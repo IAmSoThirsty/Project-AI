@@ -1,5 +1,56 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Gradle + JavaScript Setup Guide for Project-AI"
+id: gradle-javascript-setup
+type: deployment-guide
+area: development
+status: current
+version: "1.0"
+created: 2026-04-20
+last_verified: 2026-04-20
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Deployment Metadata
+deployment_target: multi-platform
+deployment_complexity: moderate
+production_ready: true
+review_cycle: monthly
+
+# Classification
+tags:
+  - deployment
+  - build-system
+  - gradle
+  - javascript
+  - nodejs
+  - android
+  - setup-guide
+
+# Developer Metadata
+skill_level: beginner
+audience:
+  - developer
+
+stakeholders: [developers, build-engineers, android-developers]
+
+languages:
+  - Groovy
+  - JavaScript
+  - Shell
+  - PowerShell
+
+frameworks:
+  - Gradle
+  - Node-JS
+
+code_examples: true
+api_reference: false
+
+related_systems: [gradle, nodejs, android-sdk, jdk]
+related_docs:
+  - [[README]]
+  - [[RELEASE_BUILD_GUIDE]]
+---
 # Gradle + JavaScript Setup Guide for Project-AI
 
 This guide will help you set up Gradle to work with JavaScript/Node.js in your Project-AI repository.
@@ -7,7 +58,6 @@ This guide will help you set up Gradle to work with JavaScript/Node.js in your P
 ## Overview
 
 Your project now has Gradle configured with the **Node Gradle Plugin**, which allows Gradle to:
-
 - Download and manage Node.js automatically
 - Run npm commands through Gradle tasks
 - Integrate JavaScript builds with your Android builds
@@ -22,27 +72,21 @@ Gradle requires Java to run. You need to install a JDK first.
 #### Recommended: Install JDK 17 (LTS)
 
 **Option A: Using Chocolatey (Recommended for Windows)**
-
 ```powershell
-
 # Install Chocolatey if you don't have it
-
 # Run PowerShell as Administrator and execute:
-
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
 # Then install OpenJDK 17:
-
 choco install openjdk17 -y
 ```
 
 **Option B: Manual Download**
-
 1. Download OpenJDK 17 from: https://adoptium.net/
-1. Choose **Temurin 17 (LTS)** for Windows
-1. Download the `.msi` installer
-1. Run the installer and **check the option to set JAVA_HOME**
-1. Restart your terminal/PowerShell
+2. Choose **Temurin 17 (LTS)** for Windows
+3. Download the `.msi` installer
+4. Run the installer and **check the option to set JAVA_HOME**
+5. Restart your terminal/PowerShell
 
 #### Verify Java Installation
 
@@ -51,7 +95,6 @@ java -version
 ```
 
 Expected output:
-
 ```
 openjdk version "17.0.x" 2024-xx-xx
 OpenJDK Runtime Environment Temurin-17.0.x+x (build 17.0.x+x)
@@ -63,101 +106,79 @@ OpenJDK 64-Bit Server VM Temurin-17.0.x+x (build 17.0.x+x, mixed mode, sharing)
 If the installer didn't set it automatically:
 
 **PowerShell (Run as Administrator):**
-
 ```powershell
-
 # Find your Java installation path
-
 $javaPath = (Get-Command java).Source
 $javaHome = Split-Path (Split-Path $javaPath)
 
 # Set JAVA_HOME for current user
-
 [System.Environment]::SetEnvironmentVariable('JAVA_HOME', $javaHome, 'User')
 
 # Add to PATH
-
 $currentPath = [System.Environment]::GetEnvironmentVariable('Path', 'User')
 [System.Environment]::SetEnvironmentVariable('Path', "$currentPath;$javaHome\bin", 'User')
 
 # Verify
-
 $env:JAVA_HOME
 ```
 
 **Manual Setup:**
-
 1. Press `Win + X` → System
-1. Click "Advanced system settings"
-1. Click "Environment Variables"
-1. Under "System variables" click "New"
-1. Variable name: `JAVA_HOME`
-1. Variable value: Path to JDK (e.g., `C:\Program Files\Eclipse Adoptium\jdk-17.0.10.7-hotspot`)
-1. Edit "Path" and add: `%JAVA_HOME%\bin`
-1. Click OK and restart your terminal
+2. Click "Advanced system settings"
+3. Click "Environment Variables"
+4. Under "System variables" click "New"
+5. Variable name: `JAVA_HOME`
+6. Variable value: Path to JDK (e.g., `C:\Program Files\Eclipse Adoptium\jdk-17.0.10.7-hotspot`)
+7. Edit "Path" and add: `%JAVA_HOME%\bin`
+8. Click OK and restart your terminal
 
 ## Available Gradle Tasks for JavaScript
 
 Once Java is installed, you can use these Gradle tasks:
 
 ### 📦 Install Dependencies
-
 ```bash
 .\gradlew.bat npmInstall
 ```
-
 This downloads Node.js automatically and installs npm packages from `package.json`.
 
 ### 🧪 Run JavaScript Tests
-
 ```bash
 .\gradlew.bat npmTest
 ```
-
 Runs all JavaScript tests defined in your project.
 
 ### 🔨 Build JavaScript/TypeScript
-
 ```bash
 .\gradlew.bat npmBuild
 ```
-
 Builds your JavaScript/TypeScript code (if you add a build script to `package.json`).
 
 ### 🚀 Run Development Server
-
 ```bash
 .\gradlew.bat npmDev
 ```
-
 Starts the development server using Docker Compose.
 
 ### ✅ Run Markdown Linting
-
 ```bash
 .\gradlew.bat npmLint
 ```
-
 Lints all markdown documentation files.
 
 ### 📋 List All Tasks
-
 ```bash
 .\gradlew.bat tasks --all
 ```
-
 Shows all available Gradle tasks.
 
 ## Configuration Details
 
 ### Node.js Version
-
 The Gradle configuration automatically downloads **Node.js 20.11.0**. You don't need to install Node.js separately! The plugin will download it to `.gradle/nodejs/`.
 
 ### Gradle Node Plugin Settings
-
 Located in `build.gradle`:
-
 ```gradle
 node {
     version = '20.11.0'          // Node.js version to download
@@ -194,50 +215,43 @@ task npmCustomTask(type: com.github.gradle.node.npm.task.NpmTask) {
 ## Troubleshooting
 
 ### Error: "JAVA_HOME is not set"
-
 - Follow the "Set JAVA_HOME Environment Variable" section above
 - Restart your terminal/PowerShell after setting environment variables
 
 ### Error: "Could not find or load main class"
-
 - Make sure you installed the JDK, not just the JRE
 - Verify `java -version` shows OpenJDK, not just "java"
 
 ### Error: "Gradle version X.X requires Java Y"
-
 - Update to Java 17 (LTS) or newer
 - Check Gradle version compatibility: https://docs.gradle.org/current/userguide/compatibility.html
 
 ### Node.js Not Downloading
-
 - Check internet connection
-
 - Try running with `--refresh-dependencies` flag:
-
   ```bash
   .\gradlew.bat npmInstall --refresh-dependencies
   ```
 
 ### Permission Errors
-
 - Run PowerShell as Administrator
 - Check that `.gradle` directory is not read-only
 
 ## Next Steps
 
 1. **Install Java JDK 17** using one of the methods above
-1. **Set JAVA_HOME** environment variable
-1. **Restart your terminal**
-1. **Test Gradle**: `.\gradlew.bat tasks --all`
-1. **Install npm packages**: `.\gradlew.bat npmInstall`
-1. **Run your first task**: `.\gradlew.bat npmTest`
+2. **Set JAVA_HOME** environment variable
+3. **Restart your terminal**
+4. **Test Gradle**: `.\gradlew.bat tasks --all`
+5. **Install npm packages**: `.\gradlew.bat npmInstall`
+6. **Run your first task**: `.\gradlew.bat npmTest`
 
 ## Integration with VS Code
 
 To enable VS Code IntelliSense for Java/Gradle:
 
 1. Install the **Extension Pack for Java** from Microsoft
-1. Create/update `.vscode/settings.json`:
+2. Create/update `.vscode/settings.json`:
 
 ```json
 {
@@ -261,6 +275,6 @@ Replace the path with your actual Java installation path.
 - [Gradle Documentation](https://docs.gradle.org/)
 - [Java Environment Setup](https://docs.oracle.com/javase/tutorial/essential/environment/paths.html)
 
-______________________________________________________________________
+---
 
 **📝 Note:** Once you complete this setup, Gradle will manage both your Android builds and JavaScript builds in a unified way!

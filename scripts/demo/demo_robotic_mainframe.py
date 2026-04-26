@@ -1,5 +1,6 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
+# EXAMPLE ONLY - This is a demonstration script, not for production use.
+# Shows how to use certain features but does not enforce governance.
+
 """
 Robotic Mainframe Integration Demo
 Demonstrates complete robotic system with Four Laws and Triumvirate validation.

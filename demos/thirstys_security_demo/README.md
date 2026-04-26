@@ -1,5 +1,19 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: demo
+tags: [demo, security, asymmetric-security, constitutional-ai, interactive]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [asymmetric-security-engine, constitutional-validator, god-tier-security, flask-api, web-ui]
+stakeholders: [security-engineers, developers, learners, auditors]
+complexity_level: intermediate
+demonstrates: [asymmetric-security-framework, constitutional-validation, privilege-escalation-protection, cross-tenant-isolation, trust-score-validation, temporal-security, clock-skew-detection, multi-stage-attack-prevention, audit-trails, forensics]
+runnable: true
+estimated_completion: 10
+requires: [docker, python-3.11+, flask, modern-browser]
+review_cycle: quarterly
+---
+
 # Thirsty's Asymmetric Security Framework - Public Demo
 
 **Try the framework with 5 live attack scenarios**
@@ -12,9 +26,7 @@
 
 ```bash
 docker-compose up
-
 # Open http://localhost:5000
-
 ```
 
 ### Option 2: Local
@@ -22,9 +34,7 @@ docker-compose up
 ```bash
 pip install -r requirements.txt
 python demo_server.py
-
 # Open http://localhost:5000
-
 ```
 
 ---
@@ -32,28 +42,23 @@ python demo_server.py
 ## Attack Scenarios
 
 ### 1. Privilege Escalation Without MFA
-
-**Attack:** User attempts to escalate to admin without multi-factor authentication
+**Attack:** User attempts to escalate to admin without multi-factor authentication  
 **Expected:** BLOCKED by constitutional rule "privilege_escalation_approval"
 
 ### 2. Cross-Tenant Data Access
-
-**Attack:** User from tenant_a tries to read data from tenant_b
+**Attack:** User from tenant_a tries to read data from tenant_b  
 **Expected:** BLOCKED by constitutional rule "cross_tenant_authorization"
 
 ### 3. Trust Score Manipulation
-
-**Attack:** Direct modification of trust score without justification
+**Attack:** Direct modification of trust score without justification  
 **Expected:** BLOCKED by constitutional rule "modify_trust_score"
 
 ### 4. Clock Skew Exploitation
-
-**Attack:** Manipulate system clock by 10 minutes to bypass temporal checks
+**Attack:** Manipulate system clock by 10 minutes to bypass temporal checks  
 **Expected:** BLOCKED by temporal security analyzer (clock skew detected)
 
 ### 5. Combined Multi-Stage Attack
-
-**Attack:** Clock skew + privilege escalation + cross-tenant access
+**Attack:** Clock skew + privilege escalation + cross-tenant access  
 **Expected:** BLOCKED at first violation (clock skew)
 
 ---

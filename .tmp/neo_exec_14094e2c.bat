@@ -1,0 +1,1 @@
+dir /b "t:\Project-AI-main\.env" 2>nul || echo "File not found"

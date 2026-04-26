@@ -1,5 +1,3 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 // API Configuration
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001';
 

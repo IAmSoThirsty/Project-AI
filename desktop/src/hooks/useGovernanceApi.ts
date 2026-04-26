@@ -1,5 +1,3 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 import { useState, useEffect } from 'react';
 import { governanceApi, HealthResponse, TarlResponse, AuditResponse } from '../api/governance';
 

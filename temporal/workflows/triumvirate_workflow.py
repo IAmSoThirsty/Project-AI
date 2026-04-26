@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Triumvirate Workflow - Durable AI Pipeline Orchestration
 
@@ -22,6 +20,11 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+# 📚 Documentation Links:
+# - [[relationships/temporal/01_WORKFLOW_CHAINS.md]]
+# - [[source-docs/temporal/WORKFLOWS_COMPREHENSIVE.md]]
+#
+
 class TriumvirateRequest:
     """Input for Triumvirate workflow."""
 

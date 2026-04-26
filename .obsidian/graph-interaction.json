@@ -1,0 +1,330 @@
+{
+  "name": "Interactive Navigation Configuration",
+  "description": "Configure hover previews, click navigation, zoom levels, and interactive features for graph view",
+  "version": "1.0.0",
+  "interactionSettings": {
+    "hoverBehavior": {
+      "enabled": true,
+      "previewDelay": 300,
+      "previewDuration": 0,
+      "highlightConnections": true,
+      "dimUnrelated": true,
+      "dimOpacity": 0.15,
+      "showMetadata": true,
+      "description": "Configure hover interactions and preview behavior"
+    },
+    "clickBehavior": {
+      "singleClick": "open-note",
+      "doubleClick": "open-in-new-pane",
+      "middleClick": "open-in-background",
+      "ctrlClick": "open-in-new-window",
+      "description": "Configure click navigation patterns",
+      "options": {
+        "open-note": "Open note in current pane",
+        "open-in-new-pane": "Open note in new vertical split",
+        "open-in-background": "Open note without switching focus",
+        "open-in-new-window": "Open note in floating window"
+      }
+    },
+    "zoomBehavior": {
+      "enabled": true,
+      "scrollZoom": true,
+      "pinchZoom": true,
+      "minZoom": 0.1,
+      "maxZoom": 5.0,
+      "defaultZoom": 1.0,
+      "zoomSpeed": 1.0,
+      "smoothZoom": true,
+      "description": "Configure zoom interactions and limits"
+    },
+    "panBehavior": {
+      "enabled": true,
+      "dragToPan": true,
+      "arrowKeyPan": true,
+      "panSpeed": 1.0,
+      "edgePan": true,
+      "edgePanSpeed": 0.3,
+      "description": "Configure panning and navigation behavior"
+    },
+    "selectionBehavior": {
+      "enabled": true,
+      "multiSelect": true,
+      "multiSelectKey": "ctrl",
+      "selectNeighbors": true,
+      "selectNeighborsKey": "shift",
+      "description": "Configure node selection and multi-selection"
+    }
+  },
+  "hoverPreviewSettings": {
+    "contentPreview": {
+      "enabled": true,
+      "maxLines": 10,
+      "showFrontmatter": true,
+      "showLinks": true,
+      "showBacklinks": true,
+      "showTags": true,
+      "showMetadata": true,
+      "description": "Content shown in hover preview popup"
+    },
+    "visualHighlighting": {
+      "highlightNode": true,
+      "highlightConnections": true,
+      "highlightIncoming": true,
+      "highlightOutgoing": true,
+      "dimUnrelated": true,
+      "dimOpacity": 0.15,
+      "highlightColor": "#5577FF",
+      "incomingColor": "#00FF00",
+      "outgoingColor": "#FFA500",
+      "description": "Visual highlighting when hovering over nodes"
+    },
+    "connectionDepth": {
+      "enabled": true,
+      "maxDepth": 2,
+      "showDepth1": true,
+      "showDepth2": true,
+      "showDepth3": false,
+      "depthBasedOpacity": true,
+      "description": "How many levels of connections to highlight on hover"
+    }
+  },
+  "navigationShortcuts": {
+    "zoom": {
+      "zoomIn": "Ctrl + Plus",
+      "zoomOut": "Ctrl + Minus",
+      "zoomReset": "Ctrl + 0",
+      "zoomFit": "Ctrl + Shift + F",
+      "description": "Keyboard shortcuts for zoom operations"
+    },
+    "pan": {
+      "panLeft": "Arrow Left",
+      "panRight": "Arrow Right",
+      "panUp": "Arrow Up",
+      "panDown": "Arrow Down",
+      "panFast": "Shift + Arrow Keys",
+      "description": "Keyboard shortcuts for panning"
+    },
+    "selection": {
+      "selectAll": "Ctrl + A",
+      "deselectAll": "Escape",
+      "selectNeighbors": "Shift + Click",
+      "selectConnected": "Ctrl + Shift + Click",
+      "description": "Keyboard shortcuts for node selection"
+    },
+    "navigation": {
+      "openNote": "Enter",
+      "openInNewPane": "Ctrl + Enter",
+      "openInBackground": "Shift + Enter",
+      "focusSearch": "Ctrl + F",
+      "description": "Keyboard shortcuts for navigation"
+    },
+    "view": {
+      "toggleFilters": "Ctrl + Shift + G",
+      "toggleGroups": "Ctrl + Shift + C",
+      "toggleLocalGraph": "Ctrl + Shift + L",
+      "refreshGraph": "F5",
+      "description": "Keyboard shortcuts for view controls"
+    }
+  },
+  "contextMenuOptions": {
+    "nodeMenu": [
+      {
+        "label": "Open in current pane",
+        "action": "open-current",
+        "shortcut": "Enter"
+      },
+      {
+        "label": "Open in new pane",
+        "action": "open-new-pane",
+        "shortcut": "Ctrl + Enter"
+      },
+      {
+        "label": "Open in new window",
+        "action": "open-new-window",
+        "shortcut": "Ctrl + Shift + Enter"
+      },
+      {
+        "label": "Focus on this node",
+        "action": "focus-node",
+        "description": "Show only this node and its connections"
+      },
+      {
+        "label": "Expand connections",
+        "action": "expand-connections",
+        "description": "Show additional connection levels"
+      },
+      {
+        "label": "Hide this node",
+        "action": "hide-node",
+        "description": "Temporarily hide from graph view"
+      },
+      {
+        "label": "Copy link to note",
+        "action": "copy-link",
+        "shortcut": "Ctrl + C"
+      },
+      {
+        "label": "Show in file explorer",
+        "action": "reveal-in-explorer",
+        "shortcut": "Ctrl + Shift + E"
+      }
+    ],
+    "edgeMenu": [
+      {
+        "label": "Navigate to source",
+        "action": "goto-source",
+        "description": "Open the source note of this link"
+      },
+      {
+        "label": "Navigate to target",
+        "action": "goto-target",
+        "description": "Open the target note of this link"
+      },
+      {
+        "label": "Show link context",
+        "action": "show-context",
+        "description": "Show the paragraph containing this link"
+      }
+    ],
+    "canvasMenu": [
+      {
+        "label": "Reset view",
+        "action": "reset-view",
+        "shortcut": "Ctrl + 0"
+      },
+      {
+        "label": "Fit to screen",
+        "action": "fit-screen",
+        "shortcut": "Ctrl + Shift + F"
+      },
+      {
+        "label": "Export as PNG",
+        "action": "export-png",
+        "description": "Export current graph view as image"
+      },
+      {
+        "label": "Export as SVG",
+        "action": "export-svg",
+        "description": "Export current graph view as vector"
+      }
+    ]
+  },
+  "advancedInteractions": {
+    "nodeDragging": {
+      "enabled": true,
+      "persistPosition": false,
+      "snapToGrid": false,
+      "gridSize": 20,
+      "description": "Allow manual node repositioning (positions not saved)"
+    },
+    "edgeInteraction": {
+      "clickableEdges": true,
+      "edgeHoverHighlight": true,
+      "edgeLabels": false,
+      "edgeTooltips": true,
+      "description": "Interactive features for graph edges/connections"
+    },
+    "searchIntegration": {
+      "searchHighlight": true,
+      "searchZoom": true,
+      "liveSearch": true,
+      "fuzzyMatch": true,
+      "description": "Search and filter integration with graph view"
+    },
+    "temporalNavigation": {
+      "enabled": false,
+      "showTimeline": false,
+      "animateChanges": false,
+      "description": "Time-based graph evolution (requires plugin)"
+    }
+  },
+  "accessibilitySettings": {
+    "keyboardNavigation": {
+      "enabled": true,
+      "tabNavigation": true,
+      "focusIndicator": true,
+      "screenReaderSupport": true,
+      "description": "Accessibility features for keyboard-only navigation"
+    },
+    "visualAccessibility": {
+      "highContrast": false,
+      "colorblindMode": false,
+      "increasedNodeSize": false,
+      "boldLabels": false,
+      "description": "Visual accessibility enhancements"
+    },
+    "motionReduction": {
+      "reduceMotion": false,
+      "disableAnimations": false,
+      "staticPreview": false,
+      "description": "Motion and animation reduction for accessibility"
+    }
+  },
+  "performanceOptimizations": {
+    "renderingOptimizations": {
+      "virtualRendering": true,
+      "renderOnlyVisible": true,
+      "maxVisibleNodes": 500,
+      "levelOfDetail": true,
+      "description": "Performance optimizations for large graphs"
+    },
+    "interactionThrottling": {
+      "hoverThrottle": 100,
+      "panThrottle": 16,
+      "zoomThrottle": 50,
+      "resizeThrottle": 200,
+      "description": "Throttle interaction events to improve performance (milliseconds)"
+    },
+    "caching": {
+      "cacheNodePositions": true,
+      "cacheRendering": true,
+      "cacheDuration": 300000,
+      "description": "Cache graph data for improved performance (duration in ms)"
+    }
+  },
+  "usage": {
+    "basicInteractions": [
+      "Hover over nodes to preview content and highlight connections",
+      "Click nodes to open notes in current pane",
+      "Ctrl + Click to open in new pane",
+      "Scroll or pinch to zoom in/out",
+      "Click and drag canvas to pan view",
+      "Right-click for context menu options"
+    ],
+    "advancedInteractions": [
+      "Shift + Click to select multiple nodes",
+      "Ctrl + Shift + Click to select connected subgraph",
+      "Drag nodes to rearrange (positions not saved)",
+      "Use arrow keys for precise panning",
+      "Ctrl + F to search and highlight nodes",
+      "Escape to deselect all nodes"
+    ],
+    "workflowTips": {
+      "exploration": "Use hover previews to quickly scan content without opening notes",
+      "navigation": "Use Ctrl + Click to compare notes side-by-side in split panes",
+      "focus": "Right-click and select 'Focus on this node' to reduce clutter",
+      "discovery": "Hover to highlight connections and discover related content",
+      "analysis": "Select multiple nodes to analyze connection patterns"
+    },
+    "troubleshooting": {
+      "slowPerformance": "Reduce maxVisibleNodes, enable renderOnlyVisible, use filters",
+      "hardToClick": "Increase nodeSizeMultiplier, reduce node density",
+      "previewsNotShowing": "Check previewDelay and ensure hoverBehavior.enabled is true",
+      "navigationNotWorking": "Verify clickBehavior settings and keyboard shortcuts"
+    }
+  },
+  "integrationNotes": {
+    "obsidianPlugins": {
+      "graphAnalysis": "Install Graph Analysis plugin for advanced metrics",
+      "breadcrumbs": "Install Breadcrumbs plugin for hierarchical navigation",
+      "dataview": "Use Dataview to create dynamic filtered graphs",
+      "localGraph": "Use local graph view for focused exploration"
+    },
+    "customCSS": {
+      "nodeStyles": "Use custom CSS snippets to style nodes by metadata",
+      "edgeStyles": "Customize edge appearance and directionality",
+      "colorSchemes": "Override default colors with custom themes",
+      "animations": "Add custom animations for interactions"
+    }
+  }
+}

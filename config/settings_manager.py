@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Settings Manager - Comprehensive settings with God tier encryption
 Covers ALL features: standard + additional features
@@ -326,8 +324,9 @@ class SettingsManager:
         if (
             self.settings["remote_access"]["browser_enabled"]
             or self.settings["remote_access"]["desktop_enabled"]
-        ) and not self.settings["remote_access"]["require_authentication"]:
-            issues.append("Remote access enabled without authentication!")
+        ):
+            if not self.settings["remote_access"]["require_authentication"]:
+                issues.append("Remote access enabled without authentication!")
 
         return {"valid": len(issues) == 0, "issues": issues, "warnings": len(issues)}
 

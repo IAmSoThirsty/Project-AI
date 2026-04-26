@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:\Project-AI-main\src\app\core\validate_constitution.py' -TotalCount 50"

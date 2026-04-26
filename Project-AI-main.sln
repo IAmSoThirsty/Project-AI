@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demos", "demos", "{FA8A28C8-4B59-8028-2ACF-626D05B08DB7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "security_advantage", "security_advantage", "{0695A80B-52C6-AA72-643F-7E1BC401E0F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "csharp", "csharp", "{1183C903-A2F3-041C-4D90-E847116DA2A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpImpossibility", "demos\security_advantage\csharp\CSharpImpossibility.csproj", "{ECB4C0FA-74CD-F669-59EE-948578BE56EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECB4C0FA-74CD-F669-59EE-948578BE56EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB4C0FA-74CD-F669-59EE-948578BE56EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB4C0FA-74CD-F669-59EE-948578BE56EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB4C0FA-74CD-F669-59EE-948578BE56EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0695A80B-52C6-AA72-643F-7E1BC401E0F1} = {FA8A28C8-4B59-8028-2ACF-626D05B08DB7}
+		{1183C903-A2F3-041C-4D90-E847116DA2A8} = {0695A80B-52C6-AA72-643F-7E1BC401E0F1}
+		{ECB4C0FA-74CD-F669-59EE-948578BE56EC} = {1183C903-A2F3-041C-4D90-E847116DA2A8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F40EF2C8-578B-4D4C-8DBE-2C2DEC448844}
+	EndGlobalSection
+EndGlobal

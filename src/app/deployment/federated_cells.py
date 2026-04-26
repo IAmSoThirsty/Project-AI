@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Federated Cell Architecture - Section 7
@@ -282,8 +280,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cells (
                 cell_id TEXT PRIMARY KEY,
                 name TEXT,
@@ -296,11 +293,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 last_seen REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cell_health (
                 cell_id TEXT PRIMARY KEY,
                 cpu_usage REAL,
@@ -311,11 +306,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 consecutive_failures INTEGER,
                 healthy INTEGER
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS work_units (
                 work_id TEXT PRIMARY KEY,
                 workload_type TEXT,
@@ -327,19 +320,16 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 status TEXT,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS raft_log (
                 log_index INTEGER PRIMARY KEY,
                 term INTEGER,
                 command TEXT,
                 timestamp REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()
@@ -713,26 +703,19 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
 
             # Merge state if peer version is newer
             if peer_version > self.gossip_version:
-                # Update cell health information (optimized to reduce lock contention)
+                # Update cell health information
                 peer_health = gossip_data.get("cell_health", {})
-
-                # Batch update to reduce lock contention
-                updates_to_apply = {}
                 for cell_id, health_data in peer_health.items():
                     if cell_id in self.cell_health:
-                        # Only update if peer data is newer
+                        # Merge with local knowledge
                         if (
                             health_data["last_heartbeat"]
                             > self.cell_health[cell_id].last_heartbeat
                         ):
-                            updates_to_apply[cell_id] = health_data
-
-                # Apply all updates at once (reduces iterations)
-                for cell_id, health_data in updates_to_apply.items():
-                    self.cell_health[cell_id].last_heartbeat = health_data[
-                        "last_heartbeat"
-                    ]
-                    self.cell_health[cell_id].healthy = health_data["healthy"]
+                            self.cell_health[cell_id].last_heartbeat = health_data[
+                                "last_heartbeat"
+                            ]
+                            self.cell_health[cell_id].healthy = health_data["healthy"]
 
         except Exception as e:
             self.logger.error("Gossip handling failed: %s", e)

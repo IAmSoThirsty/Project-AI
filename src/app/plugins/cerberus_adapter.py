@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Adapter to expose Cerberus Guard Bot to Project-AI.
 
 This module provides a thin wrapper around the Cerberus HubCoordinator so the

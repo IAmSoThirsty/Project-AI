@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 DeepSeek V3.2 (Mixture-of-Experts) Language Model Integration.
 
@@ -9,11 +7,13 @@ model and handled automatically.
 
 Features:
 - Text completion and chat inference
-- Support for Hugging Face models
+- Support for Hugging Face models via AI orchestrator
 - GPU acceleration with automatic fallback to CPU
 - Configurable generation parameters
 - Content filtering and safety checks
 - Error handling and logging
+
+Note: Now routes all inference through the AI orchestrator for unified provider management.
 """
 
 import logging
@@ -22,6 +22,8 @@ from enum import Enum
 from typing import Any
 
 from dotenv import load_dotenv
+
+from app.core.ai.orchestrator import AIRequest, run_ai
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -103,7 +105,7 @@ class DeepSeekV32:
         self.device = self._detect_device(device)
         logger.info("Using device: %s", self.device)
 
-        # Model and tokenizer (lazy loaded)
+        # Backward compatibility: Keep these for external API compatibility
         self._model = None
         self._tokenizer = None
         self._model_loaded = False
@@ -141,55 +143,19 @@ class DeepSeekV32:
     def _load_model(self) -> bool:
         """Load the model and tokenizer.
 
+        Note: This method is preserved for backward compatibility but is now a no-op.
+        Model loading is handled by the orchestrator on-demand.
+
         Returns:
-            True if successful, False otherwise
+            True (always succeeds as a compatibility shim)
         """
         if self._model_loaded:
             return True
 
-        try:
-            from transformers import AutoModelForCausalLM, AutoTokenizer
-
-            logger.info("Loading model: %s", self.model_name)
-
-            # Load tokenizer
-            self._tokenizer = AutoTokenizer.from_pretrained(
-                self.model_name,
-                trust_remote_code=True,
-            )
-
-            # Load model with appropriate device settings
-            if self.device == "cpu":
-                self._model = AutoModelForCausalLM.from_pretrained(
-                    self.model_name,
-                    trust_remote_code=True,
-                    torch_dtype="auto",
-                )
-            else:
-                self._model = AutoModelForCausalLM.from_pretrained(
-                    self.model_name,
-                    trust_remote_code=True,
-                    torch_dtype="auto",
-                    device_map="auto",
-                )
-
-            # Move to device if not using device_map
-            if self.device == "cpu":
-                self._model = self._model.to(self.device)
-
-            self._model_loaded = True
-            logger.info("Model loaded successfully")
-            return True
-
-        except ImportError as e:
-            logger.error(
-                f"Required library not installed: {e}. "
-                "Install with: pip install transformers torch accelerate"
-            )
-            return False
-        except Exception as e:
-            logger.error("Error loading model: %s", e)
-            return False
+        # Mark as loaded for compatibility (orchestrator handles actual loading)
+        self._model_loaded = True
+        logger.info("Model will be loaded on-demand via orchestrator")
+        return True
 
     def check_content_filter(self, text: str) -> tuple[bool, str]:
         """Check if text passes content filter.
@@ -241,7 +207,7 @@ class DeepSeekV32:
                 "prompt": prompt,
             }
 
-        # Load model if needed
+        # Load model if needed (backward compatibility check)
         if not self._load_model():
             return {
                 "success": False,
@@ -250,9 +216,6 @@ class DeepSeekV32:
             }
 
         try:
-            # Tokenize input
-            inputs = self._tokenizer(prompt, return_tensors="pt").to(self.device)
-
             # Use provided parameters or defaults
             gen_temp = temperature if temperature is not None else self.temperature
             gen_top_p = top_p if top_p is not None else self.top_p
@@ -261,29 +224,40 @@ class DeepSeekV32:
                 max_new_tokens if max_new_tokens is not None else self.max_length
             )
 
-            # Generate
-            outputs = self._model.generate(
-                **inputs,
-                max_new_tokens=gen_max_new,
-                temperature=gen_temp,
-                top_p=gen_top_p,
-                top_k=gen_top_k,
-                do_sample=do_sample,
-                use_cache=self.use_cache,
-                pad_token_id=self._tokenizer.eos_token_id,
+            # Create orchestrator request
+            request = AIRequest(
+                task_type="completion",
+                prompt=prompt,
+                provider="huggingface",
+                model=self.model_name,
+                config={
+                    "use_local": True,
+                    "device": self.device,
+                    "max_new_tokens": gen_max_new,
+                    "temperature": gen_temp,
+                    "top_p": gen_top_p,
+                    "top_k": gen_top_k,
+                    "do_sample": do_sample,
+                    "use_cache": self.use_cache,
+                },
             )
 
-            # Decode output
-            generated_text = self._tokenizer.decode(
-                outputs[0], skip_special_tokens=True
-            )
+            # Execute via orchestrator
+            response = run_ai(request)
 
-            return {
-                "success": True,
-                "text": generated_text,
-                "prompt": prompt,
-                "model": self.model_name,
-            }
+            if response.status == "success":
+                return {
+                    "success": True,
+                    "text": response.result,
+                    "prompt": prompt,
+                    "model": self.model_name,
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": response.error or "Unknown error",
+                    "prompt": prompt,
+                }
 
         except Exception as e:
             logger.error("Generation error: %s", e)
@@ -328,7 +302,7 @@ class DeepSeekV32:
                     "messages": messages,
                 }
 
-        # Load model if needed
+        # Load model if needed (backward compatibility check)
         if not self._load_model():
             return {
                 "success": False,
@@ -337,33 +311,52 @@ class DeepSeekV32:
             }
 
         try:
-            # Apply chat template if available
-            if hasattr(self._tokenizer, "apply_chat_template"):
-                prompt = self._tokenizer.apply_chat_template(
-                    messages,
-                    tokenize=False,
-                    add_generation_prompt=True,
-                )
-            else:
-                # Fallback: simple concatenation
-                prompt = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
-                prompt += "\nassistant:"
-
-            # Use completion method with formatted prompt
-            result = self.generate_completion(
-                prompt=prompt,
-                max_new_tokens=max_new_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                top_k=top_k,
-                do_sample=do_sample,
+            # Use provided parameters or defaults
+            gen_temp = temperature if temperature is not None else self.temperature
+            gen_top_p = top_p if top_p is not None else self.top_p
+            gen_top_k = top_k if top_k is not None else self.top_k
+            gen_max_new = (
+                max_new_tokens if max_new_tokens is not None else self.max_length
             )
 
-            # Add messages to result
-            if result["success"]:
-                result["messages"] = messages
+            # Extract last user message as prompt (orchestrator will handle chat template)
+            prompt = user_messages[-1].get("content", "") if user_messages else ""
 
-            return result
+            # Create orchestrator request
+            request = AIRequest(
+                task_type="chat",
+                prompt=prompt,
+                provider="huggingface",
+                model=self.model_name,
+                config={
+                    "use_local": True,
+                    "device": self.device,
+                    "messages": messages,
+                    "max_new_tokens": gen_max_new,
+                    "temperature": gen_temp,
+                    "top_p": gen_top_p,
+                    "top_k": gen_top_k,
+                    "do_sample": do_sample,
+                    "use_cache": self.use_cache,
+                },
+            )
+
+            # Execute via orchestrator
+            response = run_ai(request)
+
+            if response.status == "success":
+                return {
+                    "success": True,
+                    "text": response.result,
+                    "messages": messages,
+                    "model": self.model_name,
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": response.error or "Unknown error",
+                    "messages": messages,
+                }
 
         except Exception as e:
             logger.error("Chat generation error: %s", e)
@@ -415,13 +408,14 @@ class DeepSeekV32:
         }
 
     def unload_model(self) -> None:
-        """Unload model from memory to free resources."""
-        if self._model is not None:
-            del self._model
-            self._model = None
-        if self._tokenizer is not None:
-            del self._tokenizer
-            self._tokenizer = None
+        """Unload model from memory to free resources.
+
+        Note: This method is preserved for backward compatibility but is now a no-op.
+        Model cleanup is handled automatically by the orchestrator after each request.
+        """
+        # Reset state for backward compatibility
+        self._model = None
+        self._tokenizer = None
         self._model_loaded = False
 
         # Clear CUDA cache if available
@@ -433,4 +427,4 @@ class DeepSeekV32:
         except ImportError:
             pass
 
-        logger.info("Model unloaded")
+        logger.info("Model unload requested (orchestrator handles cleanup)")

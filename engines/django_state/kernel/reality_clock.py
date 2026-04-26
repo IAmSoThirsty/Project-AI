@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Reality clock with causal time tracking.
 
 Implements time progression with irreversibility tracking and causal ordering.

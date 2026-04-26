@@ -1,7 +1,9 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Performance benchmarking for Project AI API.
+
+GOVERNANCE: GOVERNED
+Classification: Performance testing tool
+Risk: Low (read-only operations)
 """
 
 import statistics

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Contrarian Firewall - Comprehensive Unit Tests
 
@@ -10,8 +8,6 @@ Tests for the complete monolithic firewall system including:
 - Governance integration
 - Intent tracking
 - Telemetry and auto-tuning
-
-Requires the ``integrations.thirsty_lang_security`` source package.
 """
 
 import asyncio
@@ -19,16 +15,11 @@ from datetime import datetime
 
 import pytest
 
-pytest.importorskip(
-    "integrations.thirsty_lang_security",
-    reason="integrations.thirsty_lang_security source package not implemented",
-)
 from integrations.thirsty_lang_security import (
     OperationMode,
     SecurityConfig,
     ThirstyLangSecurityBridge,
 )
-
 from src.app.security.contrarian_firewall_orchestrator import (
     ContrariaNFirewallOrchestrator,
     FirewallMode,

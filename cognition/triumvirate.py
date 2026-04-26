@@ -1,5 +1,3 @@
-#                                           [2026-03-05 08:49]
-#                                          Productivity: Active
 from cognition.audit import audit
 from cognition.kernel_liara import maybe_activate_liara, restore_pillar
 

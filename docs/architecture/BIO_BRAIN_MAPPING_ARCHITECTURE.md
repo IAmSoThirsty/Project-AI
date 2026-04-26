@@ -1,28 +1,76 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: Bio-Inspired Brain Mapping AI Subsystem Architecture
+id: bio-brain-mapping-architecture
+type: architecture
+version: 1.0
+created: 2026-02-01
+created_date: 2026-02-01
+last_verified: 2026-04-20
+updated_date: 2026-02-01
+status: active
+author: Architecture Team
+contributors: ["Neuroscience Team", "ML Team"]
+# Architecture-Specific Metadata
+architecture_layer: domain
+design_pattern: ["hierarchical-neural", "sparse-coding", "hebbian-learning", "hyperbolic-geometry"]
+implements: ["cortical-hierarchy", "rsgn-interface", "bio-modular-representation"]
+uses: ["poincare-ball-embeddings", "k-winner-take-all", "lateral-inhibition"]
+quality_attributes: ["biological-plausibility", "energy-efficiency", "interpretability", "scalability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/data", "ai-ml"]
+tags: ["bio-inspired", "neural-architecture", "cognitive-modeling", "hyperbolic-geometry", "sparse-coding", "rsgn", "hebbian-learning"]
+component: ["bio-brain-mapping-system", "rsgn-network", "bio-modular-representation", "cognition-kernel"]
+# Relationships
+related_docs: ["god-tier-intelligence-system", "architecture-overview", "kernel-modularization-summary"]
+related_systems: ["god-tier-platform", "kernel"]
+depends_on: ["cognition-kernel-architecture", "governance-service"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "ml-engineers", "researchers", "neuroscience-experts"]
+stakeholders: ["developers", "architecture-team"]
+priority: P1
+difficulty: expert
+estimated_reading_time: 25 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: medium
+compliance: []
+# Discovery
+keywords: ["bio-inspired", "neural networks", "cortical hierarchy", "hyperbolic geometry", "sparse coding"]
+search_terms: ["RSGN", "bio-modular", "Poincare ball", "Hebbian", "lateral inhibition"]
+aliases: ["Bio Brain Mapping", "RSGN Architecture", "Cortical AI System"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 85%
+---
+
+
 # Bio-Inspired Brain Mapping AI Subsystem Architecture
 
 ## Table of Contents
+1. [[#overview|Overview]]
+2. [[#architectural-components|Architectural Components]]
+3. [[#rsgn|RSGN (Resonant Sparse Geometry Network)]]
+4. [[#bio-modular-representation|Bio-Modular Representation]]
+5. [[#configuration-guide|Configuration Guide]]
+6. [[#api-reference|API Reference]]
+7. [[#usage-examples|Usage Examples]]
+8. [[#integration-with-project-ai|Integration with Project-AI]]
+9. [[#performance-and-scaling|Performance and Scaling]]
+10. [[#future-extensions|Future Extensions]]
 
-1. [Overview](#overview)
-1. [Architectural Components](#architectural-components)
-1. [RSGN (Resonant Sparse Geometry Network)](#rsgn)
-1. [Bio-Modular Representation](#bio-modular-representation)
-1. [Configuration Guide](#configuration-guide)
-1. [API Reference](#api-reference)
-1. [Usage Examples](#usage-examples)
-1. [Integration with Project-AI](#integration-with-project-ai)
-1. [Performance and Scaling](#performance-and-scaling)
-1. [Future Extensions](#future-extensions)
-
-______________________________________________________________________
+---
 
 ## Overview
 
 The Bio-Inspired Brain Mapping AI Subsystem is a sophisticated, geometry-driven, modular neural architecture that emulates biological cortical processing. It integrates two complementary components:
 
 1. **Resonant Sparse Geometry Network (RSGN)**: A hyperbolic geometry-based network with sparse connectivity and two-timescale learning
-1. **Bio-Modular Representation**: A hierarchical cortical architecture with sparse activation and lateral inhibition
+2. **Bio-Modular Representation**: A hierarchical cortical architecture with sparse activation and lateral inhibition
 
 ### Key Features
 
@@ -45,7 +93,7 @@ The architecture draws from neuroscience principles:
 - **Oscillatory Resonance**: Gamma-band (40 Hz) synchronization
 - **Hyperbolic Geometry**: Natural representation of tree-like semantic hierarchies
 
-______________________________________________________________________
+---
 
 ## Architectural Components
 
@@ -80,7 +128,7 @@ ______________________________________________________________________
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-______________________________________________________________________
+---
 
 ## RSGN (Resonant Sparse Geometry Network)
 
@@ -93,7 +141,6 @@ The RSGN operates in hyperbolic space (Poincaré ball model):
 **Metric**: ds² = 4/(1 - ||x||²)² * ||dx||²
 
 **Key Operations**:
-
 - **Möbius Addition**: x ⊕ y = ((1 + 2⟨x,y⟩ + ||y||²)x + (1 − ||x||²)y) / (1 + 2⟨x,y⟩ + ||x||²||y||²)
 - **Exponential Map**: exp_x(v) = x ⊕ tanh(λ_x ||v||) * v/||v||
 - **Distance**: d(x,y) = arcosh(1 + 2||x−y||²/((1−||x||²)(1−||y||²)))
@@ -119,21 +166,18 @@ Output Layer
 ### Two-Timescale Learning
 
 **Fast Learning (Gradient-Based)**:
-
 - Standard backpropagation
 - Learning rate: ~0.001
 - Updates: weights_fast
 
 **Slow Learning (Hebbian)**:
-
-- Δw_ij = η_slow *(α* pre_i *post_j - β* w_ij)
+- Δw_ij = η_slow * (α * pre_i * post_j - β * w_ij)
 - Learning rate: ~0.0001
 - Updates: weights_slow
 - α (potentiation): 0.1
 - β (decay): 0.01
 
 **Combined Forward Pass**:
-
 - Mode "fast": Uses weights_fast
 - Mode "slow": Uses weights_slow
 - Mode "both": Uses (weights_fast + weights_slow) / 2
@@ -157,13 +201,12 @@ w(r) = A_exc * exp(-r²/σ_exc²) - A_inh * exp(-r²/σ_inh²)
 ```
 
 Parameters:
-
 - σ_exc = 1.0 (excitation radius)
 - σ_inh = 3.0 (inhibition radius)
 - A_exc = 1.0 (excitation strength)
 - A_inh = 0.5 (inhibition strength)
 
-______________________________________________________________________
+---
 
 ## Bio-Modular Representation
 
@@ -171,18 +214,17 @@ ______________________________________________________________________
 
 Five-level hierarchy mimicking visual cortex:
 
-| Module  | Function                     | Input Source | Output Dim | Key Features                     |
-| ------- | ---------------------------- | ------------ | ---------- | -------------------------------- |
-| **V1**  | Edge detection, Gabor-like   | Raw input    | 256        | Low-level feature extraction     |
-| **V2**  | Contours, textures           | V1           | 256        | Intermediate features            |
-| **V4**  | Shapes, object parts         | V2           | 512        | High-level features              |
-| **IT**  | Object recognition           | V4           | 512        | Invariant object representations |
-| **PFC** | Executive control, reasoning | IT           | 256        | Abstract, task-relevant features |
+| Module | Function | Input Source | Output Dim | Key Features |
+|--------|----------|--------------|------------|--------------|
+| **V1** | Edge detection, Gabor-like | Raw input | 256 | Low-level feature extraction |
+| **V2** | Contours, textures | V1 | 256 | Intermediate features |
+| **V4** | Shapes, object parts | V2 | 512 | High-level features |
+| **IT** | Object recognition | V4 | 512 | Invariant object representations |
+| **PFC** | Executive control, reasoning | IT | 256 | Abstract, task-relevant features |
 
 ### Sparse Activation (k-WTA)
 
 Each module maintains sparse activation:
-
 - **k-winner-take-all**: Only top-k neurons active
 - Default: k=20 out of 256-512 neurons (~4-8% sparsity)
 - Metabolically efficient, biologically plausible
@@ -190,7 +232,6 @@ Each module maintains sparse activation:
 ### Lateral Inhibition
 
 Within-module competition:
-
 ```python
 activation = feedforward_input - 0.5 * lateral_inhibition
 ```
@@ -219,7 +260,7 @@ activation = activation * (1 + γ * cos(2πft))
 - Enhances phase-locked signals
 - Mimics cortical gamma-band oscillations
 
-______________________________________________________________________
+---
 
 ## Configuration Guide
 
@@ -278,37 +319,28 @@ modules:
 Three built-in presets:
 
 **Development** (fast prototyping):
-
 ```yaml
 active_preset: "development"
-
 # Smaller network, higher learning rate, frequent consolidation
-
 ```
 
 **Production** (balanced):
-
 ```yaml
 active_preset: "production"
-
 # Default configuration (shown above)
-
 ```
 
 **Research** (large-scale):
-
 ```yaml
 active_preset: "research"
-
 # Larger network, careful learning, less frequent consolidation
-
 ```
 
-______________________________________________________________________
+---
 
 ## API Reference
 
-### Neural Mapper (Experimental | Sovereign 2.1)
+### BioBrainMappingSystem
 
 Main orchestrator class.
 
@@ -318,11 +350,9 @@ Main orchestrator class.
 from app.core.bio_brain_mapper import BioBrainMappingSystem
 
 # With default config
-
 system = BioBrainMappingSystem(data_dir="data")
 
 # With custom config
-
 system = BioBrainMappingSystem(
     config=custom_config_dict,
     data_dir="data"
@@ -335,11 +365,9 @@ system = BioBrainMappingSystem(
 import numpy as np
 
 # Create input (batch_size, input_dim)
-
 x = np.random.randn(4, 128).astype(np.float32)
 
 # Process with learning
-
 result = system.process(
     x,
     learning_mode=LearningMode.BOTH,
@@ -347,7 +375,6 @@ result = system.process(
 )
 
 # Access outputs
-
 rsgn_output = result["rsgn_output"]          # RSGN final layer
 module_activations = result["module_activations"]  # Dict[ModuleType, ndarray]
 diagnostics = result["rsgn_diagnostics"]     # Diagnostic info
@@ -356,15 +383,11 @@ diagnostics = result["rsgn_diagnostics"]     # Diagnostic info
 #### Memory Consolidation
 
 ```python
-
 # Manual consolidation
-
 system.consolidate_memory()
 
 # Auto-consolidation (triggered after N learning steps)
-
 # Controlled by config['consolidation']['interval_steps']
-
 ```
 
 #### Diagnostics
@@ -373,39 +396,25 @@ system.consolidate_memory()
 diagnostics = system.get_diagnostics()
 
 print(diagnostics)
-
 # {
-
 #   'network_id': '...',
-
 #   'rsgn_layers': 3,
-
 #   'rsgn_sparsity': 0.1,
-
 #   'module_count': 5,
-
 #   'learning_events': 1234,
-
 #   'consolidation_count': 2,
-
 #   'last_consolidation': '2026-01-29T12:34:56',
-
 #   'bio_modules_time': 123.45
-
 # }
-
 ```
 
 #### State Persistence
 
 ```python
-
 # Save state
-
 system.save_state()
 
 # Load state
-
 system.load_state(network_id="...")
 ```
 
@@ -454,11 +463,9 @@ rsgn = ResonantSparseGeometryNetwork(
 )
 
 # Forward pass
-
 output, diagnostics = rsgn.forward(x, learning_mode=LearningMode.FAST)
 
 # Hebbian update
-
 rsgn.update_weights_hebbian(layer_idx=0, pre_activation=pre, post_activation=post)
 ```
 
@@ -486,16 +493,13 @@ bio_modules = BioModularRepresentation(
 )
 
 # Forward pass
-
 activations = bio_modules.forward(x)
 
 # Access module outputs
-
 v1_activation = activations[ModuleType.V1]
 pfc_activation = activations[ModuleType.PFC]
 
 # Hebbian update
-
 bio_modules.update_hebbian(x, activations)
 ```
 
@@ -510,31 +514,26 @@ import numpy as np
 hyp = HyperbolicOps(curvature=1.0)
 
 # Clip to Poincaré ball
-
 x = np.array([[2.0, 2.0]], dtype=np.float32)
 x_clipped = hyp.clip_to_ball(x)
 
 # Möbius addition
-
 x = np.array([[0.1, 0.2]], dtype=np.float32)
 y = np.array([[0.3, 0.1]], dtype=np.float32)
 z = hyp.mobius_add(x, y)
 
 # Exponential map (tangent → manifold)
-
 v = np.array([[0.05, 0.03]], dtype=np.float32)
 y = hyp.exp_map(x, v)
 
 # Logarithmic map (manifold → tangent)
-
 v_recovered = hyp.log_map(x, y)
 
 # Distance
-
 dist = hyp.distance(x, y)
 ```
 
-______________________________________________________________________
+---
 
 ## Usage Examples
 
@@ -545,19 +544,15 @@ import numpy as np
 from app.core.bio_brain_mapper import BioBrainMappingSystem, LearningMode
 
 # Initialize system
-
 system = BioBrainMappingSystem(data_dir="data")
 
 # Generate sample input (batch_size=8, input_dim=128)
-
 x = np.random.randn(8, 128).astype(np.float32)
 
 # Process with two-timescale learning
-
 result = system.process(x, learning_mode=LearningMode.BOTH, update_weights=True)
 
 # Extract outputs
-
 rsgn_output = result["rsgn_output"]
 module_activations = result["module_activations"]
 
@@ -599,23 +594,17 @@ system = BioBrainMappingSystem(config=custom_config, data_dir="data")
 ### Example 3: Online Continual Learning
 
 ```python
-
 # Simulate continuous learning over time
-
 for epoch in range(100):
-
     # Generate batch
-
     x = generate_data_batch()
-
+    
     # Process and learn
-
     result = system.process(x, learning_mode=LearningMode.BOTH, update_weights=True)
-
+    
     # Consolidation happens automatically every N steps
-
     # (configured by config['consolidation']['interval_steps'])
-
+    
     if epoch % 10 == 0:
         diagnostics = system.get_diagnostics()
         print(f"Epoch {epoch}: {diagnostics['learning_events']} events, "
@@ -625,19 +614,15 @@ for epoch in range(100):
 ### Example 4: Inference Only (No Learning)
 
 ```python
-
 # Load pre-trained network
-
 system = BioBrainMappingSystem(data_dir="data")
 system.load_state(network_id="pretrained_network_id")
 
 # Inference mode (no weight updates)
-
 x = np.random.randn(4, 128).astype(np.float32)
 result = system.process(x, learning_mode=LearningMode.BOTH, update_weights=False)
 
 # Extract features from different levels
-
 v1_features = result["module_activations"][ModuleType.V1]
 it_features = result["module_activations"][ModuleType.IT]
 pfc_features = result["module_activations"][ModuleType.PFC]
@@ -649,13 +634,11 @@ pfc_features = result["module_activations"][ModuleType.PFC]
 import matplotlib.pyplot as plt
 
 # Process with diagnostics
-
 result = system.process(x, learning_mode=LearningMode.BOTH, update_weights=True)
 
 diagnostics = result["rsgn_diagnostics"]
 
 # Visualize layer activations
-
 for layer_idx, activation in enumerate(diagnostics["layer_activations"]):
     plt.figure(figsize=(12, 4))
     plt.imshow(activation, aspect='auto', cmap='viridis')
@@ -668,7 +651,6 @@ for layer_idx, activation in enumerate(diagnostics["layer_activations"]):
     plt.close()
 
 # Visualize module activations
-
 module_activations = result["module_activations"]
 fig, axes = plt.subplots(1, 5, figsize=(20, 4))
 for idx, (mod_type, activation) in enumerate(module_activations.items()):
@@ -681,7 +663,7 @@ plt.savefig("module_activations.png")
 plt.close()
 ```
 
-______________________________________________________________________
+---
 
 ## Integration with Project-AI
 
@@ -690,23 +672,17 @@ ______________________________________________________________________
 The bio brain mapper is fully integrated with CognitionKernel:
 
 ```python
-
 # In src/app/main.py
-
 def initialize_kernel() -> CognitionKernel:
-
     # ... other subsystems ...
-
+    
     # Initialize bio brain mapper
-
     bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
-
+    
     # Register with kernel
-
     bio_brain_mapper.register_with_kernel(kernel)
-
+    
     # All operations now subject to Four Laws governance
-
 ```
 
 ### Security and Governance
@@ -723,9 +699,7 @@ The subsystem respects Project-AI governance:
 Follows Project-AI atomic write pattern:
 
 ```python
-
 # Atomic save with file locking
-
 with self._file_lock:
     temp_path = state_path.with_suffix(".tmp")
     with open(temp_path, "w") as f:
@@ -733,23 +707,22 @@ with self._file_lock:
     temp_path.replace(state_path)  # Atomic rename
 ```
 
-______________________________________________________________________
+---
 
 ## Performance and Scaling
 
 ### Computational Complexity
 
-| Operation        | Complexity   | Notes                                  |
-| ---------------- | ------------ | -------------------------------------- |
-| RSGN Forward     | O(n *m* s) | n=layers, m=max_neurons, s=sparsity    |
-| RSGN Hebbian     | O(m² * s)    | Per layer                              |
-| Module Forward   | O(k)         | k=hierarchical_depth (5 modules)       |
-| Local Inhibition | O(m²)        | Can be optimized with spatial indexing |
+| Operation | Complexity | Notes |
+|-----------|------------|-------|
+| RSGN Forward | O(n * m * s) | n=layers, m=max_neurons, s=sparsity |
+| RSGN Hebbian | O(m² * s) | Per layer |
+| Module Forward | O(k) | k=hierarchical_depth (5 modules) |
+| Local Inhibition | O(m²) | Can be optimized with spatial indexing |
 
 ### Memory Usage
 
 Typical configuration (production preset):
-
 - **RSGN weights**: ~10 MB (128→256→512→256, sparsity=0.1)
 - **Module weights**: ~5 MB (V1→V2→V4→IT→PFC)
 - **Embeddings**: ~2 MB (64-dim hyperbolic)
@@ -758,66 +731,59 @@ Typical configuration (production preset):
 ### Optimization Strategies
 
 1. **Sparse Matrices**: Use scipy.sparse for large sparse masks
-1. **Batch Processing**: Process multiple samples simultaneously
-1. **GPU Acceleration**: Convert to PyTorch/JAX for GPU compute
-1. **Pruning**: Aggressive pruning during consolidation (threshold=0.001)
-1. **Quantization**: Use float16 for inference (reduces memory by 50%)
+2. **Batch Processing**: Process multiple samples simultaneously
+3. **GPU Acceleration**: Convert to PyTorch/JAX for GPU compute
+4. **Pruning**: Aggressive pruning during consolidation (threshold=0.001)
+5. **Quantization**: Use float16 for inference (reduces memory by 50%)
 
 ### Scaling Recommendations
 
-| Use Case         | Preset         | Notes                                    |
-| ---------------- | -------------- | ---------------------------------------- |
-| **Prototyping**  | development    | Fast iteration, smaller network          |
-| **Production**   | production     | Balanced performance/accuracy            |
-| **Research**     | research       | Maximum capacity, careful learning       |
-| **Edge Devices** | Custom (small) | layer_sizes=[64, 128, 64], sparsity=0.2  |
-| **Cloud/GPU**    | Custom (large) | layer_sizes=[512, 1024, 2048, 1024, 512] |
+| Use Case | Preset | Notes |
+|----------|--------|-------|
+| **Prototyping** | development | Fast iteration, smaller network |
+| **Production** | production | Balanced performance/accuracy |
+| **Research** | research | Maximum capacity, careful learning |
+| **Edge Devices** | Custom (small) | layer_sizes=[64, 128, 64], sparsity=0.2 |
+| **Cloud/GPU** | Custom (large) | layer_sizes=[512, 1024, 2048, 1024, 512] |
 
-______________________________________________________________________
+---
 
 ## Future Extensions
 
 ### Planned Enhancements
 
 1. **Multi-Band Resonance**:
-
    - Theta (6 Hz), Alpha (10 Hz), Beta (20 Hz), Gamma (40 Hz)
    - Cross-frequency coupling
    - Hierarchical phase locking
 
-1. **Adaptive Sparsity**:
-
+2. **Adaptive Sparsity**:
    - Dynamic k-WTA based on input complexity
    - Energy-aware sparsity adjustment
    - Metabolic cost modeling
 
-1. **Experience Replay**:
-
+3. **Experience Replay**:
    - Memory buffer for continual learning
    - Prioritized experience sampling
    - Catastrophic forgetting prevention
 
-1. **Attention Mechanisms**:
-
+4. **Attention Mechanisms**:
    - Top-down attentional modulation
    - Feature-based attention (V4/IT)
    - Spatial attention maps
 
-1. **Visualization Dashboard**:
-
+5. **Visualization Dashboard**:
    - Real-time activation monitoring
    - Hyperbolic embedding plots (Plotly 3D)
    - Weight evolution timeseries
    - Resonance phase coherence
 
-1. **GPU Acceleration**:
-
+6. **GPU Acceleration**:
    - PyTorch backend (optional)
    - CUDA kernels for hyperbolic ops
    - Mixed-precision training
 
-1. **Neuromorphic Hardware**:
-
+7. **Neuromorphic Hardware**:
    - Intel Loihi2 support
    - Event-driven spike encoding
    - Asynchronous processing
@@ -830,47 +796,43 @@ ______________________________________________________________________
 - **Explainability**: Visualize which hyperbolic regions activate for specific inputs
 - **Neuro-symbolic Integration**: Connect PFC outputs to symbolic reasoning (TARL)
 
-______________________________________________________________________
+---
 
 ## References
 
 ### Hyperbolic Geometry
-
 - Nickel, M., & Kiela, D. (2017). "Poincaré Embeddings for Learning Hierarchical Representations." NeurIPS.
 - Sala, F., et al. (2018). "Representation Tradeoffs for Hyperbolic Embeddings." ICML.
 
 ### Sparse Coding
-
 - Olshausen, B. A., & Field, D. J. (1996). "Emergence of simple-cell receptive field properties by learning a sparse code for natural images." Nature.
 - Rozell, C. J., et al. (2008). "Sparse coding via thresholding and local competition in neural circuits." Neural Computation.
 
 ### Hebbian Learning
-
 - Hebb, D. O. (1949). "The Organization of Behavior." Wiley.
 - Gerstner, W., & Kistler, W. M. (2002). "Spiking Neuron Models." Cambridge University Press.
 
 ### Cortical Hierarchy
-
 - Felleman, D. J., & Van Essen, D. C. (1991). "Distributed hierarchical processing in the primate cerebral cortex." Cerebral Cortex.
 - DiCarlo, J. J., et al. (2012). "How does the brain solve visual object recognition?" Neuron.
 
 ### Oscillations
-
 - Fries, P. (2015). "Rhythms for Cognition: Communication through Coherence." Neuron.
 - Buzsáki, G., & Draguhn, A. (2004). "Neuronal oscillations in cortical networks." Science.
 
-______________________________________________________________________
+---
 
 ## Contact and Support
 
 For questions, issues, or contributions:
-
-- **Repository**: <https://github.com/IAmSoThirsty/Project-AI>
-- **Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
+- **Repository**: https://github.com/IAmSoThirsty/Project-AI
+- **Issues**: https://github.com/IAmSoThirsty/Project-AI/issues
 - **Module**: `src/app/core/bio_brain_mapper.py`
 - **Tests**: `tests/test_bio_brain_mapper.py`
 - **Config**: `config/bio_brain_mapping.yaml`
 
-______________________________________________________________________
+---
 
-**Document Version**: 1.0 **Last Updated**: 2026-01-29 **Author**: Project-AI Development Team
+**Document Version**: 1.0  
+**Last Updated**: 2026-01-29  
+**Author**: Project-AI Development Team

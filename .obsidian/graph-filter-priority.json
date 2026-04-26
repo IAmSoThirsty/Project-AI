@@ -1,0 +1,211 @@
+{
+  "name": "Priority-Based Filters",
+  "description": "Filter graph nodes by priority levels and criticality",
+  "version": "1.0.0",
+  "filters": [
+    {
+      "id": "p0-critical",
+      "name": "P0 - Critical/Mandatory",
+      "query": "tag:#priority/p0 OR tag:#critical OR tag:#mandatory OR tag:#show-stopper",
+      "include": true,
+      "description": "Show mission-critical items requiring immediate attention",
+      "useCase": "Focus on high-impact, time-sensitive work",
+      "sla": "24 hours",
+      "escalation": "immediate"
+    },
+    {
+      "id": "p1-high",
+      "name": "P1 - High Priority",
+      "query": "tag:#priority/p1 OR tag:#high-priority OR tag:#important",
+      "include": true,
+      "description": "Show high-priority features and fixes",
+      "useCase": "Plan sprint work and feature releases",
+      "sla": "72 hours",
+      "escalation": "daily"
+    },
+    {
+      "id": "p2-medium",
+      "name": "P2 - Medium Priority",
+      "query": "tag:#priority/p2 OR tag:#medium-priority OR tag:#standard",
+      "include": true,
+      "description": "Show standard priority development work",
+      "useCase": "Backlog grooming and sprint planning",
+      "sla": "2 weeks",
+      "escalation": "weekly"
+    },
+    {
+      "id": "p3-low",
+      "name": "P3 - Low Priority",
+      "query": "tag:#priority/p3 OR tag:#low-priority OR tag:#nice-to-have OR tag:#enhancement",
+      "include": true,
+      "description": "Show enhancement requests and nice-to-have features",
+      "useCase": "Long-term roadmap planning",
+      "sla": "1 month",
+      "escalation": "monthly"
+    },
+    {
+      "id": "p4-backlog",
+      "name": "P4 - Backlog/Future",
+      "query": "tag:#priority/p4 OR tag:#backlog OR tag:#future OR tag:#someday",
+      "include": false,
+      "description": "Show backlog items and future considerations (default: hidden)",
+      "useCase": "Strategic planning and ideation",
+      "sla": "none",
+      "escalation": "quarterly"
+    },
+    {
+      "id": "security-priority",
+      "name": "Security-Critical",
+      "query": "tag:#security-critical OR tag:#vulnerability OR (tag:#security AND tag:#priority/p0)",
+      "include": true,
+      "description": "Show security vulnerabilities and critical security work",
+      "useCase": "Security incident response and vulnerability management",
+      "sla": "immediate",
+      "escalation": "immediate"
+    },
+    {
+      "id": "compliance-priority",
+      "name": "Compliance-Required",
+      "query": "tag:#compliance-required OR tag:#regulatory OR tag:#audit-finding",
+      "include": true,
+      "description": "Show compliance requirements and audit findings",
+      "useCase": "Regulatory compliance and audit remediation",
+      "sla": "varies by regulation",
+      "escalation": "per compliance framework"
+    },
+    {
+      "id": "customer-impact",
+      "name": "High Customer Impact",
+      "query": "tag:#customer-impact OR tag:#user-facing OR tag:#production-issue",
+      "include": true,
+      "description": "Show items with significant customer/user impact",
+      "useCase": "Customer satisfaction and user experience improvement",
+      "sla": "48 hours",
+      "escalation": "daily"
+    },
+    {
+      "id": "technical-debt-critical",
+      "name": "Critical Technical Debt",
+      "query": "tag:#technical-debt AND (tag:#priority/p0 OR tag:#priority/p1)",
+      "include": true,
+      "description": "Show high-priority technical debt items",
+      "useCase": "Technical debt reduction and system health",
+      "sla": "1 sprint",
+      "escalation": "weekly"
+    },
+    {
+      "id": "quick-wins",
+      "name": "Quick Wins (Low Effort, High Impact)",
+      "query": "tag:#quick-win OR tag:#low-hanging-fruit OR (tag:#priority/p1 AND tag:#effort/low)",
+      "include": true,
+      "description": "Show high-impact, low-effort improvements",
+      "useCase": "Sprint filler and morale boosting",
+      "sla": "1 week",
+      "escalation": "weekly"
+    }
+  ],
+  "priorityMatrix": {
+    "p0": {
+      "name": "Critical/Mandatory",
+      "criteria": [
+        "Production outage or data loss",
+        "Security vulnerability (CVSS ≥ 9.0)",
+        "Legal/regulatory compliance deadline",
+        "Complete blocker for P0/P1 work"
+      ],
+      "responseTime": "immediate",
+      "resolution": "within 24 hours",
+      "stakeholderNotification": "immediate escalation to leadership"
+    },
+    "p1": {
+      "name": "High Priority",
+      "criteria": [
+        "Major feature for upcoming release",
+        "Significant customer-reported bug",
+        "Security vulnerability (CVSS 7.0-8.9)",
+        "Blocker for P2 work or external dependency"
+      ],
+      "responseTime": "within 24 hours",
+      "resolution": "within 72 hours",
+      "stakeholderNotification": "daily status updates"
+    },
+    "p2": {
+      "name": "Medium Priority",
+      "criteria": [
+        "Standard feature development",
+        "Minor bug fixes",
+        "Documentation improvements",
+        "Code refactoring"
+      ],
+      "responseTime": "within 3 days",
+      "resolution": "within 2 weeks",
+      "stakeholderNotification": "weekly status updates"
+    },
+    "p3": {
+      "name": "Low Priority",
+      "criteria": [
+        "Enhancement requests",
+        "Nice-to-have features",
+        "Minor UX improvements",
+        "Non-critical technical debt"
+      ],
+      "responseTime": "within 1 week",
+      "resolution": "within 1 month",
+      "stakeholderNotification": "monthly status updates"
+    },
+    "p4": {
+      "name": "Backlog",
+      "criteria": [
+        "Future ideas and experiments",
+        "Long-term strategic initiatives",
+        "Research and prototyping",
+        "Low-impact improvements"
+      ],
+      "responseTime": "no SLA",
+      "resolution": "no SLA",
+      "stakeholderNotification": "quarterly review"
+    }
+  },
+  "usage": {
+    "applyingFilters": [
+      "Open Obsidian Graph View > Filters",
+      "Toggle priority filters to focus on specific priority levels",
+      "Combine with status filters for sprint planning",
+      "Use color schemes to visualize priority distribution"
+    ],
+    "workflowViews": {
+      "incidentResponse": "Show: p0-critical, security-priority | Hide: all others",
+      "sprintPlanning": "Show: p0-critical, p1-high, p2-medium | Hide: p3-low, p4-backlog",
+      "roadmapPlanning": "Show: p1-high, p2-medium, p3-low | Hide: p0-critical (firefighting)",
+      "techDebtSprint": "Show: technical-debt-critical, quick-wins | Hide: feature work",
+      "complianceReview": "Show: compliance-priority, security-priority | Hide: enhancements"
+    },
+    "prioritizationStrategies": {
+      "eisenhowerMatrix": {
+        "urgent-important": "P0 (do first)",
+        "important-not-urgent": "P1 (schedule)",
+        "urgent-not-important": "P2 (delegate or defer)",
+        "neither": "P3/P4 (eliminate or backlog)"
+      },
+      "riceScoring": {
+        "reach": "Number of users impacted",
+        "impact": "Benefit per user (1-3 scale)",
+        "confidence": "Certainty of estimates (percentage)",
+        "effort": "Person-weeks required"
+      },
+      "moscowMethod": {
+        "must-have": "P0",
+        "should-have": "P1",
+        "could-have": "P2",
+        "wont-have-now": "P3/P4"
+      }
+    },
+    "escalationProcedures": {
+      "p0": "Immediate PagerDuty alert, stakeholder notification, incident commander assigned",
+      "p1": "Daily standup review, product owner approval, sprint commitment",
+      "p2": "Weekly grooming, team estimation, backlog prioritization",
+      "p3": "Monthly review, stakeholder input, roadmap alignment",
+      "p4": "Quarterly planning, innovation time allocation"
+    }
+  }
+}

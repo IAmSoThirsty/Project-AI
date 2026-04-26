@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Capsule Engine
 ==============
@@ -18,9 +16,9 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class BuildCapsule:
@@ -50,7 +48,7 @@ class BuildCapsule:
         self.outputs = outputs
         self.metadata = metadata
         self.merkle_root = self._compute_merkle_root()
-        self.timestamp = metadata.get("timestamp", _utcnow().isoformat())
+        self.timestamp = metadata.get("timestamp", _utc_now_iso())
 
     def _compute_merkle_root(self) -> str:
         """Compute Merkle root hash of capsule contents."""
@@ -125,6 +123,7 @@ class CapsuleEngine:
 
         Args:
             capsule_dir: Directory for capsule storage
+            storage_path: Backward-compatible alias for capsule_dir
         """
         self.capsule_dir = storage_path or capsule_dir or Path("data/build_capsules")
         self.storage_path = self.capsule_dir
@@ -156,24 +155,30 @@ class CapsuleEngine:
             Created build capsule
         """
         try:
+            # Backward compatibility: prefer explicit inputs/outputs kwargs when provided.
             resolved_inputs = inputs if inputs is not None else input_files
             resolved_outputs = outputs if outputs is not None else output_files
 
-            # Compute/accept input hashes
+            if resolved_inputs is None:
+                resolved_inputs = {}
+            if resolved_outputs is None:
+                resolved_outputs = {}
+
+            # Compute input hashes (supports both file lists and precomputed hashes)
             if isinstance(resolved_inputs, dict):
                 inputs = dict(resolved_inputs)
             else:
                 inputs = {}
-                for path in (resolved_inputs or []):
+                for path in resolved_inputs:
                     if path.exists():
                         inputs[str(path)] = self._hash_file(path)
 
-            # Compute/accept output hashes
+            # Compute output hashes (supports both file lists and precomputed hashes)
             if isinstance(resolved_outputs, dict):
                 outputs = dict(resolved_outputs)
             else:
                 outputs = {}
-                for path in (resolved_outputs or []):
+                for path in resolved_outputs:
                     if path.exists():
                         outputs[str(path)] = self._hash_file(path)
 
@@ -182,7 +187,7 @@ class CapsuleEngine:
 
             # Create capsule
             capsule_metadata = metadata or {}
-            capsule_metadata["timestamp"] = _utcnow().isoformat()
+            capsule_metadata["timestamp"] = _utc_now_iso()
 
             capsule = BuildCapsule(
                 capsule_id=capsule_id,
@@ -204,7 +209,7 @@ class CapsuleEngine:
             raise
 
     def verify_capsule(
-        self, capsule_id: str, with_reason: bool = False
+        self, capsule_id: str, detailed: bool = False
     ) -> bool | tuple[bool, str | None]:
         """
         Verify capsule integrity.
@@ -218,51 +223,56 @@ class CapsuleEngine:
         try:
             capsule = self.capsules.get(capsule_id)
             if not capsule:
-                return (False, f"Capsule not found: {capsule_id}") if with_reason else False
+                result = (False, f"Capsule not found: {capsule_id}")
+                return result if detailed else result[0]
 
             if not capsule.verify_integrity():
-                return (False, "Merkle root verification failed") if with_reason else False
+                result = (False, "Merkle root verification failed")
+                return result if detailed else result[0]
 
             # Verify against persisted version
             persisted = self._load_capsule(capsule_id)
             if persisted and persisted.merkle_root != capsule.merkle_root:
-                return (
-                    (False, "Merkle root mismatch with persisted capsule")
-                    if with_reason
-                    else False
-                )
+                result = (False, "Merkle root mismatch with persisted capsule")
+                return result if detailed else result[0]
 
-            return (True, None) if with_reason else True
+            result = (True, None)
+            return result if detailed else result[0]
 
         except Exception as e:
             logger.error("Error verifying capsule: %s", e, exc_info=True)
-            return (False, str(e)) if with_reason else False
+            result = (False, str(e))
+            return result if detailed else result[0]
 
-    # ---------------------------------------------------------------------
-    # Compatibility APIs expected by gradle_evolution tests
-    # ---------------------------------------------------------------------
     def get_capsule(self, capsule_id: str) -> BuildCapsule | None:
+        """Return capsule by ID (compatibility method)."""
         return self.capsules.get(capsule_id)
 
     def list_capsules(self) -> list[BuildCapsule]:
+        """List all known capsules (compatibility method)."""
         return list(self.capsules.values())
 
     def save(self) -> None:
+        """Persist all capsules to storage."""
         for capsule in self.capsules.values():
             self._persist_capsule(capsule)
 
     def load(self) -> None:
+        """Reload capsules from storage."""
+        self.capsules.clear()
         self._load_capsules()
 
     def hash_file(self, path: Path) -> str:
+        """Public wrapper for file hashing utility."""
         return self._hash_file(path)
 
     def compute_inputs_hash(self, input_files: list[Path]) -> dict[str, str]:
-        return {
-            str(path): self._hash_file(path)
-            for path in input_files
-            if Path(path).exists()
-        }
+        """Compute hashes for a list of input files."""
+        hashes: dict[str, str] = {}
+        for path in input_files:
+            if path.exists():
+                hashes[str(path)] = self._hash_file(path)
+        return hashes
 
     def find_capsules_by_task(self, task: str) -> list[BuildCapsule]:
         """
@@ -388,7 +398,7 @@ class CapsuleEngine:
                 "tasks": sorted(tasks),
                 "inputs": inputs,
                 "outputs": outputs,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             },
             sort_keys=True,
         )
@@ -449,7 +459,7 @@ class CapsuleEngine:
         return modified
 
 
-# Backward-compatible alias expected by older integration code/tests.
+# Backward-compatible class alias expected by integration and older imports.
 BuildCapsuleEngine = CapsuleEngine
 
 

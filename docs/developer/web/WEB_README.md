@@ -1,8 +1,20 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, web-version, flask, react, web-application, spa, modern-frontend]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [flask-backend, react-frontend, web-app, cloud-sync, plugin-system]
+stakeholders: [developers, web-developers, full-stack-engineers]
+audience: intermediate
+prerequisites: [javascript-intermediate, python-intermediate, flask-basics, react-fundamentals]
+estimated_time: 35 minutes
+review_cycle: monthly
+---
 # Project-AI Web Version
 
-This branch contains a web-based version of Project-AI, converting the PyQt desktop application into a modern web application with React frontend and Flask backend.
+This branch contains a web-based version of Project-AI, converting the PyQt desktop
+application into a modern web application with React frontend and Flask backend.
 
 ## ✨ New Features (Latest Update)
 
@@ -56,13 +68,10 @@ python -m venv venv
 1. Activate virtual environment:
 
 ```bash
-
 # Windows
-
 venv\Scripts\activate
 
 # macOS/Linux
-
 source venv/bin/activate
 ```
 
@@ -77,9 +86,7 @@ pip install -r ../../requirements.txt  # Install core Project-AI dependencies
 
 ```bash
 cp .env.example .env
-
 # Edit .env with your configuration
-
 ```
 
 1. Run the backend:
@@ -114,7 +121,8 @@ Frontend will be available at `http://localhost:3000`
 
 ### Running Both Services
 
-You can run both backend and frontend simultaneously. The frontend is configured to proxy API requests to the backend.
+You can run both backend and frontend simultaneously. The frontend is configured to
+proxy API requests to the backend.
 
 ## 📁 Project Structure
 
@@ -171,29 +179,28 @@ web/
 
 ## 🎨 Features Converted from Desktop to Web
 
-| Desktop Feature    | Web Implementation | Status      |
-| ------------------ | ------------------ | ----------- |
-| Login Window       | `/login` route     | ✅ Ready    |
-| Dashboard          | `/dashboard` route | ✅ Ready    |
-| User Management    | `/users` route     | 🚧 Template |
-| Image Generation   | `/image-gen` route | 🚧 Template |
-| Data Analysis      | `/analysis` route  | 🚧 Template |
-| Learning Paths     | `/learning` route  | 🚧 Template |
-| Security Resources | `/security` route  | 🚧 Template |
+| Desktop Feature | Web Implementation | Status |
+|----------------|-------------------|--------|
+| Login Window | `/login` route | ✅ Ready |
+| Dashboard | `/dashboard` route | ✅ Ready |
+| User Management | `/users` route | 🚧 Template |
+| Image Generation | `/image-gen` route | 🚧 Template |
+| Data Analysis | `/analysis` route | 🚧 Template |
+| Learning Paths | `/learning` route | 🚧 Template |
+| Security Resources | `/security` route | 🚧 Template |
 
 ## 🔧 Development
 
 ### Building for Production
 
 **Frontend:**
-
 ```bash
 cd web/frontend
 npm run build
 ```
 
-**Backend:** The Flask app can be deployed using Gunicorn:
-
+**Backend:**
+The Flask app can be deployed using Gunicorn:
 ```bash
 gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
@@ -206,9 +213,7 @@ The frontend uses Prettier for code formatting. After pulling changes, run:
 cd web/frontend
 npm install
 npm run format
-
 # To enable ESLint linting, run `npm init @eslint/config` to create a config file.
-
 ```
 
 ## 🌟 Next Steps for Integration
@@ -241,7 +246,8 @@ When ready to integrate:
 
 Same as Project-AI main project
 
-______________________________________________________________________
+
+---
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

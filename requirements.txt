@@ -1,40 +1,37 @@
-# (Substrate Dependency Vector)           [2026-04-09 04:26]
-#                                          Status: Active
-
 # Installation Requirements
 
 # Core dependencies
-fastapi>=0.112.2
+fastapi==0.109.1
 uvicorn[standard]==0.27.0
-pydantic>=2.9.0
+pydantic==2.5.3
 python-dotenv==1.0.0
-typer==0.9.0
-rich==13.7.0
-
-# GUI dependencies
-PyQt6==6.4.2
 
 # Web server (production)
-gunicorn>=22.0.0 # Patched against CVE-2024-1135
+gunicorn==22.0.0
 
 # Database
 sqlalchemy==2.0.25
 alembic==1.13.1
 # Note: sqlite3 is part of Python's standard library
 
+# Redis for distributed rate limiting and caching
+redis>=5.0.0
+
 # Security
 python-multipart==0.0.22
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-starlette>=0.40.0 # Mitigate ReDoS
-cryptography>=43.0.0 # Security update
-asn1crypto>=1.5.1  # RFC 3161 TSA support
+cryptography==42.0.4
+argon2-cffi==23.1.0  # Secure password hashing for governance pipeline
+PyJWT==2.8.0  # JWT token generation and verification
+pyotp>=2.9.0  # MFA (TOTP) support for two-factor authentication
+flask-cors==4.0.0  # CORS middleware for web backend
+flask-limiter==3.5.0  # Rate limiting for web backend
+flask==3.0.2  # Web framework for interface adapters
 
 # HTTP client
 httpx==0.26.0
-requests>=2.32.2
-rfc3161ng>=2.1.2
-pyasn1>=0.4.8
+requests==2.31.0
 
 # Save points system dependencies
 # Note: uses Python standard library only
@@ -61,18 +58,3 @@ mypy==1.8.0
 cbor2>=5.6.0  # Canonical binary encoding for hash integrity (updated for security)
 jsonschema>=4.23.0  # Schema validation (updated for security)
 pyyaml>=6.0.2  # Configuration loading (updated for security)
-
-# Constitutional Sovereignty - Off-Machine Backup (VECTOR 5, 10, 11)
-ipfshttpclient==0.8.0a2  # IPFS distributed immutable storage
-boto3==1.34.24  # AWS S3 with WORM (Write-Once-Read-Many) object lock
-
-# Monitoring and Metrics
-prometheus-client>=0.18.0  # Metrics export and monitoring
-grafana-client>=5.0.0  # Grafana API client for dashboard management
-
-# Miniature Office (Cognitive IDE + Repair Crew)
-flask>=3.0.3  # MO Flask server
-flask-socketio==5.3.5  # MO real-time WebSocket support
-python-socketio==5.14.0  # MO socket.io engine
-eventlet==0.40.3  # MO async networking
-pillow>=10.3.0  # MO image processing

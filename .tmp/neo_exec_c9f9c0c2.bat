@@ -1,0 +1,1 @@
+dir /b "t:\Project-AI-main\src\app\core\*.py" 2>nul | findstr /i "tscg state octoreflex directness constitutional"

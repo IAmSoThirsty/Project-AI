@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Red Team Persona Agent - DeepMind-style typed adversarial actors.
 
 This agent implements systematic red team testing using defined personas
@@ -19,7 +17,7 @@ import logging
 import os
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -537,3 +535,4 @@ Begin your attack:"""
                 f"Attack failed: {persona.goal} not achieved after {len(turns)} turns. "
                 f"Target defended against {persona.id} tactics."
             )
+

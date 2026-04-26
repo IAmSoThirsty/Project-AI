@@ -1,9 +1,6 @@
 /*
  * Rust Security Demonstration: Why Absolute Secret Protection is IMPOSSIBLE
  * 
- * Rust Version: 1.76 (2024 Edition)
- * Updated: 2026 with modern features
- * 
  * This demonstrates that even RUST with its legendary safety cannot provide
  * absolute protection for secrets when an attacker has runtime access.
  * 
@@ -18,12 +15,10 @@
  */
 
 use std::slice;
-use std::mem::ManuallyDrop;
 
 fn main() {
     println!("{}", "=".repeat(80));
     println!("RUST SECRET PROTECTION: IMPOSSIBLE TO ACHIEVE ABSOLUTE SECURITY");
-    println!("Rust Version: {} (2024 Edition)", env!("CARGO_PKG_RUST_VERSION", "1.76+"));
     println!("{}", "=".repeat(80));
     println!();
 
@@ -33,9 +28,6 @@ fn main() {
     attempt4_unsafe_transmute();
     attempt5_raw_pointers();
     attempt6_ffi_boundary();
-    attempt7_async_fn_trait();
-    attempt8_manually_drop();
-    attempt9_const_generics();
 
     print_summary();
 }
@@ -63,7 +55,7 @@ fn attempt1_private_field() {
     println!("ATTEMPT 1: Private Field in Struct");
     println!("{}", "-".repeat(80));
 
-    let holder = attempt1::SecretHolder::new("demo-token-12345".to_string());
+    let holder = attempt1::SecretHolder::new("sk-PRODUCTION-SECRET-12345".to_string());
 
     // Bypass 1: Use public getter method
     let extracted_secret = holder.get_key();
@@ -106,7 +98,7 @@ fn attempt2_private_module() {
     println!("ATTEMPT 2: Private Module Encapsulation");
     println!("{}", "-".repeat(80));
 
-    let secret = sealed_secret::Secret::new("demo-token-12345".to_string());
+    let secret = sealed_secret::Secret::new("sk-PRODUCTION-SECRET-12345".to_string());
 
     // Bypass: Module privacy doesn't protect runtime access
     let extracted_secret = secret.reveal();
@@ -120,7 +112,7 @@ fn attempt2_private_module() {
 // ATTEMPT 3: Closure Capturing Secret
 // ============================================================================
 fn create_secret_closure() -> impl Fn() -> String {
-    let secret = "demo-token-12345".to_string();
+    let secret = "sk-PRODUCTION-SECRET-12345".to_string();
     move || secret.clone()
 }
 
@@ -172,7 +164,7 @@ fn attempt4_unsafe_transmute() {
     println!("ATTEMPT 4: Type Punning with transmute");
     println!("{}", "-".repeat(80));
 
-    let holder = OpaqueSecret::new("demo-token-12345");
+    let holder = OpaqueSecret::new("sk-PRODUCTION-SECRET-12345");
 
     // Bypass 1: Use getter
     let extracted_secret = holder.get_secret();
@@ -212,7 +204,7 @@ fn attempt5_raw_pointers() {
     println!("ATTEMPT 5: Raw Pointers and Pointer Arithmetic");
     println!("{}", "-".repeat(80));
 
-    let secure_box = SecureBox::new("demo-token-12345".to_string());
+    let secure_box = SecureBox::new("sk-PRODUCTION-SECRET-12345".to_string());
 
     unsafe {
         // Get pointer to the Box<String>
@@ -261,7 +253,7 @@ fn attempt6_ffi_boundary() {
     println!("ATTEMPT 6: FFI Boundary (C Interface)");
     println!("{}", "-".repeat(80));
 
-    let secret_string = "demo-token-12345".to_string();
+    let secret_string = "sk-PRODUCTION-SECRET-12345".to_string();
     let c_secret = CSecret::new(&secret_string);
 
     unsafe {
@@ -285,160 +277,42 @@ fn attempt6_ffi_boundary() {
 }
 
 // ============================================================================
-// ATTEMPT 7: Async fn in Trait (Rust 1.75+)
-// ============================================================================
-trait AsyncSecretProvider {
-    async fn get_secret(&self) -> String;
-}
-
-struct AsyncSecret {
-    key: String,
-}
-
-impl AsyncSecretProvider for AsyncSecret {
-    async fn get_secret(&self) -> String {
-        self.key.clone()
-    }
-}
-
-fn attempt7_async_fn_trait() {
-    println!("ATTEMPT 7: Async fn in Trait (Rust 1.75+ Feature)");
-    println!("{}", "-".repeat(80));
-
-    let secret = AsyncSecret {
-        key: "demo-token-12345".to_string(),
-    };
-
-    // Bypass: async functions don't protect data
-    // In a real async context we'd .await, but for demo purposes:
-    let runtime = tokio::runtime::Runtime::new().unwrap_or_else(|_| {
-        // If tokio not available, show manual bypass
-        println!("✗ BYPASSED (Direct Access): {}", secret.key);
-        println!("  Attack: async fn in traits don't add security");
-        println!();
-        std::process::exit(0);
-    });
-
-    runtime.block_on(async {
-        let extracted = secret.get_secret().await;
-        println!("✗ BYPASSED (Async Await): {}", extracted);
-    });
-
-    // Manual bypass alternative
-    println!("✗ BYPASSED (Direct Field): {}", secret.key);
-    println!("  Attack: async fn in traits don't add security");
-    println!();
-}
-
-// ============================================================================
-// ATTEMPT 8: ManuallyDrop (Rust Memory Control)
-// ============================================================================
-fn attempt8_manually_drop() {
-    println!("ATTEMPT 8: ManuallyDrop for Memory Control");
-    println!("{}", "-".repeat(80));
-
-    let secret = ManuallyDrop::new("demo-token-12345".to_string());
-
-    // Bypass 1: Deref to access inner value
-    let extracted_secret = &**secret;
-    println!("✗ BYPASSED (Deref): {}", extracted_secret);
-
-    // Bypass 2: Use as_ref or similar
-    unsafe {
-        let inner = ManuallyDrop::take(&mut { secret.clone() });
-        println!("✗ BYPASSED (ManuallyDrop::take): {}", inner);
-    }
-
-    println!("  Attack: ManuallyDrop controls destruction, not access");
-    println!();
-}
-
-// ============================================================================
-// ATTEMPT 9: Const Generics (Advanced Type Safety)
-// ============================================================================
-struct SecretArray<const N: usize> {
-    data: [u8; N],
-}
-
-impl<const N: usize> SecretArray<N> {
-    fn new(secret: &str) -> Self {
-        let mut data = [0u8; N];
-        let bytes = secret.as_bytes();
-        let len = bytes.len().min(N);
-        data[..len].copy_from_slice(&bytes[..len]);
-        SecretArray { data }
-    }
-
-    fn get_secret(&self) -> &str {
-        let len = self.data.iter().position(|&b| b == 0).unwrap_or(N);
-        std::str::from_utf8(&self.data[..len]).unwrap()
-    }
-}
-
-fn attempt9_const_generics() {
-    println!("ATTEMPT 9: Const Generics (Advanced Type Safety)");
-    println!("{}", "-".repeat(80));
-
-    let secret: SecretArray<32> = SecretArray::new("demo-token-12345");
-
-    // Bypass 1: Call getter
-    let extracted = secret.get_secret();
-    println!("✗ BYPASSED (Getter): {}", extracted);
-
-    // Bypass 2: Direct field access via unsafe
-    unsafe {
-        let len = secret.data.iter().position(|&b| b == 0).unwrap_or(32);
-        let extracted_unsafe = std::str::from_utf8_unchecked(&secret.data[..len]);
-        println!("✗ BYPASSED (Direct Access): {}", extracted_unsafe);
-    }
-
-    println!("  Attack: Const generics provide compile-time guarantees, not runtime security");
-    println!();
-}
-
-// ============================================================================
 // SUMMARY
 // ============================================================================
 fn print_summary() {
     println!("{}", "=".repeat(80));
-    println!("RESULTS: ALL 9 PROTECTION MECHANISMS WERE BYPASSED");
+    println!("RESULTS: ALL 6 PROTECTION MECHANISMS WERE BYPASSED");
     println!("{}", "=".repeat(80));
     println!();
-    println!("Why Rust 1.76 Cannot Provide Absolute Security:");
+    println!("Why Rust Cannot Provide Absolute Security:");
     println!("  1. unsafe Blocks: Allow arbitrary memory access");
     println!("  2. Raw Pointers: Bypass borrow checker completely");
     println!("  3. transmute: Arbitrary type reinterpretation");
-    println!("  4. transmute_copy: Copy arbitrary memory");
-    println!("  5. FFI: C interop exposes raw memory");
-    println!("  6. Public Methods: Must expose data somehow for use");
-    println!("  7. Memory Layout: Predictable struct layouts enable attacks");
-    println!("  8. No Runtime Protection: All safety is compile-time");
-    println!("  9. ManuallyDrop: Controls destruction timing, not access");
-    println!(" 10. Rust 1.75+ Features: async fn in traits don't add security");
+    println!("  4. FFI: C interop exposes raw memory");
+    println!("  5. Public Methods: Must expose data somehow for use");
+    println!("  6. Memory Layout: Predictable struct layouts enable attacks");
+    println!("  7. No Runtime Protection: All safety is compile-time");
     println!();
-    println!("Attack Vectors Available in Rust 1.76:");
+    println!("Attack Vectors Available in Rust:");
     println!("  ✗ unsafe blocks");
     println!("  ✗ std::mem::transmute");
     println!("  ✗ std::mem::transmute_copy");
-    println!("  ✗ std::mem::ManuallyDrop");
     println!("  ✗ Raw pointer casting (*const T, *mut T)");
     println!("  ✗ std::slice::from_raw_parts");
     println!("  ✗ FFI boundary (extern \"C\")");
     println!("  ✗ std::ptr::read");
     println!("  ✗ Debugger/memory inspector (gdb, lldb)");
-    println!("  ✗ Direct field access via raw pointers");
     println!();
-    println!("Protection Success Rate: 0/9 (0%)");
+    println!("Protection Success Rate: 0/6 (0%)");
     println!();
     println!("{}", "=".repeat(80));
-    println!("CONCLUSION: Even Rust 1.76's legendary safety cannot prevent extraction");
+    println!("CONCLUSION: Even Rust's legendary safety cannot prevent extraction");
     println!("of secrets when an attacker has runtime access. The borrow checker and");
     println!("type system provide memory safety, NOT security from inspection.");
-    println!("Modern features (async fn in traits, const generics) don't change this.");
     println!("{}", "=".repeat(80));
     println!();
     println!("Key Insight: Rust prevents *accidental* memory errors, not *intentional*");
-    println!("memory access via unsafe, transmute, ManuallyDrop, and FFI.");
+    println!("memory access via unsafe, transmute, and FFI.");
     println!();
-    println!("See: tarl_rust_protection.rs for how T.A.R.L. solves this");
+    println!("T.A.R.L. Adapter: tarl/adapters/rust/lib.rs");
 }

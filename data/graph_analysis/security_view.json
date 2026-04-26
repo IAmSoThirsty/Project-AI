@@ -1,0 +1,77 @@
+{
+  "nodes": [
+    {
+      "id": "cerberus",
+      "name": "Cerberus Security Engine",
+      "type": "security",
+      "description": "Multi-headed security orchestration engine",
+      "tags": ["security", "cerberus", "orchestration", "monitoring"],
+      "folder": "src/app/security",
+      "metadata": {"integration": "cerberus"}
+    },
+    {
+      "id": "user_manager",
+      "name": "User Manager",
+      "type": "security",
+      "description": "User authentication with bcrypt hashing",
+      "tags": ["security", "auth", "bcrypt", "user"],
+      "folder": "src/app/core",
+      "metadata": {"class": "UserManager", "file": "user_manager.py"}
+    },
+    {
+      "id": "honeypot_detector",
+      "name": "Honeypot Detector",
+      "type": "security",
+      "description": "Detects and responds to honeypot triggers",
+      "tags": ["security", "honeypot", "detection", "defense"],
+      "folder": "src/app/core",
+      "metadata": {"file": "honeypot_detector.py"}
+    },
+    {
+      "id": "command_override",
+      "name": "Command Override System",
+      "type": "ai_system",
+      "description": "Master password override with audit logging",
+      "tags": ["override", "security", "audit", "ai_system"],
+      "folder": "src/app/core",
+      "metadata": {"class": "CommandOverrideSystem", "file": "ai_systems.py"}
+    },
+    {
+      "id": "four_laws",
+      "name": "Four Laws Framework",
+      "type": "constitutional",
+      "description": "Immutable ethics framework (Asimov's Laws)",
+      "tags": ["four_laws", "ethics", "constitutional", "validation"],
+      "folder": "src/app/core",
+      "metadata": {"class": "FourLaws", "file": "ai_systems.py"}
+    }
+  ],
+  "links": [
+    {
+      "source": "cerberus",
+      "target": "user_manager",
+      "type": "enforces",
+      "weight": 2.0,
+      "metadata": {"description": "Cerberus enforces auth policies"}
+    },
+    {
+      "source": "command_override",
+      "target": "four_laws",
+      "type": "depends_on",
+      "weight": 2.5,
+      "metadata": {"description": "Overrides can bypass Four Laws"}
+    },
+    {
+      "source": "honeypot_detector",
+      "target": "cerberus",
+      "type": "triggers",
+      "weight": 1.8,
+      "metadata": {"description": "Honeypot triggers Cerberus alerts"}
+    }
+  ],
+  "stats": {
+    "node_count": 5,
+    "link_count": 3,
+    "node_types": ["security", "constitutional", "ai_system"]
+  }
+}

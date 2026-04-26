@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Security Agent Temporal Workflows
 
@@ -29,6 +27,11 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+# 📚 Documentation Links:
+# - [[relationships/temporal/01_WORKFLOW_CHAINS.md]]
+# - [[source-docs/temporal/WORKFLOWS_COMPREHENSIVE.md]]
+#
+
 class RedTeamCampaignRequest:
     """Request for red team campaign workflow."""
 

@@ -1,6 +1,7 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python
+# EXAMPLE ONLY - This is a demonstration script, not for production use.
+# Shows how to use certain features but does not enforce governance.
+
 """
 God Tier Architecture Expansion - Integration Demo
 

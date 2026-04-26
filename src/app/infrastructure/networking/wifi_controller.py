@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 WiFi Controller - Full-Spectrum WiFi Network Direct Control
 Supports 2.4GHz, 5GHz, 6GHz (WiFi 6E/7), and 60GHz (WiGig)
@@ -226,7 +224,7 @@ class WiFiController:
                 capture_output=True,
                 text=True,
                 timeout=10,
-                shell=True,
+                shell=False,
             )
 
             if result.returncode == 0:
@@ -263,7 +261,7 @@ class WiFiController:
                 capture_output=True,
                 text=True,
                 timeout=10,
-                shell=True,
+                shell=False,
             )
 
             if result.returncode != 0:
@@ -503,7 +501,7 @@ class WiFiController:
                 capture_output=True,
                 text=True,
                 timeout=10,
-                shell=True,
+                shell=False,
             )
 
             if result.returncode == 0:

@@ -1,6 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-
 """
 Operational Substructure Framework - Decision Contracts, Signals & Telemetry, Failure Semantics
 
@@ -53,7 +50,7 @@ import uuid
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -338,6 +335,7 @@ class DecisionContract(ABC):
         Returns:
             Dictionary containing all contract details
         """
+        pass
 
 
 class SignalsTelemetry(ABC):
@@ -436,6 +434,7 @@ class SignalsTelemetry(ABC):
         Returns:
             Dictionary containing all telemetry details
         """
+        pass
 
 
 class FailureSemantics(ABC):
@@ -530,6 +529,7 @@ class FailureSemantics(ABC):
         Returns:
             FailureResponse object
         """
+        pass
 
     @abstractmethod
     def get_failure_specification(self) -> dict[str, Any]:
@@ -539,6 +539,7 @@ class FailureSemantics(ABC):
         Returns:
             Dictionary containing all failure handling details
         """
+        pass
 
 
 # ============================================================================
@@ -624,3 +625,4 @@ __all__ = [
     "FailureSemantics",
     "OperationalComponent",
 ]
+

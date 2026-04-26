@@ -1,5 +1,4 @@
-# [Project-AI Sovereign]                         [2026-04-03 14:15]
-#                                          Productivity: Active
+#!/usr/bin/env python3
 """
 Main entry point for the AI Desktop Application with AGI Identity System.
 
@@ -21,28 +20,24 @@ from dotenv import load_dotenv
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QApplication
 
+from app.core.bio_brain_mapper import BioBrainMappingSystem
+from app.core.cognition_kernel import CognitionKernel
+from app.core.council_hub import CouncilHub
+from app.core.governance import Triumvirate as GovernanceTriumvirate
+from app.core.intelligence_engine import IdentityIntegratedIntelligenceEngine
+from app.core.kernel_integration import set_global_kernel
+from app.core.memory_engine import MemoryEngine
+from app.core.platform_tiers import get_tier_registry
+from app.core.reflection_cycle import ReflectionCycle
+from app.core.tier_health_dashboard import get_health_monitor
+from app.gui.dashboard_main import DashboardMainWindow
+from app.interfaces.desktop.integration import initialize_desktop_adapter, get_desktop_adapter
+from src.cognition.triumvirate import Triumvirate
+
 try:
     import yaml
 except ImportError:
-    yaml = None
-
-# Internal Imports - Sorted and Consolidated
-from src.app.core.bio_brain_mapper import BioBrainMappingSystem
-from src.app.core.cognition_kernel import CognitionKernel
-from src.app.core.council_hub import CouncilHub
-from src.app.core.governance import Triumvirate as GovernanceTriumvirate
-from src.app.core.intelligence_engine import IdentityIntegratedIntelligenceEngine
-from src.app.core.kernel_integration import set_global_kernel
-from src.app.core.memory_engine import MemoryEngine
-from src.app.core.platform_tiers import get_tier_registry
-from src.app.core.reflection_cycle import ReflectionCycle
-from src.app.core.tier_health_dashboard import get_health_monitor
-
-# from src.app.gui.dashboard_main import DashboardMainWindow
-from src.cognition.triumvirate import Triumvirate
-
-# ────────────────────────────────────────────────────────────────────────────
-
+    yaml = None  # graceful degradation if yaml not available
 
 # Initialize logger early
 logger = logging.getLogger(__name__)
@@ -51,107 +46,7 @@ logger = logging.getLogger(__name__)
 _global_identity_engine = None
 _global_cognition_kernel = None
 _global_council_hub = None
-
-# ────────────────────────────────────────────────────────────────────────────
-
-
-# ============================================================================
-# Dependency Checking - Enterprise Monolithic Integration
-# ============================================================================
-
-
-def check_dependencies():
-    """
-    Check for optional dependencies and gracefully disable features if missing.
-
-    This enables soft degradation instead of hard failures for optional features.
-    Logs missing dependencies and updates configuration accordingly.
-    """
-    import importlib
-
-    from src.app.governance.audit_log import audit_event
-
-    # Optional dependencies with their corresponding config flags
-    optional_deps = [
-        ("cv2", "enable_video", "OpenCV for video processing"),
-        ("whisper", "enable_transcript", "Whisper for audio transcription"),
-        ("redis", "redis_enabled", "Redis for audit log fallback"),
-        ("pydub", "enable_audio_processing", "PyDub for audio format conversion"),
-    ]
-
-    missing_deps = []
-    disabled_features = []
-
-    for module_name, config_key, description in optional_deps:
-        try:
-            importlib.import_module(module_name)
-            logger.info("✓ Dependency available: %s - %s", module_name, description)
-        except ImportError:
-            logger.warning(
-                "✗ Optional dependency missing: %s - %s", module_name, description
-            )
-
-            missing_deps.append(
-                {
-                    "module": module_name,
-                    "description": description,
-                    "config_key": config_key,
-                }
-            )
-            disabled_features.append(config_key)
-
-            # Audit missing dependency
-            try:
-                audit_event(
-                    "dependency_missing",
-                    {
-                        "dependency": module_name,
-                        "description": description,
-                        "config_key": config_key,
-                        "feature_disabled": True,
-                    },
-                    actor="system_startup",
-                )
-            except Exception:
-                pass  # Don't fail startup if audit fails
-
-    # Update configuration to disable features for missing dependencies
-    if disabled_features:
-        try:
-            from src.app.core.config_loader import get_config_loader
-
-            config_loader = get_config_loader()
-
-            # Get distress config
-            distress_config = config_loader.get("distress", {})
-
-            # Disable features
-            for feature in disabled_features:
-                if feature in distress_config:
-                    distress_config[feature] = False
-                    logger.info(
-                        "Disabled feature due to missing dependency: %s", feature
-                    )
-
-            logger.info(
-                "Dependency check complete: %d missing, %d features disabled",
-                len(missing_deps),
-                len(disabled_features),
-            )
-
-        except Exception as e:
-            logger.error(
-                "Failed to update configuration for missing dependencies: %s", e
-            )
-
-    else:
-        logger.info("All optional dependencies available")
-
-    return {
-        "missing_count": len(missing_deps),
-        "missing_deps": missing_deps,
-        "disabled_features": disabled_features,
-    }
+_global_desktop_adapter = None
 
 
 def get_identity_engine() -> IdentityIntegratedIntelligenceEngine:
@@ -374,16 +269,16 @@ def initialize_security_systems(
     logger.info("🛡️  INITIALIZING SECURITY COUNTERMEASURES")
     logger.info("=" * 60)
 
-    security_components: dict[str, Any] = {}
+    security_components = {}
 
     # Phase 1: Initialize Global Watch Tower Security Command Center
     try:
-        from src.app.core.global_watch_tower import GlobalWatchTower
+        from app.core.global_watch_tower import GlobalWatchTower
 
         tower = GlobalWatchTower.initialize(
-            num_port_admins=1,  # Sector Alpha Hierarchy: 1 Admin + 10 Towers + 100 Gates = 111
+            num_port_admins=2,
             towers_per_port=10,
-            gates_per_tower=10,
+            gates_per_tower=5,
             data_dir="data",
             max_workers=2,
             timeout=8,
@@ -409,7 +304,7 @@ def initialize_security_systems(
 
     # Phase 2: Initialize Active Defense Agents
     try:
-        from src.app.agents.safety_guard_agent import SafetyGuardAgent
+        from app.agents.safety_guard_agent import SafetyGuardAgent
 
         safety_guard = SafetyGuardAgent(
             model_name="llama-guard-3-8b", strict_mode=True, kernel=kernel
@@ -431,7 +326,7 @@ def initialize_security_systems(
         security_components["safety_guard"] = None
 
     try:
-        from src.app.agents.constitutional_guardrail_agent import (
+        from app.agents.constitutional_guardrail_agent import (
             ConstitutionalGuardrailAgent,
         )
 
@@ -451,7 +346,7 @@ def initialize_security_systems(
         security_components["constitutional_guard"] = None
 
     try:
-        from src.app.agents.tarl_protector import TARLCodeProtector
+        from app.agents.tarl_protector import TARLCodeProtector
 
         tarl_protector = TARLCodeProtector(kernel=kernel)
         security_components["tarl_protector"] = tarl_protector
@@ -470,7 +365,7 @@ def initialize_security_systems(
 
     # Phase 2b: Initialize Red Team Agents (Adversarial Testing)
     try:
-        from src.app.agents.red_team_agent import RedTeamAgent
+        from app.agents.red_team_agent import RedTeamAgent
 
         red_team = RedTeamAgent(kernel=kernel)
         security_components["red_team"] = red_team
@@ -489,7 +384,7 @@ def initialize_security_systems(
         security_components["red_team"] = None
 
     try:
-        from src.app.agents.code_adversary_agent import CodeAdversaryAgent
+        from app.agents.code_adversary_agent import CodeAdversaryAgent
 
         code_adversary = CodeAdversaryAgent(kernel=kernel)
         security_components["code_adversary"] = code_adversary
@@ -509,7 +404,7 @@ def initialize_security_systems(
 
     # Phase 2c: Initialize Oversight & Analysis Agents
     try:
-        from src.app.agents.oversight import OversightAgent
+        from app.agents.oversight import OversightAgent
 
         oversight = OversightAgent(kernel=kernel)
         security_components["oversight"] = oversight
@@ -528,7 +423,7 @@ def initialize_security_systems(
         security_components["oversight"] = None
 
     try:
-        from src.app.agents.validator import ValidatorAgent
+        from app.agents.validator import ValidatorAgent
 
         validator = ValidatorAgent(kernel=kernel)
         security_components["validator"] = validator
@@ -547,7 +442,7 @@ def initialize_security_systems(
         security_components["validator"] = None
 
     try:
-        from src.app.agents.explainability import ExplainabilityAgent
+        from app.agents.explainability import ExplainabilityAgent
 
         explainability = ExplainabilityAgent(kernel=kernel)
         security_components["explainability"] = explainability
@@ -587,14 +482,12 @@ def initialize_security_systems(
                 tower.register_security_agent("red_team", "code_adversary_main")
 
             # Register Oversight agents
+            if security_components.get("oversight"):
+                tower.register_security_agent("oversight", "oversight_main")
+            if security_components.get("validator"):
+                tower.register_security_agent("oversight", "validator_main")
             if security_components.get("explainability"):
                 tower.register_security_agent("oversight", "explainability_main")
-
-            # NEW: Register hardened OAuth2Provider
-            from src.app.security.oauth2_provider import OAuth2Provider
-            oauth_provider = OAuth2Provider(kernel=kernel)
-            tower.register_security_agent("active_defense", "oauth2_provider")
-            security_components["oauth2_provider"] = oauth_provider
 
             status = tower.get_security_status()
             logger.info(
@@ -612,7 +505,7 @@ def initialize_security_systems(
 
     # Phase 3: Initialize Payload Validation & Attack Detection
     try:
-        from src.app.security.data_validation import SecureDataParser
+        from app.security.data_validation import SecureDataParser
 
         data_parser = SecureDataParser()
         security_components["data_parser"] = data_parser
@@ -628,7 +521,7 @@ def initialize_security_systems(
 
     # Phase 4: Initialize ASL-3 Security Enforcement
     try:
-        from src.app.core.security_enforcer import ASL3Security
+        from app.core.security_enforcer import ASL3Security
 
         asl3_security = ASL3Security(
             data_dir="data",
@@ -697,11 +590,11 @@ def initialize_enhanced_defenses(
     logger.info("🛡️  INITIALIZING ENHANCED DEFENSIVE CAPABILITIES")
     logger.info("=" * 60)
 
-    enhanced_components: dict[str, Any] = {}
+    enhanced_components = {}
 
     # Phase 1: IP Blocking and Rate Limiting
     try:
-        from src.app.core.ip_blocking_system import IPBlockingSystem
+        from app.core.ip_blocking_system import IPBlockingSystem
 
         ip_blocker = IPBlockingSystem(
             data_dir="data/security",
@@ -722,7 +615,7 @@ def initialize_enhanced_defenses(
 
     # Phase 2: Honeypot Detection
     try:
-        from src.app.core.honeypot_detector import HoneypotDetector
+        from app.core.honeypot_detector import HoneypotDetector
 
         honeypot = HoneypotDetector(data_dir="data/security/honeypot")
         enhanced_components["honeypot"] = honeypot
@@ -739,7 +632,7 @@ def initialize_enhanced_defenses(
 
     # Phase 3: Automated Incident Response
     try:
-        from src.app.core.incident_responder import IncidentResponder
+        from app.core.incident_responder import IncidentResponder
 
         incident_responder = IncidentResponder(
             data_dir="data/security/incidents",
@@ -928,29 +821,12 @@ def main():
     CRITICAL: This is the trust root where CognitionKernel is instantiated.
     All subsystems are wired through the kernel here.
     """
-    # Floor 1 Orchesration Hook (Thirsty-Lang)
-    thirsty_main = os.path.join(os.path.dirname(__file__), "main.thirsty")
-    if os.path.exists(thirsty_main):
-        print(f"--- SOVEREIGN FLOOR 1 ACTIVE: {thirsty_main} ---")
-        # In a production polyglot environment, we would execute this via the Thirsty Engine
-        # For now, we verify its presence and anchor the state.
-
     # Setup environment
     setup_environment()
 
     logger.info("=" * 60)
     logger.info("🚀 Starting Project-AI with CognitionKernel governance")
     logger.info("=" * 60)
-
-    # Check dependencies and gracefully disable unavailable features
-    logger.info("Checking dependencies...")
-    dep_status = check_dependencies()
-    if dep_status["missing_count"] > 0:
-        logger.warning(
-            f"Running with {dep_status['missing_count']} optional dependencies missing"
-        )
-    else:
-        logger.info("All dependencies available")
 
     # Initialize Three-Tier Platform Registry
     initialize_tier_registry()
@@ -976,45 +852,6 @@ def main():
     # Report tier platform health
     report_tier_health()
 
-    # Initialize Miniature Office (Cognitive IDE + Repair Crew + Meta Security)
-    miniature_office = None
-    try:
-        from app.plugins.miniature_office_adapter import MiniatureOfficeAdapter
-
-        miniature_office = MiniatureOfficeAdapter()
-        if miniature_office.initialize():
-            logger.info(
-                "✅ Miniature Office initialized (IDE + Repair + Lounge + Security)"
-            )
-        else:
-            miniature_office = None
-            logger.info("ℹ️  Miniature Office disabled or init returned False")
-    except Exception as e:
-        logger.warning("Miniature Office init failed (graceful degradation): %s", e)
-        miniature_office = None
-
-    # Register Miniature Office agents with CouncilHub
-    if miniature_office and council_hub:
-        try:
-            ide = miniature_office.get_cognitive_ide()
-            if ide:
-                council_hub.register_agent("cognitive_ide", ide)
-            crew = miniature_office.get_repair_crew()
-            if crew:
-                council_hub.register_agent("repair_crew", crew)
-                # Hook repair crew into kernel post-execution for auto-diagnosis
-                if kernel and hasattr(kernel, "post_execution_hooks"):
-                    kernel.post_execution_hooks.append(crew.on_execution_failure)
-            lounge = miniature_office.get_agent_lounge()
-            if lounge:
-                council_hub.register_agent("agent_lounge", lounge)
-            meta_sec = miniature_office.get_meta_security()
-            if meta_sec:
-                council_hub.register_agent("meta_security", meta_sec)
-            logger.info("✅ Miniature Office agents registered with CouncilHub")
-        except Exception as e:
-            logger.warning("Failed to register MO agents with CouncilHub: %s", e)
-
     # Start autonomous learning (optional)
     # council_hub.start_autonomous_learning()
 
@@ -1025,89 +862,6 @@ def main():
     # Create and run application
     app = QApplication(sys.argv)
 
-    # Apply "Leather Book UI" Sovereign Aesthetic
-    leather_book_qss = """
-    QMainWindow {
-        background-color: #0d0c10;
-        background-image: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #1a1520, stop:1 #050407);
-    }
-    QWidget {
-        color: #e8cca1;
-        font-family: "Segoe UI", "Consolas", sans-serif;
-    }
-    QTabWidget::pane {
-        border: 1px solid #4a3b2c;
-        background-color: rgba(20, 16, 22, 0.85);
-        border-radius: 4px;
-        margin-top: -1px;
-    }
-    QTabBar::tab {
-        background-color: #1c1620;
-        color: #8b7155;
-        border: 1px solid #2d241d;
-        border-bottom-color: #4a3b2c;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        padding: 8px 16px;
-        font-weight: bold;
-    }
-    QTabBar::tab:selected {
-        background-color: #2b1f2e;
-        color: #ffcc00; /* Glowing Gold */
-        border: 1px solid #8c6b20;
-        border-bottom-color: #2b1f2e;
-    }
-    QTabBar::tab:hover:!selected {
-        background-color: #261c28;
-        color: #d1b16c;
-    }
-    QPushButton {
-        background-color: #18121a;
-        color: #d8b884;
-        border: 1px solid #5a4632;
-        border-radius: 4px;
-        padding: 6px 14px;
-        font-weight: bold;
-    }
-    QPushButton:hover {
-        background-color: #2b1b26;
-        color: #ffcc00;
-        border: 1px solid #991a1a; /* Cybernetic Crimson */
-    }
-    QPushButton:pressed {
-        background-color: #0b080c;
-        border: 1px solid #ffcc00;
-    }
-    QListWidget, QTextEdit {
-        background-color: #0a080d;
-        color: #e0d0b0;
-        border: 1px solid #3d2f23;
-        border-radius: 4px;
-        padding: 4px;
-        selection-background-color: #4a1c1c;
-        selection-color: #ffcc00;
-    }
-    QLabel {
-        font-weight: bold;
-        color: #c9a779;
-    }
-    QScrollBar:vertical {
-        border: none;
-        background: #110e13;
-        width: 10px;
-        margin: 0px 0px 0px 0px;
-    }
-    QScrollBar::handle:vertical {
-        background: #4a3b2c;
-        min-height: 20px;
-        border-radius: 5px;
-    }
-    QScrollBar::handle:vertical:hover {
-        background: #8c6b20;
-    }
-    """
-    app.setStyleSheet(leather_book_qss)
-
     # Use a modern, legible default font and slightly larger base size
     try:
         default_font = QFont("Segoe UI", 10)
@@ -1116,10 +870,14 @@ def main():
         fallback_font = QFont("Arial", 10)
         app.setFont(fallback_font)
 
-    # Show the High-Fidelity 1st Edition Interface
-    from src.app.gui.leather_book_interface import LeatherBookInterface
+    # Initialize desktop adapter with governance routing (no username = system mode)
+    global _global_desktop_adapter
+    _global_desktop_adapter = initialize_desktop_adapter(username="system")
+    logger.info("✅ Desktop adapter initialized and routed through governance pipeline")
 
-    app_window = LeatherBookInterface()
+    # Show the consolidated dashboard
+    # Note: Dashboard will self-register as Tier-3 during initialization
+    app_window = DashboardMainWindow()
 
     # Make subsystems accessible to the dashboard
     if hasattr(app_window, "set_identity_engine"):
@@ -1128,12 +886,14 @@ def main():
         app_window.set_cognition_kernel(kernel)
     if hasattr(app_window, "set_council_hub"):
         app_window.set_council_hub(council_hub)
+    if hasattr(app_window, "set_desktop_adapter"):
+        app_window.set_desktop_adapter(_global_desktop_adapter)
 
     # Make security systems accessible to the dashboard
     if hasattr(app_window, "set_security_systems"):
         app_window.set_security_systems(all_security_systems)
 
-    # app_window.show() - Handled internally by LeatherBookInterface
+    app_window.show()
 
     logger.info("🎨 GUI launched - kernel governance active")
     logger.info("🔒 Security systems active and protecting")

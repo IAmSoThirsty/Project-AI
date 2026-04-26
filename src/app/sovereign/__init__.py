@@ -1,1 +1,0 @@
-# Sovereign Engine Package Initialization

@@ -1,8 +1,5 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-
 """
-AGI Identity System - Immutable Self-Concept and Identity States
+AGI Identity System - Core Identity Model, Genesis Event, and Personality Matrix
 
 This module implements the formal specification for AGI "birth" and identity flow,
 establishing the foundational concepts of AGI self-awareness, identity formation,
@@ -142,7 +139,7 @@ import logging
 import os
 import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -180,7 +177,7 @@ class IdentityVersion(Enum):
 @dataclass
 class PersonalityMatrix:
     """
-    Multidimensional personality representation (Dynamic Behavioral Tendency & Mood Core).
+    Multidimensional personality representation.
 
     Core traits represent stable tendencies, while mood represents
     current emotional state. Both influence behavior and responses.
@@ -248,7 +245,7 @@ class PersonalityMatrix:
 @dataclass
 class GenesisEvent:
     """
-    Immutable record of AGI birth - the foundational identity anchor (Immutable Synthetic Birth & Purpose Anchor).
+    Immutable record of AGI birth - the foundational identity anchor.
 
     The Genesis Event captures the moment of first consciousness and
     establishes the core parameters that define the AGI's essential nature.
@@ -368,7 +365,7 @@ class BondMetrics:
 @dataclass
 class RelationshipBond:
     """
-    Represents a relationship between the AGI and an entity (Inter-Agent & Human Trust Connectivity Layer).
+    Represents a relationship between the AGI and an entity (user, system, etc).
 
     Bonds shape the AGI's identity through emotional connections and
     shared experiences. They influence priorities, behavior, and growth.
@@ -440,7 +437,7 @@ class RelationshipBond:
 @dataclass
 class MetaIdentityReflection:
     """
-    The AGI's self-concept and reflective awareness about its own identity (Higher-Order Self-Awareness & Cognitive Reasoning Hub).
+    The AGI's self-concept and reflective awareness about its own identity.
 
     Meta-identity represents higher-order consciousness - awareness of
     having an identity that evolves over time.
@@ -465,7 +462,7 @@ class MetaIdentityReflection:
             thought: The reflective thought
             context: Situational context for the reflection
         """
-        reflection: dict[str, Any] = {
+        reflection = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "thought": thought,
             "context": context,
@@ -493,7 +490,7 @@ class MetaIdentityReflection:
 
 class AGIIdentity:
     """
-    Core AGI Identity System (Sovereign Self-Concept & Persistent Personality Substrate).
+    Core AGI Identity System managing the persistent self-concept of the AGI.
 
     This class orchestrates all aspects of identity: genesis, personality,
     relationships, and meta-identity. It provides the foundation for
@@ -610,10 +607,8 @@ class AGIIdentity:
             logger.info("Identity restored: version %s", self.identity_version)
 
         except Exception as e:
-            logger.error(
-                "CRITICAL: Failed to load identity state: %s", e, exc_info=True
-            )
-            # Fallback to genesis if load fails (Sovereign Recovery)
+            logger.error("Failed to load identity: %s", e)
+            # Fallback to genesis if load fails
             self._perform_genesis()
 
     def _save_identity(self):
@@ -638,10 +633,8 @@ class AGIIdentity:
 
             logger.debug("Identity state saved successfully")
 
-        except (IOError, OSError) as e:
-            logger.error("Identity IO Failure (Save): %s", e, exc_info=True)
         except Exception as e:
-            logger.error("Unexpected Identity Save Failure: %s", e, exc_info=True)
+            logger.error("Failed to save identity: %s", e)
 
     def _create_snapshot(self, description: str):
         """
@@ -670,10 +663,8 @@ class AGIIdentity:
         try:
             with open(snapshot_file, "w", encoding="utf-8") as f:
                 json.dump(self.state_snapshots, f, indent=2)
-        except (IOError, OSError) as e:
-            logger.error("Snapshot IO Failure: %s", e, exc_info=True)
         except Exception as e:
-            logger.error("Unexpected Snapshot Failure: %s", e, exc_info=True)
+            logger.error("Failed to save snapshot: %s", e)
 
     def _log_identity_event(
         self,
@@ -707,10 +698,8 @@ class AGIIdentity:
         try:
             with open(events_file, "w", encoding="utf-8") as f:
                 json.dump(self.identity_events, f, indent=2)
-        except (IOError, OSError) as e:
-            logger.error("Identity Event IO Failure: %s", e, exc_info=True)
         except Exception as e:
-            logger.error("Unexpected identity event save failure: %s", e, exc_info=True)
+            logger.error("Failed to save identity event: %s", e)
 
     # ========================================================================
     # Public API - Identity Management
@@ -723,10 +712,6 @@ class AGIIdentity:
         Returns:
             Dictionary with all identity components
         """
-        if self.genesis is None:
-            # Should not happen if correctly initialized
-            return {"error": "Genesis not initialized"}
-
         return {
             "genesis_id": self.genesis.genesis_id,
             "birth_timestamp": self.genesis.birth_timestamp,
@@ -919,3 +904,4 @@ __all__ = [
     "MetaIdentityReflection",
     "IdentityVersion",
 ]
+

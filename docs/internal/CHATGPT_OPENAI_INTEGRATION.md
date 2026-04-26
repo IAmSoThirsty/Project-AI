@@ -1,10 +1,51 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "ChatGPT/OpenAI Integration Guide"
+id: chatgpt-openai-integration
+type: guide
+version: 1.1.0
+created_date: 2026-01-28
+updated_date: 2026-01-30
+status: active
+author: AI Integration Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: reference
+retention_policy: permanent
+category: development
+tags:
+  - openai
+  - chatgpt
+  - gpt-3.5
+  - gpt-4
+  - dall-e
+  - embeddings
+  - api-integration
+technologies:
+  - OpenAI API
+  - GPT-3.5-turbo
+  - GPT-4
+  - DALL-E 3
+  - text-embedding-ada-002
+  - Python
+related_docs:
+  - PERPLEXITY_INTEGRATION.md
+  - ../architecture/ai-providers-architecture.md
+  - learning_paths.py
+  - intelligence_engine.py
+  - image_generator.py
+dependencies:
+  - openai
+scope: "Integration guide for OpenAI GPT models and APIs across conversational AI, learning paths, image generation, and RAG systems"
+description: Comprehensive integration guide for ChatGPT/OpenAI services including GPT-3.5/4 for conversational AI, DALL-E 3 for image generation, and embeddings for semantic search and RAG.
+---
+
 # ChatGPT/OpenAI Integration Guide
 
-**Last Updated:** January 28, 2026 **Status:** ✅ **ACTIVE INTEGRATION**
+**Last Updated:** January 28, 2026  
+**Status:** ✅ **ACTIVE INTEGRATION**
 
-______________________________________________________________________
+---
 
 ## 🎯 Executive Summary
 
@@ -12,7 +53,7 @@ ______________________________________________________________________
 
 Project-AI integrates OpenAI's GPT models and APIs across multiple core systems to provide intelligent conversational AI, learning path generation, image creation, and semantic search capabilities.
 
-______________________________________________________________________
+---
 
 ## 🔌 Integration Architecture
 
@@ -20,33 +61,30 @@ ______________________________________________________________________
 
 Project-AI uses OpenAI services in **5 primary modules**:
 
-| Module                     | OpenAI Feature   | Model Used             | Purpose                                |
-| -------------------------- | ---------------- | ---------------------- | -------------------------------------- |
-| **intelligence_engine.py** | Chat Completions | GPT-3.5/GPT-4          | Conversational AI responses            |
-| **learning_paths.py**      | Chat Completions | GPT-3.5-turbo          | Personalized learning path generation  |
-| **image_generator.py**     | DALL-E           | DALL-E 3               | AI image generation (optional backend) |
-| **rag_system.py**          | Embeddings       | text-embedding-ada-002 | Semantic search and RAG                |
-| **function_registry.py**   | Function Calling | Schema Generation      | OpenAI-compatible function schemas     |
+| Module | OpenAI Feature | Model Used | Purpose |
+|--------|---------------|------------|---------|
+| **intelligence_engine.py** | Chat Completions | GPT-3.5/GPT-4 | Conversational AI responses |
+| **learning_paths.py** | Chat Completions | GPT-3.5-turbo | Personalized learning path generation |
+| **image_generator.py** | DALL-E | DALL-E 3 | AI image generation (optional backend) |
+| **rag_system.py** | Embeddings | text-embedding-ada-002 | Semantic search and RAG |
+| **function_registry.py** | Function Calling | Schema Generation | OpenAI-compatible function schemas |
 
-______________________________________________________________________
+---
 
 ## 🔧 Setup Instructions
 
 ### Step 1: Obtain OpenAI API Key
 
 1. **Sign up for OpenAI account:**
-
    - Visit: https://platform.openai.com/signup
 
-1. **Generate API key:**
-
+2. **Generate API key:**
    - Navigate to: https://platform.openai.com/api-keys
    - Click "Create new secret key"
    - Copy the key (starts with `sk-proj-` or `sk-`)
    - **⚠️ IMPORTANT:** Save this key securely - you won't see it again!
 
-1. **Add billing (if required):**
-
+3. **Add billing (if required):**
    - For DALL-E 3 and GPT-4, ensure you have billing set up
    - GPT-3.5-turbo is available on free tier with rate limits
 
@@ -55,30 +93,23 @@ ______________________________________________________________________
 **Create `.env` file in project root:**
 
 ```bash
-
 # Copy the example file
-
 cp .env.example .env
 
 # Edit .env and add your key
-
 echo "OPENAI_API_KEY=sk-proj-your-actual-key-here" >> .env
 ```
 
 **Full `.env` template:**
 
 ```bash
-
 # OpenAI API key (REQUIRED for AI features)
-
 OPENAI_API_KEY=sk-proj-your-actual-key-here
 
 # Hugging Face API key (optional for Stable Diffusion)
-
 HUGGINGFACE_API_KEY=
 
 # Other optional configurations
-
 SMTP_USERNAME=
 SMTP_PASSWORD=
 FERNET_KEY=
@@ -91,13 +122,10 @@ LOG_DIR=logs
 **Test the connection:**
 
 ```bash
-
 # Run the test suite
-
 pytest tests/test_intelligence_engine.py -v
 
 # Or test learning path generation
-
 python -c "
 from src.app.core.learning_paths import LearningPathManager
 from dotenv import load_dotenv
@@ -109,14 +137,13 @@ print(path)
 "
 ```
 
-______________________________________________________________________
+---
 
 ## 📚 Feature Documentation
 
 ### 1. Conversational AI (intelligence_engine.py)
 
 **What it does:**
-
 - Powers the AI chat interface in the Leather Book UI
 - Provides intelligent responses to user queries
 - Routes queries to knowledge base and function registry
@@ -132,7 +159,6 @@ print(response)
 ```
 
 **OpenAI API calls:**
-
 - Endpoint: `https://api.openai.com/v1/chat/completions`
 - Model: `gpt-3.5-turbo` (configurable to `gpt-4`)
 - Typical cost: ~$0.0015 per 1K tokens (input) + $0.002 per 1K tokens (output)
@@ -140,7 +166,6 @@ print(response)
 ### 2. Learning Path Generation (learning_paths.py)
 
 **What it does:**
-
 - Generates personalized learning roadmaps
 - Creates structured curricula with milestones
 - Saves and tracks progress
@@ -159,7 +184,6 @@ manager.save_path(username="alice", interest="Cybersecurity", path_content=path)
 ```
 
 **OpenAI API calls:**
-
 - Model: `gpt-3.5-turbo`
 - System prompt: "You are an educational expert creating learning paths."
 - Includes: Core concepts, resources, projects, timelines, milestones
@@ -167,7 +191,6 @@ manager.save_path(username="alice", interest="Cybersecurity", path_content=path)
 ### 3. Image Generation (image_generator.py)
 
 **What it does:**
-
 - Generates images from text prompts
 - Supports dual backends: Hugging Face (Stable Diffusion) + OpenAI (DALL-E 3)
 - Includes content filtering and style presets
@@ -188,7 +211,6 @@ print(f"Image saved to: {image_path}")
 ```
 
 **OpenAI API calls (DALL-E 3):**
-
 - Endpoint: `https://api.openai.com/v1/images/generations`
 - Model: `dall-e-3`
 - Typical cost: $0.040 per image (1024x1024 standard quality)
@@ -197,7 +219,6 @@ print(f"Image saved to: {image_path}")
 ### 4. RAG System (rag_system.py)
 
 **What it does:**
-
 - Semantic search over knowledge base
 - Vector embeddings for document retrieval
 - Context-aware question answering
@@ -216,7 +237,6 @@ for result in results:
 ```
 
 **OpenAI API calls:**
-
 - Model: `text-embedding-ada-002`
 - Typical cost: $0.0001 per 1K tokens
 - Returns: 1536-dimensional vectors
@@ -224,7 +244,6 @@ for result in results:
 ### 5. Function Registry (function_registry.py)
 
 **What it does:**
-
 - Registers Python functions for AI tool use
 - Converts to OpenAI function calling schema
 - Enables structured data extraction
@@ -237,11 +256,9 @@ from app.core.function_registry import FunctionRegistry
 registry = FunctionRegistry()
 
 # Get OpenAI-compatible schema
-
 schema = registry.to_openai_function_schema("calculate_area")
 
 # Use with OpenAI API
-
 import openai
 response = openai.chat.completions.create(
     model="gpt-3.5-turbo",
@@ -250,36 +267,34 @@ response = openai.chat.completions.create(
 )
 ```
 
-______________________________________________________________________
+---
 
 ## 💰 Cost Considerations
 
 ### Typical Usage Costs
 
-| Feature          | Model                  | Cost per Request | Monthly Estimate (100 uses/day) |
-| ---------------- | ---------------------- | ---------------- | ------------------------------- |
-| Chat (short)     | GPT-3.5-turbo          | $0.003           | $9                              |
-| Chat (long)      | GPT-3.5-turbo          | $0.015           | $45                             |
-| Learning Path    | GPT-3.5-turbo          | $0.010           | $30                             |
-| Image (DALL-E 3) | dall-e-3               | $0.040           | $120                            |
-| Embeddings       | text-embedding-ada-002 | $0.0001          | $0.30                           |
+| Feature | Model | Cost per Request | Monthly Estimate (100 uses/day) |
+|---------|-------|------------------|----------------------------------|
+| Chat (short) | GPT-3.5-turbo | $0.003 | $9 |
+| Chat (long) | GPT-3.5-turbo | $0.015 | $45 |
+| Learning Path | GPT-3.5-turbo | $0.010 | $30 |
+| Image (DALL-E 3) | dall-e-3 | $0.040 | $120 |
+| Embeddings | text-embedding-ada-002 | $0.0001 | $0.30 |
 
 **Cost optimization tips:**
-
 1. Use GPT-3.5-turbo instead of GPT-4 for most tasks (10x cheaper)
-1. Set max_tokens limits to prevent runaway costs
-1. Implement caching for repeated queries
-1. Use Hugging Face backend for image generation (free with API key)
-1. Monitor usage at: https://platform.openai.com/usage
+2. Set max_tokens limits to prevent runaway costs
+3. Implement caching for repeated queries
+4. Use Hugging Face backend for image generation (free with API key)
+5. Monitor usage at: https://platform.openai.com/usage
 
-______________________________________________________________________
+---
 
 ## 🔒 Security Best Practices
 
 ### API Key Protection
 
 ✅ **DO:**
-
 - Store API keys in `.env` file (excluded from git via `.gitignore`)
 - Use environment variables for key access
 - Rotate keys regularly (every 90 days)
@@ -287,7 +302,6 @@ ______________________________________________________________________
 - Monitor for suspicious activity
 
 ❌ **DON'T:**
-
 - Commit API keys to version control
 - Hardcode keys in source code
 - Share keys in chat/email
@@ -298,11 +312,11 @@ ______________________________________________________________________
 
 Project-AI respects OpenAI's rate limits:
 
-| Tier   | Requests/min | Tokens/min | Recommended for       |
-| ------ | ------------ | ---------- | --------------------- |
-| Free   | 3            | 40,000     | Testing, personal use |
-| Tier 1 | 500          | 200,000    | Small apps            |
-| Tier 2 | 5,000        | 2,000,000  | Production apps       |
+| Tier | Requests/min | Tokens/min | Recommended for |
+|------|-------------|------------|-----------------|
+| Free | 3 | 40,000 | Testing, personal use |
+| Tier 1 | 500 | 200,000 | Small apps |
+| Tier 2 | 5,000 | 2,000,000 | Production apps |
 
 **Configure in code:**
 
@@ -310,12 +324,11 @@ Project-AI respects OpenAI's rate limits:
 import openai
 
 # Set timeout and retry logic
-
 openai.api_timeout = 30  # seconds
 openai.api_max_retries = 3
 ```
 
-______________________________________________________________________
+---
 
 ## 🧪 Testing Without API Key
 
@@ -324,7 +337,6 @@ Some features work offline or with mocked responses:
 ### Offline Features (No API Key Required)
 
 ✅ **Available:**
-
 - User authentication and profiles
 - AI Persona system (mood, traits)
 - Memory expansion (conversation logging)
@@ -336,7 +348,6 @@ Some features work offline or with mocked responses:
 - Data analysis (CSV/XLSX)
 
 ❌ **Unavailable:**
-
 - AI chat responses
 - Learning path generation
 - Image generation (DALL-E backend)
@@ -346,23 +357,21 @@ Some features work offline or with mocked responses:
 ### Mock Testing
 
 ```python
-
 # Test with mocked OpenAI responses
-
 from unittest.mock import patch, MagicMock
 
 with patch("openai.chat.completions.create") as mock_create:
     mock_create.return_value = MagicMock(
         choices=[MagicMock(message=MagicMock(content="Test response"))]
     )
-
+    
     from app.core.learning_paths import LearningPathManager
     manager = LearningPathManager(api_key="test-key")
     response = manager.generate_path("Test", "beginner")
     assert response == "Test response"
 ```
 
-______________________________________________________________________
+---
 
 ## 🐛 Troubleshooting
 
@@ -373,19 +382,14 @@ ______________________________________________________________________
 **Cause:** `.env` file missing or `OPENAI_API_KEY` not set
 
 **Solution:**
-
 ```bash
-
 # Check if .env exists
-
 ls -la .env
 
 # Verify key is set
-
 grep OPENAI_API_KEY .env
 
 # If missing, add it
-
 echo "OPENAI_API_KEY=sk-proj-your-key" >> .env
 ```
 
@@ -394,7 +398,6 @@ echo "OPENAI_API_KEY=sk-proj-your-key" >> .env
 **Cause:** Too many requests to OpenAI API
 
 **Solution:**
-
 - Wait 60 seconds and retry
 - Upgrade OpenAI tier
 - Implement exponential backoff:
@@ -420,17 +423,15 @@ for attempt in range(max_retries):
 **Cause:** Key is incorrect, revoked, or expired
 
 **Solution:**
-
 1. Generate new key at https://platform.openai.com/api-keys
-1. Update `.env` file
-1. Restart application
+2. Update `.env` file
+3. Restart application
 
 #### 4. "Model not found"
 
 **Cause:** Using a model you don't have access to (e.g., GPT-4 without billing)
 
 **Solution:**
-
 - Check model availability in OpenAI dashboard
 - Fall back to GPT-3.5-turbo:
 
@@ -441,14 +442,13 @@ except openai.NotFoundError:
     response = openai.chat.completions.create(model="gpt-3.5-turbo", ...)
 ```
 
-______________________________________________________________________
+---
 
 ## 📈 Monitoring and Analytics
 
 ### Usage Tracking
 
 **View in OpenAI dashboard:**
-
 - https://platform.openai.com/usage
 
 **Track in code:**
@@ -459,11 +459,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Log before API call
-
 logger.info(f"OpenAI API call: model={model}, tokens={max_tokens}")
 
 # Log after API call
-
 logger.info(f"OpenAI response: tokens_used={response.usage.total_tokens}, cost=${cost:.4f}")
 ```
 
@@ -472,20 +470,15 @@ logger.info(f"OpenAI response: tokens_used={response.usage.total_tokens}, cost=$
 Project-AI automatically logs OpenAI interactions:
 
 ```bash
-
 # View logs
-
 tail -f logs/app.log | grep -i openai
 
 # Example log entries:
-
 # 2026-01-28 04:49:16 INFO intelligence_engine: OpenAI chat request: model=gpt-3.5-turbo
-
 # 2026-01-28 04:49:18 INFO intelligence_engine: OpenAI response received: 145 tokens
-
 ```
 
-______________________________________________________________________
+---
 
 ## 🔄 Alternative Models
 
@@ -494,11 +487,8 @@ Project-AI can be configured to use alternative LLM providers:
 ### Hugging Face (Free Alternative)
 
 **For chat:**
-
 ```python
-
 # Instead of OpenAI, use Hugging Face Inference API
-
 import requests
 
 API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf"
@@ -510,11 +500,8 @@ def query(payload):
 ```
 
 **For images:**
-
 ```python
-
 # Use Stable Diffusion backend (already integrated)
-
 generator = ImageGenerator(data_dir="data")
 image_path, metadata = generator.generate(
     prompt="A futuristic AI assistant",
@@ -525,12 +512,11 @@ image_path, metadata = generator.generate(
 ### Local LLMs (Offline)
 
 **For complete offline operation:**
-
 - Ollama: https://ollama.ai/
 - LM Studio: https://lmstudio.ai/
 - llama.cpp: https://github.com/ggerganov/llama.cpp
 
-______________________________________________________________________
+---
 
 ## 📝 API Reference
 
@@ -568,17 +554,17 @@ class IdentityIntegratedIntelligenceEngine:
     def route_query(self, query: str, context: dict = None) -> dict
 ```
 
-______________________________________________________________________
+---
 
 ## 🔗 Related Documentation
 
 - **[.env.example](../.env.example)** - Environment variable template
 - **[IMAGE_GENERATION_QUICKSTART.md](overview/IMAGE_GENERATION_QUICKSTART.md)** - Image generation setup
-- **[FUNCTION_REGISTRY_KNOWLEDGE_BASE.md](FUNCTION_REGISTRY_KNOWLEDGE_BASE.md)** - Function calling guide
+- **[[FUNCTION_REGISTRY_KNOWLEDGE_BASE.md|FUNCTION_REGISTRY_KNOWLEDGE_BASE.md]]** - Function calling guide
 - **[SECRET_MANAGEMENT.md](security/SECRET_MANAGEMENT.md)** - API key security best practices
 - **[TECHNICAL_WHITE_PAPER.md](../TECHNICAL_WHITE_PAPER.md)** - Complete system architecture
 
-______________________________________________________________________
+---
 
 ## ❓ FAQ
 
@@ -605,33 +591,31 @@ ______________________________________________________________________
 ### Q: What happens if my API key is leaked?
 
 **A:** Immediately:
-
 1. Revoke the key at https://platform.openai.com/api-keys
-1. Generate a new key
-1. Update `.env` file
-1. Check usage logs for unauthorized charges
-1. Contact OpenAI support if needed
+2. Generate a new key
+3. Update `.env` file
+4. Check usage logs for unauthorized charges
+5. Contact OpenAI support if needed
 
-______________________________________________________________________
+---
 
 ## 📞 Support
 
 **Issues with OpenAI integration?**
 
 1. Check this documentation first
-1. Review [OpenAI API documentation](https://platform.openai.com/docs)
-1. Open an issue: https://github.com/IAmSoThirsty/Project-AI/issues
-1. Join discussions: https://github.com/IAmSoThirsty/Project-AI/discussions
+2. Review [OpenAI API documentation](https://platform.openai.com/docs)
+3. Open an issue: https://github.com/IAmSoThirsty/Project-AI/issues
+4. Join discussions: https://github.com/IAmSoThirsty/Project-AI/discussions
 
 **OpenAI API support:**
-
 - Documentation: https://platform.openai.com/docs
 - Community: https://community.openai.com/
 - Status page: https://status.openai.com/
 
-______________________________________________________________________
+---
 
-______________________________________________________________________
+---
 
 ## 🔍 Additional Integration Checks
 
@@ -642,9 +626,8 @@ ______________________________________________________________________
 **A: NO - Not currently integrated.**
 
 **Current status:**
-
 - ❌ No Google Gemini API integration
-- ❌ No Google PaLM API integration
+- ❌ No Google PaLM API integration  
 - ❌ No Google Bard integration
 - ✅ Only security scanning for Google API keys (detection pattern)
 - ✅ Documentation mentions Gemini as a *potential alternative* to OpenAI
@@ -655,10 +638,10 @@ ______________________________________________________________________
 
 **A: NO - Not yet integrated, but ready for implementation!**
 
-**What is Antigravity?** Google Antigravity is a revolutionary AI-powered IDE (Integrated Development Environment) that's an alternative to Visual Studio and VS Code. Unlike traditional IDEs where you code directly, Antigravity uses **autonomous AI agents** to handle multi-step development tasks while you supervise at a higher level.
+**What is Antigravity?**  
+Google Antigravity is a revolutionary AI-powered IDE (Integrated Development Environment) that's an alternative to Visual Studio and VS Code. Unlike traditional IDEs where you code directly, Antigravity uses **autonomous AI agents** to handle multi-step development tasks while you supervise at a higher level.
 
 **Key Features:**
-
 - ✅ Agent-first development (AI writes, tests, and verifies code)
 - ✅ Mission Control interface (manage parallel agents)
 - ✅ VS Code compatible (existing extensions work)
@@ -667,23 +650,20 @@ ______________________________________________________________________
 - ✅ Built-in security scanning and testing
 
 **Integration Status:**
-
 - ❌ Not currently integrated
 - ✅ Full compatibility confirmed
 - ✅ Integration guide available
 - ✅ Custom agent configurations prepared
 
 **Learn more:** See the complete integration guide:
-
-- **[Google Antigravity IDE Integration Guide](GOOGLE_ANTIGRAVITY_IDE_INTEGRATION.md)** - Full setup and configuration
+- **[[GOOGLE_ANTIGRAVITY_IDE_INTEGRATION.md|Google Antigravity IDE Integration Guide]]** - Full setup and configuration
 
 **Why it fits Project-AI:**
-
 1. Project-AI already has agent systems (oversight, planner, validator)
-1. Antigravity can leverage Triumvirate workflows
-1. Temporal.io integration works seamlessly
-1. Ethical review (Four Laws) can be automated
-1. Both systems are Python-focused
+2. Antigravity can leverage Triumvirate workflows
+3. Temporal.io integration works seamlessly
+4. Ethical review (Four Laws) can be automated
+5. Both systems are Python-focused
 
 ### Temporal.io Workflow Orchestration
 
@@ -692,14 +672,12 @@ ______________________________________________________________________
 **A: YES - Fully integrated and actively used!**
 
 **Integration Status:**
-
 - ✅ Temporal.io SDK installed (`temporalio>=1.5.0`)
 - ✅ Multiple workflows implemented (Triumvirate, Security, Crisis Response)
 - ✅ Production-ready configuration
 - ✅ Extensive test coverage
 
 **Key Features:**
-
 - Durable workflow execution with automatic retries
 - Fault-tolerant agent coordination
 - Security scanning orchestration
@@ -707,9 +685,10 @@ ______________________________________________________________________
 - Learning workflow management
 
 **Learn more:** See the complete integration guide:
-
 - **[Temporal.io Integration Guide](TEMPORAL_IO_INTEGRATION.md)** - Full documentation and examples
 
-______________________________________________________________________
+---
 
-**Last reviewed:** January 28, 2026 **Next review:** April 28, 2026 **Maintainer:** @IAmSoThirsty
+**Last reviewed:** January 28, 2026  
+**Next review:** April 28, 2026  
+**Maintainer:** @IAmSoThirsty

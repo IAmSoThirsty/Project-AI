@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Build Query Engine.
 
@@ -11,18 +9,13 @@ import csv
 import json
 import logging
 from collections import defaultdict
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 from .sql_utils import sanitize_identifier
 
 logger = logging.getLogger(__name__)
-
-
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildQueryEngine:
@@ -54,7 +47,7 @@ class BuildQueryEngine:
         """Get cached query result if not expired."""
         if cache_key in self._query_cache:
             result, timestamp = self._query_cache[cache_key]
-            if _utcnow() - timestamp < self._cache_ttl:
+            if datetime.utcnow() - timestamp < self._cache_ttl:
                 logger.debug("Cache hit for %s", cache_key)
                 return result
             else:
@@ -63,7 +56,7 @@ class BuildQueryEngine:
 
     def _cache_result(self, cache_key: str, result: Any) -> None:
         """Cache query result with timestamp."""
-        self._query_cache[cache_key] = (result, _utcnow())
+        self._query_cache[cache_key] = (result, datetime.utcnow())
 
     def clear_cache(self) -> None:
         """Clear all cached query results."""
@@ -95,7 +88,7 @@ class BuildQueryEngine:
         with self.db.get_connection() as conn:
             # Get failed builds within time window
             cutoff_time = (
-                _utcnow() - timedelta(hours=time_window_hours)
+                datetime.utcnow() - timedelta(hours=time_window_hours)
             ).isoformat()
 
             cursor = conn.execute(
@@ -240,7 +233,7 @@ class BuildQueryEngine:
         Returns:
             List of failure hotspots
         """
-        cutoff_time = (_utcnow() - timedelta(days=days)).isoformat()
+        cutoff_time = (datetime.utcnow() - timedelta(days=days)).isoformat()
 
         with self.db.get_connection() as conn:
             # Phase-based hotspots
@@ -356,7 +349,7 @@ class BuildQueryEngine:
         Returns:
             Trend analysis report
         """
-        cutoff_time = (_utcnow() - timedelta(days=days)).isoformat()
+        cutoff_time = (datetime.utcnow() - timedelta(days=days)).isoformat()
 
         with self.db.get_connection() as conn:
             cursor = conn.execute(
@@ -424,7 +417,7 @@ class BuildQueryEngine:
         if cached:
             return cached
 
-        cutoff_time = (_utcnow() - timedelta(days=days)).isoformat()
+        cutoff_time = (datetime.utcnow() - timedelta(days=days)).isoformat()
 
         with self.db.get_connection() as conn:
             cursor = conn.execute(
@@ -556,7 +549,7 @@ class BuildQueryEngine:
         Returns:
             Resource usage analysis
         """
-        cutoff_time = (_utcnow() - timedelta(days=days)).isoformat()
+        cutoff_time = (datetime.utcnow() - timedelta(days=days)).isoformat()
 
         with self.db.get_connection() as conn:
             # Build duration patterns
@@ -632,7 +625,7 @@ class BuildQueryEngine:
         if cached:
             return cached
 
-        cutoff_time = (_utcnow() - timedelta(days=days)).isoformat()
+        cutoff_time = (datetime.utcnow() - timedelta(days=days)).isoformat()
 
         with self.db.get_connection() as conn:
             # Overall compliance

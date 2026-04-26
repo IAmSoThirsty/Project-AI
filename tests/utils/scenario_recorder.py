@@ -1,11 +1,9 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 from __future__ import annotations
 
 import json
 import os
 from dataclasses import asdict, dataclass
-from datetime import timezone, datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -24,7 +22,7 @@ class ScenarioRecord:
 
 
 def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _artifact_dir() -> Path:
@@ -66,7 +64,7 @@ class ScenarioRecorder:
 
     def flush_jsonl(self) -> Path:
         out_dir = _artifact_dir()
-        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        ts = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         out_path = out_dir / f"fourlaws-{self.suite}-{ts}.jsonl"
         with out_path.open("w", encoding="utf-8") as f:
             for r in self.records:

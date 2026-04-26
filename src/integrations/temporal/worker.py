@@ -1,5 +1,3 @@
-#                                           [2026-03-04 22:20]
-#                                          Productivity: Active
 """
 Temporal Worker Entrypoint.
 
@@ -21,12 +19,12 @@ from temporalio.worker import Worker
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../.."))
 
-from integrations.temporal.activities.core_tasks import (  # noqa: E402
+from integrations.temporal.activities.core_tasks import (
     process_ai_task,
     simulate_ai_call,
     validate_input,
 )
-from integrations.temporal.workflows.example_workflow import ExampleWorkflow  # noqa: E402
+from integrations.temporal.workflows.example_workflow import ExampleWorkflow
 
 logging.basicConfig(
     level=logging.INFO,

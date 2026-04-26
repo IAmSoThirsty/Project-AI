@@ -1,5 +1,3 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 /**
  * T.A.R.L./Thirsty-Lang Solution for JavaScript: ABSOLUTE Secret Protection
  * 

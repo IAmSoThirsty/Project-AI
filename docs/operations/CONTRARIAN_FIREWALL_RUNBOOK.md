@@ -1,53 +1,41 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
 # Contrarian Firewall - Operations Runbook
 
 ## God-Tier Operations Guide
 
 Quick reference for deploying, monitoring, and maintaining the Contrarian Firewall.
 
-______________________________________________________________________
+---
 
 ## Quick Start
 
 ```bash
-
 # Start server (orchestrator auto-starts)
-
 uvicorn api.main:app --host 0.0.0.0 --port 8000
 
 # Activate chaos engine
-
 curl -X POST http://localhost:8000/api/firewall/chaos/start
 
 # Check status
-
 curl http://localhost:8000/api/firewall/status | jq '.'
 ```
 
-______________________________________________________________________
+---
 
 ## Key Operations
 
 ### Monitor Threats
-
 ```bash
-
 # Threat score
-
 curl http://localhost:8000/api/firewall/threat/score
 
 # Cognitive warfare status
-
 curl http://localhost:8000/api/firewall/cognitive/overload
 
 # Comprehensive status
-
 curl http://localhost:8000/api/firewall/status
 ```
 
 ### Report Violations
-
 ```bash
 curl -X POST http://localhost:8000/api/firewall/violation/detect \
   -H "Content-Type: application/json" \
@@ -59,7 +47,6 @@ curl -X POST http://localhost:8000/api/firewall/violation/detect \
 ```
 
 ### Tune Parameters
-
 ```bash
 curl -X POST http://localhost:8000/api/firewall/chaos/tune \
   -H "Content-Type: application/json" \
@@ -70,69 +57,63 @@ curl -X POST http://localhost:8000/api/firewall/chaos/tune \
   }'
 ```
 
-______________________________________________________________________
+---
 
 ## Alert Thresholds
 
-| Metric             | Normal | Warning   | Critical |
-| ------------------ | ------ | --------- | -------- |
-| Threat Score       | 0-30   | 31-60     | 61-100   |
-| Cognitive Overload | 5-8.5  | \<5 or >9 | >9.5     |
-| Swarm Active       | false  | -         | true     |
-| Violations/min     | \<10   | 10-50     | >50      |
+| Metric | Normal | Warning | Critical |
+|--------|--------|---------|----------|
+| Threat Score | 0-30 | 31-60 | 61-100 |
+| Cognitive Overload | 5-8.5 | <5 or >9 | >9.5 |
+| Swarm Active | false | - | true |
+| Violations/min | <10 | 10-50 | >50 |
 
-______________________________________________________________________
+---
 
 ## Incident Response
 
 ### SWARM Level Attack
-
 1. Verify legitimacy
-1. Check cognitive overload
-1. Review intent history
-1. Engage security team if real
+2. Check cognitive overload
+3. Review intent history
+4. Engage security team if real
 
 ### High False Positives
-
 1. Reduce chaos multiplier
-1. Increase escalation threshold
-1. Review policy rules
+2. Increase escalation threshold
+3. Review policy rules
 
 ### Performance Issues
-
 1. Disable governance temporarily
-1. Reduce telemetry frequency
-1. Scale horizontally
+2. Reduce telemetry frequency
+3. Scale horizontally
 
-______________________________________________________________________
+---
 
 ## Maintenance
 
 **Daily:**
-
 - Check health endpoint
 - Review threat trends
 
 **Weekly:**
-
 - Export telemetry
 - Review intent history
 - Rotate adversary profiles
 
 **Monthly:**
-
 - Performance benchmarking
 - Security audit
 - Documentation updates
 
-______________________________________________________________________
+---
 
 ## Resources
 
-- [Architecture Documentation](../architecture/CONTRARIAN_FIREWALL_ARCHITECTURE.md)
-- [API Integration Guide](../developer/CONTRARIAN_FIREWALL_API_GUIDE.md)
-- [Test Suite](../../tests/test_contrarian_firewall.py)
+- [[../architecture/CONTRARIAN_FIREWALL_ARCHITECTURE.md|Architecture Documentation]]
+- [[../developer/CONTRARIAN_FIREWALL_API_GUIDE.md|API Integration Guide]]
+- [[../../tests/test_contrarian_firewall.py|Test Suite]]
 
-______________________________________________________________________
+---
 
 **Operated with God-tier excellence.** 🛡️⚡

@@ -1,6 +1,7 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
+# EXAMPLE ONLY - This is a demonstration script, not for production use.
+# Shows how to use certain features but does not enforce governance.
+
 """
 Defense Engine Demonstration Script
 Project-AI God Tier Zombie Apocalypse Defense Engine
@@ -21,9 +22,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 
-from src.app.defense_engine import DefenseEngine
-
 from src.app.core.interface_abstractions import OperationalMode
+from src.app.defense_engine import DefenseEngine
 
 # Configure logging for demo
 logging.basicConfig(

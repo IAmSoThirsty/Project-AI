@@ -1,0 +1,172 @@
+{
+  "name": "System Component Filters",
+  "description": "Filter graph nodes by system component and architectural layer",
+  "version": "1.0.0",
+  "filters": [
+    {
+      "id": "core-ai",
+      "name": "Core AI Systems",
+      "query": "path:src/app/core/ai_systems path:src/app/agents path:cognition tag:#ai-system",
+      "include": true,
+      "description": "Show AI engines, agents, and cognitive systems",
+      "useCase": "Focus on AI/ML components and intelligent systems",
+      "layer": "business-logic"
+    },
+    {
+      "id": "security-layer",
+      "name": "Security Systems",
+      "query": "path:security path:src/app/core/user_manager tag:#security tag:#authentication",
+      "include": true,
+      "description": "Show security modules, authentication, and encryption systems",
+      "useCase": "Security audit and vulnerability assessment",
+      "layer": "cross-cutting"
+    },
+    {
+      "id": "governance-layer",
+      "name": "Governance Framework",
+      "query": "path:governance path:policies tag:#governance tag:#ethics",
+      "include": true,
+      "description": "Show governance policies and constitutional AI frameworks",
+      "useCase": "Review ethical guidelines and compliance requirements",
+      "layer": "business-logic"
+    },
+    {
+      "id": "gui-layer",
+      "name": "GUI Components",
+      "query": "path:src/app/gui path:desktop tag:#gui tag:#pyqt6",
+      "include": true,
+      "description": "Show PyQt6 UI components and desktop interfaces",
+      "useCase": "UI/UX development and interface design",
+      "layer": "presentation"
+    },
+    {
+      "id": "data-layer",
+      "name": "Data & Persistence",
+      "query": "path:data path:src/app/core/data_analysis tag:#database tag:#persistence",
+      "include": true,
+      "description": "Show data systems, databases, and persistence layers",
+      "useCase": "Data architecture and storage optimization",
+      "layer": "data-access"
+    },
+    {
+      "id": "web-layer",
+      "name": "Web Services",
+      "query": "path:web path:api tag:#api tag:#backend tag:#frontend",
+      "include": true,
+      "description": "Show web services, REST APIs, and frontend components",
+      "useCase": "Web architecture and API development",
+      "layer": "presentation"
+    },
+    {
+      "id": "integration-layer",
+      "name": "Integration Points",
+      "query": "path:integrations tag:#integration tag:#webhook tag:#event-bus",
+      "include": true,
+      "description": "Show external integrations and event systems",
+      "useCase": "Map system boundaries and external dependencies",
+      "layer": "integration"
+    },
+    {
+      "id": "infrastructure-layer",
+      "name": "Infrastructure & DevOps",
+      "query": "path:docker path:helm path:.github/workflows tag:#devops tag:#deployment",
+      "include": true,
+      "description": "Show infrastructure, deployment, and CI/CD systems",
+      "useCase": "Infrastructure planning and deployment automation",
+      "layer": "infrastructure"
+    },
+    {
+      "id": "testing-layer",
+      "name": "Testing Framework",
+      "query": "path:tests path:e2e tag:#testing tag:#test-framework",
+      "include": true,
+      "description": "Show test suites and QA frameworks",
+      "useCase": "Test coverage analysis and QA strategy",
+      "layer": "cross-cutting"
+    },
+    {
+      "id": "documentation-layer",
+      "name": "Documentation",
+      "query": "path:docs path:.github/instructions tag:#documentation",
+      "include": true,
+      "description": "Show documentation and knowledge base",
+      "useCase": "Documentation maintenance and knowledge management",
+      "layer": "documentation"
+    }
+  ],
+  "architecturalLayers": {
+    "presentation": {
+      "description": "User-facing components (GUI, web frontend)",
+      "components": ["gui-layer", "web-layer"],
+      "dependencies": ["business-logic", "integration"]
+    },
+    "business-logic": {
+      "description": "Core application logic and business rules",
+      "components": ["core-ai", "governance-layer"],
+      "dependencies": ["data-access", "integration"]
+    },
+    "data-access": {
+      "description": "Data persistence and retrieval",
+      "components": ["data-layer"],
+      "dependencies": []
+    },
+    "integration": {
+      "description": "External system integrations and APIs",
+      "components": ["integration-layer", "web-layer"],
+      "dependencies": ["business-logic"]
+    },
+    "infrastructure": {
+      "description": "Deployment, operations, and infrastructure",
+      "components": ["infrastructure-layer"],
+      "dependencies": []
+    },
+    "cross-cutting": {
+      "description": "Concerns spanning multiple layers",
+      "components": ["security-layer", "testing-layer"],
+      "dependencies": []
+    }
+  },
+  "systemDependencies": {
+    "gui-layer": {
+      "dependsOn": ["core-ai", "data-layer", "security-layer"],
+      "provides": ["user-interface", "desktop-application"]
+    },
+    "core-ai": {
+      "dependsOn": ["data-layer", "governance-layer"],
+      "provides": ["ai-capabilities", "intelligent-agents"]
+    },
+    "security-layer": {
+      "dependsOn": ["data-layer"],
+      "provides": ["authentication", "authorization", "encryption"]
+    },
+    "web-layer": {
+      "dependsOn": ["core-ai", "security-layer", "data-layer"],
+      "provides": ["web-interface", "rest-api"]
+    },
+    "data-layer": {
+      "dependsOn": [],
+      "provides": ["persistence", "data-retrieval", "analytics"]
+    }
+  },
+  "usage": {
+    "applyingFilters": [
+      "Open Obsidian Graph View > Filters",
+      "Select system components to focus on specific subsystems",
+      "Combine with architectural layers for structured views",
+      "Use dependency mapping to trace system interactions"
+    ],
+    "systemViews": {
+      "frontendDevelopment": "Show: gui-layer, web-layer | Hide: infrastructure, testing",
+      "backendDevelopment": "Show: core-ai, data-layer, integration-layer | Hide: gui, web",
+      "securityAudit": "Show: security-layer, data-layer | Highlight: integration-layer",
+      "architectureReview": "Show: All layers | Use color schemes to differentiate",
+      "deploymentPlanning": "Show: infrastructure-layer, web-layer | Hide: documentation"
+    },
+    "dependencyAnalysis": {
+      "upstreamImpact": "Select component, show all dependencies it requires",
+      "downstreamImpact": "Select component, show all systems depending on it",
+      "circularDependencies": "Identify components with mutual dependencies (anti-pattern)",
+      "isolationAnalysis": "Find components with minimal dependencies (good for microservices)"
+    }
+  }
+}

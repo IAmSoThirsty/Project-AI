@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 HYDRA-50 Deployment Script
@@ -12,6 +10,10 @@ Features:
 - Service startup
 - Health checks
 - Rollback capability
+
+GOVERNANCE: GOVERNED
+Classification: Production deployment
+Risk: High (modifies deployment)
 """
 
 import argparse

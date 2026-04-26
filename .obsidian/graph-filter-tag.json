@@ -1,0 +1,126 @@
+{
+  "name": "Tag-Based Filters",
+  "description": "Filter graph nodes by tag taxonomy and classification",
+  "version": "1.0.0",
+  "filters": [
+    {
+      "id": "status-active",
+      "name": "Active Status",
+      "query": "tag:#status/in-progress OR tag:#status/active OR tag:#wip",
+      "include": true,
+      "description": "Show only active work items and in-progress tasks",
+      "useCase": "Focus on current sprint and active development"
+    },
+    {
+      "id": "status-complete",
+      "name": "Completed Work",
+      "query": "tag:#status/complete OR tag:#status/done OR tag:#verified",
+      "include": false,
+      "description": "Hide completed and verified work items (default: hidden)",
+      "useCase": "Reduce clutter from finished tasks"
+    },
+    {
+      "id": "status-blocked",
+      "name": "Blocked Items",
+      "query": "tag:#status/blocked OR tag:#dependency-waiting",
+      "include": true,
+      "description": "Show blocked items requiring attention",
+      "useCase": "Identify blockers and dependency issues"
+    },
+    {
+      "id": "priority-critical",
+      "name": "Critical Priority (P0/P1)",
+      "query": "tag:#priority/p0 OR tag:#priority/p1 OR tag:#critical",
+      "include": true,
+      "description": "Show high-priority and critical items only",
+      "useCase": "Focus on mission-critical work"
+    },
+    {
+      "id": "security-tags",
+      "name": "Security-Related",
+      "query": "tag:#security OR tag:#vulnerability OR tag:#authentication OR tag:#encryption",
+      "include": true,
+      "description": "Show security-related documentation and code",
+      "useCase": "Security audit and vulnerability management"
+    },
+    {
+      "id": "testing-tags",
+      "name": "Testing & QA",
+      "query": "tag:#testing OR tag:#test-case OR tag:#qa OR tag:#validation",
+      "include": true,
+      "description": "Show testing and QA documentation",
+      "useCase": "Review test coverage and validation procedures"
+    },
+    {
+      "id": "documentation-tags",
+      "name": "Documentation",
+      "query": "tag:#documentation OR tag:#guide OR tag:#tutorial OR tag:#reference",
+      "include": true,
+      "description": "Show documentation and guides",
+      "useCase": "Navigate knowledge base and help content"
+    },
+    {
+      "id": "architecture-tags",
+      "name": "Architecture & Design",
+      "query": "tag:#architecture OR tag:#design-pattern OR tag:#implementation",
+      "include": true,
+      "description": "Show architectural and design documentation",
+      "useCase": "Understand system design and patterns"
+    },
+    {
+      "id": "governance-tags",
+      "name": "Governance & Compliance",
+      "query": "tag:#governance OR tag:#policy OR tag:#compliance OR tag:#ethics",
+      "include": true,
+      "description": "Show governance and compliance documentation",
+      "useCase": "Review organizational policies and ethical guidelines"
+    },
+    {
+      "id": "experimental-tags",
+      "name": "Experimental & POC",
+      "query": "tag:#experimental OR tag:#poc OR tag:#prototype",
+      "include": true,
+      "description": "Show experimental features and proof-of-concepts",
+      "useCase": "Track innovation and R&D initiatives"
+    },
+    {
+      "id": "technical-debt",
+      "name": "Technical Debt",
+      "query": "tag:#technical-debt OR tag:#refactor-needed OR tag:#deprecated",
+      "include": true,
+      "description": "Show technical debt and refactoring candidates",
+      "useCase": "Plan refactoring sprints and debt reduction"
+    },
+    {
+      "id": "integration-tags",
+      "name": "Integration Points",
+      "query": "tag:#integration OR tag:#api OR tag:#webhook OR tag:#event",
+      "include": true,
+      "description": "Show integration points and API boundaries",
+      "useCase": "Map system integrations and dependencies"
+    }
+  ],
+  "tagTaxonomy": {
+    "status": ["in-progress", "active", "complete", "done", "blocked", "pending"],
+    "priority": ["p0", "p1", "p2", "p3", "p4", "critical", "high-priority", "low-priority"],
+    "type": ["feature", "bug", "enhancement", "refactor", "documentation"],
+    "audience": ["developer", "architect", "security-team", "qa", "end-user", "executive"],
+    "system": ["core-ai", "security", "governance", "gui", "data", "web", "api"],
+    "lifecycle": ["experimental", "poc", "production", "deprecated", "archived"]
+  },
+  "usage": {
+    "applyingFilters": [
+      "Open Obsidian Graph View > Filters",
+      "Use tag-based queries to filter by classification",
+      "Combine multiple tag filters for granular control",
+      "Toggle filters to compare different tag groups"
+    ],
+    "tagFilterStrategies": {
+      "sprintPlanning": "Show #status/active AND (#priority/p0 OR #priority/p1)",
+      "securityReview": "Show #security OR #vulnerability OR #audit",
+      "architectureReview": "Show #architecture OR #design-pattern",
+      "debtReduction": "Show #technical-debt OR #refactor-needed",
+      "complianceAudit": "Show #governance OR #compliance OR #ethics"
+    }
+  }
+}

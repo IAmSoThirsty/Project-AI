@@ -1,0 +1,1 @@
+powershell -Command "Get-ChildItem -Path 't:\Project-AI-main' -Recurse -Include '*.yaml','*.json','*.txt','*.md' | Select-String -Pattern 'openrouter' -CaseSensitive:$false | Select-Object Path,Line -First 20"

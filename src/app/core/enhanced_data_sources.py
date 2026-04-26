@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Enhanced Data Sources - IMF and WHO API Connectors
@@ -13,7 +11,7 @@ Implements ETL connectors for:
 import logging
 from typing import Any
 
-from engines.global_scenario.global_scenario_engine import DataSource
+from app.core.global_scenario_engine import DataSource
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,3 @@
-#                                                                              [2026-03-01 13:50]
-#                                                                           Productivity: Active
-
 """
 3D Visualization Component for Project-AI Dashboard.
 

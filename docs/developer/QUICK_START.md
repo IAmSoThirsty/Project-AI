@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: quickstart
+tags: [p1-developer, platform, quickstart, backend, api, legion, deployment]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [backend-api, legion-api, desktop-app, android-app, usb-portable]
+stakeholders: [developers, new-users, contributors]
+audience: beginner
+prerequisites: [python-3.11+, git, basic-shell-knowledge]
+estimated_time: 5 minutes
+review_cycle: monthly
+---
 # Quick Start Guide - Project-AI
 
 ## 🚀 60-Second Quick Start
@@ -26,7 +37,7 @@ Open browser: <http://localhost:8002> or open `integrations/openclaw/legion_inte
 
 **Done!** Start chatting with Legion.
 
-______________________________________________________________________
+---
 
 ## Installation
 
@@ -39,13 +50,10 @@ ______________________________________________________________________
 ### Option 2: Android (Legion Mini)
 
 ```powershell
-
 # Build APK
-
 .\gradlew.bat :legion_mini:assembleDebug
 
 # Install
-
 adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 ```
 
@@ -55,7 +63,7 @@ adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 .\scripts\create_portable_usb.ps1
 ```
 
-______________________________________________________________________
+---
 
 ## System Requirements
 
@@ -65,7 +73,7 @@ ______________________________________________________________________
 - **Storage**: 5GB free space
 - **Android**: 8.0+ (for mobile app)
 
-______________________________________________________________________
+---
 
 ## Key Features
 
@@ -90,7 +98,7 @@ ______________________________________________________________________
 - Portable USB (no installation)
 - Web interface
 
-______________________________________________________________________
+---
 
 ## API Endpoints
 
@@ -107,7 +115,7 @@ ______________________________________________________________________
 - `/status` - Legion system status
 - `/health` - Health check
 
-______________________________________________________________________
+---
 
 ## Testing
 
@@ -125,7 +133,7 @@ ______________________________________________________________________
 1. Create manual saves
 1. Test restore functionality
 
-______________________________________________________________________
+---
 
 ## Troubleshooting
 
@@ -148,7 +156,7 @@ $env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot"
 - Stop other instances
 - Or edit ports in config files
 
-______________________________________________________________________
+---
 
 ## Support
 
@@ -156,6 +164,6 @@ ______________________________________________________________________
 - **GitHub**: <https://github.com/IAmSoThirsty/Project-AI>
 - **API Docs**: <http://localhost:8001/docs> (when running)
 
-______________________________________________________________________
+---
 
 **Ready to use!** 🎉

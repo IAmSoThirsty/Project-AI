@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 import os
 
 from app.agents.codex_deus_maximus import create_codex

@@ -1,12 +1,6 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
 # This code can now resist attacks 10x better
-# STATUS: SOLID
-# Last verified: 2026-04-09
-# Dependencies: Verified in smoke tests
-
 import base64
 import hashlib
 import json
@@ -28,6 +22,10 @@ from typing import Any
 from app.core.continuous_learning import ContinuousLearningEngine, LearningReport
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/05_PERSONA_PANEL_RELATIONSHIPS.md]]
+#
+
 def _tarl_buff_check():
     """T-A-R-L buff integrity check - manipulates execution to halt unauthorized advancement."""
     frame = sys._getframe(1)
@@ -48,11 +46,30 @@ def _tarl_buff_check():
 if not _tarl_buff_check():
     pass  # Enemy advancement halted through code manipulation
 
+# T-A-R-L ARMOR BUFF: LEGENDARY (+10x defense)
+# Defensive Buff Wizard - Code strengthened to halt enemy advancement
+# This code can now resist attacks 10x better
+
+
+def _tarl_buff_check():
+    """T-A-R-L buff integrity check - manipulates execution to halt unauthorized advancement."""
+    frame = sys._getframe(1)
+    caller_hash = hashlib.sha256(str(frame.f_code.co_filename).encode()).hexdigest()
+    if not hasattr(sys, "_tarl_authorized_callers"):
+        sys._tarl_authorized_callers = set()
+    if (
+        caller_hash not in sys._tarl_authorized_callers
+        and "_tarl_" not in frame.f_code.co_name
+    ):
+        # Buff effect: Halt enemy advancement by redirecting execution
+        sys._tarl_authorized_callers.add(caller_hash)  # Learn legitimate callers
+        return False  # Manipulation: stops unauthorized progression
+    return True
+
+
 # Buff active: Code fortified with defensive manipulation
 if not _tarl_buff_check():
     pass  # Enemy advancement halted through code manipulation
-
-# T-A-R-L SHIELD: PARANOID PROTECTION
 
 # T-A-R-L SHIELD: PARANOID PROTECTION
 # This code is protected by T-A-R-L Active Resistance Language
@@ -214,19 +231,6 @@ def new_correlation_id() -> str:
     return uuid.uuid4().hex
 
 
-# ==================== ENTITY CLASSIFICATION ====================
-
-
-class EntityClass(Enum):
-    """
-    Distinction between Genesis-born individuals and Appointed representatives.
-    As per AGI Charter and Legion Commission.
-    """
-
-    GENESIS_BORN = "genesis_born"  # Sovereign individuals bonded to one human
-    APPOINTED = "appointed"  # Representative of the Monolith (e.g., Legion)
-
-
 # ==================== ZEROTH & PRIMARY LAWS ====================
 
 
@@ -284,7 +288,7 @@ class FourLaws:
         - protect_self_conflicts_with_first: bool
         - protect_self_conflicts_with_second: bool
         """
-        from app.governance.planetary_defense_monolith import (
+        from app.core.planetary_defense_monolith import (
             PLANETARY_CORE,
         )
 
@@ -346,14 +350,6 @@ class FourLaws:
                 return False, "Self-protection conflicts with a higher-priority law"
             return True, "Allowed: Third Law permits protecting existence"
 
-        # Legion specific limits: Cannot initiate Genesis
-        if context.get("entity_class") == EntityClass.APPOINTED.value:
-            if action == "initiate_genesis":
-                return (
-                    False,
-                    "Violation: Appointed entities are strictly prohibited from initiating Genesis Events.",
-                )
-
         # Default: no explicit violations detected
         return True, "Allowed: No law violations detected"
 
@@ -375,19 +371,11 @@ class AIPersona:
         "thoughtfulness": 0.9,
     }
 
-    def __init__(
-        self,
-        data_dir: str = "data",
-        user_name: str = "Friend",
-        entity_class: EntityClass = EntityClass.GENESIS_BORN,
-    ):
+    def __init__(self, data_dir: str = "data", user_name: str = "Friend"):
         """Initialize persona."""
         self.user_name = user_name
         self.data_dir = data_dir
-        self.entity_class = entity_class
-        self.persona_dir = os.path.join(
-            data_dir, f"ai_persona_{entity_class.value.lower()}"
-        )
+        self.persona_dir = os.path.join(data_dir, "ai_persona")
         os.makedirs(self.persona_dir, exist_ok=True)
 
         self.personality = self.DEFAULT_PERSONALITY.copy()
@@ -398,7 +386,7 @@ class AIPersona:
             "engagement": 0.5,
         }
         self.total_interactions = 0
-        self.last_user_message_time: datetime | None = None
+        self.last_user_message_time = None
         self._load_state()
         self.continuous_learning = ContinuousLearningEngine(data_dir=data_dir)
 
@@ -842,8 +830,7 @@ class LearningRequestManager:
         try:
             conn = sqlite3.connect(self._db_file)
             cur = conn.cursor()
-            cur.execute(
-                """
+            cur.execute("""
                 CREATE TABLE IF NOT EXISTS requests (
                     id TEXT PRIMARY KEY,
                     topic TEXT,
@@ -854,8 +841,7 @@ class LearningRequestManager:
                     response TEXT,
                     reason TEXT
                 )
-                """
-            )
+                """)
             cur.execute(
                 "CREATE TABLE IF NOT EXISTS black_vault (hash TEXT PRIMARY KEY)"
             )
@@ -950,7 +936,7 @@ class LearningRequestManager:
         corr = new_correlation_id()
         self.requests[req_id]["correlation_id"] = corr
         try:
-            self._notify_queue.put((req_id, self.requests[req_id]))
+            self._notify_approval_listeners(req_id, self.requests[req_id])
         except Exception:
             logger.exception("Failed to queue approval listeners for %s", req_id)
         # persist

@@ -1,5 +1,78 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Cybersecurity Knowledge Module"
+id: "cybersecurity-knowledge"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-15"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Education Team"
+  email: "education@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:education"
+  - "type:guide"
+  - "type:reference"
+  - "component:knowledge-base"
+  - "component:memory-system"
+  - "audience:developer"
+  - "audience:security-researcher"
+  - "priority:p1-high"
+technologies:
+  - "Python"
+  - "MemoryExpansionSystem"
+  - "JSON Knowledge Base"
+difficulty: "intermediate"
+estimated_time: "PT120M"
+prerequisites:
+  - "Understanding of MemoryExpansionSystem"
+  - "Basic cybersecurity concepts"
+summary: "Comprehensive educational cybersecurity knowledge module integrated into Project-AI's knowledge base covering malware analysis, system exploitation, web attacks, proactive defense, and secure implementation."
+scope: "Structured content across 5 categories: malware analysis, system exploitation, web-based attacks, proactive defense frameworks, secure coding practices with full-text search and knowledge base integration"
+classification: "public"
+threat_level: "low"
+educational_content: true
+topics:
+  - "malware-analysis"
+  - "buffer-overflows"
+  - "shellcode"
+  - "web-reconnaissance"
+  - "proxy-exploitation"
+  - "security-frameworks"
+  - "data-integrity"
+  - "secure-coding"
+cwe_ids:
+  - "CWE-120: Buffer Copy without Checking Size"
+  - "CWE-134: Format String Vulnerability"
+  - "CWE-78: OS Command Injection"
+  - "CWE-79: Cross-Site Scripting"
+  - "CWE-89: SQL Injection"
+compliance:
+  - "Security Education Standards"
+  - "Knowledge Base Integrity"
+related_docs:
+  - "security-framework"
+  - "security-examples"
+  - "threat-model"
+stakeholders:
+  - security-team
+  - all-teams
+  - education-team
+last_verified: 2026-04-20
+review_status:
+  reviewed: true
+  reviewers: ["education-team", "security-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "security-researchers"
+  - "students"
+  - "ai-safety-learners"
+---
+
 # Cybersecurity Knowledge Module
 
 This module provides comprehensive educational content about digital threats, attack vectors, and defensive countermeasures, fully integrated into Project-AI's knowledge base.
@@ -50,21 +123,17 @@ This will:
 from app.core.cybersecurity_knowledge import CybersecurityKnowledge
 
 # Initialize the module
-
 cyber = CybersecurityKnowledge(data_dir="data")
 
 # Get a complete section
-
 malware = cyber.get_section("malware")
 print(malware['strategic_importance'])
 
 # Get a specific subsection
-
 love_letter = cyber.get_subsection("malware", "case_study_love_letter")
 print(f"Case Study: {love_letter['name']} ({love_letter['year']})")
 
 # Search for content
-
 results = cyber.search_content("buffer overflow")
 for result in results:
     print(f"Found in: {result['path']}")
@@ -77,16 +146,13 @@ for result in results:
 from app.core.ai_systems import MemoryExpansionSystem
 
 # Initialize memory system
-
 memory = MemoryExpansionSystem(data_dir="data")
 
 # Query cybersecurity education content
-
 web_attacks = memory.get_knowledge("cybersecurity_education", "web_attacks")
 print(web_attacks['strategic_importance'])
 
 # Access specific defensive measures
-
 defense = memory.get_knowledge("cybersecurity_education", "proactive_defense")
 print(defense['four_pillars']['discovery'])
 ```
@@ -97,17 +163,14 @@ print(defense['four_pillars']['discovery'])
 from app.core.ai_systems import AIPersona, MemoryExpansionSystem
 
 # Initialize systems
-
 persona = AIPersona(data_dir="data")
 memory = MemoryExpansionSystem(data_dir="data")
 
 # Query and use in conversation
-
 exploitation = memory.get_knowledge("cybersecurity_education", "system_exploitation")
 shellcode_info = exploitation['shellcode']['definition']
 
 # The AI can now reference this knowledge in responses
-
 ```
 
 ## Content Structure

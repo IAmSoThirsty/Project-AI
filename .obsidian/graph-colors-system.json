@@ -1,0 +1,110 @@
+{
+  "name": "System Cluster Colors",
+  "description": "Color scheme organizing nodes by system component type",
+  "version": "1.0.0",
+  "colorGroups": [
+    {
+      "query": "path:src/app/core/ai_systems path:src/app/agents path:cognition",
+      "color": {
+        "a": 1,
+        "rgb": 5592575
+      },
+      "label": "Core AI Systems",
+      "description": "AI engines, agents, and cognitive systems (Blue - #5577FF)"
+    },
+    {
+      "query": "path:security path:policies/security tag:#security tag:#authentication tag:#encryption",
+      "color": {
+        "a": 1,
+        "rgb": 16711680
+      },
+      "label": "Security & Authentication",
+      "description": "Security modules, auth systems, encryption (Red - #FF0000)"
+    },
+    {
+      "query": "path:governance path:policies/governance tag:#governance tag:#compliance tag:#ethics",
+      "color": {
+        "a": 1,
+        "rgb": 10494192
+      },
+      "label": "Governance & Ethics",
+      "description": "Governance frameworks, policy docs, constitutional AI (Purple - #A020F0)"
+    },
+    {
+      "query": "path:src/app/gui path:desktop tag:#gui tag:#ui tag:#interface",
+      "color": {
+        "a": 1,
+        "rgb": 65280
+      },
+      "label": "GUI & Interface",
+      "description": "PyQt6 UI components, desktop interfaces (Green - #00FF00)"
+    },
+    {
+      "query": "path:data path:src/app/core/data_analysis tag:#data tag:#database tag:#persistence",
+      "color": {
+        "a": 1,
+        "rgb": 16744448
+      },
+      "label": "Data & Persistence",
+      "description": "Data systems, databases, analysis tools (Orange - #FFA500)"
+    },
+    {
+      "query": "path:web path:api tag:#api tag:#backend tag:#frontend",
+      "color": {
+        "a": 1,
+        "rgb": 65535
+      },
+      "label": "Web & API",
+      "description": "Web services, REST APIs, frontend components (Cyan - #00FFFF)"
+    },
+    {
+      "query": "path:tests path:e2e tag:#testing tag:#qa",
+      "color": {
+        "a": 1,
+        "rgb": 16776960
+      },
+      "label": "Testing & QA",
+      "description": "Test suites, QA frameworks, validation (Yellow - #FFFF00)"
+    },
+    {
+      "query": "path:docs path:.github/instructions tag:#documentation tag:#guide",
+      "color": {
+        "a": 1,
+        "rgb": 16753920
+      },
+      "label": "Documentation",
+      "description": "Documentation, guides, references (Light Orange - #FFA000)"
+    },
+    {
+      "query": "path:docker path:helm path:.github/workflows tag:#devops tag:#deployment",
+      "color": {
+        "a": 1,
+        "rgb": 8421504
+      },
+      "label": "DevOps & Deployment",
+      "description": "Docker, K8s, CI/CD, infrastructure (Gray - #808080)"
+    },
+    {
+      "query": "path:archive tag:#archived tag:#deprecated",
+      "color": {
+        "a": 0.3,
+        "rgb": 8421504
+      },
+      "label": "Archived/Deprecated",
+      "description": "Archived content, deprecated systems (Faded Gray)"
+    }
+  ],
+  "usage": {
+    "instructions": [
+      "Open Obsidian Settings > Graph View",
+      "Click 'Groups' section",
+      "Import this configuration or manually add color groups",
+      "Use queries to filter nodes by system component"
+    ],
+    "queryExamples": [
+      "path:src/app/core - All core modules",
+      "tag:#security - All security-tagged notes",
+      "path:gui OR tag:#ui - GUI-related content"
+    ]
+  }
+}

@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 AGI Relationship Model - User-AI Partnership and Mutual Evolution
 
@@ -64,7 +62,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -363,10 +361,8 @@ class RelationshipModel:
 
                 logger.info("Loaded relationship for user: %s", self.state.user_id)
 
-            except (json.JSONDecodeError, KeyError, PermissionError) as e:
-                logger.error(
-                    "Failed to load relationship for user %s: %s", self.state.user_id, e
-                )
+            except Exception as e:
+                logger.error("Failed to load relationship: %s", e)
 
     def _save_relationship(self):
         """Save relationship data to disk."""
@@ -410,9 +406,8 @@ class RelationshipModel:
         Args:
             sentiment: Emotional tone (-1.0 negative to 1.0 positive)
             tone: Interaction tone
-            metadata: Additional interaction data (reserved for future audit logging)
+            metadata: Additional interaction data
         """
-        _ = metadata  # Reserved for future audit integration
         self.state.total_interactions += 1
         self.state.last_interaction = datetime.now(timezone.utc).isoformat()
 
@@ -673,3 +668,4 @@ __all__ = [
     "ConflictSeverity",
     "SupportType",
 ]
+

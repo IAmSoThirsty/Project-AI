@@ -1,9 +1,4 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-
 #!/usr/bin/env python3
-# [2026-03-02 05:12]
-# Productivity: Active
 """
 System Registry - Monolithic Core System Registry
 Project-AI God Tier Zombie Apocalypse Defense Engine
@@ -30,13 +25,13 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Type, cast
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class SubsystemState(Enum):
-    """Subsystem lifecycle states (Lifecycle State Transition Definition)"""
+    """Subsystem lifecycle states"""
 
     UNINITIALIZED = "uninitialized"
     INITIALIZING = "initializing"
@@ -48,7 +43,7 @@ class SubsystemState(Enum):
 
 
 class SubsystemPriority(Enum):
-    """Subsystem priority levels for resource allocation (Resource Allocation Priority Vector)"""
+    """Subsystem priority levels for resource allocation"""
 
     CRITICAL = 0  # Must always run (e.g., life support, core safety)
     HIGH = 1  # Important but can degrade gracefully
@@ -59,7 +54,7 @@ class SubsystemPriority(Enum):
 
 @dataclass
 class SubsystemMetadata:
-    """Metadata for a registered subsystem (Atomic Subsystem Descriptor & State Record)"""
+    """Metadata for a registered subsystem"""
 
     name: str
     subsystem_id: str
@@ -96,7 +91,7 @@ class SubsystemMetadata:
 
 @dataclass
 class HealthCheckResult:
-    """Result of a subsystem health check (Subsystem Reliability & Latency Telemetry)"""
+    """Result of a subsystem health check"""
 
     subsystem_id: str
     healthy: bool
@@ -108,7 +103,7 @@ class HealthCheckResult:
 
 class SystemRegistry:
     """
-    Monolithic Core System Registry (Monolithic Core System Registry & Subsystem Discovery Engine).
+    Monolithic Core System Registry
 
     Central registry for all defense engine subsystems with automatic discovery,
     health monitoring, and recovery capabilities.
@@ -130,12 +125,12 @@ class SystemRegistry:
         # Core registry data structures
         self._subsystems: dict[str, SubsystemMetadata] = {}
         self._capability_map: dict[str, list[str]] = {}  # capability -> [subsystem_ids]
-        self._dependency_graph: dict[
-            str, set[str]
-        ] = {}  # subsystem_id -> {dependencies}
-        self._reverse_dependencies: dict[
-            str, set[str]
-        ] = {}  # subsystem_id -> {dependents}
+        self._dependency_graph: dict[str, set[str]] = (
+            {}
+        )  # subsystem_id -> {dependencies}
+        self._reverse_dependencies: dict[str, set[str]] = (
+            {}
+        )  # subsystem_id -> {dependents}
 
         # Thread safety
         self._lock = threading.RLock()
@@ -170,10 +165,10 @@ class SystemRegistry:
         version: str,
         priority: SubsystemPriority,
         instance: Any,
-        dependencies: list[str] | None = None,
-        provides_capabilities: list[str] | None = None,
+        dependencies: list[str] = None,
+        provides_capabilities: list[str] = None,
         health_check_fn: Callable | None = None,
-        metadata: dict[str, Any] | None = None,
+        metadata: dict[str, Any] = None,
     ) -> bool:
         """
         Register a subsystem with the registry.
@@ -475,7 +470,7 @@ class SystemRegistry:
                     error=str(e),
                 )
 
-    def start_health_monitoring(self, interval: float | None = None):
+    def start_health_monitoring(self, interval: float = None):
         """
         Start background health monitoring thread.
 
@@ -599,20 +594,9 @@ class SystemRegistry:
             for priority in SubsystemPriority:
                 status["subsystems_by_priority"][priority.value] = 0
 
-            state_counts: dict[str, int] = cast(
-                dict[str, int], status["subsystems_by_state"]
-            )
-            priority_counts: dict[str, int] = cast(
-                dict[str, int], status["subsystems_by_priority"]
-            )
-
             for subsystem_id, subsystem in self._subsystems.items():
-                state_counts[subsystem.state.value] = (
-                    state_counts.get(subsystem.state.value, 0) + 1
-                )
-                priority_counts[subsystem.priority.value] = (
-                    priority_counts.get(subsystem.priority.value, 0) + 1
-                )
+                status["subsystems_by_state"][subsystem.state.value] += 1
+                status["subsystems_by_priority"][subsystem.priority.value] += 1
                 status["subsystems"][subsystem_id] = subsystem.to_dict()
 
             return status

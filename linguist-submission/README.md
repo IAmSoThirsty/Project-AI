@@ -1,5 +1,19 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: submission-doc
+tags: [thirsty-lang, linguist, language-design, github-integration, textmate-grammar]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, github-linguist, textmate]
+stakeholders: [language-team, contributors, linguist-maintainers]
+project_category: language-implementation
+language_paradigm: [water-themed, defensive-programming, multi-edition]
+build_system: custom
+review_cycle: monthly
+submission_package: true
+package_version: 1.0.0
+---
+
 # GitHub Linguist Submission Package for Thirsty-lang
 
 This directory contains everything needed to submit Thirsty-lang to the [github/linguist](https://github.com/github/linguist) repository for official language recognition.
@@ -7,18 +21,14 @@ This directory contains everything needed to submit Thirsty-lang to the [github/
 ## Package Contents
 
 ### 1. Language Definition (`languages.yml`)
-
 Contains the language metadata required by GitHub Linguist:
-
 - Language name, type, and color
 - File extensions (`.thirsty`, `.thirstyplus`, `.thirstyplusplus`, `.thirstofgods`)
 - TextMate scope and language ID
 - Supported interpreters
 
 ### 2. TextMate Grammar (`grammars/thirsty.tmLanguage.json`)
-
 Syntax highlighting grammar for Thirsty-lang:
-
 - Keyword definitions (drink, pour, sip, thirsty, hydrated, etc.)
 - Comment patterns
 - String and number matching
@@ -26,9 +36,7 @@ Syntax highlighting grammar for Thirsty-lang:
 - Scope: `source.thirsty`
 
 ### 3. Sample Files (`samples/*.thirsty*`)
-
 Representative code examples showcasing Thirsty-lang features:
-
 - `hello.thirsty` - Basic "Hello, World!" example
 - `variables.thirsty` - Variable declarations and types
 - `hydration.thirsty` - Simple program with output
@@ -40,7 +48,6 @@ Representative code examples showcasing Thirsty-lang features:
 **Thirsty-lang** is a unique programming language with:
 
 ### Water-Themed Syntax
-
 - `drink` - Variable declaration
 - `pour` - Output statement
 - `sip` - Input statement
@@ -50,7 +57,6 @@ Representative code examples showcasing Thirsty-lang features:
 - `glass` - Function declaration
 
 ### Defensive Programming
-
 - `shield` - Protection blocks
 - `morph` - Code obfuscation
 - `detect` - Threat monitoring
@@ -59,7 +65,6 @@ Representative code examples showcasing Thirsty-lang features:
 - `armor` - Memory protection
 
 ### Multiple Editions
-
 - **Base** (`.thirsty`) - Core features
 - **Plus** (`.thirstyplus`) - Enhanced features
 - **PlusPlus** (`.thirstyplusplus`) - Advanced features
@@ -68,7 +73,6 @@ Representative code examples showcasing Thirsty-lang features:
 ## Submission Instructions
 
 ### Prerequisites
-
 1. Fork the [github/linguist](https://github.com/github/linguist) repository
 2. Clone your fork locally
 3. Install Ruby and dependencies: `bundle install`
@@ -78,11 +82,8 @@ Representative code examples showcasing Thirsty-lang features:
 Edit `lib/linguist/languages.yml` in the linguist repository:
 
 ```yaml
-
 # Add the contents of languages.yml from this directory
-
 # Place alphabetically under "T" section
-
 ```
 
 Or simply append the contents of `languages.yml` to linguist's `languages.yml` file.
@@ -99,9 +100,7 @@ Then update `grammars.yml` in linguist repository:
 
 ```yaml
 vendor/grammars/thirsty.tmLanguage.json:
-
   - source.thirsty
-
 ```
 
 ### Step 3: Add Sample Files
@@ -120,11 +119,8 @@ Linguist requires at least 3 sample files. This package includes 5 samples.
 If TextMate grammar is hosted elsewhere, add to `vendor.yml`:
 
 ```yaml
-
 # Add to vendor.yml if grammar is from external source
-
 - vendor/grammars/thirsty.tmLanguage.json
-
 ```
 
 ### Step 5: Run Tests
@@ -135,15 +131,12 @@ Test language detection locally:
 cd /path/to/linguist
 
 # Test detection on sample file
-
 bundle exec bin/linguist samples/Thirsty-lang/hello.thirsty
 
 # Run full test suite
-
 bundle exec rake test
 
 # Generate language data
-
 bundle exec rake samples
 ```
 
@@ -155,7 +148,6 @@ samples/Thirsty-lang/hello.thirsty: 100.00% (3 lines) Thirsty-lang
 ### Step 6: Create Pull Request
 
 1. Commit your changes:
-
 ```bash
 git add lib/linguist/languages.yml
 git add vendor/grammars/thirsty.tmLanguage.json
@@ -165,7 +157,6 @@ git commit -m "Add support for Thirsty-lang"
 ```
 
 2. Push to your fork:
-
 ```bash
 git push origin add-thirsty-lang
 ```
@@ -173,27 +164,23 @@ git push origin add-thirsty-lang
 3. Create PR with this description:
 
 ```markdown
-
 ## Add support for Thirsty-lang
 
 This PR adds support for Thirsty-lang, a unique programming language with water-themed syntax and defensive programming capabilities.
 
 ### Language Overview
-
 - **Type**: Programming
 - **Extensions**: `.thirsty`, `.thirstyplus`, `.thirstyplusplus`, `.thirstofgods`
 - **Color**: #00BFFF (Deep Sky Blue)
 - **Scope**: source.thirsty
 
 ### Features
-
 - Water-themed keywords (drink, pour, sip, thirsty, hydrated)
 - Built-in security features (shield, sanitize, armor)
 - Multiple language editions
 - Active development and community
 
 ### Checklist
-
 - [x] Language definition added to `languages.yml`
 - [x] TextMate grammar included
 - [x] At least 3 sample files provided (5 included)
@@ -201,12 +188,10 @@ This PR adds support for Thirsty-lang, a unique programming language with water-
 - [x] Samples demonstrate language features
 
 ### Repository
-
 - Main: https://github.com/IAmSoThirsty/Thirsty-lang
 - Integration: https://github.com/IAmSoThirsty/Project-AI
 
 ### Author
-
 Jeremy Karrick (@IAmSoThirsty)
 ```
 
@@ -239,31 +224,24 @@ After your PR is merged:
 You can test the language definition without submitting:
 
 ```bash
-
 # In linguist repository
-
 bundle exec linguist samples/Thirsty-lang/hello.thirsty
 
 # Should output:
-
 # samples/Thirsty-lang/hello.thirsty: 100.00% (3 lines) Thirsty-lang
-
 ```
 
 ## Common Issues
 
 ### Issue: "Language not detected"
-
 - Check that file extension matches `extensions` in languages.yml
 - Verify scope in grammar matches `tm_scope` in languages.yml
 
 ### Issue: "Grammar not working"
-
 - Validate JSON syntax in tmLanguage file
 - Ensure `scopeName` in grammar matches `tm_scope`
 
 ### Issue: "Tests failing"
-
 - Run `bundle exec rake test` to see specific errors
 - Check that language ID is unique
 - Verify sample files have proper extensions
@@ -283,8 +261,8 @@ bundle exec linguist samples/Thirsty-lang/hello.thirsty
 
 ---
 
-**Status**: Ready for submission
-**Last Updated**: 2026-01-28
+**Status**: Ready for submission  
+**Last Updated**: 2026-01-28  
 **Version**: 1.0.0
 
 For questions or issues with this submission package, please open an issue in the Thirsty-lang repository.

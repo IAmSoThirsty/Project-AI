@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:\Project-AI-main\src\app\core\ai_systems.py' -TotalCount 300"

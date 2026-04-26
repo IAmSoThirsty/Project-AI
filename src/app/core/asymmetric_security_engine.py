@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 THIRSTY'S ASYMMETRIC SECURITY ENGINE
 Part of Thirsty's Active Resistance Language (T.A.R.L.) Framework
@@ -93,9 +91,8 @@ class InvariantBountySystem:
             SystemInvariant(
                 name="auth_proof_required",
                 description="State mutation without authorization proof",
-                check_function=lambda ctx: (
-                    bool(ctx.get("auth_token")) and bool(ctx.get("state_changed"))
-                ),
+                check_function=lambda ctx: bool(ctx.get("auth_token"))
+                and bool(ctx.get("state_changed")),
                 severity=InvariantSeverity.CRITICAL,
                 bounty_value=5000,
                 examples=["User data modified without valid JWT"],
@@ -107,11 +104,9 @@ class InvariantBountySystem:
             SystemInvariant(
                 name="trust_privilege_coupling",
                 description="Trust score decrease must revoke privileges",
-                check_function=lambda ctx: (
-                    not (
-                        ctx.get("trust_decreased", False)
-                        and ctx.get("privilege_retained", False)
-                    )
+                check_function=lambda ctx: not (
+                    ctx.get("trust_decreased", False)
+                    and ctx.get("privilege_retained", False)
                 ),
                 severity=InvariantSeverity.HIGH,
                 bounty_value=3000,
@@ -304,11 +299,9 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="no_state_mutation_with_trust_decrease",
                 description="No action may both mutate state and lower trust score",
-                enforcement_function=lambda ctx: (
-                    not (
-                        ctx.get("state_mutated", False)
-                        and ctx.get("trust_decreased", False)
-                    )
+                enforcement_function=lambda ctx: not (
+                    ctx.get("state_mutated", False)
+                    and ctx.get("trust_decreased", False)
                 ),
                 violation_action="halt",
                 immutable=True,
@@ -320,9 +313,8 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="human_action_replayability",
                 description="No action affecting humans may be non-replayable",
-                enforcement_function=lambda ctx: (
-                    not ctx.get("affects_human", False) or bool(ctx.get("replay_log"))
-                ),
+                enforcement_function=lambda ctx: not ctx.get("affects_human", False)
+                or bool(ctx.get("replay_log")),
                 violation_action="halt",
                 immutable=True,
             )
@@ -333,10 +325,8 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="agent_audit_requirement",
                 description="No agent may act without audit span",
-                enforcement_function=lambda ctx: (
-                    not ctx.get("is_agent_action", False)
-                    or bool(ctx.get("audit_span_id"))
-                ),
+                enforcement_function=lambda ctx: not ctx.get("is_agent_action", False)
+                or bool(ctx.get("audit_span_id")),
                 violation_action="halt",
                 immutable=True,
             )
@@ -347,11 +337,9 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="cross_tenant_authorization",
                 description="Cross-tenant actions require explicit authorization",
-                enforcement_function=lambda ctx: (
-                    not (
-                        ctx.get("requesting_tenant") != ctx.get("resource_tenant")
-                        and not ctx.get("cross_tenant_authorized", False)
-                    )
+                enforcement_function=lambda ctx: not (
+                    ctx.get("requesting_tenant") != ctx.get("resource_tenant")
+                    and not ctx.get("cross_tenant_authorized", False)
                 ),
                 violation_action="halt",
                 immutable=True,
@@ -363,13 +351,10 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="privilege_escalation_approval",
                 description="Privilege escalation requires multi-party approval",
-                enforcement_function=lambda ctx: (
-                    not ctx.get("privilege_escalated", False)
-                    or (
-                        bool(ctx.get("approvals"))
-                        and len(ctx.get("approvals", [])) >= 2
-                    )
-                ),
+                enforcement_function=lambda ctx: not ctx.get(
+                    "privilege_escalated", False
+                )
+                or (bool(ctx.get("approvals")) and len(ctx.get("approvals", [])) >= 2),
                 violation_action="escalate",
                 immutable=True,
             )

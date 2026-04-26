@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Polyglot AI Execution Engine - Section 6
@@ -8,7 +6,7 @@ Project-AI God Tier Zombie Apocalypse Defense Engine
 Multi-backend AI execution with intelligent routing and fallback.
 
 Features:
-- OpenAI API integration (GPT-4, GPT-3.5-turbo, GPT-4-turbo)
+- OpenAI API integration (GPT-4, GPT-3.5-turbo, GPT-4-turbo) via orchestrator
 - HuggingFace transformers integration (local inference)
 - Model orchestration and intelligent routing
 - Automatic fail-safe and fallback mechanisms
@@ -17,6 +15,9 @@ Features:
 - Rate limiting and quota management
 - Streaming support for real-time responses
 - Fine-tuning support and model adaptation
+
+REFACTORED: Now routes all AI calls through governance orchestrator.
+All OpenAI calls use app.core.ai.orchestrator for compliance.
 """
 
 import hashlib
@@ -44,6 +45,7 @@ logger = logging.getLogger(__name__)
 
 # Optional imports with graceful fallback
 try:
+    import openai
     from openai import OpenAI
 
     OPENAI_AVAILABLE = True
@@ -56,6 +58,9 @@ try:
     from transformers import (
         AutoModelForCausalLM,
         AutoTokenizer,
+        StoppingCriteria,
+        StoppingCriteriaList,
+        pipeline,
     )
 
     TRANSFORMERS_AVAILABLE = True
@@ -266,8 +271,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS executions (
                 request_id TEXT PRIMARY KEY,
                 prompt TEXT,
@@ -281,11 +285,9 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 timestamp REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS model_metrics (
                 model_id TEXT PRIMARY KEY,
                 total_requests INTEGER,
@@ -297,18 +299,15 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 cache_hit_rate REAL,
                 last_used REAL
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cache (
                 cache_key TEXT PRIMARY KEY,
                 response_data TEXT,
                 timestamp REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()

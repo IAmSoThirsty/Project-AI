@@ -1,50 +1,49 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Pytest configuration and fixtures for Gradle Evolution tests.
 
 Provides shared fixtures for testing constitutional, cognition, capsule,
 security, audit, and API components.
-
-Requires the ``gradle_evolution`` source package to be installed / on
-PYTHONPATH.  When absent the entire directory is skipped with a
-clear diagnostic rather than producing 7 opaque ImportErrors.
 """
 
 from __future__ import annotations
-
-import importlib.util
-
-# ── Hard gate: skip all tests in this directory when the source
-#    package is absent. Using collect_ignore_glob to avoid skipping
-#    the entire pytest session.
-if importlib.util.find_spec("gradle_evolution") is None:
-    collect_ignore_glob = ["*.py", "**/*.py"]
 
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
 from typing import Any
-from unittest import mock as umock
+import unittest.mock as mock
 
 import pytest
 import yaml
 
 
+class _FallbackMocker:
+    """Lightweight subset of pytest-mock's mocker fixture API."""
+
+    def __init__(self) -> None:
+        self._patches: list[mock._patch] = []  # type: ignore[attr-defined]
+        self.MagicMock = mock.MagicMock
+
+    def patch(self, target: str, *args: Any, **kwargs: Any) -> Any:
+        patcher = mock.patch(target, *args, **kwargs)
+        patched = patcher.start()
+        self._patches.append(patcher)
+        return patched
+
+    def stopall(self) -> None:
+        while self._patches:
+            patcher = self._patches.pop()
+            patcher.stop()
+
+
 @pytest.fixture
-def mocker(request):
-    """Fallback mocker fixture when pytest-mock plugin is unavailable."""
-
-    class _Mocker:
-        MagicMock = umock.MagicMock
-
-        def patch(self, target: str, *args, **kwargs):
-            patcher = umock.patch(target, *args, **kwargs)
-            mocked = patcher.start()
-            request.addfinalizer(patcher.stop)
-            return mocked
-
-    return _Mocker()
+def mocker() -> Generator[_FallbackMocker, None, None]:
+    """Fallback mocker fixture when pytest-mock is unavailable."""
+    m = _FallbackMocker()
+    try:
+        yield m
+    finally:
+        m.stopall()
 
 
 @pytest.fixture

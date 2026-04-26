@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Advanced Learning Systems
 God Tier architecture - Reinforcement Learning and Continual Learning for adaptive AI.
@@ -9,14 +7,16 @@ Production-grade, fully integrated, drop-in ready.
 import json
 import logging
 import os
-import random
+import pickle
 import threading
 import time
 from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, cast
+from typing import Any
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +119,8 @@ class PolicyState:
 
 class ExperienceReplayBuffer:
     """
-    Experience replay buffer for reinforcement learning (High-Capacity Interaction History & Training Substrate).
+    Experience replay buffer for reinforcement learning.
+    Stores experiences and provides sampling for training.
     """
 
     def __init__(self, max_size: int = 10000, data_dir: str = "data/rl"):
@@ -160,7 +161,8 @@ class ExperienceReplayBuffer:
                 return list(self._buffer)
 
             # Random sampling without replacement
-            return random.sample(list(self._buffer), batch_size)
+            indices = np.random.choice(len(self._buffer), batch_size, replace=False)
+            return [self._buffer[i] for i in indices]
 
     def get_recent(self, n: int) -> list[Experience]:
         """Get n most recent experiences"""
@@ -178,20 +180,20 @@ class ExperienceReplayBuffer:
             self._buffer.clear()
             logger.info("Experience buffer cleared")
 
-    def save(self, filename: str = "replay_buffer.json") -> bool:
+    def save(self, filename: str = "replay_buffer.pkl") -> bool:
         """Save buffer to disk"""
         try:
             with self._lock:
                 filepath = os.path.join(self.data_dir, filename)
-                with open(filepath, "w") as f:
-                    json.dump([exp.to_dict() for exp in self._buffer], f, indent=2)
+                with open(filepath, "wb") as f:
+                    pickle.dump(list(self._buffer), f)
                 logger.info("Saved %s experiences to %s", len(self._buffer), filepath)
                 return True
         except Exception as e:
             logger.error("Failed to save replay buffer: %s", e, exc_info=True)
             return False
 
-    def load(self, filename: str = "replay_buffer.json") -> bool:
+    def load(self, filename: str = "replay_buffer.pkl") -> bool:
         """Load buffer from disk"""
         try:
             with self._lock:
@@ -200,10 +202,9 @@ class ExperienceReplayBuffer:
                     logger.warning("Replay buffer file not found: %s", filepath)
                     return False
 
-                with open(filepath, "r") as f:
-                    data = json.load(f)
+                with open(filepath, "rb") as f:
+                    experiences = pickle.load(f)
 
-                experiences = [Experience.from_dict(d) for d in data]
                 self._buffer = deque(experiences, maxlen=self.max_size)
                 logger.info(
                     "Loaded %s experiences from %s", len(self._buffer), filepath
@@ -216,7 +217,8 @@ class ExperienceReplayBuffer:
 
 class ReinforcementLearningAgent:
     """
-    Reinforcement Learning Agent using Q-Learning (Autonomous Policy Evolution & Strategy Optimization Core).
+    Reinforcement Learning Agent using Q-Learning.
+    Learns optimal policies through interaction with environment.
     """
 
     def __init__(
@@ -297,19 +299,19 @@ class ReinforcementLearningAgent:
 
             # Epsilon-greedy action selection
             if mode == LearningMode.EXPLORATION or (
-                mode == LearningMode.MIXED and random.random() < self.policy.epsilon
+                mode == LearningMode.MIXED and np.random.random() < self.policy.epsilon
             ):
                 # Explore: random action
-                action = random.choice(self.actions)
+                action = np.random.choice(self.actions)
             else:
                 # Exploit: best action
                 q_vals = self.policy.q_values[state_key]
                 max_q = max(q_vals.values())
                 # If multiple actions have same Q-value, choose randomly among them
                 best_actions = [a for a, q in q_vals.items() if q == max_q]
-                action = random.choice(best_actions)
+                action = np.random.choice(best_actions)
 
-            return str(action)
+            return action
 
     def update(
         self,
@@ -464,7 +466,7 @@ class ReinforcementLearningAgent:
                     json.dump(data, f, indent=2)
 
                 # Save replay buffer separately
-                self.replay_buffer.save(f"{self.agent_id}_replay.json")
+                self.replay_buffer.save(f"{self.agent_id}_replay.pkl")
 
                 logger.info("Agent '%s' saved to %s", self.agent_id, filepath)
                 return True
@@ -496,7 +498,7 @@ class ReinforcementLearningAgent:
                 self.episode_lengths = data.get("episode_lengths", [])
 
                 # Load replay buffer
-                self.replay_buffer.load(f"{self.agent_id}_replay.json")
+                self.replay_buffer.load(f"{self.agent_id}_replay.pkl")
 
                 logger.info("Agent '%s' loaded from %s", self.agent_id, filepath)
                 return True
@@ -508,7 +510,8 @@ class ReinforcementLearningAgent:
 
 class ContinualLearningSystem:
     """
-    Continual Learning System for fusion and context models (Non-Catastrophic Model Evolution & Knowledge Consolidation Engine).
+    Continual Learning System for fusion and context models.
+    Enables models to learn continuously without catastrophic forgetting.
     """
 
     DEFAULT_IMPROVEMENT_THRESHOLD = 0.05  # 5% improvement threshold for new version

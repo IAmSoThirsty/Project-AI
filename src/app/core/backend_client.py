@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """HTTP client for interacting with Project-AI's Flask web backend."""
 
 from __future__ import annotations

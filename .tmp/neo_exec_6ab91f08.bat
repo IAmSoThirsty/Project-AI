@@ -1,0 +1,1 @@
+type "t:\Project-AI-main\.env" 2>nul

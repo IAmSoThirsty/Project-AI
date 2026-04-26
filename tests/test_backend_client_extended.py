@@ -1,6 +1,4 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
-"""Extended tests for BackendAPIClient (20+)."""
+﻿"""Extended tests for BackendAPIClient (20+)."""
 
 from __future__ import annotations
 

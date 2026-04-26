@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Out-Dated(archive)
 """Codex Deus Maximus - Schematic Guardian.
 Repurposed to solely focus on repository integrity, structure validation, and auto-correction.
 """
@@ -12,7 +10,7 @@ import logging
 import os
 import shutil
 import types
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 # Lazy imports for GPT‑OSS 1208 are performed inside _load_gpt_oss_model()
@@ -257,3 +255,4 @@ def create_codex(data_dir: str = "data") -> CodexDeusMaximus:
     c = CodexDeusMaximus(data_dir=data_dir)
     c.initialize()
     return c
+

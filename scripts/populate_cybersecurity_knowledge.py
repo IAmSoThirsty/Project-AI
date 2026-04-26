@@ -1,8 +1,10 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Script to populate the Project-AI knowledge base with cybersecurity educational content.
+
+GOVERNANCE: GOVERNED
+Classification: Content Management
+Risk: Medium (modifies knowledge base)
 
 Usage:
     python scripts/populate_cybersecurity_knowledge.py
@@ -15,6 +17,7 @@ import sys
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+from app.core.runtime.router import route_request
 from app.core.ai_systems import MemoryExpansionSystem
 from app.core.cybersecurity_knowledge import CybersecurityKnowledge
 
@@ -27,8 +30,27 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def main():
-    """Main function to populate cybersecurity knowledge."""
+def main_governed():
+    """Main function with governance routing."""
+    # Route through governance
+    result = route_request("cli", {
+        "action": "content.populate_knowledge_base",
+        "params": {
+            "category": "cybersecurity_education",
+            "sections": 6
+        },
+        "metadata": {
+            "script": __file__,
+            "user": "content_admin",
+            "risk_level": "medium"
+        }
+    })
+    
+    if not result.get("approved", False):
+        print(f"❌ Knowledge base update blocked: {result.get('reason', 'Unknown')}")
+        return 1
+    
+    # Proceed with population
     try:
         # Initialize the systems
         logger.info("Initializing systems...")
@@ -78,4 +100,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main_governed())

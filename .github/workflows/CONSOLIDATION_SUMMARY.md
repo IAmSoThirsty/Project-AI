@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: workflow-spec
+tags: [github-actions, workflows, consolidation, ci-cd, optimization]
+created: 2026-01-18
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation]
+stakeholders: [devops, developers, architects]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # GitHub Workflows Consolidation Summary
 
 ## Overview

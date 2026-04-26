@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 # Uninstall JDK 17 and Install JDK 21
 # Run as Administrator
 

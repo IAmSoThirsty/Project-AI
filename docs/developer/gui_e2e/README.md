@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, gui-e2e, automation, pytest-qt, testing, pyqt6-testing, ci-cd]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [pytest-qt, xvfb, github-actions, e2e-testing, gui-automation]
+stakeholders: [developers, qa-team, automation-engineers]
+audience: intermediate
+prerequisites: [pytest-knowledge, pyqt6-testing, ci-cd-basics, gui-testing-concepts]
+estimated_time: 40 minutes
+review_cycle: quarterly
+---
 # GUI E2E Automation Proposal
 
 This document outlines a pragmatic approach to adding E2E GUI automation for the PyQt6-based Leather Book application.
@@ -24,9 +35,7 @@ Recommended stack:
 Sample CI step snippet:
 
 ```yaml
-
 - name: Run GUI E2E (Xvfb)
-
   run: |
     sudo apt-get update && sudo apt-get install -y xvfb
     export DISPLAY=:99

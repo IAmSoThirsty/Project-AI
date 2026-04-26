@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 # Docker & WSL Installation Script for Project-AI
 # Run this script as Administrator
 

@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, development-setup, workflow, environment-setup, canonical-guide]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [python-env, virtualenv, dependencies, build-tools, testing-tools]
+stakeholders: [developers, contributors, new-developers]
+audience: intermediate
+prerequisites: [python-3.11, git, basic-shell-knowledge, development-tools]
+estimated_time: 25 minutes
+review_cycle: monthly
+---
 # Development (canonical)
 
 This document is the canonical developer setup and workflow for Project-AI.

@@ -1,13 +1,11 @@
-#                                                                              [2026-03-04 21:15]
-#                                                                           Productivity: Active
 """Shared leather book panels used by the interface."""
 
+import logging
 import math
 
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
 from PyQt6.QtWidgets import (
-    QApplication,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -19,10 +17,13 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.backend_client import BackendAPIClient
+from app.interfaces.desktop.adapter import DesktopAdapter
+
+logger = logging.getLogger(__name__)
 
 
-class SovereignPersonaPage(QFrame):  # pylint: disable=too-few-public-methods
-    """Left page with a Sovereign-styled animated avatar."""
+class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
+    """Left page with a Tron-styled animated face."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -31,22 +32,20 @@ class SovereignPersonaPage(QFrame):  # pylint: disable=too-few-public-methods
         self._start_animation()
 
     def _configure_frame(self):
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QFrame {
                 background-color: #0a0a0a;
                 border-right: 3px solid #00ff00;
             }
-        """
-        )
+        """)
         self.setMinimumWidth(400)
 
     def _setup_layout(self):
-        """Prepare the layout and components for the Sovereign persona panel."""
+        """Prepare the layout and components for the Tron face panel."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.addWidget(self._create_title())
-        self.face_canvas = SovereignPersonaCanvas()
+        self.face_canvas = TronFaceCanvas()
         layout.addWidget(self.face_canvas, 1)
         layout.addLayout(self._create_status_layout())
 
@@ -54,15 +53,13 @@ class SovereignPersonaPage(QFrame):  # pylint: disable=too-few-public-methods
         title = QLabel("NEURAL INTERFACE")
         title_font = QFont("Courier New", 16, QFont.Weight.Bold)
         title.setFont(title_font)
-        title.setStyleSheet(
-            """
+        title.setStyleSheet("""
             QLabel {
                 color: #00ff00;
                 text-shadow: 0px 0px 10px #00ff00;
                 padding: 10px;
             }
-        """
-        )
+        """)
         return title
 
     def _create_status_layout(self) -> QVBoxLayout:
@@ -85,8 +82,8 @@ class SovereignPersonaPage(QFrame):  # pylint: disable=too-few-public-methods
         self.animation_timer.start(50)
 
 
-class SovereignPersonaCanvas(QFrame):  # pylint: disable=too-few-public-methods
-    """Canvas that paints the Sovereign-style avatar and data streams."""
+class TronFaceCanvas(QFrame):  # pylint: disable=too-few-public-methods
+    """Canvas that paints the Tron-style face and data streams."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -95,7 +92,7 @@ class SovereignPersonaCanvas(QFrame):  # pylint: disable=too-few-public-methods
         self.animation_frame = 0
 
     def paintEvent(self, a0):
-        """Render the Sovereign assets whenever Qt requests a paint."""
+        """Render the Tron assets whenever Qt requests a paint."""
         super().paintEvent(a0)
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -198,15 +195,13 @@ class StatusIndicator(QFrame):
         layout.setContentsMargins(5, 5, 5, 5)
         led = QLabel("●")
         led_color = "#00ff00" if status else "#ff0000"
-        led.setStyleSheet(
-            f"""
+        led.setStyleSheet(f"""
             QLabel {{
                 color: {led_color};
                 font-size: 14px;
                 text-shadow: 0px 0px 5px {led_color};
             }}
-        """
-        )
+        """)
         led.setMaximumWidth(20)
         layout.addWidget(led)
         name_label = QLabel(name)
@@ -232,19 +227,21 @@ class IntroInfoPage(QFrame):
         self.backend_status_label: QLabel | None = None
         self.backend_client = BackendAPIClient()
         self.login_button: QPushButton | None = None
+
+        # Initialize desktop governance adapter
+        self.desktop_adapter = DesktopAdapter()
+
         self._configure_frame()
         self._setup_layout()
         self.update_tab_styling()
 
     def _configure_frame(self):
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QFrame {
                 background-color: #2a2a1a;
                 border-left: 3px solid #8b7355;
             }
-        """
-        )
+        """)
 
     def _setup_layout(self):
         layout = QVBoxLayout(self)
@@ -259,22 +256,19 @@ class IntroInfoPage(QFrame):
         self.content_stack.addWidget(self._create_glossary_page())
         self.content_stack.addWidget(self._create_contents_page())
         layout.addWidget(self.content_stack, 1)
-        layout.addWidget(self._create_exit_button())
         layout.addWidget(self._create_footer())
 
     def _create_title(self) -> QLabel:
         title = QLabel("PROJECT-AI")
         title_font = QFont("Georgia", 24, QFont.Weight.Bold)
         title.setFont(title_font)
-        title.setStyleSheet(
-            """
+        title.setStyleSheet("""
             QLabel {
                 color: #8b7355;
                 text-shadow: 0px 2px 4px #000000;
                 padding: 10px;
             }
-        """
-        )
+        """)
         return title
 
     def _create_divider(self) -> QFrame:
@@ -287,8 +281,7 @@ class IntroInfoPage(QFrame):
         tab_layout = QHBoxLayout()
         for index, tab_name in enumerate(self.tabs):
             btn = QPushButton(tab_name)
-            btn.setStyleSheet(
-                """
+            btn.setStyleSheet("""
                 QPushButton {
                     background-color: transparent;
                     border: none;
@@ -300,40 +293,16 @@ class IntroInfoPage(QFrame):
                 QPushButton:hover {
                     color: #a0826d;
                 }
-            """
-            )
+            """)
             btn.clicked.connect(lambda _, idx=index: self.switch_tab(idx))
             self.tab_buttons.append(btn)
             tab_layout.addWidget(btn)
         return tab_layout
 
     def _create_footer(self) -> QLabel:
-        footer = QLabel("© 2026 Project-AI | Sovereign 1st Edition Release")
-        footer.setStyleSheet(
-            "color: #8b7355; font-size: 10px; padding-top: 10px; text-align: center;"
-        )
+        footer = QLabel("© 2025 Project-AI | Advanced Neural Intelligence System")
+        footer.setStyleSheet("color: #8b7355; font-size: 10px; padding-top: 20px;")
         return footer
-
-    def _create_exit_button(self) -> QPushButton:
-        btn = QPushButton("EXIT SYSTEM")
-        btn.setStyleSheet("""
-            QPushButton {
-                background-color: #4a1c1c;
-                border: 2px solid #8b3b3b;
-                color: #ffcccc;
-                padding: 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-family: 'Courier New';
-            }
-            QPushButton:hover {
-                background-color: #6a2c2c;
-                border: 2px solid #ff0000;
-                color: #ffffff;
-            }
-        """)
-        btn.clicked.connect(lambda: QApplication.quit())
-        return btn
 
     def _create_login_page(self) -> QWidget:
         """Build the LOGIN tab content."""
@@ -382,8 +351,7 @@ class IntroInfoPage(QFrame):
         layout.addWidget(self.password_input)
         layout.addSpacing(20)
         self.login_button = QPushButton("ENTER SYSTEM")
-        self.login_button.setStyleSheet(
-            """
+        self.login_button.setStyleSheet("""
             QPushButton {
                 background-color: #8b7355;
                 border: 2px solid #8b7355;
@@ -397,8 +365,7 @@ class IntroInfoPage(QFrame):
                 background-color: #a0826d;
                 border: 2px solid #a0826d;
             }
-        """
-        )
+        """)
         self.login_button.clicked.connect(self._handle_login)
         layout.addWidget(self.login_button)
 
@@ -420,8 +387,7 @@ class IntroInfoPage(QFrame):
 
     @staticmethod
     def _style_login_input(input_field: QLineEdit):
-        input_field.setStyleSheet(
-            """
+        input_field.setStyleSheet("""
             QLineEdit {
                 background-color: #1a1a0f;
                 border: 2px solid #8b7355;
@@ -432,8 +398,7 @@ class IntroInfoPage(QFrame):
             QLineEdit:focus {
                 border: 2px solid #a0826d;
             }
-        """
-        )
+        """)
 
     def _create_glossary_page(self) -> QWidget:
         """Create the glossary tab listing key definitions."""
@@ -527,8 +492,7 @@ class IntroInfoPage(QFrame):
         """Highlight the currently active tab button."""
         for index, btn in enumerate(self.tab_buttons):
             if index == self.current_tab:
-                btn.setStyleSheet(
-                    """
+                btn.setStyleSheet("""
                     QPushButton {
                         background-color: transparent;
                         border: none;
@@ -538,11 +502,9 @@ class IntroInfoPage(QFrame):
                         font-weight: bold;
                         border-bottom: 2px solid #8b7355;
                     }
-                """
-                )
+                """)
             else:
-                btn.setStyleSheet(
-                    """
+                btn.setStyleSheet("""
                     QPushButton {
                         background-color: transparent;
                         border: none;
@@ -554,8 +516,7 @@ class IntroInfoPage(QFrame):
                     QPushButton:hover {
                         color: #a0826d;
                     }
-                """
-                )
+                """)
 
     def refresh_backend_status(self):
         """Fetch backend heartbeat and update label."""
@@ -584,6 +545,32 @@ class IntroInfoPage(QFrame):
         if self.login_button:
             self.login_button.setEnabled(enabled)
 
+    def _route_through_governance(self, action: str, payload: dict) -> dict:
+        """Route action through governance pipeline (MANDATORY - no fallback).
+
+        Args:
+            action: Action identifier (e.g., "auth.login")
+            payload: Action parameters
+
+        Returns:
+            Response dict with status and result
+
+        Raises:
+            RuntimeError: If desktop adapter not initialized
+        """
+        if not self.desktop_adapter:
+            raise RuntimeError(
+                "Desktop governance adapter not initialized. "
+                "Cannot execute governed action. "
+                "This indicates a system initialization failure."
+            )
+
+        try:
+            return self.desktop_adapter.execute(action, payload)
+        except Exception as e:
+            logger.error(f"Governance routing failed for {action}: {e}")
+            return {"status": "error", "error": str(e)}
+
     def _handle_login(self):
         """Attempt to authenticate against Flask backend and switch to the dashboard."""
         if not self.username_input or not self.password_input:
@@ -593,26 +580,49 @@ class IntroInfoPage(QFrame):
         if not username or not password:
             self._display_login_feedback("Enter both username and password.")
             return
-        self._set_login_enabled(False)
-        result = self.backend_client.authenticate(username, password)
-        self._set_login_enabled(True)
-        if not result.success:
-            self._display_login_feedback(f"Login failed: {result.message}")
-            return
-        display_name = result.user.get("username") if result.user else username
-        self._display_login_feedback(
-            f"Authenticated as {display_name}. Switching to dashboard…",
-            success=True,
-        )
-        if self.parent_window is not None:
-            self.parent_window.set_backend_token(result.token)
-            self.parent_window.switch_to_main_dashboard(display_name or username)
-        if self.username_input:
-            self.username_input.clear()
-        if self.password_input:
-            self.password_input.clear()
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_Escape:
-            QApplication.quit()
-        super().keyPressEvent(event)
+        self._set_login_enabled(False)
+
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            self._display_login_feedback(
+                "Governance Error: Desktop adapter not initialized. Cannot authenticate."
+            )
+            self._set_login_enabled(True)
+            return
+
+        # Route authentication through governance pipeline
+        response = self._route_through_governance(
+            "auth.login",
+            {
+                "username": username,
+                "password": password,
+                "source": "desktop_gui"
+            }
+        )
+
+        self._set_login_enabled(True)
+
+        if response.get("status") == "success":
+            result = response.get("result", {})
+            token = result.get("token")
+            user_data = result.get("user", {})
+            display_name = user_data.get("username", username)
+
+            self._display_login_feedback(
+                f"Authenticated as {display_name}. Switching to dashboard…",
+                success=True,
+            )
+
+            if self.parent_window is not None:
+                self.parent_window.set_backend_token(token)
+                self.parent_window.switch_to_main_dashboard(display_name)
+
+            if self.username_input:
+                self.username_input.clear()
+            if self.password_input:
+                self.password_input.clear()
+        else:
+            error_msg = response.get("error", "Authentication failed")
+            self._display_login_feedback(f"Login failed: {error_msg}")
+            logger.warning(f"Login failed for user {username}: {error_msg}")

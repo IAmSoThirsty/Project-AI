@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """User management widget: list/create/delete/update/approve users.
 
 This widget depends on `UserManager` for persistence. It provides a simple

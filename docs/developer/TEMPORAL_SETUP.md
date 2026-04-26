@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: tutorial
+tags: [p1-developer, temporal-setup, temporal-io, workflow-setup, durable-execution, installation]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [temporal-server, temporal-workflows, docker-compose, postgresql, workflow-platform]
+stakeholders: [developers, workflow-engineers, infrastructure-team]
+audience: beginner
+prerequisites: [python-basics, docker-installed, docker-compose-knowledge, postgresql-awareness]
+estimated_time: 45 minutes
+review_cycle: quarterly
+---
 # Temporal.io Integration Setup Guide
 
 ## Overview
@@ -107,20 +118,16 @@ PYTHONPATH=. python -m app.temporal.worker
 Create `.env.temporal` file (copy from `.env.temporal.example`):
 
 ```bash
-
 # Local Temporal Server
-
 TEMPORAL_HOST=localhost:7233
 TEMPORAL_NAMESPACE=default
 TEMPORAL_TASK_QUEUE=project-ai-tasks
 
 # Worker Configuration
-
 TEMPORAL_MAX_CONCURRENT_ACTIVITIES=50
 TEMPORAL_MAX_CONCURRENT_WORKFLOWS=50
 
 # Timeout Configuration (seconds)
-
 TEMPORAL_WORKFLOW_EXECUTION_TIMEOUT=3600
 TEMPORAL_ACTIVITY_START_TO_CLOSE_TIMEOUT=300
 ```
@@ -166,14 +173,11 @@ from app.temporal.workflows import (
 )
 
 async def run_learning_workflow():
-
     # Connect to Temporal
-
     manager = TemporalClientManager()
     await manager.connect()
-
+    
     # Start workflow
-
     handle = await manager.client.start_workflow(
         AILearningWorkflow.run,
         LearningRequest(
@@ -185,16 +189,15 @@ async def run_learning_workflow():
         id=f"learning-workflow-{timestamp}",
         task_queue="project-ai-tasks",
     )
-
+    
     # Wait for result
-
     result: LearningResult = await handle.result()
-
+    
     if result.success:
         print(f"Learning completed: {result.knowledge_id}")
     else:
         print(f"Learning failed: {result.error}")
-
+    
     await manager.disconnect()
 
 asyncio.run(run_learning_workflow())
@@ -203,19 +206,15 @@ asyncio.run(run_learning_workflow())
 ### Querying Workflow Status
 
 ```python
-
 # Get workflow handle
-
 handle = manager.client.get_workflow_handle(
     workflow_id="learning-workflow-123"
 )
 
 # Query workflow state
-
 result = await handle.result()
 
 # Check if workflow is running
-
 is_running = await handle.query("is_running")
 ```
 
@@ -227,7 +226,6 @@ handle = manager.client.get_workflow_handle(
 )
 
 # Cancel the workflow
-
 await handle.cancel()
 ```
 
@@ -245,14 +243,11 @@ Access the Temporal Web UI at http://localhost:8233 to:
 ### Programmatic Monitoring
 
 ```python
-
 # List workflows
-
 async for workflow in manager.client.list_workflows():
     print(f"Workflow {workflow.id}: {workflow.status}")
 
 # Get workflow history
-
 handle = manager.client.get_workflow_handle("workflow-id")
 async for event in handle.fetch_history():
     print(event)
@@ -275,7 +270,6 @@ async for event in handle.fetch_history():
    ```
 
 1. Verify task queue matches:
-
    - Worker: `TEMPORAL_TASK_QUEUE=project-ai-tasks`
    - Client: `task_queue="project-ai-tasks"`
 
@@ -328,13 +322,11 @@ async for event in handle.fetch_history():
 The Leather Book interface can trigger workflows:
 
 ```python
-
 # In dashboard_handlers.py
-
 async def on_generate_image(self, prompt: str):
     manager = TemporalClientManager()
     await manager.connect()
-
+    
     handle = await manager.client.start_workflow(
         ImageGenerationWorkflow.run,
         ImageGenerationRequest(
@@ -345,7 +337,7 @@ async def on_generate_image(self, prompt: str):
         id=f"image-gen-{datetime.now().timestamp()}",
         task_queue="project-ai-tasks",
     )
-
+    
     result = await handle.result()
     if result.success:
         self.display_image(result.image_path)
@@ -354,15 +346,11 @@ async def on_generate_image(self, prompt: str):
 ### From CLI
 
 ```bash
-
 # Start a workflow via CLI
-
 python -c "
 from app.temporal.workflows import AILearningWorkflow
 import asyncio
-
 # ... workflow code
-
 "
 ```
 
@@ -373,13 +361,10 @@ import asyncio
 Adjust concurrent task limits in `.env.temporal`:
 
 ```bash
-
 # More parallel activities (for CPU-bound tasks)
-
 TEMPORAL_MAX_CONCURRENT_ACTIVITIES=100
 
 # More parallel workflows (for I/O-bound tasks)
-
 TEMPORAL_MAX_CONCURRENT_WORKFLOWS=100
 ```
 
@@ -409,17 +394,13 @@ result = await workflow.execute_activity(
 Configure activity timeouts based on expected duration:
 
 ```python
-
 # Quick activities (< 1 minute)
-
 start_to_close_timeout=timedelta(seconds=30)
 
 # Medium activities (< 5 minutes)
-
 start_to_close_timeout=timedelta(minutes=5)
 
 # Long activities (image generation, data analysis)
-
 start_to_close_timeout=timedelta(minutes=30)
 ```
 

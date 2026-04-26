@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Red Team Agent using ARTKIT framework for automated adversarial testing.
 
 This agent implements ARTKIT (Automated Red Teaming Kit) for:
@@ -21,7 +19,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -723,3 +721,4 @@ class RedTeamAgent(KernelRoutedAgent):
 
         except Exception as e:
             logger.error("Error saving session: %s", e)
+

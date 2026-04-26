@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Robot Controller Manager with Triumvirate Integration
 Manages robot control loops, integrates with Triumvirate for validation,

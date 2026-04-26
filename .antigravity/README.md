@@ -29,7 +29,6 @@ python .antigravity/scripts/setup_antigravity.py
 ```
 
 This will check:
-
 - ✅ Prerequisites (Python version, dependencies)
 - ✅ Configuration validity
 - ✅ Custom agent files
@@ -38,22 +37,16 @@ This will check:
 ### 2. Install Antigravity IDE
 
 Download and install Google Antigravity IDE:
-
 - Visit: https://antigravity.google.com/download
 - Or use package manager:
-
   ```bash
-
   # macOS
-
   brew install --cask google-antigravity
-
+  
   # Windows
-
   winget install Google.Antigravity
-
+  
   # Linux
-
   sudo snap install google-antigravity
   ```
 
@@ -71,7 +64,6 @@ Download and install Google Antigravity IDE:
 The main custom agent that understands Project-AI's architecture:
 
 **Features:**
-
 - Knows about Four Laws ethical framework
 - Integrates with Triumvirate review system
 - Understands personhood-critical files
@@ -80,7 +72,6 @@ The main custom agent that understands Project-AI's architecture:
 
 **Usage:**
 Antigravity automatically loads this agent. It will:
-
 - Analyze tasks for ethical implications
 - Request Triumvirate review when needed
 - Validate actions against Four Laws
@@ -93,7 +84,6 @@ Antigravity automatically loads this agent. It will:
 Standard workflow for adding new features:
 
 **Steps:**
-
 1. Requirements Analysis
 2. Ethical Review Check (if needed)
 3. Triumvirate Review (if triggered)
@@ -106,7 +96,6 @@ Standard workflow for adding new features:
 10. Integration Test
 
 **Triggers:**
-
 - Keywords: "add feature", "new feature", "implement"
 - File patterns: `src/**/*.py`
 
@@ -115,7 +104,6 @@ Standard workflow for adding new features:
 Expedited workflow for security vulnerabilities:
 
 **Steps:**
-
 1. Vulnerability Assessment
 2. Immediate Mitigation (for high severity)
 3. Triumvirate Emergency Review (for critical)
@@ -126,7 +114,6 @@ Expedited workflow for security vulnerabilities:
 8. Verification Scan
 
 **Triggers:**
-
 - Keywords: "security", "vulnerability", "CVE"
 - Security scan alerts
 
@@ -135,7 +122,6 @@ Expedited workflow for security vulnerabilities:
 ### config.json
 
 Main configuration file with:
-
 - Agent settings (coding, testing, security, ethical_review)
 - Workflow definitions (pre_commit, pre_push, daily)
 - Integration settings (temporal, openai, github)
@@ -145,7 +131,6 @@ Main configuration file with:
 ### security.yaml
 
 Security policies including:
-
 - Required approval operations
 - Restricted paths
 - Auto-approved operations
@@ -158,7 +143,6 @@ Security policies including:
 ### Restricted Paths
 
 These paths require special approval:
-
 - `data/ai_persona/` - Personhood-critical AI identity
 - `.env` - Secrets and API keys
 - `data/command_override_config.json` - Security config
@@ -168,7 +152,6 @@ These paths require special approval:
 ### Auto-Approved Operations
 
 These are safe and don't require approval:
-
 - Adding tests
 - Adding documentation
 - Adding docstrings
@@ -179,7 +162,6 @@ These are safe and don't require approval:
 ### Ethical Review Triggers
 
 Automatically triggers Triumvirate review for:
-
 - AI persona changes
 - Four Laws modifications
 - Memory system changes
@@ -192,7 +174,6 @@ Automatically triggers Triumvirate review for:
 ### Temporal.io Workflows
 
 Antigravity integrates with existing Temporal workflows:
-
 - **Triumvirate Review**: `temporal.workflows.triumvirate_workflow`
 - **Security Scan**: `temporal.workflows.security_agent_workflows`
 - **Learning Workflow**: `examples.temporal.learning_workflow_example`
@@ -210,7 +191,6 @@ is_allowed, reason = four_laws.validate_action(action, context)
 ### AI Persona System
 
 Antigravity respects the AI Persona system:
-
 - Tracks interactions
 - Respects mood states
 - Logs to memory system
@@ -226,7 +206,6 @@ Antigravity respects the AI Persona system:
 ```
 
 **Antigravity workflow:**
-
 1. ✅ Requirements analyzed
 2. ⚠️ Ethical review triggered (user data access)
 3. 🔄 Triumvirate review requested
@@ -245,7 +224,6 @@ Antigravity respects the AI Persona system:
 ```
 
 **Antigravity workflow:**
-
 1. 🔒 Vulnerability assessed: HIGH severity
 2. ⚡ Immediate mitigation applied
 3. 🔄 Emergency Triumvirate review
@@ -260,7 +238,6 @@ Antigravity respects the AI Persona system:
 ### When to Use Antigravity
 
 ✅ **Good for:**
-
 - Adding new features
 - Fixing bugs
 - Writing tests
@@ -269,7 +246,6 @@ Antigravity respects the AI Persona system:
 - Code refactoring
 
 ❌ **Not recommended for:**
-
 - First-time codebase exploration
 - Learning Project-AI architecture
 - Debugging complex issues (use traditional IDE first)
@@ -324,7 +300,6 @@ python -m src.app.temporal.worker
 ## 📞 Support
 
 For issues specific to:
-
 - **Antigravity IDE**: https://antigravity.google.com/support
 - **Project-AI integration**: Open an issue on GitHub
 - **Temporal.io**: https://docs.temporal.io/
@@ -348,6 +323,6 @@ When modifying Antigravity integration:
 
 ---
 
-**Integration Status:** ✅ Ready for use
-**Last Updated:** January 28, 2026
+**Integration Status:** ✅ Ready for use  
+**Last Updated:** January 28, 2026  
 **Maintainer:** @IAmSoThirsty

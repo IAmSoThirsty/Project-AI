@@ -1,5 +1,3 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
 # Thirsty-lang Expansions
 
 Thirsty-lang comes in multiple flavors to suit different levels of thirst! 💧
@@ -114,11 +112,11 @@ The most powerful variant with divine capabilities:
 ```thirstofgods
 fountain HydrationTracker
   drink totalWater = 0
-
+  
   glass addWater(amount)
     this.totalWater = this.totalWater + amount
     pour "Added " + amount + " liters"
-
+  
   glass getTotal()
     return this.totalWater
 
@@ -153,21 +151,16 @@ cleanup error
 ## Running Different Editions
 
 ```bash
-
 # Base Thirsty-lang
-
 npm start examples/hello.thirsty
 
 # Thirsty+
-
 npm run thirstyplus examples/control-flow.thirstyplus
 
 # Thirsty++
-
 npm run thirstyplusplus examples/functions.thirstyplusplus
 
 # ThirstOfGods
-
 npm run thirstofgods examples/classes.thirstofgods
 ```
 

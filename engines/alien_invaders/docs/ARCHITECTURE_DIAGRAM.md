@@ -1,5 +1,26 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- alien-invaders
+- engines
+- architecture
+engine_type: aicpd
+implementation_status: in-progress
+language: python
+related_systems:
+- defense-simulation
+- scenario-engine
+- simulation-registry
+stakeholders:
+- architecture-team
+- simulation-team
+- defense-team
+---
+
 # Planetary Defense Monolith - Architecture Diagram
 
 ## System Overview
@@ -208,21 +229,18 @@ t=0 ────▶ tick() ────▶ t=1 ────▶ tick() ───�
 ## Key Invariants
 
 ### Time Invariants
-
 - ✅ Logical time is monotonically increasing
 - ✅ No entity can advance time except monolith
 - ✅ All events are timestamped with logical time
 - ✅ Event execution order is deterministic
 
 ### Law Invariants
-
 - ✅ Physical coherence violations are illegal
 - ✅ All actions pass through law evaluation
 - ✅ Violations generate accountability records
 - ✅ Action log is append-only
 
 ### Access Invariants
-
 - ✅ Read-only access is default
 - ✅ Mutable access requires monolith context
 - ✅ Mutable access requires law evaluation

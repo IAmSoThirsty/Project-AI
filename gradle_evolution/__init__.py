@@ -1,8 +1,9 @@
-"""Compatibility bridge for ``gradle_evolution`` imports.
+"""Compatibility package for the Gradle Evolution substrate.
 
-Project-AI keeps the implementation under ``gradle-evolution/`` (hyphenated),
-while tests and integrations import ``gradle_evolution.*`` (underscored). This
-module extends package search paths so both naming conventions resolve.
+The implementation currently lives under ``gradle-evolution/`` (hyphenated
+folder name), while Python imports across the codebase use
+``gradle_evolution.*``. This package bridges that naming mismatch by extending
+its package search path to the legacy directory.
 """
 
 from __future__ import annotations

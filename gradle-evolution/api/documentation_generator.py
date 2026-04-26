@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Documentation Generator
 =======================
@@ -81,7 +79,7 @@ class DocumentationGenerator:
         logger.info("Documentation generator initialized: %s", self.output_dir)
 
     def add_endpoint_documentation(self, documentation: APIDocumentation) -> None:
-        """Add endpoint documentation to in-memory registry."""
+        """Add endpoint documentation to the in-memory registry."""
         self.api_docs.append(documentation)
 
     def validate_documentation(self, documentation: APIDocumentation) -> bool:

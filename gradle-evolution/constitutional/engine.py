@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Constitutional Engine - Enforces constitutional principles during builds
 """
@@ -14,9 +12,9 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class ConstitutionalEngine:
@@ -140,7 +138,7 @@ class ConstitutionalEngine:
             "context": context,
             "severity": severity,
             "reason": reason,
-            "timestamp": _utcnow().isoformat(),
+            "timestamp": _utc_now_iso(),
         }
         self.violation_log.append(violation)
         logger.warning("Constitutional violation: %s", reason)
@@ -149,9 +147,11 @@ class ConstitutionalEngine:
         """Get all logged violations."""
         return self.violation_log
 
-    def get_violation_history(self) -> list[dict[str, Any]]:
-        """Compatibility alias for legacy callers/tests."""
-        return self.get_violations()
+    def get_violation_history(self, limit: int | None = None) -> list[dict[str, Any]]:
+        """Backward-compatible accessor for logged violations."""
+        if limit is None:
+            return self.violation_log
+        return self.violation_log[-limit:]
 
 
 __all__ = ["ConstitutionalEngine"]

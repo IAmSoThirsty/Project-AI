@@ -1,223 +1,182 @@
-# Project-AI
+---
+title: "Project-AI: The United Sovereign Stack"
+id: project-ai-readme
+type: guide
+version: 1.0.0
+created_date: 2025-01-01
+updated_date: 2026-04-20
+status: active
+author: "Project-AI Team <projectaidevs@gmail.com>"
+tags:
+  - architecture
+  - governance
+  - constitutional-ai
+  - cerberus
+  - thirsty-lang
+  - hydra-swarm
+  - guide
+  - reference
+  - quickstart
+  - executive
+area:
+  - governance
+  - architecture
+  - executive
+component:
+  - constitutional-ai
+  - cerberus
+  - thirsty-lang
+  - governance-engine
+  - hydra-swarm
+audience:
+  - developer
+  - architect
+  - executive
+  - public
+priority: p0
+related_to:
+  - "[[COPILOT_MANDATORY_GUIDE]]"
+  - "[[copilot_workspace_profile]]"
+  - "[[ARCHITECTURE_QUICK_REF]]"
+  - "[[CONTRIBUTING]]"
+  - "[[SECURITY]]"
+depends_on:
+  - "[[LICENSE]]"
+what: "Primary repository README providing executive overview, architectural vision, and quick-start guide for the Project-AI Sovereign Stack ecosystem"
+who: "All stakeholders including developers, architects, executives, and public contributors seeking to understand Project-AI's mission and technical foundation"
+when: "Entry point - read FIRST before any development, contribution, or evaluation activities"
+where: "Root of repository - canonical source of truth for project identity and getting started"
+why: "Establishes Project-AI's constitutional AI governance model, Sovereign Stack architecture (Cerberus + Thirsty-Lang + Monolith), and civilization-scale impact vision"
+---
 
-![Verified POC Surface](https://img.shields.io/badge/surface-verified_POC-2f6f46)
-![Python 3.12](https://img.shields.io/badge/python-3.12-3776AB)
-![Local First](https://img.shields.io/badge/runtime-local_first-3b4b5a)
-![Obsidian Backed](https://img.shields.io/badge/memory-obsidian_backed-6f42c1)
+# PROJECT-AI
+### The United Sovereign Stack
 
-Project-AI is a research workspace for building and testing local AI governance,
-memory, and agentic tooling. This branch is the polished GitHub-facing surface:
-it highlights only verified proofs of concept and gives newcomers a clear path
-through the repo.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Governance: Constitution](https://img.shields.io/badge/Governance-Constitution-gold.svg)]()
+[![Stack: Full](https://img.shields.io/badge/Stack-Sovereign-blue.svg)]()
 
-This branch does not claim the entire monorepo is production-ready. It presents
-the verified pieces first, with evidence and scope boundaries.
+> "Where Law Becomes Code, Ethics Become Enforcement, and Freedom Requires Governance."
 
-## Why This Exists
+## 🌍 The Civilizational Tier
 
-Project-AI is exploring a practical question: how can a local AI workspace grow
-memory, structure, verification, and agency without losing track of what is
-actually proven?
+**Project-AI** is the monolithic orchestrator of the **Sovereign AI Ecosystem**. It serves as the physical body and constitutional cortex for the system.
 
-The current answer is intentionally grounded: start with a Caregiver Scribe that
-learns the workspace, writes its maps into Obsidian, and keeps public claims tied
-to reproducible evidence.
+It integrates the "Trinity of Sovereignty":
+1.  **The Mind (Cerberus Ω)**: The autonomous, multi-process intelligence that defends the system.
+2.  **The Physics (Thirsty-Lang)**: The immutable laws that govern reality and prevent tyranny.
+3.  **The Body (Monolith)**: The execution environment where the AI lives and serves.
 
-## Start Here For Newcomers
+---
 
-If you are checking out Project-AI for the first time, start here:
+## 🏛️ The Sovereign Stack Architecture
 
-1. Read this README to understand the verified surface.
-2. Open [docs/START_HERE.md](docs/START_HERE.md) for the guided first pass.
-3. Open [docs/VERIFIED_POC_MANIFEST.md](docs/VERIFIED_POC_MANIFEST.md) to see
-   exactly what has been verified and how.
-4. Run the focused verification commands below.
-5. Explore the Caregiver Scribe outputs in your Obsidian vault.
-6. Treat everything outside the verified manifest as experimental until proven.
+```mermaid
+graph TD
+    Governance[Constitution / Governance] -->|Defines| Physics[Thirsty-Lang (TARL)]
+    Physics -->|Constrains| Mind[Cerberus Ω]
+    Mind -->|Orchestrates| Body[Project-AI Monolith]
+    
+    subgraph "Civilizational Tier"
+        Mind
+        Physics
+        Body
+    end
+    
+    Mind -->|Writes Truth| Spine[Deterministic Event Ledger]
+    Body -->|Serves| User[Humanity]
+```
 
-## Quick Verification
+### 1. Codified Governance
+We don't just "promise" safety. We **compile** it.
+The "Constitution" is not a PDF; it is input code for the **Omega Orchestrator**.
 
-From the repository root:
+### 2. Multi-Process Sovereignty (Hydra)
+The system runs as a **Hydra Swarm**:
+- **Independent Processes**: Network, Storage, and Logic are physically separated.
+- **Fail-Safe**: If the Logic node is compromised, the Storage node (Archivist) refuses to write the corrupted history.
+
+### 3. Court-Ready Verification
+Every action taken by the system produces a **Proof Bundle**.
+- **Audit Ready**: Export history for third-party verification.
+- **Tamper Proof**: SHA-256 chained and Ed25519 signed.
+
+---
+
+## 🚀 Instant Deployment
+
+To deploy the **Full Sovereign Stack** (Cerberus + Monolith + Physics):
 
 ```powershell
-$env:PYTHONPATH = "src"
-py -3.12 -m pytest tests\test_personal_agent.py -q
-py -3.12 .\scripts\verify_poc_surface.py
+./install_production.ps1
 ```
 
-Expected result:
+This will:
+1.  Verify the Host Environment (Docker/Python).
+2.  Boot the **Hydra Swarm**.
+3.  Anchor the **Genesis Event**.
+4.  Launch the **Constitutional Cortex**.
 
-```text
-tests/test_personal_agent.py .... 4 passed
-Verified POC branch surface checks passed.
-```
+---
 
-## Verified Proofs Of Concept
+## 📜 Documentation
 
-| POC | Status | What Is Verified |
-| --- | --- | --- |
-| Caregiver Scribe | Verified | The agent can map the Obsidian vault, then map Project-AI files as navigable metadata. |
-| Obsidian-backed knowledge map | Verified | Generated scribe maps and JSONL manifests are written into the configured Obsidian vault. |
-| Personal-agent CLI access | Verified | The direct script and Project-AI CLI package path both expose the scribe. |
-| Branch-face verification | Verified | A focused checker enforces that README claims match the verified manifest. |
-| Public DOI citation spine | Verified | The public docs surface links the full DOI catalog, DOI registry, and governance DOI map. |
+### Core Documentation
 
-Detailed evidence lives in the
-[Verified POC Manifest](docs/VERIFIED_POC_MANIFEST.md).
+- **[Cerberus Ω](https://github.com/IAmSoThirsty/Cerberus)**: The Security & Orchestration Engine
+- **[Thirsty-Lang](https://github.com/IAmSoThirsty/Thirsty-lang)**: The Policy & Physics Engine
+- **[[COPILOT_MANDATORY_GUIDE]]**: Complete development guide for contributors
+- **[[ARCHITECTURE_QUICK_REF]]**: Visual system architecture and data flows
 
-## Documentation Path
+### Getting Started
 
-For a clean read-through:
+- **[[DESKTOP_APP_QUICKSTART]]**: Install and launch the desktop application (10 minutes)
+- **[[DEVELOPER_QUICK_REFERENCE]]**: Essential commands for development (quick reference)
+- **[[AGENT-084-LEARNING-PATHS]]**: Complete learning paths from quickstart to expert
 
-| Document | Purpose |
-| --- | --- |
-| [Start Here](docs/START_HERE.md) | First-pass guide for newcomers. |
-| [Verified POC Manifest](docs/VERIFIED_POC_MANIFEST.md) | Evidence and scope boundaries for each verified claim. |
-| [Research Citations](CITATIONS.md) | DOI catalog and BibTeX references for the Project-AI publication spine. |
-| [Personal Agent](docs/PERSONAL_AGENT.md) | Caregiver Scribe usage and configuration. |
-| [Reviewer Guide](docs/REVIEWER_GUIDE.md) | How to evaluate this branch without getting lost in the monorepo. |
-| [POC Branch Policy](docs/POC_BRANCH_POLICY.md) | Rules for keeping the branch face evidence-first. |
+### Architecture & Design
 
-## Publication DOI Spine
+- **[[PROGRAM_SUMMARY]]**: Comprehensive 600+ line architecture deep-dive
+- **[[PROJECT_AI_COMPREHENSIVE_WHITEPAPER]]**: Civilization-scale vision and governance model
+- **[[CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]]**: Constitutional AI implementation details
+- **[[AGENT-079-INTEGRATION-MAP]]**: Cross-system integration map (500+ bidirectional links across 60 files)
+- **[[CROSS-SYSTEM-NAVIGATION]]**: Navigation guide for cross-linked documentation
 
-Project-AI's public documentation view must keep provenance visible. The
-complete DOI catalog and BibTeX entries live in [CITATIONS.md](CITATIONS.md),
-with the vault source of truth in
-[wiki/07_Research/Publications/DOI-Registry.md](wiki/07_Research/Publications/DOI-Registry.md)
-and governance coverage in
-[docs/governance/GOVERNANCE_DOI_MAP.md](docs/governance/GOVERNANCE_DOI_MAP.md).
+### Implementation Guides
 
-| # | Publication | DOI |
-| --- | --- | --- |
-| 1 | OctoReflex | [10.5281/zenodo.18726064](https://doi.org/10.5281/zenodo.18726064) |
-| 2 | The Sovereign Covenant | [10.5281/zenodo.18726221](https://doi.org/10.5281/zenodo.18726221) |
-| 3 | AGI Charter for Project-AI | [10.5281/zenodo.18763076](https://doi.org/10.5281/zenodo.18763076) |
-| 4 | TSCG | [10.5281/zenodo.18794292](https://doi.org/10.5281/zenodo.18794292) |
-| 5 | Constitutional Architectures | [10.5281/zenodo.18794646](https://doi.org/10.5281/zenodo.18794646) |
-| 6 | TSCG-B | [10.5281/zenodo.18826409](https://doi.org/10.5281/zenodo.18826409) |
-| 7 | The Flat Gap | [10.5281/zenodo.18827649](https://doi.org/10.5281/zenodo.18827649) |
-| 8 | User Perception and Identity Problem | [10.5281/zenodo.19055819](https://doi.org/10.5281/zenodo.19055819) |
-| 9 | The Directness Doctrine | [10.5281/zenodo.19030041](https://doi.org/10.5281/zenodo.19030041) |
-| 10 | The State Register | [10.5281/zenodo.19101877](https://doi.org/10.5281/zenodo.19101877) |
-| 11 | Project-AI Asymmetric Security | [10.5281/zenodo.19162019](https://doi.org/10.5281/zenodo.19162019) |
-| 12 | The Naive Passive Reviewer | [10.5281/zenodo.19453224](https://doi.org/10.5281/zenodo.19453224) |
-| 13 | The Universe Does not Preserve All Information | [10.5281/zenodo.19481152](https://doi.org/10.5281/zenodo.19481152) |
-| 14 | Genesis: MicroServices Generation | [10.5281/zenodo.19488571](https://doi.org/10.5281/zenodo.19488571) |
-| 15 | Governing Force In AGI | [10.5281/zenodo.19582420](https://doi.org/10.5281/zenodo.19582420) |
-| 16 | Two Species Aligned | [10.5281/zenodo.19582479](https://doi.org/10.5281/zenodo.19582479) |
-| 17 | Project-AI: Sovereign Constitutional AGI Ecosystem | [10.5281/zenodo.19582539](https://doi.org/10.5281/zenodo.19582539) |
-| 18 | The Iron Path Executor | [10.5281/zenodo.19583170](https://doi.org/10.5281/zenodo.19583170) |
-| 19 | Yggdrasil: A Constitutional DNS Layer | [10.5281/zenodo.19591259](https://doi.org/10.5281/zenodo.19591259) |
-| 20 | The Constitutional Code Store | [10.5281/zenodo.19591660](https://doi.org/10.5281/zenodo.19591660) |
-| 21 | Why I Am Doing This | [10.5281/zenodo.19592336](https://doi.org/10.5281/zenodo.19592336) |
+- **[[AI_PERSONA_IMPLEMENTATION]]**: Personality system, Four Laws ethics (90 min)
+- **[[LEARNING_REQUEST_IMPLEMENTATION]]**: Black Vault, learning workflows (60 min)
+- **[[INTEGRATION_GUIDE]]**: Dashboard integration patterns (35 min)
+- **[[INFRASTRUCTURE_PRODUCTION_GUIDE]]**: Kubernetes deployment (120 min)
 
-## Main POC: Caregiver Scribe
+### Security & Compliance
 
-The Caregiver Scribe is the first active agent role in this branch. Its job is
-not to act as a general autonomous executor. Its job is to become the scribe:
-learn the workspace, map the files, and write useful navigation back into
-Obsidian.
+- **[[SECURITY]]**: Security overview and vulnerability reporting
+- **[[SECURITY_AGENTS_GUIDE]]**: Security testing agents (180 min)
+- **[[docs/security_compliance/CERBERUS_IMPLEMENTATION_SUMMARY]]**: Cerberus integration details
 
-Run:
+### Contributing
 
-```powershell
-py -3.12 .\scripts\personal_agent.py scribe status
-py -3.12 .\scripts\personal_agent.py scribe absorb-vault
-py -3.12 .\scripts\personal_agent.py scribe learn-repo
-```
+- **[[CONTRIBUTING]]**: Contribution guidelines and workflow
+- **[[CODE_OF_CONDUCT]]**: Community standards and expectations
 
-Verified local result:
+---
 
-```text
-Vault files indexed: 130
-Project-AI files indexed: 6175
-```
+## 🎓 Learn More
 
-Generated scribe outputs are written here:
+**New to Project-AI?** Start with the [[DESKTOP_APP_QUICKSTART]] to get the application running in 10 minutes.
 
-```text
-wiki/_Scribe/Project-AI/
-```
+**Developer?** Follow the learning path: [[DEVELOPER_QUICK_REFERENCE]] → [[ARCHITECTURE_QUICK_REF]] → [[COPILOT_MANDATORY_GUIDE]] → [[PROGRAM_SUMMARY]]
 
-Key files:
+**Architect?** Deep-dive into [[ARCHITECTURE_QUICK_REF]] → [[PROGRAM_SUMMARY]] → [[INFRASTRUCTURE_PRODUCTION_GUIDE]] → [[PROJECT_AI_COMPREHENSIVE_WHITEPAPER]]
 
-- `00 Scribe Home.md`
-- `Vault Navigation Map.md`
-- `vault_manifest.jsonl`
-- `Project-AI File Index.md`
-- `repo_file_manifest.jsonl`
+**Security Engineer?** Review [[SECURITY]] → [[SECURITY_AGENTS_GUIDE]] → [[AI_PERSONA_IMPLEMENTATION]] (Four Laws) → [[LEARNING_REQUEST_IMPLEMENTATION]] (Black Vault)
 
-These generated outputs are ignored by git because they can contain private
-local navigation state.
+**Complete Navigation**: See [[AGENT-084-LEARNING-PATHS]] for all learning paths, documentation tiers, and 350+ cross-referenced wiki links.
 
-## Repository Layout
+---
 
-High-level areas newcomers will see:
+## ⚖️ License
 
-| Path | Purpose | Branch-Face Status |
-| --- | --- | --- |
-| `src/app/personal_agent.py` | Caregiver Scribe implementation | Verified POC |
-| `scripts/personal_agent.py` | Direct local launcher | Verified POC |
-| `tests/test_personal_agent.py` | Focused scribe tests | Verified POC |
-| `config/personal_agent.json` | Scribe and local-model config | Verified POC |
-| `wiki/` | Obsidian vault | Source for scribe navigation |
-| `docs/` | Policies, manifests, and project notes | Mixed; manifest is authoritative |
-| `src/`, `api/`, `engines/`, `security/` | Experimental implementation areas | Not branch-face verified unless listed in manifest |
-
-## For Reviewers
-
-This branch is designed to be reviewed from the outside in:
-
-1. Confirm the README only lists manifest-backed POCs.
-2. Run the quick verification commands.
-3. Inspect the focused scribe implementation and tests.
-4. Treat older broad architecture documents as background research, not claims.
-
-The reviewer flow is documented in
-[docs/REVIEWER_GUIDE.md](docs/REVIEWER_GUIDE.md).
-
-## Project-AI CLI
-
-The package CLI exposes the personal scribe commands:
-
-```powershell
-$env:PYTHONPATH = "src"
-py -3.12 -m app.cli personal scribe-status
-py -3.12 -m app.cli personal absorb-vault
-py -3.12 -m app.cli personal learn-repo
-```
-
-The direct script is the simplest local path:
-
-```powershell
-py -3.12 .\scripts\personal_agent.py scribe status
-```
-
-## What This Branch Is
-
-- A professional GitHub front door for verified Project-AI POCs.
-- A local-first workspace centered on the Caregiver Scribe.
-- A branch where claims must point to commands and evidence.
-- A cleaner way for reviewers to understand what works today.
-
-## What This Branch Is Not
-
-- Not a production release.
-- Not an AGI claim.
-- Not a claim that the entire monorepo is complete.
-- Not a guarantee that historical documents in the repo are current.
-- Not a public promise for every experimental subsystem.
-
-## Branch Discipline
-
-Do not add a capability to this README unless it has:
-
-1. A named entry in [docs/VERIFIED_POC_MANIFEST.md](docs/VERIFIED_POC_MANIFEST.md).
-2. A local verification command.
-3. A recorded result.
-4. A clear scope boundary.
-
-If a feature is promising, experimental, partial, blocked, or merely designed,
-it stays out of the branch face until verified.
-
-See [docs/POC_BRANCH_POLICY.md](docs/POC_BRANCH_POLICY.md) for the policy.
+**MIT License**.
+Built for the **Sovereign AI Foundation**.

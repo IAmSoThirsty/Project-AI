@@ -1,5 +1,25 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "QUICK START"
+id: "quick-start"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+historical_value: high
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - testing
+  - ci-cd
+  - security
+  - architecture
+path_confirmed: T:/Project-AI-main/docs/internal/archive/session-notes/QUICK_START.md
+---
+
 # Quick Start Guide - Project-AI Dashboard
 
 ## 🚀 Launch Commands
@@ -15,17 +35,14 @@ python src/app/main.py
 ### Alternative Launch Methods
 
 ```powershell
-
 # Method 1: Using python module execution
-
 python -m app.main
 
 # Method 2: With environment file
-
 python src/app/main.py  # Automatically loads .env file
 ```
 
-______________________________________________________________________
+---
 
 ## ✅ Pre-Launch Checklist
 
@@ -35,7 +52,7 @@ ______________________________________________________________________
 - [x] Documentation updated
 - [x] READMEs updated (main, web, android)
 
-______________________________________________________________________
+---
 
 ## 🆕 New Features Available
 
@@ -57,7 +74,7 @@ ______________________________________________________________________
 - **Location**: `plugins/` directory
 - **Template**: See `src/app/core/plugin_system.py` for ExamplePlugin
 
-______________________________________________________________________
+---
 
 ## 🎯 What You Can Do Now
 
@@ -75,7 +92,7 @@ ______________________________________________________________________
    - Emergency Alerts
    - Intent Detection
 
-______________________________________________________________________
+---
 
 ## 📋 Test Results Summary
 
@@ -90,38 +107,32 @@ ______________________________________________________________________
 Total: 6/6 tests passing (100%)
 ```
 
-______________________________________________________________________
+---
 
 ## 🔧 Environment Variables (Optional)
 
 Add these to your `.env` file for enhanced features:
 
 ```env
-
 # OpenAI Integration (for learning paths & chat)
-
 OPENAI_API_KEY=sk-your-key-here
 
 # Email Alerts (for emergency features)
-
 SMTP_USERNAME=your-email@example.com
 SMTP_PASSWORD=your-secure-app-password-here  # Generate from email provider
 
 # Encryption (auto-generated if not provided)
-
 FERNET_KEY=your-base64-key-here
 
 # Cloud Sync (NEW!)
-
 CLOUD_SYNC_URL=https://your-api.com/sync
 
 # Directories (optional)
-
 DATA_DIR=data
 LOG_DIR=logs
 ```
 
-______________________________________________________________________
+---
 
 ## 🎨 Dashboard Features
 
@@ -166,7 +177,7 @@ ______________________________________________________________________
 - Quick alert system
 - Location-aware alerts
 
-______________________________________________________________________
+---
 
 ## 📊 System Architecture
 
@@ -199,7 +210,7 @@ Project-AI/
 └── requirements.txt               # All dependencies
 ```
 
-______________________________________________________________________
+---
 
 ## 🐛 Known Minor Issues
 
@@ -210,7 +221,7 @@ ______________________________________________________________________
 1. Minor type annotation mismatches - no runtime impact
 1. Unused imports - cosmetic only
 
-______________________________________________________________________
+---
 
 ## 💬 Support
 
@@ -219,20 +230,20 @@ ______________________________________________________________________
 - **Documentation**: See README.md, INTEGRATION_SUMMARY.md
 - **Branch**: feature/android-apk-integration
 
-______________________________________________________________________
+---
 
 **System Status: ✅ READY FOR PRODUCTION USE**
 
 **Happy coding! 🎉**
 
-______________________________________________________________________
+
+---
 
 ## Formatting & Linters
 
 Before committing changes, run the project formatters and linters:
 
 PowerShell (Python):
-
 ```powershell
 $env:PYTHONPATH='src'
 python -m pip install -r requirements.txt
@@ -243,17 +254,14 @@ black src tests
 ```
 
 PowerShell (Web frontend):
-
 ```powershell
 cd web/frontend
 npm install
 npm run format
-
 # ESLint configuration may not be present; to set up linting run `npm init @eslint/config`
-
 ```
 
-______________________________________________________________________
+---
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

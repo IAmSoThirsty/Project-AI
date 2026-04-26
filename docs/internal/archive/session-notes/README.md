@@ -1,5 +1,26 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "README"
+id: "readme"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: superseded
+historical_value: high
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - implementation
+  - testing
+  - security
+  - architecture
+superseded_by: [[more recent updates]]
+path_confirmed: T:/Project-AI-main/docs/internal/archive/session-notes/README.md
+---
+
 # Development Session Notes (ARCHIVED)
 
 This folder contains historical session summaries, status reports, and development notes from various Project-AI development sessions. These documents capture point-in-time snapshots of the project's progress and are kept for reference.

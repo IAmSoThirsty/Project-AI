@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Location tracking and management system.
 """
@@ -53,7 +51,7 @@ class LocationTracker:
     def get_location_from_ip(self):
         """Get location from IP address"""
         try:
-            response = requests.get("https://ipapi.co/json/")
+            response = requests.get("https://ipapi.co/json/", timeout=10)
             if response.status_code == 200:
                 data = response.json()
                 return {
@@ -66,6 +64,9 @@ class LocationTracker:
                     "timestamp": datetime.now().isoformat(),
                     "source": "ip",
                 }
+            return None
+        except requests.Timeout:
+            print("Request to IP geolocation API timed out")
             return None
         except Exception as e:
             print(f"Error getting location from IP: {str(e)}")

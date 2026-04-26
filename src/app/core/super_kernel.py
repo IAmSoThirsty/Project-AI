@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 SuperKernel - Unified Orchestration Layer for All Kernels.
 
@@ -14,7 +12,7 @@ cognitive operations.
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from .kernel_types import KernelInterface, KernelType
@@ -462,6 +460,7 @@ class SuperKernel:
         """
         # RBAC check implementation would go here
         # For now, this is a placeholder
+        pass
 
     def get_execution_history(
         self,
@@ -531,3 +530,4 @@ __all__ = [
     "RegisteredKernel",
     "SuperKernelExecutionRecord",
 ]
+

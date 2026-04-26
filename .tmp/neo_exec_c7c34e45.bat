@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:/Project-AI-main/src/app/core/openrouter_provider.py' -TotalCount 500"

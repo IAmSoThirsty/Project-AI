@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Out-Dated(archive)
 """WiFi Security Manager - God Tier Security with WPA3, OWE, SAE, and PMF"""
 
 import logging

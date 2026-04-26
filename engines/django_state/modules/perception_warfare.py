@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Perception warfare module.
 
 Models information manipulation, epistemic collapse, and reality fragmentation.

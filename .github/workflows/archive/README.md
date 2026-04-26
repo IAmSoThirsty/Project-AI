@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, workflows, archive, deprecated, legacy]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: archived
+related_systems: [ci-cd, github-actions, codex-deus]
+stakeholders: [devops, developers]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Archived Workflows
 
 ## 📦 Status: ARCHIVED
@@ -18,7 +32,6 @@ All 28 individual workflows have been merged into the God Tier Codex Deus Ultima
 ## Archived Workflows (28 Total)
 
 ### CI/Testing (5)
-
 - `ci.yml` - Legacy CI pipeline
 - `ci-consolidated.yml` - Consolidated CI
 - `node-ci.yml` - Node.js specific CI
@@ -26,7 +39,6 @@ All 28 individual workflows have been merged into the God Tier Codex Deus Ultima
 - `coverage-threshold-enforcement.yml` - Coverage gates
 
 ### Security (6)
-
 - `security-consolidated.yml` - Security scanning suite
 - `adversarial-redteam.yml` - AI safety testing
 - `ai-model-security.yml` - ML model security
@@ -35,33 +47,28 @@ All 28 individual workflows have been merged into the God Tier Codex Deus Ultima
 - `checkov-cloud-config.yml` - IaC security
 
 ### Build & Release (4)
-
 - `build-release.yml` - Multi-platform builds
 - `release.yml` - Release automation
 - `sign-release-artifacts.yml` - Artifact signing
 - `sbom.yml` - Software Bill of Materials
 
 ### Automation (3)
-
 - `pr-automation-consolidated.yml` - PR automation
 - `issue-management-consolidated.yml` - Issue triage
 - `auto-create-branch-prs.yml` - Branch PR creation
 
 ### Validation (4)
-
 - `validate-guardians.yml` - Guardian approvals
 - `validate-waivers.yml` - Security waivers
 - `post-merge-validation.yml` - Post-merge checks
 - `gpt_oss_integration.yml` - GPT integration
 
 ### Infrastructure (3)
-
 - `jekyll-gh-pages.yml` - Documentation
 - `prune-artifacts.yml` - Artifact cleanup
 - `dependabot.yml` - Dependabot config
 
 ### Other (3)
-
 - `codex-deus-monolith.yml` - Previous consolidation attempt
 - `snn-mlops-cicd.yml` - Neural network tests
 - `main.yml` - Generic workflow
@@ -69,7 +76,6 @@ All 28 individual workflows have been merged into the God Tier Codex Deus Ultima
 ## Migration Guide
 
 See **`WORKFLOWS_TO_DEPRECATE.md`** in the repository root for:
-
 - Complete functionality mapping
 - Feature equivalents in new workflow
 - Migration instructions
@@ -86,7 +92,6 @@ git commit -m "Restore <workflow-name>"
 ## New Workflow Reference
 
 The ultimate workflow includes all functionality from these 28 workflows plus:
-
 - Smart path-based detection
 - Auto-healing with PR creation
 - Comprehensive reporting
@@ -94,13 +99,12 @@ The ultimate workflow includes all functionality from these 28 workflows plus:
 - Better parallelization
 
 **Documentation:**
-
 - `CODEX_DEUS_INDEX.md` - Getting started
 - `CODEX_DEUS_ULTIMATE_SUMMARY.md` - Complete technical reference
 - `CODEX_DEUS_QUICK_REF.md` - Quick reference guide
 
 ---
 
-**Archived:** 2026-02-01
-**By:** Codex Deus Ultimate Migration
+**Archived:** 2026-02-01  
+**By:** Codex Deus Ultimate Migration  
 **Reason:** Consolidated into single God Tier workflow

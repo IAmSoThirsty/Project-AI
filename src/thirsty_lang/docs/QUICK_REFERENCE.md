@@ -1,5 +1,3 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
 # Thirsty-lang Quick Reference
 
 ## Basic Syntax
@@ -112,7 +110,7 @@ hydrated
 ```thirsty
 glass greet(name)
   pour "Hello, " + name
-
+  
 greet("World")
 ```
 
@@ -121,10 +119,10 @@ greet("World")
 ```thirsty
 fountain Person
   drink name = ""
-
+  
   glass init(n)
     this.name = n
-
+  
   glass sayHello()
     pour "Hello, I'm " + this.name
 

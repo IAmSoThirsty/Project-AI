@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Integration example: Sovereign Messaging with Project-AI.
 
@@ -128,8 +126,7 @@ def example_integration_with_project_ai():
     print("EXAMPLE: Integration with Project-AI")
     print("=" * 60)
 
-    print(
-        """
+    print("""
 Integration Steps:
 
 1. **Initialize Sovereign Messaging in main.py:**
@@ -194,8 +191,7 @@ Integration Steps:
 
    print(f"Paired contacts: {len(contacts)}")
    print(f"Active messages: {len(messages)}")
-"""
-    )
+""")
 
 
 def example_multi_user_scenario():

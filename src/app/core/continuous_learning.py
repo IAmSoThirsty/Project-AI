@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Continuous learning engine that tracks incoming facts and generates structured reports."""
 
 from __future__ import annotations
@@ -17,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class LearningReport:
-    """A structured report generated after absorbing new knowledge (Knowledge Synthesis Artifact & Insight Documentation)."""
+    """A structured report generated after absorbing new knowledge."""
 
     topic: str
     timestamp: str
@@ -29,7 +27,7 @@ class LearningReport:
 
 
 class ContinuousLearningEngine:
-    """Engine responsible for continuously absorbing new information (Autonomous Knowledge Synthesis & Evolution Core)."""
+    """Engine responsible for continuously absorbing new information."""
 
     DATA_FILE = "reports.json"
 

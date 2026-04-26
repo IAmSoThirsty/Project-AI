@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Integration tests for Trading Hub core modules.
 
 Demonstrates complete workflow: market data -> strategy execution -> order placement -> portfolio tracking.

@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: workflow-spec
+tags: [security, checklist, github-actions, sast, dast, compliance]
+created: 2026-01-20
+last_verified: 2026-04-20
+status: current
+related_systems: [security-automation, ci-cd, github-actions]
+stakeholders: [security-team, devops, developers]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # Security Checklist for GitHub Workflows
 
 ## Overview
@@ -210,11 +222,8 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
 1. **Container Security Enhancement**
 
    ```yaml
-
    # Add to workflows with Docker builds
-
    - name: Run Trivy vulnerability scanner
-
      uses: aquasecurity/trivy-action@master
      with:
        scan-type: 'image'
@@ -238,11 +247,8 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
 1. **Enhanced Cloud Security**
 
    ```yaml
-
    # Add cloud configuration scanning
-
    - name: Run Checkov
-
      uses: bridgecrewio/checkov-action@master
      with:
        directory: infrastructure/
@@ -327,13 +333,10 @@ Code Push/PR
 1. **Always Include These Steps**:
 
    ```yaml
-
    - name: Checkout code
-
      uses: actions/checkout@v4
-
+   
    - name: Run security checks
-
      run: |
        pip install bandit pip-audit
        bandit -r . -f json -o bandit-report.json
@@ -351,17 +354,13 @@ Code Push/PR
    permissions:
      contents: read
      security-events: write
-
      # Only add permissions you need
-
    ```
 
 1. **Validate Inputs**:
 
    ```yaml
-
    - name: Validate input
-
      run: |
        if [[ ! "${{ inputs.branch }}" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
          echo "Invalid branch name"
@@ -393,6 +392,6 @@ Code Push/PR
 
 ---
 
-**Last Updated**: January 20, 2026
-**Maintained By**: Project-AI Security Team
+**Last Updated**: January 20, 2026  
+**Maintained By**: Project-AI Security Team  
 **Version**: 1.0.0

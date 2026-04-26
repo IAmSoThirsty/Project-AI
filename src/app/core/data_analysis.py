@@ -1,15 +1,19 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Data analysis and visualization utilities."""
-
-import matplotlib
-matplotlib.use('Agg')  # Use non-GUI backend to prevent Qt DLL crashes
 
 import pandas as pd
 from matplotlib.figure import Figure
 
-# Qt canvas not available in headless/test environments
-FigureCanvasQTAgg = None
+# Import the appropriate Qt canvas backend when available (supports Qt5/Qt6)
+try:
+    # Matplotlib 3.7+ provides backend_qtagg for Qt6/Qt5
+    from matplotlib.backends import backend_qtagg as _back_qt
+
+    FigureCanvasQTAgg = _back_qt.FigureCanvasQTAgg
+except Exception:
+    try:
+        from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+    except Exception:
+        FigureCanvasQTAgg = None
 
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA

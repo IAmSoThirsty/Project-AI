@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Governance Manager - Multi-Stakeholder Governance System
 
@@ -8,13 +6,21 @@ decision-making through proposals, voting, quorum requirements, and policy
 enforcement.
 
 Key Features:
-- Proposal creation with proposer permission validation
-- Voting with duplicate prevention, voting-period checks, and weights
-- Quorum calculation with weighted participation
-- Proposal execution with automatic policy application
-- State persistence to JSON
+- Proposal creation and management
+- Voting mechanisms with quorum
+- Policy rule enforcement
+- Stakeholder management
+- Governance state persistence
 
-STATUS: PRODUCTION
+This is a stub implementation providing the foundation for future development
+of comprehensive governance capabilities.
+
+Future Enhancements:
+- Implement sophisticated voting mechanisms
+- Add proposal dependency tracking
+- Support for governance token weighting
+- Integration with blockchain for transparency
+- Automated policy enforcement
 """
 
 import json
@@ -35,11 +41,10 @@ class GovernanceManager:
     """Manages multi-stakeholder governance for the AI system.
 
     This manager handles:
-    - Proposal lifecycle (create → vote → quorum check → execute/reject)
-    - Per-stakeholder vote tracking with duplicate prevention
-    - Configurable voting weights
-    - Automatic policy rule application on execution
-    - Stakeholder permission validation
+    - Proposal lifecycle
+    - Voting and quorum
+    - Policy enforcement
+    - Stakeholder permissions
     - State persistence
     """
 
@@ -48,6 +53,9 @@ class GovernanceManager:
 
         Args:
             state_file: Path to governance state JSON file
+
+        This method initializes the manager state. Full feature implementation
+        is deferred to future development phases.
         """
         self.state_file = state_file or DEFAULT_STATE_FILE
         self.state: dict[str, Any] = {}
@@ -89,7 +97,6 @@ class GovernanceManager:
             "stakeholders": [],
             "active_proposals": [],
             "executed_proposals": [],
-            "rejected_proposals": [],
             "policy_rules": {},
         }
 
@@ -114,83 +121,6 @@ class GovernanceManager:
             logger.error("Failed to save governance state: %s", e)
             return False
 
-    # ── Stakeholder management ────────────────────────────────
-
-    def add_stakeholder(
-        self,
-        stakeholder_id: str,
-        name: str,
-        role: str = "member",
-        weight: float = 1.0,
-    ) -> bool:
-        """Register a stakeholder in the governance system.
-
-        Args:
-            stakeholder_id: Unique identifier for the stakeholder
-            name: Display name
-            role: Role (e.g., "admin", "member", "observer")
-            weight: Voting weight (default 1.0)
-
-        Returns:
-            True if added, False if already exists
-        """
-        for s in self.state["stakeholders"]:
-            if s["id"] == stakeholder_id:
-                logger.warning("Stakeholder already exists: %s", stakeholder_id)
-                return False
-
-        self.state["stakeholders"].append(
-            {
-                "id": stakeholder_id,
-                "name": name,
-                "role": role,
-                "weight": weight,
-                "joined_at": datetime.now().isoformat(),
-            }
-        )
-        self.save_state()
-        logger.info("Added stakeholder: %s (role=%s, weight=%.2f)", name, role, weight)
-        return True
-
-    def remove_stakeholder(self, stakeholder_id: str) -> bool:
-        """Remove a stakeholder from the governance system.
-
-        Args:
-            stakeholder_id: ID of stakeholder to remove
-
-        Returns:
-            True if removed, False if not found
-        """
-        for i, s in enumerate(self.state["stakeholders"]):
-            if s["id"] == stakeholder_id:
-                del self.state["stakeholders"][i]
-                self.save_state()
-                logger.info("Removed stakeholder: %s", stakeholder_id)
-                return True
-
-        logger.warning("Stakeholder not found: %s", stakeholder_id)
-        return False
-
-    def _get_stakeholder(self, stakeholder_id: str) -> dict[str, Any] | None:
-        """Look up a stakeholder by ID."""
-        for s in self.state["stakeholders"]:
-            if s["id"] == stakeholder_id:
-                return s
-        return None
-
-    def _is_valid_proposer(self, proposer_id: str) -> bool:
-        """Check whether a stakeholder is allowed to create proposals.
-
-        Observers cannot create proposals.  All other registered
-        stakeholders can.
-        """
-        s = self._get_stakeholder(proposer_id)
-        if not s:
-            return False
-        return s.get("role") != "observer"
-
-    # ── Proposal lifecycle ────────────────────────────────────
-
     def create_proposal(
         self,
         title: str,
@@ -201,31 +131,22 @@ class GovernanceManager:
     ) -> str:
         """Create a new governance proposal.
 
-        Validates that the proposer is a registered stakeholder with
-        permission to propose. Schedules the voting period based on the
-        configured ``voting_period_days`` policy.
+        This is a stub implementation. Future versions will:
+        - Validate proposer permissions
+        - Check proposal deposit requirements
+        - Notify stakeholders
+        - Schedule voting period
 
         Args:
             title: Proposal title
             description: Detailed description
             proposer_id: ID of the proposer
             proposal_type: Type of proposal
-            data: Additional proposal data (e.g., rule_name + rule_value)
+            data: Additional proposal data
 
         Returns:
-            Proposal ID, or empty string if proposer lacks permission
-
-        Raises:
-            ValueError: If the proposer is not registered or is an observer
+            Proposal ID
         """
-        if not self._is_valid_proposer(proposer_id):
-            logger.error(
-                "Proposer %s is not registered or lacks permission", proposer_id
-            )
-            raise ValueError(
-                f"Proposer '{proposer_id}' is not a registered stakeholder with proposal rights"
-            )
-
         proposal_id = str(uuid4())
 
         voting_period_days = self.state["policies"].get("voting_period_days", 7)
@@ -242,7 +163,6 @@ class GovernanceManager:
             "ends_at": ends_at.isoformat(),
             "status": "active",
             "votes": {"yes": 0, "no": 0, "abstain": 0},
-            "voters": {},  # stakeholder_id → vote value
         }
 
         self.state["active_proposals"].append(proposal)
@@ -250,15 +170,6 @@ class GovernanceManager:
 
         logger.info("Created proposal: %s (ID: %s)", title, proposal_id)
         return proposal_id
-
-    def _find_active_proposal(
-        self, proposal_id: str
-    ) -> tuple[dict[str, Any] | None, int | None]:
-        """Locate an active proposal and its index."""
-        for i, p in enumerate(self.state["active_proposals"]):
-            if p["proposal_id"] == proposal_id:
-                return p, i
-        return None, None
 
     def vote_on_proposal(
         self,
@@ -268,12 +179,11 @@ class GovernanceManager:
     ) -> bool:
         """Cast a vote on a proposal.
 
-        Validates:
-        - Proposal exists and is active
-        - Vote value is valid (yes/no/abstain)
-        - Stakeholder is registered and not an observer
-        - Stakeholder has not already voted on this proposal
-        - Voting period has not expired
+        This is a stub implementation. Future versions will:
+        - Validate stakeholder permissions
+        - Apply voting weights
+        - Prevent duplicate votes
+        - Check voting period
 
         Args:
             proposal_id: ID of the proposal
@@ -283,66 +193,34 @@ class GovernanceManager:
         Returns:
             True if vote recorded successfully, False otherwise
         """
-        proposal, _ = self._find_active_proposal(proposal_id)
+        proposal = None
+        for p in self.state["active_proposals"]:
+            if p["proposal_id"] == proposal_id:
+                proposal = p
+                break
 
         if not proposal:
             logger.error("Proposal not found: %s", proposal_id)
             return False
 
-        if vote not in ("yes", "no", "abstain"):
+        if vote not in ["yes", "no", "abstain"]:
             logger.error("Invalid vote value: %s", vote)
             return False
 
-        # Validate stakeholder
-        stakeholder = self._get_stakeholder(stakeholder_id)
-        if not stakeholder:
-            logger.error("Stakeholder not registered: %s", stakeholder_id)
-            return False
-        if stakeholder.get("role") == "observer":
-            logger.error("Observers cannot vote: %s", stakeholder_id)
-            return False
-
-        # Duplicate vote prevention
-        voters = proposal.setdefault("voters", {})
-        if stakeholder_id in voters:
-            logger.warning(
-                "Stakeholder %s already voted on proposal %s",
-                stakeholder_id,
-                proposal_id,
-            )
-            return False
-
-        # Check voting period
-        ends_at_str = proposal.get("ends_at")
-        if ends_at_str:
-            try:
-                ends_at = datetime.fromisoformat(ends_at_str)
-                if datetime.now() > ends_at:
-                    logger.error("Voting period expired for proposal %s", proposal_id)
-                    return False
-            except (ValueError, TypeError):
-                pass  # malformed date — allow vote
-
-        # Record vote with weight
-        weight = stakeholder.get("weight", 1.0)
-        proposal["votes"][vote] += weight
-        voters[stakeholder_id] = vote
+        # Simple voting (stub - no weight, no duplicate check)
+        proposal["votes"][vote] += 1
         self.save_state()
 
-        logger.info(
-            "Recorded vote on proposal %s: %s=%s (weight=%.2f)",
-            proposal_id,
-            stakeholder_id,
-            vote,
-            weight,
-        )
+        logger.info("Recorded vote on proposal %s: %s", proposal_id, vote)
         return True
 
     def check_quorum(self, proposal_id: str) -> bool:
         """Check if a proposal has reached quorum.
 
-        Quorum is met when the weighted participation rate meets or
-        exceeds the configured ``quorum_threshold``.
+        This is a stub implementation. Future versions will:
+        - Calculate based on stakeholder weights
+        - Support different quorum types
+        - Track participation rates
 
         Args:
             proposal_id: ID of the proposal
@@ -350,18 +228,19 @@ class GovernanceManager:
         Returns:
             True if quorum is reached, False otherwise
         """
-        proposal, _ = self._find_active_proposal(proposal_id)
+        proposal = None
+        for p in self.state["active_proposals"]:
+            if p["proposal_id"] == proposal_id:
+                proposal = p
+                break
+
         if not proposal:
             return False
 
-        voters = proposal.get("voters", {})
-        total_participants = len(voters)
-        total_stakeholders = max(
-            len([s for s in self.state["stakeholders"] if s.get("role") != "observer"]),
-            1,
-        )
+        total_votes = sum(proposal["votes"].values())
+        total_stakeholders = max(len(self.state["stakeholders"]), 1)
 
-        participation_rate = total_participants / total_stakeholders
+        participation_rate = total_votes / total_stakeholders
         quorum_threshold = self.state["policies"].get("quorum_threshold", 0.51)
 
         return participation_rate >= quorum_threshold
@@ -369,9 +248,11 @@ class GovernanceManager:
     def execute_proposal(self, proposal_id: str) -> bool:
         """Execute a proposal that has passed.
 
-        Verifies quorum and simple majority. If the proposal is of type
-        ``policy_change`` and its ``data`` dict contains ``rule_name``
-        and ``rule_value``, the policy rule is applied automatically.
+        This is a stub implementation. Future versions will:
+        - Verify quorum and majority
+        - Apply proposal changes
+        - Update policy rules
+        - Notify stakeholders
 
         Args:
             proposal_id: ID of the proposal to execute
@@ -379,53 +260,31 @@ class GovernanceManager:
         Returns:
             True if executed successfully, False otherwise
         """
-        proposal, proposal_index = self._find_active_proposal(proposal_id)
+        proposal = None
+        proposal_index = None
+
+        for i, p in enumerate(self.state["active_proposals"]):
+            if p["proposal_id"] == proposal_id:
+                proposal = p
+                proposal_index = i
+                break
 
         if not proposal:
             logger.error("Proposal not found: %s", proposal_id)
             return False
 
-        # Check quorum
-        if not self.check_quorum(proposal_id):
-            logger.info("Proposal %s has not reached quorum", proposal_id)
-            return False
-
-        # Check simple majority (yes weighted > no weighted)
+        # Check if passed (simple majority)
         yes_votes = proposal["votes"]["yes"]
         no_votes = proposal["votes"]["no"]
 
         if yes_votes <= no_votes:
-            logger.info(
-                "Proposal %s did not pass (yes=%.1f, no=%.1f)",
-                proposal_id,
-                yes_votes,
-                no_votes,
-            )
+            logger.info("Proposal %s did not pass", proposal_id)
             proposal["status"] = "rejected"
-            proposal["resolved_at"] = datetime.now().isoformat()
-            # Move to rejected list
-            self.state.setdefault("rejected_proposals", []).append(proposal)
-            if proposal_index is not None:
-                del self.state["active_proposals"][proposal_index]
-            self.save_state()
             return False
 
-        # Execute — apply policy changes if applicable
+        # Execute (stub)
         proposal["status"] = "executed"
         proposal["executed_at"] = datetime.now().isoformat()
-
-        p_data = proposal.get("data", {})
-        if proposal.get("type") == "policy_change":
-            rule_name = p_data.get("rule_name")
-            rule_value = p_data.get("rule_value")
-            if rule_name is not None and rule_value is not None:
-                self.set_policy_rule(rule_name, rule_value)
-                logger.info(
-                    "Proposal %s applied policy: %s = %s",
-                    proposal_id,
-                    rule_name,
-                    rule_value,
-                )
 
         # Move to executed proposals
         self.state["executed_proposals"].append(proposal)
@@ -436,8 +295,6 @@ class GovernanceManager:
 
         logger.info("Executed proposal: %s", proposal_id)
         return True
-
-    # ── Policy rules ──────────────────────────────────────────
 
     def get_policy_rule(self, rule_name: str) -> Any:
         """Get a policy rule value.

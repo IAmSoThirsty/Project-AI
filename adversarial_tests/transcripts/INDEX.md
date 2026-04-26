@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: adversarial-spec
+tags: [testing, adversarial, transcripts, index, jbb, multiturn, hydra, garak]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, jailbreakbench, multiturn-attacks, hydra, garak]
+stakeholders: [security-team, researchers, qa-team]
+test_type: adversarial
+coverage_target: index of 76 test conversations (40 JBB + 15 Multiturn + 21 Garak)
+automation_status: automated
+review_cycle: monthly
+---
+
 # Adversarial Test Transcripts Index
 
 **Generated**: 2026-01-11

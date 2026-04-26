@@ -1,31 +1,23 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
 # Project AI - API Backend
 
 ## Quick Start
 
 ### Install Dependencies
-
 ```bash
 cd api
 pip install -r requirements.txt
 ```
 
 ### Start Development Server
-
 ```bash
-
 # From project root
-
 python start_api.py
 
 # Or directly with uvicorn
-
 uvicorn api.main:app --reload --port 8001
 ```
 
 ### Start Production Server
-
 ```bash
 python start_api.py --prod
 ```
@@ -33,7 +25,6 @@ python start_api.py --prod
 ## API Endpoints
 
 ### Submit Intent
-
 ```http
 POST /intent
 Content-Type: application/json
@@ -83,13 +74,11 @@ Content-Type: application/json
 ```
 
 ### View TARL Rules
-
 ```http
 GET /tarl
 ```
 
 ### Health Check
-
 ```http
 GET /health
 ```
@@ -139,7 +128,6 @@ Intent → TARL Rule Match → Galahad Vote → Cerberus Vote → CodexDeus Arbi
 ## Examples
 
 ### Allowed Read (Human)
-
 ```bash
 curl -X POST http://localhost:8001/intent \
   -H "Content-Type: application/json" \
@@ -153,7 +141,6 @@ curl -X POST http://localhost:8001/intent \
 ```
 
 ### Denied Write (Agent)
-
 ```bash
 curl -X POST http://localhost:8001/intent \
   -H "Content-Type: application/json" \
@@ -167,7 +154,6 @@ curl -X POST http://localhost:8001/intent \
 ```
 
 ### Critical Action (Blocked)
-
 ```bash
 curl -X POST http://localhost:8001/intent \
   -H "Content-Type: application/json" \
@@ -187,7 +173,6 @@ Visit http://localhost:8001/docs for Swagger UI documentation.
 ## Production Deployment
 
 ### Using Gunicorn
-
 ```bash
 gunicorn api.main:app \
   --workers 4 \
@@ -196,7 +181,6 @@ gunicorn api.main:app \
 ```
 
 ### Using Docker
-
 ```bash
 docker build -t project-ai-api -f api/Dockerfile .
 docker run -p 8001:8001 project-ai-api
@@ -212,13 +196,10 @@ docker run -p 8001:8001 project-ai-api
 ## Testing
 
 ```bash
-
 # Install test dependencies
-
 pip install pytest httpx
 
 # Run API tests
-
 pytest tests/test_api.py -v
 ```
 
@@ -232,9 +213,7 @@ const API_URL = 'http://localhost:8001';
 ## Environment Variables
 
 ```bash
-
 # Optional configuration
-
 export API_HOST=0.0.0.0
 export API_PORT=8001
 export API_WORKERS=4

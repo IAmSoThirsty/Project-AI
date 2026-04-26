@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 ASL-3 Security Enforcer - Weights/Theft Protection
 
@@ -32,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class AccessAttempt:
-    """Record of an access attempt to sensitive resource (Atomic Security Boundary Interaction Record)."""
+    """Record of an access attempt to sensitive resource."""
 
     timestamp: str
     user: str
@@ -45,7 +43,7 @@ class AccessAttempt:
 
 @dataclass
 class SecurityPolicy:
-    """Security policy configuration for sensitive resources (Sovereign Access Constraint & Encryption Definition)."""
+    """Security policy configuration for sensitive resources."""
 
     resource_path: str
     requires_encryption: bool = True
@@ -57,7 +55,7 @@ class SecurityPolicy:
 
 class ASL3Security:
     """
-    ASL-3 Security Enforcer (ASL-3 Compliance Enforcer & Advanced Threat Mitigation Grid).
+    ASL-3 Security Enforcer for Project-AI.
 
     Implements 30 core security controls:
     - Access control (least privilege, multi-party auth)
@@ -236,18 +234,18 @@ class ASL3Security:
                 in ["data/command_override_config.json", "data/codex_deus_maximus.db"],
             )
 
-    def encrypt_file(self, file_path_str: str, secure_delete: bool = True) -> str:
+    def encrypt_file(self, file_path: str, secure_delete: bool = True) -> str:
         """
         Encrypt a file at rest with ASL-3 controls.
 
         Args:
-            file_path_str: Path to file to encrypt
+            file_path: Path to file to encrypt
             secure_delete: Securely delete original after encryption
 
         Returns:
             Path to encrypted file
         """
-        file_path = Path(file_path_str)
+        file_path = Path(file_path)
 
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
@@ -291,20 +289,20 @@ class ASL3Security:
         return str(encrypted_path)
 
     def decrypt_file(
-        self, encrypted_path_str: str, user: str = "system", verify_auth: bool = True
+        self, encrypted_path: str, user: str = "system", verify_auth: bool = True
     ) -> bytes:
         """
         Decrypt a file with access control checks.
 
         Args:
-            encrypted_path_str: Path to encrypted file
+            encrypted_path: Path to encrypted file
             user: User requesting decryption
             verify_auth: Verify authorization before decrypting
 
         Returns:
             Decrypted file data
         """
-        encrypted_path = Path(encrypted_path_str)
+        encrypted_path = Path(encrypted_path)
 
         if not encrypted_path.exists():
             raise FileNotFoundError(f"Encrypted file not found: {encrypted_path}")
@@ -683,30 +681,30 @@ class ASL3Security:
 - ✅ At-rest encryption: ENABLED (Fernet)
 - ✅ Key rotation: SUPPORTED (quarterly recommended)
 - ✅ Secure deletion: ENABLED (DoD 5220.22-M 3-pass)
-- ✅ Encrypted files: {status["encrypted_files"]}
-- ✅ Critical resources protected: {status["critical_resources_protected"]}
+- ✅ Encrypted files: {status['encrypted_files']}
+- ✅ Critical resources protected: {status['critical_resources_protected']}
 
 ### Access Control (Control 6-15)
 - ✅ Least privilege: ENFORCED
 - ✅ User allowlists: ACTIVE
 - ✅ Multi-party auth: CONFIGURED (for override config)
 - ✅ Rate limiting: ACTIVE ({sum(len(v) for v in self.access_counts.values())} tracked accesses)
-- ✅ Access attempts (24h): {status["total_access_attempts_24h"]}
-- ✅ Failed attempts (24h): {status["failed_attempts_24h"]}
+- ✅ Access attempts (24h): {status['total_access_attempts_24h']}
+- ✅ Failed attempts (24h): {status['failed_attempts_24h']}
 
 ### Monitoring (Control 16-25)
 - ✅ Comprehensive logging: ACTIVE
 - ✅ Anomaly detection: ENABLED
 - ✅ Audit trail: TAMPER-PROOF
-- ✅ Audit log entries: {status["audit_log_entries"]}
-- ✅ Emergency alerts: {"ENABLED" if self.emergency_alert else "DISABLED"}
-- ✅ Suspicious activities (24h): {status["suspicious_activities_24h"]}
+- ✅ Audit log entries: {status['audit_log_entries']}
+- ✅ Emergency alerts: {'ENABLED' if self.emergency_alert else 'DISABLED'}
+- ✅ Suspicious activities (24h): {status['suspicious_activities_24h']}
 
 ### Egress Control (Control 26-30)
 - ✅ Rate limiting: ACTIVE
 - ✅ Data exfiltration detection: ACTIVE
 - ✅ Bulk access prevention: ENABLED
-- ✅ Unique users (24h): {status["unique_users_24h"]}
+- ✅ Unique users (24h): {status['unique_users_24h']}
 
 ## Recent Security Events (24h)
 

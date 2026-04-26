@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Sensor Fusion Engine - Section 5
@@ -474,8 +472,7 @@ class SensorFusionEngine(
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS sensors (
                 sensor_id TEXT PRIMARY KEY,
                 sensor_type TEXT,
@@ -489,11 +486,9 @@ class SensorFusionEngine(
                 last_seen REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS sensor_readings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 sensor_id TEXT,
@@ -501,11 +496,9 @@ class SensorFusionEngine(
                 data TEXT,
                 confidence REAL
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS threats (
                 threat_id TEXT PRIMARY KEY,
                 threat_type TEXT,
@@ -518,11 +511,9 @@ class SensorFusionEngine(
                 confidence REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS fused_states (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp REAL,
@@ -534,8 +525,7 @@ class SensorFusionEngine(
                 velocity_z REAL,
                 confidence REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()

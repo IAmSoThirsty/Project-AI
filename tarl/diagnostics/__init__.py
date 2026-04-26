@@ -1,7 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-#                                                             DATE: 2026-03-03 09:33:22
-#                                                             STATUS: Active
 """
 T.A.R.L. (Thirstys Active Resistance Language) Diagnostics Subsystem
 
@@ -29,7 +25,7 @@ Architecture Contract:
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

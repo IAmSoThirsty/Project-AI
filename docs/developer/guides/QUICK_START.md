@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: quickstart
+tags: [p1-developer, quickstart, dashboard, launch-guide, desktop-app, beginner-friendly]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-app, pyqt6-dashboard, leather-book-ui]
+stakeholders: [developers, new-users, dashboard-users]
+audience: beginner
+prerequisites: [python-3.11+, project-cloned, basic-shell-knowledge]
+estimated_time: 5 minutes
+review_cycle: monthly
+---
 # Quick Start Guide - Project-AI Dashboard
 
 ## 🚀 Launch Commands
@@ -15,17 +26,14 @@ python src/app/main.py
 ### Alternative Launch Methods
 
 ```powershell
-
 # Method 1: Using python module execution
-
 python -m app.main
 
 # Method 2: With environment file
-
 python src/app/main.py  # Automatically loads .env file
 ```
 
-______________________________________________________________________
+---
 
 ## ✅ Pre-Launch Checklist
 
@@ -35,7 +43,7 @@ ______________________________________________________________________
 - [x] Documentation updated
 - [x] READMEs updated (main, web, android)
 
-______________________________________________________________________
+---
 
 ## 🎯 What You Can Do Now
 
@@ -53,38 +61,32 @@ ______________________________________________________________________
    - Emergency Alerts
    - Intent Detection
 
-______________________________________________________________________
+---
 
 ## 🔧 Environment Variables (Optional)
 
 Add these to your `.env` file for enhanced features:
 
 ```env
-
 # OpenAI Integration (for learning paths & chat)
-
 OPENAI_API_KEY=sk-your-key-here
 
 # Email Alerts (for emergency features)
-
 SMTP_USERNAME=your-email@example.com
 SMTP_PASSWORD=your-secure-app-password-here  # Generate from email provider
 
 # Encryption (auto-generated if not provided)
-
 FERNET_KEY=your-base64-key-here
 
 # Cloud Sync (NEW!)
-
 CLOUD_SYNC_URL=https://your-api.com/sync
 
 # Directories (optional)
-
 DATA_DIR=data
 LOG_DIR=logs
 ```
 
-______________________________________________________________________
+---
 
 ## 📊 System Architecture
 
@@ -119,7 +121,5 @@ Project-AI/
 
 ---
 
-```
-
-```
-```
+``` 
+``` 

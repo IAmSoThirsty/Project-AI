@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Run Comprehensive Security Test Expansion - 2,200 Additional Scenarios.
@@ -9,6 +7,10 @@ to reach a total of 8,350 comprehensive security validations.
 
 Usage:
     python scripts/run_comprehensive_expansion.py [--export]
+
+GOVERNANCE: GOVERNED
+Classification: Security testing
+Risk: Medium (runs test scenarios)
 """
 
 import argparse
@@ -20,6 +22,9 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+# Import governance
+from app.core.runtime.router import route_request
 
 from app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
 from app.core.comprehensive_security_expansion import (

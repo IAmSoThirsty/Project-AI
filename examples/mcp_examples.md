@@ -1,5 +1,19 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: example
+tags: [examples, mcp, model-context-protocol, ai-integration, learning]
+created: 2024-01-03
+last_verified: 2026-04-20
+status: current
+related_systems: [mcp-server, ethics-framework, persona-system, memory-system, learning-system, data-analysis, image-generation, plugin-manager]
+stakeholders: [developers, ai-engineers, integrators, learners]
+complexity_level: advanced
+demonstrates: [mcp-tools, mcp-resources, mcp-prompts, ethics-validation, persona-management, memory-operations, learning-workflows, data-analysis, image-generation, plugin-management, multi-step-workflows]
+runnable: true
+estimated_completion: 30
+requires: [mcp-server, python-environment, openai-api-key, mcp-inspector]
+review_cycle: quarterly
+---
+
 # MCP Usage Examples
 
 This document provides comprehensive examples of using Project-AI's MCP server with various AI assistants and scenarios.
@@ -624,11 +638,9 @@ Respond to: Tell me about your interests
 Always validate actions before execution:
 
 ```
-
 1. validate_action()
 2. If allowed: execute_action()
 3. add_memory() to log decision
-
 ```
 
 ### Pattern 2: Context-Aware Responses
@@ -636,11 +648,9 @@ Always validate actions before execution:
 Use persona state to guide responses:
 
 ```
-
 1. get_persona_state()
 2. Use persona_interaction prompt
 3. Respond based on traits and mood
-
 ```
 
 ### Pattern 3: Knowledge Accumulation
@@ -648,11 +658,9 @@ Use persona state to guide responses:
 Build knowledge over time:
 
 ```
-
 1. Interaction occurs
 2. add_memory() for important info
 3. search_memory() for context in future
-
 ```
 
 ### Pattern 4: Supervised Learning
@@ -660,12 +668,10 @@ Build knowledge over time:
 Human-in-the-loop learning:
 
 ```
-
 1. submit_learning_request()
 2. Human reviews
 3. approve_learning_request()
 4. Knowledge integrated
-
 ```
 
 ---
@@ -724,18 +730,14 @@ Human-in-the-loop learning:
 ### Test 1: Basic Tool Functionality
 
 ```bash
-
 # Use MCP Inspector
-
 npx @modelcontextprotocol/inspector python -m src.app.core.mcp_server
 ```
 
 ### Test 2: Resource Access
 
 ```python
-
 # Access all resources
-
 for uri in ["persona://state", "memory://knowledge", "learning://requests", "plugins://list"]:
     response = await client.read_resource(uri)
     print(f"{uri}: {response}")
@@ -744,9 +746,7 @@ for uri in ["persona://state", "memory://knowledge", "learning://requests", "plu
 ### Test 3: Prompt Generation
 
 ```python
-
 # Test all prompts
-
 prompts = ["analyze_with_ethics", "persona_interaction", "memory_guided_response"]
 for prompt in prompts:
     result = await client.get_prompt(prompt, {"key": "value"})

@@ -1,14 +1,12 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Tests for Planetary Defense Monolith - Constitutional Core for Project-AI.
 """
 
-from datetime import timezone
+from datetime import UTC
 
 import pytest
 
-from app.governance.planetary_defense_monolith import (
+from app.core.planetary_defense_monolith import (
     PLANETARY_CORE,
     AccountabilityRecord,
     Cerberus,
@@ -52,11 +50,11 @@ class TestAccountabilityRecord:
 
     def test_record_creation(self):
         """Test creating an accountability record."""
-        from datetime import timezone, datetime
+        from datetime import UTC, datetime
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.now(UTC),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",
@@ -72,7 +70,7 @@ class TestAccountabilityRecord:
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.now(UTC),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",
@@ -99,7 +97,7 @@ class TestAccountabilityRecord:
         for phrase in forbidden_tests:
             record = AccountabilityRecord(
                 action_id="test-123",
-                timestamp=datetime.now(timezone.utc),
+                timestamp=datetime.now(UTC),
                 actor="TestActor",
                 intent="Test action",
                 authorized_by="TestUser",
@@ -116,7 +114,7 @@ class TestAccountabilityRecord:
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.now(UTC),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",

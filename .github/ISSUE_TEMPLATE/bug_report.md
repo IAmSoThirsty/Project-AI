@@ -1,42 +1,55 @@
 ---
-name: Bug report
-about: Report a reproducible problem
-title: "[Bug] "
-labels: ["bug"]
-assignees: ""
+type: github-config
+tags: [issue-template, bug-report, github, contribution]
+created: 2025-10-15
+last_verified: 2026-04-20
+status: current
+related_systems: [issue-management, github-actions]
+stakeholders: [developers, contributors, support-team]
+config_scope: development
+automation_type: manual-config
+requires_secrets: false
+review_cycle: quarterly
 ---
 
-## Summary
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
 
-What broke?
+---
 
-## Reproduction
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-Steps to reproduce:
+**To Reproduce**
+Steps to reproduce the behavior:
 
-1.
-2.
-3.
+1. Go to '...'
+1. Click on '....'
+1. Scroll down to '....'
+1. See error
 
-## Expected Result
+**Expected behavior**
+A clear and concise description of what you expected to happen.
 
-What should have happened?
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
 
-## Actual Result
+**Desktop (please complete the following information):**
 
-What happened instead?
+ - OS: [e.g. iOS]
+ - Browser [e.g. chrome, safari]
+ - Version [e.g. 22]
 
-## Environment
+**Smartphone (please complete the following information):**
 
-- OS:
-- Python version:
-- Branch:
-- Command used:
+ - Device: [e.g. iPhone6]
+ - OS: [e.g. iOS8.1]
+ - Browser [e.g. stock browser, safari]
+ - Version [e.g. 22]
 
-## Evidence
-
-Paste the relevant output, traceback, or screenshot.
-
-```text
-
-```
+**Additional context**
+Add any other context about the problem here.

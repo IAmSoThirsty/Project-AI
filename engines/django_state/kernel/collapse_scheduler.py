@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Collapse scheduler for deterministic collapse event scheduling.
 
 Schedules and manages collapse events based on state conditions.
@@ -136,11 +134,12 @@ class CollapseScheduler:
         if (
             state.moral_injury.value
             > self.auto_schedule_thresholds["moral_injury_critical"]
-        ) and not any(
-            c.collapse_type == "moral_injury_critical" and c.triggered
-            for c in self.triggered_collapses
         ):
-            triggered.append("moral_injury_critical")
+            if not any(
+                c.collapse_type == "moral_injury_critical" and c.triggered
+                for c in self.triggered_collapses
+            ):
+                triggered.append("moral_injury_critical")
 
         # Check legitimacy failure
         if state.legitimacy.value < self.auto_schedule_thresholds["legitimacy_failure"]:
@@ -154,11 +153,12 @@ class CollapseScheduler:
         if (
             state.epistemic_confidence.value
             < self.auto_schedule_thresholds["epistemic_collapse"]
-        ) and not any(
-            c.collapse_type == "epistemic_collapse" and c.triggered
-            for c in self.triggered_collapses
         ):
-            triggered.append("epistemic_collapse")
+            if not any(
+                c.collapse_type == "epistemic_collapse" and c.triggered
+                for c in self.triggered_collapses
+            ):
+                triggered.append("epistemic_collapse")
 
         return triggered
 

@@ -1,5 +1,3 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8001';

@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 TARL Core - Trust and Authorization Runtime Layer (Policy/Governance System)
 

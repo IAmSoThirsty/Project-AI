@@ -1,5 +1,77 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Security Policy"
+id: "security-policy-classic"
+type: "policy"
+version: "1.0.0"
+created_date: "2026-01-01"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "projectaidevs@gmail.com"
+category: "security"
+tags:
+  - "area:security"
+  - "area:vulnerability-management"
+  - "type:policy"
+  - "component:private-reporting"
+  - "component:dependency-scanning"
+  - "audience:security-researcher"
+  - "audience:contributor"
+  - "priority:p0-critical"
+technologies:
+  - "GitHub Private Vulnerability Reporting"
+  - "Dependabot"
+  - "CodeQL"
+  - "npm audit"
+  - "pip-audit"
+difficulty: "beginner"
+estimated_time: "PT30M"
+prerequisites:
+  - "GitHub account"
+  - "Responsible disclosure understanding"
+summary: "Standard security policy for vulnerability reporting via GitHub Private Reporting, severity classification, response timelines, and security feature overview including dependency scanning."
+scope: "Vulnerability reporting workflow, private reporting process, severity levels (Critical/High/Medium/Low), response timelines (48hrs-1month), dependency scanning, CodeQL analysis"
+classification: "public"
+threat_level: "high"
+contact:
+  email: "projectaidevs@gmail.com"
+  github_security_tab: "https://github.com/IAmSoThirsty/Project-AI/security"
+response_timeline:
+  acknowledgment: "72 hours"
+  initial_assessment: "1 week"
+  status_updates: "Every 2 weeks"
+severity_response:
+  critical: "48 hours (RCE, data breach, credentials)"
+  high: "1 week (Auth RCE, SQLi, privilege escalation)"
+  medium: "2 weeks (XSS, CSRF, info disclosure)"
+  low: "1 month (Minor issues)"
+compliance:
+  - "Responsible Disclosure Policy"
+  - "CVE Assignment Process"
+  - "GitHub Security Best Practices"
+stakeholders:
+  - security-team   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Security Policy"
+cwe_ids:
+  - "CWE-1008: Architectural Concepts"
+related_docs:
+  - "security-policy"
+  - "vulnerability-management"
+  - "dependency-scanning"
+review_status:
+  reviewed: true
+  reviewers: ["security-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-researchers"
+  - "bug-bounty-hunters"
+  - "contributors"
+  - "external-reporters"
+---
+
 # Security Policy
 
 ## Reporting Security Vulnerabilities
@@ -50,12 +122,12 @@ When reporting a vulnerability, please provide:
 
 ### Severity and Response Times
 
-| Severity     | Description                                            | Response Time |
-| ------------ | ------------------------------------------------------ | ------------- |
-| **Critical** | Unauthenticated RCE, data breach, credential exposure  | 48 hours      |
-| **High**     | Authenticated RCE, privilege escalation, SQL injection | 1 week        |
-| **Medium**   | XSS, CSRF, information disclosure                      | 2 weeks       |
-| **Low**      | Minor issues with minimal impact                       | 1 month       |
+| Severity | Description | Response Time |
+|----------|-------------|---------------|
+| **Critical** | Unauthenticated RCE, data breach, credential exposure | 48 hours |
+| **High** | Authenticated RCE, privilege escalation, SQL injection | 1 week |
+| **Medium** | XSS, CSRF, information disclosure | 2 weeks |
+| **Low** | Minor issues with minimal impact | 1 month |
 
 ## Security Features
 
@@ -162,6 +234,7 @@ The following are **not** considered security vulnerabilities:
   - Do not disrupt service availability
 - This policy is not a vulnerability bounty program (no financial rewards at this time)
 
-______________________________________________________________________
+---
 
-**Last Updated:** 2026-01-19 **Contact:** <projectaidevs@gmail.com>
+**Last Updated:** 2026-01-19  
+**Contact:** <projectaidevs@gmail.com>

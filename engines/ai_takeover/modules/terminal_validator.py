@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Terminal state validator for AI Takeover engine.

@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Automated Incident Response System.
 
 Implements automated incident response workflows including component isolation,
@@ -24,7 +22,7 @@ import threading
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -388,7 +386,7 @@ Description: {incident.description}
 Time: {incident.timestamp}
 
 Automated responses executed:
-{", ".join(incident.automated_responses) if incident.automated_responses else "None yet"}
+{', '.join(incident.automated_responses) if incident.automated_responses else 'None yet'}
 
 Please review and take appropriate action.
         """
@@ -562,3 +560,4 @@ Please review and take appropriate action.
 
         except Exception as e:
             logger.error("Error saving incident responder state: %s", e)
+

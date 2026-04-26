@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Configuration file management for Project-AI CLI.
 
 This module provides configuration loading from TOML files, supporting:

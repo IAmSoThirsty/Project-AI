@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Project-AI Integration Bridge
 
@@ -40,11 +38,11 @@ class CerberusSecurityBridge:
     def _initialize(self):
         """Initialize Cerberus integration"""
         try:
-            from src.app.core.cerberus_hydra import CerberusHydraDefense
-            from src.app.core.cerberus_runtime_manager import RuntimeManager
+            from src.app.core.cerberus_hydra import HydraController
+            from src.app.core.cerberus_runtime_manager import CerberusRuntimeManager
 
-            self.cerberus_runtime = RuntimeManager()
-            self.hydra_controller = CerberusHydraDefense()
+            self.cerberus_runtime = CerberusRuntimeManager()
+            self.hydra_controller = HydraController()
 
             logger.info("✅ Cerberus Security Bridge initialized")
             logger.info("   - Runtime Manager: ACTIVE")

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Build Memory Manager.
 
@@ -11,16 +9,11 @@ import gzip
 import json
 import logging
 import shutil
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
-
-
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class RetentionPolicy:
@@ -133,7 +126,7 @@ class MemoryManager:
         # Rule 2: Keep builds within age threshold
         if self.policy.keep_days:
             cutoff_time = (
-                _utcnow() - timedelta(days=self.policy.keep_days)
+                datetime.utcnow() - timedelta(days=self.policy.keep_days)
             ).isoformat()
             for build in all_builds:
                 if build["timestamp"] >= cutoff_time:
@@ -142,7 +135,7 @@ class MemoryManager:
         # Rule 3: Keep successful builds for shorter period
         if self.policy.keep_successful_days:
             cutoff_time = (
-                _utcnow() - timedelta(days=self.policy.keep_successful_days)
+                datetime.utcnow() - timedelta(days=self.policy.keep_successful_days)
             ).isoformat()
             for build in all_builds:
                 if build["status"] == "success" and build["timestamp"] >= cutoff_time:
@@ -232,7 +225,7 @@ class MemoryManager:
             }
 
             # Create archive file
-            timestamp = _utcnow().strftime("%Y%m%d")
+            timestamp = datetime.utcnow().strftime("%Y%m%d")
             archive_file = self.archive_dir / f"build_{build_id}_{timestamp}.json.gz"
 
             with gzip.open(archive_file, "wt", encoding="utf-8") as f:
@@ -420,12 +413,10 @@ class MemoryManager:
         """Rebuild all database indexes."""
         with self.db.get_connection() as conn:
             try:
-                cursor = conn.execute(
-                    """
+                cursor = conn.execute("""
                     SELECT name FROM sqlite_master
                     WHERE type = 'index' AND sql IS NOT NULL
-                """
-                )
+                """)
                 indexes = [row[0] for row in cursor.fetchall()]
 
                 for index in indexes:
@@ -545,7 +536,7 @@ class MemoryManager:
             Path to backup file
         """
         if backup_path is None:
-            timestamp = _utcnow().strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
             backup_path = self.archive_dir / f"backup_{timestamp}.db"
         else:
             backup_path = Path(backup_path)

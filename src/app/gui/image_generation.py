@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Image Generation GUI with dual-page layout.
 
@@ -24,6 +22,7 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.image_generator import ImageGenerationBackend, ImageGenerator, ImageStyle
+from app.security.data_validation import sanitize_input, validate_length
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +32,11 @@ TRON_CYAN = "#00ffff"
 TRON_BLACK = "#0a0a0a"
 TRON_DARK = "#1a1a1a"
 
+
+# 📚 Documentation Links:
+# - [[relationships/gui/06_IMAGE_GENERATION_RELATIONSHIPS.md]]
+# - [[source-docs/gui/image_generation.md]]
+#
 
 class ImageGenerationWorker(QThread):
     """Worker thread for image generation to prevent UI blocking."""
@@ -66,8 +70,7 @@ class ImageGenerationLeftPanel(QFrame):
     def __init__(self, parent=None):
         """Initialize left panel."""
         super().__init__(parent)
-        self.setStyleSheet(
-            f"""
+        self.setStyleSheet(f"""
             QFrame {{
                 background-color: {TRON_BLACK};
                 border-right: 2px solid {TRON_CYAN};
@@ -119,8 +122,7 @@ class ImageGenerationLeftPanel(QFrame):
                 border-right: 5px solid transparent;
                 border-top: 5px solid {TRON_CYAN};
             }}
-        """
-        )
+        """)
 
         self.setup_ui()
 
@@ -203,7 +205,16 @@ class ImageGenerationLeftPanel(QFrame):
 
     def _on_generate(self):
         """Handle generate button click."""
-        prompt = self.prompt_input.toPlainText().strip()
+        # Sanitize and validate prompt
+        prompt = sanitize_input(
+            self.prompt_input.toPlainText().strip(),
+            max_length=1000
+        )
+        if not validate_length(prompt, min_len=3, max_len=1000):
+            self.status_label.setText("⚠️ Prompt must be 3-1000 characters")
+            self.status_label.setStyleSheet("color: #ff4444; font-size: 10pt;")
+            return
+
         if not prompt:
             self.status_label.setText("⚠️ Please enter a prompt")
             return
@@ -242,8 +253,7 @@ class ImageGenerationRightPanel(QFrame):
     def __init__(self, parent=None):
         """Initialize right panel."""
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QFrame {
                 background-color: #1a1a1a;
                 border-left: 2px solid #00ffff;
@@ -251,8 +261,7 @@ class ImageGenerationRightPanel(QFrame):
             QLabel {
                 color: #00ffff;
             }
-        """
-        )
+        """)
 
         self.setup_ui()
 
@@ -305,8 +314,7 @@ class ImageGenerationRightPanel(QFrame):
 
         self.save_btn = QPushButton("💾 Save")
         self.save_btn.setEnabled(False)
-        self.save_btn.setStyleSheet(
-            f"""
+        self.save_btn.setStyleSheet(f"""
             QPushButton {{
                 background-color: {TRON_DARK};
                 color: {TRON_CYAN};
@@ -323,8 +331,7 @@ class ImageGenerationRightPanel(QFrame):
                 color: #555555;
                 border-color: #555555;
             }}
-        """
-        )
+        """)
         buttons_layout.addWidget(self.save_btn)
 
         self.copy_btn = QPushButton("📋 Copy")

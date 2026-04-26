@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Governance Drift Monitor - Detect when governance approvals trend looser over time.
 
@@ -12,7 +10,7 @@ Uses the five-channel memory data to track governance trends.
 
 import json
 import logging
-from datetime import timezone, datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -376,3 +374,4 @@ class GovernanceDriftMonitor:
                 logger.warning("Failed to load %s: %s", filepath, e)
 
         return alerts
+

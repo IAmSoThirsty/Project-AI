@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:\Project-AI-main\src\app\core\model_providers.py' -TotalCount 300"

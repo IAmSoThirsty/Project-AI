@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Thirsty-lang Validator - Tests T-A-R-L (Thirsty's Active Resistance Language) capabilities.
 
 This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistance Language),
@@ -15,7 +13,7 @@ import logging
 import os
 import shutil
 import subprocess  # nosec B404 - subprocess usage for trusted Node.js testing tools only
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
@@ -396,3 +394,4 @@ class ThirstyLangValidator(KernelRoutedAgent):
         )
 
         return "\n".join(report_lines)
+

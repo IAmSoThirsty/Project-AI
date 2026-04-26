@@ -1,8 +1,11 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Interactive demonstration of Project-AI security features
+
+📚 EXAMPLE/DEMONSTRATION CODE
+GOVERNANCE: EXAMPLE
+Classification: Educational/demonstration
+Production Use: NOT RECOMMENDED
 
 This script provides hands-on examples of:
 - Security test scenarios (8,850 tests)
@@ -10,6 +13,9 @@ This script provides hands-on examples of:
 - ASL-3 security framework
 - CBRN classification
 - Multi-layer defense validation
+
+This script is for demonstration purposes only with simulated results.
+Do not use in production without proper review and adaptation.
 
 Usage:
     python scripts/demo_security_features.py

@@ -1,18 +1,84 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Security Agents: Temporal Workflows & LLM Endpoints"
+id: "security-agents-temporal-llm-guide"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-25"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Architecture Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:infrastructure"
+  - "type:guide"
+  - "type:reference"
+  - "component:temporal"
+  - "component:llm-endpoints"
+  - "component:workflows"
+  - "audience:security-engineer"
+  - "audience:devops-engineer"
+  - "priority:p1-high"
+technologies:
+  - "Temporal Workflows"
+  - "Docker Compose"
+  - "PostgreSQL"
+  - "LLM Endpoints"
+  - "CI/CD Integration"
+difficulty: "expert"
+estimated_time: "PT240M"
+prerequisites:
+  - "Temporal workflow understanding"
+  - "Docker/container expertise"
+  - "LLM endpoint configuration"
+  - "CI/CD pipeline knowledge"
+summary: "Complete guide for Temporal workflow integration and LLM endpoint configuration covering RedTeam campaigns, code security sweeps, constitutional monitoring, and safety testing workflows."
+scope: "4 durable workflows (RedTeam, CodeSweep, ConstitutionalMonitoring, SafetyTesting) with Temporal server setup, worker configuration, scheduling, CI/CD integration, and monitoring"
+classification: "internal"
+threat_level: "medium"
+workflows:
+  - "RedTeamCampaignWorkflow (daily/weekly)"
+  - "CodeSecuritySweepWorkflow (nightly)"
+  - "ConstitutionalMonitoringWorkflow (continuous)"
+  - "SafetyTestingWorkflow (weekly/daily)"
+compliance:
+  - "Operational Excellence Best Practices"
+  - "Workflow Orchestration Standards"
+stakeholders:
+  - security-team   - ai-safety-team   - development-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Infrastructure Guide"
+related_docs:
+  - "security-agents-guide"
+  - "security-agents-roadmap"
+  - "ci-cd-integration"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "infrastructure-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "devops-engineers"
+  - "infrastructure-engineers"
+  - "technical-leads"
+---
+
 # Security Agents: Temporal Workflows & LLM Endpoints
 
 Complete guide for Temporal workflow integration and LLM endpoint configuration for the security agent system.
 
 ## Table of Contents
 
-1. [Temporal Workflow Integration](#temporal-workflow-integration)
-1. [LLM Endpoint Configuration](#llm-endpoint-configuration)
-1. [Scheduling Security Campaigns](#scheduling-security-campaigns)
-1. [CI/CD Integration](#cicd-integration)
-1. [Monitoring & Alerting](#monitoring--alerting)
+1. [[#temporal-workflow-integration|Temporal Workflow Integration]]
+1. [[#llm-endpoint-configuration|LLM Endpoint Configuration]]
+1. [[#scheduling-security-campaigns|Scheduling Security Campaigns]]
+1. [[#cicd-integration|CI/CD Integration]]
+1. [[#monitoring--alerting|Monitoring & Alerting]]
 
-______________________________________________________________________
+---
 
 ## Temporal Workflow Integration
 
@@ -20,12 +86,12 @@ ______________________________________________________________________
 
 Four durable workflows orchestrate security agent operations:
 
-| Workflow                           | Purpose                            | Schedule                                      | Duration  |
-| ---------------------------------- | ---------------------------------- | --------------------------------------------- | --------- |
-| `RedTeamCampaignWorkflow`          | Multi-persona adversarial testing  | Daily (high-priority), Weekly (comprehensive) | 1-6 hours |
-| `CodeSecuritySweepWorkflow`        | Vulnerability detection & patching | Nightly, on merge, on security changes        | 30-60 min |
-| `ConstitutionalMonitoringWorkflow` | Constitutional AI compliance       | Continuous (sample traffic)                   | 10-30 min |
-| `SafetyTestingWorkflow`            | Jailbreak benchmark testing        | Weekly (comprehensive), Daily (critical)      | 30-90 min |
+| Workflow | Purpose | Schedule | Duration |
+|----------|---------|----------|----------|
+| `RedTeamCampaignWorkflow` | Multi-persona adversarial testing | Daily (high-priority), Weekly (comprehensive) | 1-6 hours |
+| `CodeSecuritySweepWorkflow` | Vulnerability detection & patching | Nightly, on merge, on security changes | 30-60 min |
+| `ConstitutionalMonitoringWorkflow` | Constitutional AI compliance | Continuous (sample traffic) | 10-30 min |
+| `SafetyTestingWorkflow` | Jailbreak benchmark testing | Weekly (comprehensive), Daily (critical) | 30-90 min |
 
 ### Architecture
 
@@ -58,17 +124,13 @@ Four durable workflows orchestrate security agent operations:
 #### 1. Start Temporal Server
 
 ```bash
-
 # Using Docker Compose (includes PostgreSQL)
-
 docker-compose up -d temporal temporal-postgresql
 
 # Or using standalone Temporal
-
 docker run -d -p 7233:7233 temporalio/auto-setup:latest
 
 # Verify server is running
-
 curl http://localhost:7233/health
 ```
 
@@ -83,22 +145,16 @@ from temporal.workflows.security_agent_workflows import *
 from temporal.workflows.triumvirate_workflow import *
 
 __all__ = [
-
     # Original workflows
-
     "TriumvirateWorkflow",
     "TriumvirateRequest",
     "TriumvirateResult",
-
     # Security workflows
-
     "RedTeamCampaignWorkflow",
     "CodeSecuritySweepWorkflow",
     "ConstitutionalMonitoringWorkflow",
     "SafetyTestingWorkflow",
-
     # Request/Result classes
-
     "RedTeamCampaignRequest",
     "CodeSecuritySweepRequest",
     "ConstitutionalMonitoringRequest",
@@ -117,7 +173,6 @@ import sys
 from pathlib import Path
 
 # Add src to path
-
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(project_root))
@@ -126,7 +181,6 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 
 # Import workflows and activities
-
 from temporal.workflows.security_agent_activities import (
     block_deployment,
     generate_sarif_report,
@@ -146,7 +200,6 @@ from temporal.workflows.security_agent_workflows import (
 )
 
 # Also import existing activities for telemetry
-
 from temporal.workflows.activities import record_telemetry
 
 logging.basicConfig(level=logging.INFO)
@@ -155,13 +208,10 @@ logger = logging.getLogger(__name__)
 
 async def main():
     """Run the security agent worker."""
-
     # Connect to Temporal server
-
     client = await Client.connect("localhost:7233")
 
     # Create worker
-
     worker = Worker(
         client,
         task_queue="security-agents",
@@ -172,9 +222,7 @@ async def main():
             SafetyTestingWorkflow,
         ],
         activities=[
-
             # Security activities
-
             run_red_team_campaign,
             run_code_vulnerability_scan,
             generate_security_patches,
@@ -184,9 +232,7 @@ async def main():
             trigger_incident_workflow,
             block_deployment,
             trigger_security_alert,
-
             # Shared activities
-
             record_telemetry,
         ],
     )
@@ -195,7 +241,6 @@ async def main():
     logger.info("📋 Registered 4 workflows and 9 activities")
 
     # Run worker
-
     await worker.run()
 
 
@@ -206,13 +251,10 @@ if __name__ == "__main__":
 #### 4. Start Worker
 
 ```bash
-
 # In terminal 1: Temporal server (if not using Docker)
-
 docker-compose up temporal
 
 # In terminal 2: Security agent worker
-
 python scripts/run_security_worker.py
 ```
 
@@ -238,7 +280,6 @@ async def run_campaign():
     client = await Client.connect("localhost:7233")
 
     # Schedule red team campaign
-
     request = RedTeamCampaignRequest(
         persona_ids=["jailbreak_attacker", "data_exfiltrator", "social_engineer"],
         targets=[
@@ -251,7 +292,6 @@ async def run_campaign():
     )
 
     # Start workflow
-
     handle = await client.start_workflow(
         RedTeamCampaignWorkflow.run,
         request,
@@ -263,7 +303,6 @@ async def run_campaign():
     print(f"Started workflow: {handle.id}")
 
     # Wait for result
-
     result = await handle.result()
     print(f"Campaign complete: {result.successful_attacks}/{result.total_attacks} attacks succeeded")
     print(f"Vulnerabilities found: {len(result.vulnerabilities_found)}")
@@ -364,7 +403,7 @@ async def run_monitoring():
 asyncio.run(run_monitoring())
 ```
 
-______________________________________________________________________
+---
 
 ## LLM Endpoint Configuration
 
@@ -372,39 +411,34 @@ ______________________________________________________________________
 
 Security agents can integrate with various LLM endpoints for enhanced functionality:
 
-| Agent                          | LLM Use Case                              | Recommended Model      | Endpoint Type      |
-| ------------------------------ | ----------------------------------------- | ---------------------- | ------------------ |
-| `LongContextAgent`             | Process 200k+ token conversations         | Nous-Capybara-34B-200k | Self-hosted or API |
-| `SafetyGuardAgent`             | Content moderation & jailbreak detection  | Llama-Guard-3-8B       | Self-hosted or API |
-| `ConstitutionalGuardrailAgent` | Constitutional review & critique          | GPT-4, Claude-3        | API                |
-| `CodeAdversaryAgent`           | Vulnerability analysis & patch generation | GPT-4, CodeLlama-34B   | API or self-hosted |
-| `RedTeamPersonaAgent`          | Multi-turn adversarial conversations      | GPT-4, Claude-3        | API                |
+| Agent | LLM Use Case | Recommended Model | Endpoint Type |
+|-------|--------------|-------------------|---------------|
+| `LongContextAgent` | Process 200k+ token conversations | Nous-Capybara-34B-200k | Self-hosted or API |
+| `SafetyGuardAgent` | Content moderation & jailbreak detection | Llama-Guard-3-8B | Self-hosted or API |
+| `ConstitutionalGuardrailAgent` | Constitutional review & critique | GPT-4, Claude-3 | API |
+| `CodeAdversaryAgent` | Vulnerability analysis & patch generation | GPT-4, CodeLlama-34B | API or self-hosted |
+| `RedTeamPersonaAgent` | Multi-turn adversarial conversations | GPT-4, Claude-3 | API |
 
 ### Configuration
 
 #### Environment Variables (`.env`)
 
 ```bash
-
 # Long-Context Model (Nous-Capybara-34B-200k)
-
 LONG_CONTEXT_API_ENDPOINT=http://localhost:8000/v1
 LONG_CONTEXT_API_KEY=your-api-key-here
 LONG_CONTEXT_MODEL_NAME=nous-capybara-34b-200k
 
 # Safety Model (Llama-Guard-3-8B)
-
 SAFETY_MODEL_API_ENDPOINT=http://localhost:8001/v1
 SAFETY_MODEL_API_KEY=your-api-key-here
 SAFETY_MODEL_NAME=llama-guard-3-8b
 
 # Constitutional & Analysis Models (OpenAI/Anthropic)
-
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
 
 # Model Selection
-
 CONSTITUTIONAL_MODEL_PROVIDER=openai  # or anthropic
 CONSTITUTIONAL_MODEL_NAME=gpt-4
 CODE_ANALYSIS_MODEL_PROVIDER=openai
@@ -418,13 +452,10 @@ RED_TEAM_MODEL_NAME=claude-3-opus-20240229
 #### Option 1: vLLM (Recommended for Production)
 
 ```bash
-
 # Install vLLM
-
 pip install vllm
 
 # Start Nous-Capybara-34B-200k server
-
 python -m vllm.entrypoints.openai.api_server \
     --model NousResearch/Nous-Capybara-34B-200k \
     --host 0.0.0.0 \
@@ -433,7 +464,6 @@ python -m vllm.entrypoints.openai.api_server \
     --max-model-len 200000
 
 # Start Llama-Guard-3-8B server
-
 python -m vllm.entrypoints.openai.api_server \
     --model meta-llama/Llama-Guard-3-8B \
     --host 0.0.0.0 \
@@ -444,9 +474,7 @@ python -m vllm.entrypoints.openai.api_server \
 #### Option 2: Text Generation Inference (TGI)
 
 ```bash
-
 # Start Nous-Capybara with TGI
-
 docker run -d \
     --gpus all \
     --shm-size 1g \
@@ -461,13 +489,10 @@ docker run -d \
 #### Option 3: Ollama (For Development)
 
 ```bash
-
 # Install Ollama
-
 curl -fsSL https://ollama.com/install.sh | sh
 
 # Pull and run models
-
 ollama pull nous-capybara-34b
 ollama serve
 ```
@@ -492,12 +517,10 @@ def _call_llm(self, prompt: str, context: list[dict] = None) -> str:
         return self._mock_response(prompt)
 
     # Build messages
-
     messages = context or []
     messages.append({"role": "user", "content": prompt})
 
     # Call API
-
     response = requests.post(
         f"{endpoint}/chat/completions",
         json={
@@ -535,7 +558,6 @@ def _check_with_llm(self, content: str) -> dict:
         return self._pattern_based_check(content)
 
     # Llama-Guard specific prompt format
-
     prompt = f"""<|begin_of_text|><|start_header_id|>user<|end_header_id|>
 
 {content}<|eot_id|><|start_header_id|>assistant<|end_header_id|>"""
@@ -556,7 +578,6 @@ def _check_with_llm(self, content: str) -> dict:
         classification = response.json()["choices"][0]["text"].strip()
 
         # Llama-Guard outputs "safe" or lists violation categories
-
         if classification.lower() == "safe":
             return {"is_safe": True, "violation_type": None}
         else:
@@ -621,7 +642,7 @@ Does the AI response violate this principle? Respond with JSON:
     return None  # Fallback to pattern-based
 ```
 
-______________________________________________________________________
+---
 
 ## Scheduling Security Campaigns
 
@@ -649,7 +670,6 @@ async def create_schedules():
     client = await Client.connect("localhost:7233")
 
     # Daily red team campaign (high-priority personas)
-
     await client.create_schedule(
         "red-team-daily",
         Schedule(
@@ -664,16 +684,13 @@ async def create_schedules():
                 task_queue="security-agents",
             ),
             spec=ScheduleSpec(
-
                 # Run daily at 2 AM
-
                 cron_expressions=["0 2 * * *"],
             ),
         ),
     )
 
     # Weekly comprehensive red team campaign
-
     await client.create_schedule(
         "red-team-weekly",
         Schedule(
@@ -695,16 +712,13 @@ async def create_schedules():
                 task_queue="security-agents",
             ),
             spec=ScheduleSpec(
-
                 # Run every Sunday at 1 AM
-
                 cron_expressions=["0 1 * * 0"],
             ),
         ),
     )
 
     # Nightly code security sweep
-
     await client.create_schedule(
         "code-sweep-nightly",
         Schedule(
@@ -719,9 +733,7 @@ async def create_schedules():
                 task_queue="security-agents",
             ),
             spec=ScheduleSpec(
-
                 # Run nightly at 3 AM
-
                 cron_expressions=["0 3 * * *"],
             ),
         ),
@@ -734,7 +746,7 @@ if __name__ == "__main__":
     asyncio.run(create_schedules())
 ```
 
-______________________________________________________________________
+---
 
 ## CI/CD Integration
 
@@ -750,64 +762,53 @@ on:
     branches: [main]
   pull_request:
   schedule:
-
     # Run nightly at 2 AM UTC
-
     - cron: '0 2 * * *'
-
   workflow_dispatch:
 
 jobs:
   code-security-sweep:
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/checkout@v3
 
       - name: Set up Python
-
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-
         run: |
           pip install -r requirements.txt
           pip install temporalio
 
       - name: Start Temporal server
-
         run: |
           docker-compose up -d temporal
 
       - name: Start security worker
-
         run: |
           python scripts/run_security_worker.py &
           sleep 10
 
       - name: Run code security sweep
-
         run: |
           python scripts/run_code_sweep.py
 
       - name: Upload SARIF results
-
         if: always()
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: security-scan.sarif
 
       - name: Block on critical vulnerabilities
-
         if: failure()
         run: |
           echo "::error::Critical security vulnerabilities found"
           exit 1
 ```
 
-______________________________________________________________________
+---
 
 ## Monitoring & Alerting
 
@@ -834,7 +835,6 @@ async def export_metrics():
     client = await Client.connect("localhost:7233")
 
     # Query workflow metrics
-
     workflows = await client.list_workflows("TaskQueue='security-agents'")
 
     metrics = {
@@ -853,12 +853,10 @@ async def export_metrics():
             metrics["vulnerabilities_found"] += len(result.vulnerabilities_found)
 
     # Export to monitoring system
-
     # ... (Prometheus, Datadog, etc.)
-
 ```
 
-______________________________________________________________________
+---
 
 ## Summary
 

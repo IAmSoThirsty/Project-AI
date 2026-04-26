@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 End-to-End tests for the Governance API (FastAPI backend).
 Tests complete user flows through the TARL governance system.

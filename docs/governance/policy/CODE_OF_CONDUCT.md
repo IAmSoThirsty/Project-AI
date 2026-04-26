@@ -1,28 +1,42 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Code of Conduct for Project-AI"
+id: code-of-conduct
+type: policy
+status: active
+created_date: 2025-11-28
+updated_date: 2025-11-28
+version: 1.0
+author: Project-AI Governance Team
+contributors: ["Legal Team", "Community Team"]
+policy_level: P1
+enforcement_level: binding
+review_frequency: annually
+tags:
+  - area:governance
+  - area:community
+  - type:policy
+  - component:community-standards
+  - component:ethics
+  - audience:contributor
+  - audience:user
+  - audience:maintainer
+  - priority:critical
+  - special:constitutional
+compliance_frameworks: ["Contributor Covenant", "Diversity & Inclusion"]
+relationships:
+  governed_by: ["copilot_workspace_profile"]
+  related_docs: ["CONTRIBUTING"]
+  validates: []
+purpose: "Binding code of conduct establishing community standards, expected behaviors, unacceptable actions, reporting procedures, and enforcement mechanisms"
+scope: "Community pledge, expected behavior (respect, inclusivity, collaboration, professionalism), unacceptable behavior (harassment, discrimination), reporting procedures, enforcement consequences"
+enforcement: "Mandatory - Violations result in warnings, temporary bans, or permanent removal from community"
+---
+
 # Code of Conduct for Project-AI
-
-
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
-## Research Provenance
-
-Arch Angel protected linkage:
-- Canonical DOI registry: [DOI-Registry](../../../wiki/07_Research/Publications/DOI-Registry.md)
-- Governance DOI map: [GOVERNANCE_DOI_MAP](../GOVERNANCE_DOI_MAP.md)
-- Primary DOI anchors:
-- [The Sovereign Covenant](../../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
-- [AGI Charter for Project-AI](../../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
-- [Constitutional Architectures](../../../wiki/07_Research/Publications/Paper-05.md) - https://doi.org/10.5281/zenodo.18794646
-- [The Flat Gap](../../../wiki/07_Research/Publications/Paper-07.md) - https://doi.org/10.5281/zenodo.18827649
-- [Governing Force In AGI](../../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
-- [Two Species Aligned](../../../wiki/07_Research/Publications/Paper-16.md) - https://doi.org/10.5281/zenodo.19582479
-- [Project-AI: Sovereign Constitutional AGI Ecosystem](../../../wiki/07_Research/Publications/Paper-17.md) - https://doi.org/10.5281/zenodo.19582539
-- [Why I Am Doing This](../../../wiki/07_Research/Publications/Paper-21.md) - https://doi.org/10.5281/zenodo.19592336
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
 
 **Effective Date**: November 28, 2025
 
-______________________________________________________________________
+---
 
 ## 🤝 Our Pledge
 
@@ -30,7 +44,7 @@ We are committed to providing a welcoming and inspiring community for all. We pl
 
 We are committed to being an inclusive, welcoming, and harassment-free experience for everyone.
 
-______________________________________________________________________
+---
 
 ## 👥 Expected Behavior
 
@@ -64,7 +78,7 @@ We expect all community members to:
 - Maintain confidentiality of private information
 - Follow project guidelines and processes
 
-______________________________________________________________________
+---
 
 ## 🚫 Unacceptable Behavior
 
@@ -83,7 +97,7 @@ The following behaviors are considered unacceptable:
 - Publishing private information without consent
 - Other conduct which could reasonably be considered inappropriate
 
-______________________________________________________________________
+---
 
 ## 🎯 Our Standards
 
@@ -98,7 +112,7 @@ Examples of behavior that contribute to creating a positive environment include:
 - Creating space for underrepresented voices
 - Following through on commitments
 
-______________________________________________________________________
+---
 
 ## 📢 Reporting & Enforcement
 
@@ -138,7 +152,7 @@ Violations of this code of conduct may result in:
 - **Permanent Ban**: Severe or repeated serious violations
 - **Legal Action**: If applicable and necessary
 
-______________________________________________________________________
+---
 
 ## 🛡️ Specific Guidelines
 
@@ -172,7 +186,7 @@ ______________________________________________________________________
 - Support fellow community members
 - Help create a welcoming environment
 
-______________________________________________________________________
+---
 
 ## 💡 Accountability
 
@@ -196,7 +210,7 @@ Project maintainers commit to:
 - Following due process in investigations
 - Updating the community on progress
 
-______________________________________________________________________
+---
 
 ## 📚 Resources
 
@@ -214,7 +228,7 @@ ______________________________________________________________________
 - [Django Code of Conduct](https://www.djangoproject.com/conduct/)
 - [Geek Feminism Wiki: Codes of Conduct](https://geekfeminism.fandom.com/wiki/Code_of_conduct)
 
-______________________________________________________________________
+---
 
 ## 🔄 Policy Updates
 
@@ -225,7 +239,7 @@ This code of conduct may be updated periodically. Changes will be:
 - Documented with effective dates
 - Applied fairly to all members
 
-______________________________________________________________________
+---
 
 ## 📋 Acknowledgments
 
@@ -237,7 +251,7 @@ This code of conduct is adapted from:
 
 We appreciate these communities for their leadership in establishing inclusive standards.
 
-______________________________________________________________________
+---
 
 ## ✅ Compliance
 
@@ -248,6 +262,9 @@ By participating in Project-AI, you agree to:
 - Treat all community members with respect
 - Support a welcoming and inclusive environment
 
-______________________________________________________________________
+---
 
-**Effective Date**: November 28, 2025 **Status**: ✅ Active **Last Updated**: November 28, 2025 **Report Issues**: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues) or [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
+**Effective Date**: November 28, 2025
+**Status**: ✅ Active
+**Last Updated**: November 28, 2025
+**Report Issues**: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues) or [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)

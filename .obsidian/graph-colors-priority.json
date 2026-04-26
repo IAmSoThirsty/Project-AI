@@ -1,0 +1,111 @@
+{
+  "name": "Priority-Based Colors",
+  "description": "Color scheme based on priority and criticality levels",
+  "version": "1.0.0",
+  "colorGroups": [
+    {
+      "query": "tag:#priority/p0 tag:#critical tag:#mandatory",
+      "color": {
+        "a": 1,
+        "rgb": 16711680
+      },
+      "label": "P0 - Critical/Mandatory",
+      "description": "Mission-critical components requiring immediate attention (Red - #FF0000)"
+    },
+    {
+      "query": "tag:#priority/p1 tag:#high-priority tag:#important",
+      "color": {
+        "a": 1,
+        "rgb": 16744448
+      },
+      "label": "P1 - High Priority",
+      "description": "High-priority features and fixes (Orange - #FFA500)"
+    },
+    {
+      "query": "tag:#priority/p2 tag:#medium-priority",
+      "color": {
+        "a": 1,
+        "rgb": 16776960
+      },
+      "label": "P2 - Medium Priority",
+      "description": "Standard priority development work (Yellow - #FFFF00)"
+    },
+    {
+      "query": "tag:#priority/p3 tag:#low-priority tag:#nice-to-have",
+      "color": {
+        "a": 1,
+        "rgb": 65280
+      },
+      "label": "P3 - Low Priority",
+      "description": "Enhancement requests, nice-to-have features (Green - #00FF00)"
+    },
+    {
+      "query": "tag:#priority/p4 tag:#backlog",
+      "color": {
+        "a": 0.6,
+        "rgb": 8421504
+      },
+      "label": "P4 - Backlog",
+      "description": "Backlog items, future considerations (Faded Gray)"
+    },
+    {
+      "query": "tag:#blocked tag:#dependency-waiting",
+      "color": {
+        "a": 1,
+        "rgb": 10494192
+      },
+      "label": "Blocked/Waiting",
+      "description": "Blocked tasks waiting on dependencies (Purple - #A020F0)"
+    },
+    {
+      "query": "tag:#status/in-progress tag:#wip",
+      "color": {
+        "a": 1,
+        "rgb": 5592575
+      },
+      "label": "In Progress",
+      "description": "Currently active development (Blue - #5577FF)"
+    },
+    {
+      "query": "tag:#status/complete tag:#done tag:#verified",
+      "color": {
+        "a": 0.5,
+        "rgb": 32768
+      },
+      "label": "Completed/Verified",
+      "description": "Finished and verified work (Faded Green - #008000)"
+    },
+    {
+      "query": "tag:#experimental tag:#poc tag:#prototype",
+      "color": {
+        "a": 1,
+        "rgb": 16711935
+      },
+      "label": "Experimental/POC",
+      "description": "Experimental features, proof-of-concepts (Magenta - #FF00FF)"
+    },
+    {
+      "query": "tag:#technical-debt tag:#refactor-needed",
+      "color": {
+        "a": 1,
+        "rgb": 11829830
+      },
+      "label": "Technical Debt",
+      "description": "Technical debt requiring refactoring (Brown - #B45F06)"
+    }
+  ],
+  "usage": {
+    "instructions": [
+      "Filter graph by priority to focus on critical work",
+      "Use status colors to track project progress",
+      "Identify blocked items requiring dependency resolution",
+      "Highlight experimental work vs production code"
+    ],
+    "workflowTips": [
+      "Start with P0/P1 items for sprint planning",
+      "Monitor 'In Progress' nodes for active work tracking",
+      "Review 'Blocked' nodes in daily standups",
+      "Archive 'Complete' nodes after verification"
+    ]
+  }
+}

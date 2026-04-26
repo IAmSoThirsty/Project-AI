@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: config-guide
+tags: [automation, quick-reference, github-actions, ci-cd, cheatsheet]
+created: 2025-12-18
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation]
+stakeholders: [developers, devops]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Automation Quick Reference
 
 ⚡ **Fast reference for Project-AI automated workflows**
@@ -31,33 +43,25 @@
 ## 🚀 Quick Commands
 
 ```bash
-
 # View active workflows
-
 gh workflow list
 
 # Manually trigger security scan
-
 gh workflow run auto-security-fixes.yml
 
 # Manually trigger Bandit scan
-
 gh workflow run auto-bandit-fixes.yml
 
 # View recent workflow runs
-
 gh run list --limit 10
 
 # View Dependabot PRs
-
 gh pr list --author "dependabot[bot]"
 
 # View security issues
-
 gh issue list --label security,automated
 
 # Enable auto-merge on your PR
-
 gh pr edit <PR-NUMBER> --add-label "auto-merge"
 ```
 
@@ -81,39 +85,30 @@ gh pr edit <PR-NUMBER> --add-label "auto-merge"
 ### Auto-merge Not Working?
 
 ```bash
-
 # Check PR status
-
 gh pr checks <PR-NUMBER>
 
 # Check merge eligibility
-
 gh pr view <PR-NUMBER> --json mergeable
 ```
 
 ### Too Many Security Issues?
 
 ```bash
-
 # View Bandit report locally
-
 bandit -r src/ -f screen
 
 # Check specific package
-
 pip-audit --desc <package-name>
 ```
 
 ### Workflow Failed?
 
 ```bash
-
 # View logs
-
 gh run view <RUN-ID> --log
 
 # Re-run failed jobs
-
 gh run rerun <RUN-ID> --failed
 ```
 
@@ -144,23 +139,18 @@ gh run rerun <RUN-ID> --failed
 ## 🛠️ Local Testing
 
 ```bash
-
 # Validate automation setup
-
 ./.github/scripts/test-automation.sh
 
 # Run security scans locally
-
 bandit -r src/ -f screen
 pip-audit
 safety check
 
 # Run linting
-
 ruff check .
 
 # Run tests
-
 pytest -v
 ```
 
@@ -175,11 +165,11 @@ For complete details, workflows, troubleshooting, and architecture diagrams, see
 ## 🆘 Support
 
 - 📝 **Issues**: GitHub Issues with `question` label
-- 🔒 **Security**: GitHub Issues with `security` label
+- 🔒 **Security**: GitHub Issues with `security` label  
 - 📊 **Logs**: GitHub Actions tab (90 day retention)
 - 📚 **Docs**: `.github/AUTOMATION.md`
 
 ---
 
-**Quick Access**: Bookmark this page for fast reference!
+**Quick Access**: Bookmark this page for fast reference!  
 **Last Updated**: 2025-12-18

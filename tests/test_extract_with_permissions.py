@@ -1,14 +1,10 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 import os
 import stat
 from pathlib import Path
 from zipfile import BadZipFile, ZipFile
 
 import pytest
-
-# Module doesn't exist - skip this test file
-pytestmark = pytest.mark.skip(reason="extract_with_permissions module not found")
+from extract_with_permissions import extract_with_permissions
 
 
 @pytest.fixture

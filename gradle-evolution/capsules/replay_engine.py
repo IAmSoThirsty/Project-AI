@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Replay Engine
 =============
@@ -10,6 +8,8 @@ Enables deterministic replay of build executions for debugging and auditing.
 
 import logging
 import asyncio
+import hashlib
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -21,9 +21,14 @@ from .capsule_engine import BuildCapsule, CapsuleEngine
 logger = logging.getLogger(__name__)
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now() -> datetime:
+    """Return timezone-aware UTC datetime."""
+    return datetime.now(timezone.utc)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return _utc_now().isoformat()
 
 
 class ReplayResult:
@@ -50,8 +55,8 @@ class ReplayResult:
         self.capsule_id = capsule_id
         self.differences = differences
         self.error = error
+        self.timestamp = _utc_now_iso()
         self.output_hash = output_hash
-        self.timestamp = _utcnow().isoformat()
 
 
 class ReplayEngine:
@@ -100,53 +105,70 @@ class ReplayEngine:
 
             # Verify capsule integrity first
             is_valid, error = self.capsule_engine.verify_capsule(
-                capsule_id, with_reason=True
+                capsule_id, detailed=True
             )
             if not is_valid:
                 return ReplayResult(
                     success=False,
                     capsule_id=capsule_id,
                     error=f"Capsule integrity check failed: {error}",
+                    output_hash=capsule.merkle_root,
                 )
 
             # Execute replay workflow if Temporal available
             if self.temporal_client:
-                result = asyncio.run(self._replay_with_temporal(capsule, verify_outputs))
+                result = self._replay_with_temporal(capsule, verify_outputs)
             else:
                 result = self._replay_local(capsule, verify_outputs)
+
+            if not result.output_hash:
+                result.output_hash = self._compute_output_hash(capsule, result)
 
             # Record replay
             self._record_replay(capsule_id, result)
 
             return result
 
+        except ValueError:
+            raise
         except Exception as e:
-            if isinstance(e, ValueError):
-                raise
             logger.error("Error replaying build: %s", e, exc_info=True)
             return ReplayResult(success=False, capsule_id=capsule_id, error=str(e))
 
-    async def _replay_with_temporal(
+    async def replay_build_async(
+        self, capsule_id: str, verify_outputs: bool = True
+    ) -> ReplayResult:
+        """Async wrapper for environments requiring coroutine-based call flow."""
+        return await asyncio.to_thread(
+            self.replay_build,
+            capsule_id,
+            verify_outputs,
+        )
+
+    def _replay_with_temporal(
         self, capsule: BuildCapsule, verify_outputs: bool
     ) -> ReplayResult:
         """Replay using Temporal workflow."""
         try:
-            workflow_id = f"replay-{capsule.capsule_id}-{_utcnow().timestamp()}"
+            workflow_id = f"replay-{capsule.capsule_id}-{_utc_now().timestamp()}"
 
-            handle = await self.temporal_client.start_workflow(
-                "BuildReplayWorkflow",
-                args=[capsule.to_dict(), verify_outputs],
-                id=workflow_id,
-                task_queue=self.task_queue,
-            )
+            async def _run_temporal() -> dict[str, Any]:
+                handle = await self.temporal_client.start_workflow(
+                    "BuildReplayWorkflow",
+                    args=[capsule.to_dict(), verify_outputs],
+                    id=workflow_id,
+                    task_queue=self.task_queue,
+                )
+                return await handle.result()
 
-            result_dict = await handle.result()
+            result_dict = asyncio.run(_run_temporal())
 
             return ReplayResult(
                 success=result_dict.get("success", False),
                 capsule_id=capsule.capsule_id,
                 differences=result_dict.get("differences"),
                 error=result_dict.get("error"),
+                output_hash=result_dict.get("output_hash", capsule.merkle_root),
             )
 
         except Exception as e:
@@ -222,7 +244,14 @@ class ReplayEngine:
                 success=success,
                 capsule_id=capsule.capsule_id,
                 differences=differences if differences else None,
-                output_hash=capsule.merkle_root,
+                output_hash=self._compute_output_hash(
+                    capsule,
+                    ReplayResult(
+                        success=success,
+                        capsule_id=capsule.capsule_id,
+                        differences=differences if differences else None,
+                    ),
+                ),
             )
 
         except Exception as e:
@@ -233,7 +262,7 @@ class ReplayEngine:
                 error=f"Local replay error: {str(e)}",
             )
 
-    async def replay_capsule_chain(
+    def replay_capsule_chain(
         self, capsule_ids: list[str], stop_on_failure: bool = True
     ) -> list[ReplayResult]:
         """
@@ -260,7 +289,7 @@ class ReplayEngine:
 
         return results
 
-    async def find_divergence_point(self, capsule_ids: list[str]) -> str | None:
+    def find_divergence_point(self, capsule_ids: list[str]) -> str | None:
         """
         Find where a capsule chain diverges from expected.
 
@@ -270,7 +299,7 @@ class ReplayEngine:
         Returns:
             First capsule ID that diverges, or None if all match
         """
-        results = await self.replay_capsule_chain(capsule_ids, stop_on_failure=False)
+        results = self.replay_capsule_chain(capsule_ids, stop_on_failure=False)
 
         for result in results:
             if not result.success:
@@ -338,10 +367,11 @@ class ReplayEngine:
         self.replay_history.append(
             {
                 "capsule_id": capsule_id,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "success": result.success,
                 "has_differences": result.differences is not None,
                 "error": result.error,
+                "output_hash": result.output_hash,
             }
         )
 
@@ -349,13 +379,12 @@ class ReplayEngine:
         if len(self.replay_history) > 1000:
             self.replay_history = self.replay_history[-1000:]
 
-    # ------------------------------------------------------------------
-    # Compatibility helpers expected by legacy tests
-    # ------------------------------------------------------------------
     def forensic_analysis(self, capsule_id: str) -> dict[str, Any]:
+        """Compatibility forensic analysis helper for replay diagnostics."""
         capsule = self.capsule_engine.get_capsule(capsule_id)
-        if not capsule:
+        if capsule is None:
             raise ValueError(f"Capsule not found: {capsule_id}")
+
         return {
             "capsule_id": capsule_id,
             "input_analysis": {
@@ -366,19 +395,27 @@ class ReplayEngine:
                 "count": len(capsule.outputs),
                 "paths": list(capsule.outputs.keys()),
             },
+            "merkle_root": capsule.merkle_root,
         }
 
     def compare_capsules(self, capsule_id1: str, capsule_id2: str) -> dict[str, Any]:
+        """Compatibility comparison helper."""
         diff = self.capsule_engine.compute_capsule_diff(capsule_id1, capsule_id2)
-        differences = []
-        similarities = []
+        if "error" in diff:
+            return {"differences": [diff["error"]], "similarities": []}
 
-        for area in ("tasks", "inputs", "outputs"):
-            section = diff.get(area, {}) if isinstance(diff, dict) else {}
-            if section.get("added") or section.get("removed") or section.get("modified"):
-                differences.append(area)
-            else:
-                similarities.append(area)
+        similarities: list[str] = []
+        differences: list[str] = []
+
+        common_tasks = diff.get("tasks", {}).get("common", [])
+        if common_tasks:
+            similarities.append("common_tasks")
+
+        for section in ("tasks", "inputs", "outputs"):
+            section_data = diff.get(section, {})
+            for key in ("added", "removed", "modified"):
+                if section_data.get(key):
+                    differences.append(f"{section}.{key}")
 
         return {
             "capsule_1": capsule_id1,
@@ -387,6 +424,19 @@ class ReplayEngine:
             "similarities": similarities,
             "raw_diff": diff,
         }
+
+    def _compute_output_hash(self, capsule: BuildCapsule, result: ReplayResult) -> str:
+        """Compute deterministic replay output hash."""
+        payload = {
+            "capsule_id": capsule.capsule_id,
+            "merkle_root": capsule.merkle_root,
+            "success": result.success,
+            "differences": result.differences,
+            "error": result.error,
+        }
+        return hashlib.sha256(
+            json.dumps(payload, sort_keys=True, default=str).encode()
+        ).hexdigest()
 
 
 __all__ = ["ReplayEngine", "ReplayResult"]

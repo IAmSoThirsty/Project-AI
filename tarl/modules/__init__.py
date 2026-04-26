@@ -1,8 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-#                                                             DATE: 2026-03-03 09:33:22
-#                                                             STATUS: Active
-#                                                             OWNER: Jeremy Karrick / IAmSoThirsty
 """
 T.A.R.L. (Thirstys Active Resistance Language) Module System Subsystem
 
@@ -26,7 +21,7 @@ Architecture Contract:
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -37,8 +32,8 @@ class Module:
     def __init__(self, name: str, path: str):
         self.name = name
         self.path = path
-        self.exports: dict[str, Any] = {}
-        self.dependencies: list[str] = []
+        self.exports = {}
+        self.dependencies = []
 
 
 class ModuleLoader:
@@ -152,8 +147,7 @@ class ModuleSystem:
         if not self._initialized:
             raise RuntimeError("Module system not initialized")
 
-        module: Module = self.loader.load(module_name)
-        return module
+        return self.loader.load(module_name)
 
     def shutdown(self) -> None:
         """Shutdown module system"""

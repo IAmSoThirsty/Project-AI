@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 # Quick verification script for JDK 21 and Gradle setup
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Gradle + JavaScript Setup Verification" -ForegroundColor Cyan

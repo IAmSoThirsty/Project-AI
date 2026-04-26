@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: devcontainer-doc
+tags: [devcontainer, development-environment, vscode, codespaces, configuration]
+created: 2025-12-15
+last_verified: 2026-04-20
+status: current
+related_systems: [development-environment, ci-cd, docker]
+stakeholders: [developers, contributors]
+config_scope: development
+automation_type: devcontainer
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # DevContainer Configuration
 
 This directory contains the GitHub Codespaces and VS Code Dev Containers configuration for Project-AI.
@@ -58,17 +70,13 @@ After the container is created:
 ## Running the Application
 
 ```bash
-
 # Desktop application (PyQt6)
-
 python -m src.app.main
 
 # Run tests
-
 pytest -v
 
 # Lint code
-
 ruff check .
 ```
 

@@ -1,5 +1,18 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: deployment
+tags: [p1-developer, production-deployment, multi-platform, desktop, android, docker, kubernetes, usb-installer]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [docker, kubernetes, android-sdk, electron-builder, usb-installer, pyqt6-app]
+stakeholders: [devops, deployment-team, release-managers, build-engineers]
+audience: intermediate
+prerequisites: [docker-basics, kubernetes-fundamentals, python-packaging, android-sdk-knowledge]
+estimated_time: 120 minutes
+review_cycle: monthly
+---
+  - [[RELEASE_BUILD_GUIDE]]
+---
 # Project-AI Production Deployment Guide
 
 ## 🚀 Complete Deployment Package
@@ -11,13 +24,10 @@ This guide covers deploying Project-AI and Legion Mini to all platforms for prod
 ### Option 1: Automated Build (Recommended)
 
 ```powershell
-
 # Build everything
-
 .\scripts\build_production.ps1 -All
 
 # Or build specific platforms
-
 .\scripts\build_production.ps1 -Desktop
 .\scripts\build_production.ps1 -Android
 ```
@@ -47,7 +57,7 @@ $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
 .\scripts\create_portable_usb.ps1
 ```
 
-______________________________________________________________________
+---
 
 ## Installation
 
@@ -108,7 +118,7 @@ adb install -r android/legion_mini/build/outputs/apk/debug/legion_mini-debug.apk
 - Persistent data on USB
 - Run on any Windows PC
 
-______________________________________________________________________
+---
 
 ## System Architecture
 
@@ -162,7 +172,7 @@ Project-AI/
 - `POST /api/savepoints/restore/{id}` - Restore
 - `GET /api/savepoints/auto/status` - Auto-save status
 
-______________________________________________________________________
+---
 
 ## Testing
 
@@ -178,7 +188,7 @@ Tests:
 - ✓ Save points system
 - ✓ Legion API
 - ✓ Android configuration
-- ✓ Desktop configuration
+- ✓ Desktop configuration  
 - ✓ Gradle build system
 
 ### Manual Testing Checklist
@@ -204,7 +214,7 @@ Tests:
 - All API endpoints responsive
 - Conversation history persists
 
-______________________________________________________________________
+---
 
 ## Production Deployment
 
@@ -220,15 +230,11 @@ ______________________________________________________________________
 **Configuration:**
 
 ```bash
-
 # Copy environment template
-
 cp .env.example .env
 
 # Edit configuration
-
 # Set API keys, ports, etc.
-
 ```
 
 ### Running in Production
@@ -236,14 +242,11 @@ cp .env.example .env
 **Backend (Linux/Windows Server):**
 
 ```bash
-
 # Using systemd (Linux)
-
 sudo systemctl start project-ai
 sudo systemctl start legion-api
 
 # Using PM2 (Cross-platform)
-
 pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
@@ -259,7 +262,7 @@ pm2 startup
 - Distribute APK directly (sideload)
 - Or submit to Google Play Store ($25 one-time fee)
 
-______________________________________________________________________
+---
 
 ## Deployment Checklist
 
@@ -281,12 +284,12 @@ ______________________________________________________________________
 ### Post-Deployment
 
 - [ ] Test desktop installation
-- \[ \] Test Android sideload
+- [  ] Test Android sideload
 - [ ] Test portable USB on different PC
 - [ ] Verify save/restore functionality
 - [ ] Monitor for 24 hours
 
-______________________________________________________________________
+---
 
 ## File Locations
 
@@ -312,7 +315,7 @@ ______________________________________________________________________
 - Desktop: `%APPDATA%/Project AI/logs/`
 - Android: `logcat` (via `adb logcat`)
 
-______________________________________________________________________
+---
 
 ## Troubleshooting
 
@@ -340,7 +343,7 @@ ______________________________________________________________________
 - Re-run setup: `.\scripts\create_portable_usb.ps1`
 - Check USB drive has 2GB+ free space
 
-______________________________________________________________________
+---
 
 ## Support & Documentation
 
@@ -348,7 +351,7 @@ ______________________________________________________________________
 - API Docs: <http://localhost:8001/docs> (when running)
 - Legion Docs: <http://localhost:8002/docs> (when running)
 
-______________________________________________________________________
+---
 
 ## Security Notes
 
@@ -358,6 +361,6 @@ ______________________________________________________________________
 - TARL enforcement active
 - No backdoors or bypass mechanisms
 
-______________________________________________________________________
+---
 
 **Ready for global deployment! 🌍**

@@ -1,17 +1,11 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 #!/usr/bin/env node
 
 /**
  * Thirsty-lang AST (Abstract Syntax Tree) Generator
  * Visualize the structure of your code
- * 
- * Date: 2026-03-03 15:15 UTC | Status: Active
  */
 
 const fs = require('fs');
-const path = require('path');
-const { validatePath, isValidFile } = require('./path-validator');
 
 class ThirstyAST {
   constructor() {
@@ -109,7 +103,7 @@ class ThirstyAST {
         const childIsLast = index === node.body.length - 1;
         const childPrefix = '';
         this.visualizeTree(child, childPrefix, childIsLast);
-      }
+      });
     } else if (node.type === 'VariableDeclaration') {
       console.log("" + line + "VariableDeclaration (line " + node.lineNumber + ")");
       console.log(`${prefix}${isLast ? '    ' : '│   '}├── name: ${node.name}`);

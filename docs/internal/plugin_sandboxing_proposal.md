@@ -1,12 +1,57 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Plugin Sandboxing Architecture Proposal"
+id: plugin-sandboxing-proposal
+type: rfc
+version: 1.0.0
+created_date: 2026-01-28
+updated_date: 2026-02-03
+status: review
+author: Security Engineering Team
+contributors:
+  - Plugin Architecture Team
+audience: internal
+confidentiality: confidential
+owner_team: security
+operational_context: planning
+retention_policy: permanent
+category: security
+tags:
+  - plugin-security
+  - sandboxing
+  - isolation
+  - process-isolation
+  - containerization
+  - rfc
+  - threat-model
+technologies:
+  - Python
+  - Docker
+  - PyPy
+  - JSON-RPC
+  - WebAssembly
+related_docs:
+  - ../architecture/plugin-architecture.md
+  - ../security/plugin-security-model.md
+scope: "Phased implementation plan for plugin sandboxing with process isolation, containerization, and security controls"
+findings:
+  - Process isolation recommended as baseline
+  - Docker containerization for high-assurance
+  - Python sandboxing has weak guarantees
+  - WebAssembly offers strong isolation but high porting effort
+recommendations:
+  - Implement Phase 0 governance immediately
+  - Deploy Phase 1 process isolation
+  - Evaluate Docker for enterprise deployments
+description: RFC proposing practical, incremental approach to isolate third-party plugins with process isolation, containerization, and security controls to prevent unintended code execution and privilege escalation.
+---
+
 # Plugin Sandboxing Proposal
 
 Goal: design a practical, incremental approach to isolate third-party plugins so they cannot execute unintended code paths, access sensitive data, or escalate privileges. The intent is to provide concrete options, trade-offs, and an implementation roadmap that fits the Project-AI architecture (desktop PyQt6 app + optional web components).
 
 This document summarizes research findings and proposes a phased plan.
 
-______________________________________________________________________
+---
 
 ## Threat model (short)
 
@@ -25,40 +70,35 @@ Key security goals:
 - Enforce least-privilege API surface (only plugin API calls allowed).
 - Maintain reasonable developer ergonomics for safe plugins.
 
-______________________________________________________________________
+---
 
 ## Technical options (summary)
 
 1. Process Isolation (Recommended baseline)
-
 - Run each plugin in a separate OS process.
 - Use a minimal subprocess runner that exposes only a JSON-RPC API over stdin/stdout or a local socket.
 - Advantages: simple, works cross-platform, straightforward to kill/restart, can apply OS-level controls (nice/rlimit) and monitor health.
 - Drawbacks: IPC overhead, more complex debugging, cross-platform hardening differences.
 
 1. Containerization (Docker) for high-assurance deployments
-
 - Run untrusted plugins in lightweight containers with strict seccomp/namespace limits and read-only mounts.
 - Advantages: strong isolation, network controls, resource limits.
 - Drawbacks: Requires Docker on host (not suitable for end-user desktop by default), heavier.
 
 1. Restricted Python interpreter (PyPy sandbox / subinterpreters / restrictedexec)
-
 - Use Python's subinterpreters or a restricted VM that limits builtins and modules available to plugin code.
 - Advantages: runs on host without heavy OS dependencies.
 - Drawbacks: Python currently has weak sandboxing guarantees; subinterpreters do not guarantee security for untrusted code.
 
 1. WebAssembly (WASM) or Pyodide
-
 - Compile plugin logic to WASM (via Rust, AssemblyScript) or run Python in Pyodide inside a WASM runtime.
 - Advantages: Strong isolation; limited syscalls; deterministic environment.
 - Drawbacks: Porting effort; plugin authors must target WASM; limited library support.
 
 1. Language-based sandboxing (e.g., running plugins in a separate Node/JS sandbox or a restricted JVM)
-
 - Not ideal for Python-native plugin ecosystem.
 
-______________________________________________________________________
+---
 
 ## Recommended phased plan (practical)
 
@@ -93,31 +133,27 @@ Phase 4 — WASM plugin SDK (long-term research)
 - Investigate a WASM-based plugin runtime (wasmtime, wasm3) where plugin code runs as WASM module and communicates via a well-defined host API.
 - This can provide stronger guarantees and portable isolation, but is higher effort.
 
-______________________________________________________________________
+---
 
 ## Concrete API + Protocol suggestion (Process Model)
 
 - Plugin manifest (`plugin.json`):
-
   - `name`, `version`, `id`, `capabilities` (array), `entry_point` (script path)
 
 - Host launches plugin:
-
   - `python plugin_runner.py --plugin-dir /path/to/plugin` which spawns plugin subprocess `python plugin_main.py`
   - Runner applies resource limits and drops privileges if possible
 
 - RPC messages (JSONL):
-
   - Host -> Plugin: `{ "id": "uuid", "method": "init", "params": { ... } }`
   - Plugin -> Host: `{ "id": "uuid", "result": {...} }` or `{ "id":"uuid","error":"..." }`
 
 - Allowed host-provided APIs (examples):
-
   - `get_user_profile()` → returns non-sensitive fields only
   - `post_event(name, payload)` → plugin not allowed to send raw network requests
   - `store_plugin_data(key, value)` → sandboxed storage under plugin directory
 
-______________________________________________________________________
+---
 
 ## Operational considerations
 
@@ -126,7 +162,7 @@ ______________________________________________________________________
 - **User consent:** UI should show requested capabilities and last activity with an option to revoke.
 - **Testing:** Add plugin compatibility tests that run plugins in a simulated runner in CI.
 
-______________________________________________________________________
+---
 
 ## Implementation roadmap (milestones)
 
@@ -137,7 +173,7 @@ ______________________________________________________________________
 1. Provide optional Docker container mode and admin docs (2 weeks)
 1. Research WASM as long-term improvement (ongoing)
 
-______________________________________________________________________
+---
 
 ## Short proposal summary (one-liner)
 

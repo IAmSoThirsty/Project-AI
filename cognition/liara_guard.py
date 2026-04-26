@@ -1,5 +1,3 @@
-#                                           [2026-03-05 08:49]
-#                                          Productivity: Active
 """
 Liara Temporal Enforcement Guard
 Kernel-side authority constraints.

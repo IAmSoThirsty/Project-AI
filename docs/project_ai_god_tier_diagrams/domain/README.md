@@ -1,5 +1,29 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, domain-driven-design, ddd, bounded-contexts, ubiquitous-language]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [bounded-contexts, domain-models, domain-events, aggregates, repositories]
+stakeholders: [architecture-team, developers, domain-experts]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+bounded_contexts: 4
+---
+  - "[[domain_events]]"
+keywords:
+  - domain-driven-design
+  - ddd
+  - bounded-contexts
+  - domain-models
+  - ubiquitous-language
+  - tactical-patterns
+  - strategic-patterns
+---
+
 # Domain-Driven Design (DDD) in Project-AI
 
 ## Overview
@@ -39,7 +63,6 @@ Project-AI implements tactical and strategic DDD patterns to model complex AI go
 ## Ubiquitous Language
 
 ### AI Governance Context
-
 - **Law**: Immutable ethical rule (Asimov's Laws hierarchy)
 - **Oversight**: Pre-execution action validation against laws
 - **Governance Decision**: Result of law evaluation with rationale
@@ -47,7 +70,6 @@ Project-AI implements tactical and strategic DDD patterns to model complex AI go
 - **Override**: Emergency mechanism to bypass governance (audited)
 
 ### Memory Management Context
-
 - **Conversation**: Chronological sequence of user-AI interactions
 - **Memory Entry**: Single conversation turn with metadata
 - **Knowledge Unit**: Atomic piece of learned information
@@ -55,7 +77,6 @@ Project-AI implements tactical and strategic DDD patterns to model complex AI go
 - **Category**: Semantic grouping of knowledge (facts, skills, preferences, etc.)
 
 ### User Management Context
-
 - **User**: Authenticated human actor with credentials
 - **Profile**: User preferences and configuration
 - **Session**: Time-bound authenticated interaction
@@ -63,7 +84,6 @@ Project-AI implements tactical and strategic DDD patterns to model complex AI go
 - **Permission**: Authorization rule for resource access
 
 ### Agent Execution Context
-
 - **Agent**: Autonomous AI entity with specialized capability
 - **Workflow**: Temporal-orchestrated multi-step process
 - **Task**: Unit of work assigned to agent
@@ -96,36 +116,28 @@ Project-AI implements tactical and strategic DDD patterns to model complex AI go
 ## Key Principles
 
 ### 1. **Bounded Context Isolation**
-
 Each context has:
-
 - Independent domain model
 - Dedicated persistence
 - Context-specific ubiquitous language
 - Anti-corruption layers at boundaries
 
 ### 2. **Aggregate Design**
-
 Aggregates enforce:
-
 - Transactional consistency boundaries
 - Invariant protection
 - Single root entity
 - Internal change management
 
 ### 3. **Domain Event Propagation**
-
 Events enable:
-
 - Cross-context communication
 - Event sourcing for audit trail
 - Asynchronous processing
 - Eventual consistency
 
 ### 4. **Rich Domain Models**
-
 Models contain:
-
 - Business logic in entities
 - Validation rules
 - State transitions
@@ -134,21 +146,19 @@ Models contain:
 ## Implementation Strategy
 
 ### Tactical Patterns
-
 1. **Entities**: Objects with identity and lifecycle
-1. **Value Objects**: Immutable objects defined by attributes
-1. **Aggregates**: Consistency boundaries with single root
-1. **Domain Services**: Operations that don't belong to entities
-1. **Domain Events**: State change notifications
-1. **Repositories**: Persistence abstraction
+2. **Value Objects**: Immutable objects defined by attributes
+3. **Aggregates**: Consistency boundaries with single root
+4. **Domain Services**: Operations that don't belong to entities
+5. **Domain Events**: State change notifications
+6. **Repositories**: Persistence abstraction
 
 ### Strategic Patterns
-
 1. **Bounded Contexts**: Explicit model boundaries
-1. **Context Mapping**: Inter-context relationships
-1. **Anti-Corruption Layers**: Translation between contexts
-1. **Shared Kernel**: Common domain model elements
-1. **Customer-Supplier**: Upstream/downstream relationships
+2. **Context Mapping**: Inter-context relationships
+3. **Anti-Corruption Layers**: Translation between contexts
+4. **Shared Kernel**: Common domain model elements
+5. **Customer-Supplier**: Upstream/downstream relationships
 
 ## Context Map
 
@@ -162,14 +172,14 @@ User Management (U) ──[Customer-Supplier]──► AI Governance (P)
         │ [Shared Kernel: UserIdentity]
         │
         └──────────────────────────────► Memory Management (C)
-
+        
 AI Governance (U) ──[Partnership]──► Agent Execution (P)
 
 Memory Management (U) ──[Anti-Corruption Layer]──► Agent Execution (D)
 
 Legend:
   U = Upstream
-  D = Downstream
+  D = Downstream  
   P = Partnership
   C = Conformist
 ```
@@ -209,25 +219,21 @@ User Action
 ## Benefits Achieved
 
 ### 1. **Model Clarity**
-
 - Clear separation between business domains
 - Explicit vocabulary understood by developers and domain experts
 - Self-documenting code structure
 
 ### 2. **Maintainability**
-
 - Isolated changes within bounded contexts
 - Protected invariants through aggregates
 - Testable domain logic independent of infrastructure
 
 ### 3. **Scalability**
-
 - Independent deployment of bounded contexts
 - Async communication via events
 - Loose coupling between contexts
 
 ### 4. **Auditability**
-
 - Event sourcing provides complete history
 - Reproducible state from event replay
 - Compliance and debugging capabilities
@@ -235,9 +241,7 @@ User Action
 ## Python Implementation Example
 
 ```python
-
 # domain/base.py
-
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -251,43 +255,43 @@ class DomainEvent:
     occurred_at: datetime = field(default_factory=datetime.utcnow)
     aggregate_id: Optional[UUID] = None
     event_type: str = field(init=False)
-
+    
     def __post_init__(self):
         self.event_type = self.__class__.__name__
 
 class Entity(ABC):
     """Base class for entities with identity."""
-
+    
     def __init__(self, entity_id: UUID):
         self.id = entity_id
         self._domain_events: List[DomainEvent] = []
-
+    
     def add_domain_event(self, event: DomainEvent) -> None:
         """Add domain event to entity."""
         event.aggregate_id = self.id
         self._domain_events.append(event)
-
+    
     def clear_domain_events(self) -> List[DomainEvent]:
         """Clear and return domain events."""
         events = self._domain_events.copy()
         self._domain_events.clear()
         return events
-
+    
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Entity):
             return False
         return self.id == other.id
-
+    
     def __hash__(self) -> int:
         return hash(self.id)
 
 @dataclass(frozen=True)
 class ValueObject:
     """Base class for immutable value objects."""
-
+    
     def __post_init__(self):
         self._validate()
-
+    
     @abstractmethod
     def _validate(self) -> None:
         """Validate value object invariants."""
@@ -295,11 +299,11 @@ class ValueObject:
 
 class AggregateRoot(Entity):
     """Base class for aggregate roots."""
-
+    
     def __init__(self, aggregate_id: UUID):
         super().__init__(aggregate_id)
         self.version = 0
-
+    
     def increment_version(self) -> None:
         """Increment aggregate version for optimistic concurrency."""
         self.version += 1
@@ -308,19 +312,16 @@ class AggregateRoot(Entity):
 ## Integration Points
 
 ### With CQRS
-
 - Commands modify aggregates
 - Queries read denormalized views
 - Events sync write/read models
 
 ### With Event Sourcing
-
 - Aggregates reconstructed from events
 - State derived from event stream
 - Time-travel debugging possible
 
 ### With Microservices
-
 - Bounded contexts map to services
 - Events enable cross-service communication
 - Each service owns its data
@@ -328,52 +329,49 @@ class AggregateRoot(Entity):
 ## Testing Strategy
 
 ```python
-
 # tests/domain/test_aggregate.py
-
 import pytest
 from uuid import uuid4
 from domain.governance import GovernanceDecision, Law
 
 class TestGovernanceAggregate:
     """Test aggregate behavior and invariants."""
-
+    
     def test_decision_creation_emits_event(self):
         """Verify domain event emission."""
         aggregate = GovernanceDecision(uuid4())
         aggregate.evaluate_action("delete_file", context={"user": "admin"})
-
+        
         events = aggregate.clear_domain_events()
         assert len(events) == 1
         assert events[0].event_type == "ActionEvaluated"
-
+    
     def test_invariant_protection(self):
         """Verify invariants are enforced."""
         aggregate = GovernanceDecision(uuid4())
-
+        
         with pytest.raises(ValueError):
             aggregate.evaluate_action("", context={})  # Empty action
-
+    
     def test_aggregate_consistency(self):
         """Verify transactional consistency."""
         aggregate = GovernanceDecision(uuid4())
-
+        
         # All changes succeed or fail together
-
         aggregate.evaluate_action("action1", {})
         aggregate.evaluate_action("action2", {})
-
+        
         assert aggregate.decision_count == 2
 ```
 
 ## Related Documentation
 
-- **[Bounded Contexts](bounded_contexts.md)** - Detailed context definitions
-- **[Domain Models](domain_models.md)** - Entity and value object patterns
-- **[Domain Events](domain_events.md)** - Event definitions and handlers
-- **[Aggregates](../aggregate/README.md)** - Aggregate implementations
-- **[Command Pattern](../command/README.md)** - CQRS command side
-- **[Event Sourcing](../event/README.md)** - Event store architecture
+- **[[bounded_contexts.md|Bounded Contexts]]** - Detailed context definitions
+- **[[domain_models.md|Domain Models]]** - Entity and value object patterns
+- **[[domain_events.md|Domain Events]]** - Event definitions and handlers
+- **[[../aggregate/README.md|Aggregates]]** - Aggregate implementations
+- **[[../command/README.md|Command Pattern]]** - CQRS command side
+- **[[../event/README.md|Event Sourcing]]** - Event store architecture
 
 ## References
 

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Constitutional Engine Integration
 =================================
@@ -10,10 +8,12 @@ Enforces policies/constitution.yaml principles during build execution.
 
 from .enforcer import ConstitutionalEnforcer
 from .engine import ConstitutionalEngine
-from .temporal_law import TemporalLawEnforcer
+from .temporal_law import TemporalLaw, TemporalLawEnforcer, TemporalLawRegistry
 
 __all__ = [
     "ConstitutionalEngine",
     "ConstitutionalEnforcer",
+    "TemporalLaw",
+    "TemporalLawRegistry",
     "TemporalLawEnforcer",
 ]

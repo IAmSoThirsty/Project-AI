@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: protocol-doc
+tags: [specialized-systems, h323, business-continuity, disaster-recovery, resilience]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, bcdr-framework, backup-systems]
+stakeholders: [operations-team, bcdr-team, architecture-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Business Continuity & Disaster Recovery Plan
 
 Version 1.0 — High Availability & Failover Strategy
@@ -317,28 +329,19 @@ Defines how to maintain secure H.323 operations during outages, disasters, or in
 
 **Daily Backup**:
 ```bash
-
 #!/bin/bash
-
 # Backup GK configuration and database
-
 gk-backup --config /etc/gk/config.xml --output /backup/gk-$(date +%Y%m%d).tar.gz
 pg_dump h323_db > /backup/gk-db-$(date +%Y%m%d).sql
 ```
 
 **Restore Procedure**:
 ```bash
-
 # Restore GK configuration
-
 tar -xzf /backup/gk-20260123.tar.gz -C /etc/gk/
-
 # Restore database
-
 psql h323_db < /backup/gk-db-20260123.sql
-
 # Restart GK
-
 systemctl restart gatekeeper
 ```
 
@@ -346,21 +349,15 @@ systemctl restart gatekeeper
 
 **Daily Backup**:
 ```bash
-
 # Export gateway configuration
-
 gateway-cli export-config > /backup/gw-$(date +%Y%m%d).xml
 ```
 
 **Restore Procedure**:
 ```bash
-
 # Import gateway configuration
-
 gateway-cli import-config /backup/gw-20260123.xml
-
 # Restart gateway
-
 systemctl restart gateway
 ```
 

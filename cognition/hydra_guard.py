@@ -1,5 +1,3 @@
-#                                           [2026-03-05 08:49]
-#                                          Productivity: Active
 from cognition.violations import attempted_violation
 
 

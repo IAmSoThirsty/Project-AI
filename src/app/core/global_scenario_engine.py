@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Global Scenario Engine - God-Tier Monolithic Real-World Risk Analysis System
@@ -37,7 +35,7 @@ import random
 import time
 from collections import defaultdict
 from dataclasses import asdict
-from datetime import timezone, datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
@@ -1053,3 +1051,4 @@ def register_global_scenario_engine(
     SimulationRegistry.register("global_scenario_engine", engine)
     logger.info("GlobalScenarioEngine registered with SimulationRegistry")
     return engine
+

@@ -1,13 +1,15 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Simple verification script for new security agents.
 
 This script verifies that the new agents can be instantiated and basic
 operations work without requiring pytest.
 """
 
+import os
 import sys
 import tempfile
+
+# Set up module path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from app.agents.jailbreak_bench_agent import JailbreakBenchAgent
 from app.agents.long_context_agent import LongContextAgent

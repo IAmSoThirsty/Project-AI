@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Interface abstractions for pluggable governance and memory engines.
 
@@ -64,6 +62,7 @@ class GovernanceEngineInterface(ABC):
             ... else:
             ...     # Block action
         """
+        pass
 
     @abstractmethod
     def get_statistics(self) -> dict[str, Any]:
@@ -73,6 +72,7 @@ class GovernanceEngineInterface(ABC):
         Returns:
             Dictionary with metrics like total_evaluations, approvals, blocks, etc.
         """
+        pass
 
     def initialize(self) -> None:
         """
@@ -80,6 +80,7 @@ class GovernanceEngineInterface(ABC):
 
         Override this method if your engine needs initialization logic.
         """
+        pass
 
     def shutdown(self) -> None:
         """
@@ -87,6 +88,7 @@ class GovernanceEngineInterface(ABC):
 
         Override this method if your engine needs cleanup logic.
         """
+        pass
 
 
 class MemoryEngineInterface(ABC):
@@ -133,6 +135,7 @@ class MemoryEngineInterface(ABC):
             ...     status="completed"
             ... )
         """
+        pass
 
     @abstractmethod
     def query_executions(
@@ -156,6 +159,7 @@ class MemoryEngineInterface(ABC):
             ...     limit=10
             ... )
         """
+        pass
 
     @abstractmethod
     def get_statistics(self) -> dict[str, Any]:
@@ -165,6 +169,7 @@ class MemoryEngineInterface(ABC):
         Returns:
             Dictionary with metrics like total_records, storage_size, etc.
         """
+        pass
 
     def initialize(self) -> None:
         """
@@ -172,6 +177,7 @@ class MemoryEngineInterface(ABC):
 
         Override this method if your engine needs initialization logic.
         """
+        pass
 
     def shutdown(self) -> None:
         """
@@ -179,6 +185,7 @@ class MemoryEngineInterface(ABC):
 
         Override this method if your engine needs cleanup logic.
         """
+        pass
 
     def add_memory(
         self,
@@ -234,6 +241,7 @@ class PluginInterface(ABC):
         Returns:
             Unique plugin identifier
         """
+        pass
 
     @abstractmethod
     def get_version(self) -> str:
@@ -243,6 +251,7 @@ class PluginInterface(ABC):
         Returns:
             Version string (e.g., "1.0.0")
         """
+        pass
 
     @abstractmethod
     def execute(self, context: dict[str, Any]) -> dict[str, Any]:
@@ -255,6 +264,7 @@ class PluginInterface(ABC):
         Returns:
             Dictionary with execution results
         """
+        pass
 
     def get_metadata(self) -> dict[str, Any]:
         """

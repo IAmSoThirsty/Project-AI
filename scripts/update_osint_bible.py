@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 OSINT-BIBLE Integration Script
@@ -19,6 +17,10 @@ Future Enhancements:
     - Implement incremental updates with change detection
     - Add validation for tool metadata
     - Support for custom tool categories
+
+GOVERNANCE: GOVERNED
+Classification: Knowledge base management
+Risk: Medium (fetches external data)
 """
 
 import argparse

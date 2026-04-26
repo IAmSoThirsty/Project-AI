@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Hardware Auto-Discovery System
 God Tier architecture - Dynamic sensor/motor registration and hot-plug support.

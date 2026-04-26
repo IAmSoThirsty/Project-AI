@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: protocol-doc
+tags: [specialized-systems, h323, monitoring, telemetry, observability]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, monitoring-infrastructure, metrics-platform]
+stakeholders: [operations-team, sre-team, monitoring-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # Monitoring & Telemetry Specification for Secure H.323 Deployments
 
 ## Version 1.0 — Observability, Metrics, Alerts, and Data Flows
@@ -136,9 +148,7 @@ It ensures that all components are continuously observable and that deviations f
 
 **Using Project-AI Tools:**
 ```bash
-
 # Monitor GK registration status
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <gk-ip> \
     --snmp-user admin \
@@ -146,7 +156,6 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --priv-key <key>
 
 # Log monitoring event
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type monitoring_check \
     --device-id gk1 \
@@ -526,14 +535,11 @@ Monitoring is considered compliant when:
 ### Automated Monitoring Checks
 
 ```bash
-
 # Daily compliance check
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config monitoring_config.json
 
 # Registration monitoring
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <device-ip> \
     --snmp-user admin \
@@ -541,25 +547,20 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --priv-key <key>
 
 # Simulation test for validation
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 ```
 
 ### API-Based Monitoring
 
 ```bash
-
 # Start monitoring API
-
 cd h323_sec_profile
 uvicorn project_ai_fastapi:app --host 0.0.0.0 --port 8080
 
 # Query registration status
-
 curl -X GET "http://localhost:8080/registration/status?device_ip=<ip>&..."
 
 # Log monitoring events
-
 curl -X POST http://localhost:8080/log \
     -H "Content-Type: application/json" \
     -d '{
@@ -570,7 +571,6 @@ curl -X POST http://localhost:8080/log \
     }'
 
 # Set threat level based on monitoring
-
 curl -X POST http://localhost:8080/threat-level \
     -H "Content-Type: application/json" \
     -d '{"level": "normal"}'
@@ -579,35 +579,29 @@ curl -X POST http://localhost:8080/threat-level \
 ### Continuous Monitoring Script
 
 ```bash
-
 #!/bin/bash
-
 # H.323 Continuous Monitoring Script
 
 INTERVAL=300  # 5 minutes
 
 while true; do
-
     # Check GK status
-
     python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
         --device-ip $GK_IP \
         --snmp-user admin \
         --auth-key $AUTH_KEY \
         --priv-key $PRIV_KEY
-
+    
     # Check compliance
-
     python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
         --config /etc/h323/monitoring_config.json
-
+    
     # Log monitoring cycle
-
     python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
         --event-type monitoring_cycle \
         --device-id monitoring-system \
         --outcome success
-
+    
     sleep $INTERVAL
 done
 ```
@@ -631,55 +625,44 @@ monitoring_config:
     port: 514
     protocol: syslog
     tls: true
-
+  
   components:
     gatekeepers:
-
       - id: gk1.voice.example.com
-
         ip: 10.100.1.10
         snmp: true
         syslog: true
         metrics_interval: 60
-
+      
     gateways:
-
       - id: gw1.voice.example.com
-
         ip: 10.200.1.10
         snmp: true
         syslog: true
         cdrs: true
         metrics_interval: 60
-
+    
     endpoints:
-
       - range: 10.100.2.0/24
-
         snmp: false
         syslog: where_supported
         metrics_interval: 300
-
+  
   alerts:
     critical:
-
       - cleartext_signaling
       - rtp_detected
       - pki_compromise
       - unauthorized_endpoint
-
     high:
-
       - repeated_h235_failures
       - certificate_expiring_7days
       - trunk_failure
-
     medium:
-
       - crl_ocsp_unreachable
       - ntp_drift
       - qos_degradation
-
+  
   retention:
     signaling_logs: 365d
     media_metadata: 90d

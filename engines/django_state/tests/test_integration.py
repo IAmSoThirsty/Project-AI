@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Integration tests for complete engine."""
 
 from ..engine import DjangoStateEngine

@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, plugin-marketplace, plugin-system, extensions, third-party-plugins, qa-workflow]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [plugin-system, marketplace, four-laws-validation, security-checks, qa-pipeline]
+stakeholders: [developers, plugin-authors, marketplace-maintainers, security-reviewers]
+audience: intermediate
+prerequisites: [python-intermediate, plugin-architecture, security-awareness, four-laws-understanding]
+estimated_time: 50 minutes
+review_cycle: quarterly
+---
 # Plugin Marketplace Guide
 
 Project-AI ships with a plugin system that accepts third-party extensions as long as they respect the Four Laws and do not tamper with core safety controls. This document explains the metadata contract, QA checks, and publication workflow for every plugin before it can be listed in the marketplace.
@@ -49,8 +60,8 @@ Follow these steps when validating a new marketplace plugin:
 
 ## Marketplace Catalog
 
-| Plugin                | Status  | Hook targets                    |
-| --------------------- | ------- | ------------------------------- |
+| Plugin | Status | Hook targets |
+| --- | --- | --- |
 | Plugin example (core) | Enabled | message_received, before_action |
 
 Add your plugin entry to the catalog table after it ships so downstream users can discover it easily.

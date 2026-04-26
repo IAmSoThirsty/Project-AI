@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Tier Health Dashboard - Monitoring and visualization for three-tier platform health.
 
@@ -52,7 +50,7 @@ MONITORING DOMAINS:
 import logging
 import time
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 
 from app.core.platform_tiers import PlatformTier, TierHealthStatus, get_tier_registry
@@ -546,3 +544,4 @@ def get_health_monitor() -> TierHealthMonitor:
     if _global_monitor is None:
         _global_monitor = TierHealthMonitor()
     return _global_monitor
+

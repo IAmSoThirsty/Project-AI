@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:/Project-AI-main/.env' -TotalCount 500"

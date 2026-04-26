@@ -356,7 +356,7 @@
       "version": "8.6+",
       "exec_path": "tclsh",
       "category": "interpreted",
-      "health_check_cmd": "echo 'puts [info patchlevel]' | tclsh",
+      "health_check_cmd": "tclsh",
       "verified": false,
       "priority": 2
     },

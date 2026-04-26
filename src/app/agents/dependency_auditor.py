@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Dependency & Security Auditor agent
 
 Runs pip-audit and basic dependency checks on newly generated files.

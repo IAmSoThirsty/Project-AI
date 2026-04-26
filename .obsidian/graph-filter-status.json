@@ -1,0 +1,151 @@
+{
+  "name": "Status-Based Filters",
+  "description": "Filter graph nodes by workflow status and lifecycle stage",
+  "version": "1.0.0",
+  "filters": [
+    {
+      "id": "lifecycle-planning",
+      "name": "Planning Stage",
+      "query": "tag:#status/planning OR tag:#status/draft OR tag:#status/proposed",
+      "include": true,
+      "description": "Show items in planning or proposal stage",
+      "useCase": "Review roadmap and upcoming work",
+      "color": "gray"
+    },
+    {
+      "id": "lifecycle-in-progress",
+      "name": "In Progress",
+      "query": "tag:#status/in-progress OR tag:#status/active OR tag:#wip",
+      "include": true,
+      "description": "Show active work items currently being developed",
+      "useCase": "Monitor current sprint and active development",
+      "color": "blue"
+    },
+    {
+      "id": "lifecycle-review",
+      "name": "In Review",
+      "query": "tag:#status/review OR tag:#status/pr-open OR tag:#code-review",
+      "include": true,
+      "description": "Show items awaiting review or approval",
+      "useCase": "Track code reviews and approval workflows",
+      "color": "yellow"
+    },
+    {
+      "id": "lifecycle-testing",
+      "name": "Testing/QA",
+      "query": "tag:#status/testing OR tag:#status/qa OR tag:#validation",
+      "include": true,
+      "description": "Show items in testing or quality assurance",
+      "useCase": "Monitor QA pipeline and test execution",
+      "color": "orange"
+    },
+    {
+      "id": "lifecycle-blocked",
+      "name": "Blocked/Waiting",
+      "query": "tag:#status/blocked OR tag:#status/waiting OR tag:#dependency-waiting",
+      "include": true,
+      "description": "Show blocked items requiring resolution",
+      "useCase": "Identify and resolve blockers",
+      "color": "red"
+    },
+    {
+      "id": "lifecycle-complete",
+      "name": "Completed",
+      "query": "tag:#status/complete OR tag:#status/done OR tag:#status/merged",
+      "include": false,
+      "description": "Show completed work items (default: hidden to reduce clutter)",
+      "useCase": "Review finished work and accomplishments",
+      "color": "green"
+    },
+    {
+      "id": "lifecycle-verified",
+      "name": "Verified/Deployed",
+      "query": "tag:#status/verified OR tag:#status/deployed OR tag:#production",
+      "include": false,
+      "description": "Show verified and deployed features",
+      "useCase": "Track production deployment status",
+      "color": "dark-green"
+    },
+    {
+      "id": "lifecycle-archived",
+      "name": "Archived/Deprecated",
+      "query": "tag:#status/archived OR tag:#status/deprecated OR tag:#obsolete",
+      "include": false,
+      "description": "Show archived or deprecated content (default: hidden)",
+      "useCase": "Review legacy systems and migration candidates",
+      "color": "faded-gray"
+    },
+    {
+      "id": "lifecycle-cancelled",
+      "name": "Cancelled/Rejected",
+      "query": "tag:#status/cancelled OR tag:#status/rejected OR tag:#wont-fix",
+      "include": false,
+      "description": "Show cancelled or rejected work items",
+      "useCase": "Review decision history and scope changes",
+      "color": "dark-gray"
+    }
+  ],
+  "workflowStages": {
+    "standard": [
+      "planning → in-progress → review → testing → complete → verified",
+      "blocked/waiting can occur at any stage"
+    ],
+    "fastTrack": [
+      "planning → in-progress → complete (skip review/testing for small changes)"
+    ],
+    "experimental": [
+      "planning → in-progress → cancelled/archived (for failed experiments)"
+    ]
+  },
+  "statusTransitions": {
+    "planning": {
+      "next": ["in-progress", "cancelled"],
+      "trigger": "Work begins OR scope changed"
+    },
+    "in-progress": {
+      "next": ["review", "blocked", "testing"],
+      "trigger": "Code complete OR dependency issue OR direct to testing"
+    },
+    "review": {
+      "next": ["testing", "in-progress", "blocked"],
+      "trigger": "Approval granted OR changes requested OR blocker found"
+    },
+    "testing": {
+      "next": ["complete", "in-progress", "blocked"],
+      "trigger": "Tests pass OR bugs found OR dependency issue"
+    },
+    "blocked": {
+      "next": ["in-progress", "cancelled"],
+      "trigger": "Blocker resolved OR work cancelled"
+    },
+    "complete": {
+      "next": ["verified", "in-progress"],
+      "trigger": "Deployed to production OR reopened for changes"
+    },
+    "verified": {
+      "next": ["archived"],
+      "trigger": "Feature stable in production for 30+ days"
+    }
+  },
+  "usage": {
+    "applyingFilters": [
+      "Open Obsidian Graph View > Filters",
+      "Toggle status filters to focus on specific workflow stages",
+      "Hide 'complete' and 'archived' to see only active work",
+      "Show 'blocked' items prominently for daily standups"
+    ],
+    "workflowViews": {
+      "dailyStandup": "Show: in-progress, blocked, review | Hide: complete, archived",
+      "sprintPlanning": "Show: planning, in-progress | Hide: complete, archived, cancelled",
+      "releaseReadiness": "Show: testing, verified | Hide: planning, cancelled",
+      "retrospective": "Show: complete, cancelled | Hide: in-progress, planning",
+      "technicalDebt": "Show: blocked, archived, deprecated | Hide: in-progress, complete"
+    },
+    "automationTips": {
+      "autoStatusUpdate": "Use Dataview to auto-tag status based on metadata fields",
+      "reminderSystem": "Create reminders for items in 'blocked' status > 7 days",
+      "archivalPolicy": "Auto-archive 'complete' items after 90 days",
+      "escalationRules": "Escalate 'blocked' P0/P1 items after 3 days"
+    }
+  }
+}

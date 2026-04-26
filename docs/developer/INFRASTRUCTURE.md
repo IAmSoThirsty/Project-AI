@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, infrastructure, project-structure, ci-cd, github-actions, architecture]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [github-workflows, project-layout, ci-cd-pipeline, directory-structure]
+stakeholders: [developers, infrastructure-team, new-contributors]
+audience: intermediate
+prerequisites: [project-overview, basic-infrastructure-knowledge]
+estimated_time: 15 minutes
+review_cycle: monthly
+---
 # Infrastructure Documentation
 
 This document describes the infrastructure configuration and setup for Project-AI.
@@ -55,45 +66,37 @@ Project-AI/
 ### Python Configuration
 
 - **`pyproject.toml`**: Main project configuration (PEP 517/518)
-
   - Project metadata (name, version, dependencies)
   - Tool configurations (ruff, pytest, black)
   - Python version requirement: 3.11+
 
 - **`setup.py`**: Installation entry point
-
   - Minimal configuration (delegates to pyproject.toml)
   - Defines console scripts entry points
 
 - **`requirements.txt`**: Pinned dependencies
-
   - Generated from pyproject.toml
   - Use for reproducible installations
 
 - **`pyrightconfig.json`**: Type checking configuration
-
   - Type checking mode: "standard"
   - Python version: 3.11
 
 ### Development Configuration
 
 - **`.env`**: Environment variables (local only, not committed)
-
   - `OPENAI_API_KEY`: OpenAI API credentials
   - `SMTP_USERNAME`: Email service credentials
   - `FERNET_KEY`: Encryption key for sensitive data
 
 - **`.editorconfig`**: IDE formatting rules
-
   - Enforces consistent indentation and line endings
   - Supported by most modern IDEs
 
 - **`.python-version`**: Python version for pyenv
-
   - Ensures consistent Python version across team
 
 - **`.markdownlint.json`**: Markdown linting rules
-
   - Enforces consistent markdown formatting
 
 ### Build and Distribution
@@ -113,14 +116,12 @@ Project-AI/
 ### Docker
 
 - **`Dockerfile`**: Multi-stage build for production
-
   - Stage 1: Build wheels from dependencies
   - Stage 2: Runtime image with only necessary packages
   - Health checks included
   - Optimized for size and security
 
 - **`.dockerignore`**: Files excluded from Docker build
-
   - Reduces build context size
   - Excludes unnecessary files
 
@@ -135,17 +136,13 @@ Project-AI/
 **Usage:**
 
 ```bash
-
 # Start development environment
-
 docker-compose up
 
 # Rebuild image
-
 docker-compose build
 
 # Stop containers
-
 docker-compose down
 ```
 
@@ -228,47 +225,36 @@ Located in `.github/workflows/`:
 ### Local Development
 
 ```bash
-
 # 1. Clone repository
-
 git clone https://github.com/IAmSoThirsty/Project-AI.git
 cd Project-AI
 
 # 2. Create Python virtual environment
-
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
 # 3. Install dependencies
-
 pip install -e ".[dev]"
 pip install -r requirements.txt
 
 # 4. Set up environment file
-
 cp .env.example .env
-
 # Edit .env with your credentials
 
 # 5. Run application
-
 python -m app.main
 ```
 
 ### Docker Development
 
 ```bash
-
 # Build and start
-
 docker-compose up --build
 
 # View logs
-
 docker-compose logs -f
 
 # Run commands in container
-
 docker-compose exec project-ai bash
 ```
 
@@ -277,26 +263,20 @@ docker-compose exec project-ai bash
 ### Linting
 
 ```bash
-
 # Check code
-
 ruff check .
 
 # Auto-fix issues
-
 ruff check . --fix
 ```
 
 ### Testing
 
 ```bash
-
 # All tests
-
 pytest
 
 # With coverage
-
 pytest --cov=src --cov-report=html
 ```
 
@@ -322,34 +302,26 @@ python -m pylance
 ### Building Distribution
 
 ```bash
-
 # Build wheel and source distribution
-
 python -m build
 
 # Upload to PyPI
-
 twine upload dist/*
 ```
 
 ### Docker Deployment
 
 ```bash
-
 # Build production image
-
 docker build -t project-ai:1.0.0 .
 
 # Tag for registry
-
 docker tag project-ai:1.0.0 myregistry/project-ai:1.0.0
 
 # Push to registry
-
 docker push myregistry/project-ai:1.0.0
 
 # Run on server
-
 docker run -d \
   --name project-ai \
   -e OPENAI_API_KEY=... \
@@ -371,14 +343,11 @@ docker run -d \
 ### Dependency Security
 
 ```bash
-
 # Check for vulnerabilities
-
 npm audit
 pip install pip-audit && pip-audit
 
 # Update dependencies safely
-
 pip install --upgrade -r requirements.txt
 ```
 
@@ -408,17 +377,13 @@ docker ps  # Shows health status
 ### Python Environment Issues
 
 ```bash
-
 # Verify Python version
-
 python --version  # Should be 3.11+
 
 # Check virtual environment
-
 which python  # Should show .venv path
 
 # Reinstall dependencies
-
 pip install -e ".[dev]"
 pip install -r requirements.txt --force-reinstall
 ```
@@ -426,33 +391,26 @@ pip install -r requirements.txt --force-reinstall
 ### Docker Issues
 
 ```bash
-
 # Clean build
-
 docker-compose down
 docker system prune -a
 docker-compose up --build
 
 # View detailed logs
-
 docker-compose logs --tail=100 -f
 
 # Rebuild specific service
-
 docker-compose build --no-cache project-ai
 ```
 
 ### Linting/Type Checking
 
 ```bash
-
 # Check for configuration conflicts
-
 cat pyrightconfig.json
 cat pyproject.toml
 
 # Clear caches
-
 rm -rf .ruff_cache .pytest_cache __pycache__
 ```
 

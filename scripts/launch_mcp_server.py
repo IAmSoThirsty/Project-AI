@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 MCP Server Launcher for Project-AI
@@ -11,6 +9,10 @@ Usage:
     python scripts/launch_mcp_server.py
     python scripts/launch_mcp_server.py --data-dir /custom/data
     python scripts/launch_mcp_server.py --log-level DEBUG
+
+GOVERNANCE: GOVERNED
+Classification: Production server launcher
+Risk: Medium (starts services)
 """
 
 import argparse
@@ -19,6 +21,8 @@ import logging
 import os
 import sys
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Add project root to Python path
 project_root = Path(__file__).parent.parent
@@ -114,6 +118,7 @@ def check_dependencies():
 
 def check_environment():
     """Check if required environment variables are set."""
+    load_dotenv()
     print("\nChecking environment variables...")
 
     required = {

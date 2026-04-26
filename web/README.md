@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: platform-doc
+tags: [web, nextjs, react, typescript, production, frontend]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [flask-backend, project-ai-core, zustand, axios]
+stakeholders: [platform-team, web-team, frontend-team]
+platform: web
+integration_type: sdk
+external_dependencies: [nextjs, react, typescript, zustand, axios, tailwindcss]
+review_cycle: quarterly
+---
+
 # Project-AI Web - Production-Grade Next.js Application
 
 A complete, production-ready Next.js 14 web application for Project-AI, featuring TypeScript, server-side rendering, static export capabilities, and comprehensive integration with the Flask backend.
@@ -26,38 +38,29 @@ A complete, production-ready Next.js 14 web application for Project-AI, featurin
 ## 🛠️ Installation
 
 ```bash
-
 # Install dependencies
-
 npm install
 
 # Create environment file
-
 cp .env.example .env
 ```
 
 ## 🏃 Development
 
 ```bash
-
 # Start development server
-
 npm run dev
 
 # Open browser to http://localhost:3000
-
 ```
 
 ## 🏗️ Build
 
 ```bash
-
 # Build for production (static export)
-
 npm run build
 
 # Output directory: ./out/
-
 ```
 
 ## 📦 Scripts
@@ -116,14 +119,11 @@ web/
 ## 🔐 Environment Variables
 
 ```env
-
 # API Configuration
-
 NEXT_PUBLIC_API_URL=http://localhost:5000
 NEXT_PUBLIC_API_TIMEOUT=30000
 
 # Application Configuration
-
 NEXT_PUBLIC_APP_NAME=Project-AI
 NEXT_PUBLIC_APP_VERSION=1.0.0
 NEXT_PUBLIC_ENV=production
@@ -142,60 +142,49 @@ NEXT_PUBLIC_ENV=production
 ## 🧪 Testing
 
 ```bash
-
 # Run tests
-
 npm test
 
 # Run tests in watch mode
-
 npm run test:watch
 
 # Generate coverage report
-
 npm run test:coverage
 ```
 
 ## 📊 Dashboard Features
 
 ### 1. Overview Tab
-
 - System information
 - Feature status cards
 - User profile
 
 ### 2. AI Persona Tab
-
 - Personality trait configuration
 - Mood tracking
 - State persistence
 
 ### 3. Image Generation Tab
-
 - Dual backend support (HF Stable Diffusion, OpenAI DALL-E)
 - 10 style presets
 - Content filtering
 
 ### 4. Data Analysis Tab
-
 - CSV/XLSX/JSON support
 - K-means clustering
 - Statistical analysis
 
 ### 5. Learning Paths Tab
-
 - Learning request system
 - Black Vault (denied content tracking)
 - Knowledge base (6 categories)
 
 ### 6. Security Tab
-
 - GitHub integration
 - CTF challenges
 - Security resources
 
 ### 7. Emergency Tab
-
 - Emergency alert system
 - Email notifications
 - Contact management
@@ -230,13 +219,10 @@ The workflow at `.github/workflows/nextjs.yml` automatically builds and deploys 
 ### Manual Deployment
 
 ```bash
-
 # Build static export
-
 npm run build
 
 # Deploy the ./out/ directory to your hosting provider
-
 ```
 
 ### Docker Deployment
@@ -260,13 +246,10 @@ CMD ["nginx", "-g", "daemon off;"]
 ### Build Errors
 
 ```bash
-
 # Clear Next.js cache
-
 rm -rf .next
 
 # Reinstall dependencies
-
 rm -rf node_modules package-lock.json
 npm install
 ```
@@ -280,9 +263,7 @@ npm install
 ### TypeScript Errors
 
 ```bash
-
 # Run type checking
-
 npm run type-check
 ```
 

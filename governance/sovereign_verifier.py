@@ -1,5 +1,3 @@
-#                                           [2026-03-05 08:49]
-#                                          Productivity: Active
 """
 Sovereign Verification System - Third-Party Auditor Tool
 
@@ -412,9 +410,9 @@ class SovereignVerifier:
         # 2. Signature authority mapping
         logger.info("2. Mapping signature authorities...")
         signature_result = self._map_signature_authorities()
-        self.verification_report["checks"]["signature_authority_mapping"] = (
-            signature_result
-        )
+        self.verification_report["checks"][
+            "signature_authority_mapping"
+        ] = signature_result
         logger.info("   Status: %s", signature_result["status"])
         logger.info("")
 

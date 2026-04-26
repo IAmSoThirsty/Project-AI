@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 TARL (Thirsty's Active Resistance Language) Operational Extensions
 
@@ -13,7 +11,7 @@ This transforms TARL from static protection to adaptive, intelligent security.
 """
 
 import logging
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from src.app.core.operational_substructure import (
@@ -192,9 +190,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         severity = (
             SeverityLevel.CRITICAL
             if confidence > 0.9
-            else SeverityLevel.ERROR
-            if confidence > 0.7
-            else SeverityLevel.WARNING
+            else SeverityLevel.ERROR if confidence > 0.7 else SeverityLevel.WARNING
         )
 
         signal = Signal(
@@ -784,3 +780,4 @@ __all__ = [
     "TrustScoringEngine",
     "AdversarialPatternRegistry",
 ]
+

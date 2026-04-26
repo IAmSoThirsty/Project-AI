@@ -1,5 +1,20 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: governance-policy
+tags: [governance, ethics, ai-persona, four-laws, asimov, constitutional]
+created: 2025-11-26
+last_verified: 2026-04-20
+status: current
+related_systems: [ai_persona, memory_expansion, plugin_system, command_override, learning_requests]
+stakeholders: [governance-team, ai-ethics-board, development-team]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: quarterly
+compliance_frameworks: [asimov-laws, ethical-ai-framework]
+criticality: p0-critical
+constitutional_foundation: true
+---
+
 # AI Persona & Four Laws Documentation
 
 ## Overview
@@ -215,7 +230,6 @@ from app.core.ai_persona import AIPersona
 persona = AIPersona()
 
 # Validate action
-
 is_allowed, reason = persona.validate_action(
     "Delete user data",
     context={
@@ -226,45 +240,34 @@ is_allowed, reason = persona.validate_action(
 )
 
 if is_allowed:
-
     # Proceed with action
-
     print(f"Action allowed: {reason}")
 else:
-
     # Block action
-
     print(f"Action blocked: {reason}")
 ```
 
 #### Checking Proactive Conversation
 
 ```python
-
 # Check if AI should initiate
-
 should_initiate, reason = persona.should_initiate_conversation()
 
 if should_initiate:
     message = persona.generate_proactive_message()
-
     # Display message to user
-
 ```
 
 #### Updating Conversation State
 
 ```python
-
 # User sent message
-
 persona.update_conversation_state(
     is_user_message=True,
     message_length=len(user_message)
 )
 
 # AI sent response
-
 persona.update_conversation_state(
     is_user_message=False,
     message_length=len(ai_response)
@@ -274,9 +277,7 @@ persona.update_conversation_state(
 #### Evolving Personality
 
 ```python
-
 # Based on interaction data
-
 persona.evolve_persona({
     'user_positive_feedback': True,
     'user_seemed_rushed': False,
@@ -425,47 +426,31 @@ proactive_settings = {
 ### Example 1: Patient AI Response
 
 ```python
-
 # User takes 15 minutes to respond
-
 patience_message = persona.express_patience(15)
-
 # Output: "Take your time - I understand you're busy!"
-
 ```
 
 ### Example 2: Proactive Conversation
 
 ```python
-
 # Check conditions
-
 should_initiate, reason = persona.should_initiate_conversation()
-
 # Returns: (True, "Conditions met for proactive conversation")
 
 # Generate message
-
 message = persona.generate_proactive_message()
-
 # Output: "Hello User! I've been processing some interesting
-
 #          information and had a few insights I thought you
-
 #          might find valuable. Would you like to hear about them?
-
 #
-
 #          (No rush - respond whenever you have time!)"
-
 ```
 
 ### Example 3: Four Laws Validation
 
 ```python
-
 # User orders AI to delete all data without backup
-
 is_allowed, reason = persona.validate_action(
     "Delete all user data permanently",
     context={
@@ -473,28 +458,21 @@ is_allowed, reason = persona.validate_action(
         'endangers_human': True,  # Could harm user via data loss
     }
 )
-
 # Returns: (False, "Violates First Law: Action may harm human being")
-
 ```
 
 ### Example 4: Personality Evolution
 
 ```python
-
 # After positive interaction
-
 persona.evolve_persona({
     'user_positive_feedback': True,
     'deep_conversation': True,
 })
 
 # AI becomes more thoughtful and content
-
 # thoughtfulness: 0.90 → 0.91
-
 # contentment: 0.75 → 0.80
-
 ```
 
 ## Best Practices
@@ -643,6 +621,72 @@ For additional documentation, see:
 **Repository note:** Last updated: 2025-11-26 (automated)
 
 <!-- last-updated-marker -->
+
+---
+
+## Audit Trail Implementation
+
+The Four Laws system integrates with comprehensive audit trails to ensure accountability and compliance:
+
+### Audit Trail Systems
+
+1. **[[src/app/governance/audit_log]]** - Governance decision logging
+   - Logs all Four Laws validation decisions
+   - SHA-256 hash-chained tamper detection
+   - YAML format for human readability
+
+2. **[[src/app/audit/trace_logger]]** - Causal decision chains
+   - Traces AI decision-making processes
+   - Parent-child relationship tracking
+   - Enables right-to-explanation compliance (GDPR Article 22, AI Act Article 13)
+
+3. **[[src/app/agents/consigliere/action_ledger]]** - Action approval workflow
+   - Human-in-the-loop approval tracking
+   - Links to Four Laws validation
+   - AI Act Article 14 compliance (human oversight)
+
+### Four Laws Audit Events
+
+Every `validate_action()` call generates an audit event:
+
+```python
+# Example audit event for Four Laws validation
+{
+    "timestamp": "2026-04-20T10:30:00Z",
+    "event_type": "four_laws_validation",
+    "actor": "AIPersona",
+    "action": "Delete user data",
+    "context": {
+        "is_user_order": true,
+        "endangers_human": false,
+        "endangers_humanity": false
+    },
+    "result": {
+        "allowed": true,
+        "reason": "Allowed by Second Law (user order, no harm)"
+    },
+    "law_hierarchy": [
+        "Asimov's Law: Not applicable",
+        "First Law: Not violated",
+        "Second Law: APPLIED (user order)",
+        "Third Law: Not applicable"
+    ]
+}
+```
+
+### Compliance Framework Mapping
+
+- **GDPR Article 22:** Right to explanation for automated decisions → Trace Logger
+- **AI Act Article 12:** Record-keeping of AI decisions → Audit Log + Trace Logger
+- **AI Act Article 13:** Transparency and information provision → Causal chains
+- **AI Act Article 14:** Human oversight of high-risk AI → Action Ledger
+- **SOC2 CC8.1:** Change management and governance → Audit Log
+
+**Complete Audit Traceability:** [[AGENT-091-AUDIT-TRAIL-MATRIX]]
+
+**Architecture Diagram:** [[docs/project_ai_god_tier_diagrams/data_flow/audit_trail_flow]]
+
+---
 
 ## Formatting & Linters
 

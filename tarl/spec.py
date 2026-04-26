@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any

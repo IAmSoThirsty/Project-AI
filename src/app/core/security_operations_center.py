@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Security Operations Center (SOC) Integration for God Tier Architecture.
 
@@ -30,7 +28,7 @@ import uuid
 from collections import deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -785,3 +783,4 @@ def initialize_soc(
     if _soc_instance is None:
         _soc_instance = create_soc(data_dir, dry_run)
     return _soc_instance
+

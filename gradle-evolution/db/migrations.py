@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Database Schema Versioning and Migration System.
 
@@ -10,18 +8,13 @@ and data migration helpers.
 import logging
 import sqlite3
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from .sql_utils import sanitize_identifier, sanitize_identifier_list
 
 logger = logging.getLogger(__name__)
-
-
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class Migration:
@@ -270,32 +263,28 @@ class MigrationManager:
     def _update_version(self, conn: sqlite3.Connection, version: int) -> None:
         """Update schema version in database."""
         # Ensure schema_metadata table exists
-        conn.execute(
-            """
+        conn.execute("""
             CREATE TABLE IF NOT EXISTS schema_metadata (
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL,
                 updated_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
-        """
-        )
+        """)
 
         conn.execute(
             "INSERT OR REPLACE INTO schema_metadata (key, value, updated_at) VALUES (?, ?, ?)",
-            ("schema_version", str(version), _utcnow().isoformat()),
+            ("schema_version", str(version), datetime.utcnow().isoformat()),
         )
 
         # Record migration in history
-        conn.execute(
-            """
+        conn.execute("""
             CREATE TABLE IF NOT EXISTS migration_history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 version INTEGER NOT NULL,
                 description TEXT,
                 applied_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
-        """
-        )
+        """)
 
         migration = next((m for m in self.migrations if m.version == version), None)
         description = migration.description if migration else f"Version {version}"
@@ -309,13 +298,11 @@ class MigrationManager:
         """Get migration history."""
         try:
             with self._get_connection() as conn:
-                cursor = conn.execute(
-                    """
+                cursor = conn.execute("""
                     SELECT version, description, applied_at
                     FROM migration_history
                     ORDER BY version DESC
-                """
-                )
+                """)
                 return [
                     {
                         "version": row[0],
@@ -542,12 +529,10 @@ class MigrationManager:
                 safe_columns = sanitize_identifier_list(columns)
                 source_cols = dest_cols = ", ".join(safe_columns)
 
-            conn.execute(
-                f"""
+            conn.execute(f"""
                 INSERT INTO {safe_dest} ({dest_cols})
                 SELECT {source_cols} FROM {safe_source}
-            """
-            )
+            """)
 
             cursor = conn.execute("SELECT changes()")
             copied = cursor.fetchone()[0]
@@ -569,7 +554,7 @@ class MigrationManager:
         # Sanitize table name to prevent SQL injection
         safe_table = sanitize_identifier(table)
 
-        timestamp = _utcnow().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         backup_table = f"{table}_backup_{timestamp}"
         safe_backup = sanitize_identifier(backup_table)
 

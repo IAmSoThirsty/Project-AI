@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Surgical Logging Performance Fix - God Tier Edition
@@ -9,6 +7,10 @@ all formatting, comments, and code structure. Maximum precision!
 
 This fixes the MEDIUM priority performance issue:
 "Use lazy % formatting in logging functions" (1700+ instances)
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Code maintenance tool
+Risk: Medium (modifies source files)
 """
 
 import argparse

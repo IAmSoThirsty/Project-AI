@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: workflow-spec
+tags: [github-actions, automation, pull-requests, branch-management, ci-cd]
+created: 2026-01-20
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, pr-automation]
+stakeholders: [developers, devops]
+config_scope: ci-cd
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Automated Branch-to-Main PR System
 
 ## Overview
@@ -142,15 +154,11 @@ The automation system consists of three interconnected workflows:
 ### Trigger Auto-Creation for All Branches
 
 ```bash
-
 # Via GitHub CLI
-
 gh workflow run auto-create-branch-prs.yml
 
 # Via GitHub UI
-
 # Go to Actions → Auto-Create Branch PRs → Run workflow
-
 ```
 
 ### Trigger Auto-Creation for Specific Branch
@@ -218,47 +226,36 @@ Created as issues when workflows fail:
 ### Check Automation Status
 
 ```bash
-
 # List recent workflow runs
-
 gh run list --workflow=auto-create-branch-prs.yml --limit 10
 
 # View specific run details
-
 gh run view <RUN_ID>
 
 # View logs
-
 gh run view <RUN_ID> --log
 ```
 
 ### View Auto-Created PRs
 
 ```bash
-
 # List all auto-created PRs
-
 gh pr list --label "auto-created"
 
 # List PRs with conflicts
-
 gh pr list --label "conflicts"
 
 # List PRs ready for merge
-
 gh pr list --label "auto-merge"
 ```
 
 ### View Summary Reports
 
 ```bash
-
 # List summary issues
-
 gh issue list --label "summary"
 
 # List workflow failure alerts
-
 gh issue list --label "workflow-failure"
 ```
 
@@ -271,27 +268,21 @@ When the automation detects merge conflicts:
 1. Manual intervention is required:
 
 ```bash
-
 # Clone and checkout the branch
-
 git checkout <branch-name>
 
 # Merge main
-
 git merge main
 
 # Resolve conflicts manually
-
 # ... edit files ...
 
 # Commit and push
-
 git add .
 git commit -m "chore: resolve merge conflicts"
 git push
 
 # The PR will automatically re-run checks
-
 ```
 
 ## Troubleshooting
@@ -331,9 +322,7 @@ Edit `.github/workflows/auto-create-branch-prs.yml`:
 
 ```yaml
 schedule:
-
   - cron: '0 */6 * * *'  # Every 6 hours instead of daily
-
 ```
 
 ### Exclude Certain Branches

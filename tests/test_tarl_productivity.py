@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Test TARL Productivity Enhancements
@@ -139,7 +137,7 @@ def test_metrics_tracking():
     for ctx in contexts:
         try:
             runtime.evaluate(ctx)
-        except Exception:
+        except:
             pass  # Some contexts may raise errors (ESCALATE)
 
     metrics = runtime.get_performance_metrics()

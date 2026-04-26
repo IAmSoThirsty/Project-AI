@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 System Health Reporting Module
 
@@ -27,7 +25,7 @@ Usage:
 import logging
 import platform
 import sys
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -433,3 +431,4 @@ if __name__ == "__main__":
 
 
 __all__ = ["HealthReporter"]
+

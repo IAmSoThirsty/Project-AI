@@ -1,5 +1,26 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: diagram
+tags: [p1-diagrams, diagrams, api-reference, rest, endpoints, flask, authentication]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [flask-api, jwt-authentication, openapi, swagger]
+stakeholders: [backend-team, api-consumers, frontend-developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: reference
+format: openapi
+endpoint_categories: 6
+---
+keywords:
+  - rest-api
+  - flask-endpoints
+  - jwt-authentication
+  - api-specification
+  - openapi
+---
+
 # REST API Specification
 
 ## Overview
@@ -32,7 +53,6 @@ Authorization: Bearer <jwt_token>
 Register a new user account.
 
 **Request**:
-
 ```json
 {
   "username": "alice",
@@ -43,7 +63,6 @@ Register a new user account.
 ```
 
 **Response** (201 Created):
-
 ```json
 {
   "message": "User registered successfully",
@@ -54,7 +73,6 @@ Register a new user account.
 ```
 
 **Errors**:
-
 - `400`: Validation error (passwords don't match, weak password, etc.)
 - `409`: Username or email already exists
 
@@ -63,7 +81,6 @@ Register a new user account.
 Authenticate user and obtain JWT tokens.
 
 **Request**:
-
 ```json
 {
   "username": "alice",
@@ -72,7 +89,6 @@ Authenticate user and obtain JWT tokens.
 ```
 
 **Response** (200 OK):
-
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -88,7 +104,6 @@ Authenticate user and obtain JWT tokens.
 ```
 
 **Errors**:
-
 - `401`: Invalid credentials
 - `429`: Too many failed login attempts
 
@@ -97,7 +112,6 @@ Authenticate user and obtain JWT tokens.
 Refresh access token using refresh token.
 
 **Request**:
-
 ```json
 {
   "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -105,7 +119,6 @@ Refresh access token using refresh token.
 ```
 
 **Response** (200 OK):
-
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -115,7 +128,6 @@ Refresh access token using refresh token.
 ```
 
 **Errors**:
-
 - `401`: Invalid or expired refresh token
 
 #### POST /api/auth/logout
@@ -123,7 +135,6 @@ Refresh access token using refresh token.
 Revoke access and refresh tokens.
 
 **Request**:
-
 ```json
 {
   "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -131,7 +142,6 @@ Revoke access and refresh tokens.
 ```
 
 **Response** (200 OK):
-
 ```json
 {
   "message": "Successfully logged out"
@@ -145,7 +155,6 @@ Revoke access and refresh tokens.
 Get current user profile.
 
 **Response** (200 OK):
-
 ```json
 {
   "user_id": "usr_1234567890",
@@ -166,7 +175,6 @@ Get current user profile.
 Update current user profile.
 
 **Request**:
-
 ```json
 {
   "email": "alice.new@example.com",
@@ -178,7 +186,6 @@ Update current user profile.
 ```
 
 **Response** (200 OK):
-
 ```json
 {
   "message": "Profile updated successfully",
@@ -201,7 +208,6 @@ Update current user profile.
 Send a message to AI and get response.
 
 **Request**:
-
 ```json
 {
   "message": "What is quantum computing?",
@@ -214,7 +220,6 @@ Send a message to AI and get response.
 ```
 
 **Response** (200 OK):
-
 ```json
 {
   "conversation_id": "conv_abc123",
@@ -231,7 +236,6 @@ Send a message to AI and get response.
 ```
 
 **Errors**:
-
 - `400`: Invalid message or context
 - `429`: Rate limit exceeded
 - `503`: AI service unavailable
@@ -241,13 +245,11 @@ Send a message to AI and get response.
 List user's chat conversations.
 
 **Query Parameters**:
-
 - `page` (integer, default: 1): Page number
 - `per_page` (integer, default: 20, max: 100): Items per page
 - `sort` (string, default: "updated_desc"): Sort order
 
 **Response** (200 OK):
-
 ```json
 {
   "conversations": [
@@ -274,7 +276,6 @@ List user's chat conversations.
 Get conversation details and messages.
 
 **Response** (200 OK):
-
 ```json
 {
   "conversation_id": "conv_abc123",
@@ -310,7 +311,6 @@ Get conversation details and messages.
 Generate an image from text prompt.
 
 **Request**:
-
 ```json
 {
   "prompt": "A serene mountain landscape at sunset",
@@ -322,7 +322,6 @@ Generate an image from text prompt.
 ```
 
 **Response** (202 Accepted):
-
 ```json
 {
   "generation_id": "gen_abc123",
@@ -333,7 +332,6 @@ Generate an image from text prompt.
 ```
 
 **Errors**:
-
 - `400`: Invalid prompt or parameters
 - `403`: Content filter violation
 - `429`: Rate limit exceeded
@@ -343,7 +341,6 @@ Generate an image from text prompt.
 Get status of image generation.
 
 **Response** (200 OK) - Processing:
-
 ```json
 {
   "generation_id": "gen_abc123",
@@ -354,7 +351,6 @@ Get status of image generation.
 ```
 
 **Response** (200 OK) - Completed:
-
 ```json
 {
   "generation_id": "gen_abc123",
@@ -373,7 +369,6 @@ Get status of image generation.
 ```
 
 **Response** (200 OK) - Failed:
-
 ```json
 {
   "generation_id": "gen_abc123",
@@ -389,13 +384,11 @@ Get status of image generation.
 Get user's image generation history.
 
 **Query Parameters**:
-
 - `page` (integer, default: 1)
 - `per_page` (integer, default: 20, max: 100)
 - `status` (string): Filter by status (completed, failed, processing)
 
 **Response** (200 OK):
-
 ```json
 {
   "generations": [
@@ -425,7 +418,6 @@ Get user's image generation history.
 Generate a personalized learning path.
 
 **Request**:
-
 ```json
 {
   "category": "machine_learning",
@@ -436,7 +428,6 @@ Generate a personalized learning path.
 ```
 
 **Response** (201 Created):
-
 ```json
 {
   "path_id": "path_xyz789",
@@ -475,7 +466,6 @@ Generate a personalized learning path.
 List user's learning paths.
 
 **Response** (200 OK):
-
 ```json
 {
   "paths": [
@@ -498,7 +488,6 @@ List user's learning paths.
 Update progress on a learning path.
 
 **Request**:
-
 ```json
 {
   "module_id": "mod_1",
@@ -508,7 +497,6 @@ Update progress on a learning path.
 ```
 
 **Response** (200 OK):
-
 ```json
 {
   "message": "Progress updated successfully",
@@ -526,14 +514,12 @@ Update progress on a learning path.
 Upload and analyze a dataset.
 
 **Request** (multipart/form-data):
-
 ```
 file: dataset.csv
 analysis_type: exploratory
 ```
 
 **Response** (202 Accepted):
-
 ```json
 {
   "analysis_id": "analysis_123",
@@ -548,7 +534,6 @@ analysis_type: exploratory
 Get analysis status and results.
 
 **Response** (200 OK) - Completed:
-
 ```json
 {
   "analysis_id": "analysis_123",
@@ -614,17 +599,16 @@ All error responses follow this structure:
 
 Rate limits are applied per user per endpoint:
 
-| Endpoint Category | Rate Limit         |
-| ----------------- | ------------------ |
-| Authentication    | 10 requests/min    |
-| Chat Messages     | 100 requests/hour  |
-| Image Generation  | 20 requests/hour   |
-| Learning Paths    | 50 requests/hour   |
-| Data Analysis     | 10 requests/hour   |
-| Other Endpoints   | 1000 requests/hour |
+| Endpoint Category | Rate Limit |
+|-------------------|------------|
+| Authentication | 10 requests/min |
+| Chat Messages | 100 requests/hour |
+| Image Generation | 20 requests/hour |
+| Learning Paths | 50 requests/hour |
+| Data Analysis | 10 requests/hour |
+| Other Endpoints | 1000 requests/hour |
 
 **Rate Limit Headers**:
-
 ```http
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
@@ -641,7 +625,6 @@ Paginated endpoints support these query parameters:
 - `order`: Sort order (`asc` or `desc`)
 
 **Pagination Response**:
-
 ```json
 {
   "data": [...],
@@ -667,7 +650,6 @@ Configure webhooks to receive event notifications.
 Create a webhook endpoint.
 
 **Request**:
-
 ```json
 {
   "url": "https://your-app.com/webhooks",
@@ -713,7 +695,7 @@ class ProjectAIClient:
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         })
-
+    
     def chat(self, message: str, conversation_id: str = None) -> dict:
         """Send a chat message"""
         response = self.session.post(
@@ -725,7 +707,7 @@ class ProjectAIClient:
         )
         response.raise_for_status()
         return response.json()
-
+    
     def generate_image(self, prompt: str, style: str = "photorealistic") -> dict:
         """Generate an image"""
         response = self.session.post(
@@ -737,7 +719,7 @@ class ProjectAIClient:
         )
         response.raise_for_status()
         return response.json()
-
+    
     def get_image_status(self, generation_id: str) -> dict:
         """Check image generation status"""
         response = self.session.get(
@@ -747,21 +729,17 @@ class ProjectAIClient:
         return response.json()
 
 # Usage
-
 client = ProjectAIClient(api_key="your_api_key")
 
 # Chat with AI
-
 response = client.chat("What is machine learning?")
 print(response["response"])
 
 # Generate image
-
 generation = client.generate_image("A beautiful sunset")
 print(f"Generation ID: {generation['generation_id']}")
 
 # Check status
-
 status = client.get_image_status(generation["generation_id"])
 if status["status"] == "completed":
     print(f"Image URL: {status['image_url']}")
@@ -841,7 +819,6 @@ Current version: **v1** (default, can be omitted)
 ## OpenAPI Specification
 
 Full OpenAPI 3.0 specification available at:
-
 ```
 GET /api/openapi.json
 GET /api/docs (Swagger UI)

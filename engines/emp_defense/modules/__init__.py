@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """World state modules for EMP Defense Engine."""
 
 from engines.emp_defense.modules.sectorized_state import (

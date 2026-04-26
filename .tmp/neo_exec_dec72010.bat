@@ -1,0 +1,1 @@
+type "t:\Project-AI-main\adversarial_tests\galahad_model.py" 2>nul | findstr /n /c:"from app.core" /c:"class GalahadModel" /c:"def generate" /c:"response = " | head -20

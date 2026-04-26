@@ -1,5 +1,3 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
 # Portable AI Application Guide
 
 ## Vision
@@ -47,7 +45,7 @@ Project-AI is designed to be a **fully portable, privacy-first AI application** 
 - **Text Generation:** GPT-2 (124M), DistilGPT2 (82M)
 - **Embeddings:** MiniLM-L6 (22M)
 - **Classification:** DistilBERT (66M)
-- Total package size target: \<500MB with models
+- Total package size target: <500MB with models
 
 ### 4. Offline Functionality
 
@@ -74,9 +72,7 @@ Project-AI is designed to be a **fully portable, privacy-first AI application** 
 ### Python (PyInstaller)
 
 ```bash
-
 # Single-file executable
-
 pyinstaller --onefile \
   --add-data "models:models" \
   --add-data "config:config" \
@@ -100,13 +96,10 @@ pyinstaller --onefile \
 ### Electron (Desktop App)
 
 ```bash
-
 # Package with electron-builder
-
 npm run build:portable
 
 # Creates portable .exe (Windows), .app (macOS), .AppImage (Linux)
-
 ```
 
 **Pros:**
@@ -155,10 +148,10 @@ ProjectAI-Portable/
 ## Installation Flow
 
 1. **Download:** User downloads single file (e.g., `ProjectAI-v1.0.0-portable.exe`)
-1. **Extract:** (if using compressed format) Unzip to any location
-1. **Run:** Double-click executable
-1. **First Launch:** Application creates `data/` and `config/` directories
-1. **Ready:** Application is immediately usable
+2. **Extract:** (if using compressed format) Unzip to any location
+3. **Run:** Double-click executable
+4. **First Launch:** Application creates `data/` and `config/` directories
+5. **Ready:** Application is immediately usable
 
 ## Data Portability
 
@@ -257,11 +250,11 @@ data/
 
 ## Size Targets
 
-| Package  | Size Target | Contents                 |
-| -------- | ----------- | ------------------------ |
-| Minimal  | ~150MB      | Core + tiny models       |
-| Standard | ~500MB      | Core + standard models   |
-| Full     | ~2GB        | Core + large models + SD |
+| Package | Size Target | Contents |
+|---------|-------------|----------|
+| Minimal | ~150MB | Core + tiny models |
+| Standard | ~500MB | Core + standard models |
+| Full | ~2GB | Core + large models + SD |
 
 ## Future Enhancements
 
@@ -274,20 +267,16 @@ data/
 ## Development Commands
 
 ```bash
-
 # Build portable package
-
 python scripts/build_portable.py
 
 # Test portable mode
-
 python scripts/test_portable.py
 
 # Optimize model sizes
-
 python scripts/quantize_models.py
 ```
 
-______________________________________________________________________
+---
 
 **The portable app vision ensures Project-AI can be used anywhere, by anyone, without compromising privacy or requiring internet connectivity.**

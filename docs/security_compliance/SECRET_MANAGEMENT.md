@@ -1,10 +1,94 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Secret Management Guide"
+id: "secret-management"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-01"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:compliance"
+  - "type:guide"
+  - "type:policy"
+  - "component:secret-management"
+  - "component:env-variables"
+  - "audience:developer"
+  - "audience:security-engineer"
+  - "priority:p0-critical"
+  - "special:required-reading"
+technologies:
+  - "Python dotenv"
+  - "Environment Variables"
+  - ".gitignore"
+  - "AWS Secrets Manager"
+  - "Fernet Encryption"
+difficulty: "beginner"
+estimated_time: "PT30M"
+prerequisites:
+  - "Basic git knowledge"
+  - "Understanding of environment variables"
+summary: "Critical security guide for proper secret management using environment variables, .env files, AWS Secrets Manager, and pre-commit hooks to prevent credential leaks."
+scope: "Complete secret management practices covering what counts as secrets, environment variable usage, .env file patterns, AWS Secrets Manager integration, pre-commit hooks, and rotation procedures"
+classification: "internal"
+threat_level: "critical"
+attack_vectors:
+  - "credential-leaks"
+  - "api-key-exposure"
+  - "git-history-exposure"
+  - "environment-variable-leaks"
+mitigations:
+  - "[[ENV_VARIABLE_MANAGEMENT]]"
+  - "[[PRE_COMMIT_HOOKS]]"
+  - "[[AWS_SECRETS_MANAGER]]"
+  - "[[SECRET_ROTATION]]"
+defends_against:
+  - "Credential leaks in git history"
+  - "API key exposure in code"
+  - "Hardcoded passwords"
+  - "Unencrypted secrets in repos"
+  - "Secret sprawl"
+compliance:
+  - "OWASP ASVS V2.10 (Secret Management)"
+  - "CIS Benchmarks (Secret Storage)"
+  - "PCI DSS 3.2.1 (Requirement 8)"
+  - "ISO 27001:2022 (A.9.4.3)"
+stakeholders:
+  - security-team   - security-operations   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Security Guide"
+cwe_ids:
+  - "CWE-798: Use of Hard-coded Credentials"
+  - "CWE-259: Use of Hard-coded Password"
+  - "CWE-522: Insufficiently Protected Credentials"
+  - "CWE-312: Cleartext Storage of Sensitive Information"
+related_docs:
+  - "secret-purge-runbook"
+  - "security-framework"
+  - "asl3-implementation"
+review_status:
+  reviewed: true
+  reviewers: ["security-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "security-engineers"
+  - "devops-engineers"
+  - "all-contributors"
+enforcement_level: "mandatory"
+---
+
 # 🔐 Secret Management Guide
 
-**Last Updated**: January 2026 **Status**: Required Reading for All Contributors
+**Last Updated**: January 2026
+**Status**: Required Reading for All Contributors
 
-______________________________________________________________________
+---
 
 ## 🚨 Critical Security Rules
 
@@ -21,7 +105,7 @@ ______________________________________________________________________
 - SMTP passwords
 - Any credential that grants access to resources
 
-______________________________________________________________________
+---
 
 ## ✅ Proper Secret Management
 
@@ -34,17 +118,14 @@ import os
 from dotenv import load_dotenv
 
 # Load from .env file (not committed to git)
-
 load_dotenv()
 
 # Get secrets from environment
-
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 FERNET_KEY = os.getenv("FERNET_KEY")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
 # Validate required secrets are set
-
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY not set in environment")
 ```
@@ -52,34 +133,26 @@ if not OPENAI_API_KEY:
 ### 2. Use .env Files Correctly
 
 **Project structure:**
-
 ```
 .env              # Real secrets - IN .gitignore - NEVER commit
 .env.example      # Placeholder values - OK to commit
 ```
 
 **Example .env.example (safe to commit):**
-
 ```bash
-
 # OpenAI API key - Get from https://platform.openai.com/api-keys
-
 OPENAI_API_KEY=sk-proj-YOUR_KEY_HERE
 
 # Fernet encryption key - Generate with:
-
 # python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-
 FERNET_KEY=YOUR_BASE64_KEY_HERE
 
 # SMTP credentials (optional)
-
 SMTP_USERNAME=your-email@example.com
 SMTP_PASSWORD=your-app-password-here
 ```
 
 **Example .env (NEVER commit):**
-
 ```bash
 OPENAI_API_KEY=sk-proj-abc123...real_key_here
 FERNET_KEY=real_base64_key_here==
@@ -90,11 +163,8 @@ SMTP_PASSWORD=real_password_here
 ### 3. Verify .gitignore
 
 **Ensure .gitignore contains:**
-
 ```gitignore
-
 # Secrets and credentials - NEVER commit
-
 .env
 .env.local
 .env.*.local
@@ -106,15 +176,12 @@ credentials.json
 ```
 
 **Verify it's working:**
-
 ```bash
-
 # This should show "nothing to commit" for .env file
-
 git status .env
 ```
 
-______________________________________________________________________
+---
 
 ## 🔄 Credential Rotation
 
@@ -138,38 +205,26 @@ ______________________________________________________________________
 #### 1. OpenAI API Key
 
 ```bash
-
 # 1. Go to https://platform.openai.com/api-keys
-
 # 2. Find and REVOKE the old key
-
 # 3. Create NEW key with appropriate permissions
-
 # 4. Update .env file
-
 OPENAI_API_KEY=sk-proj-NEW_KEY_HERE
-
 # 5. Test application
-
 python -m src.app.main
 ```
 
 #### 2. Fernet Encryption Key
 
 ```bash
-
 # ⚠️ WARNING: Rotating Fernet key makes old encrypted data unreadable!
 
 # Step 1: Generate new key
-
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 
 # Step 2: Decrypt existing data with OLD key (before rotation)
-
 # This varies by application - check which files use Fernet:
-
 # - location_history.json.enc
-
 # - Any other encrypted files
 
 # Step 3: Update FERNET_KEY in .env with NEW key
@@ -177,95 +232,71 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 # Step 4: Re-encrypt all data with NEW key
 
 # Step 5: Securely delete backup files with old encryption
-
 ```
 
 #### 3. SMTP/Email Credentials
 
 ```bash
-
 # For Gmail:
-
 # 1. Go to https://myaccount.google.com/apppasswords
-
 # 2. REVOKE old app password
-
 # 3. Generate NEW app password
-
 # 4. Update .env file
-
 SMTP_PASSWORD=NEW_PASSWORD_HERE
 ```
 
 #### 4. Hugging Face Token
 
 ```bash
-
 # 1. Go to https://huggingface.co/settings/tokens
-
 # 2. DELETE old token
-
 # 3. Create NEW token with appropriate permissions
-
 # 4. Update .env file
-
 HUGGINGFACE_API_KEY=hf_NEW_TOKEN_HERE
 ```
 
-______________________________________________________________________
+---
 
 ## 🔍 Secret Scanning Tools
 
 ### 1. Bandit (Python Security Linter)
 
 ```bash
-
 # Install
-
 pip install bandit
 
 # Scan for hardcoded secrets
-
 bandit -r src/ tests/ -f json -o bandit_report.json
 
 # Check specific patterns
-
 bandit -r . -x .venv,node_modules --severity-level medium
 ```
 
 ### 2. TruffleHog (Git History Scanner)
 
 ```bash
-
 # Install
-
 pip install trufflehog
 
 # Scan entire git history
-
 trufflehog git file://. --only-verified
 
 # Scan specific branch
-
 trufflehog git file://. --branch main
 ```
 
 ### 3. git-secrets (Prevent Commits)
 
 ```bash
-
 # Install (macOS)
-
 brew install git-secrets
 
 # Install (Linux)
-
 git clone https://github.com/awslabs/git-secrets
 cd git-secrets
 sudo make install
 
 # Set up for repository
-
 cd /path/to/Project-AI
 git secrets --install
 git secrets --register-aws
@@ -276,43 +307,31 @@ git secrets --add 'hf_[a-zA-Z0-9]{32,}'  # Hugging Face tokens
 ### 4. Project-Specific Scanner
 
 ```bash
-
 # Use built-in secret scanner
-
 python tools/secret_scan.py
 
 # This checks for:
-
 # - OpenAI API keys (sk-proj-* pattern)
-
 # - Hugging Face tokens (hf_* pattern)
-
 # - AWS access keys (AKIA* pattern)
-
 # - SMTP passwords
-
 # - Generic secrets in config files
-
 ```
 
-______________________________________________________________________
+---
 
 ## 🛡️ Pre-commit Hooks
 
 ### Install Pre-commit Framework
 
 ```bash
-
 # Install pre-commit
-
 pip install pre-commit
 
 # Install hooks from .pre-commit-config.yaml
-
 pre-commit install
 
 # Run manually on all files
-
 pre-commit run --all-files
 ```
 
@@ -320,48 +339,37 @@ pre-commit run --all-files
 
 ```yaml
 repos:
-
   - repo: https://github.com/Yelp/detect-secrets
-
     rev: v1.4.0
     hooks:
-
       - id: detect-secrets
-
         args: ['--baseline', '.secrets.baseline']
-
+  
   - repo: https://github.com/trufflesecurity/trufflehog
-
     rev: v3.63.0
     hooks:
-
       - id: trufflehog
-
         args: ['filesystem', '--directory', '.', '--fail']
 ```
 
-______________________________________________________________________
+---
 
 ## 🚨 If Secrets Are Exposed
 
 ### Immediate Actions (Within 1 Hour)
 
 1. **Revoke exposed credentials immediately**
-
    - Don't wait for git history cleanup
    - Assume credentials are compromised
 
 1. **Generate new credentials**
-
    - Use platform-specific rotation procedures above
 
 1. **Update application configuration**
-
    - Update .env with new credentials
    - Test application works
 
 1. **Notify team**
-
    - Alert all developers
    - Document in security log
 
@@ -370,20 +378,15 @@ ______________________________________________________________________
 1. **Use BFG Repo-Cleaner or git-filter-repo**
 
    ```bash
-
    # Using git-filter-repo (recommended)
-
    pip install git-filter-repo
    git filter-repo --path .env --invert-paths --force
-
+   
    # Or use provided scripts:
-
    # Windows PowerShell:
-
    ./tools/purge_git_secrets.ps1
-
+   
    # Linux/macOS/WSL:
-
    ./tools/purge_git_secrets.sh
    ```
 
@@ -395,14 +398,12 @@ ______________________________________________________________________
    ```
 
 1. **Notify all contributors**
-
    - Everyone must re-clone repository
    - Old clones have compromised history
 
 ### Review and Prevent (Within 1 Week)
 
 1. **Review access logs**
-
    - OpenAI usage logs
    - Email account activity
    - AWS CloudTrail (if applicable)
@@ -410,11 +411,10 @@ ______________________________________________________________________
 1. **Add secret scanning to CI/CD**
 
 1. **Security training for team**
-
    - Review this document
    - Understand proper secret management
 
-______________________________________________________________________
+---
 
 ## 📋 Security Checklist
 
@@ -440,11 +440,11 @@ ______________________________________________________________________
 
 - [ ] Run secret scanning tools
 - [ ] Verify no secrets in repository
-- [ ] All credentials rotated recently (\<90 days)
+- [ ] All credentials rotated recently (<90 days)
 - [ ] Production uses secrets manager (not .env files)
 - [ ] Security audit passed
 
-______________________________________________________________________
+---
 
 ## 🏢 Production Deployment
 
@@ -458,12 +458,12 @@ ______________________________________________________________________
 
    ```python
    import boto3
-
+   
    def get_secret(secret_name):
        client = boto3.client('secretsmanager', region_name='us-east-1')
        response = client.get_secret_value(SecretId=secret_name)
        return json.loads(response['SecretString'])
-
+   
    secrets = get_secret('project-ai/production')
    OPENAI_API_KEY = secrets['OPENAI_API_KEY']
    ```
@@ -473,10 +473,10 @@ ______________________________________________________________________
    ```python
    from azure.keyvault.secrets import SecretClient
    from azure.identity import DefaultAzureCredential
-
+   
    credential = DefaultAzureCredential()
    client = SecretClient(vault_url="https://myvault.vault.azure.net", credential=credential)
-
+   
    OPENAI_API_KEY = client.get_secret("OPENAI-API-KEY").value
    ```
 
@@ -484,32 +484,32 @@ ______________________________________________________________________
 
    ```python
    from google.cloud import secretmanager
-
+   
    client = secretmanager.SecretManagerServiceClient()
    name = f"projects/my-project/secrets/openai-api-key/versions/latest"
    response = client.access_secret_version(request={"name": name})
-
+   
    OPENAI_API_KEY = response.payload.data.decode('UTF-8')
    ```
 
-______________________________________________________________________
+---
 
 ## 📊 Secret Inventory
 
 ### Current Secrets in Project
 
-| Secret                    | Location   | Rotation Frequency | Owner         |
-| ------------------------- | ---------- | ------------------ | ------------- |
-| OPENAI_API_KEY            | .env       | 90 days            | Dev Team      |
-| HUGGINGFACE_API_KEY       | .env       | 90 days            | Dev Team      |
-| FERNET_KEY                | .env       | 180 days\*         | Security Team |
-| SMTP_USERNAME             | .env       | As needed          | Dev Team      |
-| SMTP_PASSWORD             | .env       | 90 days            | Dev Team      |
-| COMMAND_OVERRIDE_PASSWORD | Set in app | As needed          | Admin         |
+| Secret | Location | Rotation Frequency | Owner |
+|--------|----------|-------------------|-------|
+| OPENAI_API_KEY | .env | 90 days | Dev Team |
+| HUGGINGFACE_API_KEY | .env | 90 days | Dev Team |
+| FERNET_KEY | .env | 180 days* | Security Team |
+| SMTP_USERNAME | .env | As needed | Dev Team |
+| SMTP_PASSWORD | .env | 90 days | Dev Team |
+| COMMAND_OVERRIDE_PASSWORD | Set in app | As needed | Admin |
 
-\*Fernet key rotation requires data migration
+*Fernet key rotation requires data migration
 
-______________________________________________________________________
+---
 
 ## 🎓 Training Resources
 
@@ -541,7 +541,7 @@ ______________________________________________________________________
 - Enable 2FA on all accounts
 - Monitor for secret exposure
 
-______________________________________________________________________
+---
 
 ## 📞 Questions or Issues?
 
@@ -549,10 +549,11 @@ ______________________________________________________________________
 - **Need credentials**: Request from team lead (never share existing ones)
 - **Credential exposure**: Follow "If Secrets Are Exposed" procedure above
 
-______________________________________________________________________
+---
 
 **Remember**: When in doubt, treat it as a secret. It's better to be overly cautious than to expose credentials.
 
-______________________________________________________________________
+---
 
-*Last reviewed: January 2026* *Next review: April 2026*
+*Last reviewed: January 2026*  
+*Next review: April 2026*

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+viewBox="50 0 1170 810" 
+width="1170" height="810">
+<style>
+  text { font-family: Arial, sans-serif; }
+  .header { font-size: 32px; font-weight: bold; }
+  .title { font-size: 20px; font-weight: bold; }
+  .body { font-size: 14px; }
+</style>
+<rect x="100" y="50" width="1000" height="80" fill="#a5d8ff" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="250" y="102" class="header" fill="#1e1e1e" font-size="32">Agent Orchestration & Collaboration</text>
+<rect x="450" y="180" width="300" height="120" fill="#e7d5ff" stroke="#5f3dc4" stroke-width="3" opacity="1.0" rx="10"/>
+<text x="470" y="214" class="title" fill="#5f3dc4" font-size="24">🧠 Cognition Kernel</text>
+<text x="470" y="244" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="470" dy="0">Central orchestrator for all agents</tspan>
+  <tspan x="470" dy="16.8">• Routes all operations</tspan>
+  <tspan x="470" dy="16.8">• Tracks execution context</tspan>
+  <tspan x="470" dy="16.8">• Enforces governance</tspan>
+</text>
+<rect x="100" y="380" width="230" height="140" fill="#ffe0e0" stroke="#c92a2a" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="410" class="title" fill="#c92a2a" font-size="20">🛡️ Oversight Agent</text>
+<text x="120" y="438" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="120" dy="0">Monitor compliance</tspan>
+  <tspan x="120" dy="15.6">Validate safety</tspan>
+  <tspan x="120" dy="15.6">Track system health</tspan>
+  <tspan x="120" dy="15.6">Detect anomalies</tspan>
+  <tspan x="120" dy="15.6"></tspan>
+  <tspan x="120" dy="15.6">Risk: Medium</tspan>
+</text>
+<rect x="380" y="380" width="230" height="140" fill="#d0ebff" stroke="#1971c2" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="400" y="410" class="title" fill="#1971c2" font-size="20">📋 Planner Agent</text>
+<text x="400" y="438" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="400" dy="0">Task decomposition</tspan>
+  <tspan x="400" dy="15.6">Step sequencing</tspan>
+  <tspan x="400" dy="15.6">Dependency analysis</tspan>
+  <tspan x="400" dy="15.6">Resource allocation</tspan>
+  <tspan x="400" dy="15.6"></tspan>
+  <tspan x="400" dy="15.6">Risk: Low</tspan>
+</text>
+<rect x="660" y="380" width="230" height="140" fill="#e0ffe0" stroke="#2f9e44" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="680" y="410" class="title" fill="#2f9e44" font-size="20">✅ Validator Agent</text>
+<text x="680" y="438" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="680" dy="0">Input/output checks</tspan>
+  <tspan x="680" dy="15.6">Schema validation</tspan>
+  <tspan x="680" dy="15.6">Type verification</tspan>
+  <tspan x="680" dy="15.6">Boundary testing</tspan>
+  <tspan x="680" dy="15.6"></tspan>
+  <tspan x="680" dy="15.6">Risk: Low</tspan>
+</text>
+<rect x="940" y="380" width="230" height="140" fill="#fff3e0" stroke="#f08c00" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="960" y="410" class="title" fill="#f08c00" font-size="20">💡 Explainability</text>
+<text x="960" y="438" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="960" dy="0">Generate explanations</tspan>
+  <tspan x="960" dy="15.6">Decision reasoning</tspan>
+  <tspan x="960" dy="15.6">Audit trail context</tspan>
+  <tspan x="960" dy="15.6">User transparency</tspan>
+  <tspan x="960" dy="15.6"></tspan>
+  <tspan x="960" dy="15.6">Risk: Low</tspan>
+</text>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="500" y1="310" x2="370" y2="370" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="550" y1="310" x2="550" y2="370" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="650" y1="310" x2="730" y2="370" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="720" y1="280" x2="990" y2="370" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<rect x="100" y="580" width="1070" height="180" fill="#f8f9fa" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="610" class="title" fill="#1e1e1e" font-size="20">Collaboration Workflow</text>
+<text x="120" y="639" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="120" dy="0">1. User Request → Cognition Kernel receives task</tspan>
+  <tspan x="120" dy="16.8">2. Kernel routes to Planner → Decomposes into subtasks</tspan>
+  <tspan x="120" dy="16.8">3. Planner returns plan → Kernel validates each step with Validator</tspan>
+  <tspan x="120" dy="16.8">4. Validator approves → Kernel checks Oversight for safety clearance</tspan>
+  <tspan x="120" dy="16.8">5. Oversight approves → Kernel executes validated plan</tspan>
+  <tspan x="120" dy="16.8">6. Execution completes → Explainability generates reasoning & audit trail</tspan>
+  <tspan x="120" dy="16.8">7. Result returned → Full context logged via Kernel</tspan>
+  <tspan x="120" dy="16.8"></tspan>
+  <tspan x="120" dy="16.8">All agents communicate ONLY through Kernel - no direct agent-to-agent calls!</tspan>
+</text>
+</svg>

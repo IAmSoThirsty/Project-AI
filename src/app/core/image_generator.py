@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 AI Image Generation with Content Filtering and Style Presets.
 
@@ -7,6 +5,11 @@ Supports multiple backends:
 - Stable Diffusion (Hugging Face API)
 - DALL-E (OpenAI API)
 - Local generation (optional)
+
+Security:
+- Content filtering with blocked keywords
+- Secure file storage with path traversal protection
+- Filename sanitization
 """
 
 import logging
@@ -20,6 +23,8 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
+from app.security.path_security import safe_path_join, sanitize_filename
+
 load_dotenv()
 logger = logging.getLogger(__name__)
 
@@ -27,6 +32,10 @@ logger = logging.getLogger(__name__)
 MAX_API_RETRIES = int(os.getenv("IMAGE_API_MAX_RETRIES", "3"))
 BACKOFF_FACTOR = float(os.getenv("IMAGE_API_BACKOFF_FACTOR", "0.8"))
 
+
+# 📚 Documentation Links:
+# - [[relationships/gui/06_IMAGE_GENERATION_RELATIONSHIPS.md]]
+#
 
 def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
     """Perform an HTTP request with retries and exponential backoff for transient errors.
@@ -229,49 +238,47 @@ class ImageGenerator:
         width: int = 512,
         height: int = 512,
     ) -> dict[str, Any]:
-        """Generate image using Hugging Face Stable Diffusion API."""
-        if not self.hf_api_key:
-            return {
-                "success": False,
-                "error": "Hugging Face API key not configured",
-            }
-
-        api_url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
-        headers = {"Authorization": f"Bearer {self.hf_api_key}"}
-
-        payload = {
-            "inputs": prompt,
-            "parameters": {
-                "negative_prompt": negative_prompt,
-                "width": width,
-                "height": height,
-                "num_inference_steps": 50,
-                "guidance_scale": 7.5,
-            },
-        }
-
+        """Generate image using AI orchestrator (Hugging Face backend)."""
         try:
-            response = _request_with_retries(
-                "POST", api_url, headers=headers, json=payload, timeout=60
+            from app.core.ai.orchestrator import run_ai, AIRequest
+            
+            # Use orchestrator instead of direct API call
+            request = AIRequest(
+                task_type="image",
+                prompt=prompt,
+                provider="huggingface",
+                model="stabilityai/stable-diffusion-2-1",
+                config={
+                    "negative_prompt": negative_prompt,
+                    "width": width,
+                    "height": height,
+                    "num_inference_steps": 50,
+                    "guidance_scale": 7.5,
+                }
             )
-            response.raise_for_status()
+            
+            response = run_ai(request)
+            
+            if response.status == "success":
+                # Save image data
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"sd_{timestamp}.png"
+                # Secure path joining to prevent traversal
+                filepath = safe_path_join(self.output_dir, filename)
 
-            # Save image
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"sd_{timestamp}.png"
-            filepath = os.path.join(self.output_dir, filename)
+                with open(filepath, "wb") as f:
+                    f.write(response.result)
 
-            with open(filepath, "wb") as f:
-                f.write(response.content)
-
-            return {
-                "success": True,
-                "filepath": filepath,
-                "filename": filename,
-                "prompt": prompt,
-                "timestamp": timestamp,
-            }
-
+                return {
+                    "success": True,
+                    "filepath": filepath,
+                    "filename": filename,
+                    "prompt": prompt,
+                    "timestamp": timestamp,
+                }
+            else:
+                return {"success": False, "error": response.error}
+                
         except Exception as e:
             logger.error("Hugging Face generation error: %s", e)
             return {"success": False, "error": str(e)}
@@ -281,82 +288,53 @@ class ImageGenerator:
         prompt: str,
         size: str = "512x512",
     ) -> dict[str, Any]:
-        """Generate image using OpenAI DALL-E API."""
-        if not self.openai_api_key:
-            return {
-                "success": False,
-                "error": "OpenAI API key not configured",
-            }
-
+        """Generate image using AI orchestrator (OpenAI DALL-E backend)."""
         try:
-            from typing import cast
-
-            import openai
-
-            openai.api_key = self.openai_api_key
-
+            from app.core.ai.orchestrator import run_ai, AIRequest
+            
             # Validate size parameter
             valid_sizes = ["256x256", "512x512", "1024x1024", "1024x1792", "1792x1024"]
             if size not in valid_sizes:
                 size = "1024x1024"  # Default to DALL-E 3 standard size
+            
+            # Use orchestrator instead of direct API call
+            request = AIRequest(
+                task_type="image",
+                prompt=prompt,
+                provider="openai",
+                model="dall-e-3",
+                config={"size": size, "quality": "standard", "n": 1}
+            )
+            
+            response = run_ai(request)
+            
+            if response.status == "success":
+                # response.result is the image URL
+                image_url = response.result
+                
+                # Download and save
+                img_resp = _request_with_retries("GET", str(image_url), timeout=30)
+                img_resp.raise_for_status()
 
-            attempt = 0
-            while True:
-                try:
-                    response = openai.images.generate(
-                        model="dall-e-3",
-                        prompt=prompt,
-                        size=cast(Any, size),  # Type cast for OpenAI API
-                        quality="standard",
-                        n=1,
-                    )
-                    break
-                except Exception as exc:
-                    attempt += 1
-                    if attempt > MAX_API_RETRIES:
-                        logger.exception(
-                            "OpenAI generate failed after %d attempts", attempt
-                        )
-                        raise
-                    backoff = (
-                        BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
-                    )
-                    logger.warning(
-                        "OpenAI transient error: %s - retrying in %.2fs (attempt %d)",
-                        exc,
-                        backoff,
-                        attempt,
-                    )
-                    time.sleep(backoff)
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"dalle_{timestamp}.png"
+                # Secure path joining to prevent traversal
+                filepath = safe_path_join(self.output_dir, filename)
 
-            # Validate response
-            if not getattr(response, "data", None) or len(response.data) == 0:
-                raise ValueError("No image data received from OpenAI")
+                with open(filepath, "wb") as f:
+                    f.write(img_resp.content)
 
-            image_url = response.data[0].url
-            if not image_url:
-                raise ValueError("No image URL in response")
-
-            # Download and save (with retries)
-            img_resp = _request_with_retries("GET", str(image_url), timeout=30)
-            img_resp.raise_for_status()
-
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"dalle_{timestamp}.png"
-            filepath = os.path.join(self.output_dir, filename)
-
-            with open(filepath, "wb") as f:
-                f.write(img_resp.content)
-
-            return {
-                "success": True,
-                "filepath": filepath,
-                "filename": filename,
-                "prompt": prompt,
-                "timestamp": timestamp,
-                "url": image_url,
-            }
-
+                return {
+                    "success": True,
+                    "filepath": filepath,
+                    "filename": filename,
+                    "prompt": prompt,
+                    "timestamp": timestamp,
+                    "url": image_url,
+                }
+            else:
+                return {"success": False, "error": response.error}
+                
         except Exception as e:
             logger.error("OpenAI generation error: %s", e)
             return {"success": False, "error": str(e)}
@@ -405,17 +383,18 @@ class ImageGenerator:
             return {"success": False, "error": "Backend not implemented"}
 
     def get_generation_history(self, limit: int = 10) -> list[dict[str, Any]]:
-        """Get recent generation history."""
+        """Get recent generation history with secure path handling."""
         history = []
         try:
             files = sorted(
                 os.listdir(self.output_dir),
-                key=lambda f: os.path.getmtime(os.path.join(self.output_dir, f)),
+                key=lambda f: os.path.getmtime(safe_path_join(self.output_dir, f)),
                 reverse=True,
             )[:limit]
 
             for filename in files:
-                filepath = os.path.join(self.output_dir, filename)
+                # Secure path joining
+                filepath = safe_path_join(self.output_dir, filename)
                 history.append(
                     {
                         "filename": filename,

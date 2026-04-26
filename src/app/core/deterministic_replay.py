@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Deterministic Replay Tool - Reconstruct executions from ExecutionContext logs.
 

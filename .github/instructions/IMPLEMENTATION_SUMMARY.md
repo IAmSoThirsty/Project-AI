@@ -1,40 +1,18 @@
-<!--                                         [2026-04-08 08:42] -->
-<!--                                        Productivity: Active -->
+---
+type: config-guide
+tags: [implementation, ai-instructions, architecture, documentation]
+created: 2026-01-05
+last_verified: 2026-04-20
+status: current
+related_systems: [copilot-ai, documentation, development-environment]
+stakeholders: [developers, architects, ai-assistants]
+config_scope: development
+automation_type: manual-config
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # ✅ AI Agent Instructions - Implementation Complete
-
-## 2026-04-08 Consolidation Update (Current Baseline)
-
-This section supersedes older inventory details where they conflict with current repository state.
-
-### Instruction artifacts inspected (each file)
-
-1. `.github/Active_Governance_Policy.md`
-2. `.github/instructions/codacy.instructions.md`
-3. `.github/instructions/ARCHITECTURE_QUICK_REF.md`
-4. `.github/instructions/README.md`
-5. `.github/instructions/IMPLEMENTATION_SUMMARY.md`
-6. `archive/.github/copilot-instructions.md`
-
-### Purpose-level map
-
-- **P0** `.github/Active_Governance_Policy.md` — Authoritative governance and production-readiness gate
-- **P0** `.github/instructions/codacy.instructions.md` — Quality/security operational gate when Codacy tooling is available
-- **P1** `.github/instructions/ARCHITECTURE_QUICK_REF.md` — Structural runtime and integration contract reference
-- **P2** `.github/instructions/README.md` — Instruction index and resolution/gating protocol
-- **P2** `.github/instructions/IMPLEMENTATION_SUMMARY.md` — Implementation evidence ledger
-- **P3** `archive/.github/copilot-instructions.md` — Legacy technical context, superseded by governance profile
-
-### Concrete gating and coherence guarantees
-
-- Governance precedence and instruction resolution order are explicitly defined
-- Runtime boundaries are explicit (desktop vs web backend vs web frontend)
-- Image-generation contracts and UI navigation contracts are documented
-- Workflow/security automation awareness is documented for deployment readiness
-- Monorepo integrity rule is explicit: artifacts are treated as potentially mission-critical unless maintainers state otherwise
-
-### Current status
-
-- Instruction system is now structured for concrete execution, logical gating, structural coherence, and production deployment readiness.
 
 ## 📋 What Was Created/Modified
 
@@ -123,7 +101,7 @@ This section supersedes older inventory details where they conflict with current
 
 ## 🏗️ File Structure
 
-```text
+```
 .github/
 ├── copilot-instructions.md          # Main instructions (274 lines)
 └── instructions/
@@ -202,27 +180,20 @@ This section supersedes older inventory details where they conflict with current
 ## 🚀 Quick Start for AI Agents
 
 ```python
-
 # 1. Read main instructions
-
 open(".github/copilot-instructions.md")
 
 # 2. Visualize architecture
-
 open(".github/instructions/ARCHITECTURE_QUICK_REF.md")
 
 # 3. Run the app
-
 os.system("python -m src.app.main")
 
 # 4. Run tests
-
 os.system("pytest -v")
 
 # 5. After edits, analyze
-
 # See .github/instructions/codacy.instructions.md
-
 ```
 
 ## 📚 Documentation Links
@@ -281,6 +252,6 @@ All refinement suggestions have been integrated:
 1. ✅ Visual architecture diagrams created
 1. ✅ Navigation index for easy discovery
 
-**Last Updated**: 2026-04-08 08:42 -06:00
-**Status**: Production Ready
+**Last Updated**: November 29, 2025  
+**Status**: Production Ready  
 **Files Created**: 3 (634 lines total)

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Enhanced Security Agent Workflows with Atomic Activities
 
@@ -40,6 +38,12 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+# 📚 Documentation Links:
+# - [[relationships/temporal/01_WORKFLOW_CHAINS.md]]
+# - [[relationships/temporal/04_TEMPORAL_GOVERNANCE.md]]
+# - [[source-docs/temporal/WORKFLOWS_COMPREHENSIVE.md]]
+#
+
 class RedTeamCampaignRequest:
     """Request for red team campaign workflow."""
 

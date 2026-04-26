@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Kernel Types and Base Interface for SuperKernel System.
 
@@ -62,6 +60,7 @@ class KernelInterface(ABC):
         Raises:
             RuntimeError: If processing fails
         """
+        pass
 
     def route(self, task: Any, *, source: str = "agent", **kwargs) -> Any:
         """

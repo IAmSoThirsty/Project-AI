@@ -1,24 +1,35 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Contributing to Project-AI"
+id: contributing-guide
+type: guide
+status: active
+created_date: 2025-11-28
+updated_date: 2025-11-28
+version: 1.0
+author: Project-AI Maintainers
+contributors: ["Core Development Team", "DevOps Team"]
+policy_level: P2
+enforcement_level: recommended
+tags:
+  - area:governance
+  - type:guide
+  - component:contribution
+  - component:development
+  - audience:contributor
+  - audience:developer
+  - priority:high
+compliance_frameworks: []
+relationships:
+  governed_by: ["copilot_workspace_profile", "CODE_OF_CONDUCT"]
+  related_docs: ["SECURITY", "LICENSING_GUIDE"]
+  validates: []
+purpose: "Comprehensive contribution guide covering development environment setup, workflow, code quality standards, commit conventions, and pull request process"
+scope: "Prerequisites, development environment setup, testing procedures, code style (PEP 8, ruff), commit message conventions, PR process, documentation updates"
+prerequisites: ["Python 3.11+", "Node.js 18+", "Git"]
+estimated_time: "15-20 minutes (initial setup)"
+---
+
 # Contributing to Project-AI
-
-
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
-## Research Provenance
-
-Arch Angel protected linkage:
-- Canonical DOI registry: [DOI-Registry](../../../wiki/07_Research/Publications/DOI-Registry.md)
-- Governance DOI map: [GOVERNANCE_DOI_MAP](../GOVERNANCE_DOI_MAP.md)
-- Primary DOI anchors:
-- [The Sovereign Covenant](../../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
-- [AGI Charter for Project-AI](../../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
-- [Constitutional Architectures](../../../wiki/07_Research/Publications/Paper-05.md) - https://doi.org/10.5281/zenodo.18794646
-- [The Flat Gap](../../../wiki/07_Research/Publications/Paper-07.md) - https://doi.org/10.5281/zenodo.18827649
-- [Governing Force In AGI](../../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
-- [Two Species Aligned](../../../wiki/07_Research/Publications/Paper-16.md) - https://doi.org/10.5281/zenodo.19582479
-- [Project-AI: Sovereign Constitutional AGI Ecosystem](../../../wiki/07_Research/Publications/Paper-17.md) - https://doi.org/10.5281/zenodo.19582539
-- [Why I Am Doing This](../../../wiki/07_Research/Publications/Paper-21.md) - https://doi.org/10.5281/zenodo.19592336
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
 
 Thank you for interest in contributing to Project-AI! This guide will help you get started.
 
@@ -63,34 +74,26 @@ pre-commit install
 ### Running Tests
 
 ```bash
-
 # Run all tests
-
 npm test
 
 # Run Python tests only
-
 pytest -v
 
 # Run Python tests with coverage
-
 pytest --cov=src --cov-report=html
 ```
 
 ### Code Quality
 
 ```bash
-
 # Run linter (ruff)
-
 ruff check .
 
 # Auto-fix linting issues
-
 ruff check . --fix
 
 # Run type checker (Pylance via Pyright)
-
 python -m pylance
 ```
 

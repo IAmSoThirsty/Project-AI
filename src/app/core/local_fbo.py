@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Local Fallback Offline (FBO) System for Project-AI.
 
@@ -294,7 +292,7 @@ class LocalFBOSystem:
         """Generate cache key for a query."""
         import hashlib
 
-        return hashlib.md5(query.lower().strip().encode()).hexdigest()
+        return hashlib.md5(query.lower().strip().encode(), usedforsecurity=False).hexdigest()
 
     def _generate_offline_response(self, query: str, context: str) -> str:
         """

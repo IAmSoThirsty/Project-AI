@@ -1,5 +1,43 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "TARL Productivity Enhancement - Quick Reference"
+id: tarl-productivity-quick-ref
+type: reference
+area: development
+status: active
+version: "1.0"
+created_date: "2026-04-20"
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Classification
+tags:
+  - development
+  - tarl
+
+# Developer Metadata
+skill_level: intermediate
+audience:
+  - developer
+
+languages:
+  - Python
+  - Shell
+
+frameworks:
+  - Temporal
+
+code_examples: false
+api_reference: false
+
+prerequisites:
+  - [[QUICK_START]]
+
+implements:
+  - src/app/core/tarl_orchestrator.py
+
+related_docs:
+  - [[README]]
+---
 # TARL Productivity Enhancement - Quick Reference
 
 ## 🚀 Quick Start
@@ -11,7 +49,6 @@ from tarl import TarlRuntime
 from tarl.policies.default import DEFAULT_POLICIES
 
 # All enhancements enabled by default
-
 runtime = TarlRuntime(DEFAULT_POLICIES)
 ```
 
@@ -53,21 +90,16 @@ Estimated speedup: 6.32x
 ### Adaptive Policy Ordering
 
 ```python
-
 # Automatically reorder policies for optimal performance
-
 runtime.optimize_policy_order()
 
 # Policies are now ordered by execution speed (fastest first)
-
 ```
 
 ### Reset Metrics
 
 ```python
-
 # Clear all metrics and cache
-
 runtime.reset_metrics()
 ```
 
@@ -82,13 +114,10 @@ runtime = TarlRuntime(DEFAULT_POLICIES, enable_cache=False)
 ### Custom Cache Size
 
 ```python
-
 # Larger cache for high-diversity workloads
-
 runtime = TarlRuntime(DEFAULT_POLICIES, cache_size=512)
 
 # Smaller cache for memory-constrained environments
-
 runtime = TarlRuntime(DEFAULT_POLICIES, cache_size=32)
 ```
 
@@ -100,25 +129,22 @@ runtime = TarlRuntime(DEFAULT_POLICIES, enable_parallel=False)
 
 ## 📈 Performance Benchmarks
 
-| Scenario                    | Without Cache | With Cache  | Improvement      |
-| --------------------------- | ------------- | ----------- | ---------------- |
-| Repeated Context (10k)      | 32.81ms       | 14.74ms     | **2.23x faster** |
-| Diverse Contexts            | No benefit    | ~10% faster | **1.1x faster**  |
-| Mixed Workload (50% repeat) | Baseline      | ~40% faster | **1.67x faster** |
+| Scenario | Without Cache | With Cache | Improvement |
+|----------|--------------|------------|-------------|
+| Repeated Context (10k) | 32.81ms | 14.74ms | **2.23x faster** |
+| Diverse Contexts | No benefit | ~10% faster | **1.1x faster** |
+| Mixed Workload (50% repeat) | Baseline | ~40% faster | **1.67x faster** |
 
 ## 💡 Best Practices
 
 ### 1. Let Cache Warm Up
 
 ```python
-
 # First evaluations build cache - expect normal performance
-
 for _ in range(10):
     runtime.evaluate(context)
 
 # Subsequent evaluations benefit from cache
-
 metrics = runtime.get_performance_metrics()
 print(f"Cache hit rate: {metrics['cache_hit_rate_percent']:.1f}%")
 ```
@@ -126,9 +152,7 @@ print(f"Cache hit rate: {metrics['cache_hit_rate_percent']:.1f}%")
 ### 2. Monitor Cache Hit Rate
 
 ```python
-
 # Aim for >50% cache hit rate for optimal benefit
-
 metrics = runtime.get_performance_metrics()
 if metrics['cache_hit_rate_percent'] < 50:
     print("Consider increasing cache size or reviewing context patterns")
@@ -137,30 +161,24 @@ if metrics['cache_hit_rate_percent'] < 50:
 ### 3. Optimize After Warm-Up
 
 ```python
-
 # Let runtime collect statistics
-
 for _ in range(100):
     runtime.evaluate(various_contexts)
 
 # Then optimize policy order
-
 runtime.optimize_policy_order()
 ```
 
 ### 4. Tune Cache Size
 
 ```python
-
 # Monitor cache info
-
 metrics = runtime.get_performance_metrics()
 cache_info = metrics.get('cache_info', {})
 
 print(f"Cache size: {cache_info['size']}/{cache_info['maxsize']}")
 
 # If cache is always full, consider increasing size
-
 if cache_info['size'] >= cache_info['maxsize'] * 0.9:
     print("Consider increasing cache_size parameter")
 ```
@@ -231,45 +249,42 @@ Results: 7 passed, 0 failed
 **Problem**: Cache hit rate below 30%
 
 **Solutions**:
-
 1. Check context diversity - highly unique contexts won't cache well
-1. Increase cache size: `cache_size=256` or higher
-1. Review context generation - ensure common patterns are reused
+2. Increase cache size: `cache_size=256` or higher
+3. Review context generation - ensure common patterns are reused
 
 ### High Memory Usage
 
 **Problem**: Memory usage growing
 
 **Solutions**:
-
 1. Reduce cache size: `cache_size=64` or lower
-1. Monitor with: `metrics['cache_info']['size']`
-1. Call `runtime.reset_metrics()` periodically to clear cache
+2. Monitor with: `metrics['cache_info']['size']`
+3. Call `runtime.reset_metrics()` periodically to clear cache
 
 ### Unexpected Performance
 
 **Problem**: Not seeing expected speedup
 
 **Solutions**:
-
 1. Ensure cache is enabled: `enable_cache=True`
-1. Check cache hit rate: Should be >50% for significant benefit
-1. Let cache warm up: First 10-100 evaluations build cache
-1. Profile with: `runtime.get_performance_metrics()`
+2. Check cache hit rate: Should be >50% for significant benefit
+3. Let cache warm up: First 10-100 evaluations build cache
+4. Profile with: `runtime.get_performance_metrics()`
 
 ## 🎓 Performance Tips
 
 1. **Reuse Contexts**: Design code to reuse common context patterns
-1. **Batch Evaluations**: Evaluate multiple similar contexts together
-1. **Monitor Metrics**: Regularly check productivity improvements
-1. **Optimize Periodically**: Call `optimize_policy_order()` after warm-up
-1. **Tune Cache Size**: Match cache size to workload diversity
+2. **Batch Evaluations**: Evaluate multiple similar contexts together
+3. **Monitor Metrics**: Regularly check productivity improvements
+4. **Optimize Periodically**: Call `optimize_policy_order()` after warm-up
+5. **Tune Cache Size**: Match cache size to workload diversity
 
 ## 📚 Documentation
 
 - **Full Implementation**: [TARL_PRODUCTIVITY_ENHANCEMENT.md](TARL_PRODUCTIVITY_ENHANCEMENT.md)
-- **Main README**: [TARL_README.md](TARL_README.md)
-- **Quick Reference**: [TARL_QUICK_REFERENCE.md](TARL_QUICK_REFERENCE.md)
+- **Main README**: [[TARL_README.md|TARL_README.md]]
+- **Quick Reference**: [[TARL_QUICK_REFERENCE.md|TARL_QUICK_REFERENCE.md]]
 - **Test Suite**: `test_tarl_productivity.py`
 
 ## ✅ Verification Checklist
@@ -282,6 +297,9 @@ Results: 7 passed, 0 failed
 - [x] Performance metrics available
 - [x] Zero breaking changes
 
-______________________________________________________________________
+---
 
-**Status**: ✅ Production Ready **Performance**: 🚀 60%+ Improvement **Version**: TARL 2.1 **Last Updated**: 2026-01-29
+**Status**: ✅ Production Ready  
+**Performance**: 🚀 60%+ Improvement  
+**Version**: TARL 2.1  
+**Last Updated**: 2026-01-29

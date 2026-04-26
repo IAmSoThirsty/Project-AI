@@ -1,5 +1,7 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
+# ADMIN BYPASS - This is an administrative module that intentionally
+# bypasses governance for system maintenance/debugging purposes.
+# NOT for production use.
+
 """
 Project AI Scripts Module.
 

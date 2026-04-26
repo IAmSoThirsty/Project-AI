@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 H323_SEC_PROFILE_v1
 Baseline Security Capability Profile for Project-AI
@@ -21,7 +19,7 @@ This is the foundational trust model for Project-AI.
 
 import argparse
 import json
-from datetime import timezone, datetime
+from datetime import UTC, datetime
 
 # ---------------------------------------------------------------------------
 # 0. Core utilities: time & logging
@@ -30,7 +28,7 @@ from datetime import timezone, datetime
 
 def timestamp_now():
     try:
-        return datetime.now(timezone.utc).isoformat() + "Z"
+        return datetime.now(UTC).isoformat() + "Z"
     except (AttributeError, NameError):
         return datetime.utcnow().isoformat() + "Z"
 
@@ -348,7 +346,7 @@ def run_simulated_secure_call():
                 "Assertion failed: validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)"
             )
         call = secure_h323_call_setup(ep, gw, "+18005551234", trust_store, crl_ocsp)
-        if call.media_negotiated is not True:
+        if not (call.media_negotiated is True):
             raise AssertionError("Assertion failed: call.media_negotiated is True")
 
         ep2 = SimEndpoint("ep-sim-2")

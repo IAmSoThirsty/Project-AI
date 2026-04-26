@@ -1,5 +1,65 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Deployment Guide for Project-AI Web"
+id: deployment
+type: deployment-guide
+area: development
+status: current
+version: "1.0"
+created: 2026-04-20
+last_verified: 2026-04-20
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Deployment Metadata
+deployment_target: multi-platform
+deployment_complexity: complex
+production_ready: true
+review_cycle: monthly
+
+# Classification
+tags:
+  - deployment
+  - web
+  - docker
+  - kubernetes
+  - docker-compose
+  - postgresql
+  - nginx
+  - production
+
+# Developer Metadata
+skill_level: intermediate
+audience:
+  - developer
+  - devops
+
+stakeholders: [devops, deployment-team, web-developers, sre-team]
+
+languages:
+  - Python
+  - Shell
+  - YAML
+  - JavaScript
+
+frameworks:
+  - Docker
+  - Kubernetes
+  - Flask
+  - PostgreSQL
+
+code_examples: true
+api_reference: false
+
+prerequisites:
+  - [[install]]
+  - [[config]]
+
+related_systems: [docker, kubernetes, postgresql, nginx, web-backend, web-frontend]
+related_docs:
+  - [[README]]
+  - [[WEB_DEPLOYMENT_GUIDE]]
+  - [[DEPLOYMENT_GUIDE]]
+---
 # Deployment Guide for Project-AI Web
 
 ## Docker Deployment
@@ -15,38 +75,27 @@ services:
   backend:
     build: ./backend
     ports:
-
       - "5000:5000"
-
     environment:
-
       - FLASK_ENV=production
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/projectai
-
     depends_on:
-
       - db
 
   frontend:
     build: ./frontend
     ports:
-
       - "80:80"
-
     depends_on:
-
       - backend
 
   db:
     image: postgres:15
     environment:
-
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=projectai
-
     volumes:
-
       - postgres_data:/var/lib/postgresql/data
 
 volumes:
@@ -54,7 +103,6 @@ volumes:
 ```
 
 Run with:
-
 ```bash
 docker-compose up -d
 ```
@@ -90,9 +138,7 @@ git push heroku feature/web-conversion:main
 ## Environment Variables for Production
 
 ```env
-
 # Backend
-
 FLASK_ENV=production
 SECRET_KEY=<generate-strong-secret>
 JWT_SECRET_KEY=<generate-strong-jwt-secret>
@@ -100,7 +146,6 @@ DATABASE_URL=<production-database-url>
 CORS_ORIGINS=https://yourdomain.com
 
 # API Keys
-
 OPENAI_API_KEY=<your-key>
 GEMINI_API_KEY=<your-key>
 ```
@@ -116,7 +161,8 @@ GEMINI_API_KEY=<your-key>
 - [ ] Set up database backups
 - [ ] Configure logging and monitoring
 
-______________________________________________________________________
+
+---
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

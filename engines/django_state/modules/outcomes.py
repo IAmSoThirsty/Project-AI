@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Outcomes module.
 
 Terminal state classification and outcome analysis.

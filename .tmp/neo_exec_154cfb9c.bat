@@ -1,0 +1,1 @@
+t:\Project-AI-main\venv\Scripts\pip.exe install requests

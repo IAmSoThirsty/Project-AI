@@ -1,8 +1,10 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Command-line interface for DeepSeek V3.2 inference.
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Development/testing CLI
+Risk: Medium (model inference)
 
 Usage:
     # Simple completion
@@ -27,6 +29,9 @@ from pathlib import Path
 # Add parent directory to path for imports
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
+
+# Import governance
+from app.core.runtime.router import route_request
 
 from app.core.deepseek_v32_inference import DeepSeekV32  # noqa: E402
 

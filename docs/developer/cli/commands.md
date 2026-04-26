@@ -1,12 +1,23 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, cli-commands, command-reference, cli-api, command-line-tools]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [cli-framework, command-handlers, argument-parsing]
+stakeholders: [developers, cli-users, power-users]
+audience: intermediate
+prerequisites: [cli-basics, python-cli-knowledge, command-syntax]
+estimated_time: 35 minutes
+review_cycle: monthly
+---
 # CLI Command Reference
 
 This documentation is auto-generated from CLI help output.
 
 **Last updated:** Run `python scripts/generate_cli_docs.py` to regenerate.
 
-______________________________________________________________________
+---
 
 ## Main CLI Help
 
@@ -14,8 +25,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli [OPTIONS] COMMAND [ARGS]...[0m[1m                                                                  [0m[1m [0m
 [1m                                                                                                                        [0m
- Project-AI Command Line Interface (CLI)
-
+ Project-AI Command Line Interface (CLI)                                                                                
+                                                                                                                        
 [2m╭─[0m[2m Options [0m[2m───────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [1;36m-[0m[1;36m-version[0m             [1;32m-v[0m        Show version and exit.                                                               [2m│[0m
 [2m│[0m [1;36m-[0m[1;36m-install[0m[1;36m-completion[0m            Install completion for the current shell.                                            [2m│[0m
@@ -40,8 +51,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli user [OPTIONS] COMMAND [ARGS]...[0m[1m                                                             [0m[1m [0m
 [1m                                                                                                                        [0m
- Commands for user management.
-
+ Commands for user management.                                                                                          
+                                                                                                                        
 [2m╭─[0m[2m Options [0m[2m───────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [1;36m-[0m[1;36m-help[0m          Show this message and exit.                                                                          [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -58,8 +69,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli user example [OPTIONS] NAME[0m[1m                                                                  [0m[1m [0m
 [1m                                                                                                                        [0m
- Example user command.
-
+ Example user command.                                                                                                  
+                                                                                                                        
 [2m╭─[0m[2m Arguments [0m[2m─────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [31m*[0m    name      [1;33mTEXT[0m  User name to greet. [2m[default: None][0m [2;31m[required][0m                                                  [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -76,8 +87,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli memory [OPTIONS] COMMAND [ARGS]...[0m[1m                                                           [0m[1m [0m
 [1m                                                                                                                        [0m
- Commands for memory operations.
-
+ Commands for memory operations.                                                                                        
+                                                                                                                        
 [2m╭─[0m[2m Options [0m[2m───────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [1;36m-[0m[1;36m-help[0m          Show this message and exit.                                                                          [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -94,8 +105,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli memory example [OPTIONS] ITEM[0m[1m                                                                [0m[1m [0m
 [1m                                                                                                                        [0m
- Example memory command.
-
+ Example memory command.                                                                                                
+                                                                                                                        
 [2m╭─[0m[2m Arguments [0m[2m─────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [31m*[0m    item      [1;33mTEXT[0m  Memory item example. [2m[default: None][0m [2;31m[required][0m                                                 [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -112,8 +123,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli learning [OPTIONS] COMMAND [ARGS]...[0m[1m                                                         [0m[1m [0m
 [1m                                                                                                                        [0m
- Commands for learning features.
-
+ Commands for learning features.                                                                                        
+                                                                                                                        
 [2m╭─[0m[2m Options [0m[2m───────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [1;36m-[0m[1;36m-help[0m          Show this message and exit.                                                                          [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -130,8 +141,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli learning example [OPTIONS] TOPIC[0m[1m                                                             [0m[1m [0m
 [1m                                                                                                                        [0m
- Example learning command.
-
+ Example learning command.                                                                                              
+                                                                                                                        
 [2m╭─[0m[2m Arguments [0m[2m─────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [31m*[0m    topic      [1;33mTEXT[0m  Learning topic example. [2m[default: None][0m [2;31m[required][0m                                             [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -148,8 +159,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli plugin [OPTIONS] COMMAND [ARGS]...[0m[1m                                                           [0m[1m [0m
 [1m                                                                                                                        [0m
- Commands for managing plugins.
-
+ Commands for managing plugins.                                                                                         
+                                                                                                                        
 [2m╭─[0m[2m Options [0m[2m───────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [1;36m-[0m[1;36m-help[0m          Show this message and exit.                                                                          [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -166,8 +177,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli plugin example [OPTIONS] PLUGIN[0m[1m                                                              [0m[1m [0m
 [1m                                                                                                                        [0m
- Example plugin command.
-
+ Example plugin command.                                                                                                
+                                                                                                                        
 [2m╭─[0m[2m Arguments [0m[2m─────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [31m*[0m    plugin      [1;33mTEXT[0m  Plugin name example. [2m[default: None][0m [2;31m[required][0m                                               [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -184,8 +195,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli system [OPTIONS] COMMAND [ARGS]...[0m[1m                                                           [0m[1m [0m
 [1m                                                                                                                        [0m
- Commands for system operations.
-
+ Commands for system operations.                                                                                        
+                                                                                                                        
 [2m╭─[0m[2m Options [0m[2m───────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [1;36m-[0m[1;36m-help[0m          Show this message and exit.                                                                          [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -202,8 +213,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli system example [OPTIONS] PARAM[0m[1m                                                               [0m[1m [0m
 [1m                                                                                                                        [0m
- Example system command.
-
+ Example system command.                                                                                                
+                                                                                                                        
 [2m╭─[0m[2m Arguments [0m[2m─────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [31m*[0m    param      [1;33mTEXT[0m  System parameter example. [2m[default: None][0m [2;31m[required][0m                                           [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -220,8 +231,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli ai [OPTIONS] COMMAND [ARGS]...[0m[1m                                                               [0m[1m [0m
 [1m                                                                                                                        [0m
- Commands for AI functionalities.
-
+ Commands for AI functionalities.                                                                                       
+                                                                                                                        
 [2m╭─[0m[2m Options [0m[2m───────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [1;36m-[0m[1;36m-help[0m          Show this message and exit.                                                                          [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
@@ -238,8 +249,8 @@ ______________________________________________________________________
 [1m                                                                                                                        [0m
 [1m [0m[1;33mUsage: [0m[1mpython [0m[1;32m-m[0m[1m app.cli ai example [OPTIONS] MODEL[0m[1m                                                                   [0m[1m [0m
 [1m                                                                                                                        [0m
- Example AI command.
-
+ Example AI command.                                                                                                    
+                                                                                                                        
 [2m╭─[0m[2m Arguments [0m[2m─────────────────────────────────────────────────────────────────────────────────────────────────────────[0m[2m─╮[0m
 [2m│[0m [31m*[0m    model      [1;33mTEXT[0m  AI model example. [2m[default: None][0m [2;31m[required][0m                                                   [2m│[0m
 [2m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m

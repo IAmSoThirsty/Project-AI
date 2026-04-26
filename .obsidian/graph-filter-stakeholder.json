@@ -1,0 +1,218 @@
+{
+  "name": "Stakeholder-Based Filters",
+  "description": "Filter graph nodes by stakeholder role, audience, and access level",
+  "version": "1.0.0",
+  "filters": [
+    {
+      "id": "developer-view",
+      "name": "Developer/Engineering",
+      "query": "tag:#audience/developer OR tag:#implementation OR tag:#code-architecture",
+      "include": true,
+      "description": "Show technical implementation details and code architecture",
+      "useCase": "Software development and code review",
+      "accessLevel": "internal",
+      "primaryStakeholders": ["software-engineers", "tech-leads"]
+    },
+    {
+      "id": "architect-view",
+      "name": "Architect/Design",
+      "query": "tag:#audience/architect OR tag:#architecture OR tag:#design-pattern OR tag:#system-design",
+      "include": true,
+      "description": "Show system architecture, design patterns, and technical strategy",
+      "useCase": "Architecture review and design decisions",
+      "accessLevel": "internal",
+      "primaryStakeholders": ["architects", "principal-engineers"]
+    },
+    {
+      "id": "security-view",
+      "name": "Security Team",
+      "query": "tag:#audience/security-team OR tag:#security OR tag:#vulnerability OR tag:#penetration-testing",
+      "include": true,
+      "description": "Show security operations, vulnerability management, and security testing",
+      "useCase": "Security audits and threat modeling",
+      "accessLevel": "restricted",
+      "primaryStakeholders": ["security-engineers", "infosec-team"]
+    },
+    {
+      "id": "qa-view",
+      "name": "QA/Testing Team",
+      "query": "tag:#audience/qa OR tag:#testing OR tag:#test-case OR tag:#qa-engineer",
+      "include": true,
+      "description": "Show test plans, QA procedures, and validation frameworks",
+      "useCase": "Test planning and quality assurance",
+      "accessLevel": "internal",
+      "primaryStakeholders": ["qa-engineers", "test-automation-engineers"]
+    },
+    {
+      "id": "devops-view",
+      "name": "DevOps/SRE",
+      "query": "tag:#audience/devops OR tag:#infrastructure OR tag:#deployment OR tag:#sre",
+      "include": true,
+      "description": "Show infrastructure, deployment, monitoring, and operations",
+      "useCase": "Infrastructure management and site reliability",
+      "accessLevel": "internal",
+      "primaryStakeholders": ["devops-engineers", "sre-team"]
+    },
+    {
+      "id": "product-view",
+      "name": "Product/Business",
+      "query": "tag:#audience/product-owner OR tag:#business-logic OR tag:#feature-spec OR tag:#requirements",
+      "include": true,
+      "description": "Show product requirements, business logic, and feature specifications",
+      "useCase": "Product planning and requirements management",
+      "accessLevel": "internal",
+      "primaryStakeholders": ["product-managers", "product-owners", "business-analysts"]
+    },
+    {
+      "id": "user-view",
+      "name": "End User",
+      "query": "tag:#audience/end-user OR tag:#user-guide OR tag:#tutorial OR tag:#quickstart",
+      "include": true,
+      "description": "Show user guides, tutorials, and end-user documentation",
+      "useCase": "User onboarding and support",
+      "accessLevel": "public",
+      "primaryStakeholders": ["end-users", "customers"]
+    },
+    {
+      "id": "executive-view",
+      "name": "Executive/Leadership",
+      "query": "tag:#audience/executive OR tag:#executive-summary OR tag:#strategic OR tag:#roadmap",
+      "include": true,
+      "description": "Show executive summaries, strategic decisions, and business impact",
+      "useCase": "Strategic planning and business alignment",
+      "accessLevel": "executive",
+      "primaryStakeholders": ["c-level", "vp-engineering", "directors"]
+    },
+    {
+      "id": "compliance-view",
+      "name": "Compliance/Legal",
+      "query": "tag:#audience/compliance OR tag:#legal OR tag:#audit OR tag:#regulatory",
+      "include": true,
+      "description": "Show compliance requirements, legal considerations, and audit trails",
+      "useCase": "Compliance verification and legal review",
+      "accessLevel": "restricted",
+      "primaryStakeholders": ["compliance-officers", "legal-team", "auditors"]
+    },
+    {
+      "id": "support-view",
+      "name": "Customer Support",
+      "query": "tag:#audience/support OR tag:#troubleshooting OR tag:#faq OR tag:#known-issues",
+      "include": true,
+      "description": "Show troubleshooting guides, FAQs, and known issues",
+      "useCase": "Customer support and issue resolution",
+      "accessLevel": "internal",
+      "primaryStakeholders": ["support-engineers", "customer-success"]
+    },
+    {
+      "id": "internal-only",
+      "name": "Internal/Confidential",
+      "query": "tag:#internal-only OR tag:#confidential OR tag:#proprietary",
+      "include": true,
+      "description": "Show internal documentation not for external distribution",
+      "useCase": "Internal knowledge management",
+      "accessLevel": "confidential",
+      "primaryStakeholders": ["all-employees"]
+    },
+    {
+      "id": "public-docs",
+      "name": "Public Documentation",
+      "query": "tag:#audience/all OR tag:#public OR tag:#open-source",
+      "include": true,
+      "description": "Show publicly accessible documentation",
+      "useCase": "Open source contribution and public knowledge sharing",
+      "accessLevel": "public",
+      "primaryStakeholders": ["general-public", "open-source-community"]
+    }
+  ],
+  "accessLevels": {
+    "public": {
+      "description": "Publicly accessible documentation",
+      "restrictions": "None - available to anyone",
+      "examples": ["user guides", "API documentation", "README files"]
+    },
+    "internal": {
+      "description": "Internal documentation for employees",
+      "restrictions": "Requires employee access",
+      "examples": ["development guides", "internal wikis", "process documentation"]
+    },
+    "restricted": {
+      "description": "Restricted to specific teams or roles",
+      "restrictions": "Role-based access control required",
+      "examples": ["security reports", "compliance audits", "financial data"]
+    },
+    "confidential": {
+      "description": "Confidential or proprietary information",
+      "restrictions": "Need-to-know basis only",
+      "examples": ["trade secrets", "unreleased features", "strategic plans"]
+    },
+    "executive": {
+      "description": "Executive-level strategic information",
+      "restrictions": "Leadership and executive team only",
+      "examples": ["board presentations", "strategic roadmaps", "M&A documentation"]
+    }
+  },
+  "stakeholderMatrix": {
+    "developer": {
+      "primaryInterests": ["code architecture", "implementation details", "API references"],
+      "typicalQueries": ["path:src tag:#implementation", "tag:#code-review", "tag:#refactoring"],
+      "deliverables": ["code", "unit tests", "technical documentation"]
+    },
+    "architect": {
+      "primaryInterests": ["system design", "architecture patterns", "technology strategy"],
+      "typicalQueries": ["tag:#architecture", "tag:#design-pattern", "tag:#technical-strategy"],
+      "deliverables": ["architecture diagrams", "design documents", "technology roadmaps"]
+    },
+    "security-team": {
+      "primaryInterests": ["vulnerabilities", "threat models", "security controls"],
+      "typicalQueries": ["tag:#security", "tag:#vulnerability", "tag:#threat-modeling"],
+      "deliverables": ["security reports", "penetration test results", "vulnerability assessments"]
+    },
+    "qa": {
+      "primaryInterests": ["test coverage", "bug reports", "quality metrics"],
+      "typicalQueries": ["tag:#testing", "tag:#test-case", "tag:#bug"],
+      "deliverables": ["test plans", "test cases", "quality reports"]
+    },
+    "devops": {
+      "primaryInterests": ["deployment", "infrastructure", "monitoring"],
+      "typicalQueries": ["tag:#deployment", "tag:#infrastructure", "tag:#monitoring"],
+      "deliverables": ["deployment scripts", "infrastructure code", "runbooks"]
+    },
+    "product": {
+      "primaryInterests": ["features", "requirements", "user stories"],
+      "typicalQueries": ["tag:#feature", "tag:#requirements", "tag:#user-story"],
+      "deliverables": ["product specs", "feature requirements", "roadmaps"]
+    },
+    "executive": {
+      "primaryInterests": ["strategic alignment", "business impact", "ROI"],
+      "typicalQueries": ["tag:#strategic", "tag:#executive-summary", "tag:#business-impact"],
+      "deliverables": ["executive summaries", "business cases", "strategic plans"]
+    }
+  },
+  "usage": {
+    "applyingFilters": [
+      "Open Obsidian Graph View > Filters",
+      "Select stakeholder role to see relevant documentation",
+      "Combine with access level filtering for information security",
+      "Use for role-based knowledge management and onboarding"
+    ],
+    "stakeholderViews": {
+      "newDeveloperOnboarding": "Show: developer-view, architect-view | Hide: executive, compliance",
+      "securityAudit": "Show: security-view, compliance-view | Hide: user-view, product-view",
+      "productPlanning": "Show: product-view, executive-view, user-view | Hide: developer-view",
+      "executiveBriefing": "Show: executive-view, product-view | Hide: developer, qa, devops",
+      "publicDocumentation": "Show: public-docs, user-view | Hide: internal-only, confidential"
+    },
+    "informationArchitecture": {
+      "segregationStrategy": "Tag documents with primary and secondary audiences",
+      "accessControl": "Use access levels to enforce information security policies",
+      "knowledgeSharing": "Balance between need-to-know and knowledge democratization",
+      "documentationOwnership": "Assign stakeholder groups as document owners"
+    },
+    "collaborationPatterns": {
+      "crossFunctional": "Use multiple audience tags for shared documentation",
+      "escalation": "Tag escalation paths (developer → architect → executive)",
+      "approvalWorkflows": "Track approval requirements by stakeholder role",
+      "communicationChannels": "Link stakeholder views to Slack channels, email lists"
+    }
+  }
+}

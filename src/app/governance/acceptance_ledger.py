@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Out-Dated(archive)
 """
 Legal and Governance Subsystem - Acceptance Ledger Core
 
@@ -18,10 +16,11 @@ Features:
 
 import hashlib
 import json
+import os
 import sqlite3
 import time
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 try:
@@ -39,45 +38,27 @@ except ImportError:
     CRYPTO_AVAILABLE = False
 
 
-class TierLevel(str, Enum):
+class TierLevel(StrEnum):
     """User tier levels"""
 
     SOLO = "solo"
     COMPANY = "company"
+    ORGANIZATION = "organization"
     GOVERNMENT = "government"
 
 
-class SubscriptionPlan(str, Enum):
-    """Subscription plan types for Company and Government tiers"""
-
-    # Company plans
-    COMPANY_WEEKLY = "company_weekly"
-    COMPANY_MONTHLY = "company_monthly"
-    COMPANY_YEARLY = "company_yearly"
-    COMPANY_LIFETIME = "company_lifetime"
-
-    # Government plans (no lifetime option)
-    GOVERNMENT_MONTHLY = "government_monthly"
-    GOVERNMENT_YEARLY = "government_yearly"
-
-    # Legacy Solo
-    SOLO_FREE = "solo_free"
-    SOLO_LIFETIME = "solo_lifetime"
-
-
-class AcceptanceType(str, Enum):
+class AcceptanceType(StrEnum):
     """Types of acceptance records"""
 
     INITIAL_MSA = "initial_msa"
     JURISDICTION_ANNEX = "jurisdiction_annex"
     TIER_UPGRADE = "tier_upgrade"
-    PLAN_CHANGE = "plan_change"  # New: for changing subscription plans
     POLICY_UPDATE = "policy_update"
     TERMINATION = "termination"
     AUDIT_LOCK = "audit_lock"
 
 
-class SigningMethod(str, Enum):
+class SigningMethod(StrEnum):
     """Cryptographic signing methods"""
 
     SOFTWARE_ED25519 = "software_ed25519"
@@ -208,8 +189,7 @@ class AcceptanceLedger:
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA synchronous=FULL")
 
-        conn.execute(
-            """
+        conn.execute("""
             CREATE TABLE IF NOT EXISTS acceptance_ledger (
                 entry_id TEXT PRIMARY KEY,
                 timestamp REAL NOT NULL,
@@ -229,8 +209,7 @@ class AcceptanceLedger:
                 metadata_json TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
-        """
-        )
+        """)
 
         # Indexes for efficient queries
         conn.execute(
@@ -370,23 +349,10 @@ class AcceptanceLedger:
             signing_method=signing_method,
             signature="",  # Will be computed
             public_key=public_key,
-            timestamp_authority=None,  # Will be populated if TSA URL provided
+            timestamp_authority=None,  # TODO: Implement TSA integration
             hardware_attestation=hardware_attestation,
             metadata=metadata or {},
         )
-
-        # Get Timestamp Token if Authority URL provided
-        if timestamp_authority_url and TSA_AVAILABLE:
-            try:
-                tsa_client = TSAClient(timestamp_authority_url)
-                # Timestamp the entry hash
-                entry_hash_bytes = bytes.fromhex(entry.compute_entry_hash())
-                token = tsa_client.get_timestamp(entry_hash_bytes)
-                entry.timestamp_authority = token.hex()
-            except Exception as e:
-                # Log error but don't fail acceptance if TSA fails (soft fail)
-                # Unless strict mode is required
-                print(f"TSA Warning: Failed to get timestamp: {e}")
 
         # Sign the entry
         signature_payload = entry.compute_entry_hash().encode()
@@ -398,7 +364,7 @@ class AcceptanceLedger:
             with open(self.ledger_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry.to_dict()) + "\n")
                 f.flush()
-                # os.fsync(f.fileno())  # Force write to disk - commented out for performance unless critical
+                os.fsync(f.fileno())  # Force write to disk
 
         # Write to SQLite
         if self.enable_sqlite:
@@ -568,24 +534,10 @@ class AcceptanceLedger:
             # First entry in chain
             results["hash_chain_valid"] = True
 
-        # Timestamp validation
+        # Timestamp validation (basic check - full TSA validation TODO)
         results["timestamp_valid"] = (
             entry.timestamp > 0 and entry.timestamp <= time.time()
         )
-
-        # Extended TSA Validation
-        if entry.timestamp_authority and TSA_AVAILABLE:
-            # If we have a stored token, we should verify it
-            # We need to know which TSA issued it, or default to a known one if configured
-            # For now, we just check if it's structurally valid if we had the certs
-            # This is a placeholder for full verification logic
-            try:
-                token_bytes = bytes.fromhex(entry.timestamp_authority)
-                # In a real verification, we'd fetch the certs from the token or config
-                # and verify chain.
-                results["timestamp_valid"] = True  # Assume valid if parseable for now
-            except Exception:
-                results["timestamp_valid"] = False
 
         results["valid"] = all(
             [
@@ -608,81 +560,3 @@ def get_acceptance_ledger(data_dir: str = "data/legal") -> AcceptanceLedger:
     if _ledger_instance is None:
         _ledger_instance = AcceptanceLedger(data_dir=data_dir)
     return _ledger_instance
-
-
-try:
-    import rfc3161ng
-    from pyasn1.codec.der import decoder, encoder
-
-    TSA_AVAILABLE = True
-except ImportError:
-    TSA_AVAILABLE = False
-
-
-class TSAClient:
-    """Timestamp Authority Client (RFC 3161)"""
-
-    def __init__(self, url: str):
-        self.url = url
-
-    def get_timestamp(self, data: bytes) -> bytes:
-        """Get RFC 3161 timestamp token for data"""
-        if not TSA_AVAILABLE:
-            raise RuntimeError(
-                "TSA libraries not available. Install: pip install rfc3161ng pyasn1"
-            )
-
-        tst = rfc3161ng.RemoteTimestamper(
-            self.url, hashname="sha256", include_tsa_certificate=True
-        )
-        return tst.timestamp(data=data)
-
-    def verify_timestamp(
-        self, token: bytes, data: bytes, ca_certs: bytes = None
-    ) -> bool:
-        """Verify RFC 3161 timestamp token"""
-        if not TSA_AVAILABLE:
-            return False
-
-        tst = rfc3161ng.RemoteTimestamper(self.url, hashname="sha256")
-        try:
-            # Basic verification: check integrity and data match
-            # For production, we'd need a full chain verification with ca_certs
-            # Here we rely on the library providing basic checks, but note that
-            # without a trusted root CA store passed in, this is limited.
-            # rfc3161ng doesn't have a simple 'verify' method that takes the token and data
-            # in a stateless way easily without a Timestamper instance.
-            # We will implement a basic check using pyasn1 decoding if needed,
-            # but for now we'll assume the token structure is valid and contains the hash.
-
-            # Decode token
-            tst_obj, _ = decoder.decode(token, asn1Spec=rfc3161ng.TimeStampResp())
-            status = tst_obj["status"]
-            if status["status"] != 0:  # 0 = granted
-                return False
-
-            # Verify the hash in the token matches our data hash
-            # This is a simplification. A real implementation needs full signature verification.
-            # rfc3161ng provides tools for this but they expect specific setup.
-            return True
-        except Exception:
-            return False
-
-
-def get_seat_count_from_entry(entry: AcceptanceEntry) -> int | None:
-    """
-    Extract seat count from acceptance entry metadata.
-    """
-    if entry.tier == TierLevel.GOVERNMENT:
-        return entry.metadata.get("seat_count")
-    return None
-
-
-def set_seat_count_in_metadata(metadata: dict, seat_count: int) -> dict:
-    """
-    Add seat count to metadata dictionary.
-    """
-    if seat_count < 1:
-        raise ValueError(f"Seat count must be at least 1, got {seat_count}")
-    metadata["seat_count"] = seat_count
-    return metadata

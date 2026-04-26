@@ -1,9 +1,7 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 import pytest
+from PyQt6.QtWidgets import QApplication
 
-# PyQt6 DLL errors - skip GUI tests
-pytestmark = pytest.mark.skip(reason="PyQt6 DLL not available")
+from app.gui.leather_book_interface import LeatherBookInterface
 
 
 @pytest.fixture(scope="session")

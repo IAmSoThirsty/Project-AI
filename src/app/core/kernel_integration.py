@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Kernel Integration Utilities - Wrappers for routing through CognitionKernel.
 

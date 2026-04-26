@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Run Novel Security Scenarios - Hypothetically Never Thought Of Attack Vectors.
@@ -8,6 +6,10 @@ Executes 500 unprecedented, theoretical security scenarios with redacted details
 
 Usage:
     python scripts/run_novel_scenarios.py [--export]
+
+GOVERNANCE: GOVERNED
+Classification: Security testing
+Risk: High (tests novel attack vectors)
 """
 
 import argparse
@@ -20,9 +22,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from app.core.novel_security_scenarios import NovelScenario, NovelSecurityScenarios
+# Import governance
+from app.core.runtime.router import route_request
 
 from app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
+from app.core.novel_security_scenarios import NovelScenario, NovelSecurityScenarios
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

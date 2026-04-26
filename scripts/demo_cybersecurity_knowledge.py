@@ -1,11 +1,16 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Demo script for querying the cybersecurity knowledge base.
 
+📚 EXAMPLE/DEMONSTRATION CODE
+GOVERNANCE: EXAMPLE
+Classification: Educational/demonstration
+Production Use: NOT RECOMMENDED
+
 This script demonstrates how to access and query the cybersecurity educational content
 that has been integrated into Project-AI's knowledge base.
+
+This is example code for educational purposes. Adapt for production use.
 
 Usage:
     python scripts/demo_cybersecurity_knowledge.py

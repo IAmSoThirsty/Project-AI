@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """God-Tier Intelligence Library Enhancement Module.
 
 Monolithic density implementation with enterprise-grade features:
@@ -31,7 +29,7 @@ from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import psutil
 
@@ -44,7 +42,7 @@ logger = logging.getLogger(__name__)
 
 
 class HealthStatus(Enum):
-    """Component health status (Operational Integrity State & Availability Metric)."""
+    """Component health status."""
 
     HEALTHY = "healthy"
     DEGRADED = "degraded"
@@ -55,7 +53,7 @@ class HealthStatus(Enum):
 
 @dataclass
 class HealthCheck:
-    """Health check result (Diagnostic Snapshot & Runtime Verification Data)."""
+    """Health check result."""
 
     component: str
     status: HealthStatus
@@ -65,7 +63,7 @@ class HealthCheck:
 
 
 class CircuitBreaker:
-    """Circuit breaker pattern for fault tolerance (Cascading Failure Prevention & Service Isolation Mechanism).
+    """Circuit breaker pattern for fault tolerance.
 
     Prevents cascading failures by stopping calls to failing services.
     States: CLOSED -> OPEN -> HALF_OPEN -> CLOSED
@@ -109,21 +107,18 @@ class CircuitBreaker:
         """
         with self._lock:
             if self.state == "OPEN":
-                if (
-                    self.last_failure_time is not None
-                    and time.time() - self.last_failure_time > self.timeout
-                ):
+                if time.time() - self.last_failure_time >= self.timeout:
                     self.state = "HALF_OPEN"
-                    logger.info("Circuit breaker entered HALF_OPEN state")
+                    logger.info("Circuit breaker entering HALF_OPEN state")
                 else:
-                    raise Exception("Circuit is OPEN")
+                    raise Exception("Circuit breaker is OPEN")
 
         try:
             result = func(*args, **kwargs)
             self._on_success()
             return result
-        except Exception as e:
-            self._on_failure(e)
+        except self.expected_exception:
+            self._on_failure()
             raise
 
     def _on_success(self) -> None:
@@ -134,16 +129,11 @@ class CircuitBreaker:
                 self.state = "CLOSED"
                 logger.info("Circuit breaker returned to CLOSED state")
 
-    def _on_failure(self, exception: Optional[Exception] = None) -> None:
-        """Handle failure in the circuit breaker.
-
-        Args:
-            exception: The exception that caused the failure
-        """
+    def _on_failure(self) -> None:
+        """Handle failed call."""
         with self._lock:
             self.failure_count += 1
             self.last_failure_time = time.time()
-            self.last_exception = exception
 
             if self.failure_count >= self.failure_threshold:
                 self.state = "OPEN"
@@ -255,7 +245,7 @@ class SelfHealingSystem:
 class LoadBalancer:
     """Intelligent load balancer for distributing work."""
 
-    def __init__(self, num_workers: int | None = None):
+    def __init__(self, num_workers: int = None):
         """Initialize load balancer.
 
         Args:
@@ -578,7 +568,7 @@ def memoize_with_ttl(ttl: int = 300):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # Generate cache key
-            key = f"{func.__name__}_{hashlib.md5(str((args, kwargs)).encode()).hexdigest()}"
+            key = f"{func.__name__}_{hashlib.md5(str((args, kwargs)).encode(), usedforsecurity=False).hexdigest()}"
 
             # Try cache first
             result = cache.get(key)
@@ -724,16 +714,15 @@ class ResourceMonitor:
 
 
 class GodTierIntelligenceSystem:
-    """
-    God-Tier Intelligence System (Monolithic Enterprise-Grade AGI Grid).
+    """God-tier intelligence system with monolithic density.
 
     Combines all enterprise features:
-    - Self-Healing System (Autonomous Recovery & Fault Tolerance Layer)
-    - Load Balancer (Distributed Computation & Resource Orchestrator)
-    - Real-Time Analytics (ML-Powered Telemetry & Heuristic Insight Engine)
-    - Intelligent Cache (Performance-Optimized LRU Memory Layer)
-    - Resource Monitor (System Invariant & Performance Safeguard)
-    - Complete Observability (Unified Telemetry & Audit Stream)
+    - Self-healing and fault tolerance
+    - Distributed processing
+    - Real-time analytics
+    - Performance optimization
+    - Resource management
+    - Complete observability
     """
 
     def __init__(

@@ -1,10 +1,23 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, command-override, memory-expansion, security, ai-memory, privileged-access]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [command-override-system, memory-expansion-engine, safety-protocols, knowledge-base]
+stakeholders: [developers, security-team, power-users]
+audience: intermediate
+prerequisites: [python-intermediate, security-concepts, state-management, authorization-basics]
+estimated_time: 30 minutes
+review_cycle: monthly
+---
 # Command Override & Memory Expansion Features
 
-**Date**: November 24, 2025 **Version**: 2.0.0 **Status**: Production Ready
+**Date**: November 24, 2025
+**Version**: 2.0.0
+**Status**: Production Ready
 
-______________________________________________________________________
+---
 
 ## 🔥 New Features Overview
 
@@ -12,19 +25,23 @@ Two powerful new features have been added to Project-AI:
 
 ### 1. Command Override System
 
-A privileged control system that allows authorized users to disable any and all safety protocols in the application.
+A privileged control system that allows authorized users to disable any and all safety
+protocols in the application.
 
 ### 2. Memory Expansion System
 
-A self-organizing memory database that gives the AI the ability to remember everything, learn autonomously, and expand its knowledge base.
+A self-organizing memory database that gives the AI the ability to remember everything,
+learn autonomously, and expand its knowledge base.
 
-______________________________________________________________________
+---
 
 ## ⚠️ Command Override System
 
 ### Purpose
 
-The Command Override System provides master control over all safety mechanisms in the application. This allows you to bypass content filtering, rate limiting, and other protective measures when needed.
+The Command Override System provides master control over all safety mechanisms in the
+application. This allows you to bypass content filtering, rate limiting, and other
+protective measures when needed.
 
 ### Features
 
@@ -83,35 +100,27 @@ if cmd_system.authenticate("your_secure_password"):
 #### Override Individual Protocol
 
 ```python
-
 # Disable content filtering
-
 cmd_system.override_protocol("content_filter", False)
 
 # Re-enable content filtering
-
 cmd_system.override_protocol("content_filter", True)
 ```
 
 #### Master Override
 
 ```python
-
 # Disable ALL safety protocols
-
 cmd_system.enable_master_override()
 
 # Restore ALL safety protocols
-
 cmd_system.disable_master_override()
 ```
 
 #### Emergency Lockdown
 
 ```python
-
 # Immediately restore all protocols and revoke auth
-
 cmd_system.emergency_lockdown()
 ```
 
@@ -142,13 +151,15 @@ All override actions are logged to `data/command_override_audit.log`:
 - Review audit logs regularly
 - Use emergency lockdown if needed
 
-______________________________________________________________________
+---
 
 ## 🧠 Memory Expansion System
 
 ### Purpose
 
-The Memory Expansion System gives the AI persistent, expandable memory capabilities. It can remember all conversations, actions, and learned information, and can autonomously explore and learn new things.
+The Memory Expansion System gives the AI persistent, expandable memory capabilities. It
+can remember all conversations, actions, and learned information, and can autonomously
+explore and learn new things.
 
 ### Features
 
@@ -255,13 +266,10 @@ print(memory_item)
 #### Start Autonomous Learning
 
 ```python
-
 # Start background learning (runs every hour by default)
-
 memory.start_autonomous_learning()
 
 # Set custom interval (in seconds)
-
 memory.learning_interval = 1800  # 30 minutes
 memory.start_autonomous_learning()
 ```
@@ -344,26 +352,23 @@ The Memory Expansion System respects command override settings:
 - Command override status logged in memory actions
 - Safety protocol changes stored in action log
 
-______________________________________________________________________
+---
 
 ## 🎯 Use Cases
 
 ### Command Override Use Cases
 
 1. **Content Creation Without Filters**
-
    - Disable content filtering for artistic freedom
    - Generate uncensored images or text
    - Access full API capabilities
 
 1. **Development & Testing**
-
    - Bypass rate limiting for testing
    - Disable validation for edge case testing
    - Test emergency scenarios
 
 1. **Advanced Operations**
-
    - Bulk operations without approval prompts
    - Direct plugin execution without sandbox
    - Raw ML model access
@@ -371,43 +376,36 @@ ______________________________________________________________________
 ### Memory Expansion Use Cases
 
 1. **Personalized AI Assistant**
-
    - Remember all user preferences
    - Recall past conversations for context
    - Learn user patterns and habits
 
 1. **Knowledge Building**
-
    - Build comprehensive knowledge base
    - Learn from web continuously
    - Create searchable memory archive
 
 1. **Behavior Analysis**
-
    - Track interaction patterns
    - Analyze usage statistics
    - Improve responses over time
 
 1. **Research & Documentation**
-
    - Store research findings
    - Organize project knowledge
    - Create searchable documentation
 
-______________________________________________________________________
+---
 
 ## 🔧 Configuration
 
 ### Environment Variables
 
 ```bash
-
 # Command Override
-
 COMMAND_OVERRIDE_DATA_DIR=data  # Default: data
 
 # Memory Expansion
-
 MEMORY_DIR=data/memory  # Default: data/memory
 MEMORY_LEARNING_INTERVAL=3600  # Seconds, default: 3600 (1 hour)
 ```
@@ -423,7 +421,7 @@ data/
     └── [various memory files]
 ```
 
-______________________________________________________________________
+---
 
 ## 📊 Statistics & Monitoring
 
@@ -442,7 +440,7 @@ ______________________________________________________________________
 - Memory disk usage
 - Learning activity status
 
-______________________________________________________________________
+---
 
 ## ⚡ Performance Tips
 
@@ -460,7 +458,7 @@ ______________________________________________________________________
 1. **Regular Lockdowns** - Reset to safe defaults periodically
 1. **Audit Review** - Check logs for unexpected overrides
 
-______________________________________________________________________
+---
 
 ## 🚨 Safety & Best Practices
 
@@ -486,7 +484,7 @@ ______________________________________________________________________
 1. ❌ Don't set learning intervals too short
 1. ❌ Don't ignore disk space warnings
 
-______________________________________________________________________
+---
 
 ## 📝 API Reference
 
@@ -496,7 +494,7 @@ See module documentation:
 - `src/app/core/memory_expansion.py` - Memory Expansion System
 - `src/app/gui/command_memory_ui.py` - GUI Components
 
-______________________________________________________________________
+---
 
 ## 🎉 Summary
 
@@ -516,11 +514,12 @@ You now have:
 - ✅ Build its own knowledge base
 - ✅ Improve over time
 
-______________________________________________________________________
+---
 
 **⚠️ With great power comes great responsibility. Use these features wisely! ⚠️**
 
-______________________________________________________________________
+
+---
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

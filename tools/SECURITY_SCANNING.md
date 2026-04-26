@@ -1,5 +1,20 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: tool-reference
+tags: [tools, security, scanning, secrets-detection, vulnerability-scanning]
+created: 2024-12-15
+last_verified: 2026-04-20
+status: current
+related_systems: [bandit, detect-secrets, trufflehog, git-secrets, enhanced-secret-scanner]
+stakeholders: [security-team, developers, devops-team]
+data_category: tooling
+persistence: transient
+security_sensitive: true
+review_cycle: quarterly
+tool_categories: [secret-scanning, security-linting, dependency-scanning]
+automation_workflows: [pre-commit-hooks, ci-cd-integration, scheduled-scans]
+exit_code_meanings: {0: no-secrets, 1: medium-high-secrets, 2: critical-secrets}
+---
+
 # 🔐 Security Scanning Guide
 
 This directory contains tools and configurations for scanning the Project-AI codebase for security vulnerabilities, hardcoded secrets, and compliance issues.
@@ -22,17 +37,13 @@ Comprehensive scanner that detects:
 
 **Usage:**
 ```bash
-
 # Scan entire repository
-
 python tools/enhanced_secret_scan.py
 
 # Generate JSON report
-
 python tools/enhanced_secret_scan.py --report scan-results.json
 
 # Scan specific directory
-
 python tools/enhanced_secret_scan.py --root src/
 ```
 
@@ -55,21 +66,16 @@ pip install bandit
 
 **Usage:**
 ```bash
-
 # Scan with default settings
-
 bandit -r src/ tests/ tools/
 
 # Generate JSON report
-
 bandit -r src/ -f json -o bandit-report.json
 
 # Scan with specific severity
-
 bandit -r src/ --severity-level high
 
 # Exclude test files
-
 bandit -r src/ -x tests/
 ```
 
@@ -95,25 +101,19 @@ pip install detect-secrets
 
 **Usage:**
 ```bash
-
 # Create baseline of current secrets
-
 detect-secrets scan > .secrets.baseline
 
 # Audit baseline (review findings)
-
 detect-secrets audit .secrets.baseline
 
 # Scan for new secrets
-
 detect-secrets scan --baseline .secrets.baseline
 ```
 
 **Integration:**
 ```bash
-
 # Add to pre-commit hook
-
 detect-secrets-hook --baseline .secrets.baseline
 ```
 
@@ -130,17 +130,13 @@ pip install truffleHog3
 
 **Usage:**
 ```bash
-
 # Scan entire git history
-
 trufflehog3 -v -r https://github.com/IAmSoThirsty/Project-AI
 
 # Scan specific branch
-
 trufflehog3 -v -r . --branch main
 
 # Only show verified secrets
-
 trufflehog3 -r . --only-verified
 ```
 
@@ -152,13 +148,10 @@ Prevents committing secrets to git repositories.
 
 **Installation:**
 ```bash
-
 # macOS
-
 brew install git-secrets
 
 # Linux
-
 git clone https://github.com/awslabs/git-secrets
 cd git-secrets
 sudo make install
@@ -166,22 +159,17 @@ sudo make install
 
 **Setup:**
 ```bash
-
 # Install hooks in repository
-
 git secrets --install
 
 # Register AWS patterns
-
 git secrets --register-aws
 
 # Add custom patterns
-
 git secrets --add 'sk-[a-zA-Z0-9]{32,}'  # OpenAI keys
 git secrets --add 'hf_[a-zA-Z0-9]{32,}'  # Hugging Face tokens
 
 # Scan repository
-
 git secrets --scan
 ```
 
@@ -223,21 +211,16 @@ Install pre-commit hooks to prevent committing secrets.
 
 **Setup:**
 ```bash
-
 # Install pre-commit
-
 pip install pre-commit
 
 # Copy example configuration
-
 cp .pre-commit-config.yaml.example .pre-commit-config.yaml
 
 # Install hooks
-
 pre-commit install
 
 # Run manually on all files
-
 pre-commit run --all-files
 ```
 
@@ -257,41 +240,33 @@ pre-commit run --all-files
 **Comprehensive security scan:**
 
 ```bash
-
 #!/bin/bash
-
 # Run all security scanners
 
 echo "🔍 Starting comprehensive security scan..."
 
 # 1. Enhanced secret scanner
-
 echo "1️⃣ Running enhanced secret scanner..."
 python tools/enhanced_secret_scan.py --report enhanced-scan.json
 
 # 2. Bandit
-
 echo "2️⃣ Running Bandit..."
 bandit -r src/ tools/ scripts/ -f json -o bandit-report.json
 
 # 3. detect-secrets
-
 echo "3️⃣ Running detect-secrets..."
 detect-secrets scan > .secrets.baseline
 detect-secrets audit .secrets.baseline
 
 # 4. TruffleHog (on recent commits)
-
 echo "4️⃣ Running TruffleHog..."
 trufflehog3 -v -r . --max-depth 50
 
 # 5. pip-audit (dependency vulnerabilities)
-
 echo "5️⃣ Running pip-audit..."
 pip-audit --desc
 
 # 6. Safety (dependency vulnerabilities)
-
 echo "6️⃣ Running Safety..."
 safety check --json
 
@@ -324,35 +299,26 @@ chmod +x tools/run_security_audit.sh
 ### For Real Secrets
 
 ```bash
-
 # 1. Remove secret from code
-
 #    Replace with: os.getenv("SECRET_NAME")
 
 # 2. Add to .env file (not committed)
-
 echo "SECRET_NAME=actual_secret_value" >> .env
 
 # 3. Add to .env.example (committed)
-
 echo "SECRET_NAME=your_secret_here" >> .env.example
 
 # 4. If already committed to git history
-
 # Windows PowerShell:
-
 .\tools\purge_git_secrets.ps1
 
 # Linux/macOS/WSL:
-
 ./tools/purge_git_secrets.sh
 
 # See docs/security/SECRET_MANAGEMENT.md for complete instructions
 
 # 5. Rotate the credential
-
 #    See credential-specific rotation instructions in SECRET_MANAGEMENT.md
-
 ```
 
 ### For False Positives
@@ -372,18 +338,14 @@ For detect-secrets:
 ```bash
 detect-secrets scan > .secrets.baseline
 detect-secrets audit .secrets.baseline
-
 # Mark false positives as "no" in audit
-
 ```
 
 **Option 3: Add inline comment**
 
 For Bandit:
 ```python
-
 # nosec B105 - This is test data, not a real secret
-
 password = "test_password_for_unit_tests"
 ```
 

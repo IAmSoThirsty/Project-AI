@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Model Context Protocol (MCP) Server for Project-AI
 
@@ -24,6 +22,7 @@ Features exposed via MCP:
 import json
 import logging
 import os
+import sys
 from typing import Any
 
 from mcp.server import Server
@@ -85,6 +84,11 @@ class ProjectAIMCPServer:
         self.emergency = None
         self.image_gen = None
 
+        # Ensure `app.*` imports resolve when launched via `python -m src.app.core...`
+        src_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+        if src_root not in sys.path:
+            sys.path.insert(0, src_root)
+
         try:
             from app.core.ai_systems import (
                 AIPersona,
@@ -95,7 +99,7 @@ class ProjectAIMCPServer:
                 PluginManager,
             )
             from app.core.data_analysis import DataAnalyzer
-            from app.core.emergency_alert import EmergencyAlertSystem
+            from app.core.emergency_alert import EmergencyAlert
             from app.core.image_generator import ImageGenerator
             from app.core.location_tracker import LocationTracker
             from app.core.user_manager import UserManager
@@ -106,11 +110,13 @@ class ProjectAIMCPServer:
             self.memory = MemoryExpansionSystem(data_dir=self.data_dir)
             self.learning = LearningRequestManager(data_dir=self.data_dir)
             self.override = CommandOverrideSystem(data_dir=self.data_dir)
-            self.plugins = PluginManager(data_dir=self.data_dir)
+            self.plugins = PluginManager(
+                plugins_dir=os.path.join(self.data_dir, "plugins")
+            )
             self.user_manager = UserManager(data_dir=self.data_dir)
             self.data_analyzer = DataAnalyzer()
-            self.location_tracker = LocationTracker(data_dir=self.data_dir)
-            self.emergency = EmergencyAlertSystem(data_dir=self.data_dir)
+            self.location_tracker = LocationTracker()
+            self.emergency = EmergencyAlert()
             self.image_gen = ImageGenerator(data_dir=self.data_dir)
 
             logger.info("Core systems initialized successfully")
@@ -573,7 +579,10 @@ class ProjectAIMCPServer:
         if not self.persona:
             return [TextContent(type="text", text="Persona system not available")]
 
-        state = self.persona.get_state()
+        if hasattr(self.persona, "get_state"):
+            state = self.persona.get_state()
+        else:
+            state = self.persona.get_statistics()
         return [TextContent(type="text", text=json.dumps(state, indent=2))]
 
     async def _adjust_persona_trait(self, args: dict[str, Any]) -> list[TextContent]:
@@ -584,12 +593,19 @@ class ProjectAIMCPServer:
         trait = args.get("trait")
         value = args.get("value")
 
-        self.persona.adjust_trait(trait, value)
+        current = 0.0
+        if hasattr(self.persona, "personality"):
+            current = float(self.persona.personality.get(trait, 0.0))
+        delta = float(value) - current
+
+        self.persona.adjust_trait(trait, delta)
         result = {
             "success": True,
             "trait": trait,
+            "old_value": current,
             "new_value": value,
-            "message": f"Trait '{trait}' adjusted to {value}",
+            "delta": delta,
+            "message": f"Trait '{trait}' adjusted toward {value}",
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
@@ -602,7 +618,14 @@ class ProjectAIMCPServer:
         content = args.get("content")
         importance = args.get("importance", 0.5)
 
-        memory_id = self.memory.add_knowledge(category, content, importance)
+        # Current API expects (category, key, value)
+        memory_id = f"mem_{abs(hash(str(content))) % 10_000_000}"
+        value = {
+            "content": content,
+            "importance": importance,
+            "created_by": "mcp",
+        }
+        self.memory.add_knowledge(category, memory_id, value)
         result = {
             "success": True,
             "memory_id": memory_id,
@@ -619,7 +642,10 @@ class ProjectAIMCPServer:
         query = args.get("query")
         category = args.get("category")
 
-        results = self.memory.search_knowledge(query, category)
+        if hasattr(self.memory, "search_knowledge"):
+            results = self.memory.search_knowledge(query, category)
+        else:
+            results = self.memory.query_knowledge(query=query, category=category)
         return [TextContent(type="text", text=json.dumps(results, indent=2))]
 
     async def _submit_learning_request(self, args: dict[str, Any]) -> list[TextContent]:
@@ -630,7 +656,10 @@ class ProjectAIMCPServer:
         content = args.get("content")
         reason = args.get("reason")
 
-        request_id = self.learning.submit_request(content, reason)
+        if hasattr(self.learning, "submit_request"):
+            request_id = self.learning.submit_request(content, reason)
+        else:
+            request_id = self.learning.create_request(topic=reason, description=content)
         result = {
             "success": True,
             "request_id": request_id,
@@ -648,7 +677,8 @@ class ProjectAIMCPServer:
 
         request_id = args.get("request_id")
 
-        success = self.learning.approve_request(request_id)
+        response = args.get("response", "Approved via MCP")
+        success = self.learning.approve_request(request_id, response)
         result = {
             "success": success,
             "request_id": request_id,
@@ -665,14 +695,56 @@ class ProjectAIMCPServer:
         analysis_type = args.get("analysis_type")
 
         try:
-            if analysis_type == "summary":
-                results = self.data_analyzer.get_summary(file_path)
+            if not self.data_analyzer.load_data(file_path):
+                return [
+                    TextContent(
+                        type="text", text=f"Analysis error: unable to load {file_path}"
+                    )
+                ]
+
+            if analysis_type in {"summary", "statistics"}:
+                results = self.data_analyzer.get_summary_stats()
             elif analysis_type == "correlation":
-                results = self.data_analyzer.get_correlation(file_path)
+                numeric = self.data_analyzer.data.select_dtypes(include="number")
+                if numeric.empty:
+                    results = {
+                        "error": "No numeric columns available for correlation"
+                    }
+                else:
+                    results = {
+                        "correlation": numeric.corr().fillna(0).to_dict(),
+                        "columns": list(numeric.columns),
+                    }
             elif analysis_type == "clustering":
-                results = self.data_analyzer.perform_clustering(file_path)
+                numeric_cols = (
+                    self.data_analyzer.data.select_dtypes(include="number")
+                    .columns.astype(str)
+                    .tolist()
+                )
+                if len(numeric_cols) < 2:
+                    results = {
+                        "error": "At least 2 numeric columns are required for clustering"
+                    }
+                else:
+                    selected_cols = numeric_cols[: min(5, len(numeric_cols))]
+                    _, clusters = self.data_analyzer.perform_clustering(selected_cols)
+                    if clusters is None:
+                        results = {"error": "Clustering failed"}
+                    else:
+                        distribution: dict[str, int] = {}
+                        for item in clusters:
+                            key = str(int(item))
+                            distribution[key] = distribution.get(key, 0) + 1
+                        results = {
+                            "selected_columns": selected_cols,
+                            "cluster_count": len(distribution),
+                            "distribution": distribution,
+                        }
             else:
-                results = self.data_analyzer.get_statistics(file_path)
+                results = {
+                    "error": f"Unsupported analysis_type: {analysis_type}",
+                    "supported": ["summary", "statistics", "correlation", "clustering"],
+                }
 
             return [TextContent(type="text", text=json.dumps(results, indent=2))]
         except Exception as e:
@@ -684,10 +756,24 @@ class ProjectAIMCPServer:
             return [TextContent(type="text", text="Location tracker not available")]
 
         ip_address = args.get("ip_address")
+        latitude = args.get("latitude")
+        longitude = args.get("longitude")
 
         try:
-            location = self.location_tracker.get_location(ip_address)
-            return [TextContent(type="text", text=json.dumps(location, indent=2))]
+            if latitude is not None and longitude is not None:
+                location = self.location_tracker.get_location_from_coords(
+                    float(latitude), float(longitude)
+                )
+            else:
+                # Current implementation uses current network IP and ignores explicit ip input.
+                location = self.location_tracker.get_location_from_ip()
+
+            result = {
+                "location": location,
+                "ip_address_param": ip_address,
+                "note": "Explicit ip_address override is not supported by current LocationTracker API",
+            }
+            return [TextContent(type="text", text=json.dumps(result, indent=2))]
         except Exception as e:
             return [TextContent(type="text", text=f"Location tracking error: {str(e)}")]
 
@@ -698,12 +784,22 @@ class ProjectAIMCPServer:
 
         message = args.get("message")
         location = args.get("location", "Unknown")
+        username = args.get("username", "system")
 
         try:
-            success = self.emergency.send_alert(message, location)
+            location_data = {
+                "address": location,
+                "timestamp": None,
+            }
+            success, detail = self.emergency.send_alert(
+                username=username,
+                location_data=location_data,
+                message=message,
+            )
             result = {
                 "success": success,
-                "message": "Alert sent successfully" if success else "Alert failed",
+                "message": detail,
+                "username": username,
             }
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
         except Exception as e:
@@ -732,7 +828,14 @@ class ProjectAIMCPServer:
         if not self.plugins:
             return [TextContent(type="text", text="Plugin system not available")]
 
-        plugins = self.plugins.list_plugins()
+        plugins = [
+            {
+                "name": name,
+                "enabled": getattr(plugin, "enabled", False),
+                "version": getattr(plugin, "version", "unknown"),
+            }
+            for name, plugin in self.plugins.plugins.items()
+        ]
         return [TextContent(type="text", text=json.dumps(plugins, indent=2))]
 
     async def _enable_plugin(self, args: dict[str, Any]) -> list[TextContent]:
@@ -741,7 +844,8 @@ class ProjectAIMCPServer:
             return [TextContent(type="text", text="Plugin system not available")]
 
         plugin_name = args.get("plugin_name")
-        success = self.plugins.enable_plugin(plugin_name)
+        plugin = self.plugins.plugins.get(plugin_name)
+        success = bool(plugin and plugin.enable())
         result = {
             "success": success,
             "plugin": plugin_name,
@@ -755,7 +859,8 @@ class ProjectAIMCPServer:
             return [TextContent(type="text", text="Plugin system not available")]
 
         plugin_name = args.get("plugin_name")
-        success = self.plugins.disable_plugin(plugin_name)
+        plugin = self.plugins.plugins.get(plugin_name)
+        success = bool(plugin and plugin.disable())
         result = {
             "success": success,
             "plugin": plugin_name,

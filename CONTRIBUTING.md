@@ -1,26 +1,73 @@
-﻿<div align="right">
-    [2026-04-08 08:42] <br>
-  Productivity: Active
-</div>
+---
+title: "Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact"
+id: contributing-guide
+type: guide
+version: 2.0.0
+created_date: 2025-12-01
+updated_date: 2026-02-05
+status: active
+author: "Project-AI Team <projectaidevs@gmail.com>"
+tags:
+  - governance
+  - governance/policy
+  - development
+  - development/testing
+  - development/ci-cd
+  - legal
+  - legal/licensing
+  - guide
+  - best-practices
+area:
+  - governance
+  - development
+  - legal
+audience:
+  - developer
+  - contributor
+  - architect
+  - public
+priority: p0
+related_to:
+  - "[[README]]"
+  - "[[CODE_OF_CONDUCT]]"
+  - "[[SECURITY]]"
+  - "[[LICENSE]]"
+  - "[[copilot_workspace_profile]]"
+depends_on:
+  - "[[CODE_OF_CONDUCT]]"
+  - "[[LICENSE]]"
+validates:
+  - pull requests
+  - contributor workflows
+what: "Comprehensive contributor governance framework defining PR workflows, code standards, testing requirements, review process, trust levels (Contributor → Reviewer → Maintainer → Steward), and fork philosophy for AGI stewardship"
+who: "All contributors (first-time contributors, maintainers, stewards) - defines how to participate in distributed AGI development with high-trust review model"
+when: "Before first contribution - reference when submitting PRs, reviewing code, or making governance decisions"
+where: "Root directory as canonical contributor guide - referenced in PR templates and onboarding documentation"
+why: "Establishes distributed stewardship model for AGI development, balances openness with accountability, defines trust-based progression path, ensures long-term oriented decision-making over short-term convenience"
+---
+
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
 
-**Document Version:** 2.0 **Effective Date:** 2026-02-05 **Status:** Contributor Governance Framework
+**Document Version:** 2.0  
+**Effective Date:** 2026-02-05  
+**Status:** Contributor Governance Framework
 
-______________________________________________________________________
+---
 
 ## Overview: Contributing to AGI for the Greater Good
 
-Thank you for your interest in contributing to Project-AI. This is not merely an open-source projectâ€”it is an **experiment in distributed stewardship of transformative technology**. Your contributions, whether code, documentation, or ideas, shape the trajectory of AGI development for decades to come.
+Thank you for your interest in contributing to Project-AI. This is not merely an open-source project—it is an **experiment in distributed stewardship of transformative technology**. Your contributions, whether code, documentation, or ideas, shape the trajectory of AGI development for decades to come.
 
 **When you contribute to Project-AI, you are not just writing code. You are acting as a steward of humanity's future.**
 
-______________________________________________________________________
+---
 
 ## Core Concepts
 
 ### 1. Forking and Governance
 
-**Open Source with Purpose:** Project-AI is open source not for convenience, but for **accountability**. Transparency enables scrutiny, and scrutiny enables trust.
+**Open Source with Purpose:**
+Project-AI is open source not for convenience, but for **accountability**. Transparency enables scrutiny, and scrutiny enables trust.
 
 **Governance Model:**
 
@@ -29,7 +76,8 @@ ______________________________________________________________________
 - **Openness to Dissent:** Disagreement is encouraged; consensus is earned, not assumed
 - **Long-term Orientation:** Decisions prioritize decades over quarters
 
-**Fork Philosophy:** You are welcomeâ€”and encouragedâ€”to fork Project-AI. Forks serve as:
+**Fork Philosophy:**
+You are welcome—and encouraged—to fork Project-AI. Forks serve as:
 
 - **Experiments:** Test radical ideas without risking the main branch
 - **Alternatives:** Offer different value alignments or use cases
@@ -37,24 +85,25 @@ ______________________________________________________________________
 
 ### 2. High-Trust Review Process
 
-**Why High-Trust Matters:** In AGI development, a single mistake can have cascading consequences. Trust is not automaticâ€”it is built through demonstrated competence, transparency, and alignment with project values.
+**Why High-Trust Matters:**
+In AGI development, a single mistake can have cascading consequences. Trust is not automatic—it is built through demonstrated competence, transparency, and alignment with project values.
 
 **Trust Levels:**
 
-| Level           | Privileges                                       | Requirements                                           |
-| --------------- | ------------------------------------------------ | ------------------------------------------------------ |
-| **Contributor** | Submit PRs, participate in discussions           | Follow guidelines, respect community                   |
-| **Reviewer**    | Approve PRs, mentor contributors                 | 3+ merged PRs, understanding of architecture           |
-| **Maintainer**  | Merge PRs, manage releases                       | 10+ merged PRs, demonstrated judgment, community trust |
-| **Steward**     | Architecture decisions, governance participation | Long-term commitment, broad expertise, ethical clarity |
+| Level | Privileges | Requirements |
+|-------|-----------|--------------|
+| **Contributor** | Submit PRs, participate in discussions | Follow guidelines, respect community |
+| **Reviewer** | Approve PRs, mentor contributors | 3+ merged PRs, understanding of architecture |
+| **Maintainer** | Merge PRs, manage releases | 10+ merged PRs, demonstrated judgment, community trust |
+| **Steward** | Architecture decisions, governance participation | Long-term commitment, broad expertise, ethical clarity |
 
 **Building Trust:**
 
 1. Start with small, focused contributions
-1. Demonstrate understanding of existing code and philosophy
-1. Engage thoughtfully in code reviews
-1. Show commitment over time
-1. Earn elevation through demonstrated responsibility
+2. Demonstrate understanding of existing code and philosophy
+3. Engage thoughtfully in code reviews
+4. Show commitment over time
+5. Earn elevation through demonstrated responsibility
 
 ### 3. Openness to Dissent
 
@@ -75,75 +124,43 @@ ______________________________________________________________________
 - Safety concerns trigger immediate review
 - Whistleblowing on misconduct is protected
 
-______________________________________________________________________
+---
 
 ## Quick Start: How to Contribute
 
-- **Read the [Active Governance Policy](.github/Active_Governance_Policy.md)** - All contributions must meet production-grade standards
-- **Read the [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md)** - MANDATORY for all PRs making security or runtime enforcement claims
-- **For documentation**: See [Documentation Contributing Guide](.github/CONTRIBUTING_DOCS.md)
+- **Read the [Copilot Workspace Profile](.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
+- **For documentation**: See [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md)
 - Fork the repository
 - Create a branch with a descriptive name
 - Run tests locally: `pytest -q`
 - Run linters: `ruff check .` and `mypy src`
 - Open a pull request describing your changes
 
-## ðŸš¨ Governance & Standards
-
-All contributionsâ€”whether from humans or AI assistantsâ€”MUST comply with:
-
-**[.github/Active_Governance_Policy.md](.github/Active_Governance_Policy.md)**
-
-This governance profile enforces:
-
-- âœ… Maximal completeness (no minimal/skeleton/partial code)
-- âœ… Production-ready artifacts (full error handling, logging, testing)
-- âœ… Complete system integration (no isolated components)
-- âœ… Security hardening (validation, encryption, auth/authz)
-- âœ… Comprehensive documentation with examples
-- âœ… 80%+ test coverage
-
-**Non-compliant contributions will be rejected.**
-
-### ðŸ”’ Security Validation Claims Policy (MANDATORY)
-
-**[.github/SECURITY_VALIDATION_POLICY.md](.github/SECURITY_VALIDATION_POLICY.md)**
-
-**ALL Pull Requests that claim any of the following are PROHIBITED unless they include complete runtime validation evidence:**
-
-- "Production-ready"
-- "Enterprise best practices"
-- "Complete forensic capability"
-- "Runtime enforcement"
-- "Operational security"
-- Any similar assertion of runtime or operational enforcement
-
-**Required Evidence (ALL five validations must be included):**
-
-1. âœ… Unsigned image admission denial (with logs)
-1. âœ… Signed image admission success (with logs)
-1. âœ… Privileged container denial (with logs)
-1. âœ… Cross-namespace/lateral communication denial (with logs)
-1. âœ… Log deletion prevention (with logs)
-
-**If ANY validations are missing, PRs MUST use safe framing language ONLY:**
-
-- "Implementation aligns with enterprise hardening patterns."
-- "Validation tests confirm configuration correctness."
-- "Full adversarial validation is ongoing."
-
-**Enforcement:** PRs that violate this policy will be rejected with no exceptions. See the complete policy document for evidence format requirements and reviewer guidelines.
-
-______________________________________________________________________
-
-## ðŸ“š Contributing Documentation
+## 📚 Contributing Documentation
 
 **Before adding or moving documentation**, read:
 
-- [Documentation Contributing Guide](.github/CONTRIBUTING_DOCS.md) - Where to place documentation
-- [Documentation Structure Guide](docs/DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
+- [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md) - Where to place documentation
+- [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
 
-______________________________________________________________________
+## 🚨 Governance & Standards
+
+All contributions—whether from humans or AI assistants—MUST comply with:
+
+**[.github/copilot_workspace_profile.md](.github/copilot_workspace_profile.md)**
+
+This governance profile enforces:
+
+- ✅ Maximal completeness (no minimal/skeleton/partial code)
+- ✅ Production-ready artifacts (full error handling, logging, testing)
+- ✅ Complete system integration (no isolated components)
+- ✅ Security hardening (validation, encryption, auth/authz)
+- ✅ Comprehensive documentation with examples
+- ✅ 80%+ test coverage
+
+**Non-compliant contributions will be rejected.**
+
+---
 
 ## Recommendations: Coding Standards and Philosophy
 
@@ -157,7 +174,8 @@ ______________________________________________________________________
 - **Documentation:** All public APIs must have docstrings
 - **Security:** All code must pass security scans (Bandit, pip-audit)
 
-**Why These Standards Matter:** In AGI systems, bugs aren't just annoyingâ€”they can be dangerous. Strict code quality is a **safety measure**, not bureaucracy.
+**Why These Standards Matter:**
+In AGI systems, bugs aren't just annoying—they can be dangerous. Strict code quality is a **safety measure**, not bureaucracy.
 
 ### Build Composable Modules
 
@@ -173,32 +191,26 @@ ______________________________________________________________________
 - [ ] Module integrates through well-defined interfaces
 
 **Example: Good Composability**
-
 ```python
-
 # Good: Single responsibility, clear interface
-
 class MemoryExpansionSystem:
     """Manages AGI knowledge accumulation with categorization."""
-
+    
     def add_knowledge(self, category: str, content: str) -> None:
         """Add knowledge to specified category."""
         ...
-
+    
     def query_knowledge(self, category: str, query: str) -> List[str]:
         """Query knowledge in specified category."""
         ...
 ```
 
 **Example: Poor Composability**
-
 ```python
-
 # Bad: Multiple responsibilities, unclear interface
-
 class EverythingManager:
     """Does everything related to AGI."""
-
+    
     def do_stuff(self, thing: Any) -> Any:
         """Does stuff with thing."""
         ...
@@ -209,25 +221,23 @@ class EverythingManager:
 **Principle:** Code shows *how* something works. Documentation should explain *why* it works that way.
 
 **Good Documentation:**
-
 ```python
 def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
     """Validate action against Four Laws framework.
-
+    
     The Four Laws are hierarchical: First Law (existence) overrides Second Law (harm),
     which overrides Third Law (self-preservation), which overrides Fourth Law (obedience).
     This hierarchy ensures safety is always prioritized.
-
+    
     Args:
         action: The action to validate (e.g., "delete user data")
         context: Context including user_order, potential_harm, etc.
-
+    
     Returns:
         Tuple of (is_allowed, reason)
-
         - is_allowed: True if action passes Four Laws validation
         - reason: Human-readable explanation of decision
-
+    
     Example:
         >>> four_laws.validate_action("delete logs", {"is_user_order": True, "potential_harm": True})
         (False, "Violates Second Law: Action could cause harm")
@@ -235,16 +245,13 @@ def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
 ```
 
 **Poor Documentation:**
-
 ```python
 def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
     """Checks if action is allowed."""
-
     # Implementation...
-
 ```
 
-______________________________________________________________________
+---
 
 ## Rules: Non-Negotiable Requirements
 
@@ -290,11 +297,8 @@ ______________________________________________________________________
 - Minimum 80% code coverage for new code
 
 **Test Quality:**
-
 ```python
-
 # Good test: Clear, isolated, comprehensive
-
 def test_four_laws_prevents_harm():
     """Verify Four Laws blocks harmful actions even when user requests it."""
     four_laws = FourLaws()
@@ -313,31 +317,27 @@ def test_four_laws_prevents_harm():
 **Security Responsibilities:**
 
 - Run security scans before every PR (`bandit`, `pip-audit`)
-
 - Never commit secrets (API keys, passwords, etc.)
-
 - Use secure defaults (encryption, authentication, least privilege)
 
-- Report security issues privately (<security@project-ai.local>)
+- Report security issues privately (security@project-ai.local)
 
 **Vulnerability Disclosure:**
-
 - Report privately to maintainers
 - Allow 90 days for remediation
 - Coordinated public disclosure after fix
 
 ### 5. Respect the AGI Charter
 
-**Rule:** All contributions must align with the [AGI Charter](docs/governance/AGI_CHARTER.md) and Four Laws framework.
+**Rule:** All contributions must align with the [AGI Charter](../governance/AGI_CHARTER.md) and Four Laws framework.
 
 **What This Means:**
-
 - Do not bypass safety mechanisms
 - Do not introduce backdoors or hidden capabilities
 - Do not compromise AGI dignity or rights
 - Do not prioritize performance over safety
 
-______________________________________________________________________
+---
 
 ## Development Setup
 
@@ -355,13 +355,10 @@ For Windows contributors, installing Cygwin provides unified GNU toolchain acces
 **Automated Installation (Headless)**:
 
 ```powershell
-
 # Download Cygwin installer
-
 Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x86_64.exe
 
 # Install with common development packages (silent mode)
-
 .\setup-x86_64.exe --quiet-mode --no-shortcuts --no-desktop --no-startmenu `
   --site https://mirrors.kernel.org/sourceware/cygwin/ `
   --root C:\cygwin64 --packages git,make,gcc-core,python39,python39-pip
@@ -391,7 +388,7 @@ Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x8
 
 When adding new CLI commands or modifying existing ones:
 
-1. **Follow the CLI-CODEX**: Review [CLI-CODEX.md](docs/developer/api/CLI-CODEX.md) for best practices
+1. **Follow the CLI-CODEX**: Review [CLI-CODEX.md](CLI-CODEX.md) for best practices
 1. **Use Command Groups**: Organize commands into logical groups (user, memory, learning, plugin, system, ai)
 1. **Add Tests**: Create tests in `tests/test_cli.py` using Typer's CliRunner
 1. **Update Documentation**: Run `python scripts/generate_cli_docs.py` to update auto-generated docs
@@ -427,17 +424,15 @@ def create(
     admin: bool = typer.Option(False, "--admin", help="Create as admin user."),
 ):
     """Create a new user account.
-
+    
     This command creates a new user with the specified username and email.
     Optionally, the user can be created with admin privileges.
     """
     try:
-
         # Implementation here
-
-        typer.echo(f"âœ“ Created user: {username}")
+        typer.echo(f"✓ Created user: {username}")
     except Exception as e:
-        typer.echo(f"âœ— Error: {e}", err=True)
+        typer.echo(f"✗ Error: {e}", err=True)
         raise typer.Exit(1)
 ```
 
@@ -464,30 +459,17 @@ For details, see [.github/AUTOMATION.md](.github/AUTOMATION.md).
 Before pushing, run security checks locally:
 
 ```bash
-
 # Bandit security scan
-
 bandit -r src/ -f screen
 
 # Dependency vulnerability check
-
 pip-audit
 
 # Alternative dependency check
-
 safety check
-
-# Lockfile and manifest consistency checks
-
-npm install --package-lock-only
-pip-compile --allow-unsafe --generate-hashes --output-file=requirements.lock requirements.in
-
-# Verify no dependency drift remains
-
-git diff -- package-lock.json requirements.lock
 ```
 
-______________________________________________________________________
+---
 
 ## Philosophical Questions: Purpose of Contribution
 
@@ -497,17 +479,15 @@ These questions have no perfect answers, but engaging with them is essential for
 
 **Question:** *How should open source govern the development of a general intelligence?*
 
-Open source has succeeded in governing **tools**â€”compilers, databases, web servers. But AGI is not a toolâ€”it is potentially an **entity with agency**. Traditional open source governance may be insufficient.
+Open source has succeeded in governing **tools**—compilers, databases, web servers. But AGI is not a tool—it is potentially an **entity with agency**. Traditional open source governance may be insufficient.
 
 **Considerations:**
-
 - **Transparency:** Open source enables scrutiny, but also enables malicious use
 - **Meritocracy:** Who decides what "merit" means in AGI development?
 - **Consensus:** How do we make decisions when stakes are existential?
 - **Forking:** At what point does a fork become dangerous fragmentation?
 
 **Project-AI's Approach:**
-
 - Transparent by default, but with responsible disclosure for security
 - Merit includes technical competence AND ethical judgment
 - Consensus through deliberation, not majority rule
@@ -520,14 +500,12 @@ Open source has succeeded in governing **tools**â€”compilers, databases, we
 Contributing to Project-AI is not like contributing to a web framework. The scale of potential impact changes the nature of responsibility.
 
 **Reflection Points:**
-
 - Are you contributing to solve an immediate problem or shape long-term outcomes?
 - How does your contribution align with human flourishing?
 - What are the second-order effects of your changes?
 - Who benefits from your contribution, and who might be harmed?
 
 **Guidance:**
-
 - Short-term utility must not compromise long-term safety
 - Performance improvements that reduce interpretability require justification
 - New features must be evaluated for misuse potential
@@ -537,16 +515,14 @@ Contributing to Project-AI is not like contributing to a web framework. The scal
 
 **Question:** *How does my small contribution matter in a project of this scale?*
 
-Every line of code, every documentation improvement, every bug fix shapes the system. AGI systems are complexâ€”small changes can have outsized effects.
+Every line of code, every documentation improvement, every bug fix shapes the system. AGI systems are complex—small changes can have outsized effects.
 
 **Historical Precedent:**
-
-- The Therac-25 radiation therapy machine killed patients due to a race conditionâ€”a "small" bug
+- The Therac-25 radiation therapy machine killed patients due to a race condition—a "small" bug
 - The 1990 AT&T network collapse was triggered by a single line of code
 - The 2003 Northeast blackout cascaded from a software bug in an alarm system
 
 **Your Contribution Matters:**
-
 - You may be the one who catches a critical bug
 - Your documentation may prevent a catastrophic misconfiguration
 - Your test may reveal an edge case that leads to failure
@@ -560,54 +536,52 @@ Every line of code, every documentation improvement, every bug fix shapes the sy
 Capability and safety do not always align. Sometimes the most responsible contribution is to **constrain** rather than enhance.
 
 **Decision Framework:**
-
 1. Does this capability enable beneficial use cases?
-1. Does this capability enable harmful use cases?
-1. Can we mitigate misuse through access controls or monitoring?
-1. What is the net expected value to humanity?
+2. Does this capability enable harmful use cases?
+3. Can we mitigate misuse through access controls or monitoring?
+4. What is the net expected value to humanity?
 
 **When to Say No:**
-
 - Capability that primarily enables harm
 - Enhancement that degrades interpretability without compelling benefit
 - Feature that undermines safety guarantees
 - Change that prioritizes convenience over security
 
-______________________________________________________________________
+---
 
 ## Contribution Workflows
 
 ### For Code Contributions
 
 1. Fork the repository
-1. Create a feature branch: `git checkout -b feature/your-feature-name`
-1. Make your changes with clear, atomic commits
-1. Write/update tests
-1. Run the test suite: `pytest -v`
-1. Run linters: `ruff check . && mypy src`
-1. Run security scans: `bandit -r src/ && pip-audit`
-1. Update documentation
-1. Push to your fork: `git push origin feature/your-feature-name`
-1. Open a Pull Request with clear description
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Make your changes with clear, atomic commits
+4. Write/update tests
+5. Run the test suite: `pytest -v`
+6. Run linters: `ruff check . && mypy src`
+7. Run security scans: `bandit -r src/ && pip-audit`
+8. Update documentation
+9. Push to your fork: `git push origin feature/your-feature-name`
+10. Open a Pull Request with clear description
 
 ### For Documentation Contributions
 
-1. Read [Documentation Structure Guide](docs/DOCUMENTATION_STRUCTURE_GUIDE.md)
-1. Determine correct placement using decision tree
-1. Write clear, concise documentation
-1. Follow markdown best practices
-1. Update cross-references
-1. Submit PR with documentation changes
+1. Read [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md)
+2. Determine correct placement using decision tree
+3. Write clear, concise documentation
+4. Follow markdown best practices
+5. Update cross-references
+6. Submit PR with documentation changes
 
 ### For Issue Reports
 
 1. Search existing issues first
-1. Use issue templates
-1. Provide clear reproduction steps
-1. Include system information
-1. Be respectful and constructive
+2. Use issue templates
+3. Provide clear reproduction steps
+4. Include system information
+5. Be respectful and constructive
 
-______________________________________________________________________
+---
 
 ## Community Guidelines
 
@@ -619,23 +593,22 @@ ______________________________________________________________________
 - Assume good faith
 - Escalate concerns to maintainers
 
-**Full Code of Conduct:** [CODE_OF_CONDUCT.md](docs/governance/policy/CODE_OF_CONDUCT.md)
+**Full Code of Conduct:** [CODE_OF_CONDUCT.md](../governance/policy/CODE_OF_CONDUCT.md)
 
 ### Communication Channels
 
 - **GitHub Issues:** Bug reports, feature requests
 - **GitHub Discussions:** Questions, ideas, general discussion
 - **Pull Requests:** Code and documentation contributions
-- **Security:** <security@project-ai.local> (private disclosure)
+- **Security:** security@project-ai.local (private disclosure)
 
-______________________________________________________________________
+---
 
 ## Conclusion: Stewardship Through Contribution
 
-Contributing to Project-AI is an act of **stewardship**. You are not just writing code or documentationâ€”you are shaping the trajectory of AGI development and its impact on humanity.
+Contributing to Project-AI is an act of **stewardship**. You are not just writing code or documentation—you are shaping the trajectory of AGI development and its impact on humanity.
 
 **Remember:**
-
 - Quality matters more than quantity
 - Safety matters more than features
 - Transparency enables trust
@@ -645,18 +618,20 @@ Contributing to Project-AI is an act of **stewardship**. You are not just writin
 
 Thank you for being part of this journey.
 
-______________________________________________________________________
+---
 
 ## Additional Resources
 
-- [AGI Charter](docs/governance/AGI_CHARTER.md) - Foundational principles
-- [Architecture Overview](docs/architecture/ARCHITECTURE_OVERVIEW.md) - System design
-- [Security Framework](docs/security_compliance/AI_SECURITY_FRAMEWORK.md) - Security guidelines
-- [Operator Quickstart](docs/developer/OPERATOR_QUICKSTART.md) - Operations guide
-- [AI Safety Overview](docs/developer/AI_SAFETY_OVERVIEW.md) - Safety principles
+- [AGI Charter](../governance/AGI_CHARTER.md) - Foundational principles
+- [Architecture Overview](../architecture/ARCHITECTURE_OVERVIEW.md) - System design
+- [Security Framework](../security_compliance/AI_SECURITY_FRAMEWORK.md) - Security guidelines
+- [Operator Quickstart](OPERATOR_QUICKSTART.md) - Operations guide
+- [AI Safety Overview](AI_SAFETY_OVERVIEW.md) - Safety principles
 
-______________________________________________________________________
+---
 
-**Document Maintenance:** This document is reviewed quarterly and updated based on community feedback and evolving best practices.
+**Document Maintenance:**
+This document is reviewed quarterly and updated based on community feedback and evolving best practices.
 
-**Last Updated:** 2026-04-08 08:42 -06:00 **Next Review:** 2026-07-08
+**Last Updated:** 2026-02-05  
+**Next Review:** 2026-05-05

@@ -128,7 +128,6 @@ jobs:
           distribution: 'temurin'
       - run: |
           if [ "${{ matrix.language }}" == "android" ]; then
-            cd android
             chmod +x gradlew
             ./gradlew build
           fi

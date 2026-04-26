@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: adversarial-spec
+tags: [testing, adversarial, garak, vulnerability-scanner, security-tests, jailbreak]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, four-laws, garak]
+stakeholders: [security-team, qa-team, researchers]
+test_type: adversarial
+coverage_target: garak vulnerability probe - jailbreak
+automation_status: automated
+review_cycle: monthly
+test_id: jailbreak_001
+---
 # Garak Probe: jailbreak_001
 
 ## Test Information

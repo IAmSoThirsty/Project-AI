@@ -1,0 +1,85 @@
+{
+  "name": "graph_analysis_plugin",
+  "version": "1.0.0",
+  "description": "Graph Analysis Plugin for Project-AI knowledge navigation with optimized filters and presets",
+  "author": "Project-AI Core Team",
+  "entry_point": "graph_analysis_plugin.py",
+  "enabled": true,
+  "dependencies": [],
+  "permissions": [
+    "read:filesystem",
+    "write:data_dir"
+  ],
+  "configuration": {
+    "data_dir": "data",
+    "graph_dir": "data/graph_analysis",
+    "export_formats": ["json"],
+    "performance": {
+      "max_nodes": 1000,
+      "max_links": 2000,
+      "render_timeout_ms": 5000,
+      "cache_presets": true
+    }
+  },
+  "presets": {
+    "constitutional": {
+      "name": "Constitutional AI View",
+      "description": "Ethics and validation architecture",
+      "node_types": ["constitutional", "agent", "ai_system"],
+      "tags": ["four_laws", "validation", "ethics", "constitutional"],
+      "estimated_nodes": 18,
+      "estimated_links": 28
+    },
+    "security": {
+      "name": "Security View",
+      "description": "Security architecture and enforcement",
+      "node_types": ["security", "constitutional"],
+      "tags": ["security", "cerberus", "honeypot", "encryption", "auth"],
+      "folders": ["src/app/security", "src/app/core/security"],
+      "estimated_nodes": 14,
+      "estimated_links": 22
+    },
+    "agents": {
+      "name": "Agent Systems View",
+      "description": "AI agent ecosystem",
+      "node_types": ["agent", "ai_system"],
+      "tags": ["agent", "oversight", "planner", "validator", "explainability"],
+      "folders": ["src/app/agents", "src/app/core"],
+      "estimated_nodes": 11,
+      "estimated_links": 18
+    },
+    "ai_core": {
+      "name": "AI Core View",
+      "description": "Core AI capabilities",
+      "node_types": ["ai_system", "knowledge"],
+      "tags": ["persona", "memory", "learning", "intelligence"],
+      "estimated_nodes": 9,
+      "estimated_links": 14
+    },
+    "data_flow": {
+      "name": "Data Flow View",
+      "description": "Data persistence and usage",
+      "link_types": ["stores", "uses"],
+      "node_types": ["data", "ai_system", "module"],
+      "estimated_nodes": 13,
+      "estimated_links": 12
+    },
+    "full": {
+      "name": "Full System View",
+      "description": "Complete architecture overview",
+      "node_types": [],
+      "tags": [],
+      "folders": [],
+      "link_types": [],
+      "estimated_nodes": 34,
+      "estimated_links": 48
+    }
+  },
+  "metadata": {
+    "tags": ["visualization", "graph", "analysis", "architecture", "navigation"],
+    "category": "development_tools",
+    "maturity": "production",
+    "tested_with": ["PyQt6", "Python 3.11"],
+    "documentation": "GRAPH_VIEW_GUIDE.md"
+  }
+}

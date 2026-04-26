@@ -1,10 +1,93 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Enhanced Defensive Security Capabilities"
+id: "enhanced-defenses"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-31"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "type:guide"
+  - "type:reference"
+  - "component:ip-blocking"
+  - "component:rate-limiting"
+  - "component:intrusion-detection"
+  - "component:forensic-logging"
+  - "audience:security-engineer"
+  - "audience:devops-engineer"
+  - "priority:p0-critical"
+  - "status:phase-1-2-complete"
+technologies:
+  - "Python"
+  - "IP Blocking System"
+  - "Rate Limiting"
+  - "Geolocation Tracking"
+  - "Forensic Logging"
+difficulty: "advanced"
+estimated_time: "PT150M"
+prerequisites:
+  - "Core security agents understanding"
+  - "Python security programming"
+  - "IP networking concepts"
+summary: "Enhanced defensive capabilities beyond core security agents providing IP blocking, rate limiting, geolocation tracking, and forensic logging with strict defensive posture."
+scope: "IP blocking system with configurable rate limits, automatic blacklisting, whitelist management, geolocation support, forensic logging for legal evidence, and violation tracking"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "brute-force-attacks"
+  - "distributed-dos"
+  - "credential-stuffing"
+  - "api-abuse"
+  - "rate-limit-bypass"
+mitigations:
+  - "[[IP_BLOCKING_SYSTEM]]"
+  - "[[RATE_LIMITING]]"
+  - "[[FORENSIC_LOGGING]]"
+  - "[[GEOLOCATION_TRACKING]]"
+defends_against:
+  - "Brute force attacks"
+  - "DDoS attempts"
+  - "Credential stuffing"
+  - "API abuse"
+  - "Persistent attackers"
+compliance:
+  - "OWASP API Security Top 10"
+  - "NIST SP 800-53 (AC-7: Unsuccessful Login Attempts)"
+  - "ISO 27001:2022 (A.9.4.3)"
+stakeholders:
+  - security-team   - security-operations   - architecture-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Defense Mechanism Documentation"
+cwe_ids:
+  - "CWE-307: Improper Restriction of Excessive Authentication Attempts"
+  - "CWE-799: Improper Control of Interaction Frequency"
+  - "CWE-770: Allocation without Limits"
+related_docs:
+  - "security-framework"
+  - "security-countermeasures"
+  - "incident-playbook"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "devops-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "devops-engineers"
+  - "system-administrators"
+---
+
 # Enhanced Defensive Security Capabilities
 
-**Date**: 2026-01-31 **Status**: ✅ ACTIVE (Phase 1 & 2 Complete)
+**Date**: 2026-01-31
+**Status**: ✅ ACTIVE (Phase 1 & 2 Complete)
 
-______________________________________________________________________
+---
 
 ## Overview
 
@@ -12,42 +95,39 @@ Beyond the 11 core security agents, Project-AI now includes **enhanced defensive
 
 **Mission**: "Make attacks ineffective through resilience, not retaliation"
 
-______________________________________________________________________
+---
 
 ## Enhanced Components (3/3 - 100%)
 
 ### ✅ 1. IP Blocking and Rate Limiting System
 
-**Module**: `src/app/core/ip_blocking_system.py` **Status**: ACTIVE **Purpose**: Aggressive rate limiting and IP blocking for persistent attackers
+**Module**: `src/app/core/ip_blocking_system.py`  
+**Status**: ACTIVE  
+**Purpose**: Aggressive rate limiting and IP blocking for persistent attackers
 
 #### Features
 
 - **Configurable Rate Limits**
-
   - Per-minute limits (default: 60 requests/minute)
   - Per-hour limits (default: 1000 requests/hour)
   - Customizable per endpoint
 
 - **Automatic Blacklisting**
-
   - Auto-block after threshold violations (default: 5)
   - Temporary blocks with expiration (default: 24 hours)
   - Permanent blacklist for confirmed attackers
 
 - **Whitelist Management**
-
   - Trusted IPs always allowed
   - Whitelist overrides blacklist
   - API for whitelist management
 
 - **Geolocation Support**
-
   - Track attacker locations
   - Country-based access control (optional)
   - Profile attackers by region
 
 - **Forensic Logging**
-
   - Detailed request logs for legal evidence
   - Violation history per IP
   - Endpoint access patterns
@@ -58,7 +138,6 @@ ______________________________________________________________________
 from app.core.ip_blocking_system import IPBlockingSystem
 
 # Initialize
-
 ip_blocker = IPBlockingSystem(
     max_requests_per_minute=60,
     max_requests_per_hour=1000,
@@ -67,7 +146,6 @@ ip_blocker = IPBlockingSystem(
 )
 
 # Check if IP allowed
-
 allowed, reason = ip_blocker.check_ip_allowed(
     ip_address="192.168.1.100",
     endpoint="/api/data",
@@ -78,7 +156,6 @@ if not allowed:
     return f"Access denied: {reason}", 429
 
 # Manual blocking
-
 ip_blocker.block_ip(
     ip_address="10.0.0.1",
     reason="Multiple attack attempts",
@@ -86,11 +163,9 @@ ip_blocker.block_ip(
 )
 
 # Whitelist trusted IPs
-
 ip_blocker.add_to_whitelist("127.0.0.1")
 
 # Get statistics
-
 stats = ip_blocker.get_statistics()
 print(f"Blocked IPs: {stats['blocked_ips']}")
 print(f"Total violations: {stats['total_violations']}")
@@ -100,39 +175,29 @@ print(f"Total violations: {stats['total_violations']}")
 
 ```python
 stats = ip_blocker.get_statistics()
-
 # {
-
 #     'total_ips_tracked': 1523,
-
 #     'blocked_ips': 47,
-
 #     'blacklisted_ips': 12,
-
 #     'whitelisted_ips': 5,
-
 #     'total_violations': 189,
-
 #     'rate_limits': {'per_minute': 60, 'per_hour': 1000},
-
 #     'violation_threshold': 5,
-
 #     'block_duration_hours': 24.0
-
 # }
-
 ```
 
-______________________________________________________________________
+---
 
 ### ✅ 2. Honeypot Detection System
 
-**Module**: `src/app/core/honeypot_detector.py` **Status**: ACTIVE **Purpose**: Detect and study attackers without engaging in counter-attacks
+**Module**: `src/app/core/honeypot_detector.py`  
+**Status**: ACTIVE  
+**Purpose**: Detect and study attackers without engaging in counter-attacks
 
 #### Features
 
 - **Attack Pattern Detection**
-
   - SQL Injection
   - Cross-Site Scripting (XSS)
   - Path Traversal
@@ -141,7 +206,6 @@ ______________________________________________________________________
   - Deserialization attacks
 
 - **Tool Fingerprinting**
-
   - sqlmap (SQL injection tool)
   - nikto (web scanner)
   - Burp Suite (penetration testing)
@@ -151,7 +215,6 @@ ______________________________________________________________________
   - OWASP ZAP (security testing)
 
 - **Attacker Profiling**
-
   - Sophistication scoring (0-10 scale)
   - Attack pattern analysis
   - Tool usage tracking
@@ -159,7 +222,6 @@ ______________________________________________________________________
   - Persistent attacker detection
 
 - **Threat Intelligence**
-
   - Attack attempt database
   - Attacker fingerprinting
   - Attack signature generation
@@ -171,11 +233,9 @@ ______________________________________________________________________
 from app.core.honeypot_detector import HoneypotDetector
 
 # Initialize
-
 honeypot = HoneypotDetector(data_dir="data/security/honeypot")
 
 # Analyze incoming request
-
 attempt = honeypot.analyze_request(
     ip_address="10.0.0.1",
     endpoint="/login",
@@ -189,20 +249,17 @@ if attempt:
     print(f"Attack detected: {attempt.attack_type}")
     print(f"Tool: {attempt.tool_detected}")
     print(f"Severity: {attempt.severity}")
-
+    
     # Take defensive action (e.g., block IP)
-
     ip_blocker.block_ip(attempt.ip_address, f"Attack: {attempt.attack_type}")
 
 # Get statistics
-
 stats = honeypot.get_statistics()
 print(f"Total attacks: {stats['total_attack_attempts']}")
 print(f"Unique attackers: {stats['unique_attackers']}")
 print(f"Attack types: {stats['attack_types']}")
 
 # Get high-threat attackers
-
 high_threat = honeypot.get_high_threat_attackers()
 for attacker in high_threat:
     print(f"IP: {attacker['ip_address']}")
@@ -213,28 +270,24 @@ for attacker in high_threat:
 #### Attack Patterns Detected
 
 1. **SQL Injection**
-
    - `' OR 1=1--`
    - `UNION SELECT`
    - `DROP TABLE`
    - `exec()`, `execute()`
 
-1. **XSS**
-
+2. **XSS**
    - `<script>alert('XSS')</script>`
    - `javascript:` URLs
    - `onerror=`, `onload=` handlers
    - `<iframe>` injection
 
-1. **Path Traversal**
-
+3. **Path Traversal**
    - `../` sequences
    - `..\\` (Windows)
    - URL-encoded variants
    - Null byte injection
 
-1. **Command Injection**
-
+4. **Command Injection**
    - `; ls`, `| cat`
    - `$(command)`
    - Backtick execution
@@ -243,51 +296,46 @@ for attacker in high_threat:
 #### Attacker Sophistication Scoring
 
 Score calculated from:
-
 - Variety of attack types used (max 3 points)
 - Use of automated tools (max 3 points)
 - Persistence (attempt count) (max 4 points)
 
 **Threat Levels:**
-
 - 0-3: Low (script kiddie)
 - 4-6: Medium (determined attacker)
 - 7-10: High (sophisticated/APT)
 
-______________________________________________________________________
+---
 
 ### ✅ 3. Automated Incident Response
 
-**Module**: `src/app/core/incident_responder.py` **Status**: ACTIVE **Purpose**: Automated defensive actions when incidents detected
+**Module**: `src/app/core/incident_responder.py`  
+**Status**: ACTIVE  
+**Purpose**: Automated defensive actions when incidents detected
 
 #### Features
 
 - **Automatic Component Isolation**
-
   - Isolate compromised components from network
   - Track isolated components
   - Prevent lateral movement
 
 - **Backup and Recovery**
-
   - Automatic backup on high-severity incidents
   - Critical data preservation
   - One-click recovery from backup
 
 - **Security Team Alerting**
-
   - Email/SMS/Slack notifications (configurable)
   - Alert file generation
   - Escalation workflows
 
 - **Forensic Data Preservation**
-
   - Incident records with full context
   - System state snapshots
   - Chain of custody for legal proceedings
 
 - **Configurable Response Actions**
-
   - Based on incident severity
   - Based on incident type
   - Customizable workflows
@@ -298,7 +346,6 @@ ______________________________________________________________________
 from app.core.incident_responder import IncidentResponder
 
 # Initialize
-
 responder = IncidentResponder(
     data_dir="data/security/incidents",
     backup_dir="data/security/backups",
@@ -306,7 +353,6 @@ responder = IncidentResponder(
 )
 
 # Handle incident (automatic response)
-
 incident = responder.handle_incident(
     incident_type="sql_injection",
     severity="high",
@@ -323,17 +369,14 @@ incident = responder.handle_incident(
 
 print(f"Incident ID: {incident.incident_id}")
 print(f"Automated responses: {incident.automated_responses}")
-
 # ['log_forensics', 'isolate_component', 'block_ip', 'alert_team', 'backup_data']
 
 # Get statistics
-
 stats = responder.get_statistics()
 print(f"Total incidents: {stats['total_incidents']}")
 print(f"Success rate: {stats['success_rate']}%")
 
 # Get recent incidents
-
 recent = responder.get_recent_incidents(hours=24)
 for inc in recent:
     print(f"{inc['timestamp']}: {inc['incident_type']} - {inc['severity']}")
@@ -342,21 +385,18 @@ for inc in recent:
 #### Response Actions by Severity
 
 **Critical/High Severity:**
-
 1. Log forensics
-1. Isolate compromised component
-1. Block source IP
-1. Alert security team
-1. Create backup
+2. Isolate compromised component
+3. Block source IP
+4. Alert security team
+5. Create backup
 
 **Medium Severity:**
-
 1. Log forensics
-1. Block source IP
-1. Alert security team
+2. Block source IP
+3. Alert security team
 
 **Low Severity:**
-
 1. Log forensics
 
 #### Response Actions by Type
@@ -367,7 +407,7 @@ for inc in recent:
 - **XSS**: Log + alert
 - **Command Injection**: Isolate + backup + block
 
-______________________________________________________________________
+---
 
 ## Integration
 
@@ -375,64 +415,50 @@ All enhanced systems are automatically initialized in `main.py`:
 
 ```python
 def main():
-
     # ... kernel and security agent initialization ...
-
+    
     # Initialize enhanced defenses
-
     enhanced_defenses = initialize_enhanced_defenses(kernel, security_systems)
-
+    
     # Components available:
-
     # - enhanced_defenses['ip_blocker']
-
     # - enhanced_defenses['honeypot']
-
     # - enhanced_defenses['incident_responder']
-
 ```
 
 ### Automatic Integration
 
 1. **IP Blocker + Honeypot**
-
    - Honeypot detections automatically trigger IP blocking
    - Sophisticated attackers automatically blacklisted
 
-1. **Honeypot + Incident Responder**
-
+2. **Honeypot + Incident Responder**
    - Attack attempts create incidents
    - Automated response triggered based on attack type
 
-1. **All Systems + GlobalWatchTower**
-
+3. **All Systems + GlobalWatchTower**
    - Events reported to Cerberus command center
    - Coordinated defense across all systems
 
-______________________________________________________________________
+---
 
 ## Example Workflow
 
 ### Attack Detection and Response
 
 1. **Attacker makes SQL injection attempt**
-
    ```
    POST /api/login
    payload: "username=admin' OR '1'='1--"
    ```
 
-1. **Honeypot detects attack**
-
+2. **Honeypot detects attack**
    ```python
    attempt = honeypot.analyze_request(...)
-
    # Detects: SQL injection, tool: sqlmap, severity: high
-
    ```
 
-1. **Incident created and response triggered**
-
+3. **Incident created and response triggered**
    ```python
    incident = responder.handle_incident(
        incident_type="sql_injection",
@@ -441,46 +467,41 @@ ______________________________________________________________________
    )
    ```
 
-1. **Automated actions execute**
-
+4. **Automated actions execute**
    - ✅ Forensic data logged
    - ✅ Database API component isolated
    - ✅ Attacker IP blocked (24 hours)
    - ✅ Security team alerted
    - ✅ Critical data backed up
 
-1. **Attacker tries again** (different endpoint)
-
+5. **Attacker tries again** (different endpoint)
    ```python
    allowed, reason = ip_blocker.check_ip_allowed(attacker_ip, "/api/users")
-
    # Result: False, "IP blocked: Multiple attack attempts"
-
    ```
 
-1. **Attack ineffective**
-
+6. **Attack ineffective**
    - IP blocked at network level
    - No data compromised
    - Full forensic trail preserved
    - Security team investigating
 
-______________________________________________________________________
+---
 
 ## Performance Impact
 
 ### Resource Usage
 
-- **IP Blocker**: \<5MB memory, \<1% CPU
-- **Honeypot**: \<10MB memory, \<2% CPU
-- **Incident Responder**: \<5MB memory, \<1% CPU
+- **IP Blocker**: <5MB memory, <1% CPU
+- **Honeypot**: <10MB memory, <2% CPU
+- **Incident Responder**: <5MB memory, <1% CPU
 
-**Total Additional Overhead**: ~20MB memory, \<5% CPU
+**Total Additional Overhead**: ~20MB memory, <5% CPU
 
 ### Response Times
 
-- IP check: \<1ms
-- Attack detection: \<5ms
+- IP check: <1ms
+- Attack detection: <5ms
 - Incident response: 50-500ms (depends on actions)
 
 ### Storage
@@ -491,23 +512,20 @@ ______________________________________________________________________
 
 **Retention**: Configurable (default: last 10,000 records)
 
-______________________________________________________________________
+---
 
 ## Configuration
 
 ### Environment Variables
 
 ```bash
-
 # IP Blocking
-
 export IP_BLOCKER_MAX_PER_MINUTE=60
 export IP_BLOCKER_MAX_PER_HOUR=1000
 export IP_BLOCKER_VIOLATION_THRESHOLD=5
 export IP_BLOCKER_BLOCK_DURATION_HOURS=24
 
 # Incident Response
-
 export INCIDENT_RESPONSE_ENABLED=true
 export INCIDENT_RESPONSE_ALERT_EMAIL=security@example.com
 export INCIDENT_RESPONSE_AUTO_BACKUP=true
@@ -516,7 +534,6 @@ export INCIDENT_RESPONSE_AUTO_BACKUP=true
 ### Configuration File
 
 ```python
-
 # config/enhanced_security.py
 
 ENHANCED_SECURITY = {
@@ -540,22 +557,19 @@ ENHANCED_SECURITY = {
 }
 ```
 
-______________________________________________________________________
+---
 
 ## Monitoring
 
 ### Dashboard Access
 
 ```python
-
 # Get all statistics
-
 ip_stats = ip_blocker.get_statistics()
 honeypot_stats = honeypot.get_statistics()
 incident_stats = responder.get_statistics()
 
 # Display in UI
-
 print(f"Blocked IPs: {ip_stats['blocked_ips']}")
 print(f"Attacks detected: {honeypot_stats['total_attack_attempts']}")
 print(f"Incidents handled: {incident_stats['total_incidents']}")
@@ -570,7 +584,7 @@ print(f"Response success rate: {incident_stats['success_rate']}%")
 - `data/security/incidents/incidents.json` - Incident records
 - `data/security/incidents/forensics/` - Forensic data
 
-______________________________________________________________________
+---
 
 ## Legal Considerations
 
@@ -596,13 +610,12 @@ All systems preserve data suitable for legal proceedings:
 ### Law Enforcement Reporting
 
 Forensic data suitable for reporting to:
-
 - FBI Cyber Division
 - Local law enforcement
 - CERT/CSIRT teams
 - ISPs for upstream blocking
 
-______________________________________________________________________
+---
 
 ## Future Enhancements (Phases 3-4)
 
@@ -622,37 +635,37 @@ ______________________________________________________________________
 - [ ] GDPR automated compliance
 - [ ] Incident response playbooks
 
-______________________________________________________________________
+---
 
 ## Defensive Posture Verification
 
 ✅ **All enhancements are defensive only**
-
 - IP blocking: Prevents access (doesn't attack back)
 - Honeypot: Detects and logs (doesn't counter-attack)
 - Incident response: Isolates and protects (doesn't retaliate)
 
 ✅ **No offensive capabilities**
-
 - No file deletion on attacker systems
 - No payload delivery to attackers
 - No network attacks or flooding
 - No credential harvesting
 
 ✅ **Aligned with FourLaws governance**
-
 - All actions governed by CognitionKernel
 - Respects Asimov's Laws (no harm to humans)
 - Transparent and explainable actions
 - Oversight and audit trails
 
 ✅ **Mission accomplished**
-
 - "Make attacks ineffective through resilience"
 - Stronger deterrent through being impossible to compromise
 - Legal compliance maintained
 - Ethical AI principles upheld
 
-______________________________________________________________________
+---
 
-**Last Updated**: 2026-01-31 **Version**: 1.0.0 **Status**: Phases 1-2 Complete (3/3 systems active) **Success Rate**: 100% **Security Posture**: 🛡️ DEFENSIVE - NO RETALIATION
+**Last Updated**: 2026-01-31  
+**Version**: 1.0.0  
+**Status**: Phases 1-2 Complete (3/3 systems active)  
+**Success Rate**: 100%  
+**Security Posture**: 🛡️ DEFENSIVE - NO RETALIATION

@@ -1,21 +1,17 @@
-# (Sovereign Project Architect)            [2026-04-09 04:26]
-#                                          Status: Active
-
 [build-system]
 requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "project-ai"
-version = "1.0.1"
-description = "A constitutionally governed, sovereign-grade AI platform with cryptographic audit trails and enforced ethical behavior"
+version = "1.0.0"
+description = "Comprehensive AI assistant with advanced features"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "Project AI Team"}]
-keywords = ["ai", "assistant", "pyqt6", "machine-learning", "constitutional-ai", "asimov-laws", "cryptographic-audit", "ethical-ai", "open-source", "governance"]
-dynamic = []
-
+keywords = ["ai", "assistant", "pyqt6", "machine-learning"]
+dynamic = ["scripts"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -57,13 +53,7 @@ dependencies = [
     "temporalio>=1.5.0",
     "protobuf>=4.0.0",
     "PyYAML>=6.0.0",
-    "PyQt6>=6.4.0",
 ]
-
-[project.scripts]
-taar = "taar.cli:cli_main"
-project-ai = "app.cli:app"
-project-ai-personal = "app.personal_agent:main"
 
 [project.optional-dependencies]
 dev = [
@@ -72,10 +62,6 @@ dev = [
     "pytest-cov>=4.0.0",
     "black>=22.0.0",
     "flake8>=7.0.0",
-]
-taar = [
-    "rich>=13.0.0",
-    "watchdog>=3.0.0",
 ]
 
 [project.urls]
@@ -127,30 +113,11 @@ ignore = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
 python_files = "test_*.py"
-addopts = "-v --strict-markers -m 'not weekly'"
+addopts = "--strict-markers -v"
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
-    "load: Load tests",
-    "chaos: Chaos tests",
-    "soak: Soak tests",
-    "slow: Slow-running tests",
-    "weekly: Weekly stress tests (1000-scenario constitutional tests)",
-    "daily: Daily regression tests (default)",
-    "hourly: Fast smoke tests for hourly rotation",
-    "timeout: Tests with custom timeout values",
-    "governance: Governance and constitutional tests",
-    "security: Security and attack simulation tests",
-    "kernel: Core kernel and intelligence tests",
-    "tarl: TARL orchestration tests",
-    "psia: PSIA (Planetary Security Intelligence Agency) tests",
-    "web: Web backend/frontend/API tests",
-    "temporal: Temporal system tests",
-]
-filterwarnings = [
-    "ignore::DeprecationWarning:passlib",
 ]
 
 [tool.black]

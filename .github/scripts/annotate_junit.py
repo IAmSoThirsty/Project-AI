@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Parse a JUnit XML report (reports/junit.xml) and emit GitHub Actions workflow commands

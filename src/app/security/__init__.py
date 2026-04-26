@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Security framework for Project-AI.
 
 This module provides comprehensive security controls including:
@@ -10,12 +8,30 @@ This module provides comprehensive security controls including:
 - Agent encapsulation and adversarial controls
 - Database security
 - Monitoring and alerting
-- T-SECA/GHOST Protocol for runtime hardening and catastrophic continuity
+- Path traversal protection
 """
 
-# Import core security components (always available)
-from .data_validation import DataPoisoningDefense, SecureDataParser
-from .environment_hardening import EnvironmentHardening
+# Import path security (always available, no dependencies)
+from .path_security import (
+    PathTraversalError,
+    safe_path_join,
+    safe_open,
+    validate_filename,
+    sanitize_filename,
+    is_safe_symlink,
+)
+
+# Import core security components (with graceful degradation)
+try:
+    from .data_validation import DataPoisoningDefense, SecureDataParser
+except ImportError:
+    DataPoisoningDefense = None
+    SecureDataParser = None
+
+try:
+    from .environment_hardening import EnvironmentHardening
+except ImportError:
+    EnvironmentHardening = None
 
 # Optional imports (graceful degradation if dependencies missing)
 try:
@@ -38,23 +54,6 @@ try:
 except ImportError:
     SecurityMonitor = None
 
-try:
-    from .tseca_ghost_protocol import (
-        TSECA,
-        GhostProtocol,
-        HeartbeatMonitor,
-        TSECA_Ghost_System,
-        shamir_reconstruct,
-        shamir_split,
-    )
-except ImportError:
-    GhostProtocol = None
-    TSECA = None
-    HeartbeatMonitor = None
-    TSECA_Ghost_System = None
-    shamir_split = None
-    shamir_reconstruct = None
-
 __all__ = [
     "EnvironmentHardening",
     "SecureDataParser",
@@ -63,10 +62,4 @@ __all__ = [
     "AgentEncapsulation",
     "SecureDatabaseManager",
     "SecurityMonitor",
-    "GhostProtocol",
-    "TSECA",
-    "HeartbeatMonitor",
-    "TSECA_Ghost_System",
-    "shamir_split",
-    "shamir_reconstruct",
 ]

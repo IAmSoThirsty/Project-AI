@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Event system with real consequences.
 
@@ -328,8 +326,8 @@ class ConsequentialEventSystem:
                 name="distribute_water_tablets",
                 description="Distribute purification tablets to prevent waterborne disease",
                 cost=EventCost(
-                    fuel_cost_days=1.0, population_cost=10
-                ),  # Distribution casualties
+                    fuel_cost_days=1.0, population_cost=10  # Distribution casualties
+                ),
                 benefit=EventBenefit(
                     water_treatment_boost=0.05,  # Marginal improvement
                     legitimacy_gain=0.01,

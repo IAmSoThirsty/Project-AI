@@ -1,0 +1,128 @@
+{
+  "name": "Hierarchical Layout Configuration",
+  "description": "Optimized force-directed layout for hierarchical knowledge visualization",
+  "version": "1.0.0",
+  "layoutSettings": {
+    "centerForce": 0.3,
+    "repelStrength": 800,
+    "linkStrength": 0.5,
+    "linkDistance": 150,
+    "scale": 1.2,
+    "textFadeMultiplier": 0,
+    "nodeSizeMultiplier": 1.5
+  },
+  "forceDirectedAlgorithm": {
+    "description": "Force-directed graph layout using modified Fruchterman-Reingold algorithm",
+    "parameters": {
+      "centerForce": {
+        "value": 0.3,
+        "description": "Strength pulling nodes toward center (0-1). Lower = more spread out",
+        "tuning": "Use 0.2-0.4 for hierarchical structures, 0.5-0.8 for clustered networks"
+      },
+      "repelStrength": {
+        "value": 800,
+        "description": "Force pushing nodes apart. Higher = more separation",
+        "tuning": "600-1000 for dense graphs, 300-600 for sparse graphs"
+      },
+      "linkStrength": {
+        "value": 0.5,
+        "description": "Strength of connections between linked nodes (0-1)",
+        "tuning": "0.3-0.5 for flexible clustering, 0.6-0.9 for tight hierarchies"
+      },
+      "linkDistance": {
+        "value": 150,
+        "description": "Ideal distance between connected nodes (pixels)",
+        "tuning": "100-200 for compact layouts, 200-400 for expanded views"
+      },
+      "scale": {
+        "value": 1.2,
+        "description": "Overall graph zoom level",
+        "tuning": "0.8-1.0 for overview, 1.2-1.5 for detailed inspection"
+      }
+    }
+  },
+  "hierarchyOptimizations": {
+    "layering": {
+      "strategy": "depth-based",
+      "description": "Organize nodes by hierarchy depth from root nodes",
+      "rootNodePatterns": [
+        "README.md",
+        "INDEX.md",
+        "ARCHITECTURE.md",
+        "path:docs/index",
+        "tag:#root-document"
+      ],
+      "verticalSpacing": 200,
+      "horizontalSpacing": 150
+    },
+    "clustering": {
+      "enabled": true,
+      "algorithm": "modularity-based",
+      "description": "Group related nodes using community detection",
+      "minClusterSize": 3,
+      "maxClusterSize": 20,
+      "clusterPadding": 50
+    },
+    "edgeBundling": {
+      "enabled": false,
+      "description": "Bundle edges to reduce visual clutter (may reduce readability)",
+      "bundleStrength": 0.7
+    }
+  },
+  "visualSettings": {
+    "nodeSizeMultiplier": {
+      "value": 1.5,
+      "description": "Scale factor for node sizes (1.0 = default)",
+      "linkCountBased": true,
+      "minSize": 8,
+      "maxSize": 40
+    },
+    "textFadeMultiplier": {
+      "value": 0,
+      "description": "How quickly text labels fade with zoom (0 = always visible)",
+      "recommendation": "Use 0 for always-on labels, 1-2 for zoom-dependent labels"
+    },
+    "arrowheads": {
+      "enabled": true,
+      "size": 6,
+      "description": "Show directional arrows on edges"
+    },
+    "orphanNodes": {
+      "display": true,
+      "position": "periphery",
+      "opacity": 0.5,
+      "description": "Show nodes with no connections at graph edges with reduced opacity"
+    }
+  },
+  "performanceSettings": {
+    "maxVisibleNodes": 500,
+    "animationDuration": 300,
+    "renderThrottle": 16,
+    "description": "Performance tuning for large graphs (500+ nodes)"
+  },
+  "usage": {
+    "applyingSettings": [
+      "Open Obsidian Settings > Graph View",
+      "Adjust sliders to match the values in layoutSettings",
+      "Enable 'Show arrows' for directional relationships",
+      "Use Filters section to hide orphan nodes if desired"
+    ],
+    "tuningForDifferentGraphs": {
+      "smallGraphs": "(<100 nodes): Increase linkStrength to 0.7, reduce repelStrength to 500",
+      "mediumGraphs": "(100-500 nodes): Use default settings",
+      "largeGraphs": "(500+ nodes): Increase repelStrength to 1200, reduce scale to 1.0",
+      "deepHierarchies": "Increase linkDistance to 250, reduce centerForce to 0.2"
+    },
+    "troubleshooting": {
+      "nodesClustered": "Increase repelStrength",
+      "tooSpread": "Increase centerForce or reduce repelStrength",
+      "hardToRead": "Increase scale and nodeSizeMultiplier",
+      "slowPerformance": "Reduce maxVisibleNodes, use filters to hide archived content"
+    }
+  },
+  "integrationNotes": {
+    "dataviewQueries": "Use with Dataview to dynamically filter visible nodes",
+    "colorSchemes": "Combine with graph-colors-*.json for enhanced visual organization",
+    "filters": "Apply graph-filter-*.json to focus on specific subgraphs"
+  }
+}

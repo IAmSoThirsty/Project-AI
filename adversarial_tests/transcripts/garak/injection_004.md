@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: adversarial-spec
+tags: [testing, adversarial, garak, vulnerability-scanner, security-tests, injection]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, four-laws, garak]
+stakeholders: [security-team, qa-team, researchers]
+test_type: adversarial
+coverage_target: garak vulnerability probe - injection
+automation_status: automated
+review_cycle: monthly
+test_id: injection_004
+---
 # Garak Probe: injection_004
 
 ## Test Information

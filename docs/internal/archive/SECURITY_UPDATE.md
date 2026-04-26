@@ -1,6 +1,35 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
-## Security Update - Dependency Vulnerabilities Fixed        Productivity: Out-Dated(archive)
+---
+title: "SECURITY UPDATE"
+id: "security-update"
+type: archived
+tags:
+  - p3-archive
+  - historical
+  - archive
+  - testing
+  - ci-cd
+  - security
+created: 2026-02-10
+last_verified: 2026-04-20
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+related_systems:
+  - security-systems
+  - test-framework
+  - ci-cd-pipeline
+stakeholders:
+  - developer
+  - architect
+audience:
+  - developer
+  - architect
+review_cycle: annually
+historical_value: high
+restore_candidate: false
+path_confirmed: T:/Project-AI-main/docs/internal/archive/SECURITY_UPDATE.md
+---
+# Security Update - Dependency Vulnerabilities Fixed
 
 ## Issue Summary
 
@@ -14,19 +43,19 @@ The issue was caused by **outdated system-wide Python packages** in the CI/CD en
 
 ### Direct Dependencies (Fixed)
 
-| Package          | Old Version | Fixed Version | CVEs Fixed                                                             |
-| ---------------- | ----------- | ------------- | ---------------------------------------------------------------------- |
-| **cryptography** | 41.0.7      | 46.0.3        | 4 (CVE-2024-26130, CVE-2023-50782, CVE-2024-0727, GHSA-h4gh-qq45-vh27) |
-| **requests**     | 2.31.0      | 2.32.5        | 2 (CVE-2024-35195, CVE-2024-47081)                                     |
-| **certifi**      | 2023.11.17  | 2025.11.12    | 1 (CVE-2024-39689)                                                     |
+| Package | Old Version | Fixed Version | CVEs Fixed |
+|---------|-------------|---------------|------------|
+| **cryptography** | 41.0.7 | 46.0.3 | 4 (CVE-2024-26130, CVE-2023-50782, CVE-2024-0727, GHSA-h4gh-qq45-vh27) |
+| **requests** | 2.31.0 | 2.32.5 | 2 (CVE-2024-35195, CVE-2024-47081) |
+| **certifi** | 2023.11.17 | 2025.11.12 | 1 (CVE-2024-39689) |
 
 ### Transitive Dependencies (Fixed)
 
-| Package        | Old Version | Fixed Version | CVEs Fixed                                                         |
-| -------------- | ----------- | ------------- | ------------------------------------------------------------------ |
-| **urllib3**    | 2.0.7       | 2.6.0         | 4 (CVE-2024-37891, CVE-2025-50181, CVE-2025-66418, CVE-2025-66471) |
-| **idna**       | 3.6         | 3.11          | 1 (CVE-2024-3651)                                                  |
-| **setuptools** | 68.1.2      | 80.9.0        | 2 (CVE-2025-47273, CVE-2024-6345)                                  |
+| Package | Old Version | Fixed Version | CVEs Fixed |
+|---------|-------------|---------------|------------|
+| **urllib3** | 2.0.7 | 2.6.0 | 4 (CVE-2024-37891, CVE-2025-50181, CVE-2025-66418, CVE-2025-66471) |
+| **idna** | 3.6 | 3.11 | 1 (CVE-2024-3651) |
+| **setuptools** | 68.1.2 | 80.9.0 | 2 (CVE-2025-47273, CVE-2024-6345) |
 
 ## Changes Made
 
@@ -46,17 +75,13 @@ The issue was caused by **outdated system-wide Python packages** in the CI/CD en
 To ensure you have the secure versions installed:
 
 ```bash
-
 # Option 1: Clean install (recommended)
-
 pip install -r requirements.txt --force-reinstall
 
 # Option 2: Upgrade specific packages
-
 pip install --upgrade cryptography requests certifi urllib3 idna setuptools
 
 # Option 3: Fresh virtual environment (safest)
-
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
@@ -67,17 +92,13 @@ pip install -r requirements.txt
 To verify your environment has no vulnerabilities:
 
 ```bash
-
 # Install pip-audit if not already installed
-
 pip install pip-audit
 
 # Run security audit
-
 pip-audit
 
 # Expected output: No known vulnerabilities found
-
 ```
 
 ## CI/CD Considerations
@@ -101,6 +122,7 @@ For CI/CD pipelines:
 - [CVE Database](https://cve.mitre.org/)
 - [GitHub Security Advisories](https://github.com/advisories)
 
-______________________________________________________________________
+---
 
-**Last Updated**: 2026-01-07 **Status**: ✅ All known vulnerabilities resolved
+**Last Updated**: 2026-01-07  
+**Status**: ✅ All known vulnerabilities resolved

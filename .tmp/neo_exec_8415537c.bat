@@ -1,0 +1,1 @@
+powershell -Command "Get-ChildItem -Path 't:\Project-AI-main\src\app\core' -Filter '*.py' -ErrorAction SilentlyContinue | Select-Object Name"

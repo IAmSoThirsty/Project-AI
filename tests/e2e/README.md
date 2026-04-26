@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: test-suite-doc
+tags: [testing, e2e, integration-tests, governance, authentication]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [fastapi-governance, flask-backend, tarl-runtime, system-integration]
+stakeholders: [qa-team, developers, platform-team]
+test_type: e2e
+coverage_target: 15 governance tests + complete auth workflows
+automation_status: automated
+review_cycle: monthly
+---
+
 # End-to-End Test Suite
 
 This directory contains comprehensive end-to-end (e2e) tests for the Project-AI system.
@@ -16,11 +28,9 @@ The e2e test suite validates complete user workflows across all system component
 ## Test Files
 
 ### `test_governance_api_e2e.py`
-
 Comprehensive e2e tests for the FastAPI governance backend (`api/main.py`).
 
 **Test Categories:**
-
 - **GovernanceAPIEndToEnd**: Complete governance workflows
   - Read intent allowed (human reading data)
   - Execute intent denied (high-risk actions)
@@ -44,11 +54,9 @@ Comprehensive e2e tests for the FastAPI governance backend (`api/main.py`).
 **Total Tests**: 15 comprehensive e2e tests
 
 ### `test_web_backend_complete_e2e.py`
-
 Complete Flask web backend user flow tests (`web/backend/app.py`).
 
 **Test Categories:**
-
 - **WebBackendAuthenticationE2E**: Authentication workflows
   - Complete login flow
   - Failed login scenarios (invalid password, nonexistent user, missing fields)
@@ -79,11 +87,9 @@ Complete Flask web backend user flow tests (`web/backend/app.py`).
 **Total Tests**: 19 comprehensive e2e tests
 
 ### `test_system_integration_e2e.py`
-
 Cross-component integration tests spanning multiple system parts.
 
 **Test Categories:**
-
 - **CrossComponentIntegration**: Multi-component workflows
   - Web to governance flow
   - Multi-user governance isolation
@@ -109,7 +115,6 @@ Cross-component integration tests spanning multiple system parts.
 **Total Tests**: 12 comprehensive integration tests
 
 ### `test_web_backend_endpoints.py`
-
 Basic endpoint functionality tests (existing, enhanced).
 
 **Total Tests**: 7 basic tests
@@ -119,78 +124,60 @@ Basic endpoint functionality tests (existing, enhanced).
 ### Prerequisites
 
 1. **Install test dependencies:**
-
    ```bash
    pip install pytest pytest-asyncio httpx requests
    ```
 
 2. **For governance API tests, start the API server:**
-
    ```bash
    python start_api.py &
-
    # API will run on http://localhost:8001
-
    ```
 
 ### Run All E2E Tests
 
 ```bash
-
 # Run all e2e tests
-
 pytest tests/e2e/ -v
 
 # Run with coverage
-
 pytest tests/e2e/ -v --cov=web.backend --cov=api
 
 # Run specific test file
-
 pytest tests/e2e/test_governance_api_e2e.py -v
 ```
 
 ### Run By Category
 
 ```bash
-
 # Run only Flask backend tests (no API required)
-
 pytest tests/e2e/test_web_backend_complete_e2e.py -v
 pytest tests/e2e/test_web_backend_endpoints.py -v
 
 # Run only governance API tests (API required)
-
 pytest tests/e2e/test_governance_api_e2e.py -v
 
 # Run only integration tests (API required)
-
 pytest tests/e2e/test_system_integration_e2e.py -v
 ```
 
 ### Run With Markers
 
 ```bash
-
 # Run all e2e tests (if marker is set up)
-
 pytest -m e2e -v
 
 # Run all integration tests
-
 pytest -m integration -v
 ```
 
 ### Run Specific Test Classes
 
 ```bash
-
 # Run specific test class
-
 pytest tests/e2e/test_governance_api_e2e.py::TestGovernanceAPIEndToEnd -v
 
 # Run specific test
-
 pytest tests/e2e/test_web_backend_complete_e2e.py::TestWebBackendAuthenticationE2E::test_e2e_complete_login_flow -v
 ```
 
@@ -209,7 +196,6 @@ pytest tests/e2e/test_web_backend_complete_e2e.py::TestWebBackendAuthenticationE
 ### Workflow Coverage
 
 **Authentication & Authorization:**
-
 - ✅ User login (valid/invalid credentials)
 - ✅ Session management
 - ✅ Token-based authentication
@@ -218,7 +204,6 @@ pytest tests/e2e/test_web_backend_complete_e2e.py::TestWebBackendAuthenticationE
 - ✅ Token isolation and security
 
 **Governance & Security:**
-
 - ✅ TARL policy enforcement
 - ✅ Intent validation (read/write/execute/mutate)
 - ✅ Triumvirate voting (Galahad, Cerberus, CodexDeus)
@@ -227,7 +212,6 @@ pytest tests/e2e/test_web_backend_complete_e2e.py::TestWebBackendAuthenticationE
 - ✅ Audit logging and immutability
 
 **System Integration:**
-
 - ✅ Web-to-governance flows
 - ✅ Multi-user isolation
 - ✅ Health monitoring
@@ -235,7 +219,6 @@ pytest tests/e2e/test_web_backend_complete_e2e.py::TestWebBackendAuthenticationE
 - ✅ System resilience
 
 **Complete User Journeys:**
-
 - ✅ New user onboarding
 - ✅ First authenticated action
 - ✅ Admin workflows
@@ -264,17 +247,11 @@ pytest tests/e2e/test_web_backend_complete_e2e.py::TestWebBackendAuthenticationE
 ```python
 def test_e2e_complete_workflow(self, fixture):
     """Test complete user workflow."""
-
     # Step 1: Initial state / setup
-
     # Step 2: User action
-
     # Step 3: Verify response
-
     # Step 4: Verify side effects (audit, state changes)
-
     # Step 5: Verify system consistency
-
 ```
 
 ## Continuous Integration
@@ -282,24 +259,17 @@ def test_e2e_complete_workflow(self, fixture):
 These tests are designed to run in CI/CD pipelines:
 
 ```yaml
-
 # Example GitHub Actions workflow
-
 - name: Run E2E Tests
-
   run: |
-
     # Start governance API in background
-
     python start_api.py &
     sleep 5  # Wait for API to start
-
+    
     # Run e2e tests
-
     pytest tests/e2e/ -v --cov=web.backend --cov=api
-
+    
     # Cleanup
-
     pkill -f start_api.py
 ```
 
@@ -314,13 +284,10 @@ SKIPPED [1] Governance API not running. Start with: python start_api.py
 
 **Solution:**
 ```bash
-
 # Terminal 1: Start API
-
 python start_api.py
 
 # Terminal 2: Run tests
-
 pytest tests/e2e/test_governance_api_e2e.py -v
 ```
 
@@ -328,27 +295,21 @@ pytest tests/e2e/test_governance_api_e2e.py -v
 
 If port 8001 is in use:
 ```bash
-
 # Find and kill process
-
 lsof -i :8001
 kill -9 <PID>
 
 # Or use different port (requires code change)
-
 ```
 
 ### Import Errors
 
 If you see import errors:
 ```bash
-
 # Ensure correct Python path
-
 export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
 
 # Or use module syntax
-
 python -m pytest tests/e2e/ -v
 ```
 
@@ -356,13 +317,10 @@ python -m pytest tests/e2e/ -v
 
 If tests timeout:
 ```bash
-
 # Increase timeout in test files
-
 TIMEOUT = 30  # Increase from 10
 
 # Or check API health manually
-
 curl http://localhost:8001/health
 ```
 
@@ -375,23 +333,18 @@ def test_e2e_my_workflow(self, fixture):
     """
     Test complete workflow: [describe workflow].
     """
-
     # Step 1: [Initial setup]
-
+    
     # Step 2: [User action]
-
+    
     # Step 3: [Verify primary outcome]
-
     assert response.status_code == expected_code
-
+    
     # Step 4: [Verify side effects]
-
     # Check audit logs, state changes, etc.
-
+    
     # Step 5: [Verify system consistency]
-
     # Ensure system is still operational
-
 ```
 
 ### Best Practices
@@ -434,12 +387,12 @@ Expected test execution times:
 
 The e2e test suite provides comprehensive validation of:
 
-✅ **53 end-to-end tests** covering complete user workflows
-✅ **4 test files** organized by component and functionality
-✅ **All critical paths** validated from user perspective
-✅ **Security and governance** thoroughly tested
-✅ **System integration** verified across components
-✅ **Real-world scenarios** simulated and validated
+✅ **53 end-to-end tests** covering complete user workflows  
+✅ **4 test files** organized by component and functionality  
+✅ **All critical paths** validated from user perspective  
+✅ **Security and governance** thoroughly tested  
+✅ **System integration** verified across components  
+✅ **Real-world scenarios** simulated and validated  
 
-**Run tests**: `pytest tests/e2e/ -v`
+**Run tests**: `pytest tests/e2e/ -v`  
 **With coverage**: `pytest tests/e2e/ -v --cov=web.backend --cov=api`

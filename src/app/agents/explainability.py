@@ -1,6 +1,3 @@
-# [2026-03-02 04:47]
-# Productivity: Active
-
 """Explainability agent for decision transparency.
 
 Provides explanations for AI decisions, generates reasoning traces,

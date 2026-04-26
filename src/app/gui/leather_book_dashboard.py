@@ -1,5 +1,3 @@
-#                                                                              [2026-03-04 21:09]
-#                                                                           Productivity: Active
 """
 Leather Book Main Dashboard - Post-login interface with 6-zone layout.
 
@@ -28,9 +26,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from app.gui.visualization_3d import AISystemVisualization3D
-from app.gui.dashboard_handlers import DashboardHandlers
-
 # ============================================================================
 # STYLE CONSTANTS
 # ============================================================================
@@ -39,8 +34,8 @@ from app.gui.dashboard_handlers import DashboardHandlers
 PANEL_STYLESHEET = """
     QFrame {
         background-color: #0f0f0f;
-        border: 1px solid #d4af37; /* Sovereign Gold */
-        border-radius: 8px;
+        border: 2px solid #00ff00;
+        border-radius: 5px;
     }
 """
 
@@ -48,23 +43,20 @@ PANEL_STYLESHEET = """
 TITLE_FONT = QFont("Courier New", 12, QFont.Weight.Bold)
 
 # Color styles - used for text styling
-STYLE_GOLD_GLOW = "color: #d4af37; text-shadow: 0px 0px 15px #d4af37;"
-STYLE_GREEN_TEXT = "color: #00ff00; font-family: 'Courier New';"
+STYLE_CYAN_GLOW = "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;"
+STYLE_GREEN_TEXT = "color: #00ff00;"
 
 ACTION_BUTTON_STYLESHEET = """
     QPushButton {
-        background-color: #121212;
-        border: 1px solid #d4af37;
-        color: #d4af37;
+        background-color: #1a1a1a;
+        border: 2px solid #00ff00;
+        color: #00ff00;
         padding: 8px;
         font-weight: bold;
-        font-family: 'Courier New';
-        font-size: 11px;
-        border-radius: 4px;
+        font-size: 10px;
     }
     QPushButton:hover {
-        background-color: #1a1a1a;
-        border: 1px solid #00ffff;
+        border: 2px solid #00ffff;
         color: #00ffff;
     }
 """
@@ -79,6 +71,12 @@ PROACTIVE_ACTIONS = (
     "News intelligence updates",
 )
 
+
+# 📚 Documentation Links:
+# - [[relationships/gui/01_DASHBOARD_RELATIONSHIPS.md]]
+# - [[relationships/gui/02_PANEL_RELATIONSHIPS.md]]
+# - [[source-docs/gui/leather_book_dashboard.md]]
+#
 
 class LeatherBookDashboard(QWidget):
     """Main dashboard with 6-zone layout on leather book."""
@@ -236,7 +234,7 @@ class StatsPanel(QFrame):
     def _setup_stat_labels(self, layout: QVBoxLayout) -> None:
         title = QLabel("SYSTEM STATS")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_GOLD_GLOW)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         layout.addWidget(title)
 
         user_label = QLabel(f"User: {self.username}")
@@ -277,7 +275,6 @@ class ProactiveActionsPanel(QFrame):
     watch_tower_requested = pyqtSignal()  # Signal for watch tower
     command_center_requested = pyqtSignal()  # Signal for command center
     news_intelligence_requested = pyqtSignal()  # Signal for news intelligence
-    persona_requested = pyqtSignal()  # Signal for persona configuration
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -289,26 +286,12 @@ class ProactiveActionsPanel(QFrame):
 
         layout.addWidget(self._create_title())
         layout.addWidget(self._create_action_scroll(), 1)
-
-        analyze_btn = self._create_action_button("🔍 ANALYZE SYSTEM")
-        analyze_btn.clicked.connect(DashboardHandlers.handle_analyze_system)
-        layout.addWidget(analyze_btn)
-
-        optimize_btn = self._create_action_button("⚡ OPTIMIZE PERFORMANCE")
-        optimize_btn.clicked.connect(DashboardHandlers.handle_optimize_performance)
-        layout.addWidget(optimize_btn)
-
-        security_btn = self._create_action_button("🛡️ DEPLOY COUNTERMEASURES")
-        security_btn.clicked.connect(DashboardHandlers.handle_deploy_countermeasures)
-        layout.addWidget(security_btn)
+        layout.addWidget(self._create_action_button("▶ ANALYZE"))
+        layout.addWidget(self._create_action_button("⚙ OPTIMIZE"))
 
         image_gen_btn = self._create_action_button("🎨 GENERATE IMAGES")
         image_gen_btn.clicked.connect(self.image_gen_requested.emit)
         layout.addWidget(image_gen_btn)
-
-        persona_btn = self._create_action_button("🎭 PERSONA CONFIG")
-        persona_btn.clicked.connect(self.persona_requested.emit)
-        layout.addWidget(persona_btn)
 
         # Separator
         separator = QLabel("─" * 15)
@@ -336,13 +319,12 @@ class ProactiveActionsPanel(QFrame):
     def _create_title(self) -> QLabel:
         title = QLabel("PROACTIVE ACTIONS")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_GOLD_GLOW)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         return title
 
     def _create_action_scroll(self) -> QScrollArea:
         scroll = QScrollArea()
-        scroll.setStyleSheet(
-            """
+        scroll.setStyleSheet("""
             QScrollArea {
                 background-color: transparent;
                 border: none;
@@ -355,8 +337,7 @@ class ProactiveActionsPanel(QFrame):
             QScrollBar::handle:vertical {
                 background-color: #00ff00;
             }
-        """
-        )
+        """)
         scroll.setWidgetResizable(True)
 
         actions_widget = QWidget()
@@ -394,14 +375,13 @@ class UserChatPanel(QFrame):
         # Title
         title = QLabel("YOUR MESSAGE")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_GOLD_GLOW)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         layout.addWidget(title)
 
         # Chat input
         self.input_text = QTextEdit()
         self.input_text.setPlaceholderText("Enter your message...")
-        self.input_text.setStyleSheet(
-            """
+        self.input_text.setStyleSheet("""
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -413,14 +393,12 @@ class UserChatPanel(QFrame):
             QTextEdit:focus {
                 border: 2px solid #00ffff;
             }
-        """
-        )
+        """)
         layout.addWidget(self.input_text, 1)
 
         # Send button
         send_btn = QPushButton("SEND ▶")
-        send_btn.setStyleSheet(
-            """
+        send_btn.setStyleSheet("""
             QPushButton {
                 background-color: #00ff00;
                 border: 2px solid #00ff00;
@@ -437,8 +415,7 @@ class UserChatPanel(QFrame):
             QPushButton:pressed {
                 background-color: #008800;
             }
-        """
-        )
+        """)
         send_btn.clicked.connect(self._send_message)
         layout.addWidget(send_btn)
 
@@ -455,15 +432,13 @@ class AINeuralHead(QFrame):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QFrame {
                 background-color: #000000;
                 border: 3px solid #00ffff;
                 border-radius: 10px;
             }
-        """
-        )
+        """)
         self.setMinimumSize(300, 400)
 
         self.animation_frame = 0
@@ -480,8 +455,8 @@ class AINeuralHead(QFrame):
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
 
-        # 3D Neural Face canvas
-        self.canvas = AISystemVisualization3D()
+        # Face canvas
+        self.canvas = AIFaceCanvas()
         layout.addWidget(self.canvas, 1)
 
         # Status indicator
@@ -624,14 +599,13 @@ class AIResponsePanel(QFrame):
         # Title
         title = QLabel("AI RESPONSE")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_GOLD_GLOW)
+        title.setStyleSheet(STYLE_CYAN_GLOW)
         layout.addWidget(title)
 
         # Response display
         self.response_text = QTextEdit()
         self.response_text.setReadOnly(True)
-        self.response_text.setStyleSheet(
-            """
+        self.response_text.setStyleSheet("""
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -640,14 +614,12 @@ class AIResponsePanel(QFrame):
                 font-family: Courier New;
                 font-size: 10px;
             }
-        """
-        )
+        """)
         layout.addWidget(self.response_text, 1)
 
         # Clear button
         clear_btn = QPushButton("CLEAR")
-        clear_btn.setStyleSheet(
-            """
+        clear_btn.setStyleSheet("""
             QPushButton {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -660,8 +632,7 @@ class AIResponsePanel(QFrame):
                 border: 2px solid #00ffff;
                 color: #00ffff;
             }
-        """
-        )
+        """)
         clear_btn.clicked.connect(self.response_text.clear)
         layout.addWidget(clear_btn)
 

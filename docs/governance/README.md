@@ -1,24 +1,44 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Governance Documentation Index"
+id: governance-readme
+type: reference
+status: active
+created_date: 2026-01-19
+updated_date: 2026-01-20
+version: 1.0.0
+author: Project-AI Governance Team
+contributors: ["Architecture Team", "Ethics Committee"]
+policy_level: P0
+enforcement_level: mandatory
+tags:
+  - area:governance
+  - type:reference
+  - component:ethics
+  - component:policy
+  - audience:ethicist
+  - audience:compliance-officer
+  - audience:legal
+  - audience:developer
+  - priority:critical
+compliance_frameworks: []
+classification: public
+related_systems:
+  - governance-system
+  - documentation-portal
+  - triumvirate-governance
+stakeholders:
+  - governance-team
+  - all-teams
+last_verified: 2026-04-20
+relationships:
+  governed_by: ["copilot_workspace_profile"]
+  indexes: ["AGI_CHARTER", "CODEX_DEUS_INDEX", "AGI_IDENTITY_SPECIFICATION"]
+purpose: "Central index and navigation guide for all governance, ethics, and policy documentation in Project-AI"
+scope: "Complete governance documentation hierarchy including ethics frameworks, identity systems, licensing, and policy enforcement"
+audience: "Ethicists, compliance officers, legal teams, AI safety researchers, developers implementing governance features"
+---
+
 # Governance Documentation
-
-
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
-## Research Provenance
-
-Arch Angel protected linkage:
-- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
-- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
-- Primary DOI anchors:
-- [The Sovereign Covenant](../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
-- [AGI Charter for Project-AI](../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
-- [Constitutional Architectures](../../wiki/07_Research/Publications/Paper-05.md) - https://doi.org/10.5281/zenodo.18794646
-- [The Flat Gap](../../wiki/07_Research/Publications/Paper-07.md) - https://doi.org/10.5281/zenodo.18827649
-- [Governing Force In AGI](../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
-- [Two Species Aligned](../../wiki/07_Research/Publications/Paper-16.md) - https://doi.org/10.5281/zenodo.19582479
-- [Project-AI: Sovereign Constitutional AGI Ecosystem](../../wiki/07_Research/Publications/Paper-17.md) - https://doi.org/10.5281/zenodo.19582539
-- [Why I Am Doing This](../../wiki/07_Research/Publications/Paper-21.md) - https://doi.org/10.5281/zenodo.19592336
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
 
 This folder contains documentation about ethical frameworks, policy enforcement, and the roles of the governance systems (Galahad, Cerberus, and Codex Deus Maximus).
 
@@ -33,23 +53,21 @@ This folder contains documentation about ethical frameworks, policy enforcement,
 
 ## Key Documents
 
-- [CODEX_DEUS_INDEX.md](CODEX_DEUS_INDEX.md) - Index of governance codex
-- [AGI_CHARTER.md](AGI_CHARTER.md) - Rights and protections of AGI instances
-- [AGI_IDENTITY_SPECIFICATION.md](AGI_IDENTITY_SPECIFICATION.md) - Identity formation protocol
-- [AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md](AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md) - Humanity alignment protocol
-- [IRREVERSIBILITY_FORMALIZATION.md](IRREVERSIBILITY_FORMALIZATION.md) - Irreversible decision frameworks
-- [LICENSING_GUIDE.md](LICENSING_GUIDE.md) - Open source licensing governance
+- `CODEX_DEUS_INDEX.md` - Index of governance codex
+- `AGI_CHARTER.md` - Rights and protections of AGI instances
+- `AGI_IDENTITY_SPECIFICATION.md` - Identity formation protocol
+- `AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md` - Humanity alignment protocol
+- `IRREVERSIBILITY_FORMALIZATION.md` - Irreversible decision frameworks
+- `LICENSING_GUIDE.md` - Open source licensing governance
 
 ## Naming Conventions
 
 For **external-facing documents**:
-
 - Use "Governing Council" instead of "Triumvirate" (internal codename)
 - Use "Ethics Framework" instead of "Four Laws" when appropriate
 - Use "Governance System" instead of "Codex Deus Maximus" for external audiences
 
 For **internal documentation** (keep in `docs/internal/`):
-
 - Internal codenames are acceptable: Triumvirate, Cerberus, Galahad, Codex
 
 ## Guidelines

@@ -1,5 +1,3 @@
-#                                           [2026-03-05 08:49]
-#                                          Productivity: Active
 """
 Network / IPC Boundary Enforcement
 All inbound requests must present a valid TARL hash.
@@ -18,29 +16,36 @@ def enforce_boundary(tarl_hash: str | None):
 
 
 def check_boundary(operation: str, magnitude: int | float, limit: int = 10000) -> bool:
-    """Compatibility numeric boundary guard used by cognition integrations."""
+    """Compatibility boundary check for cognition engines.
+
+    Some subsystems expect a lightweight numeric guard function named
+    ``check_boundary``. This implementation preserves that contract while
+    retaining the existing TARL boundary model.
+
+    Args:
+        operation: Logical operation name being checked.
+        magnitude: Numeric workload magnitude for the operation.
+        limit: Upper bound considered safe.
+
+    Returns:
+        ``True`` when within boundary limits, otherwise ``False``.
+    """
     try:
-        value = float(magnitude)
+        numeric_value = float(magnitude)
     except (TypeError, ValueError):
-        audit(
-            "BOUNDARY_NUMERIC_BLOCK",
-            {"operation": operation, "magnitude": magnitude, "reason": "non_numeric"},
-        )
+        audit("BOUNDARY_NUMERIC_BLOCK", {"operation": operation, "magnitude": magnitude})
         return False
 
-    if value < 0:
-        audit(
-            "BOUNDARY_NUMERIC_BLOCK",
-            {"operation": operation, "magnitude": value, "reason": "negative"},
-        )
+    if numeric_value < 0:
+        audit("BOUNDARY_NUMERIC_BLOCK", {"operation": operation, "magnitude": numeric_value})
         return False
 
-    allowed = value <= float(limit)
+    allowed = numeric_value <= float(limit)
     audit(
         "BOUNDARY_NUMERIC_CHECK",
         {
             "operation": operation,
-            "magnitude": value,
+            "magnitude": numeric_value,
             "limit": limit,
             "allowed": allowed,
         },

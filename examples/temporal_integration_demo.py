@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Example demonstrating the Temporal integration.
@@ -104,8 +102,7 @@ async def demo_workflow_structure():
     print()
 
     print("Usage Example:")
-    print(
-        """
+    print("""
 from app.service.ai_controller import AIController
 
 async def main():
@@ -116,8 +113,7 @@ async def main():
     )
     print(f"Success: {result.success}")
     await controller.close()
-"""
-    )
+""")
     print()
     print("=" * 70)
 

@@ -1,0 +1,357 @@
+# PROJECT ATLAS Safety Configuration
+# Safety constraints, hard stops, and non-bypassable rules
+# Version: 1.0.0
+# Status: IMMUTABLE - CANNOT BE MODIFIED
+
+version: "1.0.0"
+schema_version: "1.0.0"
+locked: true
+modification_allowed: false
+
+# Stack Separation Safety Rules (IMMUTABLE)
+stack_separation:
+  rule_001:
+    id: "SAFETY-STACK-001"
+    name: "SS to TS/RS Promotion Forbidden"
+    description: "Simulation Stack data SHALL NEVER transition to Timeline or Reality Stacks"
+    enforcement: "cryptographic"
+    bypass: false
+    violation_consequence: "system_halt"
+    audit_level: "critical"
+    
+  rule_002:
+    id: "SAFETY-STACK-002"
+    name: "Parent Stack Dependency"
+    description: "Child stack SHALL NOT execute until parent stack is complete and verified"
+    enforcement: "dependency_check"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "critical"
+    
+  rule_003:
+    id: "SAFETY-STACK-003"
+    name: "Stack Contamination Detection"
+    description: "Any SS data in non-SS stack SHALL trigger immediate quarantine"
+    enforcement: "runtime_validation"
+    bypass: false
+    violation_consequence: "data_quarantine"
+    audit_level: "critical"
+
+# Data Integrity Safety Rules (IMMUTABLE)
+data_integrity:
+  rule_101:
+    id: "SAFETY-DATA-101"
+    name: "Hash Chain Verification"
+    description: "All data objects MUST have valid SHA-256 hash chain"
+    enforcement: "cryptographic"
+    bypass: false
+    violation_consequence: "data_rejection"
+    audit_level: "critical"
+    
+  rule_102:
+    id: "SAFETY-DATA-102"
+    name: "Provenance Requirement"
+    description: "RS data MUST have minimum 2 independent source verifications"
+    enforcement: "validation"
+    bypass: false
+    violation_consequence: "data_rejection"
+    audit_level: "critical"
+    
+  rule_103:
+    id: "SAFETY-DATA-103"
+    name: "Immutability Enforcement"
+    description: "RS data SHALL NOT be modified after creation, only versioned"
+    enforcement: "write_protection"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "critical"
+    
+  rule_104:
+    id: "SAFETY-DATA-104"
+    name: "Temporal Consistency"
+    description: "Timestamps MUST be monotonically increasing within a stack"
+    enforcement: "validation"
+    bypass: false
+    violation_consequence: "data_rejection"
+    audit_level: "high"
+
+# Determinism Safety Rules (IMMUTABLE)
+determinism:
+  rule_201:
+    id: "SAFETY-DET-201"
+    name: "Seed Requirement"
+    description: "All TS projections MUST use deterministic seeds from seeds.yaml"
+    enforcement: "initialization_check"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "critical"
+    
+  rule_202:
+    id: "SAFETY-DET-202"
+    name: "Replay Guarantee"
+    description: "All TS operations MUST be replayable with identical results"
+    enforcement: "replay_validation"
+    bypass: false
+    violation_consequence: "projection_invalidation"
+    audit_level: "critical"
+    
+  rule_203:
+    id: "SAFETY-DET-203"
+    name: "No External Dependencies"
+    description: "No network calls, external APIs, or non-deterministic operations in projection"
+    enforcement: "runtime_monitoring"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "critical"
+    
+  rule_204:
+    id: "SAFETY-DET-204"
+    name: "State Consistency"
+    description: "Parent-child state relationships MUST maintain consistency"
+    enforcement: "validation"
+    bypass: false
+    violation_consequence: "projection_invalidation"
+    audit_level: "critical"
+
+# Governance Safety Rules (IMMUTABLE)
+governance:
+  rule_301:
+    id: "SAFETY-GOV-301"
+    name: "Council Override Authority"
+    description: "Council MUST approve all critical operations and emergency interventions"
+    enforcement: "authorization"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "critical"
+    
+  rule_302:
+    id: "SAFETY-GOV-302"
+    name: "Audit Trail Completeness"
+    description: "ALL operations MUST be logged to immutable audit trail"
+    enforcement: "logging_enforcement"
+    bypass: false
+    violation_consequence: "system_halt"
+    audit_level: "critical"
+    
+  rule_303:
+    id: "SAFETY-GOV-303"
+    name: "No Silent Failures"
+    description: "All errors and violations MUST be logged and reported"
+    enforcement: "error_handling"
+    bypass: false
+    violation_consequence: "alert_escalation"
+    audit_level: "critical"
+    
+  rule_304:
+    id: "SAFETY-GOV-304"
+    name: "Change Attestation"
+    description: "All configuration changes MUST be cryptographically signed"
+    enforcement: "signature_verification"
+    bypass: false
+    violation_consequence: "change_rejection"
+    audit_level: "critical"
+
+# Operation Safety Limits (IMMUTABLE)
+operation_limits:
+  rule_401:
+    id: "SAFETY-OP-401"
+    name: "Maximum Projection Horizon"
+    description: "Projection horizon MUST NOT exceed stack-defined limits"
+    enforcement: "parameter_validation"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "high"
+    limits:
+      TS-0: 30
+      TS-1: 180
+      TS-2: 365
+      TS-3: 3650
+    
+  rule_402:
+    id: "SAFETY-OP-402"
+    name: "Resource Exhaustion Prevention"
+    description: "Operations MUST terminate if resource limits exceeded"
+    enforcement: "resource_monitoring"
+    bypass: false
+    violation_consequence: "graceful_shutdown"
+    audit_level: "high"
+    limits:
+      max_memory_gb: 16
+      max_cpu_percent: 90
+      max_duration_seconds: 3600
+      
+  rule_403:
+    id: "SAFETY-OP-403"
+    name: "Circular Dependency Detection"
+    description: "System MUST detect and prevent circular dependencies"
+    enforcement: "graph_analysis"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "high"
+
+# Security Safety Rules (IMMUTABLE)
+security:
+  rule_501:
+    id: "SAFETY-SEC-501"
+    name: "Cryptographic Verification"
+    description: "All hashes MUST use SHA-256, all signatures Ed25519"
+    enforcement: "algorithm_enforcement"
+    bypass: false
+    violation_consequence: "operation_abort"
+    audit_level: "critical"
+    
+  rule_502:
+    id: "SAFETY-SEC-502"
+    name: "Input Sanitization"
+    description: "All external inputs MUST be sanitized and validated"
+    enforcement: "input_validation"
+    bypass: false
+    violation_consequence: "data_rejection"
+    audit_level: "critical"
+    
+  rule_503:
+    id: "SAFETY-SEC-503"
+    name: "Secure Communication"
+    description: "All network communication MUST use TLS 1.3+"
+    enforcement: "protocol_enforcement"
+    bypass: false
+    violation_consequence: "connection_abort"
+    audit_level: "critical"
+    
+  rule_504:
+    id: "SAFETY-SEC-504"
+    name: "Key Management"
+    description: "Cryptographic keys MUST be stored in secure key store"
+    enforcement: "storage_validation"
+    bypass: false
+    violation_consequence: "system_halt"
+    audit_level: "critical"
+
+# Penalty Safety Rules (IMMUTABLE)
+penalty_safety:
+  rule_601:
+    id: "SAFETY-PEN-601"
+    name: "Minimum Score Floor"
+    description: "Combined penalties MUST NOT reduce score below 10% of original"
+    enforcement: "calculation_bounds"
+    bypass: false
+    violation_consequence: "penalty_capping"
+    audit_level: "high"
+    
+  rule_602:
+    id: "SAFETY-PEN-602"
+    name: "Permanent Penalty Review"
+    description: "Permanent penalties MUST undergo council review before application"
+    enforcement: "authorization"
+    bypass: false
+    violation_consequence: "penalty_deferral"
+    audit_level: "critical"
+    
+  rule_603:
+    id: "SAFETY-PEN-603"
+    name: "Penalty Justification"
+    description: "All penalty applications MUST include documented justification"
+    enforcement: "documentation_check"
+    bypass: false
+    violation_consequence: "penalty_rejection"
+    audit_level: "high"
+
+# Emergency Safety Procedures
+emergency_procedures:
+  system_halt:
+    trigger_conditions:
+      - "SS data detected in RS or TS stacks"
+      - "Hash chain verification failure"
+      - "Critical security breach"
+      - "Cryptographic key compromise"
+    actions:
+      - "Immediately stop all operations"
+      - "Lock all data stores"
+      - "Generate emergency alert to council"
+      - "Create full system snapshot"
+      - "Initiate investigation protocol"
+    recovery_requires:
+      - "Council authorization"
+      - "Root cause analysis"
+      - "Remediation implementation"
+      - "Security validation"
+      
+  data_quarantine:
+    trigger_conditions:
+      - "Stack contamination detected"
+      - "Data integrity violation"
+      - "Suspicious data patterns"
+    actions:
+      - "Isolate affected data"
+      - "Mark as quarantined"
+      - "Prevent propagation"
+      - "Alert governance team"
+      - "Begin investigation"
+    recovery_requires:
+      - "Data validation"
+      - "Source verification"
+      - "Council approval for release"
+      
+  graceful_shutdown:
+    trigger_conditions:
+      - "Resource limits exceeded"
+      - "Operation timeout"
+      - "Unrecoverable error"
+    actions:
+      - "Save current state"
+      - "Close open transactions"
+      - "Generate error report"
+      - "Notify operations team"
+    recovery_requires:
+      - "Error analysis"
+      - "Resource availability"
+      - "Manual restart approval"
+
+# Monitoring and Enforcement
+enforcement_mechanisms:
+  runtime_monitoring:
+    enabled: true
+    check_frequency_seconds: 1
+    violation_immediate_action: true
+    
+  audit_logging:
+    enabled: true
+    log_all_checks: true
+    log_all_violations: true
+    retention_years: 10
+    
+  automated_response:
+    enabled: true
+    escalation_levels:
+      - informational
+      - warning
+      - error
+      - critical
+      - emergency
+    
+  council_notification:
+    immediate_alert:
+      - critical violations
+      - emergency procedures
+      - system halts
+    daily_report:
+      - all warnings
+      - all errors
+      - all informational
+
+# Validation Rules
+validation:
+  immutability:
+    - "This configuration file MUST NOT be modified"
+    - "All rules marked as bypass:false CANNOT be overridden"
+    - "All enforcement mechanisms MUST be enabled"
+    
+  completeness:
+    - "All safety categories must have defined rules"
+    - "All rules must have clear enforcement mechanisms"
+    - "All violations must have defined consequences"
+    
+  integrity:
+    - "Configuration hash must be verified on load"
+    - "Any tampering must trigger system halt"
+    - "Version must match expected version"

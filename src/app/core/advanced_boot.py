@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Advanced Boot System - God Tier Architecture
@@ -25,8 +23,8 @@ from pathlib import Path
 from typing import Any
 
 # Import event spine and governance graph for wiring
-from src.app.core.event_spine import EventCategory, EventPriority, get_event_spine
-from src.app.core.governance_graph import get_governance_graph
+from app.core.event_spine import EventCategory, EventPriority, get_event_spine
+from app.core.governance_graph import get_governance_graph
 
 logger = logging.getLogger(__name__)
 

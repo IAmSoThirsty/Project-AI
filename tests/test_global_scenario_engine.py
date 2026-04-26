@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Tests for Global Scenario Engine and Simulation Contingency Root.
 
@@ -14,7 +12,7 @@ Comprehensive test coverage for:
 
 import json
 import tempfile
-from datetime import timezone, datetime
+from datetime import UTC, datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -323,7 +321,7 @@ class TestGlobalScenarioEngine:
         assert len(scenarios) > 0
         # Check scenario structure
         for scenario in scenarios[:5]:
-            assert scenario.year > datetime.now(timezone.utc).year
+            assert scenario.year > datetime.now(UTC).year
             assert 0 <= scenario.likelihood <= 1
             assert len(scenario.title) > 0
             assert len(scenario.impact_domains) > 0

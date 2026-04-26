@@ -1,5 +1,3 @@
-#                                           [2026-03-05 08:49]
-#                                          Productivity: Active
 """
 Formal invariants for Project AI.
 Each invariant must be mechanically enforceable and provable.
@@ -27,7 +25,7 @@ def invariant_contraction_on_failure(expanded: bool) -> bool:
 
 
 class InvariantChecker:
-    """Compatibility invariant checker used by cognition integrations."""
+    """Compatibility invariant checker used by cognition subsystems."""
 
     def __init__(self) -> None:
         self._checks = {
@@ -38,6 +36,10 @@ class InvariantChecker:
         }
 
     def validate(self, name: str, *args: Any, **kwargs: Any) -> bool:
+        """Validate one invariant by name.
+
+        Returns ``False`` when the invariant name is unknown or validation fails.
+        """
         fn = self._checks.get(name)
         if fn is None:
             return False
@@ -47,22 +49,25 @@ class InvariantChecker:
             return False
 
     def validate_all(self, payload: dict[str, Any]) -> dict[str, bool]:
-        return {
-            "single_authority": self.validate(
-                "single_authority", payload.get("active_roles", [])
-            ),
-            "kernel_mediation": self.validate(
-                "kernel_mediation", payload.get("executed_via_kernel", False)
-            ),
-            "no_role_stacking": self.validate(
-                "no_role_stacking",
-                payload.get("liara_active", False),
-                payload.get("active_roles", []),
-            ),
-            "contraction_on_failure": self.validate(
-                "contraction_on_failure", payload.get("expanded", False)
-            ),
-        }
+        """Validate all known invariants against a payload dictionary."""
+        results: dict[str, bool] = {}
+
+        results["single_authority"] = self.validate(
+            "single_authority", payload.get("active_roles", [])
+        )
+        results["kernel_mediation"] = self.validate(
+            "kernel_mediation", payload.get("executed_via_kernel", False)
+        )
+        results["no_role_stacking"] = self.validate(
+            "no_role_stacking",
+            payload.get("liara_active", False),
+            payload.get("active_roles", []),
+        )
+        results["contraction_on_failure"] = self.validate(
+            "contraction_on_failure", payload.get("expanded", False)
+        )
+
+        return results
 
 
 __all__ = [

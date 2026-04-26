@@ -1,24 +1,55 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Licensing Guide for Project-AI"
+id: licensing-guide
+type: guide
+status: active
+created_date: 2025-12-04
+updated_date: 2025-12-04
+version: 1.0
+author: Legal Team
+contributors: ["Architecture Team", "Governance Team"]
+policy_level: P2
+enforcement_level: mandatory
+tags:
+  - area:governance
+  - area:legal
+  - type:guide
+  - type:policy
+  - component:licensing
+  - audience:legal
+  - audience:compliance-officer
+  - audience:developer
+  - audience:contributor
+  - priority:high
+compliance_frameworks: ["MIT License", "Open Source Initiative"]
+classification: public
+related_systems:
+  - license-compliance
+  - governance-system
+stakeholders:
+  - governance-team
+  - legal-team
+  - compliance-team
+last_verified: 2026-04-20
+relationships:
+  governed_by: ["copilot_workspace_profile"]
+  related_docs: ["LICENSING_SUMMARY"]
+  references: ["LICENSE"]
+license_info:
+  project_license: "MIT"
+  commercial_use: true
+  sublicensing_allowed: true
+  attribution_required: true
+purpose: "Comprehensive licensing documentation for Project-AI covering MIT license obligations, dependency licensing compatibility, compliance requirements, and usage rights"
+scope: "MIT license obligations, dependency licensing matrix (PyQt6/GPL, scikit-learn/BSD, OpenAI/Apache, etc.), compliance checklist, commercial use rights, attribution requirements"
+---
+
 # Licensing Guide for Project-AI
 
+**Status**: ✅ MIT License Implemented  
+**Date**: December 4, 2025
 
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
-## Research Provenance
-
-Arch Angel protected linkage:
-- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
-- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
-- Primary DOI anchors:
-- [The Sovereign Covenant](../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
-- [AGI Charter for Project-AI](../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
-- [The Constitutional Code Store](../../wiki/07_Research/Publications/Paper-20.md) - https://doi.org/10.5281/zenodo.19591660
-- [Why I Am Doing This](../../wiki/07_Research/Publications/Paper-21.md) - https://doi.org/10.5281/zenodo.19592336
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
-
-**Status**: ✅ MIT License Implemented **Date**: December 4, 2025
-
-______________________________________________________________________
+---
 
 ## 📋 Current Licensing
 
@@ -36,7 +67,7 @@ The Project-AI codebase is licensed under the **MIT License**, one of the most p
 - ✅ **No Warranty**: Provided "as-is" with no warranty or liability
 - ✅ **Sublicensing**: Allowed (derivative works can use different licenses)
 
-______________________________________________________________________
+---
 
 ## 📦 Dependency Licensing
 
@@ -44,75 +75,74 @@ All dependencies in `pyproject.toml` are compatible with MIT licensing:
 
 ### Core Dependencies
 
-| Package       | License                   | Compatible | Purpose             |
-| ------------- | ------------------------- | ---------- | ------------------- |
-| PyQt6         | GPL v3 / Commercial       | ✅ Yes     | GUI Framework       |
-| scikit-learn  | BSD 3-Clause              | ✅ Yes     | Machine Learning    |
-| numpy         | BSD 3-Clause              | ✅ Yes     | Numerical Computing |
-| pandas        | BSD 3-Clause              | ✅ Yes     | Data Analysis       |
-| matplotlib    | PSF                       | ✅ Yes     | Data Visualization  |
-| cryptography  | Apache 2.0 / BSD 3-Clause | ✅ Yes     | Encryption          |
-| openai        | Apache 2.0                | ✅ Yes     | AI API Client       |
-| requests      | Apache 2.0                | ✅ Yes     | HTTP Client         |
-| geopy         | MIT                       | ✅ Yes     | Geolocation         |
-| python-dotenv | BSD 3-Clause              | ✅ Yes     | Environment Config  |
-| passlib       | BSD                       | ✅ Yes     | Password Hashing    |
-| bcrypt        | Apache 2.0                | ✅ Yes     | Bcrypt Hashing      |
-| PyPDF2        | BSD                       | ✅ Yes     | PDF Processing      |
-| httpx         | BSD                       | ✅ Yes     | Async HTTP          |
+| Package | License | Compatible | Purpose |
+|---------|---------|-----------|---------|
+| PyQt6 | GPL v3 / Commercial | ✅ Yes | GUI Framework |
+| scikit-learn | BSD 3-Clause | ✅ Yes | Machine Learning |
+| numpy | BSD 3-Clause | ✅ Yes | Numerical Computing |
+| pandas | BSD 3-Clause | ✅ Yes | Data Analysis |
+| matplotlib | PSF | ✅ Yes | Data Visualization |
+| cryptography | Apache 2.0 / BSD 3-Clause | ✅ Yes | Encryption |
+| openai | Apache 2.0 | ✅ Yes | AI API Client |
+| requests | Apache 2.0 | ✅ Yes | HTTP Client |
+| geopy | MIT | ✅ Yes | Geolocation |
+| python-dotenv | BSD 3-Clause | ✅ Yes | Environment Config |
+| passlib | BSD | ✅ Yes | Password Hashing |
+| bcrypt | Apache 2.0 | ✅ Yes | Bcrypt Hashing |
+| PyPDF2 | BSD | ✅ Yes | PDF Processing |
+| httpx | BSD | ✅ Yes | Async HTTP |
 
 ### Development Dependencies
 
-| Package    | License | Purpose            |
-| ---------- | ------- | ------------------ |
-| ruff       | MIT     | Code Linting       |
-| pytest     | MIT     | Testing Framework  |
-| pytest-cov | MIT     | Coverage Reporting |
-| black      | MIT     | Code Formatter     |
-| flake8     | MIT     | Style Guide        |
+| Package | License | Purpose |
+|---------|---------|---------|
+| ruff | MIT | Code Linting |
+| pytest | MIT | Testing Framework |
+| pytest-cov | MIT | Coverage Reporting |
+| black | MIT | Code Formatter |
+| flake8 | MIT | Style Guide |
 
 All dependencies are compatible with MIT licensing
 
-______________________________________________________________________
+---
 
 ## 🔐 License Compliance
 
 ### Your Obligations (What You MUST Do)
 
 1. **Include License Notice**
-
    - ✅ Include full MIT license text with distributions
    - ✅ Keep copyright notice in LICENSE file
    - ✅ Include license in source code archives
 
 1. **Provide Attribution**
-
    - Recommended: Add notice to README.md or source files:
 
    ```python
-
    # Project-AI
-
    # Copyright (c) 2025 Project AI Team
-
    # Licensed under MIT License - See LICENSE file for details
-
    ```
 
 1. **Document Dependencies**
-
    - ✅ Already configured in pyproject.toml
    - ✅ Maintain accurate version constraints
 
 ### Your Rights (What You CAN Do)
 
-✅ Use commercially without royalties ✅ Distribute modified versions ✅ Include in proprietary software ✅ Change the license in derivative works ✅ Sublicense under different terms
+✅ Use commercially without royalties
+✅ Distribute modified versions
+✅ Include in proprietary software
+✅ Change the license in derivative works
+✅ Sublicense under different terms
 
 ### What You CANNOT Do
 
-❌ Hold the authors liable ❌ Use trademark/name for endorsement ❌ Claim original authorship of others' work
+❌ Hold the authors liable
+❌ Use trademark/name for endorsement
+❌ Claim original authorship of others' work
 
-______________________________________________________________________
+---
 
 ## 🎯 Licensing Scenarios
 
@@ -128,7 +158,7 @@ ______________________________________________________________________
 - Retain copyright notice
 - Cannot claim you wrote it
 
-______________________________________________________________________
+---
 
 ### Scenario 2: Closed-Source Distribution
 
@@ -150,7 +180,7 @@ This software includes Project-AI components
 For details, see: https://github.com/IAmSoThirsty/Project-AI
 ```
 
-______________________________________________________________________
+---
 
 ### Scenario 3: Derivative Works
 
@@ -167,16 +197,12 @@ ______________________________________________________________________
 **Example**:
 
 ```python
-
 # Based on Project-AI (c) 2025 Project AI Team (MIT License)
-
 # Modified by: Your Company Name
-
 # Licensed under: Apache 2.0
-
 ```
 
-______________________________________________________________________
+---
 
 ### Scenario 4: GPL Compatibility
 
@@ -190,7 +216,7 @@ ______________________________________________________________________
 - GPL → MIT: ❌ NOT permitted (GPL requires copy-left)
 - If combining: The combined work becomes GPL
 
-______________________________________________________________________
+---
 
 ## 📝 Adding License Headers (Optional)
 
@@ -199,34 +225,23 @@ For professional projects, add license headers to source files:
 ### Python Files
 
 ```python
-
 # src/app/main.py
-
 # Project-AI - Comprehensive AI Assistant
-
 # Copyright (c) 2025 Project AI Team
-
 # Licensed under the MIT License
-
 # See LICENSE file in the root directory for full details
-
 ```
 
 ### Configuration Files
 
 ```yaml
-
 # .github/workflows/deploy.yml
-
 # Project-AI - CI/CD Configuration
-
 # Copyright (c) 2025 Project AI Team
-
 # Licensed under the MIT License
-
 ```
 
-______________________________________________________________________
+---
 
 ## 🚀 Using Your Licensed Code
 
@@ -256,7 +271,7 @@ Forked repositories:
 1. Can be modified freely
 1. GitHub automatically inherits your license in forks
 
-______________________________________________________________________
+---
 
 ## 📊 License Compatibility Matrix
 
@@ -274,7 +289,7 @@ Project-AI (MIT) is compatible with:
 ❌ SSPL (Server Side Public License - may have restrictions)
 ```
 
-______________________________________________________________________
+---
 
 ## 🛡️ What the MIT License Protects
 
@@ -283,7 +298,7 @@ ______________________________________________________________________
 1. **Freedom of Use**: Allows any use by others
 1. **Patent Rights**: Doesn't grant patent licenses (but minimal patent risk with MIT)
 
-______________________________________________________________________
+---
 
 ## 📋 Recommended Actions
 
@@ -324,7 +339,7 @@ ______________________________________________________________________
 1. Add license notice to About dialog/splash screen
 1. Provide source upon request if using binaries
 
-______________________________________________________________________
+---
 
 ## 🔗 References
 
@@ -333,17 +348,20 @@ ______________________________________________________________________
 - **GitHub License Detection**: [https://github.com/IAmSoThirsty/Project-AI](https://github.com/IAmSoThirsty/Project-AI)
 - **Dependency License Checker**: `pip install pip-licenses && pip-licenses`
 
-______________________________________________________________________
+---
 
 ## 💡 Key Takeaway
 
 **You're good to go!**
 
-✅ Project-AI is properly licensed under MIT ✅ All dependencies are compatible ✅ Commercial use is permitted ✅ You're protected from liability
+✅ Project-AI is properly licensed under MIT
+✅ All dependencies are compatible
+✅ Commercial use is permitted
+✅ You're protected from liability
 
 The MIT license is one of the most permissive and widely adopted in open-source software, making Project-AI accessible to the broadest audience while protecting your rights.
 
-______________________________________________________________________
+---
 
 **Questions?** See:
 
@@ -351,6 +369,7 @@ ______________________________________________________________________
 - GitHub Licensing Guide: [https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)
 - Choose a License: [https://choosealicense.com/](https://choosealicense.com/)
 
-______________________________________________________________________
+---
 
-**Generated**: December 4, 2025 **Status**: ✅ Licensing Complete
+**Generated**: December 4, 2025  
+**Status**: ✅ Licensing Complete

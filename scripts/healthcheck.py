@@ -1,9 +1,11 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Health check script for Project AI services.
 Verifies all components are running and accessible.
+
+GOVERNANCE: GOVERNED
+Classification: Production health monitoring
+Risk: Low (read-only health checks)
 """
 
 import sys

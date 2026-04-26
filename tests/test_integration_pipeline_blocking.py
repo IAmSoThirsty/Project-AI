@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 from app.agents.codex_deus_maximus import create_codex
 from app.core.council_hub import CouncilHub
 

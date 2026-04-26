@@ -1,0 +1,1 @@
+dir /s /b t:\Project-AI-main\*model_provider*.py 2>nul

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 from kernel.tarl_codex_bridge import TarlCodexBridge
 from src.cognition.codex.escalation import CodexDeus
 from tarl import TarlRuntime

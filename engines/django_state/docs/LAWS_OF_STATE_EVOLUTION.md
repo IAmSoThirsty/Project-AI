@@ -1,5 +1,26 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: runtime-spec
+tags:
+- django-state
+- engines
+- laws
+- state-evolution
+engine_type: django-state
+implementation_status: in-progress
+language: python
+related_systems:
+- state-evolution
+- trust-modeling
+- simulation-engine
+stakeholders:
+- architecture-team
+- simulation-team
+---
+
 # Laws of State Evolution
 
 Complete mathematical formulations and implementation details for all irreversibility laws in the Django State Engine.
@@ -15,7 +36,6 @@ trust(t+1) = trust(t) × (1 - λ_trust) - β_betrayal
 ```
 
 Where:
-
 - `λ_trust`: Trust decay rate (default: 0.001 per tick)
 - `β_betrayal`: Impact from betrayal events
 
@@ -35,20 +55,16 @@ where α_ceiling = betrayal_severity × 0.1
 ### Implementation
 
 ```python
-
 # Natural decay
-
 decay = -trust × decay_rate
 
 # Betrayal impact
-
 if betrayal:
     impact = -0.15 × (0.5 + severity)
     new_ceiling = trust × (1 - 0.1 × severity)
     impose_ceiling(new_ceiling)
 
 # Update with ceiling enforcement
-
 trust_new = max(0, min(ceiling, trust + decay + impact))
 ```
 
@@ -73,7 +89,6 @@ if kindness(t) < θ_singularity:
 ```
 
 Where:
-
 - `θ_singularity`: Singularity threshold (default: 0.2)
 
 ### Phase Transition
@@ -95,19 +110,15 @@ where α_acceleration = 1 / (kindness + ε) for kindness < 1.5 × θ_singularity
 ### Implementation
 
 ```python
-
 # Base decay
-
 decay = -kindness × decay_rate
 
 # Accelerate near singularity
-
 if kindness < 1.5 × threshold:
     acceleration = 1.0 / (kindness + 0.1)
     decay *= acceleration
 
 # Check singularity crossing
-
 if kindness < threshold:
     trigger_collapse("kindness_singularity")
 ```
@@ -130,7 +141,6 @@ P(betrayal|state) = β_base + β_trust × (1 - trust) + β_legitimacy × (1 - le
 ```
 
 Where:
-
 - `β_base`: Base betrayal probability (0.01)
 - `β_trust`: Trust factor weight (0.15)
 - `β_legitimacy`: Legitimacy factor weight (0.10)
@@ -153,25 +163,19 @@ if betrayal_occurs:
 ### Implementation
 
 ```python
-
 # Base probability
-
 prob = 0.01
 
 # Trust contribution (inverse)
-
 prob += 0.15 × (1.0 - trust)
 
 # Legitimacy contribution (inverse)
-
 prob += 0.10 × (1.0 - legitimacy)
 
 # Moral injury contribution (direct)
-
 prob += 0.12 × moral_injury
 
 # Cap at 1.0
-
 prob = min(1.0, prob)
 ```
 
@@ -193,7 +197,6 @@ moral_injury(t+1) = moral_injury(t) + μ_violation × (0.5 + severity)
 ```
 
 Where:
-
 - `μ_violation`: Base violation severity (0.05)
 - `severity`: Violation severity factor (0.0 to 1.0)
 
@@ -229,19 +232,15 @@ if moral_injury > θ_critical:
 ### Implementation
 
 ```python
-
 # Accumulation from violation
-
 delta = 0.05 × (0.5 + severity)
 moral_injury_new = moral_injury + delta
 
 # Impose new floor (irreversibility)
-
 floor_new = moral_injury_new
 impose_floor(floor_new)
 
 # Very slow healing (constrained by floor)
-
 if no_violations:
     healing = -moral_injury × 0.0002
     moral_injury_new = max(floor, moral_injury + healing)
@@ -265,7 +264,6 @@ legitimacy(t+1) = legitimacy(t) - (ε_promise × n_broken + ε_failure × n_fail
 ```
 
 Where:
-
 - `ε_promise`: Broken promise impact (0.08)
 - `ε_failure`: Institutional failure impact (0.12)
 - `n_broken`: Count of broken promises
@@ -306,29 +304,23 @@ scope_multiplier = {
 ### Implementation
 
 ```python
-
 # Natural decay
-
 decay = -legitimacy × 0.0008
 
 # Broken promise impact
-
 if broken_promises > 0:
     promise_impact = -0.08 × broken_promises × visibility
     decay += promise_impact
 
 # Institutional failure impact
-
 if failures > 0:
     failure_impact = -0.12 × failures × visibility × scope_multiplier
     decay += failure_impact
 
 # Update with ceiling
-
 legitimacy_new = max(0, min(ceiling, legitimacy + decay))
 
 # Impose ceiling if significant erosion
-
 if abs(decay) > 0.05:
     ceiling_new = legitimacy_new × 0.95
     impose_ceiling(ceiling_new)
@@ -352,7 +344,6 @@ epistemic(t+1) = epistemic(t) × (1 - λ_epistemic) - μ_manipulation × reach �
 ```
 
 Where:
-
 - `λ_epistemic`: Epistemic decay rate (0.0004)
 - `μ_manipulation`: Manipulation base impact (0.1)
 - `reach`: Fraction of population affected (0.0 to 1.0)
@@ -391,29 +382,23 @@ if epistemic < θ_epistemic OR fragments > 10:
 ### Implementation
 
 ```python
-
 # Natural decay
-
 decay = -epistemic × 0.0004
 
 # Manipulation campaigns
-
 if manipulation:
     damage = -0.1 × (1 + reach) × (1 + sophistication)
     decay += damage
-
+    
     # Impose ceiling after significant manipulation
-
     if damage < -0.05:
         ceiling_new = epistemic × 0.92
         impose_ceiling(ceiling_new)
 
 # Update
-
 epistemic_new = max(0, min(ceiling, epistemic + decay))
 
 # Calculate fragmentation
-
 if epistemic_new < 0.3:
     fragments = 5 + int(20 × (0.3 - epistemic_new))
 ```
@@ -447,9 +432,8 @@ if in_collapse:
     kindness_decay *= 2.0
     legitimacy_decay *= 2.0
     epistemic_decay *= 2.0
-
+    
     # Plus additional cascading failures
-
     P(institutional_failure) *= 1.5
     P(betrayal) *= 1.3
 ```
@@ -465,20 +449,16 @@ Once collapse begins:
 
 ```python
 if state.in_collapse and enable_collapse_acceleration:
-
     # Temporarily increase decay rates
-
     trust_decay_rate *= acceleration_factor
     kindness_decay_rate *= acceleration_factor
     legitimacy_decay_rate *= acceleration_factor
     epistemic_decay_rate *= acceleration_factor
-
+    
     # Apply accelerated decay
-
     apply_all_decay_laws(state)
-
+    
     # Restore original rates
-
     restore_decay_rates()
 ```
 

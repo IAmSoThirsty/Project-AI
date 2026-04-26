@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Reflow Markdown paragraphs to a target column width while preserving
 code fences, YAML frontmatter, tables, headings, blockquotes, and lists.

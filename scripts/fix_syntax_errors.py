@@ -1,7 +1,11 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
-"""Fix broken bracket patterns from logging conversion"""
+"""
+Fix broken bracket patterns from logging conversion.
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Code maintenance tool
+Risk: Medium (modifies source files)
+"""
 
 import re
 import sys
@@ -63,7 +67,7 @@ def fix_format_specifiers(content: str) -> tuple[str, int]:
         nonlocal changes
         prefix = match.group(1)
         var = match.group(2)
-        match.group(3)
+        fmt = match.group(3)
         changes += 1
         # This needs to be in the string, not as argument
         return prefix + var

@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 AGI Perspective Engine - Worldview Development and Drift Management
 
@@ -67,7 +65,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -678,3 +676,4 @@ __all__ = [
     "WorkProfile",
     "DriftRate",
 ]
+

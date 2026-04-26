@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: system-spec
+tags: [specialized-systems, h323, security-protocol, telecommunications, enterprise-architecture]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [project-ai-core, pki-infrastructure, network-security]
+stakeholders: [specialized-team, integration-team, architecture-team, security-team]
+system_category: security-protocol
+external_standard: H.323, H.235, H.225, H.245
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Security Capability Profile System
 
 ## Complete Enterprise Documentation Suite
@@ -44,22 +56,17 @@ This directory contains the complete H.323/H.235 Security Capability Profile imp
 ### CLI Operations
 
 ```bash
-
 # Run security simulation
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 
 # Check deployment compliance
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config config.json
 
 # Query registration status
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <ip> --snmp-user admin --auth-key <key> --priv-key <key>
 
 # Log security event
-
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type <type> --device-id <id> --outcome <result>
 ```
@@ -67,23 +74,18 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 ### API Operations
 
 ```bash
-
 # Start REST service
-
 cd h323_sec_profile
 uvicorn project_ai_fastapi:app --host 0.0.0.0 --port 8080
 
 # Check compliance
-
 curl -X POST http://localhost:8080/compliance/check \
     -H "Content-Type: application/json" -d @config.json
 
 # Set threat level (v2)
-
 curl -X POST http://localhost:8080/threat-level -d '{"level": "elevated"}'
 
 # Trigger self-evolving cycle (v3)
-
 curl -X POST http://localhost:8080/evolve -d '{"events": [...]}'
 ```
 

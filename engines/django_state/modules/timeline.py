@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Timeline module.
 
 Event sourcing and state chain reconstruction with immutable audit trail.

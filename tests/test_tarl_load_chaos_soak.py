@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 T.A.R.L. Load Testing, Chaos Testing, and Soak Testing Suite
 
@@ -236,8 +234,8 @@ class TestChaosTesting:
         timer_ids = []
         for i in range(50):
             timer_id = stack.long_running.schedule_timer(
-                f"wf_{i}", delay=60, callback=lambda: None
-            )  # Long delay
+                f"wf_{i}", delay=60, callback=lambda: None  # Long delay
+            )
             timer_ids.append(timer_id)
 
         # Randomly cancel 50% of timers
@@ -258,8 +256,8 @@ class TestChaosTesting:
         lease_holders = []
         for i in range(20):
             acquired = stack.long_running.acquire_lease(
-                f"wf_{i}", f"executor_{i}", duration=0.1
-            )  # Very short lease
+                f"wf_{i}", f"executor_{i}", duration=0.1  # Very short lease
+            )
             if acquired:
                 lease_holders.append((f"wf_{i}", f"executor_{i}"))
 

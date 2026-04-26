@@ -1,0 +1,1 @@
+type "t:\Project-AI-main\src\app\core\directness.py" | findstr /C:"euphemism" /C:"truth"

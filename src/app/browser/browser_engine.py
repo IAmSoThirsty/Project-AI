@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Incognito Browser Engine"""
 
 import logging
@@ -30,9 +28,6 @@ class IncognitoBrowser:
     def __init__(self, config: dict[str, Any]):
         self.config = config
         self.logger = logging.getLogger(__name__)
-
-        # Thirsty-Lang Governance
-        self._initialize_thirsty_governance()
 
         # Privacy settings
         self.incognito_mode = config.get("incognito_mode", True)

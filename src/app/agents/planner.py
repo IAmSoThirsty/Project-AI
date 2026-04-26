@@ -1,10 +1,14 @@
-# [2026-03-02 04:47]
-# Productivity: Active
-
 """Task planning agent for workflow orchestration.
 
 Decomposes complex tasks into subtasks, plans execution sequences,
 and manages task dependencies and scheduling.
+
+GOVERNANCE BYPASS: Legacy stub agent with no AI operations
+Justification: Simple in-memory task queue with no AI calls, no external APIs,
+               no file system access. All operations are deterministic and safe.
+               Superseded by planner_agent.py which IS governed.
+Risk: Minimal - no AI, no I/O, no security implications
+Alternative: Use planner_agent.py for governed task planning
 """
 
 

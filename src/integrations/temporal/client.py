@@ -1,5 +1,3 @@
-#                                           [2026-03-04 22:15]
-#                                          Productivity: Active
 """
 Temporal Client Connection Logic.
 
@@ -117,7 +115,6 @@ class TemporalClient:
 
         try:
             logger.info("Starting workflow %s on queue %s", workflow_id, task_queue)
-            assert self._client is not None
             handle = await self._client.start_workflow(
                 workflow,
                 args,

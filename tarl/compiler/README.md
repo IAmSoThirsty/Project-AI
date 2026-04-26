@@ -1,5 +1,28 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: implementation-guide
+tags:
+- tarl
+- compiler
+- implementation
+engine_type: tarl-runtime
+implementation_status: in-progress
+language: tarl
+related_systems:
+- compiler
+- runtime-vm
+- bytecode
+- jit
+- garbage-collector
+stakeholders:
+- architecture-team
+- tarl-team
+- compiler-team
+---
+
 # T.A.R.L. Compiler Frontend Subsystem
 
 ## Overview
@@ -37,25 +60,21 @@ Bytecode
 ## Components
 
 ### Lexer (`lexer/`)
-
 - Tokenizes source text
 - Tracks source locations
 - Reports lexical errors
 
 ### Parser (`parser/`)
-
 - Builds Abstract Syntax Tree
 - Error recovery
 - Syntax validation
 
 ### Semantic Analyzer (`semantic/`)
-
 - Type checking
 - Scope resolution
 - Symbol table management
 
 ### Code Generator (`codegen/`)
-
 - Bytecode emission
 - Optimization passes
 - Source map generation
@@ -63,18 +82,15 @@ Bytecode
 ## Integration Contract
 
 **Dependencies:**
-
 - Configuration (for compiler settings)
 - Diagnostics (for error reporting)
 - Standard Library (for built-in types)
 
 **Provides:**
-
 - `CompilerFrontend.compile(source: str) -> bytes`
 - Bytecode format compatible with Runtime VM
 
 **Guarantees:**
-
 - All errors reported through Diagnostics
 - Deterministic compilation
 - Thread-safe operation
@@ -88,11 +104,9 @@ compiler = CompilerFrontend(config, diagnostics, stdlib)
 compiler.initialize()
 
 # Compile source
-
 bytecode = compiler.compile("pour 'Hello!'")
 
 # Check status
-
 status = compiler.get_status()
 ```
 

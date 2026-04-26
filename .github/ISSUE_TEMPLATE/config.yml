@@ -1,5 +1,0 @@
-blank_issues_enabled: true
-contact_links:
-  - name: Verified POC Manifest
-    url: https://github.com/IAmSoThirsty/Project-AI/blob/github/verified-poc-face/docs/VERIFIED_POC_MANIFEST.md
-    about: Check what is currently verified before opening a feature or claim issue.

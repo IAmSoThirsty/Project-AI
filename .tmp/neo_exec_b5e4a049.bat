@@ -1,0 +1,1 @@
+powershell -Command "Get-ChildItem -Path 't:\Project-AI-main\src' -Recurse -Filter '*.py' | Select-String -Pattern 'openrouter|OPENROUTER' -CaseSensitive:$false | Select-Object Path,Line -First 30"

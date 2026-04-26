@@ -1,0 +1,1 @@
+dir t:\Project-AI-main\project_ai /b 2>nul || echo "No project_ai dir"

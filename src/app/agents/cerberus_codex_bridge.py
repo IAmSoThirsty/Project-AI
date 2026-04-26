@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Cerberus-Codex Bridge with Thirsty-lang Integration.
 
 This module creates a bridge between Cerberus (threat detection) and Codex Deus Maximus
@@ -12,7 +10,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
@@ -345,3 +343,4 @@ class CerberusCodexBridge(KernelRoutedAgent):
             "alert_log": self.alert_log_path,
             "implementation_log": self.implementation_log_path,
         }
+

@@ -1,20 +1,49 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "MIT License - Summary"
+id: licensing-summary
+type: reference
+status: active
+created_date: 2025-12-04
+updated_date: 2025-12-04
+version: 1.0
+author: Legal Team
+contributors: []
+policy_level: P2
+enforcement_level: mandatory
+tags:
+  - area:governance
+  - area:legal
+  - type:reference
+  - component:licensing
+  - audience:legal
+  - audience:contributor
+  - audience:user
+  - priority:medium
+  - special:quick-reference
+compliance_frameworks: ["MIT License", "Open Source Initiative"]
+classification: public
+related_systems:
+  - license-compliance
+  - governance-system
+stakeholders:
+  - governance-team
+  - legal-team
+last_verified: 2026-04-20
+relationships:
+  governed_by: ["LICENSING_GUIDE", "copilot_workspace_profile"]
+  references: ["LICENSE"]
+license_info:
+  project_license: "MIT"
+  commercial_use: true
+  sublicensing_allowed: true
+  attribution_required: true
+  liability_disclaimer: true
+purpose: "Quick summary of Project-AI MIT License obligations, rights, and dependency compatibility"
+scope: "Permitted uses, required attributions, prohibited actions, dependency licensing compatibility matrix"
+estimated_time: "2-3 minutes (quick read)"
+---
+
 # MIT License - Summary
-
-
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
-## Research Provenance
-
-Arch Angel protected linkage:
-- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
-- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
-- Primary DOI anchors:
-- [The Sovereign Covenant](../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
-- [AGI Charter for Project-AI](../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
-- [The Constitutional Code Store](../../wiki/07_Research/Publications/Paper-20.md) - https://doi.org/10.5281/zenodo.19591660
-- [Why I Am Doing This](../../wiki/07_Research/Publications/Paper-21.md) - https://doi.org/10.5281/zenodo.19592336
-<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
 
 Project-AI is licensed under the MIT License - a permissive open-source license.
 
@@ -43,7 +72,11 @@ Project-AI is licensed under the MIT License - a permissive open-source license.
 
 All dependencies are compatible with MIT:
 
-**ML/Data**: scikit-learn (BSD), numpy (BSD), pandas (BSD), matplotlib (PSF) **API**: openai (Apache 2.0), requests (Apache 2.0) **Security**: cryptography (Apache/BSD), bcrypt (Apache), passlib (BSD) **GUI**: PyQt6 (GPL v3 / Commercial) **Dev Tools**: ruff (MIT), pytest (MIT), black (MIT), flake8 (MIT)
+**ML/Data**: scikit-learn (BSD), numpy (BSD), pandas (BSD), matplotlib (PSF)  
+**API**: openai (Apache 2.0), requests (Apache 2.0)  
+**Security**: cryptography (Apache/BSD), bcrypt (Apache), passlib (BSD)  
+**GUI**: PyQt6 (GPL v3 / Commercial)  
+**Dev Tools**: ruff (MIT), pytest (MIT), black (MIT), flake8 (MIT)
 
 ## Full Text
 
@@ -55,6 +88,6 @@ See `LICENSE` file in the repository root for complete MIT License text.
 - [Choose License](https://choosealicense.com/)
 - [GitHub Licensing](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)
 
-______________________________________________________________________
+---
 
 **Summary**: Project-AI is free to use, modify, and distribute with minimal restrictions.

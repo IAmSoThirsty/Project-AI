@@ -1,9 +1,11 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 God Tier Phase 2: Complete Logging Fix
 Catches ALL remaining f-string logging patterns including error handlers, multi-line, etc.
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Code maintenance tool
+Risk: Medium (modifies source files)
 """
 
 import argparse

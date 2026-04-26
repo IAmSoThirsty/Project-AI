@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Canonical Scenario HTTP Server - External Validation Interface
@@ -27,7 +25,7 @@ import json
 import subprocess
 import sys
 import time
-from datetime import timezone, datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -113,7 +111,7 @@ def execute_canonical_scenario() -> dict[str, Any]:
             metrics["passed_executions"] += 1
         else:
             metrics["failed_executions"] += 1
-        metrics["last_execution_timestamp"] = datetime.now(timezone.utc).isoformat()
+        metrics["last_execution_timestamp"] = datetime.now(UTC).isoformat()
         metrics["last_execution_status"] = "pass" if passed else "fail"
         metrics["last_execution_duration_ms"] = duration_ms
 
@@ -142,7 +140,7 @@ def execute_canonical_scenario() -> dict[str, Any]:
     except subprocess.TimeoutExpired:
         metrics["total_executions"] += 1
         metrics["failed_executions"] += 1
-        metrics["last_execution_timestamp"] = datetime.now(timezone.utc).isoformat()
+        metrics["last_execution_timestamp"] = datetime.now(UTC).isoformat()
         metrics["last_execution_status"] = "timeout"
         metrics["last_execution_duration_ms"] = (time.time() - start_time) * 1000
 
@@ -157,7 +155,7 @@ def execute_canonical_scenario() -> dict[str, Any]:
     except Exception as e:
         metrics["total_executions"] += 1
         metrics["failed_executions"] += 1
-        metrics["last_execution_timestamp"] = datetime.now(timezone.utc).isoformat()
+        metrics["last_execution_timestamp"] = datetime.now(UTC).isoformat()
         metrics["last_execution_status"] = "error"
         metrics["last_execution_duration_ms"] = (time.time() - start_time) * 1000
 
@@ -207,7 +205,7 @@ async def health() -> dict[str, Any]:
     """
     return {
         "status": "healthy",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "version": "1.0.0",
         "replay_script": str(REPLAY_SCRIPT.exists()),
         "trace_file": str(TRACE_FILE.exists()),
@@ -223,7 +221,7 @@ async def get_metrics() -> dict[str, Any]:
         dict: Execution metrics and statistics
     """
     return {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "metrics": metrics,
         "derived": {
             "pass_rate": (

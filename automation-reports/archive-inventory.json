@@ -1,0 +1,806 @@
+[
+  {
+    "FileName": "ACTIONABLE_RECOMMENDATIONS_IMPLEMENTATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "ADVERSARIAL_TESTS_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "ALL_PATCHES_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "ANDROID_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "ARCHIVE_INDEX.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "AUTOMATED_RELEASE_BUILD_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "BADGE_RECOMMENDATIONS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "CI_CD_FIX_ANALYSIS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "CLEANUP_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[current docs]]"
+  },
+  {
+    "FileName": "COMPLETE_TEST_SUITE_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "CRITICAL_FIXES_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "DEFENSE_ENGINE_IMPLEMENTATION_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "DEPLOYMENT_AND_RELEASE_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "DESKTOP_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "DIAGNOSTIC_REPORT_JAVA_INSTALLATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "medium",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "DOMAIN_SUBSYSTEMS_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "E2E_TEST_COVERAGE_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "ENHANCED_SYSTEMS_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "EXHAUSTIVE_TEST_EXECUTION_GUIDE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "FINAL_PROJECT_STATUS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GITHUB_PUSH_SUCCESS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GITHUB_UPDATE_GUIDE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GLOBAL_SCENARIO_ENGINE_DOCS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GLOBAL_SCENARIO_ENGINE_FINDINGS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GLOBAL_SCENARIO_ENGINE_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GLOBAL_WATCH_TOWER.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GOD_TIER_EXPANSION_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GOD_TIER_EXPANSION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GOD_TIER_IMPLEMENTATION_SUMMARY_NEW.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GRADLE_EVOLUTION_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GRADLE_IMPLEMENTATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GUI_IMPLEMENTATION_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "IMPLEMENTATION_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "IMPLEMENTATION_STATUS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "IMPLEMENTATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[CHANGELOG]]"
+  },
+  {
+    "FileName": "INTEGRATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "MASTER_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "OPERATIONAL_SUBSTRUCTURE_GUIDE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "OWASP_COMPLIANCE_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "OWASP_COVERAGE_ANALYSIS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "medium",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PACE_ARCHITECTURE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PACE_IMPLEMENTATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PERPLEXITY_IMPLEMENTATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PRODUCTION_DEPLOYMENT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PRODUCTION_HARDENING_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PRODUCTION_HARDENING_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PRODUCTION_INFRASTRUCTURE_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PROGRAM_SUMMARY.md",
+    "ArchiveReason": "unknown",
+    "HistoricalValue": "unknown",
+    "SupersededBy": "- \"[[ARCHITECTURE_QUICK_REF]]\""
+  },
+  {
+    "FileName": "PROJECT_AI_V1_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "RELEASE_SUMMARY_v1.0.0.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "REPO_RESOURCES_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "REPO_STRUCTURE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "RESTORATION_GUIDE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "ROBOTIC_MAINFRAME_IMPLEMENTATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECURITY_ACTIVATION_STATUS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECURITY_AGENTS_README.md",
+    "ArchiveReason": "migrated",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECURITY_INCIDENT_REPORT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECURITY_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECURITY_UPDATE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SOVEREIGN_MESSAGING_IMPLEMENTATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "STRESS_TEST_FIELDS_CONFIRMED.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_60_PERCENT_IMPROVEMENT_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_HARDENING_UX_IMPLEMENTATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_IMPLEMENTATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_PATCH_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_PRODUCTIVITY_ENHANCEMENT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TECHNICAL_WHITE_PAPER_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TEMPORAL_INTEGRATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TEMPORAL_SECURITY_AGENTS_QUICKSTART.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TESTING_FRAMEWORK_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "THIRSTY_LANG_INTEGRATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "THIRSTY_LANG_TARL_WHITEPAPER.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TRIUMVIRATE_QUICKSTART.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "medium",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "UNIQUENESS_VERIFICATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "medium",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "WEB_CHARTER_DOWNLOADS_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "WHITEPAPER_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "WIRED_ETHICS_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "FINAL_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "GARAK_COMPREHENSIVE_REPORT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "IMPLEMENTATION_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "MISSION_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "medium",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "README.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "BATCH_MERGE_CHECKLIST.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "BATCH_MERGE_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "BATCH_MERGE_VISUALIZATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "CLI_ENHANCEMENT_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "README.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECRET_REMOVAL_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECURITY_FIX_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "TARL_REFACTORING_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "CI_CHECK_ISSUES.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "medium",
+    "SupersededBy": "[[CI Pipeline Documentation]]"
+  },
+  {
+    "FileName": "COMPLETE_REPOSITORY_AUDIT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Repository Audit Report]]"
+  },
+  {
+    "FileName": "CONTRARIAN_FIREWALL_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Contrarian Firewall Security]]"
+  },
+  {
+    "FileName": "HEALTH_REPORT_SUMMARY.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Health Monitoring System]]"
+  },
+  {
+    "FileName": "IMPLEMENTATION_COMPLETE_PLANETARY_DEFENSE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Planetary Defense System]]"
+  },
+  {
+    "FileName": "IMPLEMENTATION_COMPLETE_WATCHTOWER.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Watchtower Monitoring]]"
+  },
+  {
+    "FileName": "IMPLEMENTATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[CHANGELOG]]"
+  },
+  {
+    "FileName": "IRREVERSIBILITY_IMPLEMENTATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "MEMORY_OPTIMIZATION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PHASE4_ACADEMIC_RIGOR_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Academic Documentation Standards]]"
+  },
+  {
+    "FileName": "PHASE5_EXTERNAL_DELIVERABLES_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[External Deployment Guide]]"
+  },
+  {
+    "FileName": "REVIEWER_TRAP_IMPLEMENTATION.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[AI Takeover Reviewer Trap]]"
+  },
+  {
+    "FileName": "SUPER_KERNEL_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Super Kernel Architecture]]"
+  },
+  {
+    "FileName": "THIRSTYS_SECURITY_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "WORKFLOWS_TO_DEPRECATE.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[Phase 4-5 Code Quality  Testing]]"
+  },
+  {
+    "FileName": "CRITICAL_SECRET_EXPOSURE_REPORT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "README.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SECURITY_REMEDIATION_PLAN.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "URGENT_SECURITY_UPDATE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "COMPLETION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "CONSOLIDATION_PROPOSAL.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "FINAL_SESSION_REPORT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "FINAL_STATUS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "FIXES_APPLIED.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "FULL_PROGRAM_TEST_RESULTS.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "FULL_TEST_REPORT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "IMPROVEMENT_AUDIT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "INFRASTRUCTURE_AUDIT_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "LINT_FIXES_REPORT.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "NEW_FEATURES_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "PROJECT_STATUS.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "QUICK_REFERENCE_FIXES.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "medium",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "QUICK_REFERENCE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "QUICK_START.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "README.md",
+    "ArchiveReason": "superseded",
+    "HistoricalValue": "high",
+    "SupersededBy": "[[more recent updates]]"
+  },
+  {
+    "FileName": "SESSION_LEATHER_BOOK_COMPLETE.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SESSION_STATUS.md",
+    "ArchiveReason": "deprecated",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SESSION_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "SYNTAX_HIGHLIGHTING_FIX.md",
+    "ArchiveReason": "migrated",
+    "HistoricalValue": "medium",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "THIRD_PARTY_LICENSES.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  },
+  {
+    "FileName": "WEB_BRANCH_SUMMARY.md",
+    "ArchiveReason": "completed",
+    "HistoricalValue": "high",
+    "SupersededBy": "N/A"
+  }
+]

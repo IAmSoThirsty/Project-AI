@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Bio-Inspired Brain Mapping AI Subsystem
 
@@ -85,7 +83,7 @@ import logging
 import threading
 import uuid
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -1414,3 +1412,4 @@ __all__ = [
     "ModuleState",
     "NetworkState",
 ]
+

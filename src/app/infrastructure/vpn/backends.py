@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 VPN Backend Implementations
 Concrete wrappers for WireGuard, OpenVPN, and IKEv2 protocols
@@ -66,7 +64,11 @@ class WireGuardBackend(VPNBackend):
             elif self.platform == "Windows":
                 # Check for wireguard.exe
                 result = subprocess.run(
-                    ["where", "wireguard"], capture_output=True, timeout=5, shell=True
+                    ["where", "wireguard"],
+                    shell=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
                 )
                 return result.returncode == 0
 
@@ -133,7 +135,9 @@ class WireGuardBackend(VPNBackend):
             # Use WireGuard Windows service
             # Assumes WireGuard for Windows is installed
             cmd = ["wireguard", "/installtunnelservice", self.config_path]
-            result = subprocess.run(cmd, capture_output=True, timeout=30, shell=True)
+            result = subprocess.run(
+                cmd, shell=False, capture_output=True, text=True, timeout=30
+            )
 
             if result.returncode == 0:
                 self.connected = True
@@ -186,7 +190,7 @@ class WireGuardBackend(VPNBackend):
             elif self.platform == "Windows":
                 cmd = ["wireguard", "/uninstalltunnelservice", self.interface_name]
                 result = subprocess.run(
-                    cmd, capture_output=True, timeout=30, shell=True
+                    cmd, shell=False, capture_output=True, text=True, timeout=30
                 )
 
                 if result.returncode == 0:
@@ -244,7 +248,9 @@ class OpenVPNBackend(VPNBackend):
         try:
             if self.platform == "Windows":
                 cmd = ["where", "openvpn"]
-                result = subprocess.run(cmd, capture_output=True, timeout=5, shell=True)
+                result = subprocess.run(
+                    cmd, shell=False, capture_output=True, text=True, timeout=5
+                )
             else:
                 cmd = ["which", "openvpn"]
                 result = subprocess.run(cmd, capture_output=True, timeout=5)
@@ -368,7 +374,9 @@ class IKEv2Backend(VPNBackend):
         try:
             # Use rasdial command
             cmd = ["rasdial", self.connection_name]
-            result = subprocess.run(cmd, capture_output=True, timeout=30, shell=True)
+            result = subprocess.run(
+                cmd, shell=False, capture_output=True, text=True, timeout=30
+            )
 
             if result.returncode == 0:
                 self.connected = True
@@ -416,10 +424,7 @@ class IKEv2Backend(VPNBackend):
                 return False
 
             result = subprocess.run(
-                cmd,
-                capture_output=True,
-                timeout=30,
-                shell=self.platform == "Windows",
+                cmd, shell=False, capture_output=True, text=True, timeout=30
             )
 
             if result.returncode == 0:

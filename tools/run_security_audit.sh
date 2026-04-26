@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/bin/bash
 # Comprehensive security audit script for Project-AI
 # Runs all available security scanners and generates reports

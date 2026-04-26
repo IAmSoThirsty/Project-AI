@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Visual Cue Recognition System for Project-AI
 Implements visual models, camera management, and visual bonding protocol.
@@ -106,14 +104,17 @@ class VisualCueModel(ABC):
         self, frame_data: np.ndarray, context: dict[str, Any] | None = None
     ) -> VisualCueData:
         """Detect visual cues from frame"""
+        pass
 
     @abstractmethod
     def initialize(self) -> bool:
         """Initialize the model"""
+        pass
 
     @abstractmethod
     def shutdown(self) -> None:
         """Shutdown the model"""
+        pass
 
     def is_ready(self) -> bool:
         """Check if model is ready"""

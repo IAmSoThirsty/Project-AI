@@ -1,16 +1,55 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "AI Persona Detector Retraining Guide"
+id: detector-retraining-guide
+type: guide
+version: 1.0.0
+created_date: 2026-01-22
+updated_date: 2026-02-03
+status: active
+author: AI Systems Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: runbook
+retention_policy: permanent
+category: development
+tags:
+  - ai-persona
+  - machine-learning
+  - retraining
+  - cli-tools
+  - pytorch
+  - scikit-learn
+technologies:
+  - Python
+  - PyTorch
+  - scikit-learn
+  - TfidfVectorizer
+related_docs:
+  - AI_PERSONA_IMPLEMENTATION.md
+  - ../architecture/ai-persona-architecture.md
+dependencies:
+  - torch
+  - scikit-learn
+scope: "CLI helper and behavior documentation for retraining AI Persona Zeroth/First-law detectors"
+description: Documentation for the CLI retraining helper and retraining behavior for AI Persona's Zeroth/First-law detectors, including model artifacts, vocabulary management, and audit logging.
+---
+
 # Retraining the AI Persona Detectors
 
-This document describes the CLI retrain helper and the retraining behavior used by the AI Persona.
+This document describes the CLI retrain helper and the retraining behavior used by the
+AI Persona.
 
 ## Overview
 
-The repository includes a lightweight CLI helper at `tools/retrain_detectors.py` that lets you retrain the persona's Zeroth/First-law detectors without opening the GUI. This is useful for automated retraining, scheduled jobs, or debugging model updates.
+The repository includes a lightweight CLI helper at `tools/retrain_detectors.py` that
+lets you retrain the persona's Zeroth/First-law detectors without opening the GUI. This
+is useful for automated retraining, scheduled jobs, or debugging model updates.
 
 ## Model artifacts and vocab
 
-When retraining, the persona saves model artifacts and vocabulary under `data/ai_persona/`:
+When retraining, the persona saves model artifacts and vocabulary under
+`data/ai_persona/`:
 
 - `zeroth_detector.pt`, `first_detector.pt` — PyTorch model weights (written if `torch` is available)
 - `ml_vocab.json` — saved vocabulary (always written when retrain runs)
@@ -21,13 +60,10 @@ When retraining, the persona saves model artifacts and vocabulary under `data/ai
 PowerShell examples:
 
 ```powershell
-
 # Synchronous retrain (runs and exits)
-
 python .\tools\retrain_detectors.py --data-dir .\data
 
 # Start retrain in background and poll progress until completion
-
 python .\tools\retrain_detectors.py --async --data-dir .\data
 ```
 
@@ -39,7 +75,8 @@ python .\tools\retrain_detectors.py --async --data-dir .\data
 
 - If `torch` is installed, retraining will train small linear detectors and save serialized weights. If not,
 
-  the retrain flow still updates `ml_vocab.json` and sets `ml_last_trained` so retrain events are recorded.
+  the retrain flow still updates `ml_vocab.json` and sets `ml_last_trained` so retrain
+  events are recorded.
 
 - Retrain writes a small audit entry to `data/ai_persona/retrain_audit.log` containing timestamp, example counts, and
 
@@ -49,9 +86,14 @@ python .\tools\retrain_detectors.py --async --data-dir .\data
 
 ## Security notes
 
-Retraining is an administrative action. Always validate training data and keep an audit trail of changes. ML detectors augment the Four Laws by providing scores and explainability tokens, but the Four Laws remain the authoritative control mechanism. Use the Learning Request Log and Black Vault for human-in-the-loop approvals prior to persistent learning.
+Retraining is an administrative action. Always validate training data and keep an audit
+trail of changes. ML detectors augment the Four Laws by providing scores and
+explainability tokens, but the Four Laws remain the authoritative control mechanism. Use
+the Learning Request Log and Black Vault for human-in-the-loop approvals prior to
+persistent learning.
 
-______________________________________________________________________
+
+---
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

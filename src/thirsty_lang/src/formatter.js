@@ -1,15 +1,9 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 /**
  * Thirsty-lang Code Formatter
  * Beautify your Thirsty code!
- * 
- * Date: 2026-03-03 15:15 UTC | Status: Active
  */
 
 const fs = require('fs');
-const path = require('path');
-const { validatePath, isValidFile } = require('./path-validator');
 
 class ThirstyFormatter {
   constructor(options = {}) {
@@ -99,7 +93,7 @@ class ThirstyFormatter {
       if (!isValidFile(validatedInputPath)) {
         throw new Error('Input path is not a valid file');
       }
-
+      
       const code = fs.readFileSync(validatedInputPath, 'utf-8');
       const formatted = this.format(code);
 

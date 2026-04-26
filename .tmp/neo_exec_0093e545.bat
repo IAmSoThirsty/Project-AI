@@ -1,0 +1,1 @@
+dir t:\Project-AI-main\src /s /b | findstr "model_providers\|galahad" | head -20

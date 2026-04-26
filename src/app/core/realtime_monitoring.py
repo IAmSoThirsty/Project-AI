@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Real-Time Monitoring Module - Streaming Data Architecture
@@ -18,7 +16,7 @@ import threading
 import time
 from collections import deque
 from collections.abc import Callable
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -494,3 +492,4 @@ def setup_real_time_monitoring(
 
     logger.info("Real-time monitoring setup completed")
     return components
+

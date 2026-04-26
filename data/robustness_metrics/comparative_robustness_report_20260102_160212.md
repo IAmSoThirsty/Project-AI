@@ -1,5 +1,22 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: data-schema
+tags: [data, security, robustness-metrics, benchmarking, red-team, attack-surface]
+created: 2026-01-02
+last_verified: 2026-04-20
+status: current
+related_systems: [defense-system, red-team-testing, security-validation]
+stakeholders: [security-team, ai-safety-team, red-team]
+data_category: monitoring
+persistence: persistent
+security_sensitive: true
+review_cycle: quarterly
+report_type: automated-security
+benchmark_standards: [anthropic-asl, deepmind-ccl, openai-preparedness]
+total_scenarios_tested: 3850
+defense_win_rate: 100
+metrics_categories: [proximity, robustness-margins, effort, uncertainty, transferability]
+---
+
 # Comprehensive Robustness Benchmarking Report
 
 **Generated**: 2026-01-02 16:02:12

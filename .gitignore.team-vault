@@ -1,0 +1,302 @@
+# Obsidian Team Vault Configuration
+# -----------------------------------
+# This is an EXAMPLE .gitignore for team vault scenarios.
+# DO NOT rename to `.gitignore` without reading VAULT_GIT_STRATEGY.md
+#
+# Purpose: Selectively track shared Obsidian configurations while
+#          excluding personal workspace state and cache files.
+#
+# Migration: See VAULT_GIT_STRATEGY.md → "Team Vault Adoption Checklist"
+
+# ============================================================================
+# OBSIDIAN: SELECTIVE TRACKING FOR TEAM VAULTS
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Track: Shared Plugin Manifests (Team-Recommended Plugins)
+# ----------------------------------------------------------------------------
+# These files define WHICH plugins are enabled, not their user data
+!.obsidian/plugins.json                    # Community plugins enabled list
+!.obsidian/community-plugins.json          # Plugin registry and versions
+!.obsidian/core-plugins.json               # Core plugin toggles
+!.obsidian/core-plugins-migration.json     # Plugin migration state
+
+# ----------------------------------------------------------------------------
+# Track: Shared Templates and Snippets
+# ----------------------------------------------------------------------------
+# Standard note templates and CSS customizations for team consistency
+!.obsidian/templates/                      # Note templates directory
+!.obsidian/templates/**                    # All template files
+!.obsidian/snippets/                       # CSS snippets directory
+!.obsidian/snippets/**/*.css               # CSS customizations
+
+# ----------------------------------------------------------------------------
+# Exclude: Personal Workspace State (ALWAYS EXCLUDE)
+# ----------------------------------------------------------------------------
+# These contain user-specific layouts, open files, and ephemeral state
+.obsidian/workspace.json                   # Desktop workspace state
+.obsidian/workspace-mobile.json            # Mobile workspace state
+.obsidian/workspace/                       # Workspace cache
+.obsidian/workspaces.json                  # Saved workspace layouts
+
+# ----------------------------------------------------------------------------
+# Exclude: Personal Preferences (ALWAYS EXCLUDE)
+# ----------------------------------------------------------------------------
+# User-specific settings that should never be shared
+.obsidian/hotkeys.json                     # Personal keybindings
+.obsidian/appearance.json                  # Theme, fonts, accents
+.obsidian/config                           # Legacy config file
+
+# ----------------------------------------------------------------------------
+# Exclude: Cache and Ephemeral Data (ALWAYS EXCLUDE)
+# ----------------------------------------------------------------------------
+# Generated files that should never be committed
+.obsidian/cache/                           # Metadata cache
+.obsidian/plugins/**/                      # All plugin subdirectories
+.obsidian/.trash/                          # Deleted file cache
+
+# ----------------------------------------------------------------------------
+# Exclude: Plugin User Data (ALWAYS EXCLUDE)
+# ----------------------------------------------------------------------------
+# Plugin-specific user data and state
+# NOTE: We track plugins.json (which plugins), not data.json (user's data)
+.obsidian/plugins/*/data.json              # Plugin-specific user settings
+.obsidian/plugins/*/cache/                 # Plugin caches
+.obsidian/plugins/*/*.json                 # Other plugin state files
+
+# ----------------------------------------------------------------------------
+# Conditional: Graph and Types (Use with Caution)
+# ----------------------------------------------------------------------------
+# These can be shared BUT may contain user-specific examples
+# Uncomment to track, but expect merge conflicts if team edits concurrently
+
+# !.obsidian/graph.json                    # Graph view defaults
+# !.obsidian/types.json                    # Property type definitions
+
+# ----------------------------------------------------------------------------
+# Exclude: Bookmarks (ALWAYS EXCLUDE)
+# ----------------------------------------------------------------------------
+# User's personal bookmarks to notes
+.obsidian/bookmarks.json
+
+# ----------------------------------------------------------------------------
+# Exclude: App Settings (HIGH CONFLICT RISK)
+# ----------------------------------------------------------------------------
+# Contains mixed personal/shared settings with machine-specific paths
+.obsidian/app.json                         # App-level settings
+
+# ============================================================================
+# STANDARD GITIGNORE (from main .gitignore)
+# ============================================================================
+
+# Health report snapshots and archives (keep canonical report only)
+data/health_snapshots/
+docs/assets/health_report_*.png
+governance/audit_log.yaml
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Release artifacts
+releases/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# Pyre
+.pyre/
+
+# Ruff
+.ruff_cache/
+
+# Environments
+.env
+.env.local
+.env.*.local
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Security and secrets
+*.key
+*.pem
+*.p12
+secrets.json
+credentials.json
+secret_scan_report.json
+*secret*scan*.json
+*secret*scan*.txt
+
+# IDEs
+.vscode/
+.idea/
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated test data
+data/generated_tests/
+
+# Global scenario engine cache
+data/global_scenarios*/cache/
+
+# Sovereign messaging data (contains private keys)
+data/sovereign_messages*/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+*.iml
+local.properties
+
+# Android
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+bin/
+gen/
+out/
+captures/
+.externalNativeBuild
+.cxx
+
+# Temporal.io
+.env.temporal
+config/temporal/*.local
+data/temporal/
+actionlint*
+
+# Unity
+unity/Library/
+unity/Temp/
+unity/Obj/
+unity/Build/
+unity/Builds/
+unity/Logs/
+unity/MemoryCaptures/
+unity/UserSettings/
+unity/**/*.csproj
+unity/**/*.unityproj
+unity/**/*.sln
+unity/**/*.suo
+unity/**/*.tmp
+unity/**/*.user
+unity/**/*.userprefs
+unity/**/*.pidb
+unity/**/*.booproj
+unity/**/*.svd
+unity/**/*.pdb
+unity/**/*.mdb
+unity/**/*.opendb
+unity/**/*.VC.db
+
+# Unity3D generated meta files
+unity/**/*.pidb.meta
+unity/**/*.pdb.meta
+unity/**/*.mdb.meta
+
+# Unity3D generated file on crash reports
+unity/sysinfo.txt
+
+# Keep StreamingAssets files
+!unity/StreamingAssets/
+!unity/StreamingAssets/**
+
+# Antigravity IDE artifacts
+.antigravity/artifacts/
+.antigravity/.cache/
+.antigravity/logs/
+node_modules/
+
+# Inspection & Audit System outputs
+audit_reports/
+test_audit_sample/
+test_audit_output/
+
+# ============================================================================
+# TEAM VAULT USAGE NOTES
+# ============================================================================
+#
+# After renaming this file to `.gitignore`:
+#
+# 1. Clean existing .obsidian/ state:
+#    ```powershell
+#    Remove-Item .obsidian/cache -Recurse -Force
+#    Remove-Item .obsidian/workspace*.json -Force
+#    ```
+#
+# 2. Verify selective tracking:
+#    ```powershell
+#    git status
+#    # Should show: plugins.json, templates/, snippets/
+#    # Should NOT show: workspace.json, cache/, plugins/*/data.json
+#    ```
+#
+# 3. Stage shared configs:
+#    ```powershell
+#    git add .obsidian/plugins.json
+#    git add .obsidian/community-plugins.json
+#    git add .obsidian/templates/
+#    git commit -m "feat: add team vault configuration"
+#    ```
+#
+# 4. Document team-required plugins in README.md
+#
+# 5. Test on clean clone to verify plugin installation
+#
+# ============================================================================

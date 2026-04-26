@@ -1,5 +1,19 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: example
+tags: [examples, temporal, workflows, learning, distributed-systems]
+created: 2024-01-03
+last_verified: 2026-04-20
+status: current
+related_systems: [temporal-io, docker, python-sdk, learning-system, image-generation]
+stakeholders: [developers, learners, contributors]
+complexity_level: intermediate
+demonstrates: [temporal-workflows, durable-execution, long-running-tasks, batch-processing, content-validation, retry-mechanisms, workflow-monitoring]
+runnable: true
+estimated_completion: 15
+requires: [temporal-server, temporal-worker, python-temporal-sdk, docker]
+review_cycle: quarterly
+---
+
 # Temporal.io Workflow Examples
 
 This directory contains example scripts demonstrating how to use Temporal.io workflows in Project-AI.

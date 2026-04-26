@@ -1,5 +1,20 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: deployment-guide
+tags: [deployment, desktop, electron, cross-platform, production-ready, desktop-app]
+created: 2026-01-27
+last_verified: 2026-04-20
+status: current
+related_systems: [governance-kernel, electron, react, typescript, material-ui]
+stakeholders: [devops, deployment-team, end-users, desktop-developers]
+deployment_target: desktop
+deployment_complexity: moderate
+production_ready: true
+review_cycle: monthly
+platform_support: [windows, macos, linux]
+build_system: [vite, electron-builder]
+dependencies: [node-18+, governance-kernel]
+---
+
 # Project AI - Desktop Application
 
 ## Overview
@@ -9,31 +24,26 @@ Cross-platform desktop application for **Project AI Governance Kernel** built wi
 ## Features
 
 ✅ **Native Desktop Application**
-
 - Windows, macOS, Linux support
 - Custom window controls
 - System tray integration
 - Persistent settings
 
 ✅ **Triumvirate Dashboard**
-
 - Real-time kernel status
 - Pillar health monitoring
 - Recent decisions
 
 ✅ **Intent Submission**
-
 - Interactive form
 - Real-time governance evaluation
 - Detailed verdict display
 
 ✅ **Audit Log Viewer**
-
 - Complete decision history
 - Cryptographic tracking
 
 ✅ **TARL Rules Explorer**
-
 - Policy visualization
 - Risk indicators
 
@@ -66,7 +76,6 @@ npm run dev
 ```
 
 This starts:
-
 1. Vite dev server (React hot reload)
 2. Electron app
 
@@ -128,31 +137,25 @@ desktop/
 ## Features in Detail
 
 ### Custom Title Bar
-
 - Minimize, maximize, close controls
 - Drag to move window
 - Platform-native feel
 
 ### Sidebar Navigation
-
 - Dashboard
 - Submit Intent
 - Audit Log
 - TARL Rules
 
 ### API Integration
-
 All endpoints:
-
 - `GET /health` - Kernel status
 - `GET /tarl` - Governance rules
 - `GET /audit` - Audit history
 - `POST /intent` - Submit for evaluation
 
 ### Persistent Settings
-
 Uses `electron-store` for:
-
 - Window size/position
 - User preferences
 
@@ -166,7 +169,6 @@ Uses `electron-store` for:
 ## Distribution
 
 Built apps include:
-
 - **Windows**: NSIS installer (.exe)
 - **macOS**: DMG image
 - **Linux**: AppImage
@@ -174,12 +176,10 @@ Built apps include:
 ## Troubleshooting
 
 ### Cannot connect to backend
-
 - Verify API running at `localhost:8001`
 - Check firewall settings
 
 ### Build fails
-
 ```bash
 npm clean
 npm install

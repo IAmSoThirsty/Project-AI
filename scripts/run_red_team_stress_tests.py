@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Run Red Team Hard Stress Tests - 750 Scenarios with 25% Increased Variation.
@@ -9,6 +7,10 @@ against Project-AI with enhanced variation and complexity.
 
 Usage:
     python scripts/run_red_team_stress_tests.py [--export] [--categories RT-A,RT-B]
+
+GOVERNANCE: GOVERNED
+Classification: Security testing
+Risk: High (stress tests system boundaries)
 """
 
 import argparse
@@ -21,6 +23,9 @@ from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+# Import governance
+from app.core.runtime.router import route_request
 
 from app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
 from app.core.red_team_stress_test import RedTeamScenario, RedTeamStressTestGenerator

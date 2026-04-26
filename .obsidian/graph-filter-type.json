@@ -1,0 +1,118 @@
+{
+  "name": "Content Type Filters",
+  "description": "Filter graph nodes by document type and content classification",
+  "version": "1.0.0",
+  "filters": [
+    {
+      "id": "source-code",
+      "name": "Source Code Documentation",
+      "query": "path:src path:app path:web/backend path:web/frontend",
+      "include": true,
+      "description": "Show only code documentation and implementation files",
+      "useCase": "Focus on implementation details and code architecture"
+    },
+    {
+      "id": "governance-policy",
+      "name": "Governance & Policy",
+      "query": "path:governance path:policies tag:#governance tag:#policy",
+      "include": true,
+      "description": "Show governance frameworks and policy documents",
+      "useCase": "Review organizational guidelines and compliance requirements"
+    },
+    {
+      "id": "architecture-docs",
+      "name": "Architecture Documentation",
+      "query": "path:docs/architecture tag:#architecture tag:#design-pattern",
+      "include": true,
+      "description": "Show system architecture and design documentation",
+      "useCase": "Understand system design and architectural decisions"
+    },
+    {
+      "id": "api-references",
+      "name": "API References",
+      "query": "path:api tag:#api-reference tag:#endpoint",
+      "include": true,
+      "description": "Show API documentation and endpoint references",
+      "useCase": "Navigate API contracts and integration points"
+    },
+    {
+      "id": "test-documentation",
+      "name": "Testing Documentation",
+      "query": "path:tests tag:#testing tag:#test-case tag:#qa",
+      "include": true,
+      "description": "Show test plans, cases, and QA documentation",
+      "useCase": "Review testing strategy and coverage"
+    },
+    {
+      "id": "deployment-guides",
+      "name": "Deployment & Operations",
+      "query": "path:docker path:helm path:.github/workflows tag:#deployment tag:#devops",
+      "include": true,
+      "description": "Show deployment guides and operational documentation",
+      "useCase": "Plan deployments and infrastructure changes"
+    },
+    {
+      "id": "user-documentation",
+      "name": "User Documentation",
+      "query": "tag:#user-guide tag:#tutorial tag:#quickstart tag:#audience/end-user",
+      "include": true,
+      "description": "Show end-user facing documentation",
+      "useCase": "Review user experience and documentation quality"
+    },
+    {
+      "id": "agent-reports",
+      "name": "Agent Mission Reports",
+      "query": "path:AGENT tag:#mission-report tag:#completion-report",
+      "include": true,
+      "description": "Show AI agent mission completion reports",
+      "useCase": "Track agent deliverables and project progress"
+    },
+    {
+      "id": "security-docs",
+      "name": "Security Documentation",
+      "query": "path:security tag:#security tag:#vulnerability tag:#audit",
+      "include": true,
+      "description": "Show security audits, vulnerability reports, and security guides",
+      "useCase": "Review security posture and threat landscape"
+    },
+    {
+      "id": "templates",
+      "name": "Templates & Examples",
+      "query": "path:templates tag:#template tag:#example",
+      "include": true,
+      "description": "Show document templates and example files",
+      "useCase": "Find reusable templates for documentation"
+    },
+    {
+      "id": "archived-content",
+      "name": "Archived Content",
+      "query": "path:archive tag:#archived tag:#deprecated",
+      "include": false,
+      "description": "Hide archived and deprecated content (default: hidden)",
+      "useCase": "Focus on current, active documentation only"
+    },
+    {
+      "id": "orphan-nodes",
+      "name": "Orphan Nodes",
+      "query": "NOT [[*]] NOT tag:*",
+      "include": false,
+      "description": "Hide nodes with no connections or tags",
+      "useCase": "Reduce clutter from disconnected files"
+    }
+  ],
+  "usage": {
+    "applyingFilters": [
+      "Open Obsidian Graph View",
+      "Click 'Filters' in the toolbar",
+      "Toggle filters on/off using the queries above",
+      "Combine multiple filters for complex views"
+    ],
+    "commonFilterCombinations": {
+      "developerView": ["source-code", "api-references", "test-documentation"],
+      "architectView": ["architecture-docs", "design-patterns", "api-references"],
+      "userView": ["user-documentation", "tutorials", "quickstart-guides"],
+      "securityView": ["security-docs", "audit-reports", "vulnerability-management"],
+      "cleanView": ["NOT archived-content", "NOT orphan-nodes"]
+    }
+  }
+}

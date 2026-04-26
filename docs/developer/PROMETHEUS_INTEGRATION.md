@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, prometheus, monitoring, metrics, integration, observability, timeseries]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [prometheus-server, metrics-exporters, alertmanager, grafana, monitoring-stack]
+stakeholders: [developers, devops, sre, monitoring-engineers]
+audience: intermediate
+prerequisites: [prometheus-basics, yaml-configuration, metrics-concepts, monitoring-fundamentals]
+estimated_time: 50 minutes
+review_cycle: quarterly
+---
 # Prometheus Integration Guide for Project-AI
 
 ## Overview
@@ -8,17 +19,17 @@ This document describes the Prometheus monitoring integration for Project-AI, pr
 
 ## Table of Contents
 
-1. [Architecture](#architecture)
-1. [Quick Start](#quick-start)
-1. [Metrics Categories](#metrics-categories)
-1. [Configuration](#configuration)
-1. [Grafana Dashboards](#grafana-dashboards)
-1. [Alerting](#alerting)
-1. [Integration with Existing Systems](#integration-with-existing-systems)
-1. [Troubleshooting](#troubleshooting)
-1. [Advanced Usage](#advanced-usage)
+1. [[#architecture|Architecture]]
+1. [[#quick-start|Quick Start]]
+1. [[#metrics-categories|Metrics Categories]]
+1. [[#configuration|Configuration]]
+1. [[#grafana-dashboards|Grafana Dashboards]]
+1. [[#alerting|Alerting]]
+1. [[#integration-with-existing-systems|Integration with Existing Systems]]
+1. [[#troubleshooting|Troubleshooting]]
+1. [[#advanced-usage|Advanced Usage]]
 
-______________________________________________________________________
+---
 
 ## Architecture
 
@@ -60,7 +71,7 @@ The Prometheus integration consists of:
 └──────────────┘           └──────────────┘
 ```
 
-______________________________________________________________________
+---
 
 ## Quick Start
 
@@ -96,19 +107,16 @@ Navigate to Grafana → Dashboards → Project-AI folder
 To run metrics server without Docker:
 
 ```bash
-
 # Install dependencies
-
 pip install prometheus-client
 
 # Start metrics server
-
 python -m src.app.monitoring.metrics_server
 ```
 
 Server will be available at <http://localhost:8000/metrics>
 
-______________________________________________________________________
+---
 
 ## Metrics Categories
 
@@ -117,21 +125,17 @@ ______________________________________________________________________
 Track AI personality, mood, and interaction patterns:
 
 ```promql
-
 # Current mood levels
-
 project_ai_persona_mood_energy
 project_ai_persona_mood_enthusiasm
 project_ai_persona_mood_contentment
 project_ai_persona_mood_engagement
 
 # Personality traits
-
 project_ai_persona_trait_value{trait="curiosity"}
 project_ai_persona_trait_value{trait="empathy"}
 
 # Interaction counts
-
 rate(project_ai_persona_interactions_total[5m])
 ```
 
@@ -146,18 +150,14 @@ rate(project_ai_persona_interactions_total[5m])
 Ethical decision-making and policy enforcement:
 
 ```promql
-
 # Validation results
-
 rate(project_ai_four_laws_validations_total{result="allowed"}[5m])
 rate(project_ai_four_laws_validations_total{result="denied"}[5m])
 
 # Denials by law and severity
-
 project_ai_four_laws_denials_total{law_violated="first_law",severity="critical"}
 
 # Override attempts
-
 project_ai_four_laws_overrides_total{result="success"}
 ```
 
@@ -172,21 +172,16 @@ project_ai_four_laws_overrides_total{result="success"}
 Knowledge base health and query performance:
 
 ```promql
-
 # Knowledge base size
-
 project_ai_memory_knowledge_entries{category="technical"}
 
 # Query performance
-
 histogram_quantile(0.95, rate(project_ai_memory_query_duration_seconds_bucket[5m]))
 
 # Error rates
-
 rate(project_ai_memory_query_errors_total[5m])
 
 # Storage size
-
 project_ai_memory_storage_bytes
 ```
 
@@ -201,18 +196,14 @@ project_ai_memory_storage_bytes
 Human-in-the-loop learning and Black Vault monitoring:
 
 ```promql
-
 # Request status breakdown
-
 project_ai_learning_requests_total{status="approved"}
 project_ai_learning_requests_total{status="denied"}
 
 # Pending queue size
-
 project_ai_learning_pending_requests
 
 # Black Vault additions
-
 rate(project_ai_learning_black_vault_additions_total[15m])
 ```
 
@@ -227,21 +218,16 @@ rate(project_ai_learning_black_vault_additions_total[15m])
 Threat detection and defensive system monitoring:
 
 ```promql
-
 # Security incidents
-
 rate(project_ai_security_incidents_total{severity="critical"}[5m])
 
 # Cerberus blocks
-
 project_ai_cerberus_blocks_total{attack_type="injection"}
 
 # Threat scores
-
 project_ai_threat_detection_score{threat_type="prompt_injection"}
 
 # Authentication failures
-
 rate(project_ai_auth_failures_total[5m])
 ```
 
@@ -256,22 +242,17 @@ rate(project_ai_auth_failures_total[5m])
 Plugin health and execution tracking:
 
 ```promql
-
 # Loaded plugins
-
 project_ai_plugin_loaded_total
 
 # Execution success rate
-
 rate(project_ai_plugin_execution_total{status="success"}[5m]) /
 rate(project_ai_plugin_execution_total[5m])
 
 # Execution duration
-
 histogram_quantile(0.95, rate(project_ai_plugin_execution_duration_seconds_bucket[5m]))
 
 # Load failures
-
 project_ai_plugin_load_failures_total
 ```
 
@@ -286,25 +267,20 @@ project_ai_plugin_load_failures_total
 Application and API performance:
 
 ```promql
-
 # API latency
-
 histogram_quantile(0.99, rate(project_ai_api_request_duration_seconds_bucket[5m]))
 
 # Request rate
-
 rate(project_ai_api_requests_total[5m])
 
 # Active users
-
 project_ai_active_users
 
 # Application uptime
-
 project_ai_app_uptime_seconds
 ```
 
-______________________________________________________________________
+---
 
 ## Configuration
 
@@ -320,22 +296,15 @@ Located at `config/prometheus/prometheus.yml`:
 
 ```yaml
 scrape_configs:
-
   - job_name: 'project-ai-app'
-
     static_configs:
-
       - targets: ['project-ai:8000']
-
     metrics_path: '/metrics'
     scrape_interval: 15s
 
   - job_name: 'project-ai-security'
-
     static_configs:
-
       - targets: ['project-ai:8002']
-
     metrics_path: '/security-metrics'
     scrape_interval: 15s
 ```
@@ -347,9 +316,7 @@ Located at `config/alertmanager/alertmanager.yml`:
 **Configure email alerts** by setting environment variables:
 
 ```bash
-
 # .env file
-
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USERNAME=your-email@gmail.com
@@ -372,22 +339,18 @@ ALERT_EMAIL_SECURITY=security@project-ai.local
 Add to `.env` file:
 
 ```bash
-
 # Enable metrics collection
-
 ENABLE_METRICS=true
 METRICS_PORT=8000
 
 # Grafana credentials
-
 GRAFANA_USER=admin
 GRAFANA_PASSWORD=change_me_in_production
 
 # Alert email configuration (see AlertManager section)
-
 ```
 
-______________________________________________________________________
+---
 
 ## Grafana Dashboards
 
@@ -422,21 +385,17 @@ Located in `config/grafana/dashboards/`:
 **Example PromQL queries for custom panels:**
 
 ```promql
-
 # Average AI mood over 1 hour
-
 avg_over_time(project_ai_persona_mood_contentment[1h])
 
 # Four Laws denial rate by severity
-
 sum(rate(project_ai_four_laws_denials_total[5m])) by (severity)
 
 # Top 5 most active plugins
-
 topk(5, rate(project_ai_plugin_execution_total[5m]))
 ```
 
-______________________________________________________________________
+---
 
 ## Alerting
 
@@ -469,9 +428,7 @@ Located in `config/prometheus/alerts/`:
 ### Testing Alerts
 
 ```bash
-
 # Manually trigger test alert
-
 curl -X POST http://localhost:9093/api/v1/alerts \
   -H 'Content-Type: application/json' \
   -d '[{
@@ -495,7 +452,7 @@ During maintenance:
 1. Set duration and comment
 1. Create silence
 
-______________________________________________________________________
+---
 
 ## Integration with Existing Systems
 
@@ -507,21 +464,15 @@ The metrics collector provides easy integration hooks:
 from app.monitoring.metrics_collector import collector
 
 # In your AI Persona code
-
 def update_mood(self, new_mood):
     self.mood = new_mood
-
     # Collect metrics
-
     collector.collect_persona_metrics(self.get_state())
 
 # In Four Laws validation
-
 def validate_action(self, action, context):
     is_allowed, reason = self._check_rules(action, context)
-
     # Record validation
-
     collector.record_four_laws_validation(
         is_allowed=is_allowed,
         law_violated=reason if not is_allowed else None,
@@ -538,7 +489,6 @@ The collector automatically scrapes from disk every scrape interval (15s):
 from app.monitoring.metrics_collector import collector
 
 # Manually trigger collection
-
 collector.collect_all_metrics()
 ```
 
@@ -547,9 +497,7 @@ collector.collect_all_metrics()
 Add custom metrics to `prometheus_exporter.py`:
 
 ```python
-
 # In PrometheusMetrics.__init__()
-
 self.custom_metric = Counter(
     'project_ai_custom_metric_total',
     'Description of custom metric',
@@ -558,12 +506,11 @@ self.custom_metric = Counter(
 )
 
 # Usage
-
 from app.monitoring.prometheus_exporter import metrics
 metrics.custom_metric.labels(label1='value1', label2='value2').inc()
 ```
 
-______________________________________________________________________
+---
 
 ## Troubleshooting
 
@@ -576,7 +523,6 @@ ______________________________________________________________________
    ```
 
 1. **Verify Prometheus is scraping:**
-
    - Navigate to <http://localhost:9090/targets>
    - Check if `project-ai-app` target is UP
    - If DOWN, check container networking
@@ -591,12 +537,10 @@ ______________________________________________________________________
 ### Alerts Not Firing
 
 1. **Verify alert rules loaded:**
-
    - Navigate to <http://localhost:9090/alerts>
    - Check if rules are present
 
 1. **Check AlertManager:**
-
    - Navigate to <http://localhost:9093>
    - Verify configuration and status
 
@@ -610,17 +554,14 @@ ______________________________________________________________________
 ### Dashboard Not Showing Data
 
 1. **Verify datasource connection:**
-
    - Grafana → Configuration → Data Sources
    - Test connection to Prometheus
 
 1. **Check time range:**
-
    - Ensure dashboard time range covers when app was running
    - Try "Last 5 minutes" to see recent data
 
 1. **Verify metrics exist:**
-
    - In Prometheus (http://localhost:9090)
    - Run query: `project_ai_persona_mood_energy`
 
@@ -631,26 +572,20 @@ If Prometheus memory usage is high:
 1. **Reduce retention time:**
 
    ```yaml
-
    # docker-compose.yml
-
    command:
-
      - '--storage.tsdb.retention.time=7d'  # Reduce from 15d
-
    ```
 
 1. **Reduce scrape frequency:**
 
    ```yaml
-
    # prometheus.yml
-
    global:
      scrape_interval: 30s  # Increase from 15s
    ```
 
-______________________________________________________________________
+---
 
 ## Advanced Usage
 
@@ -661,13 +596,9 @@ For multi-instance deployment:
 1. **Enable remote write in Prometheus:**
 
 ```yaml
-
 # prometheus.yml
-
 remote_write:
-
   - url: "http://thanos-receiver:19291/api/v1/receive"
-
     queue_config:
       capacity: 10000
       max_shards: 50
@@ -676,9 +607,7 @@ remote_write:
 1. **Deploy Thanos or Mimir:**
 
 ```bash
-
 # Example Thanos sidecar
-
 docker run -d \
   --name thanos-sidecar \
   --network project-ai-network \
@@ -694,18 +623,12 @@ docker run -d \
 For dynamic scraping of multiple instances:
 
 ```yaml
-
 # prometheus.yml
-
 scrape_configs:
-
   - job_name: 'project-ai-dynamic'
-
     file_sd_configs:
-
       - files:
         - '/etc/prometheus/targets/*.json'
-
         refresh_interval: 30s
 ```
 
@@ -726,13 +649,9 @@ Create target files:
 ### Long-term Storage with Mimir
 
 ```yaml
-
 # prometheus.yml
-
 remote_write:
-
   - url: "http://mimir:9009/api/v1/push"
-
     headers:
       X-Scope-OrgID: project-ai
     queue_config:
@@ -746,30 +665,20 @@ remote_write:
 Create pre-computed aggregations:
 
 ```yaml
-
 # prometheus.yml - add to rule_files
-
 - 'recording_rules.yml'
-
 ```
 
 ```yaml
-
 # recording_rules.yml
-
 groups:
-
   - name: project_ai_aggregations
-
     interval: 30s
     rules:
-
       - record: project_ai:persona_mood_avg
-
         expr: avg(project_ai_persona_mood_energy)
-
+      
       - record: project_ai:api_request_rate_5m
-
         expr: rate(project_ai_api_requests_total[5m])
 ```
 
@@ -782,24 +691,21 @@ from prometheus_client import start_http_server, Summary
 import time
 
 # Create metric
-
 REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
 
 # Decorate function
-
 @REQUEST_TIME.time()
 def process_request(t):
     time.sleep(t)
 
 # Start server
-
 if __name__ == '__main__':
     start_http_server(8000)
     while True:
         process_request(random.random())
 ```
 
-______________________________________________________________________
+---
 
 ## Best Practices
 
@@ -807,12 +713,12 @@ ______________________________________________________________________
 1. **Set Appropriate Scrape Intervals**: Balance between freshness and overhead
 1. **Configure Retention**: Match retention to storage and query needs
 1. **Use Recording Rules**: Pre-compute expensive queries
-1. **Monitor Prometheus Itself**: Watch prometheus_tsdb\_\* metrics
+1. **Monitor Prometheus Itself**: Watch prometheus_tsdb_* metrics
 1. **Test Alerts**: Regularly test alert delivery and response procedures
 1. **Dashboard Organization**: Group related panels, use consistent naming
 1. **Document Custom Metrics**: Add descriptions and usage examples
 
-______________________________________________________________________
+---
 
 ## Security Considerations
 
@@ -823,7 +729,7 @@ ______________________________________________________________________
 1. **Sensitive Data**: Avoid exposing PII in metric labels
 1. **API Keys**: Store credentials in secrets, not config files
 
-______________________________________________________________________
+---
 
 ## Support and Resources
 
@@ -832,7 +738,7 @@ ______________________________________________________________________
 - **PromQL Guide**: <https://prometheus.io/docs/prometheus/latest/querying/basics/>
 - **Project-AI Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
 
-______________________________________________________________________
+---
 
 ## Appendix: Complete Metric List
 
@@ -844,6 +750,7 @@ See `src/app/monitoring/prometheus_exporter.py` for the complete, up-to-date met
 - Component: `persona_`, `four_laws_`, `memory_`, etc.
 - Type suffix: `_total` (counter), `_seconds` (histogram), no suffix (gauge)
 
-______________________________________________________________________
+---
 
-*Last Updated: 2026-01-07* *Version: 1.0*
+*Last Updated: 2026-01-07*
+*Version: 1.0*

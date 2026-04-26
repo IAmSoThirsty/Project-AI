@@ -1,0 +1,281 @@
+## 🔴 CRITICAL SECURITY ISSUE: Missing Password Policy Enforcement
+
+### Executive Summary
+
+Project-AI's authentication system currently **accepts ANY password without validation**, including empty passwords, single-character passwords, or trivial passwords like "123" or "a". This creates a severe security vulnerability that enables brute-force attacks and credential stuffing.
+
+---
+
+### Current Vulnerable State
+
+#### 1. **UserManager (`src/app/core/user_manager.py`)**
+- `create_user()` method (lines 142-163) accepts **ANY** password without validation
+- No minimum length requirement
+- No complexity requirements (uppercase, lowercase, digits, special characters)
+- **Example vulnerability:** Users can create accounts with password = "" (empty string)
+
+```python
+# Current implementation - NO VALIDATION ❌
+def create_user(self, username, password, email="", role="user"):
+    if username in self.users:
+        return False
+    # Password is hashed WITHOUT any validation check
+    pw_hash = pwd_context.hash(password)  # Accepts ANY password!
+```
+
+#### 2. **CommandOverrideSystem (`src/app/core/command_override.py`)**
+- `set_master_password()` method (lines 166-175) has **NO password validation**
+- Master password can be set to trivial values
+- Critical system with no password strength enforcement
+
+```python
+# Current implementation - NO VALIDATION ❌
+def set_master_password(self, password: str) -> bool:
+    try:
+        self.master_password_hash = self._hash_password(password)  # Accepts ANY password!
+        self._save_config()
+        return True
+```
+
+---
+
+### Security Risks
+
+1. **Brute-Force Attacks**: Weak passwords can be cracked in seconds/minutes
+2. **Credential Stuffing**: Users with weak passwords are vulnerable to credential reuse attacks
+3. **Social Engineering**: Trivial passwords reduce the security barrier significantly
+4. **Compliance Violations**: Fails OWASP, NIST, and industry security standards
+5. **Master Password Compromise**: Override system with weak master password defeats entire security model
+
+---
+
+### Best Practice Reference: `hydra_50_security.py`
+
+Project-AI **ALREADY HAS** a proper password validation implementation in `src/app/core/hydra_50_security.py` (lines 165-185):
+
+```python
+@classmethod
+def validate_password(cls, password: str) -> tuple[bool, str]:
+    """Validate password strength"""
+    if not password:
+        return False, "Password cannot be empty"
+
+    if len(password) < 8:
+        return False, "Password must be at least 8 characters"
+
+    if not any(c.isupper() for c in password):
+        return False, "Password must contain uppercase letter"
+
+    if not any(c.islower() for c in password):
+        return False, "Password must contain lowercase letter"
+
+    if not any(c.isdigit() for c in password):
+        return False, "Password must contain digit"
+
+    if not any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password):
+        return False, "Password must contain special character"
+
+    return True, "Valid"
+```
+
+**This implementation should be extracted to a shared utility module and used across ALL authentication systems.**
+
+---
+
+### Required Password Policy
+
+Enforce the following minimum password requirements:
+
+1. ✅ **Minimum 8 characters** (industry standard, NIST recommendation)
+2. ✅ **At least one uppercase letter** (A-Z)
+3. ✅ **At least one lowercase letter** (a-z)
+4. ✅ **At least one digit** (0-9)
+5. ✅ **At least one special character** (!@#$%^&*()_+-=[]{}|;:,.<>?)
+6. ✅ **Non-empty** (reject empty strings)
+
+---
+
+### Implementation Guidance
+
+#### Step 1: Extract Shared Validation Function
+
+Create `src/app/core/password_validator.py`:
+
+```python
+"""Shared password validation utility for all authentication systems."""
+
+def validate_password(password: str) -> tuple[bool, str]:
+    """Validate password meets security requirements.
+    
+    Returns:
+        (is_valid, message): Tuple with validation status and error/success message
+    """
+    if not password:
+        return False, "Password cannot be empty"
+
+    if len(password) < 8:
+        return False, "Password must be at least 8 characters"
+
+    if not any(c.isupper() for c in password):
+        return False, "Password must contain at least one uppercase letter"
+
+    if not any(c.islower() for c in password):
+        return False, "Password must contain at least one lowercase letter"
+
+    if not any(c.isdigit() for c in password):
+        return False, "Password must contain at least one digit"
+
+    if not any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password):
+        return False, "Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)"
+
+    return True, "Password meets security requirements"
+```
+
+#### Step 2: Update UserManager
+
+```python
+# In src/app/core/user_manager.py
+from app.core.password_validator import validate_password
+
+def create_user(self, username, password, email="", role="user"):
+    """Create new user with password validation."""
+    if username in self.users:
+        return False
+    
+    # VALIDATE PASSWORD BEFORE HASHING ✅
+    is_valid, message = validate_password(password)
+    if not is_valid:
+        raise ValueError(f"Password validation failed: {message}")
+    
+    # Hash validated password
+    pw_hash = pwd_context.hash(password)
+    # ... rest of implementation
+```
+
+#### Step 3: Update CommandOverrideSystem
+
+```python
+# In src/app/core/command_override.py
+from app.core.password_validator import validate_password
+
+def set_master_password(self, password: str) -> bool:
+    """Set the master password with validation."""
+    # VALIDATE PASSWORD BEFORE HASHING ✅
+    is_valid, message = validate_password(password)
+    if not is_valid:
+        self._log_action("SET_MASTER_PASSWORD", f"Invalid password: {message}", success=False)
+        raise ValueError(f"Password validation failed: {message}")
+    
+    try:
+        self.master_password_hash = self._hash_password(password)
+        self._save_config()
+        self._log_action("SET_MASTER_PASSWORD", "Master password configured")
+        return True
+    except Exception as e:
+        self._log_action("SET_MASTER_PASSWORD", str(e), success=False)
+        return False
+```
+
+---
+
+### Testing Requirements
+
+#### Unit Tests (`tests/test_password_validation.py`)
+
+```python
+import pytest
+from app.core.password_validator import validate_password
+
+def test_reject_empty_password():
+    is_valid, msg = validate_password("")
+    assert not is_valid
+    assert "empty" in msg.lower()
+
+def test_reject_short_password():
+    is_valid, msg = validate_password("Short1!")
+    assert not is_valid
+    assert "8 characters" in msg
+
+def test_reject_no_uppercase():
+    is_valid, msg = validate_password("lowercase123!")
+    assert not is_valid
+    assert "uppercase" in msg.lower()
+
+def test_reject_no_lowercase():
+    is_valid, msg = validate_password("UPPERCASE123!")
+    assert not is_valid
+    assert "lowercase" in msg.lower()
+
+def test_reject_no_digit():
+    is_valid, msg = validate_password("NoDigits!")
+    assert not is_valid
+    assert "digit" in msg.lower()
+
+def test_reject_no_special_char():
+    is_valid, msg = validate_password("NoSpecial123")
+    assert not is_valid
+    assert "special" in msg.lower()
+
+def test_accept_valid_password():
+    is_valid, msg = validate_password("ValidPass123!")
+    assert is_valid
+    assert "meets" in msg.lower() or "valid" in msg.lower()
+```
+
+#### Integration Tests
+
+```python
+def test_user_manager_rejects_weak_password(user_manager):
+    with pytest.raises(ValueError, match="Password validation failed"):
+        user_manager.create_user("testuser", "weak")
+
+def test_command_override_rejects_weak_password(override_system):
+    with pytest.raises(ValueError, match="Password validation failed"):
+        override_system.set_master_password("123")
+```
+
+---
+
+### Migration Plan
+
+1. **Phase 1**: Create shared `password_validator.py` module
+2. **Phase 2**: Update `UserManager.create_user()` with validation
+3. **Phase 3**: Update `CommandOverrideSystem.set_master_password()` with validation
+4. **Phase 4**: Add comprehensive unit tests
+5. **Phase 5**: Update GUI to display password requirements to users
+6. **Phase 6**: Add password strength meter in UI (optional enhancement)
+
+---
+
+### Acceptance Criteria
+
+- [ ] All authentication systems enforce minimum 8-character passwords
+- [ ] Passwords require uppercase, lowercase, digit, and special character
+- [ ] Empty passwords are rejected with clear error message
+- [ ] Unit tests cover all rejection scenarios
+- [ ] Integration tests verify enforcement in UserManager and CommandOverride
+- [ ] GUI displays password requirements during account creation
+- [ ] Audit logs record password validation failures
+
+---
+
+### References
+
+- **OWASP Password Guidelines**: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
+- **NIST Digital Identity Guidelines**: https://pages.nist.gov/800-63-3/sp800-63b.html
+- **Existing Implementation**: `src/app/core/hydra_50_security.py:165-185`
+- **Audit Report**: `AUTHENTICATION_SECURITY_AUDIT_REPORT.md` Section 1.1
+
+---
+
+### Priority Justification
+
+This is marked **CRITICAL** because:
+
+1. **Immediate Exploit Risk**: Any attacker can create accounts with trivial passwords
+2. **Master Password Vulnerability**: Override system can be compromised with weak master password
+3. **Compliance Failure**: Violates basic security standards (OWASP, NIST, PCI-DSS)
+4. **Easy Fix**: Solution already exists in codebase (hydra_50_security.py)
+5. **High Impact**: Affects all user accounts and privileged access systems
+
+**Recommended Timeline**: Fix within 48 hours

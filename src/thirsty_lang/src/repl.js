@@ -1,19 +1,14 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 #!/usr/bin/env node
 
 /**
  * Thirsty-lang REPL (Read-Eval-Pour-Loop)
  * Interactive console for Thirsty-lang
- * 
- * Date: 2026-03-03 15:15 UTC | Status: Active
  */
 
 const readline = require('readline');
 const ThirstyInterpreter = require('./index');
 const fs = require('fs');
 const path = require('path');
-const { validatePath, isValidFile } = require('./path-validator');
 
 class ThirstyREPL {
   constructor() {
@@ -226,7 +221,7 @@ class ThirstyREPL {
     try {
       // Validate filename to prevent path traversal
       const validatedPath = validatePath(filename);
-      const code = this.history.filter(function (h) { return !h.startsWith('.'); }).join('\n');
+      const code = this.history.filter(function(h) { return !h.startsWith('.'); }).join('\n');
       fs.writeFileSync(validatedPath, code);
       console.log('✓ Session saved to ' + filename);
     } catch (error) {

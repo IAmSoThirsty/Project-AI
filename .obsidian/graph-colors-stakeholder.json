@@ -1,0 +1,111 @@
+{
+  "name": "Stakeholder-Focused Colors",
+  "description": "Color scheme based on stakeholder roles and audiences",
+  "version": "1.0.0",
+  "colorGroups": [
+    {
+      "query": "tag:#audience/developer tag:#dev-only tag:#implementation",
+      "color": {
+        "a": 1,
+        "rgb": 5592575
+      },
+      "label": "Developer/Engineering",
+      "description": "Technical implementation details, code architecture (Blue - #5577FF)"
+    },
+    {
+      "query": "tag:#audience/architect tag:#design tag:#architecture",
+      "color": {
+        "a": 1,
+        "rgb": 10494192
+      },
+      "label": "Architect/Design",
+      "description": "System architecture, design patterns, technical strategy (Purple - #A020F0)"
+    },
+    {
+      "query": "tag:#audience/security-team tag:#security-ops tag:#penetration-testing",
+      "color": {
+        "a": 1,
+        "rgb": 16711680
+      },
+      "label": "Security Team",
+      "description": "Security operations, penetration testing, vulnerability management (Red - #FF0000)"
+    },
+    {
+      "query": "tag:#audience/qa tag:#testing-team tag:#qa-engineer",
+      "color": {
+        "a": 1,
+        "rgb": 16776960
+      },
+      "label": "QA/Testing",
+      "description": "Test plans, QA procedures, validation frameworks (Yellow - #FFFF00)"
+    },
+    {
+      "query": "tag:#audience/devops tag:#sre tag:#infrastructure",
+      "color": {
+        "a": 1,
+        "rgb": 8421504
+      },
+      "label": "DevOps/SRE",
+      "description": "Infrastructure, deployment, monitoring, operations (Gray - #808080)"
+    },
+    {
+      "query": "tag:#audience/product-owner tag:#product-manager tag:#business",
+      "color": {
+        "a": 1,
+        "rgb": 65280
+      },
+      "label": "Product/Business",
+      "description": "Product requirements, business logic, feature specs (Green - #00FF00)"
+    },
+    {
+      "query": "tag:#audience/end-user tag:#user-guide tag:#tutorial",
+      "color": {
+        "a": 1,
+        "rgb": 65535
+      },
+      "label": "End User",
+      "description": "User guides, tutorials, end-user documentation (Cyan - #00FFFF)"
+    },
+    {
+      "query": "tag:#audience/executive tag:#stakeholder tag:#c-level",
+      "color": {
+        "a": 1,
+        "rgb": 16753920
+      },
+      "label": "Executive/Leadership",
+      "description": "Executive summaries, strategic decisions, business impact (Light Orange - #FFA000)"
+    },
+    {
+      "query": "tag:#audience/compliance tag:#legal tag:#audit",
+      "color": {
+        "a": 1,
+        "rgb": 11829830
+      },
+      "label": "Compliance/Legal",
+      "description": "Compliance requirements, legal considerations, audit trails (Brown - #B45F06)"
+    },
+    {
+      "query": "tag:#audience/all tag:#public tag:#general",
+      "color": {
+        "a": 0.7,
+        "rgb": 12632256
+      },
+      "label": "Public/General",
+      "description": "Public documentation, general information (Light Gray - #C0C0C0)"
+    }
+  ],
+  "usage": {
+    "instructions": [
+      "Filter graph by stakeholder role for targeted information",
+      "Use for access control and information architecture planning",
+      "Identify audience-specific documentation gaps",
+      "Support role-based knowledge management"
+    ],
+    "stakeholderViews": [
+      "Developers: Focus on implementation and code architecture",
+      "Security Team: Isolate security-critical components",
+      "Product Owners: View business logic and feature relationships",
+      "End Users: Navigate user-facing documentation only"
+    ]
+  }
+}

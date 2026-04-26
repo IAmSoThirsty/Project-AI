@@ -1,5 +1,77 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Branch Protection Configuration"
+id: "branch-protection-config"
+type: "policy"
+version: "1.0.0"
+created_date: "2026-01-10"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "DevOps Team"
+  email: "devops@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:devops"
+  - "type:policy"
+  - "type:runbook"
+  - "component:github-actions"
+  - "component:branch-protection"
+  - "audience:developer"
+  - "audience:devops-engineer"
+  - "priority:p0-critical"
+  - "special:ci-cd"
+technologies:
+  - "GitHub Branch Protection"
+  - "GitHub Actions"
+  - "CI/CD Workflows"
+summary: "Required branch protection rules for main branch enforcing automated quality gates, linear history, and merge safety."
+scope: "GitHub branch protection settings for main branch including status checks, review requirements, history protection, and automated enforcement via CI/CD workflows"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "force-push-attacks"
+  - "untested-code-merge"
+  - "branch-deletion"
+  - "merge-commit-pollution"
+  - "bypass-ci-checks"
+mitigations:
+  - "[[CI_WORKFLOW]]"
+  - "[[AUTO_PR_HANDLER]]"
+  - "[[POST_MERGE_VALIDATION]]"
+defends_against:
+  - "Accidental force pushes"
+  - "Merging failing code"
+  - "Branch deletion"
+  - "Non-linear git history"
+  - "Bypassing status checks"
+compliance:
+  - "GitHub Security Best Practices"
+  - "SOC 2 Type II (Change Management)"
+  - "ISO 27001:2022 (A.12.1.2)"
+stakeholders:
+  - security-team   - devops-team   - governance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Policy Documentation"
+cwe_ids:
+  - "CWE-284: Improper Access Control"
+  - "CWE-693: Protection Mechanism Failure"
+related_docs:
+  - "security-workflow-runbooks"
+  - "ci-cd-pipeline"
+  - "security-governance"
+review_status:
+  reviewed: true
+  reviewers: ["devops-team", "security-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "devops-engineers"
+  - "repository-admins"
+enforcement_level: "mandatory"
+---
+
 # Branch Protection Configuration
 
 This document outlines the required branch protection rules for the `main` branch to enforce the persistent repository defaults.
@@ -25,7 +97,7 @@ These settings must be configured in the GitHub repository settings under **Sett
 **Required status checks:**
 
 - `test` (from ci.yml)
-- `lint` (from ci.yml)
+- `lint` (from ci.yml)  
 - `tests` (from ci.yml)
 - `Auto Review PR` (from auto-pr-handler.yml)
 - `Validate Main Branch Health` (from post-merge-validation.yml)
@@ -108,17 +180,14 @@ The following workflows enforce these requirements automatically:
 ⚠️ **IMPORTANT**: While this automation provides significant efficiency, consider these security best practices:
 
 1. **Workflow File Changes**: PRs that modify `.github/workflows/` files should be reviewed manually before merge
-
    - Add a required review for workflow changes via CODEOWNERS file
    - Example CODEOWNERS entry: `.github/workflows/* @IAmSoThirsty`
 
 1. **External Contributors**: Consider requiring manual approval for PRs from external contributors
-
    - Can be configured in branch protection: "Require approval from specific users"
    - Protects against malicious PRs from unknown sources
 
 1. **Sensitive Code Areas**: High-security code (authentication, encryption, payment processing) should have:
-
    - Required code owner reviews
    - Additional manual validation
    - Separate security scanning workflows
@@ -128,13 +197,10 @@ The following workflows enforce these requirements automatically:
 Create `.github/CODEOWNERS` file:
 
 ```
-
 # Workflow files require owner review
-
 /.github/workflows/ @IAmSoThirsty
 
 # Security-sensitive code requires review
-
 /src/app/core/user_manager.py @IAmSoThirsty
 /src/app/core/command_override.py @IAmSoThirsty
 ```
@@ -173,32 +239,28 @@ All workflows are already deployed in `.github/workflows/`:
 ### For All Pull Requests:
 
 1. **PR Created/Updated**
-
    - `auto-pr-handler.yml` triggers
    - Runs lint and test checks
    - Comments with results
    - Approves if all checks pass
 
 1. **CI Failures Detected**
-
    - `auto-fix-failures.yml` triggers
    - Attempts automatic fixes
    - Commits fixes to PR branch
    - CI re-runs automatically
 
 1. **All Checks Pass**
-
    - Auto-approval granted
    - Auto-merge enabled
    - PR merges to main automatically (NO MANUAL APPROVAL NEEDED)
 
 1. **Merge Complete**
-
    - `post-merge-validation.yml` triggers on main
    - Validates main branch health
    - Reports:
      - ✅ Zero conflicts
-     - ✅ Zero linting errors
+     - ✅ Zero linting errors  
      - ✅ Zero test failures
    - Comments success on merged PR
 

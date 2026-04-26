@@ -1,14 +1,9 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 /**
  * Thirsty-lang Linter
  * Keep your code clean and hydrated!
- * 
- * Date: 2026-03-03 15:15 UTC | Status: Active
  */
 
 const fs = require('fs');
-const path = require('path');
 const { validatePath, isValidFile } = require('./path-validator');
 
 class ThirstyLinter {
@@ -37,7 +32,7 @@ class ThirstyLinter {
       const trimmed = line.trim();
 
       // Skip empty lines and comments
-      if (!trimmed || trimmed.startsWith('//')) continue;
+      if (!trimmed || trimmed.startsWith('//')) return;
 
       // Check line length
       if (line.length > this.options.maxLineLength) {
@@ -117,7 +112,7 @@ class ThirstyLinter {
           severity: 'error'
         });
       }
-    }
+    });
 
     // Check for unused variables
     if (this.options.noUnusedVariables) {
@@ -167,7 +162,7 @@ class ThirstyLinter {
       console.log('\n❌ Errors:');
       for (const err of results.errors) {
         console.log(`  Line ${err.line}: ${err.message}`);
-      }
+      });
     }
 
     // Print warnings

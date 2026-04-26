@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Integration test for DeepSeek V3.2 with Project-AI systems."""
 
 import sys

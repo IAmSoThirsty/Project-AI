@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: platform-integration
+tags: [specialized-systems, unity, vr, integration-guide, deployment]
+created: 2026-01-23
+last_verified: 2026-04-20
+status: current
+related_systems: [project-ai-core, vr-bridge, scene-initialization]
+stakeholders: [vr-team, integration-team, development-team]
+system_category: game-engine
+external_standard: Unity3D, C#, XR
+maturity: production
+review_cycle: quarterly
+---
+
 # Integration Guide - VR Module with Unity Project
 
 ## Overview
@@ -59,30 +71,25 @@ Scene Root
 
 ```csharp
 // In Unity Inspector:
-
 - Skip Genesis For Testing: false (uncheck for production)
 - Initialization Delay: 0.5
-
 ```
 
 #### PresenceController
 
 ```csharp
 // In Unity Inspector:
-
 - Orb Object: Drag your AI orb GameObject here
 - Formation Duration: 3.0
 - Stabilization Duration: 3.0
 - Lock Position During Genesis: true (checked)
 - Default Position: (0, 1.5, 2)
-
 ```
 
 #### LightingController
 
 ```csharp
 // In Unity Inspector:
-
 - Room Lights: Drag all room Light components here (array)
 - Ambient Light: Drag main ambient light here
 - Genesis Lighting Duration: 5.0
@@ -91,17 +98,14 @@ Scene Root
 - Genesis End Color: White (1, 1, 1, 1)
 - Normal Intensity: 1.0
 - Normal Color: White (1, 1, 1, 1)
-
 ```
 
 #### VRBridgeClient
 
 ```csharp
 // In Unity Inspector:
-
 - Backend URL: "http://localhost:5000" (adjust for your Python backend)
 - Reconnect Delay: 5.0
-
 ```
 
 ## Step 3: Create the AI Orb
@@ -259,7 +263,7 @@ public class AIResponse3DDisplay : MonoBehaviour
 {
     [SerializeField] private TextMeshPro textMesh;
     [SerializeField] private Transform cameraTransform;
-
+    
     private ConversationContextManager conversationManager;
 
     void Start()
@@ -287,11 +291,11 @@ public class AIResponse3DDisplay : MonoBehaviour
     private System.Collections.IEnumerator FadeOut()
     {
         yield return new WaitForSeconds(5f);
-
+        
         float duration = 1f;
         float elapsed = 0f;
         Color startColor = textMesh.color;
-
+        
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -299,7 +303,7 @@ public class AIResponse3DDisplay : MonoBehaviour
             textMesh.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
             yield return null;
         }
-
+        
         textMesh.text = "";
         textMesh.color = startColor; // Reset alpha
     }
@@ -328,7 +332,7 @@ public class UserRoleSetup : MonoBehaviour
     {
         // For testing - set owner role
         RoleManager.Instance.SetRole("testUser", "owner");
-
+        
         // In production, get from authentication system
         // string userId = AuthenticationSystem.GetUserId();
         // string role = AuthenticationSystem.GetUserRole();
@@ -359,9 +363,9 @@ public class LoginUI : MonoBehaviour
     {
         string userId = userIdInput.text;
         string role = roleDropdown.options[roleDropdown.value].text.ToLower();
-
+        
         RoleManager.Instance.SetRole(userId, role);
-
+        
         // Close login UI and start VR experience
         gameObject.SetActive(false);
     }
@@ -381,7 +385,7 @@ public class GenesisEventListener : MonoBehaviour
     void Start()
     {
         var genesisManager = GenesisManager.Instance;
-
+        
         genesisManager.OnStateChanged += OnGenesisStateChanged;
         genesisManager.OnNarration += OnGenesisNarration;
         genesisManager.OnGenesisComplete += OnGenesisComplete;
@@ -390,7 +394,7 @@ public class GenesisEventListener : MonoBehaviour
     private void OnGenesisStateChanged(object sender, GenesisStateChangedEventArgs args)
     {
         Debug.Log($"Genesis state: {args.PreviousState} -> {args.NewState} ({args.Progress:P0})");
-
+        
         // Update UI, play sounds, etc.
         switch (args.NewState)
         {
@@ -452,14 +456,14 @@ private IEnumerator SendActionToBackend(VRActionPacket packet)
 {
     string json = JsonUtility.ToJson(packet);
     byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
-
+    
     UnityWebRequest request = new UnityWebRequest(backendUrl + "/vr/action", "POST");
     request.uploadHandler = new UploadHandlerRaw(bodyRaw);
     request.downloadHandler = new DownloadHandlerBuffer();
     request.SetRequestHeader("Content-Type", "application/json");
-
+    
     yield return request.SendWebRequest();
-
+    
     if (request.result == UnityWebRequest.Result.Success)
     {
         Debug.Log("Action sent successfully");
@@ -500,11 +504,11 @@ Debug.Log($"Genesis Progress: {GenesisManager.Instance.OverallProgress:P0}");
 
 ```csharp
 // Test different request types:
-var context = new RequestContext
-{
-    UserRole = "owner",
-    UserId = "test",
-    IsGenesisActive = false
+var context = new RequestContext 
+{ 
+    UserRole = "owner", 
+    UserId = "test", 
+    IsGenesisActive = false 
 };
 
 // Command
@@ -513,7 +517,7 @@ AutonomyManager.Instance.ProcessRequest("Turn on the lights", context);
 // Request
 AutonomyManager.Instance.ProcessRequest("Could you please dim the lights?", context);
 
-// Suggestion
+// Suggestion  
 AutonomyManager.Instance.ProcessRequest("Maybe we could change the color", context);
 
 // Casual
@@ -580,7 +584,7 @@ private void ExecuteCustomEffect(VRActionPacket packet)
     // Your custom VR effect logic
     string effectType = packet.Parameters["EffectType"] as string;
     float intensity = (float)packet.Parameters["Intensity"];
-
+    
     // Execute effect...
 }
 ```
@@ -635,5 +639,5 @@ private void ExecuteCustomEffect(VRActionPacket packet)
 
 ---
 
-**Version:** 1.0
+**Version:** 1.0  
 **Last Updated:** 2026-01-23

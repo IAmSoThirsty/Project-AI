@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Constitutional Enforcer
 ========================
@@ -19,9 +17,9 @@ from project_ai.engine.policy.policy_engine import PolicyEngine
 logger = logging.getLogger(__name__)
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class BuildActionViolation(Exception):
@@ -131,6 +129,41 @@ class ConstitutionalEnforcer:
             )
             return False, f"Validation error: {str(e)}"
 
+    def enforce_action(
+        self,
+        action: str,
+        identity: str,
+        context: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Compatibility enforcement entrypoint used by test and legacy flows."""
+        metadata = context or {}
+
+        is_identity_valid = True
+        if hasattr(self.identity_manager, "verify_identity"):
+            try:
+                is_identity_valid = bool(self.identity_manager.verify_identity(identity))
+            except Exception as e:
+                logger.error("Identity verification error: %s", e, exc_info=True)
+                is_identity_valid = False
+
+        if not is_identity_valid:
+            reason = f"Identity verification failed for {identity}"
+            self._record_violation(action, metadata, reason)
+            return {
+                "action": action,
+                "identity": identity,
+                "allowed": False,
+                "reason": reason,
+            }
+
+        allowed, reason = self.validate_build_action(action, metadata)
+        return {
+            "action": action,
+            "identity": identity,
+            "allowed": allowed,
+            "reason": reason,
+        }
+
     def enforce_task_limit(self, task_count: int) -> tuple[bool, str | None]:
         """
         Enforce maximum task count based on current policy mode.
@@ -178,33 +211,6 @@ class ConstitutionalEnforcer:
             results[action] = self.validate_build_action(action, metadata)
         return results
 
-    def enforce_action(
-        self, action: str, identity: str, context: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
-        """Compatibility API for enforcing a single action with identity context."""
-        context = context or {}
-
-        # Identity verification hook expected by tests.
-        if hasattr(self.identity_manager, "verify_identity"):
-            verified = bool(self.identity_manager.verify_identity(identity))
-            if not verified:
-                reason = f"Identity verification failed for {identity}"
-                self._record_violation(action, context, reason)
-                return {
-                    "allowed": False,
-                    "action": action,
-                    "identity": identity,
-                    "reason": reason,
-                }
-
-        allowed, reason = self.validate_build_action(action, context)
-        return {
-            "allowed": allowed,
-            "action": action,
-            "identity": identity,
-            "reason": reason,
-        }
-
     def get_policy_summary(self) -> dict[str, Any]:
         """
         Get current policy configuration summary.
@@ -240,7 +246,7 @@ class ConstitutionalEnforcer:
             reason: Reason for denial
         """
         violation = {
-            "timestamp": _utcnow().isoformat(),
+            "timestamp": _utc_now_iso(),
             "action": action,
             "metadata": metadata,
             "reason": reason,

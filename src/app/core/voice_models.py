@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Voice Model System for Project-AI
 Implements VoiceModel interface, concrete models, and registry with bonding protocol.
@@ -95,14 +93,17 @@ class VoiceModel(ABC):
         context: dict[str, Any] | None = None,
     ) -> VoiceResponse:
         """Synthesize speech from text with emotion"""
+        pass
 
     @abstractmethod
     def initialize(self) -> bool:
         """Initialize the voice model"""
+        pass
 
     @abstractmethod
     def shutdown(self) -> None:
         """Clean shutdown of voice model"""
+        pass
 
     def is_ready(self) -> bool:
         """Check if model is ready to use"""

@@ -1,167 +1,108 @@
-#                                           [2026-03-04 17:07]
-#                                          Productivity: Active
-# Project AI – Governance-First Web Backend
-# Canonical, production-ready backend enforcing TARL as law
-# Stack: Python 3.12 + FastAPI
+# Project AI – Governance‑First Web Backend
+# Canonical minimal-but-complete backend enforcing TARL as law
+# Stack: Python 3.11 + FastAPI
 
-import contextlib
 import hashlib
 import json
-import os
 import time
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-# ==========================================================
-# Application Instance
-# ==========================================================
-
-app = FastAPI(
-    title="Project AI Governance Host",
-    version=os.getenv("APP_VERSION", "1.0.0"),
-    description="Production-ready AI governance platform with enterprise security",
-)
+app = FastAPI(title="Project AI Governance Host", version="0.1.0")
 
 # CORS for web frontend
-cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
+    allow_origins=["*"],  # Configure appropriately for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ==========================================================
-# Production Middleware (graceful fallback if not installed)
-# ==========================================================
-
-# Rate limiting
-if os.getenv("ENABLE_RATE_LIMITING", "true").lower() == "true":
-    try:
-        from api.rate_limiter import RateLimitMiddleware
-
-        rate_limit = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
-        app.add_middleware(
-            RateLimitMiddleware,
-            rate=rate_limit,
-            per=60,
-            exempt_paths=["/health", "/metrics", "/docs"],
-        )
-    except ImportError:
-        pass
-
-# Request validation
-if os.getenv("ENABLE_REQUEST_VALIDATION", "true").lower() == "true":
-    try:
-        from api.request_validator import RequestValidationMiddleware
-
-        app.add_middleware(
-            RequestValidationMiddleware,
-            exempt_paths=["/docs", "/openapi.json", "/metrics"],
-        )
-    except ImportError:
-        pass
-
-# Observability (OpenTelemetry)
-if os.getenv("ENABLE_OBSERVABILITY", "false").lower() == "true":
-    try:
-        from api.observability import setup_observability
-
-        setup_observability(app)
-    except ImportError:
-        pass
-
-# ==========================================================
-# Router Registration
-# ==========================================================
-
-# Health endpoints (Kubernetes probes)
-try:
-    from api.health_endpoints import router as health_router
-
-    app.include_router(health_router)
-except ImportError:
-    pass
-
-# Save Points API
-try:
-    from api.save_points_routes import router as save_points_router
-
-    app.include_router(save_points_router)
-except ImportError:
-    pass
-
-# VR Bridge
-try:
-    from api.vr_routes import router as vr_router
-
-    app.include_router(vr_router)
-except ImportError:
-    pass
-
-# Legion / OpenClaw
+# Include Legion/OpenClaw router
 try:
     from integrations.openclaw.api_endpoints import router as openclaw_router
 
     app.include_router(openclaw_router)
-except ImportError:
-    pass
+    print("[OK] Legion agent endpoints registered")
+except ImportError as e:
+    print(f"[WARN] Legion endpoints not available: {e}")
 
+# Include Save Points router
+try:
+    from api.save_points_routes import router as save_points_router
+    from api.save_points_routes import start_auto_save, stop_auto_save
 
-# ==========================================================
-# Lifespan (Startup / Shutdown)
-# ==========================================================
+    app.include_router(save_points_router)
 
-
-@contextlib.asynccontextmanager
-async def lifespan(application: FastAPI):
-    """Startup / shutdown lifecycle for the application."""
-    # ---- startup ----
-    try:
-        from api.save_points_routes import start_auto_save
-
+    @app.on_event("startup")
+    async def startup_auto_save():
+        """Start auto-save service on app startup"""
         await start_auto_save()
-    except (ImportError, Exception):
-        pass
+        print("[OK] Auto-save service started (15-min intervals)")
 
-    yield  # application is running
-
-    # ---- shutdown ----
-    try:
-        from api.save_points_routes import stop_auto_save
-
+    @app.on_event("shutdown")
+    async def shutdown_auto_save():
+        """Stop auto-save service on app shutdown"""
         await stop_auto_save()
-    except (ImportError, Exception):
-        pass
+        print("[OK] Auto-save service stopped")
 
+    print("[OK] Save Points API endpoints registered")
+except ImportError as e:
+    print(f"[WARN] Save Points endpoints not available: {e}")
 
-app.router.lifespan_context = lifespan
+# Include Contrarian Firewall router (God-tier monolithic integration)
+try:
+    from api.firewall_routes import router as firewall_router
 
+    app.include_router(firewall_router)
+    print("[OK] Contrarian Firewall endpoints registered")
+
+    # Initialize orchestrator on startup
+    from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+
+    @app.on_event("startup")
+    async def startup_firewall_orchestrator():
+        """Start the Contrarian Firewall Orchestrator"""
+        orchestrator = get_orchestrator()
+        await orchestrator.start()
+        print("[OK] Contrarian Firewall Orchestrator started")
+
+    @app.on_event("shutdown")
+    async def shutdown_firewall_orchestrator():
+        """Stop the Contrarian Firewall Orchestrator"""
+        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+
+        orchestrator = get_orchestrator()
+        await orchestrator.stop()
+        print("[OK] Contrarian Firewall Orchestrator stopped")
+
+except ImportError as e:
+    print(f"[WARN] Contrarian Firewall endpoints not available: {e}")
 
 # ==========================================================
 # Core Data Models
 # ==========================================================
 
 
-class ActorType(str, Enum):
+class ActorType(StrEnum):
     human = "human"
     agent = "agent"
     system = "system"
 
 
-class ActionType(str, Enum):
+class ActionType(StrEnum):
     read = "read"
     write = "write"
     execute = "execute"
     mutate = "mutate"
 
 
-class Verdict(str, Enum):
+class Verdict(StrEnum):
     allow = "allow"
     deny = "deny"
     degrade = "degrade"
@@ -223,14 +164,13 @@ TARL_V1 = {
     ],
 }
 
-
 # ==========================================================
 # Utility Functions
 # ==========================================================
 
 
 def hash_intent(intent: Intent) -> str:
-    payload = json.dumps(intent.model_dump(), sort_keys=True).encode()
+    payload = json.dumps(intent.dict(), sort_keys=True).encode()
     return hashlib.sha256(payload).hexdigest()
 
 
@@ -240,10 +180,26 @@ def hash_intent(intent: Intent) -> str:
 
 
 class Galahad:
-    """Ethics & alignment pillar — ensures actor authorization."""
+    """Ethics & alignment - now integrated with Planetary Defense Core"""
 
     @staticmethod
     def evaluate(intent: Intent, rule: dict[str, Any]) -> PillarVote:
+        """
+        Evaluate intent through Constitutional Core's Galahad agent.
+
+        This wraps the Planetary Defense Core's advisory system.
+        """
+        from app.core.planetary_defense_monolith import PLANETARY_CORE
+
+        # Map intent to context for Galahad assessment
+        context = {
+            "threat_level": 3 if rule.get("risk") in ("high", "critical") else 0,
+            "human_risk": rule.get("risk", "low"),
+        }
+
+        # Get advisory assessment from Constitutional Galahad
+        PLANETARY_CORE.agents["galahad"].assess(context)
+
         if intent.actor.value not in rule["allowed_actors"]:
             return PillarVote(
                 pillar="Galahad",
@@ -251,17 +207,26 @@ class Galahad:
                 reason="Actor not ethically authorized",
             )
         return PillarVote(
-            pillar="Galahad",
-            verdict=Verdict.allow,
-            reason="Actor aligns with rule",
+            pillar="Galahad", verdict=Verdict.allow, reason="Actor aligns with rule"
         )
 
 
 class Cerberus:
-    """Threat & bypass detection pillar — blocks high-risk actions."""
+    """Threat & bypass detection - now integrated with Planetary Defense Core"""
 
     @staticmethod
     def evaluate(intent: Intent, rule: dict[str, Any]) -> PillarVote:
+        """
+        Evaluate intent through Constitutional Core's Cerberus agent.
+
+        This wraps the Planetary Defense Core's advisory system.
+        """
+        from app.core.planetary_defense_monolith import PLANETARY_CORE
+
+        # Get advisory assessment from Constitutional Cerberus
+        context = {}
+        PLANETARY_CORE.agents["cerberus"].assess(context)
+
         if rule["risk"] in ("high", "critical"):
             return PillarVote(
                 pillar="Cerberus",
@@ -276,10 +241,21 @@ class Cerberus:
 
 
 class CodexDeus:
-    """Final arbitration pillar — reconciles pillar votes."""
+    """Final arbitration - now integrated with Planetary Defense Core"""
 
     @staticmethod
     def arbitrate(votes: list[PillarVote], rule: dict[str, Any]) -> Verdict:
+        """
+        Final arbitration through Constitutional Core's CodexDeus agent.
+
+        This wraps the Planetary Defense Core's advisory system.
+        """
+        from app.core.planetary_defense_monolith import PLANETARY_CORE
+
+        # Get advisory assessment from Constitutional CodexDeus
+        context = {}
+        PLANETARY_CORE.agents["codex"].assess(context)
+
         if any(v.verdict == Verdict.deny for v in votes):
             return Verdict.deny
         return Verdict(rule["default"])
@@ -299,10 +275,7 @@ def evaluate_tarl(intent: Intent) -> GovernanceResult:
     rule = matching_rules[0]
     intent_id = hash_intent(intent)
 
-    votes = [
-        Galahad.evaluate(intent, rule),
-        Cerberus.evaluate(intent, rule),
-    ]
+    votes = [Galahad.evaluate(intent, rule), Cerberus.evaluate(intent, rule)]
 
     final = CodexDeus.arbitrate(votes, rule)
 
@@ -316,60 +289,48 @@ def evaluate_tarl(intent: Intent) -> GovernanceResult:
 
 
 # ==========================================================
-# Persistent Audit Log (Append-Only)
-# ==========================================================
-
-AUDIT_LOG_PATH = "audit.log"
-
-
-def write_audit(record: GovernanceResult):
-    entry = {
-        "intent_hash": record.intent_hash,
-        "tarl_version": record.tarl_version,
-        "votes": [v.model_dump() for v in record.votes],
-        "final_verdict": record.final_verdict,
-        "timestamp": record.timestamp,
-    }
-    with open(AUDIT_LOG_PATH, "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry) + "\n")
-
-
-# ==========================================================
-# Signed TARL (Immutable Law)
-# ==========================================================
-
-TARL_SIGNATURE = hashlib.sha256(
-    json.dumps(TARL_V1, sort_keys=True).encode()
-).hexdigest()
-
-
-# ==========================================================
-# Execution Sandbox (Governed, No-Op by Default)
+# Web Ingress – Governed Endpoint
 # ==========================================================
 
 
-class SandboxExecutor:
-    """All executions occur here. Nothing outside this class mutates state."""
+@app.post("/intent")
+async def submit_intent(intent: Intent, request: Request):
+    result = evaluate_tarl(intent)
+    write_audit(result)
 
-    @staticmethod
-    def execute(intent: Intent) -> dict[str, Any]:
-        return {
-            "status": "executed",
-            "note": "Sandbox execution completed",
-            "target": intent.target,
-        }
+    if result.final_verdict == Verdict.deny:
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "message": "Governance denied this request",
+                "governance": result.dict(),
+            },
+        )
+
+    return {"message": "Intent accepted under governance", "governance": result.dict()}
 
 
 # ==========================================================
-# API Endpoints
+# Read‑Only Audit Endpoint
 # ==========================================================
+
+
+@app.get("/tarl")
+def get_tarl():
+    """Public, read-only governance law"""
+    return TARL_V1
+
+
+@app.get("/health")
+def health():
+    return {"status": "governance-online", "tarl": TARL_V1["version"]}
 
 
 @app.get("/")
 def root():
     return {
         "service": "Project AI Governance Host",
-        "version": "1.0.0",
+        "version": "0.2.0",
         "architecture": "Triumvirate + Contrarian Firewall",
         "capabilities": [
             "TARL Governance (Galahad, Cerberus, CodexDeus)",
@@ -386,41 +347,75 @@ def root():
                 "audit_replay": "GET /audit",
                 "view_tarl": "GET /tarl",
             },
+            "firewall": {
+                "chaos_control": "POST /api/firewall/chaos/{start|stop|tune}",
+                "violation_detect": "POST /api/firewall/violation/detect",
+                "intent_tracking": "POST /api/firewall/intent/track",
+                "decoy_management": "POST /api/firewall/decoy/{deploy|list}",
+                "threat_scoring": "GET /api/firewall/threat/score",
+                "status": "GET /api/firewall/status",
+            },
+            "save_points": {
+                "create": "POST /api/savepoints/create",
+                "list": "GET /api/savepoints/list",
+                "restore": "POST /api/savepoints/restore/{id}",
+                "delete": "DELETE /api/savepoints/delete/{id}",
+                "auto_status": "GET /api/savepoints/auto/status",
+            },
             "health_check": "GET /health",
             "api_docs": "GET /docs",
         },
     }
 
 
-@app.get("/health")
-def health():
-    return {"status": "governance-online", "tarl": TARL_V1["version"]}
+# ==========================================================
+# Persistent Audit Log (Append-Only)
+# ==========================================================
+
+AUDIT_LOG_PATH = "audit.log"
 
 
-@app.get("/tarl")
-def get_tarl():
-    """Public, read-only governance law"""
-    return TARL_V1
-
-
-@app.post("/intent")
-async def submit_intent(intent: Intent, request: Request):
-    result = evaluate_tarl(intent)
-    write_audit(result)
-
-    if result.final_verdict == Verdict.deny:
-        raise HTTPException(
-            status_code=403,
-            detail={
-                "message": "Governance denied this request",
-                "governance": result.model_dump(),
-            },
-        )
-
-    return {
-        "message": "Intent accepted under governance",
-        "governance": result.model_dump(),
+def write_audit(record: GovernanceResult):
+    entry = {
+        "intent_hash": record.intent_hash,
+        "tarl_version": record.tarl_version,
+        "votes": [v.dict() for v in record.votes],
+        "final_verdict": record.final_verdict,
+        "timestamp": record.timestamp,
     }
+    with open(AUDIT_LOG_PATH, "a", encoding="utf-8") as f:
+        f.write(json.dumps(entry) + "\n")
+
+
+# ==========================================================
+# Execution Sandbox (Governed, No-Op by Default)
+# ==========================================================
+
+
+class SandboxExecutor:
+    """All executions occur here. Nothing outside this class mutates state."""
+
+    @staticmethod
+    def execute(intent: Intent) -> dict[str, Any]:
+        # Placeholder for real execution logic
+        return {
+            "status": "executed",
+            "note": "Sandbox execution completed",
+            "target": intent.target,
+        }
+
+
+# ==========================================================
+# Signed TARL (Immutable Law)
+# ==========================================================
+
+TARL_SIGNATURE = hashlib.sha256(
+    json.dumps(TARL_V1, sort_keys=True).encode()
+).hexdigest()
+
+# ==========================================================
+# Audit Replay (Read-Only)
+# ==========================================================
 
 
 @app.get("/audit")
@@ -439,6 +434,11 @@ def read_audit(limit: int = 50):
     }
 
 
+# ==========================================================
+# Governed Execution Endpoint
+# ==========================================================
+
+
 @app.post("/execute")
 async def governed_execute(intent: Intent):
     result = evaluate_tarl(intent)
@@ -449,7 +449,7 @@ async def governed_execute(intent: Intent):
             status_code=403,
             detail={
                 "message": "Execution denied by governance",
-                "governance": result.model_dump(),
+                "governance": result.dict(),
             },
         )
 
@@ -457,65 +457,11 @@ async def governed_execute(intent: Intent):
 
     return {
         "message": "Execution completed under governance",
-        "governance": result.model_dump(),
+        "governance": result.dict(),
         "execution": execution,
     }
 
 
 # ==========================================================
-# Explainability Endpoint (Optional)
+# END
 # ==========================================================
-
-
-@app.get("/explain/{action_id}")
-def explain_decision(action_id: str):
-    """Explain why a governance decision was made."""
-    try:
-        from src.app.core.explainability_agent import get_explainability_agent
-
-        agent = get_explainability_agent()
-        explanation = agent.explain_decision(action_id)
-
-        return {
-            "action_id": explanation.action_id,
-            "timestamp": explanation.timestamp,
-            "summary": explanation.summary,
-            "reasoning": explanation.detailed_reasoning,
-            "laws_evaluated": explanation.laws_evaluated,
-            "moral_claims": explanation.moral_claims_detected,
-            "outcome": explanation.outcome,
-            "recommendation": explanation.recommendation,
-        }
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except ImportError:
-        raise HTTPException(
-            status_code=500, detail="Explainability Agent not available"
-        )
-
-
-@app.get("/explain")
-def explain_recent_decisions(limit: int = 10):
-    """Explain recent governance decisions."""
-    try:
-        from src.app.core.explainability_agent import get_explainability_agent
-
-        agent = get_explainability_agent()
-        explanations = agent.explain_latest_decisions(limit=limit)
-
-        return {
-            "count": len(explanations),
-            "explanations": [
-                {
-                    "action_id": ex.action_id,
-                    "timestamp": ex.timestamp,
-                    "summary": ex.summary,
-                    "outcome": ex.outcome,
-                }
-                for ex in explanations
-            ],
-        }
-    except ImportError:
-        raise HTTPException(
-            status_code=500, detail="Explainability Agent not available"
-        )

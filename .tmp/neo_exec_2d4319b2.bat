@@ -1,0 +1,1 @@
+type "t:\Project-AI-main\CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT.md" 2>nul | findstr /c:"## Implementation Summary" /c:"## Architecture Overview" /c:"## Document Coverage" | head -5

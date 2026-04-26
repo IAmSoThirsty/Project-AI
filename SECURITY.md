@@ -1,63 +1,61 @@
-﻿<div align="right">
-  [2026-03-01 13:20] <br>
-  Productivity: Active
-</div>
+---
+title: "Project-AI Security Policy"
+id: security-policy
+type: policy
+version: 1.1.0
+created_date: 2025-11-01
+updated_date: 2026-01-28
+status: active
+author: "Security Team <projectaidevs@gmail.com>"
+tags:
+  - security
+  - security/audit
+  - security/cryptography
+  - security/authentication
+  - security/application
+  - governance
+  - governance/policy
+  - operations
+  - operations/monitoring
+  - policy
+area:
+  - security
+  - governance
+  - operations
+component:
+  - constitutional-ai
+  - governance-engine
+  - tarl
+audience:
+  - security
+  - developer
+  - architect
+  - public
+priority: p0
+related_to:
+  - "[[README]]"
+  - "[[CONTRIBUTING]]"
+  - "[[CODE_OF_CONDUCT]]"
+what: "Security vulnerability reporting policy, supported version matrix, and comprehensive security architecture documentation including 8-layer defense system (HTTP gateway, intent validation, TARL enforcement, Triumvirate voting, formal invariants, security guards, audit logging, fail-closed defaults)"
+who: "Security researchers, contributors, users - anyone discovering or needing to understand Project-AI security mechanisms"
+when: "IMMEDIATELY when security vulnerability discovered - reference when understanding security architecture or deploying to production"
+where: "Root directory as canonical security disclosure policy - referenced in security advisories and vulnerability reports"
+why: "Provides responsible disclosure channel, documents multi-layer constitutional security architecture (TARL + Cerberus + Galahad voting), tracks known security notes (e.g., example keys in git history), establishes 48-hour response SLA"
+---
+
 # Security Policy
 
 ## Supported Versions
 
 | Version | Supported          |
 | ------- | ------------------ |
-| HARDENED| :white_check_mark: |
+| 1.0.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
-### Preferred: GitHub Security Advisories (Private Reporting)
+If you discover a security vulnerability in Project-AI, please report it by emailing the maintainers or using GitHub's private security advisory feature. **Do not create a public issue.**
 
-**ðŸ”’ Use GitHub's Private Vulnerability Reporting:**
-
-1. Navigate to the [Security Advisories](https://github.com/IAmSoThirsty/Project-AI/security/advisories) page
-2. Click "Report a vulnerability"
-3. Fill out the advisory form with details
-4. Submit privately - only maintainers will see it
-
-**Why use GitHub Security Advisories?**
-
-- âœ… Encrypted communication
-- âœ… Credit tracking for researchers
-- âœ… CVE assignment assistance
-- âœ… Coordinated disclosure workflow
-- âœ… Security advisory publication when fixed
-
-### Alternative: Email Reporting
-
-If you prefer email or cannot access GitHub:
-
-- **Email**: <security@thirstysprojects.com>
-- **PGP Key**: [Available on request]
-
-### Important Guidelines
-
-**âš ï¸ DO NOT:**
-
-- Create public issues for vulnerabilities
-- Disclose vulnerabilities on social media
-- Share exploit code publicly before a fix
-- Test vulnerabilities on production systems
-
-**âœ… DO:**
-
-- Report responsibly via private channels
-- Provide clear reproduction steps
-- Allow 90 days for coordinated disclosure
-- Work with maintainers on fix verification
-
-**Response Timeline:**
-
-- **Initial Response**: Within 48 hours
-- **Triage & Assessment**: Within 5 business days
-- **Fix Development**: Depends on severity (Critical: 7-14 days, High: 30 days, Medium: 60 days)
-- **Disclosure**: After fix is released + 7-day adoption period
+We aim to respond to security reports within 48 hours and will work with you to understand and resolve the issue promptly.
 
 ## Security Features
 
@@ -72,20 +70,64 @@ Project-AI implements multiple layers of security:
 7. **Audit Logging** - Immutable cryptographic trail with intent hashing
 8. **Fail-Closed Default** - Deny execution unless explicitly allowed
 
-## ðŸ›¡ï¸ Tier 0: Reflexive Defense (OctoReflex)
+## Audit Trail & Compliance
 
-The **OctoReflex** substrate provides the ultimate containment boundary. Before the Governance Layer evaluates a decision, the Reflexive Bedrock enforces kernel-level invariants.
+Project-AI implements **comprehensive cryptographic audit trails** for all security-critical operations:
 
-- **Reflexive Containment**: O(1) isolation of any diverging logic.
-- **Deterministic Halts**: Hard reflexive termination if the Shadow Plane and Primary Plane diverge.
-- **Immutable Bedrock**: The OctoReflex logic is anchored beyond the reach of the AI persona.
+### Audit Trail Implementations
+
+1. **[[src/app/governance/audit_log]]** - SHA-256 hash-chained audit log (SOC2, GDPR)
+   - Cryptographic tamper detection
+   - YAML append-only format
+   - Chain verification: `verify_chain()`
+
+2. **[[src/app/audit/tamperproof_log]]** - Immutable event logging (SOC2, HIPAA)
+   - Append-only operations
+   - Integrity verification
+   - JSON export for compliance
+
+3. **[[atlas/audit/trail]]** - ATLAS audit trail system (SOC2, GDPR, HIPAA)
+   - Event categorization (8 types)
+   - Severity levels (5 levels)
+   - JSONL format with statistics
+
+4. **[[src/app/security/advanced/privacy_ledger]]** - Privacy event tracking (GDPR, HIPAA)
+   - Data subject rights logging
+   - Consent management
+   - Access logging (Article 15, 164.312(b))
+
+5. **[[src/app/core/command_override]]** - Privileged access auditing (SOC2, ISO 27001)
+   - Master password authentication
+   - Override tracking for 10+ safety protocols
+   - Failed authentication attempts
+
+6. **[[src/app/security/monitoring]]** - Security event monitoring (SOC2, ISO 27001)
+   - Real-time threat detection
+   - Incident classification
+   - Alert generation
+
+**Complete Audit Documentation:** [[AGENT-091-AUDIT-TRAIL-MATRIX]]
+
+### Compliance Coverage
+
+- ✅ **SOC2** - CC6.1, CC6.2, CC7.2, CC7.3, CC8.1 (100% coverage)
+- ✅ **GDPR** - Articles 15, 17, 20, 22, 30, 32 (100% coverage)
+- ✅ **HIPAA** - 164.308(a)(1)(ii)(D), 164.312(b) (100% coverage)
+- ✅ **ISO 27001** - A.9.4.1, A.9.4.2, A.12.1.2, A.12.4.1, A.16.1.2 (100% coverage)
+- ✅ **AI Act** - Articles 12, 13, 14 (100% coverage)
+
+**Cryptographic Coverage:** 80% (12/15 implementations with SHA-256 hash chaining)
+
+See [[AGENT-091-AUDIT-TRAIL-MATRIX]] for complete traceability matrix.
+
+---
 
 ## Known Security Notes
 
 ### Example/Test Keys in Git History
 
-**Commit:** `9134791530f193bde79d2afddeefd2342e0c5e90`
-**Date:** 2026-01-28 21:05:59 UTC
+**Commit:** `9134791530f193bde79d2afddeefd2342e0c5e90`  
+**Date:** 2026-01-28 21:05:59 UTC  
 **Files Affected:**
 
 - `data/sovereign_messages_ai/identity.json`
@@ -95,9 +137,9 @@ The **OctoReflex** substrate provides the ultimate containment boundary. Before 
 - `data/sovereign_messages_multi_charlie/identity.json`
 - `data/sovereign_messages_user/identity.json`
 
-**Status:** Files removed from HEAD (current working tree is clean)
-**Classification:** Example/test RSA private keys only
-**Risk Level:** LOW - These are demonstration keys for the sovereign messaging integration example
+**Status:** Files removed from HEAD (current working tree is clean)  
+**Classification:** Example/test RSA private keys only  
+**Risk Level:** LOW - These are demonstration keys for the sovereign messaging integration example  
 **Recommendation:** Generate new cryptographic keys for any production deployment
 
 **Important:** These keys were never used in production and were only included as examples to demonstrate the sovereign messaging feature. If you are deploying Project-AI in a production environment, you must generate your own unique keys using:
@@ -108,7 +150,6 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 
 # Generate new key pair
-
 private_key = rsa.generate_private_key(
     public_exponent=65537,
     key_size=2048,
@@ -116,7 +157,6 @@ private_key = rsa.generate_private_key(
 )
 
 # Export private key
-
 pem = private_key.private_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PrivateFormat.PKCS8,
@@ -164,30 +204,6 @@ Project-AI implements security controls aligned with:
 - **OWASP LLM Top 10**: Protection against AI-specific vulnerabilities
 - **OWASP Testing Guide v4**: Comprehensive security testing
 
-### ðŸš¨ Security Validation Claims Policy
-
-**MANDATORY REQUIREMENT FOR ALL PULL REQUESTS:**
-
-All PRs that claim "production-ready," "enterprise best practices," "complete forensic capability," "runtime enforcement," or any assertion of operational security **MUST** include direct runtime validation output for **ALL** of the following:
-
-1. **Unsigned Image Admission Denial** - Evidence of deployment denial for unsigned images
-2. **Signed Image Admission Success** - Evidence of successful deployment for signed images
-3. **Privileged Container Denial** - Evidence of deployment denial for privileged containers
-4. **Cross-Namespace/Lateral Communication Denial** - Evidence of network policy enforcement
-5. **Log Deletion Prevention** - Evidence of log deletion prevention or detection
-
-**If ANY of these validations are missing**, the PR MUST use safe framing language ONLY:
-
-- "Implementation aligns with enterprise hardening patterns."
-- "Validation tests confirm configuration correctness."
-- "Full adversarial validation is ongoing."
-
-**PRs that claim runtime enforcement without complete evidence will be rejected with no exceptions.**
-
-**Complete Policy:** See [.github/SECURITY_VALIDATION_POLICY.md](.github/SECURITY_VALIDATION_POLICY.md) for detailed requirements, evidence format, and enforcement process.
-
-**Rationale:** This policy ensures that security claims are backed by verifiable runtime evidence, preventing false assertions and maintaining trust in Project-AI's security posture.
-
 ## Security Testing
 
 The project includes:
@@ -199,129 +215,8 @@ The project includes:
 - Container security scanning (Trivy)
 - Cloud configuration checks (Checkov)
 
-## GitHub Security Features
-
-### Automated Security Scanning
-
-**CodeQL Analysis**
-
-- Continuous code scanning for Python and JavaScript
-- Security-extended and quality query suites
-- Automatic SARIF upload to GitHub Security tab
-- Workflow: `.github/workflows/codeql.yml`
-- Schedule: Daily at 6:00 AM UTC
-
-**Dependency Scanning**
-
-- Dependabot configured for pip, npm, Docker, and GitHub Actions
-- Automatic pull requests for security updates
-- Dependency review on all PRs via GitHub Actions
-- pip-audit scanning for Python vulnerabilities
-- Configuration: `.github/dependabot.yml`
-
-**Secret Scanning**
-
-- GitHub secret scanning enabled (repository setting)
-- Detects committed secrets (API keys, tokens, credentials)
-- Push protection prevents secret commits (recommended)
-- Partner pattern detection (AWS, Azure, GCP, etc.)
-
-**Security Advisories**
-
-- Private vulnerability reporting via GitHub Security Advisories
-- CVE assignment and coordination
-- Template available: `.github/SECURITY_ADVISORY_TEMPLATE.md`
-
-### Supply Chain Security
-
-**Signed Commits**
-
-- Recommended for all contributors
-- Required on protected branches (configurable)
-- GPG or SSH signing supported
-
-**Workflow Security**
-
-- All GitHub Actions pinned to full SHA (not tags)
-- Minimal permissions per workflow (principle of least privilege)
-- Dependabot keeps Actions up to date
-
-**SBOM Generation**
-
-- Software Bill of Materials generated automatically
-- Workflow: `.github/workflows/generate-sbom.yml`
-- SPDX and CycloneDX formats supported
-
-### Branch Protection
-
-Comprehensive branch protection rules are documented and should be configured in repository settings:
-
-- Required pull request reviews
-- Required status checks (CodeQL, dependency review, tests)
-- Conversation resolution required
-- Force push disabled on protected branches
-- Full documentation: `.github/BRANCH_PROTECTION.md`
-
-### Security Monitoring
-
-**Security Alerts**
-
-- Dependabot security alerts enabled
-- CodeQL scanning alerts
-- Secret scanning alerts
-- Email notifications to maintainers
-
-**Audit Logging**
-
-- Repository audit log tracks security-related changes
-- Protected branch modifications logged
-- Security settings changes tracked
-
-### Security Policies
-
-- **Security Validation Claims Policy**: `.github/SECURITY_VALIDATION_POLICY.md`
-- **Security Automation**: `.github/SECURITY_AUTOMATION.md`
-- **Security Checklist**: `.github/SECURITY_VALIDATION_CHECKLIST.md`
-
-### Recommended Repository Settings
-
-To achieve full GitHub security compliance, configure these settings in repository settings:
-
-**Security & Analysis**
-
-- âœ… Dependency graph: Enabled
-- âœ… Dependabot alerts: Enabled
-- âœ… Dependabot security updates: Enabled
-- âœ… Grouped security updates: Enabled
-- âœ… CodeQL analysis: Enabled (via workflow)
-- âœ… Secret scanning: Enabled
-- âœ… Secret scanning push protection: Enabled (recommended)
-
-**Branch Protection Rules**
-
-- âœ… Configure for `main`, `develop`, and `release/**` branches
-- âœ… See `.github/BRANCH_PROTECTION.md` for detailed rules
-
-**Actions Permissions**
-
-- âœ… Allow select actions and reusable workflows
-- âœ… Require workflow approval for first-time contributors
-- âœ… Restrict actions to verified creators
-
-**Vulnerability Reporting**
-
-- âœ… Private vulnerability reporting: Enabled
-- âœ… Security policy published (this file)
-
-### Security Resources
-
-- [GitHub Security Advisories](https://github.com/IAmSoThirsty/Project-AI/security/advisories)
-- [CodeQL Scanning Results](https://github.com/IAmSoThirsty/Project-AI/security/code-scanning)
-- [Dependabot Alerts](https://github.com/IAmSoThirsty/Project-AI/security/dependabot)
-- [Secret Scanning Alerts](https://github.com/IAmSoThirsty/Project-AI/security/secret-scanning)
-
 ## Contact
 
 For security concerns, please contact the project maintainers through GitHub's security advisory system.
 
-**Last Updated:** 2026-02-28
+**Last Updated:** 2026-02-05

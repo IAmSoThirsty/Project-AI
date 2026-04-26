@@ -1,5 +1,3 @@
-#                                           [2026-03-05 08:49]
-#                                          Productivity: Active
 """
 The Iron Path - Sovereign Runtime Proof System
 
@@ -227,8 +225,6 @@ class IronPathExecutor:
             result["output"] = self._execute_promotion(stage)
         elif stage_type == "rollback":
             result["output"] = self._execute_rollback(stage)
-        elif stage_type == "abliteration":
-            result["output"] = self._execute_abliteration(stage)
         elif stage_type == "audit_export":
             result["output"] = self._execute_audit_export(stage)
         else:
@@ -396,33 +392,6 @@ class IronPathExecutor:
         rollback_info["rollback_hash"] = rollback_hash
 
         return rollback_info
-
-    def _execute_abliteration(self, stage: dict[str, Any]) -> dict[str, Any]:
-        """Execute model abliteration stage.
-
-        Args:
-            stage: Stage configuration
-
-        Returns:
-            Stage output
-        """
-        # Simulate abliteration
-        abliteration_info = {
-            "target_model": stage.get("model", "base_model"),
-            "vectors_found": 3,
-            "orthogonal_projection": "COMPLETE",
-            "kl_divergence_check": 0.042,
-            "decensoring_status": "VERIFIED",
-            "governance_handoff": "GALAHAD_ACTIVE",
-        }
-
-        # Create abliteration artifact hash
-        abliteration_hash = hashlib.sha256(
-            json.dumps(abliteration_info, sort_keys=True).encode()
-        ).hexdigest()
-        abliteration_info["abliteration_hash"] = abliteration_hash
-
-        return abliteration_info
 
     def _execute_audit_export(self, stage: dict[str, Any]) -> dict[str, Any]:
         """Execute audit export stage.

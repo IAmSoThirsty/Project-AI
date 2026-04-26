@@ -1,32 +1,34 @@
 ---
-name: Feature request
-about: Propose a focused improvement
-title: "[Feature] "
-labels: ["enhancement"]
-assignees: ""
+type: github-config
+tags: [issue-template, feature-request, github, contribution]
+created: 2025-10-15
+last_verified: 2026-04-20
+status: current
+related_systems: [issue-management, github-actions]
+stakeholders: [developers, contributors, product-team]
+config_scope: development
+automation_type: manual-config
+requires_secrets: false
+review_cycle: quarterly
 ---
 
-## Summary
+---
+name: Feature request
+about: Suggest an idea for this project
+title: ''
+labels: ''
+assignees: ''
 
-What should be added or improved?
+---
 
-## Problem
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
-What current workflow or limitation does this solve?
+**Describe the solution you'd like**
+A clear and concise description of what you want to happen.
 
-## Proposed Shape
+**Describe alternatives you've considered**
+A clear and concise description of any alternative solutions or features you've considered.
 
-Describe the smallest useful version of the feature.
-
-## Verification
-
-How should this feature prove that it works?
-
-```text
-Suggested command/test:
-Expected result:
-```
-
-## Scope Boundary
-
-What should this feature explicitly not do?
+**Additional context**
+Add any other context or screenshots about the feature request here.

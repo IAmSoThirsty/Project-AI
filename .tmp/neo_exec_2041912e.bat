@@ -1,0 +1,1 @@
+curl -H "Authorization: Bearer sk-v1-5759e75e76807e09ee7fed4f4fda9064cf8e557e0ce9e24ec5d3845525c68a86" -H "Content-Type: application/json" -d "{\"model\":\"openrouter/elephant-alpha\",\"messages":[{"role":"user","content":"Say hello"}]}" https://openrouter.ai/api/v1/chat/completions

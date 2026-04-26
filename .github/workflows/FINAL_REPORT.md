@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: workflow-spec
+tags: [github-actions, workflows, consolidation, ci-cd, success-report]
+created: 2026-01-18
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation]
+stakeholders: [devops, developers, executives, architects]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # 🎯 Workflow Consolidation - Complete Success
 
 ## Executive Summary
@@ -221,9 +233,7 @@ Weekly artifact cleanup (updated with submodule support).
 Every workflow now includes this step **immediately after checkout** and **before any pip/npm install**:
 
 ```yaml
-
 - name: Update submodules
-
   run: git submodule update --init --recursive
 ```
 

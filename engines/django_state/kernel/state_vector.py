@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """State vector module for kernel.
 
 Re-exports StateVector from schemas for kernel namespace.

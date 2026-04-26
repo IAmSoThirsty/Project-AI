@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 AGI Rebirth Protocol - Per-User Identity Management
 
@@ -53,7 +51,7 @@ import os
 import secrets
 import string
 from dataclasses import dataclass
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from app.core.identity import AGIIdentity, GenesisEvent
@@ -495,3 +493,4 @@ __all__ = [
     "RebirthManager",
     "UserAIInstance",
 ]
+

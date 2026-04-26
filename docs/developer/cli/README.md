@@ -1,18 +1,29 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, cli, cli-documentation, command-line-interface, usage-guide]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [cli-framework, command-parser, project-ai-cli]
+stakeholders: [developers, cli-users, contributors]
+audience: intermediate
+prerequisites: [shell-basics, python-cli-familiarity, command-line-comfort]
+estimated_time: 20 minutes
+review_cycle: monthly
+---
 # Project-AI CLI Documentation
 
 Welcome to the Project-AI Command Line Interface (CLI) documentation. This guide covers everything you need to know about using the CLI effectively.
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Configuration](#configuration)
-- [Command Groups](#command-groups)
-- [Shell Completion](#shell-completion)
-- [Examples](#examples)
-- [Troubleshooting](#troubleshooting)
+- [[#installation|Installation]]
+- [[#quick-start|Quick Start]]
+- [[#configuration|Configuration]]
+- [[#command-groups|Command Groups]]
+- [[#shell-completion|Shell Completion]]
+- [[#examples|Examples]]
+- [[#troubleshooting|Troubleshooting]]
 
 ## Installation
 
@@ -113,11 +124,8 @@ python -m app.cli user --help
 ```
 
 **Examples:**
-
 ```bash
-
 # Example user command
-
 python -m app.cli user example JohnDoe
 ```
 
@@ -130,11 +138,8 @@ python -m app.cli memory --help
 ```
 
 **Examples:**
-
 ```bash
-
 # Example memory command
-
 python -m app.cli memory example "important-fact"
 ```
 
@@ -147,11 +152,8 @@ python -m app.cli learning --help
 ```
 
 **Examples:**
-
 ```bash
-
 # Example learning command
-
 python -m app.cli learning example "machine-learning"
 ```
 
@@ -164,11 +166,8 @@ python -m app.cli plugin --help
 ```
 
 **Examples:**
-
 ```bash
-
 # Example plugin command
-
 python -m app.cli plugin example "my-plugin"
 ```
 
@@ -181,11 +180,8 @@ python -m app.cli system --help
 ```
 
 **Examples:**
-
 ```bash
-
 # Example system command
-
 python -m app.cli system example "config-param"
 ```
 
@@ -198,11 +194,8 @@ python -m app.cli ai --help
 ```
 
 **Examples:**
-
 ```bash
-
 # Example AI command
-
 python -m app.cli ai example "gpt-4"
 ```
 
@@ -216,9 +209,7 @@ The CLI supports tab completion for bash, zsh, and fish shells.
 
 ```bash
 python -m app.cli --install-completion bash
-
 # Or add to ~/.bashrc:
-
 eval "$(_APP_CLI_COMPLETE=bash_source python -m app.cli)"
 ```
 
@@ -226,9 +217,7 @@ eval "$(_APP_CLI_COMPLETE=bash_source python -m app.cli)"
 
 ```bash
 python -m app.cli --install-completion zsh
-
 # Or add to ~/.zshrc:
-
 eval "$(_APP_CLI_COMPLETE=zsh_source python -m app.cli)"
 ```
 
@@ -236,9 +225,7 @@ eval "$(_APP_CLI_COMPLETE=zsh_source python -m app.cli)"
 
 ```bash
 python -m app.cli --install-completion fish
-
 # Or add to ~/.config/fish/completions/app-cli.fish:
-
 eval (env _APP_CLI_COMPLETE=fish_source python -m app.cli)
 ```
 
@@ -264,26 +251,20 @@ python -m app.cli --version
 #### 2. Get Command Help
 
 ```bash
-
 # Get general help
-
 python -m app.cli --help
 
 # Get help for specific command group
-
 python -m app.cli user --help
 
 # Get help for specific subcommand
-
 python -m app.cli user example --help
 ```
 
 #### 3. Using Configuration
 
 ```bash
-
 # Create user config
-
 cat > ~/.projectai.toml << EOF
 [general]
 log_level = "DEBUG"
@@ -295,16 +276,13 @@ temperature = 0.8
 EOF
 
 # Config is automatically loaded
-
 python -m app.cli ai example "gpt-4"
 ```
 
 #### 4. Environment Overrides
 
 ```bash
-
 # Override specific config values
-
 PROJECTAI_AI_TEMPERATURE=0.9 python -m app.cli ai example "model"
 ```
 
@@ -332,14 +310,11 @@ pip install -r requirements.txt
 Check file locations and permissions:
 
 ```bash
-
 # Check if config exists
-
 ls -la ~/.projectai.toml
 ls -la .projectai.toml
 
 # Verify TOML syntax
-
 python -c "import tomllib; print(tomllib.load(open('.projectai.toml', 'rb')))"
 ```
 
@@ -359,22 +334,17 @@ python -c "import tomllib; print(tomllib.load(open('.projectai.toml', 'rb')))"
 The CLI is designed to be script-friendly:
 
 ```bash
-
 #!/bin/bash
-
 # Example automation script
 
 # Set error handling
-
 set -e
 
 # Configure via environment
-
 export PROJECTAI_GENERAL_LOG_LEVEL=ERROR
 export PROJECTAI_GENERAL_VERBOSE=false
 
 # Run commands
-
 python -m app.cli user example "script-user"
 python -m app.cli memory example "script-memory"
 ```
@@ -398,9 +368,9 @@ python -m app.cli batch --file commands.txt
 ## Related Documentation
 
 - [CLI-CODEX.md](../../CLI-CODEX.md) - CLI development guidelines
-- [commands.md](./commands.md) - Auto-generated command reference
+- [[./commands.md|commands.md]] - Auto-generated command reference
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) - Contributing to CLI development
-- [README.md](../../README.md) - Main project documentation
+- [[../../README.md|README.md]] - Main project documentation
 
 ## Getting Help
 
@@ -412,6 +382,6 @@ If you need help:
 1. Open an issue: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues)
 1. Join discussions: [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
 
-______________________________________________________________________
+---
 
 **Note**: This documentation is for version 1.0.0. For the latest updates, see [CHANGELOG.md](../../CHANGELOG.md).

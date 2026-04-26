@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 HYDRA-50 USAGE EXAMPLES
@@ -68,7 +66,7 @@ def example_realtime_monitoring():
     engine = HYDRA50Engine()
 
     # Monitor for 10 seconds
-    for _i in range(5):
+    for i in range(5):
         status = engine.get_system_status()
         logger.info(
             "Active: %s, Critical: %s",
@@ -226,7 +224,7 @@ def example_alert_management():
         source="system_monitor",
     )
 
-    telemetry.alert_manager.create_alert(
+    alert2 = telemetry.alert_manager.create_alert(
         severity=AlertSeverity.CRITICAL,
         title="Scenario Escalation",
         message="Scenario reached critical level",
@@ -325,13 +323,13 @@ def example_performance_optimization():
 
     # First call (slow)
     start = time.time()
-    expensive_computation(10)
+    result1 = expensive_computation(10)
     time1 = time.time() - start
     logger.info("First call: %ss", time1)
 
     # Second call (cached, fast)
     start = time.time()
-    expensive_computation(10)
+    result2 = expensive_computation(10)
     time2 = time.time() - start
     logger.info("Second call (cached): %ss", time2)
 

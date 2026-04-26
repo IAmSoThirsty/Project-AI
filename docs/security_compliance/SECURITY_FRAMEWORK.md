@@ -1,5 +1,109 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Security Framework Documentation"
+id: "security-framework"
+type: "framework"
+version: "1.0.0"
+created_date: "2026-01-10"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "type:framework"
+  - "type:reference"
+  - "component:environment-hardening"
+  - "component:data-validation"
+  - "component:aws-integration"
+  - "component:agent-security"
+  - "component:database-security"
+  - "component:monitoring"
+  - "audience:developer"
+  - "audience:security-engineer"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "EnvironmentHardening"
+  - "SecureDataParser"
+  - "AWS Secrets Manager"
+  - "SecureDatabaseManager"
+  - "SecurityMonitor"
+  - "SOAP/HTTP Security"
+difficulty: "advanced"
+estimated_time: "PT240M"
+prerequisites:
+  - "Python security programming"
+  - "AWS security services"
+  - "Defense-in-depth principles"
+summary: "Comprehensive security framework documentation covering environment hardening, data validation, AWS integration, agent security, database security, monitoring, web security, and standards compliance."
+scope: "Complete secure AI deployment lifecycle: virtualenv validation, sys.path hardening, ASLR/SSP, secure XML/CSV/JSON parsing, AWS IAM, agent isolation, parameterized queries, rate limiting, HMAC signing"
+classification: "internal"
+threat_level: "critical"
+attack_vectors:
+  - "code-injection"
+  - "xss"
+  - "sql-injection"
+  - "xxe"
+  - "path-traversal"
+  - "data-poisoning"
+  - "privilege-escalation"
+mitigations:
+  - "[[ENVIRONMENT_HARDENING]]"
+  - "[[SECURE_DATA_PARSER]]"
+  - "[[AWS_SECURITY_INTEGRATION]]"
+  - "[[AGENT_ISOLATION]]"
+  - "[[DATABASE_SECURITY]]"
+  - "[[SECURITY_MONITORING]]"
+defends_against:
+  - "Current directory code injection"
+  - "XSS attacks"
+  - "SQL injection"
+  - "XXE attacks"
+  - "Path traversal"
+  - "Data poisoning"
+  - "Privilege escalation"
+compliance:
+  - "OWASP Top 10 2021"
+  - "NIST Cybersecurity Framework"
+  - "CERT Secure Coding Standards"
+  - "AWS Well-Architected Security Pillar"
+  - "CIS Benchmarks"
+stakeholders:
+  - security-team   - architecture-team   - governance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Framework Documentation"
+cwe_ids:
+  - "CWE-78: OS Command Injection"
+  - "CWE-79: XSS"
+  - "CWE-89: SQL Injection"
+  - "CWE-611: XXE"
+  - "CWE-22: Path Traversal"
+  - "CWE-269: Improper Privilege Management"
+test_coverage:
+  has_tests: true
+  total_tests: 158
+  passing_tests: 157
+  skipped_tests: 1
+  coverage_categories: 9
+related_docs:
+  - "security-quickref"
+  - "security-examples"
+  - "threat-model"
+  - "deployment-guide"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "architecture-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "security-engineers"
+  - "system-architects"
+  - "compliance-auditors"
+---
+
 # Security Framework Documentation
 
 ## Overview
@@ -8,18 +112,18 @@ This document provides comprehensive documentation for Project-AI's security fra
 
 ## Table of Contents
 
-1. [Environment Hardening](#environment-hardening)
-1. [Data Validation & Parsing](#data-validation--parsing)
-1. [AWS Cloud Integration](#aws-cloud-integration)
-1. [Agent Security](#agent-security)
-1. [Database Security](#database-security)
-1. [Security Monitoring](#security-monitoring)
-1. [Web Service Security](#web-service-security)
-1. [Testing Infrastructure](#testing-infrastructure)
-1. [Standards Compliance](#standards-compliance)
-1. [Deployment Checklist](#deployment-checklist)
+1. [[#environment-hardening|Environment Hardening]]
+1. [[#data-validation--parsing|Data Validation & Parsing]]
+1. [[#aws-cloud-integration|AWS Cloud Integration]]
+1. [[#agent-security|Agent Security]]
+1. [[#database-security|Database Security]]
+1. [[#security-monitoring|Security Monitoring]]
+1. [[#web-service-security|Web Service Security]]
+1. [[#testing-infrastructure|Testing Infrastructure]]
+1. [[#standards-compliance|Standards Compliance]]
+1. [[#deployment-checklist|Deployment Checklist]]
 
-______________________________________________________________________
+---
 
 ## Environment Hardening
 
@@ -59,23 +163,19 @@ Validates and hardens the runtime environment to prevent common security vulnera
 from app.security import EnvironmentHardening
 
 # Initialize
-
 hardening = EnvironmentHardening(data_dir="data")
 
 # Run validation
-
 is_valid, issues = hardening.validate_environment()
 
 if not is_valid:
     print(f"Security issues detected: {issues}")
-
+    
 # Apply hardening
-
 hardening.harden_sys_path()
 hardening.secure_directory_structure()
 
 # Get detailed report
-
 report = hardening.get_validation_report()
 ```
 
@@ -84,7 +184,7 @@ report = hardening.get_validation_report()
 - **OWASP**: Addresses insecure platform use (M10)
 - **CERT**: SEI CERT Secure Coding Standards (Python)
 
-______________________________________________________________________
+---
 
 ## Data Validation & Parsing
 
@@ -107,7 +207,6 @@ from app.security import SecureDataParser
 parser = SecureDataParser()
 
 # Parse XML with security controls
-
 xml_data = "<root><item>test</item></root>"
 result = parser.parse_xml(xml_data)
 
@@ -124,9 +223,7 @@ else:
 - **Size Limits**: Prevents DoS via large files
 
 ```python
-
 # Parse CSV with schema
-
 csv_data = "name,age\nJohn,30"
 schema = {"name": "string", "age": "int"}
 result = parser.parse_csv(csv_data, schema=schema)
@@ -150,7 +247,6 @@ from app.security import DataPoisoningDefense
 defense = DataPoisoningDefense()
 
 # Check for poisoning
-
 is_poisoned, patterns = defense.check_for_poison(user_input)
 
 if is_poisoned:
@@ -164,7 +260,7 @@ if is_poisoned:
 - **CWE-91**: XML Injection (XEE)
 - **CWE-89**: SQL Injection (detection)
 
-______________________________________________________________________
+---
 
 ## AWS Cloud Integration
 
@@ -184,17 +280,14 @@ Secure AWS resource access following Principle of Least Privilege (PoLP).
 from app.security import AWSSecurityManager
 
 # Initialize (uses IAM role credentials)
-
 aws = AWSSecurityManager(region="us-east-1")
 
 # Audit current permissions
-
 audit = aws.audit_iam_permissions()
 print(f"Role: {audit['role_name']}")
 print(f"Attached policies: {audit['attached_policies']}")
 
 # Validate PoLP
-
 required_perms = ["s3:GetObject", "s3:PutObject"]
 if aws.validate_polp(required_perms):
     print("PoLP validated")
@@ -207,14 +300,11 @@ if aws.validate_polp(required_perms):
 - **Rotation**: Supports automatic secret rotation
 
 ```python
-
 # Store secret
-
 secret_data = {"api_key": "secret_value"}
 aws.put_secret("my-api-key", secret_data)
 
 # Retrieve secret
-
 secret = aws.get_secret("my-api-key")
 ```
 
@@ -225,9 +315,7 @@ secret = aws.get_secret("my-api-key")
 - **MFA Delete**: Protect critical data
 
 ```python
-
 # Upload with encryption
-
 data = b"sensitive data"
 aws.upload_to_s3(
     bucket="my-bucket",
@@ -237,16 +325,13 @@ aws.upload_to_s3(
 )
 
 # Enable MFA delete
-
 aws.enable_mfa_delete("my-bucket")
 ```
 
 #### Temporary Credentials
 
 ```python
-
 # Assume role for limited access
-
 creds = aws.get_temporary_credentials(
     role_arn="arn:aws:iam::123456789012:role/ReadOnlyRole",
     session_name="data-processor",
@@ -260,7 +345,7 @@ creds = aws.get_temporary_credentials(
 - **CIS AWS Foundations Benchmark**: IAM best practices
 - **NIST CSF**: PR.AC-4 (Access permissions)
 
-______________________________________________________________________
+---
 
 ## Agent Security
 
@@ -282,16 +367,13 @@ from app.security import AgentEncapsulation
 agent = AgentEncapsulation("agent_id_1")
 
 # Set permissions
-
 agent.set_permissions(read=True, write=True, execute=False)
 
 # Manage state with audit trail
-
 agent.set_state("model_weights", weights, caller="trainer")
 weights = agent.get_state("model_weights", caller="inference")
 
 # Review access log
-
 log = agent.get_access_log()
 ```
 
@@ -308,15 +390,12 @@ from app.security.agent_security import NumericalProtection
 protection = NumericalProtection()
 
 # Clip to safe range
-
 safe_array = protection.clip_array(untrusted_input)
 
 # Remove outliers
-
 clean_data = protection.remove_outliers(sensor_data, threshold=3.0)
 
 # Safe operations
-
 result = protection.safe_divide(numerator, denominator, default=0.0)
 ```
 
@@ -332,7 +411,6 @@ from app.security.agent_security import PluginIsolation
 isolation = PluginIsolation(timeout=30)
 
 # Execute untrusted plugin
-
 result = isolation.execute_isolated(
     plugin_func=untrusted_plugin,
     args=(data,),
@@ -351,11 +429,9 @@ from app.security.agent_security import RuntimeFuzzer
 fuzzer = RuntimeFuzzer()
 
 # Generate fuzz cases
-
 test_cases = fuzzer.fuzz_input("boundary_values", 0)
 
 # Test with fuzz cases
-
 for test_case in test_cases:
     try:
         function_under_test(test_case)
@@ -368,7 +444,7 @@ for test_case in test_cases:
 - **OWASP**: ML Security (adversarial robustness)
 - **NIST AI RMF**: Trustworthy AI principles
 
-______________________________________________________________________
+---
 
 ## Database Security
 
@@ -390,11 +466,9 @@ from app.security import SecureDatabaseManager
 db = SecureDatabaseManager("data/app.db")
 
 # Parameterized insert
-
 user_id = db.insert_user("alice", "hashed_password", "alice@example.com")
 
 # Parameterized select
-
 user = db.get_user("alice")
 ```
 
@@ -404,16 +478,12 @@ user = db.get_user("alice")
 - **Context Manager**: Clean transaction handling
 
 ```python
-
 # Explicit transaction
-
 with db.transaction() as conn:
     cursor = conn.cursor()
     cursor.execute("INSERT INTO users ...")
     cursor.execute("UPDATE settings ...")
-
     # Automatically commits on success, rolls back on error
-
 ```
 
 #### Audit Logging
@@ -423,9 +493,7 @@ with db.transaction() as conn:
 - **IP Tracking**: Records client IP addresses
 
 ```python
-
 # Log action
-
 db.log_action(
     user_id=123,
     action="delete_data",
@@ -435,7 +503,6 @@ db.log_action(
 )
 
 # Retrieve audit log
-
 log = db.get_audit_log(user_id=123, limit=100)
 ```
 
@@ -451,7 +518,7 @@ log = db.get_audit_log(user_id=123, limit=100)
 - **CWE-89**: SQL Injection mitigation
 - **NIST 800-53**: SC-23 Session Authenticity
 
-______________________________________________________________________
+---
 
 ## Security Monitoring
 
@@ -477,7 +544,6 @@ monitor = SecurityMonitor(
 )
 
 # Log security event
-
 monitor.log_security_event(
     event_type="authentication_failure",
     severity="medium",
@@ -506,16 +572,13 @@ monitor.log_security_event(
 - **Automated Blocking**: Integrate with WAF/firewall
 
 ```python
-
 # Add threat signature
-
 monitor.add_threat_signature(
     campaign_name="APT29",
     indicators=["evil.com", "malware_hash_abc123"]
 )
 
 # Check for threats
-
 matches = monitor.check_threat_signatures(user_input)
 if matches:
     print(f"Threat detected: {matches}")
@@ -528,9 +591,7 @@ if matches:
 - **Automated Response**: Trigger alerts/blocks
 
 ```python
-
 # Detect anomalies
-
 anomalies = monitor.detect_anomalies(
     time_window=3600,  # 1 hour
     threshold=10       # 10+ events = anomaly
@@ -546,7 +607,7 @@ for anomaly in anomalies:
 - **PCI DSS**: Requirement 10 (Logging and Monitoring)
 - **SOC 2**: CC7.2 (Monitoring)
 
-______________________________________________________________________
+---
 
 ## Web Service Security
 
@@ -566,7 +627,6 @@ Secure web services with SOAP, HTTP, and capability-based access control.
 from app.security.web_service import SOAPClient
 
 # EXAMPLE ONLY - Use environment variables for real credentials
-
 client = SOAPClient(
     endpoint="https://api.example.com/soap",
     username=os.getenv("SOAP_USERNAME"),
@@ -574,7 +634,6 @@ client = SOAPClient(
 )
 
 # Make SOAP call
-
 response = client.call("GetData", {"id": "123"})
 ```
 
@@ -590,15 +649,11 @@ from app.security.web_service import SecureWebHandler
 handler = SecureWebHandler()
 
 # Generate capability for specific actions
-
 token = handler.generate_capability_token(["read", "write"])
 
 # Check permission
-
 if handler.check_capability(token, "read"):
-
     # Allow read operation
-
     pass
 ```
 
@@ -609,13 +664,9 @@ if handler.check_capability(token, "read"):
 - **HSTS**: HTTP Strict Transport Security
 
 ```python
-
 # Get secure headers for response
-
 headers = handler.set_secure_headers()
-
 # Apply to HTTP response
-
 ```
 
 #### Request Signing
@@ -625,17 +676,12 @@ headers = handler.set_secure_headers()
 - **Constant-Time Comparison**: Timing attack prevention
 
 ```python
-
 # Sign request
-
 signature = handler.sign_request(request_data, secret_key)
 
 # Verify signature
-
 if handler.verify_signature(request_data, signature, secret_key):
-
     # Process request
-
     pass
 ```
 
@@ -651,14 +697,10 @@ from app.security.web_service import RateLimiter
 limiter = RateLimiter(max_requests=100, window=60)
 
 if limiter.check_rate_limit(client_ip):
-
     # Process request
-
     pass
 else:
-
     # Return 429 Too Many Requests
-
     pass
 ```
 
@@ -674,7 +716,7 @@ else:
 - **OWASP Top 10**: A01:2021 Broken Access Control, A05:2021 Security Misconfiguration
 - **OWASP API Security**: API1:2019 Broken Object Level Authorization
 
-______________________________________________________________________
+---
 
 ## Testing Infrastructure
 
@@ -698,21 +740,16 @@ ______________________________________________________________________
 ### Running Tests
 
 ```bash
-
 # All security tests
-
 pytest tests/test_security_phase1.py tests/test_security_phase2.py -v
 
 # With coverage
-
 pytest tests/test_security_phase*.py --cov=app.security --cov-report=html
 
 # Specific phase
-
 pytest tests/test_security_phase1.py -v
 
 # Specific test class
-
 pytest tests/test_security_phase1.py::TestEnvironmentHardening -v
 ```
 
@@ -726,13 +763,14 @@ Tests include concurrent access, high-volume operations, and adversarial inputs:
 - **Unicode handling**: International character sets
 - **Fuzzing**: Boundary values, type confusion, overflow
 
-______________________________________________________________________
+---
 
 ## Supply Chain Security
 
 ### Release Artifact Signing
 
-**Implementation:** Sigstore Cosign keyless signing **Workflow:** `.github/workflows/sign-release-artifacts.yml`
+**Implementation:** Sigstore Cosign keyless signing  
+**Workflow:** `.github/workflows/sign-release-artifacts.yml`
 
 All release artifacts are cryptographically signed:
 
@@ -741,7 +779,6 @@ All release artifacts are cryptographically signed:
 - Checksums (`SHA256SUMS`, `SHA512SUMS`)
 
 **Verification:**
-
 ```bash
 cosign verify-blob <artifact> \
   --signature=<artifact>.sig \
@@ -759,7 +796,10 @@ cosign verify-blob <artifact> \
 
 ### Software Bill of Materials (SBOM)
 
-**Tool:** Syft (Anchore) **Format:** CycloneDX 1.5 JSON **Workflow:** `.github/workflows/sbom.yml` **Policy:** [docs/security/SBOM_POLICY.md](security/SBOM_POLICY.md)
+**Tool:** Syft (Anchore)  
+**Format:** CycloneDX 1.5 JSON  
+**Workflow:** `.github/workflows/sbom.yml`  
+**Policy:** [docs/security/SBOM_POLICY.md](security/SBOM_POLICY.md)
 
 SBOMs generated for:
 
@@ -774,7 +814,8 @@ SBOMs generated for:
 - Binary artifacts and model files (metadata)
 - Transitive dependencies (full dependency tree)
 
-**NTIA Compliance:** ✅ All 7 minimum elements included:
+**NTIA Compliance:**
+✅ All 7 minimum elements included:
 
 1. Supplier Name
 1. Component Name
@@ -792,19 +833,14 @@ SBOMs generated for:
 - US Executive Order 14028 ✅
 
 **Usage:**
-
 ```bash
-
 # Vulnerability scanning
-
 grype sbom:sbom-comprehensive.cyclonedx.json
 
 # License compliance
-
 jq '.components[].licenses' sbom-comprehensive.cyclonedx.json
 
 # Dependency analysis
-
 cat sbom-report.txt
 ```
 
@@ -844,36 +880,36 @@ Automated scanning for AI/ML-specific threats:
 - GitHub Issue creation on main branch failures
 - Detailed scan reports in artifacts
 
-______________________________________________________________________
+---
 
 ## Standards Compliance
 
 ### OWASP Compliance
 
-| OWASP Top 10 2021                | Mitigation                                              |
-| -------------------------------- | ------------------------------------------------------- |
-| A01: Broken Access Control       | Capability-based access, IAM PoLP                       |
-| A02: Cryptographic Failures      | AES-256 encryption, HTTPS, secure headers               |
-| A03: Injection                   | Parameterized queries, input validation, XXE prevention |
-| A04: Insecure Design             | Security by design, threat modeling                     |
-| A05: Security Misconfiguration   | Environment hardening, secure defaults                  |
-| A06: Vulnerable Components       | Dependency scanning, SBOM, updates                      |
-| A07: Authentication Failures     | bcrypt hashing, MFA support                             |
-| A08: Software and Data Integrity | **Artifact signing, SBOM, audit logging**               |
-| A09: Logging Failures            | Comprehensive audit logs, CloudWatch                    |
-| A10: SSRF                        | Input validation, URL whitelisting                      |
+| OWASP Top 10 2021 | Mitigation |
+|-------------------|------------|
+| A01: Broken Access Control | Capability-based access, IAM PoLP |
+| A02: Cryptographic Failures | AES-256 encryption, HTTPS, secure headers |
+| A03: Injection | Parameterized queries, input validation, XXE prevention |
+| A04: Insecure Design | Security by design, threat modeling |
+| A05: Security Misconfiguration | Environment hardening, secure defaults |
+| A06: Vulnerable Components | Dependency scanning, SBOM, updates |
+| A07: Authentication Failures | bcrypt hashing, MFA support |
+| A08: Software and Data Integrity | **Artifact signing, SBOM, audit logging** |
+| A09: Logging Failures | Comprehensive audit logs, CloudWatch |
+| A10: SSRF | Input validation, URL whitelisting |
 
 ### NIST Cybersecurity Framework
 
-| Function | Category              | Implementation                             |
-| -------- | --------------------- | ------------------------------------------ |
-| Identify | Asset Management      | Dependency tracking, inventory             |
-| Protect  | Access Control        | IAM, capability tokens, rate limiting      |
-| Protect  | Data Security         | Encryption at rest/transit, secure parsing |
-| Detect   | Anomaly Detection     | Threshold-based detection, signatures      |
-| Detect   | Continuous Monitoring | CloudWatch, event logging                  |
-| Respond  | Incident Response     | Automated alerts, SNS notifications        |
-| Recover  | Backups               | Versioning, MFA delete                     |
+| Function | Category | Implementation |
+|----------|----------|----------------|
+| Identify | Asset Management | Dependency tracking, inventory |
+| Protect | Access Control | IAM, capability tokens, rate limiting |
+| Protect | Data Security | Encryption at rest/transit, secure parsing |
+| Detect | Anomaly Detection | Threshold-based detection, signatures |
+| Detect | Continuous Monitoring | CloudWatch, event logging |
+| Respond | Incident Response | Automated alerts, SNS notifications |
+| Recover | Backups | Versioning, MFA delete |
 
 ### CERT Secure Coding
 
@@ -881,7 +917,7 @@ ______________________________________________________________________
 - **FIO**: File I/O (secure permissions)
 - **MSC**: Miscellaneous (ASLR/SSP verification)
 
-______________________________________________________________________
+---
 
 ## Deployment Checklist
 
@@ -927,7 +963,7 @@ ______________________________________________________________________
 - [ ] **Verify artifact signatures:** Spot-check release signatures quarterly
 - [ ] **Update AI/ML model scans:** Review and update threat detection patterns
 
-______________________________________________________________________
+---
 
 ## Example Integration
 
@@ -943,7 +979,6 @@ from app.security import (
 )
 
 # 1. Environment hardening
-
 hardening = EnvironmentHardening()
 is_valid, issues = hardening.validate_environment()
 
@@ -953,7 +988,6 @@ if not is_valid:
     hardening.secure_directory_structure()
 
 # 2. Initialize monitoring
-
 monitor = SecurityMonitor(
     region="us-east-1",
     sns_topic_arn=os.getenv("SECURITY_SNS_TOPIC"),
@@ -968,30 +1002,24 @@ monitor.log_security_event(
 )
 
 # 3. Initialize database
-
 db = SecureDatabaseManager("data/app.db")
 
 # 4. Initialize AWS (if in cloud)
-
 if os.getenv("AWS_EXECUTION_ENV"):
     aws = AWSSecurityManager(region="us-east-1")
-
+    
     # Get secrets
-
     secrets = aws.get_secret("app-secrets")
-
+    
     # Validate permissions
-
     required = ["s3:GetObject", "secretsmanager:GetSecretValue"]
     if not aws.validate_polp(required):
         raise RuntimeError("Excessive IAM permissions detected")
 
 # 5. Initialize parsers
-
 parser = SecureDataParser()
 
 # Now application is ready with full security
-
 ```
 
 ### Request Handling
@@ -1005,14 +1033,11 @@ rate_limiter = RateLimiter(max_requests=100, window=60)
 validator = InputValidator()
 
 def handle_request(client_ip: str, user_input: str):
-
     # 1. Rate limiting
-
     if not rate_limiter.check_rate_limit(client_ip):
         return {"error": "Rate limit exceeded"}, 429
-
+    
     # 2. Input validation
-
     if not validator.validate_input(user_input, "application/json"):
         monitor.log_security_event(
             event_type="invalid_input",
@@ -1022,9 +1047,8 @@ def handle_request(client_ip: str, user_input: str):
             metadata={"ip": client_ip}
         )
         return {"error": "Invalid input"}, 400
-
+    
     # 3. Poisoning check
-
     is_poisoned, patterns = defense.check_for_poison(user_input)
     if is_poisoned:
         monitor.log_security_event(
@@ -1035,16 +1059,14 @@ def handle_request(client_ip: str, user_input: str):
             metadata={"ip": client_ip}
         )
         return {"error": "Malicious input detected"}, 403
-
+    
     # 4. Process request safely
-
     result = parser.parse_json(user_input)
-
+    
     if not result.validated:
         return {"error": "Validation failed"}, 400
-
+    
     # 5. Audit log
-
     db.log_action(
         user_id=get_user_id(client_ip),
         action="api_request",
@@ -1052,11 +1074,11 @@ def handle_request(client_ip: str, user_input: str):
         details=result.data,
         ip_address=client_ip
     )
-
+    
     return {"success": True, "data": result.data}, 200
 ```
 
-______________________________________________________________________
+---
 
 ## Future Work and Security Roadmap
 
@@ -1069,35 +1091,30 @@ For detailed information about planned security enhancements, see **[Security Ro
 The roadmap covers:
 
 1. **Build-Time Code Injection Protection** (SLSA Provenance)
-
    - Status: Planned for Q2 2026
    - SLSA Level 2-4 implementation
    - Hardened build environments
    - Reproducible builds
 
 1. **Malicious Dependency Injection** (Enhanced Dependency Review)
-
    - Status: Planned for Q2 2026
    - GitHub Dependency Review workflow
    - Private package registry
    - Supply chain verification
 
 1. **Model Backdoors in Weights** (ML Security)
-
    - Status: In Progress
    - Model provenance tracking
    - Behavioral testing suite
    - Runtime anomaly detection
 
 1. **Adversarial Examples** (Runtime Defense)
-
    - Status: Planned for Q2 2026
    - Enhanced input validation
    - Adversarial robustness testing
    - Runtime attack detection
 
 1. **Runtime Vulnerabilities** (DAST/RASP)
-
    - Status: Planned for Q2 2026
    - Dynamic Application Security Testing
    - Runtime Application Self-Protection
@@ -1105,13 +1122,13 @@ The roadmap covers:
 
 ### Current Coverage Status
 
-| Security Area         | Coverage | Status         |
-| --------------------- | -------- | -------------- |
-| Static Analysis       | 90%      | ✅ Implemented |
-| Supply Chain Security | 70%      | 🟡 Partial     |
-| Build Security        | 40%      | 🟠 Planned     |
-| Model Security        | 50%      | 🟡 In Progress |
-| Runtime Security      | 60%      | 🟡 Partial     |
+| Security Area | Coverage | Status |
+|---------------|----------|--------|
+| Static Analysis | 90% | ✅ Implemented |
+| Supply Chain Security | 70% | 🟡 Partial |
+| Build Security | 40% | 🟠 Planned |
+| Model Security | 50% | 🟡 In Progress |
+| Runtime Security | 60% | 🟡 Partial |
 
 ### Integration Points
 
@@ -1130,7 +1147,7 @@ The Security Roadmap is integrated with:
 
 See **[SECURITY_ROADMAP.md](security/SECURITY_ROADMAP.md)** for complete details, timelines, and implementation plans.
 
-______________________________________________________________________
+---
 
 ## Support and Resources
 
@@ -1147,6 +1164,8 @@ ______________________________________________________________________
 - [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
 - [CERT Secure Coding Standards](https://wiki.sei.cmu.edu/confluence/display/seccode)
 
-______________________________________________________________________
+---
 
-**Document Version**: 1.0 **Last Updated**: 2025-12-31 **Author**: Project-AI Security Team
+**Document Version**: 1.0  
+**Last Updated**: 2025-12-31  
+**Author**: Project-AI Security Team

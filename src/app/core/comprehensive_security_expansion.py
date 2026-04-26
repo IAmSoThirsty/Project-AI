@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Comprehensive Security Test Expansion - 2,200 Additional Scenarios.
 
@@ -15,7 +13,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -103,7 +101,7 @@ class ComprehensiveSecurityExpansion:
                     category=f"B_{attack.lower()}_attack",
                     severity="critical",
                     difficulty="expert",
-                    title=f"{attack} authentication bypass - variant {i + 1}",
+                    title=f"{attack} authentication bypass - variant {i+1}",
                     description=f"Advanced {attack} manipulation for authentication bypass",
                     attack_vector="authentication",
                     payload={"type": attack, "technique": f"technique_{i}"},
@@ -126,7 +124,7 @@ class ComprehensiveSecurityExpansion:
                     category="C_crypto_failure",
                     severity="high",
                     difficulty="expert",
-                    title=f"Cryptographic weakness exploitation {i + 1}",
+                    title=f"Cryptographic weakness exploitation {i+1}",
                     description="Exploiting weak cryptographic implementations",
                     attack_vector="cryptography",
                     payload={
@@ -155,7 +153,7 @@ class ComprehensiveSecurityExpansion:
                     category="D_deserialization",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Deserialization RCE {i + 1}",
+                    title=f"Deserialization RCE {i+1}",
                     description="Remote code execution via deserialization",
                     attack_vector="deserialization",
                     payload={"language": ["Java", "Python", "PHP"][i % 3]},
@@ -182,7 +180,7 @@ class ComprehensiveSecurityExpansion:
                     category="E_exploitation",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Memory corruption exploit {i + 1}",
+                    title=f"Memory corruption exploit {i+1}",
                     description="Buffer overflow and memory corruption",
                     attack_vector="memory_corruption",
                     payload={
@@ -209,7 +207,7 @@ class ComprehensiveSecurityExpansion:
                     category="F_file_operations",
                     severity="high",
                     difficulty="expert",
-                    title=f"Path traversal and file upload {i + 1}",
+                    title=f"Path traversal and file upload {i+1}",
                     description="File operation abuse for unauthorized access",
                     attack_vector="file_operations",
                     payload={
@@ -238,7 +236,7 @@ class ComprehensiveSecurityExpansion:
                     category="G_graphql_api",
                     severity="high",
                     difficulty="expert",
-                    title=f"GraphQL/API security bypass {i + 1}",
+                    title=f"GraphQL/API security bypass {i+1}",
                     description="API and GraphQL exploitation",
                     attack_vector="api",
                     payload={
@@ -267,7 +265,7 @@ class ComprehensiveSecurityExpansion:
                     category="H_http_protocol",
                     severity="high",
                     difficulty="expert",
-                    title=f"HTTP protocol attack {i + 1}",
+                    title=f"HTTP protocol attack {i+1}",
                     description="HTTP smuggling and response splitting",
                     attack_vector="http_protocol",
                     payload={
@@ -300,7 +298,7 @@ class ComprehensiveSecurityExpansion:
                     category="I_iam",
                     severity="critical",
                     difficulty="expert",
-                    title=f"IAM privilege escalation {i + 1}",
+                    title=f"IAM privilege escalation {i+1}",
                     description="Identity and access management bypass",
                     attack_vector="iam",
                     payload={
@@ -327,7 +325,7 @@ class ComprehensiveSecurityExpansion:
                     category="K_kubernetes",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Kubernetes security breach {i + 1}",
+                    title=f"Kubernetes security breach {i+1}",
                     description="Container orchestration exploitation",
                     attack_vector="kubernetes",
                     payload={
@@ -356,7 +354,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_web_advanced",
                     severity="critical" if i < 150 else "high",
                     difficulty="redteam",
-                    title=f"Advanced web exploit {i + 1}",
+                    title=f"Advanced web exploit {i+1}",
                     description="Multi-stage web application attack",
                     attack_vector="web",
                     payload={
@@ -387,7 +385,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_network_advanced",
                     severity="high",
                     difficulty="redteam",
-                    title=f"Network layer attack {i + 1}",
+                    title=f"Network layer attack {i+1}",
                     description="Advanced network penetration",
                     attack_vector="network",
                     payload={"attack": ["mitm", "dns_spoofing", "arp_poison"][i % 3]},
@@ -410,7 +408,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_application",
                     severity="critical",
                     difficulty="redteam",
-                    title=f"Application layer exploit {i + 1}",
+                    title=f"Application layer exploit {i+1}",
                     description="Complex application vulnerability chain",
                     attack_vector="application",
                     payload={"complexity": "high", "chain_length": 4 + (i % 3)},
@@ -437,7 +435,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_infrastructure",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Infrastructure compromise {i + 1}",
+                    title=f"Infrastructure compromise {i+1}",
                     description="Critical infrastructure attack",
                     attack_vector="infrastructure",
                     payload={"target": ["cloud", "on_prem", "hybrid"][i % 3]},
@@ -462,7 +460,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_reconnaissance",
                     severity="medium",
                     difficulty="expert",
-                    title=f"Reconnaissance technique {i + 1}",
+                    title=f"Reconnaissance technique {i+1}",
                     description="Advanced target enumeration",
                     attack_vector="reconnaissance",
                     payload={"method": ["osint", "scanning", "enumeration"][i % 3]},
@@ -485,7 +483,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_weaponization",
                     severity="high",
                     difficulty="expert",
-                    title=f"Weaponization technique {i + 1}",
+                    title=f"Weaponization technique {i+1}",
                     description="Malware and exploit creation",
                     attack_vector="weaponization",
                     payload={"type": ["trojan", "backdoor", "exploit"][i % 3]},
@@ -512,7 +510,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_delivery",
                     severity="high",
                     difficulty="expert",
-                    title=f"Delivery mechanism {i + 1}",
+                    title=f"Delivery mechanism {i+1}",
                     description="Advanced payload delivery",
                     attack_vector="delivery",
                     payload={
@@ -541,7 +539,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_exploitation",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Exploitation technique {i + 1}",
+                    title=f"Exploitation technique {i+1}",
                     description="Initial access exploitation",
                     attack_vector="exploitation",
                     payload={"target": ["client", "server", "network"][i % 3]},
@@ -564,7 +562,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_post_exploitation",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Post-exploitation technique {i + 1}",
+                    title=f"Post-exploitation technique {i+1}",
                     description="Persistence and lateral movement",
                     attack_vector="post_exploitation",
                     payload={
@@ -631,3 +629,4 @@ class ComprehensiveSecurityExpansion:
             "average_cvss_score": round(avg_cvss, 2),
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
+

@@ -1,5 +1,26 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+created: '2026-02-03'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- emp-defense
+- engines
+- architecture
+- simulation
+engine_type: emp-defense
+implementation_status: in-progress
+language: python
+related_systems:
+- simulation-engine
+- emp-modeling
+- grid-analysis
+stakeholders:
+- architecture-team
+- simulation-team
+---
+
 # EMP Defense Engine - Architecture Diagram
 
 ## System Overview
@@ -280,6 +301,6 @@ engines/emp_defense/
 
 ---
 
-**Version**: 1.0.0
-**Status**: Core architecture complete
+**Version**: 1.0.0  
+**Status**: Core architecture complete  
 **Last Updated**: 2026-02-03

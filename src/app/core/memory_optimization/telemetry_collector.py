@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Telemetry Collector - Continuous Memory Metrics
 
@@ -8,7 +6,7 @@ Collects and aggregates memory optimization metrics for adaptive policy tuning.
 
 import logging
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -74,3 +72,4 @@ class TelemetryCollector:
             "total_snapshots": len(self.metrics_history),
             "collection_interval_seconds": self.collection_interval,
         }
+

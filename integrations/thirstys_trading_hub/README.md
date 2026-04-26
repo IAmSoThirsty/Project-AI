@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: integration-guide
+tags: [integrations, trading, finance, market-data, portfolio-management]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [alpaca-api, binance-api, trading-hub-core, four-laws, cerberus, tarl]
+stakeholders: [integration-team, trading-team, security-team]
+platform: cross-platform
+integration_type: service
+external_dependencies: [alpaca-trade-api, ccxt, pandas, numpy, ta]
+review_cycle: quarterly
+---
+
 # Thirsty's Trading Hub Integration
 
 ## Overview
@@ -9,7 +21,6 @@ This module integrates **Thirsty's Trading Hub** into Project AI, providing comp
 ## Architecture
 
 The Trading Hub integration follows Project AI's governance-first architecture, ensuring all trading operations are subject to:
-
 - **Four Laws Validation**: Ethical constraints on trading actions
 - **Cerberus Security**: Threat detection and prevention
 - **TARL Policy Enforcement**: Trading policy compliance
@@ -18,28 +29,24 @@ The Trading Hub integration follows Project AI's governance-first architecture, 
 ## Features
 
 ### 1. Market Data Integration
-
 - Real-time market data streaming
 - Historical data analysis
 - Multi-asset support (stocks, crypto, forex, commodities)
 - Technical indicator calculations
 
 ### 2. Trading Operations
-
 - Order placement and management
 - Portfolio tracking and rebalancing
 - Risk management and position sizing
 - Automated trading strategies
 
 ### 3. Analysis & Reporting
-
 - Performance analytics
 - Risk metrics and reporting
 - Trade journaling and insights
 - Market sentiment analysis
 
 ### 4. Governance & Safety
-
 - Trading limit enforcement
 - Risk threshold monitoring
 - Compliance checking
@@ -62,25 +69,20 @@ ta>=0.11.0  # Technical analysis library
 
 Add to `.env`:
 ```bash
-
 # Trading Hub Configuration
-
 TRADING_HUB_ENABLED=true
 TRADING_MODE=paper  # paper or live
 
 # Alpaca API (for stocks)
-
 ALPACA_API_KEY=your_key_here
 ALPACA_SECRET_KEY=your_secret_here
 ALPACA_BASE_URL=https://paper-api.alpaca.markets
 
 # Binance API (for crypto)
-
 BINANCE_API_KEY=your_key_here
 BINANCE_SECRET_KEY=your_secret_here
 
 # Risk Limits
-
 TRADING_MAX_POSITION_SIZE=10000
 TRADING_MAX_DAILY_LOSS=500
 TRADING_MAX_PORTFOLIO_RISK=0.02
@@ -94,15 +96,12 @@ TRADING_MAX_PORTFOLIO_RISK=0.02
 from integrations.thirstys_trading_hub import TradingHub
 
 # Initialize trading hub
-
 hub = TradingHub(mode="paper")
 
 # Get market data
-
 market_data = hub.get_market_data("AAPL")
 
 # Place order (subject to governance)
-
 order = hub.place_order(
     symbol="AAPL",
     quantity=10,
@@ -111,7 +110,6 @@ order = hub.place_order(
 )
 
 # Check portfolio
-
 portfolio = hub.get_portfolio()
 ```
 
@@ -135,9 +133,7 @@ Test strategies in paper trading mode before live deployment:
 
 ```python
 hub = TradingHub(mode="paper")
-
 # All trades are simulated
-
 ```
 
 ## License

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Audit Integration
 =================
@@ -18,9 +16,9 @@ from cognition.audit import audit
 logger = logging.getLogger(__name__)
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class BuildAuditIntegration:
@@ -60,7 +58,7 @@ class BuildAuditIntegration:
             detail = {
                 "tasks": tasks,
                 "task_count": len(tasks),
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "context": self._sanitize_context(context),
             }
 
@@ -94,7 +92,7 @@ class BuildAuditIntegration:
             detail = {
                 "success": success,
                 "duration_seconds": duration_seconds,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "result_summary": self._summarize_result(result),
             }
 
@@ -110,7 +108,7 @@ class BuildAuditIntegration:
     def audit_policy_decision(
         self,
         decision_type: str,
-        action: str | dict[str, Any],
+        action: str | dict[str, Any] | None = None,
         allowed: bool | None = None,
         reason: str | None = None,
         metadata: dict[str, Any] | None = None,
@@ -126,39 +124,62 @@ class BuildAuditIntegration:
             metadata: Optional additional metadata
         """
         try:
-            event = f"POLICY_DECISION:{decision_type}"
-
-            # Compatibility signature:
-            # audit_policy_decision(build_id, decision_dict)
-            if isinstance(action, dict) and allowed is None:
-                decision = action
-                detail = {
-                    "action": decision.get("policy") or decision.get("action"),
-                    "allowed": (decision.get("outcome") == "allowed"),
-                    "reason": decision.get("reason"),
-                    "timestamp": _utcnow().isoformat(),
-                    "metadata": metadata or {},
-                }
+            if isinstance(action, dict):
+                # Legacy call pattern: audit_policy_decision(build_id, decision_dict)
+                decision_dict = action
+                event_scope = str(decision_type)
+                action_name = decision_dict.get("policy") or decision_dict.get("action")
+                allowed_value = (
+                    decision_dict.get("outcome", "").lower() in {"allowed", "success", "ok"}
+                )
+                reason_value = decision_dict.get("reason")
+                metadata_value = decision_dict
             else:
-                detail = {
-                    "action": action,
-                    "allowed": bool(allowed),
-                    "reason": reason,
-                    "timestamp": _utcnow().isoformat(),
-                    "metadata": metadata or {},
-                }
+                event_scope = str(decision_type)
+                action_name = action or "unknown_action"
+                allowed_value = bool(allowed)
+                reason_value = reason
+                metadata_value = metadata or {}
+
+            event = f"POLICY_DECISION:{event_scope}"
+            detail = {
+                "action": action_name,
+                "allowed": allowed_value,
+                "reason": reason_value,
+                "timestamp": _utc_now_iso(),
+                "metadata": metadata_value,
+            }
 
             audit(event, detail)
             self._buffer_audit(event, detail)
 
-            if self.enable_verbose or not allowed:
+            if self.enable_verbose or not allowed_value:
                 logger.info(
                     f"Audited policy decision: {decision_type}, "
-                    f"action={action}, allowed={allowed}"
+                    f"action={action_name}, allowed={allowed_value}"
                 )
 
         except Exception as e:
             logger.error("Error auditing policy decision: %s", e, exc_info=True)
+
+    def audit_task_execution(
+        self,
+        build_id: str,
+        task_name: str,
+        task_result: dict[str, Any],
+    ) -> None:
+        """Audit execution of an individual build task."""
+        try:
+            event = f"TASK_EXECUTION:{build_id}"
+            detail = {
+                "task_name": task_name,
+                "task_result": task_result,
+                "timestamp": _utc_now_iso(),
+            }
+            audit(event, detail)
+            self._buffer_audit(event, detail)
+        except Exception as e:
+            logger.error("Error auditing task execution: %s", e, exc_info=True)
 
     def audit_security_event(
         self,
@@ -188,7 +209,7 @@ class BuildAuditIntegration:
                 "operation": operation,
                 "allowed": allowed,
                 "reason": reason,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
             audit(event, detail)
@@ -228,7 +249,7 @@ class BuildAuditIntegration:
                 "input_count": input_count,
                 "output_count": output_count,
                 "merkle_root": merkle_root,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
             audit(event, detail)
@@ -256,7 +277,7 @@ class BuildAuditIntegration:
             detail = {
                 "success": success,
                 "has_differences": differences is not None,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
             if differences:
@@ -293,7 +314,7 @@ class BuildAuditIntegration:
                 "inputs_summary": self._summarize_dict(inputs, max_keys=5),
                 "outputs_summary": self._summarize_dict(outputs, max_keys=5),
                 "has_reasoning": reasoning is not None,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
             audit(event, detail)
@@ -317,32 +338,9 @@ class BuildAuditIntegration:
         """
         return self.audit_buffer[-limit:]
 
-    def audit_task_execution(
-        self, build_id: str, task_name: str, task_result: dict[str, Any]
-    ) -> None:
-        """Compatibility audit hook for individual task execution."""
-        try:
-            event = f"TASK_EXECUTION:{build_id}:{task_name}"
-            detail = {
-                "task": task_name,
-                "result": task_result,
-                "timestamp": _utcnow().isoformat(),
-            }
-            audit(event, detail)
-            self._buffer_audit(event, detail)
-        except Exception as e:
-            logger.error("Error auditing task execution: %s", e, exc_info=True)
-
-    def get_audit_summary(self) -> dict[str, Any]:
-        """Compatibility summary API used by legacy tests."""
-        counts: dict[str, int] = {}
-        for entry in self.audit_buffer:
-            et = entry.get("event", "UNKNOWN").split(":")[0]
-            counts[et] = counts.get(et, 0) + 1
-        return {
-            "total_events": len(self.audit_buffer),
-            "event_types": counts,
-        }
+    def get_recent_events(self, limit: int = 100) -> list[dict[str, Any]]:
+        """Backward-compatible alias for recent audit entries."""
+        return self.get_audit_buffer(limit=limit)
 
     def clear_audit_buffer(self) -> int:
         """
@@ -411,13 +409,25 @@ class BuildAuditIntegration:
             logger.error("Error generating audit report: %s", e, exc_info=True)
             return {"error": str(e)}
 
+    def get_audit_summary(self) -> dict[str, Any]:
+        """Compatibility summary helper used by test and integration workflows."""
+        event_types: dict[str, int] = {}
+        for entry in self.audit_buffer:
+            event_type = entry.get("event", "UNKNOWN").split(":")[0]
+            event_types[event_type] = event_types.get(event_type, 0) + 1
+
+        return {
+            "total_events": len(self.audit_buffer),
+            "event_types": event_types,
+        }
+
     def _buffer_audit(self, event: str, detail: Any) -> None:
         """Add audit entry to buffer."""
         self.audit_buffer.append(
             {
                 "event": event,
                 "detail": detail,
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
         )
 

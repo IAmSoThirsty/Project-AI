@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/bin/bash
 # Pre-commit hook to enforce root structure
 # This prevents prohibited files from being committed to the root directory

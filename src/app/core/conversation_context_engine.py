@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Deep Conversational Context Engine for Project-AI
 Multi-turn tracking, intent detection, user history, and policy management.
@@ -590,28 +588,23 @@ class PolicyManager:
         """Initialize default policy configurations"""
         return {
             AdaptivePolicy.RESPONSE_LENGTH: PolicyConfiguration(
-                policy_type=AdaptivePolicy.RESPONSE_LENGTH,
-                value=0.5,  # Medium length
+                policy_type=AdaptivePolicy.RESPONSE_LENGTH, value=0.5  # Medium length
             ),
             AdaptivePolicy.FORMALITY_LEVEL: PolicyConfiguration(
-                policy_type=AdaptivePolicy.FORMALITY_LEVEL,
-                value=0.5,  # Balanced
+                policy_type=AdaptivePolicy.FORMALITY_LEVEL, value=0.5  # Balanced
             ),
             AdaptivePolicy.DETAIL_LEVEL: PolicyConfiguration(
-                policy_type=AdaptivePolicy.DETAIL_LEVEL,
-                value=0.6,  # Moderate detail
+                policy_type=AdaptivePolicy.DETAIL_LEVEL, value=0.6  # Moderate detail
             ),
             AdaptivePolicy.EMPATHY_LEVEL: PolicyConfiguration(
-                policy_type=AdaptivePolicy.EMPATHY_LEVEL,
-                value=0.7,  # High empathy
+                policy_type=AdaptivePolicy.EMPATHY_LEVEL, value=0.7  # High empathy
             ),
             AdaptivePolicy.PROACTIVITY: PolicyConfiguration(
                 policy_type=AdaptivePolicy.PROACTIVITY,
                 value=0.4,  # Moderate proactivity
             ),
             AdaptivePolicy.HUMOR_USAGE: PolicyConfiguration(
-                policy_type=AdaptivePolicy.HUMOR_USAGE,
-                value=0.3,  # Light humor
+                policy_type=AdaptivePolicy.HUMOR_USAGE, value=0.3  # Light humor
             ),
             AdaptivePolicy.TOPIC_SENSITIVITY: PolicyConfiguration(
                 policy_type=AdaptivePolicy.TOPIC_SENSITIVITY,

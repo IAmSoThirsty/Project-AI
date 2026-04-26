@@ -1,5 +1,19 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: submission-doc
+tags: [thirsty-lang, linguist, pr-template, github-integration]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, github-linguist]
+stakeholders: [language-team, contributors, linguist-maintainers]
+project_category: language-implementation
+language_paradigm: [water-themed, defensive-programming, multi-edition]
+build_system: custom
+review_cycle: monthly
+template_type: pull-request
+template_target: github/linguist
+---
+
 ## Add support for Thirsty-lang
 
 This PR adds support for Thirsty-lang, a unique programming language with water-themed syntax and defensive programming capabilities.
@@ -7,7 +21,6 @@ This PR adds support for Thirsty-lang, a unique programming language with water-
 ### Language Overview
 
 **Thirsty-lang** is a modern programming language featuring:
-
 - Water-themed syntax for intuitive programming
 - Built-in defensive programming and security features
 - Multiple language editions (Base, Plus, PlusPlus, ThirstOfGods)
@@ -47,7 +60,6 @@ shield myApp {
 ### Key Features
 
 **Water-Themed Keywords:**
-
 - `drink` - Variable declaration
 - `pour` - Output statement
 - `sip` - Input statement
@@ -57,7 +69,6 @@ shield myApp {
 - `glass` - Function declaration
 
 **Defensive Programming:**
-
 - `shield` - Protection blocks
 - `morph` - Code obfuscation
 - `detect` - Threat monitoring
@@ -92,9 +103,7 @@ $ bundle exec bin/linguist samples/Thirsty-lang/hello.thirsty
 samples/Thirsty-lang/hello.thirsty: 100.00% (3 lines) Thirsty-lang
 
 $ bundle exec rake test
-
 # All tests pass
-
 ```
 
 ### Repository Information
@@ -108,7 +117,6 @@ $ bundle exec rake test
 ### Implementation Details
 
 The language has:
-
 - Full JavaScript and Python implementations
 - REPL, debugger, and profiler
 - VS Code extension with syntax highlighting

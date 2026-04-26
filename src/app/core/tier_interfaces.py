@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Tier Interfaces - Formal interface definitions for three-tier platform communication.
 
@@ -45,7 +43,6 @@ from enum import Enum
 from typing import Any
 
 logger = logging.getLogger(__name__)
-UTC = getattr(datetime, "UTC", timezone.utc)  # noqa: UP017
 
 
 # ============================================================================
@@ -102,7 +99,7 @@ class TierRequest:
     target_component: str
     operation: str
     payload: dict[str, Any]
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -113,7 +110,7 @@ class TierResponse:
     success: bool
     result: Any
     error_message: str | None = None
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -137,16 +134,6 @@ class GovernanceDecisionResponse:
     council_votes: dict[str, Any] | None = None
     enforcement_actions: list[EnforcementAction] = field(default_factory=list)
     constraints: dict[str, Any] = field(default_factory=dict)
-
-    @property
-    def allowed(self) -> bool:
-        """Compatibility alias for legacy Triumvirate callers."""
-        return self.approved
-
-    @property
-    def overrides(self) -> bool:
-        """Compatibility alias used by legacy deny/degrade mapping code."""
-        return not self.approved
 
 
 @dataclass
@@ -223,6 +210,7 @@ class ITier1Governance(ABC):
         Returns:
             GovernanceDecisionResponse with approval/denial
         """
+        pass
 
     @abstractmethod
     def enforce_policy(
@@ -239,6 +227,7 @@ class ITier1Governance(ABC):
         Returns:
             bool: True if enforcement succeeded
         """
+        pass
 
     @abstractmethod
     def audit_operation(
@@ -256,6 +245,7 @@ class ITier1Governance(ABC):
         Returns:
             str: Audit record ID
         """
+        pass
 
     @abstractmethod
     def rollback_tier(self, tier: int, reason: str) -> bool:
@@ -269,6 +259,7 @@ class ITier1Governance(ABC):
         Returns:
             bool: True if rollback succeeded
         """
+        pass
 
 
 class ITier2Infrastructure(ABC):
@@ -295,6 +286,7 @@ class ITier2Infrastructure(ABC):
         Returns:
             ResourceAllocationResponse with allocation details
         """
+        pass
 
     @abstractmethod
     def isolate_workload(self, workload_id: str, isolation_level: str) -> str:
@@ -308,6 +300,7 @@ class ITier2Infrastructure(ABC):
         Returns:
             str: Isolation domain ID
         """
+        pass
 
     @abstractmethod
     def scale_capacity(self, component_id: str, target_capacity: int) -> bool:
@@ -321,6 +314,7 @@ class ITier2Infrastructure(ABC):
         Returns:
             bool: True if scaling succeeded
         """
+        pass
 
     @abstractmethod
     def block_application(self, request: BlockRequest) -> BlockResponse:
@@ -335,6 +329,7 @@ class ITier2Infrastructure(ABC):
         Returns:
             BlockResponse with block details
         """
+        pass
 
 
 class ITier3Application(ABC):
@@ -360,6 +355,7 @@ class ITier3Application(ABC):
         Returns:
             bool: True if granted
         """
+        pass
 
     @abstractmethod
     def submit_task(self, task: dict[str, Any]) -> str:
@@ -372,6 +368,7 @@ class ITier3Application(ABC):
         Returns:
             str: Task ID
         """
+        pass
 
     @abstractmethod
     def query_status(self) -> dict[str, Any]:
@@ -381,6 +378,7 @@ class ITier3Application(ABC):
         Returns:
             dict: Status information
         """
+        pass
 
     @abstractmethod
     def register_service(self, service_id: str, service_spec: dict[str, Any]) -> bool:
@@ -394,6 +392,7 @@ class ITier3Application(ABC):
         Returns:
             bool: True if registration succeeded
         """
+        pass
 
 
 # ============================================================================
@@ -585,3 +584,4 @@ def get_tier_router() -> TierInterfaceRouter:
     if _global_router is None:
         _global_router = TierInterfaceRouter()
     return _global_router
+

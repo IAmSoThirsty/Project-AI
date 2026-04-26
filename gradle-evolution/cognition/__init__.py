@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Build Cognition & State Management
 ==================================
@@ -8,9 +6,13 @@ Integrates Project-AI's cognition and state management for intelligent builds.
 """
 
 from .build_cognition import BuildCognitionEngine
-from .state_integration import BuildStateManager
+from .state_integration import BuildStateIntegration
+
+# Backward-compatible alias
+BuildStateManager = BuildStateIntegration
 
 __all__ = [
     "BuildCognitionEngine",
     "BuildStateManager",
+    "BuildStateIntegration",
 ]

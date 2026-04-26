@@ -1,5 +1,37 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Perplexity API Integration Guide"
+id: perplexity-integration-guide
+type: guide
+version: 1.0.0
+created_date: 2026-02-01
+updated_date: 2026-02-04
+status: active
+author: AI Integration Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: implementation
+retention_policy: permanent
+category: development
+tags:
+  - perplexity-ai
+  - api-integration
+  - model-providers
+  - rag
+  - learning-paths
+technologies:
+  - Perplexity API
+  - Python
+  - OpenAI API
+related_docs:
+  - ../architecture/ai-providers-architecture.md
+  - learning_paths.py
+dependencies:
+  - perplexity-sdk
+scope: "Integration guide for using Perplexity AI as alternative model provider for learning paths and RAG queries"
+description: Guide for integrating Perplexity AI as an alternative model provider alongside OpenAI, covering configuration, API key setup, and usage examples.
+---
+
 # Perplexity API Integration
 
 This document explains how to use Perplexity AI as an alternative model provider in Project-AI.
@@ -7,7 +39,6 @@ This document explains how to use Perplexity AI as an alternative model provider
 ## Overview
 
 Project-AI now supports multiple AI model providers through a unified interface. You can use either OpenAI or Perplexity AI for:
-
 - Learning path generation
 - RAG (Retrieval-Augmented Generation) queries
 - General AI-powered features
@@ -17,8 +48,8 @@ Project-AI now supports multiple AI model providers through a unified interface.
 ### 1. Obtain a Perplexity API Key
 
 1. Visit [Perplexity AI](https://www.perplexity.ai/) and sign up for an account
-1. Navigate to your API settings to generate an API key
-1. Copy your API key for use in the next step
+2. Navigate to your API settings to generate an API key
+3. Copy your API key for use in the next step
 
 ### 2. Set Up Environment Variables
 
@@ -55,12 +86,10 @@ max_tokens = 256
 from app.core.learning_paths import LearningPathManager
 
 # Use Perplexity provider
-
 manager = LearningPathManager(provider="perplexity")
 path = manager.generate_path("machine learning", skill_level="beginner")
 
 # Or use OpenAI provider
-
 manager = LearningPathManager(provider="openai")
 path = manager.generate_path("machine learning", skill_level="beginner")
 ```
@@ -71,15 +100,12 @@ path = manager.generate_path("machine learning", skill_level="beginner")
 from app.core.rag_system import RAGSystem
 
 # Initialize RAG system
-
 rag = RAGSystem(data_dir="data/rag_index")
 
 # Ingest documents
-
 rag.ingest_directory("docs/")
 
 # Query with Perplexity
-
 result = rag.query_with_llm(
     query="What is the main concept?",
     model="llama-3.1-sonar-small-128k-online",
@@ -87,7 +113,6 @@ result = rag.query_with_llm(
 )
 
 # Query with OpenAI
-
 result = rag.query_with_llm(
     query="What is the main concept?",
     model="gpt-4",
@@ -101,11 +126,9 @@ result = rag.query_with_llm(
 from app.core.model_providers import get_provider
 
 # Get Perplexity provider
-
 perplexity = get_provider("perplexity", api_key="your_key")
 
 # Check if available
-
 if perplexity.is_available():
     response = perplexity.chat_completion(
         messages=[
@@ -131,17 +154,17 @@ Refer to [Perplexity's documentation](https://docs.perplexity.ai/) for the lates
 ## Benefits of Using Perplexity
 
 1. **Real-time Information**: Perplexity models have access to current information through online search
-1. **Citation Support**: Responses include citations to sources
-1. **Cost-Effective**: Competitive pricing compared to other providers
-1. **Specialized Models**: Purpose-built models for different use cases
+2. **Citation Support**: Responses include citations to sources
+3. **Cost-Effective**: Competitive pricing compared to other providers
+4. **Specialized Models**: Purpose-built models for different use cases
 
 ## Switching Between Providers
 
 You can easily switch between providers without changing your application code:
 
 1. **Environment Variables**: Set `PERPLEXITY_API_KEY` or `OPENAI_API_KEY`
-1. **Configuration File**: Update the `provider` setting in `.projectai.toml`
-1. **Code**: Pass `provider="perplexity"` or `provider="openai"` to functions
+2. **Configuration File**: Update the `provider` setting in `.projectai.toml`
+3. **Code**: Pass `provider="perplexity"` or `provider="openai"` to functions
 
 ## Error Handling
 
@@ -199,5 +222,5 @@ If you get a model not found error:
 ## Additional Resources
 
 - [Perplexity AI Documentation](https://docs.perplexity.ai/)
-- [Project-AI Documentation](../README.md)
+- [[../README.md|Project-AI Documentation]]
 - [Model Provider API Reference](../DEVELOPER_QUICK_REFERENCE.md)

@@ -1,5 +1,54 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: Temporal Integration Architecture - Workflow Orchestration
+id: temporal-integration-architecture
+type: architecture
+version: 1.0
+created: 2026-01-28
+created_date: 2026-01-28
+last_verified: 2026-04-20
+updated_date: 2026-01-28
+status: active
+author: Temporal Integration Team
+contributors: ["Workflow Team", "Backend Team"]
+# Architecture-Specific Metadata
+architecture_layer: infrastructure
+design_pattern: ["durable-execution", "workflow-orchestration", "activity-pattern"]
+implements: ["temporal-client", "workflows", "activities", "worker"]
+uses: ["temporalio-sdk", "workflow-definitions", "activity-functions"]
+quality_attributes: ["fault-tolerance", "durability", "reliability", "observability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/infrastructure", "workflow"]
+tags: ["temporal", "workflow-orchestration", "durable-execution", "fault-tolerance", "activities"]
+component: ["temporal-client", "workflow-engine", "activity-executor", "temporal-worker"]
+# Relationships
+related_docs: ["temporal-io-integration", "workflow-engine-spec", "architecture-overview"]
+related_systems: ["temporal-integration", "workflow-engine"]
+depends_on: ["workflow-engine-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "workflow-engineers", "backend-developers"]
+stakeholders: ["platform-team", "devops-team", "developers", "architecture-team"]
+priority: P0
+difficulty: advanced
+estimated_reading_time: 14 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["Temporal", "workflow orchestration", "durable execution", "fault tolerance", "activities"]
+search_terms: ["Temporal.io", "workflow definitions", "activity patterns", "worker"]
+aliases: ["Temporal Architecture", "Workflow Orchestration System"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 81%
+---
+
+
 # Temporal Integration Architecture
 
 ## Overview
@@ -132,25 +181,19 @@ This document describes the Temporal integration architecture for Project-AI.
 ### Starting a Workflow
 
 ```
-
 1. Application → AI Controller
-
    controller.process_ai_request(data="...", user_id="...")
 
 2. AI Controller → Temporal Client
-
    client.start_workflow(ExampleWorkflow, args=WorkflowInput(...))
 
 3. Temporal Client → Temporal Server
-
    POST /api/v1/namespaces/default/workflows
 
 4. Temporal Server → Worker
-
    Task dispatched to worker via task queue
 
 5. Worker → Workflow
-
    ExampleWorkflow.run() starts executing
 
 6. Workflow → Activities
@@ -159,15 +202,12 @@ This document describes the Temporal integration architecture for Project-AI.
    - execute_activity(process_ai_task)
 
 7. Workflow → Temporal Server
-
    Workflow result stored
 
 8. Temporal Server → AI Controller
-
    Result returned to caller
 
 9. AI Controller → Application
-
    WorkflowOutput returned with success/result
 ```
 
@@ -221,7 +261,6 @@ The AI Controller provides a clean interface:
 from app.service.ai_controller import AIController
 
 # Use in existing code
-
 controller = AIController()
 result = await controller.process_ai_request(
     data=user_input,
@@ -229,14 +268,10 @@ result = await controller.process_ai_request(
 )
 
 if result.success:
-
     # Handle success
-
     process_result(result.result)
 else:
-
     # Handle error
-
     log_error(result.error)
 ```
 

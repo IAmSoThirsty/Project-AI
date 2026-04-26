@@ -1,99 +1,119 @@
-<!--                                        [2026-03-04 14:24]  -->
-<!--                                       Productivity: Active  -->
+# Project-AI Documentation
 
-# `docs/` — Project Documentation Index
+Welcome to **Project-AI** — an extensible, secure AGI operations stack for building, running, and monitoring advanced intelligent agents with robust safety and identity management.
 
-> **Every specification, framework, protocol, and standard in one place.** This is the documentation hub for the entire Project-AI sovereign architecture.
+## 🔗 NEW: Complete Architecture Traceability
 
-## 📑 Quick Navigation
+**[[AGENT-080-CONCEPT-CODE-MAP|Architecture Concept-to-Code Traceability Matrix]]** - 421 bidirectional wiki links connecting architecture concepts to implementing code. Use this to navigate from design to implementation and back.
 
-### Constitutional & Governance
+**Quick Links:**
+- [[AGENT-080-SUMMARY|Mission Summary]] - Overview of traceability matrix
+- [[AGENT-080-COMPLETION-REPORT|Full Report]] - Complete details and statistics
+- [[BIDIRECTIONAL_LINKS|Wiki Linking Guide]] - Standards for bidirectional documentation
 
-| Document | Subject |
-|---|---|
-| [CONSTITUTION_COMPLETE.md](CONSTITUTION_COMPLETE.md) | Full AGI Constitution |
-| [CONSTITUTIONAL_AUDIT.md](CONSTITUTIONAL_AUDIT.md) | Constitutional audit procedures |
-| [OMEGA_DOCTRINE.md](OMEGA_DOCTRINE.md) | Omega-level governance doctrine |
-| [TAMS_OMEGA_META_CONSTITUTIONAL_FRAMEWORK.md](TAMS_OMEGA_META_CONSTITUTIONAL_FRAMEWORK.md) | Meta-constitutional framework |
-| [TAMS_OMEGA_P1_AMENDMENT_SPEC.md](TAMS_OMEGA_P1_AMENDMENT_SPEC.md) | Amendment specification |
-| [TAMS_OMEGA_P2_ADVERSARIAL_SPEC.md](TAMS_OMEGA_P2_ADVERSARIAL_SPEC.md) | Adversarial specification |
-| [TAMS_OMEGA_P3_ENTROPY_SPEC.md](TAMS_OMEGA_P3_ENTROPY_SPEC.md) | Entropy specification |
-| [TAMS_OMEGA_P4_SOVEREIGNTY_SPEC.md](TAMS_OMEGA_P4_SOVEREIGNTY_SPEC.md) | Sovereignty specification |
+---
 
-### Security
+## 📁 Documentation Structure
 
-| Document | Subject |
-|---|---|
-| [ASYMMETRIC_SECURITY_FRAMEWORK.md](ASYMMETRIC_SECURITY_FRAMEWORK.md) | Asymmetric security model |
-| [THIRSTYS_ASYMMETRIC_SECURITY_README.md](THIRSTYS_ASYMMETRIC_SECURITY_README.md) | Thirsty's security implementation |
-| [ATTACK_SIMULATION_SUITE.md](ATTACK_SIMULATION_SUITE.md) | Attack simulation documentation |
-| [SECURITY_IMPLEMENTATION_GUIDE.md](SECURITY_IMPLEMENTATION_GUIDE.md) | Security implementation guide |
-| [SECURITY_IMPLEMENTATION_SUMMARY.md](SECURITY_IMPLEMENTATION_SUMMARY.md) | Security implementation summary |
-| [SECURITY_ADVANTAGE_DEMO.md](SECURITY_ADVANTAGE_DEMO.md) | Security advantage showcase |
-| [SUPPLY_CHAIN_SECURITY.md](SUPPLY_CHAIN_SECURITY.md) | Supply chain security |
-| [TRUST_BOUNDARIES.md](TRUST_BOUNDARIES.md) | Trust boundary definitions |
-| [REPOSITORY_HARDENING.md](REPOSITORY_HARDENING.md) | Repository hardening guide |
-| [TSECA_GHOST_PROTOCOL.md](TSECA_GHOST_PROTOCOL.md) | Ghost protocol specification |
+Project-AI documentation is organized into **six main categories** to help you find what you need quickly:
 
-### Architecture & Technical Specs
+| Folder | Audience | Content |
+|--------|----------|---------|
+| **[[executive/|executive/]]** | Executives, investors, auditors | Business overviews, whitepapers, compliance guides, user guides |
+| **[[architecture/|architecture/]]** | Architects, senior engineers | System architecture, technical diagrams, design documents |
+| **[[governance/|governance/]]** | Ethics teams, legal, compliance | Ethics frameworks, AGI rights, policy documents, licensing |
+| **[[security_compliance/|security_compliance/]]** | Security engineers, auditors | Security policies, incident playbooks, compliance guides, RBAC |
+| **[[developer/|developer/]]** | Developers, DevOps, SRE | Installation, APIs, CLI docs, deployment guides, quickstarts |
+| **[[internal/|internal/]]** | Engineering team | Implementation notes, session records, legacy docs, WIP |
 
-| Document | Subject |
-|---|---|
-| [PRODUCTION_ARCHITECTURE.md](PRODUCTION_ARCHITECTURE.md) | Production system architecture |
-| [INFRASTRUCTURE_ROADMAP.md](INFRASTRUCTURE_ROADMAP.md) | Infrastructure development roadmap |
-| [SHADOW_THIRST_DOCTRINE.md](SHADOW_THIRST_DOCTRINE.md) | Shadow Thirst architecture |
-| [TSCG_SPEC.md](TSCG_SPEC.md) | TSCG wire protocol specification |
-| [TK8S_DOCTRINE.md](TK8S_DOCTRINE.md) | Kubernetes doctrine |
-| [BIO_BRAIN_MAPPING_PROTOCOL.md](BIO_BRAIN_MAPPING_PROTOCOL.md) | Bio-brain mapping protocol |
-| [THEOLOGICAL_TECHNICAL_WHITEPAPER.md](THEOLOGICAL_TECHNICAL_WHITEPAPER.md) | Theological-technical whitepaper |
-| [PLATFORM_TIERS.md](PLATFORM_TIERS.md) | Platform tier definitions |
-| [THREE_TIER_IMPLEMENTATION_SUMMARY.md](THREE_TIER_IMPLEMENTATION_SUMMARY.md) | Three-tier implementation |
+📖 **[[DOCUMENTATION_STRUCTURE_GUIDE.md|Documentation Structure Guide]]** - Complete guide for adding new documentation
 
-### Operations & Deployment
+---
 
-| Document | Subject |
-|---|---|
-| [DEPLOYABLE_SYSTEM_STANDARD.md](DEPLOYABLE_SYSTEM_STANDARD.md) | Deployment standards |
-| [SOVEREIGN_CICD_IMPLEMENTATION.md](SOVEREIGN_CICD_IMPLEMENTATION.md) | CI/CD implementation |
-| [SOVEREIGN_CICD_QUICK_REF.md](SOVEREIGN_CICD_QUICK_REF.md) | CI/CD quick reference |
-| [FAILURE_MODELS_OPERATIONS.md](FAILURE_MODELS_OPERATIONS.md) | Failure models and ops |
-| [SLO_ERROR_BUDGETS.md](SLO_ERROR_BUDGETS.md) | SLOs and error budgets |
-| [AUDIT_LOGGING.md](AUDIT_LOGGING.md) | Audit logging specification |
-| [PORTABLE_APP_GUIDE.md](PORTABLE_APP_GUIDE.md) | Portable app guide |
+## What is Project-AI?
 
-### Integration & Guides
+_Project-AI is an open, extensible platform for operating, securing, and researching AGI systems. It integrates state-of-the-art scheduling (Temporal), monitoring, modular cognitive processing (MCP tools), Spiking Neural Network co-processors, and end-to-end security/identity for both production and experimental deployments._
 
-| Document | Subject |
-|---|---|
-| [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md) | Integration guide |
-| [CATHEDRAL_INTEGRATION_GUIDE.md](CATHEDRAL_INTEGRATION_GUIDE.md) | Cathedral integration |
-| [TIER2_TIER3_INTEGRATION.md](TIER2_TIER3_INTEGRATION.md) | Tier 2/3 integration |
-| [MINIATURE_OFFICE_SPEC.md](MINIATURE_OFFICE_SPEC.md) | Miniature Office spec |
-| [REPOSITORY_CONFIGURATION_GUIDE.md](REPOSITORY_CONFIGURATION_GUIDE.md) | Repository config |
-| [GOD_TIER_CROSS_TIER_PERFORMANCE_MONITORING.md](GOD_TIER_CROSS_TIER_PERFORMANCE_MONITORING.md) | Performance monitoring |
+## What Can You Do With Project-AI?
 
-### Validation & Standards
+- **Run a full AGI stack** with guarded workflows, SNN co-processors, MCP tools, and built-in monitoring.
+- **Deploy and monitor** production or research systems with layered safety, identity, and observability.
+- **Prototype and extend** new AGI modules, security policies, or research ideas in a modular, testable sandbox.
 
-| Document | Subject |
-|---|---|
-| [VALIDATION_README.md](VALIDATION_README.md) | Validation overview |
-| [VALIDATION_STANDARDS.md](VALIDATION_STANDARDS.md) | Validation standards |
-| [SOVEREIGN_STATUS_DASHBOARD.md](SOVEREIGN_STATUS_DASHBOARD.md) | Status dashboard |
-| [TIER_HEALTH_REPORT_OUTPUT.md](TIER_HEALTH_REPORT_OUTPUT.md) | Tier health reports |
-| [CITATIONS.md](CITATIONS.md) | Citation references |
+---
 
-### Indexes
+## Start Here (Choose Your Role)
 
-| Document | Subject |
-|---|---|
-| [TECHNICAL_DOCUMENTATION_INDEX.md](TECHNICAL_DOCUMENTATION_INDEX.md) | Technical docs index |
-| [TECHNICAL_SPECS_INDEX.md](TECHNICAL_SPECS_INDEX.md) | Technical specs index |
-| [Main_Page.md](Main_Page.md) | Main documentation page |
+| If you're an...     | Start Here                                                                  |
+|---------------------|-----------------------------------------------------------------------------|
+| **Operator**        | [[developer/OPERATOR_QUICKSTART.md|Operator Quickstart]] - Guardian mindset, operational safety, incident response         |
+| **Infrastructure Engineer** | [[developer/INFRASTRUCTURE_PRODUCTION_GUIDE.md|Infrastructure Production Guide]] - Deployment checklist, Prometheus monitoring, Kubernetes guide<br>[[developer/EXAMPLE_DEPLOYMENTS.md|Example Deployments]] - Minimal, secured, and research sandbox configurations|
+| **AI Safety/Research** | [[developer/AI_SAFETY_OVERVIEW.md|AI Safety Overview]] - Corrigibility, interpretability, robustness metrics<br>[[governance/AGI_CHARTER.md|AGI Charter]] - Rights, dignity, and Four Laws framework|
+| **Contributor**     | [[developer/CONTRIBUTING.md|Code & Docs Contribution Guide]] - Standards, governance, philosophical framework<br>[[DOCUMENTATION_STRUCTURE_GUIDE.md|Documentation Structure Guide]] - Where to place new docs |
 
-### Visual
+---
 
-| File | Subject |
-|---|---|
-| [ICON_DESIGN_SPEC.md](ICON_DESIGN_SPEC.md) | Icon design specification |
-| [roadmap_dashboard.html](roadmap_dashboard.html) | Interactive roadmap dashboard |
-| [whitepaper.thirsty](whitepaper.thirsty) | Whitepaper in Thirsty-Lang |
+## Overview & Roadmap
+
+- [[developer/ROADMAP.md|Project Vision & Roadmap]] - AGI for collective flourishing, organizational theory, philosophical framework
+- [[developer/IDENTITY_SECURITY_INFRASTRUCTURE.md|Identity, Security & Infrastructure]] - Self-sovereign identity, security principles, infrastructure philosophy
+
+---
+
+## Example Deployments (Production-Ready Patterns)
+
+*See [[developer/EXAMPLE_DEPLOYMENTS.md|Example Deployments Guide]] for complete configurations*
+
+- **Minimal Deployment:** Simple, single-server setup for development and PoC
+- **Secured Advanced Deployment:** Production-grade with defense-in-depth, HA, monitoring
+- **Research Sandbox:** Isolated environment for testing risky capabilities
+- [[developer/TEMPORAL_SETUP.md|Temporal Workflow Setup]] + [[developer/INTEGRATION_GUIDE.md|Integration Guide]]
+
+---
+
+## Document Taxonomy / Index
+
+**Identity Docs:**  
+
+- [[governance/AGI_IDENTITY_SPECIFICATION.md|AGI Identity Specification]]
+- [[governance/IDENTITY_SYSTEM_FULL_SPEC.md|Identity System Full Spec]]
+- [[developer/IDENTITY_SECURITY_INFRASTRUCTURE.md|Identity, Security & Infrastructure Framework]]
+
+**Security Docs:**  
+
+- [[security_compliance/AI_SECURITY_FRAMEWORK.md|AI Security Framework]]
+- [[security_compliance/SECURITY.md|Security Policy]]
+- [[security_compliance/INCIDENT_PLAYBOOK.md|Incident Playbook]]
+- [[developer/AI_SAFETY_OVERVIEW.md|AI Safety Overview]] - Robustness metrics, red-teaming, corrigibility
+
+**Infrastructure Docs:**  
+
+- [[developer/INFRASTRUCTURE_PRODUCTION_GUIDE.md|Infrastructure Production Guide]] - Deployment, Prometheus, Kubernetes
+- [[developer/EXAMPLE_DEPLOYMENTS.md|Example Deployments]] - Minimal, secured, research sandbox
+- [[developer/DEPLOYMENT_GUIDE.md|Deployment Guide]]
+- [[developer/KUBERNETES_MONITORING_GUIDE.md|Kubernetes Monitoring Guide]]
+
+**Governance & Ethics:**
+
+- [[governance/AGI_CHARTER.md|AGI Charter]] - Rights, dignity, Four Laws
+- [[developer/ROADMAP.md|Project Vision & Roadmap]] - Mission, organizational theory
+- [[developer/CONTRIBUTING.md|Contributing Guide]] - Code/docs contribution philosophy
+
+---
+
+## Reference (`actionlint` Docs)
+
+- [Checks](checks.md): Full list of all checks done by actionlint with example inputs, outputs, and playground links.
+- [Installation](install.md): Installation instructions for prebuilt binaries, Homebrew, Docker image, building from source, or CI script.
+- [Usage](usage.md): How to use `actionlint` locally, in CI, or with Docker and integrations (reviewdog, Problem Matchers, pre-commit, etc.).
+- [Configuration](config.md): How to configure `actionlint`. (Currently only self-hosted runner labels.)
+- [Go API](api.md): Using actionlint as a Go library.
+- [References](reference.md): Further resources.
+
+---
+
+**See the [[../README.md|project root README]] for repo-wide notes and status.**
+
+---
+
+_This README provides narrative structure and discoverable entry points. As more guides/docs are added, update the links above to remove "_(Coming soon)_" and set desired onboarding flow._

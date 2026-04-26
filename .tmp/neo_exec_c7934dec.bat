@@ -1,0 +1,1 @@
+cd t:\Project-AI-main && findstr /s /i /m "openrouter" *.py 2>nul | head -20

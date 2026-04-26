@@ -1,9 +1,22 @@
 /*
- * (Monolithic Build Synthesis)              [2026-04-09 04:26]
- *                                          Status: Active
- *
- * Unified build orchestration layer for the Sovereign Substrate.
- * Coordinates Python, Android, Electron, and Documentation synthesis.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * THIRSTY'S GRADLE: GOD TIER MONOLITHIC BUILD ORCHESTRATION
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * Enterprise-grade, unified build system for Project-AI
+ * Coordinates ALL builds, tests, packaging, and deployments across:
+ *   - Python backends (Flask/FastAPI)
+ *   - Android applications (Legion Mini)
+ *   - Electron Desktop (TypeScript/React)
+ *   - Documentation generation
+ *   - USB/Portable distributions
+ *   - Testing, linting, security scanning
+ *   - CI/CD integration and release automation
+ * 
+ * Version: 1.0.0
+ * Architecture: Monolithic Density Pattern
+ * Paradigm: Maximum Coordination, Zero Fragmentation
+ * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
@@ -110,7 +123,7 @@ val discoveredModules = mutableSetOf<String>()
 if (file("android").exists()) {
     discoveredModules.add("android")
 }
-if (file("android/app/build.gradle").exists()) {
+if (file("app").exists() && file("app/build.gradle").exists()) {
     discoveredModules.add("app")
 }
 
@@ -432,55 +445,6 @@ tasks.register<Exec>("pythonRunApi") {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// TAAR — Thirstys Active Agent Runner (Intelligent Build Orchestration)
-// ═══════════════════════════════════════════════════════════════════════════
-
-tasks.register<Exec>("taarRun") {
-    group = "taar"
-    description = "Run affected tasks for uncommitted changes (change-aware)"
-    
-    dependsOn("pythonInstall")
-    
-    val pythonExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
-        file("${pythonVenvDir}/Scripts/python.exe").absolutePath
-    } else {
-        file("${pythonVenvDir}/bin/python").absolutePath
-    }
-    
-    commandLine(pythonExec, "-m", "taar.cli", "run")
-}
-
-tasks.register<Exec>("taarWatch") {
-    group = "taar"
-    description = "Start TAAR active watch mode — auto-run on file save"
-    
-    dependsOn("pythonInstall")
-    
-    val pythonExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
-        file("${pythonVenvDir}/Scripts/python.exe").absolutePath
-    } else {
-        file("${pythonVenvDir}/bin/python").absolutePath
-    }
-    
-    commandLine(pythonExec, "-m", "taar.cli", "watch")
-}
-
-tasks.register<Exec>("taarCI") {
-    group = "taar"
-    description = "TAAR CI mode — fresh run, no cache, fail-fast"
-    
-    dependsOn("pythonInstall")
-    
-    val pythonExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
-        file("${pythonVenvDir}/Scripts/python.exe").absolutePath
-    } else {
-        file("${pythonVenvDir}/bin/python").absolutePath
-    }
-    
-    commandLine(pythonExec, "-m", "taar.cli", "ci")
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
 // NODE.JS / NPM ORCHESTRATION (Electron Desktop, Web Frontend)
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -495,9 +459,17 @@ configure<com.github.gradle.node.NodeExtension> {
     npmWorkDir.set(file("${projectRoot}/.gradle/npm"))
 }
 
-// Root npm install - handled automatically by gradle-node-plugin
-// Configuration is done via the configure<NodeExtension> block above
-// This manual registration was causing "Duplicate task name 'npmInstall'" errors
+// Root npm install - configure existing task if it exists
+tasks.findByName("npmInstall") ?: tasks.register<com.github.gradle.node.npm.task.NpmTask>("npmInstall") {
+    group = "npm"
+    description = "Install root npm dependencies"
+    
+    args.set(listOf("install"))
+    
+    inputs.file("package.json")
+    inputs.file("package-lock.json")
+    outputs.dir("node_modules")
+}
 
 // Root npm build
 tasks.register<com.github.gradle.node.npm.task.NpmTask>("npmBuild") {
@@ -1498,21 +1470,20 @@ tasks.register<Exec>("evolutionOverride") {
     
     dependsOn("pythonInstall")
     
-    // Defer property reads to execution time so Gradle can configure without these flags
+    val reason = project.findProperty("overrideReason")?.toString() 
+        ?: throw GradleException("Must provide -PoverrideReason='...'")
+    val authorizer = project.findProperty("authorizer")?.toString() 
+        ?: throw GradleException("Must provide -Pauthorizer='...'")
+    
+    commandLine(
+        evolutionPython,
+        "-m", "gradle_evolution.audit.accountability",
+        "--request-override",
+        "--reason", reason,
+        "--authorizer", authorizer
+    )
+    
     doFirst {
-        val reason = project.findProperty("overrideReason")?.toString() 
-            ?: throw GradleException("Must provide -PoverrideReason='...'")
-        val authorizer = project.findProperty("authorizer")?.toString() 
-            ?: throw GradleException("Must provide -Pauthorizer='...'")
-        
-        executable = evolutionPython
-        args(
-            "-m", "gradle_evolution.audit.accountability",
-            "--request-override",
-            "--reason", reason,
-            "--authorizer", authorizer
-        )
-        
         logger.lifecycle("🧬 Requesting accountability override...")
         logger.lifecycle("  Reason: $reason")
         logger.lifecycle("  Authorizer: $authorizer")
@@ -1719,31 +1690,3 @@ For all tasks:            gradle tasks --all
 // ═══════════════════════════════════════════════════════════════════════════
 // END OF GOD TIER BUILD ORCHESTRATION WITH EVOLUTION SUBSTRATE
 // ═══════════════════════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════════════════
-// ROBUST CLEANUP STRATEGY
-// ═══════════════════════════════════════════════════════════════════════════
-tasks.named<Delete>("clean") {
-    doFirst {
-        logger.lifecycle("🧹 Aggressive cleanup: Terminating lingering build daemons to release file locks...")
-        if (System.getProperty("os.name").lowercase().contains("windows")) {
-            exec {
-                commandLine("cmd", "/c", "taskkill /F /IM node.exe /FI \"MEMUSAGE gt 1000\" 2>nul || exit 0")
-                isIgnoreExitValue = true
-            }
-            exec {
-                commandLine("cmd", "/c", "taskkill /F /IM python.exe /FI \"MEMUSAGE gt 150000\" 2>nul || exit 0")
-                isIgnoreExitValue = true
-            }
-        } else {
-            exec {
-                commandLine("sh", "-c", "pkill -f node || true")
-                isIgnoreExitValue = true
-            }
-            exec {
-                commandLine("sh", "-c", "pkill -f python || true")
-                isIgnoreExitValue = true
-            }
-        }
-    }
-}

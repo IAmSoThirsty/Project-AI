@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Cross-Tier Governance Policies - Rules for inter-tier enforcement and blocking.
 
@@ -63,7 +61,7 @@ CRITICAL PRINCIPLES:
 
 import logging
 from dataclasses import dataclass
-from datetime import timezone, datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from enum import Enum
 from typing import Any
 
@@ -632,3 +630,4 @@ def get_policy_engine() -> CrossTierPolicyEngine:
     if _global_policy_engine is None:
         _global_policy_engine = CrossTierPolicyEngine()
     return _global_policy_engine
+

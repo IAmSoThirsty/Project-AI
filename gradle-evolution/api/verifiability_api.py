@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Verifiability API
 =================
@@ -27,9 +25,9 @@ from ..capsules.replay_engine import ReplayEngine
 logger = logging.getLogger(__name__)
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class VerifiabilityAPI:
@@ -77,7 +75,7 @@ class VerifiabilityAPI:
             return jsonify(
                 {
                     "status": "healthy",
-                    "timestamp": _utcnow().isoformat(),
+                    "timestamp": _utc_now_iso(),
                     "service": "verifiability-api",
                 }
             )
@@ -126,7 +124,7 @@ class VerifiabilityAPI:
             """Verify capsule integrity."""
             try:
                 is_valid, error = self.capsule_engine.verify_capsule(
-                    capsule_id, with_reason=True
+                    capsule_id, detailed=True
                 )
 
                 return jsonify(
@@ -135,7 +133,7 @@ class VerifiabilityAPI:
                         "verified": is_valid,
                         "valid": is_valid,
                         "error": error,
-                        "timestamp": _utcnow().isoformat(),
+                        "timestamp": _utc_now_iso(),
                     }
                 )
             except Exception as e:
@@ -162,6 +160,8 @@ class VerifiabilityAPI:
                         "timestamp": result.timestamp,
                     }
                 )
+            except ValueError as e:
+                return jsonify({"error": str(e)}), 404
             except Exception as e:
                 logger.error("Error replaying capsule: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
@@ -190,7 +190,6 @@ class VerifiabilityAPI:
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/audit/events", methods=["GET"])
-        @self.app.route("/api/v1/audit", methods=["GET"])
         def get_audit_events():
             """Get recent audit events."""
             try:
@@ -206,6 +205,11 @@ class VerifiabilityAPI:
             except Exception as e:
                 logger.error("Error getting audit events: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
+
+        # Backward-compatible alias expected by some clients/tests.
+        @self.app.route("/api/v1/audit", methods=["GET"])
+        def get_audit_events_alias():
+            return get_audit_events()
 
         @self.app.route("/api/v1/audit/report", methods=["GET"])
         def get_audit_report():
@@ -227,7 +231,6 @@ class VerifiabilityAPI:
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/proof/<capsule_id>", methods=["GET"])
-        @self.app.route("/api/v1/capsules/<capsule_id>/proof", methods=["GET"])
         def get_cryptographic_proof(capsule_id):
             """Get cryptographic proof package for capsule."""
             try:
@@ -237,7 +240,7 @@ class VerifiabilityAPI:
 
                 # Verify integrity
                 is_valid, error = self.capsule_engine.verify_capsule(
-                    capsule_id, with_reason=True
+                    capsule_id, detailed=True
                 )
 
                 # Generate proof package
@@ -246,7 +249,7 @@ class VerifiabilityAPI:
                     "merkle_root": capsule.merkle_root,
                     "integrity_verified": is_valid,
                     "verification_error": error,
-                    "timestamp": _utcnow().isoformat(),
+                    "timestamp": _utc_now_iso(),
                     "capsule_data": capsule.to_dict(),
                 }
 
@@ -254,6 +257,11 @@ class VerifiabilityAPI:
             except Exception as e:
                 logger.error("Error generating proof: %s", e, exc_info=True)
                 return jsonify({"error": str(e)}), 500
+
+        # Backward-compatible alias expected by some clients/tests.
+        @self.app.route("/api/v1/capsules/<capsule_id>/proof", methods=["GET"])
+        def get_cryptographic_proof_alias(capsule_id):
+            return get_cryptographic_proof(capsule_id)
 
         @self.app.route("/api/v1/statistics", methods=["GET"])
         def get_statistics():
@@ -268,7 +276,7 @@ class VerifiabilityAPI:
                         "audit_buffer_size": len(
                             self.audit_integration.get_audit_buffer(limit=10000)
                         ),
-                        "timestamp": _utcnow().isoformat(),
+                        "timestamp": _utc_now_iso(),
                     }
                 )
             except Exception as e:

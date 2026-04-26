@@ -1,0 +1,1 @@
+python -m src.app.core.validate_constitution 2>&1 | findstr /c:"Test Summary" /c:"passed" /c:"failed"

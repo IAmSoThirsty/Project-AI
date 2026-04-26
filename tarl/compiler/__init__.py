@@ -1,7 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-#                                                             DATE: 2026-03-03 09:33:22
-#                                                             STATUS: Active
 """
 T.A.R.L. (Thirstys Active Resistance Language) Compiler Frontend Subsystem
 
@@ -37,8 +33,8 @@ logger = logging.getLogger(__name__)
 class Token:
     """Lexical token"""
 
-    def __init__(self, token_type: str, value: Any, line: int, column: int):
-        self.type = token_type
+    def __init__(self, type: str, value: Any, line: int, column: int):
+        self.type = type
         self.value = value
         self.line = line
         self.column = column
@@ -173,7 +169,7 @@ class SemanticAnalyzer:
         self.diagnostics = diagnostics
         self.stdlib = stdlib
 
-    def analyze(self, _ast: ASTNode) -> bool:
+    def analyze(self, ast: ASTNode) -> bool:
         """
         Analyze AST for semantic correctness
 
@@ -226,7 +222,7 @@ class CodeGenerator:
         bytecode = bytearray(b"TARL_BYTECODE_V1\x00")
 
         # Constant pool section
-        constants: list[Any] = []
+        constants = []
 
         # Extract tokens from AST
         tokens = ast.attributes.get("tokens", [])
@@ -257,7 +253,6 @@ class CodeGenerator:
                 # Number constant
                 const_index = len(constants)
                 # Try to parse as int or float
-                num_value: int | float
                 try:
                     num_value = int(token.value)
                 except ValueError:
@@ -385,7 +380,7 @@ class CompilerFrontend:
                 raise RuntimeError("Semantic analysis failed")
 
             # Stage 4: Code generation
-            bytecode: bytes = self.codegen.generate(ast)
+            bytecode = self.codegen.generate(ast)
 
             logger.info("Compilation successful")
             return bytecode

@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Deduplication Engine - Content-Addressed Storage
 
@@ -23,7 +21,7 @@ import json
 import logging
 import threading
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -100,8 +98,8 @@ class BloomFilter:
 
     def _hash(self, item: str, seed: int) -> int:
         """Generate hash with seed."""
-        content_hash = hashlib.sha256(f"{item}{seed}".encode()).digest()
-        return int.from_bytes(content_hash[:4], byteorder="big")
+        h = hashlib.sha256(f"{item}{seed}".encode()).digest()
+        return int.from_bytes(h[:4], byteorder="big")
 
     def clear(self):
         """Clear bloom filter."""
@@ -534,3 +532,4 @@ class DeduplicationEngine:
             logger.info("Compaction complete: removed %d orphaned contents", orphaned)
         except Exception as e:
             logger.error("Compaction failed: %s", e)
+

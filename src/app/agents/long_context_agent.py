@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Long-context AI agent supporting extended conversations up to 200k tokens.
 
 This agent provides access to long-context language models like Nous-Capybara-34B-200k

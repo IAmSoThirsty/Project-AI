@@ -1,5 +1,19 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: demo
+tags: [demo, security, rust, memory-safety, runtime-security, learning]
+created: 2024-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [tarl, rust-compiler, unsafe-code, ffi]
+stakeholders: [security-engineers, rust-developers, learners, architects]
+complexity_level: advanced
+demonstrates: [memory-safety-limitations, unsafe-blocks, raw-pointers, transmute, ffi-boundary, reflection-attacks, compile-time-vs-runtime-security]
+runnable: true
+estimated_completion: 8
+requires: [rust-1.70+, rustc]
+review_cycle: quarterly
+---
+
 # Rust Security Demonstration
 
 ## Overview
@@ -77,4 +91,4 @@ The borrow checker and type system provide **memory safety**, NOT **security fro
 
 ## Learn More
 
-This demonstration is part of the T.A.R.L. (Thirsty's Active Resistance Language) project, which provides architectural solutions to secret protection through cryptographic attestation rather than runtime hiding.
+This demonstration is part of the T.A.R.L. (Temporal Authority Resource Ledger) project, which provides architectural solutions to secret protection through cryptographic attestation rather than runtime hiding.

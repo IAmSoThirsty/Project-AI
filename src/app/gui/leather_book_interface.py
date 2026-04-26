@@ -1,7 +1,5 @@
-#                                           [2026-03-04 21:15]
-#                                          Productivity: Active
 """
-LeatherBookInterface - Main Orchestrator for the Project-AI Desktop Application.ut.
+Leather Book Interface - Main container with left/right page layout.
 
 Creates an old leather book aesthetic with:
 - Left page: Futuristic Tron-themed digital face
@@ -11,7 +9,7 @@ Creates an old leather book aesthetic with:
 
 import logging
 
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QGraphicsDropShadowEffect,
@@ -21,17 +19,21 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from src.app.core.platform_tiers import (
+from app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
-from src.app.gui.leather_book_panels import IntroInfoPage, SovereignPersonaPage
-from src.app.gui.persona_panel import PersonaPanel
+from app.gui.leather_book_panels import IntroInfoPage, TronFacePage
 
 logger = logging.getLogger(__name__)
 
+
+# 📚 Documentation Links:
+# - [[relationships/gui/01_DASHBOARD_RELATIONSHIPS.md]]
+# - [[source-docs/gui/leather_book_interface.md]]
+#
 
 class LeatherBookInterface(QMainWindow):
     """Main window with leather book aesthetic."""
@@ -45,8 +47,8 @@ class LeatherBookInterface(QMainWindow):
         self.backend_token: str | None = None
         self.current_page = 0  # 0 = login/intro, 1 = main dashboard
 
-        self.setWindowTitle("Project-AI: Sovereign 1st Edition")
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setWindowTitle("Project-AI: Leather Book Interface")
+        self.setGeometry(100, 100, 1920, 1080)
         self.setStyleSheet(self._get_stylesheet())
 
         self.main_widget = QWidget()
@@ -55,7 +57,7 @@ class LeatherBookInterface(QMainWindow):
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.main_layout.setSpacing(0)
 
-        self.left_page = SovereignPersonaPage(self)
+        self.left_page = TronFacePage(self)
         self.right_page = IntroInfoPage(self)
 
         self.page_container = QStackedWidget()
@@ -86,54 +88,49 @@ class LeatherBookInterface(QMainWindow):
                 "Failed to register LeatherBookInterface in tier registry: %s", e
             )
 
-        # Engulf the screen for 1st Edition immersion
-        self.showFullScreen()
-        self.raise_()
-        self.activateWindow()
+        self.show()
 
     def _get_stylesheet(self) -> str:
         """Return QSS stylesheet for leather book theme."""
         return """
         QMainWindow {
-            background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #1a1a1a, stop:1 #050505);
-        }
-        QWidget#main_widget {
-            background-color: transparent;
+            background-color: #1a1a1a;
         }
         QLabel {
-            color: #d4af37; /* Sovereign Gold */
-            font-family: 'Courier New';
-            font-weight: bold;
+            color: #e0e0e0;
         }
         QPushButton {
-            background-color: #121212;
+            background-color: #2a2a2a;
             border: 2px solid #00ff00;
             color: #00ff00;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 8px;
+            border-radius: 4px;
             font-weight: bold;
-            font-family: 'Courier New';
-            text-transform: uppercase;
+            text-shadow: 0px 0px 10px #00ff00;
         }
         QPushButton:hover {
-            background-color: #1a1a1a;
+            background-color: #3a3a3a;
             border: 2px solid #00ffff;
             color: #00ffff;
-            box-shadow: 0 0 15px #00ffff;
+            text-shadow: 0px 0px 15px #00ffff;
+        }
+        QPushButton:pressed {
+            background-color: #1a1a1a;
         }
         QLineEdit {
-            background-color: #0f0f0f;
-            border: 1px solid #00ff00;
+            background-color: #1a1a1a;
+            border: 2px solid #00ff00;
             color: #00ff00;
-            padding: 8px;
-            font-family: 'Courier New';
-            selection-background-color: #00ffff;
+            padding: 5px;
+            font-weight: bold;
+        }
+        QLineEdit:focus {
+            border: 2px solid #00ffff;
         }
         QTextEdit {
-            background-color: #0f0f0f;
-            border: 1px solid #004400;
+            background-color: #1a1a1a;
+            border: 2px solid #00ff00;
             color: #00ff00;
-            font-family: 'Courier New';
         }
         """
 
@@ -163,7 +160,7 @@ class LeatherBookInterface(QMainWindow):
         self.username = username
         self.user_logged_in.emit(username)
 
-        from src.app.gui.leather_book_dashboard import LeatherBookDashboard
+        from app.gui.leather_book_dashboard import LeatherBookDashboard
 
         dashboard = LeatherBookDashboard(username)
 
@@ -176,7 +173,6 @@ class LeatherBookInterface(QMainWindow):
         dashboard.actions_panel.news_intelligence_requested.connect(
             self.switch_to_news_intelligence
         )
-        dashboard.actions_panel.persona_requested.connect(self.switch_to_persona_config)
         dashboard.actions_panel.intelligence_library_requested.connect(
             self.switch_to_intelligence_library
         )
@@ -186,9 +182,6 @@ class LeatherBookInterface(QMainWindow):
         dashboard.actions_panel.command_center_requested.connect(
             self.switch_to_command_center
         )
-        # Assuming we add a persona_btn to the actions panel or connect it elsewhere
-        # For now, let's wire it to a potential new signal or replace one
-        # dashboard.actions_panel.persona_requested.connect(self.switch_to_persona_config)
 
         self._set_stack_page(dashboard, 1)
 
@@ -198,7 +191,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_image_generation(self):
         """Switch to image generation interface."""
-        from src.app.gui.image_generation import ImageGenerationInterface
+        from app.gui.image_generation import ImageGenerationInterface
 
         image_gen = ImageGenerationInterface()
 
@@ -212,7 +205,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_news_intelligence(self):
         """Switch to news intelligence panel."""
-        from src.app.gui.news_intelligence_panel import NewsIntelligencePanel
+        from app.gui.news_intelligence_panel import NewsIntelligencePanel
 
         news_panel = NewsIntelligencePanel()
         news_panel.back_requested.connect(self.switch_to_dashboard)
@@ -221,7 +214,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_intelligence_library(self):
         """Switch to intelligence library panel."""
-        from src.app.gui.intelligence_library_panel import IntelligenceLibraryPanel
+        from app.gui.intelligence_library_panel import IntelligenceLibraryPanel
 
         library_panel = IntelligenceLibraryPanel()
         library_panel.back_requested.connect(self.switch_to_dashboard)
@@ -230,7 +223,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_watch_tower(self):
         """Switch to watch tower panel."""
-        from src.app.gui.watch_tower_panel import WatchTowerPanel
+        from app.gui.watch_tower_panel import WatchTowerPanel
 
         tower_panel = WatchTowerPanel()
         tower_panel.back_requested.connect(self.switch_to_dashboard)
@@ -239,16 +232,9 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_command_center(self):
         """Switch to god-tier command center panel."""
-        from src.app.gui.god_tier_panel import GodTierCommandPanel
+        from app.gui.god_tier_panel import GodTierCommandPanel
 
         command_panel = GodTierCommandPanel()
         command_panel.back_requested.connect(self.switch_to_dashboard)
 
         self._set_stack_page(command_panel, 2)
-
-    def switch_to_persona_config(self):
-        """Switch to persona configuration panel."""
-        persona_panel = PersonaPanel()
-        persona_panel.back_requested.connect(self.switch_to_dashboard)
-
-        self._set_stack_page(persona_panel, 2)

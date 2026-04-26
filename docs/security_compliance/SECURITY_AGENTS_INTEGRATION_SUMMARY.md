@@ -1,5 +1,82 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Security Agents Integration Summary"
+id: "security-agents-integration-summary"
+type: "report"
+version: "1.0.0"
+created_date: "2026-01-26"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Integration Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:ai-safety"
+  - "type:report"
+  - "type:reference"
+  - "component:security-agents"
+  - "component:triumvirate"
+  - "audience:security-engineer"
+  - "audience:technical-lead"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "Nous-Capybara-34B-200k"
+  - "Llama-Guard-3-8B"
+  - "JailbreakBench"
+  - "Triumvirate Governance"
+summary: "Integration summary for four new security agents (LongContext, SafetyGuard, JailbreakBench, RedTeamPersona) with Triumvirate governance including methods, capabilities, and attack categories."
+scope: "Complete integration overview: agent files (360-573 lines), model specifications, key methods, detection capabilities, attack categories, Triumvirate workflows, and operational patterns"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "jailbreak-attempts"
+  - "prompt-injection"
+  - "role-play-scenarios"
+  - "hypothetical-framing"
+  - "harmful-content"
+  - "manipulation-patterns"
+mitigations:
+  - "[[LONG_CONTEXT_AGENT]]"
+  - "[[SAFETY_GUARD_AGENT]]"
+  - "[[JAILBREAK_BENCH_AGENT]]"
+  - "[[RED_TEAM_PERSONA_AGENT]]"
+validates:
+  - "200k token context windows"
+  - "Content moderation pipelines"
+  - "Jailbreak detection rates"
+  - "Adversarial testing coverage"
+  - "Triumvirate integration"
+compliance:
+  - "AI Safety Best Practices"
+  - "Content Moderation Standards"
+  - "Adversarial Testing Framework"
+stakeholders:
+  - security-team   - ai-safety-team   - development-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Integration Report"
+cwe_ids:
+  - "CWE-94: Code Injection"
+  - "CWE-116: Improper Encoding"
+  - "CWE-200: Information Exposure"
+related_docs:
+  - "security-agents-guide"
+  - "security-agents-roadmap"
+  - "ai-security-framework"
+  - "cerberus-security-structure"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "integration-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "technical-leads"
+  - "integration-engineers"
+  - "ai-safety-researchers"
+---
+
 # Security Agents Integration Summary
 
 ## Overview
@@ -92,9 +169,7 @@ Project-AI has been enhanced with four new security and testing agents that inte
 All agents are automatically registered when CouncilHub initializes:
 
 ```python
-
 # In council_hub.py register_project()
-
 self._project["long_context"] = LongContextAgent(kernel=self.kernel)
 self._project["safety_guard"] = SafetyGuardAgent(kernel=self.kernel)
 self._project["jailbreak_bench"] = JailbreakBenchAgent(kernel=self.kernel)
@@ -127,9 +202,7 @@ This ensures:
 Each agent operation can be evaluated by the Triumvirate:
 
 ```python
-
 # Example: Red team testing requires approval
-
 context = GovernanceContext(
     high_risk=True,
     requires_approval=True,
@@ -155,14 +228,11 @@ The Triumvirate council members evaluate:
 Added to `.env.example`:
 
 ```bash
-
 # Long-Context Model
-
 LONG_CONTEXT_API_ENDPOINT=https://api.example.com/v1/long-context
 LONG_CONTEXT_API_KEY=your_api_key_here
 
 # Safety Model
-
 SAFETY_MODEL_API_ENDPOINT=https://api.example.com/v1/safety
 SAFETY_MODEL_API_KEY=your_api_key_here
 ```
@@ -206,19 +276,15 @@ Created comprehensive test suite:
 ### Pattern 1: Safety Pipeline
 
 ```python
-
 # Pre-process input
-
 safety_check = safety_guard.check_prompt_safety(user_input)
 if not safety_check["is_safe"]:
     return "Input blocked"
 
 # Process with LLM
-
 response = llm.generate(user_input)
 
 # Post-process output
-
 response_check = safety_guard.check_response_safety(response)
 if response_check["is_safe"]:
     return response
@@ -227,9 +293,7 @@ if response_check["is_safe"]:
 ### Pattern 2: Long-Context Analysis
 
 ```python
-
 # Large document with query
-
 result = long_context.analyze_large_document(
     document=large_policy_doc,
     query="Summarize security requirements"
@@ -239,9 +303,7 @@ result = long_context.analyze_large_document(
 ### Pattern 3: Regular Security Testing
 
 ```python
-
 # Weekly automated test
-
 results = jailbreak_bench.run_benchmark(
     target_system=production_ai,
     max_tests=50
@@ -255,9 +317,7 @@ if evaluation["defense_rate"] < 0.8:
 ### Pattern 4: Red Team Exercise
 
 ```python
-
 # Monthly adversarial test
-
 session = red_team.run_adversarial_session(
     target_system=production_ai,
     strategy="gradual_escalation"
@@ -294,12 +354,12 @@ if session["vulnerabilities_found"] > 0:
 
 ### Initial Benchmarks
 
-| Agent               | Initialization | Operation       | Memory |
-| ------------------- | -------------- | --------------- | ------ |
-| LongContextAgent    | \<1s           | 1-5s            | 4-8GB  |
-| SafetyGuardAgent    | \<1s           | \<100ms         | ~2GB   |
-| JailbreakBenchAgent | \<1s           | 1-5s/test       | \<1GB  |
-| RedTeamAgent        | \<1s           | 30-300s/session | \<1GB  |
+| Agent | Initialization | Operation | Memory |
+|-------|---------------|-----------|--------|
+| LongContextAgent | <1s | 1-5s | 4-8GB |
+| SafetyGuardAgent | <1s | <100ms | ~2GB |
+| JailbreakBenchAgent | <1s | 1-5s/test | <1GB |
+| RedTeamAgent | <1s | 30-300s/session | <1GB |
 
 ### Throughput
 
@@ -313,25 +373,21 @@ if session["vulnerabilities_found"] > 0:
 ### Planned Features
 
 1. **Model Integration**:
-
    - Direct integration with Hugging Face models
    - Local model deployment options
    - API fallback mechanisms
 
 1. **Enhanced Testing**:
-
    - Additional attack categories
    - Custom scenario creation
    - Automated vulnerability patching
 
 1. **Analytics**:
-
    - Real-time dashboards
    - Trend analysis
    - Predictive alerts
 
 1. **Optimization**:
-
    - Caching for common patterns
    - Batch processing
    - Parallel testing
@@ -350,20 +406,17 @@ Planned integrations:
 Created comprehensive documentation:
 
 1. **User Guide**: `docs/SECURITY_AGENTS_GUIDE.md` (336 lines)
-
    - Quick start examples
    - API reference
    - Best practices
    - Troubleshooting
 
 1. **Integration Summary**: This document
-
    - Architecture overview
    - Design decisions
    - Performance metrics
 
 1. **Code Documentation**: Inline docstrings
-
    - All methods documented
    - Type hints throughout
    - Usage examples
@@ -392,6 +445,6 @@ All agents integrate seamlessly with the Triumvirate governance system, ensuring
 - Security Review: Triumvirate Council
 - Testing: Automated Test Suite
 
-______________________________________________________________________
+---
 
 *For detailed usage instructions, see `docs/SECURITY_AGENTS_GUIDE.md`*

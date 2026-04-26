@@ -1,17 +1,53 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "TARL Quick Reference Guide"
+id: tarl-quick-reference
+type: guide
+area: development
+status: active
+version: "1.0"
+created_date: "2026-04-20"
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Classification
+tags:
+  - development
+  - tarl
+
+# Developer Metadata
+skill_level: beginner
+audience:
+  - developer
+
+languages:
+  - Python
+  - Shell
+
+frameworks:
+  - Temporal
+
+code_examples: true
+api_reference: false
+
+prerequisites:
+  - [[QUICK_START]]
+
+implements:
+  - src/app/core/tarl_orchestrator.py
+
+related_docs:
+  - [[README]]
+---
 # TARL Quick Reference Guide
 
 ## Quick Start
 
 ### 1. Initialize the System
-
 ```bash
 python bootstrap.py
 ```
 
 ### 2. Import Components
-
 ```python
 from tarl.runtime import TarlRuntime
 from tarl.policies.default import DEFAULT_POLICIES
@@ -21,18 +57,14 @@ from src.cognition.codex.escalation import CodexDeus
 ```
 
 ### 3. Basic Usage
-
 ```python
-
 # Initialize
-
 runtime = TarlRuntime(DEFAULT_POLICIES)
 codex = CodexDeus()
 governance = GovernanceCore()
 kernel = ExecutionKernel(governance, runtime, codex)
 
 # Execute with context
-
 context = {"agent": "my_agent", "mutation": False}
 result = kernel.execute("action", context)
 ```
@@ -41,22 +73,20 @@ result = kernel.execute("action", context)
 
 Required keys for TARL policy evaluation:
 
-| Key                | Type        | Description                   | Required    |
-| ------------------ | ----------- | ----------------------------- | ----------- |
-| `agent`            | str or None | Agent identity                | Yes         |
-| `mutation`         | bool        | Whether action mutates state  | Yes         |
-| `mutation_allowed` | bool        | Whether mutation is permitted | Conditional |
+| Key | Type | Description | Required |
+|-----|------|-------------|----------|
+| `agent` | str or None | Agent identity | Yes |
+| `mutation` | bool | Whether action mutates state | Yes |
+| `mutation_allowed` | bool | Whether mutation is permitted | Conditional |
 
 ## Policy Behavior
 
 ### deny_unauthorized_mutation
-
 - **Triggers**: `mutation=True` AND `mutation_allowed=False`
 - **Verdict**: DENY
 - **Reason**: "Mutation not permitted by TARL policy"
 
 ### escalate_on_unknown_agent
-
 - **Triggers**: `agent=None`
 - **Verdict**: ESCALATE
 - **Reason**: "Unknown agent identity"
@@ -64,55 +94,43 @@ Required keys for TARL policy evaluation:
 ## Common Patterns
 
 ### Safe Read Operation
-
 ```python
 context = {
     "agent": "authenticated_user",
     "mutation": False,
     "mutation_allowed": False,
 }
-
 # Result: ALLOW
-
 ```
 
 ### Authorized Mutation
-
 ```python
 context = {
     "agent": "admin_user",
     "mutation": True,
     "mutation_allowed": True,
 }
-
 # Result: ALLOW
-
 ```
 
 ### Denied Mutation
-
 ```python
 context = {
     "agent": "user",
     "mutation": True,
     "mutation_allowed": False,
 }
-
 # Result: DENY
-
 ```
 
 ### Escalated Request
-
 ```python
 context = {
     "agent": None,
     "mutation": False,
     "mutation_allowed": False,
 }
-
 # Result: ESCALATE (SystemExit)
-
 ```
 
 ## Custom Policy Example
@@ -132,7 +150,6 @@ def rate_limit_policy(ctx):
     return TarlDecision(TarlVerdict.ALLOW, "OK")
 
 # Add to runtime
-
 policies = DEFAULT_POLICIES + [
     TarlPolicy("rate_limit", rate_limit_policy)
 ]
@@ -155,19 +172,16 @@ except SystemExit as e:
 ## Testing
 
 ### Run All Tests
-
 ```bash
 python test_tarl_integration.py
 ```
 
 ### Run Fuzzer
-
 ```bash
 python -m tarl.fuzz.fuzz_tarl
 ```
 
 ### Bootstrap Verification
-
 ```bash
 python bootstrap.py
 ```
@@ -175,41 +189,32 @@ python bootstrap.py
 ## Troubleshooting
 
 ### Issue: "Unknown agent identity" escalation
-
 **Solution**: Ensure `agent` is set in context
-
 ```python
 context["agent"] = "authenticated_user"
 ```
 
 ### Issue: "Mutation not permitted" denial
-
 **Solution**: Set `mutation_allowed=True` for authorized mutations
-
 ```python
 context["mutation_allowed"] = True
 ```
 
 ### Issue: SystemExit on escalation
-
 **Solution**: This is expected for HIGH priority escalations. Handle in production:
-
 ```python
-
 # In production, consider catching SystemExit
-
 # and routing to incident response system
-
 ```
 
 ## Best Practices
 
 1. **Always provide agent identity**: Never leave `agent=None` unless intentional
-1. **Explicit mutation flags**: Always set `mutation` and `mutation_allowed`
-1. **Test policies**: Use fuzzer before deploying new policies
-1. **Audit logs**: Review governance audit logs regularly
-1. **Policy ordering**: Place more specific policies first in the list
-1. **Metadata usage**: Include meaningful metadata for debugging
+2. **Explicit mutation flags**: Always set `mutation` and `mutation_allowed`
+3. **Test policies**: Use fuzzer before deploying new policies
+4. **Audit logs**: Review governance audit logs regularly
+5. **Policy ordering**: Place more specific policies first in the list
+6. **Metadata usage**: Include meaningful metadata for debugging
 
 ## Performance Tips
 
@@ -221,51 +226,42 @@ context["mutation_allowed"] = True
 ## API Reference
 
 ### TarlRuntime
-
 - `__init__(policies: List[TarlPolicy])`
 - `evaluate(context: Dict[str, Any]) -> TarlDecision`
 
 ### TarlGate
-
 - `__init__(runtime: TarlRuntime, codex: CodexDeus)`
 - `enforce(execution_context: Dict[str, Any]) -> TarlDecision`
 
 ### ExecutionKernel
-
 - `__init__(governance, tarl_runtime, codex: CodexDeus)`
 - `execute(action, context=None) -> Dict`
 
 ### GovernanceCore
-
 - `add_policy(policy)`
 - `audit(event)`
 - `get_audit_log() -> List`
 
 ## Environment Variables
 
-| Variable                   | Default | Description                 |
-| -------------------------- | ------- | --------------------------- |
-| `TARL_ENABLED`             | `1`     | Enable TARL security layer  |
-| `CODEX_ESCALATION_ENABLED` | `1`     | Enable CodexDeus escalation |
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TARL_ENABLED` | `1` | Enable TARL security layer |
+| `CODEX_ESCALATION_ENABLED` | `1` | Enable CodexDeus escalation |
 
 ## Common Commands
 
 ```bash
-
 # Initialize system
-
 python bootstrap.py
 
 # Run tests
-
 python test_tarl_integration.py
 
 # Fuzz policies
-
 python -m tarl.fuzz.fuzz_tarl
 
 # Run with logging
-
 PYTHONPATH=. python -c "from bootstrap import main; main()"
 ```
 

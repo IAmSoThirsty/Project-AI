@@ -1,0 +1,1 @@
+python -c "import os; os.environ['OPENROUTER_API_KEY'] = open('t:\\Project-AI-main\\.env').read().split('=')[1].strip(); print('Key loaded:', os.environ['OPENROUTER_API_KEY'][:20] + '...')"

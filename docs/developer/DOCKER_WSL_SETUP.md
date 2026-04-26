@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: tutorial
+tags: [p1-developer, docker, wsl2, windows, containerization, setup, development-environment]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [docker-desktop, wsl2, virtualization, codacy-cli, development-tools]
+stakeholders: [developers, devops, windows-users]
+audience: intermediate
+prerequisites: [windows-10+, admin-privileges, virtualization-enabled, basic-docker-knowledge]
+estimated_time: 30 minutes
+review_cycle: quarterly
+---
 # Docker & WSL Setup Guide for Project-AI
 
 ## Overview
@@ -8,7 +19,9 @@ This guide walks you through the proper installation of WSL 2, Docker Desktop, a
 
 ## Current Status
 
-✅ WSL 2.6.1 installation started 🔄 VirtualMachinePlatform component installing ⏳ Waiting for installation completion
+✅ WSL 2.6.1 installation started
+🔄 VirtualMachinePlatform component installing
+⏳ Waiting for installation completion
 
 ## Step-by-Step Installation Process
 
@@ -23,30 +36,23 @@ This guide walks you through the proper installation of WSL 2, Docker Desktop, a
 Run these commands as Administrator:
 
 ```powershell
-
 # Run the setup script
-
 .\setup-docker-wsl.ps1
 ```
 
 Or manually:
 
 ```powershell
-
 # Verify WSL installation
-
 wsl --status
 
 # Install Ubuntu (if not already installed)
-
 wsl --install -d Ubuntu
 
 # Set WSL 2 as default
-
 wsl --set-default-version 2
 
 # Verify Ubuntu is running
-
 wsl -l -v
 ```
 
@@ -55,19 +61,15 @@ wsl -l -v
 After WSL is ready:
 
 ```powershell
-
 # Download Docker Desktop
-
 $url = "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe"
 $installer = "$env:TEMP\DockerDesktopInstaller.exe"
 Invoke-WebRequest -Uri $url -OutFile $installer
 
 # Install Docker Desktop
-
 Start-Process -FilePath $installer -ArgumentList "install --quiet --accept-license" -Wait
 
 # Start Docker Desktop (will launch automatically after install)
-
 ```
 
 ### Phase 4: Configure Docker for WSL 2
@@ -90,17 +92,13 @@ Run the Codacy setup script:
 Or manually:
 
 ```powershell
-
 # Pull Codacy CLI image
-
 docker pull codacy/codacy-analysis-cli:latest
 
 # Test Codacy CLI
-
 docker run --rm codacy/codacy-analysis-cli:latest --help
 
 # Analyze project
-
 docker run --rm `
   -v "${PWD}:/src" `
   codacy/codacy-analysis-cli:latest analyze `
@@ -112,18 +110,14 @@ docker run --rm `
 ### Verify Installations
 
 ```powershell
-
 # Check WSL
-
 wsl --version
 
 # Check Docker
-
 docker --version
 docker ps
 
 # Check Codacy CLI
-
 docker images | Select-String codacy
 ```
 
@@ -169,10 +163,11 @@ docker run --rm `
 
 ### WSL Issues
 
-**Problem**: WSL command not found **Solution**: Restart computer after WSL installation
+**Problem**: WSL command not found
+**Solution**: Restart computer after WSL installation
 
-**Problem**: Ubuntu not starting **Solution**:
-
+**Problem**: Ubuntu not starting
+**Solution**: 
 ```powershell
 wsl --update
 wsl --shutdown
@@ -181,9 +176,11 @@ wsl -d Ubuntu
 
 ### Docker Issues
 
-**Problem**: Docker daemon not running **Solution**: Start Docker Desktop from Start Menu
+**Problem**: Docker daemon not running
+**Solution**: Start Docker Desktop from Start Menu
 
-**Problem**: WSL 2 integration not working **Solution**:
+**Problem**: WSL 2 integration not working
+**Solution**: 
 
 1. Open Docker Desktop
 1. Settings → Resources → WSL Integration
@@ -192,25 +189,25 @@ wsl -d Ubuntu
 
 ### Codacy CLI Issues
 
-**Problem**: Permission denied errors **Solution**: Ensure you're running PowerShell as Administrator
+**Problem**: Permission denied errors
+**Solution**: Ensure you're running PowerShell as Administrator
 
-**Problem**: Cannot pull Docker image **Solution**: Check internet connection and Docker Hub access
+**Problem**: Cannot pull Docker image
+**Solution**: Check internet connection and Docker Hub access
 
 ## Helper Functions
 
 Add this to your PowerShell profile (`$PROFILE`):
 
 ```powershell
-
 # Codacy Analysis Helper
-
 function Invoke-CodacyAnalysis {
     param(
         [string]$Directory = ".",
         [string]$Tool = "",
         [string]$File = ""
     )
-
+    
     $absolutePath = (Resolve-Path $Directory).Path
     $dockerArgs = @(
         "run", "--rm",
@@ -218,10 +215,10 @@ function Invoke-CodacyAnalysis {
         "codacy/codacy-analysis-cli:latest",
         "analyze", "--directory", "/src"
     )
-
+    
     if ($Tool) { $dockerArgs += "--tool", $Tool }
     if ($File) { $dockerArgs += "--file", $File }
-
+    
     docker @dockerArgs
 }
 
@@ -229,7 +226,6 @@ Set-Alias -Name codacy-analyze -Value Invoke-CodacyAnalysis
 ```
 
 Then use simply:
-
 ```powershell
 codacy-analyze
 codacy-analyze -Tool ruff

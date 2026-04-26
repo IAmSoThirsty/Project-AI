@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Honeypot Detection System.
 
 Implements honeypot endpoints and attack detection for defensive security.
@@ -23,7 +21,7 @@ import re
 import uuid
 from collections import defaultdict
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -506,3 +504,4 @@ class HoneypotDetector:
 
         except Exception as e:
             logger.error("Error saving honeypot state: %s", e)
+

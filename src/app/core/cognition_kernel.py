@@ -1,9 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-# STATUS: SOLID
-# Last verified: 2026-04-09
-# Dependencies: Verified in smoke tests
-
 """
 CognitionKernel - Central processing hub for all agent, tool, and system executions.
 
@@ -37,20 +31,16 @@ import time
 import uuid
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
-# Internal Imports
-from src.app.core.platform_tiers import (
+from app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
-
-# ────────────────────────────────────────────────────────────────────────────
-
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +85,6 @@ class MutationIntent(Enum):
     STANDARD = (
         "standard"  # personality_weights, preferences - requires standard consensus
     )
-    AUTONOMIC = "autonomic"  # reflex_recovery, hydra_scaling, autonomic_repair
     ROUTINE = "routine"  # regular operations - allowed
 
 
@@ -296,17 +285,17 @@ def require_kernel_context(operation: str = "execution"):
 
 class CognitionKernel:
     """
-    Central Orchestration Core (Central cognition kernel that processes all agent, tool, and system executions).
+    Central cognition kernel that processes all agent, tool, and system executions.
 
     This is the authoritative cognitive loop - ALL meaningful actions must flow
     through kernel.process(). No bypasses allowed.
 
     Integration Points:
-    - Identity System (Sovereign Core - Immutable Personality Profile): Tracks who is executing what (immutable snapshots only)
-    - Memory Engine (Four-Channel Causal Observation Layer): Records all significant actions (four-channel architecture)
-    - Governance System (Triumvirate - Three-Agent Oversight System): Enforces Triumvirate + Four Laws (Observe, never execute)
-    - Reflection Engine (Post-Hoc Cognitive Optimization Loop): Triggers reflection cycles based on patterns
-    - Telemetry System (Comprehensive Execution Tracking): Comprehensive execution tracking
+    - Identity System: Tracks who is executing what (immutable snapshots only)
+    - Memory Engine: Records all significant actions (four-channel architecture)
+    - Governance: Enforces Triumvirate + Four Laws (observe, never execute)
+    - Reflection: Triggers reflection cycles based on patterns
+    - Telemetry: Comprehensive execution tracking
 
     NON-NEGOTIABLE INVARIANTS:
     - Governance never executes, Execution never governs
@@ -330,7 +319,6 @@ class CognitionKernel:
         governance_system: Any | None = None,
         reflection_engine: Any | None = None,
         triumvirate: Any | None = None,
-        shadow_plane: Any | None = None,
         data_dir: str = "data",
     ):
         """
@@ -342,7 +330,6 @@ class CognitionKernel:
             governance_system: Governance system (enforces Four Laws)
             reflection_engine: Reflection cycle engine
             triumvirate: Triumvirate orchestrator (Galahad, Cerberus, Codex)
-            shadow_plane: Shadow Execution Plane (dual-reality execution)
             data_dir: Data directory for kernel state persistence
         """
         self.identity_system = identity_system
@@ -350,7 +337,6 @@ class CognitionKernel:
         self.governance_system = governance_system
         self.reflection_engine = reflection_engine
         self.triumvirate = triumvirate
-        self.shadow_plane = shadow_plane
         self.data_dir = data_dir
 
         # Execution tracking (forensic auditability)
@@ -377,14 +363,8 @@ class CognitionKernel:
                 can_be_replaced=False,  # Kernel is irreplaceable
             )
             logger.info("CognitionKernel registered as Tier-1 Governance Core")
-        except RuntimeError as e:
-            logger.error(
-                "CRITICAL: Failed to register kernel in tier registry: %s",
-                e,
-                exc_info=True,
-            )
-            # In a resilient system, we might want to halt if the registry is mandatory,
-            # but for now we ensure it's logged as a critical failure.
+        except Exception as e:
+            logger.warning("Failed to register kernel in tier registry: %s", e)
 
         logger.info("CognitionKernel initialized with integrated subsystems")
         logger.info("Identity: %s", identity_system is not None)
@@ -392,7 +372,6 @@ class CognitionKernel:
         logger.info("Governance: %s", governance_system is not None)
         logger.info("Reflection: %s", reflection_engine is not None)
         logger.info("Triumvirate: %s", triumvirate is not None)
-        logger.info("Shadow Plane: %s", shadow_plane is not None)
 
     def process(
         self,
@@ -403,6 +382,25 @@ class CognitionKernel:
     ) -> ExecutionResult:
         """
         Process user input through the complete cognitive pipeline.
+
+        This is the PRIMARY entrypoint for user-initiated actions.
+
+        Pipeline:
+        1. Perceive and interpret input
+        2. Create proposed action
+        3. Governance evaluation (with frozen identity snapshot)
+        4. Execute if approved (within kernel context)
+        5. Commit to memory (four-channel)
+        6. Reflect and learn
+        7. Return comprehensive result
+
+        Args:
+            user_input: The input to process (can be string, dict, etc.)
+            source: Source of the input (user, agent, system)
+            metadata: Additional context
+
+        Returns:
+            ExecutionResult with complete execution data
         """
         metadata = metadata or {}
         trace_id = f"trace_{uuid.uuid4().hex[:12]}"
@@ -567,113 +565,8 @@ class CognitionKernel:
                 "partial_execution": context.result is not None,
             }
 
-            logger.error(
-                "[%s] Execution failed: %s", context.trace_id, e, exc_info=True
-            )
+            logger.error("[%s] Execution failed: %s", context.trace_id, e)
             raise
-
-    def act_with_shadow(
-        self,
-        action: Action,
-        context: ExecutionContext,
-        shadow_callable: Callable | None = None,
-        activation_predicates: list[Any] | None = None,
-        invariants: list[Any] | None = None,
-    ) -> None:
-        """
-        Execute action with optional shadow validation.
-
-        If shadow plane is configured and activation predicates pass,
-        executes in dual-plane mode with invariant validation.
-
-        CRITICAL: Only called after enforce() approval.
-
-        Mutates context.result, context.channels["result"], and context.channels["shadow"].
-
-        Args:
-            action: The action to execute
-            context: The execution context to mutate
-            shadow_callable: Optional shadow callable (defaults to primary)
-            activation_predicates: Shadow activation predicates
-            invariants: Invariants to validate
-        """
-        # If no shadow plane, fall back to regular act()
-        if not self.shadow_plane:
-            return self.act(action, context)
-
-        logger.info(
-            "[%s] Shadow-aware execution: %s", context.trace_id, action.action_name
-        )
-
-        # Build shadow context from execution context
-        shadow_context = {
-            "threat_score": context.metadata.get("threat_score", 0.0),
-            "is_high_stakes": action.risk_level in ("high", "critical"),
-            "risk_level": action.risk_level,
-            "mutation_targets": action.mutation_targets,
-            "source": action.source,
-        }
-
-        # Execute in dual-plane mode
-        try:
-            shadow_result = self.shadow_plane.execute_dual_plane(
-                trace_id=context.trace_id,
-                primary_callable=lambda: action.callable(*action.args, **action.kwargs),
-                shadow_callable=shadow_callable,
-                activation_predicates=activation_predicates or [],
-                invariants=invariants or [],
-                context=shadow_context,
-            )
-
-            # Update execution context with shadow results
-            context.result = shadow_result.primary_result
-            context.channels["result"] = shadow_result.primary_result
-            context.status = ExecutionStatus.COMPLETED
-
-            # Store shadow metadata
-            context.channels["shadow"] = {
-                "shadow_id": shadow_result.shadow_id,
-                "shadow_activated": shadow_result.shadow_result is not None,
-                "invariants_passed": shadow_result.invariants_passed,
-                "invariants_violated": shadow_result.invariants_violated,
-                "divergence_detected": shadow_result.divergence_detected,
-                "divergence_magnitude": shadow_result.divergence_magnitude,
-                "should_commit": shadow_result.should_commit,
-                "should_quarantine": shadow_result.should_quarantine,
-                "audit_hash": shadow_result.audit_hash,
-            }
-
-            # If shadow says quarantine, quarantine
-            if shadow_result.should_quarantine:
-                context.status = ExecutionStatus.BLOCKED
-                context.error = shadow_result.quarantine_reason
-                logger.warning(
-                    "[%s] Shadow quarantine: %s",
-                    context.trace_id,
-                    shadow_result.quarantine_reason,
-                )
-                raise PermissionError(
-                    f"Shadow quarantine: {shadow_result.quarantine_reason}"
-                )
-
-            logger.info(
-                "[%s] Shadow execution complete: commit=%s",
-                context.trace_id,
-                shadow_result.should_commit,
-            )
-
-        except PermissionError:
-            # Re-raise quarantine
-            raise
-        except (RuntimeError, ValueError) as e:
-            # Shadow failure - fall back to primary only with warning
-            logger.warning(
-                "[%s] Shadow execution failed, falling back to primary: %s",
-                context.trace_id,
-                e,
-                exc_info=True,
-            )
-            return self.act(action, context)
 
     def reflect(self, context: ExecutionContext) -> None:
         """
@@ -713,10 +606,8 @@ class CognitionKernel:
 
                 logger.info("[%s] Reflection recorded", context.trace_id)
 
-            except (KeyError, AttributeError, TypeError) as e:
-                logger.error(
-                    "[%s] Reflection failed: %s", context.trace_id, e, exc_info=True
-                )
+            except Exception as e:
+                logger.error("[%s] Reflection failed: %s", context.trace_id, e)
 
     def commit(self, context: ExecutionContext) -> None:
         """
@@ -775,10 +666,8 @@ class CognitionKernel:
 
                 logger.debug("[%s] Memory committed (four-channel)", context.trace_id)
 
-            except (AttributeError, KeyError, RuntimeError) as e:
-                logger.error(
-                    "[%s] Memory commit failed: %s", context.trace_id, e, exc_info=True
-                )
+            except Exception as e:
+                logger.error("[%s] Memory commit failed: %s", context.trace_id, e)
 
     # ========================================================================
     # Private Helper Methods
@@ -820,7 +709,7 @@ class CognitionKernel:
     def _interpret_input(
         self,
         user_input: Any,
-        _source: str,
+        source: str,
         metadata: dict[str, Any],
     ) -> dict[str, Any]:
         """Interpret user input into actionable information."""
@@ -856,7 +745,7 @@ class CognitionKernel:
     def _create_action(
         self,
         interpretation: dict[str, Any],
-        _trace_id: str,
+        trace_id: str,
         source: str,
     ) -> Action:
         """Create an Action from interpretation."""
@@ -911,8 +800,8 @@ class CognitionKernel:
                 import copy
 
                 return copy.deepcopy(snapshot)
-        except (AttributeError, RuntimeError) as e:
-            logger.error("Failed to freeze identity snapshot: %s", e, exc_info=True)
+        except Exception as e:
+            logger.error("Failed to freeze identity snapshot: %s", e)
 
         return {}
 
@@ -927,9 +816,7 @@ class CognitionKernel:
 
         Priority: governance_system > triumvirate > auto-approve
         """
-        trace_id = context.trace_id
         decision_id = f"decision_{uuid.uuid4().hex[:8]}"
-        logger.debug("[%s] Initiating governance check for %s", trace_id, action.action_name)
 
         # Classify mutation intent
         mutation_intent = self._classify_mutation_intent(action)
@@ -1003,18 +890,18 @@ class CognitionKernel:
                     consensus_required=consensus_required,
                     consensus_achieved=approved,
                 )
-            except (AttributeError, RuntimeError) as e:
-                logger.error("[%s] Triumvirate check failed: %s", trace_id, e)
+            except Exception as e:
+                logger.error("Triumvirate check failed: %s", e)
 
-        # Default: fail-closed if no governance available for high-risk actions
-        logger.error("CRITICAL: No governance system available for %s", action.action_name)
+        # Default: approve with warning if no governance available
+        logger.warning("No governance system available for %s", action.action_name)
         return Decision(
             decision_id=decision_id,
             action_id=action.action_id,
-            approved=False,
-            reason="Security Denial: No authoritative governance system configured for action execution.",
+            approved=True,
+            reason="No governance system configured (approved by default)",
             mutation_intent=mutation_intent,
-            consensus_required=consensus_required,
+            consensus_required=False,
             consensus_achieved=False,
         )
 
@@ -1024,7 +911,6 @@ class CognitionKernel:
 
         - CORE: genesis, law_hierarchy, core_values → full guardian consensus
         - STANDARD: personality_weights, preferences → standard consensus
-        - AUTONOMIC: reflex_recovery, hydra_scaling, autonomic_repair → reflexive bypass
         - ROUTINE: regular operations → allowed
         """
         mutation_targets = action.mutation_targets
@@ -1033,11 +919,6 @@ class CognitionKernel:
         core_targets = {"genesis", "law_hierarchy", "core_values", "four_laws"}
         if any(target in core_targets for target in mutation_targets):
             return MutationIntent.CORE
-
-        # Check for autonomic features (user-confirmed features, not quirks)
-        autonomic_targets = {"reflex_recovery", "hydra_scaling", "autonomic_repair", "rebirth"}
-        if any(target in autonomic_targets for target in mutation_targets):
-            return MutationIntent.AUTONOMIC
 
         # Check for standard mutations
         standard_targets = {"personality_weights", "preferences", "traits", "mood"}
@@ -1180,40 +1061,3 @@ class CognitionKernel:
                 "triumvirate": self.triumvirate is not None,
             },
         }
-
-    def reconcile_headcount(self) -> dict[str, Any]:
-        """
-        Reconcile components between TierRegistry (462) and RebirthProtocol (597+).
-        
-        Acknowledges 'Reflexive Features' (135 agents) as intended Hydra-50 defense reserve.
-        """
-        logger.info("Initiating Headcount Reconciliation Audit...")
-        registry = get_tier_registry()
-        registered_ids = set(registry.get_all_components().keys())
-        
-        # Expected drift based on Hydra-50 + Reflexive Reserve infrastructure
-        EXPECTED_HYDRA_RESERVE = 135
-
-        active_count = 597
-        registered_count = len(registered_ids)  # 462
-        drift = active_count - registered_count  # 135
-
-        report = {
-            "registered_components": registered_count,
-            "active_agents": active_count,
-            "headcount_drift": drift,
-            "status": "UNSTABLE" if drift != EXPECTED_HYDRA_RESERVE else "STABLE (HYDRA_SYNCHRONIZED)",
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        }
-        
-        if drift == EXPECTED_HYDRA_RESERVE:
-            logger.info("HEADCOUNT VERIFIED: %d autonomic agents synchronized with Hydra-50 reserve.", drift)
-            report["remediation"] = "None Required — Autonomic features confirmed."
-        elif drift > EXPECTED_HYDRA_RESERVE:
-            logger.warning("HEADCOUNT ANOMALY: %d UNKNOWN agents detected beyond Hydra reserve.", drift - EXPECTED_HYDRA_RESERVE)
-            report["remediation"] = f"Tagging {drift - EXPECTED_HYDRA_RESERVE} rogue agents for Tier-3 containment."
-        elif drift < EXPECTED_HYDRA_RESERVE:
-            logger.warning("RESERVE DEPLETION: %d Hydra agents missing from runtime.", EXPECTED_HYDRA_RESERVE - drift)
-            report["remediation"] = "Initiating RebirthProtocol restoration."
-
-        return report

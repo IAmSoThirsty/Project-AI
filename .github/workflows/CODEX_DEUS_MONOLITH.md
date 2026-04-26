@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: workflow-spec
+tags: [github-actions, codex-deus, workflows, monolith, consolidation]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, codex-deus]
+stakeholders: [devops, developers, architects]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # Codex Deus Monolith Documentation
 
 ## Overview
@@ -220,19 +232,18 @@ Phase 11: Reporting & Summary
 on:
   push:
     branches: [main, develop, cerberus-integration, 'copilot/**', 'feature/**', 'fix/**']
-
+  
   pull_request:
     branches: [main, develop]
     types: [opened, synchronize, reopened, ready_for_review]
-
+  
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
-
+  
   issues:
     types: [opened, labeled, reopened, edited]
-
+  
   schedule:
-
     - cron: '0 */6 * * *'   # Every 6 hours - Security Orchestrator
     - cron: '0 2 * * *'     # Daily 2 AM - Security scans, auto-fixes, branch PRs
     - cron: '0 3 * * *'     # Daily 3 AM - Issue triage, Bandit fixes
@@ -241,7 +252,7 @@ on:
     - cron: '33 21 * * 6'   # Weekly Saturday 9:33 PM - Bandit scan
     - cron: '0 3 * * 1'     # Weekly Monday 3 AM - Auto Bandit fixes
     - cron: '20 22 * * *'   # Nightly 10:20 PM - Stale issues
-
+  
   workflow_dispatch:
     inputs:
       run_security_only: [true/false]
@@ -334,32 +345,25 @@ The workflow runs automatically on push/PR events:
 
 ```bash
 git push origin main
-
 # Triggers full workflow execution
-
 ```
 
 ### Manual Execution with Options
 
 ```bash
-
 # Run only security scans
-
 gh workflow run codex-deus-monolith.yml \
   -f run_security_only=true
 
 # Run only tests
-
 gh workflow run codex-deus-monolith.yml \
   -f run_tests_only=true
 
 # Run everything except deployment
-
 gh workflow run codex-deus-monolith.yml \
   -f skip_deployment=true
 
 # Create PRs for a specific branch
-
 gh workflow run codex-deus-monolith.yml \
   -f target_branch=feature/my-feature
 ```
@@ -570,9 +574,9 @@ The Codex Deus Monolith is production-ready and represents the pinnacle of GitHu
 
 ---
 
-**Version**: 1.0.0
-**Created**: January 20, 2026
-**Lines of Code**: 860
-**Jobs**: 23
-**Phases**: 11
+**Version**: 1.0.0  
+**Created**: January 20, 2026  
+**Lines of Code**: 860  
+**Jobs**: 23  
+**Phases**: 11  
 **Consolidated Workflows**: 35+

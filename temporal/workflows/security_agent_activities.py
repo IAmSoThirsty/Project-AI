@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Security Agent Temporal Activities
 
@@ -18,6 +16,11 @@ logger = logging.getLogger(__name__)
 
 
 @activity.defn
+# 📚 Documentation Links:
+# - [[relationships/temporal/02_ACTIVITY_DEPENDENCIES.md]]
+# - [[source-docs/temporal/ACTIVITIES_COMPREHENSIVE.md]]
+#
+
 async def run_red_team_campaign(request: dict) -> dict:
     """
     Execute a red team campaign with multiple personas.

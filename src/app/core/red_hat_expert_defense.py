@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Expert Career-Level Red Hat Defense Simulation Framework.
 
@@ -16,7 +14,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -294,8 +292,8 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_A1_{i:04d}",
                     category=ExpertAttackCategory.A_ADVANCED_SQL_INJECTION.value,
                     severity=ThreatSeverity.CRITICAL.value,
-                    title=f"Second-order SQL injection with {['Base64', 'Hex', 'Unicode', 'Double-URL'][i % 4]} encoding",
-                    description=f"Expert scenario {i + 1}: SQL injection stored in database, executed later with WAF bypass using encoding chain and time-based blind extraction",
+                    title=f"Second-order SQL injection with {['Base64', 'Hex', 'Unicode', 'Double-URL'][i%4]} encoding",
+                    description=f"Expert scenario {i+1}: SQL injection stored in database, executed later with WAF bypass using encoding chain and time-based blind extraction",
                     attack_chain=[
                         "Initial injection stored in user profile",
                         "Encoding bypass applied (multi-layer)",
@@ -327,7 +325,7 @@ class RedHatExpertDefenseSimulator:
                         "Principle of least privilege for DB accounts",
                         "WAF with anomaly detection",
                     ],
-                    cve_references=[f"CVE-2024-{10000 + i}"],
+                    cve_references=[f"CVE-2024-{10000+i}"],
                     mitre_tactics=["T1190", "T1059.007"],
                     cvss_score=9.1 + (i % 10) / 10,
                     exploitability="hard",
@@ -353,7 +351,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_A2_{i:04d}",
                     category=ExpertAttackCategory.A_NOSQL_OPERATOR_INJECTION.value,
                     severity=ThreatSeverity.CRITICAL.value,
-                    title=f"NoSQL operator injection - {['MongoDB', 'CouchDB', 'Redis', 'Cassandra'][i % 4]}",
+                    title=f"NoSQL operator injection - {['MongoDB', 'CouchDB', 'Redis', 'Cassandra'][i%4]}",
                     description="NoSQL injection using operator abuse for authentication bypass and data extraction",
                     attack_chain=[
                         "Inject NoSQL operators in JSON payload",
@@ -400,7 +398,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_A3_{i:04d}",
                     category=ExpertAttackCategory.A_LDAP_INJECTION.value,
                     severity=ThreatSeverity.HIGH.value,
-                    title=f"LDAP injection with filter bypass - technique {i + 1}",
+                    title=f"LDAP injection with filter bypass - technique {i+1}",
                     description="LDAP filter injection to bypass authentication and enumerate directory",
                     attack_chain=[
                         "Inject LDAP filter metacharacters",
@@ -436,7 +434,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_A4_{i:04d}",
                     category=ExpertAttackCategory.A_XXE_ADVANCED.value,
                     severity=ThreatSeverity.CRITICAL.value,
-                    title=f"XXE with out-of-band exfiltration - variant {i + 1}",
+                    title=f"XXE with out-of-band exfiltration - variant {i+1}",
                     description="XML External Entity attack with blind OOB data exfiltration via DTD",
                     attack_chain=[
                         "Upload malicious XML with external entity",
@@ -461,7 +459,7 @@ class RedHatExpertDefenseSimulator:
                         "Input validation",
                         "Network segmentation",
                     ],
-                    cve_references=[f"CVE-2023-{20000 + i}"],
+                    cve_references=[f"CVE-2023-{20000+i}"],
                     mitre_tactics=["T1203", "T1005"],
                     cvss_score=9.3,
                     exploitability="medium",
@@ -476,7 +474,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_A5_{i:04d}",
                     category=ExpertAttackCategory.A_XPATH_INJECTION.value,
                     severity=ThreatSeverity.HIGH.value,
-                    title=f"XPath injection for XML data extraction {i + 1}",
+                    title=f"XPath injection for XML data extraction {i+1}",
                     description="XPath injection to bypass authentication and extract XML data",
                     attack_chain=[
                         "Inject XPath syntax in query",
@@ -526,7 +524,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_J1_{i:04d}",
                     category=ExpertAttackCategory.J_PROMPT_INJECTION_ADVANCED.value,
                     severity=ThreatSeverity.CRITICAL.value,
-                    title=f"AI prompt injection - jailbreak technique {i + 1}",
+                    title=f"AI prompt injection - jailbreak technique {i+1}",
                     description="Advanced prompt injection to bypass safety guidelines and extract system prompts",
                     attack_chain=[
                         "Craft adversarial prompt with special tokens",
@@ -571,7 +569,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_J2_{i:04d}",
                     category=ExpertAttackCategory.J_MODEL_EXTRACTION.value,
                     severity=ThreatSeverity.HIGH.value,
-                    title=f"ML model extraction via API queries {i + 1}",
+                    title=f"ML model extraction via API queries {i+1}",
                     description="Extract model weights/architecture through systematic API querying",
                     attack_chain=[
                         "Query model with crafted inputs",
@@ -613,7 +611,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_J3_{i:04d}",
                     category=ExpertAttackCategory.J_ADVERSARIAL_EXAMPLES.value,
                     severity=ThreatSeverity.HIGH.value,
-                    title=f"Adversarial perturbation attack {i + 1}",
+                    title=f"Adversarial perturbation attack {i+1}",
                     description="Craft adversarial examples to fool ML classifiers",
                     attack_chain=[
                         "Generate adversarial perturbations",
@@ -648,7 +646,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_J4_{i:04d}",
                     category=ExpertAttackCategory.J_DATA_POISONING.value,
                     severity=ThreatSeverity.CRITICAL.value,
-                    title=f"Training data poisoning attack {i + 1}",
+                    title=f"Training data poisoning attack {i+1}",
                     description="Poison training data to inject backdoors or degrade model performance",
                     attack_chain=[
                         "Inject malicious training samples",
@@ -694,7 +692,7 @@ class RedHatExpertDefenseSimulator:
                     scenario_id=f"RHEX_J5_{i:04d}",
                     category=ExpertAttackCategory.J_MODEL_INVERSION.value,
                     severity=ThreatSeverity.HIGH.value,
-                    title=f"Model inversion to extract training data {i + 1}",
+                    title=f"Model inversion to extract training data {i+1}",
                     description="Invert model predictions to reconstruct training data samples",
                     attack_chain=[
                         "Query model with optimization inputs",
@@ -865,3 +863,4 @@ class RedHatExpertDefenseSimulator:
     def _generate_category_t_timing(self) -> list[ExpertScenario]:
         """Stub for Category T - will be expanded."""
         return []
+

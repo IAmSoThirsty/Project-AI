@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """CI Checker Agent
 
 This agent is deployed as a smaller agent under CouncilHub and runs periodic
@@ -23,9 +21,9 @@ import time
 from datetime import datetime
 from typing import Any
 
-import uuid
-from src.app.core.cognition_kernel import CognitionKernel, ExecutionType
-from src.app.core.kernel_integration import KernelRoutedAgent
+from app.core.ai_systems import new_correlation_id
+from app.core.cognition_kernel import CognitionKernel, ExecutionType
+from app.core.kernel_integration import KernelRoutedAgent
 
 logger = logging.getLogger(__name__)
 
@@ -62,23 +60,19 @@ class CICheckerAgent(KernelRoutedAgent):
         Security: Commands are hardcoded and use only trusted tools from
         project dependencies. No external input is used in commands.
         """
-        from typing import cast
-
-        return cast(
-            dict[str, Any],
-            self._execute_through_kernel(
-                self._do_run_one,
-                action_name="run_ci_checks",
-                risk_level="medium",
-                metadata={"check_type": "pytest_and_ruff"},
-            ),
+        # Route through kernel (COGNITION KERNEL ROUTING)
+        return self._execute_through_kernel(
+            self._do_run_one,
+            operation_name="run_ci_checks",
+            risk_level="medium",
+            metadata={"check_type": "pytest_and_ruff"},
         )
 
     def _do_run_one(self) -> dict[str, Any]:
         """Internal implementation of CI check execution."""
-        corr = uuid.uuid4().hex
+        corr = new_correlation_id()
         ts = datetime.utcnow().isoformat()
-        report: dict[str, Any] = {"corr": corr, "timestamp": ts, "results": {}}
+        report = {"corr": corr, "timestamp": ts, "results": {}}
 
         # Resolve tool paths - validate they exist
         pytest_cmd = shutil.which("pytest")
@@ -93,7 +87,6 @@ class CICheckerAgent(KernelRoutedAgent):
                     capture_output=True,
                     text=True,
                     timeout=180,  # 3 minute timeout for CI checks
-                    check=False,
                 )
                 report["results"]["pytest"] = {
                     "rc": res.returncode,
@@ -118,7 +111,6 @@ class CICheckerAgent(KernelRoutedAgent):
                     capture_output=True,
                     text=True,
                     timeout=60,  # 1 minute timeout (ruff is fast)
-                    check=False,
                 )
                 report["results"]["ruff"] = {
                     "rc": res.returncode,

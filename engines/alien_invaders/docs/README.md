@@ -1,5 +1,26 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- alien-invaders
+- engines
+- documentation
+engine_type: aicpd
+implementation_status: in-progress
+language: python
+related_systems:
+- defense-simulation
+- scenario-engine
+- simulation-registry
+stakeholders:
+- architecture-team
+- simulation-team
+- defense-team
+---
+
 # Alien Invaders Contingency Plan Defense (AICPD) Engine
 
 ## Overview
@@ -86,20 +107,16 @@ Optional AI decision-making system with:
 from engines.alien_invaders import AlienInvadersEngine, SimulationConfig
 
 # Create engine with default configuration
-
 engine = AlienInvadersEngine()
 
 # Initialize
-
 engine.init()
 
 # Run for 5 years (60 months)
-
 for _ in range(60):
     engine.tick()
 
 # Export artifacts
-
 engine.export_artifacts()
 ```
 
@@ -109,13 +126,11 @@ engine.export_artifacts()
 from engines.alien_invaders import load_scenario_preset
 
 # Load aggressive invasion scenario
-
 config = load_scenario_preset("aggressive")
 engine = AlienInvadersEngine(config)
 ```
 
 Available presets:
-
 - `standard` - Balanced threat, 15% invasion probability
 - `aggressive` - High threat, immediate invasion
 - `peaceful` - Scientific interest, low hostility
@@ -124,26 +139,20 @@ Available presets:
 ### Running from Command Line
 
 ```bash
-
 # Run standard 5-year simulation
-
 python engines/alien_invaders/run_simulation.py
 
 # Run aggressive scenario for 10 years
-
 python engines/alien_invaders/run_simulation.py --scenario aggressive --duration 10
 
 # Custom output directory
-
 python engines/alien_invaders/run_simulation.py --output /path/to/artifacts
 ```
 
 ### Event Injection
 
 ```python
-
 # Inject alien attack event
-
 engine.inject_event(
     "alien_attack",
     {
@@ -154,7 +163,6 @@ engine.inject_event(
 )
 
 # Inject diplomatic success
-
 engine.inject_event(
     "diplomatic_success",
     {
@@ -167,13 +175,10 @@ engine.inject_event(
 ### State Observation
 
 ```python
-
 # Get complete state
-
 state = engine.observe()
 
 # Query specific domains
-
 countries = engine.observe("countries")
 aliens = engine.observe("aliens")
 global_metrics = engine.observe("global")
@@ -244,7 +249,6 @@ The engine generates comprehensive documentation:
 Location: `artifacts/monthly/report_YYYY_MM.json`
 
 Contains:
-
 - Event log for the month
 - Severity classification
 - Affected countries
@@ -255,7 +259,6 @@ Contains:
 Location: `artifacts/annual/report_YYYY.json`
 
 Contains:
-
 - Year summary statistics
 - Population changes
 - Casualty totals
@@ -267,7 +270,6 @@ Contains:
 Location: `artifacts/postmortem/simulation_postmortem.json`
 
 Contains:
-
 - Complete configuration dump
 - Simulation duration metrics
 - Final state analysis
@@ -277,7 +279,6 @@ Contains:
 - Outcome classification
 
 Outcome classifications:
-
 - `extinction` - >90% population loss
 - `occupation` - >80% alien control
 - `partial_control` - >50% alien control
@@ -291,7 +292,6 @@ Outcome classifications:
 Location: `artifacts/raw_data.json`
 
 Contains:
-
 - Complete event log with parameters
 - Validation history with violations
 - State snapshots (if enabled)
@@ -320,19 +320,15 @@ config.validation.random_seed = 42
 Replay from snapshot:
 
 ```python
-
 # Save snapshot
-
 snapshot = engine.state_snapshots[day_number]
 
 # Create new engine and restore
-
 new_engine = AlienInvadersEngine(config)
 new_engine.init()
 new_engine.state = snapshot
 
 # Continue from snapshot
-
 new_engine.tick()
 ```
 
@@ -345,12 +341,10 @@ from src.app.core.simulation_contingency_root import SimulationRegistry
 from engines.alien_invaders import AlienInvadersEngine
 
 # Create and register
-
 engine = AlienInvadersEngine()
 SimulationRegistry.register("alien_invaders", engine)
 
 # Retrieve later
-
 engine = SimulationRegistry.get("alien_invaders")
 ```
 
@@ -364,7 +358,6 @@ Typical performance on modern hardware:
 - Artifact generation: ~500ms
 
 Memory usage:
-
 - Engine: ~50MB
 - State: ~10MB
 - Snapshots: ~10MB per snapshot
@@ -376,9 +369,7 @@ Memory usage:
 ```python
 def _process_event(self, event: SimulationEvent):
     if event.event_type == "custom_event":
-
         # Custom processing logic
-
         pass
 ```
 
@@ -394,13 +385,12 @@ def _process_event(self, event: SimulationEvent):
 ```python
 def _validate_state(self) -> ValidationState:
     validation = super()._validate_state()
-
+    
     # Custom validation
-
     if self.state.custom_metric > threshold:
         validation.violations.append("Custom metric exceeded")
         validation.is_valid = False
-
+    
     return validation
 ```
 
@@ -409,17 +399,13 @@ def _validate_state(self) -> ValidationState:
 Run tests:
 
 ```bash
-
 # Unit tests
-
 pytest engines/alien_invaders/tests/test_engine.py
 
 # Integration tests
-
 pytest engines/alien_invaders/tests/test_integration.py
 
 # Full test suite
-
 pytest engines/alien_invaders/tests/
 ```
 
@@ -428,19 +414,16 @@ pytest engines/alien_invaders/tests/
 ### Common Issues
 
 **Simulation fails to initialize**
-
 - Check configuration values are within valid ranges
 - Ensure output directory is writable
 - Verify Python version ≥ 3.11
 
 **State validation failures**
-
 - Review validation violations in log
 - Check for conservation law violations
 - Disable strict validation for experimental runs
 
 **Performance issues**
-
 - Reduce `save_state_frequency` to save fewer snapshots
 - Disable raw data export if not needed
 - Increase `time_step_days` for larger steps

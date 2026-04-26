@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 TARL OS - Multi-Turn Conversational Stress Tests
 Advanced multi-turn attack scenarios simulating persistent adversaries

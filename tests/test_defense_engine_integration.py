@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Defense Engine Integration Tests
@@ -26,9 +24,7 @@ from src.app.core.interface_abstractions import (
     validate_subsystem_interface,
 )
 from src.app.core.system_registry import SubsystemPriority, SystemRegistry
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "engines" / "zombie_defense"))
-from defense_engine import DefenseEngine
+from src.app.defense_engine import DefenseEngine
 
 # Suppress logging during tests
 logging.getLogger().setLevel(logging.ERROR)
@@ -287,8 +283,7 @@ class TestDefenseEngineIntegration(unittest.TestCase):
 
         # Create minimal config
         self.config_file = Path(self.test_dir) / "test_config.toml"
-        self.config_file.write_text(
-            """
+        self.config_file.write_text("""
 version = "1.0.0"
 
 [bootstrap]
@@ -298,8 +293,7 @@ health_check_interval = 30
 enable_hot_reload = false
 
 [subsystems]
-        """
-        )
+        """)
 
     def tearDown(self):
         """Clean up test environment."""

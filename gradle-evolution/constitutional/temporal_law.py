@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Temporal Law Enforcement
 ========================
@@ -21,8 +19,13 @@ logger = logging.getLogger(__name__)
 
 
 def _utc_now_naive() -> datetime:
-    """Return naive UTC datetime for compatibility comparisons."""
+    """Return naive UTC datetime for compatibility with legacy naive timestamps."""
     return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class TemporalLaw:
@@ -47,7 +50,7 @@ class TemporalLaw:
     @staticmethod
     def _coerce_datetime(value: str | datetime | None) -> datetime:
         if isinstance(value, datetime):
-            return value.replace(tzinfo=None) if value.tzinfo else value
+            return value
         if value is None:
             return _utc_now_naive()
         return datetime.fromisoformat(value.replace("Z", "+00:00")).replace(
@@ -55,7 +58,8 @@ class TemporalLaw:
         )
 
     def is_active(self, at: datetime | None = None) -> bool:
-        now = at.replace(tzinfo=None) if isinstance(at, datetime) and at.tzinfo else (at or _utc_now_naive())
+        """Return whether law is active at a given moment (defaults to now)."""
+        now = at or _utc_now_naive()
         if now < self.effective_from:
             return False
         if self.effective_until and now > self.effective_until:
@@ -86,7 +90,6 @@ class TemporalLawRegistry:
 
     def get_active_laws(self, at: datetime | None = None) -> list[TemporalLaw]:
         now = at or _utc_now_naive()
-        now = now.replace(tzinfo=None) if now.tzinfo else now
         return [law for law in self.laws.values() if law.is_active(now)]
 
     def revoke_law(self, law_id: str) -> bool:
@@ -153,7 +156,7 @@ class TemporalLawEnforcer:
                 return self._local_enforcement(action, metadata)
 
             # Start enforcement workflow
-            workflow_id = f"enforce-{action}-{_utc_now_naive().timestamp()}"
+            workflow_id = f"enforce-{action}-{datetime.now(timezone.utc).timestamp()}"
 
             handle = await self.temporal_client.start_workflow(
                 "PolicyEnforcementWorkflow",
@@ -175,14 +178,14 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"Policy enforcement timeout ({timeout_seconds}s)",
-                "timestamp": _utc_now_naive().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
         except Exception as e:
             logger.error("Error in temporal enforcement: %s", e, exc_info=True)
             return {
                 "allowed": False,
                 "reason": f"Enforcement error: {str(e)}",
-                "timestamp": _utc_now_naive().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
     async def query_historical_decision(
@@ -236,7 +239,7 @@ class TemporalLawEnforcer:
             if not self.temporal_client:
                 raise RuntimeError("Temporal client not available")
 
-            workflow_id = f"review-{action}-{_utc_now_naive().timestamp()}"
+            workflow_id = f"review-{action}-{datetime.now(timezone.utc).timestamp()}"
 
             await self.temporal_client.start_workflow(
                 "PeriodicPolicyReview",
@@ -298,7 +301,7 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"Time-bounded enforcement error: {str(e)}",
-                "timestamp": _utc_now_naive().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
     def _local_enforcement(
@@ -321,14 +324,14 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"High risk level {risk_level} in local mode",
-                "timestamp": _utc_now_naive().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "fallback": True,
             }
 
         return {
             "allowed": True,
             "reason": "Allowed by local enforcement",
-            "timestamp": _utc_now_naive().isoformat(),
+            "timestamp": _utc_now_iso(),
             "fallback": True,
         }
 

@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 from __future__ import annotations
 
 import json
@@ -10,8 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AccessControlManager:
-    """
-    Access Control Manager (Sovereign Role-Based Authorization Engine).
+    """Simple role-based access control manager with persistent storage.
 
     - Users stored in `data/access_control.json` as {user: [roles]}
     - Default 'system' user has 'integrator' role to allow automated operations.

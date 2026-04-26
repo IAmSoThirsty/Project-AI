@@ -1,6 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-
 """
 Identity & Personhood Operational Extensions
 
@@ -14,7 +11,7 @@ This ensures identity operations are ethically defensible and temporally consist
 """
 
 import logging
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -792,3 +789,4 @@ __all__ = [
     # Continuity Manager
     "ContinuityManager",
 ]
+

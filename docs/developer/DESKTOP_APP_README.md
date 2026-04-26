@@ -1,5 +1,21 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: deployment-guide
+tags: [deployment, desktop-app, pyqt6, user-guide, application-overview, features, installation]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-app, leather-book-ui, command-override, memory-expansion, dashboard]
+stakeholders: [developers, end-users, desktop-users, deployment-team]
+audience: intermediate
+prerequisites: [python-3.11+, windows-or-linux, basic-desktop-app-usage]
+estimated_time: 20 minutes
+review_cycle: monthly
+deployment_target: desktop
+deployment_complexity: simple
+production_ready: true
+platform_support: [windows, linux]
+automation: [batch-scripts, powershell-scripts]
+---
 # Project-AI Desktop Application
 
 Welcome to **Project-AI**, an advanced AI dashboard with command override and memory expansion capabilities.
@@ -147,6 +163,8 @@ Project-AI is licensed under the MIT License. See `LICENSE` for details.
 - Command override actions are logged for audit purposes
 - See `SECURITY.md` for detailed security information
 
-______________________________________________________________________
+---
 
-**Version**: 1.0.0 **Last Updated**: November 28, 2025 **Status**: Production Ready ✓
+**Version**: 1.0.0  
+**Last Updated**: November 28, 2025  
+**Status**: Production Ready ✓

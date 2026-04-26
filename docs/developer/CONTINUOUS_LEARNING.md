@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, continuous-learning, ai-learning, knowledge-absorption, insight-generation]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [learning-engine, knowledge-base, fact-extraction, insight-generation]
+stakeholders: [developers, ai-researchers, knowledge-engineers]
+audience: intermediate
+prerequisites: [python-intermediate, ai-concepts, data-persistence, nlp-basics]
+estimated_time: 25 minutes
+review_cycle: monthly
+---
 # Continuous Learning Engine
 
 The Continuous Learning Engine lets the AI absorb every meaningful information input as soon as it comes online. Each call to `ContinuousLearningEngine.absorb_information` stores facts, suggests meaningful usage, and provides a neutral overview that includes the pros and cons whenever controversy markers are present.
@@ -20,7 +31,6 @@ The Continuous Learning Engine lets the AI absorb every meaningful information i
    ```
 
 1. Call `engine.absorb_information(topic, content, metadata=...)` after absorbing a new piece of information.
-
 1. The returned `LearningReport` contains all parts of the report that can be logged, surfaced in the UI, or handed to further reasoning systems.
 
 ## Persona Integration

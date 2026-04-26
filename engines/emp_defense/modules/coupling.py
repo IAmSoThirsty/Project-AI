@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Cross-domain coupling engine for sectorized world state.
 
@@ -84,8 +82,8 @@ class CrossDomainCoupling:
 
         # Pumping stations depend heavily on grid
         state.water.pumping_stations_operational_pct = min(
-            1.0, grid_factor * 1.1
-        )  # Some backup, but not much
+            1.0, grid_factor * 1.1  # Some backup, but not much
+        )
 
         # Treatment capacity degrades without power
         if grid_factor < 0.30:  # Below 30% grid
@@ -131,8 +129,8 @@ class CrossDomainCoupling:
 
         # Electronic records inaccessible without power
         state.health.electronic_records_accessible_pct = max(
-            0.1, grid_factor
-        )  # Some paper backup
+            0.1, grid_factor  # Some paper backup
+        )
 
         # Cold chain fails (vaccines, insulin)
         if grid_factor < 0.30:
@@ -148,8 +146,8 @@ class CrossDomainCoupling:
 
         # Courts can't function without infrastructure
         state.governance.courts_operational_pct = max(
-            0.3, grid_factor * 1.2
-        )  # Some manual operation possible
+            0.3, grid_factor * 1.2  # Some manual operation possible
+        )
 
         # Regional fragmentation increases when coordination fails
         if grid_factor < 0.40:

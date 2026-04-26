@@ -1,8 +1,19 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 God Tier Phase 2: Fix Assert Statements in Production Code
+
+⚠️ ADMIN-ONLY SCRIPT ⚠️
+GOVERNANCE: ADMIN-BYPASS
+Classification: Dev maintenance tool
+Risk: Medium (modifies production code error handling)
+Justification: One-time code quality improvement; developer-supervised
+
+WARNING: This script bypasses governance controls.
+         - Restricted to developers
+         - Modifies error handling across production code
+         - Manual code review required after execution
+         - Test suite must pass after changes
+
 Replace assert with proper error handling (raise ValueError, TypeError, etc.)
 """
 

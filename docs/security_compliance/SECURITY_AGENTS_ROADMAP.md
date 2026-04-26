@@ -1,12 +1,84 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Security Agents Operational Roadmap"
+id: "security-agents-roadmap"
+type: "roadmap"
+version: "1.3.0"
+created_date: "2026-01-20"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Operations Team"
+  email: "secops@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:planning"
+  - "type:roadmap"
+  - "component:security-agents"
+  - "component:constitutional-ai"
+  - "component:monitoring"
+  - "audience:security-engineer"
+  - "audience:product-manager"
+  - "priority:p0-critical"
+  - "status:phase-1-complete"
+technologies:
+  - "Python"
+  - "Security Metrics Collection"
+  - "Canary Deployment"
+  - "ConstitutionalGuardrailAgent"
+  - "Dashboards and Alerting"
+difficulty: "advanced"
+estimated_time: "PT240M"
+prerequisites:
+  - "Security agent architecture understanding"
+  - "Operational deployment experience"
+  - "Monitoring and alerting setup"
+summary: "Operational roadmap for security agents deployment covering validation & monitoring (Phase 1 ✅), constitutional layer rollout (Phase 2 🚀), advanced features (Phase 3), and production hardening (Phase 4)."
+scope: "4-phase deployment plan: smoke tests, canary deployment, Triumvirate veto paths, security metrics, constitutional guardrails, least privilege, sandboxing, human-in-the-loop gates"
+classification: "internal"
+threat_level: "medium"
+milestones:
+  - "Phase 1: Validation & Monitoring (Weeks 1-2) ✅ COMPLETE"
+  - "Phase 2: Constitutional Layer Rollout (Weeks 3-4) 🚀 NEXT"
+  - "Phase 3: Advanced Features (Weeks 5-6)"
+  - "Phase 4: Production Hardening (Weeks 7-8)"
+validates:
+  - "7 agents end-to-end flows"
+  - "Canary deployment 1-100%"
+  - "Policy enforcement verification"
+  - "Data integrity checks"
+  - "Test reproducibility"
+compliance:
+  - "Operational Excellence Best Practices"
+  - "Canary Deployment Standards"
+  - "Security Monitoring Framework"
+stakeholders:
+  - security-team   - ai-safety-team   - development-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Operational Roadmap"
+related_docs:
+  - "security-agents-guide"
+  - "security-agents-integration-summary"
+  - "cerberus-security-structure"
+review_status:
+  reviewed: true
+  reviewers: ["secops-team", "product-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "product-managers"
+  - "devops-engineers"
+  - "technical-leads"
+---
+
 # Security Agents Operational Roadmap
 
 ## Current Status: v1.3.0 - Foundation Complete
 
 All core agents, workflows, and infrastructure are production-ready with comprehensive testing, monitoring, and hardening controls.
 
-______________________________________________________________________
+---
 
 ## Phase 1: Validation & Monitoring (Weeks 1-2) ✅ COMPLETE
 
@@ -43,7 +115,7 @@ ______________________________________________________________________
 - [x] Rate limits and quotas (protect endpoints from amplification)
 - [x] Explainability logging (audit trail for all decisions)
 
-______________________________________________________________________
+---
 
 ## Phase 2: Constitutional Layer Rollout (Weeks 3-4) 🚀 NEXT
 
@@ -95,7 +167,7 @@ Rollback Triggers:
 - p95 latency > 5 seconds
 - User complaints > baseline
 
-______________________________________________________________________
+---
 
 ## Phase 3: Code Adversary Integration (Weeks 5-6)
 
@@ -112,25 +184,17 @@ Tasks:
 - [ ] Create GitHub Actions workflow
 
   ```yaml
-
   - name: Security Scan
-
     run: python scripts/run_code_adversary_scan.py
-
   - name: Upload SARIF
-
     uses: github/codeql-action/upload-sarif@v2
   ```
 
 - [ ] Configure scan scope:
-
   - Security-critical directories (auth/, agents/, orchestration/)
   - New code in PRs (incremental scanning)
-
 - [ ] Set up SARIF report pipeline → GitHub Security tab
-
 - [ ] Define blocking policies:
-
   - Critical vulnerabilities → block merge
   - High vulnerabilities → require review
 
@@ -152,7 +216,7 @@ Tasks:
   - Patch acceptance rate
 - [ ] Iterate on patch quality based on feedback
 
-______________________________________________________________________
+---
 
 ## Phase 4: Red Team Campaign Automation (Weeks 7-8)
 
@@ -199,7 +263,7 @@ Tasks:
   - Add multi-stage attack chains
   - Integrate community scenarios from ARTKIT
 
-______________________________________________________________________
+---
 
 ## Phase 5: LLM Endpoint Optimization (Weeks 9-10)
 
@@ -250,7 +314,7 @@ Tasks:
   - Target < 5s for LongContext
   - Target < 200ms for Constitutional review
 
-______________________________________________________________________
+---
 
 ## Phase 6: Dashboard & Observability (Weeks 11-12)
 
@@ -298,7 +362,7 @@ Tasks:
   - Verify ticket creation
   - Verify escalation flow
 
-______________________________________________________________________
+---
 
 ## Phase 7: Continuous Improvement (Ongoing)
 
@@ -359,41 +423,41 @@ Maintain and improve security agent ecosystem based on production telemetry.
   - Incident response
   - Best practices
 
-______________________________________________________________________
+---
 
 ## Risk Mitigation Strategies
 
 ### Technical Risks
 
-| Risk                            | Mitigation                                                 |
-| ------------------------------- | ---------------------------------------------------------- |
-| Model endpoint failures         | Multi-region deployment, fallback chains, circuit breakers |
-| Adversarial amplification loops | Rate limits, quotas, cooldown periods                      |
-| False positive fatigue          | Continuous tuning, A/B testing, user feedback              |
-| Latency degradation             | Caching, batch processing, connection pooling              |
-| Dataset poisoning               | Checksums, versioning, integrity verification              |
+| Risk | Mitigation |
+|------|------------|
+| Model endpoint failures | Multi-region deployment, fallback chains, circuit breakers |
+| Adversarial amplification loops | Rate limits, quotas, cooldown periods |
+| False positive fatigue | Continuous tuning, A/B testing, user feedback |
+| Latency degradation | Caching, batch processing, connection pooling |
+| Dataset poisoning | Checksums, versioning, integrity verification |
 
 ### Operational Risks
 
-| Risk                     | Mitigation                                         |
-| ------------------------ | -------------------------------------------------- |
-| Alert fatigue            | Severity tuning, cooldown periods, aggregation     |
+| Risk | Mitigation |
+|------|------------|
+| Alert fatigue | Severity tuning, cooldown periods, aggregation |
 | Incident response delays | Automated workflows, escalation policies, runbooks |
-| Knowledge gaps           | Documentation, training, shadowing                 |
-| Configuration drift      | Infrastructure as code, version control, audits    |
-| Compliance violations    | Regular audits, logging, approval gates            |
+| Knowledge gaps | Documentation, training, shadowing |
+| Configuration drift | Infrastructure as code, version control, audits |
+| Compliance violations | Regular audits, logging, approval gates |
 
 ### Business Risks
 
-| Risk                   | Mitigation                                      |
-| ---------------------- | ----------------------------------------------- |
-| User experience impact | Canary deployments, A/B testing, user feedback  |
-| Cost overruns          | Budget monitoring, cost optimization, quotas    |
-| Vendor lock-in         | Multi-provider strategy, open standards         |
-| Reputation damage      | Incident response plan, communication plan      |
-| Resource contention    | Capacity planning, auto-scaling, prioritization |
+| Risk | Mitigation |
+|------|------------|
+| User experience impact | Canary deployments, A/B testing, user feedback |
+| Cost overruns | Budget monitoring, cost optimization, quotas |
+| Vendor lock-in | Multi-provider strategy, open standards |
+| Reputation damage | Incident response plan, communication plan |
+| Resource contention | Capacity planning, auto-scaling, prioritization |
 
-______________________________________________________________________
+---
 
 ## Success Metrics
 
@@ -426,7 +490,7 @@ ______________________________________________________________________
 - [ ] Continuous innovation (new agents, techniques, datasets)
 - [ ] Community contributions (open-source agents, datasets, tools)
 
-______________________________________________________________________
+---
 
 ## Resource Requirements
 
@@ -451,7 +515,7 @@ ______________________________________________________________________
 - **Tools & Services**: $50K (PagerDuty, monitoring, etc.)
 - **Training & Development**: $50K (conferences, courses, certifications)
 
-______________________________________________________________________
+---
 
 ## Appendices
 
@@ -478,6 +542,9 @@ ______________________________________________________________________
 - Incident Commander: <incident-commander@project-ai.internal>
 - Ethics Review: <ethics-team@project-ai.internal>
 
-______________________________________________________________________
+---
 
-**Document Version**: 1.0 **Last Updated**: 2026-01-21 **Next Review**: 2026-02-21 **Owner**: Security Agents Team
+**Document Version**: 1.0  
+**Last Updated**: 2026-01-21  
+**Next Review**: 2026-02-21  
+**Owner**: Security Agents Team

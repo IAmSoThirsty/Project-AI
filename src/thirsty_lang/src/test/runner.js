@@ -1,5 +1,3 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 /**
  * Test Runner for Thirsty-lang
  */
@@ -63,10 +61,10 @@ runner.test('Pour statement with literal', () => {
   const oldLog = console.log;
   let output = '';
   console.log = (msg) => { output = msg; };
-
+  
   interpreter.execute('pour "Hello, Thirsty World!"');
   console.log = oldLog;
-
+  
   runner.assertEqual(output, 'Hello, Thirsty World!', 'Should output literal string');
 });
 
@@ -75,10 +73,10 @@ runner.test('Pour statement with variable', () => {
   const oldLog = console.log;
   let output = '';
   console.log = (msg) => { output = msg; };
-
+  
   interpreter.execute('drink message = "Hydrate!"\npour message');
   console.log = oldLog;
-
+  
   runner.assertEqual(output, 'Hydrate!', 'Should output variable value');
 });
 
@@ -96,8 +94,4 @@ runner.test('Comments are ignored', () => {
   runner.assertEqual(interpreter.variables.water, 'clean', 'Comments should be ignored');
 });
 
-if (require.main === module) {
-  runner.run();
-}
-
-module.exports = runner;
+runner.run();

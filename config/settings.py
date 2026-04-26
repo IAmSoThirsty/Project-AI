@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Configuration management for Project AI.
 """
@@ -35,7 +33,6 @@ class Config:
     # Paths
     BASE_DIR: Path = Path(__file__).resolve().parent.parent
     DATA_DIR: Path = BASE_DIR / "data"
-    DATASETS_DIR: Path = DATA_DIR / "datasets"
     LOGS_DIR: Path = BASE_DIR / "logs"
 
     @classmethod
@@ -55,5 +52,4 @@ class Config:
 
 # Ensure directories exist
 Config.DATA_DIR.mkdir(exist_ok=True)
-Config.DATASETS_DIR.mkdir(exist_ok=True)
 Config.LOGS_DIR.mkdir(exist_ok=True)

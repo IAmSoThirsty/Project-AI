@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 Spiking Neural Network (SNN) Integration for Project-AI
 

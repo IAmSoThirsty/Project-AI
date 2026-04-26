@@ -1,0 +1,874 @@
+{
+  "total_findings": 111,
+  "categories": {
+    "ai_bypass": 19,
+    "legacy_sha_usage": 43,
+    "script_unclassified": 48,
+    "temporal_ungoverned": 1
+  },
+  "findings": {
+    "ai_bypass": [
+      {
+        "file": "src/app/agents/codex_deus_maximus.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          188,
+          197
+        ]
+      },
+      {
+        "file": "src/app/core/cloud_sync.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          159
+        ]
+      },
+      {
+        "file": "src/app/core/config.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          37
+        ]
+      },
+      {
+        "file": "src/app/core/image_generator.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          138,
+          292
+        ]
+      },
+      {
+        "file": "src/app/core/intelligence_engine.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          425,
+          431,
+          479
+        ]
+      },
+      {
+        "file": "src/app/core/learning_paths.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          17,
+          23,
+          61
+        ]
+      },
+      {
+        "file": "src/app/core/mcp_server.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          356
+        ]
+      },
+      {
+        "file": "src/app/core/polyglot_execution.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          10,
+          45,
+          46,
+          55,
+          77,
+          319,
+          733
+        ]
+      },
+      {
+        "file": "src/app/core/rag_system.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          6,
+          93,
+          110,
+          119,
+          120,
+          122,
+          400,
+          409,
+          472,
+          480,
+          488,
+          496,
+          554
+        ]
+      },
+      {
+        "file": "src/app/core/ai/__init__.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          6,
+          11
+        ]
+      },
+      {
+        "file": "src/app/gui/image_generation.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          169
+        ]
+      },
+      {
+        "file": "src/app/inspection/integrity_checker.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          467
+        ]
+      },
+      {
+        "file": "src/app/interfaces/cli/main.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          34
+        ]
+      },
+      {
+        "file": "src/app/reporting/sarif_generator.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          434
+        ]
+      },
+      {
+        "file": "src/cognition/adapters/model_adapter.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          69,
+          101,
+          103
+        ]
+      },
+      {
+        "file": "scripts/launch_mcp_server.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          90
+        ]
+      },
+      {
+        "file": "scripts/register_simple.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          25
+        ]
+      },
+      {
+        "file": "scripts/verify/verify_constitution.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          66,
+          91,
+          145,
+          177,
+          201
+        ]
+      },
+      {
+        "file": "tools/secret_scan.py",
+        "category": "ai_bypass",
+        "message": "Direct AI/provider usage outside approved orchestrator/provider files",
+        "line_hits": [
+          5
+        ]
+      }
+    ],
+    "legacy_sha_usage": [
+      {
+        "file": "src/app/agents/knowledge_curator.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          73
+        ]
+      },
+      {
+        "file": "src/app/agents/tarl_protector.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          294
+        ]
+      },
+      {
+        "file": "src/app/agents/firewalls/thirsty_honeypot_swarm_defense.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          254
+        ]
+      },
+      {
+        "file": "src/app/audit/tamperproof_log.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          83,
+          123
+        ]
+      },
+      {
+        "file": "src/app/browser/encrypted_navigation.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          57,
+          97
+        ]
+      },
+      {
+        "file": "src/app/browser/encrypted_search.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          58
+        ]
+      },
+      {
+        "file": "src/app/core/ai_systems.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          28,
+          53,
+          500,
+          899,
+          900,
+          957
+        ]
+      },
+      {
+        "file": "src/app/core/cerberus_hydra.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          478
+        ]
+      },
+      {
+        "file": "src/app/core/cloud_sync.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          73
+        ]
+      },
+      {
+        "file": "src/app/core/command_override.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          186
+        ]
+      },
+      {
+        "file": "src/app/core/continuous_monitoring_system.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          174,
+          213
+        ]
+      },
+      {
+        "file": "src/app/core/data_persistence.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          649
+        ]
+      },
+      {
+        "file": "src/app/core/global_scenario_engine.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          73
+        ]
+      },
+      {
+        "file": "src/app/core/health_monitoring_continuity.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          355
+        ]
+      },
+      {
+        "file": "src/app/core/honeypot_detector.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          355
+        ]
+      },
+      {
+        "file": "src/app/core/hydra_50_engine.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          345
+        ]
+      },
+      {
+        "file": "src/app/core/hydra_50_security.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          501,
+          526
+        ]
+      },
+      {
+        "file": "src/app/core/hydra_50_telemetry.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          217
+        ]
+      },
+      {
+        "file": "src/app/core/identity.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          291
+        ]
+      },
+      {
+        "file": "src/app/core/polyglot_execution.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          864
+        ]
+      },
+      {
+        "file": "src/app/core/rag_system.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          184
+        ]
+      },
+      {
+        "file": "src/app/core/secure_comms.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          262
+        ]
+      },
+      {
+        "file": "src/app/core/security_enforcer.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          272
+        ]
+      },
+      {
+        "file": "src/app/core/visual_cue_models.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          184
+        ]
+      },
+      {
+        "file": "src/app/core/voice_models.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          171,
+          261,
+          370
+        ]
+      },
+      {
+        "file": "src/app/core/memory_optimization/compression_engine.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          84,
+          216
+        ]
+      },
+      {
+        "file": "src/app/core/memory_optimization/deduplication_engine.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          101,
+          201
+        ]
+      },
+      {
+        "file": "src/app/core/memory_optimization/tiered_storage.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          425
+        ]
+      },
+      {
+        "file": "src/app/deployment/federated_cells.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          276
+        ]
+      },
+      {
+        "file": "src/app/governance/acceptance_ledger.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          146,
+          333
+        ]
+      },
+      {
+        "file": "src/app/governance/audit_log.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          96
+        ]
+      },
+      {
+        "file": "src/app/governance/jurisdiction_loader.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          57
+        ]
+      },
+      {
+        "file": "src/app/privacy/anti_malware.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          78
+        ]
+      },
+      {
+        "file": "src/app/security/ai_security_framework.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          1168,
+          1194
+        ]
+      },
+      {
+        "file": "src/app/security/data_validation.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          86,
+          135,
+          180,
+          412,
+          432
+        ]
+      },
+      {
+        "file": "src/app/security/advanced/dos_trap.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          219,
+          224
+        ]
+      },
+      {
+        "file": "src/app/security/advanced/hardware_root_of_trust.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          96,
+          134,
+          184,
+          205,
+          283,
+          315,
+          378,
+          433,
+          496
+        ]
+      },
+      {
+        "file": "src/app/security/advanced/mfa_auth.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          275,
+          443
+        ]
+      },
+      {
+        "file": "src/app/security/advanced/privacy_ledger.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          181,
+          185,
+          274,
+          374
+        ]
+      },
+      {
+        "file": "src/app/temporal/activities.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          79,
+          112
+        ]
+      },
+      {
+        "file": "src/features/sovereign_messaging.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          431,
+          494
+        ]
+      },
+      {
+        "file": "scripts/redteam_workflow.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          90
+        ]
+      },
+      {
+        "file": "tools/merge_fourlaws_artifacts.py",
+        "category": "legacy_sha_usage",
+        "message": "SHA usage detected; verify this is not legacy auth/hash migration debt",
+        "line_hits": [
+          59
+        ]
+      }
+    ],
+    "temporal_ungoverned": [
+      {
+        "file": "src/app/temporal/activities.py",
+        "category": "temporal_ungoverned",
+        "message": "Temporal definition found without governance marker/integration call",
+        "line_hits": []
+      }
+    ],
+    "script_unclassified": [
+      {
+        "file": "scripts/backup_audit.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/benchmark.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/deepseek_v32_cli.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo_cybersecurity_knowledge.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo_security_features.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/fix_assert_statements.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/fix_logging_performance.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/fix_logging_performance_surgical.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/fix_logging_phase2.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/fix_syntax_errors.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/generate_cerberus_languages.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/generate_cli_docs.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/healthcheck.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/hydra50_deploy.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/install-shortcuts.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/launch_mcp_server.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/redteam_workflow.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/register_legion_moltbook.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/register_simple.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/run_asl_assessment.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/run_comprehensive_expansion.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/run_novel_scenarios.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/run_red_hat_expert_simulations.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/run_red_team_stress_tests.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/run_robustness_benchmarks.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/run_security_worker.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/sarif_exporter.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/setup_temporal.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/update_osint_bible.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/validate_release.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/verify_governance.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/__init__.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_advanced_boot.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_defense_engine.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_enhanced_scenario_engine.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_enhanced_systems.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_global_scenario_engine.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_god_tier.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_god_tier_expansion.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_robotic_mainframe.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_tarl_productivity.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/demo/demo_wired_systems.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/verify/final_phase4_validation.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/verify/god_tier_verification.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/verify/validate_thirstys_security.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "scripts/verify/verify_constitution.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "src/app/cli/hydra_50_cli.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      },
+      {
+        "file": "src/app/cli/__init__.py",
+        "category": "script_unclassified",
+        "message": "Script is neither governed nor explicitly marked bypass/example",
+        "line_hits": []
+      }
+    ]
+  }
+}

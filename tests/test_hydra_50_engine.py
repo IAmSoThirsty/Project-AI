@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 Comprehensive Tests for HYDRA-50 Contingency Plan Engine
@@ -8,11 +6,9 @@ Tests all 50 scenarios, 5 engine modules, event sourcing, time-travel,
 and integration points. Target: 80%+ coverage.
 """
 
-import sys as _sys
 import tempfile
 from datetime import datetime, timedelta
 from pathlib import Path
-from pathlib import Path as _Path
 
 import pytest
 
@@ -29,9 +25,7 @@ from app.core.hydra_50_engine import (
     SlowBurnPandemicScenario,
     SovereignDebtCascadeScenario,
 )
-
-_sys.path.insert(0, str(_Path(__file__).parent.parent / "engines" / "hydra_50"))
-from hydra_50_integration import (
+from app.core.hydra_50_integration import (
     CommandCenterIntegration,
     GlobalScenarioEngineIntegration,
     GUIExportHooks,

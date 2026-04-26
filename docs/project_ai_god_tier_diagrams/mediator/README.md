@@ -1,5 +1,19 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, mediator-pattern, behavioral-pattern, agent-collaboration, council-hub]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [council-hub, agent-registry, communication-bus, inter-agent-communication]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: class
+format: code
+pattern_category: behavioral
+---
+
 # Mediator Pattern in Project-AI
 
 ## Overview
@@ -9,9 +23,7 @@ Mediator Pattern centralizes complex communications and control logic between ob
 ## CouncilHub Mediator
 
 ```python
-
 # domain/mediators/council_hub.py
-
 import logging
 from typing import Dict, List
 from uuid import UUID
@@ -20,17 +32,17 @@ logger = logging.getLogger(__name__)
 
 class CouncilHub:
     """Mediator for agent council collaboration."""
-
+    
     def __init__(self):
         self.agents: Dict[UUID, Any] = {}
         self.active_councils: Dict[str, Dict] = {}
         logger.info("Initialized CouncilHub mediator")
-
+    
     def register_agent(self, agent_id: UUID, agent: Any) -> None:
         """Register agent with hub."""
         self.agents[agent_id] = agent
         logger.info(f"Registered agent {agent_id} with CouncilHub")
-
+    
     def convene_council(
         self,
         council_name: str,
@@ -39,31 +51,30 @@ class CouncilHub:
     ) -> str:
         """Convene council and coordinate discussion."""
         council_id = f"{council_name}_{len(self.active_councils)}"
-
+        
         self.active_councils[council_id] = {
             "name": council_name,
             "agents": agent_ids,
             "topic": topic,
             "votes": {}
         }
-
+        
         logger.info(f"Convened council {council_id} with {len(agent_ids)} agents")
         return council_id
-
+    
     def coordinate_vote(self, council_id: str) -> Dict:
         """Coordinate voting among council members."""
         council = self.active_councils.get(council_id)
         if not council:
             raise ValueError(f"Council {council_id} not found")
-
+        
         # Collect votes from agents
-
         for agent_id in council["agents"]:
             agent = self.agents.get(agent_id)
             if agent:
                 vote = agent.cast_vote(council["topic"])
                 council["votes"][str(agent_id)] = vote
-
+        
         logger.info(f"Coordinated vote for council {council_id}")
         return council["votes"]
 ```
@@ -71,4 +82,4 @@ class CouncilHub:
 ## Related Documentation
 
 - **[Agent Execution](../../workflow/temporal_workflows.md)** - Agent orchestration
-- **[Factory Pattern](../factory/README.md)** - Agent creation
+- **[[../factory/README.md|Factory Pattern]]** - Agent creation

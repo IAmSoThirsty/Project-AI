@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, troubleshooting, debugging, problem-solving, common-issues, support]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [python-environment, virtualenv, dependencies, desktop-app, web-frontend]
+stakeholders: [developers, support-team, users, troubleshooters]
+audience: intermediate
+prerequisites: [python-basics, virtualenv-knowledge, debugging-mindset]
+estimated_time: 20 minutes
+review_cycle: monthly
+---
 # Troubleshooting Checklist
 
 ## Environment sanity

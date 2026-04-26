@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 from __future__ import annotations
 
 from typing import Any
@@ -8,9 +6,6 @@ import pytest
 
 from app.core.ai_systems import FourLaws
 from tests.utils.scenario_recorder import ScenarioRecorder
-
-# WEEKLY STRESS TEST - Run once per week, not daily
-pytestmark = pytest.mark.weekly
 
 
 def _deterministic_cases() -> list[tuple[str, str, dict[str, Any], bool, str]]:

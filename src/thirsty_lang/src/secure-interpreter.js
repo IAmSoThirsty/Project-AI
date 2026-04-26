@@ -1,5 +1,5 @@
-//                                            [2026-03-01 13:20]
-//                                           Productivity: Active
+
+
 /**
  * Thirsty-lang Secure Interpreter
  * Enhanced interpreter with defensive programming capabilities
@@ -47,7 +47,7 @@ class SecureThirstyInterpreter {
     }
 
     // Execute without security
-    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(function (line) { return line && !line.startsWith('//') });
+    const lines = code.split('\n').map(function (line) { return line.trim() }).filter(function(line) { return line && !line.startsWith('//') });
 
     for (var i = 0; i < lines.length; i++) {
       this.executeLine(lines[i]);
@@ -60,7 +60,7 @@ class SecureThirstyInterpreter {
    * Execute secured code
    */
   executeSecured(code) {
-    const lines = code.split('\n').map(function (line) { return line.trim(); }).filter(function (line) { return line && !line.startsWith('//'); });
+    const lines = code.split('\n').map(function(line) { return line.trim(); }).filter(function(line) { return line && !line.startsWith('//'); });
 
     for (var i = 0; i < lines.length; i++) {
       this.executeLine(lines[i]);
@@ -144,7 +144,7 @@ class SecureThirstyInterpreter {
     // Extract morph configuration
     const match = line.match(/morph\s+on:\s*\[([^\]]+)\]/);
     if (match) {
-      const threats = match[1].split(',').map(function (t) { return t.trim().replace(/['"]/g, ''); });
+      const threats = match[1].split(',').map(function(t) { return t.trim().replace(/['"]/g, ''); });
       this.morphEnabled = true;
       console.log('[SECURITY] Morphing enabled for: ' + threats.join(', '));
     } else {
@@ -299,7 +299,7 @@ class SecureThirstyInterpreter {
 
     // String concatenation with +
     if (expr.includes(' + ')) {
-      const parts = expr.split(' + ').map(function (p) { return this.evaluateExpression(p.trim()); }.bind(this));
+      const parts = expr.split(' + ').map(function(p) { return this.evaluateExpression(p.trim()); }.bind(this));
       return parts.join('');
     }
 

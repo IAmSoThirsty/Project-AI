@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, dashboard-integration, pyqt6, ui-integration, persona-panel, async-management]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [dashboard, persona-panel, error-handler, async-manager, ui-components]
+stakeholders: [developers, ui-developers, integration-engineers]
+audience: intermediate
+prerequisites: [python-intermediate, pyqt6-fundamentals, async-programming, signal-slots]
+estimated_time: 35 minutes
+review_cycle: monthly
+---
 # Dashboard Integration Guide
 
 ## Quick Start: Adding AI Persona Panel to Dashboard
@@ -24,23 +35,18 @@ from app.gui.dashboard_utils import (
 In your `DashboardWindow.__init__()` method:
 
 ```python
-
 # Create AI Persona instance
-
 self.ai_persona = AIPersona(user_name="Jeremy")
 
 # Create Persona Panel
-
 self.persona_panel = PersonaPanel()
 self.persona_panel.set_persona(self.ai_persona)
 
 # Connect signals for real-time updates
-
 self.persona_panel.personality_changed.connect(self.on_personality_changed)
 self.persona_panel.proactive_settings_changed.connect(self.on_proactive_changed)
 
 # Add as a tab to your dashboard
-
 self.tabs.addTab(self.persona_panel, "🤖 AI Persona")
 ```
 
@@ -52,9 +58,7 @@ Add these methods to your dashboard:
 def on_personality_changed(self, personality_traits):
     """Handle personality trait changes."""
     logger.info(f"Personality updated: {personality_traits}")
-
     # Save to user preferences
-
     self.user_manager.save_user_preferences({
         'persona_traits': personality_traits
     })
@@ -62,12 +66,10 @@ def on_personality_changed(self, personality_traits):
 def on_proactive_changed(self, settings):
     """Handle proactive settings changes."""
     logger.info(f"Proactive settings updated: {settings}")
-
     # Update any running timers or processes
-
 ```
 
-______________________________________________________________________
+---
 
 ## Using Dashboard Utilities
 
@@ -94,13 +96,10 @@ def delete_user(self, user_id):
 Run long operations without blocking UI:
 
 ```python
-
 # In __init__
-
 self.async_manager = DashboardAsyncManager()
 
 # In method
-
 def load_data(self):
     self.async_manager.run_async(
         task_id="load_data",
@@ -110,9 +109,7 @@ def load_data(self):
     )
 
 def load_heavy_data(self):
-
     # Long operation here
-
     return results
 
 def on_data_loaded(self, result):
@@ -126,20 +123,17 @@ Validate user input:
 ```python
 def save_settings(self):
     username = self.username_field.text()
-
+    
     # Validate username (3-50 chars, alphanumeric+dash/underscore)
-
     valid, msg = DashboardValidationManager.validate_username(username)
     if not valid:
         DashboardErrorHandler.handle_warning(msg, "Username Validation")
         return False
-
+    
     # Sanitize input
-
     username = DashboardValidationManager.sanitize_string(username)
-
+    
     # Save safely
-
     self.save_user_settings(username)
 ```
 
@@ -148,28 +142,23 @@ def save_settings(self):
 Track slow operations:
 
 ```python
-
 # Create logger
-
 logger = DashboardLogger("Dashboard")
 
 # Log operations
-
 def expensive_calculation(self):
     import time
     start = time.time()
-
+    
     result = self.calculate_something()
-
+    
     duration_ms = (time.time() - start) * 1000
     logger.log_performance("Expensive Calculation", duration_ms)
-
     # Alerts if duration > 1000ms
-
+    
     return result
 
 # Log user actions
-
 def user_did_something(self, user, action):
     logger.log_user_action(
         user=user,
@@ -178,7 +167,7 @@ def user_did_something(self, user, action):
     )
 ```
 
-______________________________________________________________________
+---
 
 ## Four Laws Testing in UI
 
@@ -192,7 +181,7 @@ The `PersonaPanel` provides UI for testing actions against the Four Laws:
 1. **Click "Validate Action"**
 1. **See result**: ❌ BLOCKED - "Violates First Law: Action may harm human being"
 
-______________________________________________________________________
+---
 
 ## Personality Trait Management
 
@@ -209,7 +198,7 @@ Users can adjust traits with sliders:
 
 Changes are reflected in real-time in the Statistics tab.
 
-______________________________________________________________________
+---
 
 ## Proactive Settings Configuration
 
@@ -220,7 +209,7 @@ Users can control how often AI initiates conversations:
 - **Minimum idle time**: How long to wait before checking in (60-3600 seconds)
 - **Check-in probability**: 0-100% chance of initiating
 
-______________________________________________________________________
+---
 
 ## Testing
 
@@ -233,7 +222,7 @@ python -m pytest tests/test_ai_systems.py -v
 
 Expected output: **13 tests passed (100%)**
 
-______________________________________________________________________
+---
 
 ## Architecture
 
@@ -270,7 +259,7 @@ Operation → Try-Catch → DashboardErrorHandler
                         Log error + Optional dialog
 ```
 
-______________________________________________________________________
+---
 
 ## Common Tasks
 
@@ -279,14 +268,11 @@ ______________________________________________________________________
 ```python
 def load_persona_settings(self):
     try:
-
         # Load from user preferences
-
         preferences = self.user_manager.get_user_preferences()
         traits = preferences.get('persona_traits', {})
-
+        
         # Set in UI
-
         for trait, value in traits.items():
             if trait in self.persona_panel.trait_sliders:
                 slider = self.persona_panel.trait_sliders[trait]
@@ -303,11 +289,9 @@ def load_persona_settings(self):
 def start_proactive_messaging(self):
     settings = self.persona_panel.get_settings()
     proactive = settings.get('proactive', {})
-
+    
     if proactive.get('enabled'):
-
         # Start timer for proactive checks
-
         self.proactive_timer = QTimer()
         min_idle = proactive.get('min_idle_time', 300)
         self.proactive_timer.setInterval(min_idle * 1000)
@@ -320,15 +304,13 @@ def start_proactive_messaging(self):
 ```python
 def validate_all_inputs(self) -> bool:
     """Validate all user inputs on form submission."""
-
     # Validate each field
-
     validators = [
         (self.username_field.text(), "username", DashboardValidationManager.validate_username),
         (self.email_field.text(), "email", DashboardValidationManager.validate_email),
         (self.password_field.text(), "password", DashboardValidationManager.validate_password),
     ]
-
+    
     for value, name, validator in validators:
         valid, msg = validator(value)
         if not valid:
@@ -338,11 +320,11 @@ def validate_all_inputs(self) -> bool:
                 parent=self
             )
             return False
-
+    
     return True
 ```
 
-______________________________________________________________________
+---
 
 ## Performance Considerations
 
@@ -351,7 +333,7 @@ ______________________________________________________________________
 1. **Input Validation**: Validate early to prevent invalid data reaching core systems
 1. **Error Handling**: Comprehensive logging helps with debugging performance issues
 
-______________________________________________________________________
+---
 
 ## Next Steps
 

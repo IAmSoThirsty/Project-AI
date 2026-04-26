@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Security Engine
 ===============
@@ -19,9 +17,9 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class SecurityContext:
@@ -194,9 +192,20 @@ class SecurityEngine:
         return results
 
     def validate_operation(self, agent: str, operation: str) -> tuple[bool, str | None]:
-        """Compatibility API that validates operation without explicit path."""
-        synthetic_path = "build/**"
-        return self.validate_path_access(agent, synthetic_path, operation)
+        """Validate whether an agent may perform an operation type."""
+        context = self.get_security_context(agent)
+        if not context:
+            reason = f"No security context for agent: {agent}"
+            self._log_denied_operation(agent, "<operation-only>", operation, reason)
+            return False, reason
+
+        if operation not in context.allowed_operations:
+            reason = f"Operation '{operation}' not allowed for agent '{agent}'"
+            self._log_denied_operation(agent, "<operation-only>", operation, reason)
+            return False, reason
+
+        self._log_access(agent, "<operation-only>", operation, allowed=True)
+        return True, None
 
     def get_allowed_paths(self, agent: str) -> list[str]:
         """
@@ -300,7 +309,7 @@ class SecurityEngine:
         """Log access attempt."""
         self.access_log.append(
             {
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "agent": agent,
                 "path": path,
                 "operation": operation,
@@ -318,7 +327,7 @@ class SecurityEngine:
         """Log denied operation."""
         self.denied_operations.append(
             {
-                "timestamp": _utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "agent": agent,
                 "path": path,
                 "operation": operation,

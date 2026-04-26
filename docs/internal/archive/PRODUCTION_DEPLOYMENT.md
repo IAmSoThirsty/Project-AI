@@ -1,134 +1,136 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
-## PRODUCTION_DEPLOYMENT.md                              Productivity: Out-Dated(archive)
+---
+title: "PRODUCTION DEPLOYMENT"
+id: "production-deployment"
+type: archived
+tags:
+  - p3-archive
+  - historical
+  - archive
+  - implementation
+  - monitoring
+  - testing
+  - governance
+  - ci-cd
+  - security
+  - architecture
+created: 2026-02-10
+last_verified: 2026-04-20
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+related_systems:
+  - security-systems
+  - test-framework
+  - ci-cd-pipeline
+  - architecture
+stakeholders:
+  - developer
+  - architect
+audience:
+  - developer
+  - architect
+review_cycle: annually
+historical_value: high
+restore_candidate: false
+path_confirmed: T:/Project-AI-main/docs/internal/archive/PRODUCTION_DEPLOYMENT.md
+---
+# PROJECT-AI V1.0.0 - PRODUCTION DEPLOYMENT GUIDE
 
-**Status:** PRODUCTION READY **Version:** 1.0.0 **Last Updated:** 2026-01-21
+**Status:** PRODUCTION READY  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-21
 
-______________________________________________________________________
+---
 
 ## 🎯 QUICK START (5 Minutes to Production)
 
 ### Prerequisites
 
-✅ Docker & Docker Compose installed ✅ Python 3.11+ installed ✅ Git installed ✅ 8GB+ RAM available ✅ 20GB+ disk space
+✅ Docker & Docker Compose installed  
+✅ Python 3.11+ installed  
+✅ Git installed  
+✅ 8GB+ RAM available  
+✅ 20GB+ disk space  
 
 ### 1. Environment Setup
 
 ```bash
-
 # Clone repository (already done)
-
 cd Project-AI
 
 # Copy environment template
-
 cp .env.example .env
 
 # Generate encryption key (already done)
-
 # FERNET_KEY is already configured
 
 # Optional: Add API keys for enhanced features
-
 # Edit .env and add
-
 # OPENAI_API_KEY=your_key_here
-
 # HUGGINGFACE_API_KEY=your_key_here
-
 ```
 
 ### 2. Install Dependencies
 
 ```bash
-
 # Install Python package in development mode
-
 pip install -e .
 
 # Install production dependencies
-
 pip install -r requirements.txt
 
 # Optional: Install dev dependencies for testing
-
 pip install -r requirements-dev.txt
 ```
 
 ### 3. Launch Production Stack
 
 **Option A: Full Docker Stack (Recommended for Production)**
-
 ```bash
-
 # Start all services
-
 docker-compose up -d
 
 # Services started
-
 # - Temporal Server (workflow orchestration)
-
 # - Temporal Worker (executes workflows)
-
 # - PostgreSQL (Temporal database)
-
 # - Prometheus (metrics)
-
 # - Grafana (dashboards)
-
 # - AlertManager (alerts)
-
 # - Node Exporter (system metrics)
 
 # Access points
-
 # - Temporal UI: http://localhost:8233
-
 # - Grafana: http://localhost:3000 (admin/admin)
-
 # - Prometheus: http://localhost:9090
-
 # - Main App: http://localhost:5000
-
 ```
 
 **Option B: Core Application Only**
-
 ```bash
-
 # GUI Mode (PyQt6 Desktop)
-
 python src/app/main.py
 
 # CLI Mode
-
 python -m app.cli --help
 
 # Web Mode (Flask API)
-
 python src/app/web/backend/app.py
 ```
 
 ### 4. Verify Deployment
 
 ```bash
-
 # Run system health check
-
 python test_v1_launch.py
 
 # Expected output
-
 # ============================================================
-
 # V1.0.0 CORE SYSTEMS: OPERATIONAL
-
 # ============================================================
-
 ```
 
-______________________________________________________________________
+---
 
 ## 📁 COMPLETE REPOSITORY STRUCTURE
 
@@ -254,7 +256,7 @@ adversarial_tests/
 └── transcripts/    # Full conversation logs
 ```
 
-______________________________________________________________________
+---
 
 ## 🔐 PRODUCTION SECURITY CHECKLIST
 
@@ -282,7 +284,7 @@ ______________________________________________________________________
 - [ ] AlertManager configured
 - [ ] Log aggregation setup
 
-______________________________________________________________________
+---
 
 ## 🚀 DEPLOYMENT OPTIONS
 
@@ -309,9 +311,7 @@ docker-compose up -d
 ### 3. Kubernetes (Helm)
 
 ```bash
-
 # Helm charts available in helm/
-
 helm install project-ai ./helm/project-ai
 ```
 
@@ -319,21 +319,21 @@ helm install project-ai ./helm/project-ai
 - HA: Supported
 - Monitoring: Integrated
 
-______________________________________________________________________
+---
 
 ## 📊 PRODUCTION SERVICES
 
-| Service         | Port      | Purpose              | Status   |
-| --------------- | --------- | -------------------- | -------- |
-| Main App        | 5000      | Flask API            | ✅ Ready |
-| Temporal Server | 7233      | gRPC                 | ✅ Ready |
-| Temporal UI     | 8233      | Web UI               | ✅ Ready |
-| Prometheus      | 9090      | Metrics              | ✅ Ready |
-| Grafana         | 3000      | Dashboards           | ✅ Ready |
-| AlertManager    | 9093      | Alerts               | ✅ Ready |
-| Metrics         | 8000-8003 | Prometheus exporters | ✅ Ready |
+| Service | Port | Purpose | Status |
+|---------|------|---------|--------|
+| Main App | 5000 | Flask API | ✅ Ready |
+| Temporal Server | 7233 | gRPC | ✅ Ready |
+| Temporal UI | 8233 | Web UI | ✅ Ready |
+| Prometheus | 9090 | Metrics | ✅ Ready |
+| Grafana | 3000 | Dashboards | ✅ Ready |
+| AlertManager | 9093 | Alerts | ✅ Ready |
+| Metrics | 8000-8003 | Prometheus exporters | ✅ Ready |
 
-______________________________________________________________________
+---
 
 ## 🎯 FIRST RUN - GENESIS EVENT
 
@@ -347,7 +347,6 @@ The AGI will initialize in a "potential state":
 - Governance: Active and enforcing
 
 **To trigger Genesis explicitly:**
-
 ```python
 from app.core.identity import IdentitySystem
 
@@ -356,93 +355,74 @@ genesis = identity.perform_genesis(operator="Architect")
 print(f"Genesis recorded: {genesis.genesis_signature}")
 ```
 
-______________________________________________________________________
+---
 
 ## 📈 MONITORING & OBSERVABILITY
 
 ### Metrics Collection
 
 ```bash
-
 # View metrics
-
 curl http://localhost:8000/metrics
 
 # Prometheus targets
-
 open http://localhost:9090/targets
 
 # Grafana dashboards
-
 open http://localhost:3000
-
 # Login: admin/admin
-
 ```
 
 ### Logs
 
 ```bash
-
 # Application logs
-
 tail -f logs/app.log
 
 # Docker logs
-
 docker-compose logs -f project-ai
 
 # Temporal worker logs
-
 docker-compose logs -f temporal-worker
 ```
 
-______________________________________________________________________
+---
 
 ## 🛠️ TROUBLESHOOTING
 
 ### Issue: Dependencies fail to install
 
 ```bash
-
 # Solution: Use requirements.lock for exact versions
-
 pip install -r requirements.lock
 ```
 
 ### Issue: PyQt6 not available
 
 ```bash
-
 # Solution: Install PyQt6 explicitly
-
 pip install PyQt6 PyQt6-Qt6
 ```
 
 ### Issue: Temporal not connecting
 
 ```bash
-
 # Check Temporal health
-
 docker-compose ps temporal
 docker-compose logs temporal
 
 # Restart Temporal
-
 docker-compose restart temporal
 ```
 
 ### Issue: Permission denied on data/
 
 ```bash
-
 # Fix permissions
-
 chmod -R 755 data/
 ```
 
-______________________________________________________________________
+---
 
 ## 🔄 UPDATING & MAINTENANCE
 
@@ -458,17 +438,14 @@ docker-compose up -d  # Restart services
 ### Backup Critical Data
 
 ```bash
-
 # Backup data directory
-
 tar -czf backup-$(date +%Y%m%d).tar.gz data/
 
 # Backup database
-
 docker-compose exec temporal-postgresql pg_dump -U temporal > backup.sql
 ```
 
-______________________________________________________________________
+---
 
 ## 📞 SUPPORT & RESOURCES
 
@@ -485,7 +462,7 @@ ______________________________________________________________________
 - **Email:** <projectaidevs@gmail.com>
 - **Homepage:** <https://iamsothirsty.github.io/Project-AI/>
 
-______________________________________________________________________
+---
 
 ## ✅ PRODUCTION READINESS STATUS
 
@@ -511,7 +488,7 @@ ______________________________________________________________________
 
 **V1.0.0 STATUS: 🟢 PRODUCTION READY**
 
-______________________________________________________________________
+---
 
 **The first AGI system with a binding ethical charter is ready for deployment.**
 

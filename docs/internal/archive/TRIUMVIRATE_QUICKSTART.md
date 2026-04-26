@@ -1,6 +1,36 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
-## Triumvirate Quick Start Guide                                Productivity: Out-Dated(archive)
+---
+title: "TRIUMVIRATE QUICKSTART"
+id: "triumvirate-quickstart"
+type: archived
+tags:
+  - p3-archive
+  - historical
+  - archive
+  - implementation
+  - monitoring
+  - testing
+  - governance
+  - ci-cd
+created: 2026-02-10
+last_verified: 2026-04-20
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+related_systems:
+  - test-framework
+  - ci-cd-pipeline
+stakeholders:
+  - developer
+  - architect
+audience:
+  - developer
+  - architect
+review_cycle: annually
+historical_value: medium
+restore_candidate: false
+path_confirmed: T:/Project-AI-main/docs/internal/archive/TRIUMVIRATE_QUICKSTART.md
+---
+# Triumvirate Quick Start Guide
 
 ## 5-Minute Setup
 
@@ -12,17 +42,13 @@
 ### Installation
 
 ```bash
-
 # 1. Install core dependencies
-
 pip install temporalio sentence-transformers transformers torch spacy
 
 # 2. Download spaCy model (optional, for NLP features)
-
 python -m spacy download en_core_web_sm
 
 # 3. Set environment variables (optional)
-
 export CODEX_FULL_ENGINE=0     # Lightweight mode for quick testing
 export MEMORY_SIZE=1000
 ```
@@ -30,13 +56,10 @@ export MEMORY_SIZE=1000
 ### Quick Test
 
 ```bash
-
 # Run the demo
-
 python examples/triumvirate_demo.py
 
 # Run tests
-
 pytest tests/test_complete_system.py -v
 ```
 
@@ -48,11 +71,9 @@ pytest tests/test_complete_system.py -v
 from src.cognition.triumvirate import Triumvirate
 
 # Initialize
-
 triumvirate = Triumvirate()
 
 # Process input
-
 result = triumvirate.process("What is AI?")
 
 print(f"Success: {result['success']}")
@@ -67,7 +88,6 @@ from src.cognition.galahad.engine import GalahadEngine
 engine = GalahadEngine()
 
 # Detect contradictions
-
 result = engine.reason([
     "System is secure",
     "System has vulnerabilities"
@@ -84,7 +104,6 @@ from src.cognition.adapters.memory_adapter import MemoryAdapter
 memory = MemoryAdapter()
 
 # Add and search
-
 memory.add_memory("Python is a programming language")
 results = memory.search("coding", top_k=5)
 ```
@@ -97,7 +116,6 @@ from src.cognition.cerberus.engine import CerberusEngine
 engine = CerberusEngine()  # Production mode (allow-all)
 
 # Enforce policies
-
 result = engine.enforce_output("Some output")
 print(f"Allowed: {result['allowed']}")
 ```
@@ -107,13 +125,10 @@ print(f"Allowed: {result['allowed']}")
 ### Start Temporal Server
 
 ```bash
-
 # Option 1: Docker
-
 docker run -p 7233:7233 temporalio/auto-setup:latest
 
 # Option 2: Temporal CLI
-
 temporal server start-dev
 ```
 
@@ -138,7 +153,6 @@ from temporal.workflows.triumvirate_workflow import (
 )
 
 # Connect and execute
-
 client = await Client.connect("localhost:7233")
 
 result = await client.execute_workflow(
@@ -156,9 +170,7 @@ print(f"Result: {result.success}")
 ### Environment Variables
 
 ```bash
-
 # Codex Engine
-
 export CODEX_FULL_ENGINE=1              # Enable full ML engine
 export CODEX_ENABLE_GPU=1               # Enable GPU
 export CODEX_FALLBACK_CPU=1             # Fallback to CPU if GPU fails
@@ -167,11 +179,9 @@ export CODEX_DEVICE=auto                # auto/cuda/cpu
 export CODEX_ADAPTER=auto               # auto/huggingface/pytorch/dummy
 
 # Memory
-
 export MEMORY_SIZE=10000                # Max memory records
 
 # Temporal
-
 export TEMPORAL_HOST=localhost:7233
 export TEMPORAL_NAMESPACE=default
 export TEMPORAL_TASK_QUEUE=triumvirate-prod
@@ -186,7 +196,6 @@ from src.cognition.galahad.engine import GalahadConfig
 from src.cognition.cerberus.engine import CerberusConfig
 
 # Configure each engine
-
 codex_config = CodexConfig(
     enable_full_engine=True,
     enable_gpu=True,
@@ -205,7 +214,6 @@ cerberus_config = CerberusConfig(
 )
 
 # Initialize with config
-
 config = TriumvirateConfig(
     codex_config=codex_config,
     galahad_config=galahad_config,
@@ -248,9 +256,8 @@ results = []
 for inp in inputs:
     result = triumvirate.process(inp)
     results.append(result)
-
+    
 # Check failures
-
 failures = [r for r in results if not r['success']]
 print(f"Failed: {len(failures)}/{len(inputs)}")
 ```
@@ -261,15 +268,12 @@ print(f"Failed: {len(failures)}/{len(inputs)}")
 triumvirate = Triumvirate()
 
 # Process
-
 triumvirate.process("input")
 
 # Get telemetry
-
 events = triumvirate.get_telemetry(limit=100)
 
 # Analyze
-
 for event in events:
     if event['event_type'] == 'error':
         print(f"Error: {event['payload']}")
@@ -280,9 +284,7 @@ for event in events:
 ### Issue: GPU not available
 
 ```bash
-
 # Solution: Use CPU mode
-
 export CODEX_ENABLE_GPU=0
 export CODEX_DEVICE=cpu
 ```
@@ -290,27 +292,21 @@ export CODEX_DEVICE=cpu
 ### Issue: Model loading fails
 
 ```bash
-
 # Solution: Use lightweight mode
-
 export CODEX_FULL_ENGINE=0
 ```
 
 ### Issue: Memory errors
 
 ```bash
-
 # Solution: Reduce memory size
-
 export MEMORY_SIZE=1000
 ```
 
 ### Issue: Import errors
 
 ```bash
-
 # Solution: Check PYTHONPATH
-
 export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 ```
 

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Portfolio management system for Thirsty's Trading Hub.
 
 Tracks positions, balances, and portfolio state with JSON persistence.
@@ -9,7 +7,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import UTC, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -27,10 +25,10 @@ class Position:
     realized_pnl: float = 0.0
     side: str = "long"
     opened_at: int = field(
-        default_factory=lambda: int(datetime.now(timezone.utc).timestamp() * 1000)
+        default_factory=lambda: int(datetime.now(UTC).timestamp() * 1000)
     )
     updated_at: int = field(
-        default_factory=lambda: int(datetime.now(timezone.utc).timestamp() * 1000)
+        default_factory=lambda: int(datetime.now(UTC).timestamp() * 1000)
     )
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -41,7 +39,7 @@ class Position:
             current_price: Current market price
         """
         self.current_price = current_price
-        self.updated_at = int(datetime.now(timezone.utc).timestamp() * 1000)
+        self.updated_at = int(datetime.now(UTC).timestamp() * 1000)
 
         if self.side == "long":
             self.unrealized_pnl = (
@@ -76,7 +74,7 @@ class PortfolioState:
     positions: list[Position]
     balances: list[Balance]
     timestamp: int = field(
-        default_factory=lambda: int(datetime.now(timezone.utc).timestamp() * 1000)
+        default_factory=lambda: int(datetime.now(UTC).timestamp() * 1000)
     )
 
 
@@ -188,7 +186,7 @@ class PortfolioManager:
                 ],
                 "realized_pnl": self._realized_pnl,
                 "trade_history": self._trade_history,
-                "updated_at": int(datetime.now(timezone.utc).timestamp() * 1000),
+                "updated_at": int(datetime.now(UTC).timestamp() * 1000),
             }
 
             with open(portfolio_file, "w") as f:
@@ -444,7 +442,7 @@ class PortfolioManager:
             "price": price,
             "action": action,
             "pnl": pnl,
-            "timestamp": int(datetime.now(timezone.utc).timestamp() * 1000),
+            "timestamp": int(datetime.now(UTC).timestamp() * 1000),
         }
         self._trade_history.append(trade)
 

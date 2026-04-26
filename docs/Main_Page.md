@@ -1,19 +1,13 @@
-<!-- markdownlint-disable MD033 MD025 MD041 -->
-<div align="right">
-  <img src="https://img.shields.io/badge/DATE-2026--03--05-blueviolet?style=for-the-badge" alt="Date" />
-  <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
-</div>
-
-# Project-AI Documentation Portal
+# Project-AI Main Page
 
 Welcome to **Project-AI** — a comprehensive, production-grade AI assistant platform with advanced security, governance, and health monitoring capabilities.
 
 ## Quick Links
 
-- [Documentation Home](README.md)
-- [Architecture Overview](architecture/)
-- [Developer Guides](developer/)
-- [Security & Compliance](security_compliance/)
+- [[README.md|Documentation Home]]
+- [[architecture/|Architecture Overview]]
+- [[developer/|Developer Guides]]
+- [[security_compliance/|Security & Compliance]]
 
 ## System Health
 
@@ -30,7 +24,7 @@ The latest system health report provides diagnostic information including:
 - **Dependencies**: Installed packages and versions
 - **Configuration**: Active configuration settings
 
-**[View Latest Health Report](assets/health_report.png)**
+**[[assets/health_report.png|View Latest Health Report]]**
 
 ### Health Snapshots
 
@@ -41,23 +35,19 @@ Detailed health snapshots are available in YAML format at `data/health_snapshots
 To generate a new health report, run:
 
 ```bash
-
 # Using the CLI
-
 python -m src.app health report
 
 # Or directly via the module
-
 python -m src.app.health.report
 ```
 
 This will:
-
 1. Collect system diagnostics (CPU, memory, disk, platform info)
-1. Scan installed dependencies
-1. Generate a timestamped YAML snapshot in `data/health_snapshots/`
-1. Create a PNG visualization in `docs/assets/`
-1. Log the event to the cryptographic audit log
+2. Scan installed dependencies
+3. Generate a timestamped YAML snapshot in `data/health_snapshots/`
+4. Create a PNG visualization in `docs/assets/`
+5. Log the event to the cryptographic audit log
 
 ### Audit Trail
 
@@ -83,7 +73,6 @@ report_dir = "docs/assets"
 ```
 
 Environment variables:
-
 - `PROJECTAI_HEALTH_COLLECT_SYSTEM_METRICS`
 - `PROJECTAI_HEALTH_COLLECT_DEPENDENCIES`
 - `PROJECTAI_HEALTH_SNAPSHOT_DIR`
@@ -123,18 +112,18 @@ The health report follows Project-AI's canonical asset pattern:
 The health reporting system adheres to Project-AI's security and governance standards:
 
 1. **Audit Logging**: Every report generation is logged with cryptographic chaining
-1. **Chain Verification**: Detect any tampering attempts via `verify-audit` command
-1. **No Sensitive Data**: Health reports exclude sensitive configuration values
-1. **Append-Only Logs**: Audit logs are append-only for forensic integrity
-1. **Structured Output**: YAML format ensures parsability and tool compatibility
+2. **Chain Verification**: Detect any tampering attempts via `verify-audit` command
+3. **No Sensitive Data**: Health reports exclude sensitive configuration values
+4. **Append-Only Logs**: Audit logs are append-only for forensic integrity
+5. **Structured Output**: YAML format ensures parsability and tool compatibility
 
 ## Next Steps
 
-- [Read the Full Documentation](README.md)
-- [Explore the Architecture](architecture/)
-- [Review Security Policies](security_compliance/)
-- [Contribute to the Project](developer/CONTRIBUTING.md)
+- [[README.md|Read the Full Documentation]]
+- [[architecture/|Explore the Architecture]]
+- [[security_compliance/|Review Security Policies]]
+- [[developer/CONTRIBUTING.md|Contribute to the Project]]
 
-______________________________________________________________________
+---
 
 **Project-AI** — Building safe, transparent, and accountable AI systems.

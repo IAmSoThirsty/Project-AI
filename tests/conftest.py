@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Pytest configuration: ensure repository root (for non-src packages like `web`) is importable.
 
 This adds the project root to sys.path so tests can import the top-level `web` package.

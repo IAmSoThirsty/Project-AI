@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """Sample marketplace plugin demonstrating metadata and safety checks."""
 
 from __future__ import annotations

@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Production-Grade Multi-Factor Authentication Module
 Provides comprehensive MFA support with TOTP, FIDO2/WebAuthn, passkeys, certificates,
@@ -862,7 +860,7 @@ class BiometricProvider(AuthenticationProvider):
         """Calculate similarity between biometric hashes"""
         # Simplified similarity calculation
         # Production systems would use sophisticated matching algorithms
-        matching_bytes = sum(a == b for a, b in zip(hash1, hash2, strict=False))
+        matching_bytes = sum(a == b for a, b in zip(hash1, hash2))
         return matching_bytes / len(hash1)
 
 
@@ -1327,7 +1325,10 @@ class MFAAuthenticator:
 
         # Check if session was created too long ago
         max_session_age = 86400  # 24 hours
-        return not time.time() - context.timestamp > max_session_age
+        if time.time() - context.timestamp > max_session_age:
+            return False
+
+        return True
 
     def _log_audit(
         self,

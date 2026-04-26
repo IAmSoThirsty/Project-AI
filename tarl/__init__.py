@@ -1,8 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-#                                                             DATE: 2026-03-03 09:33:22
-#                                                             STATUS: Active
-#                                                             OWNER: Jeremy Karrick / IAmSoThirsty
 """TARL - Trust and Authorization Runtime Layer"""
 
 # Import from runtime module (the simple policy runtime, not the VM directory)
@@ -16,10 +11,10 @@ if str(_tarl_dir) not in sys.path:
 
 # Import TarlRuntime from the runtime.py file (not runtime/ directory)
 # We do this by importing the module explicitly
-import importlib.util  # noqa: E402
+import importlib.util
 
-from tarl.policy import TarlPolicy  # noqa: E402
-from tarl.spec import TarlDecision, TarlVerdict  # noqa: E402
+from tarl.policy import TarlPolicy
+from tarl.spec import TarlDecision, TarlVerdict
 
 _runtime_file = _tarl_dir / "runtime.py"
 _spec = importlib.util.spec_from_file_location("tarl.runtime_policy", _runtime_file)

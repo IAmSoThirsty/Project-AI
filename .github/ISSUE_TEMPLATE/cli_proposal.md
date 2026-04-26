@@ -1,43 +1,120 @@
 ---
-name: CLI proposal
-about: Propose a CLI command or CLI behavior change
-title: "[CLI] "
-labels: ["enhancement", "cli"]
-assignees: ""
+type: github-config
+tags: [issue-template, cli, enhancement, proposal, github]
+created: 2026-01-10
+last_verified: 2026-04-20
+status: current
+related_systems: [cli, development-environment, issue-management]
+stakeholders: [developers, contributors, cli-team]
+config_scope: development
+automation_type: manual-config
+requires_secrets: false
+review_cycle: quarterly
 ---
 
-## Summary
+---
+name: CLI Enhancement Proposal
+about: Propose a new CLI command, feature, or improvement
+title: '[CLI] '
+labels: ['enhancement', 'cli']
+assignees: ''
 
-What CLI change are you proposing?
+---
 
-## Command Shape
+## CLI Enhancement Proposal
 
-```powershell
-py -3.12 .\scripts\personal_agent.py ...
+### Summary
+
+<!-- Brief description of the proposed CLI enhancement -->
+
+### Motivation
+
+<!-- Why is this enhancement needed? What problem does it solve? -->
+
+### Proposed CLI Interface
+
+#### Command Structure
+
+```bash
+# Example of proposed command usage
+python -m app.cli [command] [subcommand] [options]
 ```
 
-or
+#### Arguments and Options
 
-```powershell
-$env:PYTHONPATH = "src"
-py -3.12 -m app.cli ...
+<!-- List all arguments and options with descriptions -->
+
+- `--option-name`: Description
+- `argument`: Description
+
+#### Example Usage
+
+```bash
+# Provide concrete examples of how the command would be used
+python -m app.cli example command --option value
 ```
 
-## Expected Output
+### Expected Output
 
-```text
-
+<!-- Describe what the command should output -->
+```
+Example output here
 ```
 
-## Verification
+### Implementation Details
 
-How should this command be tested?
+#### Affected Files
 
-```text
-Command:
-Expected result:
-```
+<!-- List files that would need to be modified -->
 
-## Scope Boundary
+- [ ] `src/app/cli.py`
+- [ ] Other files...
 
-What should this command not do?
+#### New Dependencies
+
+<!-- List any new dependencies required -->
+
+- None / Package name and version
+
+#### Breaking Changes
+
+<!-- Will this break existing CLI usage? -->
+
+- [ ] Yes (describe)
+- [ ] No
+
+### Testing Strategy
+
+<!-- How will this be tested? -->
+
+- [ ] Unit tests in `tests/test_cli.py`
+- [ ] Integration tests
+- [ ] Manual testing steps:
+  1. Step 1
+  1. Step 2
+
+### Documentation Updates
+
+<!-- What documentation needs to be updated? -->
+
+- [ ] `docs/cli/README.md`
+- [ ] `docs/cli/commands.md` (auto-generated)
+- [ ] `CLI-CODEX.md`
+- [ ] `CHANGELOG.md`
+- [ ] Other documentation
+
+### Alternatives Considered
+
+<!-- What other approaches did you consider? Why is this the best option? -->
+
+### Additional Context
+
+<!-- Add any other context, screenshots, or examples -->
+
+### Checklist
+
+- [ ] I have reviewed the [CLI-CODEX.md](../CLI-CODEX.md) guidelines
+- [ ] I have checked for similar existing issues
+- [ ] I am willing to implement this feature (optional)
+- [ ] I have considered backward compatibility
+- [ ] I have considered cross-platform compatibility (Linux, macOS, Windows)

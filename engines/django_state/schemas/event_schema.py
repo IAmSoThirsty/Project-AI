@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """Event schema for Django State Engine.
 
 Defines all event types that can be injected into the simulation.

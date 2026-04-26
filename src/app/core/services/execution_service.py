@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 """
 ExecutionService - Extracted execution logic from CognitionKernel.
 
@@ -23,7 +21,7 @@ import time
 from enum import Enum
 from typing import Any
 
-from src.app.core.platform_tiers import (
+from app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,

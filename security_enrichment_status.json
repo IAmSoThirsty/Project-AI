@@ -1,0 +1,338 @@
+[
+  {
+    "File": "AI_SECURITY_FRAMEWORK.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "ASL_FRAMEWORK.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "ASL3_IMPLEMENTATION.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "BRANCH_PROTECTION_CONFIG.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "CERBERUS_HYDRA_README.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "CERBERUS_IMPLEMENTATION_SUMMARY.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "CERBERUS_SECURITY_STRUCTURE.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "COMPREHENSIVE_SECURITY_TESTING_FINAL_REPORT.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "CYBERSECURITY_KNOWLEDGE.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "ENHANCED_DEFENSES.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "INCIDENT_PLAYBOOK.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "METADATA_P0_SECURITY_REPORT.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": true,
+    "HasLastVerified": true,
+    "NeedsEnhancement": false
+  },
+  {
+    "File": "README.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "RED_HAT_EXPERT_SIMULATIONS.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "RED_HAT_SIMULATION_RESULTS.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "RED_TEAM_STRESS_TEST_RESULTS.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SBOM_POLICY.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECRET_MANAGEMENT.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECRET_PURGE_RUNBOOK.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURE-H323-DEPLOYMENT.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_AGENTS_GUIDE.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_AGENTS_INTEGRATION_SUMMARY.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_AGENTS_ROADMAP.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_AGENTS_TEMPORAL_LLM_GUIDE.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_AUDIT_EXECUTIVE_SUMMARY.md",
+    "HasClassification": true,
+    "HasRelatedSystems": false,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_AUDIT_REPORT.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_COMPLIANCE_CHECKLIST.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_COUNTERMEASURES.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_EXAMPLES.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_FRAMEWORK.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_GOVERNANCE.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_POLICY_CLASSIC.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_QUICKREF.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_RELATIONSHIP_MATRIX.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": true,
+    "HasLastVerified": true,
+    "NeedsEnhancement": false
+  },
+  {
+    "File": "SECURITY_ROADMAP.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY_WORKFLOW_RUNBOOKS.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": true,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "SECURITY.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "TEST_ARTIFACTS_POLICY.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "THREAT_MODEL_COVERAGE_MAP.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": true,
+    "HasLastVerified": true,
+    "NeedsEnhancement": false
+  },
+  {
+    "File": "THREAT_MODEL_SECURITY_WORKFLOWS.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "THREAT_MODEL.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  },
+  {
+    "File": "threat-model.md",
+    "HasClassification": true,
+    "HasRelatedSystems": true,
+    "HasStakeholders": false,
+    "HasLastVerified": false,
+    "NeedsEnhancement": true
+  }
+]

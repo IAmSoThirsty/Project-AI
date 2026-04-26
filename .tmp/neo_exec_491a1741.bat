@@ -1,0 +1,1 @@
+dir "t:\Project-AI-main\src\app\core\constitutional_model.py" "t:\Project-AI-main\src\app\core\validate_constitution.py" "t:\Project-AI-main\CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT.md" 2>nul

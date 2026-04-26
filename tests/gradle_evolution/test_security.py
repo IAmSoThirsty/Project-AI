@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 """
 Tests for Security Engine and Policy Scheduler.
 
@@ -19,9 +17,9 @@ from gradle_evolution.security.security_engine import (
 )
 
 
-def _utcnow() -> datetime:
-    """Return naive UTC datetime without deprecated utcnow()."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+def _utc_now() -> datetime:
+    """Return timezone-aware UTC datetime for tests."""
+    return datetime.now(timezone.utc)
 
 
 class TestSecurityContext:
@@ -175,7 +173,7 @@ class TestScheduledPolicy:
         policy = ScheduledPolicy(
             policy_id="test_policy_001",
             policy_data={"name": "Test Policy", "rules": ["rule1", "rule2"]},
-            activation_time=_utcnow(),
+            activation_time=_utc_now(),
             expiration_time=None,
         )
 
@@ -197,7 +195,7 @@ class TestPolicyScheduler:
         """Test scheduling a security policy."""
         scheduler = PolicyScheduler()
 
-        activation_time = _utcnow()
+        activation_time = _utc_now()
         policy_data = {
             "name": "Security Policy",
             "rules": ["encrypt_at_rest"],
@@ -217,7 +215,7 @@ class TestPolicyScheduler:
         scheduler = PolicyScheduler()
 
         # Schedule policies
-        now = _utcnow()
+        now = _utc_now()
         scheduler.schedule_policy(
             policy_id="active",
             policy_data={"name": "Active", "rules": ["rule1"]},
@@ -246,7 +244,7 @@ class TestPolicyScheduler:
         scheduler.schedule_policy(
             policy_id="policy_001",
             policy_data={"name": "Policy", "rules": ["rule"]},
-            activation_time=_utcnow(),
+            activation_time=_utc_now(),
         )
 
         # Manually activate first
@@ -269,7 +267,7 @@ class TestPolicyScheduler:
             scheduler.schedule_policy(
                 policy_id=f"policy_{i}",
                 policy_data={"name": f"Policy {i}"},
-                activation_time=_utcnow() + timedelta(hours=i),
+                activation_time=_utc_now() + timedelta(hours=i),
             )
 
         # Should have 3 scheduled
@@ -281,7 +279,7 @@ class TestPolicyScheduler:
 
         # Record some policy events manually
         scheduler._record_policy_event(
-            "policy_001", "activated", {"timestamp": _utcnow().isoformat()}
+            "policy_001", "activated", {"timestamp": _utc_now().isoformat()}
         )
 
         history = scheduler.get_policy_history()

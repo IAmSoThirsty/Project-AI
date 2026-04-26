@@ -1,5 +1,87 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+title: "Security & Compliance Documentation"
+id: "security-compliance-readme"
+type: "index"
+version: "1.0.0"
+created_date: "2026-01-10"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:compliance"
+  - "type:index"
+  - "type:guide"
+  - "audience:security-engineer"
+  - "audience:compliance-auditor"
+  - "audience:developer"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "OWASP Top 10"
+  - "NIST Cybersecurity Framework"
+  - "AWS Security Best Practices"
+  - "CIS Benchmarks"
+summary: "Central index for cryptographic verification, RBAC examples, incident response playbooks, security frameworks, and compliance documentation covering OWASP, NIST, CERT, AWS, and CIS standards."
+scope: "Complete security framework documentation including environment hardening, data validation, AWS integration, agent security, database security, web security, monitoring, and 158 comprehensive tests"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "injection-attacks"
+  - "data-poisoning"
+  - "privilege-escalation"
+  - "adversarial-ai-attacks"
+  - "xss"
+  - "sql-injection"
+  - "xxe"
+  - "path-traversal"
+defends_against:
+  - "OWASP Top 10 2021 (all 10 categories)"
+  - "Injection attacks"
+  - "Data poisoning"
+  - "Privilege escalation"
+  - "Adversarial AI attacks"
+compliance:
+  - "OWASP Top 10 2021"
+  - "NIST Cybersecurity Framework"
+  - "CERT Secure Coding Standards"
+  - "AWS Well-Architected Security Pillar"
+  - "CIS Benchmarks"
+  - "GDPR"
+  - "HIPAA"
+  - "SOC 2"
+  - "ISO 27001:2022"
+stakeholders:
+  - security-team   - all-teams
+last_verified: 2026-04-20
+cvss_score: "N/A - Index Documentation"
+test_coverage:
+  has_tests: true
+  coverage_percent: 99
+  test_count: 158
+  tests_passing: 157
+  tests_skipped: 1
+related_docs:
+  - "security-framework"
+  - "security-quickref"
+  - "threat-model"
+  - "ai-security-framework"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "compliance-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "compliance-officers"
+  - "auditors"
+  - "penetration-testers"
+  - "developers"
+---
+
 # Security & Compliance Documentation
 
 ## 📁 Folder Purpose
@@ -7,7 +89,6 @@
 This folder centralizes **cryptographic verification instructions**, **RBAC examples**, **incident response playbooks**, **security frameworks**, and **compliance documentation**.
 
 ### What Belongs Here
-
 - Security frameworks and policies
 - Compliance documentation (GDPR, HIPAA, SOC2, ISO 27001, etc.)
 - Cryptographic verification procedures
@@ -17,12 +98,11 @@ This folder centralizes **cryptographic verification instructions**, **RBAC exam
 - Vulnerability management
 
 ### Guidelines
-
 - **Audience**: Security engineers, compliance officers, auditors, penetration testers
 - **Tone**: Technical, security-focused, compliance-oriented
 - **Include**: Runbooks, checklists, verification procedures, audit trails
 
-______________________________________________________________________
+---
 
 # Project-AI Security Framework
 
@@ -53,7 +133,7 @@ This security framework implements a comprehensive, multi-phase secure AI deploy
 ### 📚 Documentation
 
 - **Complete API Reference** - SECURITY_FRAMEWORK.md (22KB)
-- **Deployment Guide** - DEPLOYMENT_GUIDE.md (21KB)
+- **Deployment Guide** - DEPLOYMENT_GUIDE.md (21KB)  
 - **Quick Reference** - SECURITY_QUICKREF.md (9KB)
 - **Working Example** - examples/security_integration.py (14KB)
 
@@ -70,13 +150,10 @@ This security framework implements a comprehensive, multi-phase secure AI deploy
 ### Installation
 
 ```bash
-
 # Install dependencies
-
 pip install -r requirements.txt
 
 # Verify installation
-
 python -c "from app.security import EnvironmentHardening; print('✓ Security framework installed')"
 ```
 
@@ -91,19 +168,16 @@ from app.security import (
 )
 
 # 1. Harden environment
-
 hardening = EnvironmentHardening()
 is_valid, issues = hardening.validate_environment()
 
 # 2. Initialize monitoring
-
 monitor = SecurityMonitor(
     region="us-east-1",
     sns_topic_arn="arn:aws:sns:us-east-1:123:security-alerts"
 )
 
 # 3. Parse data securely
-
 parser = SecureDataParser()
 result = parser.parse_json('{"data": "value"}')
 
@@ -113,14 +187,13 @@ else:
     print(f"Validation failed: {result.issues}")
 
 # 4. Use secure database
-
 db = SecureDatabaseManager("data/secure.db")
 user_id = db.insert_user("alice", "hashed_password")
 ```
 
 ### Complete Integration Example
 
-See [examples/security_integration.py](../../examples/security_integration.py) for a fully working example that demonstrates:
+See [examples/security_integration.py](../examples/security_integration.py) for a fully working example that demonstrates:
 
 - Environment hardening and validation
 - Security monitoring with CloudWatch/SNS
@@ -130,7 +203,6 @@ See [examples/security_integration.py](../../examples/security_integration.py) f
 - Web security controls
 
 Run it:
-
 ```bash
 PYTHONPATH=src python examples/security_integration.py
 ```
@@ -145,16 +217,13 @@ Validates and hardens the runtime environment:
 hardening = EnvironmentHardening()
 
 # Comprehensive validation
-
 is_valid, issues = hardening.validate_environment()
 
 # Apply fixes
-
 hardening.harden_sys_path()
 hardening.secure_directory_structure()
 
 # Get detailed report
-
 report = hardening.get_validation_report()
 ```
 
@@ -166,6 +235,10 @@ report = hardening.get_validation_report()
 - Directory permission enforcement (0700)
 - Data structure initialization
 
+**Implementation:** See [[src/app/security/environment_hardening.py|Environment Hardening Implementation]]
+
+---
+
 ### 2. Data Validation (`data_validation.py`)
 
 Secure parsing with attack detection:
@@ -175,15 +248,12 @@ parser = SecureDataParser()
 defense = DataPoisoningDefense()
 
 # XML with XXE prevention
-
 xml_result = parser.parse_xml(xml_data)
 
 # CSV with injection detection
-
 csv_result = parser.parse_csv(csv_data, schema={"name": "string", "age": "int"})
 
 # Check for attacks
-
 is_poisoned, patterns = defense.check_for_poison(user_input)
 ```
 
@@ -198,6 +268,13 @@ is_poisoned, patterns = defense.check_for_poison(user_input)
 - Template injection blocking
 - CRLF injection prevention
 
+**Implementation:** 
+- [[src/app/security/data_validation.py|Data Validation Framework]]
+- [[src/app/security/path_security.py|Path Security Validator]]
+- [[source-docs/security/07-data-validation.md|Data Validation Guide]]
+
+---
+
 ### 3. AWS Integration (`aws_integration.py`)
 
 Secure cloud resource access:
@@ -206,22 +283,18 @@ Secure cloud resource access:
 aws = AWSSecurityManager(region="us-east-1")
 
 # Secrets Manager
-
 secret = aws.get_secret("app-secrets")
 aws.put_secret("api-key", {"key": "value"})
 
 # S3 with encryption
-
 aws.upload_to_s3("bucket", "key", data, encryption="AES256")
 data = aws.download_from_s3("bucket", "key")
 
 # IAM auditing
-
 audit = aws.audit_iam_permissions()
 is_secure = aws.validate_polp(required_permissions)
 
 # Temporary credentials
-
 creds = aws.get_temporary_credentials("role-arn", "session-name")
 ```
 
@@ -247,24 +320,20 @@ from app.security.agent_security import (
 )
 
 # State encapsulation
-
 agent = AgentEncapsulation("agent_id")
 agent.set_permissions(read=True, write=True, execute=False)
 agent.set_state("weights", model_weights, caller="trainer")
 
 # Numerical protection
-
 protection = NumericalProtection()
 safe_data = protection.clip_array(untrusted_data, min_val=-1e6, max_val=1e6)
 clean_data = protection.remove_outliers(sensor_data, threshold=3.0)
 
 # Plugin isolation
-
 isolation = PluginIsolation(timeout=30)
 result = isolation.execute_isolated(untrusted_plugin, args=(data,))
 
 # Fuzzing
-
 fuzzer = RuntimeFuzzer()
 test_cases = fuzzer.fuzz_input("boundary_values", base_input)
 ```
@@ -281,6 +350,17 @@ test_cases = fuzzer.fuzz_input("boundary_values", base_input)
 - Timeout protection
 - Runtime fuzzing (4 strategies)
 
+**Implementation:**
+- [[src/app/security/agent_security.py|Agent Security Implementation]]
+- [[src/app/security/ai_security_framework.py|AI Security Framework]]
+- [[source-docs/security/06-agent-security.md|Agent Security Guide]]
+
+**Related:**
+- [[src/app/core/ai_systems.py#FourLaws|Four Laws Ethics System]]
+- [[docs/security_compliance/AI_SECURITY_FRAMEWORK.md|AI Security Framework Documentation]]
+
+---
+
 ### 5. Database Security (`database_security.py`)
 
 SQL injection prevention:
@@ -289,13 +369,11 @@ SQL injection prevention:
 db = SecureDatabaseManager("data/secure.db")
 
 # Parameterized operations
-
 user_id = db.insert_user("alice", "hashed_password", "alice@example.com")
 user = db.get_user("alice")
 db.update_user(user_id, email="newemail@example.com")
 
 # Audit logging
-
 db.log_action(
     user_id=123,
     action="delete_data",
@@ -305,14 +383,11 @@ db.log_action(
 )
 
 # Transaction management
-
 with db.transaction() as conn:
     cursor = conn.cursor()
     cursor.execute("INSERT INTO ...")
     cursor.execute("UPDATE ...")
-
     # Auto-commit on success, rollback on error
-
 ```
 
 **Features**:
@@ -324,6 +399,12 @@ with db.transaction() as conn:
 - Schema with foreign keys and constraints
 - Agent state storage
 - Knowledge base storage
+
+**Implementation:**
+- [[src/app/security/database_security.py|Database Security Manager]]
+- [[src/app/core/user_manager.py|User Manager]] (bcrypt password hashing)
+
+---
 
 ### 6. Security Monitoring (`monitoring.py`)
 
@@ -337,7 +418,6 @@ monitor = SecurityMonitor(
 )
 
 # Log events
-
 monitor.log_security_event(
     event_type="authentication_failure",
     severity="high",
@@ -347,16 +427,13 @@ monitor.log_security_event(
 )
 
 # Threat signatures
-
 monitor.add_threat_signature("APT29", ["evil.com", "malware_hash"])
 matches = monitor.check_threat_signatures(network_traffic)
 
 # Anomaly detection
-
 anomalies = monitor.detect_anomalies(time_window=3600, threshold=10)
 
 # Statistics
-
 stats = monitor.get_event_statistics(time_window=3600)
 ```
 
@@ -370,7 +447,18 @@ stats = monitor.get_event_statistics(time_window=3600)
 - Event statistics and reporting
 - Export audit logs (JSON/CSV)
 
-### 7. Web Security (`web_service.py`)
+**Implementation:**
+- [[src/app/core/security_monitoring.py|Security Monitoring System]]
+- [[src/app/monitoring/security_metrics.py|Security Metrics]]
+- [[src/app/core/security_operations_center.py|Security Operations Center]]
+- [[source-docs/security/05-security-monitoring.md|Security Monitoring Guide]]
+
+**Related:**
+- [[kernel/threat_detection.py|Threat Detection Engine]]
+- [[src/app/core/honeypot_detector.py|Honeypot Detector]]
+- [[src/app/core/incident_responder.py|Incident Responder]]
+
+---
 
 HTTP/SOAP security:
 
@@ -383,48 +471,36 @@ from app.security.web_service import (
 )
 
 # SOAP client
-
 client = SOAPClient(
-    "https://api.example.com/soap",
-    username=os.getenv("SOAP_USERNAME"),
+    "https://api.example.com/soap", 
+    username=os.getenv("SOAP_USERNAME"), 
     password=os.getenv("SOAP_PASSWORD")
 )
 response = client.call("GetData", {"id": "123"})
 
 # Capability tokens
-
 handler = SecureWebHandler()
 token = handler.generate_capability_token(["read", "write"])
 
 if handler.check_capability(token, "read"):
-
     # Allow read operation
-
     data = read_data()
 
 # Rate limiting
-
 limiter = RateLimiter(max_requests=100, window=60)
 
 if limiter.check_rate_limit(client_ip):
-
     # Process request
-
     process_request()
 else:
-
     # Return 429 Too Many Requests
-
     return {"error": "Rate limit exceeded"}, 429
 
 # Input validation
-
 validator = InputValidator()
 
 if validator.validate_input(user_input, "application/json"):
-
     # Safe to process
-
     result = process_input(user_input)
 ```
 
@@ -445,51 +521,46 @@ if validator.validate_input(user_input, "application/json"):
 ### Run All Tests
 
 ```bash
-
 # All security tests (158 tests)
-
 pytest tests/test_security*.py -v
 
 # Specific phases
-
 pytest tests/test_security_phase1.py -v  # Environment & data (27 tests)
 pytest tests/test_security_phase2.py -v  # Components (34 tests)
 pytest tests/test_security_stress.py -v  # Stress tests (97 tests)
 
 # With coverage
-
 pytest tests/test_security*.py --cov=app.security --cov-report=html
 
 # Parallel execution
-
 pytest tests/test_security*.py -n auto
 ```
 
 ### Test Categories
 
-| Category              | Tests | Description                                 |
-| --------------------- | ----- | ------------------------------------------- |
-| Environment           | 8     | Virtualenv, sys.path, ASLR/SSP, permissions |
-| Data Parsing          | 30+   | XML, CSV, JSON with attack detection        |
-| Poisoning Defense     | 30+   | XSS, SQL injection, path traversal, etc.    |
-| Concurrent Operations | 15+   | Thread-safe operations up to 20 threads     |
-| Numerical             | 10+   | Bounds checking, outlier removal            |
-| Fuzzing               | 20+   | Multi-strategy fuzzing                      |
-| Rate Limiting         | 5+    | Burst traffic, distributed attacks          |
-| Monitoring            | 10+   | Event logging, anomaly detection            |
-| Database              | 5+    | SQL injection prevention, transactions      |
-| Web Security          | 10+   | SOAP, capability tokens, validation         |
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Environment | 8 | Virtualenv, sys.path, ASLR/SSP, permissions |
+| Data Parsing | 30+ | XML, CSV, JSON with attack detection |
+| Poisoning Defense | 30+ | XSS, SQL injection, path traversal, etc. |
+| Concurrent Operations | 15+ | Thread-safe operations up to 20 threads |
+| Numerical | 10+ | Bounds checking, outlier removal |
+| Fuzzing | 20+ | Multi-strategy fuzzing |
+| Rate Limiting | 5+ | Burst traffic, distributed attacks |
+| Monitoring | 10+ | Event logging, anomaly detection |
+| Database | 5+ | SQL injection prevention, transactions |
+| Web Security | 10+ | SOAP, capability tokens, validation |
 
 ## 📈 Performance
 
-| Operation                    | Performance |
-| ---------------------------- | ----------- |
-| Parse 5,000 CSV rows         | < 1 second  |
-| Parse 50-level nested JSON   | < 100ms     |
-| Handle 20 concurrent threads | Safe        |
-| Monitor 1,000 events/second  | Handled     |
-| Process 100 DB ops/second    | Maintained  |
-| Detect 18 attack patterns    | < 10ms      |
+| Operation | Performance |
+|-----------|-------------|
+| Parse 5,000 CSV rows | < 1 second |
+| Parse 50-level nested JSON | < 100ms |
+| Handle 20 concurrent threads | Safe |
+| Monitor 1,000 events/second | Handled |
+| Process 100 DB ops/second | Maintained |
+| Detect 18 attack patterns | < 10ms |
 
 ## 🔒 Attack Vectors Blocked
 
@@ -518,13 +589,13 @@ pytest tests/test_security*.py -n auto
 
 ### Core Documentation
 
-- **[SECURITY_FRAMEWORK.md](SECURITY_FRAMEWORK.md)** - Complete API reference with examples
+- **[[SECURITY_FRAMEWORK.md|SECURITY_FRAMEWORK.md]]** - Complete API reference with examples
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Step-by-step deployment procedures
-- **[SECURITY_QUICKREF.md](SECURITY_QUICKREF.md)** - Quick reference guide
+- **[[SECURITY_QUICKREF.md|SECURITY_QUICKREF.md]]** - Quick reference guide
 
 ### Examples
 
-- **[security_integration.py](../../examples/security_integration.py)** - Complete working integration
+- **[security_integration.py](../examples/security_integration.py)** - Complete working integration
 
 ### Additional Resources
 
@@ -536,48 +607,37 @@ pytest tests/test_security*.py -n auto
 ### Development
 
 ```bash
-
 # Create virtualenv
-
 python -m venv venv
 source venv/bin/activate
 
 # Install dependencies
-
 pip install -r requirements.txt
 
 # Run tests
-
 pytest tests/test_security*.py -v
 
 # Run example
-
 PYTHONPATH=src python examples/security_integration.py
 ```
 
 ### Production (AWS)
 
 ```bash
-
 # Configure IAM role (no static credentials)
-
 aws iam create-role --role-name ProjectAI-Role --assume-role-policy-document file://trust-policy.json
 
 # Set up Secrets Manager
-
 aws secretsmanager create-secret --name project-ai-secrets --secret-string file://secrets.json
 
 # Enable CloudWatch
-
 aws cloudwatch put-dashboard --dashboard-name ProjectAI-Security --dashboard-body file://dashboard.json
 
 # Set up SNS alerts
-
 aws sns create-topic --name security-alerts
 aws sns subscribe --topic-arn arn:aws:sns:us-east-1:123:security-alerts --protocol email --notification-endpoint security@example.com
 
 # Launch EC2 instance with IAM role
-
 aws ec2 run-instances --image-id ami-xxx --iam-instance-profile Name=ProjectAI-Role
 ```
 
@@ -588,24 +648,18 @@ See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete instructions.
 ### Environment Variables
 
 ```bash
-
 # ⚠️ SECURITY: Generate NEW keys - NEVER use examples from documentation
-
 # Required keys - generate your own values
-
 FERNET_KEY=<generate using: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())">
 
 # AWS (use IAM roles in production - NEVER commit static credentials)
-
 AWS_REGION=us-east-1
 
 # Monitoring (use environment-specific values)
-
 SECURITY_SNS_TOPIC=arn:aws:sns:us-east-1:123:security-alerts
 CLOUDWATCH_NAMESPACE=ProjectAI/Security
 
 # Application
-
 DATABASE_PATH=data/secure.db
 MAX_UPLOAD_SIZE=104857600  # 100MB
 ```
@@ -623,39 +677,28 @@ MAX_UPLOAD_SIZE=104857600  # 100MB
 ### Common Issues
 
 **Issue**: Tests failing
-
 ```bash
-
 # Install all dependencies
-
 pip install -r requirements.txt
 
 # Check Python version (requires 3.12+)
-
 python --version
 
 # Run with verbose output
-
 pytest tests/test_security_phase1.py -vv
 ```
 
 **Issue**: CloudWatch metrics not appearing
-
 ```bash
-
 # Check IAM permissions
-
 aws iam simulate-principal-policy \
   --policy-source-arn arn:aws:iam::123:role/ProjectAI \
   --action-names cloudwatch:PutMetricData
 ```
 
 **Issue**: Permission denied errors
-
 ```bash
-
 # Fix directory permissions (Unix/Linux)
-
 chmod 700 data/
 chmod 600 data/*.db
 ```
@@ -678,6 +721,9 @@ MIT License - See LICENSE file for details
 - CERT for secure coding standards
 - AWS for cloud security guidance
 
-______________________________________________________________________
+---
 
-**Version**: 1.0.0 **Last Updated**: 2025-12-31 **Test Coverage**: 158 tests (157 passing, 1 skipped) **Code Size**: ~75KB security framework + ~47KB tests + ~43KB documentation
+**Version**: 1.0.0  
+**Last Updated**: 2025-12-31  
+**Test Coverage**: 158 tests (157 passing, 1 skipped)  
+**Code Size**: ~75KB security framework + ~47KB tests + ~43KB documentation

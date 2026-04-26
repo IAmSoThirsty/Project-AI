@@ -1,5 +1,25 @@
-#!/bin/sh
-set -e
+#!/usr/bin/env python3
+"""Repository pre-commit hook runner."""
 
-py -3 tools/check_large_files_for_lfs.py
-py -3 tools/enforce_docs_only_branch.py
+from __future__ import annotations
+
+import subprocess
+import sys
+
+
+COMMANDS: tuple[tuple[str, ...], ...] = (
+	(sys.executable, "tools/check_large_files_for_lfs.py"),
+	(sys.executable, "tools/enforce_vault_write_scope.py"),
+)
+
+
+def main() -> int:
+	for command in COMMANDS:
+		result = subprocess.run(command, check=False)
+		if result.returncode != 0:
+			return result.returncode
+	return 0
+
+
+if __name__ == "__main__":
+	raise SystemExit(main())

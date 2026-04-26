@@ -1,5 +1,17 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
+---
+type: protocol-doc
+tags: [specialized-systems, h323, configuration, baselines, standards]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, configuration-management, change-control]
+stakeholders: [operations-team, configuration-management, deployment-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Configuration Baselines
 
 Version 1.0 — Standardized Secure Configurations (GK, GW, EP)
@@ -334,114 +346,76 @@ Defines standardized, secure configuration baselines for all H.323 components to
 
 **Security Checks**:
 ```bash
-
 # Validate H.235 enabled
-
 gk-cli show h235-status
-
 # Expected: H.235.2/3/4 enabled, mandatory
 
 # Validate TLS enabled
-
 gk-cli show tls-config
-
 # Expected: TLS 1.2+, mutual auth enabled
 
 # Validate certificate
-
 openssl x509 -in /etc/certs/gatekeeper.pem -noout -text
-
 # Expected: Valid, not expired, correct SAN
-
 ```
 
 **Functional Checks**:
 ```bash
-
 # Check registrations
-
 gk-cli show registrations
-
 # Expected: All endpoints registered with valid H.235 tokens
 
 # Check routing
-
 gk-cli show routes
-
 # Expected: All routes defined per baseline
-
 ```
 
 ### 5.2 Gateway Validation
 
 **Security Checks**:
 ```bash
-
 # Validate SRTP mandatory
-
 gw-cli show srtp-config
-
 # Expected: SRTP mandatory, no RTP fallback
 
 # Validate trunk status
-
 gw-cli show trunk-status
-
 # Expected: All trunks up
 
 # Validate certificate
-
 openssl x509 -in /etc/certs/gateway.pem -noout -text
-
 # Expected: Valid, not expired
-
 ```
 
 **Functional Checks**:
 ```bash
-
 # Test call to PSTN
-
 gw-cli test-call +18005551234
-
 # Expected: Call succeeds, SRTP active
 
 # Validate CDR export
-
 gw-cli show cdr-export
-
 # Expected: Logs flowing to SIEM
-
 ```
 
 ### 5.3 Endpoint Validation
 
 **Security Checks**:
 ```bash
-
 # Validate SRTP enabled
-
 ep-cli show srtp-status
-
 # Expected: SRTP enabled, mandatory
 
 # Validate registration
-
 ep-cli show registration
-
 # Expected: Registered with GK, H.235 auth
-
 ```
 
 **Functional Checks**:
 ```bash
-
 # Test call to another endpoint
-
 ep-cli test-call ep-conference-room-102
-
 # Expected: Call succeeds, SRTP active
-
 ```
 
 ---
@@ -452,13 +426,9 @@ ep-cli test-call ep-conference-room-102
 
 **Automated Scanning**:
 ```bash
-
 # Compare current config vs. baseline
-
 config-audit --baseline /baselines/gk-baseline.xml --current /etc/gk/config.xml
-
 # Output: List of deviations
-
 ```
 
 **Manual Inspection**:

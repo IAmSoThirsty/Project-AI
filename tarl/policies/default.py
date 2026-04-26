@@ -1,5 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
 from tarl.policy import TarlPolicy
 from tarl.spec import TarlDecision, TarlVerdict
 

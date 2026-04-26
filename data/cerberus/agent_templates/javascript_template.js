@@ -1,5 +1,3 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
 // Cerberus Hydra Guard Agent - JavaScript Template
 // Language: {{human_lang}} ({{human_lang_name}})
 // Agent ID: {{agent_id}}

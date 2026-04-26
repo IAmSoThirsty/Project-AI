@@ -1,5 +1,16 @@
-<!--                                         [2026-03-04 09:48] -->
-<!--                                        Productivity: Active -->
+---
+type: reference
+tags: [p1-developer, mcp, model-context-protocol, configuration, mcp-server, ai-integration]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [mcp-server, mcp-integration, claude-desktop, ai-clients, protocol-handlers]
+stakeholders: [developers, integrators, mcp-users, ai-engineers]
+audience: intermediate
+prerequisites: [python-intermediate, mcp-concepts, protocol-understanding, api-integration]
+estimated_time: 40 minutes
+review_cycle: monthly
+---
 # Model Context Protocol (MCP) Configuration for Project-AI
 
 ## Overview
@@ -231,9 +242,7 @@ This opens a web interface to test all tools, resources, and prompts interactive
 You can specify a custom data directory by modifying the server initialization:
 
 ```python
-
 # In mcp_server.py
-
 server = ProjectAIMCPServer(data_dir="/custom/data/path")
 ```
 
@@ -242,17 +251,13 @@ server = ProjectAIMCPServer(data_dir="/custom/data/path")
 For web-based clients, you can modify the server to use HTTP transport:
 
 ```python
-
 # In mcp_server.py, modify the run method:
-
 async def run(self):
     """Run the MCP server using HTTP transport."""
     from mcp.server.sse import sse_server
-
+    
     app = sse_server(self.server)
-
     # Run with uvicorn or another ASGI server
-
 ```
 
 ### Adding Custom Tools
@@ -281,9 +286,7 @@ Tool(
 async def _custom_tool(self, args: Dict[str, Any]) -> List[TextContent]:
     """Custom tool implementation."""
     param = args.get("param")
-
     # Tool logic here
-
     result = {"result": "value"}
     return [TextContent(type="text", text=json.dumps(result, indent=2))]
 ```
@@ -318,9 +321,7 @@ chmod 600 ~/.config/Claude/claude_desktop_config.json
 The command override tool requires additional authentication:
 
 ```python
-
 # Protected by master password
-
 self.override.validate_override(password, action)
 ```
 
@@ -329,9 +330,7 @@ self.override.validate_override(password, action)
 All learning requests require human approval before execution:
 
 ```python
-
 # Requires explicit approval
-
 self.learning.approve_request(request_id)
 ```
 
@@ -387,9 +386,7 @@ self.learning.approve_request(request_id)
 Core systems are initialized on first use to improve startup time:
 
 ```python
-
 # Systems are initialized in __init__ but gracefully handle failures
-
 try:
     from app.core.ai_systems import FourLaws
     self.four_laws = FourLaws()
@@ -403,9 +400,7 @@ except Exception as e:
 Memory and knowledge base results can be cached:
 
 ```python
-
 # Implement caching for frequently accessed data
-
 @lru_cache(maxsize=128)
 def search_memory_cached(query: str):
     return self.memory.search_knowledge(query)
@@ -417,9 +412,7 @@ All tool implementations are async to prevent blocking:
 
 ```python
 async def _generate_image(self, args):
-
     # Long-running image generation doesn't block other tools
-
     return await self.image_gen.generate_async(...)
 ```
 
@@ -463,9 +456,7 @@ logger.info(f"Tool {name} executed in {execution_time:.2f}s")
 Use Project-AI as an ethics validation service:
 
 ```python
-
 # In your AI application
-
 from anthropic import Anthropic
 
 client = Anthropic()
@@ -488,9 +479,7 @@ response = client.messages.create(
 Use Project-AI as a persistent knowledge base:
 
 ```python
-
 # Store knowledge
-
 await client.use_mcp_tool(
     server="project-ai",
     tool="add_memory",
@@ -502,7 +491,6 @@ await client.use_mcp_tool(
 )
 
 # Retrieve knowledge
-
 await client.use_mcp_tool(
     server="project-ai",
     tool="search_memory",
@@ -555,9 +543,7 @@ To contribute to the MCP server:
 ### Testing Guidelines
 
 ```python
-
 # Test new tools
-
 async def test_new_tool():
     server = ProjectAIMCPServer(data_dir="/tmp/test")
     result = await server._new_tool({"param": "value"})
@@ -601,6 +587,6 @@ Project-AI MCP Server is licensed under MIT License. See LICENSE file for detail
 - [ ] Custom prompt templates
 - [ ] Enhanced error recovery
 
-______________________________________________________________________
+---
 
 **Project-AI MCP Server** - Bringing ethical AI capabilities to your favorite AI assistants through the Model Context Protocol.

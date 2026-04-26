@@ -1,5 +1,3 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 SARIF Exporter Utility
@@ -16,6 +14,10 @@ Integration:
     1. Call after each JailbreakBench or CodeAdversary run
     2. Upload resulting SARIF to GitHub Security
     3. Use level=error findings to drive deployment gates
+
+GOVERNANCE: GOVERNED
+Classification: Security reporting
+Risk: Low (exports security findings)
 
 Author: Security Agents Team
 Date: 2026-01-21

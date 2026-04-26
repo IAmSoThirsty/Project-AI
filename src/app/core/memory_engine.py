@@ -1,6 +1,3 @@
-#                                           [2026-03-05 10:03]
-#                                          Productivity: Active
-
 """
 AGI Memory Engine - Advanced Memory System with Episodic, Semantic, and Procedural Memory
 
@@ -91,20 +88,16 @@ import logging
 import os
 import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import timezone, datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from enum import Enum
 from typing import Any
 
-# Internal Imports
-from src.app.core.platform_tiers import (
+from app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
-
-# ────────────────────────────────────────────────────────────────────────────
-
 
 logger = logging.getLogger(__name__)
 
@@ -150,7 +143,7 @@ class RelationType(Enum):
 @dataclass
 class EpisodicMemory:
     """
-    A specific autobiographical experience remembered by the AGI (Detailed Autobiographical Experience Anchor).
+    A specific autobiographical experience remembered by the AGI.
 
     Episodic memories capture the "what happened" of AGI experience,
     including rich contextual details and emotional coloring.
@@ -256,7 +249,7 @@ class EpisodicMemory:
 @dataclass
 class SemanticConcept:
     """
-    A concept in the semantic knowledge graph (Abstract Knowledge Node & Global Fact Repository).
+    A concept in the semantic knowledge graph.
 
     Represents factual knowledge independent of specific experiences.
     """
@@ -314,7 +307,7 @@ class SemanticConcept:
 @dataclass
 class ProceduralSkill:
     """
-    A learned skill or procedure that can be executed (Executable Capability & Task Optimization Pattern).
+    A learned skill or procedure that can be executed.
 
     Represents "how to" knowledge - executable procedures.
     """
@@ -397,7 +390,7 @@ class ProceduralSkill:
 
 class MemoryEngine:
     """
-    Advanced AGI Memory System (High-Performance Neural Memory Graph & Knowledge Synthesis Engine).
+    Advanced AGI Memory System managing episodic, semantic, and procedural memory.
 
     This engine provides sophisticated memory storage, retrieval, and
     consolidation capabilities that enable the AGI to learn from experience,
@@ -454,11 +447,7 @@ class MemoryEngine:
             )
             logger.info("MemoryEngine registered as Tier-2 Resource Orchestrator")
         except Exception as e:
-            logger.error(
-                "CRITICAL: Failed to register MemoryEngine in tier registry: %s",
-                e,
-                exc_info=True,
-            )
+            logger.warning("Failed to register MemoryEngine in tier registry: %s", e)
 
     def _load_memories(self):
         """Load all memory types from disk."""
@@ -473,14 +462,8 @@ class MemoryEngine:
                         self.episodic_memories[memory.memory_id] = memory
                         self._index_episodic_memory(memory)
                 logger.info("Loaded %s episodic memories", len(self.episodic_memories))
-            except (IOError, json.JSONDecodeError) as e:
-                logger.error(
-                    "Episodic Memory Corruption/IO Error: %s", e, exc_info=True
-                )
             except Exception as e:
-                logger.error(
-                    "Unexpected Episodic Memory Load Failure: %s", e, exc_info=True
-                )
+                logger.error("Failed to load episodic memories: %s", e)
 
         # Load semantic concepts
         semantic_file = os.path.join(self.data_dir, "semantic_concepts.json")
@@ -492,12 +475,8 @@ class MemoryEngine:
                         concept = SemanticConcept.from_dict(concept_data)
                         self.semantic_concepts[concept.concept_id] = concept
                 logger.info("Loaded %s semantic concepts", len(self.semantic_concepts))
-            except (IOError, json.JSONDecodeError) as e:
-                logger.error(
-                    "Semantic Concept Corruption/IO Error: %s", e, exc_info=True
-                )
             except Exception as e:
-                logger.error("Unexpected Semantic Load Failure: %s", e, exc_info=True)
+                logger.error("Failed to load semantic concepts: %s", e)
 
         # Load procedural skills
         procedural_file = os.path.join(self.data_dir, "procedural_skills.json")
@@ -509,12 +488,8 @@ class MemoryEngine:
                         skill = ProceduralSkill.from_dict(skill_data)
                         self.procedural_skills[skill.skill_id] = skill
                 logger.info("Loaded %s procedural skills", len(self.procedural_skills))
-            except (IOError, json.JSONDecodeError) as e:
-                logger.error(
-                    "Procedural Skill Corruption/IO Error: %s", e, exc_info=True
-                )
             except Exception as e:
-                logger.error("Unexpected Procedural Load Failure: %s", e, exc_info=True)
+                logger.error("Failed to load procedural skills: %s", e)
 
     def _save_memories(self):
         """Save all memory types to disk."""
@@ -1065,3 +1040,4 @@ __all__ = [
     "SignificanceLevel",
     "RelationType",
 ]
+
