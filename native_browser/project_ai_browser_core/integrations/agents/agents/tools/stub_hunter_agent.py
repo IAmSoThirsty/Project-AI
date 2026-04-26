@@ -1,4 +1,5 @@
 import logging
+
 logger = logging.getLogger(__name__)
 # ============================================================================ #
 #                                           [2026-03-18 20:20]
@@ -16,7 +17,7 @@ No interaction. Runs and exits.
 import ast
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.absolute()
@@ -139,7 +140,7 @@ def build_manifest():
         by_file.setdefault(s["file"], []).append(s)
 
     manifest = {
-        "generated": datetime.now(timezone.utc).isoformat(),
+        "generated": datetime.now(UTC).isoformat(),
         "summary": {
             "total_stubs": len(all_stubs),
             "high_priority": len(by_severity["HIGH"]),

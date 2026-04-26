@@ -20,9 +20,10 @@ import hashlib
 import json
 import logging
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Callable
+from datetime import UTC, datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -293,7 +294,7 @@ def create_event(
         request_id=request_id,
         subject=subject,
         severity=severity,
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         payload=payload or {},
         artifact_hashes=artifact_hashes or {},
     )

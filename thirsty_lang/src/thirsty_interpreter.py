@@ -9,10 +9,10 @@ is pending initialization.
 
 class ThirstyInterpreter:
     """Mock/Bridge for Thirsty-lang interpreter."""
-    
+
     def __init__(self, *args, **kwargs):
         pass
-        
+
     def execute(self, script_path: str):
         """Execute a .thirsty script."""
         raise RuntimeError(

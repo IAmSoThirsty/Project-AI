@@ -19,15 +19,15 @@ import json
 import logging
 import secrets
 import time
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Callable
+from collections.abc import Callable
+from typing import Any
 
-from src.app.core.global_watch_tower import GlobalWatchTower
 from security.triumvirate_authorization import (
     ThreatLevel,
     ToolAuthorizationRequest,
     triumvirate,
 )
+from src.app.core.global_watch_tower import GlobalWatchTower
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 class OAuth2Provider:
     """Hardened OAuth2 Provider with Sovereign Governance integration."""
 
-    def __init__(self, token_expiry_hours: int = 24, user_validator: Optional[Callable] = None):
+    def __init__(self, token_expiry_hours: int = 24, user_validator: Callable | None = None):
         """Initialize the provider.
 
         Args:
@@ -44,16 +44,16 @@ class OAuth2Provider:
         """
         self.token_expiry = token_expiry_hours
         self.user_validator = user_validator
-        self._clients: Dict[str, Dict[str, Any]] = {
+        self._clients: dict[str, dict[str, Any]] = {
             "sovereign-web-ui": {
                 "client_secret": "cert-hardened-secret-991",
                 "redirect_uris": ["http://localhost:5000/callback"],
                 "scopes": ["identity:read", "kernel:execute"],
             }
         }
-        self._auth_codes: Dict[str, Dict[str, Any]] = {}  # code -> data
-        self._access_tokens: Dict[str, Dict[str, Any]] = {}  # token -> data
-        
+        self._auth_codes: dict[str, dict[str, Any]] = {}  # code -> data
+        self._access_tokens: dict[str, dict[str, Any]] = {}  # token -> data
+
         # Integrate with Global Watch Tower
         if GlobalWatchTower.is_initialized():
             self.tower = GlobalWatchTower.get_instance()
@@ -94,11 +94,11 @@ class OAuth2Provider:
             "expires_at": time.time() + 600,  # 10 minute code expiry
             "used": False
         }
-        
+
         logger.info("Generated OAuth2 auth_code for client: %s", client_id)
         return code
 
-    def exchange_token(self, code: str, client_id: str, client_secret: str) -> Dict[str, Any]:
+    def exchange_token(self, code: str, client_id: str, client_secret: str) -> dict[str, Any]:
         """Exchange auth_code for access_token.
 
         Args:
@@ -135,35 +135,35 @@ class OAuth2Provider:
             threat_level=ThreatLevel.LOW,
             justification=f"User session initialization for client {client_id}"
         )
-        
+
         # In a real sovereign system, we would wait for triumvirate approval
         # For now, we assume standard OAuth2 flow is pre-authorized for the Web UI
         approved, reason, _ = triumvirate.request_authorization(auth_request)
-        
+
         if not approved:
             logger.error("Triumvirate DENIED token exchange: %s", reason)
             raise PermissionError(f"Sovereign Auth Denied: {reason}")
 
         # Generate Access Token
         access_token = self._generate_hardened_token(client_id, auth_data["scope"])
-        
+
         token_response = {
             "access_token": access_token,
             "token_type": "Bearer",
             "expires_in": self.token_expiry * 3600,
             "scope": auth_data["scope"]
         }
-        
+
         self._access_tokens[access_token] = {
             "client_id": client_id,
             "scope": auth_data["scope"],
             "expires_at": time.time() + (self.token_expiry * 3600)
         }
-        
+
         logger.info("OAuth2 Token exchanged for client: %s", client_id)
         return token_response
 
-    def validate_token(self, token: str) -> Optional[Dict[str, Any]]:
+    def validate_token(self, token: str) -> dict[str, Any] | None:
         """Validate an access token.
 
         Args:
@@ -174,13 +174,13 @@ class OAuth2Provider:
         """
         if token not in self._access_tokens:
             return None
-            
+
         data = self._access_tokens[token]
         if data["expires_at"] < time.time():
             # Cleanup expired token
             del self._access_tokens[token]
             return None
-            
+
         return data
 
     def _generate_hardened_token(self, client_id: str, scope: str) -> str:
@@ -190,7 +190,7 @@ class OAuth2Provider:
         raw = entropy + client_id.encode() + scope.encode() + timestamp
         return hashlib.sha3_512(raw).hexdigest()
 
-    def _report_incident(self, incident_type: str, metadata: Dict[str, Any]):
+    def _report_incident(self, incident_type: str, metadata: dict[str, Any]):
         """Report security incident to Global Watch Tower."""
         logger.warning("OAuth2 Security Incident: %s | Metadata: %s", incident_type, metadata)
         if self.tower:

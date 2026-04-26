@@ -17,8 +17,7 @@ Fingerprint sources:
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 
 from psia.waterfall.engine import StageDecision, StageResult, WaterfallStage
 

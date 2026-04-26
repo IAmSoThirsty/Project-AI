@@ -9,7 +9,6 @@ from unittest.mock import MagicMock
 # Ensure src is on the path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-import pytest
 
 
 # ── Stub out heavy dependencies before import ──────────────────

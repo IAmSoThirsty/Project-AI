@@ -14,9 +14,10 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from dotenv import load_dotenv
+
 from src.app.api_core import initialize_api_core, runtime_summary
 from src.block_pyqt6 import ensure_pyqt6_available
-from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 

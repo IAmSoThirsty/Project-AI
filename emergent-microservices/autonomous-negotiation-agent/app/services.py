@@ -4,8 +4,7 @@
 Autonomous Negotiation Agent - Service Layer
 """
 
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from datetime import datetime
 from uuid import UUID
 
 from .logging_config import logger
@@ -55,7 +54,7 @@ class NegotiationService:
         return await self.repository.save_session(session)
 
     async def finalize_agreement(
-        self, session_id: UUID, signatures: Dict[str, str]
+        self, session_id: UUID, signatures: dict[str, str]
     ) -> AgreedContract:
         """Seal a negotiation session with a signed contract"""
         session = await self.repository.get_session(session_id)

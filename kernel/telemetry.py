@@ -20,9 +20,10 @@ import logging
 import threading
 import time
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ class MetricValue:
 
     timestamp: float
     value: float
-    labels: Dict[str, str] = field(default_factory=dict)
+    labels: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -53,14 +54,14 @@ class Metric:
     metric_type: MetricType
     description: str
     unit: str
-    labels: List[str] = field(default_factory=list)
+    labels: list[str] = field(default_factory=list)
     values: deque = field(default_factory=lambda: deque(maxlen=10000))  # Ring buffer
 
     # For histograms
-    buckets: List[float] = field(default_factory=list)
+    buckets: list[float] = field(default_factory=list)
 
     # For summaries
-    quantiles: List[float] = field(default_factory=lambda: [0.5, 0.9, 0.95, 0.99])
+    quantiles: list[float] = field(default_factory=lambda: [0.5, 0.9, 0.95, 0.99])
 
 
 @dataclass
@@ -89,17 +90,17 @@ class TelemetrySystem:
 
     def __init__(self):
         # Metric registry
-        self.metrics: Dict[str, Metric] = {}
+        self.metrics: dict[str, Metric] = {}
 
         # Alert registry
-        self.alerts: List[Alert] = []
+        self.alerts: list[Alert] = []
 
         # Thread safety
         self.lock = threading.RLock()
 
         # Aggregation caches
-        self.rate_cache: Dict[str, Dict[str, float]] = defaultdict(dict)
-        self.last_values: Dict[str, float] = {}
+        self.rate_cache: dict[str, dict[str, float]] = defaultdict(dict)
+        self.last_values: dict[str, float] = {}
 
         # Initialize standard kernel metrics
         self._init_standard_metrics()
@@ -204,7 +205,7 @@ class TelemetrySystem:
         metric_type: MetricType,
         description: str,
         unit: str,
-        labels: Optional[List[str]] = None,
+        labels: list[str] | None = None,
     ):
         """Register a new metric"""
         with self.lock:
@@ -227,8 +228,8 @@ class TelemetrySystem:
         self,
         metric_name: str,
         value: float,
-        labels: Optional[Dict[str, str]] = None,
-        timestamp: Optional[float] = None,
+        labels: dict[str, str] | None = None,
+        timestamp: float | None = None,
     ):
         """Record a metric value"""
         with self.lock:
@@ -251,7 +252,7 @@ class TelemetrySystem:
         self,
         metric_name: str,
         amount: float = 1.0,
-        labels: Optional[Dict[str, str]] = None,
+        labels: dict[str, str] | None = None,
     ):
         """Increment a counter metric"""
         with self.lock:
@@ -274,7 +275,7 @@ class TelemetrySystem:
             self.last_values[f"{metric_name}:{label_key}"] = new_value
 
     def set_gauge(
-        self, metric_name: str, value: float, labels: Optional[Dict[str, str]] = None
+        self, metric_name: str, value: float, labels: dict[str, str] | None = None
     ):
         """Set a gauge metric value"""
         with self.lock:
@@ -291,7 +292,7 @@ class TelemetrySystem:
             self.record(metric_name, value, labels)
 
     def observe_histogram(
-        self, metric_name: str, value: float, labels: Optional[Dict[str, str]] = None
+        self, metric_name: str, value: float, labels: dict[str, str] | None = None
     ):
         """Observe a value for histogram metric"""
         with self.lock:
@@ -308,8 +309,8 @@ class TelemetrySystem:
             self.record(metric_name, value, labels)
 
     def get_metric_value(
-        self, metric_name: str, labels: Optional[Dict[str, str]] = None
-    ) -> Optional[float]:
+        self, metric_name: str, labels: dict[str, str] | None = None
+    ) -> float | None:
         """Get latest value for metric"""
         with self.lock:
             if metric_name not in self.metrics:
@@ -333,7 +334,7 @@ class TelemetrySystem:
         self,
         metric_name: str,
         window_seconds: float = 60.0,
-        labels: Optional[Dict[str, str]] = None,
+        labels: dict[str, str] | None = None,
     ) -> float:
         """
         Calculate rate of change (per second) over time window
@@ -378,8 +379,8 @@ class TelemetrySystem:
         metric_name: str,
         percentile: float,
         window_seconds: float = 60.0,
-        labels: Optional[Dict[str, str]] = None,
-    ) -> Optional[float]:
+        labels: dict[str, str] | None = None,
+    ) -> float | None:
         """
         Calculate percentile value over time window
 
@@ -502,7 +503,7 @@ class TelemetrySystem:
 
             return "\n".join(lines)
 
-    def _format_labels(self, labels: Dict[str, str]) -> str:
+    def _format_labels(self, labels: dict[str, str]) -> str:
         """Format labels for Prometheus format"""
         if not labels:
             return ""
@@ -510,7 +511,7 @@ class TelemetrySystem:
         pairs = [f'{k}="{v}"' for k, v in sorted(labels.items())]
         return "{" + ",".join(pairs) + "}"
 
-    def _get_histogram_export(self, metric: Metric) -> List[str]:
+    def _get_histogram_export(self, metric: Metric) -> list[str]:
         """Export histogram metric in Prometheus format"""
         lines = []
 
@@ -544,7 +545,7 @@ class TelemetrySystem:
 
         return lines
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get telemetry system statistics"""
         with self.lock:
             return {

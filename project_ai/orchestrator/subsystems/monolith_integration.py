@@ -8,7 +8,7 @@ Provides schematic enforcement and policy validation
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Add Monolith to path
 monolith_path = (
@@ -31,7 +31,7 @@ except ImportError as e:
 class MonolithIntegration:
     """Integrates Thirstys-Monolith schematic guardian and policy enforcement"""
 
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, config: dict[str, Any] = None):
         self.logger = logging.getLogger(__name__)
         self.config = config or {}
         self.active = False
@@ -89,7 +89,7 @@ class MonolithIntegration:
         self.logger.info("Stopping Monolith Governance Engine...")
         self.active = False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get Monolith status"""
         return {
             "active": self.active,

@@ -16,7 +16,7 @@ NEW_HEADER = f"<!--                                         [{CURRENT_TIME}] -->
 
 
 def update_file(filepath):
-    with open(filepath, "r", encoding="utf-8") as f:
+    with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
     if content.startswith("<!--"):

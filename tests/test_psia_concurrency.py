@@ -14,17 +14,9 @@ Fact-verifies claims from the paper (§6):
 
 from __future__ import annotations
 
-import threading
-
-import pytest
-
 from psia.concurrency import (
     CommitOutcome,
-    CommitResult,
     LinearizableCanonicalStore,
-    MutationIntent,
-    StateSnapshot,
-    VersionedValue,
 )
 
 

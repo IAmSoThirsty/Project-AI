@@ -196,7 +196,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
           submodules: recursive
@@ -354,21 +354,21 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         with:
           languages: python
           queries: security-extended,security-and-quality
       
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
       
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         with:
           category: "/language:python"
           upload: true
@@ -391,7 +391,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -418,14 +418,14 @@ jobs:
             --severity-level medium --confidence-level medium || true
       
       - name: Upload SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         if: always()
         with:
           sarif_file: reports/bandit-sarif.sarif
           category: bandit
       
       - name: Upload Bandit reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: bandit-security-reports
@@ -449,7 +449,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       
@@ -486,7 +486,7 @@ jobs:
           trufflehog3 -v -r . --format json -o reports/trufflehog-report.json || true
       
       - name: Upload secret scanning reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: secret-scanning-reports
@@ -508,7 +508,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -533,7 +533,7 @@ jobs:
           safety check || true
       
       - name: Upload dependency reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: dependency-security-reports
@@ -564,7 +564,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -605,7 +605,7 @@ jobs:
           fi
       
       - name: Upload AI safety reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: ai-safety-reports
@@ -627,7 +627,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -650,7 +650,7 @@ jobs:
           fi
       
       - name: Upload model security reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: model-security-reports
@@ -671,7 +671,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -687,7 +687,7 @@ jobs:
           ruff check . || true
       
       - name: Upload Ruff report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: ruff-lint-reports
@@ -708,7 +708,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -726,7 +726,7 @@ jobs:
           mypy src/ project_ai/ --install-types --non-interactive || true
       
       - name: Upload MyPy reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: mypy-type-reports
@@ -747,7 +747,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -773,12 +773,12 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       
       - name: Run Super-Linter
-        uses: super-linter/super-linter@v5
+        uses: super-linter/super-linter@a8150b40c89574adb5f68bf9502b890a236a06b3
         continue-on-error: true
         env:
           DEFAULT_BRANCH: main
@@ -807,10 +807,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Run actionlint
-        uses: reviewdog/action-actionlint@v1
+        uses: reviewdog/action-actionlint@e0207a28405ecad11953ba625a95d92f7889572a
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-check
@@ -838,7 +838,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           submodules: recursive
       
@@ -862,14 +862,14 @@ jobs:
             || true
       
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457
         with:
           files: reports/coverage/coverage-${{ matrix.python-version }}-${{ matrix.os }}.xml
           flags: python-${{ matrix.python-version }}
           name: python-${{ matrix.python-version }}-${{ matrix.os }}
       
       - name: Upload test reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: python-test-reports-${{ matrix.python-version }}-${{ matrix.os }}
@@ -893,7 +893,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
@@ -918,7 +918,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -955,7 +955,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           submodules: recursive
       
@@ -990,7 +990,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1026,7 +1026,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1064,10 +1064,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download coverage artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           pattern: python-test-reports-*
           path: coverage-reports/
@@ -1098,21 +1098,21 @@ jobs:
           coverage report --fail-under=${COVERAGE_THRESHOLD_PYTHON} || true
       
             - name: Upload coverage to Codacy
-        uses: codacy/codacy-coverage-reporter-action@v1
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699
         with:
           project-token: ${{ secrets.CODACY_API_TOKEN }}
           coverage-reports: coverage-combined.xml
 
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request'
-        uses: py-cov-action/python-coverage-comment-action@v3
+        uses: py-cov-action/python-coverage-comment-action@4c2eefcda8b94596768855a80ac94edc61aba669
         with:
           GITHUB_TOKEN: ${{ github.token }}
           MINIMUM_GREEN: 80
           MINIMUM_ORANGE: 70
       
       - name: Upload combined coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457
         with:
           files: coverage-combined.xml
           flags: combined
@@ -1146,7 +1146,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1169,7 +1169,7 @@ jobs:
           twine check dist/*
       
       - name: Upload wheel artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: python-wheels
           path: dist/
@@ -1196,10 +1196,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
       
       - name: Extract dockerfile name
         id: extract
@@ -1209,7 +1209,7 @@ jobs:
           echo "name=$NAME" >> $GITHUB_OUTPUT
       
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25
         with:
           context: .
           file: ${{ matrix.dockerfile }}
@@ -1232,16 +1232,16 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
       
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2.4.2
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
       
       - name: Build Android APK
         if: hashFiles('android/build.gradle') != ''
@@ -1252,7 +1252,7 @@ jobs:
       
       - name: Upload APK
         if: hashFiles('android/app/build/outputs/apk/release/*.apk') != ''
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: android-apk
           path: android/app/build/outputs/apk/release/*.apk
@@ -1276,7 +1276,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1296,7 +1296,7 @@ jobs:
         shell: bash
       
       - name: Upload desktop build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: hashFiles('dist/ProjectAI-*') != ''
         with:
           name: desktop-build-${{ matrix.os }}
@@ -1323,7 +1323,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Install Syft
         run: |
@@ -1343,7 +1343,7 @@ jobs:
           ls -lh sbom/
       
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@f713795cb21599bc4e5c4b58cbad1da852d7eeb9
       
       - name: Sign SBOM with Cosign
         run: |
@@ -1352,7 +1352,7 @@ jobs:
           cosign sign-blob --yes sbom/sbom-cyclonedx.json > sbom/sbom-cyclonedx.json.sig || true
       
       - name: Upload SBOM artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: sbom-files
           path: sbom/
@@ -1377,10 +1377,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download SBOM artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           name: sbom-files
           path: sbom/
@@ -1401,14 +1401,14 @@ jobs:
           grype sbom:sbom/sbom-spdx.json || true
       
       - name: Upload Grype SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         if: always()
         with:
           sarif_file: reports/grype-sarif.sarif
           category: grype-sbom
       
       - name: Upload vulnerability reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         if: always()
         with:
           name: sbom-vulnerability-reports
@@ -1434,10 +1434,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -1446,7 +1446,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
       
       - name: Upload Trivy SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         if: always()
         with:
           sarif_file: trivy-fs-results.sarif
@@ -1467,13 +1467,13 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
       
       - name: Build Docker image for scanning
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25
         with:
           context: .
           file: Dockerfile
@@ -1482,7 +1482,7 @@ jobs:
           tags: project-ai:scan
       
       - name: Run Trivy image scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
         with:
           scan-type: 'image'
           image-ref: 'project-ai:scan'
@@ -1491,7 +1491,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
       
       - name: Upload Trivy image SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         if: always()
         with:
           sarif_file: trivy-image-results.sarif
@@ -1512,10 +1512,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Run Trivy config scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
         with:
           scan-type: 'config'
           scan-ref: '.'
@@ -1524,7 +1524,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
       
       - name: Upload Trivy config SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         if: always()
         with:
           sarif_file: trivy-config-results.sarif
@@ -1545,10 +1545,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Run Checkov scan
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@002cd2e8cc0fe0535e6f364509e091c1a9870efa
         with:
           directory: .
           framework: all
@@ -1557,7 +1557,7 @@ jobs:
           soft_fail: true
       
       - name: Upload Checkov SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c
         if: always()
         with:
           sarif_file: checkov-results.sarif
@@ -1583,7 +1583,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -1638,7 +1638,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1646,7 +1646,7 @@ jobs:
           python-version: '3.12'
       
       - name: Download dependency reports
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           name: dependency-security-reports
           path: reports/
@@ -1659,7 +1659,7 @@ jobs:
           pip-upgrade || true
       
       - name: Create PR with fixes
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@4e1beaa7521e8b457b572c090b25bd3db56bf1c5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "🔒 Security: Auto-upgrade vulnerable dependencies"
@@ -1691,10 +1691,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download security reports
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           pattern: '*-security-reports'
           path: all-reports/
@@ -1731,17 +1731,17 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       
       - name: Label PR based on changed files
-        uses: actions/labeler@v4
+        uses: actions/labeler@ac9175f8a1f3625fd0d4fb234536d26811351594
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Add size label
-        uses: codelytv/pr-size-labeler@v1
+        uses: codelytv/pr-size-labeler@0b7f116f59d1830881bc1cc88be32b005ab09ffa
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           xs_label: 'size/xs'
@@ -1769,11 +1769,11 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Auto-approve PR
         if: success()
-        uses: hmarr/auto-approve-action@v3
+        uses: hmarr/auto-approve-action@7d0ab8fdbb906da8a6297d373561d5ccb137d98f
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           review-message: |
@@ -1806,7 +1806,7 @@ jobs:
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v1
+        uses: dependabot/fetch-metadata@8348ea7f5d949b08c7f125a44b569c9626b05db3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       
@@ -1831,17 +1831,17 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Auto-label issue
-        uses: github/issue-labeler@v3.1
+        uses: github/issue-labeler@e24a3eb6b2e28c8904d086302a2b760647f5f45c
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/issue-labeler.yml
           enable-versioned-regex: 0
       
       - name: Comment on new issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
         with:
           script: |
             github.rest.issues.createComment({
@@ -1866,7 +1866,7 @@ jobs:
     
     steps:
       - name: Close stale issues and PRs
-        uses: actions/stale@v8
+        uses: actions/stale@1160a2240286f5da8ec72b1c0816ce2481aabf84
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity.'
@@ -1898,7 +1898,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       
@@ -1959,7 +1959,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1999,7 +1999,7 @@ jobs:
         shell: bash
       
       - name: Upload release artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: release-${{ matrix.platform }}-${{ needs.prepare-release.outputs.version }}
           path: release-artifacts/
@@ -2020,16 +2020,16 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download all release artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           pattern: release-*
           path: all-releases/
       
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@f713795cb21599bc4e5c4b58cbad1da852d7eeb9
       
       - name: Sign artifacts with Cosign
         run: |
@@ -2042,7 +2042,7 @@ jobs:
           done
       
       - name: Upload signed artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: signed-release-artifacts
           path: all-releases/
@@ -2062,16 +2062,16 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download signed artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           name: signed-release-artifacts
           path: release-files/
       
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@26994186c0ac3ef5cae75ac16aa32e8153525f77
         with:
           tag_name: ${{ needs.prepare-release.outputs.version }}
           name: Release ${{ needs.prepare-release.outputs.version }}
@@ -2101,10 +2101,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download wheel artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           pattern: release-linux-*
           path: dist/
@@ -2132,13 +2132,13 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
       
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -2146,7 +2146,7 @@ jobs:
       
       - name: Docker metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
@@ -2156,7 +2156,7 @@ jobs:
             type=raw,value=latest
       
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25
         with:
           context: .
           push: true
@@ -2184,7 +2184,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -2234,7 +2234,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       
@@ -2268,10 +2268,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Delete old artifacts
-        uses: c-hive/gha-remove-artifacts@v1
+        uses: c-hive/gha-remove-artifacts@44fc7acaf1b3d0987da0e8d4707a989d80e9554b
         with:
           age: '30 days'
           skip-recent: 10
@@ -2291,7 +2291,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Cleanup old caches
         run: |
@@ -2321,7 +2321,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       
@@ -2356,10 +2356,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           path: all-artifacts/
       
@@ -2408,7 +2408,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Generate badge data
         run: |
@@ -2430,7 +2430,7 @@ jobs:
           fi
       
       - name: Upload badge data
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: status-badges
           path: badges/
@@ -2449,10 +2449,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
       
       - name: Download all reports
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           path: all-reports/
       
@@ -2488,7 +2488,7 @@ jobs:
           echo "Dashboard generated at metrics/dashboard.json"
       
       - name: Upload metrics
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: workflow-metrics
           path: metrics/

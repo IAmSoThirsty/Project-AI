@@ -8,7 +8,6 @@
 # COMPLIANCE: Sovereign Substrate / debug_torch.py
 
 
-import sys
 try:
     import torch
     print(f"Torch Version: {torch.__version__}")

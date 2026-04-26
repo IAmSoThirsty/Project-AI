@@ -55,7 +55,7 @@ def discover_microservices():
     if os.path.exists(sovereign_dir):
         for item in os.listdir(sovereign_dir):
             item_path = os.path.join(sovereign_dir, item)
-            if (os.path.isdir(item_path) and not (item == "Project-AI" or item.startswith(".")) and 
+            if (os.path.isdir(item_path) and not (item == "Project-AI" or item.startswith(".")) and
                 (item.startswith("thirsty-lang-") or item in [
                     "Cerberus",
                     "TTP",

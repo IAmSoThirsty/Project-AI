@@ -7,7 +7,7 @@ from uuid import uuid4
 import pytest
 
 from app.errors import NotFoundError
-from app.models import ItemCreate, ItemUpdate
+from app.models import ItemCreate
 from app.services import ItemService
 
 

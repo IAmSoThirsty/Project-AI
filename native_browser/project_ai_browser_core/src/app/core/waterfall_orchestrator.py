@@ -7,10 +7,10 @@ import json
 import os
 import socket
 import struct
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-from typing import Iterable
 from urllib.parse import quote_plus, urlparse
 from uuid import uuid4
 

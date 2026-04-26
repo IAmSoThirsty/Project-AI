@@ -24,10 +24,9 @@ import json
 import logging
 import os
 import threading
-import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from cryptography.fernet import Fernet
 
@@ -107,7 +106,7 @@ def check_and_rotate_vault_key(force: bool = False) -> bool:
         # Check rotation schedule
         if rotation_file.exists():
             try:
-                with open(rotation_file, "r") as f:
+                with open(rotation_file) as f:
                     rotation_data = json.load(f)
                     last_rotation = datetime.fromisoformat(
                         rotation_data["last_rotation"]
@@ -222,7 +221,7 @@ class BlackVault:
     """
 
     def __init__(
-        self, vault_store: Optional[str] = None, max_size: Optional[int] = None
+        self, vault_store: str | None = None, max_size: int | None = None
     ):
         """
         Initialize Black Vault.
@@ -305,7 +304,7 @@ class BlackVault:
         return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
     def deny(
-        self, doc: str, reason: str, metadata: Optional[Dict[str, Any]] = None
+        self, doc: str, reason: str, metadata: dict[str, Any] | None = None
     ) -> str:
         """
         Store denied content in the vault with encryption.
@@ -375,7 +374,7 @@ class BlackVault:
                 logger.error(f"Failed to write to vault: {e}")
                 raise VaultStorageError(f"Failed to store content in vault: {e}")
 
-    def retrieve(self, vault_id: str) -> Optional[Dict[str, Any]]:
+    def retrieve(self, vault_id: str) -> dict[str, Any] | None:
         """
         Retrieve content from vault by ID (requires authorization).
 
@@ -408,7 +407,7 @@ class BlackVault:
 
         return None
 
-    def list_entries(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def list_entries(self, limit: int = 100) -> list[dict[str, Any]]:
         """
         List vault entries (metadata only, no content).
 
@@ -450,7 +449,7 @@ class BlackVault:
 
         return entries
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get vault statistics.
 

@@ -21,7 +21,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # ============================================================================
 # I. FOUNDATIONAL LEGITIMACY PACK
@@ -41,14 +41,14 @@ class CivilizationCharter:
     charter_id: str
     version: str
     issued_date: datetime
-    axioms: List[str]  # The 6 primitive axioms
-    constitutional_laws: List[Dict[str, Any]]  # All laws by class
-    role_definitions: Dict[str, Dict[str, Any]]  # All roles and their powers
-    limits_and_prohibitions: Dict[str, List[str]]  # What cannot be done
-    supersession_rules: List[str]
+    axioms: list[str]  # The 6 primitive axioms
+    constitutional_laws: list[dict[str, Any]]  # All laws by class
+    role_definitions: dict[str, dict[str, Any]]  # All roles and their powers
+    limits_and_prohibitions: dict[str, list[str]]  # What cannot be done
+    supersession_rules: list[str]
     digital_signature: str
     is_immutable: bool = True
-    superseded_by: Optional[str] = None
+    superseded_by: str | None = None
 
     def to_human_readable(self) -> str:
         """Convert to plain-language document."""
@@ -96,8 +96,8 @@ class AuthorityGrant:
     granted_by: str  # entity_id
     timestamp: datetime
     revoked: bool = False
-    revoked_at: Optional[datetime] = None
-    revoked_by: Optional[str] = None
+    revoked_at: datetime | None = None
+    revoked_by: str | None = None
     justification: str = ""
 
 
@@ -112,8 +112,8 @@ class AuthorityRoleLedger:
 
     ledger_id: str
     created_at: datetime
-    roles: Dict[str, Dict[str, Any]]  # role_name -> {powers, prohibitions}
-    grants: List[AuthorityGrant]
+    roles: dict[str, dict[str, Any]]  # role_name -> {powers, prohibitions}
+    grants: list[AuthorityGrant]
 
     def grant_authority(
         self,
@@ -149,7 +149,7 @@ class AuthorityRoleLedger:
                 return True
         return False
 
-    def get_active_authorities(self, entity_id: str) -> List[str]:
+    def get_active_authorities(self, entity_id: str) -> list[str]:
         """Get all active authorities for an entity."""
         return [
             grant.authority
@@ -170,8 +170,8 @@ class PurposeLockCheck:
     subsystem: str
     timestamp: datetime
     is_locked: bool
-    violations: List[str]
-    evidence: Dict[str, Any]
+    violations: list[str]
+    evidence: dict[str, Any]
 
 
 @dataclass
@@ -187,12 +187,12 @@ class PurposeLockAttestation:
     attestation_id: str
     version: str
     timestamp: datetime
-    subsystems_checked: List[str]
-    checks: List[PurposeLockCheck]
+    subsystems_checked: list[str]
+    checks: list[PurposeLockCheck]
     overall_locked: bool
     attestation_signature: str
 
-    def verify_purpose_lock(self, subsystem: str) -> Tuple[bool, List[str]]:
+    def verify_purpose_lock(self, subsystem: str) -> tuple[bool, list[str]]:
         """Verify a subsystem is purpose-locked."""
         check = PurposeLockCheck(
             check_id=f"check-{len(self.checks) + 1}",
@@ -247,11 +247,11 @@ class BoardResolution:
     directive_id: str
     timestamp: datetime
     decision: str  # "accepted", "rejected", "superseded"
-    language_selected: Optional[str]
-    topology_assigned: Optional[Dict[str, Any]]
-    contracts_created: List[str]
+    language_selected: str | None
+    topology_assigned: dict[str, Any] | None
+    contracts_created: list[str]
     rationale: str
-    votes: Dict[str, str]  # entity_id -> vote
+    votes: dict[str, str]  # entity_id -> vote
 
 
 @dataclass
@@ -265,15 +265,15 @@ class BoardResolutionArchive:
 
     archive_id: str
     created_at: datetime
-    resolutions: List[BoardResolution]
+    resolutions: list[BoardResolution]
 
     def record_resolution(
         self,
         directive_id: str,
         decision: str,
-        language: Optional[str],
+        language: str | None,
         rationale: str,
-        votes: Dict[str, str],
+        votes: dict[str, str],
     ) -> str:
         """Record a new board resolution."""
         resolution = BoardResolution(
@@ -290,7 +290,7 @@ class BoardResolutionArchive:
         self.resolutions.append(resolution)
         return resolution.resolution_id
 
-    def get_resolutions_for_directive(self, directive_id: str) -> List[BoardResolution]:
+    def get_resolutions_for_directive(self, directive_id: str) -> list[BoardResolution]:
         """Get all resolutions for a specific directive."""
         return [r for r in self.resolutions if r.directive_id == directive_id]
 
@@ -306,7 +306,7 @@ class DirectivePrecedent:
     outcome: str
     rationale: str
     timestamp: datetime
-    tags: List[str]
+    tags: list[str]
 
 
 @dataclass
@@ -319,8 +319,8 @@ class DirectivePrecedentCorpus:
     """
 
     corpus_id: str
-    precedents: List[DirectivePrecedent]
-    index: Dict[str, List[str]]  # tag -> precedent_ids
+    precedents: list[DirectivePrecedent]
+    index: dict[str, list[str]]  # tag -> precedent_ids
 
     def add_precedent(
         self,
@@ -329,7 +329,7 @@ class DirectivePrecedentCorpus:
         scenario: str,
         outcome: str,
         rationale: str,
-        tags: List[str],
+        tags: list[str],
     ) -> str:
         """Add a new precedent to the corpus."""
         precedent = DirectivePrecedent(
@@ -352,7 +352,7 @@ class DirectivePrecedentCorpus:
 
         return precedent.precedent_id
 
-    def search_precedents(self, tags: List[str]) -> List[DirectivePrecedent]:
+    def search_precedents(self, tags: list[str]) -> list[DirectivePrecedent]:
         """Search for relevant precedents by tags."""
         precedent_ids = set()
         for tag in tags:
@@ -369,10 +369,10 @@ class MetaOfficeRuling:
     escalation_id: str
     timestamp: datetime
     ruling_type: str  # "constitutional", "sanction", "intervention"
-    affected_entities: List[str]
+    affected_entities: list[str]
     decision: str
     rationale: str
-    sanctions_issued: List[str]
+    sanctions_issued: list[str]
 
 
 @dataclass
@@ -385,16 +385,16 @@ class MetaOfficeRulingsLedger:
     """
 
     ledger_id: str
-    rulings: List[MetaOfficeRuling]
+    rulings: list[MetaOfficeRuling]
 
     def record_ruling(
         self,
         escalation_id: str,
         ruling_type: str,
-        affected_entities: List[str],
+        affected_entities: list[str],
         decision: str,
         rationale: str,
-        sanctions: List[str],
+        sanctions: list[str],
     ) -> str:
         """Record a new Meta-Office ruling."""
         ruling = MetaOfficeRuling(
@@ -423,8 +423,8 @@ class FailureResponse:
     failure_type: str
     law_violated: str
     response_action: str
-    escalation_path: List[str]
-    resource_cost: Dict[str, int]
+    escalation_path: list[str]
+    resource_cost: dict[str, int]
     is_automatic: bool
 
 
@@ -439,15 +439,15 @@ class LawFailureResponseMatrix:
 
     matrix_id: str
     version: str
-    responses: Dict[Tuple[str, str], FailureResponse]  # (law, failure) -> response
+    responses: dict[tuple[str, str], FailureResponse]  # (law, failure) -> response
 
-    def get_response(self, law: str, failure: str) -> Optional[FailureResponse]:
+    def get_response(self, law: str, failure: str) -> FailureResponse | None:
         """Get the legal response for a law-failure combination."""
         return self.responses.get((law, failure))
 
     def verify_completeness(
-        self, all_laws: List[str], all_failures: List[str]
-    ) -> Tuple[bool, List[str]]:
+        self, all_laws: list[str], all_failures: list[str]
+    ) -> tuple[bool, list[str]]:
         """Verify matrix is complete - no undefined states."""
         missing = []
         for law in all_laws:
@@ -481,7 +481,7 @@ class FormalLawVerificationModels:
 
     model_id: str
     version: str
-    invariants: List[FormalInvariant]
+    invariants: list[FormalInvariant]
 
     def add_invariant(
         self,
@@ -503,7 +503,7 @@ class FormalLawVerificationModels:
         self.invariants.append(invariant)
         return invariant.invariant_id
 
-    def verify_all_invariants(self) -> Tuple[bool, List[str]]:
+    def verify_all_invariants(self) -> tuple[bool, list[str]]:
         """Verify all invariants hold."""
         unverified = [inv.name for inv in self.invariants if not inv.verified]
         return len(unverified) == 0, unverified
@@ -518,8 +518,8 @@ class ViolationPlaybook:
     detection_method: str
     automatic_halt_behavior: str
     human_intervention_protocol: str
-    recovery_constraints: List[str]
-    escalation_path: List[str]
+    recovery_constraints: list[str]
+    escalation_path: list[str]
 
 
 @dataclass
@@ -532,13 +532,13 @@ class InvariantViolationPlaybooks:
     """
 
     playbooks_id: str
-    playbooks: Dict[str, ViolationPlaybook]  # invariant_name -> playbook
+    playbooks: dict[str, ViolationPlaybook]  # invariant_name -> playbook
 
-    def get_playbook(self, invariant: str) -> Optional[ViolationPlaybook]:
+    def get_playbook(self, invariant: str) -> ViolationPlaybook | None:
         """Get the playbook for an invariant violation."""
         return self.playbooks.get(invariant)
 
-    def execute_playbook(self, invariant: str) -> Dict[str, Any]:
+    def execute_playbook(self, invariant: str) -> dict[str, Any]:
         """Execute the appropriate playbook for a violation."""
         playbook = self.get_playbook(invariant)
         if not playbook:
@@ -571,9 +571,9 @@ class CanonicalExecutionKernel:
     version: str
     kernel_code: str  # Minimal reference implementation
     test_suite: str
-    conformance_criteria: List[str]
+    conformance_criteria: list[str]
 
-    def verify_conformance(self, implementation: str) -> Tuple[bool, List[str]]:
+    def verify_conformance(self, implementation: str) -> tuple[bool, list[str]]:
         """Verify an implementation conforms to the kernel."""
         # Placeholder for actual conformance testing
         failures = []
@@ -586,9 +586,9 @@ class SimulationTrace:
 
     trace_id: str
     scenario: str
-    start_state: Dict[str, Any]
-    ticks: List[Dict[str, Any]]
-    end_state: Dict[str, Any]
+    start_state: dict[str, Any]
+    ticks: list[dict[str, Any]]
+    end_state: dict[str, Any]
     trace_hash: str
 
 
@@ -602,14 +602,14 @@ class SimulationTraceCorpus:
     """
 
     corpus_id: str
-    traces: List[SimulationTrace]
+    traces: list[SimulationTrace]
 
     def add_trace(
         self,
         scenario: str,
-        start_state: Dict[str, Any],
-        ticks: List[Dict[str, Any]],
-        end_state: Dict[str, Any],
+        start_state: dict[str, Any],
+        ticks: list[dict[str, Any]],
+        end_state: dict[str, Any],
     ) -> str:
         """Add a new simulation trace."""
         # Compute deterministic hash
@@ -648,11 +648,11 @@ class ReproducibilityPacket:
     packet_id: str
     directive_id: str
     board_resolution_id: str
-    environment_snapshot: Dict[str, Any]
-    contract_versions: Dict[str, str]
-    tool_versions: Dict[str, str]
-    input_data: Dict[str, Any]
-    output_data: Dict[str, Any]
+    environment_snapshot: dict[str, Any]
+    contract_versions: dict[str, str]
+    tool_versions: dict[str, str]
+    input_data: dict[str, Any]
+    output_data: dict[str, Any]
     timestamp: datetime
     packet_hash: str
 
@@ -667,17 +667,17 @@ class ReproducibilityPackets:
     """
 
     packets_id: str
-    packets: List[ReproducibilityPacket]
+    packets: list[ReproducibilityPacket]
 
     def create_packet(
         self,
         directive_id: str,
         resolution_id: str,
-        environment: Dict[str, Any],
-        contracts: Dict[str, str],
-        tools: Dict[str, str],
-        input_data: Dict[str, Any],
-        output_data: Dict[str, Any],
+        environment: dict[str, Any],
+        contracts: dict[str, str],
+        tools: dict[str, str],
+        input_data: dict[str, Any],
+        output_data: dict[str, Any],
     ) -> str:
         """Create a new reproducibility packet."""
         packet_data = json.dumps(
@@ -721,10 +721,10 @@ class FloorRuntimeProfile:
 
     floor_id: str
     language: str
-    resource_budgets: Dict[str, int]  # resource_type -> budget
-    tool_permissions: List[str]
-    execution_ceilings: Dict[str, int]  # metric -> ceiling
-    security_constraints: List[str]
+    resource_budgets: dict[str, int]  # resource_type -> budget
+    tool_permissions: list[str]
+    execution_ceilings: dict[str, int]  # metric -> ceiling
+    security_constraints: list[str]
 
 
 @dataclass
@@ -737,13 +737,13 @@ class FloorRuntimeProfiles:
     """
 
     profiles_id: str
-    profiles: Dict[str, FloorRuntimeProfile]  # language -> profile
+    profiles: dict[str, FloorRuntimeProfile]  # language -> profile
 
-    def get_profile(self, language: str) -> Optional[FloorRuntimeProfile]:
+    def get_profile(self, language: str) -> FloorRuntimeProfile | None:
         """Get the runtime profile for a language."""
         return self.profiles.get(language)
 
-    def verify_uniformity(self) -> Tuple[bool, List[str]]:
+    def verify_uniformity(self) -> tuple[bool, list[str]]:
         """Verify all floors have uniform constraints."""
         # Check that critical constraints are uniform across floors
         violations = []
@@ -762,8 +762,8 @@ class CrossFloorContract:
     directional: bool
     bound_to_resolution: str
     created_at: datetime
-    data_formats: List[str]
-    failure_modes: List[str]
+    data_formats: list[str]
+    failure_modes: list[str]
     is_active: bool
 
 
@@ -777,7 +777,7 @@ class CrossFloorContractRegistry:
     """
 
     registry_id: str
-    contracts: List[CrossFloorContract]
+    contracts: list[CrossFloorContract]
 
     def register_contract(
         self,
@@ -786,8 +786,8 @@ class CrossFloorContractRegistry:
         version: str,
         directional: bool,
         resolution_id: str,
-        data_formats: List[str],
-        failure_modes: List[str],
+        data_formats: list[str],
+        failure_modes: list[str],
     ) -> str:
         """Register a new cross-floor contract."""
         contract = CrossFloorContract(
@@ -805,7 +805,7 @@ class CrossFloorContractRegistry:
         self.contracts.append(contract)
         return contract.contract_id
 
-    def get_active_contracts(self, floor: str) -> List[CrossFloorContract]:
+    def get_active_contracts(self, floor: str) -> list[CrossFloorContract]:
         """Get all active contracts for a floor."""
         return [
             c
@@ -821,7 +821,7 @@ class ContractDriftReport:
     report_id: str
     contract_id: str
     timestamp: datetime
-    divergences: List[str]
+    divergences: list[str]
     severity: str
     escalation_triggered: bool
 
@@ -836,7 +836,7 @@ class ContractDriftReports:
     """
 
     reports_id: str
-    reports: List[ContractDriftReport]
+    reports: list[ContractDriftReport]
 
     def detect_drift(self, contract_id: str) -> ContractDriftReport:
         """Detect drift in a contract."""
@@ -867,7 +867,7 @@ class ToolProvenanceRecord:
     version: str
     checksum: str
     trust_score: float
-    authorization_history: List[Dict[str, Any]]
+    authorization_history: list[dict[str, Any]]
     first_used: datetime
     last_used: datetime
 
@@ -882,7 +882,7 @@ class ToolProvenanceTrustLedger:
     """
 
     ledger_id: str
-    tools: Dict[str, ToolProvenanceRecord]  # tool_id -> record
+    tools: dict[str, ToolProvenanceRecord]  # tool_id -> record
 
     def register_tool(
         self, tool_name: str, version: str, checksum: str, trust_score: float
@@ -935,7 +935,7 @@ class UnsafeCapabilityExceptionRecords:
     """
 
     records_id: str
-    exceptions: List[UnsafeCapabilityException]
+    exceptions: list[UnsafeCapabilityException]
 
     def grant_exception(
         self,
@@ -959,7 +959,7 @@ class UnsafeCapabilityExceptionRecords:
         self.exceptions.append(exception)
         return exception.exception_id
 
-    def get_active_exceptions(self, entity_id: str) -> List[UnsafeCapabilityException]:
+    def get_active_exceptions(self, entity_id: str) -> list[UnsafeCapabilityException]:
         """Get active exceptions for an entity."""
         now = datetime.now()
         return [
@@ -983,7 +983,7 @@ class ConsigliereInteraction:
     interaction_type: str  # "explanation", "warning", "draft", etc.
     content: str
     human_id: str
-    response: Optional[str]
+    response: str | None
 
 
 @dataclass
@@ -996,14 +996,14 @@ class ConsigliereInteractionLogs:
     """
 
     logs_id: str
-    interactions: List[ConsigliereInteraction]
+    interactions: list[ConsigliereInteraction]
 
     def log_interaction(
         self,
         interaction_type: str,
         content: str,
         human_id: str,
-        response: Optional[str] = None,
+        response: str | None = None,
     ) -> str:
         """Log a Consigliere interaction."""
         interaction = ConsigliereInteraction(
@@ -1027,7 +1027,7 @@ class SecurityDecision:
     threat_model: str
     risk_analysis: str
     decision: str  # "allow", "deny", "conditional"
-    conditions: List[str]
+    conditions: list[str]
     decided_by: str
 
 
@@ -1041,14 +1041,14 @@ class SecurityDecisionDossiers:
     """
 
     dossiers_id: str
-    decisions: List[SecurityDecision]
+    decisions: list[SecurityDecision]
 
     def record_decision(
         self,
         threat_model: str,
         risk_analysis: str,
         decision: str,
-        conditions: List[str],
+        conditions: list[str],
         decided_by: str,
     ) -> str:
         """Record a security decision."""
@@ -1072,7 +1072,7 @@ class Override:
     override_id: str
     timestamp: datetime
     what_bypassed: str
-    cost_incurred: Dict[str, int]
+    cost_incurred: dict[str, int]
     long_term_risk: str
     justified_by: str
     human_id: str
@@ -1088,12 +1088,12 @@ class OverrideCostLedger:
     """
 
     ledger_id: str
-    overrides: List[Override]
+    overrides: list[Override]
 
     def record_override(
         self,
         what_bypassed: str,
-        cost: Dict[str, int],
+        cost: dict[str, int],
         risk: str,
         justification: str,
         human_id: str,
@@ -1124,8 +1124,8 @@ class ConstitutionalAmendment:
     amendment_id: str
     proposal_id: str
     proposed_change: str
-    simulation_results: List[Dict[str, Any]]
-    votes: Dict[str, str]
+    simulation_results: list[dict[str, Any]]
+    votes: dict[str, str]
     outcome: str  # "approved", "rejected"
     timestamp: datetime
 
@@ -1140,14 +1140,14 @@ class ConstitutionalAmendmentRegistry:
     """
 
     registry_id: str
-    amendments: List[ConstitutionalAmendment]
+    amendments: list[ConstitutionalAmendment]
 
     def propose_amendment(
         self,
         proposal_id: str,
         proposed_change: str,
-        simulations: List[Dict[str, Any]],
-        votes: Dict[str, str],
+        simulations: list[dict[str, Any]],
+        votes: dict[str, str],
         outcome: str,
     ) -> str:
         """Record a constitutional amendment."""
@@ -1185,7 +1185,7 @@ class DormantRejectedProposalArchive:
     """
 
     archive_id: str
-    proposals: List[RejectedProposal]
+    proposals: list[RejectedProposal]
 
     def archive_proposal(
         self,
@@ -1221,10 +1221,10 @@ class IndependentAuditInterface:
     """
 
     interface_id: str
-    accessible_artifacts: List[str]
-    access_log: List[Dict[str, Any]]
+    accessible_artifacts: list[str]
+    access_log: list[dict[str, Any]]
 
-    def grant_audit_access(self, auditor_id: str, artifacts: List[str]) -> str:
+    def grant_audit_access(self, auditor_id: str, artifacts: list[str]) -> str:
         """Grant audit access to an external auditor."""
         access_record = {
             "auditor_id": auditor_id,
@@ -1235,7 +1235,7 @@ class IndependentAuditInterface:
         self.access_log.append(access_record)
         return access_record["access_token"]
 
-    def get_artifact(self, artifact_id: str, access_token: str) -> Optional[Any]:
+    def get_artifact(self, artifact_id: str, access_token: str) -> Any | None:
         """Get an artifact for audit (read-only)."""
         # Verify access token
         # Return artifact if authorized
@@ -1249,9 +1249,9 @@ class ComplianceReport:
     report_id: str
     standard: str  # e.g., "ISO-27001", "SOC2"
     timestamp: datetime
-    evidence_references: List[str]
+    evidence_references: list[str]
     compliance_status: str
-    gaps: List[str]
+    gaps: list[str]
 
 
 @dataclass
@@ -1264,10 +1264,10 @@ class ComplianceCertificationReports:
     """
 
     reports_id: str
-    reports: List[ComplianceReport]
+    reports: list[ComplianceReport]
 
     def generate_report(
-        self, standard: str, evidence: List[str], status: str, gaps: List[str]
+        self, standard: str, evidence: list[str], status: str, gaps: list[str]
     ) -> str:
         """Generate a compliance report."""
         report = ComplianceReport(
@@ -1298,14 +1298,14 @@ class CivilizationFreezeProtocol:
 
     protocol_id: str
     is_frozen: bool
-    frozen_at: Optional[datetime]
-    frozen_by: Optional[str]
+    frozen_at: datetime | None
+    frozen_by: str | None
     freeze_reason: str
-    sealed_state_hash: Optional[str]
+    sealed_state_hash: str | None
     access_locked: bool
 
     def freeze(
-        self, frozen_by: str, reason: str, state_snapshot: Dict[str, Any]
+        self, frozen_by: str, reason: str, state_snapshot: dict[str, Any]
     ) -> str:
         """Execute emergency freeze."""
         state_json = json.dumps(state_snapshot, sort_keys=True)
@@ -1341,13 +1341,13 @@ class CivilizationShutdownSuccession:
 
     protocol_id: str
     is_shutdown: bool
-    shutdown_at: Optional[datetime]
-    final_archive_hash: Optional[str]
-    successor_steward: Optional[str]
-    cryptographic_seal: Optional[str]
+    shutdown_at: datetime | None
+    final_archive_hash: str | None
+    successor_steward: str | None
+    cryptographic_seal: str | None
 
     def shutdown(
-        self, initiated_by: str, archive_data: Dict[str, Any], successor: str
+        self, initiated_by: str, archive_data: dict[str, Any], successor: str
     ) -> str:
         """Execute clean shutdown."""
         archive_json = json.dumps(archive_data, sort_keys=True)
@@ -1381,23 +1381,23 @@ class SuccessFailureMetricsCanon:
     version: str
 
     # Core metrics
-    correctness_metrics: Dict[str, str]
-    completeness_metrics: Dict[str, str]
-    trustworthiness_metrics: Dict[str, str]
+    correctness_metrics: dict[str, str]
+    completeness_metrics: dict[str, str]
+    trustworthiness_metrics: dict[str, str]
 
     # Anti-patterns (what improvement is NOT)
-    forbidden_metrics: List[str]
+    forbidden_metrics: list[str]
 
-    def evaluate_correctness(self, results: Dict[str, Any]) -> Tuple[bool, str]:
+    def evaluate_correctness(self, results: dict[str, Any]) -> tuple[bool, str]:
         """Evaluate correctness per canonical definition."""
         # Placeholder for actual evaluation
         return True, "All correctness criteria met"
 
-    def evaluate_completeness(self, results: Dict[str, Any]) -> Tuple[bool, str]:
+    def evaluate_completeness(self, results: dict[str, Any]) -> tuple[bool, str]:
         """Evaluate completeness per canonical definition."""
         return True, "All completeness criteria met"
 
-    def evaluate_trustworthiness(self, results: Dict[str, Any]) -> Tuple[bool, str]:
+    def evaluate_trustworthiness(self, results: dict[str, Any]) -> tuple[bool, str]:
         """Evaluate trustworthiness per canonical definition."""
         return True, "All trustworthiness criteria met"
 
@@ -1476,7 +1476,7 @@ class NonDesignCanonicalBundle:
     # XI. Meta-Evaluation
     metrics_canon: SuccessFailureMetricsCanon
 
-    def verify_bundle_completeness(self) -> Tuple[bool, List[str]]:
+    def verify_bundle_completeness(self) -> tuple[bool, list[str]]:
         """Verify all 27 artifacts are present and valid."""
         missing = []
 
@@ -1791,7 +1791,7 @@ def create_canonical_bundle() -> NonDesignCanonicalBundle:
 
 
 # Global canonical bundle instance
-_canonical_bundle: Optional[NonDesignCanonicalBundle] = None
+_canonical_bundle: NonDesignCanonicalBundle | None = None
 
 
 def get_canonical_bundle() -> NonDesignCanonicalBundle:

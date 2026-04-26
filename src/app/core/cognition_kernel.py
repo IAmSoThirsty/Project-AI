@@ -1186,7 +1186,7 @@ class CognitionKernel:
         logger.info("Initiating Headcount Reconciliation Audit...")
         registry = get_tier_registry()
         registered_ids = set(registry.get_all_components().keys())
-        
+
         # Expected drift based on Hydra-50 + Reflexive Reserve infrastructure
         EXPECTED_HYDRA_RESERVE = 135
 
@@ -1201,7 +1201,7 @@ class CognitionKernel:
             "status": "UNSTABLE" if drift != EXPECTED_HYDRA_RESERVE else "STABLE (HYDRA_SYNCHRONIZED)",
             "timestamp": datetime.now(UTC).isoformat()
         }
-        
+
         if drift == EXPECTED_HYDRA_RESERVE:
             logger.info("HEADCOUNT VERIFIED: %d autonomic agents synchronized with Hydra-50 reserve.", drift)
             report["remediation"] = "None Required — Autonomic features confirmed."

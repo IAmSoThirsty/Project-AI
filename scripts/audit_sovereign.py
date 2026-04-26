@@ -76,7 +76,7 @@ def audit_files():
                 outdated = True
 
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, encoding="utf-8") as f:
                     content = f.read()
 
                 if "DEPRECATED" in content.upper() or "LEGACY" in content.upper():

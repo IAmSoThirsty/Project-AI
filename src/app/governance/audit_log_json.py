@@ -12,10 +12,9 @@ import hashlib
 import json
 import logging
 import threading
-import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +64,7 @@ class JSONAuditLog:
             return "GENESIS"
 
         try:
-            with open(self.log_file, "r") as f:
+            with open(self.log_file) as f:
                 # Read last line
                 lines = f.readlines()
                 if lines:
@@ -76,7 +75,7 @@ class JSONAuditLog:
 
         return "GENESIS"
 
-    def _compute_hash(self, event_data: Dict[str, Any]) -> str:
+    def _compute_hash(self, event_data: dict[str, Any]) -> str:
         """Compute SHA-256 hash of event data."""
         # Create canonical JSON representation
         canonical = json.dumps(event_data, sort_keys=True, separators=(",", ":"))
@@ -104,13 +103,13 @@ class JSONAuditLog:
     def log_event(
         self,
         event_type: str,
-        data: Dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
         actor: str = "system",
         action: str = "",
         target: str = "",
         outcome: str = "success",
         severity: str = "info",
-        metadata: Dict[str, Any] | None = None,
+        metadata: dict[str, Any] | None = None,
         trace_id: str | None = None,
         span_id: str | None = None,
     ) -> bool:
@@ -185,7 +184,7 @@ class JSONAuditLog:
             return True, "Log file does not exist (valid)"
 
         try:
-            with open(self.log_file, "r") as f:
+            with open(self.log_file) as f:
                 lines = f.readlines()
 
             expected_prev_hash = "GENESIS"
@@ -227,7 +226,7 @@ class JSONAuditLog:
         start_time: datetime | None = None,
         end_time: datetime | None = None,
         limit: int | None = None,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """
         Query audit events with filters.
 
@@ -248,7 +247,7 @@ class JSONAuditLog:
         results = []
 
         try:
-            with open(self.log_file, "r") as f:
+            with open(self.log_file) as f:
                 for line in f:
                     event = json.loads(line)
 
@@ -280,13 +279,13 @@ class JSONAuditLog:
 
         return results
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get audit log statistics."""
         if not self.log_file.exists():
             return {"total_events": 0, "file_size_mb": 0, "file_exists": False}
 
         try:
-            with open(self.log_file, "r") as f:
+            with open(self.log_file) as f:
                 events = [json.loads(line) for line in f]
 
             # Aggregate statistics

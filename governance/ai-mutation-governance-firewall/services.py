@@ -4,14 +4,12 @@
 AI Mutation Governance Service
 """
 
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
 from uuid import UUID
 
-from .errors import NotFoundError, ValidationError
+from .errors import NotFoundError
 from .logging_config import logger
-from .metrics import DOMAIN_EVENTS, DOMAIN_FAILURES
-from .models import MutationProposal, ProposalCreate, ProposalUpdate
+from .metrics import DOMAIN_EVENTS
+from .models import MutationProposal, ProposalCreate
 from .repository import ProposalRepository
 
 
@@ -60,7 +58,7 @@ class MutationGovernanceService:
 
     async def list_proposals(
         self, offset: int = 0, limit: int = 20
-    ) -> Tuple[List[MutationProposal], int]:
+    ) -> tuple[list[MutationProposal], int]:
         return await self.repository.list(offset, limit)
 
     async def get_proposal(self, proposal_id: UUID) -> MutationProposal:

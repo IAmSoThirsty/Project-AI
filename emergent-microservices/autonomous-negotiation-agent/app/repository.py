@@ -4,8 +4,7 @@
 Autonomous Negotiation Agent - Repository
 """
 
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from uuid import UUID
 
 from .logging_config import logger
@@ -14,7 +13,7 @@ from .models import AgreedContract, NegotiationSession
 
 class Database:
     def __init__(self):
-        self.data: Dict[str, Any] = {"sessions": {}, "contracts": {}}
+        self.data: dict[str, Any] = {"sessions": {}, "contracts": {}}
         self.connected = False
 
     async def connect(self):
@@ -29,7 +28,7 @@ class NegotiationRepository:
     def __init__(self):
         self.db = database
 
-    async def get_session(self, session_id: UUID) -> Optional[NegotiationSession]:
+    async def get_session(self, session_id: UUID) -> NegotiationSession | None:
         return self.db.data["sessions"].get(str(session_id))
 
     async def save_session(self, session: NegotiationSession) -> NegotiationSession:

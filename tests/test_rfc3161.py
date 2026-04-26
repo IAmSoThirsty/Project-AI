@@ -21,11 +21,8 @@ import os
 import sys
 import threading
 
-import pytest
-
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from psia.crypto.ed25519_provider import Ed25519Provider
 from psia.crypto.rfc3161_provider import LocalTSA, TimeStampToken
 
 # ── LocalTSA Initialization ────────────────────────────────────────────

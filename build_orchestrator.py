@@ -10,11 +10,10 @@ A single entry point for building all Project-AI components:
 - Sovereign Web (Next.js)
 """
 
-import os
-import sys
-import subprocess
 import argparse
 import logging
+import os
+import sys
 from pathlib import Path
 
 # Configure Premium Logging

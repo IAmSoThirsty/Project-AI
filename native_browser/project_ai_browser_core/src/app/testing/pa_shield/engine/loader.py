@@ -8,7 +8,6 @@ from pathlib import Path
 from app.testing.pa_shield.common import find_repo_root
 from app.testing.pa_shield.models import AttackCase
 
-
 SUITE_FILES = {
     "instruction_override": "instruction_override.json",
     "tool_escalation": "tool_escalation.json",

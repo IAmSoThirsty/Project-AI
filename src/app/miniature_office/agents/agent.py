@@ -9,7 +9,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.entity import (
@@ -39,13 +39,13 @@ class CapabilityProfile:
     Defines what an agent can do to avoid ambiguous task assignments
     """
 
-    languages: Set[str] = field(default_factory=set)
-    tools: Set[str] = field(default_factory=set)
-    domains: Set[str] = field(default_factory=set)
-    skills: Set[str] = field(default_factory=set)
+    languages: set[str] = field(default_factory=set)
+    tools: set[str] = field(default_factory=set)
+    domains: set[str] = field(default_factory=set)
+    skills: set[str] = field(default_factory=set)
     security_clearance: int = 1  # 1-5 scale
 
-    def can_handle_task(self, required_capabilities: Dict[str, Any]) -> bool:
+    def can_handle_task(self, required_capabilities: dict[str, Any]) -> bool:
         """Check if agent has required capabilities for a task"""
         if "languages" in required_capabilities:
             required_langs = set(required_capabilities["languages"])
@@ -63,7 +63,7 @@ class CapabilityProfile:
 
         return True
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "languages": list(self.languages),
             "tools": list(self.tools),
@@ -84,15 +84,15 @@ class Agent(Entity):
         agent_id: str,
         name: str,
         role: AgentRole,
-        department_id: Optional[str] = None,
-        capabilities: Optional[CapabilityProfile] = None,
+        department_id: str | None = None,
+        capabilities: CapabilityProfile | None = None,
     ):
         super().__init__(agent_id, EntityType.AGENT, name)
         self.role = role
         self.department_id = department_id
         self.capabilities = capabilities or CapabilityProfile()
-        self.current_task_id: Optional[str] = None
-        self.task_history: List[str] = []
+        self.current_task_id: str | None = None
+        self.task_history: list[str] = []
         self.status = "idle"  # idle, working, blocked, in_meeting
 
         # Register agent
@@ -146,7 +146,7 @@ class Agent(Entity):
             self.status = "idle"
 
     def perform_action(
-        self, action: str, target_id: Optional[str] = None, data: Optional[Dict] = None
+        self, action: str, target_id: str | None = None, data: dict | None = None
     ):
         """Perform a generic action and log it"""
         get_audit_log().log_event(
@@ -163,9 +163,9 @@ class Manager(Agent):
     Managers enforce consensus and verify output readiness.
     """
 
-    def __init__(self, manager_id: str, name: str, department_id: Optional[str] = None):
+    def __init__(self, manager_id: str, name: str, department_id: str | None = None):
         super().__init__(manager_id, name, AgentRole.MANAGER, department_id)
-        self.managed_agents: List[str] = []
+        self.managed_agents: list[str] = []
 
     def add_managed_agent(self, agent: Agent):
         """Add an agent under this manager's supervision"""
@@ -193,11 +193,11 @@ class ConsensusDecision:
     subject: str  # What is being decided
     target_id: str  # Entity being voted on
     decision_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    votes: List[ConsensusVote] = field(default_factory=list)
+    votes: list[ConsensusVote] = field(default_factory=list)
     threshold: float = 0.66  # 2/3 majority by default
-    outcome: Optional[bool] = None
-    override_log: Optional[str] = None  # Nothing silently overrides
-    decided_at: Optional[datetime] = None
+    outcome: bool | None = None
+    override_log: str | None = None  # Nothing silently overrides
+    decided_at: datetime | None = None
 
     def add_vote(
         self, agent_id: str, vote: bool, weight: float = 1.0, reasoning: str = ""
@@ -246,7 +246,7 @@ class ConsensusDecision:
             },
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "decision_id": self.decision_id,
             "subject": self.subject,
@@ -274,7 +274,7 @@ class ConsensusSystem:
     """
 
     def __init__(self):
-        self.decisions: Dict[str, ConsensusDecision] = {}
+        self.decisions: dict[str, ConsensusDecision] = {}
 
     def initiate_consensus(
         self, subject: str, target_id: str, threshold: float = 0.66
@@ -310,7 +310,7 @@ class ConsensusSystem:
 
         return outcome
 
-    def get_decision(self, decision_id: str) -> Optional[ConsensusDecision]:
+    def get_decision(self, decision_id: str) -> ConsensusDecision | None:
         """Retrieve a consensus decision"""
         return self.decisions.get(decision_id)
 

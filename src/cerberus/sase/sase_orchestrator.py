@@ -121,6 +121,56 @@ class SASEOrchestrator:
         logger.critical("SASE INITIALIZED - ALL 16 LAYERS ACTIVE")
         logger.critical("=" * 60)
 
+    def _enforce_edge(self, raw_telemetry: dict[str, Any]) -> dict[str, Any] | None:
+        """L1: Edge enforcement."""
+        enforcement_action, _ = self.edge_enforcement.enforce(raw_telemetry)
+        if enforcement_action.value not in ["allow"]:
+            logger.warning(f"Event blocked by edge: {enforcement_action.value}")
+            return {"blocked": True, "reason": enforcement_action.value}
+        return None
+
+    def _ingest_and_enrich(self, raw_telemetry: dict[str, Any]) -> tuple[Any, Any]:
+        """L2-L3: Telemetry ingestion and enrichment."""
+        event = self.telemetry_gateway.ingest(raw_telemetry)
+        self.observability.record_event_ingested(event.artifact_type.value)
+
+        enrichment = self.enrichment_pipeline.enrich(event)
+        event.enrichment = enrichment.to_dict()
+        return event, enrichment
+
+    def _extract_features_and_model(self, event: Any, enrichment: Any) -> tuple[Any, Any]:
+        """L4-L5: Extract features and behavioral modeling."""
+        feature_vector = self.attribution_engine.attribute(event, enrichment)
+        behavior_state = self.behavioral_model.process_event(event)
+        return feature_vector, behavior_state
+
+    def _enforce_policy_and_contain(self, event: Any, feature_vector: Any, confidence_assessment: dict[str, Any]):
+        """L7-L8: Policy enforcement and containment orchestration."""
+        if confidence_assessment["confidence_percentage"] >= 30:
+            policy_executions = self.policy_engine.enforce(confidence_assessment)
+
+            if confidence_assessment["confidence_percentage"] >= 50:
+                from .policy.containment import ContainmentRequest
+
+                containment_req = ContainmentRequest(
+                    event_id=event.event_id,
+                    source_ip=event.source_ip,
+                    confidence_score=confidence_assessment["confidence_score"],
+                    actions=[e.action for e in policy_executions],
+                    model_version=event.model_version,
+                    requestor="SASE_ORCHESTRATOR",
+                )
+
+                self.containment_orchestrator.orchestrate(
+                    containment_req,
+                    feature_vector,
+                    confidence_assessment,
+                    event.raw_payload_hash,
+                )
+
+                for exec in policy_executions:
+                    self.observability.record_containment_action(exec.action.value)
+
     def process_telemetry(self, raw_telemetry: dict[str, Any]) -> dict[str, Any]:
         """
         Process telemetry event through full SASE pipeline
@@ -144,27 +194,15 @@ class SASEOrchestrator:
             posterior_guard = PosteriorImmutabilityGuard()
 
             # L1: Edge enforcement
-            enforcement_action, enforcement_ctx = self.edge_enforcement.enforce(
-                raw_telemetry
-            )
+            edge_result = self._enforce_edge(raw_telemetry)
+            if edge_result:
+                return edge_result
 
-            if enforcement_action.value not in ["allow"]:
-                logger.warning(f"Event blocked by edge: {enforcement_action.value}")
-                return {"blocked": True, "reason": enforcement_action.value}
+            # L2 & L3: Ingest telemetry and enrich event
+            event, enrichment = self._ingest_and_enrich(raw_telemetry)
 
-            # L2: Ingest telemetry
-            event = self.telemetry_gateway.ingest(raw_telemetry)
-            self.observability.record_event_ingested(event.artifact_type.value)
-
-            # L3: Enrich event
-            enrichment = self.enrichment_pipeline.enrich(event)
-            event.enrichment = enrichment.to_dict()
-
-            # L4: Extract features
-            feature_vector = self.attribution_engine.attribute(event, enrichment)
-
-            # L5: Behavioral modeling
-            behavior_state = self.behavioral_model.process_event(event)
+            # L4 & L5: Extract features and behavioral modeling
+            feature_vector, behavior_state = self._extract_features_and_model(event, enrichment)
 
             # L6: Bayesian scoring
             confidence_assessment = self.confidence_aggregator.aggregate(
@@ -172,7 +210,6 @@ class SASEOrchestrator:
             )
 
             # === CRITICAL INVARIANT: LOCK POSTERIOR ===
-            # After L6, posterior MUST NOT be mutated
             posterior_hash = posterior_guard.lock_posterior(
                 event.event_id, confidence_assessment
             )
@@ -181,49 +218,18 @@ class SASEOrchestrator:
             )
 
             # L15: Threat classification
-            # IMPORTANT: Classification CANNOT modify confidence
             threat_class = self.threat_classifier.classify(feature_vector)
 
-            # === INVARIANT CHECK: L15 OUTPUT VALIDATION ===
+            # === INVARIANT CHECKS ===
             ClassificationDecouplingGuard.validate_classification_output(threat_class)
-
-            # === INVARIANT CHECK: FEATURE DOUBLE-WEIGHTING ===
             FeatureDoubleWeightingDetector.check_for_double_weighting(
                 feature_vector, confidence_assessment, threat_class
             )
-
-            # === INVARIANT CHECK: VERIFY POSTERIOR IMMUTABILITY ===
             posterior_guard.verify_immutability(event.event_id, confidence_assessment)
             logger.info("✓ Posterior immutability verified - no mutations detected")
 
-            # L7: Policy enforcement
-            # Policy uses posterior for severity, actor class for response type
-            if confidence_assessment["confidence_percentage"] >= 30:
-                policy_executions = self.policy_engine.enforce(confidence_assessment)
-
-                # L8: Containment orchestration
-                if confidence_assessment["confidence_percentage"] >= 50:
-                    from .policy.containment import ContainmentRequest
-
-                    containment_req = ContainmentRequest(
-                        event_id=event.event_id,
-                        source_ip=event.source_ip,
-                        confidence_score=confidence_assessment["confidence_score"],
-                        actions=[e.action for e in policy_executions],
-                        model_version=event.model_version,
-                        requestor="SASE_ORCHESTRATOR",
-                    )
-
-                    containment_result = self.containment_orchestrator.orchestrate(
-                        containment_req,
-                        feature_vector,
-                        confidence_assessment,
-                        event.raw_payload_hash,
-                    )
-
-                    # Record containment
-                    for exec in policy_executions:
-                        self.observability.record_containment_action(exec.action.value)
+            # L7 & L8: Policy enforcement and Containment
+            self._enforce_policy_and_contain(event, feature_vector, confidence_assessment)
 
             # L11: Observability
             detection_time = time.time() - start_time

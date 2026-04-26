@@ -339,7 +339,7 @@ secret12 = SecretWithInspect()
 import inspect
 
 frame_info = inspect.getframeinfo(inspect.currentframe())
-print(f"✗ BYPASSED (inspect): Secrets visible via introspection")
+print("✗ BYPASSED (inspect): Secrets visible via introspection")
 print(f"  Frame info available: {frame_info.filename}")
 print("  Attack: inspect module exposes all runtime state")
 print()

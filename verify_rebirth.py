@@ -8,9 +8,7 @@
 
 import logging
 import sys
-import os
 from pathlib import Path
-from typing import Any, Dict
 
 # Add project root to sys.path
 PROJECT_ROOT = Path(__file__).parent.absolute()
@@ -22,12 +20,12 @@ logger = logging.getLogger("Verification")
 
 def verify_sovereign_rebirth():
     logger.info("Starting Sovereign Rebirth Verification...")
-    
+
     try:
         from src.app.core.utf_bridge import get_utf_bridge
         bridge = get_utf_bridge()
         logger.info("✅ UTF Bridge Loaded.")
-        
+
         # Test 1: Constitutional Enforcement delegation
         logger.info("Test 1: Testing Constitutional Enforcement...")
         enforcement = bridge.enforce_constitution(
@@ -52,7 +50,7 @@ def verify_sovereign_rebirth():
         logger.info("--- Sovereign Rebirth Verification Complete ---")
         return True
 
-    except Exception as e:
+    except Exception:
         logger.exception("❌ Verification failed")
         return False
 

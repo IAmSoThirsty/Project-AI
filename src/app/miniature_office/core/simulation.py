@@ -6,8 +6,8 @@ Implements Simulation Design Document Section II
 """
 
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional
 
 from app.miniature_office.agents.agent import Agent, Manager, get_consensus_system
 from app.miniature_office.core.audit import EventType, get_audit_log
@@ -23,7 +23,7 @@ class SimulationConfig:
     tick_duration_ms: int = 100  # Duration of each tick in milliseconds
     auto_assign_tasks: bool = True
     auto_resolve_meetings: bool = True
-    max_ticks: Optional[int] = None  # None for infinite
+    max_ticks: int | None = None  # None for infinite
 
 
 class AgentExecutionEngine:
@@ -237,12 +237,12 @@ class SimulationEngine:
         persistState(world)
     """
 
-    def __init__(self, world: World, config: Optional[SimulationConfig] = None):
+    def __init__(self, world: World, config: SimulationConfig | None = None):
         self.world = world
         self.config = config or SimulationConfig()
         self.is_running = False
         self.tick_count = 0
-        self.event_handlers: Dict[str, List[Callable]] = {}
+        self.event_handlers: dict[str, list[Callable]] = {}
 
     def register_handler(self, event_type: str, handler: Callable):
         """Register an event handler"""
@@ -250,7 +250,7 @@ class SimulationEngine:
             self.event_handlers[event_type] = []
         self.event_handlers[event_type].append(handler)
 
-    def emit_event(self, event_type: str, data: Dict):
+    def emit_event(self, event_type: str, data: dict):
         """Emit an event to all registered handlers"""
         if event_type in self.event_handlers:
             for handler in self.event_handlers[event_type]:
@@ -340,7 +340,7 @@ class SimulationEngine:
             },
         )
 
-    def get_state(self) -> Dict:
+    def get_state(self) -> dict:
         """Get current simulation state"""
         return {
             "world": self.world.to_dict(),
@@ -351,7 +351,7 @@ class SimulationEngine:
 
 
 def create_simulation(
-    world: Optional[World] = None, config: Optional[SimulationConfig] = None
+    world: World | None = None, config: SimulationConfig | None = None
 ) -> SimulationEngine:
     """Create a simulation engine"""
     if world is None:

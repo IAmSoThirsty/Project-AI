@@ -1,7 +1,8 @@
-import pytest
 import urllib.error
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from src.cerberus.sase.core.normalization import TorDetector
+
 
 @patch("urllib.request.urlopen")
 def test_tor_detector_success(mock_urlopen):

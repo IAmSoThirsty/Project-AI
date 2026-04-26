@@ -6,9 +6,7 @@ Continuously monitors subsystem health
 """
 
 import logging
-import time
 from threading import Event, Thread
-from typing import Any, Dict
 
 
 class HealthMonitor:

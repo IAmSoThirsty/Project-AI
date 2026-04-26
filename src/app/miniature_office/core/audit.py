@@ -11,7 +11,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 
 class EventType(Enum):
@@ -42,11 +42,11 @@ class AuditEvent:
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     event_type: EventType = EventType.AGENT_ACTION
     timestamp: datetime = field(default_factory=datetime.utcnow)
-    actor_id: Optional[str] = None  # Entity that caused the event
-    target_id: Optional[str] = None  # Entity affected by the event
-    data: Dict[str, Any] = field(default_factory=dict)
-    parent_events: List[str] = field(default_factory=list)  # Causality links
-    _hash: Optional[str] = None
+    actor_id: str | None = None  # Entity that caused the event
+    target_id: str | None = None  # Entity affected by the event
+    data: dict[str, Any] = field(default_factory=dict)
+    parent_events: list[str] = field(default_factory=list)  # Causality links
+    _hash: str | None = None
 
     def __post_init__(self):
         """Calculate hash for immutability verification"""
@@ -71,7 +71,7 @@ class AuditEvent:
         """Verify event hasn't been tampered with"""
         return self._hash == self._calculate_hash()
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Serialize event to dictionary"""
         return {
             "event_id": self.event_id,
@@ -92,8 +92,8 @@ class CausalityGraph:
     """
 
     def __init__(self):
-        self.events: Dict[str, AuditEvent] = {}
-        self.children: Dict[str, Set[str]] = {}  # parent_id -> set of child_ids
+        self.events: dict[str, AuditEvent] = {}
+        self.children: dict[str, set[str]] = {}  # parent_id -> set of child_ids
 
     def add_event(self, event: AuditEvent) -> None:
         """Add event to the causality graph"""
@@ -111,16 +111,16 @@ class CausalityGraph:
                 self.children[parent_id] = set()
             self.children[parent_id].add(event.event_id)
 
-    def get_event(self, event_id: str) -> Optional[AuditEvent]:
+    def get_event(self, event_id: str) -> AuditEvent | None:
         """Retrieve an event by ID"""
         return self.events.get(event_id)
 
-    def get_children(self, event_id: str) -> List[AuditEvent]:
+    def get_children(self, event_id: str) -> list[AuditEvent]:
         """Get all events caused by a given event"""
         child_ids = self.children.get(event_id, set())
         return [self.events[cid] for cid in child_ids if cid in self.events]
 
-    def get_lineage(self, event_id: str) -> List[AuditEvent]:
+    def get_lineage(self, event_id: str) -> list[AuditEvent]:
         """
         Get complete lineage (ancestry chain) of an event.
         Returns events from root to the specified event.
@@ -144,7 +144,7 @@ class CausalityGraph:
         trace_back(event_id)
         return lineage
 
-    def get_descendants(self, event_id: str) -> List[AuditEvent]:
+    def get_descendants(self, event_id: str) -> list[AuditEvent]:
         """Get all events descended from a given event"""
         descendants = []
         visited = set()
@@ -170,17 +170,17 @@ class AuditLog:
 
     def __init__(self):
         self.graph = CausalityGraph()
-        self._type_index: Dict[EventType, List[str]] = {}
-        self._actor_index: Dict[str, List[str]] = {}
-        self._target_index: Dict[str, List[str]] = {}
+        self._type_index: dict[EventType, list[str]] = {}
+        self._actor_index: dict[str, list[str]] = {}
+        self._target_index: dict[str, list[str]] = {}
 
     def log_event(
         self,
         event_type: EventType,
-        actor_id: Optional[str] = None,
-        target_id: Optional[str] = None,
-        data: Optional[Dict] = None,
-        parent_events: Optional[List[str]] = None,
+        actor_id: str | None = None,
+        target_id: str | None = None,
+        data: dict | None = None,
+        parent_events: list[str] | None = None,
     ) -> AuditEvent:
         """
         Log a new event to the immutable audit log.
@@ -213,28 +213,28 @@ class AuditLog:
 
         return event
 
-    def get_events_by_type(self, event_type: EventType) -> List[AuditEvent]:
+    def get_events_by_type(self, event_type: EventType) -> list[AuditEvent]:
         """Get all events of a specific type"""
         event_ids = self._type_index.get(event_type, [])
         return [
             self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)
         ]
 
-    def get_events_by_actor(self, actor_id: str) -> List[AuditEvent]:
+    def get_events_by_actor(self, actor_id: str) -> list[AuditEvent]:
         """Get all events performed by a specific actor"""
         event_ids = self._actor_index.get(actor_id, [])
         return [
             self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)
         ]
 
-    def get_events_by_target(self, target_id: str) -> List[AuditEvent]:
+    def get_events_by_target(self, target_id: str) -> list[AuditEvent]:
         """Get all events affecting a specific target"""
         event_ids = self._target_index.get(target_id, [])
         return [
             self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)
         ]
 
-    def get_change_lineage(self, target_id: str) -> List[AuditEvent]:
+    def get_change_lineage(self, target_id: str) -> list[AuditEvent]:
         """
         Get complete change lineage for a target entity.
         Implements change lineage tracking (Codex 8.2)
@@ -243,7 +243,7 @@ class AuditLog:
         # Sort by timestamp to show evolution
         return sorted(events, key=lambda e: e.timestamp)
 
-    def get_events(self, limit: Optional[int] = None) -> List[Dict]:
+    def get_events(self, limit: int | None = None) -> list[dict]:
         """
         Get recent events as dictionaries.
         Returns events in reverse chronological order.

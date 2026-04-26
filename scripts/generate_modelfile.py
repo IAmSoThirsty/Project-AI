@@ -56,11 +56,11 @@ CONSTRAINTS:
 
     modelfile_content = f"FROM {base_model_path}\n"
     modelfile_content += f'SYSTEM """\n{system_prompt}\n"""\n'
-    modelfile_content += f"PARAMETER temperature 0.3 # Precision over creativity\n"
-    modelfile_content += f"PARAMETER stop <|end|>\n"
-    modelfile_content += f"PARAMETER stop <|user|>\n"
-    modelfile_content += f"PARAMETER stop <|assistant|>\n"
-    modelfile_content += f"PARAMETER stop <|system|>\n"
+    modelfile_content += "PARAMETER temperature 0.3 # Precision over creativity\n"
+    modelfile_content += "PARAMETER stop <|end|>\n"
+    modelfile_content += "PARAMETER stop <|user|>\n"
+    modelfile_content += "PARAMETER stop <|assistant|>\n"
+    modelfile_content += "PARAMETER stop <|system|>\n"
 
     output_dir = Path("models/modelfiles")
     os.makedirs(output_dir, exist_ok=True)

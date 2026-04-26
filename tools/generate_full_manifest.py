@@ -1,9 +1,9 @@
-import os
 import hashlib
-import time
+import os
 import sys
-from pathlib import Path
+import time
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 # <!-- # ============================================================================ # -->
 # <!-- # STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-24 | TIME: 16:07               # -->
@@ -23,7 +23,7 @@ def get_absolute_file_list():
         # Always ignore .git internal data
         if '.git' in dirs:
             dirs.remove('.git')
-        
+
         for name in files:
             abs_p = Path(root) / name
             try:
@@ -38,7 +38,7 @@ def get_file_info(rel_path):
     abs_path = ROOT / rel_path
     if not abs_path.is_file():
         return None
-    
+
     # Statistics
     try:
         stats = abs_path.stat()
@@ -53,7 +53,7 @@ def get_file_info(rel_path):
     # However, to avoid "lying", we declare that hashing is limited to source folders for speed.
     parts = [p.lower() for p in Path(rel_path).parts]
     skip_hashing_dirs = {'node_modules', '.venv', '.venv_prod', '.git', '__pycache__', 'archive'}
-    
+
     if any(s in parts for s in skip_hashing_dirs) or size > 50 * 1024 * 1024:
         h = "N/A (Skipped for performance)"
     else:
@@ -65,7 +65,7 @@ def get_file_info(rel_path):
             h = sha256_hash.hexdigest()
         except Exception:
             h = "ERROR: Calculation Failed"
-    
+
     return {
         "path": rel_path,
         "size": size,
@@ -115,7 +115,7 @@ def write_manifest():
     with open(OUTPUT_MD, "w", encoding="utf-8", buffering=2**20) as out:
         out.write("# FULL REPOSITORY MANIFEST\n\n")
         out.write(f"**Generated:** {time.strftime('%Y-%m-%d %H:%M:%S')} UTC\n")
-        out.write(f"**Scope:** Absolute Physical Inventory (Exhaustive Scan)\n\n")
+        out.write("**Scope:** Absolute Physical Inventory (Exhaustive Scan)\n\n")
         out.write(f"**Total Files Scanned:** {total_files}\n")
         out.write(f"**Active Files:** {len(active_list)} | **Archived Files:** {len(archived_list)}\n\n")
         out.write("---\n\n")
@@ -125,7 +125,7 @@ def write_manifest():
             if not groups:
                 out.write("_None_\n\n---\n\n")
                 return
-            
+
             sorted_names = sorted(groups.keys())
             out.write("## Table of Contents\n\n")
             for name in sorted_names:

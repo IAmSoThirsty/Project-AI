@@ -21,8 +21,8 @@ INVARIANTS:
 """
 
 import logging
-import urllib.request
 import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any

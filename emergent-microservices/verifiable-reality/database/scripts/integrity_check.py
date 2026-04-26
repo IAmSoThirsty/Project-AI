@@ -6,7 +6,6 @@ Database integrity check script for Verifiable Reality Infrastructure (Post-AI P
 """
 import asyncio
 import sys
-from typing import List, Tuple
 
 
 async def main():

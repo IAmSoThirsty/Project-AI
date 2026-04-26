@@ -20,7 +20,7 @@ All semantic properties are tracked without compression.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Set
+from typing import Optional
 
 
 class SymbolKind(Enum):
@@ -56,10 +56,10 @@ class Symbol:
     definition_line: int
     definition_col: int
     scope_id: str
-    references: List[tuple[int, int]] = field(
+    references: list[tuple[int, int]] = field(
         default_factory=list
     )  # List of (line, col)
-    inferred_type: Optional[str] = None
+    inferred_type: str | None = None
     is_mutated: bool = False
     is_exported: bool = False
     is_imported: bool = False
@@ -80,12 +80,12 @@ class SymbolTable:
 
     scope_id: str
     parent: Optional["SymbolTable"] = None
-    children: List["SymbolTable"] = field(default_factory=list)
-    symbols: Dict[str, Symbol] = field(default_factory=dict)
-    imports: Set[str] = field(default_factory=set)
-    exports: Set[str] = field(default_factory=set)
+    children: list["SymbolTable"] = field(default_factory=list)
+    symbols: dict[str, Symbol] = field(default_factory=dict)
+    imports: set[str] = field(default_factory=set)
+    exports: set[str] = field(default_factory=set)
 
-    def lookup(self, name: str) -> Optional[Symbol]:
+    def lookup(self, name: str) -> Symbol | None:
         """
         Resolve name with scope chain traversal
 
@@ -160,8 +160,8 @@ class SemanticAnalyzer:
     """
 
     def __init__(self):
-        self.root_table: Optional[SymbolTable] = None
-        self.issues: List[Dict] = []
+        self.root_table: SymbolTable | None = None
+        self.issues: list[dict] = []
 
     def analyze(self, ast_root) -> SymbolTable:
         """
@@ -185,7 +185,7 @@ class SemanticAnalyzer:
         self.root_table = SymbolTable(scope_id="module")
         return self.root_table
 
-    def get_issues(self) -> List[Dict]:
+    def get_issues(self) -> list[dict]:
         """
         Return all detected semantic issues
 

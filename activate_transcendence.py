@@ -11,13 +11,12 @@
 
 import subprocess
 import sys
-import time
 
 
 def main():
     print("YGGDRASIL TRANSCENDENT ACTIVATION SEQUENCE")
     print("=============================================")
-    
+
     # Ensure dependencies
     print("[INIT] Installing Flask for Public Resolver...")
     subprocess.run([sys.executable, "-m", "pip", "install", "flask"], check=True)

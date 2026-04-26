@@ -220,7 +220,7 @@ class Executor:
                 "output": output,
                 "duration": duration,
             }
-        except asyncio.TimeoutError:
+        except TimeoutError:
             duration = time.perf_counter() - start
             return {
                 "returncode": -1,

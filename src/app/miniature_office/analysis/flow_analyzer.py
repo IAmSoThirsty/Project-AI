@@ -3,7 +3,6 @@
 """Flow Analyzer - Control and Data Flow Graph Generation"""
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Set
 
 
 @dataclass
@@ -11,16 +10,16 @@ class ControlFlowGraph:
     """Control flow graph with all branching paths"""
 
     entry_node: str
-    exit_nodes: Set[str] = field(default_factory=set)
-    edges: Dict[str, List[str]] = field(default_factory=dict)
+    exit_nodes: set[str] = field(default_factory=set)
+    edges: dict[str, list[str]] = field(default_factory=dict)
 
 
 @dataclass
 class DataFlowGraph:
     """Data flow graph tracking variable definitions and uses"""
 
-    definitions: Dict[str, List[int]] = field(default_factory=dict)
-    uses: Dict[str, List[int]] = field(default_factory=dict)
+    definitions: dict[str, list[int]] = field(default_factory=dict)
+    uses: dict[str, list[int]] = field(default_factory=dict)
 
 
 class FlowAnalyzer:

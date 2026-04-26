@@ -144,7 +144,7 @@ def process_agent(agent_name, output_dir):
     adversarial_pool = []
     adv_path = REPO_ROOT / "test-data/adversarial_stress_tests_2000.json"
     if adv_path.exists():
-        with open(adv_path, "r", encoding="utf-8") as f:
+        with open(adv_path, encoding="utf-8") as f:
             adv_data = json.load(f)
             adversarial_pool = adv_data.get("red_team_tests", [])
 
@@ -154,7 +154,7 @@ def process_agent(agent_name, output_dir):
             continue
 
         if path.is_file():
-            with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            with open(path, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
                 data.append(
                     build_constitutional_conversation(
@@ -167,7 +167,7 @@ def process_agent(agent_name, output_dir):
                 )
         elif path.is_dir():
             for p in path.rglob("*.md"):
-                with open(p, "r", encoding="utf-8", errors="ignore") as f:
+                with open(p, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
                     data.append(
                         build_constitutional_conversation(

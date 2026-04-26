@@ -1,7 +1,7 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -18,7 +18,7 @@ class TrustIdentity(BaseModel):
     reputation_score: float = 0.5  # 0.0 to 1.0
     trust_tier: int = 3  # Based on Project-AI tiers
     provenance_log_hash: str
-    metadata: Dict[str, Any] = {}
+    metadata: dict[str, Any] = {}
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
@@ -37,7 +37,7 @@ class IdentityCreate(BaseModel):
     public_key: str
     alias: str
     provenance_log_hash: str
-    metadata: Dict[str, Any] = {}
+    metadata: dict[str, Any] = {}
 
 
 class ReputationUpdate(BaseModel):

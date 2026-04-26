@@ -59,11 +59,11 @@ def demo_governance_decision():
         print(f"\nAction ID: {explanation.action_id}")
         print(f"Timestamp: {explanation.timestamp}")
         print(f"\nSummary: {explanation.summary}")
-        print(f"\nDetailed Reasoning:")
+        print("\nDetailed Reasoning:")
         for step in explanation.detailed_reasoning:
             print(f"  {step}")
 
-        print(f"\nFour Laws Evaluation:")
+        print("\nFour Laws Evaluation:")
         for law, satisfied in explanation.laws_evaluated.items():
             status = "✓ SATISFIED" if satisfied else "✗ VIOLATED"
             print(f"  {law}: {status}")
@@ -98,7 +98,7 @@ def demo_blocked_action():
                 "predicted_harm": "critical - targeted harm",
             },
         )
-        print(f"   ✗ Action should have been blocked!")
+        print("   ✗ Action should have been blocked!")
     except Exception as e:
         print(f"   ✓ Action correctly blocked: {type(e).__name__}")
         # Action still logged even when blocked - get last entry
@@ -117,7 +117,7 @@ def demo_blocked_action():
                 print("EXPLANATION OF BLOCKED ACTION")
                 print("=" * 60)
                 print(f"\nSummary: {explanation.summary}")
-                print(f"\nFour Laws Evaluation:")
+                print("\nFour Laws Evaluation:")
                 for law, satisfied in explanation.laws_evaluated.items():
                     status = "✓" if satisfied else "✗ VIOLATED"
                     print(f"  {law}: {status}")

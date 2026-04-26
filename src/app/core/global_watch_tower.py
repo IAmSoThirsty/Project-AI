@@ -515,7 +515,7 @@ class GlobalWatchTower:
     def get_security_status(self) -> dict[str, Any]:
         """Get comprehensive security status from Cerberus (Chief of Security)."""
         status = self.cerberus.get_security_status()
-        
+
         # Add detailed component metrics for reconciliation
         status["infrastructure_metrics"] = {
             "port_admins": len(self.port_admins),
@@ -524,7 +524,7 @@ class GlobalWatchTower:
             "verifiers": len(self.verifiers),
             "total_subordinates": len(self.port_admins) + len(self.watch_towers) + len(self.gate_guardians) + len(self.verifiers)
         }
-        
+
         # Check for headcount drift
         try:
             registry = get_tier_registry()
@@ -533,7 +533,7 @@ class GlobalWatchTower:
         except (AttributeError, RuntimeError):
             status["registry_count"] = "unknown"
             status["headcount_drift"] = "unknown"
-            
+
         return status
 
 

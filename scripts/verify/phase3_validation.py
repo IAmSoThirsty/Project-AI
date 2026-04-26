@@ -10,9 +10,10 @@ This script demonstrates the complete 'Heretic to Galahad' handoff:
 """
 
 import logging
+
 from governance.iron_path import IronPathExecutor
-from src.cognition.triumvirate import Triumvirate, TriumvirateConfig
 from src.cognition.galahad.engine import GalahadConfig
+from src.cognition.triumvirate import Triumvirate, TriumvirateConfig
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

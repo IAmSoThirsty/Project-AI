@@ -9,10 +9,10 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
       
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@17f84c3641ba7b8f6deff6309fc4c864478f5d62
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -24,7 +24,7 @@ jobs:
           ../gradlew :legion_mini:assembleRelease
       
       - name: Upload Android APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: legion-mini-apk
           path: android/legion_mini/build/outputs/apk/release/*.apk
@@ -32,10 +32,10 @@ jobs:
   build-desktop:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
       
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610
         with:
           node-version: '18'
       
@@ -46,7 +46,7 @@ jobs:
           npm run build:win
       
       - name: Upload Desktop Installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5
         with:
           name: desktop-installer
           path: desktop/release/*.exe
@@ -55,22 +55,22 @@ jobs:
     needs: [build-android, build-desktop]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
       
       - name: Download Android APK
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           name: legion-mini-apk
           path: ./artifacts/android
       
       - name: Download Desktop Installer
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
         with:
           name: desktop-installer
           path: ./artifacts/desktop
       
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@26994186c0ac3ef5cae75ac16aa32e8153525f77
         with:
           files: |
             ./artifacts/android/*.apk

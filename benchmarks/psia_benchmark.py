@@ -36,9 +36,10 @@ import os
 import platform
 import statistics
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Callable
+from datetime import UTC, datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +75,7 @@ class HardwareProfile:
             os_name=platform.system(),
             os_version=platform.version(),
             python_version=platform.python_version(),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
         )
 
 
@@ -325,7 +326,7 @@ class BenchmarkHarness:
         """
         report = {
             "report_version": "1.0",
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "hardware": {
                 "cpu_model": self._hardware.cpu_model,
                 "cpu_count_logical": self._hardware.cpu_count_logical,

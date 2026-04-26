@@ -17,11 +17,12 @@ except ImportError:
     pass
 
 import os
+
 import torch
 from datasets import load_dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
-from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from trl import SFTConfig, SFTTrainer
 
 try:
     HAS_UNSLOTH = torch.cuda.is_available()

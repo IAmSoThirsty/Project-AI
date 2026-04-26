@@ -4,10 +4,9 @@
 API routes
 """
 
-from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, Path, Query, status
+from fastapi import APIRouter, Body, Depends, Path, status
 
 from .logging_config import logger
 from .models import (

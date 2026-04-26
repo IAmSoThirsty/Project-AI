@@ -22,9 +22,9 @@ Submodules:
   - skill_manager: The SkillManager orchestrator (acquire, practice, reflect)
 """
 
+from .forensics import ForensicsSkill
+from .sigma_rules import SigmaRulesSkill
 from .skill import Skill
 from .skill_manager import SkillManager
-from .sigma_rules import SigmaRulesSkill
-from .forensics import ForensicsSkill
 
 __all__ = ["Skill", "SkillManager", "SigmaRulesSkill", "ForensicsSkill"]

@@ -1,7 +1,7 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -17,10 +17,10 @@ class SecurityIncident(BaseModel):
     severity: str  # low, medium, high, critical
     incident_type: str
     description: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     status: str = "detected"  # detected, analyzing, reflex_triggered, closed
-    evidence_hash: Optional[str] = None
-    reflex_actions_taken: List[str] = []
+    evidence_hash: str | None = None
+    reflex_actions_taken: list[str] = []
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
 
@@ -30,17 +30,17 @@ class IncidentCreate(BaseModel):
     severity: str
     incident_type: str
     description: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class IncidentUpdate(BaseModel):
-    status: Optional[str] = None
-    evidence_hash: Optional[str] = None
-    reflex_actions_taken: Optional[List[str]] = None
+    status: str | None = None
+    evidence_hash: str | None = None
+    reflex_actions_taken: list[str] | None = None
 
 
 class PaginatedIncidents(BaseModel):
-    items: List[SecurityIncident]
+    items: list[SecurityIncident]
     total: int
     page: int
     page_size: int

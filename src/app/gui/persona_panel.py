@@ -5,20 +5,21 @@
 # Job Board Panel - Capability Expansion UI.
 
 import logging
+
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
+    QFrame,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
+    QProgressBar,
     QPushButton,
     QScrollArea,
     QTabWidget,
     QTextEdit,
     QVBoxLayout,
     QWidget,
-    QGridLayout,
-    QProgressBar,
-    QFrame,
 )
 
 from src.app.core.ai_systems import AIPersona, FourLaws

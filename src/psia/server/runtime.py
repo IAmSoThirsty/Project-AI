@@ -22,7 +22,7 @@ import hashlib
 import logging
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from src.psia.bootstrap.genesis import GenesisCoordinator
@@ -136,7 +136,7 @@ class PSIARuntime:
             self._triumvirate = None
 
         self._booted = True
-        self._boot_time = datetime.now(timezone.utc).isoformat()
+        self._boot_time = datetime.now(UTC).isoformat()
         boot_duration_ms = (time.monotonic() - start) * 1000
 
         logger.info("PSIA Desktop Runtime boot complete in %.1fms", boot_duration_ms)
@@ -162,7 +162,7 @@ class PSIARuntime:
             GovernanceResult-compatible dict with votes, verdict, and audit trail
         """
         self._intent_count += 1
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         request_id = f"req_{uuid.uuid4().hex[:12]}"
         intent_hash = hashlib.sha256(
             f"{intent_data.get('actor', 'unknown')}:{intent_data.get('action', 'unknown')}:"

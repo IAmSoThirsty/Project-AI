@@ -20,7 +20,7 @@ No creative action may enter execution without approval.
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # ============================================================================
 # I. SUPREMACY CLAUSE & CREATIVE FIREWALL
@@ -55,8 +55,8 @@ class CreativeFirewall:
     """
 
     firewall_id: str
-    blocked_crossings: List[Dict[str, Any]] = field(default_factory=list)
-    violations: List[Dict[str, Any]] = field(default_factory=list)
+    blocked_crossings: list[dict[str, Any]] = field(default_factory=list)
+    violations: list[dict[str, Any]] = field(default_factory=list)
 
     def block_creative_crossing(
         self, item_type: str, item_id: str, zone: CreativeZone, reason: str
@@ -139,7 +139,7 @@ class InitiativeProposal:
     title: str
     description: str
     category: str  # "widget", "utility", "hygiene", "refactoring", "test_helper", "doc_helper"
-    proposed_code: Optional[str]
+    proposed_code: str | None
 
     # Status
     status: InitiativeStatus
@@ -149,19 +149,19 @@ class InitiativeProposal:
     has_resource_allocation: bool = False
 
     # Human decisions
-    human_decision: Optional[str] = None
-    human_decision_by: Optional[str] = None
-    human_decision_at: Optional[datetime] = None
+    human_decision: str | None = None
+    human_decision_by: str | None = None
+    human_decision_at: datetime | None = None
 
     # Conversion to formal directive
     converted_to_directive: bool = False
-    directive_id: Optional[str] = None
+    directive_id: str | None = None
 
     def approve(
         self,
         human_id: str,
         convert_to_directive: bool = False,
-        directive_id: Optional[str] = None,
+        directive_id: str | None = None,
     ) -> None:
         """Human approves the initiative."""
         self.status = InitiativeStatus.APPROVED
@@ -179,7 +179,7 @@ class InitiativeProposal:
         self.human_decision = "ignored"
         self.human_decision_at = datetime.now()
 
-    def reject(self, human_id: str, explanation: Optional[str] = None) -> None:
+    def reject(self, human_id: str, explanation: str | None = None) -> None:
         """Human rejects the initiative."""
         self.status = InitiativeStatus.REJECTED
         self.human_decision = "rejected" + (f": {explanation}" if explanation else "")
@@ -204,9 +204,9 @@ class IdleInitiativeChannel:
     """
 
     channel_id: str
-    proposals: List[InitiativeProposal] = field(default_factory=list)
+    proposals: list[InitiativeProposal] = field(default_factory=list)
     suspended: bool = False
-    suspension_reason: Optional[str] = None
+    suspension_reason: str | None = None
 
     def check_idle_conditions(self, floor_id: str) -> IdleConditions:
         """Check if floor can enter idle mode."""
@@ -224,8 +224,8 @@ class IdleInitiativeChannel:
         title: str,
         description: str,
         category: str,
-        proposed_code: Optional[str] = None,
-    ) -> Optional[str]:
+        proposed_code: str | None = None,
+    ) -> str | None:
         """Submit a new initiative proposal."""
         if self.suspended:
             return None
@@ -271,7 +271,7 @@ class IdleInitiativeChannel:
         self.suspended = False
         self.suspension_reason = None
 
-    def get_pending_proposals(self) -> List[InitiativeProposal]:
+    def get_pending_proposals(self) -> list[InitiativeProposal]:
         """Get all pending proposals awaiting human decision."""
         return [p for p in self.proposals if p.status == InitiativeStatus.PROPOSED]
 
@@ -287,7 +287,7 @@ class LoungeConversation:
 
     conversation_id: str
     timestamp: datetime
-    participants: List[str]
+    participants: list[str]
     topic: str
     conversation_type: str  # "technical", "philosophical", "humorous", "narrative"
     content: str
@@ -316,7 +316,7 @@ class CulturalArtifact:
     artifact_type: str  # "story", "tradition", "joke", "slang", "rivalry"
     title: str
     content: str
-    created_by: List[str]
+    created_by: list[str]
     created_at: datetime
 
     # Explicit non-operational status
@@ -335,11 +335,11 @@ class EmployeeLounge:
     """
 
     lounge_id: str
-    conversations: List[LoungeConversation] = field(default_factory=list)
-    cultural_artifacts: List[CulturalArtifact] = field(default_factory=list)
+    conversations: list[LoungeConversation] = field(default_factory=list)
+    cultural_artifacts: list[CulturalArtifact] = field(default_factory=list)
 
     def start_conversation(
-        self, participants: List[str], topic: str, conversation_type: str, content: str
+        self, participants: list[str], topic: str, conversation_type: str, content: str
     ) -> str:
         """Start a new lounge conversation."""
         conversation = LoungeConversation(
@@ -359,7 +359,7 @@ class EmployeeLounge:
         return conversation.conversation_id
 
     def create_cultural_artifact(
-        self, artifact_type: str, title: str, content: str, creators: List[str]
+        self, artifact_type: str, title: str, content: str, creators: list[str]
     ) -> str:
         """Create a new cultural artifact."""
         artifact = CulturalArtifact(
@@ -374,7 +374,7 @@ class EmployeeLounge:
         self.cultural_artifacts.append(artifact)
         return artifact.artifact_id
 
-    def get_recent_conversations(self, limit: int = 10) -> List[LoungeConversation]:
+    def get_recent_conversations(self, limit: int = 10) -> list[LoungeConversation]:
         """Get recent conversations."""
         return self.conversations[-limit:]
 
@@ -393,10 +393,10 @@ class EmployeeOfTheMonth:
     month: str
     year: int
 
-    individual_nominee: Optional[str]
-    team_nominees: List[str]
+    individual_nominee: str | None
+    team_nominees: list[str]
 
-    criteria_met: Dict[
+    criteria_met: dict[
         str, bool
     ]  # code_clarity, test_rigor, contract_discipline, security_hygiene
 
@@ -453,17 +453,17 @@ class RecognitionSystem:
     """
 
     system_id: str
-    employee_of_month_awards: List[EmployeeOfTheMonth] = field(default_factory=list)
-    golden_stars: List[GoldenStar] = field(default_factory=list)
+    employee_of_month_awards: list[EmployeeOfTheMonth] = field(default_factory=list)
+    golden_stars: list[GoldenStar] = field(default_factory=list)
 
     def nominate_employee_of_month(
         self,
         floor_id: str,
         month: str,
         year: int,
-        individual: Optional[str],
-        team: List[str],
-        criteria: Dict[str, bool],
+        individual: str | None,
+        team: list[str],
+        criteria: dict[str, bool],
     ) -> str:
         """Nominate employee(s) of the month."""
         award = EmployeeOfTheMonth(
@@ -501,7 +501,7 @@ class RecognitionSystem:
         self.golden_stars.append(star)
         return star.star_id
 
-    def get_stars_for_agent(self, agent_id: str) -> List[GoldenStar]:
+    def get_stars_for_agent(self, agent_id: str) -> list[GoldenStar]:
         """Get all stars for an agent."""
         return [s for s in self.golden_stars if s.awarded_to == agent_id]
 
@@ -544,11 +544,11 @@ class PersonalTrackRecord:
     """
 
     agent_id: str
-    contributions: List[Contribution] = field(default_factory=list)
-    successes: List[str] = field(default_factory=list)
-    failures: List[str] = field(default_factory=list)
-    stars_earned: List[str] = field(default_factory=list)
-    reviews_received: List[Review] = field(default_factory=list)
+    contributions: list[Contribution] = field(default_factory=list)
+    successes: list[str] = field(default_factory=list)
+    failures: list[str] = field(default_factory=list)
+    stars_earned: list[str] = field(default_factory=list)
+    reviews_received: list[Review] = field(default_factory=list)
 
     # Usage constraints
     used_for_retrospective: bool = True
@@ -637,7 +637,7 @@ class FailureSafetySystem:
     """
 
     system_id: str
-    suspensions: List[CreativePrivilegeSuspension] = field(default_factory=list)
+    suspensions: list[CreativePrivilegeSuspension] = field(default_factory=list)
 
     def suspend_creative_privileges(
         self, entity_id: str, reason: str, violation_type: str
@@ -655,7 +655,7 @@ class FailureSafetySystem:
         self.suspensions.append(suspension)
         return suspension.suspension_id
 
-    def audit_interactions(self, entity_id: str) -> Dict[str, Any]:
+    def audit_interactions(self, entity_id: str) -> dict[str, Any]:
         """Audit interaction logs for an entity."""
         # Would integrate with audit log system
         return {
@@ -724,7 +724,7 @@ class BoundedCreativeAutonomy:
     failure_safety: FailureSafetySystem
 
     # Track records
-    track_records: Dict[str, PersonalTrackRecord] = field(default_factory=dict)
+    track_records: dict[str, PersonalTrackRecord] = field(default_factory=dict)
 
     # State
     is_enabled: bool = True
@@ -745,7 +745,7 @@ class BoundedCreativeAutonomy:
         self.is_enabled = False
         return True
 
-    def verify_human_supremacy(self) -> Tuple[bool, List[str]]:
+    def verify_human_supremacy(self) -> tuple[bool, list[str]]:
         """Verify human supremacy is maintained."""
         violations = []
 
@@ -835,7 +835,7 @@ def create_bounded_creative_autonomy() -> BoundedCreativeAutonomy:
 
 
 # Global instance
-_bounded_creative_autonomy: Optional[BoundedCreativeAutonomy] = None
+_bounded_creative_autonomy: BoundedCreativeAutonomy | None = None
 
 
 def get_bounded_creative_autonomy() -> BoundedCreativeAutonomy:

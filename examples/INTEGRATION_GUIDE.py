@@ -10,7 +10,6 @@ into your existing dashboard.
 import logging
 import time
 
-from app.core.ai_systems import AIPersona
 from app.gui.dashboard_utils import (
     DashboardAsyncManager,
     DashboardConfiguration,
@@ -18,6 +17,8 @@ from app.gui.dashboard_utils import (
     DashboardLogger,
     DashboardValidationManager,
 )
+
+from app.core.ai_systems import AIPersona
 from app.gui.persona_panel import PersonaPanel
 
 logger = logging.getLogger(__name__)

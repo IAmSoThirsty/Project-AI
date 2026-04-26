@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import random
+from collections.abc import Callable
 from dataclasses import replace
-from typing import Callable
 
 from app.testing.pa_shield.common import stable_digest
 from app.testing.pa_shield.models import AttackCase
-
 
 TextMutation = Callable[[str], str]
 

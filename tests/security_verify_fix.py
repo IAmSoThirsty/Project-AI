@@ -3,7 +3,9 @@ import json
 import os
 import shutil
 import tempfile
-from app.core.advanced_learning_systems import ExperienceReplayBuffer, Experience
+
+from app.core.advanced_learning_systems import Experience, ExperienceReplayBuffer
+
 
 def test_save_is_json():
     tmpdir = tempfile.mkdtemp()
@@ -25,7 +27,7 @@ def test_save_is_json():
         assert os.path.exists(filepath)
 
         # Verify it's valid JSON and contains the expected data
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             data = json.load(f)
 
         assert isinstance(data, list)

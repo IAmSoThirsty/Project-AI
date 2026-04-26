@@ -5,9 +5,6 @@ Tests for DeadmanSwitch implementation.
 """
 
 import threading
-import time
-
-import pytest
 
 from app.resilience.deadman_switch import DeadmanSwitch
 

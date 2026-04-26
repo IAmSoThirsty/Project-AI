@@ -16,11 +16,9 @@ Thirst of Gods Level Architecture
 """
 
 import logging
-import os
 import threading
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Set
 
 logger = logging.getLogger(__name__)
 
@@ -58,20 +56,20 @@ class Capability(Enum):
 class ResourceLimits:
     """Cgroup resource limits"""
 
-    cpu_shares: Optional[int] = None  # CPU shares (1024 = 1 CPU)
-    cpu_quota_us: Optional[int] = None  # CPU quota in microseconds
+    cpu_shares: int | None = None  # CPU shares (1024 = 1 CPU)
+    cpu_quota_us: int | None = None  # CPU quota in microseconds
     cpu_period_us: int = 100000  # CPU period (default 100ms)
-    memory_limit_bytes: Optional[int] = None  # Memory limit
-    memory_swap_limit_bytes: Optional[int] = None  # Swap limit
-    io_weight: Optional[int] = None  # I/O weight (100-10000)
-    pids_max: Optional[int] = None  # Max number of PIDs
+    memory_limit_bytes: int | None = None  # Memory limit
+    memory_swap_limit_bytes: int | None = None  # Swap limit
+    io_weight: int | None = None  # I/O weight (100-10000)
+    pids_max: int | None = None  # Max number of PIDs
 
 
 @dataclass
 class IsolationConfig:
     """Process isolation configuration"""
 
-    namespaces: Set[NamespaceType] = field(
+    namespaces: set[NamespaceType] = field(
         default_factory=lambda: {
             NamespaceType.PID,
             NamespaceType.MOUNT,
@@ -79,12 +77,12 @@ class IsolationConfig:
             NamespaceType.UTS,
         }
     )
-    capabilities: Set[Capability] = field(default_factory=set)
+    capabilities: set[Capability] = field(default_factory=set)
     resource_limits: ResourceLimits = field(default_factory=ResourceLimits)
-    allowed_syscalls: Optional[Set[str]] = None  # None = all allowed
-    denied_syscalls: Set[str] = field(default_factory=set)
-    selinux_context: Optional[str] = None
-    apparmor_profile: Optional[str] = None
+    allowed_syscalls: set[str] | None = None  # None = all allowed
+    denied_syscalls: set[str] = field(default_factory=set)
+    selinux_context: str | None = None
+    apparmor_profile: str | None = None
 
 
 @dataclass
@@ -95,7 +93,7 @@ class Namespace:
     namespace_type: NamespaceType
     owner_pid: int
     created_at: float
-    members: Set[int] = field(default_factory=set)  # PIDs in this namespace
+    members: set[int] = field(default_factory=set)  # PIDs in this namespace
 
 
 @dataclass
@@ -127,21 +125,21 @@ class ProcessIsolationManager:
 
     def __init__(self):
         # Namespace management
-        self.namespaces: Dict[int, Namespace] = {}
+        self.namespaces: dict[int, Namespace] = {}
         self.next_namespace_id = 1
-        self.process_namespaces: Dict[int, Dict[NamespaceType, int]] = {}
+        self.process_namespaces: dict[int, dict[NamespaceType, int]] = {}
 
         # Isolation configurations per process
-        self.isolation_configs: Dict[int, IsolationConfig] = {}
+        self.isolation_configs: dict[int, IsolationConfig] = {}
 
         # Resource accounting per process
-        self.resource_accounting: Dict[int, ResourceAccounting] = {}
+        self.resource_accounting: dict[int, ResourceAccounting] = {}
 
         # Capability sets per process
-        self.process_capabilities: Dict[int, Set[Capability]] = {}
+        self.process_capabilities: dict[int, set[Capability]] = {}
 
         # Seccomp filters per process
-        self.seccomp_filters: Dict[int, Set[str]] = {}
+        self.seccomp_filters: dict[int, set[str]] = {}
 
         # Thread safety
         self.lock = threading.RLock()
@@ -157,7 +155,7 @@ class ProcessIsolationManager:
         logger.info("Process Isolation Manager initialized")
 
     def create_isolated_process(
-        self, pid: int, config: Optional[IsolationConfig] = None
+        self, pid: int, config: IsolationConfig | None = None
     ):
         """
         Create isolation environment for process
@@ -330,11 +328,11 @@ class ProcessIsolationManager:
     def update_resource_accounting(
         self,
         pid: int,
-        cpu_time_us: Optional[int] = None,
-        memory_bytes: Optional[int] = None,
-        io_read_bytes: Optional[int] = None,
-        io_write_bytes: Optional[int] = None,
-        syscall_count: Optional[int] = None,
+        cpu_time_us: int | None = None,
+        memory_bytes: int | None = None,
+        io_read_bytes: int | None = None,
+        io_write_bytes: int | None = None,
+        syscall_count: int | None = None,
     ):
         """Update resource usage accounting"""
         with self.lock:
@@ -359,7 +357,7 @@ class ProcessIsolationManager:
             if syscall_count is not None:
                 acct.syscalls_made += syscall_count
 
-    def get_resource_usage(self, pid: int) -> Optional[ResourceAccounting]:
+    def get_resource_usage(self, pid: int) -> ResourceAccounting | None:
         """Get resource usage for process"""
         with self.lock:
             return self.resource_accounting.get(pid)
@@ -432,7 +430,7 @@ class ProcessIsolationManager:
 
             logger.debug(f"Cleaned up isolation for process {pid}")
 
-    def _get_all_syscalls(self) -> Set[str]:
+    def _get_all_syscalls(self) -> set[str]:
         """Get set of all known syscalls"""
         # Simplified - real implementation would read from kernel
         return {
@@ -534,7 +532,7 @@ class ProcessIsolationManager:
             # ... many more syscalls
         }
 
-    def get_isolation_stats(self) -> Dict:
+    def get_isolation_stats(self) -> dict:
         """Get isolation statistics"""
         with self.lock:
             return {

@@ -16,7 +16,7 @@ import hashlib
 import json
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from psia.schemas.identity import Signature
@@ -179,7 +179,7 @@ class MemoryStage:
         )
         inputs_hash = hashlib.sha256(inputs_data.encode()).hexdigest()
 
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         record = ExecutionRecord(
             record_id=f"rec_{uuid.uuid4().hex[:12]}",

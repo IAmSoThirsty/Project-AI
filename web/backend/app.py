@@ -54,7 +54,7 @@ def login():
 
     username = (payload.get("username") or "").strip()
     password = payload.get("password")
-    
+
     # 1. Validate Initial Credentials
     user = _USERS.get(username)
     if not user or user.get("password") != password:
@@ -74,14 +74,14 @@ def login():
             scope=f"role:{user['role']}",
             redirect_uri="http://localhost:5000/callback"
         )
-        
+
         # Immediate exchange for web-bound sessions (simplified flow for internal UI)
         token_data = oauth2_provider.exchange_token(
             code=code,
             client_id="sovereign-web-ui",
             client_secret="cert-hardened-secret-991"  # Defined in provider
         )
-        
+
         return (
             jsonify(
                 status="ok",
@@ -105,7 +105,7 @@ def profile():
             jsonify(error="missing-token", message="X-Auth-Token header required"),
             401,
         )
-    
+
     # Validate via hardened provider
     token_metadata = oauth2_provider.validate_token(token)
     if not token_metadata:
@@ -113,11 +113,11 @@ def profile():
             jsonify(error="invalid-token", message="Provided token is not recognized or expired"),
             403,
         )
-        
+
     # In a real system, we'd map the token back to a user ID via the Identity Engine
     # For now, we mock it based on the token pattern or metadata
     return jsonify(
-        status="ok", 
+        status="ok",
         user={
             "client_id": token_metadata["client_id"],
             "scope": token_metadata["scope"]

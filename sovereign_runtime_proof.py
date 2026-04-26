@@ -19,6 +19,7 @@ Orchestrates Audit, Liara-Guard, and Predictive Fates in an adversarial scenario
 import sys
 
 from branches.fates.predictive_fates import PredictiveFates
+
 from cognition.audit import AUDIT_LOG, audit
 from cognition.kernel_liara import maybe_activate_liara, restore_pillar
 from cognition.liara_guard import STATE, check_liara_state

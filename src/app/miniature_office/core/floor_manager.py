@@ -10,7 +10,7 @@ implemented in different programming languages.
 import json
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class FloorProcess:
@@ -22,8 +22,8 @@ class FloorProcess:
         self.process = process
 
     def send_request(
-        self, method: str, params: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, method: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Send a JSON-RPC request to the floor process"""
         request = {"method": method}
         if params:
@@ -64,7 +64,7 @@ class MultiLanguageFloorManager:
 
     def __init__(self, floors_dir: str = "floors"):
         self.floors_dir = Path(floors_dir)
-        self.active_floors: Dict[str, FloorProcess] = {}
+        self.active_floors: dict[str, FloorProcess] = {}
         self.floor_configs = {
             "python": {
                 "floor_number": 1,
@@ -157,7 +157,7 @@ class MultiLanguageFloorManager:
         for language in list(self.active_floors.keys()):
             self.stop_floor(language)
 
-    def get_floor_info(self, language: str) -> Optional[Dict[str, Any]]:
+    def get_floor_info(self, language: str) -> dict[str, Any] | None:
         """Get information about a floor"""
         if language not in self.active_floors:
             return None
@@ -165,8 +165,8 @@ class MultiLanguageFloorManager:
         return self.active_floors[language].send_request("get_info")
 
     def send_request_to_floor(
-        self, language: str, method: str, params: Optional[Dict[str, Any]] = None
-    ) -> Optional[Dict[str, Any]]:
+        self, language: str, method: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any] | None:
         """Send a request to a specific floor"""
         if language not in self.active_floors:
             print(f"Floor {language} is not running")
@@ -174,7 +174,7 @@ class MultiLanguageFloorManager:
 
         return self.active_floors[language].send_request(method, params)
 
-    def get_all_floor_info(self) -> Dict[str, Any]:
+    def get_all_floor_info(self) -> dict[str, Any]:
         """Get information about all running floors"""
         info = {}
         for language, floor in self.active_floors.items():

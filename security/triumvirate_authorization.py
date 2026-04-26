@@ -14,7 +14,6 @@ import logging
 import time
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Tuple
 
 logger = logging.getLogger("TriumvirateAuth")
 
@@ -61,7 +60,7 @@ class ToolAuthorizationRequest:
 class TriumvirateDecision:
     """Triumvirate's decision on tool authorization"""
 
-    def __init__(self, approved: bool, reason: str, conditions: List[str] = None):
+    def __init__(self, approved: bool, reason: str, conditions: list[str] = None):
         self.approved = approved
         self.reason = reason
         self.conditions = conditions or []
@@ -95,7 +94,7 @@ class TriumvirateAuthorizationSystem:
 
     def request_authorization(
         self, request: ToolAuthorizationRequest
-    ) -> Tuple[bool, str, Optional[str]]:
+    ) -> tuple[bool, str, str | None]:
         """
         Request authorization from Triumvirate
 
@@ -289,7 +288,7 @@ class TriumvirateAuthorizationSystem:
         with open("security/triumvirate_decisions.log", "a") as f:
             f.write(json.dumps(log_entry) + "\n")
 
-    def get_decision_history(self, limit: int = 50) -> List[Dict]:
+    def get_decision_history(self, limit: int = 50) -> list[dict]:
         """Get recent Triumvirate decisions"""
         return self.decision_history[-limit:]
 

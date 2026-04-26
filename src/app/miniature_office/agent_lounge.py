@@ -11,7 +11,6 @@ The Lounge renders as a physical break room on a dedicated VR floor.
 from __future__ import annotations
 
 import logging
-import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import UTC, datetime

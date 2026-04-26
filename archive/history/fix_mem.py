@@ -4,7 +4,7 @@
 src_file = r"archive\src\app\core\ai_systems.py"
 dest_file = r"src\app\core\ai_systems.py"
 
-with open(src_file, "r", encoding="utf-8") as f:
+with open(src_file, encoding="utf-8") as f:
     lines = f.readlines()
 
 atomic_start, atomic_end = -1, -1

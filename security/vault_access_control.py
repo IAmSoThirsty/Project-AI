@@ -9,14 +9,9 @@ All access attempts are logged and require multi-factor authorization
 """
 
 import hashlib
-import hmac
-import json
 import logging
-import os
 import time
-from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 # Configure audit logging
 logging.basicConfig(
@@ -74,7 +69,7 @@ class SecurityVault:
 
     def authenticate(
         self, user_id: str, role: str, auth_token: str, justification: str = ""
-    ) -> Dict:
+    ) -> dict:
         """
         Authenticate user for vault access
 
@@ -113,7 +108,7 @@ class SecurityVault:
 
         # Require justification
         if not justification or len(justification) < 20:
-            logger.error(f"VAULT ACCESS DENIED - Insufficient justification")
+            logger.error("VAULT ACCESS DENIED - Insufficient justification")
             self._log_failed_attempt(user_id, "No justification")
             raise AccessDeniedError("Valid justification required (min 20 chars)")
 
@@ -175,7 +170,7 @@ class SecurityVault:
         All access is logged
         """
         if not self.validate_session(session_token):
-            logger.error(f"TOOL ACCESS DENIED - Invalid session")
+            logger.error("TOOL ACCESS DENIED - Invalid session")
             raise AccessDeniedError("Invalid or expired session")
 
         session = self._active_sessions[session_token]
@@ -220,7 +215,7 @@ class SecurityVault:
 
         Requires SECURITY_ADMIN token
         """
-        logger.critical(f"VAULT ACTIVATION ATTEMPT")
+        logger.critical("VAULT ACTIVATION ATTEMPT")
 
         if not self._validate_admin_token(admin_token):
             logger.critical("VAULT ACTIVATION DENIED - Invalid admin token")
@@ -246,7 +241,7 @@ class SecurityVault:
         # In production, this would be a secure admin credential
         return len(token) >= 64
 
-    def get_audit_log(self, admin_token: str, limit: int = 100) -> List[Dict]:
+    def get_audit_log(self, admin_token: str, limit: int = 100) -> list[dict]:
         """Retrieve audit log (admin only)"""
         if not self._validate_admin_token(admin_token):
             raise AccessDeniedError("Admin token required for audit log")
@@ -255,7 +250,7 @@ class SecurityVault:
         audit_entries = []
 
         if self.ACCESS_LOG.exists():
-            with open(self.ACCESS_LOG, "r") as f:
+            with open(self.ACCESS_LOG) as f:
                 lines = f.readlines()[-limit:]
                 for line in lines:
                     audit_entries.append({"log": line.strip()})

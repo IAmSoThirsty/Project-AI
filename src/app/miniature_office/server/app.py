@@ -6,7 +6,6 @@ Implements Simulation API Endpoints (Section II.10)
 """
 
 import os
-from typing import Optional
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory
@@ -74,7 +73,7 @@ def apply_security_headers(response):
 CLIENT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "client")
 
 # Global simulation instance
-simulation: Optional[SimulationEngine] = None
+simulation: SimulationEngine | None = None
 
 
 def init_simulation():

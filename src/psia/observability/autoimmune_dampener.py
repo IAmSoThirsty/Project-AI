@@ -32,9 +32,9 @@ Production notes:
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Callable
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
 
 logger = logging.getLogger(__name__)
 
@@ -238,7 +238,7 @@ class AutoimmuneDampener:
             old_sensitivity=old_sensitivity,
             new_sensitivity=new_sensitivity,
             reason=f"FP rate {fp_rate:.3f} vs target {self.target_fp_rate:.3f}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
         )
         self._adjustments.append(adjustment)
 

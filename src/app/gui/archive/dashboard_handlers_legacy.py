@@ -5,6 +5,7 @@ Dashboard Handlers - Centralized logic for Project-AI dashboard actions.
 """
 
 import logging
+
 from PyQt6.QtWidgets import QMessageBox
 
 logger = logging.getLogger(__name__)

@@ -24,7 +24,7 @@ from shadow_thirst.constitutional import CommitDecision, ConstitutionalIntegrati
 from shadow_thirst.ir_generator import generate_ir
 from shadow_thirst.lexer import TokenType, tokenize
 from shadow_thirst.parser import parse
-from shadow_thirst.static_analysis import AnalysisSeverity, analyze
+from shadow_thirst.static_analysis import analyze
 from shadow_thirst.vm import ShadowAwareVM
 
 

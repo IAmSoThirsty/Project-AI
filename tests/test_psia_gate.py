@@ -39,7 +39,7 @@ Covers:
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -49,15 +49,15 @@ from psia.gate.identity_head import (
     IdentityDocumentStore,
     IdentityHead,
 )
-from psia.gate.invariant_head import InvariantHead, InvariantRegistry
-from psia.gate.quorum_engine import HeadWeight, ProductionQuorumEngine
+from psia.gate.invariant_head import InvariantHead
+from psia.gate.quorum_engine import ProductionQuorumEngine
 from psia.schemas.capability import (
     CapabilityScope,
     CapabilityToken,
     DelegationPolicy,
     TokenBinding,
 )
-from psia.schemas.cerberus_decision import CerberusVote, ConstraintsApplied, DenyReason
+from psia.schemas.cerberus_decision import CerberusVote
 from psia.schemas.identity import (
     IdentityAttributes,
     IdentityDocument,
@@ -84,7 +84,7 @@ def _identity_doc(
     key_expires: str | None = None,
 ) -> IdentityDocument:
     if key_expires is None:
-        key_expires = (datetime.now(timezone.utc) + timedelta(days=365)).isoformat()
+        key_expires = (datetime.now(UTC) + timedelta(days=365)).isoformat()
     return IdentityDocument(
         id=did,
         type="human",
@@ -121,7 +121,7 @@ def _cap_token(
     if actions is None:
         actions = ["read", "mutate_state"]
     if expires_at is None:
-        expires_at = (datetime.now(timezone.utc) + timedelta(days=30)).isoformat()
+        expires_at = (datetime.now(UTC) + timedelta(days=30)).isoformat()
     return CapabilityToken(
         token_id=token_id,
         issuer="did:project-ai:ca",
@@ -150,7 +150,7 @@ def _envelope(
         capability_token_id=token_id,
         intent=Intent(action=action, resource=resource, parameters={"value": 42}),
         context=RequestContext(trace_id="trace_gate_001"),
-        timestamps=RequestTimestamps(created_at=datetime.now(timezone.utc).isoformat()),
+        timestamps=RequestTimestamps(created_at=datetime.now(UTC).isoformat()),
         signature=_sig(),
     )
 
@@ -357,7 +357,7 @@ class TestProductionQuorumEngine:
             head=head,
             decision=decision,
             reasons=[],
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=_sig(),
         )
 

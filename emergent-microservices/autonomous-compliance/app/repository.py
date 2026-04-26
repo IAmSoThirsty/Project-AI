@@ -4,9 +4,7 @@
 Autonomous Compliance - Repository
 """
 
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
-from uuid import UUID
+from typing import Any
 
 from .logging_config import logger
 from .models import ComplianceAudit, ComplianceRule, PolicyViolation
@@ -14,7 +12,7 @@ from .models import ComplianceAudit, ComplianceRule, PolicyViolation
 
 class Database:
     def __init__(self):
-        self.data: Dict[str, Any] = {"rules": {}, "audits": [], "violations": []}
+        self.data: dict[str, Any] = {"rules": {}, "audits": [], "violations": []}
         self.connected = False
 
     async def connect(self):
@@ -29,14 +27,14 @@ class ComplianceRepository:
     def __init__(self):
         self.db = database
 
-    async def get_rule(self, rule_id: str) -> Optional[ComplianceRule]:
+    async def get_rule(self, rule_id: str) -> ComplianceRule | None:
         return self.db.data["rules"].get(rule_id)
 
     async def save_rule(self, rule: ComplianceRule) -> ComplianceRule:
         self.db.data["rules"][rule.id] = rule
         return rule
 
-    async def list_rules(self) -> List[ComplianceRule]:
+    async def list_rules(self) -> list[ComplianceRule]:
         return list(self.db.data["rules"].values())
 
     async def record_audit(self, audit: ComplianceAudit) -> ComplianceAudit:

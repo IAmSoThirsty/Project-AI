@@ -8,10 +8,9 @@ Production-ready, all tests passing, complete branch coverage.
 # Import module under test
 import sys
 import threading
-import time
 import uuid
 from collections import defaultdict
-from unittest.mock import ANY, MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 

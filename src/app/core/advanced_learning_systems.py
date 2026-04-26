@@ -16,7 +16,7 @@ from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, cast
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -200,7 +200,7 @@ class ExperienceReplayBuffer:
                     logger.warning("Replay buffer file not found: %s", filepath)
                     return False
 
-                with open(filepath, "r") as f:
+                with open(filepath) as f:
                     data = json.load(f)
 
                 experiences = [Experience.from_dict(d) for d in data]

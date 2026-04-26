@@ -6,7 +6,6 @@ Database integrity check script for Autonomous Compliance-as-Code Engine
 """
 import asyncio
 import sys
-from typing import List, Tuple
 
 
 async def main():

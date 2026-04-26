@@ -23,8 +23,6 @@ import glob
 import json
 import re
 import sys
-from pathlib import Path
-from typing import Dict, List, Tuple
 
 # Prohibited claim patterns from SECURITY_VALIDATION_POLICY.md
 PROHIBITED_PATTERNS = {
@@ -133,12 +131,12 @@ class Violation:
         )
 
 
-def scan_file(filepath: str) -> List[Violation]:
+def scan_file(filepath: str) -> list[Violation]:
     """Scan a single file for policy violations"""
     violations = []
 
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             lines = f.readlines()
     except Exception as e:
         print(f"Error reading {filepath}: {e}", file=sys.stderr)
@@ -165,7 +163,7 @@ def scan_file(filepath: str) -> List[Violation]:
     return violations
 
 
-def generate_report(violations: List[Violation], output_format: str = "text") -> str:
+def generate_report(violations: list[Violation], output_format: str = "text") -> str:
     """Generate a formatted report"""
 
     if output_format == "json":
@@ -176,7 +174,7 @@ def generate_report(violations: List[Violation], output_format: str = "text") ->
         return "✅ No policy violations found.\n"
 
     # Group by file
-    by_file: Dict[str, List[Violation]] = {}
+    by_file: dict[str, list[Violation]] = {}
     for v in violations:
         if v.filepath not in by_file:
             by_file[v.filepath] = []
@@ -198,7 +196,7 @@ def generate_report(violations: List[Violation], output_format: str = "text") ->
     lines.append("SUMMARY:")
     lines.append(f"  Total Violations: {len(violations)}")
     lines.append(f"  Files Affected: {len(by_file)}")
-    lines.append(f"  Severity Breakdown:")
+    lines.append("  Severity Breakdown:")
     for severity in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
         count = severity_counts.get(severity, 0)
         if count > 0:

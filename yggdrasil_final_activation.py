@@ -8,12 +8,10 @@
 # COMPLIANCE: Sovereign-Native / Final Activation v1.0                         #
 
 
-import os
 import json
-from pathlib import Path
-from datetime import datetime
 import subprocess
 import sys
+from pathlib import Path
 
 print("YGGDRASIL FINAL ACTIVATION — Phases 6–10")
 print("========================================")

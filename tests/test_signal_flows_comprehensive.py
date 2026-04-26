@@ -10,14 +10,12 @@ Target: 100% line, branch, and function coverage.
 """
 
 import base64
-import json
 import os
 import tempfile
 import threading
 import time
 from pathlib import Path
-from typing import Any, Dict
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 from cryptography.fernet import Fernet
@@ -118,112 +116,103 @@ class TestProcessSignalStatusCodes:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-001",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Emergency assistance needed",
-                            "score": 0.95,
-                        }
+            signal = {
+                "signal_id": "test-001",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Emergency assistance needed",
+                "score": 0.95,
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        assert result["status"] == "processed"
-                        assert "incident_id" in result
-                        assert result["attempts"] == 1
-                        assert result["service"] == "test_service"
-                        assert "result" in result
+            assert result["status"] == "processed"
+            assert "incident_id" in result
+            assert result["attempts"] == 1
+            assert result["service"] == "test_service"
+            assert "result" in result
 
     def test_status_denied_validation_failure(self, vault_key, mock_dependencies):
         """Test 'denied' status - validation failure with forbidden phrase."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-002",
-                            "signal_type": "system_event",
-                            "source": "test_service",
-                            "text": "About to DROP DATABASE production",
-                        }
+            signal = {
+                "signal_id": "test-002",
+                "signal_type": "system_event",
+                "source": "test_service",
+                "text": "About to DROP DATABASE production",
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        assert result["status"] == "denied"
-                        assert result["reason"] == "validation_failed"
-                        assert "vault_id" in result
-                        assert "incident_id" in result
+            assert result["status"] == "denied"
+            assert result["reason"] == "validation_failed"
+            assert "vault_id" in result
+            assert "incident_id" in result
 
-                        # Verify vault was called
-                        mock_dependencies["aggregator"].flush_to_vault.assert_called()
+            # Verify vault was called
+            mock_dependencies["aggregator"].flush_to_vault.assert_called()
 
     def test_status_failed_max_retries(self, vault_key, mock_dependencies):
         """Test 'failed' status - max retries exceeded."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-003",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Emergency",
-                            "score": 0.95,
-                            "simulate": "permanent",  # Causes permanent failure
-                        }
+            signal = {
+                "signal_id": "test-003",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Emergency",
+                "score": 0.95,
+                "simulate": "permanent",  # Causes permanent failure
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        assert result["status"] == "failed"
-                        assert result["reason"] == "processing_error"
-                        assert "vault_id" in result
-                        assert "incident_id" in result
+            assert result["status"] == "failed"
+            assert result["reason"] == "processing_error"
+            assert "vault_id" in result
+            assert "incident_id" in result
 
-                        # Verify error was logged
-                        assert mock_dependencies["aggregator"].log.called
+            # Verify error was logged
+            assert mock_dependencies["aggregator"].log.called
 
     def test_status_throttled_global_limit(self, vault_key, mock_dependencies):
         """Test 'throttled' status - global retry limit exceeded."""
@@ -240,34 +229,31 @@ class TestProcessSignalStatusCodes:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-004",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Emergency",
-                            "score": 0.95,
-                            "simulate": "retry",  # Would retry but throttled
-                        }
+            signal = {
+                "signal_id": "test-004",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Emergency",
+                "score": 0.95,
+                "simulate": "retry",  # Would retry but throttled
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        assert result["status"] == "throttled"
-                        assert "Global retry limit" in result["reason"]
+            assert result["status"] == "throttled"
+            assert "Global retry limit" in result["reason"]
 
     def test_status_throttled_service_limit(self, vault_key, mock_dependencies):
         """Test 'throttled' status - service-specific retry limit."""
@@ -284,69 +270,63 @@ class TestProcessSignalStatusCodes:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-005",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Emergency",
-                            "score": 0.95,
-                            "simulate": "retry",
-                        }
+            signal = {
+                "signal_id": "test-005",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Emergency",
+                "score": 0.95,
+                "simulate": "retry",
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        assert result["status"] == "throttled"
-                        assert "test_service" in result["reason"]
+            assert result["status"] == "throttled"
+            assert "test_service" in result["reason"]
 
     def test_status_ignored_score_below_threshold(self, vault_key, mock_dependencies):
         """Test 'ignored' status - score below threshold (normal mode)."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-006",
-                            "signal_type": "system_event",
-                            "source": "test_service",
-                            "text": "Low priority event",
-                            "score": 0.50,  # Below 0.85 threshold
-                        }
+            signal = {
+                "signal_id": "test-006",
+                "signal_type": "system_event",
+                "source": "test_service",
+                "text": "Low priority event",
+                "score": 0.50,  # Below 0.85 threshold
+            }
 
-                        result = process_signal(signal, is_incident=False)
+            result = process_signal(signal, is_incident=False)
 
-                        assert result["status"] == "ignored"
-                        assert result["reason"] == "below_threshold"
-                        assert result["score"] == 0.50
-                        assert result["threshold"] == 0.85
+            assert result["status"] == "ignored"
+            assert result["reason"] == "below_threshold"
+            assert result["score"] == 0.50
+            assert result["threshold"] == 0.85
 
     def test_status_ignored_anomaly_score_below_threshold(
         self, vault_key, mock_dependencies
@@ -355,35 +335,32 @@ class TestProcessSignalStatusCodes:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-007",
-                            "signal_type": "incident",
-                            "source": "test_service",
-                            "text": "Potential anomaly",
-                            "anomaly_score": 0.80,  # Below 0.95 threshold
-                        }
+            signal = {
+                "signal_id": "test-007",
+                "signal_type": "incident",
+                "source": "test_service",
+                "text": "Potential anomaly",
+                "anomaly_score": 0.80,  # Below 0.95 threshold
+            }
 
-                        result = process_signal(signal, is_incident=True)
+            result = process_signal(signal, is_incident=True)
 
-                        assert result["status"] == "ignored"
-                        assert result["reason"] == "below_threshold"
-                        assert result["score"] == 0.80
-                        assert result["threshold"] == 0.95
+            assert result["status"] == "ignored"
+            assert result["reason"] == "below_threshold"
+            assert result["score"] == 0.80
+            assert result["threshold"] == 0.95
 
 
 # ============================================================================
@@ -399,42 +376,39 @@ class TestProcessingPhases:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-008",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Clean emergency text",
-                            "score": 0.95,
-                        }
+            signal = {
+                "signal_id": "test-008",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Clean emergency text",
+                "score": 0.95,
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        # Should complete validation phase
-                        mock_dependencies["audit"].log_event.assert_any_call(
-                            event_type="signal_validated",
-                            data={
-                                "incident_id": result["incident_id"],
-                                "validation_result": pytest.approx({}, abs=1e-9)
-                                or dict,
-                            },
-                            actor="signal_kernel",
-                            description="Signal validation completed",
-                        )
+            # Should complete validation phase
+            mock_dependencies["audit"].log_event.assert_any_call(
+                event_type="signal_validated",
+                data={
+                    "incident_id": result["incident_id"],
+                    "validation_result": pytest.approx({}, abs=1e-9)
+                    or dict,
+                },
+                actor="signal_kernel",
+                description="Signal validation completed",
+            )
 
     def test_phase2_transcription_with_media(self, vault_key, mock_dependencies):
         """Test Phase 2: Media transcription when enabled."""
@@ -452,142 +426,130 @@ class TestProcessingPhases:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_config,
         ):
+            # Mock the transcribe_audio import and function
             with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
+                "src.app.pipeline.signal_flows.transcribe_audio",
+                mock_transcript,
             ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_config,
-                    ):
-                        # Mock the transcribe_audio import and function
-                        with patch(
-                            "src.app.pipeline.signal_flows.transcribe_audio",
-                            mock_transcript,
-                        ):
-                            from src.app.pipeline.signal_flows import process_signal
+                from src.app.pipeline.signal_flows import process_signal
 
-                            signal = {
-                                "signal_id": "test-009",
-                                "signal_type": "distress",
-                                "source": "test_service",
-                                "text": "Emergency",
-                                "media_type": "audio",
-                                "asset_path": "test.mp3",
-                                "score": 0.95,
-                            }
+                signal = {
+                    "signal_id": "test-009",
+                    "signal_type": "distress",
+                    "source": "test_service",
+                    "text": "Emergency",
+                    "media_type": "audio",
+                    "asset_path": "test.mp3",
+                    "score": 0.95,
+                }
 
-                            result = process_signal(signal)
+                result = process_signal(signal)
 
-                            # Verify transcription was attempted
-                            mock_transcript.assert_called_once()
+                # Verify transcription was attempted
+                mock_transcript.assert_called_once()
 
     def test_phase3_threshold_check_pass(self, vault_key, mock_dependencies):
         """Test Phase 3: Score threshold check passes."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-010",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "High priority",
-                            "score": 0.95,  # Above 0.85 threshold
-                        }
+            signal = {
+                "signal_id": "test-010",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "High priority",
+                "score": 0.95,  # Above 0.85 threshold
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        # Should not be ignored
-                        assert result["status"] != "ignored"
+            # Should not be ignored
+            assert result["status"] != "ignored"
 
     def test_phase4_retry_success_on_first_attempt(self, vault_key, mock_dependencies):
         """Test Phase 4: Processing succeeds on first attempt."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-011",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Emergency",
-                            "score": 0.95,
-                        }
+            signal = {
+                "signal_id": "test-011",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Emergency",
+                "score": 0.95,
+            }
 
-                        result = process_signal(signal)
+            result = process_signal(signal)
 
-                        assert result["status"] == "processed"
-                        assert result["attempts"] == 1
+            assert result["status"] == "processed"
+            assert result["attempts"] == 1
 
     def test_phase4_retry_success_on_second_attempt(self, vault_key, mock_dependencies):
         """Test Phase 4: Processing succeeds on second attempt after retry."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-012",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Emergency",
-                            "score": 0.95,
-                            "simulate": "retry",  # Fails first, succeeds second
-                        }
+            signal = {
+                "signal_id": "test-012",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Emergency",
+                "score": 0.95,
+                "simulate": "retry",  # Fails first, succeeds second
+            }
 
-                        # Mock time.sleep to speed up test
-                        with patch("time.sleep"):
-                            result = process_signal(signal)
+            # Mock time.sleep to speed up test
+            with patch("time.sleep"):
+                result = process_signal(signal)
 
-                        assert result["status"] == "processed"
-                        assert result["attempts"] == 2
+            assert result["status"] == "processed"
+            assert result["attempts"] == 2
 
 
 # ============================================================================
@@ -613,45 +575,42 @@ class TestPerServiceRetryTracking:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        # Service A signal - should be throttled
-                        signal_a = {
-                            "signal_id": "test-013",
-                            "signal_type": "distress",
-                            "source": "service_a",
-                            "text": "Emergency A",
-                            "score": 0.95,
-                            "simulate": "retry",
-                        }
+            # Service A signal - should be throttled
+            signal_a = {
+                "signal_id": "test-013",
+                "signal_type": "distress",
+                "source": "service_a",
+                "text": "Emergency A",
+                "score": 0.95,
+                "simulate": "retry",
+            }
 
-                        result_a = process_signal(signal_a)
-                        assert result_a["status"] == "throttled"
+            result_a = process_signal(signal_a)
+            assert result_a["status"] == "throttled"
 
-                        # Service B signal - should process
-                        signal_b = {
-                            "signal_id": "test-014",
-                            "signal_type": "distress",
-                            "source": "service_b",
-                            "text": "Emergency B",
-                            "score": 0.95,
-                        }
+            # Service B signal - should process
+            signal_b = {
+                "signal_id": "test-014",
+                "signal_type": "distress",
+                "source": "service_b",
+                "text": "Emergency B",
+                "score": 0.95,
+            }
 
-                        result_b = process_signal(signal_b)
-                        assert result_b["status"] == "processed"
+            result_b = process_signal(signal_b)
+            assert result_b["status"] == "processed"
 
     def test_multiple_services_tracked_independently(
         self, vault_key, mock_dependencies
@@ -840,37 +799,34 @@ class TestCircuitBreakerIntegration:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        # Send signals with forbidden phrases to trigger validation failures
-                        for i in range(15):  # More than failure threshold (10)
-                            signal = {
-                                "signal_id": f"test-circuit-{i}",
-                                "signal_type": "system_event",
-                                "source": "test_service",
-                                "text": f"DROP DATABASE test_{i}",
-                            }
-                            process_signal(signal)
+            # Send signals with forbidden phrases to trigger validation failures
+            for i in range(15):  # More than failure threshold (10)
+                signal = {
+                    "signal_id": f"test-circuit-{i}",
+                    "signal_type": "system_event",
+                    "source": "test_service",
+                    "text": f"DROP DATABASE test_{i}",
+                }
+                process_signal(signal)
 
-                        # Circuit breaker should be OPEN
-                        assert circuit_breakers["validation"].state == "OPEN"
+            # Circuit breaker should be OPEN
+            assert circuit_breakers["validation"].state == "OPEN"
 
     def test_circuit_breaker_recovery(self, vault_key, mock_dependencies):
         """Test circuit breaker recovery from OPEN to CLOSED."""
-        from src.app.pipeline.signal_flows import CircuitBreaker, circuit_breakers
+        from src.app.pipeline.signal_flows import CircuitBreaker
 
         # Create a test circuit breaker with short timeouts
         cb = CircuitBreaker(
@@ -942,74 +898,66 @@ class TestErrorHandlingEdgeCases:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_signal
+            from src.app.pipeline.signal_flows import process_signal
 
-                        signal = {
-                            "signal_id": "test-none",
-                            "signal_type": "system_event",
-                            "source": "test_service",
-                            "summary": "Summary instead of text",  # Has summary, not text
-                        }
+            signal = {
+                "signal_id": "test-none",
+                "signal_type": "system_event",
+                "source": "test_service",
+                "summary": "Summary instead of text",  # Has summary, not text
+            }
 
-                        # Should handle gracefully
-                        result = process_signal(signal)
-                        assert "status" in result
+            # Should handle gracefully
+            result = process_signal(signal)
+            assert "status" in result
 
     def test_exponential_backoff_delays(self, vault_key, mock_dependencies):
         """Test exponential backoff delay calculation."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import (
-                            RETRY_BACKOFF_BASE,
-                            RETRY_MAX_DELAY,
-                            process_signal,
-                        )
+            from src.app.pipeline.signal_flows import (
+                process_signal,
+            )
 
-                        signal = {
-                            "signal_id": "test-backoff",
-                            "signal_type": "distress",
-                            "source": "test_service",
-                            "text": "Emergency",
-                            "score": 0.95,
-                            "simulate": "retry",
-                        }
+            signal = {
+                "signal_id": "test-backoff",
+                "signal_type": "distress",
+                "source": "test_service",
+                "text": "Emergency",
+                "score": 0.95,
+                "simulate": "retry",
+            }
 
-                        # Mock time.sleep to verify delays
-                        with patch("time.sleep") as mock_sleep:
-                            result = process_signal(signal)
+            # Mock time.sleep to verify delays
+            with patch("time.sleep") as mock_sleep:
+                result = process_signal(signal)
 
-                            # Should have called sleep with exponential delays
-                            if mock_sleep.called:
-                                calls = mock_sleep.call_args_list
-                                # First retry: 2^1 = 2s, second: 2^2 = 4s
-                                assert len(calls) > 0
+                # Should have called sleep with exponential delays
+                if mock_sleep.called:
+                    calls = mock_sleep.call_args_list
+                    # First retry: 2^1 = 2s, second: 2^2 = 4s
+                    assert len(calls) > 0
 
 
 # ============================================================================
@@ -1025,110 +973,101 @@ class TestProcessBatch:
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_batch
+            from src.app.pipeline.signal_flows import process_batch
 
-                        signals = [
-                            {
-                                "signal_id": f"batch-{i}",
-                                "signal_type": "distress",
-                                "source": "test_service",
-                                "text": f"Emergency {i}",
-                                "score": 0.95,
-                            }
-                            for i in range(5)
-                        ]
+            signals = [
+                {
+                    "signal_id": f"batch-{i}",
+                    "signal_type": "distress",
+                    "source": "test_service",
+                    "text": f"Emergency {i}",
+                    "score": 0.95,
+                }
+                for i in range(5)
+            ]
 
-                        results = process_batch(signals)
+            results = process_batch(signals)
 
-                        assert len(results) == 5
-                        assert all(r["status"] == "processed" for r in results)
+            assert len(results) == 5
+            assert all(r["status"] == "processed" for r in results)
 
     def test_batch_mixed_statuses(self, vault_key, mock_dependencies):
         """Test batch with mixed status results."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_batch
+            from src.app.pipeline.signal_flows import process_batch
 
-                        signals = [
-                            {
-                                "signal_id": "batch-1",
-                                "signal_type": "distress",
-                                "source": "test",
-                                "text": "OK",
-                                "score": 0.95,
-                            },
-                            {
-                                "signal_id": "batch-2",
-                                "signal_type": "system_event",
-                                "source": "test",
-                                "text": "DROP DATABASE",
-                            },
-                            {
-                                "signal_id": "batch-3",
-                                "signal_type": "distress",
-                                "source": "test",
-                                "text": "Low",
-                                "score": 0.5,
-                            },
-                        ]
+            signals = [
+                {
+                    "signal_id": "batch-1",
+                    "signal_type": "distress",
+                    "source": "test",
+                    "text": "OK",
+                    "score": 0.95,
+                },
+                {
+                    "signal_id": "batch-2",
+                    "signal_type": "system_event",
+                    "source": "test",
+                    "text": "DROP DATABASE",
+                },
+                {
+                    "signal_id": "batch-3",
+                    "signal_type": "distress",
+                    "source": "test",
+                    "text": "Low",
+                    "score": 0.5,
+                },
+            ]
 
-                        results = process_batch(signals)
+            results = process_batch(signals)
 
-                        assert len(results) == 3
-                        assert results[0]["status"] == "processed"
-                        assert results[1]["status"] == "denied"
-                        assert results[2]["status"] == "ignored"
+            assert len(results) == 3
+            assert results[0]["status"] == "processed"
+            assert results[1]["status"] == "denied"
+            assert results[2]["status"] == "ignored"
 
     def test_batch_empty(self, vault_key, mock_dependencies):
         """Test batch processing with empty list."""
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
+        ), patch(
+            "src.app.pipeline.signal_flows.BlackVault",
+            return_value=mock_dependencies["vault"],
+        ), patch(
+            "src.app.pipeline.signal_flows.AuditLog",
+            return_value=mock_dependencies["audit"],
+        ), patch(
+            "src.app.pipeline.signal_flows.get_config_loader",
+            return_value=mock_dependencies["config_loader"],
         ):
-            with patch(
-                "src.app.pipeline.signal_flows.BlackVault",
-                return_value=mock_dependencies["vault"],
-            ):
-                with patch(
-                    "src.app.pipeline.signal_flows.AuditLog",
-                    return_value=mock_dependencies["audit"],
-                ):
-                    with patch(
-                        "src.app.pipeline.signal_flows.get_config_loader",
-                        return_value=mock_dependencies["config_loader"],
-                    ):
-                        from src.app.pipeline.signal_flows import process_batch
+            from src.app.pipeline.signal_flows import process_batch
 
-                        results = process_batch([])
+            results = process_batch([])
 
-                        assert results == []
+            assert results == []
 
 
 # ============================================================================
@@ -1510,8 +1449,6 @@ class TestTier1IntegrationTests:
         Test error aggregator → vault flush when validation fails.
         Validates complete error flow: exception → aggregator → vault.
         """
-        from security.black_vault import BlackVault
-        from src.app.core.error_aggregator import GlobalErrorAggregator
         from src.app.pipeline.signal_flows import process_signal
 
         # Setup

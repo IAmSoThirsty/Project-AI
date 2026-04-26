@@ -57,7 +57,7 @@ def audit() -> None:
 
                 path = os.path.join(root, file_name)
                 try:
-                    with open(path, "r", encoding="utf-8", errors="ignore") as handle:
+                    with open(path, encoding="utf-8", errors="ignore") as handle:
                         head = [handle.readline() for _ in range(10)]
                         content = "".join(head)
 
@@ -84,7 +84,7 @@ def audit() -> None:
             continue
 
         try:
-            with open(file_name, "r", encoding="utf-8", errors="ignore") as handle:
+            with open(file_name, encoding="utf-8", errors="ignore") as handle:
                 head = [handle.readline() for _ in range(10)]
                 content = "".join(head)
                 if "STATUS: ACTIVE" not in content:
