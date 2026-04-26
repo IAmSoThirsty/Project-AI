@@ -138,7 +138,7 @@ class SASEOrchestrator:
         event.enrichment = enrichment.to_dict()
         return event, enrichment
 
-    def _extract_features_and_model(self, event: Any, enrichment: Any) -> tuple[Any, Any]:
+    def _extract_features_and_model(self, event: "AdversarialEvent", enrichment: "EnrichmentData") -> tuple["FeatureVector", "BehaviorState" | None]:
         """L4-L5: Extract features and behavioral modeling."""
         feature_vector = self.attribution_engine.attribute(event, enrichment)
         behavior_state = self.behavioral_model.process_event(event)
