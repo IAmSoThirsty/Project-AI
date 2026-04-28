@@ -1,0 +1,92 @@
+{
+  "execution_id": "5b673fc4-b30f-4ce6-abf0-7f5092aa22b3",
+  "started_at": "2026-04-27T05:32:43.140165",
+  "completed_at": "2026-04-27T05:32:43.150670",
+  "status": "completed",
+  "stages_completed": [
+    {
+      "stage": "data_preparation_only",
+      "type": "data_preparation",
+      "status": "success",
+      "timestamp": "2026-04-27T05:32:43.143161",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "a7ad30f7788c4776300cba43ce36c2423e33abffba066fd385a7ca4b659f2f4b",
+        "signature": "2ad98a5df899d277b58574363f0b4848c160cd6fcab4b8dbe8093f79494a912a5076ee81e2274df13c63a96258661e133c2e3a4547a95d81447d6cadbe0e5c03",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-04-27T05:32:43.142162"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "37adb074b4d767af8b74a739e58ce94e71cbe1173fd778376e5cae1165d98e88",
+        "binding_hash": "64e7c825eb2a78c9aeb91e6d5527dcd23d23325db304407a4e61b4c529d1e3b2",
+        "signature": "ca59a14fbb35addef35730e826b2953dd7777a78c8a06fdcd574f272e4149c416ff5a45659b70b029e91958828eed3ab15904f1ba2bb5c78ef639a0aee446002",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-04-27T05:32:43.143161"
+      },
+      "output": {
+        "dataset_name": "sovereign_demo_dataset",
+        "records_processed": 1000,
+        "features": [
+          "feature_a",
+          "feature_b",
+          "feature_c"
+        ],
+        "train_split": 0.8,
+        "test_split": 0.2,
+        "preparation_method": "standardization",
+        "dataset_hash": "45480beeb35958d65785cacb977eb4b3059d3e67d0565702f7f9a5ef1cb228af"
+      },
+      "artifact_hash": "ba3e44cdf141d740bba27b977c6a045a602e90cd480368c8e9da73a70b5aff79",
+      "artifact_path": "T:\\Project-AI-main\\governance\\sovereign_data\\artifacts\\20260427_053243\\stage_data_preparation_only_ba3e44cd.json"
+    },
+    {
+      "stage": "audit_export_only",
+      "type": "audit_export",
+      "status": "success",
+      "timestamp": "2026-04-27T05:32:43.145673",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "15badd43d43ba78a0e338e7c00687bdebb498f074c73d3461b1937f907b37eef",
+        "signature": "09e308d14a7ac0cb0dffdd9da251896c214d9830ff9683d77749e8ce3933327d50a29f57bb64e5465e498add1d5d12216aa9a5b9f3829e11a501d17280b1670d",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-04-27T05:32:43.144665"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "9bc51e769641f8d71f3916b0af48e65949e3e9b6d5aefebe0261bd963b28e48d",
+        "binding_hash": "3591c857bbc48e939fe6fd48f437cbd4b467879672a590e8fcc08d575a32ad7b",
+        "signature": "37a6c574609c9d73c22958e9bd23aaaf9766e32a475bdb2beb6302a97a8488ec2dfcbdee6f3445bf340a10093a25776575041c7fa359cfc05e9a29b882dde904",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-04-27T05:32:43.145673"
+      },
+      "output": {
+        "exported_at": "2026-04-27T05:32:43.150670",
+        "bundle_path": "T:\\Project-AI-main\\governance\\sovereign_data\\artifacts\\20260427_053243\\compliance_bundle.json",
+        "export_successful": true,
+        "format": "json"
+      },
+      "artifact_hash": "3f398858293991c9f6ce7d831a5b2f3f2d84e1292b766e05b3e3678a79bcd3d5",
+      "artifact_path": "T:\\Project-AI-main\\governance\\sovereign_data\\artifacts\\20260427_053243\\stage_audit_export_only_3f398858.json"
+    }
+  ],
+  "artifacts": {
+    "data_preparation_only": "T:\\Project-AI-main\\governance\\sovereign_data\\artifacts\\20260427_053243\\stage_data_preparation_only_ba3e44cd.json",
+    "audit_export_only": "T:\\Project-AI-main\\governance\\sovereign_data\\artifacts\\20260427_053243\\stage_audit_export_only_3f398858.json"
+  },
+  "hashes": {
+    "data_preparation_only": "ba3e44cdf141d740bba27b977c6a045a602e90cd480368c8e9da73a70b5aff79",
+    "audit_export_only": "3f398858293991c9f6ce7d831a5b2f3f2d84e1292b766e05b3e3678a79bcd3d5"
+  },
+  "config_snapshot": {
+    "config_hash": "5a30e2b9ecabdde957c033b3b0939e63195316bb99445cf1ae852b51c0593d7c",
+    "signature": "d5f1631911cc445419cab6a57f8175c0060305233a86bfe0b5a722e896b95be3721f4b12ff0a2c65530332e7b19c8dd3ff560f576bb3744ad509dbec422f7802",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-04-27T05:32:43.141160",
+    "algorithm": "Ed25519"
+  },
+  "audit_integrity": {
+    "is_valid": true,
+    "issues": []
+  }
+}

@@ -215,7 +215,7 @@ This matrix provides comprehensive bidirectional mappings between security contr
 
 **Control Documents**:
 - [[docs/security_compliance/SECURITY_FRAMEWORK#authentication-system]]
-- [[docs/reports/AUTHENTICATION_SECURITY_AUDIT_REPORT]]
+- [[AUTHENTICATION_SECURITY_AUDIT_REPORT]]
 
 **Type**: Multi-factor authentication  
 **Defense Layer**: Layer 3 (Access Control)  

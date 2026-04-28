@@ -54,7 +54,26 @@ Agents should prioritize these files for monorepo understanding:
 - `README.md`
 - `.github/COPILOT_MANDATORY_GUIDE.md`
 - `.github/copilot_workspace_profile.md`
+- `.github/instructions/mandatory-structured-generation-default.instructions.md`
 - `wiki/00_AGENT_MONOREPO_DATABASE.md`
+
+## Mandatory Coding Default (All Agents and IDE Copilots)
+
+For any coding task (code generation, code edits, or code review recommendations), agents MUST follow:
+
+- `.github/instructions/mandatory-structured-generation-default.instructions.md`
+
+Required order:
+
+1. Requirements contract (no silent assumptions)
+2. Design
+3. Pseudocode
+4. Implementation
+5. Adversarial self-review
+6. Refinement
+7. Verification gate
+
+Skipping this protocol is non-compliant.
 
 ## Operating Principle
 

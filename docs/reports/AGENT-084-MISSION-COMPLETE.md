@@ -22,7 +22,7 @@ audience:
   - developer
 priority: p0
 related_to:
-  - "[[docs/reports/AGENT-084-LEARNING-PATHS]]"
+  - "[[AGENT-084-LEARNING-PATHS]]"
   - "[[README]]"
   - "[[DEVELOPER_QUICK_REFERENCE]]"
   - "[[ARCHITECTURE_QUICK_REF]]"
@@ -552,7 +552,7 @@ When adding new documentation:
 **Mission Agent**: AGENT-084 Documentation Specialist  
 **Mission Type**: Phase 5 (Cross-Linking)  
 **Deliverable**: AGENT-084-LEARNING-PATHS.md navigation guide  
-**Support**: See [[docs/reports/AGENT-084-LEARNING-PATHS]] for complete documentation navigation  
+**Support**: See [[AGENT-084-LEARNING-PATHS]] for complete documentation navigation  
 
 ---
 

@@ -209,7 +209,7 @@ pytest --cov=src --cov-report=xml
 pytest --cov=src --cov-report=json
 ```
 
-**Output:** `coverage.json`
+**Output:** `test-artifacts/coverage.json`
 
 **Features:**
 - Programmatic access
@@ -266,10 +266,10 @@ from pathlib import Path
 from typing import Any
 
 def load_coverage_data() -> dict[str, Any]:
-    """Load coverage data from coverage.json."""
-    coverage_file = Path("coverage.json")
+  """Load coverage data from test-artifacts/coverage.json."""
+  coverage_file = Path("test-artifacts/coverage.json")
     if not coverage_file.exists():
-        raise FileNotFoundError("coverage.json not found. Run pytest with --cov-report=json")
+    raise FileNotFoundError("test-artifacts/coverage.json not found. Run pytest with --cov-report=json")
     
     with open(coverage_file) as f:
         return json.load(f)

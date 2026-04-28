@@ -154,7 +154,7 @@ project-ai sovereign-verify --bundle compliance_bundle.json
 # Verify and save report
 project-ai sovereign-verify \
     --bundle compliance_bundle.json \
-    --output verification_report.json
+  --output test-artifacts/verification_report.json
 ```
 
 **Output:**
@@ -201,7 +201,7 @@ Policy Resolutions: 78
 Overall Status: PASS
 ================================================================================
 
-📄 Full verification report saved to: verification_report.json
+📄 Full verification report saved to: test-artifacts/verification_report.json
 ```
 
 **Exit Codes:**

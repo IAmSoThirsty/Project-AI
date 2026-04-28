@@ -2,9 +2,9 @@
 title: "Copilot Mandatory Guide - Project-AI"
 id: copilot-mandatory-guide
 type: guide
-version: 2.1.0
+version: 2.2.0
 created_date: 2026-01-15
-updated_date: 2026-04-14
+updated_date: 2026-04-28
 status: active
 author: "Principal Architect <projectaidevs@gmail.com>"
 tags:
@@ -51,7 +51,7 @@ why: "Eliminates AI hallucinations about non-existent systems, documents verifie
 
 **Purpose:** THE definitive rulebook, knowledge base, and system inventory for ALL AI assistants working on Project-AI  
 **Location:** `.github/COPILOT_MANDATORY_GUIDE.md` (PERMANENT - NEVER DELETE)  
-**Last Updated:** 2026-04-14  
+**Last Updated:** 2026-04-28  
 **Status:** MANDATORY - READ THIS FIRST BEFORE ANY WORK
 
 ---
@@ -589,7 +589,7 @@ why: "Eliminates AI hallucinations about non-existent systems, documents verifie
 
 ### ✅ Scripts Classification (100% COMPLETE)
 - 34/34 scripts have GOVERNANCE markers
-- Classification documented in `classification_plan.json`
+- Classification documented in `test-artifacts/classification_plan.json`
 - Governance level marked per script
 
 ### ✅ AI Calls Refactoring (100% COMPLETE)
@@ -1027,6 +1027,27 @@ Better to ask than to:
 
 ---
 
+## 🚨 RULE 8: MANDATORY STRUCTURED GENERATION & ADVERSARIAL REVIEW DEFAULT
+
+For every coding task (code generation, edits, and review recommendations), all assistants MUST follow:
+
+- `.github/instructions/mandatory-structured-generation-default.instructions.md`
+
+Required order:
+
+1. Requirements contract (no silent assumptions)
+2. Design
+3. Pseudocode
+4. Implementation
+5. Adversarial self-review
+6. Refinement
+7. Verification gate
+
+If any contract field is missing, assistants MUST request clarification before coding.
+If this sequence is skipped, output is non-compliant and must be regenerated.
+
+---
+
 # NEVER AGAIN MISTAKES
 
 ## 🔴 INCIDENT: 2026-04-14 FALSE DENIALS
@@ -1152,6 +1173,9 @@ After the 2026-04-14 incident, I almost claimed:
 - [ ] Read `.github/copilot_workspace_profile.md` (P0)
 - [ ] Read `.github/COPILOT_MANDATORY_GUIDE.md` (this file)
 - [ ] Read `.github/instructions/ARCHITECTURE_QUICK_REF.md` (P1)
+- [ ] Read `.github/instructions/mandatory-structured-generation-default.instructions.md`
+- [ ] Complete explicit requirements contract (language/runtime/input-output/constraints/edge cases)
+- [ ] Execute mandatory sequence: design → pseudocode → implementation → adversarial self-review → refinement → verification
 - [ ] Searched for existing implementation
 - [ ] Verified integration points
 - [ ] Understood governance requirements
@@ -1238,6 +1262,14 @@ find . -name "*octoreflex*"
 ---
 
 # UPDATE LOG
+
+## 2026-04-28
+
+### Governance Update
+- Elevated structured generation + adversarial self-review to mandatory default for all coding agents/IDE copilots.
+- Added explicit Rule 8 requiring requirements contract, sequential workflow, and verification gate.
+- Added new mandatory instruction file reference: `.github/instructions/mandatory-structured-generation-default.instructions.md`.
+- Updated pre-implementation checklist to enforce this protocol.
 
 ## 2026-04-14
 

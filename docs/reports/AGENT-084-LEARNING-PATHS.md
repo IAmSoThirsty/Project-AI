@@ -194,7 +194,7 @@ This guide maps the complete learning journey through Project-AI documentation. 
 | Deployment | [[DESKTOP_APP_QUICKSTART]] | [[INFRASTRUCTURE_PRODUCTION_GUIDE]] |
 | Cerberus Ω | [[README]] → Cerberus section | [[docs/security_compliance/CERBERUS_IMPLEMENTATION_SUMMARY]] |
 | Thirsty-Lang | [[README]] → Physics section | [[src/thirsty_lang/IMPLEMENTATION_SUMMARY]] |
-| Constitutional AI | [[ARCHITECTURE_QUICK_REF]] → Security | [[docs/reports/CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]] |
+| Constitutional AI | [[ARCHITECTURE_QUICK_REF]] → Security | [[CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]] |
 
 **Learn More**: See "[[README]] → Documentation" section for complete guide index
 
@@ -338,7 +338,7 @@ This guide maps the complete learning journey through Project-AI documentation. 
 1. [[SECURITY_AGENTS_GUIDE]] → All agents (Long Context, Safety Guard, Jailbreak Bench, Red Team)
 1. [[PROGRAM_SUMMARY]] → Security sections
 1. [[docs/security_compliance/CERBERUS_IMPLEMENTATION_SUMMARY]]
-1. [[docs/reports/CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]]
+1. [[CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]]
 
 ---
 

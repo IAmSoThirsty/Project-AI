@@ -137,12 +137,13 @@ jobs:
       - name: Run Bandit scan
         id: bandit
         run: |
-          bandit -r src/ -f json -o bandit-report.json || true
+          mkdir -p test-artifacts
+          bandit -r src/ -f json -o test-artifacts/bandit-report.json || true
           bandit -r src/ -f sarif -o bandit-report.sarif || true
           
           # Check if issues were found
-          if [ -s bandit-report.json ]; then
-            ISSUES=$(python -c "import json; data=json.load(open('bandit-report.json')); print(len(data.get('results', [])))")
+          if [ -s test-artifacts/bandit-report.json ]; then
+            ISSUES=$(python -c "import json; data=json.load(open('test-artifacts/bandit-report.json')); print(len(data.get('results', [])))")
             echo "ISSUES_FOUND=$ISSUES" >> $GITHUB_OUTPUT
             
             if [ "$ISSUES" -gt "0" ]; then
@@ -166,7 +167,7 @@ jobs:
           import json
           import os
           
-          with open('bandit-report.json', 'r') as f:
+            with open('test-artifacts/bandit-report.json', 'r') as f:
               data = json.load(f)
           
           results = data.get('results', [])
@@ -237,7 +238,7 @@ jobs:
         with:
           name: bandit-reports
           path: |
-            bandit-report.json
+            test-artifacts/bandit-report.json
             bandit-report.sarif
             bandit-details.md
 

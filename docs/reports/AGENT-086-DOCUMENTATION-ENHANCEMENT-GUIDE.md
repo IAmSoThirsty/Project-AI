@@ -279,7 +279,7 @@ if success:
 ### See Also
 
 - [[AGENT-086-SECURITY-COVERAGE-MATRIX#14-authentication-system-identity-verification|Full Authentication Coverage]]
-- [[docs/reports/AUTHENTICATION_SECURITY_AUDIT_REPORT]]
+- [[AUTHENTICATION_SECURITY_AUDIT_REPORT|Authentication Audit Report]]
 - [[docs/security_compliance/SECRET_MANAGEMENT|Password Storage Guide]]
 ```
 

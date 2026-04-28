@@ -152,20 +152,20 @@ related_agents:
 
 2. **TIMING_ATTACK_FIX_REPORT.md** (10.6 KB)
    - **Links to**:
-     - [[docs/reports/ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]]
+     - [[ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]]
      - [[docs/developer/IDENTITY_SECURITY_INFRASTRUCTURE]]
      - [[docs/security_compliance/SECURITY_AGENTS_GUIDE]]
 
 3. **GUI_INPUT_VALIDATION_FIX_REPORT.md** (10.0 KB)
    - **Links to**:
-     - [[docs/reports/GUI_ARCHITECTURE_EVALUATION_REPORT]]
+     - [[GUI_ARCHITECTURE_EVALUATION_REPORT]]
      - [[docs/developer/DESKTOP_APP_README]]
      - [[docs/architecture/ARCHITECTURE_OVERVIEW]]
      - [[INPUT_VALIDATION_SECURITY_AUDIT]]
 
 4. **BYPASS_FIX_REPORT.md** (7.9 KB)
    - **Links to**:
-     - [[docs/reports/CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]]
+     - [[CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]]
      - [[docs/architecture/AGENT_MODEL]]
      - [[docs/developer/AI_SAFETY_OVERVIEW]]
      - [[docs/architecture/ARCHITECTURE_SECURITY_ETHICS_OVERVIEW]]
@@ -180,13 +180,13 @@ related_agents:
 
 6. **ISSUE_SHELL_INJECTION_B602.md** (7.2 KB)
    - **Links to**:
-     - [[docs/reports/AGENT_23_SHELL_INJECTION_FIX_REPORT]]
+     - [[AGENT_23_SHELL_INJECTION_FIX_REPORT]]
      - [[SECURITY]]
      - [[docs/developer/checks.md]]
 
 7. **ISSUE_B324_MD5_WEAK_HASH.md** (6.7 KB)
    - **Links to**:
-     - [[docs/reports/SHA256_AUDIT_REPORT]]
+     - [[SHA256_AUDIT_REPORT]]
      - [[docs/CRYPTO_RANDOM_AUDIT]]
      - [[docs/security_compliance/SECURITY_AGENTS_GUIDE]]
 
@@ -340,7 +340,7 @@ related_agents:
 - Path traversal vulnerability → [[docs/PATH_SECURITY_GUIDE]]
 - Timing attacks → [[docs/developer/IDENTITY_SECURITY_INFRASTRUCTURE]]
 - Input validation → [[INPUT_VALIDATION_SECURITY_AUDIT]]
-- Authentication errors → [[docs/reports/ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]]
+- Authentication errors → [[ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]]
 - Bypass attempts → [[docs/architecture/ARCHITECTURE_SECURITY_ETHICS_OVERVIEW]]
 
 **Estimated Links**: 50
@@ -355,7 +355,7 @@ related_agents:
 - Slow queries → [[docs/architecture/STATE_MODEL]]
 - Memory leaks → [[docs/developer/DEVELOPMENT]]
 - High CPU usage → [[docs/architecture/WORKFLOW_ENGINE]]
-- Database slow → [[docs/reports/DATABASE_PERSISTENCE_AUDIT_REPORT]]
+- Database slow → [[DATABASE_PERSISTENCE_AUDIT_REPORT]]
 
 **Estimated Links**: 30
 
@@ -518,9 +518,9 @@ Add to each troubleshooting guide:
 ### Security Issues
 | Problem | Troubleshooting Guide | System Reference |
 |---------|----------------------|------------------|
-| Path traversal | [[docs/reports/PATH_TRAVERSAL_FIX_REPORT]] | [[docs/PATH_SECURITY_GUIDE]] |
-| Timing attacks | [[docs/reports/TIMING_ATTACK_FIX_REPORT]] | [[docs/developer/IDENTITY_SECURITY_INFRASTRUCTURE]] |
-| Input validation | [[docs/reports/GUI_INPUT_VALIDATION_FIX_REPORT]] | [[INPUT_VALIDATION_SECURITY_AUDIT]] |
+| Path traversal | [[PATH_TRAVERSAL_FIX_REPORT]] | [[docs/PATH_SECURITY_GUIDE]] |
+| Timing attacks | [[TIMING_ATTACK_FIX_REPORT]] | [[docs/developer/IDENTITY_SECURITY_INFRASTRUCTURE]] |
+| Input validation | [[GUI_INPUT_VALIDATION_FIX_REPORT]] | [[INPUT_VALIDATION_SECURITY_AUDIT]] |
 | Shell injection | [[ISSUE_SHELL_INJECTION_B602]] | [[SECURITY]] |
 
 ---

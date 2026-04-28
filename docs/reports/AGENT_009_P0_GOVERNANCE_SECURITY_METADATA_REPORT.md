@@ -289,9 +289,9 @@ ASL_FRAMEWORK.md (Safety Level Classification)
 
 ### Generated Reports
 
-- `metadata_validation_report.json` - Detailed validation results
-- `governance_enrichment.json` - Governance files metadata
-- `security_enrichment_status.json` - Security files status
+- `test-artifacts/metadata_validation_report.json` - Detailed validation results
+- `test-artifacts/governance_enrichment.json` - Governance files metadata
+- `test-artifacts/security_enrichment_status.json` - Security files status
 - `AGENT_009_P0_GOVERNANCE_SECURITY_METADATA_REPORT.md` - This comprehensive report
 
 ---

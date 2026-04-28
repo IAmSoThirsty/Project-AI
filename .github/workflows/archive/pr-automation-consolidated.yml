@@ -148,7 +148,8 @@ jobs:
         run: |
           echo "Running security checks..."
           pip-audit --format json -o pip-audit-report.json || true
-          bandit -r src -f json -o bandit-report.json || true
+          mkdir -p test-artifacts
+          bandit -r src -f json -o test-artifacts/bandit-report.json || true
         continue-on-error: true
 
       - name: Upload check artifacts
@@ -158,7 +159,7 @@ jobs:
           name: check-reports
           path: |
             pip-audit-report.json
-            bandit-report.json
+            test-artifacts/bandit-report.json
 
   # =========================================================================
   # AUTO-FIX FAILURES

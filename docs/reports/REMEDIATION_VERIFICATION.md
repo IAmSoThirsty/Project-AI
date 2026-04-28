@@ -243,10 +243,10 @@ Validate-WikiLinks.ps1
 
 
 bandit-report-post-fix.json
-bandit-report.json
+test-artifacts/bandit-report.json
 bypass_fix_report.json
 classification_plan.json
-coverage.json
+test-artifacts/coverage.json
 god_tier_bandit.json
 governance_enrichment.json
 hydra_bandit.json

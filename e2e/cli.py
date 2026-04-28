@@ -248,7 +248,7 @@ class E2EOrchestrator:
 
             coverage_file = Path("e2e/coverage/coverage.json")
             if not coverage_file.exists():
-                coverage_file = Path("coverage.json")
+                coverage_file = Path("test-artifacts/coverage.json")
 
             if coverage_file.exists():
                 data = json.loads(coverage_file.read_text())

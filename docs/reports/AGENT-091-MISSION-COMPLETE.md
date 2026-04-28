@@ -8,7 +8,7 @@ created: 2026-04-20
 completed: 2026-04-20
 tags: [audit, compliance, wiki-links, traceability, mission-complete]
 related_to:
-  - "[[docs/reports/AGENT-091-AUDIT-TRAIL-MATRIX]]"
+  - "[[AGENT-091-AUDIT-TRAIL-MATRIX]]"
   - "[[SECURITY]]"
   - "[[.github/copilot_workspace_profile]]"
   - "[[governance/AI_PERSONA_FOUR_LAWS]]"
@@ -45,7 +45,7 @@ Successfully created **comprehensive bidirectional wiki links** between all audi
 
 ### 1. ✅ Audit Trail Traceability Matrix
 
-**File:** [[docs/reports/AGENT-091-AUDIT-TRAIL-MATRIX]]
+**File:** [[AGENT-091-AUDIT-TRAIL-MATRIX]]
 
 Comprehensive 1000+ line matrix documenting:
 - 15 audit requirements with full descriptions
@@ -538,7 +538,7 @@ This work provides:
 
 ### Next Steps
 
-1. Review and approve [[docs/reports/AGENT-091-AUDIT-TRAIL-MATRIX]]
+1. Review and approve [[AGENT-091-AUDIT-TRAIL-MATRIX]]
 2. Prioritize enhancement recommendations (10-11 days effort)
 3. Implement AR-003 persistent storage (critical for AI Act)
 4. Integrate AR-009 with ATLAS AuditTrail (critical for SOC2)
@@ -560,7 +560,7 @@ This work provides:
 *This mission report is part of Phase 5 (Cross-Linking) of the Project-AI documentation enhancement initiative. All deliverables meet workspace profile maximal completeness requirements and production-grade quality standards.*
 
 **Related Deliverables:**
-- [[docs/reports/AGENT-091-AUDIT-TRAIL-MATRIX]] - Primary traceability matrix
+- [[AGENT-091-AUDIT-TRAIL-MATRIX]] - Primary traceability matrix
 - [[SECURITY]] - Updated with audit trail section
 - [[.github/copilot_workspace_profile]] - Updated with audit requirements
 - [[governance/AI_PERSONA_FOUR_LAWS]] - Updated with audit trail implementation

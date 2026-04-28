@@ -415,6 +415,39 @@ class IronPathExecutor:
 
         return export_info
 
+    def _ensure_compliance_bundle(self) -> dict[str, Any]:
+        """Ensure a compliance bundle exists for every successful execution.
+
+        Returns:
+            Compliance bundle export metadata
+
+        Raises:
+            RuntimeError: If compliance bundle export fails
+        """
+        bundle_path = self.artifacts_dir / "compliance_bundle.json"
+        existed_before = bundle_path.exists()
+        success = self.sovereign.export_compliance_bundle(bundle_path)
+
+        if not success:
+            raise RuntimeError("Failed to export compliance bundle")
+
+        export_info = {
+            "bundle_path": str(bundle_path),
+            "export_successful": success,
+            "source": "stage_export" if existed_before else "execution_finalize",
+            "format": "json",
+            "exported_at": datetime.now().isoformat(),
+        }
+        self.execution_state["compliance_bundle"] = export_info
+
+        logger.info(
+            "Compliance bundle ensured: %s (source=%s)",
+            bundle_path,
+            export_info["source"],
+        )
+
+        return export_info
+
     def execute(self) -> dict[str, Any]:
         """
         Execute the complete Iron Path sovereign loop.
@@ -456,6 +489,10 @@ class IronPathExecutor:
             # Mark execution as completed
             self.execution_state["completed_at"] = datetime.now().isoformat()
             self.execution_state["status"] = "completed"
+
+            # Ensure compliance bundle exists for every successful run,
+            # even when no explicit audit_export stage is configured.
+            self._ensure_compliance_bundle()
 
             # Verify audit trail integrity
             is_valid, issues = self.sovereign.verify_audit_trail_integrity()

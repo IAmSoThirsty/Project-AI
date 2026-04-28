@@ -92,10 +92,19 @@ class TestCognitionKernel:
         assert result.result == 5
         assert result.governance_approved is True
         assert result.error is None
+        assert result.policy_evaluation_id is not None
+        assert result.post_evaluation_id is not None
+        assert result.decision_record_id is not None
 
         # Verify kernel state
         assert kernel.execution_count == 1
         assert len(kernel.execution_history) == 1
+        execution_context = kernel.execution_history[0]
+        assert execution_context.policy_evaluation_request is not None
+        assert execution_context.policy_evaluation_response is not None
+        assert execution_context.post_evaluation_request is not None
+        assert execution_context.post_evaluation_response is not None
+        assert execution_context.decision_record_id is not None
 
     def test_execution_with_kwargs(self, kernel):
         """Test execution with keyword arguments using new API."""
@@ -143,6 +152,7 @@ class TestCognitionKernel:
         # Verify execution was blocked
         assert result.success is False
         assert result.governance_approved is False
+        assert result.decision_record_id is not None
         # blocked_reason should be set when governance blocks (error contains "Blocked by governance")
         assert result.error is not None
         assert "blocked" in result.error.lower() or "Test blocked" in result.error

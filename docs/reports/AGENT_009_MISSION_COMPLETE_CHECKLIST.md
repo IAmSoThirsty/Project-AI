@@ -153,9 +153,9 @@
 ### ✅ Generated Reports (4/4)
 
 - [x] **AGENT_009_P0_GOVERNANCE_SECURITY_METADATA_REPORT.md** (comprehensive report)
-- [x] **metadata_validation_report.json** (automated validation)
-- [x] **governance_enrichment.json** (governance metadata)
-- [x] **security_enrichment_status.json** (security status)
+- [x] **test-artifacts/metadata_validation_report.json** (automated validation)
+- [x] **test-artifacts/governance_enrichment.json** (governance metadata)
+- [x] **test-artifacts/security_enrichment_status.json** (security status)
 
 ---
 

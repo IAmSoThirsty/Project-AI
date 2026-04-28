@@ -238,7 +238,7 @@ This matrix establishes **265 bidirectional wiki links** between compliance requ
   - Type: Preventive
   - Test: [[Test Password Validation|tests/test_user_manager.py#L110-L140]]
 - **Status**: ✅ Enforced
-- **Related**: [[docs/reports/AUTHENTICATION_SECURITY_AUDIT_REPORT]]
+- **Related**: [[AUTHENTICATION_SECURITY_AUDIT_REPORT|AUTHENTICATION_SECURITY_AUDIT_REPORT.md]]
 
 ### REQ-P1-PWD-02: Password History
 
@@ -267,7 +267,7 @@ This matrix establishes **265 bidirectional wiki links** between compliance requ
   - Type: Detective + Corrective
   - Test: [[Test Account Lockout|tests/test_user_manager.py#L175-L210]]
 - **Status**: ✅ Enforced
-- **Related**: [[docs/reports/ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]]
+- **Related**: [[ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT|ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT.md]]
 
 ---
 
@@ -445,7 +445,7 @@ This matrix establishes **265 bidirectional wiki links** between compliance requ
   - Type: Detective
   - Test: Verified via GitHub Actions logs
 - **Status**: ✅ Enforced
-- **Related**: [[docs/reports/DEPENDENCY_AUDIT_REPORT]]
+- **Related**: [[DEPENDENCY_AUDIT_REPORT|DEPENDENCY_AUDIT_REPORT.md]]
 
 ---
 
@@ -764,7 +764,7 @@ This matrix establishes **265 bidirectional wiki links** between compliance requ
 
 ### REQ-EXTRA-TIMING-01: Timing Attack Prevention
 
-- **Source**: [[docs/reports/TIMING_ATTACK_FIX_REPORT]]
+- **Source**: [[TIMING_ATTACK_FIX_REPORT|TIMING_ATTACK_FIX_REPORT.md#L20-L60]]
 - **Description**: Use constant-time comparison for password verification
 - **Enforcement**:
   - File: [[User Manager|src/app/core/user_manager.py]]
@@ -777,7 +777,7 @@ This matrix establishes **265 bidirectional wiki links** between compliance requ
 
 ### REQ-EXTRA-SHELL-01: Shell Injection Prevention
 
-- **Source**: [[docs/reports/AGENT_23_SHELL_INJECTION_FIX_REPORT]]
+- **Source**: [[AGENT_23_SHELL_INJECTION_FIX_REPORT|AGENT_23_SHELL_INJECTION_FIX_REPORT.md]]
 - **Description**: Prevent shell injection via subprocess arguments
 - **Enforcement**:
   - File: [[Data Validation|src/app/security/data_validation.py]]
@@ -793,7 +793,7 @@ This matrix establishes **265 bidirectional wiki links** between compliance requ
 
 ### REQ-EXTRA-BYPASS-01: Command Override Bypass Prevention
 
-- **Source**: [[docs/reports/BYPASS_FIX_REPORT]]
+- **Source**: [[BYPASS_FIX_REPORT|BYPASS_FIX_REPORT.md]]
 - **Description**: 10+ safety protocols for master password system
 - **Enforcement**:
   - File: [[Command Override|src/app/core/command_override.py]]

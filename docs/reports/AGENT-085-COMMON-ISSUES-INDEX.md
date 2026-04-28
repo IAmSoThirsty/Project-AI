@@ -67,7 +67,7 @@ This index provides instant access to troubleshooting guides and system document
 | **Template execution timeout** | [[TEMPLATER_TROUBLESHOOTING_GUIDE#issue-6-template-execution-timeout]] | [[docs/architecture/WORKFLOW_ENGINE]]<br>[[docs/developer/DEVELOPMENT#performance]] |
 | **User scripts not loading** | [[TEMPLATER_TROUBLESHOOTING_GUIDE#issue-7-user-scripts-not-loading]] | [[docs/developer/DEVELOPMENT]]<br>[[docs/architecture/MODULE_CONTRACTS]] |
 | **File operations failing** | [[TEMPLATER_TROUBLESHOOTING_GUIDE#issue-12-file-operations-failing]] | [[docs/PATH_SECURITY_GUIDE]]<br>[[docs/architecture/ROOT_STRUCTURE]] |
-| **Decryption failed** | [[vault-troubleshooting-guide#issue-5-decryption-failed]] | [[docs/reports/DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]]<br>[[docs/ASYMMETRIC_SECURITY_FRAMEWORK]] |
+| **Decryption failed** | [[vault-troubleshooting-guide#issue-5-decryption-failed]] | [[DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]]<br>[[docs/ASYMMETRIC_SECURITY_FRAMEWORK]] |
 
 ---
 
@@ -91,11 +91,11 @@ This index provides instant access to troubleshooting guides and system document
 | Problem | Troubleshooting Guide | System Documentation |
 |---------|----------------------|----------------------|
 | **Slow queries (>1 second)** | [[docs/dataview-examples/TROUBLESHOOTING#issue-1-queries-taking-1-second]] | [[docs/architecture/STATE_MODEL#performance-optimization]]<br>[[docs/developer/DEVELOPMENT#performance-tuning]] |
-| **Memory usage growing** | [[docs/dataview-examples/TROUBLESHOOTING#issue-2-memory-usage-growing-over-time]] | [[docs/architecture/STATE_MODEL#memory-management]]<br>[[docs/reports/DATABASE_PERSISTENCE_AUDIT_REPORT]] |
+| **Memory usage growing** | [[docs/dataview-examples/TROUBLESHOOTING#issue-2-memory-usage-growing-over-time]] | [[docs/architecture/STATE_MODEL#memory-management]]<br>[[DATABASE_PERSISTENCE_AUDIT_REPORT]] |
 | **Templates execute slowly** | [[TEMPLATER_TROUBLESHOOTING_GUIDE#issue-9-templates-execute-slowly]] | [[docs/architecture/WORKFLOW_ENGINE#optimization]]<br>[[docs/developer/DEVELOPMENT#performance]] |
 | **High CPU usage** | [[vault-troubleshooting-guide#performance-issues]] | [[docs/architecture/WORKFLOW_ENGINE]]<br>[[docs/developer/DEVELOPMENT#monitoring]] |
 | **UI freezes** | [[docs/dataview-examples/TROUBLESHOOTING#performance-problems]] | [[docs/architecture/STATE_MODEL#ui-responsiveness]] |
-| **Database slow** | [[vault-troubleshooting-guide#database-performance]] | [[docs/reports/DATABASE_PERSISTENCE_AUDIT_REPORT]]<br>[[docs/architecture/STATE_MODEL#database]] |
+| **Database slow** | [[vault-troubleshooting-guide#database-performance]] | [[DATABASE_PERSISTENCE_AUDIT_REPORT]]<br>[[docs/architecture/STATE_MODEL#database]] |
 
 ---
 
@@ -103,14 +103,14 @@ This index provides instant access to troubleshooting guides and system document
 
 | Problem | Troubleshooting Guide | System Documentation |
 |---------|----------------------|----------------------|
-| **Path traversal vulnerability** | [[docs/reports/PATH_TRAVERSAL_FIX_REPORT]] | [[docs/PATH_SECURITY_GUIDE]]<br>[[INPUT_VALIDATION_SECURITY_AUDIT]] |
-| **Timing attack vulnerability** | [[docs/reports/TIMING_ATTACK_FIX_REPORT]] | [[docs/reports/ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]]<br>[[docs/developer/IDENTITY_SECURITY_INFRASTRUCTURE]] |
-| **Input validation failures** | [[docs/reports/GUI_INPUT_VALIDATION_FIX_REPORT]] | [[INPUT_VALIDATION_SECURITY_AUDIT]]<br>[[docs/security_compliance/SECURITY_AGENTS_GUIDE]] |
-| **AI bypass attempts** | [[docs/reports/BYPASS_FIX_REPORT]] | [[docs/reports/CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]]<br>[[docs/architecture/AGENT_MODEL]]<br>[[docs/developer/AI_SAFETY_OVERVIEW]] |
-| **Shell injection (B602)** | [[ISSUE_SHELL_INJECTION_B602]]<br>[[docs/reports/AGENT_23_SHELL_INJECTION_FIX_REPORT]] | [[SECURITY#shell-injection]]<br>[[docs/security_compliance/THREAT_MODEL_SECURITY_WORKFLOWS]] |
-| **Weak hash (MD5)** | [[ISSUE_B324_MD5_WEAK_HASH]] | [[docs/reports/SHA256_AUDIT_REPORT]]<br>[[docs/CRYPTO_RANDOM_AUDIT]] |
+| **Path traversal vulnerability** | [[PATH_TRAVERSAL_FIX_REPORT]] | [[docs/PATH_SECURITY_GUIDE]]<br>[[INPUT_VALIDATION_SECURITY_AUDIT]] |
+| **Timing attack vulnerability** | [[TIMING_ATTACK_FIX_REPORT]] | [[ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]]<br>[[docs/developer/IDENTITY_SECURITY_INFRASTRUCTURE]] |
+| **Input validation failures** | [[GUI_INPUT_VALIDATION_FIX_REPORT]] | [[INPUT_VALIDATION_SECURITY_AUDIT]]<br>[[docs/security_compliance/SECURITY_AGENTS_GUIDE]] |
+| **AI bypass attempts** | [[BYPASS_FIX_REPORT]] | [[CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]]<br>[[docs/architecture/AGENT_MODEL]]<br>[[docs/developer/AI_SAFETY_OVERVIEW]] |
+| **Shell injection (B602)** | [[ISSUE_SHELL_INJECTION_B602]]<br>[[AGENT_23_SHELL_INJECTION_FIX_REPORT]] | [[SECURITY#shell-injection]]<br>[[docs/security_compliance/THREAT_MODEL_SECURITY_WORKFLOWS]] |
+| **Weak hash (MD5)** | [[ISSUE_B324_MD5_WEAK_HASH]] | [[SHA256_AUDIT_REPORT]]<br>[[docs/CRYPTO_RANDOM_AUDIT]] |
 | **AI isolation breach** | [[vault-troubleshooting-guide#issue-2-ai-isolation-not-configured]] | [[SECURITY#ai-isolation]]<br>[[docs/security_compliance/SECURITY_AGENTS_GUIDE]] |
-| **Encryption failures** | [[vault-troubleshooting-guide#issue-3-encryption-key-missing]] | [[docs/ASYMMETRIC_SECURITY_FRAMEWORK]]<br>[[docs/reports/DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]] |
+| **Encryption failures** | [[vault-troubleshooting-guide#issue-3-encryption-key-missing]] | [[docs/ASYMMETRIC_SECURITY_FRAMEWORK]]<br>[[DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]] |
 
 ---
 
@@ -192,7 +192,7 @@ This index provides instant access to troubleshooting guides and system document
 ```
 1. Start: [[vault-troubleshooting-guide#emergency-procedures]]
 2. Assess threat: [[docs/security_compliance/THREAT_MODEL_SECURITY_WORKFLOWS]]
-3. Review vulnerability: [[docs/reports/PATH_TRAVERSAL_FIX_REPORT]] OR [[docs/reports/TIMING_ATTACK_FIX_REPORT]] OR [[docs/reports/GUI_INPUT_VALIDATION_FIX_REPORT]]
+3. Review vulnerability: [[PATH_TRAVERSAL_FIX_REPORT]] OR [[TIMING_ATTACK_FIX_REPORT]] OR [[GUI_INPUT_VALIDATION_FIX_REPORT]]
 4. Apply fixes: Follow fix report procedures
 5. Verify: [[docs/developer/checks.md]]
 6. Document: [[SECURITY#incident-response]]
@@ -213,7 +213,7 @@ This index provides instant access to troubleshooting guides and system document
 2. Profile: [[docs/architecture/STATE_MODEL#performance-monitoring]]
 3. Optimize: [[docs/developer/DEVELOPMENT#performance-tuning]]
 4. Validate: [[docs/developer/checks.md#performance-tests]]
-5. Monitor: [[docs/reports/DATABASE_PERSISTENCE_AUDIT_REPORT]]
+5. Monitor: [[DATABASE_PERSISTENCE_AUDIT_REPORT]]
 ```
 
 **Key Documentation**:
@@ -250,19 +250,19 @@ This index provides instant access to troubleshooting guides and system document
 | VLT-002 | AI isolation | [[vault-troubleshooting-guide#issue-2-ai-isolation-not-configured]] | [[SECURITY#ai-isolation]] |
 | VLT-003 | Encryption key | [[vault-troubleshooting-guide#issue-3-encryption-key-missing]] | [[docs/ASYMMETRIC_SECURITY_FRAMEWORK]] |
 | VLT-004 | Sovereign keypair | [[vault-troubleshooting-guide#issue-4-sovereign-keypair-invalid]] | [[docs/architecture/SOVEREIGN_RUNTIME]] |
-| VLT-005 | Decryption failed | [[vault-troubleshooting-guide#issue-5-decryption-failed]] | [[docs/reports/DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]] |
+| VLT-005 | Decryption failed | [[vault-troubleshooting-guide#issue-5-decryption-failed]] | [[DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]] |
 | VLT-006 | Permission denied | [[vault-troubleshooting-guide#permission-errors]] | [[docs/PATH_SECURITY_GUIDE]] |
 
 ### Security Error Codes
 
 | Code | Issue | Fix Report | System Docs |
 |------|-------|-----------|-------------|
-| B602 | Shell injection | [[ISSUE_SHELL_INJECTION_B602]]<br>[[docs/reports/AGENT_23_SHELL_INJECTION_FIX_REPORT]] | [[SECURITY#shell-injection]] |
-| B324 | Weak hash (MD5) | [[ISSUE_B324_MD5_WEAK_HASH]] | [[docs/reports/SHA256_AUDIT_REPORT]] |
-| PATH-001 | Path traversal | [[docs/reports/PATH_TRAVERSAL_FIX_REPORT]] | [[docs/PATH_SECURITY_GUIDE]] |
-| TIMING-001 | Timing attack | [[docs/reports/TIMING_ATTACK_FIX_REPORT]] | [[docs/reports/ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]] |
-| INPUT-001 | Input validation | [[docs/reports/GUI_INPUT_VALIDATION_FIX_REPORT]] | [[INPUT_VALIDATION_SECURITY_AUDIT]] |
-| BYPASS-001 | AI bypass | [[docs/reports/BYPASS_FIX_REPORT]] | [[docs/reports/CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]] |
+| B602 | Shell injection | [[ISSUE_SHELL_INJECTION_B602]]<br>[[AGENT_23_SHELL_INJECTION_FIX_REPORT]] | [[SECURITY#shell-injection]] |
+| B324 | Weak hash (MD5) | [[ISSUE_B324_MD5_WEAK_HASH]] | [[SHA256_AUDIT_REPORT]] |
+| PATH-001 | Path traversal | [[PATH_TRAVERSAL_FIX_REPORT]] | [[docs/PATH_SECURITY_GUIDE]] |
+| TIMING-001 | Timing attack | [[TIMING_ATTACK_FIX_REPORT]] | [[ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT]] |
+| INPUT-001 | Input validation | [[GUI_INPUT_VALIDATION_FIX_REPORT]] | [[INPUT_VALIDATION_SECURITY_AUDIT]] |
+| BYPASS-001 | AI bypass | [[BYPASS_FIX_REPORT]] | [[CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT]] |
 
 ---
 
@@ -319,18 +319,18 @@ This index provides instant access to troubleshooting guides and system document
 4. [[docs/security_compliance/SECURITY_AGENTS_GUIDE]] - Security agents
 
 **Vulnerability Fixes**:
-1. [[docs/reports/PATH_TRAVERSAL_FIX_REPORT]] - Path traversal
-2. [[docs/reports/TIMING_ATTACK_FIX_REPORT]] - Timing attacks
-3. [[docs/reports/GUI_INPUT_VALIDATION_FIX_REPORT]] - Input validation
-4. [[docs/reports/BYPASS_FIX_REPORT]] - AI bypasses
-5. [[docs/reports/AGENT_23_SHELL_INJECTION_FIX_REPORT]] - Shell injection
+1. [[PATH_TRAVERSAL_FIX_REPORT]] - Path traversal
+2. [[TIMING_ATTACK_FIX_REPORT]] - Timing attacks
+3. [[GUI_INPUT_VALIDATION_FIX_REPORT]] - Input validation
+4. [[BYPASS_FIX_REPORT]] - AI bypasses
+5. [[AGENT_23_SHELL_INJECTION_FIX_REPORT]] - Shell injection
 
 **Security Audits**:
 1. [[INPUT_VALIDATION_SECURITY_AUDIT]] - Input validation
-2. [[docs/reports/AUTHENTICATION_SECURITY_AUDIT_REPORT]] - Authentication
-3. [[docs/reports/DATABASE_PERSISTENCE_AUDIT_REPORT]] - Database security
-4. [[docs/reports/DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]] - Encryption & privacy
-5. [[docs/reports/SHA256_AUDIT_REPORT]] - Hash security
+2. [[AUTHENTICATION_SECURITY_AUDIT_REPORT]] - Authentication
+3. [[DATABASE_PERSISTENCE_AUDIT_REPORT]] - Database security
+4. [[DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT]] - Encryption & privacy
+5. [[SHA256_AUDIT_REPORT]] - Hash security
 
 ---
 

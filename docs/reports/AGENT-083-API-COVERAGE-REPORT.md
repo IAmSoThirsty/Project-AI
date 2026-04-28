@@ -7,7 +7,7 @@ mission: Tutorial to API Links Specialist
 status: in-progress
 progress: 9.25%
 related_to:
-  - "[[docs/reports/AGENT-083-GUIDE-API-MAP]]"
+  - "[[AGENT-083-GUIDE-API-MAP]]"
   - "[[API_QUICK_REFERENCE]]"
   - "[[DEVELOPER_QUICK_REFERENCE]]"
 ---
@@ -547,7 +547,7 @@ Projected Completion: Day 7 (assuming ~60 links/day)
 
 **Agent**: AGENT-083 (Tutorial to API Links Specialist)  
 **Mission**: Phase 5 Cross-Linking  
-**Charter**: [[docs/reports/AGENT-083-GUIDE-API-MAP]]  
+**Charter**: [[AGENT-083-GUIDE-API-MAP]]  
 **Repository**: IAmSoThirsty/Project-AI
 
 **Related Agents**:

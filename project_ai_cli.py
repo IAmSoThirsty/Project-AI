@@ -314,7 +314,7 @@ Examples:
 
   # Comprehensive third-party verification
   project-ai sovereign-verify --bundle compliance_bundle.json
-  project-ai sovereign-verify --bundle compliance.zip --output verification_report.json
+    project-ai sovereign-verify --bundle compliance.zip --output test-artifacts/verification_report.json
 
   # Verify audit trail integrity
   project-ai verify-audit governance/sovereign_data/immutable_audit.jsonl

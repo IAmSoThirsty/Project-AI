@@ -34,8 +34,29 @@ This profile establishes:
 - Full system wiring and integration mandates
 - Security, testing, and documentation requirements
 - Peer-level communication style
+- Mandatory structured generation default for coding tasks
 
 **Failure to comply with the Workspace Profile is a policy violation.**
+
+---
+
+## 🔧 MANDATORY CODING DEFAULT (ALL AGENTS / IDE COPILOTS)
+
+For every coding task (code generation, code edits, and code review recommendations), assistants MUST follow:
+
+- `.github/instructions/mandatory-structured-generation-default.instructions.md`
+
+Required order:
+
+1. Requirements contract (no silent assumptions)
+2. Design
+3. Pseudocode
+4. Implementation
+5. Adversarial self-review
+6. Refinement
+7. Verification gate
+
+If required fields are missing, request clarification before implementation. Skipping the protocol is non-compliant.
 
 ---
 

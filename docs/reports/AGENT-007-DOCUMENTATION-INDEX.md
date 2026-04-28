@@ -14,7 +14,7 @@
 | **Mission Summary** | Executive overview | 14 KB | [AGENT-007-MISSION-SUMMARY.md](#mission-summary) |
 | **Validation Report** | Comprehensive analysis | 39 KB | [vault-validation-report.md](#validation-report) |
 | **Validation Script** | Automated testing | 24 KB | [validate-vault-structure.ps1](#validation-script) |
-| **Test Results** | JSON output | 12 KB | [vault-validation-results.json](#test-results) |
+| **Test Results** | JSON output | 12 KB | [test-artifacts/vault-validation-results.json](#test-results) |
 | **Troubleshooting** | Issue resolution | 46 KB | [vault-troubleshooting-guide.md](#troubleshooting-guide) |
 | **Sign-Off** | Official approval | 24 KB | [vault-sign-off-document.md](#sign-off-document) |
 
@@ -144,7 +144,7 @@ if ($LASTEXITCODE -ne 0) { exit 1 }
 ---
 
 ### Test Results
-**File:** `vault-validation-results.json`  
+**File:** `test-artifacts/vault-validation-results.json`  
 **Size:** 12.6 KB  
 **Purpose:** Machine-readable test results for automation
 
@@ -306,7 +306,7 @@ schtasks /create /tn "Vault Health Check" `
   /sc daily /st 02:00
 
 # Check results
-Get-Content "T:\Project-AI-main\vault-validation-results.json" | ConvertFrom-Json
+Get-Content "T:\Project-AI-main\test-artifacts\vault-validation-results.json" | ConvertFrom-Json
 ```
 
 **CI/CD Integration:**
@@ -446,7 +446,7 @@ All documentation has been created in compliance with:
 | AGENT-007-MISSION-SUMMARY.md | 1.0.0 | 2026-04-20 | Final |
 | vault-validation-report.md | 1.0.0 | 2026-04-20 | Final |
 | validate-vault-structure.ps1 | 1.0.0 | 2026-04-20 | Final |
-| vault-validation-results.json | 1.0.0 | 2026-04-20 | Final |
+| test-artifacts/vault-validation-results.json | 1.0.0 | 2026-04-20 | Final |
 | vault-troubleshooting-guide.md | 1.0.0 | 2026-04-20 | Final |
 | vault-sign-off-document.md | 1.0.0 | 2026-04-20 | Final |
 

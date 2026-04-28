@@ -89,6 +89,12 @@ class TestIronPathExecutor:
             decision="allow",
             reason="Authorized",
         )
+        assert record.decision_id == record.decision_record_id
+        assert record.signature
+        assert record.previous_hash
+        assert record.evaluation_id == result.evaluation_id
+        assert record.inputs_hash
+        assert record.outputs_hash
 
         compensation = executor.compensate(
             principal="admin",
@@ -104,3 +110,5 @@ class TestIronPathExecutor:
         assert records[0].decision_record_id == record.decision_record_id
         assert records[1].decision_record_id == compensation.decision_record_id
         assert records[1].metadata["compensation_for"] == record.decision_record_id
+        assert records[1].decision_type == "compensating_action"
+        assert records[1].metadata["priorDecisionId"] == record.decision_record_id

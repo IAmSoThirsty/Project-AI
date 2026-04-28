@@ -49,7 +49,7 @@ test_coverage: 89%
 ---
 
 
-# Sovereign Verification System - Quick Start Guide
+## Sovereign Verification System - Quick Start Guide
 
 ## Overview
 
@@ -90,25 +90,29 @@ python project_ai_cli.py sovereign-verify --bundle compliance_bundle.json
 ## Usage Examples
 
 ### Basic Verification
+
 ```bash
 python project_ai_cli.py sovereign-verify --bundle compliance_bundle.json
 ```
 
 ### With Report Export
+
 ```bash
 python project_ai_cli.py sovereign-verify \
   --bundle compliance.zip \
-  --output verification_report.json
+  --output test-artifacts/verification_report.json
 ```
 
 ### Third-Party Auditor Workflow
 
 **Step 1:** Receive compliance bundle
+
 ```bash
 # Auditor receives: compliance_bundle.json or compliance.zip
 ```
 
 **Step 2:** Run verification
+
 ```bash
 python project_ai_cli.py sovereign-verify \
   --bundle compliance_bundle.json \
@@ -116,12 +120,14 @@ python project_ai_cli.py sovereign-verify \
 ```
 
 **Step 3:** Review results
+
 - ✅ Hash Chain: PASS/FAIL
 - ✅ Signatures: X/Y verified
 - ✅ Policy Trace: X resolutions
 - ✅ Attestation: Independent proof
 
 **Step 4:** Save report
+
 ```bash
 # Detailed JSON report saved to audit_verification.json
 # Share with stakeholders as cryptographic proof
@@ -129,7 +135,7 @@ python project_ai_cli.py sovereign-verify \
 
 ## Output Structure
 
-```
+```text
 ================================================================================
 SOVEREIGN VERIFICATION SYSTEM
 ================================================================================
@@ -208,11 +214,13 @@ The `--output` flag saves a detailed JSON report:
 ## Why This Matters
 
 ### Before: Trust-Based
+
 - "We have policies" (documentation)
 - "Trust us" (promise)
 - "We're compliant" (claim)
 
 ### After: Cryptography-Based
+
 - "Verify independently" (cryptography)
 - "Check the hash chain" (SHA-256)
 - "Validate the signatures" (Ed25519)
@@ -263,13 +271,13 @@ python project_ai_cli.py run examples/sovereign-demo.yaml
 BUNDLE=$(find governance/sovereign_data/artifacts -name "compliance_bundle.json" | head -1)
 python project_ai_cli.py sovereign-verify \
   --bundle "$BUNDLE" \
-  --output verification_report.json
+  --output test-artifacts/verification_report.json
 
 # Step 3: Review report
-cat verification_report.json | python -m json.tool
+cat test-artifacts/verification_report.json | python -m json.tool
 
 # Step 4: Share attestation with stakeholders
-# The verification_report.json contains cryptographic proof
+# The test-artifacts/verification_report.json contains cryptographic proof
 ```
 
 ## Trust Is Now Portable
@@ -279,11 +287,13 @@ cat verification_report.json | python -m json.tool
 **Solution:** Cryptographic verification with portable trust.
 
 **Command:**
+
 ```bash
 project-ai sovereign-verify --bundle compliance.zip
 ```
 
 **Result:**
+
 - ✅ Hash chain verified (SHA-256)
 - ✅ Signatures verified (Ed25519)
 - ✅ Policy trace complete

@@ -30,16 +30,24 @@ import threading
 import time
 import uuid
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
+
+import hashlib
+import json
 
 from app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
+)
+from app.core.governance.iron_path_executor import (
+    PolicyEvaluationRequest,
+    PolicyEvaluationResponse,
+    get_iron_path_executor,
 )
 
 logger = logging.getLogger(__name__)
@@ -86,6 +94,10 @@ class MutationIntent(Enum):
         "standard"  # personality_weights, preferences - requires standard consensus
     )
     ROUTINE = "routine"  # regular operations - allowed
+
+
+class ConstitutionalFault(PermissionError):
+    """Raised when explicit governance contract evaluation denies execution."""
 
 
 # ============================================================================
@@ -159,6 +171,11 @@ class ExecutionContext:
     # Action and governance
     proposed_action: Action
     governance_decision: Decision | None = None
+    policy_evaluation_request: PolicyEvaluationRequest | None = None
+    policy_evaluation_response: PolicyEvaluationResponse | None = None
+    post_evaluation_request: PolicyEvaluationRequest | None = None
+    post_evaluation_response: PolicyEvaluationResponse | None = None
+    decision_record_id: str | None = None
 
     # Execution and result
     status: ExecutionStatus = ExecutionStatus.PENDING
@@ -173,6 +190,7 @@ class ExecutionContext:
             "result": None,  # Actual effect
             "reflection": None,  # Post-hoc reasoning (optional)
             "error": None,  # Runtime exceptions and failures (forensic replay)
+            "decision_record": None,  # Immutable signed chain entry
         }
     )
 
@@ -212,6 +230,11 @@ class ExecutionResult:
     # Reflection insights
     reflection_triggered: bool = False
     reflection_insights: list[str] = field(default_factory=list)
+
+    # Explicit governance contract exposure
+    decision_record_id: str | None = None
+    policy_evaluation_id: str | None = None
+    post_evaluation_id: str | None = None
 
     # Timing and metadata
     duration_ms: float = 0.0
@@ -427,6 +450,9 @@ class CognitionKernel:
                 # Phase 3: Reflect on execution
                 self.reflect(context)
 
+                # Phase 3.5: Post-execution governance contract evaluation
+                self.post_evaluate(context)
+
                 # Phase 4: Commit to memory (four-channel)
                 self.commit(context)
 
@@ -448,6 +474,17 @@ class CognitionKernel:
 
                 # Run error hooks
                 self._run_error_hooks(context, e)
+
+                # Best-effort post-evaluation contract for failed/blocked paths
+                if context.post_evaluation_response is None:
+                    try:
+                        self.post_evaluate(context)
+                    except Exception as post_evaluation_error:
+                        logger.error(
+                            "[%s] Post-evaluation failed: %s",
+                            trace_id,
+                            post_evaluation_error,
+                        )
 
                 # Still commit (blocked actions are logged for auditability)
                 self.commit(context)
@@ -502,6 +539,13 @@ class CognitionKernel:
             "[%s] Enforcing governance for %s", context.trace_id, action.action_name
         )
 
+        # Explicit policy-evaluation contract request
+        evaluation_request = self._build_policy_evaluation_request(
+            action=action,
+            context=context,
+            stage="pre",
+        )
+
         # Freeze identity snapshot (immutable, governance can only observe)
         identity_snapshot = self._freeze_identity_snapshot()
 
@@ -510,15 +554,71 @@ class CognitionKernel:
 
         # Mutate context with decision
         context.governance_decision = decision
-        context.channels["decision"] = decision
+        evaluation_response = self._build_policy_evaluation_response(
+            request=evaluation_request,
+            approved=decision.approved,
+            reason=decision.reason,
+            context=context,
+            stage="pre",
+            matched_policies=self._derive_matched_policies(decision),
+        )
 
-        if not decision.approved:
+        context.policy_evaluation_request = evaluation_request
+        context.policy_evaluation_response = evaluation_response
+        context.channels["decision"] = {
+            "governance_decision": asdict(decision),
+            "policy_evaluation_request": asdict(evaluation_request),
+            "policy_evaluation_response": asdict(evaluation_response),
+        }
+
+        if evaluation_response.decision != "allow":
             context.status = ExecutionStatus.BLOCKED
-            logger.warning("[%s] BLOCKED: %s", context.trace_id, decision.reason)
-            raise PermissionError(f"Blocked by governance: {decision.reason}")
+            logger.warning("[%s] BLOCKED: %s", context.trace_id, evaluation_response.reason)
+            raise ConstitutionalFault(f"Blocked by governance: {evaluation_response.reason}")
 
         context.status = ExecutionStatus.APPROVED
-        logger.info("[%s] Approved: %s", context.trace_id, decision.reason)
+        logger.info("[%s] Approved: %s", context.trace_id, evaluation_response.reason)
+
+    def post_evaluate(self, context: ExecutionContext) -> None:
+        """Perform explicit post-execution policy contract evaluation.
+
+        This binds post-state to the same trace for replayable governance.
+        """
+        logger.debug("[%s] Performing post-execution policy evaluation", context.trace_id)
+
+        evaluation_request = self._build_policy_evaluation_request(
+            action=context.proposed_action,
+            context=context,
+            stage="post",
+        )
+
+        approved = context.status == ExecutionStatus.COMPLETED
+        if approved:
+            reason = "Post-evaluation passed"
+            matched_policies = ["kernel-post-evaluation", "execution-consistency"]
+        else:
+            reason = (
+                f"Post-evaluation denied due to execution status: {context.status.value}"
+            )
+            matched_policies = ["kernel-post-evaluation", "execution-failure-policy"]
+
+        evaluation_response = self._build_policy_evaluation_response(
+            request=evaluation_request,
+            approved=approved,
+            reason=reason,
+            context=context,
+            stage="post",
+            matched_policies=matched_policies,
+        )
+
+        context.post_evaluation_request = evaluation_request
+        context.post_evaluation_response = evaluation_response
+
+        # Only hard-fail successful executions that violate post-evaluation.
+        if context.status == ExecutionStatus.COMPLETED and evaluation_response.decision != "allow":
+            raise ConstitutionalFault(
+                f"Post-evaluation blocked commit: {evaluation_response.reason}"
+            )
 
     def act(self, action: Action, context: ExecutionContext) -> None:
         """
@@ -668,6 +768,214 @@ class CognitionKernel:
 
             except Exception as e:
                 logger.error("[%s] Memory commit failed: %s", context.trace_id, e)
+
+        # Append immutable decision record (signed, linked) for every action.
+        try:
+            self._record_decision_chain(context)
+        except Exception as e:
+            logger.error("[%s] Decision chain commit failed: %s", context.trace_id, e)
+
+    def _build_policy_evaluation_request(
+        self,
+        *,
+        action: Action,
+        context: ExecutionContext,
+        stage: str,
+    ) -> PolicyEvaluationRequest:
+        """Build canonical PolicyEvaluationRequest for pre/post contract exposure."""
+        actor = context.user_id or action.source or "unknown"
+        resource = str(action.metadata.get("resource", action.action_name))
+
+        request_context = {
+            "stage": stage,
+            "source": context.source,
+            "risk_level": action.risk_level,
+            "action_type": action.action_type.value,
+            "metadata": context.metadata,
+        }
+
+        inputs_payload = {
+            "trace_id": context.trace_id,
+            "actor": actor,
+            "action": action.action_name,
+            "resource": resource,
+            "stage": stage,
+            "context": request_context,
+        }
+        inputs_hash = hashlib.sha256(
+            json.dumps(inputs_payload, sort_keys=True, separators=(",", ":")).encode(
+                "utf-8"
+            )
+        ).hexdigest()
+
+        return PolicyEvaluationRequest(
+            evaluation_id=f"eval_{uuid.uuid4().hex}",
+            trace_id=context.trace_id,
+            action=action.action_name,
+            resource=resource,
+            actor=actor,
+            principal=actor,
+            context=request_context,
+            inputs_hash=inputs_hash,
+            requested_at=datetime.now(timezone.utc).isoformat(),
+        )
+
+    def _build_policy_evaluation_response(
+        self,
+        *,
+        request: PolicyEvaluationRequest,
+        approved: bool,
+        reason: str,
+        context: ExecutionContext,
+        stage: str,
+        matched_policies: list[str] | None = None,
+    ) -> PolicyEvaluationResponse:
+        """Build canonical PolicyEvaluationResponse from existing governance state."""
+        constraints = [
+            f"stage:{stage}",
+            f"status:{context.status.value}",
+        ]
+        if context.governance_decision and context.governance_decision.consensus_required:
+            constraints.append("consensus-required")
+
+        executor = get_iron_path_executor()
+        return executor.build_response_from_decision(
+            request=request,
+            approved=approved,
+            reason=reason,
+            matched_policies=matched_policies or ["kernel-governance"],
+            constraints=constraints,
+        )
+
+    def _derive_matched_policies(self, decision: Decision) -> list[str]:
+        """Derive policy identifiers from governance decision context."""
+        if not decision.council_votes:
+            return ["kernel-governance"]
+
+        if isinstance(decision.council_votes, dict):
+            if isinstance(decision.council_votes.get("matched_policies"), list):
+                return [str(p) for p in decision.council_votes["matched_policies"]]
+
+            policy_like_keys = [
+                str(key)
+                for key in decision.council_votes.keys()
+                if key not in {"allowed", "reason", "success", "output"}
+            ]
+            if policy_like_keys:
+                return sorted(set(policy_like_keys))
+
+        return ["kernel-governance"]
+
+    def _derive_quorum_proof(self, context: ExecutionContext) -> dict[str, Any]:
+        """Derive quorum proof from governance votes for decision-chain recording."""
+        votes: list[str] = []
+
+        decision = context.governance_decision
+        if decision and isinstance(decision.council_votes, dict):
+            explicit_votes = decision.council_votes.get("votes")
+            if isinstance(explicit_votes, list):
+                votes.extend(str(v) for v in explicit_votes)
+            else:
+                votes.extend(
+                    str(key)
+                    for key in decision.council_votes.keys()
+                    if key not in {"allowed", "reason", "success", "output"}
+                )
+
+        if not votes and decision and decision.consensus_required:
+            votes = ["galahad", "cerberus", "codex_deus_maximus"]
+
+        if not votes:
+            votes = ["kernel"]
+
+        deduped = sorted(set(votes))
+        return {
+            "votes": deduped,
+            "affected_domains": deduped,
+        }
+
+    def _record_decision_chain(self, context: ExecutionContext) -> None:
+        """Emit immutable DecisionRecord bound to pre/post evaluations and commit."""
+        executor = get_iron_path_executor()
+
+        evaluation_request = (
+            context.post_evaluation_request
+            or context.policy_evaluation_request
+            or self._build_policy_evaluation_request(
+                action=context.proposed_action,
+                context=context,
+                stage="post",
+            )
+        )
+
+        if context.post_evaluation_response is not None:
+            evaluation_response = context.post_evaluation_response
+        elif context.policy_evaluation_response is not None:
+            evaluation_response = context.policy_evaluation_response
+        else:
+            evaluation_response = self._build_policy_evaluation_response(
+                request=evaluation_request,
+                approved=context.status == ExecutionStatus.COMPLETED,
+                reason=(
+                    "Implicit post-evaluation allow"
+                    if context.status == ExecutionStatus.COMPLETED
+                    else f"Implicit post-evaluation deny: {context.status.value}"
+                ),
+                context=context,
+                stage="post",
+                matched_policies=["kernel-implicit-post-evaluation"],
+            )
+
+        capability_token = str(context.metadata.get("capability_token", "kernel-internal"))
+        quorum_proof = self._derive_quorum_proof(context)
+
+        binding = executor.bind_observed_decision(
+            action=context.proposed_action.action_name,
+            resource=str(
+                context.proposed_action.metadata.get(
+                    "resource", context.proposed_action.action_name
+                )
+            ),
+            capability_token=capability_token,
+            governance_context={
+                "trace_id": context.trace_id,
+                "source": context.source,
+                "status": context.status.value,
+                "risk_level": context.proposed_action.risk_level,
+            },
+            resolution_policy="default-deny-precedence",
+            evaluation_request=evaluation_request,
+            evaluation_response=evaluation_response,
+            quorum_proof=quorum_proof,
+        )
+
+        actor = context.user_id or context.source or "unknown"
+        metadata = {
+            "execution_status": context.status.value,
+            "trace_id": context.trace_id,
+            "duration_ms": context.duration_ms,
+        }
+
+        if evaluation_response.decision == "allow":
+            record = executor.record_commit_receipt(
+                principal=actor,
+                binding=binding,
+                evaluation_result=evaluation_response,
+                reason="Commit receipt for governed execution",
+                metadata=metadata,
+            )
+        else:
+            record = executor.record_arbiter_ruling(
+                principal=actor,
+                binding=binding,
+                evaluation_result=evaluation_response,
+                decision="deny",
+                reason=evaluation_response.reason,
+                metadata=metadata,
+            )
+
+        context.decision_record_id = record.decision_id
+        context.channels["decision_record"] = asdict(record)
 
     # ========================================================================
     # Private Helper Methods
@@ -981,6 +1289,17 @@ class CognitionKernel:
             blocked_reason=(
                 context.error
                 if not success and context.status == ExecutionStatus.BLOCKED
+                else None
+            ),
+            decision_record_id=context.decision_record_id,
+            policy_evaluation_id=(
+                context.policy_evaluation_response.evaluation_id
+                if context.policy_evaluation_response
+                else None
+            ),
+            post_evaluation_id=(
+                context.post_evaluation_response.evaluation_id
+                if context.post_evaluation_response
                 else None
             ),
             metadata=context.metadata,

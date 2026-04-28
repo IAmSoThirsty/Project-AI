@@ -249,7 +249,7 @@ strategy:
 
 **Relationships**:
 - **Depends**: Phase 5 (testing)
-- **Generates**: `coverage.json`
+- **Generates**: `test-artifacts/coverage.json`
 - **Posts**: PR comments with coverage delta
 
 ---

@@ -72,6 +72,39 @@ def executor(pipeline_file):
 class TestIronPathExecutor:
     """Test suite for IronPathExecutor."""
 
+    def test_execute_exports_compliance_bundle_without_audit_stage(self):
+        """Test compliance bundle is exported even without audit_export stage."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            pipeline_config = {
+                "name": "test_no_audit_stage_pipeline",
+                "version": "1.0.0",
+                "stages": [
+                    {
+                        "name": "data_prep_only",
+                        "type": "data_preparation",
+                    }
+                ],
+            }
+
+            pipeline_path = Path(tmpdir) / "test_no_audit_stage.yaml"
+            with open(pipeline_path, "w") as f:
+                yaml.dump(pipeline_config, f)
+
+            executor = IronPathExecutor(
+                pipeline_path=pipeline_path,
+                data_dir=Path(tmpdir) / "data",
+                artifacts_dir=Path(tmpdir) / "artifacts",
+            )
+
+            result = executor.execute()
+
+            assert result["status"] == "completed"
+            assert "compliance_bundle" in result
+            assert result["compliance_bundle"]["export_successful"] is True
+
+            bundle_path = executor.artifacts_dir / "compliance_bundle.json"
+            assert bundle_path.exists()
+
     def test_initialization(self, executor):
         """Test executor initializes correctly."""
         assert executor.sovereign is not None

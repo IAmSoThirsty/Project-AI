@@ -27,7 +27,7 @@
 - ✅ **All integration docs enriched with metadata** - 17/17 files
 - ✅ **Platform classification report** - INTEGRATION_METADATA_REPORT.md
 - ✅ **Integration type matrix** - Documented in report
-- ✅ **External dependencies inventory** - integration_metadata_inventory.json
+- ✅ **External dependencies inventory** - test-artifacts/integration_metadata_inventory.json
 - ✅ **Deprecation status report** - All current, no deprecated docs
 - ✅ **Validation report** - 100% validation pass rate
 - ✅ **Completion checklist** - This document

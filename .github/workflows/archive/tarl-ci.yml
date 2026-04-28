@@ -82,14 +82,15 @@ jobs:
       
       - name: Run Bandit security scan
         run: |
-          bandit -r tarl/ -f json -o bandit-report.json || true
+          mkdir -p test-artifacts
+          bandit -r tarl/ -f json -o test-artifacts/bandit-report.json || true
           bandit -r tarl/ -f screen
       
       - name: Upload Bandit report
         uses: actions/upload-artifact@v4
         with:
           name: bandit-report
-          path: bandit-report.json
+          path: test-artifacts/bandit-report.json
 
   tarl-docs:
     name: T.A.R.L. Documentation Check

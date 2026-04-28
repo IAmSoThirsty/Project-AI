@@ -348,7 +348,7 @@ jobs:
         run: pip install bandit safety
       
       - name: Run Bandit
-        run: bandit -r src/ -f json -o bandit-report.json
+        run: mkdir -p test-artifacts && bandit -r src/ -f json -o test-artifacts/bandit-report.json
       
       - name: Run Safety
         run: safety check --file requirements.txt

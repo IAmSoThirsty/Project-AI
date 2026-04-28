@@ -70,7 +70,7 @@ pip install bandit
 bandit -r src/ tests/ tools/
 
 # Generate JSON report
-bandit -r src/ -f json -o bandit-report.json
+bandit -r src/ -f json -o test-artifacts/bandit-report.json
 
 # Scan with specific severity
 bandit -r src/ --severity-level high
@@ -199,7 +199,7 @@ The repository includes automated secret scanning via GitHub Actions.
 
 **Artifacts:**
 
-- `bandit-report.json` - Bandit findings
+- `test-artifacts/bandit-report.json` - Bandit findings
 - `.secrets.baseline` - detect-secrets baseline
 - `enhanced-scan-report.json` - Detailed scan results
 
@@ -251,7 +251,7 @@ python tools/enhanced_secret_scan.py --report enhanced-scan.json
 
 # 2. Bandit
 echo "2️⃣ Running Bandit..."
-bandit -r src/ tools/ scripts/ -f json -o bandit-report.json
+bandit -r src/ tools/ scripts/ -f json -o test-artifacts/bandit-report.json
 
 # 3. detect-secrets
 echo "3️⃣ Running detect-secrets..."
@@ -273,7 +273,7 @@ safety check --json
 echo "✅ Security scan complete!"
 echo "📄 Reports generated:"
 echo "  - enhanced-scan.json"
-echo "  - bandit-report.json"
+echo "  - test-artifacts/bandit-report.json"
 echo "  - .secrets.baseline"
 ```
 

@@ -279,7 +279,7 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
 
 ## 🔐 Security Workflow Integration Map
 
-```
+```text
 Code Push/PR
      │
      ├─→ CodeQL (SAST)
@@ -308,16 +308,14 @@ Code Push/PR
 
 ### Current Status
 
-| Category | Implementation | Coverage | Status |
-|----------|---------------|----------|--------|
-| SAST | CodeQL, Bandit | 95% | ✅ Excellent |
-| Secret Scanning | Multiple tools | 100% | ✅ Excellent |
-| Dependency Security | pip-audit, safety | 95% | ✅ Excellent |
-| DAST | NeuraLegion | 60% | ⚠️ Good |
-| Container Security | Partial | 40% | ⚠️ Needs Work |
-| Test Coverage | pytest | 85% | ✅ Good |
-| Cloud Security | Datree | 70% | ✅ Good |
-| GenAI Security | Basic | 30% | ⚠️ Needs Work |
+- **SAST** — Implementation: CodeQL, Bandit; Coverage: 95%; Status: ✅ Excellent
+- **Secret Scanning** — Implementation: Multiple tools; Coverage: 100%; Status: ✅ Excellent
+- **Dependency Security** — Implementation: pip-audit, safety; Coverage: 95%; Status: ✅ Excellent
+- **DAST** — Implementation: NeuraLegion; Coverage: 60%; Status: ⚠️ Good
+- **Container Security** — Implementation: Partial; Coverage: 40%; Status: ⚠️ Needs Work
+- **Test Coverage** — Implementation: pytest; Coverage: 85%; Status: ✅ Good
+- **Cloud Security** — Implementation: Datree; Coverage: 70%; Status: ✅ Good
+- **GenAI Security** — Implementation: Basic; Coverage: 30%; Status: ⚠️ Needs Work
 
 ### Key Performance Indicators
 
@@ -339,7 +337,8 @@ Code Push/PR
    - name: Run security checks
      run: |
        pip install bandit pip-audit
-       bandit -r . -f json -o bandit-report.json
+       mkdir -p test-artifacts
+       bandit -r . -f json -o test-artifacts/bandit-report.json
        pip-audit --format json > audit-report.json
    ```
 

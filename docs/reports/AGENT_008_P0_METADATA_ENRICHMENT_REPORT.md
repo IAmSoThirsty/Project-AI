@@ -27,7 +27,7 @@ audience:
   - internal
 priority: p0
 related_to:
-  - "[[docs/reports/METADATA_P0_CORE_REPORT]]"
+  - "[[METADATA_P0_CORE_REPORT]]"
   - "[[MULTI_PATH_GOVERNANCE_COMPLETE]]"
   - "[[MULTI_PATH_GOVERNANCE_ARCHITECTURE]]"
   - "[[COPILOT_MANDATORY_GUIDE]]"

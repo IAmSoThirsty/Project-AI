@@ -1,0 +1,35 @@
+{
+  "stage": "data_preparation_only",
+  "type": "data_preparation",
+  "status": "success",
+  "timestamp": "2026-04-27T05:32:08.045958",
+  "role_signature": {
+    "role": "pipeline_executor",
+    "payload_hash": "4ed2e7123fdbbe5e370e4a417f1479c610ae2302e5e227c2ec4df61e728fa623",
+    "signature": "96f8e2d96b90b283f971bfef6559b6bf3a6f13ee0c2052905884d8a8b399cf5d9b09d183188a6630871d9a0f1727f005f448d4022cc5937366c84b126ad7f70a",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-04-27T05:32:08.043959"
+  },
+  "policy_binding": {
+    "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+    "context_hash": "89bb397c13854398414d0e6942f6899406f0dcf2829e4945887602da1a5cfd0e",
+    "binding_hash": "35d9dad76a6a6a4f4549907b86554f6d5a6371fa883b463a7142d6f4d098dd03",
+    "signature": "08ef01bdb95168de34f9f9e11f61d58ec6333e9a3b7d7d16ba9140a9a62bd883b1ca7c2b6827fc1e0b9a073c501f1946c0389f57504e9f79db38f302e450fb08",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-04-27T05:32:08.044959"
+  },
+  "output": {
+    "dataset_name": "sovereign_demo_dataset",
+    "records_processed": 1000,
+    "features": [
+      "feature_a",
+      "feature_b",
+      "feature_c"
+    ],
+    "train_split": 0.8,
+    "test_split": 0.2,
+    "preparation_method": "standardization",
+    "dataset_hash": "45480beeb35958d65785cacb977eb4b3059d3e67d0565702f7f9a5ef1cb228af"
+  },
+  "artifact_hash": "534ef5a1c5bf0f1b81517a0b94208d5ae7e37880f48ddbc54ad35e3f717aad4a"
+}

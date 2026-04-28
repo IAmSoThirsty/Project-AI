@@ -78,7 +78,7 @@ jobs:
         run: mypy . --ignore-missing-imports || true
       
       - name: Security scan (Bandit)
-        run: bandit -r . -f json -o bandit-report.json || true
+        run: mkdir -p test-artifacts && bandit -r . -f json -o test-artifacts/bandit-report.json || true
       
       - name: Check dependencies (Safety)
         run: safety check --json || true

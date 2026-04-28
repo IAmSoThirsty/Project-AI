@@ -169,7 +169,10 @@ class SovereignVerifier:
                 "public_key": self.bundle.get("public_key"),
                 "algorithm": self.bundle.get("algorithm"),
                 "signatures_found": 0,
+                "signatures_verifiable": 0,
+                "signatures_unverifiable": 0,
                 "signatures_verified": 0,
+                "signature_verification_failures": 0,
             },
             "authorities": {},
             "issues": [],
@@ -197,35 +200,74 @@ class SovereignVerifier:
                     result["details"]["signatures_found"] += 1
 
                     # Extract signature info
-                    if "role" in data:
-                        role = data["role"]
-                        if role not in result["authorities"]:
-                            result["authorities"][role] = {
-                                "occurrences": 0,
-                                "verified": 0,
-                            }
-                        result["authorities"][role]["occurrences"] += 1
+                    role = str(data.get("role", "unknown"))
+                    if role not in result["authorities"]:
+                        result["authorities"][role] = {
+                            "occurrences": 0,
+                            "verifiable": 0,
+                            "verified": 0,
+                            "unverifiable": 0,
+                        }
+                    result["authorities"][role]["occurrences"] += 1
 
-                        # Try to verify if signature is present
-                        if "signature" in data and "payload_hash" in data:
-                            try:
-                                sig_bytes = bytes.fromhex(data["signature"][:64])
-                                payload = data["payload_hash"].encode()
-                                public_key.verify(sig_bytes, payload)
-                                result["authorities"][role]["verified"] += 1
-                                result["details"]["signatures_verified"] += 1
-                            except Exception as e:
-                                result["issues"].append(
-                                    f"Signature verification failed for {role}: {e}"
-                                )
+                    signature_hex = data.get("signature")
+                    payload_hash = data.get("payload_hash")
+
+                    # Some audit events intentionally include redacted/truncated
+                    # signatures for human-readable logs. These should be reported as
+                    # unverifiable evidence rather than cryptographic failures.
+                    is_hex_signature = (
+                        isinstance(signature_hex, str)
+                        and "..." not in signature_hex
+                        and len(signature_hex) == 128
+                    )
+                    has_payload_hash = isinstance(payload_hash, str) and len(payload_hash) > 0
+
+                    if not is_hex_signature or not has_payload_hash:
+                        result["details"]["signatures_unverifiable"] += 1
+                        result["authorities"][role]["unverifiable"] += 1
+                        continue
+
+                    try:
+                        sig_bytes = bytes.fromhex(signature_hex)
+                    except ValueError:
+                        result["details"]["signatures_unverifiable"] += 1
+                        result["authorities"][role]["unverifiable"] += 1
+                        continue
+
+                    result["details"]["signatures_verifiable"] += 1
+                    result["authorities"][role]["verifiable"] += 1
+
+                    try:
+                        public_key.verify(sig_bytes, payload_hash.encode())
+                        result["authorities"][role]["verified"] += 1
+                        result["details"]["signatures_verified"] += 1
+                    except Exception as e:
+                        result["details"]["signature_verification_failures"] += 1
+                        result["issues"].append(
+                            f"Signature verification failed for {role}: {e}"
+                        )
 
             # Determine status
             if result["details"]["signatures_found"] == 0:
                 result["status"] = "warning"
                 result["issues"].append("No signatures found in audit trail")
+            elif result["details"]["signature_verification_failures"] > 0:
+                result["status"] = "fail"
+            elif result["details"]["signatures_verifiable"] == 0:
+                result["status"] = "warning"
+                result["issues"].append(
+                    "Signatures present but unverifiable from bundle evidence"
+                )
             elif (
                 result["details"]["signatures_verified"]
-                == result["details"]["signatures_found"]
+                == result["details"]["signatures_verifiable"]
+                and result["details"]["signatures_unverifiable"] > 0
+            ):
+                result["status"] = "warning"
+            elif (
+                result["details"]["signatures_verified"]
+                == result["details"]["signatures_verifiable"]
             ):
                 result["status"] = "pass"
             else:

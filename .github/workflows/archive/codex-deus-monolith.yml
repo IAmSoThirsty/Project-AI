@@ -209,7 +209,8 @@ jobs:
         continue-on-error: true
         run: |
           echo "🔍 Running Bandit security linter..."
-          bandit -r src/ tools/ scripts/ -f json -o bandit-report.json || true
+          mkdir -p test-artifacts
+          bandit -r src/ tools/ scripts/ -f json -o test-artifacts/bandit-report.json || true
           bandit -r src/ tools/ scripts/ -f txt || true
       
       - name: Run detect-secrets
@@ -235,7 +236,7 @@ jobs:
         with:
           name: security-scan-results
           path: |
-            bandit-report.json
+            test-artifacts/bandit-report.json
             .secrets.baseline
             trufflehog-report.json
 

@@ -210,7 +210,7 @@ npm run format
   uses: actions/upload-artifact@v3
   with:
     name: unit-coverage
-    path: coverage.json
+    path: test-artifacts/coverage.json
 ```
 
 #### Phase 2: Integration Tests
@@ -223,7 +223,7 @@ npm run format
   uses: actions/upload-artifact@v3
   with:
     name: integration-coverage
-    path: coverage.json
+    path: test-artifacts/coverage.json
 ```
 
 #### Phase 3: E2E Tests
@@ -522,7 +522,7 @@ pytest --cov=src --cov-report=xml
 
 # JSON report (for parsing)
 pytest --cov=src --cov-report=json
-# Generates: coverage.json
+# Generates: test-artifacts/coverage.json
 ```
 
 ## Test Runner Configuration

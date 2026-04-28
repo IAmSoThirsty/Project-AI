@@ -183,7 +183,8 @@ graph TB
 
 ### 1. Perimeter Defense
 
-**IP Firewall (Border Patrol)**
+#### IP Firewall (Border Patrol)
+
 - Whitelist/blacklist IP ranges
 - Geolocation-based blocking
 - Cloud provider IP detection
@@ -200,24 +201,27 @@ class BorderPatrol:
         return True, "IP allowed"
 ```
 
-**Honeypot Detection**
+#### Honeypot Detection
+
 - Fake endpoints to trap attackers
 - Automatic blacklisting on honeypot access
 - Behavioral fingerprinting
 
-**Rate Limiting**
+#### Rate Limiting
+
 - Per-IP quotas: 60 requests/minute
 - Per-user quotas: 100 requests/hour
 - API endpoint throttling
 
-**Web Application Firewall**
+#### Web Application Firewall
+
 - OWASP Top 10 protection
 - ModSecurity rule sets
 - Custom pattern matching
 
 ### 2. Authentication (Who Are You?)
 
-**UserManager Implementation**
+#### UserManager Implementation
 
 ```python
 # src/app/core/user_manager.py
@@ -226,14 +230,14 @@ class UserManager:
         user = self.load_user(username)
         if not user:
             return False, "Invalid credentials"
-        
+
         # Check account lockout
         if user["failed_attempts"] >= 5:
             if self.is_locked_out(user):
                 return False, "Account locked. Try again later."
             else:
                 user["failed_attempts"] = 0  # Reset after lockout expires
-        
+
         # Verify password (bcrypt)
         if bcrypt.checkpw(password.encode(), user["password_hash"]):
             user["failed_attempts"] = 0
@@ -245,19 +249,21 @@ class UserManager:
             return False, "Invalid credentials"
 ```
 
-**Account Lockout Policy**
+#### Account Lockout Policy
+
 - 5 failed attempts → 30-minute lockout
 - Exponential backoff on repeated lockouts
 - Admin bypass with master password
 
-**Session Management**
+#### Session Management
+
 - JWT tokens with 1-hour expiration
 - Refresh token rotation
 - Secure HttpOnly cookies
 
 ### 3. Authorization (What Can You Do?)
 
-**RBAC Engine**
+#### RBAC Engine
 
 ```python
 # src/app/core/access_control.py
@@ -275,7 +281,7 @@ def check_permission(user_role: str, action: str) -> bool:
     return "*" in perms or action in perms
 ```
 
-**Command Override System**
+#### Command Override System
 
 Master password for elevated privileges:
 
@@ -285,19 +291,19 @@ class CommandOverrideSystem:
     def validate_override(self, password: str) -> bool:
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         return password_hash == self.master_password_hash
-    
+
     def execute_override(self, action: str, password: str):
         if not self.validate_override(password):
             self.audit_log.record_failed_override(action)
             return False, "Invalid master password"
-        
+
         self.audit_log.record_successful_override(action)
         return True, "Override granted"
 ```
 
 ### 4. Input Validation & Sanitization
 
-**XSS Prevention**
+#### XSS Prevention
 
 ```python
 import html
@@ -307,7 +313,7 @@ def sanitize_html(content: str) -> str:
     return html.escape(content)
 ```
 
-**SQL Injection Prevention**
+#### SQL Injection Prevention
 
 ```python
 # Always use parameterized queries
@@ -317,7 +323,7 @@ cursor.execute(
 )
 ```
 
-**Path Traversal Prevention**
+#### Path Traversal Prevention
 
 ```python
 # src/app/core/utils/path_validator.py
@@ -328,19 +334,19 @@ ALLOWED_DIRECTORIES = ["/data", "/logs", "/uploads"]
 def validate_path(path: str) -> tuple[bool, str]:
     """Prevent directory traversal attacks"""
     abs_path = os.path.abspath(path)
-    
+
     # Check if path is within allowed directories
     if not any(abs_path.startswith(allowed) for allowed in ALLOWED_DIRECTORIES):
         return False, "Path outside allowed directories"
-    
+
     # Reject traversal attempts
     if ".." in path or path.startswith("/"):
         return False, "Path traversal detected"
-    
+
     return True, "Path valid"
 ```
 
-**Shell Injection Prevention**
+#### Shell Injection Prevention
 
 ```python
 import shlex
@@ -362,7 +368,7 @@ def safe_shell_exec(command: str, args: list[str]) -> str:
 
 ### 5. Cryptographic Services
 
-**Fernet Encryption (AES-128 in CBC mode)**
+#### Fernet Encryption (AES-128 in CBC mode)
 
 ```python
 from cryptography.fernet import Fernet
@@ -370,15 +376,15 @@ from cryptography.fernet import Fernet
 class DataEncryptor:
     def __init__(self, key: bytes):
         self.fernet = Fernet(key)
-    
+
     def encrypt(self, data: str) -> bytes:
         return self.fernet.encrypt(data.encode())
-    
+
     def decrypt(self, token: bytes) -> str:
         return self.fernet.decrypt(token).decode()
 ```
 
-**bcrypt Password Hashing**
+#### bcrypt Password Hashing
 
 ```python
 import bcrypt
@@ -391,7 +397,7 @@ def verify_password(password: str, hash: bytes) -> bool:
     return bcrypt.checkpw(password.encode(), hash)
 ```
 
-**SHA-256 Fingerprinting**
+#### SHA-256 Fingerprinting
 
 ```python
 import hashlib
@@ -403,7 +409,7 @@ def fingerprint_content(content: str) -> str:
 
 ### 6. Security Monitoring
 
-**Audit Logging**
+#### Audit Logging
 
 Every security-relevant event is logged:
 
@@ -422,7 +428,7 @@ Every security-relevant event is logged:
 }
 ```
 
-**Anomaly Detection**
+#### Anomaly Detection
 
 ML-based detection of unusual patterns:
 
@@ -431,7 +437,7 @@ ML-based detection of unusual patterns:
 - Unusual access times
 - Permission escalation attempts
 
-**SIEM Integration**
+#### SIEM Integration
 
 Export logs to Splunk/ELK:
 
@@ -448,7 +454,7 @@ def export_to_siem(event: dict):
 
 ### 7. AI Security Agents
 
-**Red Team Agent**
+#### Red Team Agent
 
 Automated attack simulations:
 
@@ -465,7 +471,7 @@ class RedTeamAgent:
         self.test_rate_limit_bypass()
 ```
 
-**Jailbreak Detector**
+#### Jailbreak Detector
 
 Detect prompt injection attempts:
 
@@ -485,7 +491,7 @@ def detect_jailbreak(user_input: str) -> bool:
     return False
 ```
 
-**Constitutional Guardrail**
+#### Constitutional Guardrail
 
 Enforce Asimov's Laws at runtime:
 
@@ -502,7 +508,7 @@ def validate_ai_action(action: str, context: dict) -> tuple[bool, str]:
 
 ### 8. Data Protection
 
-**Encryption at Rest**
+#### Encryption at Rest
 
 All sensitive data encrypted in database:
 
@@ -512,13 +518,13 @@ encrypted_location = fernet.encrypt(gps_coordinates.encode())
 db.store("location_history", encrypted_location)
 ```
 
-**Encryption in Transit**
+#### Encryption in Transit
 
 - TLS 1.3 for all HTTP traffic
 - Certificate pinning for API calls
 - End-to-end encryption for backups
 
-**PII Detection**
+#### PII Detection
 
 Regex + ML models to detect:
 
@@ -528,7 +534,7 @@ Regex + ML models to detect:
 - Phone numbers
 - Addresses
 
-**Data Masking**
+#### Data Masking
 
 Redact sensitive fields in logs:
 
@@ -545,7 +551,7 @@ def mask_pii(data: dict) -> dict:
 
 ### 9. Threat Intelligence
 
-**CVE Database Integration**
+#### CVE Database Integration
 
 ```python
 # Check dependencies for known vulnerabilities
@@ -559,7 +565,7 @@ def check_vulnerabilities():
         auto_patch_critical(vulnerabilities)
 ```
 
-**IP Blacklist Management**
+#### IP Blacklist Management
 
 Maintained list of malicious IPs:
 
@@ -567,7 +573,7 @@ Maintained list of malicious IPs:
 - Known botnet IPs
 - Previously detected attackers
 
-**Auto-Patching**
+#### Auto-Patching
 
 Automated dependency updates for critical CVEs:
 
@@ -606,7 +612,7 @@ authentication:
     require_lowercase: true
     require_numbers: true
     require_special: true
-  
+
   lockout_policy:
     max_failed_attempts: 5
     lockout_duration: 1800  # seconds
@@ -625,7 +631,7 @@ encryption:
     passwords: bcrypt
     data_at_rest: fernet
     data_in_transit: tls_1_3
-  
+
   key_rotation:
     enabled: true
     interval_days: 90
@@ -635,7 +641,7 @@ monitoring:
     enabled: true
     retention_days: 365
     pii_masking: true
-  
+
   anomaly_detection:
     enabled: true
     ml_model: isolation_forest
@@ -648,7 +654,7 @@ monitoring:
 
 ```bash
 # Bandit (Python security linter)
-bandit -r src/ -f json -o bandit-report.json
+bandit -r src/ -f json -o test-artifacts/bandit-report.json
 
 # Safety (dependency vulnerability scanner)
 safety check --file requirements.txt

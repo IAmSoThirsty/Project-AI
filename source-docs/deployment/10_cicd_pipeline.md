@@ -105,14 +105,14 @@ jobs:
         continue-on-error: true
       
       - name: Security scan (Bandit)
-        run: bandit -r src/ -f json -o bandit-report.json
+        run: mkdir -p test-artifacts && bandit -r src/ -f json -o test-artifacts/bandit-report.json
         continue-on-error: true
       
       - name: Upload Bandit results
         uses: actions/upload-artifact@v3
         with:
           name: bandit-report
-          path: bandit-report.json
+          path: test-artifacts/bandit-report.json
 
   # ===== TESTING =====
   test-backend:

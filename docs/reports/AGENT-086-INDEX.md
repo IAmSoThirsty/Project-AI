@@ -9,9 +9,9 @@
 
 ## Quick Links
 
-- **[[docs/reports/AGENT-086-SECURITY-COVERAGE-MATRIX]]** - Primary deliverable (53KB, 785+ wiki links)
-- **[[docs/reports/AGENT-086-MISSION-COMPLETE]]** - Executive summary and metrics (16KB)
-- **[[docs/reports/AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE]]** - Implementation guide (22KB)
+- **[[AGENT-086-SECURITY-COVERAGE-MATRIX]]** - Primary deliverable (53KB, 785+ wiki links)
+- **[[AGENT-086-MISSION-COMPLETE]]** - Executive summary and metrics (16KB)
+- **[[AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE]]** - Implementation guide (22KB)
 - **AGENT-086-MISSION-SUMMARY.txt** - Quick reference summary
 
 ---
@@ -201,7 +201,7 @@ Reference this guide when:
 
 ### For Security Audits
 
-1. Start with **[[docs/reports/AGENT-086-SECURITY-COVERAGE-MATRIX]]**
+1. Start with **[[AGENT-086-SECURITY-COVERAGE-MATRIX]]**
 2. Navigate to relevant security system section
 3. Follow wiki links to component implementations
 4. Verify protections are active
@@ -218,16 +218,16 @@ Reference this guide when:
 ### For Security Incident Response
 
 1. Identify affected component
-2. Search **[[docs/reports/AGENT-086-SECURITY-COVERAGE-MATRIX]]** for component name
+2. Search **[[AGENT-086-SECURITY-COVERAGE-MATRIX]]** for component name
 3. Review security controls protecting the component
 4. Check defense layer and integration points
 5. Follow incident response chain
 
 ### For Documentation Updates
 
-1. Review **[[docs/reports/AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE]]**
+1. Review **[[AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE]]**
 2. Copy template pattern
-3. Fill in component details from **[[docs/reports/AGENT-086-SECURITY-COVERAGE-MATRIX]]**
+3. Fill in component details from **[[AGENT-086-SECURITY-COVERAGE-MATRIX]]**
 4. Add to security control document
 5. Validate wiki links
 
@@ -374,7 +374,7 @@ AGENT-086 successfully completed its mission to create comprehensive bidirection
 ---
 
 **Navigation**:
-- [[docs/reports/AGENT-086-SECURITY-COVERAGE-MATRIX]] - Main deliverable
-- [[docs/reports/AGENT-086-MISSION-COMPLETE]] - Executive summary
-- [[docs/reports/AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE]] - Implementation guide
+- [[AGENT-086-SECURITY-COVERAGE-MATRIX]] - Main deliverable
+- [[AGENT-086-MISSION-COMPLETE]] - Executive summary
+- [[AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE]] - Implementation guide
 - AGENT-086-MISSION-SUMMARY.txt - Quick reference

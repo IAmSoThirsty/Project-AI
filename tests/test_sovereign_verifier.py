@@ -12,6 +12,7 @@ Validates third-party verification capabilities:
 import json
 import tempfile
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -122,6 +123,58 @@ class TestSovereignVerifier:
         assert "public_key" in result["details"]
         assert "algorithm" in result["details"]
         assert "signatures_found" in result["details"]
+
+    def test_signature_mapping_tracks_unverifiable_evidence(
+        self, compliance_bundle: Path
+    ):
+        """Test signature mapping reports verifiable vs unverifiable evidence."""
+        verifier = SovereignVerifier(bundle_path=compliance_bundle)
+        report = verifier.verify()
+        result = report["checks"]["signature_authority_mapping"]
+        details = result["details"]
+
+        assert "signatures_verifiable" in details
+        assert "signatures_unverifiable" in details
+        assert details["signatures_found"] == (
+            details["signatures_verifiable"] + details["signatures_unverifiable"]
+        )
+
+        # Current sovereign audit records intentionally truncate some signatures
+        # in log payloads; these should be a warning, not a cryptographic failure.
+        if details["signatures_found"] > 0 and details["signatures_verifiable"] == 0:
+            assert result["status"] == "warning"
+
+    def test_signature_mapping_fails_on_invalid_full_signature(
+        self, compliance_bundle: Path
+    ):
+        """Test invalid full-length signatures are treated as verification failures."""
+        with open(compliance_bundle) as f:
+            mutated_bundle: dict[str, Any] = json.load(f)
+
+        # Force one verifiable-looking signature that fails Ed25519 verification.
+        updated = False
+        for block in mutated_bundle["audit_trail"]["blocks"]:
+            data = block.get("data", {})
+            if "role" in data and "payload_hash" in data:
+                data["signature"] = "00" * 64  # 64 bytes / 128 hex chars
+                updated = True
+                break
+
+        assert updated, "Expected at least one role signature event in test bundle"
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mutated_bundle_path = Path(tmpdir) / "mutated_compliance_bundle.json"
+            with open(mutated_bundle_path, "w") as f:
+                json.dump(mutated_bundle, f, indent=2)
+
+            verifier = SovereignVerifier(bundle_path=mutated_bundle_path)
+            report = verifier.verify()
+            result = report["checks"]["signature_authority_mapping"]
+            details = result["details"]
+
+            assert details["signatures_verifiable"] >= 1
+            assert details["signature_verification_failures"] >= 1
+            assert result["status"] == "fail"
 
     def test_policy_resolution_tracing(self, compliance_bundle):
         """Test policy resolution tracing."""

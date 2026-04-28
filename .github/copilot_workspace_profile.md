@@ -2,9 +2,9 @@
 title: "Project-AI Copilot Workspace Profile"
 id: copilot-workspace-profile
 type: policy
-version: 1.0.0
+version: 1.1.0
 created_date: 2026-01-23
-updated_date: 2026-01-23
+updated_date: 2026-04-28
 status: active
 author: "Architecture Team <projectaidevs@gmail.com>"
 tags:
@@ -31,6 +31,7 @@ related_to:
   - "[[README]]"
   - "[[CONTRIBUTING]]"
   - "[[ARCHITECTURE_QUICK_REF]]"
+mandatory_coding_default_reference: "[[.github/instructions/mandatory-structured-generation-default.instructions.md]]"
 supersedes:
   - "[[.github/copilot-instructions.md]]"
 validates:
@@ -44,8 +45,8 @@ why: "Prevents technical debt from minimal/skeleton implementations, enforces en
 
 # Project-AI Copilot Workspace Profile
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-01-23  
+**Version:** 1.1.0  
+**Last Updated:** 2026-04-28  
 **Status:** ACTIVE GOVERNANCE POLICY
 
 ---
@@ -71,6 +72,36 @@ This document establishes the **mandatory governance policy** for all AI workspa
 - Integration tests, unit tests, and validation checks included by default
 
 **Rationale:** Half-measures create technical debt and security vulnerabilities. Complete solutions prevent iterative rework and ensure consistency across the codebase.
+
+### 1.1. Mandatory Structured Generation & Adversarial Review Default
+
+**Policy:** For every coding task, AI assistants SHALL execute the mandatory sequence below with no silent assumptions.
+
+**Required sequence:**
+
+1. **Requirements Contract** (language/runtime/input-output schema/constraints/edge cases)
+2. **Design** (approach, data flow, explicit assumptions)
+3. **Pseudocode** (step-by-step logic aligned to design)
+4. **Implementation** (fully executable; no placeholders/dead code)
+5. **Adversarial Self-Review** (failure modes, edge gaps, performance risks, spec mismatches)
+6. **Refinement** (resolve all findings while preserving constraints)
+7. **Verification** (normal + edge + failure tests, expected outputs, constraints justification)
+
+**Mandatory behaviors:**
+
+- If required inputs are missing, assistants MUST request clarification before coding.
+- The first implementation pass is presumed insufficient and MUST include at least one critique-and-refine pass.
+- Feedback iterations MUST address only requested issues while preventing regressions.
+
+**Failure conditions (automatic non-compliance):**
+
+- Unresolved ambiguity
+- Missing edge-case handling
+- Violated constraints
+- Non-executable or incomplete code
+- Unjustified assumptions
+
+**Reference implementation file:** `.github/instructions/mandatory-structured-generation-default.instructions.md`
 
 ---
 

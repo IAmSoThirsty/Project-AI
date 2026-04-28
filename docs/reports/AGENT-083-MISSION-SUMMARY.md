@@ -8,8 +8,8 @@ status: in-progress
 progress: 9.25%
 deliverables_complete: 5/9
 related_to:
-  - "[[docs/reports/AGENT-083-GUIDE-API-MAP]]"
-  - "[[docs/reports/AGENT-083-API-COVERAGE-REPORT]]"
+  - "[[AGENT-083-GUIDE-API-MAP]]"
+  - "[[AGENT-083-API-COVERAGE-REPORT]]"
   - "[[API_QUICK_REFERENCE]]"
 ---
 
@@ -514,8 +514,8 @@ Always include full method signatures with parameter types:
 
 **Agent**: AGENT-083 (Tutorial to API Links Specialist)  
 **Phase**: 5 (Cross-Linking)  
-**Charter**: [[docs/reports/AGENT-083-GUIDE-API-MAP]]  
-**Coverage Report**: [[docs/reports/AGENT-083-API-COVERAGE-REPORT]]
+**Charter**: [[AGENT-083-GUIDE-API-MAP]]  
+**Coverage Report**: [[AGENT-083-API-COVERAGE-REPORT]]
 
 **Related Agents**:
 - **AGENT-051**: Phase 3 Coordinator (API documentation generation)

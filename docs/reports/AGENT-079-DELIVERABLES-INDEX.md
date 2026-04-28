@@ -274,7 +274,7 @@ All quality gates passed ✅:
 **Section**: Architecture & Design  
 **Added**:
 ```markdown
-- **[[docs/reports/AGENT-079-INTEGRATION-MAP]]**: Cross-system integration map (500+ bidirectional links)
+- **[[AGENT-079-INTEGRATION-MAP]]**: Cross-system integration map (500+ bidirectional links)
 - **[[CROSS-SYSTEM-NAVIGATION]]**: Navigation guide for cross-linked documentation
 ```
 

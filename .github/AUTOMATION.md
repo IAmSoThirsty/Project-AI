@@ -76,6 +76,7 @@ The automation system consists of five main components:
 - 🛡️ Complete coverage of security issues
 
 **Usage**:
+
 ```bash
 # Manually trigger comprehensive security scan
 gh workflow run security-orchestrator.yml
@@ -113,6 +114,7 @@ gh run download <RUN-ID> -n security-compliance-report
    - Comments on major updates to alert maintainers
 
 **Usage:**
+
 ```bash
 # To enable auto-merge on your PR (use with caution):
 gh pr edit <PR-NUMBER> --add-label "auto-merge"
@@ -160,6 +162,7 @@ gh run list --workflow=auto-pr-handler.yml
 - Workflow artifacts available for 90 days
 
 **Usage:**
+
 ```bash
 # Manually trigger security scan:
 gh workflow run auto-security-fixes.yml
@@ -197,12 +200,13 @@ gh run download <RUN-ID> -n security-reports
 
 **Reports Generated:**
 
-- `bandit-report.json` - Complete findings
+- `test-artifacts/bandit-report.json` - Complete findings
 - `bandit-report.sarif` - SARIF format for Security tab
 - `bandit-summary.txt` - Quick stats
 - `bandit-details.md` - Formatted detailed report
 
 **Usage:**
+
 ```bash
 # Manually trigger Bandit scan:
 gh workflow run auto-bandit-fixes.yml
@@ -253,6 +257,7 @@ All security updates are grouped together for efficient processing.
 - Includes scope for easier changelog generation
 
 **Usage:**
+
 ```bash
 # View Dependabot PRs:
 gh pr list --author "dependabot[bot]"
@@ -284,7 +289,7 @@ gh pr list --author "dependabot[bot]"
 
 ## Workflow Architecture
 
-```
+```text
 ┌─────────────────────┐
 │   Pull Request      │
 │   (opened/updated)  │
@@ -315,7 +320,7 @@ gh pr list --author "dependabot[bot]"
             └─────────────────┘
 ```
 
-```
+```text
 ┌─────────────────────┐
 │   Daily/Weekly      │
 │   Scheduled Scan    │
@@ -411,6 +416,7 @@ All automated workflows require these GitHub permissions:
 - Required secrets are configured (if any)
 
 **Fix:**
+
 ```bash
 # View workflow status:
 gh workflow view auto-pr-handler.yml
@@ -431,6 +437,7 @@ gh run view <RUN-ID> --log
 1. Workflow permissions insufficient
 
 **Check Status:**
+
 ```bash
 # View PR checks:
 gh pr checks <PR-NUMBER>
@@ -458,6 +465,7 @@ gh pr view <PR-NUMBER> --json mergeable,mergeStateStatus
 1. Dependencies are actually outdated
 
 **Validate Config:**
+
 ```bash
 # Validate YAML syntax:
 python3 -c "import yaml; yaml.safe_load(open('.github/dependabot.yml'))"

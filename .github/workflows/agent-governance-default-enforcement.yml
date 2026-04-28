@@ -1,0 +1,46 @@
+name: Enforce Agent Governance Defaults
+
+on:
+  pull_request:
+    paths:
+      - AGENTS.md
+      - .github/copilot-instructions.md
+      - .github/copilot_workspace_profile.md
+      - .github/COPILOT_MANDATORY_GUIDE.md
+      - .github/instructions/mandatory-structured-generation-default.instructions.md
+      - tools/validate_mandatory_agent_protocol.py
+      - .githooks/pre-commit
+  push:
+    branches:
+      - main
+      - develop
+      - cerberus-integration
+    paths:
+      - AGENTS.md
+      - .github/copilot-instructions.md
+      - .github/copilot_workspace_profile.md
+      - .github/COPILOT_MANDATORY_GUIDE.md
+      - .github/instructions/mandatory-structured-generation-default.instructions.md
+      - tools/validate_mandatory_agent_protocol.py
+      - .githooks/pre-commit
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-agent-governance-default:
+    name: Validate mandatory agent protocol wiring
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate mandatory protocol integration
+        run: python tools/validate_mandatory_agent_protocol.py
