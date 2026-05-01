@@ -418,54 +418,62 @@ class SituationalAwarenessSubsystem(
 
     def execute_command(self, command: SubsystemCommand) -> SubsystemResponse:
         """Execute a command."""
-        start_time = time.time()
+        from app.core.execution_router import execute as _gov_execute
 
-        try:
-            if command.command_type == "add_safe_zone":
-                success = self._add_safe_zone(command.parameters)
-                result = {"zone_added": success}
+        def _dispatch(_ctx: dict) -> SubsystemResponse:
+            start_time = time.time()
+            try:
+                if command.command_type == "add_safe_zone":
+                    success = self._add_safe_zone(command.parameters)
+                    result = {"zone_added": success}
 
-            elif command.command_type == "update_threat":
-                success = self._update_threat(command.parameters)
-                result = {"threat_updated": success}
+                elif command.command_type == "update_threat":
+                    success = self._update_threat(command.parameters)
+                    result = {"threat_updated": success}
 
-            elif command.command_type == "get_threats_in_area":
-                threats = self._get_threats_in_area(command.parameters)
-                success = True
-                result = {"threats": [vars(t) for t in threats]}
+                elif command.command_type == "get_threats_in_area":
+                    threats = self._get_threats_in_area(command.parameters)
+                    success = True
+                    result = {"threats": [vars(t) for t in threats]}
 
-            elif command.command_type == "predict_threat_movement":
-                prediction = self._predict_threat_movement(command.parameters)
-                success = True
-                result = {"prediction": prediction}
+                elif command.command_type == "predict_threat_movement":
+                    prediction = self._predict_threat_movement(command.parameters)
+                    success = True
+                    result = {"prediction": prediction}
 
-            else:
-                success = False
-                result = None
-                error = f"Unknown command type: {command.command_type}"
+                else:
+                    return SubsystemResponse(
+                        command_id=command.command_id,
+                        success=False,
+                        error=f"Unknown command type: {command.command_type}",
+                        execution_time_ms=(time.time() - start_time) * 1000,
+                    )
 
                 return SubsystemResponse(
                     command_id=command.command_id,
-                    success=False,
-                    error=error,
+                    success=success,
+                    result=result,
                     execution_time_ms=(time.time() - start_time) * 1000,
                 )
 
-            return SubsystemResponse(
-                command_id=command.command_id,
-                success=success,
-                result=result,
-                execution_time_ms=(time.time() - start_time) * 1000,
-            )
+            except Exception as e:
+                self.logger.error("Command execution failed: %s", e)
+                return SubsystemResponse(
+                    command_id=command.command_id,
+                    success=False,
+                    error=str(e),
+                    execution_time_ms=(time.time() - start_time) * 1000,
+                )
 
-        except Exception as e:
-            self.logger.error("Command execution failed: %s", e)
-            return SubsystemResponse(
-                command_id=command.command_id,
-                success=False,
-                error=str(e),
-                execution_time_ms=(time.time() - start_time) * 1000,
-            )
+        approved, result = _gov_execute(
+            "situational_awareness",
+            command.command_type,
+            command.parameters or {},
+            _dispatch,
+        )
+        if not approved:
+            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+        return result
 
     def get_supported_commands(self) -> list[str]:
         """Get list of supported command types."""

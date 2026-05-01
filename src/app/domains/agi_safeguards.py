@@ -103,19 +103,32 @@ class AGISafeguardsSubsystem(
         return status
 
     def execute_command(self, command: SubsystemCommand) -> SubsystemResponse:
-        start_time = time.time()
-        try:
-            if command.command_type == "monitor_ai_system":
-                monitor = self._monitor_system(command.parameters)
-                return SubsystemResponse(
-                    command.command_id,
-                    monitor is not None,
-                    {"system_id": monitor.system_id} if monitor else None,
-                    execution_time_ms=(time.time() - start_time) * 1000,
-                )
-            return SubsystemResponse(command.command_id, False, error="Unknown command")
-        except Exception as e:
-            return SubsystemResponse(command.command_id, False, error=str(e))
+        from app.core.execution_router import execute as _gov_execute
+
+        def _dispatch(_ctx: dict) -> SubsystemResponse:
+            start_time = time.time()
+            try:
+                if command.command_type == "monitor_ai_system":
+                    monitor = self._monitor_system(command.parameters)
+                    return SubsystemResponse(
+                        command.command_id,
+                        monitor is not None,
+                        {"system_id": monitor.system_id} if monitor else None,
+                        execution_time_ms=(time.time() - start_time) * 1000,
+                    )
+                return SubsystemResponse(command.command_id, False, error="Unknown command")
+            except Exception as e:
+                return SubsystemResponse(command.command_id, False, error=str(e))
+
+        approved, result = _gov_execute(
+            "agi_safeguards",
+            command.command_type,
+            command.parameters or {},
+            _dispatch,
+        )
+        if not approved:
+            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+        return result
 
     def get_supported_commands(self) -> list[str]:
         return ["monitor_ai_system", "verify_alignment"]
