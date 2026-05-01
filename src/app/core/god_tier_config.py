@@ -1,7 +1,6 @@
 """
-God Tier Configuration System
-Comprehensive YAML-based configuration for all components.
-Production-grade, fully integrated.
+YAML-based configuration system for multimodal AI integration.
+Covers voice, visual, camera, conversation, policy, fusion, logging, and storage.
 """
 
 import logging

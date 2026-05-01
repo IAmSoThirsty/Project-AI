@@ -1,15 +1,6 @@
-#!/usr/bin/env python3
 """
-Advanced Boot System - God Tier Architecture
-Project-AI Defense Engine
-
-Implements:
-1. Staged Boot Profiles - Different initialization sequences for different scenarios
-2. Emergency-Only Mode - Minimal critical subsystems for crisis operations
-3. Ethics-First Cold Start - Ethics validation before system initialization
-4. Audit Replay - Complete event reconstruction and time-travel debugging
-
-Monolithic Density: All advanced boot features in one cohesive system.
+Advanced boot system — staged profiles, emergency mode, ethics-first cold start,
+audit replay, governance-aware profile transitions, and boot invariants.
 """
 
 import json
@@ -20,11 +11,13 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable, Literal, Optional
 
-# Import event spine and governance graph for wiring
 from app.core.event_spine import EventCategory, EventPriority, get_event_spine
 from app.core.governance_graph import get_governance_graph
+
+BootPhase = Literal["pre_boot", "post_boot"]
+BootInvariantFn = Callable[["AdvancedBootSystem", BootPhase], None]
 
 logger = logging.getLogger(__name__)
 
@@ -96,6 +89,20 @@ class AuditEvent:
         return cls(**data)
 
 
+class BootProfileTransitionError(Exception):
+    """Raised when an invalid or unauthorized boot profile transition is attempted."""
+
+
+@dataclass
+class BootProfileTransitionRule:
+    """Governance-aware rule for boot profile transitions."""
+
+    source: Optional[BootProfile]  # None = from uninitialized
+    target: BootProfile
+    requires_governance_decision: bool = True
+    description: str = ""
+
+
 class AdvancedBootSystem:
     """
     Advanced Boot System - God Tier Architecture
@@ -164,6 +171,12 @@ class AdvancedBootSystem:
             "ethics_approvals_granted": 0,
             "emergency_activations": 0,
         }
+
+        # Governance-aware boot profile transition rules + boot invariants
+        self._boot_invariants: list[BootInvariantFn] = []
+        self._profile_transition_rules: list[BootProfileTransitionRule] = []
+        self._initialize_profile_transition_rules()
+        self._initialize_boot_invariants()
 
         # Thread safety
         self._lock = threading.RLock()
@@ -261,6 +274,126 @@ class AdvancedBootSystem:
             metadata={"security_level": "maximum", "paranoid_mode": True},
         )
 
+    # ------------------------------------------------------------------
+    # Profile transition rules (governance-aware)
+    # ------------------------------------------------------------------
+
+    def _initialize_profile_transition_rules(self) -> None:
+        rules: list[BootProfileTransitionRule] = []
+
+        for target in BootProfile:
+            rules.append(BootProfileTransitionRule(
+                source=None, target=target, requires_governance_decision=True,
+                description=f"Initial boot into {target.value}",
+            ))
+
+        for src, tgt, desc in [
+            (BootProfile.NORMAL, BootProfile.EMERGENCY, "Escalation from NORMAL to EMERGENCY"),
+            (BootProfile.EMERGENCY, BootProfile.NORMAL, "De-escalation from EMERGENCY to NORMAL"),
+            (BootProfile.NORMAL, BootProfile.ETHICS_FIRST, "Reboot into ethics-first cold start"),
+            (BootProfile.ETHICS_FIRST, BootProfile.NORMAL, "Exit ethics-first mode into NORMAL"),
+        ]:
+            rules.append(BootProfileTransitionRule(source=src, target=tgt,
+                requires_governance_decision=True, description=desc))
+
+        non_emergency = (
+            BootProfile.DIAGNOSTIC, BootProfile.RECOVERY, BootProfile.MINIMAL,
+            BootProfile.AIR_GAPPED, BootProfile.ADVERSARIAL,
+        )
+        for target in non_emergency:
+            rules.append(BootProfileTransitionRule(
+                source=BootProfile.NORMAL, target=target, requires_governance_decision=True,
+                description=f"Transition from NORMAL to {target.value}",
+            ))
+        for source in non_emergency:
+            rules.append(BootProfileTransitionRule(
+                source=source, target=BootProfile.NORMAL, requires_governance_decision=True,
+                description=f"Transition from {source.value} to NORMAL",
+            ))
+
+        self._profile_transition_rules = rules
+
+    def _find_profile_transition_rule(
+        self, source: Optional[BootProfile], target: BootProfile
+    ) -> Optional[BootProfileTransitionRule]:
+        for rule in self._profile_transition_rules:
+            if rule.source == source and rule.target == target:
+                return rule
+        return None
+
+    def _validate_profile_transition(self, new_profile: BootProfile) -> BootProfileTransitionRule:
+        current = self._current_profile
+        rule = self._find_profile_transition_rule(current, new_profile)
+        if rule is None:
+            raise BootProfileTransitionError(
+                f"Illegal boot profile transition: {current} -> {new_profile}"
+            )
+        return rule
+
+    def _emit_profile_transition_governance_decision(
+        self, rule: BootProfileTransitionRule, event_id: str
+    ) -> None:
+        current_val = self._current_profile.value if self._current_profile else None
+        payload = {
+            "decision_type": "boot_profile_transition",
+            "from_profile": current_val,
+            "to_profile": rule.target.value,
+            "requires_governance_decision": rule.requires_governance_decision,
+            "description": rule.description,
+        }
+        try:
+            get_event_spine().publish(
+                category=EventCategory.GOVERNANCE_DECISION,
+                source_domain="advanced_boot",
+                payload=payload,
+                priority=EventPriority.HIGH,
+                metadata={"event_id": event_id},
+            )
+        except Exception as e:
+            logger.warning("Failed to emit profile transition governance event: %s", e)
+
+    # ------------------------------------------------------------------
+    # Boot invariants
+    # ------------------------------------------------------------------
+
+    def _initialize_boot_invariants(self) -> None:
+        def invariant_profile_set_before_boot_start(
+            system: "AdvancedBootSystem", phase: BootPhase
+        ) -> None:
+            if phase == "pre_boot" and system._current_profile is None:
+                raise RuntimeError(
+                    "Boot invariant violated: boot profile must be set before start_boot()"
+                )
+
+        def invariant_emergency_requires_activation(
+            system: "AdvancedBootSystem", phase: BootPhase
+        ) -> None:
+            if phase == "post_boot" and system._current_profile == BootProfile.EMERGENCY:
+                if system._boot_stats.get("emergency_activations", 0) <= 0:
+                    raise RuntimeError(
+                        "Boot invariant violated: EMERGENCY profile without emergency activation"
+                    )
+
+        self._boot_invariants.extend([
+            invariant_profile_set_before_boot_start,
+            invariant_emergency_requires_activation,
+        ])
+
+    def register_boot_invariant(self, fn: BootInvariantFn) -> None:
+        """Register an additional boot invariant."""
+        with self._lock:
+            self._boot_invariants.append(fn)
+
+    def _run_boot_invariants(self, phase: BootPhase) -> None:
+        for invariant in list(self._boot_invariants):
+            invariant(self, phase)
+
+    def _new_event_id(self, event_type: str, scope: str) -> str:
+        safe_scope = str(scope).replace(" ", "_").replace("/", "_")
+        return f"{event_type}_{safe_scope}_{int(time.time() * 1000)}"
+
+    # ------------------------------------------------------------------
+
     def set_boot_profile(self, profile: BootProfile) -> bool:
         """
         Set the boot profile for the next initialization.
@@ -271,25 +404,36 @@ class AdvancedBootSystem:
         Returns:
             True if profile set successfully
         """
-        with self._lock:
-            if profile not in self._profiles:
-                logger.error("Unknown boot profile: %s", profile)
-                return False
+        try:
+            rule = self._validate_profile_transition(profile)
+        except BootProfileTransitionError as e:
+            logger.error(str(e))
+            return False
 
+        with self._lock:
+            previous_profile = self._current_profile
             self._current_profile = profile
             self._current_profile_config = self._profiles[profile]
 
-            self._audit_event(
-                event_type="profile_changed",
-                action="set_boot_profile",
-                context={"profile": profile.value},
-                result="success",
-            )
+        event_id = self._new_event_id("profile_changed", profile.value)
 
-            logger.info("Boot profile set to: %s", profile.value)
-            logger.info("  Description: %s", self._current_profile_config.description)
+        if rule.requires_governance_decision:
+            self._emit_profile_transition_governance_decision(rule, event_id)
 
-            return True
+        self._audit_event(
+            event_type="profile_changed",
+            action="set_boot_profile",
+            context={
+                "from_profile": previous_profile.value if previous_profile else None,
+                "profile": profile.value,
+            },
+            result="success",
+        )
+
+        logger.info("Boot profile set to: %s", profile.value)
+        logger.info("  Description: %s", self._current_profile_config.description)
+
+        return True
 
     def get_current_profile(self) -> BootProfile | None:
         """Get current boot profile."""
@@ -863,6 +1007,9 @@ class AdvancedBootSystem:
         if profile:
             self.set_boot_profile(profile)
 
+        # Validate pre-boot invariants before recording anything
+        self._run_boot_invariants("pre_boot")
+
         with self._lock:
             self._boot_stats["profile"] = (
                 self._current_profile.value if self._current_profile else None
@@ -892,6 +1039,9 @@ class AdvancedBootSystem:
         """Finish boot sequence."""
         with self._lock:
             self._boot_stats["end_time"] = datetime.now().isoformat()
+
+        # Validate post-boot invariants before declaring success
+        self._run_boot_invariants("post_boot")
 
         self._audit_event(
             event_type="boot",
