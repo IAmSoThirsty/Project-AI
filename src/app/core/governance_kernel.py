@@ -69,6 +69,21 @@ class GovernanceKernel:
                 f"Triumvirate denied: {tri_decision.reason}",
             )
 
+        # ML Triumvirate — second validation layer (Codex + Galahad + Cerberus engines).
+        # Runs after rule-based Triumvirate passes; only blocks on explicit error signal.
+        try:
+            from cognition.triumvirate import Triumvirate as MLTriumvirate, TriumvirateConfig
+            _ml_result = MLTriumvirate(TriumvirateConfig()).process(
+                {"domain": domain, "action": action, "context": context}
+            )
+            if not _ml_result.get("success", True) and _ml_result.get("error"):
+                return self._reject(
+                    decision_id, domain, action, context,
+                    f"ML Triumvirate: {_ml_result.get('error')}",
+                )
+        except Exception:
+            pass  # ML Triumvirate unavailable — continue
+
         chain = self.graph.get_authority_chain(domain)
 
         self.spine.publish(

@@ -606,6 +606,115 @@ class OperationalComponent:
 
 
 # ============================================================================
+# Default Implementations + DomainOperationalMixin
+# ============================================================================
+
+
+class DefaultDecisionContract(DecisionContract):
+    """Generic decision contract with sensible defaults for domain classes."""
+
+    def get_contract_specification(self) -> dict[str, Any]:
+        return {
+            "component": self.component_name,
+            "authorities": {k: v.to_dict() for k, v in self.authorities.items()},
+            "decision_log_size": len(self.decision_log),
+        }
+
+
+class DefaultSignalsTelemetry(SignalsTelemetry):
+    """Generic signals/telemetry with sensible defaults for domain classes."""
+
+    def get_telemetry_specification(self) -> dict[str, Any]:
+        return {
+            "component": self.component_name,
+            "signal_types": [st.value for st in SignalType],
+            "metrics": self.get_metrics(),
+            "signal_history_size": len(self.signal_history),
+        }
+
+
+class DefaultFailureSemantics(FailureSemantics):
+    """Generic failure semantics with sensible defaults for domain classes."""
+
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any]
+    ) -> FailureResponse:
+        critical = failure_mode in (FailureMode.TOTAL_FAILURE, FailureMode.COMPROMISED)
+        return FailureResponse(
+            failure_mode=failure_mode,
+            degradation_path=["reduce_throughput", "enter_safe_mode"],
+            failover_target="ManualReview" if critical else None,
+            escalation_required=critical,
+            recovery_procedure=["restart_subsystem", "restore_last_known_good"],
+        )
+
+    def get_failure_specification(self) -> dict[str, Any]:
+        return {
+            "component": self.component_name,
+            "supported_failure_modes": [fm.value for fm in FailureMode],
+            "current_mode": (
+                self.current_failure_mode.value if self.current_failure_mode else None
+            ),
+            "history_size": len(self.failure_history),
+        }
+
+
+class DomainOperationalMixin:
+    """
+    Mixin that injects OperationalComponent capabilities into any domain class.
+
+    Add as a base class alongside BaseSubsystem:
+
+        class MyDomain(BaseSubsystem, DomainOperationalMixin):
+            ...
+
+    Provides:
+        - get_contract_specification()
+        - get_telemetry_specification()
+        - create_failure_response()
+        - get_failure_specification()
+        - get_operational_status()
+    """
+
+    _dom_oc: "OperationalComponent | None" = None
+
+    def _get_oc(self) -> "OperationalComponent":
+        if self._dom_oc is None:
+            name = getattr(self, "name", type(self).__name__)
+            self._dom_oc = OperationalComponent(
+                component_name=name,
+                decision_contract=DefaultDecisionContract(name),
+                signals_telemetry=DefaultSignalsTelemetry(name),
+                failure_semantics=DefaultFailureSemantics(name),
+            )
+        return self._dom_oc
+
+    def get_contract_specification(self) -> dict[str, Any]:
+        """Return this domain's decision contract specification."""
+        return self._get_oc().decision_contract.get_contract_specification()
+
+    def get_telemetry_specification(self) -> dict[str, Any]:
+        """Return this domain's signals/telemetry specification."""
+        return self._get_oc().signals_telemetry.get_telemetry_specification()
+
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any] | None = None
+    ) -> FailureResponse:
+        """Create a failure response for a given failure mode."""
+        return self._get_oc().failure_semantics.create_failure_response(
+            failure_mode, context or {}
+        )
+
+    def get_failure_specification(self) -> dict[str, Any]:
+        """Return this domain's failure semantics specification."""
+        return self._get_oc().failure_semantics.get_failure_specification()
+
+    def get_operational_status(self) -> dict[str, Any]:
+        """Return complete operational status (contracts + telemetry + failure state)."""
+        return self._get_oc().get_operational_status()
+
+
+# ============================================================================
 # Module Exports
 # ============================================================================
 
@@ -624,5 +733,10 @@ __all__ = [
     "SignalsTelemetry",
     "FailureSemantics",
     "OperationalComponent",
+    # Default implementations
+    "DefaultDecisionContract",
+    "DefaultSignalsTelemetry",
+    "DefaultFailureSemantics",
+    "DomainOperationalMixin",
 ]
 

@@ -19,6 +19,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class Scenario:
     probability: float
 
 
-class DeepExpansionSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
+class DeepExpansionSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
     SUBSYSTEM_METADATA = {
         "id": "deep_expansion",
         "name": "Deep Expansion Protocols",

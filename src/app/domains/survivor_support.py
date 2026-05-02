@@ -19,6 +19,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class Survivor:
     needs: list[str] = field(default_factory=list)
 
 
-class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
+class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
     SUBSYSTEM_METADATA = {
         "id": "survivor_support",
         "name": "Survivor Support",

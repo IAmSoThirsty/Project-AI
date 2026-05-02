@@ -26,6 +26,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +59,7 @@ class PatientRecord:
 
 
 class BiomedicalDefenseSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin
 ):
 
     SUBSYSTEM_METADATA = {

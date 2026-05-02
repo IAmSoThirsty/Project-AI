@@ -14,10 +14,14 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-# Ensure src/ is on the path so execution_router and friends are importable.
+# Ensure src/ and repo root are on the path.
 _SRC_PATH = str(Path(__file__).resolve().parent.parent / "src")
 if _SRC_PATH not in sys.path:
     sys.path.insert(0, _SRC_PATH)
+
+_REPO_ROOT = str(Path(__file__).resolve().parent.parent)
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
 
 try:
     from app.core.execution_router import execute as _gov_execute
@@ -35,6 +39,43 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Directness Doctrine middleware — rewrites euphemistic language in JSON responses.
+try:
+    from starlette.middleware.base import BaseHTTPMiddleware
+    from starlette.responses import Response as _StarletteResponse
+
+    class DirectnessMiddleware(BaseHTTPMiddleware):
+        async def dispatch(self, request, call_next):
+            response = await call_next(request)
+            content_type = response.headers.get("content-type", "")
+            if "application/json" not in content_type:
+                return response
+            # Consume body so it can be rewritten.
+            chunks = []
+            async for chunk in response.body_iterator:
+                chunks.append(chunk)
+            body = b"".join(chunks)
+            try:
+                from app.core.directness import get_directness
+                data = json.loads(body)
+                if isinstance(data, dict):
+                    _d = get_directness()
+                    for k, v in list(data.items()):
+                        if isinstance(v, str) and v:
+                            data[k] = _d.apply_directness(v).revised_text
+                body = json.dumps(data).encode()
+            except Exception:
+                pass  # non-fatal — serve original body
+            return _StarletteResponse(
+                content=body,
+                status_code=response.status_code,
+                media_type="application/json",
+            )
+
+    app.add_middleware(DirectnessMiddleware)
+except Exception:
+    pass  # graceful degrade if starlette not available
 
 # Include Legion/OpenClaw router
 try:
@@ -524,6 +565,65 @@ async def governed_execute(intent: Intent):
         "governance": result.dict(),
         "execution": execution,
     }
+
+
+# ==========================================================
+# IronPath — Governed ML Pipeline Execution
+# ==========================================================
+
+
+class PipelineRequest(BaseModel):
+    pipeline_path: str
+    context: dict[str, Any] = Field(default_factory=dict)
+
+
+@app.post("/pipeline")
+async def run_pipeline(req: PipelineRequest):
+    """Execute a sovereign IronPath ML pipeline under full governance."""
+    if not _GOVERNANCE_PIPELINE_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Governance pipeline unavailable")
+
+    def _dispatch(_ctx: dict) -> dict[str, Any]:
+        import sys as _sys
+        _root = str(Path(__file__).resolve().parent.parent)
+        if _root not in _sys.path:
+            _sys.path.insert(0, _root)
+        from governance.iron_path import IronPathExecutor
+        executor = IronPathExecutor(pipeline_path=req.pipeline_path)
+        executor.load_pipeline()
+        return executor.execute()
+
+    approved, result = _gov_execute(
+        "iron_path",
+        "pipeline_execute",
+        {**req.context, "pipeline_path": req.pipeline_path},
+        _dispatch,
+    )
+    if not approved:
+        raise HTTPException(
+            status_code=403,
+            detail={"message": "Governance denied pipeline execution", "reason": str(result)},
+        )
+    return {"status": "completed", "result": result}
+
+
+# ==========================================================
+# SovereignVerifier — Compliance Bundle Attestation
+# ==========================================================
+
+
+@app.get("/verify")
+def verify_compliance_bundle(bundle_path: str):
+    """Cryptographically verify a sovereign compliance bundle (third-party auditor)."""
+    try:
+        import sys as _sys
+        _root = str(Path(__file__).resolve().parent.parent)
+        if _root not in _sys.path:
+            _sys.path.insert(0, _root)
+        from governance.sovereign_verifier import SovereignVerifier
+        return SovereignVerifier(bundle_path).verify()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ==========================================================

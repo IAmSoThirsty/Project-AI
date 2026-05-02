@@ -1054,6 +1054,32 @@ class AdvancedBootSystem:
         # Validate post-boot invariants before declaring success
         self._run_boot_invariants("post_boot")
 
+        # Phase 7a — Drift monitor: background analysis of governance alignment.
+        try:
+            from app.core.governance_drift_monitor import GovernanceDriftMonitor
+            threading.Thread(
+                target=lambda: GovernanceDriftMonitor().analyze_drift(),
+                daemon=True,
+                name="drift-monitor",
+            ).start()
+        except Exception:
+            pass
+
+        # Phase 9 — Guardian approval for high-impact boot profiles.
+        try:
+            from app.core.guardian_approval_system import GuardianApprovalSystem, ImpactLevel
+            _profile = self._boot_stats.get("profile", "")
+            if _profile in ("adversarial", "air_gapped"):
+                GuardianApprovalSystem().create_approval_request(
+                    title=f"High-impact boot: {_profile}",
+                    description=f"Boot sequence completed in profile: {_profile}",
+                    change_type="deployment",
+                    impact_level=ImpactLevel.HIGH,
+                    requested_by="advanced_boot",
+                )
+        except Exception:
+            pass
+
         self._audit_event(
             event_type="boot",
             action="finish",

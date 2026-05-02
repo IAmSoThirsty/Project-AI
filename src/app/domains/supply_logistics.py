@@ -36,6 +36,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -124,7 +125,8 @@ class DistributionRoute:
 
 
 class SupplyLogisticsSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable, IResourceManager
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, IResourceManager,
+    DomainOperationalMixin,
 ):
     """
     Supply Logistics Subsystem

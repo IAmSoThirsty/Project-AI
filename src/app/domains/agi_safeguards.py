@@ -19,6 +19,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,8 @@ class AISystemMonitor:
 
 
 class AGISafeguardsSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable, ISecureSubsystem
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, ISecureSubsystem,
+    DomainOperationalMixin,
 ):
     SUBSYSTEM_METADATA = {
         "id": "agi_safeguards",

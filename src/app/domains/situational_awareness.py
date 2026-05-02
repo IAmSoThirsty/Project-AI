@@ -37,6 +37,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -116,6 +117,7 @@ class SituationalAwarenessSubsystem(
     IObservable,
     ISensorFusion,
     IThreatDetection,
+    DomainOperationalMixin,
 ):
     """
     Situational Awareness Subsystem

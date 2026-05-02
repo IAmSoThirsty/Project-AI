@@ -36,6 +36,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +135,8 @@ class CommandMessage:
 
 
 class CommandControlSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable, ICommunication
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, ICommunication,
+    DomainOperationalMixin,
 ):
     """
     Command & Control Subsystem

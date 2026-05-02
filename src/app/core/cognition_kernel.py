@@ -549,6 +549,30 @@ class CognitionKernel:
         # Freeze identity snapshot (immutable, governance can only observe)
         identity_snapshot = self._freeze_identity_snapshot()
 
+        # Bridge: route through canonical governance pipeline (dry-run).
+        # All 32 agents inherit waterfall → Liara → RuntimeEnforcer → invariants →
+        # GovernanceKernel / Triumvirate / Fates / ledger before any local check.
+        try:
+            from app.core.execution_router import execute as _gov_execute
+            _allowed, _reason = _gov_execute(
+                domain="cognition",
+                action=action.action_name,
+                context={
+                    "user_id": context.user_id,
+                    "trace_id": context.trace_id,
+                    "payload": str(getattr(action, "kwargs", {})),
+                    "identity_snapshot": identity_snapshot,
+                },
+                executor_fn=lambda _ctx: None,  # dry-run; kernel owns actual execution
+            )
+            if not _allowed:
+                context.status = ExecutionStatus.BLOCKED
+                raise ConstitutionalFault(f"Governance pipeline denied: {_reason}")
+        except ConstitutionalFault:
+            raise
+        except Exception:
+            pass  # bridge unavailable — fall through to internal governance
+
         # Check governance with frozen snapshot
         decision = self._check_governance(action, context, identity_snapshot)
 
@@ -768,6 +792,23 @@ class CognitionKernel:
 
             except Exception as e:
                 logger.error("[%s] Memory commit failed: %s", context.trace_id, e)
+
+            # Episodic memory bridge — richer semantic record for drift analysis.
+            try:
+                self.memory_engine.store_episodic_memory(
+                    event_type="kernel_execution",
+                    description=context.proposed_action.action_name,
+                    participants=[
+                        context.source or "kernel",
+                        context.user_id or "system",
+                    ],
+                    sensory_details={
+                        "trace_id": context.trace_id,
+                        "status": context.status.value,
+                    },
+                )
+            except Exception:
+                pass
 
         # Append immutable decision record (signed, linked) for every action.
         try:

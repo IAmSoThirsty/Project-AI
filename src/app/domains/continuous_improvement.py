@@ -18,6 +18,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class Improvement:
 
 
 class ContinuousImprovementSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin
 ):
     SUBSYSTEM_METADATA = {
         "id": "continuous_improvement",

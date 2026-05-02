@@ -26,6 +26,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,7 @@ class TacticalDecision:
     timestamp: datetime = field(default_factory=datetime.now)
 
 
-class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
+class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
 
     SUBSYSTEM_METADATA = {
         "id": "tactical_edge_ai",
