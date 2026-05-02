@@ -116,6 +116,16 @@ class GovernanceKernel:
             get_ledger().attest(record)
         except Exception:
             pass
+        try:
+            from app.governance.audit_log import AuditLog
+            AuditLog().log_event(
+                event_type="governance_approved",
+                data={"domain": domain, "action": action, "decision_id": record.decision_id},
+                actor=domain,
+                description=f"{action} approved for {domain}",
+            )
+        except Exception:
+            pass
         return True, record
 
     def _reject(
@@ -148,6 +158,16 @@ class GovernanceKernel:
             pass
         try:
             get_ledger().attest(record)
+        except Exception:
+            pass
+        try:
+            from app.governance.audit_log import AuditLog
+            AuditLog().log_event(
+                event_type="governance_denied",
+                data={"domain": domain, "action": action, "decision_id": record.decision_id},
+                actor=domain,
+                description=f"{action} denied for {domain}: {reason}",
+            )
         except Exception:
             pass
         return False, record

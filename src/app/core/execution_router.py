@@ -29,11 +29,43 @@ def execute(
     liara_ttl_check(context)
     context = {**context, **get_liara_context()}
 
+    # 2.5. Runtime enforcement — consent / PAGL prohibitions / tier / sovereign.
+    try:
+        from app.governance.runtime_enforcer import get_runtime_enforcer, EnforcementContext
+        _enforce_ctx = EnforcementContext(
+            user_id=context.get("user_id", "anonymous"),
+            action=action,
+            is_commercial=context.get("is_commercial", False),
+            is_government=context.get("is_government", False),
+            metadata=context,
+        )
+        _enforce_result = get_runtime_enforcer().enforce(_enforce_ctx)
+        if _enforce_result.verdict == "deny":
+            return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
+    except Exception:
+        pass
+
     # 3. State Register — inject temporal context for anti-gaslighting checks.
     try:
         sr = get_state_register()
         temporal = sr.get_temporal_context()
         context = {**context, "_temporal": temporal}
+    except Exception:
+        pass
+
+    # 3.5. Trust scoring + adversarial pattern detection.
+    try:
+        from app.core.tarl_operational_extensions import (
+            TrustScoringEngine, AdversarialPatternRegistry,
+        )
+        _trust_score, _ = TrustScoringEngine().calculate_trust_score(
+            context.get("user_id", "anonymous"),
+            {"behavioral": 0.7, "security": 0.7, "governance": 0.7, "pattern": 0.7},
+        )
+        _adv_flags = AdversarialPatternRegistry().detect_patterns(
+            str(context.get("payload", ""))
+        )
+        context = {**context, "_trust_score": _trust_score, "_adversarial_flags": _adv_flags}
     except Exception:
         pass
 
