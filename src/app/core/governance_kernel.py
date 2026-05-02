@@ -12,6 +12,7 @@ from app.core.event_spine import EventCategory, EventPriority, get_event_spine
 from app.core.governance_graph import get_governance_graph
 from app.core.fates import get_fates
 from app.core.constitutional_ledger import get_ledger
+from app.core.governance import GovernanceContext, Triumvirate
 
 
 @dataclass
@@ -31,6 +32,7 @@ class GovernanceKernel:
     def __init__(self) -> None:
         self.graph = get_governance_graph()
         self.spine = get_event_spine()
+        self.triumvirate = Triumvirate()
 
     def evaluate_action(
         self,
@@ -49,6 +51,22 @@ class GovernanceKernel:
                 action,
                 context,
                 f"Consultation required: {consult_required}",
+            )
+
+        # 3-guardian Triumvirate evaluation (Galahad / Cerberus / Codex).
+        gov_ctx = GovernanceContext.from_dict(
+            {k: v for k, v in context.items() if hasattr(GovernanceContext, k)}
+        )
+        gov_ctx.action_type = action
+        gov_ctx.description = f"{domain}.{action}"
+        tri_decision = self.triumvirate.evaluate_action(action, gov_ctx)
+        if not tri_decision.allowed:
+            return self._reject(
+                decision_id,
+                domain,
+                action,
+                context,
+                f"Triumvirate denied: {tri_decision.reason}",
             )
 
         chain = self.graph.get_authority_chain(domain)
