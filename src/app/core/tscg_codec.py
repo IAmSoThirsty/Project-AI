@@ -24,17 +24,25 @@ logger = logging.getLogger(__name__)
 
 
 class SymbolType(Enum):
-    """Types of symbols in TSCG grammar."""
+    """Types of symbols in TSCG grammar (UTF canonical taxonomy)."""
     STATE = "S"           # General state marker
     TEMPORAL = "T"        # Temporal/timestamp marker
     MEMORY = "M"          # Memory fragment marker
     INTENT = "I"          # Intent marker
-    EMOTION = "E"         # Emotional state marker
     COVENANT = "C"        # Covenant/agreement marker
     DIRECTNESS = "D"      # Directness doctrine marker
     GAP = "G"             # Human gap marker
     REGISTER = "R"        # State register marker
-    REFLEX = "X"          # OctoReflex enforcement marker
+    # Correct TSCG symbol taxonomy (replaces the former EMOTION = "E" placeholder)
+    COG = "COG"           # Cognitive processing state
+    DELTA_NT = "DNT"      # Neurotransmitter-analogous state delta (emotional/neurochemical)
+    SHD = "SHD"           # Shadow Thirsty encoding (low-resource/shadow mode)
+    INV = "INV"           # Invariant assertion marker
+    CAP = "CAP"           # Capability assertion marker
+    QRM = "QRM"           # Quorum marker
+    COM = "COM"           # Communication channel marker
+    ANC = "ANC"           # Anchor point (temporal/identity)
+    RFX = "RFX"           # Reflex/enforcement marker
 
 
 @dataclass
@@ -135,13 +143,27 @@ class TSCGSemanticDictionary:
             "continuity_break": "CBk",
             "time_anchor": "TA",
             
-            # Emotional/Consciousness states
-            "awareness": "AW",
-            "concern": "CN",
-            "certainty": "CT",
-            "uncertainty": "UC",
-            "obligation": "OB",
-            "violation": "VL",
+            # TSCG canonical state taxonomy (COG / DELTA_NT / SHD / INV / CAP / QRM / COM / ANC / RFX)
+            "cognitive_processing": "COG",
+            "attention_shift": "COG",
+            "reasoning_state": "COG",
+            "neurotransmitter_delta": "DNT",
+            "valence_shift": "DNT",
+            "arousal_level": "DNT",
+            "shadow_mode": "SHD",
+            "low_resource_operation": "SHD",
+            "invariant_assertion": "INV",
+            "invariant_violation": "INV",
+            "capability_online": "CAP",
+            "capability_offline": "CAP",
+            "quorum_pending": "QRM",
+            "quorum_reached": "QRM",
+            "channel_open": "COM",
+            "channel_closed": "COM",
+            "temporal_anchor": "ANC",
+            "identity_anchor": "ANC",
+            "reflex_trigger": "RFX",
+            "enforcement_action": "RFX",
         }
         
         for concept, symbol in core_mappings.items():

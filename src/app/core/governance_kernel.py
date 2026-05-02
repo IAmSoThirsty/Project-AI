@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional, Tuple
 
 from app.core.event_spine import EventCategory, EventPriority, get_event_spine
 from app.core.governance_graph import get_governance_graph
+from app.core.fates import get_fates
 
 
 @dataclass
@@ -82,6 +83,16 @@ class GovernanceKernel:
             reason=None,
             output_hash=self._hash_output(domain, action, context),
         )
+        try:
+            get_fates().remember(
+                agents_involved=[domain],
+                event_type="governance_approved",
+                description=f"{action} approved for {domain}",
+                decision_made="APPROVED",
+                paths_considered=[action],
+            )
+        except Exception:
+            pass
         return True, record
 
     def _reject(
@@ -102,6 +113,16 @@ class GovernanceKernel:
             reason=reason,
             output_hash=self._hash_output(domain, action, context),
         )
+        try:
+            get_fates().remember(
+                agents_involved=[domain],
+                event_type="governance_denied",
+                description=f"{action} denied for {domain}: {reason}",
+                decision_made="DENIED",
+                paths_considered=[action],
+            )
+        except Exception:
+            pass
         return False, record
 
     def _hash_output(self, domain: str, action: str, context: Dict[str, Any]) -> str:
