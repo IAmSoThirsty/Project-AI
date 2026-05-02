@@ -4,13 +4,26 @@
 
 import hashlib
 import json
+import sys
 import time
 from enum import StrEnum
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+
+# Ensure src/ is on the path so execution_router and friends are importable.
+_SRC_PATH = str(Path(__file__).resolve().parent.parent / "src")
+if _SRC_PATH not in sys.path:
+    sys.path.insert(0, _SRC_PATH)
+
+try:
+    from app.core.execution_router import execute as _gov_execute
+    _GOVERNANCE_PIPELINE_AVAILABLE = True
+except ImportError:
+    _GOVERNANCE_PIPELINE_AVAILABLE = False
 
 app = FastAPI(title="Project AI Governance Host", version="0.1.0")
 
@@ -393,16 +406,67 @@ def write_audit(record: GovernanceResult):
 
 
 class SandboxExecutor:
-    """All executions occur here. Nothing outside this class mutates state."""
+    """
+    All executions occur here. Nothing outside this class mutates state.
+
+    When the full governance pipeline is available (src/ on sys.path), execution
+    is routed through execution_router.execute() — waterfall → Liara TTL check →
+    State Register temporal injection → invariant engine → execution gate
+    (governance kernel / Triumvirate / Fates / constitutional ledger).
+
+    When the pipeline is unavailable (e.g., isolated API tests), falls back to
+    the original no-op sandbox.
+    """
 
     @staticmethod
     def execute(intent: Intent) -> dict[str, Any]:
-        # Placeholder for real execution logic
-        return {
-            "status": "executed",
-            "note": "Sandbox execution completed",
-            "target": intent.target,
+        if not _GOVERNANCE_PIPELINE_AVAILABLE:
+            # Fallback: no-op sandbox (pipeline not reachable)
+            return {
+                "status": "executed",
+                "note": "Sandbox execution completed (pipeline unavailable)",
+                "target": intent.target,
+            }
+
+        # Build context from the intent.
+        try:
+            ctx = intent.dict()
+        except AttributeError:
+            ctx = intent.model_dump()  # Pydantic v2 compat
+        context = {
+            **ctx.get("context", {}),
+            "actor": intent.actor.value,
+            "origin": intent.origin,
+            "action_type": intent.action.value,
+            "_intent_hash": hash_intent(intent),
         }
+
+        # The executor_fn — called only if governance approves.
+        def _dispatch(_ctx: dict) -> dict[str, Any]:
+            return {
+                "status": "executed",
+                "note": "Governed execution completed",
+                "target": intent.target,
+                "actor": intent.actor.value,
+            }
+
+        approved, result = _gov_execute(
+            domain=intent.target,
+            action=intent.action.value,
+            context=context,
+            executor_fn=_dispatch,
+        )
+
+        if not approved:
+            raise HTTPException(
+                status_code=403,
+                detail={
+                    "message": "Governance pipeline denied execution",
+                    "reason": str(result),
+                },
+            )
+
+        return result
 
 
 # ==========================================================
