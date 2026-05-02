@@ -11,6 +11,7 @@ from typing import Any, Dict, Optional, Tuple
 from app.core.event_spine import EventCategory, EventPriority, get_event_spine
 from app.core.governance_graph import get_governance_graph
 from app.core.fates import get_fates
+from app.core.constitutional_ledger import get_ledger
 
 
 @dataclass
@@ -93,6 +94,10 @@ class GovernanceKernel:
             )
         except Exception:
             pass
+        try:
+            get_ledger().attest(record)
+        except Exception:
+            pass
         return True, record
 
     def _reject(
@@ -121,6 +126,10 @@ class GovernanceKernel:
                 decision_made="DENIED",
                 paths_considered=[action],
             )
+        except Exception:
+            pass
+        try:
+            get_ledger().attest(record)
         except Exception:
             pass
         return False, record
