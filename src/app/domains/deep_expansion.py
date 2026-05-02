@@ -19,6 +19,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class Scenario:
     probability: float
 
 
-class DeepExpansionSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
+class DeepExpansionSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
     SUBSYSTEM_METADATA = {
         "id": "deep_expansion",
         "name": "Deep Expansion Protocols",
@@ -99,19 +100,32 @@ class DeepExpansionSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserva
         return status
 
     def execute_command(self, command: SubsystemCommand) -> SubsystemResponse:
-        start_time = time.time()
-        try:
-            if command.command_type == "simulate_scenario":
-                scenario = self._simulate_scenario(command.parameters)
-                return SubsystemResponse(
-                    command.command_id,
-                    scenario is not None,
-                    {"scenario_id": scenario.scenario_id} if scenario else None,
-                    execution_time_ms=(time.time() - start_time) * 1000,
-                )
-            return SubsystemResponse(command.command_id, False, error="Unknown command")
-        except Exception as e:
-            return SubsystemResponse(command.command_id, False, error=str(e))
+        from app.core.execution_router import execute as _gov_execute
+
+        def _dispatch(_ctx: dict) -> SubsystemResponse:
+            start_time = time.time()
+            try:
+                if command.command_type == "simulate_scenario":
+                    scenario = self._simulate_scenario(command.parameters)
+                    return SubsystemResponse(
+                        command.command_id,
+                        scenario is not None,
+                        {"scenario_id": scenario.scenario_id} if scenario else None,
+                        execution_time_ms=(time.time() - start_time) * 1000,
+                    )
+                return SubsystemResponse(command.command_id, False, error="Unknown command")
+            except Exception as e:
+                return SubsystemResponse(command.command_id, False, error=str(e))
+
+        approved, result = _gov_execute(
+            "deep_expansion",
+            command.command_type,
+            command.parameters or {},
+            _dispatch,
+        )
+        if not approved:
+            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+        return result
 
     def get_supported_commands(self) -> list[str]:
         return ["simulate_scenario", "generate_long_term_strategy"]

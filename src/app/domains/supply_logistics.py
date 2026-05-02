@@ -36,6 +36,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -124,7 +125,8 @@ class DistributionRoute:
 
 
 class SupplyLogisticsSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable, IResourceManager
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, IResourceManager,
+    DomainOperationalMixin,
 ):
     """
     Supply Logistics Subsystem
@@ -390,65 +392,73 @@ class SupplyLogisticsSubsystem(
 
     def execute_command(self, command: SubsystemCommand) -> SubsystemResponse:
         """Execute a command."""
-        start_time = time.time()
+        from app.core.execution_router import execute as _gov_execute
 
-        try:
-            if command.command_type == "add_resource":
-                item = self._add_resource(command.parameters)
-                success = item is not None
-                result = {"item_id": item.item_id} if item else None
+        def _dispatch(_ctx: dict) -> SubsystemResponse:
+            start_time = time.time()
+            try:
+                if command.command_type == "add_resource":
+                    item = self._add_resource(command.parameters)
+                    success = item is not None
+                    result = {"item_id": item.item_id} if item else None
 
-            elif command.command_type == "request_resource":
-                request = self._create_supply_request(command.parameters)
-                success = request is not None
-                result = {"request_id": request.request_id} if request else None
+                elif command.command_type == "request_resource":
+                    request = self._create_supply_request(command.parameters)
+                    success = request is not None
+                    result = {"request_id": request.request_id} if request else None
 
-            elif command.command_type == "create_distribution_route":
-                route = self._create_distribution_route(command.parameters)
-                success = route is not None
-                result = {"route_id": route.route_id} if route else None
+                elif command.command_type == "create_distribution_route":
+                    route = self._create_distribution_route(command.parameters)
+                    success = route is not None
+                    result = {"route_id": route.route_id} if route else None
 
-            elif command.command_type == "enable_rationing":
-                success = self._enable_rationing(command.parameters)
-                result = {"rationing_enabled": success}
+                elif command.command_type == "enable_rationing":
+                    success = self._enable_rationing(command.parameters)
+                    result = {"rationing_enabled": success}
 
-            elif command.command_type == "get_inventory_report":
-                report = self._generate_inventory_report()
-                success = True
-                result = {"report": report}
+                elif command.command_type == "get_inventory_report":
+                    report = self._generate_inventory_report()
+                    success = True
+                    result = {"report": report}
 
-            elif command.command_type == "optimize_distribution":
-                optimization = self._optimize_distribution(command.parameters)
-                success = True
-                result = {"optimization": optimization}
+                elif command.command_type == "optimize_distribution":
+                    optimization = self._optimize_distribution(command.parameters)
+                    success = True
+                    result = {"optimization": optimization}
 
-            else:
-                success = False
-                result = None
-                error = f"Unknown command type: {command.command_type}"
+                else:
+                    return SubsystemResponse(
+                        command_id=command.command_id,
+                        success=False,
+                        error=f"Unknown command type: {command.command_type}",
+                        execution_time_ms=(time.time() - start_time) * 1000,
+                    )
 
                 return SubsystemResponse(
                     command_id=command.command_id,
-                    success=False,
-                    error=error,
+                    success=success,
+                    result=result,
                     execution_time_ms=(time.time() - start_time) * 1000,
                 )
 
-            return SubsystemResponse(
-                command_id=command.command_id,
-                success=success,
-                result=result,
-                execution_time_ms=(time.time() - start_time) * 1000,
-            )
+            except Exception as e:
+                self.logger.error("Command execution failed: %s", e)
+                return SubsystemResponse(
+                    command_id=command.command_id,
+                    success=False,
+                    error=str(e),
+                    execution_time_ms=(time.time() - start_time) * 1000,
+                )
 
-        except Exception as e:
-            self.logger.error("Command execution failed: %s", e)
-            return SubsystemResponse(
-                command_id=command.command_id,
-                success=False,
-                error=str(e),
-                execution_time_ms=(time.time() - start_time) * 1000,
-            )
+        approved, result = _gov_execute(
+            "supply_logistics",
+            command.command_type,
+            command.parameters or {},
+            _dispatch,
+        )
+        if not approved:
+            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+        return result
 
     def get_supported_commands(self) -> list[str]:
         """Get list of supported command types."""

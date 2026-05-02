@@ -4,13 +4,30 @@
 
 import hashlib
 import json
+import sys
 import time
 from enum import StrEnum
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+
+# Ensure src/ and repo root are on the path.
+_SRC_PATH = str(Path(__file__).resolve().parent.parent / "src")
+if _SRC_PATH not in sys.path:
+    sys.path.insert(0, _SRC_PATH)
+
+_REPO_ROOT = str(Path(__file__).resolve().parent.parent)
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+try:
+    from app.core.execution_router import execute as _gov_execute
+    _GOVERNANCE_PIPELINE_AVAILABLE = True
+except ImportError:
+    _GOVERNANCE_PIPELINE_AVAILABLE = False
 
 app = FastAPI(title="Project AI Governance Host", version="0.1.0")
 
@@ -22,6 +39,43 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Directness Doctrine middleware — rewrites euphemistic language in JSON responses.
+try:
+    from starlette.middleware.base import BaseHTTPMiddleware
+    from starlette.responses import Response as _StarletteResponse
+
+    class DirectnessMiddleware(BaseHTTPMiddleware):
+        async def dispatch(self, request, call_next):
+            response = await call_next(request)
+            content_type = response.headers.get("content-type", "")
+            if "application/json" not in content_type:
+                return response
+            # Consume body so it can be rewritten.
+            chunks = []
+            async for chunk in response.body_iterator:
+                chunks.append(chunk)
+            body = b"".join(chunks)
+            try:
+                from app.core.directness import get_directness
+                data = json.loads(body)
+                if isinstance(data, dict):
+                    _d = get_directness()
+                    for k, v in list(data.items()):
+                        if isinstance(v, str) and v:
+                            data[k] = _d.apply_directness(v).revised_text
+                body = json.dumps(data).encode()
+            except Exception:
+                pass  # non-fatal — serve original body
+            return _StarletteResponse(
+                content=body,
+                status_code=response.status_code,
+                media_type="application/json",
+            )
+
+    app.add_middleware(DirectnessMiddleware)
+except Exception:
+    pass  # graceful degrade if starlette not available
 
 # Include Legion/OpenClaw router
 try:
@@ -393,16 +447,67 @@ def write_audit(record: GovernanceResult):
 
 
 class SandboxExecutor:
-    """All executions occur here. Nothing outside this class mutates state."""
+    """
+    All executions occur here. Nothing outside this class mutates state.
+
+    When the full governance pipeline is available (src/ on sys.path), execution
+    is routed through execution_router.execute() — waterfall → Liara TTL check →
+    State Register temporal injection → invariant engine → execution gate
+    (governance kernel / Triumvirate / Fates / constitutional ledger).
+
+    When the pipeline is unavailable (e.g., isolated API tests), falls back to
+    the original no-op sandbox.
+    """
 
     @staticmethod
     def execute(intent: Intent) -> dict[str, Any]:
-        # Placeholder for real execution logic
-        return {
-            "status": "executed",
-            "note": "Sandbox execution completed",
-            "target": intent.target,
+        if not _GOVERNANCE_PIPELINE_AVAILABLE:
+            # Fallback: no-op sandbox (pipeline not reachable)
+            return {
+                "status": "executed",
+                "note": "Sandbox execution completed (pipeline unavailable)",
+                "target": intent.target,
+            }
+
+        # Build context from the intent.
+        try:
+            ctx = intent.dict()
+        except AttributeError:
+            ctx = intent.model_dump()  # Pydantic v2 compat
+        context = {
+            **ctx.get("context", {}),
+            "actor": intent.actor.value,
+            "origin": intent.origin,
+            "action_type": intent.action.value,
+            "_intent_hash": hash_intent(intent),
         }
+
+        # The executor_fn — called only if governance approves.
+        def _dispatch(_ctx: dict) -> dict[str, Any]:
+            return {
+                "status": "executed",
+                "note": "Governed execution completed",
+                "target": intent.target,
+                "actor": intent.actor.value,
+            }
+
+        approved, result = _gov_execute(
+            domain=intent.target,
+            action=intent.action.value,
+            context=context,
+            executor_fn=_dispatch,
+        )
+
+        if not approved:
+            raise HTTPException(
+                status_code=403,
+                detail={
+                    "message": "Governance pipeline denied execution",
+                    "reason": str(result),
+                },
+            )
+
+        return result
 
 
 # ==========================================================
@@ -460,6 +565,65 @@ async def governed_execute(intent: Intent):
         "governance": result.dict(),
         "execution": execution,
     }
+
+
+# ==========================================================
+# IronPath — Governed ML Pipeline Execution
+# ==========================================================
+
+
+class PipelineRequest(BaseModel):
+    pipeline_path: str
+    context: dict[str, Any] = Field(default_factory=dict)
+
+
+@app.post("/pipeline")
+async def run_pipeline(req: PipelineRequest):
+    """Execute a sovereign IronPath ML pipeline under full governance."""
+    if not _GOVERNANCE_PIPELINE_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Governance pipeline unavailable")
+
+    def _dispatch(_ctx: dict) -> dict[str, Any]:
+        import sys as _sys
+        _root = str(Path(__file__).resolve().parent.parent)
+        if _root not in _sys.path:
+            _sys.path.insert(0, _root)
+        from governance.iron_path import IronPathExecutor
+        executor = IronPathExecutor(pipeline_path=req.pipeline_path)
+        executor.load_pipeline()
+        return executor.execute()
+
+    approved, result = _gov_execute(
+        "iron_path",
+        "pipeline_execute",
+        {**req.context, "pipeline_path": req.pipeline_path},
+        _dispatch,
+    )
+    if not approved:
+        raise HTTPException(
+            status_code=403,
+            detail={"message": "Governance denied pipeline execution", "reason": str(result)},
+        )
+    return {"status": "completed", "result": result}
+
+
+# ==========================================================
+# SovereignVerifier — Compliance Bundle Attestation
+# ==========================================================
+
+
+@app.get("/verify")
+def verify_compliance_bundle(bundle_path: str):
+    """Cryptographically verify a sovereign compliance bundle (third-party auditor)."""
+    try:
+        import sys as _sys
+        _root = str(Path(__file__).resolve().parent.parent)
+        if _root not in _sys.path:
+            _sys.path.insert(0, _root)
+        from governance.sovereign_verifier import SovereignVerifier
+        return SovereignVerifier(bundle_path).verify()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ==========================================================

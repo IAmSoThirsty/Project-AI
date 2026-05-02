@@ -1,17 +1,8 @@
-"""God-Tier Global Intelligence Command System.
+"""Global Intelligence Command System.
 
-Ultimate integration of all systems with monolithic density:
-- Global Watch Tower Command Center
-- Global Intelligence Library (120+ agents)
-- 24/7 Continuous Monitoring
-- Secure Encrypted Storage
-- Self-Healing and Fault Tolerance
-- Distributed Processing
-- Real-Time Analytics
-- Performance Optimization
-- Complete Observability
-
-This is the MASTER CONTROL SYSTEM for all intelligence operations.
+Integrates GlobalWatchTower, GlobalIntelligenceLibrary (6 domains),
+ContinuousMonitoringSystem, and GodTierIntelligenceSystem into a
+singleton command center with health metrics and intelligence assessment.
 """
 
 from __future__ import annotations

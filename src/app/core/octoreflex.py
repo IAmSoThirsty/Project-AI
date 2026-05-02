@@ -392,6 +392,18 @@ class OctoReflex:
         
         elif rule.enforcement_level == EnforcementLevel.BLOCK:
             logger.error(f"[BLOCK] Action blocked: {violation.description}")
+            # Route through the formal execution gate so the block is recorded
+            # as a governance decision and picked up by Fates + the ledger.
+            try:
+                from app.core.execution_router import execute as _gov_execute
+                _gov_execute(
+                    "constitutional_enforcement",
+                    violation.violation_type.value,
+                    {**violation.context, "_octoreflex_block": True},
+                    lambda _ctx: None,
+                )
+            except Exception:
+                pass
         
         elif rule.enforcement_level == EnforcementLevel.TERMINATE:
             logger.critical(f"[TERMINATE] Session terminated: {violation.description}")

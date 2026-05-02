@@ -19,6 +19,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class EthicalDecision:
     rationale: str
 
 
-class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
+class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
     SUBSYSTEM_METADATA = {
         "id": "ethics_governance",
         "name": "Ethics & Governance",
@@ -95,26 +96,39 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
         return status
 
     def execute_command(self, command: SubsystemCommand) -> SubsystemResponse:
-        start_time = time.time()
-        try:
-            if command.command_type == "validate_ethical_decision":
-                decision = self._validate_decision(command.parameters)
-                return SubsystemResponse(
-                    command.command_id,
-                    decision is not None,
-                    (
-                        {
-                            "decision_id": decision.decision_id,
-                            "approved": decision.approved,
-                        }
-                        if decision
-                        else None
-                    ),
-                    execution_time_ms=(time.time() - start_time) * 1000,
-                )
-            return SubsystemResponse(command.command_id, False, error="Unknown command")
-        except Exception as e:
-            return SubsystemResponse(command.command_id, False, error=str(e))
+        from app.core.execution_router import execute as _gov_execute
+
+        def _dispatch(_ctx: dict) -> SubsystemResponse:
+            start_time = time.time()
+            try:
+                if command.command_type == "validate_ethical_decision":
+                    decision = self._validate_decision(command.parameters)
+                    return SubsystemResponse(
+                        command.command_id,
+                        decision is not None,
+                        (
+                            {
+                                "decision_id": decision.decision_id,
+                                "approved": decision.approved,
+                            }
+                            if decision
+                            else None
+                        ),
+                        execution_time_ms=(time.time() - start_time) * 1000,
+                    )
+                return SubsystemResponse(command.command_id, False, error="Unknown command")
+            except Exception as e:
+                return SubsystemResponse(command.command_id, False, error=str(e))
+
+        approved, result = _gov_execute(
+            "ethics_governance",
+            command.command_type,
+            command.parameters or {},
+            _dispatch,
+        )
+        if not approved:
+            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+        return result
 
     def get_supported_commands(self) -> list[str]:
         return ["validate_ethical_decision"]

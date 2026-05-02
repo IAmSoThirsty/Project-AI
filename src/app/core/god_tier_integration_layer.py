@@ -1,26 +1,9 @@
 """
-God Tier Integration Layer - Unified System Orchestration.
+Unified system orchestration layer.
 
-Integrates all God Tier architecture expansion components into a cohesive,
-monolithic system. Provides unified API, orchestration, and lifecycle management.
-
-Integrated Systems:
-1. Distributed Event Streaming
-2. Security Operations Center (SOC)
-3. Guardian Approval System
-4. Live Metrics Dashboard
-5. Advanced Behavioral Validation
-6. Health Monitoring & Continuity
-
-Features:
-- Unified system initialization and shutdown
-- Cross-system event coordination
-- Centralized configuration management
-- Integrated monitoring and alerting
-- Automated health checks and recovery
-- Production-ready orchestration
-
-Production-ready with full error handling and logging.
+Integrates: distributed event streaming, SOC, guardian approval,
+live metrics dashboard, behavioral validation, and health monitoring.
+Provides cross-system event routing and unified lifecycle management.
 """
 
 import json

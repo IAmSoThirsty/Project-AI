@@ -36,6 +36,7 @@ from ..core.interface_abstractions import (
     SubsystemCommand,
     SubsystemResponse,
 )
+from ..core.operational_substructure import DomainOperationalMixin
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +135,8 @@ class CommandMessage:
 
 
 class CommandControlSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable, ICommunication
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, ICommunication,
+    DomainOperationalMixin,
 ):
     """
     Command & Control Subsystem
@@ -385,65 +387,73 @@ class CommandControlSubsystem(
 
     def execute_command(self, command: SubsystemCommand) -> SubsystemResponse:
         """Execute a command."""
-        start_time = time.time()
+        from app.core.execution_router import execute as _gov_execute
 
-        try:
-            if command.command_type == "create_mission":
-                mission = self._create_mission(command.parameters)
-                success = mission is not None
-                result = {"mission_id": mission.mission_id} if mission else None
+        def _dispatch(_ctx: dict) -> SubsystemResponse:
+            start_time = time.time()
+            try:
+                if command.command_type == "create_mission":
+                    mission = self._create_mission(command.parameters)
+                    success = mission is not None
+                    result = {"mission_id": mission.mission_id} if mission else None
 
-            elif command.command_type == "update_mission_status":
-                success = self._update_mission_status(command.parameters)
-                result = {"updated": success}
+                elif command.command_type == "update_mission_status":
+                    success = self._update_mission_status(command.parameters)
+                    result = {"updated": success}
 
-            elif command.command_type == "create_task":
-                task = self._create_task(command.parameters)
-                success = task is not None
-                result = {"task_id": task.task_id} if task else None
+                elif command.command_type == "create_task":
+                    task = self._create_task(command.parameters)
+                    success = task is not None
+                    result = {"task_id": task.task_id} if task else None
 
-            elif command.command_type == "allocate_resources":
-                allocation_id = self._allocate_resources(command.parameters)
-                success = allocation_id is not None
-                result = {"allocation_id": allocation_id}
+                elif command.command_type == "allocate_resources":
+                    allocation_id = self._allocate_resources(command.parameters)
+                    success = allocation_id is not None
+                    result = {"allocation_id": allocation_id}
 
-            elif command.command_type == "get_mission_status":
-                mission_status = self._get_mission_status(command.parameters)
-                success = mission_status is not None
-                result = mission_status
+                elif command.command_type == "get_mission_status":
+                    mission_status = self._get_mission_status(command.parameters)
+                    success = mission_status is not None
+                    result = mission_status
 
-            elif command.command_type == "plan_tactical_response":
-                plan = self._plan_tactical_response(command.parameters)
-                success = plan is not None
-                result = {"plan": plan}
+                elif command.command_type == "plan_tactical_response":
+                    plan = self._plan_tactical_response(command.parameters)
+                    success = plan is not None
+                    result = {"plan": plan}
 
-            else:
-                success = False
-                result = None
-                error = f"Unknown command type: {command.command_type}"
+                else:
+                    return SubsystemResponse(
+                        command_id=command.command_id,
+                        success=False,
+                        error=f"Unknown command type: {command.command_type}",
+                        execution_time_ms=(time.time() - start_time) * 1000,
+                    )
 
                 return SubsystemResponse(
                     command_id=command.command_id,
-                    success=False,
-                    error=error,
+                    success=success,
+                    result=result,
                     execution_time_ms=(time.time() - start_time) * 1000,
                 )
 
-            return SubsystemResponse(
-                command_id=command.command_id,
-                success=success,
-                result=result,
-                execution_time_ms=(time.time() - start_time) * 1000,
-            )
+            except Exception as e:
+                self.logger.error("Command execution failed: %s", e)
+                return SubsystemResponse(
+                    command_id=command.command_id,
+                    success=False,
+                    error=str(e),
+                    execution_time_ms=(time.time() - start_time) * 1000,
+                )
 
-        except Exception as e:
-            self.logger.error("Command execution failed: %s", e)
-            return SubsystemResponse(
-                command_id=command.command_id,
-                success=False,
-                error=str(e),
-                execution_time_ms=(time.time() - start_time) * 1000,
-            )
+        approved, result = _gov_execute(
+            "command_control",
+            command.command_type,
+            command.parameters or {},
+            _dispatch,
+        )
+        if not approved:
+            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+        return result
 
     def get_supported_commands(self) -> list[str]:
         """Get list of supported command types."""

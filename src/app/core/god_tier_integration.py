@@ -1,7 +1,7 @@
 """
-God Tier System Integration
-Main integration module that wires all components together with comprehensive logging.
-Production-grade, fully integrated, drop-in ready.
+Multimodal AI system integration.
+Wires voice, visual, camera, conversation, policy, and fusion systems
+into a single lifecycle-managed instance with event hooks.
 """
 
 import logging
