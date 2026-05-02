@@ -1010,6 +1010,17 @@ class AdvancedBootSystem:
         # Validate pre-boot invariants before recording anything
         self._run_boot_invariants("pre_boot")
 
+        # Start a State Register session for temporal continuity tracking.
+        try:
+            from app.core.state_register import get_state_register
+            get_state_register().start_session(
+                context={"boot_profile": (
+                    self._current_profile.value if self._current_profile else "unknown"
+                )}
+            )
+        except Exception:
+            pass
+
         with self._lock:
             self._boot_stats["profile"] = (
                 self._current_profile.value if self._current_profile else None
