@@ -1,0 +1,155 @@
+[
+  {
+    "slug": "project-ai",
+    "name": "Project-AI & OCTOREFLEX",
+    "tagline": "Syscall-authoritative governance & control-theoretic containment for sovereign AGI.",
+    "summary": "A modular, self-aware AI assistant ecosystem with eBPF-mediated syscall governance, deterministic policy enforcement, and a control-theoretic containment loop (OCTOREFLEX) ensuring every model action is observable, attributable, and reversible.",
+    "tags": ["AI Governance", "Containment", "eBPF", "Control Theory", "Architecture"],
+    "github": "https://github.com/IAmSoThirsty/Project-AI",
+    "page": "project-ai.html",
+    "featured": true,
+    "accent": "cyan"
+  },
+  {
+    "slug": "cerberus",
+    "name": "Cerberus Guard Bot",
+    "tagline": "A hardened, multi-agent shield for AI-to-AGI systems.",
+    "summary": "Three guardians in distinct coding styles, coordinated by a central hub. Any bypass attempt spawns three new randomized guardians — exponential growth capped at 27 before total shutdown. Designed to neutralize jailbreaks, prompt-injections, and bot attacks before they reach the model surface.",
+    "tags": ["Multi-Agent", "AI Safety", "Containment", "Jailbreak Defense"],
+    "github": "https://github.com/IAmSoThirsty/Cerberus",
+    "page": "cerberus.html",
+    "featured": true,
+    "accent": "violet"
+  },
+  {
+    "slug": "hub-epstein",
+    "name": "Hub of Epstein Files Directory",
+    "tagline": "An educational, public-records research archive.",
+    "summary": "A comprehensive directory and organizational hub for Epstein-related public files and documentation. Includes a full web interface, automated workflows, and AI agent infrastructure. Strictly educational and research-oriented — no original allegations, no targeting, no editorial conclusions.",
+    "tags": ["Public Records", "Research", "Archive", "Civic Tech"],
+    "github": "https://github.com/IAmSoThirsty/Hub_of_Epstein_Files_Directory",
+    "page": "hub-epstein.html",
+    "featured": true,
+    "accent": "amber"
+  },
+  {
+    "slug": "mhe-router",
+    "name": "Mental Health Escalation Router",
+    "tagline": "Real-time detection of high-risk distress signals and safe routing to human resources.",
+    "summary": "A defensive layer for any AI surface that may receive crisis-laden input. Detects acute distress signals, suppresses generative responses that could harm, and routes the user to verified human resources within bounded latency.",
+    "tags": ["AI Safety", "Civic Tech", "Crisis Response"],
+    "github": "https://github.com/IAmSoThirsty/Mental-Health-Escalation-Router",
+    "featured": true,
+    "accent": "rose"
+  },
+  {
+    "slug": "civic-attest",
+    "name": "civic-attest",
+    "tagline": "Deterministic, cryptographically verifiable, publicly auditable authenticity for high-trust public communications.",
+    "summary": "A signing and attestation framework for institutional speech. Every statement carries a verifiable provenance chain — issuer, time, content hash, revocation status — that any observer can audit without trust.",
+    "tags": ["Cryptography", "Provenance", "Civic Tech", "Code Signing"],
+    "github": "https://github.com/IAmSoThirsty/civic-attest",
+    "featured": true,
+    "accent": "cyan"
+  },
+  {
+    "slug": "giewa",
+    "name": "Global Incident Early Warning Aggregator",
+    "tagline": "Aggregate multi-source telemetry and detect anomaly patterns at planetary scale.",
+    "summary": "A signal-fusion pipeline that ingests open telemetry feeds, normalizes them into a unified anomaly schema, and surfaces emerging incidents before they hit traditional reporting channels.",
+    "tags": ["Telemetry", "Anomaly Detection", "Civic Tech"],
+    "github": "https://github.com/IAmSoThirsty/GLOBAL-INCIDENT-EARLY-WARNING-AGGREGATOR",
+    "featured": true,
+    "accent": "violet"
+  },
+  {
+    "slug": "oakd",
+    "name": "Open Access Knowledge Distiller",
+    "tagline": "Transform research papers into structured, verifiable knowledge graphs.",
+    "summary": "OAKD ingests open-access scientific and technical documents and produces structured, provenance-tagged knowledge graphs suitable for downstream LLM grounding, peer review automation, and academic discovery.",
+    "tags": ["Knowledge Graphs", "Research", "LLM Grounding"],
+    "github": "https://github.com/IAmSoThirsty/Open-Access-Knowledge-Distiller",
+    "accent": "cyan"
+  },
+  {
+    "slug": "ocee",
+    "name": "Open Constraint Enforcement Engine",
+    "tagline": "Evaluate actions against formally declared invariants — before execution.",
+    "summary": "A pre-execution gate that compiles invariants into deterministic checks and refuses any action whose effect would violate a declared constraint. The substrate beneath OCTOREFLEX's governance loop.",
+    "tags": ["AI Governance", "Formal Methods", "Containment"],
+    "github": "https://github.com/IAmSoThirsty/OPEN-CONSTRAINT-ENFORCEMENT-ENGINE",
+    "accent": "violet"
+  },
+  {
+    "slug": "dicps",
+    "name": "Digital Identity Capability Proof Service",
+    "tagline": "Privacy-preserving attribute verification using zero-knowledge proofs.",
+    "summary": "DICPS lets a holder prove a capability (age, residency, credential) without disclosing the underlying attribute. Built on standardized ZK primitives with selective-disclosure semantics.",
+    "tags": ["Cryptography", "Identity", "Privacy"],
+    "github": "https://github.com/IAmSoThirsty/Digital-Identity-Capability-Proof-Service",
+    "accent": "amber"
+  },
+  {
+    "slug": "monolith",
+    "name": "Thirsty's Monolith",
+    "tagline": "The one Code To Rule Them All.",
+    "summary": "Unified core that links Project-AI, Cerberus, and the Waterfall firewall under a single deterministic build, deploy, and observability surface.",
+    "tags": ["Architecture", "Core"],
+    "github": "https://github.com/IAmSoThirsty/Thirstys-Monolith",
+    "accent": "cyan"
+  },
+  {
+    "slug": "waterfall",
+    "name": "Thirsty's Waterfall",
+    "tagline": "A firewall — except it's a waterfall, because I'm thirsty.",
+    "summary": "A multi-stage egress and ingress filter built on the Waterfall metaphor: every packet flows through cascading inspection layers, each with its own policy and provenance.",
+    "tags": ["Network", "Security", "Containment"],
+    "github": "https://github.com/IAmSoThirsty/Thirstys-waterfall",
+    "accent": "violet"
+  },
+  {
+    "slug": "thirsty-lang",
+    "name": "Thirsty-lang",
+    "tagline": "A language for anyone and everyone who is Thirsty.",
+    "summary": "A constitutional, governance-aware programming language and ecosystem with first-class hooks for TARL/NIRL invariants, deterministic compilation, and a 40+ repo template family.",
+    "tags": ["Language", "Compiler", "Architecture"],
+    "github": "https://github.com/IAmSoThirsty/Thirsty-lang",
+    "accent": "amber"
+  },
+  {
+    "slug": "ofed",
+    "name": "Optical Flow Epicenter Detection",
+    "tagline": "Locate the precise spatial-temporal origin of motion events.",
+    "summary": "A research-grade pipeline using dense optical flow and back-propagated trajectories to identify the exact frame and pixel-region where an event began — for forensic analysis, sports tactics, and scientific imaging.",
+    "tags": ["Computer Vision", "Research"],
+    "github": "https://github.com/IAmSoThirsty/Optical-flow-epicenter-detection-",
+    "accent": "rose"
+  },
+  {
+    "slug": "codex",
+    "name": "Codex Workflow",
+    "tagline": "24/7 aggressive patrol bot for any repository.",
+    "summary": "A continuously-running CI agent that cleans, fixes, and secures every pushed line of code across all branches. Configurable patrol intensity and policy bundles.",
+    "tags": ["DevOps", "CI/CD", "Security"],
+    "github": "https://github.com/IAmSoThirsty/Codex-workflow",
+    "accent": "cyan"
+  },
+  {
+    "slug": "microservice-gen",
+    "name": "MicroService Generator",
+    "tagline": "Paste-ready, governance-compatible Python microservices.",
+    "summary": "Generates fully-formed FastAPI microservices with TARL/NIRL hook stubs, Dockerfile, compose entry, Makefile, tests, and observability defaults — no placeholders.",
+    "tags": ["Tooling", "FastAPI", "Architecture"],
+    "github": "https://github.com/IAmSoThirsty/MicroService-Generator-",
+    "accent": "violet"
+  },
+  {
+    "slug": "triumvirate",
+    "name": "The Triumvirate",
+    "tagline": "Three sovereign AGI roles in dynamic equilibrium.",
+    "summary": "A governance topology defining Architect, Guardian, and Operator agents whose mutual checks bound capability and prevent unilateral drift.",
+    "tags": ["AI Governance", "Multi-Agent", "Architecture"],
+    "github": "https://github.com/IAmSoThirsty/the_triumvirate",
+    "accent": "amber"
+  }
+]

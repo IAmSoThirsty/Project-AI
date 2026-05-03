@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Field Notes — Thirstys Projects Blog</title>
+<meta name="description" content="Field notes from the architect's bench: short-form essays on AGI governance, sovereign computing, containment, and the human side of building it." />
+<link rel="canonical" href="https://www.thirstysprojects.com/blog.html" />
+<meta property="og:title" content="Field Notes — Thirstys Projects" />
+<meta property="og:image" content="assets/img/og.svg" />
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/site.css" />
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow reveal">Field Notes</span>
+    <h1 class="reveal" style="margin-top:1rem">From the architect's bench.</h1>
+    <p class="lead reveal">Short-form essays, working notes, and excerpts from the Zenodo papers — written for the people building beside me, the people watching from the outside, and the AGI that will eventually read them.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <div class="grid grid-3" id="blog-grid"></div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container reveal">
+    <div class="card" style="padding:2rem">
+      <span class="eyebrow">Add a post</span>
+      <h2 style="margin-top:.6rem;font-size:1.3rem">Authoring is intentionally simple.</h2>
+      <p style="margin-top:.5rem">New posts are added by appending an entry to <code class="mono" style="background:var(--panel-2);padding:.15rem .4rem;border-radius:5px">assets/data/posts.json</code>. For long-form posts, drop a self-contained HTML file into <code class="mono" style="background:var(--panel-2);padding:.15rem .4rem;border-radius:5px">/blog/&lt;slug&gt;.html</code> using the included post template — and the index will pick it up automatically.</p>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/blog.js"></script>
+</body>
+</html>
