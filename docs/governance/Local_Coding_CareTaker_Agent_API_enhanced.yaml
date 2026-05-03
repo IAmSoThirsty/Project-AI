@@ -1,0 +1,3927 @@
+# Local Coding CareTaker Agent API
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Jeremy Karrick / IAmSoThirsty
+# OpenAPI 3.1 specification for a local-first, governance-aware coding agent runtime.
+
+openapi: 3.1.1
+info:
+  title: Local Coding CareTaker Agent API
+  version: 1.1.0
+  summary: Comprehensive control-plane and runtime schema for a locally hosted coding assistant agent.
+  description: >
+    OpenAPI 3.1.1 specification for a governance-aware, tool-using, local-first coding
+    assistant agent operating on personal hardware. The API covers identity, capability
+    declarations, execution policies, projects, sessions, messages, tool orchestration,
+    file/workspace access, memory, model routing, jobs, observability, and runtime health.
+    This enhanced edition adds production-grade error handling, richer examples, streaming,
+    artifact lifecycle coverage, audit decision records, metrics, webhook contracts, and
+    stronger reusable response/header components for industrial-quality client generation and
+    backend implementation.
+  termsOfService: https://localhost/terms
+  contact:
+    name: Jeremy Karrick / IAmSoThirsty
+    url: https://localhost/contact
+    email: caretaker@localhost
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+
+servers:
+  - url: http://127.0.0.1:8080/api/v1
+    description: Local runtime server
+  - url: http://{host}:{port}/api/{version}
+    description: Parameterized local runtime server
+    variables:
+      host:
+        default: 127.0.0.1
+      port:
+        default: '8080'
+      version:
+        default: v1
+
+tags:
+  - name: Runtime
+    description: Runtime configuration, health, host status, metrics, and streaming state.
+  - name: Agents
+    description: Agent personas, activation, capability declaration, and defaults.
+  - name: Projects
+    description: Project registration, indexing, graph intelligence, and snapshots.
+  - name: Sessions
+    description: Interactive and task-oriented execution sessions, checkpoints, streams, and artifacts.
+  - name: Messages
+    description: Session message submission and retrieval.
+  - name: Tools
+    description: Tool registry, invocation, governance mediation, and approvals.
+  - name: Files
+    description: Workspace-safe filesystem access including stat, move, delete, read, write, patch, and search.
+  - name: Memory
+    description: Durable and scoped memory management with semantic retrieval.
+  - name: Models
+    description: Local model registry, warmup, and routing decisions.
+  - name: Jobs
+    description: Long-running asynchronous workloads, logs, and cancellation.
+  - name: Governance
+    description: Policy administration, evaluations, audit decisions, and approval workflow.
+  - name: Observability
+    description: Events, traces, metrics, and operational diagnostics.
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      tags: [Runtime]
+      operationId: getHealth
+      summary: Get runtime health status.
+      responses:
+        '200':
+          description: Runtime health details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /runtime/status:
+    get:
+      tags: [Runtime]
+      operationId: getRuntimeStatus
+      summary: Get runtime, hardware, and scheduler status.
+      responses:
+        '200':
+          description: Runtime status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeStatus'
+
+  /runtime/config:
+    get:
+      tags: [Runtime]
+      operationId: getRuntimeConfig
+      summary: Get effective runtime configuration.
+      responses:
+        '200':
+          description: Effective runtime configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeConfig'
+
+    patch:
+      tags: [Runtime]
+      operationId: updateRuntimeConfig
+      summary: Patch effective runtime configuration.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/RuntimeConfigPatch'
+      responses:
+        '200':
+          description: Updated runtime configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeConfig'
+
+  /agents:
+    get:
+      tags: [Agents]
+      operationId: listAgents
+      summary: List registered agents.
+      responses:
+        '200':
+          description: Agents list.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Agent'
+                  nextCursor:
+                    type: string
+                    nullable: true
+                required: [items]
+
+    post:
+      tags: [Agents]
+      operationId: createAgent
+      summary: Create or register an agent definition.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentCreate'
+      responses:
+        '201':
+          description: Agent created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+
+  /agents/{agentId}:
+    parameters:
+      - $ref: '#/components/parameters/AgentId'
+    get:
+      tags: [Agents]
+      operationId: getAgent
+      summary: Get agent definition by id.
+      responses:
+        '200':
+          description: Agent definition.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+
+    patch:
+      tags: [Agents]
+      operationId: updateAgent
+      summary: Patch an agent definition.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/AgentPatch'
+      responses:
+        '200':
+          description: Updated agent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+
+    delete:
+      tags: [Agents]
+      operationId: deleteAgent
+      summary: Delete an agent definition.
+      responses:
+        '204':
+          description: Agent deleted.
+
+  /agents/{agentId}/activate:
+    parameters:
+      - $ref: '#/components/parameters/AgentId'
+    post:
+      tags: [Agents]
+      operationId: activateAgent
+      summary: Activate an agent as the current primary runtime persona.
+      responses:
+        '200':
+          description: Agent activated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentActivation'
+
+  /projects:
+    get:
+      tags: [Projects]
+      operationId: listProjects
+      summary: List projects registered with the runtime.
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Projects list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectListResponse'
+
+    post:
+      tags: [Projects]
+      operationId: createProject
+      summary: Create a project record.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreate'
+      responses:
+        '201':
+          description: Project created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /projects/{projectId}:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      tags: [Projects]
+      operationId: getProject
+      summary: Get a project by id.
+      responses:
+        '200':
+          description: Project details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+    patch:
+      tags: [Projects]
+      operationId: updateProject
+      summary: Patch a project.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/ProjectPatch'
+      responses:
+        '200':
+          description: Updated project.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+    delete:
+      tags: [Projects]
+      operationId: deleteProject
+      summary: Delete a project.
+      responses:
+        '204':
+          description: Project deleted.
+
+  /projects/{projectId}/index:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    post:
+      tags: [Projects]
+      operationId: indexProject
+      summary: Index project files for retrieval and semantic memory.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectIndexRequest'
+      responses:
+        '202':
+          description: Indexing job accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobAccepted'
+
+  /projects/{projectId}/graph:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      tags: [Projects]
+      operationId: getProjectGraph
+      summary: Get dependency and symbol graph snapshot.
+      responses:
+        '200':
+          description: Project graph.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectGraph'
+
+  /sessions:
+    get:
+      tags: [Sessions]
+      operationId: listSessions
+      summary: List sessions.
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: projectId
+          in: query
+          schema:
+            type: string
+        - name: agentId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/SessionStatus'
+      responses:
+        '200':
+          description: Sessions list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListResponse'
+
+    post:
+      tags: [Sessions]
+      operationId: createSession
+      summary: Create a new interactive or task session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionCreate'
+      responses:
+        '201':
+          description: Session created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+
+  /sessions/{sessionId}:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Sessions]
+      operationId: getSession
+      summary: Get session details.
+      responses:
+        '200':
+          description: Session details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+
+    patch:
+      tags: [Sessions]
+      operationId: updateSession
+      summary: Patch a session.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/SessionPatch'
+      responses:
+        '200':
+          description: Updated session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+
+    delete:
+      tags: [Sessions]
+      operationId: deleteSession
+      summary: Delete a session and associated transient context.
+      responses:
+        '204':
+          description: Session deleted.
+
+  /sessions/{sessionId}/messages:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Messages]
+      operationId: listMessages
+      summary: List messages in a session.
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Messages list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageListResponse'
+
+    post:
+      tags: [Messages]
+      operationId: createMessage
+      summary: Submit a user, system, or tool-result message to a session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreate'
+      responses:
+        '201':
+          description: Message accepted and response generated or queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResult'
+
+  /sessions/{sessionId}/run:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      tags: [Sessions]
+      operationId: runSession
+      summary: Trigger a managed reasoning-and-tool execution turn.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+      responses:
+        '200':
+          description: Synchronous run result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResult'
+        '202':
+          description: Asynchronous run accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobAccepted'
+
+  /sessions/{sessionId}/interrupt:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      tags: [Sessions]
+      operationId: interruptSession
+      summary: Interrupt an active session run.
+      responses:
+        '202':
+          description: Interrupt requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterruptResult'
+
+  /sessions/{sessionId}/checkpoint:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      tags: [Sessions]
+      operationId: checkpointSession
+      summary: Save a named checkpoint of session state.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckpointCreate'
+      responses:
+        '201':
+          description: Checkpoint created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Checkpoint'
+
+  /sessions/{sessionId}/resume:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    post:
+      tags: [Sessions]
+      operationId: resumeSession
+      summary: Resume a session from a checkpoint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResumeRequest'
+      responses:
+        '200':
+          description: Session resumed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+
+  /tools:
+    get:
+      tags: [Tools]
+      operationId: listTools
+      summary: List available tools exposed to the agent.
+      responses:
+        '200':
+          description: Tool registry.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tool'
+                required: [items]
+
+    post:
+      tags: [Tools]
+      operationId: createTool
+      summary: Register a tool definition.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolCreate'
+      responses:
+        '201':
+          description: Tool registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+
+  /tools/{toolId}:
+    parameters:
+      - $ref: '#/components/parameters/ToolId'
+    get:
+      tags: [Tools]
+      operationId: getTool
+      summary: Get a tool definition.
+      responses:
+        '200':
+          description: Tool details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+
+    patch:
+      tags: [Tools]
+      operationId: updateTool
+      summary: Patch a tool definition.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/ToolPatch'
+      responses:
+        '200':
+          description: Updated tool.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+
+    delete:
+      tags: [Tools]
+      operationId: deleteTool
+      summary: Delete a tool definition.
+      responses:
+        '204':
+          description: Tool deleted.
+
+  /tools/{toolId}/invoke:
+    parameters:
+      - $ref: '#/components/parameters/ToolId'
+    post:
+      tags: [Tools]
+      operationId: invokeTool
+      summary: Invoke a tool directly or under governance mediation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolInvocationRequest'
+      responses:
+        '200':
+          description: Tool invocation result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolInvocationResult'
+
+  /files/read:
+    post:
+      tags: [Files]
+      operationId: readFile
+      summary: Read a file or byte range from an allowed workspace.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileReadRequest'
+      responses:
+        '200':
+          description: File content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileReadResponse'
+
+  /files/write:
+    post:
+      tags: [Files]
+      operationId: writeFile
+      summary: Write or replace file content.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileWriteRequest'
+      responses:
+        '200':
+          description: File write result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileWriteResponse'
+
+  /files/patch:
+    post:
+      tags: [Files]
+      operationId: patchFile
+      summary: Apply structured text patches to a file.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilePatchRequest'
+      responses:
+        '200':
+          description: Patch result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileWriteResponse'
+
+  /files/search:
+    post:
+      tags: [Files]
+      operationId: searchFiles
+      summary: Search files by path, text, or semantic query.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileSearchRequest'
+      responses:
+        '200':
+          description: Search results.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileSearchResponse'
+
+  /files/tree:
+    get:
+      tags: [Files]
+      operationId: getFileTree
+      summary: Get a file tree for a project or workspace root.
+      parameters:
+        - name: rootPath
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: maxDepth
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 5
+      responses:
+        '200':
+          description: File tree.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileTree'
+
+  /memory/entries:
+    get:
+      tags: [Memory]
+      operationId: listMemory
+      summary: List memory entries.
+      parameters:
+        - name: scope
+          in: query
+          schema:
+            $ref: '#/components/schemas/MemoryScope'
+        - name: sessionId
+          in: query
+          schema:
+            type: string
+        - name: projectId
+          in: query
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 50
+      responses:
+        '200':
+          description: Memory entries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryListResponse'
+
+    post:
+      tags: [Memory]
+      operationId: createMemory
+      summary: Create a durable memory entry.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryEntryCreate'
+      responses:
+        '201':
+          description: Memory entry created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryEntry'
+
+  /memory/query:
+    post:
+      tags: [Memory]
+      operationId: queryMemory
+      summary: Query memory by keywords or semantic search.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryQueryRequest'
+      responses:
+        '200':
+          description: Memory query results.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryQueryResponse'
+
+  /memory/entries/{memoryId}:
+    parameters:
+      - $ref: '#/components/parameters/MemoryId'
+    get:
+      tags: [Memory]
+      operationId: getMemory
+      summary: Get a memory entry by id.
+      responses:
+        '200':
+          description: Memory entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryEntry'
+
+    patch:
+      tags: [Memory]
+      operationId: updateMemory
+      summary: Patch a memory entry.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/MemoryEntryPatch'
+      responses:
+        '200':
+          description: Updated memory entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryEntry'
+
+    delete:
+      tags: [Memory]
+      operationId: deleteMemory
+      summary: Delete a memory entry.
+      responses:
+        '204':
+          description: Memory entry deleted.
+
+  /models:
+    get:
+      tags: [Models]
+      operationId: listModels
+      summary: List installed or routable local models.
+      responses:
+        '200':
+          description: Models list.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Model'
+                required: [items]
+
+  /models/{modelId}:
+    parameters:
+      - $ref: '#/components/parameters/ModelId'
+    get:
+      tags: [Models]
+      operationId: getModel
+      summary: Get model metadata and runtime characteristics.
+      responses:
+        '200':
+          description: Model details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+
+  /models/route:
+    post:
+      tags: [Models]
+      operationId: routeModel
+      summary: Resolve a model route for a requested task profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelRouteRequest'
+      responses:
+        '200':
+          description: Routing decision.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelRouteDecision'
+
+  /jobs:
+    get:
+      tags: [Jobs]
+      operationId: listJobs
+      summary: List async jobs.
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/JobStatus'
+      responses:
+        '200':
+          description: Jobs list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobListResponse'
+
+  /jobs/{jobId}:
+    parameters:
+      - $ref: '#/components/parameters/JobId'
+    get:
+      tags: [Jobs]
+      operationId: getJob
+      summary: Get async job status and result.
+      responses:
+        '200':
+          description: Job details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+    delete:
+      tags: [Jobs]
+      operationId: cancelJob
+      summary: Cancel a pending or running job.
+      responses:
+        '202':
+          description: Cancellation requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+  /governance/policies:
+    get:
+      tags: [Governance]
+      operationId: listPolicies
+      summary: List governance policies.
+      responses:
+        '200':
+          description: Policies list.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Policy'
+                required: [items]
+
+    post:
+      tags: [Governance]
+      operationId: createPolicy
+      summary: Create a governance policy.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyCreate'
+      responses:
+        '201':
+          description: Policy created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+
+  /governance/policies/{policyId}:
+    parameters:
+      - $ref: '#/components/parameters/PolicyId'
+    get:
+      tags: [Governance]
+      operationId: getPolicy
+      summary: Get a governance policy by id.
+      responses:
+        '200':
+          description: Policy details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+
+    patch:
+      tags: [Governance]
+      operationId: updatePolicy
+      summary: Patch a governance policy.
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/PolicyPatch'
+      responses:
+        '200':
+          description: Updated policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+
+    delete:
+      tags: [Governance]
+      operationId: deletePolicy
+      summary: Delete a governance policy.
+      responses:
+        '204':
+          description: Policy deleted.
+
+  /governance/evaluate:
+    post:
+      tags: [Governance]
+      operationId: evaluatePolicy
+      summary: Evaluate a proposed action against active policies.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyEvaluationRequest'
+      responses:
+        '200':
+          description: Policy evaluation result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyEvaluationResult'
+
+  /observability/events:
+    get:
+      tags: [Observability]
+      operationId: listEvents
+      summary: List agent/runtime events.
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: sessionId
+          in: query
+          schema:
+            type: string
+        - name: severity
+          in: query
+          schema:
+            $ref: '#/components/schemas/EventSeverity'
+        - name: type
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Event stream snapshot.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponse'
+
+  /observability/traces/{traceId}:
+    parameters:
+      - name: traceId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Observability]
+      operationId: getTrace
+      summary: Get an execution trace.
+      responses:
+        '200':
+          description: Trace details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trace'
+
+  /runtime/metrics:
+    get:
+      tags: [Runtime, Observability]
+      operationId: getRuntimeMetrics
+      summary: Get runtime utilization and throughput metrics.
+      responses:
+        '200':
+          description: Runtime metrics snapshot.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeMetrics'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+
+  /runtime/events/stream:
+    get:
+      tags: [Runtime, Observability]
+      operationId: streamRuntimeEvents
+      summary: Subscribe to runtime events using server-sent events.
+      responses:
+        '200':
+          description: Server-sent event stream of runtime activity.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/StreamEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /projects/{projectId}/snapshots:
+    parameters:
+      - $ref: '#/components/parameters/ProjectId'
+    get:
+      tags: [Projects]
+      operationId: listProjectSnapshots
+      summary: List saved project snapshots or workspace baselines.
+      responses:
+        '200':
+          description: Project snapshots.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSnapshotListResponse'
+    post:
+      tags: [Projects]
+      operationId: createProjectSnapshot
+      summary: Create an immutable project snapshot.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectSnapshotCreate'
+      responses:
+        '201':
+          description: Project snapshot created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSnapshot'
+
+  /sessions/{sessionId}/stream:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Sessions]
+      operationId: streamSession
+      summary: Stream tokens, tool events, and status transitions for a session run.
+      responses:
+        '200':
+          description: Server-sent event stream for session activity.
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/SessionStreamEvent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /sessions/{sessionId}/artifacts:
+    parameters:
+      - $ref: '#/components/parameters/SessionId'
+    get:
+      tags: [Sessions]
+      operationId: listSessionArtifacts
+      summary: List artifacts produced during a session.
+      responses:
+        '200':
+          description: Session artifacts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactListResponse'
+    post:
+      tags: [Sessions]
+      operationId: createSessionArtifact
+      summary: Register or persist an artifact produced by the session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtifactCreate'
+      responses:
+        '201':
+          description: Artifact registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artifact'
+
+  /tools/{toolId}/approvals:
+    parameters:
+      - $ref: '#/components/parameters/ToolId'
+    post:
+      tags: [Tools, Governance]
+      operationId: approveToolInvocation
+      summary: Approve, deny, or constrain a pending mediated tool invocation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecisionRequest'
+      responses:
+        '200':
+          description: Approval decision recorded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditDecision'
+
+  /files/stat:
+    post:
+      tags: [Files]
+      operationId: statFile
+      summary: Get metadata for a file or directory within an allowed workspace.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileStatRequest'
+      responses:
+        '200':
+          description: File or directory metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileStatResponse'
+
+  /files/delete:
+    post:
+      tags: [Files]
+      operationId: deleteFile
+      summary: Delete a file or directory from an allowed workspace.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileDeleteRequest'
+      responses:
+        '200':
+          description: Delete result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileDeleteResponse'
+
+  /files/move:
+    post:
+      tags: [Files]
+      operationId: moveFile
+      summary: Move or rename a file or directory atomically when possible.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileMoveRequest'
+      responses:
+        '200':
+          description: Move result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileMoveResponse'
+
+  /models/{modelId}/warmup:
+    parameters:
+      - $ref: '#/components/parameters/ModelId'
+    post:
+      tags: [Models]
+      operationId: warmupModel
+      summary: Warm a model into memory for low-latency subsequent routing.
+      responses:
+        '202':
+          description: Model warmup accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobAccepted'
+
+  /jobs/{jobId}/logs:
+    parameters:
+      - $ref: '#/components/parameters/JobId'
+    get:
+      tags: [Jobs, Observability]
+      operationId: getJobLogs
+      summary: Retrieve structured logs emitted by a job.
+      responses:
+        '200':
+          description: Job logs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobLogResponse'
+
+  /governance/decisions:
+    get:
+      tags: [Governance]
+      operationId: listAuditDecisions
+      summary: List recorded governance and approval decisions.
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: sessionId
+          in: query
+          schema:
+            type: string
+        - name: decision
+          in: query
+          schema:
+            type: string
+            enum: [allow, deny, requireApproval]
+      responses:
+        '200':
+          description: Governance decisions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditDecisionListResponse'
+
+  /observability/metrics:
+    get:
+      tags: [Observability]
+      operationId: listMetricSamples
+      summary: List metric samples suitable for dashboards or alerting pipelines.
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: since
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Metric samples.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricSampleListResponse'
+
+webhooks:
+  jobCompleted:
+    post:
+      tags: [Jobs]
+      operationId: onJobCompleted
+      summary: Delivery contract for job completion notifications.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEnvelope'
+      responses:
+        '202':
+          description: Webhook accepted for downstream processing.
+  sessionStateChanged:
+    post:
+      tags: [Sessions]
+      operationId: onSessionStateChanged
+      summary: Delivery contract for session state changes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEnvelope'
+      responses:
+        '202':
+          description: Webhook accepted for downstream processing.
+  approvalRequired:
+    post:
+      tags: [Governance]
+      operationId: onApprovalRequired
+      summary: Delivery contract for policy or tool approval escalation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEnvelope'
+      responses:
+        '202':
+          description: Webhook accepted for downstream processing.
+
+externalDocs:
+  description: Companion operational and deployment documentation.
+  url: https://localhost/docs/local-coding-caretaker-agent-api
+
+x-tagGroups:
+  - name: Core Runtime
+    tags: [Runtime, Agents, Projects, Sessions, Messages]
+  - name: Execution Surface
+    tags: [Tools, Files, Memory, Models]
+  - name: Control and Insights
+    tags: [Jobs, Governance, Observability]
+
+components:
+
+  headers:
+    XRequestId:
+      description: Stable request correlation identifier emitted by the runtime.
+      schema:
+        type: string
+        format: uuid
+    XTraceId:
+      description: Distributed trace identifier associated with the request.
+      schema:
+        type: string
+    XRateLimitLimit:
+      description: Maximum number of requests permitted in the current window.
+      schema:
+        type: integer
+    XRateLimitRemaining:
+      description: Remaining number of requests in the current window.
+      schema:
+        type: integer
+    XRateLimitReset:
+      description: Seconds until the current rate-limit window resets.
+      schema:
+        type: integer
+
+  responses:
+    BadRequest:
+      description: Request validation failed.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Unauthorized:
+      description: Authentication required or token invalid.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Forbidden:
+      description: Request blocked by policy or authorization rules.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    NotFound:
+      description: Requested resource was not found.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Conflict:
+      description: Request conflicts with current resource state.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    TooManyRequests:
+      description: Rate limit exceeded.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/XRateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/XRateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/XRateLimitReset'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    ServiceUnavailable:
+      description: Runtime dependency unavailable or degraded beyond service threshold.
+      headers:
+        X-Request-Id:
+          $ref: '#/components/headers/XRequestId'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+  examples:
+    MinimalAgent:
+      summary: Minimal coder agent.
+      value:
+        name: Builder
+        role: coder
+        systemPrompt: You are a careful local coding assistant.
+        capabilities:
+          - name: codeEdit
+            enabled: true
+        defaultModelPreferences:
+          strategy: routeByTask
+    MinimalRunRequest:
+      summary: Run a task-focused instruction.
+      value:
+        instruction: Refactor the parser to reduce nesting and add tests.
+        stream: true
+        dryRun: false
+    ProblemForbiddenExample:
+      summary: Policy-blocked shell command.
+      value:
+        type: https://localhost/problems/policy-denied
+        title: Forbidden
+        status: 403
+        detail: Shell execution was denied by active project policy.
+        instance: /sessions/ses_123/run
+        code: policy_denied
+        traceId: trc_456
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: local-token
+
+  parameters:
+    AgentId:
+      name: agentId
+      in: path
+      required: true
+      schema:
+        type: string
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      schema:
+        type: string
+    SessionId:
+      name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+    ToolId:
+      name: toolId
+      in: path
+      required: true
+      schema:
+        type: string
+    MemoryId:
+      name: memoryId
+      in: path
+      required: true
+      schema:
+        type: string
+    ModelId:
+      name: modelId
+      in: path
+      required: true
+      schema:
+        type: string
+    JobId:
+      name: jobId
+      in: path
+      required: true
+      schema:
+        type: string
+    PolicyId:
+      name: policyId
+      in: path
+      required: true
+      schema:
+        type: string
+    Cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 500
+        default: 50
+
+  schemas:
+    Metadata:
+      type: object
+      additionalProperties:
+        oneOf:
+          - type: string
+          - type: number
+          - type: integer
+          - type: boolean
+          - type: array
+          - type: object
+          - type: 'null'
+
+    Timestamped:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [createdAt, updatedAt]
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, unavailable]
+        version:
+          type: string
+        uptimeSeconds:
+          type: number
+        checks:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              status:
+                type: string
+                enum: [ok, degraded, unavailable]
+              detail:
+                type: string
+            required: [name, status]
+      required: [status, version, uptimeSeconds, checks]
+
+    RuntimeStatus:
+      type: object
+      properties:
+        runtimeId:
+          type: string
+        host:
+          $ref: '#/components/schemas/HostInfo'
+        scheduler:
+          $ref: '#/components/schemas/SchedulerStatus'
+        activeAgentId:
+          type: string
+          nullable: true
+        activeSessions:
+          type: integer
+          minimum: 0
+        queuedJobs:
+          type: integer
+          minimum: 0
+      required: [runtimeId, host, scheduler, activeSessions, queuedJobs]
+
+    HostInfo:
+      type: object
+      properties:
+        hostname:
+          type: string
+        platform:
+          type: string
+        arch:
+          type: string
+        cpu:
+          type: object
+          properties:
+            model:
+              type: string
+            coresPhysical:
+              type: integer
+            coresLogical:
+              type: integer
+          required: [coresLogical]
+        memory:
+          type: object
+          properties:
+            totalBytes:
+              type: integer
+            availableBytes:
+              type: integer
+          required: [totalBytes, availableBytes]
+        gpus:
+          type: array
+          items:
+            $ref: '#/components/schemas/GpuInfo'
+      required: [hostname, platform, arch, cpu, memory, gpus]
+
+    GpuInfo:
+      type: object
+      properties:
+        index:
+          type: integer
+        vendor:
+          type: string
+        name:
+          type: string
+        vramBytes:
+          type: integer
+        utilization:
+          type: number
+          minimum: 0
+          maximum: 1
+          nullable: true
+      required: [index, vendor, name, vramBytes]
+
+    SchedulerStatus:
+      type: object
+      properties:
+        maxConcurrentRuns:
+          type: integer
+        activeRuns:
+          type: integer
+        queuedRuns:
+          type: integer
+        preemptionEnabled:
+          type: boolean
+      required: [maxConcurrentRuns, activeRuns, queuedRuns, preemptionEnabled]
+
+    RuntimeConfig:
+      type: object
+      properties:
+        defaultAgentId:
+          type: string
+          nullable: true
+        workspaceRoots:
+          type: array
+          items:
+            type: string
+        sandboxMode:
+          type: string
+          enum: [disabled, permissive, strict]
+        networkAccess:
+          type: string
+          enum: [disabled, allowlist, unrestricted]
+        allowShell:
+          type: boolean
+        maxTokensPerTurn:
+          type: integer
+          minimum: 1
+        maxToolCallsPerTurn:
+          type: integer
+          minimum: 0
+        defaultModelRoute:
+          type: string
+        auditRetentionDays:
+          type: integer
+          minimum: 1
+      required:
+        - workspaceRoots
+        - sandboxMode
+        - networkAccess
+        - allowShell
+        - maxTokensPerTurn
+        - maxToolCallsPerTurn
+        - auditRetentionDays
+
+    RuntimeConfigPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        defaultAgentId:
+          type: string
+          nullable: true
+        workspaceRoots:
+          type: array
+          items:
+            type: string
+        sandboxMode:
+          type: string
+          enum: [disabled, permissive, strict]
+        networkAccess:
+          type: string
+          enum: [disabled, allowlist, unrestricted]
+        allowShell:
+          type: boolean
+        maxTokensPerTurn:
+          type: integer
+          minimum: 1
+        maxToolCallsPerTurn:
+          type: integer
+          minimum: 0
+        defaultModelRoute:
+          type: string
+        auditRetentionDays:
+          type: integer
+          minimum: 1
+
+    Agent:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+            role:
+              type: string
+              enum: [caretaker, coArchitect, coder, reviewer, orchestrator, analyst]
+            systemPrompt:
+              type: string
+            capabilities:
+              type: array
+              items:
+                $ref: '#/components/schemas/Capability'
+            defaultPolicies:
+              type: array
+              items:
+                type: string
+            defaultTools:
+              type: array
+              items:
+                type: string
+            defaultModelPreferences:
+              $ref: '#/components/schemas/ModelPreferences'
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required:
+            - id
+            - name
+            - role
+            - systemPrompt
+            - capabilities
+            - defaultPolicies
+            - defaultTools
+            - defaultModelPreferences
+
+    AgentCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        role:
+          type: string
+          enum: [caretaker, coArchitect, coder, reviewer, orchestrator, analyst]
+        systemPrompt:
+          type: string
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capability'
+        defaultPolicies:
+          type: array
+          items:
+            type: string
+        defaultTools:
+          type: array
+          items:
+            type: string
+        defaultModelPreferences:
+          $ref: '#/components/schemas/ModelPreferences'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required:
+        - name
+        - role
+        - systemPrompt
+        - capabilities
+        - defaultModelPreferences
+
+    AgentPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        role:
+          type: string
+          enum: [caretaker, coArchitect, coder, reviewer, orchestrator, analyst]
+        systemPrompt:
+          type: string
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capability'
+        defaultPolicies:
+          type: array
+          items:
+            type: string
+        defaultTools:
+          type: array
+          items:
+            type: string
+        defaultModelPreferences:
+          $ref: '#/components/schemas/ModelPreferences'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+
+    AgentActivation:
+      type: object
+      properties:
+        agentId:
+          type: string
+        activatedAt:
+          type: string
+          format: date-time
+      required: [agentId, activatedAt]
+
+    Capability:
+      type: object
+      properties:
+        name:
+          type: string
+        enabled:
+          type: boolean
+        constraints:
+          type: array
+          items:
+            type: string
+      required: [name, enabled]
+
+    ModelPreferences:
+      type: object
+      properties:
+        primary:
+          type: string
+        fallback:
+          type: array
+          items:
+            type: string
+        strategy:
+          type: string
+          enum: [fixed, routeByTask, routeByContext, routeByCost]
+        maxContextTokens:
+          type: integer
+          minimum: 1
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+        topP:
+          type: number
+          minimum: 0
+          maximum: 1
+      required: [strategy]
+
+    Project:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+            rootPath:
+              type: string
+            languageHints:
+              type: array
+              items:
+                type: string
+            vcs:
+              $ref: '#/components/schemas/VcsInfo'
+            indexing:
+              $ref: '#/components/schemas/IndexingStatus'
+            policies:
+              type: array
+              items:
+                type: string
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required: [id, name, rootPath, indexing, policies]
+
+    ProjectCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        rootPath:
+          type: string
+        languageHints:
+          type: array
+          items:
+            type: string
+        policies:
+          type: array
+          items:
+            type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required: [name, rootPath]
+
+    ProjectPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        languageHints:
+          type: array
+          items:
+            type: string
+        policies:
+          type: array
+          items:
+            type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+
+    ProjectListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    VcsInfo:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: [git, none]
+        branch:
+          type: string
+          nullable: true
+        commit:
+          type: string
+          nullable: true
+        dirty:
+          type: boolean
+      required: [provider, dirty]
+
+    IndexingStatus:
+      type: object
+      properties:
+        state:
+          type: string
+          enum: [notIndexed, indexing, ready, error]
+        lastIndexedAt:
+          type: string
+          format: date-time
+          nullable: true
+        symbolCount:
+          type: integer
+          minimum: 0
+        chunkCount:
+          type: integer
+          minimum: 0
+        error:
+          type: string
+          nullable: true
+      required: [state, symbolCount, chunkCount]
+
+    ProjectIndexRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        fullReindex:
+          type: boolean
+          default: false
+        includeGlobs:
+          type: array
+          items:
+            type: string
+        excludeGlobs:
+          type: array
+          items:
+            type: string
+        embeddingsModel:
+          type: string
+      required: []
+
+    ProjectGraph:
+      type: object
+      properties:
+        projectId:
+          type: string
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/GraphNode'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/GraphEdge'
+      required: [projectId, nodes, edges]
+
+    GraphNode:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+          enum: [file, module, class, function, symbol, package]
+        name:
+          type: string
+        path:
+          type: string
+          nullable: true
+      required: [id, kind, name]
+
+    GraphEdge:
+      type: object
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+        relation:
+          type: string
+          enum: [imports, calls, defines, extends, implements, references, dependsOn]
+      required: [from, to, relation]
+
+    SessionStatus:
+      type: string
+      enum: [idle, running, waiting, interrupted, completed, failed, archived]
+
+    Session:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            agentId:
+              type: string
+            projectId:
+              type: string
+              nullable: true
+            mode:
+              type: string
+              enum: [interactive, task, review, refactor, build, debug]
+            status:
+              $ref: '#/components/schemas/SessionStatus'
+            goals:
+              type: array
+              items:
+                type: string
+            contextWindow:
+              type: object
+              properties:
+                maxTokens:
+                  type: integer
+                usedTokens:
+                  type: integer
+              required: [maxTokens, usedTokens]
+            execution:
+              $ref: '#/components/schemas/ExecutionProfile'
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required:
+            - id
+            - name
+            - agentId
+            - mode
+            - status
+            - goals
+            - contextWindow
+            - execution
+
+    SessionCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        agentId:
+          type: string
+        projectId:
+          type: string
+        mode:
+          type: string
+          enum: [interactive, task, review, refactor, build, debug]
+        goals:
+          type: array
+          items:
+            type: string
+        execution:
+          $ref: '#/components/schemas/ExecutionProfile'
+        bootstrapMessages:
+          type: array
+          items:
+            $ref: '#/components/schemas/BootstrapMessage'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required: [name, agentId, mode]
+
+    SessionPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/SessionStatus'
+        goals:
+          type: array
+          items:
+            type: string
+        execution:
+          $ref: '#/components/schemas/ExecutionProfile'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+
+    SessionListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    ExecutionProfile:
+      type: object
+      properties:
+        autonomy:
+          type: string
+          enum: [advisory, constrained, supervised, delegated]
+        approvalMode:
+          type: string
+          enum: [never, riskyOnly, always]
+        maxToolCalls:
+          type: integer
+          minimum: 0
+        maxWallClockSeconds:
+          type: integer
+          minimum: 1
+        networkAccess:
+          type: string
+          enum: [inherit, disabled, allowlist, unrestricted]
+        shellAccess:
+          type: string
+          enum: [inherit, disabled, readOnly, full]
+        fileWriteAccess:
+          type: string
+          enum: [inherit, disabled, workspaceOnly, unrestricted]
+      required: [autonomy, approvalMode]
+
+    BootstrapMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [system, user, assistant]
+        content:
+          type: string
+      required: [role, content]
+
+    MessageRole:
+      type: string
+      enum: [system, user, assistant, tool]
+
+    MessagePart:
+      oneOf:
+        - type: object
+          properties:
+            type:
+              const: text
+            text:
+              type: string
+          required: [type, text]
+        - type: object
+          properties:
+            type:
+              const: code
+            language:
+              type: string
+            code:
+              type: string
+          required: [type, code]
+        - type: object
+          properties:
+            type:
+              const: fileRef
+            path:
+              type: string
+            startLine:
+              type: integer
+              minimum: 1
+              nullable: true
+            endLine:
+              type: integer
+              minimum: 1
+              nullable: true
+          required: [type, path]
+        - type: object
+          properties:
+            type:
+              const: toolCall
+            toolName:
+              type: string
+            arguments:
+              type: object
+          required: [type, toolName, arguments]
+        - type: object
+          properties:
+            type:
+              const: toolResult
+            toolName:
+              type: string
+            output:
+              oneOf:
+                - type: string
+                - type: object
+                - type: array
+          required: [type, toolName, output]
+
+    Message:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            sessionId:
+              type: string
+            role:
+              $ref: '#/components/schemas/MessageRole'
+            parts:
+              type: array
+              items:
+                $ref: '#/components/schemas/MessagePart'
+            tokenUsage:
+              $ref: '#/components/schemas/TokenUsage'
+            parentMessageId:
+              type: string
+              nullable: true
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required: [id, sessionId, role, parts]
+
+    MessageCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        role:
+          $ref: '#/components/schemas/MessageRole'
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessagePart'
+        responseMode:
+          type: string
+          enum: [none, sync, async]
+          default: sync
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required: [role, parts]
+
+    MessageResult:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+        message:
+          $ref: '#/components/schemas/Message'
+        run:
+          oneOf:
+            - $ref: '#/components/schemas/RunResult'
+            - $ref: '#/components/schemas/JobAccepted'
+          nullable: true
+      required: [accepted, message]
+
+    MessageListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    RunRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        instruction:
+          type: string
+        stream:
+          type: boolean
+          default: false
+        overrideModel:
+          type: string
+        toolAllowlist:
+          type: array
+          items:
+            type: string
+        toolDenylist:
+          type: array
+          items:
+            type: string
+        dryRun:
+          type: boolean
+          default: false
+      required: []
+
+    RunResult:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        status:
+          type: string
+          enum: [completed, waiting, interrupted, failed]
+        outputMessage:
+          $ref: '#/components/schemas/Message'
+        toolCalls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolInvocationResult'
+        traceId:
+          type: string
+        tokenUsage:
+          $ref: '#/components/schemas/TokenUsage'
+      required: [sessionId, status, traceId]
+
+    InterruptResult:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        requested:
+          type: boolean
+        at:
+          type: string
+          format: date-time
+      required: [sessionId, requested, at]
+
+    CheckpointCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        label:
+          type: string
+        includeTransientState:
+          type: boolean
+          default: false
+
+    Checkpoint:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            sessionId:
+              type: string
+            name:
+              type: string
+            label:
+              type: string
+              nullable: true
+          required: [id, sessionId, name]
+
+    ResumeRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        checkpointId:
+          type: string
+      required: [checkpointId]
+
+    Tool:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+            category:
+              type: string
+              enum: [filesystem, shell, vcs, build, test, search, retrieval, editor, http, custom]
+            transport:
+              type: string
+              enum: [inProcess, stdio, http, websocket]
+            inputSchema:
+              type: object
+            outputSchema:
+              type: object
+            sideEffectLevel:
+              type: string
+              enum: [none, low, moderate, high]
+            approvalRequired:
+              type: boolean
+            enabled:
+              type: boolean
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required:
+            - id
+            - name
+            - category
+            - transport
+            - inputSchema
+            - outputSchema
+            - sideEffectLevel
+            - approvalRequired
+            - enabled
+
+    ToolCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum: [filesystem, shell, vcs, build, test, search, retrieval, editor, http, custom]
+        transport:
+          type: string
+          enum: [inProcess, stdio, http, websocket]
+        inputSchema:
+          type: object
+        outputSchema:
+          type: object
+        sideEffectLevel:
+          type: string
+          enum: [none, low, moderate, high]
+        approvalRequired:
+          type: boolean
+        enabled:
+          type: boolean
+          default: true
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required:
+        - name
+        - category
+        - transport
+        - inputSchema
+        - outputSchema
+        - sideEffectLevel
+        - approvalRequired
+
+    ToolPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        inputSchema:
+          type: object
+        outputSchema:
+          type: object
+        sideEffectLevel:
+          type: string
+          enum: [none, low, moderate, high]
+        approvalRequired:
+          type: boolean
+        enabled:
+          type: boolean
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+
+    ToolInvocationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        sessionId:
+          type: string
+          nullable: true
+        arguments:
+          type: object
+        dryRun:
+          type: boolean
+          default: false
+        governanceContext:
+          $ref: '#/components/schemas/GovernanceContext'
+      required: [arguments]
+
+    ToolInvocationResult:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            invocationId:
+              type: string
+            toolId:
+              type: string
+            toolName:
+              type: string
+            status:
+              type: string
+              enum: [succeeded, failed, denied, dryRun]
+            output:
+              oneOf:
+                - type: object
+                - type: array
+                - type: string
+                - type: 'null'
+            error:
+              type: string
+              nullable: true
+            traceId:
+              type: string
+            durationMs:
+              type: integer
+              minimum: 0
+            governance:
+              $ref: '#/components/schemas/PolicyEvaluationResult'
+          required:
+            - invocationId
+            - toolId
+            - toolName
+            - status
+            - traceId
+            - durationMs
+
+    FileEncoding:
+      type: string
+      enum: [utf8, base64]
+
+    FileReadRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          type: string
+        startByte:
+          type: integer
+          minimum: 0
+        endByte:
+          type: integer
+          minimum: 0
+        encoding:
+          $ref: '#/components/schemas/FileEncoding'
+      required: [path]
+
+    FileReadResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        encoding:
+          $ref: '#/components/schemas/FileEncoding'
+        content:
+          type: string
+        sha256:
+          type: string
+        sizeBytes:
+          type: integer
+      required: [path, encoding, content, sha256, sizeBytes]
+
+    FileWriteRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          type: string
+        content:
+          type: string
+        encoding:
+          $ref: '#/components/schemas/FileEncoding'
+        createParents:
+          type: boolean
+          default: false
+        expectedSha256:
+          type: string
+          nullable: true
+      required: [path, content]
+
+    FilePatchRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          type: string
+        expectedSha256:
+          type: string
+          nullable: true
+        hunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TextPatch'
+      required: [path, hunks]
+
+    TextPatch:
+      type: object
+      properties:
+        startLine:
+          type: integer
+          minimum: 1
+        endLine:
+          type: integer
+          minimum: 1
+        replacement:
+          type: string
+      required: [startLine, endLine, replacement]
+
+    FileWriteResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        sha256:
+          type: string
+        bytesWritten:
+          type: integer
+        changed:
+          type: boolean
+      required: [path, sha256, bytesWritten, changed]
+
+    FileSearchRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        rootPath:
+          type: string
+        query:
+          type: string
+        mode:
+          type: string
+          enum: [path, text, regex, semantic]
+        includeGlobs:
+          type: array
+          items:
+            type: string
+        excludeGlobs:
+          type: array
+          items:
+            type: string
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+      required: [rootPath, query, mode]
+
+    FileSearchResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileSearchHit'
+      required: [items]
+
+    FileSearchHit:
+      type: object
+      properties:
+        path:
+          type: string
+        score:
+          type: number
+        line:
+          type: integer
+          nullable: true
+        snippet:
+          type: string
+          nullable: true
+      required: [path, score]
+
+    FileTree:
+      type: object
+      properties:
+        rootPath:
+          type: string
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileTreeNode'
+      required: [rootPath, nodes]
+
+    FileTreeNode:
+      type: object
+      properties:
+        path:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          enum: [file, directory]
+        sizeBytes:
+          type: integer
+          nullable: true
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileTreeNode'
+          nullable: true
+      required: [path, name, type]
+
+    MemoryScope:
+      type: string
+      enum: [global, agent, project, session, ephemeral]
+
+    MemoryEntry:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            scope:
+              $ref: '#/components/schemas/MemoryScope'
+            agentId:
+              type: string
+              nullable: true
+            projectId:
+              type: string
+              nullable: true
+            sessionId:
+              type: string
+              nullable: true
+            kind:
+              type: string
+              enum: [fact, preference, summary, decision, constraint, artifact, embedding]
+            content:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+            importance:
+              type: number
+              minimum: 0
+              maximum: 1
+            expiresAt:
+              type: string
+              format: date-time
+              nullable: true
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required: [id, scope, kind, content, tags, importance]
+
+    MemoryEntryCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        scope:
+          $ref: '#/components/schemas/MemoryScope'
+        agentId:
+          type: string
+        projectId:
+          type: string
+        sessionId:
+          type: string
+        kind:
+          type: string
+          enum: [fact, preference, summary, decision, constraint, artifact, embedding]
+        content:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        importance:
+          type: number
+          minimum: 0
+          maximum: 1
+        expiresAt:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required: [scope, kind, content]
+
+    MemoryEntryPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        content:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        importance:
+          type: number
+          minimum: 0
+          maximum: 1
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+
+    MemoryListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemoryEntry'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    MemoryQueryRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        query:
+          type: string
+        scope:
+          $ref: '#/components/schemas/MemoryScope'
+        agentId:
+          type: string
+        projectId:
+          type: string
+        sessionId:
+          type: string
+        topK:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+      required: [query]
+
+    MemoryQueryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              entry:
+                $ref: '#/components/schemas/MemoryEntry'
+              score:
+                type: number
+            required: [entry, score]
+      required: [items]
+
+    Model:
+      type: object
+      properties:
+        id:
+          type: string
+        family:
+          type: string
+        format:
+          type: string
+          enum: [gguf, onnx, pytorch, mlx, tensorrt, custom]
+        quantization:
+          type: string
+          nullable: true
+        contextLength:
+          type: integer
+        modalities:
+          type: array
+          items:
+            type: string
+            enum: [text, code, vision, embeddings, rerank]
+        parameterEstimate:
+          type: string
+        localPath:
+          type: string
+          nullable: true
+        runtime:
+          type: string
+          enum: [llamaCpp, vllm, ollama, mlx, custom]
+        capabilities:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [available, loading, unavailable]
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required:
+        - id
+        - family
+        - format
+        - contextLength
+        - modalities
+        - runtime
+        - capabilities
+        - status
+
+    ModelRouteRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        task:
+          type: string
+          enum: [chat, codeGen, codeReview, refactor, retrieval, planning, summarization, embeddings, testing]
+        minContext:
+          type: integer
+          minimum: 1
+        requireVision:
+          type: boolean
+          default: false
+        requireEmbeddings:
+          type: boolean
+          default: false
+        latencyBias:
+          type: number
+          minimum: 0
+          maximum: 1
+        qualityBias:
+          type: number
+          minimum: 0
+          maximum: 1
+        costBias:
+          type: number
+          minimum: 0
+          maximum: 1
+      required: [task]
+
+    ModelRouteDecision:
+      type: object
+      properties:
+        selectedModelId:
+          type: string
+        rationale:
+          type: string
+        alternatives:
+          type: array
+          items:
+            type: string
+      required: [selectedModelId, rationale]
+
+    JobStatus:
+      type: string
+      enum: [queued, running, completed, failed, cancelled]
+
+    JobAccepted:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          $ref: '#/components/schemas/JobStatus'
+      required: [jobId, status]
+
+    Job:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+            status:
+              $ref: '#/components/schemas/JobStatus'
+            progress:
+              type: number
+              minimum: 0
+              maximum: 1
+            result:
+              oneOf:
+                - type: object
+                - type: array
+                - type: string
+                - type: 'null'
+            error:
+              type: string
+              nullable: true
+            traceId:
+              type: string
+          required: [id, type, status, progress, traceId]
+
+    JobListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    PolicyEffect:
+      type: string
+      enum: [allow, deny, requireApproval, redact, constrain]
+
+    Policy:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+            scope:
+              type: string
+              enum: [global, agent, project, session, tool]
+            enabled:
+              type: boolean
+            priority:
+              type: integer
+            rules:
+              type: array
+              items:
+                $ref: '#/components/schemas/PolicyRule'
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required: [id, name, scope, enabled, priority, rules]
+
+    PolicyCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        scope:
+          type: string
+          enum: [global, agent, project, session, tool]
+        enabled:
+          type: boolean
+          default: true
+        priority:
+          type: integer
+          default: 100
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyRule'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required: [name, scope, rules]
+
+    PolicyPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        enabled:
+          type: boolean
+        priority:
+          type: integer
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyRule'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+
+    PolicyRule:
+      type: object
+      properties:
+        id:
+          type: string
+        effect:
+          $ref: '#/components/schemas/PolicyEffect'
+        actions:
+          type: array
+          items:
+            type: string
+        resources:
+          type: array
+          items:
+            type: string
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        reason:
+          type: string
+      required: [effect, actions]
+
+    Condition:
+      type: object
+      properties:
+        field:
+          type: string
+        op:
+          type: string
+          enum: [eq, ne, in, notIn, lt, lte, gt, gte, matches, exists]
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: integer
+            - type: boolean
+            - type: array
+            - type: object
+            - type: 'null'
+      required: [field, op]
+
+    GovernanceContext:
+      type: object
+      properties:
+        agentId:
+          type: string
+        sessionId:
+          type: string
+        projectId:
+          type: string
+        action:
+          type: string
+        resource:
+          type: string
+        proposedArguments:
+          type: object
+      required: [action]
+
+    PolicyEvaluationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        context:
+          $ref: '#/components/schemas/GovernanceContext'
+      required: [context]
+
+    PolicyEvaluationResult:
+      type: object
+      properties:
+        decision:
+          type: string
+          enum: [allow, deny, requireApproval]
+        matchedPolicies:
+          type: array
+          items:
+            type: object
+            properties:
+              policyId:
+                type: string
+              ruleId:
+                type: string
+                nullable: true
+              effect:
+                $ref: '#/components/schemas/PolicyEffect'
+              reason:
+                type: string
+            required: [policyId, effect]
+        constraints:
+          type: array
+          items:
+            type: string
+        redactions:
+          type: array
+          items:
+            type: string
+      required: [decision, matchedPolicies, constraints, redactions]
+
+    EventSeverity:
+      type: string
+      enum: [debug, info, warn, error, critical]
+
+    Event:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+            severity:
+              $ref: '#/components/schemas/EventSeverity'
+            sessionId:
+              type: string
+              nullable: true
+            traceId:
+              type: string
+              nullable: true
+            message:
+              type: string
+            data:
+              $ref: '#/components/schemas/Metadata'
+          required: [id, type, severity, message]
+
+    EventListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    Trace:
+      type: object
+      properties:
+        traceId:
+          type: string
+        spans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
+      required: [traceId, spans]
+
+    Span:
+      type: object
+      properties:
+        spanId:
+          type: string
+        parentSpanId:
+          type: string
+          nullable: true
+        name:
+          type: string
+        kind:
+          type: string
+          enum: [sessionRun, modelInference, toolCall, policyEval, fileIo, indexing, retrieval]
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        attributes:
+          $ref: '#/components/schemas/Metadata'
+        status:
+          type: string
+          enum: [ok, error, cancelled]
+      required: [spanId, name, kind, startedAt, status]
+
+    TokenUsage:
+      type: object
+      properties:
+        inputTokens:
+          type: integer
+          minimum: 0
+        outputTokens:
+          type: integer
+          minimum: 0
+        cachedTokens:
+          type: integer
+          minimum: 0
+        totalTokens:
+          type: integer
+          minimum: 0
+      required: [inputTokens, outputTokens, totalTokens]
+
+
+
+
+
+
+
+
+    ErrorCode:
+      type: string
+      enum:
+        - validation_error
+        - unauthorized
+        - forbidden
+        - not_found
+        - conflict
+        - rate_limited
+        - policy_denied
+        - tool_failed
+        - model_unavailable
+        - runtime_unavailable
+        - unsupported_operation
+
+    ProblemDetails:
+      type: object
+      description: RFC 9457-style problem details payload enriched with local runtime diagnostics.
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 100
+          maximum: 599
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+        traceId:
+          type: string
+        requestId:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+            required: [path, message]
+      required: [title, status]
+
+    PaginationMeta:
+      type: object
+      properties:
+        nextCursor:
+          type: string
+          nullable: true
+        limit:
+          type: integer
+          minimum: 1
+        estimatedTotal:
+          type: integer
+          minimum: 0
+          nullable: true
+      required: [limit]
+
+    LinkSet:
+      type: object
+      properties:
+        self:
+          type: string
+        next:
+          type: string
+          nullable: true
+        prev:
+          type: string
+          nullable: true
+      required: [self]
+
+    ResourceRef:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+          nullable: true
+      required: [id, type]
+
+    ProjectSnapshot:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            projectId:
+              type: string
+            label:
+              type: string
+            description:
+              type: string
+              nullable: true
+            vcs:
+              $ref: '#/components/schemas/VcsInfo'
+            manifestSha256:
+              type: string
+            fileCount:
+              type: integer
+              minimum: 0
+            sizeBytes:
+              type: integer
+              minimum: 0
+          required: [id, projectId, label, manifestSha256, fileCount, sizeBytes]
+
+    ProjectSnapshotCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        label:
+          type: string
+        description:
+          type: string
+      required: [label]
+
+    ProjectSnapshotListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectSnapshot'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    ArtifactKind:
+      type: string
+      enum: [patch, file, report, testResult, buildLog, image, archive, transcript, other]
+
+    Artifact:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            sessionId:
+              type: string
+            projectId:
+              type: string
+              nullable: true
+            kind:
+              $ref: '#/components/schemas/ArtifactKind'
+            name:
+              type: string
+            mediaType:
+              type: string
+            path:
+              type: string
+              nullable: true
+            sha256:
+              type: string
+              nullable: true
+            sizeBytes:
+              type: integer
+              minimum: 0
+              nullable: true
+            sourceMessageId:
+              type: string
+              nullable: true
+            metadata:
+              $ref: '#/components/schemas/Metadata'
+          required: [id, sessionId, kind, name, mediaType]
+
+    ArtifactCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        projectId:
+          type: string
+        kind:
+          $ref: '#/components/schemas/ArtifactKind'
+        name:
+          type: string
+        mediaType:
+          type: string
+        path:
+          type: string
+        sha256:
+          type: string
+        sizeBytes:
+          type: integer
+          minimum: 0
+        sourceMessageId:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+      required: [kind, name, mediaType]
+
+    ArtifactListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artifact'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    ApprovalDecision:
+      type: string
+      enum: [approve, deny, constrain]
+
+    ApprovalDecisionRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        invocationId:
+          type: string
+        decision:
+          $ref: '#/components/schemas/ApprovalDecision'
+        reason:
+          type: string
+        constraints:
+          type: array
+          items:
+            type: string
+        approver:
+          type: string
+      required: [invocationId, decision]
+
+    AuditDecision:
+      allOf:
+        - $ref: '#/components/schemas/Timestamped'
+        - type: object
+          properties:
+            id:
+              type: string
+            sessionId:
+              type: string
+              nullable: true
+            traceId:
+              type: string
+              nullable: true
+            invocationId:
+              type: string
+              nullable: true
+            decision:
+              type: string
+              enum: [allow, deny, requireApproval]
+            source:
+              type: string
+              enum: [policyEngine, human, system]
+            reason:
+              type: string
+              nullable: true
+            matchedPolicyIds:
+              type: array
+              items:
+                type: string
+            constraints:
+              type: array
+              items:
+                type: string
+            approver:
+              type: string
+              nullable: true
+          required: [id, decision, source, matchedPolicyIds, constraints]
+
+    AuditDecisionListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditDecision'
+        nextCursor:
+          type: string
+          nullable: true
+      required: [items]
+
+    FileStatRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          type: string
+        followSymlinks:
+          type: boolean
+          default: false
+      required: [path]
+
+    FileStatResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        type:
+          type: string
+          enum: [file, directory, symlink, other]
+        exists:
+          type: boolean
+        sizeBytes:
+          type: integer
+          minimum: 0
+          nullable: true
+        sha256:
+          type: string
+          nullable: true
+        mimeType:
+          type: string
+          nullable: true
+        modifiedAt:
+          type: string
+          format: date-time
+          nullable: true
+        permissions:
+          type: object
+          properties:
+            readable:
+              type: boolean
+            writable:
+              type: boolean
+            executable:
+              type: boolean
+          required: [readable, writable, executable]
+      required: [path, type, exists]
+
+    FileDeleteRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          type: string
+        recursive:
+          type: boolean
+          default: false
+        expectedSha256:
+          type: string
+          nullable: true
+      required: [path]
+
+    FileDeleteResponse:
+      type: object
+      properties:
+        path:
+          type: string
+        deleted:
+          type: boolean
+      required: [path, deleted]
+
+    FileMoveRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        fromPath:
+          type: string
+        toPath:
+          type: string
+        overwrite:
+          type: boolean
+          default: false
+      required: [fromPath, toPath]
+
+    FileMoveResponse:
+      type: object
+      properties:
+        fromPath:
+          type: string
+        toPath:
+          type: string
+        changed:
+          type: boolean
+      required: [fromPath, toPath, changed]
+
+    StreamEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        event:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+      required: [event, data]
+
+    SessionStreamEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        event:
+          type: string
+          enum: [token, message, toolCall, toolResult, status, checkpoint, artifact, error]
+        sessionId:
+          type: string
+        data:
+          oneOf:
+            - type: string
+            - type: object
+            - type: array
+      required: [event, sessionId, data]
+
+    WebhookEnvelope:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+        traceId:
+          type: string
+          nullable: true
+        payload:
+          type: object
+      required: [id, type, occurredAt, payload]
+
+    MetricSample:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: number
+        unit:
+          type: string
+          nullable: true
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        observedAt:
+          type: string
+          format: date-time
+      required: [name, value, observedAt]
+
+    MetricSampleListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricSample'
+      required: [items]
+
+    RuntimeMetrics:
+      type: object
+      properties:
+        cpuUtilization:
+          type: number
+          minimum: 0
+          maximum: 1
+        memoryUtilization:
+          type: number
+          minimum: 0
+          maximum: 1
+        gpuUtilization:
+          type: array
+          items:
+            type: number
+            minimum: 0
+            maximum: 1
+        activeSessions:
+          type: integer
+          minimum: 0
+        activeJobs:
+          type: integer
+          minimum: 0
+        requestsPerMinute:
+          type: number
+          minimum: 0
+        averageRunLatencyMs:
+          type: number
+          minimum: 0
+        toolCallsPerMinute:
+          type: number
+          minimum: 0
+        sampledAt:
+          type: string
+          format: date-time
+      required: [activeSessions, activeJobs, sampledAt]
+
+    JobLogEntry:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          type: string
+          enum: [debug, info, warn, error]
+        message:
+          type: string
+        fields:
+          $ref: '#/components/schemas/Metadata'
+      required: [timestamp, level, message]
+
+    JobLogResponse:
+      type: object
+      properties:
+        jobId:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobLogEntry'
+      required: [jobId, items]
