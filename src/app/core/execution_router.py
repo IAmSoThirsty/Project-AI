@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
+import hashlib
+import logging
 from typing import Any, Callable, Dict, Tuple
 
 from app.core.execution_gate import get_execution_gate
 from app.core.invariant_engine import get_invariant_engine
+from app.core.nirl.forge import Forge
 from app.core.waterfall_filter import get_waterfall_filter
 from app.core.liara_bridge import get_liara_context, liara_ttl_check
 from app.core.state_register import get_state_register
+
+logger = logging.getLogger(__name__)
 
 
 def execute(
@@ -78,7 +83,30 @@ def execute(
 
     # 5. Governance gate (authority chain + Triumvirate + Fates + ledger).
     gate = get_execution_gate()
-    return gate.execute(domain, action, context, executor_fn)
+    gate_ok, gate_result = gate.execute(domain, action, context, executor_fn)
+
+    # 6. NIRL Forge — verify governance context integrity after gate approval.
+    #    Forge failure is non-fatal (logged) so legitimate executions are not blocked.
+    if gate_ok:
+        try:
+            ctx_str = f"{domain}:{action}:{sorted(context.items())}"
+            forge = Forge()
+            forge_payload = {
+                "data": ctx_str,
+                "checksum": hashlib.sha256(ctx_str.encode()).hexdigest(),
+                "section_id": domain,
+                "probe_id": action,
+            }
+            forge_result = forge.process(forge_payload)
+            if not forge_result.get("success"):
+                logger.warning(
+                    "NIRL Forge integrity warning: domain=%s action=%s reason=%s",
+                    domain, action, forge_result.get("reason"),
+                )
+        except Exception:
+            logger.exception("NIRL Forge processing failed (non-fatal)")
+
+    return gate_ok, gate_result
 
 
 __all__ = ["execute"]

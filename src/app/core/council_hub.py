@@ -28,6 +28,7 @@ from app.agents.consigliere.consigliere_engine import ThirstyConsigliere
 from app.agents.consigliere.privacy_checker import PrivacyChecker
 from app.agents.ux_telemetry import UxTelemetryAgent
 from app.core.ai_systems import AIPersona, MemoryExpansionSystem
+from app.core.nirl.heart import Heart
 from app.core.cognition_kernel import CognitionKernel
 from app.core.continuous_learning import ContinuousLearningEngine
 from app.core.platform_tiers import (
@@ -180,6 +181,12 @@ class CouncilHub:
             self._project["consigliere"] = consigliere
             self._privacy_checker = PrivacyChecker()
 
+            # NIRL Heart — global tick engine driving the probe/antibody/forge cascade
+            self._heart = Heart(tick_interval=30.0, min_probes=1)
+            self._heart.register_section("council_hub")
+            self._heart.start()
+            logger.info("NIRL Heart started — governance tick engine active")
+
             # default all agents enabled
             for k in list(self._project.keys()):
                 if k not in ("name", "persona", "memory", "continuous_learning"):
@@ -260,6 +267,8 @@ class CouncilHub:
             self._autolearn_stop.set()
             self._autolearn_thread.join(timeout=2.0)
             logger.info("CouncilHub autonomous learning stopped")
+        if hasattr(self, "_heart") and self._heart:
+            self._heart.stop()
 
     def _autolearn_loop(self) -> None:
         """Loop that wakes periodically and lets the Project AI absorb new info."""
