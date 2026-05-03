@@ -2,7 +2,6 @@
 
 Agents:
 - Oversight: System monitoring and compliance
-- Planner: Task planning and scheduling
 - Validator: Input validation and verification
 - Explainability: Decision explanation and transparency
 - LongContextAgent: Extended context conversations (200k+ tokens)
@@ -30,7 +29,6 @@ from .explainability import ExplainabilityAgent
 from .jailbreak_bench_agent import JailbreakBenchAgent
 from .long_context_agent import LongContextAgent
 from .oversight import OversightAgent
-from .planner import PlannerAgent
 from .red_team_agent import RedTeamAgent
 from .red_team_persona_agent import RedTeamPersonaAgent
 from .safety_guard_agent import SafetyGuardAgent
@@ -45,7 +43,6 @@ __all__ = [
     "JailbreakBenchAgent",
     "LongContextAgent",
     "OversightAgent",
-    "PlannerAgent",
     "PortAdmin",
     "QuarantineBox",
     "RedTeamAgent",
