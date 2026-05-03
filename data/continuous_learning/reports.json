@@ -711,5 +711,74 @@
     "metadata": {
       "source": "autolearn"
     }
+  },
+  {
+    "topic": "topic1",
+    "timestamp": "2026-05-02T19:31:47.828249+00:00",
+    "facts": [
+      "Autolearn content for hub test."
+    ],
+    "usage_ideas": [
+      "Brief the team on topic1 with the verified facts so they stay aligned.",
+      "Create a small experiment around topic1 that tests one of the recorded facts."
+    ],
+    "neutral_summary": "Continuous learning update for topic1: 1 fact(s) recorded. Neutral perspective weighs the pros and cons before suggesting action.",
+    "pros_cons": {
+      "pros": [
+        "Summarizes the benefits or arguments that advocates are promoting."
+      ],
+      "cons": [
+        "Remembers the counterpoints that keep the debate grounded and neutral."
+      ]
+    },
+    "metadata": {
+      "source": "autolearn"
+    }
+  },
+  {
+    "topic": "topic1",
+    "timestamp": "2026-05-02T19:31:47.938820+00:00",
+    "facts": [
+      "Autolearn content for hub test."
+    ],
+    "usage_ideas": [
+      "Brief the team on topic1 with the verified facts so they stay aligned.",
+      "Create a small experiment around topic1 that tests one of the recorded facts."
+    ],
+    "neutral_summary": "Continuous learning update for topic1: 1 fact(s) recorded. Neutral perspective weighs the pros and cons before suggesting action.",
+    "pros_cons": {
+      "pros": [
+        "Summarizes the benefits or arguments that advocates are promoting."
+      ],
+      "cons": [
+        "Remembers the counterpoints that keep the debate grounded and neutral."
+      ]
+    },
+    "metadata": {
+      "source": "autolearn"
+    }
+  },
+  {
+    "topic": "topic1",
+    "timestamp": "2026-05-02T19:31:48.046338+00:00",
+    "facts": [
+      "Autolearn content for hub test."
+    ],
+    "usage_ideas": [
+      "Brief the team on topic1 with the verified facts so they stay aligned.",
+      "Create a small experiment around topic1 that tests one of the recorded facts."
+    ],
+    "neutral_summary": "Continuous learning update for topic1: 1 fact(s) recorded. Neutral perspective weighs the pros and cons before suggesting action.",
+    "pros_cons": {
+      "pros": [
+        "Summarizes the benefits or arguments that advocates are promoting."
+      ],
+      "cons": [
+        "Remembers the counterpoints that keep the debate grounded and neutral."
+      ]
+    },
+    "metadata": {
+      "source": "autolearn"
+    }
   }
 ]

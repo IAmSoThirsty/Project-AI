@@ -8421,10 +8421,1038 @@
         "details": "test incident"
       },
       "ts": 1769715058.1496205
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "ts": 1777750474.305404
+      },
+      "ts": 1777750474.3100183
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-1",
+        "ts": 1777750474.3236299
+      },
+      "ts": 1777750474.3246331
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-2",
+        "ts": 1777750474.339847
+      },
+      "ts": 1777750474.3418567
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-3",
+        "ts": 1777750474.3559494
+      },
+      "ts": 1777750474.3569467
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-4",
+        "ts": 1777750474.3714654
+      },
+      "ts": 1777750474.373471
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-0",
+        "ts": 1777750474.3874779
+      },
+      "ts": 1777750474.3894854
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-1",
+        "ts": 1777750474.405011
+      },
+      "ts": 1777750474.406027
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-2",
+        "ts": 1777750474.4227061
+      },
+      "ts": 1777750474.4247053
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-3",
+        "ts": 1777750474.4391906
+      },
+      "ts": 1777750474.440207
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-4",
+        "ts": 1777750474.45425
+      },
+      "ts": 1777750474.4562547
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-0",
+        "ts": 1777750474.470779
+      },
+      "ts": 1777750474.4727807
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-1",
+        "ts": 1777750474.4867806
+      },
+      "ts": 1777750474.4887815
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-2",
+        "ts": 1777750474.5037947
+      },
+      "ts": 1777750474.5053093
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-3",
+        "ts": 1777750474.5209086
+      },
+      "ts": 1777750474.522922
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-4",
+        "ts": 1777750474.5371225
+      },
+      "ts": 1777750474.5391197
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-0",
+        "ts": 1777750474.5524213
+      },
+      "ts": 1777750474.5544224
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-1",
+        "ts": 1777750474.5684338
+      },
+      "ts": 1777750474.570437
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-2",
+        "ts": 1777750474.586204
+      },
+      "ts": 1777750474.5882018
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-3",
+        "ts": 1777750474.603206
+      },
+      "ts": 1777750474.6052122
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-4",
+        "ts": 1777750474.6244855
+      },
+      "ts": 1777750474.6259968
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-0",
+        "ts": 1777750474.6426547
+      },
+      "ts": 1777750474.644655
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-1",
+        "ts": 1777750474.6581929
+      },
+      "ts": 1777750474.6601872
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-2",
+        "ts": 1777750474.6784575
+      },
+      "ts": 1777750474.6804566
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-3",
+        "ts": 1777750474.6944692
+      },
+      "ts": 1777750474.696469
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-4",
+        "ts": 1777750474.7122498
+      },
+      "ts": 1777750474.714247
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-0",
+        "ts": 1777750474.7293952
+      },
+      "ts": 1777750474.731391
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-1",
+        "ts": 1777750474.7460697
+      },
+      "ts": 1777750474.7490635
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-2",
+        "ts": 1777750474.7635932
+      },
+      "ts": 1777750474.7655919
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-3",
+        "ts": 1777750474.780118
+      },
+      "ts": 1777750474.7821186
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-4",
+        "ts": 1777750474.7971277
+      },
+      "ts": 1777750474.7991314
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-0",
+        "ts": 1777750474.8140526
+      },
+      "ts": 1777750474.8160613
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-1",
+        "ts": 1777750474.8300998
+      },
+      "ts": 1777750474.8331013
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-2",
+        "ts": 1777750474.8471324
+      },
+      "ts": 1777750474.8481297
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-3",
+        "ts": 1777750474.8624651
+      },
+      "ts": 1777750474.864455
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-4",
+        "ts": 1777750474.8789818
+      },
+      "ts": 1777750474.8809798
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-0",
+        "ts": 1777750474.8949914
+      },
+      "ts": 1777750474.8969913
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-1",
+        "ts": 1777750474.9107866
+      },
+      "ts": 1777750474.9128008
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-2",
+        "ts": 1777750474.928329
+      },
+      "ts": 1777750474.9293303
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-3",
+        "ts": 1777750474.9433591
+      },
+      "ts": 1777750474.945367
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-4",
+        "ts": 1777750474.959951
+      },
+      "ts": 1777750474.9609504
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-0",
+        "ts": 1777750474.9754765
+      },
+      "ts": 1777750474.9774773
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-1",
+        "ts": 1777750474.9914885
+      },
+      "ts": 1777750474.9944894
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-2",
+        "ts": 1777750475.0125175
+      },
+      "ts": 1777750475.015178
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-3",
+        "ts": 1777750475.0302327
+      },
+      "ts": 1777750475.0318468
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-4",
+        "ts": 1777750475.047186
+      },
+      "ts": 1777750475.0491934
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-0",
+        "ts": 1777750475.0640986
+      },
+      "ts": 1777750475.0661125
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-1",
+        "ts": 1777750475.0802693
+      },
+      "ts": 1777750475.0822713
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-2",
+        "ts": 1777750475.0972831
+      },
+      "ts": 1777750475.0992823
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-3",
+        "ts": 1777750475.1158628
+      },
+      "ts": 1777750475.1178632
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-4",
+        "ts": 1777750475.131371
+      },
+      "ts": 1777750475.1343868
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-0",
+        "ts": 1777750475.1639912
+      },
+      "ts": 1777750475.1664987
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-1",
+        "ts": 1777750475.1825118
+      },
+      "ts": 1777750475.18451
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-2",
+        "ts": 1777750475.2005522
+      },
+      "ts": 1777750475.2025535
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-3",
+        "ts": 1777750475.2174535
+      },
+      "ts": 1777750475.2194493
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-0",
+        "gate": "gate-0-0-4",
+        "ts": 1777750475.234224
+      },
+      "ts": 1777750475.236329
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-0",
+        "ts": 1777750475.2523618
+      },
+      "ts": 1777750475.253362
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-1",
+        "ts": 1777750475.2688808
+      },
+      "ts": 1777750475.2708795
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-2",
+        "ts": 1777750475.2848787
+      },
+      "ts": 1777750475.2868826
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-3",
+        "ts": 1777750475.3018906
+      },
+      "ts": 1777750475.303893
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-1",
+        "gate": "gate-0-1-4",
+        "ts": 1777750475.3195817
+      },
+      "ts": 1777750475.3215806
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-0",
+        "ts": 1777750475.3362331
+      },
+      "ts": 1777750475.3382325
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-1",
+        "ts": 1777750475.3520193
+      },
+      "ts": 1777750475.3540266
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-2",
+        "ts": 1777750475.3670259
+      },
+      "ts": 1777750475.3690274
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-3",
+        "ts": 1777750475.382551
+      },
+      "ts": 1777750475.3845522
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-2",
+        "gate": "gate-0-2-4",
+        "ts": 1777750475.398564
+      },
+      "ts": 1777750475.4005637
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-0",
+        "ts": 1777750475.413443
+      },
+      "ts": 1777750475.4154456
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-1",
+        "ts": 1777750475.4304862
+      },
+      "ts": 1777750475.4324856
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-2",
+        "ts": 1777750475.4466088
+      },
+      "ts": 1777750475.448608
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-3",
+        "ts": 1777750475.4635532
+      },
+      "ts": 1777750475.465068
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-3",
+        "gate": "gate-0-3-4",
+        "ts": 1777750475.480083
+      },
+      "ts": 1777750475.4820817
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-0",
+        "ts": 1777750475.4970982
+      },
+      "ts": 1777750475.4990997
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-1",
+        "ts": 1777750475.5131578
+      },
+      "ts": 1777750475.5151484
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-2",
+        "ts": 1777750475.5293345
+      },
+      "ts": 1777750475.5313387
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-3",
+        "ts": 1777750475.5459957
+      },
+      "ts": 1777750475.5479949
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-4",
+        "gate": "gate-0-4-4",
+        "ts": 1777750475.5615332
+      },
+      "ts": 1777750475.5635347
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-0",
+        "ts": 1777750475.578573
+      },
+      "ts": 1777750475.5811439
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-1",
+        "ts": 1777750475.5941532
+      },
+      "ts": 1777750475.595153
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-2",
+        "ts": 1777750475.6111808
+      },
+      "ts": 1777750475.6127768
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-3",
+        "ts": 1777750475.626288
+      },
+      "ts": 1777750475.6282928
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-5",
+        "gate": "gate-0-5-4",
+        "ts": 1777750475.6429913
+      },
+      "ts": 1777750475.6455522
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-0",
+        "ts": 1777750475.6620724
+      },
+      "ts": 1777750475.6640713
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-1",
+        "ts": 1777750475.6805983
+      },
+      "ts": 1777750475.6836
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-2",
+        "ts": 1777750475.7006025
+      },
+      "ts": 1777750475.7025971
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-3",
+        "ts": 1777750475.7189267
+      },
+      "ts": 1777750475.721525
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-6",
+        "gate": "gate-0-6-4",
+        "ts": 1777750475.7362263
+      },
+      "ts": 1777750475.7388124
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-0",
+        "ts": 1777750475.753424
+      },
+      "ts": 1777750475.7554238
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-1",
+        "ts": 1777750475.7699578
+      },
+      "ts": 1777750475.7719533
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-2",
+        "ts": 1777750475.786618
+      },
+      "ts": 1777750475.7886195
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-3",
+        "ts": 1777750475.805141
+      },
+      "ts": 1777750475.8071527
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-7",
+        "gate": "gate-0-7-4",
+        "ts": 1777750475.8210897
+      },
+      "ts": 1777750475.8230896
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-0",
+        "ts": 1777750475.8392859
+      },
+      "ts": 1777750475.8412914
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-1",
+        "ts": 1777750475.8560228
+      },
+      "ts": 1777750475.858022
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-2",
+        "ts": 1777750475.8720229
+      },
+      "ts": 1777750475.873533
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-3",
+        "ts": 1777750475.8895438
+      },
+      "ts": 1777750475.8915532
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-8",
+        "gate": "gate-0-8-4",
+        "ts": 1777750475.9060736
+      },
+      "ts": 1777750475.908073
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-0",
+        "ts": 1777750475.9237144
+      },
+      "ts": 1777750475.924714
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-1",
+        "ts": 1777750475.9397652
+      },
+      "ts": 1777750475.9417648
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-2",
+        "ts": 1777750475.9556046
+      },
+      "ts": 1777750475.9576044
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-3",
+        "ts": 1777750475.9716046
+      },
+      "ts": 1777750475.9736044
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "wt-0-9",
+        "gate": "gate-0-9-4",
+        "ts": 1777750475.9876044
+      },
+      "ts": 1777750475.9896042
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "type": "test",
+        "details": "test incident"
+      },
+      "ts": 1777750483.1399672
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1777750674.915633
+      },
+      "ts": 1777750674.9226356
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1777750674.940335
+      },
+      "ts": 1777750674.9454448
     }
   ],
   "attack_counts": {
-    "unknown": 650,
+    "unknown": 753,
     "gate-0-0-0": 35,
     "gate-0-0-1": 4,
     "gate-0-1-0": 4,

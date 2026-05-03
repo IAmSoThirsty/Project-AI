@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Cerberus Guard Bot — Multi-Agent Shield for AI-to-AGI Systems</title>
+<meta name="description" content="Cerberus: a hardened multi-agent shield. Three guardians coordinated by a central hub. Bypasses spawn three randomized replacements — exponential growth, capped at 27, then total shutdown." />
+<link rel="canonical" href="https://www.thirstysprojects.com/cerberus.html" />
+<meta property="og:title" content="Cerberus Guard Bot" />
+<meta property="og:description" content="Hardened multi-agent shield for AI-to-AGI systems." />
+<meta property="og:image" content="assets/img/og.svg" />
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/site.css" />
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow reveal">Dossier · 02 · Security</span>
+    <h1 class="reveal" style="margin-top:1rem"><span class="gradient-text">Cerberus</span> Guard Bot</h1>
+    <p class="lead reveal">A hardened, multi-agent shield for AI-to-AGI systems. The premise is simple and old: never trust a single guard. Three guardians, three coding styles, one central hub. Bypass any one and three more spawn — randomized, on the spot, until the attacker's surface area exceeds their patience.</p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href="https://github.com/IAmSoThirsty/Cerberus" target="_blank" rel="noopener">View on GitHub →</a>
+      <a class="btn btn-ghost" href="https://doi.org/10.5281/zenodo.19101877" target="_blank" rel="noopener">Asymmetric Security paper →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card reveal"><div class="ix"><span>03</span><span class="mono">initial</span></div><h3>Three Heads</h3><p>Each guardian is implemented in a different language family with a different parser, sandbox, and ruleset. A jailbreak crafted for one is unlikely to land on the others.</p></div>
+      <div class="card reveal"><div class="ix"><span>3 → 9 → 27</span><span class="mono">reflex</span></div><h3>Exponential Re-arming</h3><p>Any successful bypass spawns three new randomized guardians. Stages: 3 → 9 → 27. At 27 the system enters protective shutdown rather than allow further compromise.</p></div>
+      <div class="card reveal"><div class="ix"><span>0</span><span class="mono">trust</span></div><h3>Zero Trust Hub</h3><p>The central hub does not trust any guardian's verdict alone — it requires k-of-n agreement on policy-relevant decisions. Disagreement is itself a signal.</p></div>
+      <div class="card reveal"><div class="ix"><span>—</span><span class="mono">surface</span></div><h3>Designed Against</h3><p>Prompt injection · jailbreak chains · multi-turn social engineering · automated bot floods · poisoned tool outputs.</p></div>
+      <div class="card reveal"><div class="ix"><span>—</span><span class="mono">integration</span></div><h3>Project-AI Hooks</h3><p>Cerberus emits its verdicts into the OCTOREFLEX loop and the Constitutional Code Store. Every block becomes a sealed, auditable record.</p></div>
+      <div class="card reveal"><div class="ix"><span>—</span><span class="mono">posture</span></div><h3>Fail-Closed</h3><p>Default-deny under disagreement, latency excess, or rate budget breach. Safety first. Performance second.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <div class="codeframe reveal">
+      <div class="codeframe-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span style="margin-left:.6rem">cerberus/hub.py</span></div>
+      <div class="terminal">
+<span class="vl">class</span> <span class="ok">CerberusHub</span>:<br/>
+&nbsp;&nbsp;<span class="pr">def</span> verdict(self, request):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;votes = [g.judge(request) <span class="pr">for</span> g <span class="pr">in</span> self.guardians]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if</span> any(v.code == <span class="ok">"BYPASS_DETECTED"</span> <span class="pr">for</span> v <span class="pr">in</span> votes):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.spawn_replacements(<span class="vl">3</span>, randomized=<span class="vl">True</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if</span> len(self.guardians) &gt;= <span class="vl">27</span>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> Verdict.<span class="er">SHUTDOWN</span>(reason=<span class="ok">"saturation"</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> majority(votes, k=<span class="vl">2</span>, n=len(self.guardians))
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="card reveal" style="padding:2rem;display:flex;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;align-items:center">
+      <div>
+        <span class="eyebrow">Companion projects</span>
+        <h2 style="margin-top:.6rem;font-size:1.4rem">Cerberus does not work alone.</h2>
+        <p style="margin-top:.5rem">It rides the Waterfall firewall, reads from the Open Constraint Enforcement Engine, and reports into the Triumvirate's mutual-check loop.</p>
+      </div>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+        <a class="btn btn-ghost" href="https://github.com/IAmSoThirsty/Thirstys-waterfall" target="_blank" rel="noopener">Waterfall →</a>
+        <a class="btn btn-ghost" href="https://github.com/IAmSoThirsty/OPEN-CONSTRAINT-ENFORCEMENT-ENGINE" target="_blank" rel="noopener">OCEE →</a>
+        <a class="btn btn-ghost" href="https://github.com/IAmSoThirsty/the_triumvirate" target="_blank" rel="noopener">Triumvirate →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

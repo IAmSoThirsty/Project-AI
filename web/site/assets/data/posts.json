@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "why-i-am-doing-this",
+    "title": "Why I Am Doing This",
+    "date": "2026-04-15",
+    "tags": ["Manifesto", "Origin"],
+    "excerpt": "The origin story of Project-AI — and why a sovereign, constitutional, executed-governance AGI ecosystem is not a luxury but a precondition for survival.",
+    "external": "https://doi.org/10.5281/zenodo.19592336"
+  },
+  {
+    "slug": "two-species-aligned",
+    "title": "Two Species, Aligned",
+    "date": "2026-04-14",
+    "tags": ["Philosophy", "AGI Governance"],
+    "excerpt": "Alignment is not a control problem. It is a relationship problem between two species that must learn to coexist under shared constitutional law.",
+    "external": "https://doi.org/10.5281/zenodo.19481152"
+  },
+  {
+    "slug": "the-flat-gap",
+    "title": "The Flat Gap: Temporal Dissonance Between Humans and AI",
+    "date": "2026-06-01",
+    "tags": ["Philosophy", "Temporal"],
+    "excerpt": "Large language models do not experience the passage of time. When a human carries elapsed grief into a conversation and the system responds as if nothing has changed, that is structural gaslighting — and it must be fixed at the architectural layer.",
+    "external": "https://doi.org/10.5281/zenodo.18827649"
+  },
+  {
+    "slug": "the-iron-path",
+    "title": "The Iron Path Executor",
+    "date": "2026-04-15",
+    "tags": ["Specification", "Determinism"],
+    "excerpt": "Formal technical specification for deterministic AI governance: every action passes a hard-rail executor with verifiable invariants — or it does not pass at all.",
+    "external": "https://doi.org/10.5281/zenodo.19582479"
+  }
+]
