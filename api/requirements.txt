@@ -7,7 +7,7 @@ uvicorn[standard]==0.27.0
 pydantic==2.5.3
 
 # CORS & Security
-python-multipart==0.0.22
+python-multipart==0.0.26
 
 # Optional: Production deployment
-gunicorn==22.0.0
+gunicorn==25.3.0
