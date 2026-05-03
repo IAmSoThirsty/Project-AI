@@ -14,6 +14,7 @@ THREE-TIER PLATFORM:
 import logging
 import os
 import sys
+import threading
 from typing import Any
 
 from dotenv import load_dotenv
@@ -815,6 +816,39 @@ def report_tier_health():
         traceback.print_exc()
 
 
+def _start_triumvirate_server() -> threading.Thread | None:
+    """Launch the Triumvirate governance REST service on port 8001.
+
+    Runs as a daemon thread so it is automatically torn down when the main
+    process exits.  Failures are logged as warnings — the rest of the system
+    continues regardless, because the in-process GovernanceTriumvirate object
+    already provides the same policy evaluation.
+
+    Returns:
+        The running Thread, or None if startup failed.
+    """
+    try:
+        import uvicorn
+        from governance.triumvirate_server import app as triumvirate_app
+
+        def _run():
+            uvicorn.run(
+                triumvirate_app,
+                host="127.0.0.1",
+                port=8001,
+                log_level="warning",
+                access_log=False,
+            )
+
+        t = threading.Thread(target=_run, name="triumvirate-server", daemon=True)
+        t.start()
+        logger.info("✅ Triumvirate governance server started on http://127.0.0.1:8001")
+        return t
+    except Exception as exc:
+        logger.warning("Triumvirate server could not start: %s", exc)
+        return None
+
+
 def main():
     """Main application entry point.
 
@@ -830,6 +864,9 @@ def main():
 
     # Initialize Three-Tier Platform Registry
     initialize_tier_registry()
+
+    # Start Triumvirate governance REST service (port 8001, daemon thread)
+    _start_triumvirate_server()
 
     # Initialize CognitionKernel (trust root)
     # Note: Kernel will self-register as Tier-1 during initialization
