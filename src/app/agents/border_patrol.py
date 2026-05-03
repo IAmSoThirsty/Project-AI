@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from app.agents.cerberus_codex_bridge import CerberusCodexBridge
 from app.agents.dependency_auditor import DependencyAuditor
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
@@ -128,10 +129,17 @@ class GateGuardian:
     and coordinating with a VerifierAgent to allow/deny passage.
     """
 
-    def __init__(self, gate_id: str, verifier: VerifierAgent, watch_tower: WatchTower):
+    def __init__(
+        self,
+        gate_id: str,
+        verifier: VerifierAgent,
+        watch_tower: WatchTower,
+        bridge: CerberusCodexBridge | None = None,
+    ):
         self.gate_id = gate_id
         self.verifier = verifier
         self.watch_tower = watch_tower
+        self.bridge = bridge
         self.quarantine: dict[str, QuarantineBox] = {}
         self.lock = threading.Lock()
         self.force_field_active = False
@@ -155,14 +163,24 @@ class GateGuardian:
         self.watch_tower.receive_report(self.gate_id, box)
         # record incident for monitoring if suspicious
         if not box.verified:
-            record_incident(
-                {
-                    "type": "suspicious_plugin",
-                    "gate": self.gate_id,
-                    "module": file_path,
-                    "metadata": report,
+            incident = {
+                "type": "suspicious_plugin",
+                "gate": self.gate_id,
+                "module": file_path,
+                "metadata": report,
+            }
+            record_incident(incident)
+            # Notify Codex of the threat so it can propose defense upgrades
+            if self.bridge is not None:
+                threat_data = {
+                    "threat_type": report.get("threat_type", "verification_failure"),
+                    "severity": report.get("severity", "medium"),
+                    "id": f"{self.gate_id}:{file_path}",
                 }
-            )
+                try:
+                    self.bridge.process_threat_engagement(threat_data, report)
+                except Exception:
+                    logger.exception("CerberusCodexBridge failed on threat engagement")
         return report
 
     def activate_force_field(self) -> None:
@@ -330,8 +348,12 @@ class Cerberus:
 
 
 # Helper: build the hierarchy
-def build_border_patrol(num_port_admins: int = 1) -> list[PortAdmin]:
+def build_border_patrol(
+    num_port_admins: int = 1,
+    kernel: CognitionKernel | None = None,
+) -> list[PortAdmin]:
     cer = Cerberus()
+    bridge = CerberusCodexBridge(kernel=kernel)
     admins: list[PortAdmin] = []
     for a in range(num_port_admins):
         pa = PortAdmin(str(a), cer)
@@ -341,7 +363,7 @@ def build_border_patrol(num_port_admins: int = 1) -> list[PortAdmin]:
             # create 5 gates with verifier/scanner pairs
             for g in range(5):
                 verifier = VerifierAgent(f"v-{a}-{t}-{g}")
-                GateGuardian(f"g-{a}-{t}-{g}", verifier, wt)
+                GateGuardian(f"g-{a}-{t}-{g}", verifier, wt, bridge=bridge)
                 wt.reports = []
         admins.append(pa)
     return admins

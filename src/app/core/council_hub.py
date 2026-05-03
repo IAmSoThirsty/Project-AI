@@ -5,6 +5,8 @@ import os
 import threading
 from typing import Any
 
+from cryptography.fernet import Fernet
+
 from app.agents.ci_checker_agent import CICheckerAgent
 from app.agents.code_adversary_agent import CodeAdversaryAgent
 from app.agents.constitutional_guardrail_agent import ConstitutionalGuardrailAgent
@@ -22,6 +24,8 @@ from app.agents.rollback_agent import RollbackAgent
 from app.agents.safety_guard_agent import SafetyGuardAgent
 from app.agents.sandbox_runner import SandboxRunner
 from app.agents.test_qa_generator import TestQAGenerator
+from app.agents.consigliere.consigliere_engine import ThirstyConsigliere
+from app.agents.consigliere.privacy_checker import PrivacyChecker
 from app.agents.ux_telemetry import UxTelemetryAgent
 from app.core.ai_systems import AIPersona, MemoryExpansionSystem
 from app.core.cognition_kernel import CognitionKernel
@@ -34,6 +38,16 @@ from app.core.platform_tiers import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class _FernetEncryptionShim:
+    """Minimal shim satisfying the encrypt_god_tier interface expected by ThirstyConsigliere."""
+
+    def __init__(self) -> None:
+        self._fernet = Fernet(Fernet.generate_key())
+
+    def encrypt_god_tier(self, data: bytes) -> bytes:
+        return self._fernet.encrypt(data)
 
 
 class CouncilHub:
@@ -156,6 +170,16 @@ class CouncilHub:
             )
             self._project["red_team_persona"] = RedTeamPersonaAgent(kernel=self.kernel)
 
+            # Privacy-first Consigliere — routes sensitive requests through PrivacyChecker
+            _enc = _FernetEncryptionShim()
+            consigliere = ThirstyConsigliere(
+                config={"on_device_only": True, "max_context_size": 10},
+                god_tier_encryption=_enc,
+            )
+            consigliere.start()
+            self._project["consigliere"] = consigliere
+            self._privacy_checker = PrivacyChecker()
+
             # default all agents enabled
             for k in list(self._project.keys()):
                 if k not in ("name", "persona", "memory", "continuous_learning"):
@@ -165,7 +189,7 @@ class CouncilHub:
                     if agent_obj:
                         self.register_agent(k, agent_obj)
             logger.info(
-                "Registered project head: %s with kernel-routed agents (18 agents total)",
+                "Registered project head: %s with kernel-routed agents (19 agents + consigliere)",
                 name,
             )
 
@@ -197,6 +221,14 @@ class CouncilHub:
                 )
 
             logger.info("Registered agent %s", agent_id)
+
+    def check_privacy(self, query: str, context: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Run a privacy audit on a query before it reaches the kernel.
+
+        Returns the PrivacyChecker audit dict: {safe, concerns, suggestions}.
+        Callers should gate dispatch on result['safe'].
+        """
+        return self._privacy_checker.audit_query(query, context)
 
     def unregister_agent(self, agent_id: str) -> None:
         with self._lock:
