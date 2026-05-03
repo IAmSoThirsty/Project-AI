@@ -1,3 +1,4 @@
+import logging
 import time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -5,6 +6,8 @@ from typing import Any
 
 from .policy import TarlPolicy
 from .spec import TarlDecision, TarlVerdict
+
+logger = logging.getLogger(__name__)
 
 
 def _make_hashable(obj):
@@ -32,11 +35,15 @@ class TarlRuntime:
         enable_cache: bool = True,
         enable_parallel: bool = True,
         cache_size: int = 128,
+        run_lang_validation: bool = False,
     ):
         self.policies = policies
         self.enable_cache = enable_cache
         self.enable_parallel = enable_parallel
         self.cache_size = cache_size
+
+        if run_lang_validation:
+            self._run_lang_validator()
 
         # Performance tracking
         self.policy_stats = defaultdict(
@@ -55,6 +62,23 @@ class TarlRuntime:
         if enable_cache:
             self._decision_cache = {}
             self._cache_order = []  # LRU tracking
+
+    def _run_lang_validator(self) -> None:
+        """Validate the Thirsty-lang toolchain at runtime startup."""
+        try:
+            from app.agents.thirsty_lang_validator import ThirstyLangValidator
+
+            validator = ThirstyLangValidator()
+            report = validator.run_full_validation()
+            if report.get("overall_status") == "passed":
+                logger.info("TARL: Thirsty-lang T-A-R-L capabilities validated OK")
+            else:
+                logger.warning(
+                    "TARL: Thirsty-lang validation issues detected: %s",
+                    report.get("summary", "unknown"),
+                )
+        except Exception as exc:
+            logger.warning("TARL: Thirsty-lang validator unavailable: %s", exc)
 
     def _get_from_cache(self, context_tuple) -> TarlDecision | None:
         """Get cached decision"""
