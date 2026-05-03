@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Project-AI — Sovereign Constitutional AGI Ecosystem</title>
+<meta name="description" content="Project-AI is a syscall-authoritative, constitutionally governed AGI ecosystem. OctoReflex, TARL, Triumvirate, Iron Path, and 16 modules of ethics-first runtime safety."/>
+<link rel="canonical" href="https://www.thirstysprojects.com/projects/project-ai/"/>
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .project-hero { padding: clamp(5rem,11vw,9rem) 0 clamp(3rem,6vw,5rem); }
+  .subpages { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.2rem; margin-top:2rem; }
+  .subpage-card {
+    border:1px solid var(--line); border-radius:14px; padding:1.4rem;
+    background:var(--panel);
+    transition:border-color .3s,transform .3s;
+    display:flex; flex-direction:column; gap:.6rem;
+  }
+  .subpage-card:hover { border-color:var(--line-strong); transform:translateY(-3px); }
+  .subpage-card .num { font-family:var(--font-mono); font-size:.68rem; letter-spacing:.2em; color:var(--ink-3); text-transform:uppercase; }
+  .subpage-card h3 { font-size:1.1rem; margin:0; }
+  .subpage-card p { font-size:.88rem; color:var(--ink-2); line-height:1.55; margin:0; flex:1; }
+  .subpage-card a.btn { margin-top:.4rem; }
+  .stat-row { display:flex; gap:2rem; flex-wrap:wrap; margin:2rem 0; }
+  .stat { text-align:left; }
+  .stat .n { font-family:var(--font-display); font-size:2.2rem; color:var(--cyan); line-height:1; }
+  .stat .l { font-family:var(--font-mono); font-size:.68rem; letter-spacing:.18em; color:var(--ink-3); text-transform:uppercase; margin-top:.2rem; }
+  .stack-layer {
+    display:grid; grid-template-columns:80px 1fr; gap:1rem;
+    padding:.6rem .9rem; border-left:2px solid var(--cyan);
+    background:rgba(0,212,255,.03); border-radius:0 8px 8px 0;
+    margin:.35rem 0; font-family:var(--font-mono); font-size:.82rem;
+  }
+  .stack-layer:nth-child(2n) { border-left-color:var(--cyan-2); background:rgba(0,119,255,.04); }
+  .stack-layer .lab { color:var(--ink-3); }
+  .stack-layer .desc { color:var(--ink); }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<section class="project-hero">
+  <div class="container">
+    <span class="eyebrow reveal">Project-AI · Sovereign Constitutional AGI Ecosystem</span>
+    <h1 class="reveal" style="margin-top:1.4rem">
+      <span class="gradient-text">Governance enforced</span><br/>
+      at the syscall surface.
+    </h1>
+    <p class="reveal" style="max-width:58ch;font-size:1.1rem;line-height:1.7;color:var(--ink-2);margin-top:1.4rem">
+      Project-AI is not a framework layered on top of AI — it is governance wired into the kernel itself. OctoReflex intercepts every model action via eBPF. The Triumvirate holds veto authority. The Iron Path compiles invariants into deterministic checks. If policy says no, the kernel says no.
+    </p>
+
+    <div class="stat-row reveal">
+      <div class="stat"><div class="n">16</div><div class="l">Core Modules</div></div>
+      <div class="stat"><div class="n">7,913</div><div class="l">Lines — AEGIS</div></div>
+      <div class="stat"><div class="n">21</div><div class="l">Zenodo Papers</div></div>
+      <div class="stat"><div class="n">5/5</div><div class="l">Invariants — Canon</div></div>
+    </div>
+
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.4rem" class="reveal">
+      <a class="btn btn-primary" href="overview.html">Read the overview →</a>
+      <a class="btn btn-ghost" href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-ghost" href="https://doi.org/10.5281/zenodo.19582420" target="_blank" rel="noopener">DOI · System Paper</a>
+    </div>
+  </div>
+</section>
+
+<!-- GOVERNANCE STACK -->
+<section class="section section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Architecture</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The six-layer governance stack.</h2>
+    <div class="reveal" style="border:1px solid var(--line);border-radius:16px;padding:1.6rem;background:var(--panel);">
+      <div class="stack-layer"><span class="lab">L0</span><span class="desc">Constitutional Code Store · Iron Path Executor</span></div>
+      <div class="stack-layer"><span class="lab">L1</span><span class="desc">eBPF syscall substrate — OctoReflex</span></div>
+      <div class="stack-layer"><span class="lab">L2</span><span class="desc">OCEE invariant enforcement</span></div>
+      <div class="stack-layer"><span class="lab">L3</span><span class="desc">OctoReflex closed-loop control — STATE_REGISTER</span></div>
+      <div class="stack-layer"><span class="lab">L4</span><span class="desc">NIRL · TARL immune &amp; governance layer</span></div>
+      <div class="stack-layer"><span class="lab">L5</span><span class="desc">Triumvirate (Galahad · Cerberus · Codex) / Fates dual kernel</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBPAGE CARDS -->
+<section class="section section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Deep Dives</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.4rem">Explore the subsystems.</h2>
+    <div class="subpages">
+      <div class="subpage-card reveal">
+        <span class="num">01 · Overview</span>
+        <h3>The Full Picture</h3>
+        <p>What Project-AI is, why it exists, and the 21 papers that prove it. The human origin story behind a constitutional framework for AGI.</p>
+        <a class="btn btn-ghost" href="overview.html">Read overview →</a>
+      </div>
+      <div class="subpage-card reveal">
+        <span class="num">02 · Triumvirate</span>
+        <h3>Galahad · Cerberus · Codex</h3>
+        <p>Three-pillar constitutional evaluation engine. Any single veto is a denial. Ethics, security, and constitutional law — all three must agree.</p>
+        <a class="btn btn-ghost" href="triumvirate.html">Explore →</a>
+      </div>
+      <div class="subpage-card reveal">
+        <span class="num">03 · OctoReflex</span>
+        <h3>Syscall-Level Containment</h3>
+        <p>eBPF programs intercept the syscall surface. A closed-loop controller enforces policy at the kernel level. Benchmark results from canonical replay.</p>
+        <a class="btn btn-ghost" href="octoreflex.html">Explore →</a>
+      </div>
+      <div class="subpage-card reveal">
+        <span class="num">04 · TARL</span>
+        <h3>Trust &amp; Authorization Runtime</h3>
+        <p>The reactive defensive governance layer. Policy as code, enforcement as runtime. T.A.R.L. rules are namespaced, auditable, and immutable.</p>
+        <a class="btn btn-ghost" href="tarl.html">Explore →</a>
+      </div>
+      <div class="subpage-card reveal">
+        <span class="num">05 · Architecture</span>
+        <h3>Module Map &amp; Wiring</h3>
+        <p>Full inventory of 16 modules, the canonical boot sequence, domain routing, and how the governance spine connects every subsystem.</p>
+        <a class="btn btn-ghost" href="architecture.html">Explore →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY PAPERS -->
+<section class="section section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Publications</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Key papers.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem" class="reveal">
+      <a class="card" href="https://doi.org/10.5281/zenodo.19582420" target="_blank" rel="noopener" style="text-decoration:none;display:block;padding:1.4rem">
+        <div style="font-family:var(--font-mono);font-size:.68rem;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase;margin-bottom:.6rem">Whole-System Paper</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Project-AI Sovereign Constitutional AGI Ecosystem</h3>
+        <p style="font-size:.85rem;margin:0">DOI: 10.5281/zenodo.19582420</p>
+      </a>
+      <a class="card" href="https://doi.org/10.5281/zenodo.18726064" target="_blank" rel="noopener" style="text-decoration:none;display:block;padding:1.4rem">
+        <div style="font-family:var(--font-mono);font-size:.68rem;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase;margin-bottom:.6rem">Containment</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">OctoReflex — Foundational Paper</h3>
+        <p style="font-size:.85rem;margin:0">DOI: 10.5281/zenodo.18726064</p>
+      </a>
+      <a class="card" href="https://doi.org/10.5281/zenodo.18763076" target="_blank" rel="noopener" style="text-decoration:none;display:block;padding:1.4rem">
+        <div style="font-family:var(--font-mono);font-size:.68rem;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase;margin-bottom:.6rem">Constitution</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">AGI Charter v2.1</h3>
+        <p style="font-size:.85rem;margin:0">DOI: 10.5281/zenodo.18763076</p>
+      </a>
+    </div>
+    <div style="margin-top:1.2rem" class="reveal">
+      <a class="btn btn-ghost" href="../../papers.html">All 21 papers →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

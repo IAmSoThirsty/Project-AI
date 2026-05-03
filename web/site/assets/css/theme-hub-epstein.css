@@ -1,0 +1,40 @@
+/* ─────────────────────────────────────────────────────────────────
+   Hub of Epstein Files Theme — Crimson / Amber on Near-Black
+   Investigative archive, dark truths, evidence-based research
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #dc2626;
+  --theme-accent:     #fbbf24;
+  --theme-surface:    #0a0a0a;
+  --theme-surface-2:  #0f0d0d;
+  --theme-panel:      #161010;
+  --theme-panel-2:    #1c1212;
+  --theme-glow:       0 0 24px rgba(220,38,38,0.35), 0 0 60px rgba(251,191,36,0.1);
+  --theme-gradient:   linear-gradient(135deg, #0a0a0a 0%, #1a0505 50%, #250808 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 70% -20%, rgba(220,38,38,.2), transparent 60%),
+                      radial-gradient(700px 400px at 10% 10%, rgba(251,191,36,.1), transparent 60%),
+                      #0a0a0a;
+  --cyan:             #dc2626;
+  --cyan-2:           #b91c1c;
+  --amber:            #fbbf24;
+  --void:             #080808;
+  --void-2:           #0a0a0a;
+  --panel:            #161010;
+  --panel-2:          #1c1212;
+  --line:             rgba(220, 38, 38, 0.14);
+  --line-strong:      rgba(220, 38, 38, 0.30);
+  --shadow-glow:      0 0 0 1px rgba(220,38,38,.22), 0 0 60px -10px rgba(220,38,38,.3);
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-accent); }
+.gradient-text {
+  background: linear-gradient(135deg, #f5e6e6 0%, #dc2626 55%, #fbbf24 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 75% -15%, rgba(220,38,38,.22), transparent 60%),
+    radial-gradient(800px 500px at 5% 5%, rgba(251,191,36,.08), transparent 60%),
+    #0a0a0a;
+}

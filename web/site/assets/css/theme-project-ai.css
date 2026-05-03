@@ -1,0 +1,40 @@
+/* ─────────────────────────────────────────────────────────────────
+   Project-AI Theme — Cyan / Deep Navy
+   AI authority, constitutional governance, syscall substrate
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #00d4ff;
+  --theme-accent:     #0077ff;
+  --theme-surface:    #0a0f1e;
+  --theme-surface-2:  #0d1628;
+  --theme-panel:      #0f1a30;
+  --theme-panel-2:    #132040;
+  --theme-glow:       0 0 24px rgba(0,212,255,0.35), 0 0 60px rgba(0,119,255,0.15);
+  --theme-gradient:   linear-gradient(135deg, #0a0f1e 0%, #001a2e 50%, #00264a 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 70% -20%, rgba(0,119,255,.22), transparent 60%),
+                      radial-gradient(700px 400px at 10% 10%, rgba(0,212,255,.18), transparent 60%),
+                      #0a0f1e;
+  --cyan:             #00d4ff;
+  --cyan-2:           #0077ff;
+  --void:             #080e1c;
+  --void-2:           #0a0f1e;
+  --panel:            #0f1a30;
+  --panel-2:          #132040;
+  --line:             rgba(0, 180, 255, 0.12);
+  --line-strong:      rgba(0, 180, 255, 0.28);
+  --shadow-glow:      0 0 0 1px rgba(0,212,255,.2), 0 0 60px -10px rgba(0,212,255,.3);
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-primary); }
+.gradient-text {
+  background: linear-gradient(135deg, #e8edff 0%, #00d4ff 55%, #0077ff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 75% -15%, rgba(0,119,255,.22), transparent 60%),
+    radial-gradient(800px 500px at 5% 5%, rgba(0,212,255,.18), transparent 60%),
+    radial-gradient(700px 700px at 50% 115%, rgba(0,100,200,.12), transparent 60%),
+    var(--void);
+}

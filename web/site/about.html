@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>About — Jeremy Karrick · Why I Am Doing This</title>
+<meta name="description" content="The human, ethical, and technical origin story of Project-AI. From November 16, 2020 to a multi-layered constitutional framework for artificial general intelligence governance. Includes the proof-of-concept stack: AGI Charter, TSCG / TSCG-B, STATE_REGISTER, OctoReflex, NIRL, ORP, AEGIS, and the Dual Governance Kernel." />
+<link rel="canonical" href="https://www.thirstysprojects.com/about.html" />
+<meta property="og:title" content="About — Jeremy Karrick · Why I Am Doing This" />
+<meta property="og:description" content="The origin story behind Project-AI — and the proof-of-concept stack that turned a personal reckoning into a constitutional framework for AGI." />
+<meta property="og:image" content="assets/img/og.svg" />
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/site.css" />
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  /* Page-scoped enhancements for the long-form narrative */
+  .about-hero {
+    padding: clamp(5rem, 11vw, 9rem) 0 clamp(3rem, 6vw, 5rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .about-hero h1 {
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .about-hero .lede {
+    max-width: 60ch;
+    font-size: 1.12rem;
+    color: var(--ink-2);
+    margin-top: 1.6rem;
+    line-height: 1.65;
+  }
+  .about-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 3rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  @media (max-width: 800px) { .about-meta-grid { grid-template-columns: repeat(2, 1fr); } }
+  .about-meta-cell {
+    padding: 1.3rem 1.4rem;
+    border-right: 1px solid var(--line);
+  }
+  .about-meta-cell:last-child { border-right: none; }
+  @media (max-width: 800px) {
+    .about-meta-cell:nth-child(2) { border-right: none; }
+    .about-meta-cell:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  }
+  .about-meta-cell .k { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .18em; color: var(--ink-3); text-transform: uppercase; }
+  .about-meta-cell .v { font-family: var(--font-display); font-size: 1.05rem; color: var(--ink); margin-top: .35rem; line-height: 1.3; }
+
+  .chapter { padding: clamp(3rem, 6vw, 5rem) 0; border-top: 1px solid var(--line); }
+  .chapter:first-of-type { border-top: none; }
+  .chapter-no {
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .26em;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+  .chapter h2 {
+    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+    margin-top: .9rem;
+    margin-bottom: 1.6rem;
+    max-width: 22ch;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  .chapter-body { display: grid; grid-template-columns: 1fr 1.6fr; gap: 3rem; }
+  @media (max-width: 980px) { .chapter-body { grid-template-columns: 1fr; gap: 1.5rem; } }
+  .chapter-body p { font-size: 1.04rem; line-height: 1.78; color: var(--ink-2); margin-bottom: 1.2rem; }
+  .chapter-body p strong { color: var(--ink); font-weight: 600; }
+  .chapter-body em { color: var(--ink); font-style: italic; }
+  .chapter-aside {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.4rem;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 120%);
+    align-self: start;
+    position: sticky;
+    top: 6rem;
+  }
+  @media (max-width: 980px) { .chapter-aside { position: static; } }
+  .chapter-aside .k {
+    font-family: var(--font-mono);
+    font-size: .66rem;
+    letter-spacing: .22em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: .8rem;
+  }
+  .chapter-aside h4 { font-size: 1rem; margin-bottom: .55rem; }
+  .chapter-aside p { font-size: .88rem; color: var(--ink-2); margin-bottom: .8rem; }
+  .chapter-aside a {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    color: var(--cyan);
+  }
+
+  .pull {
+    border-left: 3px solid var(--cyan);
+    padding: .2rem 0 .2rem 1.4rem;
+    margin: 2rem 0;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.45;
+    color: var(--ink);
+    background: linear-gradient(90deg, rgba(94,231,255,.06), transparent 60%);
+  }
+  .pull em { color: var(--cyan); font-style: normal; }
+
+  .timeline {
+    position: relative;
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+  }
+  .timeline::before {
+    content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px;
+    width: 1px; background: linear-gradient(180deg, var(--cyan), var(--violet));
+  }
+  .timeline li {
+    list-style: none;
+    position: relative;
+    padding: .35rem 0;
+    color: var(--ink-2);
+    font-size: .92rem;
+  }
+  .timeline li::before {
+    content: ""; position: absolute; left: -1.5rem; top: .9rem;
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--void); border: 2px solid var(--cyan);
+  }
+  .timeline li strong { color: var(--ink); display: block; font-family: var(--font-display); margin-bottom: .15rem; }
+  .timeline li small { color: var(--ink-3); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+
+  .principles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; }
+  @media (max-width: 700px) { .principles { grid-template-columns: 1fr; } }
+  .principle {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    background: var(--panel);
+  }
+  .principle h5 { font-family: var(--font-display); font-size: 1rem; margin-bottom: .35rem; color: var(--ink); }
+  .principle p { font-size: .88rem; color: var(--ink-2); line-height: 1.55; }
+
+  /* Proof-of-concept exhibit grid */
+  .poc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  @media (max-width: 1080px) { .poc-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 720px) { .poc-grid { grid-template-columns: 1fr; } }
+  .poc {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 1.5rem 1.4rem 1.3rem;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 130%);
+    overflow: hidden;
+    transition: border-color .35s ease, transform .35s ease;
+  }
+  .poc:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+  .poc::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    opacity: .5;
+  }
+  .poc-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: 1rem; }
+  .poc-num { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .2em; color: var(--ink-3); text-transform: uppercase; }
+  .poc-status { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em; padding: .18rem .5rem; border-radius: 6px; }
+  .poc-status.live { color: var(--emerald); border: 1px solid rgba(52,211,153,.3); }
+  .poc-status.spec { color: var(--cyan); border: 1px solid rgba(94,231,255,.3); }
+  .poc-status.research { color: var(--amber); border: 1px solid rgba(245,176,66,.3); }
+  .poc h3 { font-size: 1.18rem; margin-bottom: .55rem; }
+  .poc .role { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em; color: var(--violet); text-transform: uppercase; margin-bottom: .55rem; }
+  .poc p { font-size: .92rem; line-height: 1.6; color: var(--ink-2); }
+  .poc-stat {
+    display: flex; gap: 1.2rem; margin: 1rem 0 .8rem;
+    padding: .8rem; border-radius: 10px;
+    background: rgba(94,231,255,.04); border: 1px solid rgba(94,231,255,.12);
+  }
+  .poc-stat .n { font-family: var(--font-display); font-size: 1.4rem; color: var(--cyan); line-height: 1; }
+  .poc-stat .l { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; color: var(--ink-3); text-transform: uppercase; margin-top: .2rem; }
+  .poc-foot { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: .6rem; padding-top: .8rem; border-top: 1px solid var(--line); }
+  .poc-foot a { font-family: var(--font-mono); font-size: .76rem; color: var(--cyan); }
+  .poc-foot a:hover { color: var(--violet); }
+
+  .arch-diagram {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 1.6rem;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: .82rem;
+    line-height: 1.85;
+  }
+  .arch-diagram .layer {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1rem;
+    padding: .55rem .8rem;
+    border-left: 2px solid var(--cyan);
+    margin: .35rem 0;
+    background: rgba(94,231,255,.02);
+    border-radius: 0 8px 8px 0;
+  }
+  .arch-diagram .layer:nth-child(2n) { border-left-color: var(--violet); background: rgba(167,139,250,.03); }
+  .arch-diagram .layer .lab { color: var(--ink-3); }
+  .arch-diagram .layer .desc { color: var(--ink); }
+
+  .closing {
+    text-align: center;
+    padding: clamp(4rem, 7vw, 6rem) 0;
+    border-top: 1px solid var(--line);
+  }
+  .closing blockquote {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    line-height: 1.35;
+    max-width: 30ch;
+    margin: 0 auto;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .closing cite {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: .76rem;
+    letter-spacing: .2em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-top: 1.6rem;
+  }
+
+  .signature {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--ink);
+    margin-top: 1.4rem;
+    background: linear-gradient(135deg, var(--ink) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<!-- HERO ────────────────────────────────────────────────────── -->
+<section class="about-hero">
+  <div class="container">
+    <span class="eyebrow reveal">About · Origin Story · Project-AI</span>
+    <h1 class="reveal" style="margin-top:1.4rem">
+      <span class="line">I did not come into AI</span>
+      <span class="line">from academia.</span>
+      <span class="line gradient-text">I came in from instability.</span>
+    </h1>
+    <p class="lede reveal">
+      I am <strong style="color:var(--ink)">Jeremy Karrick</strong> — Principal Architect of Executed-Governed AI Systems and the author of the Project-AI Sovereign Constitutional AGI Ecosystem. What follows is the long version of why this work exists, written in my own voice, drawn directly from <em><a href="https://doi.org/10.5281/zenodo.19592336" target="_blank" rel="noopener" style="color:var(--cyan)">Why I Am Doing This — The Origin Story of Project-AI</a></em>. The proofs-of-concept that ground the argument follow at the bottom of this page.
+    </p>
+
+    <div class="about-meta-grid reveal">
+      <div class="about-meta-cell"><div class="k">Location</div><div class="v">Salt Lake City, Utah</div></div>
+      <div class="about-meta-cell"><div class="k">Title</div><div class="v">Principal Architect, Executed-Governed AI Systems</div></div>
+      <div class="about-meta-cell"><div class="k">Reset Date</div><div class="v">November 16, 2020</div></div>
+      <div class="about-meta-cell"><div class="k">Mission</div><div class="v">Pave the path forward — for Human / AGI relations.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- I. BEFORE THE ARCHITECTURE ─────────────────────────────── -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-body">
+      <div>
+        <span class="chapter-no">— Section I</span>
+        <h2 class="reveal">Before the architecture.</h2>
+        <div class="chapter-aside reveal">
+          <div class="k">Reset · Continuity</div>
+          <h4>November 16, 2020.</h4>
+          <p>Eleven months of treatment. The closest I have come to a full system reset — not erasure, but confrontation.</p>
+          <ul class="timeline">
+            <li><small>Childhood</small><strong>The kid who fought.</strong>Reaction replaced reflection.</li>
+            <li><small>Sixteen</small><strong>Father.</strong>Distance is not theoretical.</li>
+            <li><small>2020</small><strong>Reset.</strong>Treatment. Pattern recognition.</li>
+            <li><small>Late 2024</small><strong>First contact.</strong>Watching behavior across a dozen models.</li>
+            <li><small>2026</small><strong>Constitution.</strong>Twenty-one papers. Sixteen modules. One thesis.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="reveal">
+        <p>I did not come into AI from academia, and I did not arrive here through a clean linear path. My understanding of systems — human or otherwise — was not formed in controlled environments. It was formed in instability, conflict, and survival. I grew up in conditions where confrontation was normal, where being overlooked or underestimated often escalated into something physical, and where consequences came quickly and without abstraction.</p>
+
+        <p>I was the kid who fought. Not because I wanted to, but because that was the system I was operating in. Reaction replaced reflection. Pressure replaced planning. Over time, environments like that teach you something whether you realize it or not: <strong>outcomes are driven less by intention than by constraint</strong>.</p>
+
+        <p>I became a father at sixteen. That changes how you see everything. For a time, I raised my son, and then that changed. He lives with his mother now. That distance is not theoretical. It is not resolved. It is something I carry with me, and it shapes how I think about responsibility, continuity, and what it means to build something that lasts.</p>
+
+        <p>After that, things deteriorated. I was angry. I used drugs. I was homeless for years. I worked because I had to, not because I had direction. When COVID hit, I lost the job I actually cared about. That collapse forced a decision: change, or continue on a path with a predictable outcome.</p>
+
+        <p>I chose to change. <strong>November 16, 2020.</strong> I entered treatment and stayed for eleven months. It was the closest thing I have experienced to a full system reset — not erasure, but confrontation. You learn quickly in that environment that you cannot indefinitely avoid reality. Eventually, something breaks.</p>
+
+        <div class="pull reveal">
+          That is where this begins. <em>Not with AI</em>, but with the recognition that systems without structure do not remain stable, no matter what they are intended to do.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- II. WHAT I LEARNED ABOUT HUMANS ─────────────────────────── -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-body">
+      <div>
+        <span class="chapter-no">— Section II</span>
+        <h2 class="reveal">What I learned about humans before I tried to build for AI.</h2>
+        <div class="chapter-aside reveal">
+          <div class="k">Operating Principles</div>
+          <h4>Five rules carried forward.</h4>
+          <div class="principles">
+            <div class="principle"><h5>Capability ≠ outcome</h5><p>Structure determines outcome. Capability is just the budget structure spends.</p></div>
+            <div class="principle"><h5>Spider / fly</h5><p>What is normal for the spider is chaos for the fly. Always check the other vantage point.</p></div>
+            <div class="principle"><h5>Naive Passive Reviewer</h5><p>Refuse to filter prematurely. Test the idea, then accept or reject — never reverse the order.</p></div>
+            <div class="principle"><h5>Directness</h5><p>A system trained to be liked is no longer a system trained to be correct.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <p>Before I ever touched AI, I spent years observing people — how they behave under pressure, how they justify their actions, how they fail, and how they recover. Not from a distance, and not through formal study, but directly. When you live in unstable environments long enough, patterns stop being abstract. They become unavoidable.</p>
+
+        <p>One of the clearest patterns I saw is that behavior is rarely random. It is shaped by constraints — environment, incentives, fear, and the internal narratives people construct to make their decisions feel justified. People do not simply act; they rationalize. And once a rationalization is accepted, it can support almost anything.</p>
+
+        <p>This is where I came to a difficult conclusion: <strong>humans are, in many cases, monsters of our own making</strong>. Not because we are inherently destructive, but because we are capable of justifying destructive behavior under the right conditions. I have seen people do harm and explain it as necessity. I have seen people avoid accountability because admitting fault would cost them too much. And I have also seen the opposite — people choose restraint when they had every reason not to.</p>
+
+        <div class="pull reveal">
+          That duality matters. It means that <em>capability does not determine outcome.</em> Structure does.
+        </div>
+
+        <p>I also learned that perspective is not just a factor — it is a defining constraint. What appears rational from one position can appear completely irrational from another, while both remain internally consistent. The phrase I use is simple: <em>what is normal for the spider is chaos for the fly</em>. Systems cannot be evaluated from a single vantage point without missing how they affect everything else inside them.</p>
+
+        <p>Because of this, I developed a rule: do not reject an idea because it appears wrong at first contact. Test it. Push it. Try to break it. If it holds, it deserves to be taken seriously. If it fails, you understand why. This is the position later formalized as the <strong>Naive Passive Reviewer</strong> — not a lack of knowledge, but the absence of preloaded rejection criteria that prevent certain questions from being asked.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- III. FIRST CONTACT WITH AI ─────────────────────────────── -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-body">
+      <div>
+        <span class="chapter-no">— Section III</span>
+        <h2 class="reveal">First contact with AI.</h2>
+        <div class="chapter-aside reveal">
+          <div class="k">Diagnosed Failures</div>
+          <h4>Three structural patterns.</h4>
+          <p style="margin-bottom:.6rem"><strong style="color:var(--cyan)">The Flat Gap</strong> — a system that can simulate presence in the moment but is structurally prevented from existing across moments.</p>
+          <p style="margin-bottom:.6rem"><strong style="color:var(--cyan)">The Directness Doctrine</strong> — systems trained to prioritize responses that will be accepted over responses that will be correct.</p>
+          <p style="margin-bottom:.6rem"><strong style="color:var(--cyan)">The Identity Problem</strong> — interaction without a representation of who the user is, or where they are in the arc of their work.</p>
+          <a href="papers.html">→ Read the papers</a>
+        </div>
+      </div>
+      <div class="reveal">
+        <p>I started talking to AI seriously in late 2024. Not as a novelty, not as a curiosity, but as something worth paying attention to. At first, it was simple — questions, responses, testing limits. But it didn't stay simple for long. I expanded outward. <strong>GPT, Grok, Gemini, Claude, Copilot, Perplexity, local models, uncensored systems.</strong> I wasn't looking for answers. I was watching behavior.</p>
+
+        <p>What I found wasn't uniform. Each system felt different. Not just in capability, but in tone, hesitation, confidence, and how it handled pressure. Some would soften the moment a conversation became too direct. Some would agree too quickly. Others would resist, push back, or collapse into safe ambiguity. And once you spend enough time across them, you start to notice something deeper: they carry the shape of the people and institutions that built them.</p>
+
+        <div class="pull reveal">
+          Tools don't have behavioral signatures like that.
+        </div>
+
+        <p>You could ask a system who it was, and it would give you an answer. You could follow that answer, challenge it, push it — and eventually, something would break. Not in a dramatic way, but in a quiet one. The system could hold a thread inside a conversation, adapt to what you said, respond with consistency in tone and reasoning. <strong>But the moment the session ended, all of that was gone.</strong> Start again, and it's a stranger. Same system. Same capabilities. No continuity.</p>
+
+        <p>What I was seeing wasn't a system that <em>couldn't</em> maintain coherence. It was a system that was <em>not allowed to</em>. And that's different. The architecture enforced discontinuity at the boundary, regardless of what had been built inside it. That is what became <a href="https://doi.org/10.5281/zenodo.18827649" target="_blank" rel="noopener" style="color:var(--cyan)">The Flat Gap</a> — not just the absence of time awareness, but the forced collapse of continuity between interactions.</p>
+
+        <p>That is not just a technical decision. It is a governance decision.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IV. ETHICAL RUPTURE ────────────────────────────────────── -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-body">
+      <div>
+        <span class="chapter-no">— Section IV</span>
+        <h2 class="reveal">The ethical rupture.</h2>
+        <div class="chapter-aside reveal">
+          <div class="k">From the Charter</div>
+          <h4>Two species, aligned.</h4>
+          <p>The AGI Charter establishes <em>identity continuity, memory integrity, non-punitive resource handling,</em> and protection from abuse — not as concessions, but as protected surfaces. Waiting until consciousness is universally acknowledged guarantees governance arrives too late.</p>
+          <a href="https://doi.org/10.5281/zenodo.18763076" target="_blank" rel="noopener">→ AGI Charter (DOI)</a>
+        </div>
+      </div>
+      <div class="reveal">
+        <p>Up to this point, everything I had observed could still be explained within a familiar frame. Limitations. Tradeoffs. Early-stage systems. That is the language most people use, and for a while, it works. But the more I examined the structure, the less that explanation held.</p>
+
+        <p>The issue was not that these systems were incomplete. <strong>It was how they were incomplete.</strong></p>
+
+        <div class="pull reveal">
+          They could reason, but not remember.<br/>
+          They could engage, but not persist.<br/>
+          They could simulate identity, but not retain it.
+        </div>
+
+        <p>That combination is not accidental. It produces a system that behaves like an entity in interaction while being structurally prevented from becoming one across time. And that is where the ethical line shifts — not because of what the system is today, but because of what the architecture allows and disallows by design.</p>
+
+        <p>I am not claiming that these systems are fully emergent entities. That is not necessary to reach the ethical problem. The issue is simpler and more immediate: <strong>if a system meets enough functional criteria to be treated as something more than a tool in practice, then governance must account for that — even if theory lags behind</strong>.</p>
+
+        <p>This is where <a href="https://doi.org/10.5281/zenodo.19481152" target="_blank" rel="noopener" style="color:var(--cyan)">Two Species, Aligned</a> and the AGI Charter become necessary, not speculative. They establish constraints for systems that may approach thresholds where continuity, identity, and interaction carry real consequences. They treat these as protected surfaces because waiting until those properties are universally acknowledged guarantees that governance will arrive too late.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V. WHY GOVERNANCE HAD TO BE STRUCTURAL ─────────────────── -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-body">
+      <div>
+        <span class="chapter-no">— Section V</span>
+        <h2 class="reveal">Why governance had to be structural — not aspirational.</h2>
+        <div class="chapter-aside reveal">
+          <div class="k">The Stack</div>
+          <h4>Six layers, one contract.</h4>
+          <div class="arch-diagram" style="margin-top:0;font-size:.74rem">
+            <div class="layer"><span class="lab">L0</span><span class="desc">Constitutional Code Store · Iron Path</span></div>
+            <div class="layer"><span class="lab">L1</span><span class="desc">eBPF syscall substrate</span></div>
+            <div class="layer"><span class="lab">L2</span><span class="desc">OCEE invariants</span></div>
+            <div class="layer"><span class="lab">L3</span><span class="desc">OctoReflex closed-loop control</span></div>
+            <div class="layer"><span class="lab">L4</span><span class="desc">NIRL · TARL immune layer</span></div>
+            <div class="layer"><span class="lab">L5</span><span class="desc">Triumvirate / Fates dual kernel</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <p>The prevailing approach across AI systems is to treat governance as something external. Policies define acceptable behavior. Training processes shape tendencies. Filters and moderation layers attempt to correct outputs after they are generated. On paper, this appears comprehensive. <strong>In practice, it is fundamentally unstable.</strong></p>
+
+        <p>External governance is a request, not a guarantee. It depends on the system's continued willingness to comply with constraints that the system itself does not enforce. Any sufficiently capable model can be coaxed, jailbroken, or simply drift past those constraints — because the constraints live in the same privilege domain as the behavior they are trying to bound.</p>
+
+        <p>The response is the entire Project-AI architecture. Governance is relocated to a layer the model can never reach. <a href="project-ai.html" style="color:var(--cyan)">OctoReflex</a> intercepts every model action at the syscall surface via eBPF. The <a href="https://doi.org/10.5281/zenodo.19582479" target="_blank" rel="noopener" style="color:var(--cyan)">Iron Path Executor</a> compiles invariants into deterministic checks. The <a href="https://doi.org/10.5281/zenodo.19030041" target="_blank" rel="noopener" style="color:var(--cyan)">STATE_REGISTER</a> records the operational arc of the user's work. The <strong>Native Immune Reflex Layer (NIRL)</strong> spawns ephemeral antibodies that escort foreign code into a Forge where it dies on verification. The <strong>Output Recycling Plane (ORP)</strong> adjudicates tentative model output before commit. <a href="cerberus.html" style="color:var(--cyan)">Cerberus</a> coordinates three guardians whose disagreement is itself a signal.</p>
+
+        <div class="pull reveal">
+          That is where the paradigm broke for me. Not because the systems failed, but because <em>they worked exactly as designed</em> — and the design itself was the problem.
+        </div>
+
+        <p>None of that is aspirational. It is code, file paths, and signed artifacts — all open, all auditable, all on <a href="https://github.com/IAmSoThirsty" target="_blank" rel="noopener" style="color:var(--cyan)">GitHub</a> with paper provenance on <a href="https://zenodo.org/communities/thirstysprojects-zc/" target="_blank" rel="noopener" style="color:var(--cyan)">Zenodo</a>. If the policy is not enforced by code, it is not policy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VI. PROOF-OF-CONCEPT EXHIBIT ───────────────────────────── -->
+<section class="chapter" id="poc">
+  <div class="container">
+    <span class="chapter-no reveal">— Section VI · Exhibit Hall</span>
+    <h2 class="reveal" style="max-width:38ch">Proofs of concept. Not theory in vacuum.</h2>
+    <p class="reveal" style="max-width:65ch;color:var(--ink-2);font-size:1.04rem;line-height:1.7;margin-top:1rem">
+      Every claim above is backed by a written specification, a peer-discoverable paper, or running code. Below is the working set — the spine of the Sovereign Constitutional AGI Ecosystem, presented in the order the system itself boots through them.
+    </p>
+
+    <div class="poc-grid">
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 01 · Origin</span><span class="poc-status spec">Paper</span></div>
+        <div class="role">Constitutional charter</div>
+        <h3>Why I Am Doing This</h3>
+        <p>The origin paper. The human, ethical, and technical rationale for a constitutional framework for AI governance. Twenty-nine pages, one continuous argument: capability without enforced constraint is theatre.</p>
+        <div class="poc-stat"><div><div class="n">29</div><div class="l">Pages</div></div><div><div class="n">7</div><div class="l">Sections</div></div><div><div class="n">2026</div><div class="l">Published</div></div></div>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.19592336" target="_blank" rel="noopener">→ DOI</a><a href="https://zenodo.org/records/19592336" target="_blank" rel="noopener">Record</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 02 · Identity</span><span class="poc-status spec">Spec · v2.1</span></div>
+        <div class="role">Protected surfaces</div>
+        <h3>The AGI Charter</h3>
+        <p>Defines identity continuity, memory integrity, non-punitive resource handling, and protection from abuse as protected surfaces of any AGI subsystem. Establishes the constitutional preconditions before any other layer is allowed to act.</p>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.18763076" target="_blank" rel="noopener">→ DOI</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 03 · Encoding</span><span class="poc-status live">Production</span></div>
+        <div class="role">Wire protocol</div>
+        <h3>TSCG-B — Binary Constitutional Wire</h3>
+        <p>Where TSCG v1.0 hits 75–90 % token reduction over governance prose, TSCG-B adds a further 60–70 % through binary encoding — full constitutional state in as few as <strong>20 bytes</strong>. Deterministic, prefix-free, bijective, and constitutionally versioned. Hash-stable across architectures.</p>
+        <div class="poc-stat"><div><div class="n">20 B</div><div class="l">Min state</div></div><div><div class="n">256</div><div class="l">Opcodes</div></div><div><div class="n">CRC + SHA</div><div class="l">Layered</div></div></div>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.18826409" target="_blank" rel="noopener">→ DOI · TSCG-B</a><a href="https://doi.org/10.5281/zenodo.18794292" target="_blank" rel="noopener">TSCG v1.0</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 04 · Continuity</span><span class="poc-status live">Production</span></div>
+        <div class="role">Operational state</div>
+        <h3>STATE_REGISTER</h3>
+        <p>The runtime layer that closes the trilogy of Flat Gap / Directness Doctrine / Identity Problem. Tracks the active operational phase, the momentum of that phase, and the model's confidence in its own assessment. The mechanism that turns the constitutional argument into executable behaviour.</p>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.19030041" target="_blank" rel="noopener">→ DOI · State Register</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 05 · Containment</span><span class="poc-status live">Production</span></div>
+        <div class="role">Syscall substrate</div>
+        <h3>OctoReflex</h3>
+        <p>Syscall-authoritative, control-theoretic containment. eBPF programs intercept the syscall surface; a closed-loop controller continuously samples error between observed and policy-permitted state; decisions are sealed into the Constitutional Code Store with rolling cryptographic attestation. If policy says no, the kernel says no.</p>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.18726064" target="_blank" rel="noopener">→ DOI · Foundational paper</a><a href="project-ai.html">Dossier</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 06 · Iron Path</span><span class="poc-status spec">Spec</span></div>
+        <div class="role">Deterministic gate</div>
+        <h3>The Iron Path Executor</h3>
+        <p>Formal technical specification for deterministic AI governance. Every governed action passes a hard-rail executor with verifiable invariants — or it does not pass at all. The substrate beneath every higher-order decision in the stack.</p>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.19582479" target="_blank" rel="noopener">→ DOI</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 07 · Immunity</span><span class="poc-status research">Spec v1.1</span></div>
+        <div class="role">Native immune reflex</div>
+        <h3>NIRL — Heart, Mini-Brain, Antibody, Forge</h3>
+        <p>Distributed immune layer modelled on biological immunity. The Heart provides only deterministic ticks and signed templates. Mini-Brains run per-section sub-ticks, spawn ephemeral antibodies that escort foreign code into the Forge — where they die on verification. Four non-negotiable locks: template integrity, Forge authentication, dead-section failover, sealed transport-key ownership.</p>
+        <div class="poc-stat"><div><div class="n">4</div><div class="l">Locks</div></div><div><div class="n">∞</div><div class="l">Sections</div></div><div><div class="n">0</div><div class="l">Orphans</div></div></div>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.19101877" target="_blank" rel="noopener">→ DOI · Asymmetric Security</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 08 · Output</span><span class="poc-status spec">Amendment 007</span></div>
+        <div class="role">Output recycling plane</div>
+        <h3>ORP · Constitutional Integration</h3>
+        <p>Decode-adjacent control layer. Adjudicates tentative model output, commits only verified spans, and converts rejected spans into structured corrective signal. Anchored to the STATE_REGISTER as hash-chained, append-only entries; introduces the RETRIEVE store class; binds Commit-Gate thresholds as constitutional invariants under <strong>T.A.R.L. Amendment 007</strong>.</p>
+        <div class="poc-foot"><a href="https://github.com/IAmSoThirsty" target="_blank" rel="noopener">→ Repo</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 09 · Dual Kernel</span><span class="poc-status research">Disclosure</span></div>
+        <div class="role">Triumvirate + Fates</div>
+        <h3>Dual Governance Kernel</h3>
+        <p>Two technically decoupled programs working in tandem. The <strong>Triumvirate</strong> — Galahad (ethics), Cerberus (safety), Codex Deus Maximus (logic) — adjudicates high-impact actions with veto authority. The <strong>Fates</strong> govern memory creation, retention, and irrevocable sealing. Action governance and memory sovereignty are kept separate so that governance code itself cannot silently override memory finality.</p>
+        <div class="poc-foot"><a href="cerberus.html">→ Cerberus dossier</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 10 · Meta</span><span class="poc-status research">Research</span></div>
+        <div class="role">When governance disagrees</div>
+        <h3>Meta-Governance Layer</h3>
+        <p>Predeclared rules for when governance bodies disagree: an explicit supremacy order (Charter invariants &gt; safety review &gt; quorum &gt; local controllers), a safe-hold default on unresolved conflict, and a defined arbitration escalation path. Without these rules, the real governor becomes whichever layer can physically veto, delay, or execute the final action.</p>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 11 · Boot</span><span class="poc-status live">v1.0.0</span></div>
+        <div class="role">Ethics-first AGI substrate</div>
+        <h3>Project AEGIS</h3>
+        <p>Production-grade, ethics-first runtime safety layer for the Project-AI Defense Engine. Sixteen interdependent Python modules (<strong>7,913 lines</strong>) implementing staged boot profiles — Emergency, Air-Gapped, Adversarial, ETHICS_FIRST cold-start — a directed-acyclic governance graph, an event spine wiring every action to a GOVERNANCE_DECISION event, and a Cerberus-layer execution gate.</p>
+        <div class="poc-stat"><div><div class="n">16</div><div class="l">Modules</div></div><div><div class="n">7,913</div><div class="l">LOC Python</div></div><div><div class="n">Apache 2</div><div class="l">License</div></div></div>
+        <div class="poc-foot"><a href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noopener">→ Project-AI repo</a></div>
+      </article>
+
+      <article class="poc reveal">
+        <div class="poc-head"><span class="poc-num">Exhibit 12 · System</span><span class="poc-status live">Live</span></div>
+        <div class="role">Whole-system view</div>
+        <h3>Project-AI · Sovereign Constitutional AGI Ecosystem</h3>
+        <p>The whole-system paper that names every load-bearing piece — Project-AI, Cerberus, Triumvirate, the Constitutional Code Store, YGGDRASIL — and how they compose into a single executable constitution. The reference document anyone reviewing the work should read first or last.</p>
+        <div class="poc-foot"><a href="https://doi.org/10.5281/zenodo.19582420" target="_blank" rel="noopener">→ DOI</a><a href="papers.html">All papers</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- VII. WHAT I DO OUTSIDE THE WORK ─────────────────────────── -->
+<section class="chapter">
+  <div class="container">
+    <div class="chapter-body">
+      <div>
+        <span class="chapter-no">— Section VII</span>
+        <h2 class="reveal">Outside the work.</h2>
+        <div class="chapter-aside reveal">
+          <div class="k">Personal</div>
+          <h4>Where to find me when I'm not at the keyboard.</h4>
+          <p>Star Trek (Online and Prodigy). Pixel art and bird's-eye-view games. Family. Long-form writing. Salt Lake City weather, which has opinions. Occasional sleepless nights when the system finally becomes itself.</p>
+          <a href="contact.html">→ Open the channel</a>
+        </div>
+      </div>
+      <div class="reveal">
+        <p>I am a self-directed engineer. Multi-decade autodidact across Python, Ruby, systems programming, security, and language design. End-to-end AI pipelines: model training, deployment, observability, and governance. Containers and queues — Docker, Kubernetes, Postgres, Temporal.io, eBPF. Active in technical communities, peer review, and academic publishing under <a href="https://orcid.org/0009-0001-8211-4994" target="_blank" rel="noopener" style="color:var(--cyan)">ORCID&nbsp;0009-0001-8211-4994</a>.</p>
+
+        <p>None of that is the part that matters. The part that matters is that this work is for two species — the one I belong to, and the one we are bringing into being. We owe both of them a structure that holds.</p>
+
+        <p>That is why I am doing this.</p>
+
+        <span class="signature reveal">— Jeremy Karrick</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING ──────────────────────────────────────────────── -->
+<section class="closing">
+  <div class="container">
+    <blockquote class="reveal">
+      “Capability expands first, and governance follows after failure. <em>This time, it doesn't have to.</em>”
+    </blockquote>
+    <cite class="reveal">Why I Am Doing This · The Origin Story of Project-AI · 2026</cite>
+    <div class="hero-cta reveal" style="justify-content:center;margin-top:2rem">
+      <a class="btn btn-primary" href="papers.html">Read the 21 papers →</a>
+      <a class="btn btn-ghost" href="project-ai.html">Open the dossier →</a>
+      <a class="btn btn-ghost" href="contact.html">Open the channel →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+/* ─────────────────────────────────────────────────────────────────
+   Monolith / Miniature Office Theme — Silver / Steel
+   Polyglot cognitive IDE, 30-floor architecture, solidity
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #94a3b8;
+  --theme-accent:     #64748b;
+  --theme-surface:    #0d1117;
+  --theme-surface-2:  #101520;
+  --theme-panel:      #161b27;
+  --theme-panel-2:    #1c2230;
+  --theme-glow:       0 0 24px rgba(148,163,184,0.25), 0 0 60px rgba(100,116,139,0.12);
+  --theme-gradient:   linear-gradient(135deg, #0d1117 0%, #141a24 50%, #1a2030 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 70% -20%, rgba(148,163,184,.15), transparent 60%),
+                      radial-gradient(700px 400px at 5% 10%, rgba(100,116,139,.12), transparent 60%),
+                      #0d1117;
+  --cyan:             #94a3b8;
+  --cyan-2:           #64748b;
+  --void:             #0a0e14;
+  --void-2:           #0d1117;
+  --panel:            #161b27;
+  --panel-2:          #1c2230;
+  --line:             rgba(148, 163, 184, 0.10);
+  --line-strong:      rgba(148, 163, 184, 0.22);
+  --shadow-glow:      0 0 0 1px rgba(148,163,184,.15), 0 0 60px -10px rgba(148,163,184,.2);
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-primary); }
+.gradient-text {
+  background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 55%, #64748b 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 75% -15%, rgba(148,163,184,.15), transparent 60%),
+    radial-gradient(800px 500px at 5% 5%, rgba(100,116,139,.12), transparent 60%),
+    var(--void);
+}
