@@ -4,10 +4,14 @@
 import sys
 from pathlib import Path
 
-# Add current directory to path to prioritize runtime.py over runtime/ directory
+# Add tarl/ to sys.path so internal flat imports resolve correctly.
+# Use append (not insert) to avoid shadowing root-level packages such as
+# `policies/` with the `tarl/policies/` sub-package.
+# The runtime.py vs runtime/ directory ambiguity is handled explicitly below
+# via importlib.util.spec_from_file_location, so insert(0) is not required.
 _tarl_dir = Path(__file__).parent
 if str(_tarl_dir) not in sys.path:
-    sys.path.insert(0, str(_tarl_dir))
+    sys.path.append(str(_tarl_dir))
 
 # Import TarlRuntime from the runtime.py file (not runtime/ directory)
 # We do this by importing the module explicitly

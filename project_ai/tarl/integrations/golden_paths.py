@@ -9,13 +9,13 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from project_ai.tarl.integrations import (
-    Capability,
+# Import directly from sub-modules to avoid circular import through __init__.py
+from project_ai.tarl.integrations.orchestration import Capability, Policy
+from project_ai.tarl.integrations.orchestration_extended import (
     ExtendedTarlStackBox,
-    FullGovernanceStack,
-    Policy,
     ResourceQuota,
 )
+from project_ai.tarl.integrations.orchestration_governance import FullGovernanceStack
 
 
 @dataclass
@@ -180,7 +180,7 @@ sbom = stack.provenance.generate_sbom("query_agent")
         Returns:
             dict: Minimal configured system for deterministic execution
         """
-        from project_ai.tarl.integrations import TarlStackBox
+        from project_ai.tarl.integrations.orchestration import TarlStackBox
 
         stack = TarlStackBox(
             config={"vm_data_dir": "data/tarl_vm", "enable_recording": True}
