@@ -25,6 +25,8 @@ import json
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -195,20 +197,33 @@ async def run_canonical(request: Request) -> JSONResponse:
     return JSONResponse(content=result, status_code=status_code)
 
 
+def _check_triumvirate_health() -> dict[str, Any]:
+    """Probe the Triumvirate governance server on port 8001."""
+    try:
+        with urllib.request.urlopen(
+            "http://127.0.0.1:8001/health", timeout=2
+        ) as resp:
+            return {"reachable": True, "status_code": resp.status}
+    except (urllib.error.URLError, OSError):
+        return {"reachable": False}
+
+
 @app.get("/health")
 async def health() -> dict[str, Any]:
     """
-    Health check endpoint.
+    Health check endpoint. Also probes the Triumvirate governance server.
 
     Returns:
         dict: Health status and basic system info
     """
+    triumvirate = _check_triumvirate_health()
     return {
         "status": "healthy",
         "timestamp": datetime.now(UTC).isoformat(),
         "version": "1.0.0",
         "replay_script": str(REPLAY_SCRIPT.exists()),
         "trace_file": str(TRACE_FILE.exists()),
+        "triumvirate_server": triumvirate,
     }
 
 
