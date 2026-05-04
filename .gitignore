@@ -232,3 +232,13 @@ test_audit_output/
 .obsidian/plugins/**
 .obsidian/plugins/*/data.json
 .obsidian/plugins/*/cache/
+
+# Project-AI: re-include editor config + plugin settings (solo project, track across machines)
+!.obsidian/app.json
+!.obsidian/workspace.json
+!.obsidian/hotkeys.json
+!.obsidian/plugins/
+!.obsidian/plugins/dataview/
+!.obsidian/plugins/dataview/data.json
+!.obsidian/plugins/templater-obsidian/
+!.obsidian/plugins/templater-obsidian/data.json

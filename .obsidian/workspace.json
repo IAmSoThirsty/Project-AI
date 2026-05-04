@@ -1,0 +1,143 @@
+{
+  "main": {
+    "id": "main",
+    "type": "split",
+    "children": [
+      {
+        "id": "left-sidebar",
+        "type": "split",
+        "children": [
+          {
+            "id": "left-tab-container",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "file-explorer",
+                "type": "leaf",
+                "state": {
+                  "type": "file-explorer",
+                  "state": {}
+                }
+              },
+              {
+                "id": "search",
+                "type": "leaf",
+                "state": {
+                  "type": "search",
+                  "state": {
+                    "query": "",
+                    "matchingCase": false,
+                    "explainSearch": false,
+                    "collapseAll": false,
+                    "extraContext": false,
+                    "sortOrder": "alphabetical"
+                  }
+                }
+              },
+              {
+                "id": "starred",
+                "type": "leaf",
+                "state": {
+                  "type": "starred",
+                  "state": {}
+                }
+              },
+              {
+                "id": "tag-pane",
+                "type": "leaf",
+                "state": {
+                  "type": "tag",
+                  "state": {}
+                }
+              }
+            ],
+            "currentTab": 0
+          }
+        ],
+        "direction": "vertical",
+        "width": 280
+      },
+      {
+        "id": "center",
+        "type": "split",
+        "children": [
+          {
+            "id": "center-tabs",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "master-index",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "docs/00_INDEX.md",
+                    "mode": "preview",
+                    "source": false
+                  }
+                }
+              }
+            ],
+            "currentTab": 0
+          }
+        ],
+        "direction": "vertical"
+      },
+      {
+        "id": "right-sidebar",
+        "type": "split",
+        "children": [
+          {
+            "id": "right-tab-container",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "outline",
+                "type": "leaf",
+                "state": {
+                  "type": "outline",
+                  "state": {}
+                }
+              },
+              {
+                "id": "backlinks",
+                "type": "leaf",
+                "state": {
+                  "type": "backlink",
+                  "state": {
+                    "file": "docs/00_INDEX.md",
+                    "collapseAll": false,
+                    "extraContext": false,
+                    "sortOrder": "alphabetical",
+                    "showSearch": false,
+                    "searchQuery": "",
+                    "backlinkCollapsed": false,
+                    "unlinkedCollapsed": true
+                  }
+                }
+              }
+            ],
+            "currentTab": 0
+          }
+        ],
+        "direction": "vertical",
+        "width": 280
+      }
+    ],
+    "direction": "horizontal"
+  },
+  "left": {
+    "collapsed": false
+  },
+  "right": {
+    "collapsed": false
+  },
+  "active": "master-index",
+  "lastOpenFiles": [
+    "docs/00_INDEX.md",
+    "docs/nirl/NIRL_IMPLEMENTATION.md",
+    "relationships/agents/00_AGENTS_MOC.md",
+    "relationships/governance/00_GOVERNANCE_MOC.md",
+    "canonical/scenario.yaml"
+  ]
+}

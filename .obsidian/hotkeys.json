@@ -1,0 +1,62 @@
+{
+  "graph:open": [
+    {
+      "modifiers": ["Ctrl", "Shift"],
+      "key": "G"
+    }
+  ],
+  "graph:open-local": [
+    {
+      "modifiers": ["Ctrl", "Alt"],
+      "key": "G"
+    }
+  ],
+  "switcher:open": [
+    {
+      "modifiers": ["Ctrl"],
+      "key": "P"
+    }
+  ],
+  "backlink:open": [
+    {
+      "modifiers": ["Ctrl", "Shift"],
+      "key": "B"
+    }
+  ],
+  "outgoing-links:open": [
+    {
+      "modifiers": ["Ctrl", "Shift"],
+      "key": "O"
+    }
+  ],
+  "tag-pane:open": [
+    {
+      "modifiers": ["Ctrl", "Shift"],
+      "key": "T"
+    }
+  ],
+  "outline:open": [
+    {
+      "modifiers": ["Ctrl", "Shift"],
+      "key": "L"
+    }
+  ],
+  "command-palette:open": [
+    {
+      "modifiers": ["Ctrl"],
+      "key": "Shift+P"
+    }
+  ],
+  "editor:toggle-fold-all": [
+    {
+      "modifiers": ["Ctrl", "Shift"],
+      "key": "F"
+    }
+  ],
+  "workspace:toggle-pin": [
+    {
+      "modifiers": ["Ctrl", "Shift"],
+      "key": "P"
+    }
+  ]
+}
