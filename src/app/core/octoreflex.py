@@ -366,52 +366,56 @@ class OctoReflex:
         
         return self.validate_syscall(event)
     
+    def _gate(self, action: str, violation_type: str, context: Dict[str, Any]) -> None:
+        """Route enforcement action through ExecutionGate so it becomes a formal governance decision."""
+        try:
+            from app.core.execution_gate import get_execution_gate
+            get_execution_gate().execute(
+                "constitutional_enforcement",
+                f"{action}:{violation_type}",
+                context,
+                lambda _ctx: None,
+            )
+        except Exception:
+            pass  # graceful degrade — log already captured the event
+
     def _enforce_violation(self, violation: Violation, rule: EnforcementRule):
-        """
-        Execute enforcement action for a violation.
-        
-        Args:
-            violation: The violation to enforce
-            rule: The rule that was violated
-        """
+        """Execute enforcement action for a violation."""
         violation.enforcement_action = rule.enforcement_level.value
-        
-        # Execute custom action if provided
+
         if rule.action:
             try:
                 rule.action(violation)
             except Exception as e:
                 logger.error(f"Custom enforcement action failed: {e}")
-        
-        # Log based on enforcement level
+
+        gate_context = {
+            **violation.context,
+            "violation_id": violation.violation_id,
+            "violation_type": violation.violation_type.value,
+            "severity": violation.severity,
+            "enforcement_level": rule.enforcement_level.value,
+        }
+
         if rule.enforcement_level == EnforcementLevel.MONITOR:
             logger.info(f"[MONITOR] Violation detected: {violation.description}")
-        
+
         elif rule.enforcement_level == EnforcementLevel.WARN:
             logger.warning(f"[WARN] Constitutional violation: {violation.description}")
-        
+            self._gate("warn", violation.violation_type.value, gate_context)
+
         elif rule.enforcement_level == EnforcementLevel.BLOCK:
             logger.error(f"[BLOCK] Action blocked: {violation.description}")
-            # Route through the formal execution gate so the block is recorded
-            # as a governance decision and picked up by Fates + the ledger.
-            try:
-                from app.core.execution_router import execute as _gov_execute
-                _gov_execute(
-                    "constitutional_enforcement",
-                    violation.violation_type.value,
-                    {**violation.context, "_octoreflex_block": True},
-                    lambda _ctx: None,
-                )
-            except Exception:
-                pass
-        
+            self._gate("block", violation.violation_type.value, gate_context)
+
         elif rule.enforcement_level == EnforcementLevel.TERMINATE:
             logger.critical(f"[TERMINATE] Session terminated: {violation.description}")
-        
+            self._gate("terminate", violation.violation_type.value, gate_context)
+
         elif rule.enforcement_level == EnforcementLevel.ESCALATE:
             logger.critical(f"[ESCALATE] Violation escalated to Triumvirate: {violation.description}")
-        
-        # Add to violations list
+            self._gate("escalate", violation.violation_type.value, gate_context)
+
         self.violations.append(violation)
     
     def _calculate_severity(self, rule: EnforcementRule) -> int:
