@@ -5,9 +5,22 @@ Provides governance wrappers and validation helpers for Temporal workflows
 to ensure all workflows route through the unified governance pipeline.
 """
 
+import json
 import logging
-from datetime import datetime
+import os
+from datetime import datetime, timedelta, timezone
 from typing import Any
+
+def _get_redis_client():
+    """Return a Redis client if Redis is available, else None."""
+    try:
+        import redis as _redis
+        url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+        client = _redis.from_url(url, decode_responses=True, socket_connect_timeout=2, socket_timeout=2)
+        client.ping()
+        return client
+    except Exception:
+        return None
 
 logger = logging.getLogger(__name__)
 
@@ -262,25 +275,46 @@ async def check_workflow_quota(
 
     limit = quotas.get(workflow_type, 50)  # Default: 50/day
 
-    # TODO: Implement persistent quota tracking with Redis
-    # For now, return optimistic response
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    quota_key = f"quota:{user_id or 'anonymous'}:{workflow_type}:{today}"
+
+    next_reset = (
+        datetime.now(timezone.utc)
+        .replace(hour=0, minute=0, second=0, microsecond=0)
+        + timedelta(days=1)
+    )
+
+    redis = _get_redis_client()
+    if redis is not None:
+        try:
+            pipe = redis.pipeline()
+            pipe.incr(quota_key)
+            pipe.expire(quota_key, 86400)
+            current_count, _ = pipe.execute()
+            remaining = max(0, limit - current_count)
+            allowed = current_count <= limit
+            if not allowed:
+                logger.warning(
+                    "Quota exceeded for %s: %s used %d/%d",
+                    user_id or "anonymous", workflow_type, current_count, limit,
+                )
+            return {
+                "allowed": allowed,
+                "remaining": remaining,
+                "resets_at": next_reset.isoformat(),
+                "limit": limit,
+            }
+        except Exception as exc:
+            logger.warning("Redis quota check failed, failing open: %s", exc)
+
+    # Redis unavailable — optimistic allow, log it
     logger.info(
-        f"Quota check for {user_id or 'anonymous'}: "
-        f"{workflow_type} (limit: {limit}/day)"
+        "Quota check (no Redis) for %s: %s (limit: %d/day)",
+        user_id or "anonymous", workflow_type, limit,
     )
-
-    from datetime import timezone
-
-    next_reset = datetime.now(timezone.utc).replace(
-        hour=0, minute=0, second=0, microsecond=0
-    )
-    from datetime import timedelta
-
-    next_reset += timedelta(days=1)
-
     return {
-        "allowed": True,  # Optimistic: assume quota available
-        "remaining": limit,  # TODO: Calculate actual remaining quota
+        "allowed": True,
+        "remaining": limit,
         "resets_at": next_reset.isoformat(),
         "limit": limit,
     }
@@ -320,9 +354,30 @@ async def validate_crisis_authorization(
     if not target_member or len(target_member) < 3:
         return {"allowed": False, "reason": "Invalid target member ID"}
 
-    # Check 3: No duplicate active crisis for same target
-    # TODO: Check for existing active crisis in Temporal
-    # For now, allow (optimistic)
+    # Check 3: No duplicate active crisis for same target — scan drift alerts dir
+    alerts_dir = "data/governance_drift_alerts"
+    if os.path.isdir(alerts_dir):
+        try:
+            cutoff = datetime.now(timezone.utc).timestamp() - 3600  # 1 hour
+            for fname in os.listdir(alerts_dir):
+                if not fname.endswith(".json"):
+                    continue
+                fpath = os.path.join(alerts_dir, fname)
+                mtime = os.path.getmtime(fpath)
+                if mtime < cutoff:
+                    continue
+                try:
+                    with open(fpath, encoding="utf-8") as fh:
+                        alert = json.load(fh)
+                    if alert.get("target_member") == target_member:
+                        return {
+                            "allowed": False,
+                            "reason": f"Active crisis already in progress for target '{target_member}'",
+                        }
+                except Exception:
+                    pass
+        except Exception as exc:
+            logger.warning("Crisis active-check scan failed: %s", exc)
 
     return {"allowed": True, "reason": "Crisis authorization passed"}
 

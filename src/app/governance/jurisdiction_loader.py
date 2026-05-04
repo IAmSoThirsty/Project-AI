@@ -15,6 +15,7 @@ Supports:
 """
 
 import hashlib
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -115,6 +116,70 @@ class JurisdictionLoader:
 
         return metadata
 
+    def _parse_sections_from_markdown(
+        self, content: str
+    ) -> tuple[dict, list[str], list[str]]:
+        """Extract requirements, data-subject rights, and compliance obligations from markdown."""
+        requirements: dict = {}
+        data_subject_rights: list[str] = []
+        compliance_obligations: list[str] = []
+
+        # Split on L2 headers (## …); first element is pre-header preamble
+        sections = re.split(r"^## ", content, flags=re.MULTILINE)
+
+        _OBLIGATION_KEYWORDS = {
+            "OBLIGATION",
+            "COMPLIANCE",
+            "CONSENT MANAGEMENT",
+            "DATA PROTECTION PRINCIPLE",
+            "BREACH",
+            "INTERNATIONAL DATA TRANSFER",
+            "RECORD OF PROCESSING",
+        }
+
+        for section in sections:
+            lines = section.strip().split("\n")
+            if not lines:
+                continue
+            header = lines[0].strip().upper()
+            body = "\n".join(lines[1:])
+
+            # DATA SUBJECT RIGHTS — collect ### sub-section titles as right names
+            if "DATA SUBJECT RIGHT" in header or "SUBJECT RIGHT" in header:
+                for line in body.split("\n"):
+                    stripped = line.strip()
+                    if stripped.startswith("### "):
+                        right = stripped[4:].strip()
+                        if right and right not in data_subject_rights:
+                            data_subject_rights.append(right)
+
+            # APPENDIX / COMPLIANCE SUMMARY — parse markdown table rows
+            elif "APPENDIX" in header or "COMPLIANCE SUMMARY" in header:
+                for line in body.split("\n"):
+                    stripped = line.strip()
+                    if (
+                        not stripped.startswith("|")
+                        or stripped.startswith("|---")
+                        or "Article" in stripped
+                    ):
+                        continue
+                    cols = [c.strip() for c in stripped.strip("|").split("|")]
+                    if len(cols) >= 2:
+                        key, val = cols[0].strip(), cols[1].strip()
+                        if key and val and not key.startswith("-"):
+                            requirements[key] = val
+
+            # Obligation-bearing sections — collect top-level bullet points
+            if any(kw in header for kw in _OBLIGATION_KEYWORDS):
+                for line in body.split("\n"):
+                    stripped = line.strip()
+                    if re.match(r"^[-*]\s+\S", stripped):
+                        obligation = stripped.lstrip("-* ").strip()
+                        if obligation and obligation not in compliance_obligations:
+                            compliance_obligations.append(obligation)
+
+        return requirements, data_subject_rights, compliance_obligations
+
     def _load_all_jurisdictions(self):
         """Load all jurisdictional annexes from the jurisdictions directory"""
         if not self.jurisdictions_dir.exists():
@@ -131,6 +196,10 @@ class JurisdictionLoader:
                 # Extract metadata from markdown
                 metadata = self._extract_metadata_from_markdown(file_path)
 
+                # Parse structured content from markdown
+                raw_content = file_path.read_text(encoding="utf-8")
+                reqs, rights, obligations = self._parse_sections_from_markdown(raw_content)
+
                 # Create jurisdiction annex object
                 annex = JurisdictionAnnex(
                     code=jurisdiction_code,
@@ -140,9 +209,9 @@ class JurisdictionLoader:
                     regulation_name=metadata["regulation"],
                     file_path=str(file_path),
                     document_hash=document_hash,
-                    requirements={},  # TODO: Parse requirements from document
-                    data_subject_rights=[],  # TODO: Parse rights from document
-                    compliance_obligations=[],  # TODO: Parse obligations
+                    requirements=reqs,
+                    data_subject_rights=rights,
+                    compliance_obligations=obligations,
                 )
 
                 self.loaded_jurisdictions[jurisdiction_code] = annex
