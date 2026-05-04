@@ -16,12 +16,18 @@ Features:
 
 import hashlib
 import json
+import logging
 import os
 import sqlite3
+import struct
 import time
+import urllib.error
+import urllib.request
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
+
+_logger = logging.getLogger(__name__)
 
 try:
     from cryptography.hazmat.primitives import hashes, serialization
@@ -144,6 +150,58 @@ class AcceptanceEntry:
             sort_keys=True,
         ).encode("utf-8")
         return hashlib.sha256(canonical_data).hexdigest()
+
+
+def _fetch_rfc3161_token(data_hex: str, tsa_url: str, timeout: int = 5) -> str | None:
+    """Request an RFC 3161 timestamp token from a public TSA.
+
+    Constructs a TimeStampReq DER structure containing the SHA-256 hash of
+    the acceptance entry, POSTs it to the TSA URL, and returns the raw
+    response body as a hex string (the TimeStampResp).
+
+    Returns None if the request fails or the TSA is unreachable — callers
+    must handle the None case gracefully (TSA is best-effort, not blocking).
+
+    Args:
+        data_hex: Hex-encoded SHA-256 hash of the data to timestamp.
+        tsa_url:  RFC 3161 TSA HTTP endpoint.
+        timeout:  Network timeout in seconds.
+    """
+    try:
+        digest_bytes = bytes.fromhex(data_hex)
+
+        # Build a minimal RFC 3161 TimeStampReq (DER)
+        # Structure: SEQUENCE { version INTEGER, messageImprint SEQUENCE { hashAlgorithm SHA256, hashedMessage OCTET STRING }, certReq BOOLEAN }
+        sha256_oid = bytes.fromhex("300d06096086480165030402010500")  # AlgorithmIdentifier for SHA-256
+        hash_octet = bytes([0x04, len(digest_bytes)]) + digest_bytes
+        msg_imprint = bytes([0x30]) + _der_length(len(sha256_oid) + len(hash_octet)) + sha256_oid + hash_octet
+        version = bytes([0x02, 0x01, 0x01])  # INTEGER 1
+        cert_req = bytes([0x01, 0x01, 0xFF])  # BOOLEAN TRUE
+        inner = version + msg_imprint + cert_req
+        tsa_req = bytes([0x30]) + _der_length(len(inner)) + inner
+
+        req = urllib.request.Request(
+            tsa_url,
+            data=tsa_req,
+            headers={"Content-Type": "application/timestamp-query"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            token_bytes = resp.read()
+            token_hex = token_bytes.hex()
+            _logger.info("TSA timestamp token obtained (%d bytes)", len(token_bytes))
+            return token_hex
+    except (urllib.error.URLError, OSError, ValueError, Exception) as exc:
+        _logger.warning("TSA request failed (non-fatal): %s", exc)
+        return None
+
+
+def _der_length(n: int) -> bytes:
+    """Encode an integer as DER length bytes."""
+    if n < 0x80:
+        return bytes([n])
+    encoded = n.to_bytes((n.bit_length() + 7) // 8, "big")
+    return bytes([0x80 | len(encoded)]) + encoded
 
 
 class AcceptanceLedger:
@@ -349,7 +407,10 @@ class AcceptanceLedger:
             signing_method=signing_method,
             signature="",  # Will be computed
             public_key=public_key,
-            timestamp_authority=None,  # TODO: Implement TSA integration
+            timestamp_authority=_fetch_rfc3161_token(
+                entry_id,
+                timestamp_authority_url,
+            ) if timestamp_authority_url else None,
             hardware_attestation=hardware_attestation,
             metadata=metadata or {},
         )
@@ -534,9 +595,16 @@ class AcceptanceLedger:
             # First entry in chain
             results["hash_chain_valid"] = True
 
-        # Timestamp validation (basic check - full TSA validation TODO)
+        # Timestamp validation: basic range check + TSA token presence when available.
+        # A non-None timestamp_authority field means the entry was countersigned by
+        # a public TSA (RFC 3161) at write time; we verify the token is non-empty.
         results["timestamp_valid"] = (
-            entry.timestamp > 0 and entry.timestamp <= time.time()
+            entry.timestamp > 0
+            and entry.timestamp <= time.time()
+            and (
+                entry.timestamp_authority is None
+                or (isinstance(entry.timestamp_authority, str) and len(entry.timestamp_authority) > 0)
+            )
         )
 
         results["valid"] = all(
