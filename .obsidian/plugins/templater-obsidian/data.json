@@ -1,0 +1,23 @@
+{
+  "command_timeout": 5,
+  "templates_folder": "templates",
+  "syntax_highlighting": true,
+  "syntax_highlighting_mobile": false,
+  "auto_jump_to_cursor": true,
+  "trigger_on_file_creation": true,
+  "enable_system_commands": false,
+  "shell_path": "",
+  "user_scripts_folder": "",
+  "enable_folder_templates": true,
+  "folder_templates": [
+    {
+      "folder": "docs",
+      "template": "templates/code-documentation-template.md"
+    },
+    {
+      "folder": "docs/internal/archive",
+      "template": "templates/meeting-notes-template.md"
+    }
+  ],
+  "templates_pairs": []
+}
