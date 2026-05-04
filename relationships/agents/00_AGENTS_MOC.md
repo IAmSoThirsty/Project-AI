@@ -12,11 +12,30 @@
 ```
 AI Agent Systems
 │
-├─🤖 FOUR SPECIALIZED AGENTS
-│  ├─ [[01_oversight_agent.md|Oversight Agent]] - Action safety validation
-│  ├─ [[02_planner_agent.md|Planner Agent]] - Task decomposition
-│  ├─ [[03_validator_agent.md|Validator Agent]] - Input/output validation
-│  └─ [[04_explainability_agent.md|Explainability Agent]] - Decision explanations
+├─🤖 GOVERNANCE AGENTS (implemented 2026-05-03)
+│  ├─ [[01_oversight_agent.md|Oversight Agent]] ✓ Implemented
+│  │     deny-rate monitor · 5-min sliding window · JSON drift alerts
+│  │     src/app/agents/oversight.py
+│  ├─ [[03_validator_agent.md|Validator Agent]] ✓ Implemented
+│  │     schema registry · 4 named schemas · type/range/allowlist checks
+│  │     src/app/agents/validator.py
+│  ├─ [[04_explainability_agent.md|Explainability Agent]] ✓ Implemented
+│  │     natural-language decision formatter · trace summarizer
+│  │     src/app/agents/explainability.py
+│  └─ [[02_planner_agent.md|Planner Agent]] ✓ Active
+│        task decomposition · OpenAI GPT · memory integration
+│        src/app/agents/planner_agent.py
+│
+├─🔒 PRIVACY & SECURITY AGENTS (wired 2026-05-03)
+│  ├─ Consigliere (ThirstyConsigliere) ✓ Wired → CouncilHub
+│  │     privacy-first strategy engine · Code of Omertà
+│  │     Fernet encryption shim · src/app/agents/consigliere/
+│  ├─ CerberusCodexBridge ✓ Wired → GateGuardian
+│  │     threat-engagement bridge (Cerberus→Codex defense)
+│  │     src/app/agents/cerberus_codex_bridge.py
+│  └─ ThirstyLangValidator ✓ Wired → TarlRuntime
+│        TARL capability validation
+│        src/app/agents/thirsty_lang_validator.py
 │
 ├─⚖️ ETHICS & GOVERNANCE
 │  ├─ [[relationships/core-ai/01_four_laws_relationships.md|FourLaws Framework]]
@@ -37,12 +56,15 @@ AI Agent Systems
 
 ## 🎯 Agent Capabilities Matrix
 
-| Agent | Primary Function | Tools | Integration | Status |
-|-------|------------------|-------|-------------|--------|
-| **Oversight** | Safety validation | FourLaws, Constitutional AI | All actions | ✅ Active |
-| **Planner** | Task decomposition | OpenAI GPT, Memory | Complex tasks | ✅ Active |
-| **Validator** | Input/output validation | Regex, Schema validation | All I/O | ✅ Active |
-| **Explainability** | Decision transparency | Logging, Analysis | All decisions | ✅ Active |
+| Agent | Primary Function | Source | Status |
+|-------|-----------------|--------|--------|
+| **OversightAgent** | Deny-rate monitor, 5-min window, drift alerts | `src/app/agents/oversight.py` | ✅ Implemented |
+| **ValidatorAgent** | Schema registry, type/range/allowlist validation | `src/app/agents/validator.py` | ✅ Implemented |
+| **ExplainabilityAgent** | NL decision formatter, trace summarizer | `src/app/agents/explainability.py` | ✅ Implemented |
+| **PlannerAgent** | Task decomposition, OpenAI GPT, memory | `src/app/agents/planner_agent.py` | ✅ Active |
+| **ThirstyConsigliere** | Privacy-first strategy, Code of Omertà | `src/app/agents/consigliere/` | ✅ Wired → CouncilHub |
+| **CerberusCodexBridge** | Threat-engagement bridge | `src/app/agents/cerberus_codex_bridge.py` | ✅ Wired → GateGuardian |
+| **ThirstyLangValidator** | TARL capability validation | `src/app/agents/thirsty_lang_validator.py` | ✅ Wired → TarlRuntime |
 
 ---
 

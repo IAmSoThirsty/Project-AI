@@ -54,10 +54,31 @@ Governance Framework Hierarchy
 │  ├─ [[relationships/constitutional/03_ethics_validation.md|Ethics Validation]]
 │  └─ [[CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT.md|Implementation Report]]
 │
-└─🔄 MULTI-PATH GOVERNANCE
-   ├─ [[MULTI_PATH_GOVERNANCE_ARCHITECTURE.md|Architecture]]
-   ├─ [[MULTI_PATH_GOVERNANCE_COMPLETE.md|Implementation]]
-   └─ [[P0_MANDATORY_GOVERNANCE_COMPLETE.md|P0 Governance]]
+├─🔄 MULTI-PATH GOVERNANCE
+│  ├─ [[MULTI_PATH_GOVERNANCE_ARCHITECTURE.md|Architecture]]
+│  ├─ [[MULTI_PATH_GOVERNANCE_COMPLETE.md|Implementation]]
+│  └─ [[P0_MANDATORY_GOVERNANCE_COMPLETE.md|P0 Governance]]
+│
+└─🆕 LIVE GOVERNANCE (implemented 2026-05-03)
+   ├─ **TSA Timestamp Authority** ✓ Live
+   │     RFC 3161 · DigiCert endpoint · DER-encoded request · stdlib-only
+   │     Graceful degradation on network failure
+   │     `src/app/governance/acceptance_ledger.py`
+   ├─ **Jurisdiction Markdown Parser** ✓ Live
+   │     Extracts data-subject rights (### sub-headers)
+   │     Compliance obligations (bullet points in obligation sections)
+   │     Requirements (GDPR compliance summary table rows)
+   │     `src/app/governance/jurisdiction_loader.py`
+   │     Jurisdiction docs: `docs/legal/jurisdictions/`
+   ├─ **Temporal Quota + Crisis Check** ✓ Live
+   │     Redis INCR+EXPIRE · daily quota per user+workflow_type
+   │     Falls open gracefully when Redis unavailable
+   │     Active crisis scan: `data/governance_drift_alerts/` (1-hour window)
+   │     `src/app/temporal/governance_integration.py`
+   └─ **Triumvirate Server** ✓ Running (port 8001)
+         FastAPI · /intent · /health · /audit · /fourlaws
+         Started as daemon thread from main() at boot
+         `governance/triumvirate_server.py`
 ```
 
 ---

@@ -1,9 +1,9 @@
 ---
 type: config-guide
-tags: [copilot, ai-assistant, development, architecture, legacy-reference]
+tags: [copilot, ai-assistant, development, architecture, vault-navigation]
 created: 2025-11-15
-last_verified: 2026-04-20
-status: superseded
+last_verified: 2026-05-03
+status: active
 related_systems: [development-environment, copilot-ai, governance]
 stakeholders: [developers, architects, ai-assistants]
 config_scope: development
@@ -15,8 +15,26 @@ superseded_by: copilot_workspace_profile.md
 
 # Project-AI Copilot Instructions
 
-> **⚠️ GOVERNANCE POLICY SUPERSEDED**  
-> This file contains legacy technical instructions. All AI assistants MUST follow the comprehensive governance policy in [copilot_workspace_profile.md](./copilot_workspace_profile.md).  
+## 🗺️ Vault Navigation — Start Here
+
+The repo root IS the Obsidian vault. All markdown files are navigable. Begin from these entry points:
+
+| Entry Point | Purpose |
+|-------------|---------|
+| `docs/00_INDEX.md` | Master navigation hub — 16 MOC sections, role-based quick access |
+| `docs/nirl/NIRL_IMPLEMENTATION.md` | NIRL cascade reference (Heart/MiniBrain/Antibody/Forge) |
+| `indexes/code_modules_index.md` | Structured code module inventory (purpose, tests, status) |
+| `indexes/code_file_paths_index.md` | Raw code file path listing, updated 2026-05-02 |
+| `relationships/` | Cross-system dependency maps — agents, governance, data, security |
+| `canonical/scenario.yaml` | Canonical governance scenario — ground truth for system behavior |
+| `canonical/replay.py` | Runs scenario, validates 5/5 invariants — run to verify governance |
+| `docs/governance/TRIUMVIRATE_DOMAIN_MAPPING.md` | Authoritative Cerberus/Codex/Galahad mapping |
+
+**Windows Copilot+ Recall**: This vault is automatically indexed by Windows Recall as you navigate it in Obsidian. Keep Recall enabled in Windows Settings → Privacy & Security → Recall for AI-powered vault search.
+
+---
+
+> **GOVERNANCE POLICY**: All AI assistants MUST also follow the comprehensive governance policy in [copilot_workspace_profile.md](./copilot_workspace_profile.md).  
 > **The Workspace Profile takes precedence over all instructions in this file.**
 
 ---

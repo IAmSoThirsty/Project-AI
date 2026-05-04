@@ -35,14 +35,19 @@ Project-AI Documentation Universe
 │  ├─ [[docs/security_compliance/THREAT_MODEL_SECURITY_WORKFLOWS.md|Threat Model]]
 │  └─ [[relationships/security/|Security Relationships]]
 │
-├─⚖️ GOVERNANCE SYSTEMS (8 Systems)
+├─⚖️ GOVERNANCE SYSTEMS
 │  ├─ [[relationships/governance/00_GOVERNANCE_MOC.md|Governance MOC]] ⭐ Main Index
 │  ├─ [[relationships/governance/01_GOVERNANCE_SYSTEMS_OVERVIEW.md|Overview]]
 │  ├─ [[relationships/governance/02_POLICY_ENFORCEMENT_POINTS.md|PEPs]]
 │  ├─ [[relationships/governance/03_AUTHORIZATION_FLOWS.md|Authorization]]
 │  ├─ [[relationships/governance/04_AUDIT_TRAIL_GENERATION.md|Audit Trail]]
 │  ├─ [[docs/governance/CODEX_DEUS_INDEX.md|Codex Deus]]
-│  └─ [[docs/governance/AGI_CHARTER.md|AGI Charter]]
+│  ├─ [[docs/governance/AGI_CHARTER.md|AGI Charter]]
+│  ├─ [[docs/governance/TRIUMVIRATE_DOMAIN_MAPPING.md|Triumvirate Domain Mapping]]
+│  ├─ TSA Timestamp Authority ✓ Live — RFC 3161, DigiCert, stdlib-only
+│  ├─ Jurisdiction Markdown Parser ✓ Live — rights/obligations/requirements
+│  ├─ Temporal Quota + Crisis Check ✓ Live — Redis INCR+EXPIRE, drift alert scan
+│  └─ Triumvirate Server ✓ Running port 8001 — /intent /health /audit /fourlaws
 │
 ├─🏗️ ARCHITECTURE & DESIGN
 │  ├─ [[docs/architecture/00_ARCHITECTURE_MOC.md|Architecture MOC]] ⭐ Main Index
@@ -67,10 +72,25 @@ Project-AI Documentation Universe
 │
 ├─🤖 AGENT SYSTEMS
 │  ├─ [[relationships/agents/00_AGENTS_MOC.md|Agents MOC]] ⭐ Main Index
-│  ├─ [[relationships/agents/01_oversight_agent.md|Oversight Agent]]
-│  ├─ [[relationships/agents/02_planner_agent.md|Planner Agent]]
-│  ├─ [[relationships/agents/03_validator_agent.md|Validator Agent]]
-│  └─ [[relationships/agents/04_explainability_agent.md|Explainability Agent]]
+│  ├─ [[relationships/agents/01_oversight_agent.md|Oversight Agent]] ✓ Implemented
+│  ├─ [[relationships/agents/02_planner_agent.md|Planner Agent]] ✓ Active
+│  ├─ [[relationships/agents/03_validator_agent.md|Validator Agent]] ✓ Implemented
+│  ├─ [[relationships/agents/04_explainability_agent.md|Explainability Agent]] ✓ Implemented
+│  ├─ Consigliere (ThirstyConsigliere) ✓ Wired → CouncilHub
+│  ├─ CerberusCodexBridge ✓ Wired → GateGuardian
+│  └─ ThirstyLangValidator ✓ Wired → TarlRuntime
+│
+├─🧬 NIRL CASCADE (Nested Intention-Response Loop)
+│  ├─ [[docs/nirl/NIRL_IMPLEMENTATION.md|NIRL Python Implementation]] ⭐ Reference
+│  ├─ [[docs/nirl/nirl_state_machines.html|State Machine Diagrams (FSM)]]
+│  ├─ Heart — global tick engine · daemon thread · 30s interval
+│  │     src/app/core/nirl/heart.py · wired: council_hub.py
+│  ├─ MiniBrain — section controller · owns Forge · Antibody lifecycle
+│  │     src/app/core/nirl/mini_brain.py
+│  ├─ Antibody — single-lifecycle escort · SHA-256 seal · SPAWNED→DESTROYED
+│  │     src/app/core/nirl/antibody.py
+│  └─ Forge — purification + HMAC-SHA256 signing · non-fatal post-gate check
+│        src/app/core/nirl/forge.py · wired: execution_router.py
 │
 ├─🖥️ GUI COMPONENTS
 │  ├─ [[relationships/gui/00_MASTER_INDEX.md|GUI MOC]] ⭐ Main Index
