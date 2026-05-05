@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thirsty-stack-bootstrap"
+version = "0.1.0"
+description = "Bootstrap implementation of Thirsty-Lang, Thirst of Gods, TARL, Shadow Thirst, TSCG, and TSCG-B."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+thirsty = "thirsty_lang.cli:main"
+tarl = "tarl.cli:main"
+shadowthirst = "shadow_thirst.cli:main"
+tscg = "tscg.cli:main"
+tscgb = "tscg_b.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

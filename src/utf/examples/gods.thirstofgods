@@ -1,0 +1,28 @@
+fountain WaterTracker {
+  drink mut count: Int;
+
+  glass init(start: Int) {
+    this.count = start;
+  }
+
+  glass add(amount: Int) -> Int {
+    this.count = this.count + amount;
+    return this.count;
+  }
+
+  cascade glass current() -> Int {
+    return this.count;
+  }
+}
+
+glass main() -> Int {
+  drink mut tracker: WaterTracker = new WaterTracker(3);
+  pour(tracker.add(4));
+  pour(await tracker.current());
+  spillage {
+    throw "oops";
+  } cleanup error (e: Error) {
+    pour(e);
+  }
+  return 0;
+}

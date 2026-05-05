@@ -1,0 +1,5 @@
+policy PromotionGate {
+  when actor.role == "builder" and mutation.risk <= 3 => ALLOW;
+  when mutation.risk > 3 => ESCALATE;
+  when actor.role != "builder" => DENY;
+}
