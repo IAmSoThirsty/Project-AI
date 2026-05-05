@@ -24,6 +24,13 @@ from .tscg_codec import TSCGCodec, SymbolType, TSCGSymbol
 
 logger = logging.getLogger(__name__)
 
+try:
+    import base64 as _base64
+    from utf.tscg_b.core import pack_text as _tscg_b_pack, TSCGBError as _TSCGBError
+except ImportError:
+    _tscg_b_pack = None  # type: ignore[assignment]
+    _TSCGBError = Exception  # type: ignore[assignment,misc]
+
 
 @dataclass
 class SessionMetadata:
@@ -414,7 +421,22 @@ class StateRegister:
         }
         
         temporal_context = self.get_temporal_context()
-        
+
+        # TSCG-B audit frame — binary wire record of session continuity state.
+        # COG (cognition) -> ANC (anchor) -> COM (commit) when verified;
+        # COG -> ANC -> INV (invariant violation) when not.
+        if _tscg_b_pack is not None:
+            try:
+                verdict = "COM" if state_data["continuity_hash_verified"] else "INV"
+                tscg_expr = f"COG -> ANC -> {verdict}"
+                frame_bytes = _tscg_b_pack(tscg_expr)
+                self.current_session.continuity_metadata["tscg_b_frame"] = (
+                    _base64.b64encode(frame_bytes).decode()
+                )
+                self.current_session.continuity_metadata["tscg_b_expr"] = tscg_expr
+            except Exception as exc:
+                logger.warning("TSCG-B frame generation failed: %s", exc)
+
         return self.codec.encode_state(state_data, temporal_context)
     
     def decode_and_verify(self, encoded: str) -> Tuple[bool, Dict[str, Any]]:

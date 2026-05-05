@@ -16,6 +16,12 @@ from .iron_path_executor import GovernanceBindingError, get_iron_path_executor
 
 logger = logging.getLogger(__name__)
 
+try:
+    from utf.shadow_thirst.core import parse_shadow as _parse_shadow, promote as _promote_shadow
+except ImportError:
+    _parse_shadow = None  # type: ignore[assignment]
+    _promote_shadow = None  # type: ignore[assignment]
+
 
 # ACTION REGISTRY: Whitelist of all valid actions
 # This prevents unknown/malicious actions from bypassing validation
@@ -491,10 +497,39 @@ def _enforce_mutation_governance_binding(
         },
     )
 
+    # Shadow Thirst promotion gate — runs when caller supplies a shadow_source
+    # (a .shadowthirst mutation block). REJECT halts the mutation; PROMOTE adds
+    # replay provenance to governance context.
+    shadow_source = payload.get("shadow_source")
+    if shadow_source and _parse_shadow is not None and _promote_shadow is not None:
+        try:
+            shadow_module = _parse_shadow(shadow_source)
+            promotion = _promote_shadow(shadow_module, replay_id=trace_id)
+            if promotion["decision"] == "REJECT":
+                failed = [
+                    r["message"] for r in promotion["analysis"]
+                    if r["level"] == "critical" and not r["passed"]
+                ]
+                raise PermissionError(
+                    f"Shadow Thirst REJECT (replay={promotion['replay_id']}): "
+                    + "; ".join(failed)
+                )
+            payload.setdefault("_shadow_promotion", {
+                "decision": promotion["decision"],
+                "replay_id": promotion["replay_id"],
+                "replay_hash": promotion["replay_hash"],
+            })
+        except PermissionError:
+            raise
+        except Exception as exc:
+            logger.warning("Shadow Thirst analysis skipped: %s", exc)
+
     context.setdefault("governance", {})
     context["governance"]["trace_id"] = trace_id
     context["governance"]["decision_record_id"] = decision.decision_record_id
     context["governance"]["mutation_class"] = mutation_class
+    if "_shadow_promotion" in payload:
+        context["governance"]["shadow_promotion"] = payload["_shadow_promotion"]
 
 
 def _check_rate_limit(context: dict[str, Any]) -> None:
