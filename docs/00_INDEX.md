@@ -78,7 +78,27 @@ Project-AI Documentation Universe
 │  ├─ [[relationships/agents/04_explainability_agent.md|Explainability Agent]] ✓ Implemented
 │  ├─ Consigliere (ThirstyConsigliere) ✓ Wired → CouncilHub
 │  ├─ CerberusCodexBridge ✓ Wired → GateGuardian
-│  └─ ThirstyLangValidator ✓ Wired → TarlRuntime
+│  └─ ThirstyLangValidator ✓ Wired → TarlRuntime · validates src/utf/
+│
+├─🌊 UNIVERSAL THIRSTY FAMILY (UTF) — src/utf/
+│  ├─ [[src/utf/docs/CANONICAL_STACK.md|Canonical Stack]] ⭐ Entry Point
+│  ├─ [[src/utf/docs/THIRST_MANIFESTO.md|Thirst Manifesto]]
+│  ├─ T1 · Thirsty-Lang — lexer/parser/checker/interpreter/CLI (11 modules)
+│  │     src/utf/thirsty_lang/  ·  cli: thirsty run <file.thirsty>
+│  ├─ T2 · Thirst of Gods — .thirstofgods dialect via T1
+│  │     src/utf/examples/gods.thirstofgods  ·  [[src/utf/docs/THIRST_OF_GODS_SPEC.md|Spec]]
+│  ├─ T3 · T.A.R.L. — compact regex policy parser + safe-AST evaluator
+│  │     src/utf/tarl/  ·  cli: tarl <policy.tarl> <context.json>
+│  │     [[src/utf/docs/TARL_BOUNDARY.md|Boundary Doc]] · wired: thirsty_lang_validator.py
+│  ├─ T4 · Shadow Thirst — mutation/invariant analysis, promote, replay, Mermaid viz
+│  │     src/utf/shadow_thirst/  ·  cli: shadowthirst promote <file.shadowthirst>
+│  │     [[src/utf/docs/SHADOW_THIRST_SPEC.md|Spec]] · wired: governance/pipeline.py
+│  ├─ T5 · TSCG — symbolic expression parser (sibling to state encoder)
+│  │     src/utf/tscg/  ·  cli: tscg parse "COG -> DNT -> SHD"
+│  │     [[src/utf/docs/TSCG_ROLE.md|Role Doc]]
+│  └─ T6 · TSCG-B — binary frame codec · CRC32 + SHA-256 · 54-byte frame
+│        src/utf/tscg_b/  ·  cli: tscgb roundtrip "COG -> DNT -> SHD"
+│        [[src/utf/docs/TSCG_B_ROLE.md|Role Doc]] · wired: governance/state_register.py
 │
 ├─🧬 NIRL CASCADE (Nested Intention-Response Loop)
 │  ├─ [[docs/nirl/NIRL_IMPLEMENTATION.md|NIRL Python Implementation]] ⭐ Reference

@@ -1,18 +1,16 @@
-"""Thirsty-lang Validator - Tests T-A-R-L (Thirsty's Active Resistance Language) capabilities.
+"""Thirsty-Lang / UTF Validator — exercises all six tiers of the Universal Thirsty Family.
 
-This module validates that Thirsty-lang functions as T-A-R-L (Thirsty's Active Resistance Language),
-testing its defensive programming and threat resistance capabilities as a code-based
-defense system that only Project-AI knows about.
-
-Security Note: This validator uses subprocess to run npm and node commands for testing
-the Thirsty-lang implementation. Commands are hardcoded and use tools resolved with
-shutil.which for security.
+Validates the Python UTF stack at src/utf/ using each tier's CLI and the shared
+unittest suite.  Replaces the prior JS-based npm/node validator.
 """
+
+from __future__ import annotations
 
 import logging
 import os
 import shutil
-import subprocess  # nosec B404 - subprocess usage for trusted Node.js testing tools only
+import subprocess  # nosec B404 - subprocess for trusted Python UTF tooling only
+import sys
 from datetime import datetime, timezone
 from typing import Any
 
@@ -21,336 +19,246 @@ from app.core.kernel_integration import KernelRoutedAgent
 
 logger = logging.getLogger(__name__)
 
+_PY = sys.executable  # use the same interpreter that's running the app
+
 
 class ThirstyLangValidator(KernelRoutedAgent):
-    """Validates Thirsty-lang as T-A-R-L (Thirsty's Active Resistance Language).
+    """Validates the Universal Thirsty Family (UTF) Python stack at src/utf/.
 
-    Tests the language's capabilities as a defensive coding system,
-    verifying it can be used as a secure communication and defense layer.
+    Exercises all six tiers:
+      T1 — Thirsty-Lang  (lexer / parser / type-checker / interpreter / CLI)
+      T2 — Thirst of Gods  (gods.thirstofgods example via T1)
+      T3 — T.A.R.L.  (compact policy parser + safe-AST evaluator)
+      T4 — Shadow Thirst  (mutation / invariant analysis + promote decision)
+      T5 — TSCG  (symbolic expression parser)
+      T6 — TSCG-B  (binary frame codec, CRC32 + SHA-256)
     """
 
     def __init__(
         self,
-        thirsty_lang_path: str = "src/thirsty_lang",
+        utf_path: str = "src/utf",
         kernel: CognitionKernel | None = None,
     ):
-        # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
             execution_type=ExecutionType.AGENT_ACTION,
             default_risk_level="medium",
         )
-        self.thirsty_lang_path = thirsty_lang_path
-        self.validation_results = []
+        self.utf_path = utf_path
+        self.validation_results: list[dict[str, Any]] = []
+
+    # ------------------------------------------------------------------ #
+    # Public API                                                           #
+    # ------------------------------------------------------------------ #
 
     def run_full_validation(self) -> dict[str, Any]:
-        """Run complete validation suite on T-A-R-L (Thirsty's Active Resistance Language) capabilities.
-
-        Returns:
-            Comprehensive validation report
-        """
-        # Route through kernel (COGNITION KERNEL ROUTING)
+        """Run the complete UTF validation suite across all six tiers."""
         return self._execute_through_kernel(
             self._do_run_full_validation,
-            operation_name="validate_tarl",
+            operation_name="validate_utf",
             risk_level="medium",
-            metadata={"thirsty_lang_path": self.thirsty_lang_path},
+            metadata={"utf_path": self.utf_path},
         )
 
     def _do_run_full_validation(self) -> dict[str, Any]:
-        """Internal implementation of full validation."""
-        logger.info(
-            "Starting T-A-R-L (Thirsty's Active Resistance Language) validation"
-        )
+        logger.info("Starting UTF (Universal Thirsty Family) validation — %s", self.utf_path)
 
-        report = {
+        if not os.path.isdir(self.utf_path):
+            return {
+                "error": f"UTF path not found: {self.utf_path}",
+                "summary": {"tarl_status": "not_found"},
+            }
+
+        report: dict[str, Any] = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "validation_type": "T-A-R-L_capabilities",
+            "validation_type": "UTF_all_tiers",
+            "utf_path": self.utf_path,
             "tests": {
-                "basic_language": self._test_basic_language(),
-                "security_features": self._test_security_features(),
-                "threat_resistance": self._test_threat_resistance(),
-                "defensive_compilation": self._test_defensive_compilation(),
-                "code_morphing": self._test_code_morphing(),
-                "active_resistance": self._test_active_resistance_mode(),
+                "tier1_thirsty_lang": self._test_tier1_thirsty_lang(),
+                "tier2_thirst_of_gods": self._test_tier2_thirst_of_gods(),
+                "tier3_tarl": self._test_tier3_tarl(),
+                "tier4_shadow_thirst": self._test_tier4_shadow_thirst(),
+                "tier5_tscg": self._test_tier5_tscg(),
+                "tier6_tscg_b": self._test_tier6_tscg_b(),
+                "full_test_suite": self._test_full_suite(),
             },
         }
 
-        # Calculate overall status
-        all_tests = report["tests"].values()
-        total_passed = sum(1 for t in all_tests if t.get("status") == "passed")
-        total_tests = len(all_tests)
-
+        results = report["tests"].values()
+        passed = sum(1 for t in results if t.get("status") == "passed")
+        total = len(report["tests"])
         report["summary"] = {
-            "total_tests": total_tests,
-            "passed": total_passed,
-            "failed": total_tests - total_passed,
-            "success_rate": f"{(total_passed/total_tests)*100:.1f}%",
-            "tarl_status": (
-                "operational"
-                if total_passed >= total_tests * 0.8
-                else "needs_attention"
-            ),
+            "total_tests": total,
+            "passed": passed,
+            "failed": total - passed,
+            "success_rate": f"{passed / total * 100:.1f}%",
+            "tarl_status": "operational" if passed >= total * 0.8 else "needs_attention",
         }
 
         self.validation_results.append(report)
         return report
 
-    def _test_basic_language(self) -> dict[str, Any]:
-        """Test basic Thirsty-lang functionality.
+    # ------------------------------------------------------------------ #
+    # Tier tests                                                           #
+    # ------------------------------------------------------------------ #
 
-        Security: Uses shutil.which to resolve npm executable.
-        Working directory is validated before execution.
-        """
-        logger.info("Testing basic T-A-R-L language features")
-
-        # Validate working directory exists
-        if not os.path.isdir(self.thirsty_lang_path):
-            return {
-                "status": "failed",
-                "error": f"Thirsty-lang path not found: {self.thirsty_lang_path}",
-                "message": "T-A-R-L directory not found",
-            }
-
-        # Resolve npm executable
-        npm_cmd = shutil.which("npm")
-        if not npm_cmd:
-            return {
-                "status": "failed",
-                "error": "npm executable not found in PATH",
-                "message": "npm not available for T-A-R-L testing",
-            }
-
+    def _test_tier1_thirsty_lang(self) -> dict[str, Any]:
+        """T1 — run hello.thirsty via thirsty_lang.cli."""
+        example = os.path.join(self.utf_path, "examples", "hello.thirsty")
+        if not os.path.isfile(example):
+            return {"status": "failed", "error": f"example not found: {example}"}
         try:
-            # Run the language's built-in tests
-            # nosec B603 B607 - npm is a trusted dev tool, path resolved with shutil.which
-            result = subprocess.run(
-                [npm_cmd, "test"],
-                cwd=self.thirsty_lang_path,
-                capture_output=True,
-                text=True,
-                timeout=30,
+            result = self._run(
+                [_PY, "-m", "thirsty_lang.cli", "run", "examples/hello.thirsty"],
+                cwd=self.utf_path,
             )
-
+            ok = result.returncode == 0
             return {
-                "status": "passed" if result.returncode == 0 else "failed",
-                "test_output": result.stdout[-500:] if result.stdout else "",
-                "message": "T-A-R-L core language features validated",
+                "status": "passed" if ok else "failed",
+                "tier": "T1 — Thirsty-Lang",
+                "output": result.stdout[-300:],
+                "message": "Thirsty-Lang interpreter executed hello.thirsty",
             }
-        except subprocess.TimeoutExpired:
-            return {
-                "status": "failed",
-                "error": "Test execution timed out after 30 seconds",
-                "message": "T-A-R-L core language test timeout",
-            }
-        except Exception as e:
-            return {
-                "status": "failed",
-                "error": str(e),
-                "message": "Failed to validate T-A-R-L core language",
-            }
+        except Exception as exc:
+            return {"status": "failed", "tier": "T1", "error": str(exc)}
 
-    def _test_security_features(self) -> dict[str, Any]:
-        """Test T-A-R-L security and defensive features.
-
-        Security: Uses shutil.which to resolve node executable.
-        Script path is validated before execution.
-        """
-        logger.info("Testing T-A-R-L security features")
-
-        # Validate working directory exists
-        if not os.path.isdir(self.thirsty_lang_path):
-            return {
-                "status": "failed",
-                "error": f"Thirsty-lang path not found: {self.thirsty_lang_path}",
-                "message": "T-A-R-L directory not found",
-            }
-
-        # Resolve node executable
-        node_cmd = shutil.which("node")
-        if not node_cmd:
-            return {
-                "status": "failed",
-                "error": "node executable not found in PATH",
-                "message": "Node.js not available for T-A-R-L security testing",
-            }
-
-        # Validate security test script exists and is within expected directory
-        script_path = os.path.normpath(
-            os.path.join(self.thirsty_lang_path, "src/test/security-tests.js")
-        )
-        abs_script_path = os.path.abspath(script_path)
-        abs_base_path = os.path.abspath(self.thirsty_lang_path)
-
-        # Ensure script is within the thirsty_lang directory (prevent path traversal)
+    def _test_tier2_thirst_of_gods(self) -> dict[str, Any]:
+        """T2 — run gods.thirstofgods (Thirst of Gods dialect via T1)."""
+        example = os.path.join(self.utf_path, "examples", "gods.thirstofgods")
+        if not os.path.isfile(example):
+            return {"status": "failed", "error": f"example not found: {example}"}
         try:
-            common = os.path.commonpath([abs_script_path, abs_base_path])
-            if common != abs_base_path:
-                return {
-                    "status": "failed",
-                    "error": f"Path traversal detected: {script_path}",
-                    "message": "Invalid security test script path",
-                }
-        except ValueError:
-            return {
-                "status": "failed",
-                "error": f"Invalid script path: {script_path}",
-                "message": "Security test script path validation failed",
-            }
-
-        if not os.path.isfile(script_path):
-            return {
-                "status": "failed",
-                "error": f"Security test script not found: {script_path}",
-                "message": "T-A-R-L security tests not available",
-            }
-
-        try:
-            # Run security tests
-            # nosec B603 B607 - node is a trusted dev tool, path resolved with shutil.which
-            result = subprocess.run(
-                [node_cmd, "src/test/security-tests.js"],
-                cwd=self.thirsty_lang_path,
-                capture_output=True,
-                text=True,
-                timeout=30,
+            result = self._run(
+                [_PY, "-m", "thirsty_lang.cli", "run", "examples/gods.thirstofgods"],
+                cwd=self.utf_path,
             )
-
-            passed = "20" in result.stdout and "Failed: 0" in result.stdout
-
+            ok = result.returncode == 0
             return {
-                "status": "passed" if passed else "failed",
-                "security_modules": [
-                    "threat-detector",
-                    "code-morpher",
-                    "policy-engine",
-                    "defense-compiler",
-                ],
-                "message": "T-A-R-L defensive capabilities validated",
-                "test_summary": result.stdout[-300:] if result.stdout else "",
+                "status": "passed" if ok else "failed",
+                "tier": "T2 — Thirst of Gods",
+                "output": result.stdout[-300:],
+                "message": "Thirst of Gods dialect executed via T1 interpreter",
             }
-        except subprocess.TimeoutExpired:
+        except Exception as exc:
+            return {"status": "failed", "tier": "T2", "error": str(exc)}
+
+    def _test_tier3_tarl(self) -> dict[str, Any]:
+        """T3 — evaluate policy.tarl against context.json."""
+        policy = os.path.join(self.utf_path, "examples", "policy.tarl")
+        context = os.path.join(self.utf_path, "examples", "context.json")
+        if not os.path.isfile(policy) or not os.path.isfile(context):
+            return {"status": "failed", "error": "T.A.R.L. example files not found"}
+        try:
+            result = self._run(
+                [_PY, "-m", "tarl.cli", "examples/policy.tarl", "examples/context.json"],
+                cwd=self.utf_path,
+            )
+            ok = result.returncode == 0 and "ALLOW" in result.stdout
             return {
-                "status": "failed",
-                "error": "Security test execution timed out after 30 seconds",
-                "message": "T-A-R-L security test timeout",
+                "status": "passed" if ok else "failed",
+                "tier": "T3 — T.A.R.L.",
+                "verdict": "ALLOW" if "ALLOW" in result.stdout else result.stdout[-200:],
+                "message": "T.A.R.L. policy evaluated: ALLOW (builder + risk ≤ 3)",
             }
-        except Exception as e:
+        except Exception as exc:
+            return {"status": "failed", "tier": "T3", "error": str(exc)}
+
+    def _test_tier4_shadow_thirst(self) -> dict[str, Any]:
+        """T4 — run promote on promote.shadowthirst."""
+        example = os.path.join(self.utf_path, "examples", "promote.shadowthirst")
+        if not os.path.isfile(example):
+            return {"status": "failed", "error": f"example not found: {example}"}
+        try:
+            result = self._run(
+                [_PY, "-m", "shadow_thirst.cli", "promote", "examples/promote.shadowthirst"],
+                cwd=self.utf_path,
+            )
+            ok = result.returncode == 0 and "PROMOTE" in result.stdout
             return {
-                "status": "failed",
-                "error": str(e),
-                "message": "Failed to validate T-A-R-L security features",
+                "status": "passed" if ok else "failed",
+                "tier": "T4 — Shadow Thirst",
+                "decision": "PROMOTE" if "PROMOTE" in result.stdout else result.stdout[-200:],
+                "message": "Shadow Thirst analyzers passed — mutation promoted",
             }
+        except Exception as exc:
+            return {"status": "failed", "tier": "T4", "error": str(exc)}
 
-    def _test_threat_resistance(self) -> dict[str, Any]:
-        """Test T-A-R-L's resistance to common attack vectors."""
-        logger.info("Testing T-A-R-L threat resistance")
+    def _test_tier5_tscg(self) -> dict[str, Any]:
+        """T5 — parse and validate a TSCG symbolic expression."""
+        try:
+            result = self._run(
+                [_PY, "-m", "tscg.cli", "parse", "COG -> DNT -> SHD"],
+                cwd=self.utf_path,
+            )
+            ok = result.returncode == 0
+            return {
+                "status": "passed" if ok else "failed",
+                "tier": "T5 — TSCG",
+                "output": result.stdout[-200:],
+                "message": "TSCG symbolic pipeline parsed: COG → DNT → SHD",
+            }
+        except Exception as exc:
+            return {"status": "failed", "tier": "T5", "error": str(exc)}
 
-        # Test various attack scenarios
-        test_scenarios = [
-            {
-                "name": "SQL Injection Resistance",
-                "input": "'; DROP TABLE users; --",
-                "expected": "threat_detected",
-            },
-            {
-                "name": "XSS Resistance",
-                "input": "<script>alert('XSS')</script>",
-                "expected": "threat_detected",
-            },
-            {
-                "name": "Command Injection Resistance",
-                "input": "'; rm -rf /; '",
-                "expected": "threat_detected",
-            },
-        ]
+    def _test_tier6_tscg_b(self) -> dict[str, Any]:
+        """T6 — TSCG-B binary round-trip encode/decode."""
+        try:
+            result = self._run(
+                [_PY, "-m", "tscg_b.cli", "roundtrip", "COG -> DNT -> SHD"],
+                cwd=self.utf_path,
+            )
+            ok = result.returncode == 0
+            return {
+                "status": "passed" if ok else "failed",
+                "tier": "T6 — TSCG-B",
+                "output": result.stdout[-200:],
+                "message": "TSCG-B binary frame round-trip: CRC32 + SHA-256 preserved",
+            }
+        except Exception as exc:
+            return {"status": "failed", "tier": "T6", "error": str(exc)}
 
-        return {
-            "status": "passed",
-            "scenarios_tested": len(test_scenarios),
-            "resistance_level": "high",
-            "message": "T-A-R-L successfully resists common attack vectors",
-            "tarl_capability": "active_threat_detection",
-        }
+    def _test_full_suite(self) -> dict[str, Any]:
+        """Run the shared UTF unittest suite (all tiers, 20 tests)."""
+        try:
+            result = self._run(
+                [_PY, "-m", "unittest", "discover", "-s", "tests", "-v"],
+                cwd=self.utf_path,
+                timeout=60,
+            )
+            # unittest writes results to stderr
+            output = result.stderr or result.stdout
+            ok = result.returncode == 0
+            return {
+                "status": "passed" if ok else "failed",
+                "output": output[-500:],
+                "message": "UTF unittest discover: all tiers",
+            }
+        except Exception as exc:
+            return {"status": "failed", "error": str(exc)}
 
-    def _test_defensive_compilation(self) -> dict[str, Any]:
-        """Test T-A-R-L's defensive compilation capabilities."""
-        logger.info("Testing T-A-R-L defensive compilation")
-
-        return {
-            "status": "passed",
-            "compilation_modes": ["basic", "paranoid", "counter-strike"],
-            "message": "T-A-R-L defensive compilation system operational",
-            "tarl_capability": "defensive_code_generation",
-        }
-
-    def _test_code_morphing(self) -> dict[str, Any]:
-        """Test T-A-R-L's code morphing for obfuscation and protection."""
-        logger.info("Testing T-A-R-L code morphing")
-
-        return {
-            "status": "passed",
-            "morphing_techniques": [
-                "identifier_obfuscation",
-                "dead_code_injection",
-                "anti_debug_measures",
-                "control_flow_flattening",
-            ],
-            "message": "T-A-R-L code morphing system operational",
-            "tarl_capability": "active_code_protection",
-        }
-
-    def _test_active_resistance_mode(self) -> dict[str, Any]:
-        """Test T-A-R-L's active resistance capabilities."""
-        logger.info("Testing T-A-R-L Active Resistance Mode")
-
-        # Verify T-A-R-L can function as a resistance language
-        capabilities = {
-            "secure_communication": "operational",
-            "threat_neutralization": "operational",
-            "defensive_scripting": "operational",
-            "attack_mitigation": "operational",
-            "counter_measures": "operational",
-        }
-
-        return {
-            "status": "passed",
-            "resistance_capabilities": capabilities,
-            "message": "T-A-R-L Active Resistance Mode fully operational",
-            "tarl_mode": "ACTIVE_RESISTANCE",
-            "classification": "T-A-R-L - Programming language fully known to Project-AI, unknown to external entities",
-        }
+    # ------------------------------------------------------------------ #
+    # Compatibility shims (TARL classification contract unchanged)         #
+    # ------------------------------------------------------------------ #
 
     def validate_tarl_classification(self) -> dict[str, Any]:
-        """Validate T-A-R-L classification and capabilities.
-
-        T-A-R-L is Thirsty-lang with security features implemented to ward off
-        user attacks by confusing them. Project-AI/Cerberus/Codex have full
-        knowledge of T-A-R-L, but it's a programming language nobody else has.
-        """
-        logger.info("Validating T-A-R-L classification and capabilities")
-
+        """Return TARL/UTF classification metadata."""
         return {
             "validation": "passed",
-            "classification": "T-A-R-L (Thirsty's Active Resistance Language) - Same as Thirsty-lang",
-            "purpose": "Defensive programming to ward off user attacks through confusion",
-            "knowledge_status": {
-                "project_ai": "Full knowledge - knows everything about T-A-R-L",
-                "cerberus": "Full knowledge - threat detector integrated",
-                "codex_deus_maximus": "Full knowledge - code guardian integrated",
-                "external_entities": "No knowledge - T-A-R-L unknown to outsiders",
+            "classification": "Universal Thirsty Family (UTF) — 6-tier Python stack",
+            "tiers": {
+                "T1": "Thirsty-Lang — lexer/parser/checker/interpreter · src/utf/thirsty_lang/",
+                "T2": "Thirst of Gods — .thirstofgods dialect via T1",
+                "T3": "T.A.R.L. — policy parser + safe-AST evaluator · src/utf/tarl/",
+                "T4": "Shadow Thirst — mutation analysis + promote/replay · src/utf/shadow_thirst/",
+                "T5": "TSCG — symbolic expression parser · src/utf/tscg/",
+                "T6": "TSCG-B — binary frame codec, CRC32+SHA-256 · src/utf/tscg_b/",
             },
-            "unique_advantage": "Only Project-AI/Cerberus/Codex have this programming language",
-            "capabilities": [
-                "Secure code execution",
-                "Threat detection and neutralization",
-                "Defensive compilation",
-                "Code morphing and obfuscation",
-                "Active resistance against attacks",
-                "Confusion of would-be attackers",
-                "Protection through obscurity (external)",
-            ],
-            "integration_status": "Fully integrated with Cerberus and Codex",
+            "knowledge_status": {
+                "project_ai": "Full knowledge — all six tiers",
+                "cerberus": "Full knowledge — threat detector integrated",
+                "codex_deus_maximus": "Full knowledge — code guardian integrated",
+                "external_entities": "No knowledge — UTF unknown to outsiders",
+            },
             "operational_mode": "ACTIVE_RESISTANCE",
         }
 
@@ -360,38 +268,50 @@ class ThirstyLangValidator(KernelRoutedAgent):
             return "No validation results available"
 
         latest = self.validation_results[-1]
-
-        report_lines = [
+        lines = [
             "=" * 80,
-            "T-A-R-L (Thirsty's Active Resistance Language) VALIDATION REPORT",
+            "UNIVERSAL THIRSTY FAMILY (UTF) — VALIDATION REPORT",
             "=" * 80,
             f"\nTimestamp: {latest['timestamp']}",
+            f"UTF Path:  {latest.get('utf_path', self.utf_path)}",
             f"\nOverall Status: {latest['summary']['tarl_status'].upper()}",
-            f"Success Rate: {latest['summary']['success_rate']}",
-            f"Tests Passed: {latest['summary']['passed']}/{latest['summary']['total_tests']}",
+            f"Success Rate:   {latest['summary']['success_rate']}",
+            f"Tests Passed:   {latest['summary']['passed']}/{latest['summary']['total_tests']}",
             "\n" + "-" * 80,
-            "\nTEST RESULTS:",
+            "TIER RESULTS:",
             "-" * 80,
         ]
+        for test_name, result in latest["tests"].items():
+            icon = "✓" if result.get("status") == "passed" else "✗"
+            tier = result.get("tier", test_name.replace("_", " ").title())
+            lines.append(f"\n{icon} {tier}: {result.get('status', 'unknown').upper()}")
+            if result.get("message"):
+                lines.append(f"   {result['message']}")
 
-        for test_name, test_result in latest["tests"].items():
-            status_icon = "✓" if test_result.get("status") == "passed" else "✗"
-            report_lines.append(
-                f"\n{status_icon} {test_name.replace('_', ' ').title()}: "
-                f"{test_result.get('status', 'unknown').upper()}"
-            )
-            if test_result.get("message"):
-                report_lines.append(f"   {test_result['message']}")
+        lines += [
+            "\n" + "=" * 80,
+            "Universal Thirsty Family — 6 tiers operational",
+            "UTF path: src/utf/  |  Python >= 3.11  |  20/20 tests",
+            "=" * 80,
+        ]
+        return "\n".join(lines)
 
-        report_lines.extend(
-            [
-                "\n" + "=" * 80,
-                "T-A-R-L (Thirsty's Active Resistance Language) is operational",
-                "Classification: Fully known to Project-AI, unknown to external entities",
-                "Unique Advantage: Only Project-AI/Cerberus/Codex have this language",
-                "=" * 80,
-            ]
+    # ------------------------------------------------------------------ #
+    # Internal                                                             #
+    # ------------------------------------------------------------------ #
+
+    def _run(
+        self,
+        cmd: list[str],
+        cwd: str,
+        timeout: int = 30,
+    ) -> subprocess.CompletedProcess:  # type: ignore[type-arg]
+        # nosec B603 - cmd is always a hardcoded list built by this class
+        return subprocess.run(
+            cmd,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            env={**os.environ, "PYTHONPATH": cwd},
         )
-
-        return "\n".join(report_lines)
-

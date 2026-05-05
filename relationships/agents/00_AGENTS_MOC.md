@@ -34,8 +34,8 @@ AI Agent Systems
 │  │     threat-engagement bridge (Cerberus→Codex defense)
 │  │     src/app/agents/cerberus_codex_bridge.py
 │  └─ ThirstyLangValidator ✓ Wired → TarlRuntime
-│        TARL capability validation
-│        src/app/agents/thirsty_lang_validator.py
+│        UTF validation — all 6 tiers (T1–T6) via Python subprocess
+│        src/app/agents/thirsty_lang_validator.py · validates: src/utf/
 │
 ├─⚖️ ETHICS & GOVERNANCE
 │  ├─ [[relationships/core-ai/01_four_laws_relationships.md|FourLaws Framework]]
@@ -64,7 +64,7 @@ AI Agent Systems
 | **PlannerAgent** | Task decomposition, OpenAI GPT, memory | `src/app/agents/planner_agent.py` | ✅ Active |
 | **ThirstyConsigliere** | Privacy-first strategy, Code of Omertà | `src/app/agents/consigliere/` | ✅ Wired → CouncilHub |
 | **CerberusCodexBridge** | Threat-engagement bridge | `src/app/agents/cerberus_codex_bridge.py` | ✅ Wired → GateGuardian |
-| **ThirstyLangValidator** | TARL capability validation | `src/app/agents/thirsty_lang_validator.py` | ✅ Wired → TarlRuntime |
+| **ThirstyLangValidator** | UTF validation — T1–T6 Python tiers | `src/app/agents/thirsty_lang_validator.py` · `src/utf/` | ✅ Wired → TarlRuntime |
 
 ---
 

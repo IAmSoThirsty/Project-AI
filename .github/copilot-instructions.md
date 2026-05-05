@@ -23,6 +23,8 @@ The repo root IS the Obsidian vault. All markdown files are navigable. Begin fro
 |-------------|---------|
 | `docs/00_INDEX.md` | Master navigation hub — 16 MOC sections, role-based quick access |
 | `docs/nirl/NIRL_IMPLEMENTATION.md` | NIRL cascade reference (Heart/MiniBrain/Antibody/Forge) |
+| `src/utf/` | Universal Thirsty Family — 6-tier Python stack (T1–T6) |
+| `src/utf/docs/CANONICAL_STACK.md` | UTF canonical stack reference |
 | `indexes/code_modules_index.md` | Structured code module inventory (purpose, tests, status) |
 | `indexes/code_file_paths_index.md` | Raw code file path listing, updated 2026-05-02 |
 | `relationships/` | Cross-system dependency maps — agents, governance, data, security |
@@ -101,11 +103,14 @@ src/app/
 │   ├── intelligence_engine.py # OpenAI chat integration
 │   ├── intent_detection.py   # Scikit-learn ML intent classifier
 │   └── image_generator.py    # Image generation (HF Stable Diffusion, OpenAI DALL-E)
-├── agents/                    # 4 AI agent modules (NOT plugins)
-│   ├── oversight.py          # Action safety validation
-│   ├── planner.py            # Task decomposition
-│   ├── validator.py          # Input/output validation
-│   └── explainability.py     # Decision explanations
+├── agents/                    # Agent fleet (governance + privacy + language)
+│   ├── oversight.py          # Deny-rate monitor, drift alerts (✅ implemented)
+│   ├── validator.py          # Schema registry, type/range/allowlist (✅ implemented)
+│   ├── explainability.py     # NL decision formatter, trace summarizer (✅ implemented)
+│   ├── planner_agent.py      # Task decomposition, OpenAI GPT (✅ active)
+│   ├── consigliere/          # Privacy-first strategy, Code of Omertà (✅ → CouncilHub)
+│   ├── cerberus_codex_bridge.py  # Threat-engagement bridge (✅ → GateGuardian)
+│   └── thirsty_lang_validator.py # UTF T1–T6 validation → src/utf/ (✅ → TarlRuntime)
 └── gui/                       # 6 PyQt6 UI modules
     ├── leather_book_interface.py   # Main window (659 lines)
     ├── leather_book_dashboard.py   # 6-zone dashboard (608 lines)
