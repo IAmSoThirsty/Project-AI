@@ -1,0 +1,19 @@
+glass inc(x: Int) -> Int {
+  return x + 1;
+}
+
+glass double(x: Int) -> Int {
+  return x * 2;
+}
+
+glass main() -> Int {
+  drink mut counter: Int = 1;
+  drip counter += 2;
+  drink numbers: Reservoir[Int] = [1, 2, 3];
+  drink bigger: Reservoir[Any] = numbers.transmute(inc);
+  pour(counter);
+  pour(3 |> inc |> double);
+  pour(thirst counter > 1 quench "hydrated" hydrated "dry");
+  pour(size(bigger));
+  return 0;
+}

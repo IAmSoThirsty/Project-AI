@@ -1,0 +1,12 @@
+mutation validated_canonical set_counter(value: Int) {
+  shadow {
+    drink mut temp: Int = value;
+    temp = temp + 1;
+  }
+  invariant {
+    length("ok");
+  }
+  canonical {
+    canonical_counter = value;
+  }
+}

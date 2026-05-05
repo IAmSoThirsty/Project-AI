@@ -1,0 +1,4 @@
+glass main() -> Int {
+  pour("hello, thirsty world");
+  return 0;
+}

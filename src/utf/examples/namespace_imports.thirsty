@@ -1,0 +1,8 @@
+import "thirst::crypto" as crypto;
+import "thirst::time" as time;
+
+glass main() -> Int {
+  pour(crypto.sha256("hydration"));
+  pour(time.now());
+  return 0;
+}
