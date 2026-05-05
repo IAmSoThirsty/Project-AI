@@ -7,6 +7,15 @@ all reference the mandatory coding default protocol.
 
 from __future__ import annotations
 
+import sys
+import io
+
+# Force UTF-8 stdout so Unicode chars (✅, ❌) don't crash on cp1252 terminals.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+else:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+
 from pathlib import Path
 import re
 
