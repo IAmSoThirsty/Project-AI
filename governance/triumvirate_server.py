@@ -353,6 +353,55 @@ async def get_fourlaws():
 
 
 # ============================================================
+# Chimera Governance Bridge
+# ============================================================
+
+class ChimeraVerdictPayload(BaseModel):
+    ip: str
+    verdict: str          # SUSPICIOUS | ATTACKER
+    score: int
+    sid: str = ""
+    path: str = ""
+    ts: str = ""
+
+class ChimeraCanaryPayload(BaseModel):
+    ip: str
+    sid: str = ""
+    hits: list[dict[str, Any]] = []
+    ts: str = ""
+
+@app.post("/chimera/verdict")
+async def chimera_verdict(payload: ChimeraVerdictPayload):
+    """Receive a threat verdict from the Chimera deception perimeter."""
+    try:
+        from app.security.chimera_bridge import get_bridge
+        get_bridge().receive_verdict(
+            ip=payload.ip,
+            verdict=payload.verdict,
+            score=payload.score,
+            sid=payload.sid,
+            path=payload.path,
+        )
+    except Exception as exc:
+        return {"status": "error", "detail": str(exc)}
+    return {"status": "ok", "ip": payload.ip, "verdict": payload.verdict}
+
+@app.post("/chimera/canary")
+async def chimera_canary(payload: ChimeraCanaryPayload):
+    """Receive a canary hit alert from the Chimera deception perimeter."""
+    try:
+        from app.security.chimera_bridge import get_bridge
+        get_bridge().receive_canary_hit(
+            ip=payload.ip,
+            hits=payload.hits,
+            sid=payload.sid,
+        )
+    except Exception as exc:
+        return {"status": "error", "detail": str(exc)}
+    return {"status": "ok", "ip": payload.ip, "hits": len(payload.hits)}
+
+
+# ============================================================
 # Main
 # ============================================================
 

@@ -23,6 +23,17 @@ class ExecutionGate:
         approved, decision = self.kernel.evaluate_action(domain, action, context)
 
         if not approved:
+            # Report denial to Chimera so it elevates the score for this IP
+            try:
+                from app.security.chimera_bridge import get_bridge
+                get_bridge().report_governance_denial(
+                    ip=context.get("ip") or context.get("client_ip"),
+                    domain=domain,
+                    action=action,
+                    reason=decision.reason,
+                )
+            except Exception:
+                pass
             return False, decision.reason
 
         binding = MutationGovernanceBinding.create(decision)
