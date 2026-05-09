@@ -5,7 +5,7 @@ Tests audit logging integration with cognition/audit.py,
 accountability tracking, and compliance reporting.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 from gradle_evolution.audit.accountability import (
@@ -17,7 +17,7 @@ from gradle_evolution.audit.audit_integration import BuildAuditIntegration
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format for tests."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class TestBuildAuditIntegration:

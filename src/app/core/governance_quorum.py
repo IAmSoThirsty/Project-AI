@@ -8,7 +8,7 @@ import threading
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 
 class QuorumDecision(Enum):
@@ -20,7 +20,7 @@ class QuorumDecision(Enum):
 @dataclass
 class QuorumPolicy:
     decision_type: str
-    validator_ids: Set[str]
+    validator_ids: set[str]
     min_participation_fraction: float = 0.67
     min_approval_fraction: float = 0.67
     high_impact: bool = True
@@ -35,7 +35,7 @@ class QuorumVote:
     reason: str
     timestamp: datetime = field(default_factory=datetime.utcnow)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "decision_id": self.decision_id,
             "validator_id": self.validator_id,
@@ -51,13 +51,13 @@ class QuorumProof:
     decision_type: str
     decision_context_hash: str
     final_decision: QuorumDecision
-    participating_validators: List[str]
-    approving_validators: List[str]
-    rejecting_validators: List[str]
-    votes: List[QuorumVote]
+    participating_validators: list[str]
+    approving_validators: list[str]
+    rejecting_validators: list[str]
+    votes: list[QuorumVote]
     created_at: datetime = field(default_factory=datetime.utcnow)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "decision_id": self.decision_id,
             "decision_type": self.decision_type,
@@ -91,10 +91,10 @@ class QuorumEngine:
     """
 
     def __init__(self) -> None:
-        self._policies: Dict[str, QuorumPolicy] = {}
-        self._votes: Dict[str, List[QuorumVote]] = {}
-        self._proofs: Dict[str, QuorumProof] = {}
-        self._waiters: Dict[str, threading.Event] = {}
+        self._policies: dict[str, QuorumPolicy] = {}
+        self._votes: dict[str, list[QuorumVote]] = {}
+        self._proofs: dict[str, QuorumProof] = {}
+        self._waiters: dict[str, threading.Event] = {}
         self._lock = threading.RLock()
 
     def register_policy(self, policy: QuorumPolicy) -> None:
@@ -110,7 +110,7 @@ class QuorumEngine:
             )
         return policy
 
-    def _decision_context_hash(self, context: Dict[str, Any]) -> str:
+    def _decision_context_hash(self, context: dict[str, Any]) -> str:
         serialized = json.dumps(context, sort_keys=True, separators=(",", ":"))
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
 
@@ -118,7 +118,7 @@ class QuorumEngine:
         self,
         decision_id: str,
         decision_type: str,
-        context: Dict[str, Any],
+        context: dict[str, Any],
     ) -> str:
         _ = self.get_policy(decision_type)
         context_hash = self._decision_context_hash(context)
@@ -130,9 +130,7 @@ class QuorumEngine:
         return context_hash
 
     def submit_vote(self, vote: QuorumVote) -> None:
-        policy = self.get_policy(
-            self._infer_decision_type_from_id(vote.decision_id)
-        )
+        policy = self.get_policy(self._infer_decision_type_from_id(vote.decision_id))
         with self._lock:
             existing = self._votes.setdefault(vote.decision_id, [])
             if any(v.validator_id == vote.validator_id for v in existing):
@@ -148,8 +146,8 @@ class QuorumEngine:
         self,
         decision_id: str,
         decision_type: str,
-        context: Dict[str, Any],
-        timeout_seconds: Optional[float] = None,
+        context: dict[str, Any],
+        timeout_seconds: float | None = None,
     ) -> QuorumProof:
         policy = self.get_policy(decision_type)
         context_hash = self.start_decision(decision_id, decision_type, context)
@@ -179,7 +177,7 @@ class QuorumEngine:
             votes=votes,
         )
 
-    def get_proof(self, decision_id: str) -> Optional[QuorumProof]:
+    def get_proof(self, decision_id: str) -> QuorumProof | None:
         with self._lock:
             return self._proofs.get(decision_id)
 
@@ -193,7 +191,7 @@ class QuorumEngine:
         self,
         decision_id: str,
         policy: QuorumPolicy,
-    ) -> Optional[QuorumProof]:
+    ) -> QuorumProof | None:
         # Proof construction requires the context hash stored by the caller;
         # signal completion to wait_for_quorum via waiter, which builds the proof.
         votes = list(self._votes.get(decision_id, []))
@@ -234,7 +232,7 @@ class QuorumEngine:
         decision_type: str,
         context_hash: str,
         policy: QuorumPolicy,
-        votes: List[QuorumVote],
+        votes: list[QuorumVote],
     ) -> QuorumProof:
         validator_ids = policy.validator_ids
         participating_ids = {

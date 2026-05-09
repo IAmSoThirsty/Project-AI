@@ -105,13 +105,13 @@ def demo_decorator_tracking():
     # Execute functions
     for i in range(5):
         result1 = governance_operation(i, i * 2)
-        print(f"  Governance operation {i+1}: result={result1}")
+        print(f"  Governance operation {i + 1}: result={result1}")
 
         result2 = infrastructure_operation(f"data_{i}")
-        print(f"  Infrastructure operation {i+1}: result={result2}")
+        print(f"  Infrastructure operation {i + 1}: result={result2}")
 
         result3 = application_operation([1, 2, 3, 4, 5])
-        print(f"  Application operation {i+1}: result={result3}")
+        print(f"  Application operation {i + 1}: result={result3}")
         print()
 
 

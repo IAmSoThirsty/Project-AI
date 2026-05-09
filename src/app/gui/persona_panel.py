@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 # - [[source-docs/gui/persona_panel.md]]
 #
 
+
 class PersonaPanel(QWidget):
     """Panel for managing AI Persona settings and displaying Four Laws."""
 
@@ -187,12 +188,17 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
                     val_label.setText(f"{normalized:.2f}")
                     if self.persona:
                         # REFACTORED: Route through desktop adapter for governance
-                        from app.interfaces.desktop.integration import execute_persona_update
+                        from app.interfaces.desktop.integration import (
+                            execute_persona_update,
+                        )
+
                         try:
                             execute_persona_update(trait_name.lower(), normalized)
                             self.personality_changed.emit(self.persona.personality)
                         except Exception as e:
-                            logger.error(f"Failed to update persona trait {trait_name}: {e}")
+                            logger.error(
+                                f"Failed to update persona trait {trait_name}: {e}"
+                            )
 
                 return update_value
 
@@ -324,14 +330,11 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
 
         # Sanitize and validate action input
         action = sanitize_input(
-            self.action_input.toPlainText().strip(),
-            max_length=2000
+            self.action_input.toPlainText().strip(), max_length=2000
         )
         if not validate_length(action, min_len=1, max_len=2000):
             QMessageBox.warning(
-                self,
-                "Error",
-                "Action description must be 1-2000 characters"
+                self, "Error", "Action description must be 1-2000 characters"
             )
             return
 

@@ -9,21 +9,22 @@ Provides living documentation that reflects actual system behavior.
 import json
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from project_ai.engine.state.state_manager import StateManager
 
 from ..audit.audit_integration import BuildAuditIntegration
 from ..capsules.capsule_engine import CapsuleEngine
 from ..cognition.state_integration import BuildStateIntegration
-from project_ai.engine.state.state_manager import StateManager
 
 logger = logging.getLogger(__name__)
 
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 @dataclass
@@ -536,7 +537,7 @@ class DocumentationGenerator:
 
             output_path = (
                 self.output_dir
-                / f"snapshot-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}.json"
+                / f"snapshot-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}.json"
             )
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)

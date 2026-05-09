@@ -25,29 +25,28 @@ THREE-TIER PLATFORM INTEGRATION:
 - Capability flows upward (Tier 3 → Tier 2 → Tier 1)
 """
 
+import hashlib
+import json
 import logging
 import threading
 import time
 import uuid
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
-import hashlib
-import json
-
+from app.core.governance.iron_path_executor import (
+    PolicyEvaluationRequest,
+    PolicyEvaluationResponse,
+    get_iron_path_executor,
+)
 from app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
-)
-from app.core.governance.iron_path_executor import (
-    PolicyEvaluationRequest,
-    PolicyEvaluationResponse,
-    get_iron_path_executor,
 )
 
 logger = logging.getLogger(__name__)
@@ -141,7 +140,7 @@ class Decision:
     mutation_intent: MutationIntent | None = None
     consensus_required: bool = False
     consensus_achieved: bool = False
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 @dataclass
@@ -238,7 +237,7 @@ class ExecutionResult:
 
     # Timing and metadata
     duration_ms: float = 0.0
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     metadata: dict[str, Any] = field(default_factory=dict)
 
     # Error information
@@ -554,6 +553,7 @@ class CognitionKernel:
         # GovernanceKernel / Triumvirate / Fates / ledger before any local check.
         try:
             from app.core.execution_router import execute as _gov_execute
+
             _allowed, _reason = _gov_execute(
                 domain="cognition",
                 action=action.action_name,
@@ -597,8 +597,12 @@ class CognitionKernel:
 
         if evaluation_response.decision != "allow":
             context.status = ExecutionStatus.BLOCKED
-            logger.warning("[%s] BLOCKED: %s", context.trace_id, evaluation_response.reason)
-            raise ConstitutionalFault(f"Blocked by governance: {evaluation_response.reason}")
+            logger.warning(
+                "[%s] BLOCKED: %s", context.trace_id, evaluation_response.reason
+            )
+            raise ConstitutionalFault(
+                f"Blocked by governance: {evaluation_response.reason}"
+            )
 
         context.status = ExecutionStatus.APPROVED
         logger.info("[%s] Approved: %s", context.trace_id, evaluation_response.reason)
@@ -608,7 +612,9 @@ class CognitionKernel:
 
         This binds post-state to the same trace for replayable governance.
         """
-        logger.debug("[%s] Performing post-execution policy evaluation", context.trace_id)
+        logger.debug(
+            "[%s] Performing post-execution policy evaluation", context.trace_id
+        )
 
         evaluation_request = self._build_policy_evaluation_request(
             action=context.proposed_action,
@@ -621,9 +627,7 @@ class CognitionKernel:
             reason = "Post-evaluation passed"
             matched_policies = ["kernel-post-evaluation", "execution-consistency"]
         else:
-            reason = (
-                f"Post-evaluation denied due to execution status: {context.status.value}"
-            )
+            reason = f"Post-evaluation denied due to execution status: {context.status.value}"
             matched_policies = ["kernel-post-evaluation", "execution-failure-policy"]
 
         evaluation_response = self._build_policy_evaluation_response(
@@ -639,7 +643,10 @@ class CognitionKernel:
         context.post_evaluation_response = evaluation_response
 
         # Only hard-fail successful executions that violate post-evaluation.
-        if context.status == ExecutionStatus.COMPLETED and evaluation_response.decision != "allow":
+        if (
+            context.status == ExecutionStatus.COMPLETED
+            and evaluation_response.decision != "allow"
+        ):
             raise ConstitutionalFault(
                 f"Post-evaluation blocked commit: {evaluation_response.reason}"
             )
@@ -858,7 +865,7 @@ class CognitionKernel:
             principal=actor,
             context=request_context,
             inputs_hash=inputs_hash,
-            requested_at=datetime.now(timezone.utc).isoformat(),
+            requested_at=datetime.now(UTC).isoformat(),
         )
 
     def _build_policy_evaluation_response(
@@ -876,7 +883,10 @@ class CognitionKernel:
             f"stage:{stage}",
             f"status:{context.status.value}",
         ]
-        if context.governance_decision and context.governance_decision.consensus_required:
+        if (
+            context.governance_decision
+            and context.governance_decision.consensus_required
+        ):
             constraints.append("consensus-required")
 
         executor = get_iron_path_executor()
@@ -967,7 +977,9 @@ class CognitionKernel:
                 matched_policies=["kernel-implicit-post-evaluation"],
             )
 
-        capability_token = str(context.metadata.get("capability_token", "kernel-internal"))
+        capability_token = str(
+            context.metadata.get("capability_token", "kernel-internal")
+        )
         quorum_proof = self._derive_quorum_proof(context)
 
         binding = executor.bind_observed_decision(
@@ -1046,7 +1058,7 @@ class CognitionKernel:
         # Create context (single source of truth)
         return ExecutionContext(
             trace_id=trace_id,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=datetime.now(UTC),
             perception=perception,
             interpretation=interpretation,
             proposed_action=proposed_action,

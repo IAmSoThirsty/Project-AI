@@ -169,9 +169,9 @@ def main():
             total_changes += changes
             files_changed += 1
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("📊 ASSERT FIXES COMPLETE")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Files modified: {files_changed}")
     print(f"Assert statements fixed: {total_changes}")
 

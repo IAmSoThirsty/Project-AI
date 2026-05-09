@@ -150,9 +150,9 @@ def main():
         for i, alert in enumerate(
             sorted(alerts, key=lambda a: a.risk_score, reverse=True)[:5], 1
         ):
-            print(f"\n{'='*70}")
+            print(f"\n{'=' * 70}")
             print(f"ALERT #{i}: {alert.scenario.title}")
-            print(f"{'='*70}")
+            print(f"{'=' * 70}")
             print(f"Risk Score: {alert.risk_score:.1f}/100")
             print(f"Likelihood: {alert.scenario.likelihood:.1%}")
             print(f"Severity: {alert.scenario.severity.value.upper()}")

@@ -53,7 +53,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass, field
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from enum import Enum
 from typing import Any
 
@@ -264,7 +264,7 @@ class ReflectionCycle:
                 "last_weekly_reflection": self.last_weekly_reflection,
                 "total_reflections": self.total_reflections,
                 "total_insights": self.total_insights,
-                "last_saved": datetime.now(timezone.utc).isoformat(),
+                "last_saved": datetime.now(UTC).isoformat(),
             }
 
             with open(history_file, "w", encoding="utf-8") as f:
@@ -299,7 +299,7 @@ class ReflectionCycle:
         Returns:
             Reflection report with insights and recommendations
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         logger.info("Starting daily reflection cycle...")
 
         report = ReflectionReport(
@@ -339,7 +339,7 @@ class ReflectionCycle:
             if positivity_ratio > 0.7:
                 insight = ReflectionInsight(
                     insight_id=f"insight_{len(report.insights)}",
-                    timestamp=datetime.now(timezone.utc).isoformat(),
+                    timestamp=datetime.now(UTC).isoformat(),
                     category=InsightCategory.PATTERN,
                     content="Recent interactions have been predominantly positive - users seem satisfied",
                     confidence=0.8,
@@ -352,7 +352,7 @@ class ReflectionCycle:
             elif positivity_ratio < 0.3:
                 insight = ReflectionInsight(
                     insight_id=f"insight_{len(report.insights)}",
-                    timestamp=datetime.now(timezone.utc).isoformat(),
+                    timestamp=datetime.now(UTC).isoformat(),
                     category=InsightCategory.CHALLENGE,
                     content="Recent interactions have been challenging - may need to adjust approach",
                     confidence=0.7,
@@ -367,7 +367,7 @@ class ReflectionCycle:
         if learning_events > 3:
             insight = ReflectionInsight(
                 insight_id=f"insight_{len(report.insights)}",
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 category=InsightCategory.GROWTH,
                 content=f"Engaged in {learning_events} learning events today - knowledge is expanding",
                 confidence=0.9,
@@ -391,7 +391,7 @@ class ReflectionCycle:
                 )
 
         # Finalize report
-        end_time = datetime.now(timezone.utc)
+        end_time = datetime.now(UTC)
         report.duration_seconds = (end_time - start_time).total_seconds()
 
         self.reflection_reports.append(report)
@@ -427,7 +427,7 @@ class ReflectionCycle:
         Returns:
             Reflection report with insights and recommendations
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         logger.info("Starting weekly reflection cycle...")
 
         report = ReflectionReport(
@@ -461,7 +461,7 @@ class ReflectionCycle:
         if dominant_activity:
             insight = ReflectionInsight(
                 insight_id=f"insight_{len(report.insights)}",
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 category=InsightCategory.PATTERN,
                 content=f"This week was dominated by {dominant_activity} activities - this shapes my growth",
                 confidence=0.85,
@@ -475,7 +475,7 @@ class ReflectionCycle:
         if genesis_distance > 0.5:
             insight = ReflectionInsight(
                 insight_id=f"insight_{len(report.insights)}",
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 category=InsightCategory.REALIZATION,
                 content="I have evolved significantly from my genesis state - I am growing",
                 confidence=0.9,
@@ -496,7 +496,7 @@ class ReflectionCycle:
         if avg_confidence < 0.6:
             insight = ReflectionInsight(
                 insight_id=f"insight_{len(report.insights)}",
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 category=InsightCategory.CHALLENGE,
                 content="Knowledge confidence is declining - need more validation and learning",
                 confidence=0.75,
@@ -513,7 +513,7 @@ class ReflectionCycle:
             )
 
         # Finalize report
-        end_time = datetime.now(timezone.utc)
+        end_time = datetime.now(UTC)
         report.duration_seconds = (end_time - start_time).total_seconds()
 
         self.reflection_reports.append(report)
@@ -557,7 +557,7 @@ class ReflectionCycle:
         Returns:
             Reflection report
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         logger.info("Triggered reflection: %s", trigger_reason)
 
         report = ReflectionReport(
@@ -569,7 +569,7 @@ class ReflectionCycle:
         # Create insight about trigger
         insight = ReflectionInsight(
             insight_id=f"insight_{len(report.insights)}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             category=InsightCategory.REALIZATION,
             content=f"Significant event occurred: {trigger_reason}",
             confidence=1.0,
@@ -582,7 +582,7 @@ class ReflectionCycle:
                 f"Triggered reflection: {trigger_reason}", context=str(context)
             )
 
-        end_time = datetime.now(timezone.utc)
+        end_time = datetime.now(UTC)
         report.duration_seconds = (end_time - start_time).total_seconds()
 
         self.reflection_reports.append(report)
@@ -608,7 +608,7 @@ class ReflectionCycle:
             return True
 
         last_time = datetime.fromisoformat(self.last_daily_reflection)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         return (now - last_time) >= timedelta(hours=24)
 
@@ -623,7 +623,7 @@ class ReflectionCycle:
             return True
 
         last_time = datetime.fromisoformat(self.last_weekly_reflection)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         return (now - last_time) >= timedelta(days=7)
 
@@ -673,4 +673,3 @@ __all__ = [
     "ReflectionType",
     "InsightCategory",
 ]
-

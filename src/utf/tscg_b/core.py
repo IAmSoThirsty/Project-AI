@@ -3,9 +3,8 @@ from __future__ import annotations
 import binascii
 import hashlib
 import struct
-from dataclasses import dataclass
 
-from tscg.core import Symbol, Pipeline, Combine, Expr, canonical, parse, validate
+from tscg.core import Combine, Expr, Pipeline, Symbol, canonical, parse, validate
 
 MAGIC = b"TSGB"
 VERSION = 1
@@ -52,7 +51,11 @@ def encode_expr(expr: Expr) -> bytes:
             out.extend(encode_expr(item))
         return bytes(out)
     if isinstance(expr, Combine):
-        return encode_expr(expr.left) + encode_expr(Symbol(expr.op)) + encode_expr(expr.right)
+        return (
+            encode_expr(expr.left)
+            + encode_expr(Symbol(expr.op))
+            + encode_expr(expr.right)
+        )
     raise TypeError(expr)
 
 
@@ -60,19 +63,22 @@ def decode_expr(payload: bytes) -> str:
     parts: list[str] = []
     i = 0
     while i < len(payload):
-        opcode = payload[i]; i += 1
+        opcode = payload[i]
+        i += 1
         if opcode not in REVERSE:
             raise TSCGBError(f"invalid opcode 0x{opcode:02x}")
         symbol = REVERSE[opcode]
-        argc = payload[i]; i += 1
+        argc = payload[i]
+        i += 1
         args = []
         for _ in range(argc):
             if i >= len(payload):
                 raise TSCGBError("truncated arg")
-            n = payload[i]; i += 1
+            n = payload[i]
+            i += 1
             if i + n > len(payload):
                 raise TSCGBError("truncated arg data")
-            args.append(payload[i:i+n].decode("utf-8"))
+            args.append(payload[i : i + n].decode("utf-8"))
             i += n
         if args:
             parts.append(f"{symbol}({','.join(args)})")
@@ -86,9 +92,15 @@ def pack_text(text: str) -> bytes:
     validate(expr)
     normalized = canonical(expr)
     payload = encode_expr(expr)
-    crc = binascii.crc32(payload) & 0xffffffff
+    crc = binascii.crc32(payload) & 0xFFFFFFFF
     digest = hashlib.sha256(normalized.encode("utf-8")).digest()
-    return MAGIC + struct.pack(">BBH", VERSION, 0, len(payload)) + payload + struct.pack(">I", crc) + digest
+    return (
+        MAGIC
+        + struct.pack(">BBH", VERSION, 0, len(payload))
+        + payload
+        + struct.pack(">I", crc)
+        + digest
+    )
 
 
 def unpack_frame(frame: bytes) -> dict:
@@ -103,12 +115,12 @@ def unpack_frame(frame: bytes) -> dict:
     if payload_end + 4 + 32 != len(frame):
         raise TSCGBError("invalid frame length")
     payload = frame[8:payload_end]
-    crc_expected = struct.unpack(">I", frame[payload_end:payload_end+4])[0]
-    crc_actual = binascii.crc32(payload) & 0xffffffff
+    crc_expected = struct.unpack(">I", frame[payload_end : payload_end + 4])[0]
+    crc_actual = binascii.crc32(payload) & 0xFFFFFFFF
     if crc_expected != crc_actual:
         raise TSCGBError("CRC mismatch")
     text = decode_expr(payload)
-    digest_expected = frame[payload_end+4:]
+    digest_expected = frame[payload_end + 4 :]
     digest_actual = hashlib.sha256(text.encode("utf-8")).digest()
     if digest_expected != digest_actual:
         raise TSCGBError("SHA mismatch")

@@ -136,7 +136,7 @@ def example_statistics_and_monitoring():
 
         tower.verify_file(test_file)
         test_file.unlink()
-        print(f"   - File {i+1} verified")
+        print(f"   - File {i + 1} verified")
 
     # Get updated stats
     stats = tower.get_stats()

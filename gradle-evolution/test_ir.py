@@ -89,7 +89,9 @@ def test_execution(graph):
     print(f"✓ Nodes executed: {results['nodes_executed']}")
     print(f"✓ Execution time: {results['execution_time_ms']:.2f}ms")
     print(f"✓ CPU time: {results['resource_usage']['cpu_time_ms']:.2f}ms")
-    print(f"✓ Memory: {results['resource_usage']['memory_bytes'] / (1024*1024):.2f}MB")
+    print(
+        f"✓ Memory: {results['resource_usage']['memory_bytes'] / (1024 * 1024):.2f}MB"
+    )
 
     return results
 

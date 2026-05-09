@@ -1,1 +1,1 @@
-from .core import parse, canonical, checksum, validate
+from .core import canonical, checksum, parse, validate

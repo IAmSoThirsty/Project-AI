@@ -33,11 +33,16 @@ def check_boundary(operation: str, magnitude: int | float, limit: int = 10000) -
     try:
         numeric_value = float(magnitude)
     except (TypeError, ValueError):
-        audit("BOUNDARY_NUMERIC_BLOCK", {"operation": operation, "magnitude": magnitude})
+        audit(
+            "BOUNDARY_NUMERIC_BLOCK", {"operation": operation, "magnitude": magnitude}
+        )
         return False
 
     if numeric_value < 0:
-        audit("BOUNDARY_NUMERIC_BLOCK", {"operation": operation, "magnitude": numeric_value})
+        audit(
+            "BOUNDARY_NUMERIC_BLOCK",
+            {"operation": operation, "magnitude": numeric_value},
+        )
         return False
 
     allowed = numeric_value <= float(limit)

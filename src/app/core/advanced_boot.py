@@ -7,11 +7,12 @@ import json
 import logging
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Literal, Optional
+from typing import Any, Literal
 
 from app.core.event_spine import EventCategory, EventPriority, get_event_spine
 from app.core.governance_graph import get_governance_graph
@@ -97,7 +98,7 @@ class BootProfileTransitionError(Exception):
 class BootProfileTransitionRule:
     """Governance-aware rule for boot profile transitions."""
 
-    source: Optional[BootProfile]  # None = from uninitialized
+    source: BootProfile | None  # None = from uninitialized
     target: BootProfile
     requires_governance_decision: bool = True
     description: str = ""
@@ -282,46 +283,85 @@ class AdvancedBootSystem:
         rules: list[BootProfileTransitionRule] = []
 
         for target in BootProfile:
-            rules.append(BootProfileTransitionRule(
-                source=None, target=target, requires_governance_decision=True,
-                description=f"Initial boot into {target.value}",
-            ))
+            rules.append(
+                BootProfileTransitionRule(
+                    source=None,
+                    target=target,
+                    requires_governance_decision=True,
+                    description=f"Initial boot into {target.value}",
+                )
+            )
 
         for src, tgt, desc in [
-            (BootProfile.NORMAL, BootProfile.EMERGENCY, "Escalation from NORMAL to EMERGENCY"),
-            (BootProfile.EMERGENCY, BootProfile.NORMAL, "De-escalation from EMERGENCY to NORMAL"),
-            (BootProfile.NORMAL, BootProfile.ETHICS_FIRST, "Reboot into ethics-first cold start"),
-            (BootProfile.ETHICS_FIRST, BootProfile.NORMAL, "Exit ethics-first mode into NORMAL"),
+            (
+                BootProfile.NORMAL,
+                BootProfile.EMERGENCY,
+                "Escalation from NORMAL to EMERGENCY",
+            ),
+            (
+                BootProfile.EMERGENCY,
+                BootProfile.NORMAL,
+                "De-escalation from EMERGENCY to NORMAL",
+            ),
+            (
+                BootProfile.NORMAL,
+                BootProfile.ETHICS_FIRST,
+                "Reboot into ethics-first cold start",
+            ),
+            (
+                BootProfile.ETHICS_FIRST,
+                BootProfile.NORMAL,
+                "Exit ethics-first mode into NORMAL",
+            ),
         ]:
-            rules.append(BootProfileTransitionRule(source=src, target=tgt,
-                requires_governance_decision=True, description=desc))
+            rules.append(
+                BootProfileTransitionRule(
+                    source=src,
+                    target=tgt,
+                    requires_governance_decision=True,
+                    description=desc,
+                )
+            )
 
         non_emergency = (
-            BootProfile.DIAGNOSTIC, BootProfile.RECOVERY, BootProfile.MINIMAL,
-            BootProfile.AIR_GAPPED, BootProfile.ADVERSARIAL,
+            BootProfile.DIAGNOSTIC,
+            BootProfile.RECOVERY,
+            BootProfile.MINIMAL,
+            BootProfile.AIR_GAPPED,
+            BootProfile.ADVERSARIAL,
         )
         for target in non_emergency:
-            rules.append(BootProfileTransitionRule(
-                source=BootProfile.NORMAL, target=target, requires_governance_decision=True,
-                description=f"Transition from NORMAL to {target.value}",
-            ))
+            rules.append(
+                BootProfileTransitionRule(
+                    source=BootProfile.NORMAL,
+                    target=target,
+                    requires_governance_decision=True,
+                    description=f"Transition from NORMAL to {target.value}",
+                )
+            )
         for source in non_emergency:
-            rules.append(BootProfileTransitionRule(
-                source=source, target=BootProfile.NORMAL, requires_governance_decision=True,
-                description=f"Transition from {source.value} to NORMAL",
-            ))
+            rules.append(
+                BootProfileTransitionRule(
+                    source=source,
+                    target=BootProfile.NORMAL,
+                    requires_governance_decision=True,
+                    description=f"Transition from {source.value} to NORMAL",
+                )
+            )
 
         self._profile_transition_rules = rules
 
     def _find_profile_transition_rule(
-        self, source: Optional[BootProfile], target: BootProfile
-    ) -> Optional[BootProfileTransitionRule]:
+        self, source: BootProfile | None, target: BootProfile
+    ) -> BootProfileTransitionRule | None:
         for rule in self._profile_transition_rules:
             if rule.source == source and rule.target == target:
                 return rule
         return None
 
-    def _validate_profile_transition(self, new_profile: BootProfile) -> BootProfileTransitionRule:
+    def _validate_profile_transition(
+        self, new_profile: BootProfile
+    ) -> BootProfileTransitionRule:
         current = self._current_profile
         rule = self._find_profile_transition_rule(current, new_profile)
         if rule is None:
@@ -368,16 +408,21 @@ class AdvancedBootSystem:
         def invariant_emergency_requires_activation(
             system: "AdvancedBootSystem", phase: BootPhase
         ) -> None:
-            if phase == "post_boot" and system._current_profile == BootProfile.EMERGENCY:
+            if (
+                phase == "post_boot"
+                and system._current_profile == BootProfile.EMERGENCY
+            ):
                 if system._boot_stats.get("emergency_activations", 0) <= 0:
                     raise RuntimeError(
                         "Boot invariant violated: EMERGENCY profile without emergency activation"
                     )
 
-        self._boot_invariants.extend([
-            invariant_profile_set_before_boot_start,
-            invariant_emergency_requires_activation,
-        ])
+        self._boot_invariants.extend(
+            [
+                invariant_profile_set_before_boot_start,
+                invariant_emergency_requires_activation,
+            ]
+        )
 
     def register_boot_invariant(self, fn: BootInvariantFn) -> None:
         """Register an additional boot invariant."""
@@ -727,7 +772,9 @@ class AdvancedBootSystem:
             logger.debug("Emergency mode deactivation event emitted")
         except Exception as e:
             logger.exception("Failed to emit emergency mode deactivation event")
-            raise RuntimeError("Emergency mode deactivation event emission failed") from e
+            raise RuntimeError(
+                "Emergency mode deactivation event emission failed"
+            ) from e
 
         self._audit_event(
             event_type="emergency_mode",
@@ -1019,10 +1066,15 @@ class AdvancedBootSystem:
         # Start a State Register session for temporal continuity tracking.
         try:
             from app.core.state_register import get_state_register
+
             get_state_register().start_session(
-                context={"boot_profile": (
-                    self._current_profile.value if self._current_profile else "unknown"
-                )}
+                context={
+                    "boot_profile": (
+                        self._current_profile.value
+                        if self._current_profile
+                        else "unknown"
+                    )
+                }
             )
         except Exception:
             pass
@@ -1063,6 +1115,7 @@ class AdvancedBootSystem:
         # Phase 7a — Drift monitor: background analysis of governance alignment.
         try:
             from app.core.governance_drift_monitor import GovernanceDriftMonitor
+
             threading.Thread(
                 target=lambda: GovernanceDriftMonitor().analyze_drift(),
                 daemon=True,
@@ -1073,7 +1126,11 @@ class AdvancedBootSystem:
 
         # Phase 9 — Guardian approval for high-impact boot profiles.
         try:
-            from app.core.guardian_approval_system import GuardianApprovalSystem, ImpactLevel
+            from app.core.guardian_approval_system import (
+                GuardianApprovalSystem,
+                ImpactLevel,
+            )
+
             _profile = self._boot_stats.get("profile", "")
             if _profile in ("adversarial", "air_gapped"):
                 GuardianApprovalSystem().create_approval_request(

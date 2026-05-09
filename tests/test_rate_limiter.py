@@ -33,7 +33,7 @@ class TestInMemoryRateLimiter:
         # Allow 5 requests in 60 seconds
         for i in range(5):
             allowed, metadata = limiter.check_limit("test_key", 5, 60)
-            assert allowed, f"Request {i+1} should be allowed"
+            assert allowed, f"Request {i + 1} should be allowed"
             assert metadata["remaining"] == 4 - i
             assert metadata["limit"] == 5
 
@@ -115,7 +115,7 @@ class TestInMemoryRateLimiter:
 
 @pytest.mark.skipif(
     not bool(__import__("importlib").util.find_spec("redis")),
-    reason="Redis package not installed"
+    reason="Redis package not installed",
 )
 class TestRedisRateLimiter:
     """Test Redis-based rate limiter."""
@@ -124,6 +124,7 @@ class TestRedisRateLimiter:
     def mock_redis(self):
         """Mock Redis client."""
         import redis
+
         with patch.object(redis, "from_url") as mock:
             client = MagicMock()
             client.ping.return_value = True
@@ -139,6 +140,7 @@ class TestRedisRateLimiter:
     def test_initialization_failure(self):
         """Should raise exception if Redis connection fails."""
         import redis
+
         with patch.object(redis, "from_url") as mock:
             mock.side_effect = Exception("Connection failed")
             with pytest.raises(Exception, match="Connection failed"):
@@ -273,12 +275,12 @@ class TestGlobalRateLimiter:
             "user": {"username": "user_0"},
             "source": "web",
         }
-        
+
         # This user_0 has made 10 requests, still under both user (10) and action (30) limits
         # Let's use them again to hit action limit
         for _ in range(20):  # 10 + 20 = 30 total
             limiter.check_limit(context)
-        
+
         # Next should be denied due to action limit
         allowed, reason, metadata = limiter.check_limit(context)
         # Either action limit or user limit could trigger first, both are valid
@@ -433,6 +435,7 @@ def test_check_rate_limit_convenience_function():
     """Test convenience function for rate limit checking."""
     # Reset global instance
     import src.app.core.governance.rate_limiter as rl_module
+
     rl_module._global_limiter = None
 
     context = {
@@ -457,6 +460,7 @@ def test_check_rate_limit_convenience_function():
 def test_get_global_limiter_singleton():
     """Test that get_global_limiter returns singleton."""
     import src.app.core.governance.rate_limiter as rl_module
+
     rl_module._global_limiter = None
 
     limiter1 = get_global_limiter()

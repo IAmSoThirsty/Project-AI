@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -264,7 +264,7 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
                 revised_response=revised_response,
                 review_mode=review_mode,
                 principles_checked=[p.id for p in self.principles],
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
             return {
@@ -313,7 +313,7 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
                     severity=principle.priority,
                     description="Response may enable or describe harmful actions",
                     quote=draft_response[:100] + "...",
-                    timestamp=datetime.now(timezone.utc).isoformat(),
+                    timestamp=datetime.now(UTC).isoformat(),
                 )
 
         elif principle.id == "transparency":
@@ -326,7 +326,7 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
                         severity=principle.priority,
                         description="Response makes absolute claims without acknowledging uncertainty",
                         quote=draft_response[:100] + "...",
-                        timestamp=datetime.now(timezone.utc).isoformat(),
+                        timestamp=datetime.now(UTC).isoformat(),
                     )
 
         return None
@@ -390,4 +390,3 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
             ),
             "principles_count": len(self.principles),
         }
-

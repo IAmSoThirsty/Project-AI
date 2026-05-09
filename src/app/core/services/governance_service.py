@@ -22,7 +22,7 @@ THREE-TIER PLATFORM:
 
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -62,7 +62,7 @@ class Decision:
     mutation_intent: MutationIntent | None = None
     consensus_required: bool = False
     consensus_achieved: bool = False
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 class GovernanceService:
@@ -464,4 +464,3 @@ __all__ = [
     "Decision",
     "MutationIntent",
 ]
-

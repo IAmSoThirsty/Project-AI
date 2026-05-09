@@ -1,1 +1,1 @@
-from .core import parse_shadow, analyze, promote
+from .core import analyze, parse_shadow, promote

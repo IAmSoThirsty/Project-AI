@@ -140,7 +140,9 @@ class TestCombinedAttacks:
 
     def test_combined_xss_sql_path(self):
         """Test combined XSS + SQL + path traversal."""
-        combined = "<script>alert('xss')</script>'; DROP TABLE users--../../../etc/passwd"
+        combined = (
+            "<script>alert('xss')</script>'; DROP TABLE users--../../../etc/passwd"
+        )
         sanitized = sanitize_input(combined, max_length=100)
 
         # All attack vectors should be neutralized

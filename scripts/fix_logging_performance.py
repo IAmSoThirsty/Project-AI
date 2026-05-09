@@ -236,9 +236,9 @@ def main():
             files_changed += 1
 
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("📊 SUMMARY")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Files processed: {len(files)}")
     print(f"Files changed: {files_changed}")
     print(f"Total logging calls fixed: {total_changes}")

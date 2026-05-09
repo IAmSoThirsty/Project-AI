@@ -198,7 +198,9 @@ class JurisdictionLoader:
 
                 # Parse structured content from markdown
                 raw_content = file_path.read_text(encoding="utf-8")
-                reqs, rights, obligations = self._parse_sections_from_markdown(raw_content)
+                reqs, rights, obligations = self._parse_sections_from_markdown(
+                    raw_content
+                )
 
                 # Create jurisdiction annex object
                 annex = JurisdictionAnnex(

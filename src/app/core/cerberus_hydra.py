@@ -910,20 +910,20 @@ class CerberusHydraDefense:
 
 ## Defense Statistics
 
-- **Total Agents Spawned**: {registry['total_spawns']}
-- **Currently Active**: {registry['active_agents']}
-- **Security Bypasses**: {registry['total_bypasses']}
-- **Lockdown Stage**: {lockdown_status['current_stage']}/25
-- **Sections Locked**: {lockdown_status['locked_count']}/{lockdown_status['total_sections']}
-- **Lockdown Percentage**: {lockdown_status['lockdown_percentage']:.1f}%
+- **Total Agents Spawned**: {registry["total_spawns"]}
+- **Currently Active**: {registry["active_agents"]}
+- **Security Bypasses**: {registry["total_bypasses"]}
+- **Lockdown Stage**: {lockdown_status["current_stage"]}/25
+- **Sections Locked**: {lockdown_status["locked_count"]}/{lockdown_status["total_sections"]}
+- **Lockdown Percentage**: {lockdown_status["lockdown_percentage"]:.1f}%
 
 ## Runtime Health
 
-- **Total Runtimes**: {runtime_health['total_runtimes']}
-- **Healthy**: {runtime_health['by_status']['healthy']}
-- **Degraded**: {runtime_health['by_status']['degraded']}
-- **Unavailable**: {runtime_health['by_status']['unavailable']}
-- **Verified**: {runtime_health['verified_count']}
+- **Total Runtimes**: {runtime_health["total_runtimes"]}
+- **Healthy**: {runtime_health["by_status"]["healthy"]}
+- **Degraded**: {runtime_health["by_status"]["degraded"]}
+- **Unavailable**: {runtime_health["by_status"]["unavailable"]}
+- **Verified**: {runtime_health["verified_count"]}
 
 ## Agent Distribution
 
@@ -976,7 +976,7 @@ class CerberusHydraDefense:
 - **Max Agents Limit**: {self.max_agents}
 - **Runtime Manager**: ✅ Active
 - **Template Renderer**: ✅ Active
-- **Lockdown Controller**: ✅ Active (Stage {lockdown_status['current_stage']})
+- **Lockdown Controller**: ✅ Active (Stage {lockdown_status["current_stage"]})
 
 ## Recommendations
 

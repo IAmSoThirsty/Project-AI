@@ -18,7 +18,7 @@ import logging
 import os
 import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -41,7 +41,7 @@ class PolicyEvaluationRequest:
     principal: str = ""
     context: dict[str, Any] = field(default_factory=dict)
     inputs_hash: str = ""
-    requested_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    requested_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     def __post_init__(self) -> None:
         actor = self.actor or self.principal
@@ -141,7 +141,7 @@ class DecisionRecord:
 
 
 def _utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _stable_json(data: Any) -> str:
@@ -225,7 +225,9 @@ class AppendOnlyDecisionLog:
                         "matched_policies": [],
                         "constraints": [],
                         "outputs_hash": data.get("outputs_hash", ""),
-                        "evaluated_at": data.get("timestamp", data.get("created_at", _utc_now_iso())),
+                        "evaluated_at": data.get(
+                            "timestamp", data.get("created_at", _utc_now_iso())
+                        ),
                     }
 
                 policy_result = PolicyEvaluationResponse(
@@ -233,10 +235,18 @@ class AppendOnlyDecisionLog:
                         "evaluation_id",
                         evaluation_binding_data.get("evaluation_id", "unknown"),
                     ),
-                    trace_id=policy_result_data.get("trace_id", data.get("trace_id", "unknown")),
-                    decision=policy_result_data.get("decision", data.get("decision", "deny")),
-                    reason=policy_result_data.get("reason", data.get("reason", "replayed")),
-                    matched_policies=list(policy_result_data.get("matched_policies", [])),
+                    trace_id=policy_result_data.get(
+                        "trace_id", data.get("trace_id", "unknown")
+                    ),
+                    decision=policy_result_data.get(
+                        "decision", data.get("decision", "deny")
+                    ),
+                    reason=policy_result_data.get(
+                        "reason", data.get("reason", "replayed")
+                    ),
+                    matched_policies=list(
+                        policy_result_data.get("matched_policies", [])
+                    ),
                     constraints=list(policy_result_data.get("constraints", [])),
                     outputs_hash=policy_result_data.get(
                         "outputs_hash",
@@ -258,10 +268,18 @@ class AppendOnlyDecisionLog:
                 )
 
                 binding = MutationGovernanceBinding(
-                    trace_id=binding_data.get("trace_id", data.get("trace_id", "unknown")),
-                    action=binding_data.get("action", data.get("action", "unknown.action")),
-                    resource=binding_data.get("resource", data.get("resource", "resource://unknown")),
-                    mutation_class=binding_data.get("mutation_class", data.get("mutation_class", "softMutation")),
+                    trace_id=binding_data.get(
+                        "trace_id", data.get("trace_id", "unknown")
+                    ),
+                    action=binding_data.get(
+                        "action", data.get("action", "unknown.action")
+                    ),
+                    resource=binding_data.get(
+                        "resource", data.get("resource", "resource://unknown")
+                    ),
+                    mutation_class=binding_data.get(
+                        "mutation_class", data.get("mutation_class", "softMutation")
+                    ),
                     capability_token=binding_data.get("capability_token", "replay"),
                     governance_context=binding_data.get("governance_context", {}),
                     evaluation_binding=GovernanceEvaluationBinding(
@@ -269,32 +287,49 @@ class AppendOnlyDecisionLog:
                             "evaluation_id",
                             policy_result.evaluation_id,
                         ),
-                        trace_id=evaluation_binding_data.get("trace_id", data.get("trace_id", "unknown")),
+                        trace_id=evaluation_binding_data.get(
+                            "trace_id", data.get("trace_id", "unknown")
+                        ),
                         request_fingerprint=request_fingerprint,
                         policy_result_fingerprint=response_fingerprint,
                         bound_at=evaluation_binding_data.get(
                             "bound_at",
-                            data.get("timestamp", data.get("created_at", _utc_now_iso())),
+                            data.get(
+                                "timestamp", data.get("created_at", _utc_now_iso())
+                            ),
                         ),
                     ),
-                    resolution_policy=binding_data.get("resolution_policy", "default-deny-precedence"),
+                    resolution_policy=binding_data.get(
+                        "resolution_policy", "default-deny-precedence"
+                    ),
                     quorum_proof=binding_data.get("quorum_proof"),
                 )
 
                 record = DecisionRecord(
-                    decision_id=data.get("decision_id", data.get("decision_record_id", f"dec_replay_{uuid.uuid4().hex}")),
+                    decision_id=data.get(
+                        "decision_id",
+                        data.get(
+                            "decision_record_id", f"dec_replay_{uuid.uuid4().hex}"
+                        ),
+                    ),
                     trace_id=data.get("trace_id", binding.trace_id),
-                    evaluation_id=data.get("evaluation_id", policy_result.evaluation_id),
+                    evaluation_id=data.get(
+                        "evaluation_id", policy_result.evaluation_id
+                    ),
                     actor=data.get("actor", data.get("principal", "unknown")),
                     action=data.get("action", binding.action),
                     resource=data.get("resource", binding.resource),
-                    inputs_hash=data.get("inputs_hash", binding.evaluation_binding.request_fingerprint),
+                    inputs_hash=data.get(
+                        "inputs_hash", binding.evaluation_binding.request_fingerprint
+                    ),
                     outputs_hash=data.get(
                         "outputs_hash",
                         binding.evaluation_binding.policy_result_fingerprint,
                     ),
                     authority_chain=list(data.get("authority_chain", [])),
-                    timestamp=data.get("timestamp", data.get("created_at", _utc_now_iso())),
+                    timestamp=data.get(
+                        "timestamp", data.get("created_at", _utc_now_iso())
+                    ),
                     signature=data.get("signature", "unsigned"),
                     previous_hash=entry_previous_hash,
                     mutation_class=data.get("mutation_class", binding.mutation_class),
@@ -357,7 +392,9 @@ class IronPathExecutor:
         signing_key: str | None = None,
     ):
         self.log = AppendOnlyDecisionLog(decision_log_path)
-        key_material = signing_key or os.getenv("IRON_PATH_SIGNING_KEY", "iron-path-dev-key")
+        key_material = signing_key or os.getenv(
+            "IRON_PATH_SIGNING_KEY", "iron-path-dev-key"
+        )
         self._signing_key = key_material.encode("utf-8")
 
     def classify_mutation(self, action: str) -> str:
@@ -666,7 +703,9 @@ class IronPathExecutor:
                 ]
 
             if affected_domains:
-                missing_domains = [domain for domain in affected_domains if domain not in votes]
+                missing_domains = [
+                    domain for domain in affected_domains if domain not in votes
+                ]
                 if missing_domains:
                     raise GovernanceBindingError(
                         "Governance mutation missing affected domain signatures: "

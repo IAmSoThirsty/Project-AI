@@ -8,10 +8,9 @@ from __future__ import annotations
 
 import logging
 import os
-import shutil
 import subprocess  # nosec B404 - subprocess for trusted Python UTF tooling only
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
@@ -61,7 +60,9 @@ class ThirstyLangValidator(KernelRoutedAgent):
         )
 
     def _do_run_full_validation(self) -> dict[str, Any]:
-        logger.info("Starting UTF (Universal Thirsty Family) validation — %s", self.utf_path)
+        logger.info(
+            "Starting UTF (Universal Thirsty Family) validation — %s", self.utf_path
+        )
 
         if not os.path.isdir(self.utf_path):
             return {
@@ -70,7 +71,7 @@ class ThirstyLangValidator(KernelRoutedAgent):
             }
 
         report: dict[str, Any] = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "validation_type": "UTF_all_tiers",
             "utf_path": self.utf_path,
             "tests": {
@@ -92,7 +93,9 @@ class ThirstyLangValidator(KernelRoutedAgent):
             "passed": passed,
             "failed": total - passed,
             "success_rate": f"{passed / total * 100:.1f}%",
-            "tarl_status": "operational" if passed >= total * 0.8 else "needs_attention",
+            "tarl_status": "operational"
+            if passed >= total * 0.8
+            else "needs_attention",
         }
 
         self.validation_results.append(report)
@@ -150,14 +153,22 @@ class ThirstyLangValidator(KernelRoutedAgent):
             return {"status": "failed", "error": "T.A.R.L. example files not found"}
         try:
             result = self._run(
-                [_PY, "-m", "tarl.cli", "examples/policy.tarl", "examples/context.json"],
+                [
+                    _PY,
+                    "-m",
+                    "tarl.cli",
+                    "examples/policy.tarl",
+                    "examples/context.json",
+                ],
                 cwd=self.utf_path,
             )
             ok = result.returncode == 0 and "ALLOW" in result.stdout
             return {
                 "status": "passed" if ok else "failed",
                 "tier": "T3 — T.A.R.L.",
-                "verdict": "ALLOW" if "ALLOW" in result.stdout else result.stdout[-200:],
+                "verdict": "ALLOW"
+                if "ALLOW" in result.stdout
+                else result.stdout[-200:],
                 "message": "T.A.R.L. policy evaluated: ALLOW (builder + risk ≤ 3)",
             }
         except Exception as exc:
@@ -170,14 +181,22 @@ class ThirstyLangValidator(KernelRoutedAgent):
             return {"status": "failed", "error": f"example not found: {example}"}
         try:
             result = self._run(
-                [_PY, "-m", "shadow_thirst.cli", "promote", "examples/promote.shadowthirst"],
+                [
+                    _PY,
+                    "-m",
+                    "shadow_thirst.cli",
+                    "promote",
+                    "examples/promote.shadowthirst",
+                ],
                 cwd=self.utf_path,
             )
             ok = result.returncode == 0 and "PROMOTE" in result.stdout
             return {
                 "status": "passed" if ok else "failed",
                 "tier": "T4 — Shadow Thirst",
-                "decision": "PROMOTE" if "PROMOTE" in result.stdout else result.stdout[-200:],
+                "decision": "PROMOTE"
+                if "PROMOTE" in result.stdout
+                else result.stdout[-200:],
                 "message": "Shadow Thirst analyzers passed — mutation promoted",
             }
         except Exception as exc:

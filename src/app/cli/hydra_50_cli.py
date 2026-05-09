@@ -21,15 +21,14 @@ GOVERNANCE: This script uses the governance router for all production operations
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
-import sys
 
 # Add src to path for governance import
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 # Import governance
-from app.core.runtime.router import route_request
 
 import typer
 from rich.console import Console

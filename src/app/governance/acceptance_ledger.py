@@ -19,7 +19,6 @@ import json
 import logging
 import os
 import sqlite3
-import struct
 import time
 import urllib.error
 import urllib.request
@@ -172,9 +171,16 @@ def _fetch_rfc3161_token(data_hex: str, tsa_url: str, timeout: int = 5) -> str |
 
         # Build a minimal RFC 3161 TimeStampReq (DER)
         # Structure: SEQUENCE { version INTEGER, messageImprint SEQUENCE { hashAlgorithm SHA256, hashedMessage OCTET STRING }, certReq BOOLEAN }
-        sha256_oid = bytes.fromhex("300d06096086480165030402010500")  # AlgorithmIdentifier for SHA-256
+        sha256_oid = bytes.fromhex(
+            "300d06096086480165030402010500"
+        )  # AlgorithmIdentifier for SHA-256
         hash_octet = bytes([0x04, len(digest_bytes)]) + digest_bytes
-        msg_imprint = bytes([0x30]) + _der_length(len(sha256_oid) + len(hash_octet)) + sha256_oid + hash_octet
+        msg_imprint = (
+            bytes([0x30])
+            + _der_length(len(sha256_oid) + len(hash_octet))
+            + sha256_oid
+            + hash_octet
+        )
         version = bytes([0x02, 0x01, 0x01])  # INTEGER 1
         cert_req = bytes([0x01, 0x01, 0xFF])  # BOOLEAN TRUE
         inner = version + msg_imprint + cert_req
@@ -410,7 +416,9 @@ class AcceptanceLedger:
             timestamp_authority=_fetch_rfc3161_token(
                 entry_id,
                 timestamp_authority_url,
-            ) if timestamp_authority_url else None,
+            )
+            if timestamp_authority_url
+            else None,
             hardware_attestation=hardware_attestation,
             metadata=metadata or {},
         )
@@ -626,7 +634,10 @@ class AcceptanceLedger:
             and entry.timestamp <= time.time()
             and (
                 entry.timestamp_authority is None
-                or (isinstance(entry.timestamp_authority, str) and len(entry.timestamp_authority) > 0)
+                or (
+                    isinstance(entry.timestamp_authority, str)
+                    and len(entry.timestamp_authority) > 0
+                )
             )
         )
 

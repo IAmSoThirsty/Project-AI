@@ -63,12 +63,12 @@ class ExternalEcosystemBridge:
             "available_repositories": len(available),
             "configured_repositories": len(inventories),
             "repository_keys": [inv.key for inv in available],
-            "capabilities": {
-                inv.key: inv.capabilities for inv in available
-            },
+            "capabilities": {inv.key: inv.capabilities for inv in available},
         }
 
-    def _inventory_one(self, spec: ExternalRepositorySpec) -> ExternalRepositoryInventory:
+    def _inventory_one(
+        self, spec: ExternalRepositorySpec
+    ) -> ExternalRepositoryInventory:
         path_obj = Path(spec.path)
         inv = ExternalRepositoryInventory(
             key=spec.key,
@@ -100,7 +100,9 @@ class ExternalEcosystemBridge:
         metadata: dict[str, Any] = {
             "has_pyproject": (path_obj / "pyproject.toml").exists(),
             "has_requirements": (path_obj / "requirements.txt").exists(),
-            "has_readme": any((path_obj / name).exists() for name in ("README.md", "readme.md")),
+            "has_readme": any(
+                (path_obj / name).exists() for name in ("README.md", "readme.md")
+            ),
         }
 
         pyproject = path_obj / "pyproject.toml"

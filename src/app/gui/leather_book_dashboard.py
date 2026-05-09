@@ -78,6 +78,7 @@ PROACTIVE_ACTIONS = (
 # - [[source-docs/gui/leather_book_dashboard.md]]
 #
 
+
 class LeatherBookDashboard(QWidget):
     """Main dashboard with 6-zone layout on leather book."""
 

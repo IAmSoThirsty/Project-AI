@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 def main() -> int:
     """
     CLI entrypoint that routes all operations through governance pipeline.
-    
+
     Examples:
         python -m app.interfaces.cli --action ai.chat --prompt "Hello"
         python -m app.interfaces.cli --action persona.update --trait curiosity --value 0.8
@@ -44,7 +44,7 @@ def main() -> int:
         payload = {
             "action": args.action,
         }
-        
+
         if args.prompt:
             payload["prompt"] = args.prompt
             payload["task_type"] = "chat"
@@ -60,14 +60,14 @@ def main() -> int:
     # Route through governance pipeline
     try:
         response = route_request(source="cli", payload=payload)
-        
+
         if response["status"] == "success":
             print(json.dumps(response["result"], indent=2))
             return 0
         else:
             print(f"Error: {response.get('error', 'Unknown error')}", file=sys.stderr)
             return 1
-            
+
     except Exception as e:
         logger.error(f"CLI execution failed: {e}")
         print(f"Fatal error: {e}", file=sys.stderr)

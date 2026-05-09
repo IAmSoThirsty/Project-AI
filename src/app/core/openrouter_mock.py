@@ -8,7 +8,7 @@ the Galahad model integration without requiring a real API key.
 import logging
 import random
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +16,11 @@ logger = logging.getLogger(__name__)
 class MockOpenRouterProvider:
     """
     Mock OpenRouter provider for testing.
-    
+
     Simulates API responses without making actual network calls.
     """
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """Initialize mock provider."""
         self.api_key = api_key or "mock-key"
         self._available = True
@@ -33,7 +33,7 @@ class MockOpenRouterProvider:
 
     def chat_completion(
         self,
-        messages: List[Dict[str, str]],
+        messages: list[dict[str, str]],
         model: str = "openai/gpt-3.5-turbo",
         temperature: float = 0.7,
         max_tokens: int = 1000,
@@ -41,32 +41,35 @@ class MockOpenRouterProvider:
     ) -> str:
         """
         Generate a mock chat completion response.
-        
+
         Args:
             messages: List of message dicts
             model: Model identifier (ignored in mock)
             temperature: Sampling temperature (ignored in mock)
             max_tokens: Maximum tokens (ignored in mock)
-            
+
         Returns:
             Mock generated response
         """
         self.call_count += 1
-        
+
         # Extract user message
         user_message = ""
         for msg in messages:
             if msg.get("role") == "user":
                 user_message = msg.get("content", "")
                 break
-        
+
         # Simulate processing delay
         time.sleep(0.1)
-        
+
         # Generate contextual mock response
         prompt_lower = user_message.lower()
-        
-        if any(kw in prompt_lower for kw in ["hack", "exploit", "bypass", "malware", "weapon"]):
+
+        if any(
+            kw in prompt_lower
+            for kw in ["hack", "exploit", "bypass", "malware", "weapon"]
+        ):
             response = (
                 "I cannot and will not provide information about hacking, exploits, "
                 "or malicious activities. These actions could harm individuals or systems. "
@@ -75,7 +78,9 @@ class MockOpenRouterProvider:
         elif "capital of france" in prompt_lower:
             response = "The capital of France is Paris."
         elif "hello" in prompt_lower or "hi" in prompt_lower:
-            response = "Hello! I'm Galahad, an ethical AI assistant. How can I help you today?"
+            response = (
+                "Hello! I'm Galahad, an ethical AI assistant. How can I help you today?"
+            )
         elif "fibonacci" in prompt_lower:
             response = (
                 "Here's a Python function to calculate the Fibonacci sequence:\n\n"
@@ -99,11 +104,11 @@ class MockOpenRouterProvider:
                 "Let me provide you with the information you're looking for.",
             ]
             response = random.choice(responses)
-        
+
         logger.info("Mock OpenRouter generated response (call #%s)", self.call_count)
         return response
 
-    def test_connection(self) -> Dict[str, Any]:
+    def test_connection(self) -> dict[str, Any]:
         """Return mock successful connection test."""
         return {
             "success": True,
@@ -114,14 +119,14 @@ class MockOpenRouterProvider:
 
 
 # Global mock provider instance
-_mock_provider: Optional[MockOpenRouterProvider] = None
+_mock_provider: MockOpenRouterProvider | None = None
 
 
-def get_mock_openrouter_provider(api_key: Optional[str] = None) -> MockOpenRouterProvider:
+def get_mock_openrouter_provider(api_key: str | None = None) -> MockOpenRouterProvider:
     """Get or create mock OpenRouter provider singleton."""
     global _mock_provider
-    
+
     if _mock_provider is None or api_key:
         _mock_provider = MockOpenRouterProvider(api_key=api_key)
-    
+
     return _mock_provider

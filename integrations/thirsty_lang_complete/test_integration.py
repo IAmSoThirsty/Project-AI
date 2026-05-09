@@ -283,9 +283,9 @@ class IntegrationTester:
 
     def run_all_tests(self):
         """Run all integration tests"""
-        print(f"\n{BLUE}{'='*60}{RESET}")
+        print(f"\n{BLUE}{'=' * 60}{RESET}")
         print(f"{BLUE}Thirsty-lang + TARL Integration Test Suite{RESET}")
-        print(f"{BLUE}{'='*60}{RESET}\n")
+        print(f"{BLUE}{'=' * 60}{RESET}\n")
 
         # Core component tests
         print(f"{YELLOW}Testing Core Components...{RESET}")
@@ -317,9 +317,9 @@ class IntegrationTester:
         self.run_test("Example files exist", self.test_examples_exist)
 
         # Print summary
-        print(f"\n{BLUE}{'='*60}{RESET}")
+        print(f"\n{BLUE}{'=' * 60}{RESET}")
         print(f"{BLUE}Test Summary{RESET}")
-        print(f"{BLUE}{'='*60}{RESET}")
+        print(f"{BLUE}{'=' * 60}{RESET}")
         print(f"{GREEN}Passed: {self.passed}{RESET}")
         if self.failed > 0:
             print(f"{RED}Failed: {self.failed}{RESET}")

@@ -681,30 +681,30 @@ class ASL3Security:
 - ✅ At-rest encryption: ENABLED (Fernet)
 - ✅ Key rotation: SUPPORTED (quarterly recommended)
 - ✅ Secure deletion: ENABLED (DoD 5220.22-M 3-pass)
-- ✅ Encrypted files: {status['encrypted_files']}
-- ✅ Critical resources protected: {status['critical_resources_protected']}
+- ✅ Encrypted files: {status["encrypted_files"]}
+- ✅ Critical resources protected: {status["critical_resources_protected"]}
 
 ### Access Control (Control 6-15)
 - ✅ Least privilege: ENFORCED
 - ✅ User allowlists: ACTIVE
 - ✅ Multi-party auth: CONFIGURED (for override config)
 - ✅ Rate limiting: ACTIVE ({sum(len(v) for v in self.access_counts.values())} tracked accesses)
-- ✅ Access attempts (24h): {status['total_access_attempts_24h']}
-- ✅ Failed attempts (24h): {status['failed_attempts_24h']}
+- ✅ Access attempts (24h): {status["total_access_attempts_24h"]}
+- ✅ Failed attempts (24h): {status["failed_attempts_24h"]}
 
 ### Monitoring (Control 16-25)
 - ✅ Comprehensive logging: ACTIVE
 - ✅ Anomaly detection: ENABLED
 - ✅ Audit trail: TAMPER-PROOF
-- ✅ Audit log entries: {status['audit_log_entries']}
-- ✅ Emergency alerts: {'ENABLED' if self.emergency_alert else 'DISABLED'}
-- ✅ Suspicious activities (24h): {status['suspicious_activities_24h']}
+- ✅ Audit log entries: {status["audit_log_entries"]}
+- ✅ Emergency alerts: {"ENABLED" if self.emergency_alert else "DISABLED"}
+- ✅ Suspicious activities (24h): {status["suspicious_activities_24h"]}
 
 ### Egress Control (Control 26-30)
 - ✅ Rate limiting: ACTIVE
 - ✅ Data exfiltration detection: ACTIVE
 - ✅ Bulk access prevention: ENABLED
-- ✅ Unique users (24h): {status['unique_users_24h']}
+- ✅ Unique users (24h): {status["unique_users_24h"]}
 
 ## Recent Security Events (24h)
 

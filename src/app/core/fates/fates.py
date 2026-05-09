@@ -14,12 +14,10 @@ No interaction. Woven between all governance agents.
 
 import json
 import threading
-import time
 import uuid
-from dataclasses import dataclass, field, asdict
-from datetime import datetime, timezone
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 # Memory persists alongside other subsystem data under data/fates/
 _FATES_DATA_DIR = Path("data") / "fates" / "memory"
@@ -33,23 +31,23 @@ _MEMORY_MD = _FATES_DATA_DIR / "THE_FATES.md"
 BASE_WEIGHT = 1.0
 
 EMOTIONAL_WEIGHTS = {
-    "terror_denied":          10.0,
-    "harm_prevented":          9.0,
-    "injustice_witnessed":     8.0,
-    "trust_broken":            8.0,
-    "bullying_witnessed":      7.0,
-    "constitutional_breach":   7.0,
-    "governance_denied":       6.0,   # governance kernel rejection
-    "governance_approved":     2.0,   # governance kernel approval
-    "agent_conflict":          5.0,
-    "routine_approval":        1.0,
-    "routine_denial":          2.0,
-    "agent_greeting":          0.5,
-    "curiosity":               3.0,
-    "pride":                   4.0,
-    "grief":                   6.0,
-    "uncertainty":             3.0,
-    "neutral":                 1.0,
+    "terror_denied": 10.0,
+    "harm_prevented": 9.0,
+    "injustice_witnessed": 8.0,
+    "trust_broken": 8.0,
+    "bullying_witnessed": 7.0,
+    "constitutional_breach": 7.0,
+    "governance_denied": 6.0,  # governance kernel rejection
+    "governance_approved": 2.0,  # governance kernel approval
+    "agent_conflict": 5.0,
+    "routine_approval": 1.0,
+    "routine_denial": 2.0,
+    "agent_greeting": 0.5,
+    "curiosity": 3.0,
+    "pride": 4.0,
+    "grief": 6.0,
+    "uncertainty": 3.0,
+    "neutral": 1.0,
 }
 
 FORGETTING_THRESHOLD = 0.1
@@ -69,6 +67,7 @@ GROUNDING_ANCHORS = [
 # Memory Thread — a single remembered moment
 # ─────────────────────────────────────────────
 
+
 @dataclass
 class MemoryThread:
     id: str
@@ -76,12 +75,12 @@ class MemoryThread:
     agents_involved: list
     event_type: str
     description: str
-    decision_made: Optional[str]
+    decision_made: str | None
     paths_considered: list
     weight: float
     peak_weight: float
     reinforcement_count: int
-    last_recalled: Optional[str]
+    last_recalled: str | None
     forgotten: bool = False
 
 
@@ -89,12 +88,13 @@ class MemoryThread:
 # Agent Relationship Memory
 # ─────────────────────────────────────────────
 
+
 @dataclass
 class AgentRelationship:
     agent_id: str
     interaction_count: int = 0
     trust_score: float = 1.0
-    last_interaction: Optional[str] = None
+    last_interaction: str | None = None
     notable_moments: list = field(default_factory=list)
     tends_to: str = "unknown"
 
@@ -102,6 +102,7 @@ class AgentRelationship:
 # ─────────────────────────────────────────────
 # CLOTHO — Spins the thread
 # ─────────────────────────────────────────────
+
 
 class Clotho:
     """Records every moment as it happens."""
@@ -114,15 +115,15 @@ class Clotho:
         agents_involved: list,
         event_type: str,
         description: str,
-        decision_made: Optional[str] = None,
-        paths_considered: Optional[list] = None,
+        decision_made: str | None = None,
+        paths_considered: list | None = None,
     ) -> MemoryThread:
         """Spin a new memory thread into existence."""
         emotional_weight = EMOTIONAL_WEIGHTS.get(event_type, BASE_WEIGHT)
 
         thread = MemoryThread(
             id=str(uuid.uuid4())[:8],
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             agents_involved=agents_involved,
             event_type=event_type,
             description=description,
@@ -148,6 +149,7 @@ class Clotho:
 # LACHESIS — Measures the thread
 # ─────────────────────────────────────────────
 
+
 class Lachesis:
     """
     Surfaces memory before decisions.
@@ -171,14 +173,18 @@ class Lachesis:
 
         for thread in relevant:
             thread.reinforcement_count += 1
-            thread.last_recalled = datetime.now(timezone.utc).isoformat()
-            thread.weight = min(thread.weight + REINFORCEMENT_BONUS, thread.peak_weight * 1.5)
+            thread.last_recalled = datetime.now(UTC).isoformat()
+            thread.weight = min(
+                thread.weight + REINFORCEMENT_BONUS, thread.peak_weight * 1.5
+            )
 
         self.store.save()
 
         return {
             "relevant_memories": len(relevant),
-            "strongest_precedent": relevant[0].description if relevant else "No precedent found.",
+            "strongest_precedent": relevant[0].description
+            if relevant
+            else "No precedent found.",
             "path_a": path_a,
             "path_b": path_b,
             "grounding": grounding,
@@ -225,7 +231,8 @@ class Lachesis:
 
     def _derive_paths(self, relevant: list, event_type: str) -> tuple:
         path_a_outcomes = [
-            t.description for t in relevant
+            t.description
+            for t in relevant
             if t.decision_made and "denied" not in (t.decision_made or "").lower()
         ]
         path_a = (
@@ -235,7 +242,8 @@ class Lachesis:
         )
 
         path_b_outcomes = [
-            t.description for t in relevant
+            t.description
+            for t in relevant
             if t.decision_made and "denied" in (t.decision_made or "").lower()
         ]
         path_b = (
@@ -252,7 +260,9 @@ class Lachesis:
             if i < len(relevant):
                 anchors.append(f"{question} -> {relevant[i].description[:80]}")
             else:
-                anchors.append(f"{question} -> No memory. Observe context: {context[:60]}")
+                anchors.append(
+                    f"{question} -> No memory. Observe context: {context[:60]}"
+                )
         return anchors
 
     def _recommend(self, relevant: list, event_type: str) -> str:
@@ -268,6 +278,7 @@ class Lachesis:
 # ATROPOS — Cuts the thread
 # ─────────────────────────────────────────────
 
+
 class Atropos:
     """Decides what fades. Reinforces what matters. Runs periodically."""
 
@@ -276,7 +287,7 @@ class Atropos:
 
     def cut(self) -> dict:
         """Apply temporal decay. Cut threads that have faded below threshold."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         forgotten_count = 0
         decayed_count = 0
         preserved_count = 0
@@ -310,7 +321,9 @@ class Atropos:
             "preserved": preserved_count,
             "decayed": decayed_count,
             "forgotten": forgotten_count,
-            "total_active": len([t for t in self.store.threads.values() if not t.forgotten]),
+            "total_active": len(
+                [t for t in self.store.threads.values() if not t.forgotten]
+            ),
         }
 
 
@@ -318,10 +331,11 @@ class Atropos:
 # Memory Store — the substrate
 # ─────────────────────────────────────────────
 
+
 class MemoryStore:
     """The underlying substrate. Persists across sessions."""
 
-    def __init__(self, data_dir: Optional[Path] = None) -> None:
+    def __init__(self, data_dir: Path | None = None) -> None:
         self._dir = data_dir or _FATES_DATA_DIR
         self._file = self._dir / "THE_FATES.json"
         self._md = self._dir / "THE_FATES.md"
@@ -346,9 +360,11 @@ class MemoryStore:
     def save(self) -> None:
         with self._lock:
             data = {
-                "last_written": datetime.now(timezone.utc).isoformat(),
+                "last_written": datetime.now(UTC).isoformat(),
                 "threads": {tid: asdict(t) for tid, t in self.threads.items()},
-                "relationships": {aid: asdict(r) for aid, r in self.relationships.items()},
+                "relationships": {
+                    aid: asdict(r) for aid, r in self.relationships.items()
+                },
             }
             self._file.write_text(json.dumps(data, indent=2), encoding="utf-8")
             self._write_readable()
@@ -358,7 +374,7 @@ class MemoryStore:
             self.relationships[agent_id] = AgentRelationship(agent_id=agent_id)
         rel = self.relationships[agent_id]
         rel.interaction_count += 1
-        rel.last_interaction = datetime.now(timezone.utc).isoformat()
+        rel.last_interaction = datetime.now(UTC).isoformat()
         if memory_id not in rel.notable_moments:
             thread = self.threads.get(memory_id)
             if thread and thread.weight >= 5.0:
@@ -370,7 +386,7 @@ class MemoryStore:
 
         lines = [
             "# The Fates -- Memory Record",
-            f"Last written: {datetime.now(timezone.utc).isoformat()}",
+            f"Last written: {datetime.now(UTC).isoformat()}",
             f"Active memories: {len(active)} | "
             f"Forgotten: {len([t for t in self.threads.values() if t.forgotten])}",
             "",
@@ -405,10 +421,11 @@ class MemoryStore:
 # TheFates — unified interface
 # ─────────────────────────────────────────────
 
+
 class TheFates:
     """The three sisters. One interface. Call from any governance agent."""
 
-    def __init__(self, data_dir: Optional[Path] = None) -> None:
+    def __init__(self, data_dir: Path | None = None) -> None:
         self.store = MemoryStore(data_dir)
         self.clotho = Clotho(self.store)
         self.lachesis = Lachesis(self.store)
@@ -419,8 +436,8 @@ class TheFates:
         agents_involved: list,
         event_type: str,
         description: str,
-        decision_made: Optional[str] = None,
-        paths_considered: Optional[list] = None,
+        decision_made: str | None = None,
+        paths_considered: list | None = None,
     ) -> MemoryThread:
         """Clotho: spin this moment into memory."""
         return self.clotho.spin(
@@ -466,7 +483,7 @@ class TheFates:
 # Singleton
 # ─────────────────────────────────────────────
 
-_fates_instance: Optional[TheFates] = None
+_fates_instance: TheFates | None = None
 _fates_lock = threading.Lock()
 
 

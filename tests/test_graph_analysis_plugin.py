@@ -100,15 +100,9 @@ class TestGraphFilter:
     def test_filter_by_node_type(self):
         """Test filtering nodes by type."""
         nodes = [
-            GraphNode(
-                "n1", "Node 1", NodeType.CONSTITUTIONAL, tags=["test"]
-            ),
-            GraphNode(
-                "n2", "Node 2", NodeType.SECURITY, tags=["test"]
-            ),
-            GraphNode(
-                "n3", "Node 3", NodeType.AGENT, tags=["test"]
-            ),
+            GraphNode("n1", "Node 1", NodeType.CONSTITUTIONAL, tags=["test"]),
+            GraphNode("n2", "Node 2", NodeType.SECURITY, tags=["test"]),
+            GraphNode("n3", "Node 3", NodeType.AGENT, tags=["test"]),
         ]
 
         filter_obj = GraphFilter(node_types=[NodeType.CONSTITUTIONAL, NodeType.AGENT])
@@ -121,15 +115,9 @@ class TestGraphFilter:
     def test_filter_by_tags(self):
         """Test filtering nodes by tags."""
         nodes = [
-            GraphNode(
-                "n1", "Node 1", NodeType.AI_SYSTEM, tags=["persona", "memory"]
-            ),
-            GraphNode(
-                "n2", "Node 2", NodeType.AI_SYSTEM, tags=["learning"]
-            ),
-            GraphNode(
-                "n3", "Node 3", NodeType.SECURITY, tags=["auth", "security"]
-            ),
+            GraphNode("n1", "Node 1", NodeType.AI_SYSTEM, tags=["persona", "memory"]),
+            GraphNode("n2", "Node 2", NodeType.AI_SYSTEM, tags=["learning"]),
+            GraphNode("n3", "Node 3", NodeType.SECURITY, tags=["auth", "security"]),
         ]
 
         filter_obj = GraphFilter(tags=["memory", "security"])
@@ -142,15 +130,9 @@ class TestGraphFilter:
     def test_filter_by_folder(self):
         """Test filtering nodes by folder path."""
         nodes = [
-            GraphNode(
-                "n1", "Node 1", NodeType.MODULE, folder_path="src/app/core"
-            ),
-            GraphNode(
-                "n2", "Node 2", NodeType.AGENT, folder_path="src/app/agents"
-            ),
-            GraphNode(
-                "n3", "Node 3", NodeType.MODULE, folder_path="src/app/gui"
-            ),
+            GraphNode("n1", "Node 1", NodeType.MODULE, folder_path="src/app/core"),
+            GraphNode("n2", "Node 2", NodeType.AGENT, folder_path="src/app/agents"),
+            GraphNode("n3", "Node 3", NodeType.MODULE, folder_path="src/app/gui"),
         ]
 
         filter_obj = GraphFilter(folders=["src/app/core", "src/app/agents"])
@@ -239,9 +221,7 @@ class TestGraphAnalysisEngine:
 
     def test_apply_filter(self, engine):
         """Test applying a filter to the graph."""
-        filter_obj = GraphFilter(
-            node_types=[NodeType.CONSTITUTIONAL, NodeType.AGENT]
-        )
+        filter_obj = GraphFilter(node_types=[NodeType.CONSTITUTIONAL, NodeType.AGENT])
 
         result = engine.apply_filter(filter_obj)
 
@@ -458,7 +438,14 @@ class TestIntegration:
         assert result is True
 
         # Test all presets
-        for preset_name in ["constitutional", "security", "agents", "ai_core", "data_flow", "full"]:
+        for preset_name in [
+            "constitutional",
+            "security",
+            "agents",
+            "ai_core",
+            "data_flow",
+            "full",
+        ]:
             graph = plugin.get_graph(preset=preset_name)
             assert graph["stats"]["node_count"] > 0
 

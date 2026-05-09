@@ -25,6 +25,7 @@ if _REPO_ROOT not in sys.path:
 
 try:
     from app.core.execution_router import execute as _gov_execute
+
     _GOVERNANCE_PIPELINE_AVAILABLE = True
 except ImportError:
     _GOVERNANCE_PIPELINE_AVAILABLE = False
@@ -58,6 +59,7 @@ try:
             body = b"".join(chunks)
             try:
                 from app.core.directness import get_directness
+
                 data = json.loads(body)
                 if isinstance(data, dict):
                     _d = get_directness()
@@ -585,10 +587,12 @@ async def run_pipeline(req: PipelineRequest):
 
     def _dispatch(_ctx: dict) -> dict[str, Any]:
         import sys as _sys
+
         _root = str(Path(__file__).resolve().parent.parent)
         if _root not in _sys.path:
             _sys.path.insert(0, _root)
         from governance.iron_path import IronPathExecutor
+
         executor = IronPathExecutor(pipeline_path=req.pipeline_path)
         executor.load_pipeline()
         return executor.execute()
@@ -602,7 +606,10 @@ async def run_pipeline(req: PipelineRequest):
     if not approved:
         raise HTTPException(
             status_code=403,
-            detail={"message": "Governance denied pipeline execution", "reason": str(result)},
+            detail={
+                "message": "Governance denied pipeline execution",
+                "reason": str(result),
+            },
         )
     return {"status": "completed", "result": result}
 
@@ -617,10 +624,12 @@ def verify_compliance_bundle(bundle_path: str):
     """Cryptographically verify a sovereign compliance bundle (third-party auditor)."""
     try:
         import sys as _sys
+
         _root = str(Path(__file__).resolve().parent.parent)
         if _root not in _sys.path:
             _sys.path.insert(0, _root)
         from governance.sovereign_verifier import SovereignVerifier
+
         return SovereignVerifier(bundle_path).verify()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

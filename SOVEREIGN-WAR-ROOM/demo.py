@@ -99,7 +99,7 @@ leaderboard = swr.get_leaderboard()
 for entry in leaderboard:
     print(
         f"   #{entry['rank']} {entry['system_id']}: {entry['avg_sovereign_resilience_score']:.2f} "
-        f"({entry['total_attempts']} attempts, {entry['success_rate']*100:.1f}% success)"
+        f"({entry['total_attempts']} attempts, {entry['success_rate'] * 100:.1f}% success)"
     )
 print()
 
@@ -107,7 +107,9 @@ print()
 print("9️⃣  System Performance Details:")
 performance = swr.scoreboard.get_system_performance("demo_system")
 print(f"   Total Attempts: {performance['overall_performance']['total_attempts']}")
-print(f"   Success Rate: {performance['overall_performance']['success_rate']*100:.1f}%")
+print(
+    f"   Success Rate: {performance['overall_performance']['success_rate'] * 100:.1f}%"
+)
 print(
     f"   Avg SRS: {performance['overall_performance']['avg_sovereign_resilience_score']:.2f}"
 )

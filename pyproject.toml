@@ -75,6 +75,7 @@ exclude = [
     "*.md",
     "node_modules",
     ".venv",
+    ".venv_airllm",
     "venv",
     "__pycache__",
     ".git",

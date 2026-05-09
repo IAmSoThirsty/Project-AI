@@ -91,9 +91,9 @@ def verify_uniqueness():
         print(f"   - {id}")
 
     # Verification summary
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("VERIFICATION SUMMARY")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     all_unique = (
         len(all_tests) == len(unique_ids)
@@ -115,7 +115,7 @@ def verify_uniqueness():
         if len(all_tests) != len(unique_scenarios):
             print("   - Scenarios: ⚠️  (some steps are identical)")
 
-    print(f"{'='*70}\n")
+    print(f"{'=' * 70}\n")
 
     return all_unique
 

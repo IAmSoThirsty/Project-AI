@@ -14,7 +14,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-from typing import Iterable
+from collections.abc import Iterable
 
 ALLOWED_PREFIXES: tuple[str, ...] = (
     ".obsidian/",

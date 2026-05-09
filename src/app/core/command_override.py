@@ -183,20 +183,20 @@ class CommandOverrideSystem:
         """Validate master password meets security requirements."""
         if len(password) < 8:
             return False, "Master password must be at least 8 characters"
-        
+
         if not any(c.isupper() for c in password):
             return False, "Master password must contain uppercase letter"
-        
+
         if not any(c.islower() for c in password):
             return False, "Master password must contain lowercase letter"
-        
+
         if not any(c.isdigit() for c in password):
             return False, "Master password must contain digit"
-        
+
         special_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?"
         if not any(c in special_chars for c in password):
             return False, "Master password must contain special character"
-        
+
         return True, ""
 
     def set_master_password(self, password: str) -> bool:
@@ -206,9 +206,11 @@ class CommandOverrideSystem:
             is_valid, error_msg = self._validate_master_password_strength(password)
             if not is_valid:
                 logger.error(f"Master password policy violation: {error_msg}")
-                self._log_action("SET_MASTER_PASSWORD", f"Rejected: {error_msg}", success=False)
+                self._log_action(
+                    "SET_MASTER_PASSWORD", f"Rejected: {error_msg}", success=False
+                )
                 return False
-            
+
             self.master_password_hash = self._hash_password(password)
             self._save_config()
             self._log_action("SET_MASTER_PASSWORD", "Master password configured")
@@ -313,14 +315,14 @@ class CommandOverrideSystem:
     def emergency_unlock(self, admin_verification: str = "") -> bool:
         """
         Emergency unlock to reset account lockout.
-        
+
         This is a separate administrative function that should require
         additional verification in production (e.g., separate admin password,
         physical access verification, or multi-factor authentication).
-        
+
         Args:
             admin_verification: Additional verification token/password (for future use)
-        
+
         Returns:
             bool: True if unlock successful
         """
@@ -428,7 +430,7 @@ class CommandOverrideSystem:
                 }
             else:
                 lockout_info = {"locked": False, "expired": True}
-        
+
         return {
             "authenticated": self.authenticated,
             "master_override_active": self.master_override_active,

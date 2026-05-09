@@ -11,6 +11,6 @@ Architecture:
     Systems → AI Orchestrator → Providers (OpenAI/HF/Perplexity/Local)
 """
 
-from .orchestrator import run_ai, AIRequest, AIResponse
+from .orchestrator import AIRequest, AIResponse, run_ai
 
 __all__ = ["run_ai", "AIRequest", "AIResponse"]

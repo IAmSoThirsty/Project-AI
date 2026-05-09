@@ -25,7 +25,7 @@ def main(
         help="Show version and exit.",
         callback=version_callback,
         is_eager=True,
-    )
+    ),
 ):
     """
     Project-AI CLI - A comprehensive AI assistant platform.
@@ -60,7 +60,7 @@ health_app = typer.Typer(help="Commands for system health reporting and diagnost
 def health_report(
     verbose: bool = typer.Option(
         False, "--verbose", "-v", help="Enable verbose output."
-    )
+    ),
 ):
     """Generate a comprehensive system health report with YAML snapshot and PNG visualization."""
     if verbose:

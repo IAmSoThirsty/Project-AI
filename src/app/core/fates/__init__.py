@@ -1,13 +1,13 @@
 """The Fates — substrate memory layer for governance agents."""
 
 from app.core.fates.fates import (
-    TheFates,
+    AgentRelationship,
+    Atropos,
     Clotho,
     Lachesis,
-    Atropos,
     MemoryStore,
     MemoryThread,
-    AgentRelationship,
+    TheFates,
     get_fates,
 )
 

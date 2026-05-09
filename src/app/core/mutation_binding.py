@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
 
 
 @dataclass
@@ -13,13 +13,13 @@ class MutationGovernanceBinding:
     decision_id: str
     actor: str
     action: str
-    context: Dict[str, Any]
+    context: dict[str, Any]
     approved: bool
     output_hash: str
     binding_hash: str
 
     @staticmethod
-    def create(decision_record: Any) -> "MutationGovernanceBinding":
+    def create(decision_record: Any) -> MutationGovernanceBinding:
         serialized = json.dumps(
             {
                 "decision_id": decision_record.decision_id,

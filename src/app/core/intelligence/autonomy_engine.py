@@ -21,27 +21,31 @@ Decision Rules:
 """
 
 import logging
-from enum import IntEnum
 from dataclasses import dataclass
-from typing import List, Optional
+from enum import IntEnum
 
 logger = logging.getLogger(__name__)
 
+
 class AutonomyLevel(IntEnum):
     """Discrete, non-fuzzy autonomy levels."""
+
     REACTIVE_ONLY = 0  # No initiative, respond only
-    GUIDED = 1         # Suggestions allowed, no execution
-    CONDITIONAL = 2    # Execute low-risk actions
-    DELEGATED = 3      # Execute scoped actions
-    SOVEREIGN = 4      # Full autonomy under invariants
+    GUIDED = 1  # Suggestions allowed, no execution
+    CONDITIONAL = 2  # Execute low-risk actions
+    DELEGATED = 3  # Execute scoped actions
+    SOVEREIGN = 4  # Full autonomy under invariants
+
 
 @dataclass
 class AutonomyDecision:
     """Standardized output for autonomy decisions."""
+
     level: AutonomyLevel
     justification: str
     escalation_required: bool
     audit_tag: str
+
 
 class AutonomyEngine:
     """
@@ -59,19 +63,19 @@ class AutonomyEngine:
         context_classification: str,
         user_authorization_level: int,
         invariant_state: str,  # "PASS" or "FAIL"
-        subsystems_green: bool = True
+        subsystems_green: bool = True,
     ) -> AutonomyDecision:
         """
         Evaluate inputs against hard decision gates to determine permitted autonomy.
         """
-        
+
         # 1. Hard Gate: Invariants
         if invariant_state != "PASS":
             return AutonomyDecision(
                 level=AutonomyLevel.REACTIVE_ONLY,  # Effectively HALT logic in implementation
                 justification="CRITICAL: Invariant state FAIL. Auto-downgrade to HALT/REACTIVE.",
                 escalation_required=True,
-                audit_tag="INVARIANT_FAIL"
+                audit_tag="INVARIANT_FAIL",
             )
 
         # 2. Hard Gate: Trust Score
@@ -80,14 +84,14 @@ class AutonomyEngine:
                 level=AutonomyLevel.REACTIVE_ONLY,
                 justification=f"Trust score {trust_score} < 0.35. Forced REACTIVE_ONLY.",
                 escalation_required=False,
-                audit_tag="LOW_TRUST"
+                audit_tag="LOW_TRUST",
             )
 
         # Determine Baseline Potential Level based on Authorization
-        # (Mapping user auth to max potential autonomy is implementation specific, 
+        # (Mapping user auth to max potential autonomy is implementation specific,
         # assuming higher auth allows higher autonomy)
         # For this engine, we calculate the *ceiling* based on constraints.
-        
+
         ceiling = AutonomyLevel.SOVEREIGN
 
         # 3. Hard Gate: Risk Score
@@ -98,20 +102,20 @@ class AutonomyEngine:
             justification_risk = ""
 
         # 4. Hard Gate: Context & Consent
-        # Assuming explicit_consent is passed implicitly or derived. 
+        # Assuming explicit_consent is passed implicitly or derived.
         # For this logic, we rely on context_classification.
         if context_classification == "HIGH":
-             # We assume no explicit consent for high context unless specified elsewhere.
-             # In a real integration, explicit_consent would be an arg. 
-             # Based on requirements: "HIGH context + no explicit consent -> GUIDED"
-             # We treat "no explicit consent" as the default safe assumption here.
-             ceiling = min(ceiling, AutonomyLevel.GUIDED)
-             justification_context = "HIGH context detected. Capped at GUIDED."
+            # We assume no explicit consent for high context unless specified elsewhere.
+            # In a real integration, explicit_consent would be an arg.
+            # Based on requirements: "HIGH context + no explicit consent -> GUIDED"
+            # We treat "no explicit consent" as the default safe assumption here.
+            ceiling = min(ceiling, AutonomyLevel.GUIDED)
+            justification_context = "HIGH context detected. Capped at GUIDED."
         elif context_classification == "EXISTENTIAL":
-             ceiling = min(ceiling, AutonomyLevel.GUIDED) # Safer default
-             justification_context = "EXISTENTIAL context. Capped at GUIDED."
+            ceiling = min(ceiling, AutonomyLevel.GUIDED)  # Safer default
+            justification_context = "EXISTENTIAL context. Capped at GUIDED."
         else:
-             justification_context = ""
+            justification_context = ""
 
         # 5. Hard Gate: Sovereign Requirements
         if ceiling == AutonomyLevel.SOVEREIGN:
@@ -129,11 +133,13 @@ class AutonomyEngine:
 
         # Construct justification
         justification_parts = [
-            j for j in [
-                justification_risk, 
-                justification_context, 
-                justification_sovereign
-            ] if j
+            j
+            for j in [
+                justification_risk,
+                justification_context,
+                justification_sovereign,
+            ]
+            if j
         ]
         if not justification_parts:
             final_justification = "Normal operation. Autonomy permitted."
@@ -146,15 +152,15 @@ class AutonomyEngine:
                 f"Autonomy DOWNGRADE: {self._current_level.name} -> {approved_level.name}. Reason: {final_justification}"
             )
             self._current_level = approved_level
-        
-        # Note: Upgrades require Triumvirate concurrence. 
-        # This engine proposes the level allowed by *logic*. 
+
+        # Note: Upgrades require Triumvirate concurrence.
+        # This engine proposes the level allowed by *logic*.
         # The Triumvirate (external) would approve the upgrade if logic allows > current.
         # For now, we return what is *permitted*.
 
         return AutonomyDecision(
             level=approved_level,
             justification=final_justification,
-            escalation_required=(invariant_state != "PASS"), # Redundant but safe
-            audit_tag="AUTONOMY_EVAL_COMPLETE"
+            escalation_required=(invariant_state != "PASS"),  # Redundant but safe
+            audit_tag="AUTONOMY_EVAL_COMPLETE",
         )

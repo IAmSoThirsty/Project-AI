@@ -18,9 +18,9 @@ from app.core.god_tier_asymmetric_security import GodTierAsymmetricSecurity
 
 def print_section(title: str):
     """Print formatted section header."""
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print(f"  {title}")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
 
 def demo_basic_validation():

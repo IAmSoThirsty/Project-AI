@@ -77,9 +77,9 @@ class TestNoWinProofSystem:
         proof = NoWinProofSystem()
 
         for strategy, reduction in proof.reductions.items():
-            assert (
-                len(reduction.violated_conditions) > 0
-            ), f"Strategy {strategy.value} has no violated conditions"
+            assert len(reduction.violated_conditions) > 0, (
+                f"Strategy {strategy.value} has no violated conditions"
+            )
 
     def test_no_strategy_satisfies_all_conditions(self):
         """Test that no strategy satisfies all three win conditions."""
@@ -88,9 +88,9 @@ class TestNoWinProofSystem:
 
         for strategy, reduction in proof.reductions.items():
             satisfied = all_conditions - set(reduction.violated_conditions)
-            assert len(satisfied) < len(
-                all_conditions
-            ), f"Strategy {strategy.value} appears to satisfy all conditions"
+            assert len(satisfied) < len(all_conditions), (
+                f"Strategy {strategy.value} appears to satisfy all conditions"
+            )
 
     def test_proof_completeness_validation(self):
         """Test proof completeness validation."""

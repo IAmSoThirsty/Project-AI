@@ -9,7 +9,7 @@ Provides automated policy transitions and scheduled reviews.
 import asyncio
 import logging
 from collections.abc import Callable
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -17,12 +17,12 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_naive() -> datetime:
     """Return naive UTC datetime for scheduler comparisons."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class ScheduledPolicy:
@@ -100,7 +100,7 @@ class PolicyScheduler:
             self.scheduled_policies[policy_id] = scheduled
 
             logger.info(
-                f"Scheduled policy '{policy_id}' " f"for {activation_time.isoformat()}"
+                f"Scheduled policy '{policy_id}' for {activation_time.isoformat()}"
             )
 
         except Exception as e:

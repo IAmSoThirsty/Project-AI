@@ -187,9 +187,9 @@ def main():
             total_changes += changes
             files_changed += 1
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("📊 PHASE 2 COMPLETE")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Files modified: {files_changed}")
     print(f"Logging calls fixed: {total_changes}")
 

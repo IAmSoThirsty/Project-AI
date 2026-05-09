@@ -34,7 +34,7 @@ import logging
 import os
 import threading
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -45,8 +45,8 @@ _BUILTIN_STUB = "app.core._waterfall_stub"
 @dataclass
 class WaterfallResult:
     allowed: bool
-    context: Dict[str, Any]
-    reason: Optional[str] = None
+    context: dict[str, Any]
+    reason: str | None = None
 
 
 class WaterfallFilter:
@@ -63,7 +63,7 @@ class WaterfallFilter:
         module_path = os.environ.get(_WATERFALL_MODULE_ENV, _BUILTIN_STUB)
         try:
             mod = importlib.import_module(module_path)
-            fn = getattr(mod, "filter")
+            fn = mod.filter
             logger.info("WaterfallFilter: loaded from %s", module_path)
             return fn
         except (ImportError, AttributeError):
@@ -74,7 +74,7 @@ class WaterfallFilter:
                 )
             return _passthrough
 
-    def filter(self, context: Dict[str, Any]) -> WaterfallResult:
+    def filter(self, context: dict[str, Any]) -> WaterfallResult:
         """
         Run the inbound filter.
 
@@ -96,7 +96,7 @@ class WaterfallFilter:
             return WaterfallResult(allowed=True, context=context)
 
 
-def _passthrough(context: Dict[str, Any]) -> WaterfallResult:
+def _passthrough(context: dict[str, Any]) -> WaterfallResult:
     """Built-in passthrough — allows everything, returns context unchanged."""
     return WaterfallResult(allowed=True, context=context)
 
@@ -105,7 +105,7 @@ def _passthrough(context: Dict[str, Any]) -> WaterfallResult:
 # Singleton
 # ─────────────────────────────────────────────
 
-_filter_instance: Optional[WaterfallFilter] = None
+_filter_instance: WaterfallFilter | None = None
 _filter_lock = threading.Lock()
 
 

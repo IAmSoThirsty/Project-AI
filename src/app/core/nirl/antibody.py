@@ -81,7 +81,11 @@ class Antibody:
         except Exception as exc:
             self.state = AntibodyState.DEAD_LETTER
             logger.error("Antibody %s failed pre-forge: %s", self.antibody_id, exc)
-            return {"success": False, "error": str(exc), "antibody_id": self.antibody_id}
+            return {
+                "success": False,
+                "error": str(exc),
+                "antibody_id": self.antibody_id,
+            }
 
         # Caller (MiniBrain) drives FORGE_ENTRY by passing the payload to Forge
         return self._build_forge_payload()

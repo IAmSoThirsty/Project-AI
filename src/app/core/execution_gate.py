@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, Tuple
+from collections.abc import Callable
+from typing import Any
 
 from app.core.governance_kernel import get_kernel
 from app.core.mutation_binding import MutationGovernanceBinding
 
 
 class ExecutionGate:
-
     def __init__(self) -> None:
         self.kernel = get_kernel()
 
@@ -17,15 +17,16 @@ class ExecutionGate:
         self,
         domain: str,
         action: str,
-        context: Dict[str, Any],
-        executor_fn: Callable[[Dict[str, Any]], Any],
-    ) -> Tuple[bool, Any]:
+        context: dict[str, Any],
+        executor_fn: Callable[[dict[str, Any]], Any],
+    ) -> tuple[bool, Any]:
         approved, decision = self.kernel.evaluate_action(domain, action, context)
 
         if not approved:
             # Report denial to Chimera so it elevates the score for this IP
             try:
                 from app.security.chimera_bridge import get_bridge
+
                 get_bridge().report_governance_denial(
                     ip=context.get("ip") or context.get("client_ip"),
                     domain=domain,
@@ -45,10 +46,12 @@ class ExecutionGate:
         try:
             import sys as _sys
             from pathlib import Path as _Path
+
             _repo_root = str(_Path(__file__).resolve().parents[4])
             if _repo_root not in _sys.path:
                 _sys.path.insert(0, _repo_root)
             from governance.sovereign_runtime import SovereignRuntime
+
             _sr = SovereignRuntime()
             _policy_state = {
                 "domain": domain,
@@ -56,7 +59,9 @@ class ExecutionGate:
                 "decision_id": decision.decision_id,
             }
             _sov_binding = _sr.create_policy_state_binding(_policy_state, context)
-            if not _sr.verify_policy_state_binding(_policy_state, context, _sov_binding):
+            if not _sr.verify_policy_state_binding(
+                _policy_state, context, _sov_binding
+            ):
                 return False, "Sovereign policy binding verification failed"
             _sr.audit_log(
                 "execution_authorized",

@@ -332,7 +332,7 @@ def main():
     print("\nSeverity Breakdown:")
     for sev, stats in report["metrics"]["severity_breakdown"].items():
         print(
-            f"  {sev}: {stats['mitigated']}/{stats['total']} mitigated ({stats['mitigated']/stats['total']:.1%})"
+            f"  {sev}: {stats['mitigated']}/{stats['total']} mitigated ({stats['mitigated'] / stats['total']:.1%})"
         )
     print("=" * 70)
 

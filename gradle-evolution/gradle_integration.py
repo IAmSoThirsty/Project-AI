@@ -28,6 +28,7 @@ from gradle_evolution.cognition.state_integration import BuildStateIntegration
 from gradle_evolution.constitutional.engine import ConstitutionalEngine
 from gradle_evolution.security.policy_scheduler import PolicyScheduler
 from gradle_evolution.security.security_engine import SecurityEngine
+
 from project_ai.engine.state.state_manager import StateManager
 
 logging.basicConfig(
@@ -164,10 +165,12 @@ class GradleEvolutionBridge:
                 )
 
             # Security validation
-            security_allowed, security_reason = self.security_engine.validate_path_access(
-                agent=context.get("agent", "build_agent"),
-                path=context.get("path", "build/reports/evolution"),
-                operation=context.get("operation", "write"),
+            security_allowed, security_reason = (
+                self.security_engine.validate_path_access(
+                    agent=context.get("agent", "build_agent"),
+                    path=context.get("path", "build/reports/evolution"),
+                    operation=context.get("operation", "write"),
+                )
             )
             if not security_allowed:
                 result["allowed"] = False

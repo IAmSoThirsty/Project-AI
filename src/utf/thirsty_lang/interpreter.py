@@ -1,12 +1,11 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from . import ast
-from .module_system import builtin_modules, resolve_module_file, ModuleValue
+from .module_system import ModuleValue, builtin_modules, resolve_module_file
 from .token import Span
 
 
@@ -24,7 +23,7 @@ class ReturnSignal(Exception):
 
 
 class TailCallSignal(Exception):
-    def __init__(self, fn: "UserFunction", args: list[Any]) -> None:
+    def __init__(self, fn: UserFunction, args: list[Any]) -> None:
         self.fn = fn
         self.args = args
 
@@ -35,13 +34,15 @@ class ThrownSignal(Exception):
 
 
 class Env:
-    def __init__(self, parent: "Env | None" = None) -> None:
+    def __init__(self, parent: Env | None = None) -> None:
         self.parent = parent
         self.values: dict[str, Any] = {}
         self.mutable: dict[str, bool] = {}
         self.types: dict[str, str] = {}
 
-    def define(self, name: str, value: Any, mutable: bool = False, type_name: str | None = None) -> None:
+    def define(
+        self, name: str, value: Any, mutable: bool = False, type_name: str | None = None
+    ) -> None:
         self.values[name] = value
         self.mutable[name] = mutable
         if type_name:
@@ -89,11 +90,13 @@ class TaskValue:
 class UserFunction:
     decl: ast.FunctionDecl
     closure: Env
-    interpreter: "Interpreter"
-    bound_this: "UserInstance | None" = None
+    interpreter: Interpreter
+    bound_this: UserInstance | None = None
 
-    def bind(self, instance: "UserInstance") -> "UserFunction":
-        return UserFunction(self.decl, self.closure, self.interpreter, bound_this=instance)
+    def bind(self, instance: UserInstance) -> UserFunction:
+        return UserFunction(
+            self.decl, self.closure, self.interpreter, bound_this=instance
+        )
 
     def __call__(self, args: list[Any]) -> Any:
         return self.interpreter.call_function(self, args)
@@ -105,7 +108,7 @@ class UserClass:
     fields: dict[str, Any]
     methods: dict[str, UserFunction]
 
-    def instantiate(self, interpreter: "Interpreter", args: list[Any]) -> "UserInstance":
+    def instantiate(self, interpreter: Interpreter, args: list[Any]) -> UserInstance:
         inst = UserInstance(self, dict(self.fields))
         if "init" in self.methods:
             self.methods["init"].bind(inst)(args)
@@ -129,7 +132,15 @@ class UserInstance:
 
 
 class Interpreter:
-    def __init__(self, input_provider=None, trace: bool = False, thirst_level: int = 1, recursion_limit: int = 256, current_file: str = "<memory>", project_root: str | None = None) -> None:
+    def __init__(
+        self,
+        input_provider=None,
+        trace: bool = False,
+        thirst_level: int = 1,
+        recursion_limit: int = 256,
+        current_file: str = "<memory>",
+        project_root: str | None = None,
+    ) -> None:
         self.globals = Env()
         self.output: list[str] = []
         self.input_provider = input_provider or (lambda: input())
@@ -139,7 +150,11 @@ class Interpreter:
         self.call_depth = 0
         self.achievements: set[str] = set()
         self.current_file = current_file
-        self.project_root = Path(project_root).resolve() if project_root else Path(current_file).resolve().parent
+        self.project_root = (
+            Path(project_root).resolve()
+            if project_root
+            else Path(current_file).resolve().parent
+        )
         self.module_cache: dict[str, ModuleValue] = {}
         self._install_builtins()
 
@@ -194,17 +209,34 @@ class Interpreter:
 
     def run(self, program: ast.Program, call_main: bool = True) -> list[str]:
         self.current_file = program.span.file
-        self.project_root = Path(self.current_file).resolve().parent if self.current_file not in {"<memory>", "<repl>"} else self.project_root
+        self.project_root = (
+            Path(self.current_file).resolve().parent
+            if self.current_file not in {"<memory>", "<repl>"}
+            else self.project_root
+        )
         for decl in program.declarations:
             if isinstance(decl, ast.ImportDecl):
-                alias = decl.alias or decl.module.split("::")[-1].split("/")[-1].split(".")[0]
-                self.globals.define(alias, self._load_module_value(decl.module), type_name=f"Module:{decl.module}")
+                alias = (
+                    decl.alias
+                    or decl.module.split("::")[-1].split("/")[-1].split(".")[0]
+                )
+                self.globals.define(
+                    alias,
+                    self._load_module_value(decl.module),
+                    type_name=f"Module:{decl.module}",
+                )
         for decl in program.declarations:
             if isinstance(decl, ast.FunctionDecl):
-                self.globals.define(decl.name, UserFunction(decl, self.globals, self), type_name="Function")
+                self.globals.define(
+                    decl.name,
+                    UserFunction(decl, self.globals, self),
+                    type_name="Function",
+                )
         for decl in program.declarations:
             if isinstance(decl, ast.ClassDecl):
-                self.globals.define(decl.name, self._build_class(decl), type_name=decl.name)
+                self.globals.define(
+                    decl.name, self._build_class(decl), type_name=decl.name
+                )
         for decl in program.declarations:
             if isinstance(decl, (ast.FunctionDecl, ast.ClassDecl, ast.ImportDecl)):
                 continue
@@ -221,7 +253,9 @@ class Interpreter:
         self.call_depth += 1
         if self.call_depth > self.recursion_limit:
             self.call_depth -= 1
-            raise RuntimeFault("THIRSTY-E900", "your recursion has run dry", fn.decl.span)
+            raise RuntimeFault(
+                "THIRSTY-E900", "your recursion has run dry", fn.decl.span
+            )
         self._trace(f"calling {fn.decl.name} with {len(args)} sips taken")
         current_fn = fn
         current_args = list(args)
@@ -229,7 +263,12 @@ class Interpreter:
             while True:
                 env = Env(current_fn.closure)
                 if current_fn.bound_this is not None:
-                    env.define("this", current_fn.bound_this, mutable=True, type_name=current_fn.bound_this.cls.name)
+                    env.define(
+                        "this",
+                        current_fn.bound_this,
+                        mutable=True,
+                        type_name=current_fn.bound_this.cls.name,
+                    )
                 for param, value in zip(current_fn.decl.params, current_args):
                     env.define(param.name, value, type_name="param")
                 try:
@@ -259,14 +298,29 @@ class Interpreter:
             mod = builtin_modules()[module_spec]
             self.module_cache[module_spec] = mod
             return mod
-        source_file = resolve_module_file(module_spec, Path(self.current_file).resolve().parent if self.current_file not in {"<memory>", "<repl>"} else self.project_root)
-        from .cli import parse_source, check_source
+        source_file = resolve_module_file(
+            module_spec,
+            Path(self.current_file).resolve().parent
+            if self.current_file not in {"<memory>", "<repl>"}
+            else self.project_root,
+        )
+        from .cli import check_source, parse_source
+
         text = Path(source_file).read_text(encoding="utf-8")
         program = parse_source(text, str(source_file))
         check_source(text, str(source_file))
-        child = Interpreter(input_provider=self.input_provider, trace=self.trace, thirst_level=self.thirst_level, recursion_limit=self.recursion_limit, current_file=str(source_file), project_root=str(Path(source_file).parent))
+        child = Interpreter(
+            input_provider=self.input_provider,
+            trace=self.trace,
+            thirst_level=self.thirst_level,
+            recursion_limit=self.recursion_limit,
+            current_file=str(source_file),
+            project_root=str(Path(source_file).parent),
+        )
         child.run(program, call_main=False)
-        exports = {k: v for k, v in child.globals.values.items() if not k.startswith("_")}
+        exports = {
+            k: v for k, v in child.globals.values.items() if not k.startswith("_")
+        }
         mod = ModuleValue(module_spec, exports)
         self.module_cache[module_spec] = mod
         return mod
@@ -290,11 +344,18 @@ class Interpreter:
             return
         if isinstance(stmt, ast.VarDecl):
             value = self._eval(stmt.initializer, env)
-            env.define(stmt.name, value, mutable=stmt.mutable and not stmt.is_field, type_name=str(getattr(stmt.type_node, "name", "Value")))
+            env.define(
+                stmt.name,
+                value,
+                mutable=stmt.mutable and not stmt.is_field,
+                type_name=str(getattr(stmt.type_node, "name", "Value")),
+            )
             return
         if isinstance(stmt, ast.FunctionDecl):
             if stmt.name not in env.values:
-                env.define(stmt.name, UserFunction(stmt, env, self), type_name="Function")
+                env.define(
+                    stmt.name, UserFunction(stmt, env, self), type_name="Function"
+                )
             return
         if isinstance(stmt, ast.ClassDecl):
             if stmt.name not in env.values:
@@ -332,7 +393,11 @@ class Interpreter:
         if isinstance(stmt, ast.IfStmt):
             cond = self._eval(stmt.condition, env)
             if not isinstance(cond, bool):
-                raise RuntimeFault("THIRSTY-E022", "if condition must evaluate to Bool", stmt.condition.span)
+                raise RuntimeFault(
+                    "THIRSTY-E022",
+                    "if condition must evaluate to Bool",
+                    stmt.condition.span,
+                )
             if cond:
                 self._exec(stmt.then_branch, env)
             elif stmt.else_branch:
@@ -341,9 +406,13 @@ class Interpreter:
         if isinstance(stmt, ast.LoopStmt):
             count = self._eval(stmt.count, env)
             if not isinstance(count, int):
-                raise RuntimeFault("THIRSTY-E023", "loop count must evaluate to Int", stmt.count.span)
+                raise RuntimeFault(
+                    "THIRSTY-E023", "loop count must evaluate to Int", stmt.count.span
+                )
             if count < 0:
-                raise RuntimeFault("THIRSTY-E023", "loop count must be non-negative", stmt.count.span)
+                raise RuntimeFault(
+                    "THIRSTY-E023", "loop count must be non-negative", stmt.count.span
+                )
             for _ in range(count):
                 self._exec(stmt.body, env)
             return
@@ -353,9 +422,13 @@ class Interpreter:
             except ThrownSignal as thrown:
                 handled = False
                 for catch in stmt.catches:
-                    if catch.type_name == "Error" or self._match_catch(catch.type_name, thrown.value):
+                    if catch.type_name == "Error" or self._match_catch(
+                        catch.type_name, thrown.value
+                    ):
                         catch_env = Env(env)
-                        catch_env.define(catch.name, thrown.value, type_name=catch.type_name)
+                        catch_env.define(
+                            catch.name, thrown.value, type_name=catch.type_name
+                        )
                         self._exec(catch.block, catch_env)
                         handled = True
                         break
@@ -401,7 +474,11 @@ class Interpreter:
                 if isinstance(obj, UserInstance):
                     obj.set(expr.target.name, value)
                     return value
-                raise RuntimeFault("THIRSTY-E021", "member assignment expects object instance", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E021",
+                    "member assignment expects object instance",
+                    expr.span,
+                )
             if isinstance(expr.target, ast.IndexExpr):
                 items = self._eval(expr.target.obj, env)
                 idx = self._eval(expr.target.index, env)
@@ -423,7 +500,12 @@ class Interpreter:
             return self._eval_pipe(left, expr.right, env)
         if isinstance(expr, ast.GuardExpr):
             cond = self._eval(expr.condition, env)
-            return self._eval(expr.when_true if cond else (expr.when_false or ast.LiteralExpr(expr.span, None)), env)
+            return self._eval(
+                expr.when_true
+                if cond
+                else (expr.when_false or ast.LiteralExpr(expr.span, None)),
+                env,
+            )
         if isinstance(expr, ast.CallExpr):
             try:
                 callee = self._eval(expr.callee, env)
@@ -437,7 +519,11 @@ class Interpreter:
             obj = self._eval(expr.obj, env)
             if isinstance(obj, ModuleValue):
                 if expr.name not in obj.members:
-                    raise RuntimeFault("THIRSTY-E021", f"unknown module member '{expr.name}'", expr.span)
+                    raise RuntimeFault(
+                        "THIRSTY-E021",
+                        f"unknown module member '{expr.name}'",
+                        expr.span,
+                    )
                 return obj.members[expr.name]
             if isinstance(obj, UserInstance):
                 return obj.get(expr.name)
@@ -447,7 +533,9 @@ class Interpreter:
                 return obj[expr.name]
             if isinstance(obj, list):
                 return self._list_member(obj, expr.name)
-            raise RuntimeFault("THIRSTY-E021", f"cannot access member '{expr.name}'", expr.span)
+            raise RuntimeFault(
+                "THIRSTY-E021", f"cannot access member '{expr.name}'", expr.span
+            )
         if isinstance(expr, ast.IndexExpr):
             obj = self._eval(expr.obj, env)
             idx = self._eval(expr.index, env)
@@ -459,7 +547,9 @@ class Interpreter:
             cls = env.get(expr.class_name)
             args = [self._eval(a, env) for a in expr.args]
             if not isinstance(cls, UserClass):
-                raise RuntimeFault("THIRSTY-E011", f"unknown class '{expr.class_name}'", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E011", f"unknown class '{expr.class_name}'", expr.span
+                )
             return cls.instantiate(self, args)
         if isinstance(expr, ast.AwaitExpr):
             value = self._eval(expr.expr, env)
@@ -469,7 +559,9 @@ class Interpreter:
         if isinstance(expr, ast.CondenseExpr):
             value = self._eval(expr.expr, env)
             if value is None:
-                raise RuntimeFault("THIRSTY-E901", "cannot condense an empty spring", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E901", "cannot condense an empty spring", expr.span
+                )
             return value
         if isinstance(expr, ast.EvaporateExpr):
             self._eval(expr.expr, env)
@@ -501,23 +593,40 @@ class Interpreter:
             return lambda fn: self._builtin_transmute(items, fn)
         if name == "distill":
             return lambda seed, fn: self._builtin_distill(items, seed, fn)
-        raise RuntimeFault("THIRSTY-E021", f"unknown reservoir method '{name}'", Span("<runtime>", 1, 1, 1, 1))
+        raise RuntimeFault(
+            "THIRSTY-E021",
+            f"unknown reservoir method '{name}'",
+            Span("<runtime>", 1, 1, 1, 1),
+        )
 
     def _apply_binary(self, op: str, left: Any, right: Any, span: Span) -> Any:
         try:
-            if op == "+": return left + right
-            if op == "-": return left - right
-            if op == "*": return left * right
-            if op == "/": return left / right
-            if op == "%": return left % right
-            if op == "==": return left == right
-            if op == "!=": return left != right
-            if op == "<": return left < right
-            if op == "<=": return left <= right
-            if op == ">": return left > right
-            if op == ">=": return left >= right
-            if op == "&&": return bool(left) and bool(right)
-            if op == "||": return bool(left) or bool(right)
+            if op == "+":
+                return left + right
+            if op == "-":
+                return left - right
+            if op == "*":
+                return left * right
+            if op == "/":
+                return left / right
+            if op == "%":
+                return left % right
+            if op == "==":
+                return left == right
+            if op == "!=":
+                return left != right
+            if op == "<":
+                return left < right
+            if op == "<=":
+                return left <= right
+            if op == ">":
+                return left > right
+            if op == ">=":
+                return left >= right
+            if op == "&&":
+                return bool(left) and bool(right)
+            if op == "||":
+                return bool(left) or bool(right)
         except ZeroDivisionError:
             raise RuntimeFault("THIRSTY-E101", "division by zero", span)
         raise RuntimeFault("THIRSTY-E021", f"unsupported operator '{op}'", span)

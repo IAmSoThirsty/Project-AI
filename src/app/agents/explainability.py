@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 import textwrap
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
@@ -115,7 +115,8 @@ class ExplainabilityAgent(KernelRoutedAgent):
 
         verdict_upper = str(verdict).upper()
         is_allowed = any(
-            w in verdict_upper for w in ("ALLOW", "PERMIT", "AUTHORIZED", "PASS", "OK", "SUCCESS")
+            w in verdict_upper
+            for w in ("ALLOW", "PERMIT", "AUTHORIZED", "PASS", "OK", "SUCCESS")
         )
         is_denied = any(
             w in verdict_upper for w in ("DENY", "BLOCK", "REJECT", "FAIL", "REFUSED")
@@ -124,28 +125,34 @@ class ExplainabilityAgent(KernelRoutedAgent):
         lines: list[str] = []
 
         # Header
-        outcome_word = "APPROVED" if is_allowed else ("DENIED" if is_denied else verdict_upper)
+        outcome_word = (
+            "APPROVED" if is_allowed else ("DENIED" if is_denied else verdict_upper)
+        )
         lines.append(f"Decision: {outcome_word}")
         lines.append(f"  Actor   : {actor}")
         lines.append(f"  Action  : {action}")
 
         if ts_raw:
             try:
-                ts = datetime.fromisoformat(str(ts_raw)).astimezone(timezone.utc)
+                ts = datetime.fromisoformat(str(ts_raw)).astimezone(UTC)
                 lines.append(f"  When    : {ts.strftime('%Y-%m-%d %H:%M:%S UTC')}")
             except Exception:
                 lines.append(f"  When    : {ts_raw}")
 
         # Reasoning block
         if reasoning:
-            wrapped = textwrap.fill(str(reasoning), width=72, initial_indent="  ", subsequent_indent="  ")
+            wrapped = textwrap.fill(
+                str(reasoning), width=72, initial_indent="  ", subsequent_indent="  "
+            )
             lines.append(f"\nReasoning:\n{wrapped}")
 
         # Trust score
         if trust_score is not None:
             level = (
-                "high" if float(trust_score) >= 0.7
-                else "medium" if float(trust_score) >= 0.4
+                "high"
+                if float(trust_score) >= 0.7
+                else "medium"
+                if float(trust_score) >= 0.4
                 else "low"
             )
             lines.append(f"\nTrust Score: {trust_score:.2f} ({level})")
@@ -184,13 +191,9 @@ class ExplainabilityAgent(KernelRoutedAgent):
             lines.append(
                 "  The request has been blocked. To appeal, provide explicit authorization"
             )
-            lines.append(
-                "  and ensure your trust score meets the required threshold."
-            )
+            lines.append("  and ensure your trust score meets the required threshold.")
         else:
-            lines.append(
-                "  The system is waiting for clarification before proceeding."
-            )
+            lines.append("  The system is waiting for clarification before proceeding.")
 
         explanation = "\n".join(lines)
 
@@ -198,7 +201,7 @@ class ExplainabilityAgent(KernelRoutedAgent):
         key = f"{actor}:{action}:{verdict}"
         self.explanations[key] = {
             "explanation": explanation,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
         }
 
         logger.debug("ExplainabilityAgent: generated explanation for %s", key)
@@ -227,12 +230,15 @@ class ExplainabilityAgent(KernelRoutedAgent):
         warn_signals = [
             s.get("message") or str(s)
             for s in signals
-            if str(s.get("level") or s.get("severity") or "").upper() in ("WARNING", "ERROR", "CRITICAL")
+            if str(s.get("level") or s.get("severity") or "").upper()
+            in ("WARNING", "ERROR", "CRITICAL")
         ]
 
         parts: list[str] = []
         if phase_names:
-            parts.append(f"Execution traversed {len(phase_names)} phase(s): {', '.join(phase_names)}.")
+            parts.append(
+                f"Execution traversed {len(phase_names)} phase(s): {', '.join(phase_names)}."
+            )
         if actor_set:
             parts.append(f"Participating actors: {', '.join(sorted(actor_set))}.")
         if denied:

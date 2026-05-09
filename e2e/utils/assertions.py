@@ -155,8 +155,7 @@ def assert_permission_denied(
         actual_reason = getattr(result, "reason", "")
         if expected_reason not in actual_reason:
             raise AssertionError(
-                f"Expected denial reason '{expected_reason}', "
-                f"but got '{actual_reason}'"
+                f"Expected denial reason '{expected_reason}', but got '{actual_reason}'"
             )
 
     logger.info("Permission denial validated")

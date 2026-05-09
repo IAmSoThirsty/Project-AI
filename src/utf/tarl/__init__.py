@@ -1,1 +1,1 @@
-from .core import parse_policy, evaluate
+from .core import evaluate, parse_policy

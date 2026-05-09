@@ -245,7 +245,7 @@ class ReportGenerator:
 
         if doc_coverage < 0.5:
             recommendations.append(
-                f"Increase documentation coverage from {doc_coverage*100:.1f}% to at least 70%"
+                f"Increase documentation coverage from {doc_coverage * 100:.1f}% to at least 70%"
             )
 
         if not recommendations:

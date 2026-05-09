@@ -345,7 +345,9 @@ class GodTierVerifier:
             "status": (
                 "VERIFIED"
                 if self.failures == 0 and self.warnings == 0
-                else "PASSED_WITH_WARNINGS" if self.failures == 0 else "FAILED"
+                else "PASSED_WITH_WARNINGS"
+                if self.failures == 0
+                else "FAILED"
             ),
         }
 

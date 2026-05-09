@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 # - [[source-docs/gui/leather_book_interface.md]]
 #
 
+
 class LeatherBookInterface(QMainWindow):
     """Main window with leather book aesthetic."""
 

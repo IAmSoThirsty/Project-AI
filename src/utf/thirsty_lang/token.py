@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -171,7 +170,7 @@ class Span:
     end_line: int
     end_column: int
 
-    def merge(self, other: "Span") -> "Span":
+    def merge(self, other: Span) -> Span:
         return Span(self.file, self.line, self.column, other.end_line, other.end_column)
 
 

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -9,7 +8,7 @@ from . import ast
 @dataclass(frozen=True)
 class Type:
     name: str
-    args: tuple["Type", ...] = field(default_factory=tuple)
+    args: tuple[Type, ...] = field(default_factory=tuple)
 
     def __str__(self) -> str:
         if not self.args:
@@ -54,7 +53,12 @@ def from_type_node(node: ast.TypeNode) -> Type:
         base = "Reservoir" if node.base == "well" else node.base
         return Type(base, tuple(from_type_node(x) for x in node.args))
     if isinstance(node, ast.FunctionType):
-        return Type("Function", tuple([from_type_node(x) for x in node.params] + [from_type_node(node.result)]))
+        return Type(
+            "Function",
+            tuple(
+                [from_type_node(x) for x in node.params] + [from_type_node(node.result)]
+            ),
+        )
     raise TypeError(f"unsupported type node: {node!r}")
 
 

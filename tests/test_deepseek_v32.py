@@ -1,6 +1,6 @@
 """Tests for DeepSeek V3.2 inference module."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -82,7 +82,7 @@ class TestDeepSeekV32:
         assert "text" in result
         assert result["prompt"] == "Hello, how are you?"
         assert result["model"] == deepseek.model_name
-        
+
         # Verify orchestrator was called with correct parameters
         mock_run_ai.assert_called_once()
         call_args = mock_run_ai.call_args[0][0]
@@ -120,7 +120,7 @@ class TestDeepSeekV32:
         assert "text" in result
         assert "messages" in result
         assert result["messages"] == messages
-        
+
         # Verify orchestrator was called with correct parameters
         mock_run_ai.assert_called_once()
         call_args = mock_run_ai.call_args[0][0]

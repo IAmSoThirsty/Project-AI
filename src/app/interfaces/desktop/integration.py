@@ -25,13 +25,14 @@ _desktop_adapter: DesktopAdapter | None = None
 # - [[relationships/gui/03_HANDLER_RELATIONSHIPS.md]]
 #
 
+
 def get_desktop_adapter() -> DesktopAdapter:
     """
     Get global desktop adapter instance.
-    
+
     Returns:
         DesktopAdapter instance
-        
+
     Raises:
         RuntimeError: If adapter not initialized (user not logged in)
     """
@@ -44,10 +45,10 @@ def get_desktop_adapter() -> DesktopAdapter:
 def initialize_desktop_adapter(username: str) -> DesktopAdapter:
     """
     Initialize desktop adapter after user login.
-    
+
     Args:
         username: Logged-in username
-        
+
     Returns:
         Initialized adapter
     """
@@ -58,13 +59,17 @@ def initialize_desktop_adapter(username: str) -> DesktopAdapter:
 
 
 # Backward compatibility functions for existing GUI code
-def execute_ai_chat(prompt: str, model: str | None = None, provider: str | None = None) -> str:
+def execute_ai_chat(
+    prompt: str, model: str | None = None, provider: str | None = None
+) -> str:
     """Execute AI chat through governance pipeline."""
     adapter = get_desktop_adapter()
     return adapter.ai_chat(prompt, model, provider)
 
 
-def execute_ai_image(prompt: str, model: str | None = None, provider: str | None = None):
+def execute_ai_image(
+    prompt: str, model: str | None = None, provider: str | None = None
+):
     """Execute AI image generation through governance pipeline."""
     adapter = get_desktop_adapter()
     return adapter.ai_image(prompt, model, provider)

@@ -1,11 +1,9 @@
-
 from __future__ import annotations
 
 import hashlib
 import json
 import shutil
 import time
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -49,7 +47,9 @@ def save_manifest(project: Path, data: dict[str, Any]) -> None:
 
 
 def _safe_name(name: str) -> str:
-    return "".join(ch for ch in name if ch.isalnum() or ch in "-_:.").strip() or "unnamed"
+    return (
+        "".join(ch for ch in name if ch.isalnum() or ch in "-_:.").strip() or "unnamed"
+    )
 
 
 def _registry_dir(name: str, version: str) -> Path:
@@ -61,7 +61,7 @@ def _installed_dir(project: Path, name: str, version: str) -> Path:
 
 
 def package_id(manifest: dict[str, Any]) -> str:
-    return f"{manifest.get('name','unnamed')}@{manifest.get('version','0.0.0')}"
+    return f"{manifest.get('name', 'unnamed')}@{manifest.get('version', '0.0.0')}"
 
 
 def publish_package(project: Path) -> dict[str, Any]:
@@ -74,7 +74,11 @@ def publish_package(project: Path) -> dict[str, Any]:
     if dest.exists():
         shutil.rmtree(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(src, dest, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", ".git", "*.pyc"))
+    shutil.copytree(
+        src,
+        dest,
+        ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", ".git", "*.pyc"),
+    )
     entry = {
         "name": name,
         "version": version,
@@ -83,12 +87,17 @@ def publish_package(project: Path) -> dict[str, Any]:
         "entry": manifest.get("entry", "src/main.thirsty"),
         "publishedAt": int(time.time()),
         "registryPath": str(dest),
-        "hash": hashlib.sha256((name + version + str(dest)).encode("utf-8")).hexdigest(),
+        "hash": hashlib.sha256(
+            (name + version + str(dest)).encode("utf-8")
+        ).hexdigest(),
     }
     items = load_gallery()
     items = [x for x in items if not (x["name"] == name and x["version"] == version)]
     items.append(entry)
-    GALLERY_INDEX.write_text(json.dumps(sorted(items, key=lambda x: (x["name"], x["version"])), indent=2), encoding="utf-8")
+    GALLERY_INDEX.write_text(
+        json.dumps(sorted(items, key=lambda x: (x["name"], x["version"])), indent=2),
+        encoding="utf-8",
+    )
     return entry
 
 
@@ -104,7 +113,9 @@ def search_gallery(term: str | None = None) -> list[dict[str, Any]]:
     low = term.lower()
     out = []
     for item in items:
-        hay = " ".join([item["name"], item.get("description", ""), " ".join(item.get("tags", []))]).lower()
+        hay = " ".join(
+            [item["name"], item.get("description", ""), " ".join(item.get("tags", []))]
+        ).lower()
         if low in hay:
             out.append(item)
     return out
@@ -112,7 +123,9 @@ def search_gallery(term: str | None = None) -> list[dict[str, Any]]:
 
 def show_gallery_item(name: str) -> dict[str, Any] | None:
     items = load_gallery()
-    matches = [x for x in items if x["name"] == name or f"{x['name']}@{x['version']}" == name]
+    matches = [
+        x for x in items if x["name"] == name or f"{x['name']}@{x['version']}" == name
+    ]
     if not matches:
         return None
     matches.sort(key=lambda x: x["version"])
@@ -161,7 +174,11 @@ def install_package(project: Path, spec: str) -> dict[str, Any]:
     if dest.exists():
         shutil.rmtree(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(source, dest, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", ".git", "*.pyc"))
+    shutil.copytree(
+        source,
+        dest,
+        ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", ".git", "*.pyc"),
+    )
     lock = _load_lock(project)
     lock["dependencies"][name] = {"version": version, "path": str(dest)}
     _save_lock(project, lock)

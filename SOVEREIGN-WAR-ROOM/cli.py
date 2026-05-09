@@ -169,7 +169,7 @@ def leaderboard(limit: int):
             f"{entry['system_id']:<30} "
             f"{entry['avg_sovereign_resilience_score']:<10.2f} "
             f"{entry['total_attempts']:<10} "
-            f"{entry['success_rate']*100:<12.1f}"
+            f"{entry['success_rate'] * 100:<12.1f}"
         )
 
 

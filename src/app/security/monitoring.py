@@ -205,7 +205,7 @@ Security Alert
 Type: {event.event_type}
 Severity: {event.severity}
 Source: {event.source}
-Time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(event.timestamp))}
+Time: {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(event.timestamp))}
 
 Description:
 {event.description}

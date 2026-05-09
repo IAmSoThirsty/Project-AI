@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 # - [[source-docs/gui/dashboard_utils.md]]
 #
 
+
 class DashboardErrorHandler:
     """Centralized error handling for dashboard operations."""
 

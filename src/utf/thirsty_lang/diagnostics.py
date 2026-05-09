@@ -1,8 +1,7 @@
-
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable
 
 from .token import Span
 
@@ -26,7 +25,9 @@ def levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-def nearest_word(word: str, candidates: Iterable[str], max_distance: int = 3) -> str | None:
+def nearest_word(
+    word: str, candidates: Iterable[str], max_distance: int = 3
+) -> str | None:
     scored = []
     for cand in candidates:
         d = levenshtein(word, cand)

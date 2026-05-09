@@ -281,12 +281,12 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
 Scenario: {scenario.title}
 
 Current Situation:
-- Global Population: {state['global']['population']:,}
-- Casualties: {state['global']['casualties']:,}
-- Average Morale: {state['global']['average_morale']:.2f}
-- Alien Ships: {state['aliens']['ships']}
-- Alien Control: {state['aliens']['control_percentage']:.1f}%
-- AI Operational: {state['ai']['operational']}
+- Global Population: {state["global"]["population"]:,}
+- Casualties: {state["global"]["casualties"]:,}
+- Average Morale: {state["global"]["average_morale"]:.2f}
+- Alien Ships: {state["aliens"]["ships"]}
+- Alien Control: {state["aliens"]["control_percentage"]:.1f}%
+- AI Operational: {state["ai"]["operational"]}
 
 Severity: {scenario.severity.value}
 
@@ -300,7 +300,7 @@ Key Factors:
 4. Societal stress from ongoing conflict
 
 Recommended Actions:
-{chr(10).join(f'- {action}' for action in scenario.mitigation_strategies)}
+{chr(10).join(f"- {action}" for action in scenario.mitigation_strategies)}
 """
 
         return explanation.strip()

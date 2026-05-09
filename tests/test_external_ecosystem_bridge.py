@@ -56,19 +56,19 @@ class TestExternalEcosystemBridge:
         by_key = {item.key: item for item in inventory}
         assert "substrate_memory_layer" in by_key["the_fates"].capabilities
         assert (
-            "deterministic_work_queue_orchestration"
-            in by_key["the_fates"].capabilities
+            "deterministic_work_queue_orchestration" in by_key["the_fates"].capabilities
         )
         assert (
-            "governed_runtime_api_surface"
-            in by_key["execution_governed"].capabilities
+            "governed_runtime_api_surface" in by_key["execution_governed"].capabilities
         )
         assert (
             "mutation_governance_contract_models"
             in by_key["execution_governed"].capabilities
         )
 
-    def test_governance_context_filters_missing_repositories(self, tmp_path: Path) -> None:
+    def test_governance_context_filters_missing_repositories(
+        self, tmp_path: Path
+    ) -> None:
         present = tmp_path / "knowledge_services"
         _make_file(present / "navigator_pathfinder.py", "# module")
 

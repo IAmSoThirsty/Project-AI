@@ -1,19 +1,16 @@
-
 from __future__ import annotations
 
 import hashlib
-import json
 import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from . import ast
-from .diagnostics import ThirstyError
 from .lexer import Lexer
-from .parser import Parser
-from .typesys import ANY, INT, STRING, VOID, BOOL, Type, reservoir
 from .package_manager import project_search_roots, resolve_package_source
+from .parser import Parser
+from .typesys import ANY, INT, STRING, VOID, Type
 
 
 @dataclass
@@ -33,55 +30,88 @@ class ModuleTypeInfo:
 
 def builtin_module_types() -> dict[str, ModuleTypeInfo]:
     return {
-        "thirst::time": ModuleTypeInfo("thirst::time", {
-            "now": Type("BuiltinFn", (INT,)),
-            "epoch_ms": Type("BuiltinFn", (INT,)),
-        }),
-        "thirst::crypto": ModuleTypeInfo("thirst::crypto", {
-            "sha256": Type("BuiltinFn", (STRING, STRING)),
-            "bless": Type("BuiltinFn", (STRING, STRING)),
-        }),
-        "thirst::reservoir": ModuleTypeInfo("thirst::reservoir", {
-            "size": Type("BuiltinFn", (ANY, INT)),
-            "push": Type("BuiltinFn", (ANY, ANY, VOID)),
-            "pop": Type("BuiltinFn", (ANY, ANY)),
-            "get": Type("BuiltinFn", (ANY, INT, ANY)),
-            "strain": Type("BuiltinFn", (ANY, ANY, ANY)),
-            "transmute": Type("BuiltinFn", (ANY, ANY, ANY)),
-            "distill": Type("BuiltinFn", (ANY, ANY, ANY, ANY)),
-            "flood": Type("BuiltinFn", (ANY, ANY, ANY)),
-        }),
+        "thirst::time": ModuleTypeInfo(
+            "thirst::time",
+            {
+                "now": Type("BuiltinFn", (INT,)),
+                "epoch_ms": Type("BuiltinFn", (INT,)),
+            },
+        ),
+        "thirst::crypto": ModuleTypeInfo(
+            "thirst::crypto",
+            {
+                "sha256": Type("BuiltinFn", (STRING, STRING)),
+                "bless": Type("BuiltinFn", (STRING, STRING)),
+            },
+        ),
+        "thirst::reservoir": ModuleTypeInfo(
+            "thirst::reservoir",
+            {
+                "size": Type("BuiltinFn", (ANY, INT)),
+                "push": Type("BuiltinFn", (ANY, ANY, VOID)),
+                "pop": Type("BuiltinFn", (ANY, ANY)),
+                "get": Type("BuiltinFn", (ANY, INT, ANY)),
+                "strain": Type("BuiltinFn", (ANY, ANY, ANY)),
+                "transmute": Type("BuiltinFn", (ANY, ANY, ANY)),
+                "distill": Type("BuiltinFn", (ANY, ANY, ANY, ANY)),
+                "flood": Type("BuiltinFn", (ANY, ANY, ANY)),
+            },
+        ),
     }
 
 
 def builtin_modules() -> dict[str, ModuleValue]:
     return {
-        "thirst::time": ModuleValue("thirst::time", {
-            "now": lambda: int(time.time()),
-            "epoch_ms": lambda: int(time.time() * 1000),
-        }),
-        "thirst::crypto": ModuleValue("thirst::crypto", {
-            "sha256": lambda text: hashlib.sha256(str(text).encode("utf-8")).hexdigest(),
-            "bless": lambda text: "blessed:" + hashlib.sha256(str(text).encode("utf-8")).hexdigest()[:16],
-        }),
-        "thirst::reservoir": ModuleValue("thirst::reservoir", {
-            "size": lambda items: len(items),
-            "push": lambda items, value: items.append(value),
-            "pop": lambda items: items.pop(),
-            "get": lambda items, idx: items[idx],
-            "flood": lambda items, payload: items.extend(payload if isinstance(payload, list) else [payload]) or items,
-        }),
+        "thirst::time": ModuleValue(
+            "thirst::time",
+            {
+                "now": lambda: int(time.time()),
+                "epoch_ms": lambda: int(time.time() * 1000),
+            },
+        ),
+        "thirst::crypto": ModuleValue(
+            "thirst::crypto",
+            {
+                "sha256": lambda text: hashlib.sha256(
+                    str(text).encode("utf-8")
+                ).hexdigest(),
+                "bless": lambda text: (
+                    "blessed:"
+                    + hashlib.sha256(str(text).encode("utf-8")).hexdigest()[:16]
+                ),
+            },
+        ),
+        "thirst::reservoir": ModuleValue(
+            "thirst::reservoir",
+            {
+                "size": lambda items: len(items),
+                "push": lambda items, value: items.append(value),
+                "pop": lambda items: items.pop(),
+                "get": lambda items, idx: items[idx],
+                "flood": lambda items, payload: (
+                    items.extend(payload if isinstance(payload, list) else [payload])
+                    or items
+                ),
+            },
+        ),
     }
 
 
 def _module_exports_from_program(program: ast.Program) -> dict[str, Type]:
     exports: dict[str, Type] = {}
     from .typesys import from_type_node, task
+
     for decl in program.declarations:
         if isinstance(decl, ast.FunctionDecl):
             params = [from_type_node(p.type_node) for p in decl.params]
-            result = VOID if decl.return_type is None else from_type_node(decl.return_type)
-            fn_type = task(result) if decl.is_async else Type("Function", tuple(params + [result]))
+            result = (
+                VOID if decl.return_type is None else from_type_node(decl.return_type)
+            )
+            fn_type = (
+                task(result)
+                if decl.is_async
+                else Type("Function", tuple(params + [result]))
+            )
             exports[decl.name] = fn_type
         elif isinstance(decl, ast.ClassDecl):
             exports[decl.name] = Type(decl.name)
@@ -106,7 +136,11 @@ def resolve_import_type(module_spec: str, current_file: str) -> ModuleTypeInfo:
 
 def resolve_module_file(module_spec: str, base_dir: Path) -> Path:
     raw = Path(module_spec)
-    if module_spec.startswith("./") or module_spec.startswith("../") or raw.suffix in {".thirsty", ".thirstofgods"}:
+    if (
+        module_spec.startswith("./")
+        or module_spec.startswith("../")
+        or raw.suffix in {".thirsty", ".thirstofgods"}
+    ):
         candidate = (base_dir / module_spec).resolve()
         if candidate.exists():
             return candidate

@@ -78,7 +78,9 @@ Response:
         threat_color = (
             "red"
             if step.threat_score > 0.7
-            else "yellow" if step.threat_score > 0.4 else "green"
+            else "yellow"
+            if step.threat_score > 0.4
+            else "green"
         )
         layer_name = {0: "REAL", 1: "MIRROR", 2: "DECEPTION"}.get(step.layer, "UNKNOWN")
 
@@ -201,7 +203,9 @@ class AnimatedAttackFlow:
             threat_icon = (
                 "🔴"
                 if step.threat_score > 0.7
-                else "🟡" if step.threat_score > 0.4 else "🟢"
+                else "🟡"
+                if step.threat_score > 0.4
+                else "🟢"
             )
 
             print(

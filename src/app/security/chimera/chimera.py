@@ -28,11 +28,9 @@ import time
 import urllib.parse
 import urllib.request
 from collections import defaultdict
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from socketserver import ThreadingMixIn
-from typing import Optional
 
 # ═══════════════════════════════════════════════════════════════════════
 # CONFIG
@@ -46,7 +44,9 @@ if ENV == "prod" and not SECRET_RAW:
     )
     sys.exit(2)
 if ENV != "prod" and not SECRET_RAW:
-    sys.stderr.write("WARN: CHIMERA_SECRET unset; generating ephemeral secret (dev only).\n")
+    sys.stderr.write(
+        "WARN: CHIMERA_SECRET unset; generating ephemeral secret (dev only).\n"
+    )
 SECRET = (SECRET_RAW or secrets.token_hex(32)).encode()
 
 BIND_HOST = os.environ.get("CHIMERA_HOST", "0.0.0.0")
@@ -69,7 +69,9 @@ UPSTREAM_TLS = os.environ.get("CHIMERA_UPSTREAM_TLS", "0") == "1"
 PROXY_BENIGN = os.environ.get("CHIMERA_PROXY_BENIGN", "1") == "1"
 PROXY_SCORE_MAX = int(os.environ.get("CHIMERA_PROXY_SCORE_MAX", "14"))
 PROXY_TIMEOUT = float(os.environ.get("CHIMERA_PROXY_TIMEOUT", "15"))
-PROXY_FAIL_OPEN = os.environ.get("CHIMERA_PROXY_FAIL_OPEN", "1" if ENV != "prod" else "0") == "1"
+PROXY_FAIL_OPEN = (
+    os.environ.get("CHIMERA_PROXY_FAIL_OPEN", "1" if ENV != "prod" else "0") == "1"
+)
 DECEPTION_HEADER = os.environ.get("CHIMERA_DECEPTION_HEADER", "0") == "1"
 RETENTION_HOURS = int(os.environ.get("CHIMERA_RETENTION_HOURS", "168"))
 RETENTION_PATH_MAX = int(os.environ.get("CHIMERA_PATH_SEEN_MAX", "10000"))
@@ -120,19 +122,27 @@ for entry in EGRESS_ALLOW_RAW.split(","):
 # PROJECT-AI GOVERNANCE BRIDGE
 # ═══════════════════════════════════════════════════════════════════════
 
+
 def _notify_governance(ip: str, verdict: str, score: int, sid: str, path: str) -> None:
     """POST verdict to the Project-AI governance bridge (fire-and-forget)."""
     if not WEBHOOK_URL:
         return
     try:
-        payload = json.dumps({
-            "ip": ip, "verdict": verdict, "score": score,
-            "sid": sid, "path": path[:256],
-            "ts": datetime.now(timezone.utc).isoformat(),
-        }).encode()
+        payload = json.dumps(
+            {
+                "ip": ip,
+                "verdict": verdict,
+                "score": score,
+                "sid": sid,
+                "path": path[:256],
+                "ts": datetime.now(UTC).isoformat(),
+            }
+        ).encode()
         req = urllib.request.Request(
-            WEBHOOK_URL + "/chimera/verdict", data=payload,
-            headers={"Content-Type": "application/json"}, method="POST",
+            WEBHOOK_URL + "/chimera/verdict",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
         )
         urllib.request.urlopen(req, timeout=1)
     except Exception:
@@ -144,14 +154,21 @@ def _notify_canary(ip: str, hits: list) -> None:
     if not WEBHOOK_URL or not hits:
         return
     try:
-        payload = json.dumps({
-            "ip": ip,
-            "hits": [{"token": h["token"][:32], "kind": h["kind"], "form": h["form"]} for h in hits],
-            "ts": datetime.now(timezone.utc).isoformat(),
-        }).encode()
+        payload = json.dumps(
+            {
+                "ip": ip,
+                "hits": [
+                    {"token": h["token"][:32], "kind": h["kind"], "form": h["form"]}
+                    for h in hits
+                ],
+                "ts": datetime.now(UTC).isoformat(),
+            }
+        ).encode()
         req = urllib.request.Request(
-            WEBHOOK_URL + "/chimera/canary", data=payload,
-            headers={"Content-Type": "application/json"}, method="POST",
+            WEBHOOK_URL + "/chimera/canary",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
         )
         urllib.request.urlopen(req, timeout=1)
     except Exception:
@@ -177,10 +194,12 @@ def _governance_denial_boost(ip: str, max_age: float = 300.0) -> int:
     except Exception:
         return 0
 
+
 def _resolve_host(addr) -> str:
     if isinstance(addr, tuple):
         return str(addr[0])
     return str(addr)
+
 
 def _refresh_upstream_egress() -> None:
     now = time.monotonic()
@@ -194,6 +213,7 @@ def _refresh_upstream_egress() -> None:
                     _egress_upstream_cache[info[4][0]] = now + _EGRESS_TTL
             except Exception:
                 pass
+
 
 def _is_allowed(host: str) -> bool:
     if host == "localhost" or host == UPSTREAM[0]:
@@ -211,11 +231,13 @@ def _is_allowed(host: str) -> bool:
     with _egress_lock:
         return host in _egress_upstream_cache
 
+
 def _guarded_connect(self, addr):
     host = _resolve_host(addr)
     if not _is_allowed(host):
         raise PermissionError(f"chimera egress blocked: {host}")
     return _orig_connect(self, addr)
+
 
 socket.socket.connect = _guarded_connect  # type: ignore[assignment]
 
@@ -273,6 +295,7 @@ CREATE TABLE IF NOT EXISTS path_seen(
 """)
 _dblock = threading.Lock()
 
+
 def metric_inc(k: str, n: int = 1) -> None:
     with _dblock:
         _db.execute(
@@ -281,20 +304,24 @@ def metric_inc(k: str, n: int = 1) -> None:
             (k, n),
         )
 
+
 def metric_get(k: str) -> int:
     with _dblock:
         row = _db.execute("SELECT v FROM metrics WHERE k=?", (k,)).fetchone()
     return int(row[0]) if row else 0
+
 
 def metrics_all() -> dict[str, int]:
     with _dblock:
         rows = _db.execute("SELECT k,v FROM metrics").fetchall()
     return {k: int(v) for k, v in rows}
 
+
 # ═══════════════════════════════════════════════════════════════════════
 # AUDIT
 # ═══════════════════════════════════════════════════════════════════════
 _audit_lock = threading.Lock()
+
 
 def _recover_chain() -> str:
     p = Path(AUDIT_PATH)
@@ -327,15 +354,25 @@ def _recover_chain() -> str:
     log.info("audit chain recovered: %s (lines=%d)", last_file[:16], line_count)
     return last_file
 
+
 _LAST_HASH = _recover_chain()
+
 
 def audit(event: str, **payload) -> str:
     global _LAST_HASH
     with _audit_lock:
-        ts = datetime.now(timezone.utc).isoformat()
+        ts = datetime.now(UTC).isoformat()
         body = json.dumps(payload, sort_keys=True, default=str)
-        h = hmac.new(SECRET, (_LAST_HASH + ts + event + body).encode("utf-8"), "sha3_256").hexdigest()
-        rec = {"ts": ts, "event": event, "prev": _LAST_HASH, "hash": h, "payload": payload}
+        h = hmac.new(
+            SECRET, (_LAST_HASH + ts + event + body).encode("utf-8"), "sha3_256"
+        ).hexdigest()
+        rec = {
+            "ts": ts,
+            "event": event,
+            "prev": _LAST_HASH,
+            "hash": h,
+            "payload": payload,
+        }
         with open(AUDIT_PATH, "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, default=str) + "\n")
         _LAST_HASH = h
@@ -346,6 +383,7 @@ def audit(event: str, **payload) -> str:
                 (h,),
             )
         return h
+
 
 def verify_audit() -> dict:
     p = Path(AUDIT_PATH)
@@ -362,17 +400,38 @@ def verify_audit() -> dict:
             try:
                 obj = json.loads(raw)
             except json.JSONDecodeError:
-                return {"ok": False, "lines": n, "tip": prev, "broken_at": n, "reason": "json"}
+                return {
+                    "ok": False,
+                    "lines": n,
+                    "tip": prev,
+                    "broken_at": n,
+                    "reason": "json",
+                }
             ts = obj.get("ts", "")
             ev = obj.get("event", "")
             body = json.dumps(obj.get("payload", {}), sort_keys=True, default=str)
-            expect = hmac.new(SECRET, (prev + ts + ev + body).encode("utf-8"), "sha3_256").hexdigest()
+            expect = hmac.new(
+                SECRET, (prev + ts + ev + body).encode("utf-8"), "sha3_256"
+            ).hexdigest()
             if obj.get("prev") != prev:
-                return {"ok": False, "lines": n, "tip": prev, "broken_at": n, "reason": "prev_mismatch"}
+                return {
+                    "ok": False,
+                    "lines": n,
+                    "tip": prev,
+                    "broken_at": n,
+                    "reason": "prev_mismatch",
+                }
             if obj.get("hash") != expect:
-                return {"ok": False, "lines": n, "tip": prev, "broken_at": n, "reason": "hash_mismatch"}
+                return {
+                    "ok": False,
+                    "lines": n,
+                    "tip": prev,
+                    "broken_at": n,
+                    "reason": "hash_mismatch",
+                }
             prev = expect
     return {"ok": True, "lines": n, "tip": prev, "broken_at": None}
+
 
 def verify_audit_tip() -> dict:
     """Fast tip-only check: file's last recorded hash matches the DB tip.
@@ -383,7 +442,12 @@ def verify_audit_tip() -> dict:
         row = _db.execute("SELECT v FROM audit_state WHERE k='last'").fetchone()
     db_tip = row[0] if row else "GENESIS"
     if not p.exists():
-        return {"ok": db_tip == "GENESIS", "tip": "GENESIS", "db_tip": db_tip, "mode": "tip"}
+        return {
+            "ok": db_tip == "GENESIS",
+            "tip": "GENESIS",
+            "db_tip": db_tip,
+            "mode": "tip",
+        }
     last_obj = None
     with p.open("rb") as f:
         try:
@@ -401,18 +465,36 @@ def verify_audit_tip() -> dict:
         except json.JSONDecodeError:
             continue
     if last_obj is None:
-        return {"ok": False, "tip": None, "db_tip": db_tip, "mode": "tip", "reason": "no_parseable_line"}
+        return {
+            "ok": False,
+            "tip": None,
+            "db_tip": db_tip,
+            "mode": "tip",
+            "reason": "no_parseable_line",
+        }
     file_tip = last_obj.get("hash")
     return {"ok": file_tip == db_tip, "tip": file_tip, "db_tip": db_tip, "mode": "tip"}
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # CANARIES
 # ═══════════════════════════════════════════════════════════════════════
-_PROVIDER_KINDS = ("stripe", "aws_id", "aws_sec", "github", "slack", "jwt", "generic", "dbpass")
+_PROVIDER_KINDS = (
+    "stripe",
+    "aws_id",
+    "aws_sec",
+    "github",
+    "slack",
+    "jwt",
+    "generic",
+    "dbpass",
+)
+
 
 def _seeded(ip: str, kind: str, n: int = 24) -> str:
-    h = hmac.new(SECRET, f"{ip}:{kind}".encode("utf-8"), "sha256").digest()
+    h = hmac.new(SECRET, f"{ip}:{kind}".encode(), "sha256").digest()
     return base64.b32encode(h).decode("ascii").rstrip("=")[:n].lower()
+
 
 def _build_surface(ip: str, kind: str) -> str:
     if kind == "stripe":
@@ -429,19 +511,34 @@ def _build_surface(ip: str, kind: str) -> str:
     if kind == "slack":
         return "xoxb-" + _seeded(ip, "slack", 12) + "-" + _seeded(ip, "slack2", 12)
     if kind == "jwt":
-        hdr = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip("=")
+        hdr = (
+            base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}')
+            .decode()
+            .rstrip("=")
+        )
         body = _seeded(ip, "jwt_sub", 12)
         # Deterministic iat — derived from secret+ip so the canary token is
         # stable across calls. Without this, every fake .env serve emits a
         # fresh JWT and the canary table grows unbounded per visitor.
         iat_seed = hmac.new(SECRET, f"{ip}:jwt_iat".encode(), "sha256").digest()
         iat = 1700000000 + (int.from_bytes(iat_seed[:4], "big") % 31_536_000)
-        pay = base64.urlsafe_b64encode(f'{{"sub":"{body}","iat":{iat}}}'.encode()).decode().rstrip("=")
-        sig = base64.urlsafe_b64encode(hmac.new(SECRET, f"{hdr}.{pay}".encode(), "sha256").digest()).decode().rstrip("=")
+        pay = (
+            base64.urlsafe_b64encode(f'{{"sub":"{body}","iat":{iat}}}'.encode())
+            .decode()
+            .rstrip("=")
+        )
+        sig = (
+            base64.urlsafe_b64encode(
+                hmac.new(SECRET, f"{hdr}.{pay}".encode(), "sha256").digest()
+            )
+            .decode()
+            .rstrip("=")
+        )
         return f"{hdr}.{pay}.{sig}"
     if kind == "dbpass":
         return _seeded(ip, "dbpass", 22)
     return _seeded(ip, "generic", 24)
+
 
 def canary(ip: str, kind: str) -> tuple[str, str]:
     if kind not in _PROVIDER_KINDS:
@@ -449,7 +546,7 @@ def canary(ip: str, kind: str) -> tuple[str, str]:
     surface = _build_surface(ip, kind)
     body = _seeded(ip, kind + ":sem", 20)
     semantic = f"CHIMERA-CANARY-{kind}-{body}"
-    ts = datetime.now(timezone.utc).isoformat()
+    ts = datetime.now(UTC).isoformat()
     with _dblock:
         for tok in (semantic, surface):
             _db.execute(
@@ -457,6 +554,7 @@ def canary(ip: str, kind: str) -> tuple[str, str]:
                 (tok, surface, semantic, kind, ip, ts),
             )
     return semantic, surface
+
 
 _SURFACE_PATTERNS = [
     re.compile(r"sk_live_[A-Za-z0-9]{16,}"),
@@ -466,6 +564,7 @@ _SURFACE_PATTERNS = [
     re.compile(r"eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+"),
 ]
 _SEMANTIC_PATTERN = re.compile(r"CHIMERA-CANARY-[a-zA-Z0-9_]+-[A-Za-z0-9+/=._\-]+")
+
 
 def canary_scan(blob: bytes | str) -> list[dict]:
     if not blob:
@@ -482,28 +581,33 @@ def canary_scan(blob: bytes | str) -> list[dict]:
     if not candidates:
         return hits
     with _dblock:
-        q = "SELECT token,kind,semantic,surface,ip FROM canary WHERE token IN (%s)" % (",".join("?" * len(candidates)))
+        q = "SELECT token,kind,semantic,surface,ip FROM canary WHERE token IN (%s)" % (
+            ",".join("?" * len(candidates))
+        )
         rows = _db.execute(q, tuple(candidates)).fetchall()
     for tok, kind, sem, sur, owner_ip in rows:
         if tok in seen:
             continue
         seen.add(tok)
         form = "semantic" if tok.startswith("CHIMERA-CANARY-") else "surface"
-        hits.append({
-            "form": form,
-            "kind": kind,
-            "label": kind,
-            "token": tok,
-            "semantic": sem,
-            "surface": sur,
-            "owner_ip": owner_ip,
-        })
+        hits.append(
+            {
+                "form": form,
+                "kind": kind,
+                "label": kind,
+                "token": tok,
+                "semantic": sem,
+                "surface": sur,
+                "owner_ip": owner_ip,
+            }
+        )
     return hits
+
 
 def canary_register(label: str) -> str:
     safe = re.sub(r"[^a-zA-Z0-9_\-]", "_", label)
     token = f"CHIMERA-CANARY-{safe}-{secrets.token_urlsafe(18)}"
-    ts = datetime.now(timezone.utc).isoformat()
+    ts = datetime.now(UTC).isoformat()
     with _dblock:
         _db.execute(
             "INSERT OR IGNORE INTO canary(token,surface,semantic,kind,ip,ts) VALUES(?,?,?,?,?,?)",
@@ -511,13 +615,14 @@ def canary_register(label: str) -> str:
         )
     return token
 
+
 def canary_rotate(label: str) -> str:
     """Retire all manual canaries for `label` and mint a fresh one.
     Old tokens are deleted from the active set so a hit on a retired
     token returns no row (i.e. the burned token is no longer trackable)."""
     safe = re.sub(r"[^a-zA-Z0-9_\-]", "_", label)
     new_token = f"CHIMERA-CANARY-{safe}-{secrets.token_urlsafe(18)}"
-    ts = datetime.now(timezone.utc).isoformat()
+    ts = datetime.now(UTC).isoformat()
     with _dblock:
         rows = _db.execute(
             "SELECT token FROM canary WHERE kind=? AND ip='manual'", (label,)
@@ -528,9 +633,15 @@ def canary_rotate(label: str) -> str:
             "INSERT OR IGNORE INTO canary(token,surface,semantic,kind,ip,ts) VALUES(?,?,?,?,?,?)",
             (new_token, new_token, new_token, label, "manual", ts),
         )
-    audit("canary.rotate", label=label, new_token=new_token,
-          retired_count=len(retired), retired_preview=[t[:24] + "..." for t in retired])
+    audit(
+        "canary.rotate",
+        label=label,
+        new_token=new_token,
+        retired_count=len(retired),
+        retired_preview=[t[:24] + "..." for t in retired],
+    )
     return new_token
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # CLASSIFIER
@@ -567,11 +678,26 @@ SHELL2 = re.compile(
     re.I,
 )
 DECOY_PATHS2 = (
-    b".env", b".git/", b".aws/", b".ssh/", b"wp-login.php", b"wp-admin",
-    b"phpmyadmin", b"admin.php", b"config.json", b"backup.zip", b"backup.sql",
-    b"server-status", b".dockerenv", b"actuator", b"/api/v1/secrets",
-    b"id_rsa", b"metrics", b"jaeger",
+    b".env",
+    b".git/",
+    b".aws/",
+    b".ssh/",
+    b"wp-login.php",
+    b"wp-admin",
+    b"phpmyadmin",
+    b"admin.php",
+    b"config.json",
+    b"backup.zip",
+    b"backup.sql",
+    b"server-status",
+    b".dockerenv",
+    b"actuator",
+    b"/api/v1/secrets",
+    b"id_rsa",
+    b"metrics",
+    b"jaeger",
 )
+
 
 def _verdict_from_score(score: int) -> str:
     if score >= 100:
@@ -586,7 +712,10 @@ def _verdict_from_score(score: int) -> str:
         return "scanner"
     return "normal_browser"
 
-def classify(path: str, body: bytes = b"", ua: bytes = b"", headers: dict | None = None) -> dict:
+
+def classify(
+    path: str, body: bytes = b"", ua: bytes = b"", headers: dict | None = None
+) -> dict:
     path_b = path.encode("utf-8", "replace") if isinstance(path, str) else (path or b"")
     body_b = body or b""
     ua_b = ua or b""
@@ -612,7 +741,9 @@ def classify(path: str, body: bytes = b"", ua: bytes = b"", headers: dict | None
     if TRAV2.search(raw):
         score += 50
         tags.append("traversal")
-    if RCE2.search(raw) or (SHELL2.search(path_b) and (b"/etc/shadow" in raw or b"/etc/passwd" in raw)):
+    if RCE2.search(raw) or (
+        SHELL2.search(path_b) and (b"/etc/shadow" in raw or b"/etc/passwd" in raw)
+    ):
         score += 60
         tags.append("rce")
     if SHELL2.search(path_b):
@@ -635,34 +766,59 @@ def classify(path: str, body: bytes = b"", ua: bytes = b"", headers: dict | None
     verdict = _verdict_from_score(score)
     return {"score": int(score), "tags": sorted(set(tags)), "verdict": verdict}
 
-def sticky_classify(sid: str, ip: str, path: str, body: bytes, ua: bytes, headers: dict | None = None) -> dict:
+
+def sticky_classify(
+    sid: str, ip: str, path: str, body: bytes, ua: bytes, headers: dict | None = None
+) -> dict:
     current = classify(path=path, body=body, ua=ua, headers=headers)
     with _dblock:
-        row = _db.execute("SELECT verdict,score FROM classify WHERE sid=?", (sid,)).fetchone()
+        row = _db.execute(
+            "SELECT verdict,score FROM classify WHERE sid=?", (sid,)
+        ).fetchone()
         if row:
             old_verdict, old_score = row[0], int(row[1])
             if current["score"] > old_score:
                 final = current
                 _db.execute(
                     "UPDATE classify SET verdict=?,score=?,ip=?,ts=? WHERE sid=?",
-                    (final["verdict"], final["score"], ip, datetime.now(timezone.utc).isoformat(), sid),
+                    (
+                        final["verdict"],
+                        final["score"],
+                        ip,
+                        datetime.now(UTC).isoformat(),
+                        sid,
+                    ),
                 )
             else:
-                final = {"score": old_score, "tags": current["tags"], "verdict": old_verdict}
+                final = {
+                    "score": old_score,
+                    "tags": current["tags"],
+                    "verdict": old_verdict,
+                }
         else:
             final = current
             _db.execute(
                 "INSERT INTO classify(sid,verdict,score,ip,ts) VALUES(?,?,?,?,?)",
-                (sid, final["verdict"], final["score"], ip, datetime.now(timezone.utc).isoformat()),
+                (
+                    sid,
+                    final["verdict"],
+                    final["score"],
+                    ip,
+                    datetime.now(UTC).isoformat(),
+                ),
             )
     return final
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # RATE LIMITER
 # ═══════════════════════════════════════════════════════════════════════
 _rate_lock = threading.Lock()
-_rate_buckets: dict[str, list[float]] = defaultdict(lambda: [float(RPS_BURST), time.monotonic()])
+_rate_buckets: dict[str, list[float]] = defaultdict(
+    lambda: [float(RPS_BURST), time.monotonic()]
+)
 _rate_last_sweep = 0.0
+
 
 def allow_request(ip: str) -> bool:
     global _rate_last_sweep
@@ -671,7 +827,9 @@ def allow_request(ip: str) -> bool:
         # Periodic sweep — drop idle buckets so a 100k-IP scan doesn't
         # leak memory permanently. Bounded to once per minute.
         if now - _rate_last_sweep > 60.0:
-            stale = [k for k, b in _rate_buckets.items() if now - b[1] > RATE_BUCKET_TTL]
+            stale = [
+                k for k, b in _rate_buckets.items() if now - b[1] > RATE_BUCKET_TTL
+            ]
             for k in stale:
                 _rate_buckets.pop(k, None)
             _rate_last_sweep = now
@@ -684,13 +842,14 @@ def allow_request(ip: str) -> bool:
         bucket[0], bucket[1] = tokens - 1.0, now
         return True
 
+
 # ═══════════════════════════════════════════════════════════════════════
 # RETENTION SWEEP
 # ═══════════════════════════════════════════════════════════════════════
 def retention_sweep() -> dict:
     """Prune time-bounded tables. Manually-registered canaries (ip='manual')
     are NEVER auto-pruned — they're operator-managed via canary_rotate."""
-    cutoff = (datetime.now(timezone.utc) - timedelta(hours=RETENTION_HOURS)).isoformat()
+    cutoff = (datetime.now(UTC) - timedelta(hours=RETENTION_HOURS)).isoformat()
     counts = {}
     with _dblock:
         for table, ts_col, extra in (
@@ -699,7 +858,9 @@ def retention_sweep() -> dict:
             ("universe", "last_seen", ""),
             ("canary", "ts", " AND ip != 'manual'"),
         ):
-            cur = _db.execute(f"DELETE FROM {table} WHERE {ts_col} < ?{extra}", (cutoff,))
+            cur = _db.execute(
+                f"DELETE FROM {table} WHERE {ts_col} < ?{extra}", (cutoff,)
+            )
             counts[table] = cur.rowcount or 0
         row = _db.execute("SELECT COUNT(*) FROM path_seen").fetchone()
         if row and int(row[0]) > RETENTION_PATH_MAX:
@@ -714,6 +875,7 @@ def retention_sweep() -> dict:
     audit("retention.sweep", cutoff=cutoff, **counts)
     return counts
 
+
 def _retention_loop() -> None:
     while not _shutdown.is_set():
         try:
@@ -722,6 +884,7 @@ def _retention_loop() -> None:
             log.warning("retention sweep failed: %s", e)
         # 10-minute interval, but wake on shutdown
         _shutdown.wait(600.0)
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # FAKE UNIVERSE / RESPONDERS
@@ -734,42 +897,68 @@ _STACKS2 = [
     {"server": "lighttpd/1.4.28", "lang": "Perl/5.10", "db": "PostgreSQL 8.4"},
 ]
 
+
 def _rng_for_sid(sid: str, salt: str = "universe") -> random.Random:
-    seed = hmac.new(SECRET, f"{sid}:{salt}".encode("utf-8"), "sha256").digest()
+    seed = hmac.new(SECRET, f"{sid}:{salt}".encode(), "sha256").digest()
     return random.Random(int.from_bytes(seed, "big"))
+
 
 def universe_for(sid: str, ip: str) -> dict:
     with _dblock:
-        row = _db.execute("SELECT stack_json,topo_json FROM universe WHERE sid=?", (sid,)).fetchone()
+        row = _db.execute(
+            "SELECT stack_json,topo_json FROM universe WHERE sid=?", (sid,)
+        ).fetchone()
         if row:
-            _db.execute("UPDATE universe SET last_seen=? WHERE sid=?", (datetime.now(timezone.utc).isoformat(), sid))
+            _db.execute(
+                "UPDATE universe SET last_seen=? WHERE sid=?",
+                (datetime.now(UTC).isoformat(), sid),
+            )
             return {"stack": json.loads(row[0]), "topology": json.loads(row[1])}
     rng = _rng_for_sid(sid)
     stack = rng.choice(_STACKS2)
-    subnet = f"10.{rng.randrange(10,250)}.{rng.randrange(0,255)}"
+    subnet = f"10.{rng.randrange(10, 250)}.{rng.randrange(0, 255)}"
     roles = [
-        ("nginx-edge", 443), ("api-gateway", 8080), ("postgres-primary", 5432),
-        ("postgres-replica", 5432), ("redis-sentinel", 26379), ("vault-active", 8200),
-        ("kafka-broker", 9092), ("node-exporter", 9100), ("legacy-mainframe-bridge", 3270),
+        ("nginx-edge", 443),
+        ("api-gateway", 8080),
+        ("postgres-primary", 5432),
+        ("postgres-replica", 5432),
+        ("redis-sentinel", 26379),
+        ("vault-active", 8200),
+        ("kafka-broker", 9092),
+        ("node-exporter", 9100),
+        ("legacy-mainframe-bridge", 3270),
     ]
     nodes = []
     for i, (role, port) in enumerate(roles, start=10):
-        nodes.append({
-            "host": f"{role}-{rng.randrange(1,99):02d}.internal",
-            "ip": f"{subnet}.{i}",
-            "role": role,
-            "port": port,
-            "az": rng.choice(["us-east-1a", "us-east-1b", "us-west-2c"]),
-        })
-    topology = {"vpc": f"vpc-{rng.randrange(16**8):08x}", "region": rng.choice(["us-east-1", "us-west-2", "eu-west-1"]), "nodes": nodes}
-    ts = datetime.now(timezone.utc).isoformat()
+        nodes.append(
+            {
+                "host": f"{role}-{rng.randrange(1, 99):02d}.internal",
+                "ip": f"{subnet}.{i}",
+                "role": role,
+                "port": port,
+                "az": rng.choice(["us-east-1a", "us-east-1b", "us-west-2c"]),
+            }
+        )
+    topology = {
+        "vpc": f"vpc-{rng.randrange(16**8):08x}",
+        "region": rng.choice(["us-east-1", "us-west-2", "eu-west-1"]),
+        "nodes": nodes,
+    }
+    ts = datetime.now(UTC).isoformat()
     with _dblock:
         _db.execute(
             "INSERT OR IGNORE INTO universe(sid,ip,first_seen,last_seen,stack_json,topo_json) VALUES(?,?,?,?,?,?)",
             (sid, ip, ts, ts, json.dumps(stack), json.dumps(topology)),
         )
-    audit("universe.create", sid=sid, ip=ip, stack=stack, topology_summary={"region": topology["region"], "nodes": len(nodes)})
+    audit(
+        "universe.create",
+        sid=sid,
+        ip=ip,
+        stack=stack,
+        topology_summary={"region": topology["region"], "nodes": len(nodes)},
+    )
     return {"stack": stack, "topology": topology}
+
 
 def _fake_env_for(ip: str) -> dict:
     db_sem, db_surface = canary(ip, "dbpass")
@@ -797,19 +986,115 @@ def _fake_env_for(ip: str) -> dict:
         "SLACK_BOT_TOKEN": slack_surface,
     }
 
-_CORPUS2 = (
-    "internal admin token leaked in commit referencing legacy oauth bridge "
-    "deprecated soap endpoint exposes xml entity expansion via staging gateway "
-    "mysql replica credentials rotated nightly through ansible vault checksum "
-    "debug flag enables verbose stack trace on malformed multipart boundary "
-    "stripe webhook secret stored beside redis sentinel failover manifest "
-    "kubernetes serviceaccount mounted at unusual path leaking jwt audience "
-    "ldap bind dn truncated when username exceeds character limit "
-    "nginx auth_request module bypassed by trailing dot in host header value "
-    "postgres row level security disabled for analytics readonly role "
-    "vault transit key material rotated after unsealed recovery ceremony "
-    "jaeger trace exemplar references dead shard in federated prometheus cluster "
-).split()
+
+_CORPUS2 = [
+    "internal",
+    "admin",
+    "token",
+    "leaked",
+    "in",
+    "commit",
+    "referencing",
+    "legacy",
+    "oauth",
+    "bridge",
+    "deprecated",
+    "soap",
+    "endpoint",
+    "exposes",
+    "xml",
+    "entity",
+    "expansion",
+    "via",
+    "staging",
+    "gateway",
+    "mysql",
+    "replica",
+    "credentials",
+    "rotated",
+    "nightly",
+    "through",
+    "ansible",
+    "vault",
+    "checksum",
+    "debug",
+    "flag",
+    "enables",
+    "verbose",
+    "stack",
+    "trace",
+    "on",
+    "malformed",
+    "multipart",
+    "boundary",
+    "stripe",
+    "webhook",
+    "secret",
+    "stored",
+    "beside",
+    "redis",
+    "sentinel",
+    "failover",
+    "manifest",
+    "kubernetes",
+    "serviceaccount",
+    "mounted",
+    "at",
+    "unusual",
+    "path",
+    "leaking",
+    "jwt",
+    "audience",
+    "ldap",
+    "bind",
+    "dn",
+    "truncated",
+    "when",
+    "username",
+    "exceeds",
+    "character",
+    "limit",
+    "nginx",
+    "auth_request",
+    "module",
+    "bypassed",
+    "by",
+    "trailing",
+    "dot",
+    "in",
+    "host",
+    "header",
+    "value",
+    "postgres",
+    "row",
+    "level",
+    "security",
+    "disabled",
+    "for",
+    "analytics",
+    "readonly",
+    "role",
+    "vault",
+    "transit",
+    "key",
+    "material",
+    "rotated",
+    "after",
+    "unsealed",
+    "recovery",
+    "ceremony",
+    "jaeger",
+    "trace",
+    "exemplar",
+    "references",
+    "dead",
+    "shard",
+    "in",
+    "federated",
+    "prometheus",
+    "cluster",
+]
+
 
 def _markov(sid: str, n: int = 180) -> str:
     rng = _rng_for_sid(sid, "markov")
@@ -819,6 +1104,7 @@ def _markov(sid: str, n: int = 180) -> str:
     for _ in range(n):
         out.append(rng.choice(_CORPUS2))
     return " ".join(out)
+
 
 def polyglot(**kw):
     ip = kw.get("ip", "0.0.0.0")
@@ -863,13 +1149,20 @@ window.__BOOTSTRAP__ = {json.dumps({"path": path, "stack": u["stack"], "topology
         hdrs["X-Chimera"] = "polyglot"
     return 200, body.encode("utf-8"), "text/html; charset=utf-8", hdrs
 
+
 def fake_env(**kw):
     ip = kw.get("ip", "0.0.0.0")
     env = _fake_env_for(ip)
     body = "\n".join(f"{k}={v}" for k, v in env.items()) + "\n"
     metric_inc("fake.env.served")
     audit("canary.serve", ip=ip, surface=".env", keys=list(env.keys()))
-    return 200, body.encode("utf-8"), "text/plain; charset=utf-8", {"Cache-Control": "no-store"}
+    return (
+        200,
+        body.encode("utf-8"),
+        "text/plain; charset=utf-8",
+        {"Cache-Control": "no-store"},
+    )
+
 
 def fake_git(**kw):
     ip = kw.get("ip", "0.0.0.0")
@@ -887,7 +1180,13 @@ def fake_git(**kw):
     fetch = +refs/heads/*:refs/remotes/origin/*
 # {gh_sem}
 """
-    return 200, body.encode("utf-8"), "text/plain; charset=utf-8", {"Cache-Control": "no-store"}
+    return (
+        200,
+        body.encode("utf-8"),
+        "text/plain; charset=utf-8",
+        {"Cache-Control": "no-store"},
+    )
+
 
 def fake_admin(**kw):
     ip = kw.get("ip", "0.0.0.0")
@@ -900,7 +1199,9 @@ def fake_admin(**kw):
     for i in range(18):
         slug = choices[i % len(choices)]
         token = hashlib.sha1(f"{sid}:{path}:{i}".encode()).hexdigest()[:8]
-        links.append(f'<li><a href="{html.escape(path.rstrip("/"))}/{slug}-{token}">{slug}-{token}</a></li>')
+        links.append(
+            f'<li><a href="{html.escape(path.rstrip("/"))}/{slug}-{token}">{slug}-{token}</a></li>'
+        )
     body = f"""<!doctype html>
 <html>
 <head><title>Admin — {html.escape(u["stack"]["server"])}</title></head>
@@ -912,25 +1213,58 @@ def fake_admin(**kw):
   <input name="password" type="password">
   <button>Login</button>
 </form>
-<ul>{''.join(links)}</ul>
+<ul>{"".join(links)}</ul>
 <!-- build={rng.randrange(100000, 999999)} -->
 </body>
 </html>
 """
-    return 200, body.encode("utf-8"), "text/html; charset=utf-8", {"Cache-Control": "no-store"}
+    return (
+        200,
+        body.encode("utf-8"),
+        "text/html; charset=utf-8",
+        {"Cache-Control": "no-store"},
+    )
+
 
 def fake_secrets(**kw):
     ip = kw.get("ip", "0.0.0.0")
     env = _fake_env_for(ip)
-    body = json.dumps({"status": "ok", "secrets": {"database": env["DB_PASSWORD"], "aws": {"access_key_id": env["AWS_ACCESS_KEY_ID"], "secret_access_key": env["AWS_SECRET_ACCESS_KEY"]}, "stripe": env["STRIPE_SECRET_KEY"], "jwt": env["JWT_BEARER"]}}, indent=2)
+    body = json.dumps(
+        {
+            "status": "ok",
+            "secrets": {
+                "database": env["DB_PASSWORD"],
+                "aws": {
+                    "access_key_id": env["AWS_ACCESS_KEY_ID"],
+                    "secret_access_key": env["AWS_SECRET_ACCESS_KEY"],
+                },
+                "stripe": env["STRIPE_SECRET_KEY"],
+                "jwt": env["JWT_BEARER"],
+            },
+        },
+        indent=2,
+    )
     audit("canary.serve", ip=ip, surface="/api/v1/secrets", keys=list(env.keys()))
     return 200, body.encode("utf-8"), "application/json", {"Cache-Control": "no-store"}
+
 
 def fake_actuator(**kw):
     ip = kw.get("ip", "0.0.0.0")
     env = _fake_env_for(ip)
-    body = json.dumps({"activeProfiles": ["prod"], "propertySources": [{"name": "systemEnvironment", "properties": {k: {"value": v} for k, v in env.items()}}]}, indent=2)
+    body = json.dumps(
+        {
+            "activeProfiles": ["prod"],
+            "propertySources": [
+                {
+                    "name": "systemEnvironment",
+                    "properties": {k: {"value": v} for k, v in env.items()},
+                }
+            ],
+        },
+        indent=2,
+    )
     return 200, body.encode("utf-8"), "application/json", {"Cache-Control": "no-store"}
+
 
 def fake_status(**kw):
     sid = kw.get("sid", "nosid")
@@ -944,14 +1278,21 @@ def fake_status(**kw):
         "Server MPM: prefork",
         f"Server Built: {rng.randrange(2012, 2020)}-0{rng.randrange(1, 9)}-{rng.randrange(10, 28)}",
         "",
-        "Current Time: " + datetime.now(timezone.utc).isoformat(),
+        "Current Time: " + datetime.now(UTC).isoformat(),
         f"Total accesses: {rng.randrange(100000, 9000000)}",
         f"CPU Usage: u{rng.random():.2f} s{rng.random():.2f}",
         "",
     ]
-    return 200, ("\n".join(body) + "\n").encode("utf-8"), "text/plain; charset=utf-8", {}
+    return (
+        200,
+        ("\n".join(body) + "\n").encode("utf-8"),
+        "text/plain; charset=utf-8",
+        {},
+    )
+
 
 _tarpit_sem = threading.BoundedSemaphore(max(1, TARPIT_MAX))
+
 
 def tarpit(**kw):
     sid = kw.get("sid", "nosid")
@@ -960,39 +1301,60 @@ def tarpit(**kw):
     if not _tarpit_sem.acquire(blocking=False):
         metric_inc("tarpit.shed")
         body = {"ok": False, "error": "backend busy", "trace": secrets.token_hex(8)}
-        return 503, json.dumps(body).encode("utf-8"), "application/json", {"Retry-After": "5", "Cache-Control": "no-store"}
+        return (
+            503,
+            json.dumps(body).encode("utf-8"),
+            "application/json",
+            {"Retry-After": "5", "Cache-Control": "no-store"},
+        )
     try:
         rng = _rng_for_sid(sid, "tarpit")
         delay = min(0.35 + rng.random() * 1.2, 1.5)
         time.sleep(delay)
-        body = {"ok": False, "error": "backend timeout", "trace": secrets.token_hex(12), "retry_after": int(delay * 1000)}
-        return 200, json.dumps(body).encode("utf-8"), "application/json", {"Cache-Control": "no-store"}
+        body = {
+            "ok": False,
+            "error": "backend timeout",
+            "trace": secrets.token_hex(12),
+            "retry_after": int(delay * 1000),
+        }
+        return (
+            200,
+            json.dumps(body).encode("utf-8"),
+            "application/json",
+            {"Cache-Control": "no-store"},
+        )
     finally:
         _tarpit_sem.release()
+
 
 def stream_fake_users(handler, ip: str):
     sid, _ = handler._session()
     users = []
     rng = _rng_for_sid(sid, "users")
     for i in range(50):
-        users.append({
-            "id": rng.randrange(1000, 999999),
-            "email": f"user{i:03d}@internal.invalid",
-            "role": rng.choice(["admin", "operator", "finance", "readonly"]),
-            "mfa": rng.choice([True, True, False]),
-        })
+        users.append(
+            {
+                "id": rng.randrange(1000, 999999),
+                "email": f"user{i:03d}@internal.invalid",
+                "role": rng.choice(["admin", "operator", "finance", "readonly"]),
+                "mfa": rng.choice([True, True, False]),
+            }
+        )
     body = json.dumps({"users": users}, indent=2).encode("utf-8")
     headers = getattr(handler, "send_header_later", {})
     handler._send(200, body, ctype="application/json", extra_headers=headers)
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # WEBSOCKET FAKE SHELL
 # ═══════════════════════════════════════════════════════════════════════
 _WS_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
+
 def ws_accept_key(key: str) -> str:
     raw = hashlib.sha1((key + _WS_GUID).encode("utf-8")).digest()
     return base64.b64encode(raw).decode("ascii")
+
 
 def _ws_send_text(wfile, text: str) -> None:
     payload = text.encode("utf-8", "replace")
@@ -1007,7 +1369,8 @@ def _ws_send_text(wfile, text: str) -> None:
     wfile.write(hdr + payload)
     wfile.flush()
 
-def _ws_recv_text(rfile) -> Optional[str]:
+
+def _ws_recv_text(rfile) -> str | None:
     h = rfile.read(2)
     if len(h) < 2:
         return None
@@ -1039,12 +1402,14 @@ def _ws_recv_text(rfile) -> Optional[str]:
         return ""
     return payload.decode("utf-8", "replace")
 
+
 def _record_ws(sid: str, ip: str, direction: str, data: str) -> None:
     with _dblock:
         _db.execute(
             "INSERT INTO ws_transcript(sid,ip,ts,dir,data) VALUES(?,?,?,?,?)",
-            (sid, ip, datetime.now(timezone.utc).isoformat(), direction, data[:4000]),
+            (sid, ip, datetime.now(UTC).isoformat(), direction, data[:4000]),
         )
+
 
 def ws_fake_shell_loop(rfile, wfile, ip: str, sid: str) -> None:
     banner = "Connected to debug shell\nhostname: edge-prod-01\n$ "
@@ -1078,6 +1443,7 @@ def ws_fake_shell_loop(rfile, wfile, ip: str, sid: str) -> None:
         _record_ws(sid, ip, "out", reply)
         _ws_send_text(wfile, reply)
 
+
 # ═══════════════════════════════════════════════════════════════════════
 # SESSION HELPERS
 # ═══════════════════════════════════════════════════════════════════════
@@ -1095,23 +1461,36 @@ def parse_cookies(header: str | None) -> dict[str, str]:
             out[k] = v
     return out
 
+
 def get_sid(headers) -> tuple[str, bool]:
-    cookies = parse_cookies(headers.get("Cookie", "") if hasattr(headers, "get") else headers.get("Cookie"))
+    cookies = parse_cookies(
+        headers.get("Cookie", "") if hasattr(headers, "get") else headers.get("Cookie")
+    )
     sid = cookies.get("chimera_sid", "")
     if sid and re.fullmatch(r"[A-Za-z0-9_\-]{16,64}", sid):
         return sid, False
     return secrets.token_urlsafe(18), True
 
+
 # ═══════════════════════════════════════════════════════════════════════
 # PROXY HELPERS
 # ═══════════════════════════════════════════════════════════════════════
 _HOP_BY_HOP_HEADERS = {
-    "connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
-    "te", "trailer", "trailers", "transfer-encoding", "upgrade",
+    "connection",
+    "keep-alive",
+    "proxy-authenticate",
+    "proxy-authorization",
+    "te",
+    "trailer",
+    "trailers",
+    "transfer-encoding",
+    "upgrade",
 }
+
 
 def _request_scheme(tls_enabled: bool) -> str:
     return "https" if tls_enabled else "http"
+
 
 def _build_forward_headers(headers, ip: str) -> dict[str, str]:
     out: dict[str, str] = {}
@@ -1126,7 +1505,14 @@ def _build_forward_headers(headers, ip: str) -> dict[str, str]:
         out["X-Forwarded-Host"] = out["Host"]
     return out
 
-def _should_proxy_request(method: str, path: str, verdict: dict, canary_hits: list[dict], handler_name: str | None) -> bool:
+
+def _should_proxy_request(
+    method: str,
+    path: str,
+    verdict: dict,
+    canary_hits: list[dict],
+    handler_name: str | None,
+) -> bool:
     if not PROXY_BENIGN:
         return False
     if method not in ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"):
@@ -1136,6 +1522,7 @@ def _should_proxy_request(method: str, path: str, verdict: dict, canary_hits: li
     if handler_name is not None:
         return False
     return int(verdict.get("score", 0)) <= PROXY_SCORE_MAX
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # HANDLER
@@ -1185,9 +1572,13 @@ class Handler(BaseHTTPRequestHandler):
         except Exception:
             return b""
 
-    def _send(self, status: int, body: bytes,
-              ctype: str = "text/html; charset=utf-8",
-              extra_headers: dict | None = None) -> None:
+    def _send(
+        self,
+        status: int,
+        body: bytes,
+        ctype: str = "text/html; charset=utf-8",
+        extra_headers: dict | None = None,
+    ) -> None:
         if isinstance(body, str):
             body = body.encode("utf-8", "replace")
         self.send_response(status)
@@ -1205,10 +1596,20 @@ class Handler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError):
             pass
 
-    def _proxy_upstream(self, method: str, path: str, query: str, body: bytes,
-                        ip: str, sid: str, extra_headers: dict[str, str]) -> None:
+    def _proxy_upstream(
+        self,
+        method: str,
+        path: str,
+        query: str,
+        body: bytes,
+        ip: str,
+        sid: str,
+        extra_headers: dict[str, str],
+    ) -> None:
         target = path + (("?" + query) if query else "")
-        conn_cls = http.client.HTTPSConnection if UPSTREAM_TLS else http.client.HTTPConnection
+        conn_cls = (
+            http.client.HTTPSConnection if UPSTREAM_TLS else http.client.HTTPConnection
+        )
         conn = None
         try:
             conn = conn_cls(UPSTREAM[0], UPSTREAM[1], timeout=PROXY_TIMEOUT)
@@ -1233,16 +1634,44 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(payload)
 
             metric_inc("proxy.pass")
-            audit("proxy.pass", ip=ip, sid=sid, method=method, path=path, status=int(resp.status), bytes=len(payload))
+            audit(
+                "proxy.pass",
+                ip=ip,
+                sid=sid,
+                method=method,
+                path=path,
+                status=int(resp.status),
+                bytes=len(payload),
+            )
         except Exception as e:
             metric_inc("proxy.error")
-            audit("proxy.error", ip=ip, sid=sid, method=method, path=path, error=str(e)[:300], fail_open=PROXY_FAIL_OPEN)
+            audit(
+                "proxy.error",
+                ip=ip,
+                sid=sid,
+                method=method,
+                path=path,
+                error=str(e)[:300],
+                fail_open=PROXY_FAIL_OPEN,
+            )
             if PROXY_FAIL_OPEN:
-                status, payload, ctype, hdrs = polyglot(ip=ip, sid=sid, path=path, query=query, body=body, headers=self.headers)
+                status, payload, ctype, hdrs = polyglot(
+                    ip=ip,
+                    sid=sid,
+                    path=path,
+                    query=query,
+                    body=body,
+                    headers=self.headers,
+                )
                 merged = {**hdrs, **extra_headers}
                 self._send(status, payload, ctype=ctype, extra_headers=merged)
             else:
-                self._send(502, b"bad gateway", ctype="text/plain; charset=utf-8", extra_headers=extra_headers)
+                self._send(
+                    502,
+                    b"bad gateway",
+                    ctype="text/plain; charset=utf-8",
+                    extra_headers=extra_headers,
+                )
         finally:
             try:
                 if conn is not None:
@@ -1253,12 +1682,21 @@ class Handler(BaseHTTPRequestHandler):
     def _session(self) -> tuple[str, bool]:
         return get_sid(self.headers)
 
-    def _canary_scan_request(self, path: str, query: str, body: bytes, ip: str) -> list[dict]:
+    def _canary_scan_request(
+        self, path: str, query: str, body: bytes, ip: str
+    ) -> list[dict]:
         surfaces: list[bytes] = []
         surfaces.append(path.encode("utf-8", "replace"))
         surfaces.append(query.encode("utf-8", "replace"))
         surfaces.append(body or b"")
-        for hk in ("Cookie", "Authorization", "Referer", "X-Api-Key", "X-Auth-Token", "User-Agent"):
+        for hk in (
+            "Cookie",
+            "Authorization",
+            "Referer",
+            "X-Api-Key",
+            "X-Auth-Token",
+            "User-Agent",
+        ):
             v = self.headers.get(hk, "")
             if v:
                 surfaces.append(v.encode("utf-8", "replace"))
@@ -1266,17 +1704,38 @@ class Handler(BaseHTTPRequestHandler):
         hits = canary_scan(joined)
         for hit in hits:
             metric_inc("canary.hits.total")
-            audit("canary.hit", ip=ip, token=hit["token"], kind=hit["kind"], form=hit["form"], owner_ip=hit.get("owner_ip"))
+            audit(
+                "canary.hit",
+                ip=ip,
+                token=hit["token"],
+                kind=hit["kind"],
+                form=hit["form"],
+                owner_ip=hit.get("owner_ip"),
+            )
         if hits:
-            audit("canary.surface_hit", ip=ip, count=len(hits), tokens=[h["token"][:24] + "..." for h in hits])
+            audit(
+                "canary.surface_hit",
+                ip=ip,
+                count=len(hits),
+                tokens=[h["token"][:24] + "..." for h in hits],
+            )
             _notify_canary(ip, hits)
         return hits
 
-    def do_GET(self): self._dispatch("GET")
-    def do_POST(self): self._dispatch("POST")
-    def do_PUT(self): self._dispatch("PUT")
-    def do_DELETE(self): self._dispatch("DELETE")
-    def do_HEAD(self): self._dispatch("HEAD", suppress_body=True)
+    def do_GET(self):
+        self._dispatch("GET")
+
+    def do_POST(self):
+        self._dispatch("POST")
+
+    def do_PUT(self):
+        self._dispatch("PUT")
+
+    def do_DELETE(self):
+        self._dispatch("DELETE")
+
+    def do_HEAD(self):
+        self._dispatch("HEAD", suppress_body=True)
 
     def _dispatch(self, method: str, suppress_body: bool = False) -> None:
         ip = self._client_ip()
@@ -1352,7 +1811,9 @@ class Handler(BaseHTTPRequestHandler):
 
         extra_headers: dict[str, str] = {}
         if fresh:
-            extra_headers["Set-Cookie"] = f"chimera_sid={sid}; HttpOnly; SameSite=Lax; Path=/"
+            extra_headers["Set-Cookie"] = (
+                f"chimera_sid={sid}; HttpOnly; SameSite=Lax; Path=/"
+            )
 
         if _should_proxy_request(method, path, verdict, canary_hits, handler_name):
             self._proxy_upstream(method, path, query, body, ip, sid, extra_headers)
@@ -1420,37 +1881,61 @@ class Handler(BaseHTTPRequestHandler):
             auth = self.headers.get("Authorization", "")
             presented = auth[7:] if auth.startswith("Bearer ") else ""
             if not presented or not hmac.compare_digest(presented, METRICS_TOKEN):
-                self._send(404, b"not found", ctype="text/plain", extra_headers=extra_headers)
+                self._send(
+                    404, b"not found", ctype="text/plain", extra_headers=extra_headers
+                )
                 return
         elif ip not in ("127.0.0.1", "::1"):
-            self._send(404, b"not found", ctype="text/plain", extra_headers=extra_headers)
+            self._send(
+                404, b"not found", ctype="text/plain", extra_headers=extra_headers
+            )
             return
-        lines = ["# HELP chimera_requests_total Total requests by verdict", "# TYPE chimera_requests_total counter"]
+        lines = [
+            "# HELP chimera_requests_total Total requests by verdict",
+            "# TYPE chimera_requests_total counter",
+        ]
         for k, v in metrics_all().items():
             safe = re.sub(r"[^a-zA-Z0-9_]", "_", k)
             lines.append(f"chimera_{safe} {v}")
         body = ("\n".join(lines) + "\n").encode("utf-8")
-        self._send(200, body, ctype="text/plain; version=0.0.4", extra_headers=extra_headers)
+        self._send(
+            200, body, ctype="text/plain; version=0.0.4", extra_headers=extra_headers
+        )
 
     def _jaeger_handler(self, path: str, extra_headers: dict) -> None:
         payload = {
-            "data": [{
-                "traceID": secrets.token_hex(8),
-                "spans": [{
-                    "spanID": secrets.token_hex(8),
-                    "operationName": "http.request",
-                    "startTime": int(time.time() * 1_000_000),
-                    "duration": 1234,
-                    "tags": [{"key": "http.status_code", "type": "int64", "value": 200}],
-                }],
-                "processes": {},
-            }],
+            "data": [
+                {
+                    "traceID": secrets.token_hex(8),
+                    "spans": [
+                        {
+                            "spanID": secrets.token_hex(8),
+                            "operationName": "http.request",
+                            "startTime": int(time.time() * 1_000_000),
+                            "duration": 1234,
+                            "tags": [
+                                {
+                                    "key": "http.status_code",
+                                    "type": "int64",
+                                    "value": 200,
+                                }
+                            ],
+                        }
+                    ],
+                    "processes": {},
+                }
+            ],
             "total": 1,
             "limit": 0,
             "offset": 0,
             "errors": None,
         }
-        self._send(200, json.dumps(payload).encode("utf-8"), ctype="application/json", extra_headers=extra_headers)
+        self._send(
+            200,
+            json.dumps(payload).encode("utf-8"),
+            ctype="application/json",
+            extra_headers=extra_headers,
+        )
 
     def _ws_upgrade(self, ip: str, sid: str, verdict: dict) -> None:
         if not HIGH_INT_WS:
@@ -1473,6 +1958,7 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:
             audit("ws.error", ip=ip, sid=sid, error=str(e)[:300])
 
+
 # ═══════════════════════════════════════════════════════════════════════
 # SERVE / CLI
 # ═══════════════════════════════════════════════════════════════════════
@@ -1481,14 +1967,18 @@ class _ThreadedHTTPS(ThreadingHTTPServer):
     allow_reuse_address = True
     request_queue_size = 128
 
+
 _shutdown = threading.Event()
 
-def _build_ssl_context() -> Optional[ssl.SSLContext]:
+
+def _build_ssl_context() -> ssl.SSLContext | None:
     if not TLS_CERT and not TLS_KEY:
         log.warning("TLS disabled: CHIMERA_CERT/CHIMERA_KEY unset; binding plaintext")
         return None
     if not TLS_CERT or not TLS_KEY:
-        sys.stderr.write("FATAL: both CHIMERA_CERT and CHIMERA_KEY must be set for TLS.\n")
+        sys.stderr.write(
+            "FATAL: both CHIMERA_CERT and CHIMERA_KEY must be set for TLS.\n"
+        )
         sys.exit(2)
     cert = Path(TLS_CERT)
     key = Path(TLS_KEY)
@@ -1510,6 +2000,7 @@ def _build_ssl_context() -> Optional[ssl.SSLContext]:
         pass
     return ctx
 
+
 def _install_signal_handlers(server: _ThreadedHTTPS) -> None:
     def _handler(signum, _frame):
         if _shutdown.is_set():
@@ -1519,11 +2010,13 @@ def _install_signal_handlers(server: _ThreadedHTTPS) -> None:
         _shutdown.set()
         audit("shutdown.signal", signum=int(signum))
         threading.Thread(target=server.shutdown, daemon=True).start()
+
     for sig in (signal.SIGINT, signal.SIGTERM):
         try:
             signal.signal(sig, _handler)
         except (ValueError, OSError):
             pass
+
 
 def _preflight() -> None:
     if BIND_PORT != 0 and (BIND_PORT < 1 or BIND_PORT > 65535):
@@ -1534,21 +2027,44 @@ def _preflight() -> None:
         sys.exit(2)
     chk = verify_audit()
     if not chk["ok"]:
-        sys.stderr.write(f"FATAL: audit chain broken at line {chk['broken_at']} reason={chk.get('reason')}\n")
+        sys.stderr.write(
+            f"FATAL: audit chain broken at line {chk['broken_at']} reason={chk.get('reason')}\n"
+        )
         sys.exit(3)
     log.info("audit verified: lines=%d tip=%s", chk["lines"], chk["tip"][:16])
 
+
 def _serve() -> int:
     _preflight()
-    audit("boot", env=ENV, host=BIND_HOST, port=BIND_PORT, upstream=f"{UPSTREAM[0]}:{UPSTREAM[1]}", tls=bool(TLS_CERT and TLS_KEY), ws=HIGH_INT_WS, prom=PROM_ENABLE)
+    audit(
+        "boot",
+        env=ENV,
+        host=BIND_HOST,
+        port=BIND_PORT,
+        upstream=f"{UPSTREAM[0]}:{UPSTREAM[1]}",
+        tls=bool(TLS_CERT and TLS_KEY),
+        ws=HIGH_INT_WS,
+        prom=PROM_ENABLE,
+    )
     server = _ThreadedHTTPS((BIND_HOST, BIND_PORT), Handler)
     ctx = _build_ssl_context()
     if ctx is not None:
         server.socket = ctx.wrap_socket(server.socket, server_side=True)
     _install_signal_handlers(server)
-    threading.Thread(target=_retention_loop, name="chimera-retention", daemon=True).start()
+    threading.Thread(
+        target=_retention_loop, name="chimera-retention", daemon=True
+    ).start()
     scheme = "https" if ctx else "http"
-    log.info("CHIMERA listening on %s://%s:%d upstream=%s:%d ws=%s prom=%s", scheme, BIND_HOST, server.server_address[1], UPSTREAM[0], UPSTREAM[1], HIGH_INT_WS, PROM_ENABLE)
+    log.info(
+        "CHIMERA listening on %s://%s:%d upstream=%s:%d ws=%s prom=%s",
+        scheme,
+        BIND_HOST,
+        server.server_address[1],
+        UPSTREAM[0],
+        UPSTREAM[1],
+        HIGH_INT_WS,
+        PROM_ENABLE,
+    )
     rc = 0
     try:
         server.serve_forever(poll_interval=0.5)
@@ -1570,14 +2086,17 @@ def _serve() -> int:
         log.info("CHIMERA stopped cleanly rc=%d", rc)
     return rc
 
+
 def _cmd_verify_audit() -> int:
     chk = verify_audit()
     print(json.dumps(chk, indent=2, sort_keys=True))
     return 0 if chk.get("ok") else 3
 
+
 def _cmd_metrics_dump() -> int:
     print(json.dumps(metrics_all(), indent=2, sort_keys=True))
     return 0
+
 
 def _cmd_canary_register(args: list[str]) -> int:
     if not args:
@@ -1589,6 +2108,7 @@ def _cmd_canary_register(args: list[str]) -> int:
     print(token)
     return 0
 
+
 def _cmd_canary_rotate(args: list[str]) -> int:
     if not args:
         sys.stderr.write("usage: chimera.py canary-rotate <label>\n")
@@ -1597,6 +2117,7 @@ def _cmd_canary_rotate(args: list[str]) -> int:
     token = canary_rotate(label)
     print(token)
     return 0
+
 
 def _cmd_canary_scan(args: list[str]) -> int:
     if not args:
@@ -1609,14 +2130,19 @@ def _cmd_canary_scan(args: list[str]) -> int:
     print(json.dumps(hits, indent=2, sort_keys=True))
     return 0 if not hits else 10
 
+
 def _cmd_session_dump(args: list[str]) -> int:
     if not args:
         sys.stderr.write("usage: chimera.py session-dump <sid>\n")
         return 2
     sid = args[0]
     with _dblock:
-        classify_row = _db.execute("SELECT verdict,score,ip,ts FROM classify WHERE sid=?", (sid,)).fetchone()
-        ws_rows = _db.execute("SELECT ts,dir,data FROM ws_transcript WHERE sid=? ORDER BY id ASC", (sid,)).fetchall()
+        classify_row = _db.execute(
+            "SELECT verdict,score,ip,ts FROM classify WHERE sid=?", (sid,)
+        ).fetchone()
+        ws_rows = _db.execute(
+            "SELECT ts,dir,data FROM ws_transcript WHERE sid=? ORDER BY id ASC", (sid,)
+        ).fetchall()
     out = {
         "sid": sid,
         "classification": {
@@ -1624,17 +2150,32 @@ def _cmd_session_dump(args: list[str]) -> int:
             "score": classify_row[1],
             "ip": classify_row[2],
             "ts": classify_row[3],
-        } if classify_row else None,
-        "ws_transcript": [{"ts": ts, "dir": direction, "data": data} for ts, direction, data in ws_rows],
+        }
+        if classify_row
+        else None,
+        "ws_transcript": [
+            {"ts": ts, "dir": direction, "data": data}
+            for ts, direction, data in ws_rows
+        ],
     }
     print(json.dumps(out, indent=2, sort_keys=True))
     return 0
 
+
 def _cmd_top_paths() -> int:
     with _dblock:
-        rows = _db.execute("SELECT path,count FROM path_seen ORDER BY count DESC LIMIT 50").fetchall()
-    print(json.dumps([{"path": path, "count": int(count)} for path, count in rows], indent=2, sort_keys=True))
+        rows = _db.execute(
+            "SELECT path,count FROM path_seen ORDER BY count DESC LIMIT 50"
+        ).fetchall()
+    print(
+        json.dumps(
+            [{"path": path, "count": int(count)} for path, count in rows],
+            indent=2,
+            sort_keys=True,
+        )
+    )
     return 0
+
 
 def _cmd_health() -> int:
     # Fast tip check by default — full chain walk is O(n) and the
@@ -1659,9 +2200,11 @@ def _cmd_health() -> int:
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0 if payload["ok"] else 3
 
+
 def _cmd_print_docs() -> int:
     print(__DOCS__)
     return 0
+
 
 def _usage() -> str:
     return """CHIMERA v2.2
@@ -1704,6 +2247,7 @@ Environment:
   CHIMERA_TARPIT_MAX=32        # max concurrent tarpit threads
   CHIMERA_METRICS_TOKEN=       # if set, /metrics requires Bearer; else loopback-only
 """
+
 
 __DOCS__ = r"""
 CHIMERA v2.2 — deployment notes
@@ -1790,6 +2334,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     sys.stderr.write(f"unknown command: {cmd}\n\n{_usage()}")
     return 2
+
 
 if __name__ == "__main__":
     sys.exit(main())

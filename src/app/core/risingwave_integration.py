@@ -131,7 +131,7 @@ class RisingWaveClient:
             connector = 'kafka',
             topic = '{topic}',
             properties.bootstrap.server = '{bootstrap_servers}'
-            {', ' + props_str if props_str else ''}
+            {", " + props_str if props_str else ""}
         ) FORMAT PLAIN ENCODE JSON;
         """
 
@@ -224,7 +224,7 @@ class RisingWaveClient:
             connector = 'kafka',
             properties.bootstrap.server = '{bootstrap_servers}',
             topic = '{topic}'
-            {', ' + props_str if props_str else ''}
+            {", " + props_str if props_str else ""}
         ) FORMAT PLAIN ENCODE JSON;
         """
 

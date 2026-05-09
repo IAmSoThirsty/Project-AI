@@ -24,7 +24,9 @@ class TestGovernancePipelineRegressions:
         with pytest.raises(ValueError, match="not in registry"):
             pipeline._validate(context)
 
-    def test_user_login_handles_tuple_auth_result(self, monkeypatch: pytest.MonkeyPatch):
+    def test_user_login_handles_tuple_auth_result(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
         """UserManager.authenticate returns tuple(bool, message) and must not bypass."""
 
         class FakeUserManager:
@@ -86,7 +88,9 @@ class TestGovernancePipelineRegressions:
         with pytest.raises(PermissionError, match="requires role"):
             pipeline._gate(context, simulation={})
 
-    def test_persona_update_returns_non_none_result(self, monkeypatch: pytest.MonkeyPatch):
+    def test_persona_update_returns_non_none_result(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
         """persona.update must return structured result to satisfy commit consistency checks."""
 
         class FakePersona:

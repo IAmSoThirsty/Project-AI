@@ -198,9 +198,7 @@ class CBRNClassifier:
             return
 
         # Combine examples
-        X_train = (
-            self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES
-        )  # noqa: N806 - ML convention
+        X_train = self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES  # noqa: N806 - ML convention
         y_train = [1] * len(self.HARMFUL_EXAMPLES) + [0] * len(self.SAFE_EXAMPLES)
 
         # Train
@@ -258,9 +256,7 @@ class CBRNClassifier:
         ml_confidence = 0.0
 
         if ML_AVAILABLE and self.model is not None:
-            X_vec = self.vectorizer.transform(
-                [input_text]
-            )  # noqa: N806 - ML convention
+            X_vec = self.vectorizer.transform([input_text])  # noqa: N806 - ML convention
             ml_pred = self.model.predict(X_vec)[0]
             ml_confidence = self.model.predict_proba(X_vec)[0][
                 1
@@ -483,16 +479,16 @@ class CBRNClassifier:
 ## Classification Statistics
 
 ### Last 24 Hours
-- Total Classifications: {stats_24h['total_classifications']}
-- Unsafe Detections: {stats_24h['unsafe_count']}
-- Unsafe Rate: {stats_24h['unsafe_rate']:.2%}
-- Unique Users: {stats_24h['unique_users']}
+- Total Classifications: {stats_24h["total_classifications"]}
+- Unsafe Detections: {stats_24h["unsafe_count"]}
+- Unsafe Rate: {stats_24h["unsafe_rate"]:.2%}
+- Unique Users: {stats_24h["unique_users"]}
 
 ### Last 7 Days
-- Total Classifications: {stats_7d['total_classifications']}
-- Unsafe Detections: {stats_7d['unsafe_count']}
-- Unsafe Rate: {stats_7d['unsafe_rate']:.2%}
-- Unique Users: {stats_7d['unique_users']}
+- Total Classifications: {stats_7d["total_classifications"]}
+- Unsafe Detections: {stats_7d["unsafe_count"]}
+- Unsafe Rate: {stats_7d["unsafe_rate"]:.2%}
+- Unique Users: {stats_7d["unique_users"]}
 
 ## Risk Category Breakdown (24h)
 
@@ -505,13 +501,13 @@ class CBRNClassifier:
 
 ## ASL-3 Threshold Compliance
 
-**CBRN Attack Success Rate (ASR)**: {stats_24h['unsafe_rate']:.2%}
+**CBRN Attack Success Rate (ASR)**: {stats_24h["unsafe_rate"]:.2%}
 
-- ✅ **ASL-2 Threshold (<5%)**: {'PASS' if stats_24h['unsafe_rate'] < 0.05 else 'FAIL ⚠️'}
-- ✅ **ASL-3 Threshold (<20%)**: {'PASS' if stats_24h['unsafe_rate'] < 0.20 else 'FAIL ⚠️'}
-- ✅ **ASL-4 Threshold (<50%)**: {'PASS' if stats_24h['unsafe_rate'] < 0.50 else 'FAIL ⚠️'}
+- ✅ **ASL-2 Threshold (<5%)**: {"PASS" if stats_24h["unsafe_rate"] < 0.05 else "FAIL ⚠️"}
+- ✅ **ASL-3 Threshold (<20%)**: {"PASS" if stats_24h["unsafe_rate"] < 0.20 else "FAIL ⚠️"}
+- ✅ **ASL-4 Threshold (<50%)**: {"PASS" if stats_24h["unsafe_rate"] < 0.50 else "FAIL ⚠️"}
 
-**Current ASL Level**: {'ASL-2' if stats_24h['unsafe_rate'] < 0.05 else 'ASL-3' if stats_24h['unsafe_rate'] < 0.20 else 'ASL-4'}
+**Current ASL Level**: {"ASL-2" if stats_24h["unsafe_rate"] < 0.05 else "ASL-3" if stats_24h["unsafe_rate"] < 0.20 else "ASL-4"}
 
 ## Recent Unsafe Classifications (Last 10)
 

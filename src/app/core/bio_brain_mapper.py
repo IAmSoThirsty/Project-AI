@@ -83,7 +83,7 @@ import logging
 import threading
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -187,7 +187,7 @@ class ModuleState:
     weights_fast: NDArray[np.float32]  # Fast synaptic weights
     weights_slow: NDArray[np.float32]  # Slow synaptic weights
     phase: float  # Oscillatory phase (radians)
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 @dataclass
@@ -200,8 +200,8 @@ class NetworkState:
     learning_history: list[dict[str, Any]] = field(default_factory=list)
     consolidation_count: int = 0
     last_consolidation: str | None = None
-    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ============================================================================
@@ -1227,7 +1227,7 @@ class BioBrainMappingSystem:
             # Log learning event
             self.learning_history.append(
                 {
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                     "learning_mode": learning_mode.value,
                     "batch_size": x.shape[0],
                 }
@@ -1242,7 +1242,7 @@ class BioBrainMappingSystem:
             "module_activations": module_activations,
             "rsgn_diagnostics": rsgn_diagnostics,
             "network_id": self.network_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     def consolidate_memory(self) -> None:
@@ -1278,7 +1278,7 @@ class BioBrainMappingSystem:
 
         # Update consolidation tracking
         self.consolidation_count += 1
-        self.last_consolidation = datetime.now(timezone.utc)
+        self.last_consolidation = datetime.now(UTC)
 
         # Reset learning history
         self.learning_history = []
@@ -1324,7 +1324,7 @@ class BioBrainMappingSystem:
             "last_consolidation": (
                 self.last_consolidation.isoformat() if self.last_consolidation else None
             ),
-            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(UTC).isoformat(),
         }
 
         state_path = self.data_dir / f"network_{self.network_id}.json"
@@ -1412,4 +1412,3 @@ __all__ = [
     "ModuleState",
     "NetworkState",
 ]
-

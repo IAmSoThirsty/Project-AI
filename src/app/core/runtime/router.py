@@ -11,6 +11,7 @@ IS a shared coordination layer for governance alignment.
 from __future__ import annotations
 
 import logging
+from datetime import UTC
 from typing import Any, Literal
 
 logger = logging.getLogger(__name__)
@@ -87,6 +88,6 @@ def route_request(source: ExecutionSource, payload: dict[str, Any]) -> dict[str,
 
 def _get_timestamp() -> str:
     """Get ISO 8601 timestamp for request tracking."""
-    from datetime import datetime, timezone
+    from datetime import datetime
 
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()

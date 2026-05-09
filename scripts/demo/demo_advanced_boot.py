@@ -236,7 +236,7 @@ def demo_audit_replay():
 
     print("\n📋 Timeline Reconstruction:")
     for i, event in enumerate(state["timeline"][:5]):  # Show first 5 events
-        print(f"   {i+1}. [{event['event_type']}] {event['action']}")
+        print(f"   {i + 1}. [{event['event_type']}] {event['action']}")
         if event.get("subsystem_id"):
             print(f"      Subsystem: {event['subsystem_id']}")
 

@@ -6,11 +6,11 @@ Forensic replay engine using Temporal workflows.
 Enables deterministic replay of build executions for debugging and auditing.
 """
 
-import logging
 import asyncio
 import hashlib
 import json
-from datetime import datetime, timezone
+import logging
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 def _utc_now() -> datetime:
     """Return timezone-aware UTC datetime."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def _utc_now_iso() -> str:

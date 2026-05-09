@@ -14,11 +14,11 @@ This module provides comprehensive security controls including:
 # Import path security (always available, no dependencies)
 from .path_security import (
     PathTraversalError,
-    safe_path_join,
-    safe_open,
-    validate_filename,
-    sanitize_filename,
     is_safe_symlink,
+    safe_open,
+    safe_path_join,
+    sanitize_filename,
+    validate_filename,
 )
 
 # Import core security components (with graceful degradation)

@@ -38,7 +38,9 @@ class EthicalDecision:
     rationale: str
 
 
-class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
+class EthicsGovernanceSubsystem(
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin
+):
     SUBSYSTEM_METADATA = {
         "id": "ethics_governance",
         "name": "Ethics & Governance",
@@ -116,7 +118,9 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
                         ),
                         execution_time_ms=(time.time() - start_time) * 1000,
                     )
-                return SubsystemResponse(command.command_id, False, error="Unknown command")
+                return SubsystemResponse(
+                    command.command_id, False, error="Unknown command"
+                )
             except Exception as e:
                 return SubsystemResponse(command.command_id, False, error=str(e))
 
@@ -127,7 +131,9 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
             _dispatch,
         )
         if not approved:
-            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+            return SubsystemResponse(
+                command.command_id, False, error=f"Governance denied: {result}"
+            )
         return result
 
     def get_supported_commands(self) -> list[str]:

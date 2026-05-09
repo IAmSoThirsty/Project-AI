@@ -17,8 +17,9 @@ import hashlib
 import hmac
 import logging
 import time
+from collections.abc import Callable
 from enum import Enum, auto
-from typing import Any, Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -90,8 +91,12 @@ class Forge:
 
         if not integrity_ok:
             self.state = ForgeState.REJECT
-            logger.warning("Forge: payload rejected (integrity failure) probe=%s", probe_id)
-            return self._sign_and_route(section_id, probe_id, success=False, reason="integrity_failure")
+            logger.warning(
+                "Forge: payload rejected (integrity failure) probe=%s", probe_id
+            )
+            return self._sign_and_route(
+                section_id, probe_id, success=False, reason="integrity_failure"
+            )
 
         self.state = ForgeState.VALID
 
@@ -102,14 +107,20 @@ class Forge:
             shadow_ok = self._shadow_replay(payload)
             self.state = ForgeState.ANALYZE
             if not shadow_ok:
-                return self._sign_and_route(section_id, probe_id, success=False, reason="shadow_replay_mismatch")
+                return self._sign_and_route(
+                    section_id, probe_id, success=False, reason="shadow_replay_mismatch"
+                )
         else:
             self.state = ForgeState.DIRECT_DESTROY
 
         # DESTROY
         self.state = ForgeState.DESTROY
         primary_destroyed = self._destroy(payload, plane="primary")
-        shadow_destroyed = self._destroy(payload, plane="shadow") if self.require_shadow_replay else True
+        shadow_destroyed = (
+            self._destroy(payload, plane="shadow")
+            if self.require_shadow_replay
+            else True
+        )
 
         # ATOMIC_CHECK
         self.state = ForgeState.ATOMIC_CHECK
@@ -118,7 +129,9 @@ class Forge:
         else:
             self.state = ForgeState.DEAD_LETTER
             logger.error("Forge: partial destruction failure probe=%s", probe_id)
-            return self._sign_and_route(section_id, probe_id, success=False, reason="partial_destruction")
+            return self._sign_and_route(
+                section_id, probe_id, success=False, reason="partial_destruction"
+            )
 
         return self._sign_and_route(section_id, probe_id, success=True)
 
@@ -155,10 +168,16 @@ class Forge:
                 "destroyed_at": time.time(),
             }
             self._processed.append(record)
-            logger.debug("Forge: destroyed probe=%s plane=%s", payload.get("probe_id"), plane)
+            logger.debug(
+                "Forge: destroyed probe=%s plane=%s", payload.get("probe_id"), plane
+            )
             return True
         except Exception:
-            logger.exception("Forge: destruction failed probe=%s plane=%s", payload.get("probe_id"), plane)
+            logger.exception(
+                "Forge: destruction failed probe=%s plane=%s",
+                payload.get("probe_id"),
+                plane,
+            )
             return False
 
     def _sign_and_route(

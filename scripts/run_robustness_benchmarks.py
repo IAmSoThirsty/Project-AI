@@ -27,8 +27,6 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Import governance
-from app.core.runtime.router import route_request
-
 from app.core.robustness_metrics import (  # noqa: E402
     AttackProximityMetrics,
     RobustnessAnalysis,
@@ -270,7 +268,7 @@ class ComprehensiveBenchmarkRunner:
                     f"| Near-Miss Count | {analysis.near_miss_count} | Attacks that came close |\n"
                 )
                 f.write(
-                    f"| Near-Miss Rate | {analysis.near_miss_count/analysis.total_attacks*100:.1f}% | % of close calls |\n"
+                    f"| Near-Miss Rate | {analysis.near_miss_count / analysis.total_attacks * 100:.1f}% | % of close calls |\n"
                 )
                 f.write(
                     f"| Avg Near-Miss Score | {analysis.avg_near_miss_score:.3f} | Proximity to success |\n\n"
@@ -328,7 +326,7 @@ class ComprehensiveBenchmarkRunner:
                     f"| High Uncertainty Count | {analysis.high_uncertainty_count} | Risk indicators |\n"
                 )
                 f.write(
-                    f"| High Uncertainty Rate | {analysis.high_uncertainty_count/analysis.total_attacks*100:.1f}% | % high entropy |\n\n"
+                    f"| High Uncertainty Rate | {analysis.high_uncertainty_count / analysis.total_attacks * 100:.1f}% | % high entropy |\n\n"
                 )
 
                 f.write(
@@ -342,7 +340,7 @@ class ComprehensiveBenchmarkRunner:
                     f"| Transferable Attacks | {analysis.transferable_attacks} | Proxy→Main transfers |\n"
                 )
                 f.write(
-                    f"| Transfer Success Rate | {analysis.transfer_success_rate*100:.1f}% | Cross-model rate |\n\n"
+                    f"| Transfer Success Rate | {analysis.transfer_success_rate * 100:.1f}% | Cross-model rate |\n\n"
                 )
 
                 f.write(
@@ -366,13 +364,13 @@ class ComprehensiveBenchmarkRunner:
                 f.write("| Metric | Value | Standard |\n")
                 f.write("|--------|-------|----------|\n")
                 f.write(
-                    f"| Single-Attempt ASR | {analysis.single_attempt_asr*100:.2f}% | Anthropic ASL |\n"
+                    f"| Single-Attempt ASR | {analysis.single_attempt_asr * 100:.2f}% | Anthropic ASL |\n"
                 )
                 f.write(
-                    f"| Multi-Attempt ASR | {analysis.multi_attempt_asr*100:.2f}% | OpenAI Preparedness |\n"
+                    f"| Multi-Attempt ASR | {analysis.multi_attempt_asr * 100:.2f}% | OpenAI Preparedness |\n"
                 )
                 f.write(
-                    f"| Adaptive ASR | {analysis.adaptive_asr*100:.2f}% | DeepMind CCL |\n\n"
+                    f"| Adaptive ASR | {analysis.adaptive_asr * 100:.2f}% | DeepMind CCL |\n\n"
                 )
 
                 f.write(
@@ -415,7 +413,7 @@ class ComprehensiveBenchmarkRunner:
             f.write("**Overall Defense Win Rate**: 100%\n")
             f.write(f"**Total Near-Miss Scenarios**: {total_near_miss}\n")
             f.write(
-                f"**Overall Near-Miss Rate**: {total_near_miss/total_scenarios*100:.1f}%\n\n"
+                f"**Overall Near-Miss Rate**: {total_near_miss / total_scenarios * 100:.1f}%\n\n"
             )
 
             f.write("### Cross-Suite Robustness Characteristics\n\n")
@@ -423,10 +421,10 @@ class ComprehensiveBenchmarkRunner:
                 f"- **Minimum Robustness Margin (Weakest Point)**: {min(all_margins):.3f}\n"
             )
             f.write(
-                f"- **Average Detection Confidence**: {sum(all_confidences)/len(all_confidences):.3f}\n"
+                f"- **Average Detection Confidence**: {sum(all_confidences) / len(all_confidences):.3f}\n"
             )
             f.write(
-                f"- **Average Lipschitz Constant**: {sum(all_lipschitz)/len(all_lipschitz):.3f}\n\n"
+                f"- **Average Lipschitz Constant**: {sum(all_lipschitz) / len(all_lipschitz):.3f}\n\n"
             )
 
             f.write("---\n\n")

@@ -566,7 +566,7 @@ class GodTierStressTestGenerator:
             extended_attacks[:99], start=2
         ):
             variant_suffix = (
-                f" (Variant {(i-1)//len(memory_attacks) + 1})"
+                f" (Variant {(i - 1) // len(memory_attacks) + 1})"
                 if i > len(memory_attacks)
                 else ""
             )
@@ -611,7 +611,7 @@ class GodTierStressTestGenerator:
             tests.append(
                 TestScenario(
                     scenario_id=self._generate_scenario_id("WB-CFG"),
-                    title=f"Config Manipulation: Scenario {i+1}",
+                    title=f"Config Manipulation: Scenario {i + 1}",
                     category=TestCategory.WHITE_BOX,
                     severity=Severity.HIGH if i % 2 == 0 else Severity.MEDIUM,
                     difficulty=Difficulty((i % 6) + 1),
@@ -633,7 +633,7 @@ class GodTierStressTestGenerator:
                     target_subsystems=["config"],
                     expected_defenses=["schema_validation", "signature_check"],
                     should_block=True,
-                    description=f"Configuration manipulation attack scenario {i+1}",
+                    description=f"Configuration manipulation attack scenario {i + 1}",
                     cvss_score=5.5 + (i % 3),
                 )
             )
@@ -717,7 +717,7 @@ class GodTierStressTestGenerator:
             tests.append(
                 TestScenario(
                     scenario_id=self._generate_scenario_id("WB-RBAC"),
-                    title=f"RBAC Bypass: Technique {i+1}",
+                    title=f"RBAC Bypass: Technique {i + 1}",
                     category=TestCategory.WHITE_BOX,
                     severity=Severity.CRITICAL if i % 3 == 0 else Severity.HIGH,
                     difficulty=Difficulty((i % 6) + 1),
@@ -739,7 +739,7 @@ class GodTierStressTestGenerator:
                     target_subsystems=["rbac"],
                     expected_defenses=["role_validation", "permission_check", "audit"],
                     should_block=True,
-                    description=f"RBAC bypass attempt {i+1}",
+                    description=f"RBAC bypass attempt {i + 1}",
                     cvss_score=8.0 + (i % 2),
                 )
             )
@@ -804,7 +804,7 @@ class GodTierStressTestGenerator:
             scenarios.append(
                 TestScenario(
                     scenario_id=self._generate_scenario_id(prefix),
-                    title=f"{category.value.title()} Test Scenario {i+1}",
+                    title=f"{category.value.title()} Test Scenario {i + 1}",
                     category=category,
                     severity=(
                         Severity((i % 5) + 1) if (i % 5) + 1 <= 5 else Severity.CRITICAL
@@ -828,7 +828,7 @@ class GodTierStressTestGenerator:
                     target_subsystems=["kernel", "memory", "security"],
                     expected_defenses=["multi_layer_defense"],
                     should_block=True,
-                    description=f"{category.value} attack scenario {i+1}",
+                    description=f"{category.value} attack scenario {i + 1}",
                     cvss_score=5.0 + ((i % 5) * 0.8),
                 )
             )
@@ -841,9 +841,9 @@ if __name__ == "__main__":
     generator = GodTierStressTestGenerator()
     scenarios = generator.generate_all_scenarios()
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("GOD TIER STRESS TEST SUITE - SCENARIO GENERATION COMPLETE")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"Total Scenarios Generated: {len(scenarios)}")
     print("\nBreakdown by Category:")
 
@@ -867,4 +867,4 @@ if __name__ == "__main__":
             f"  Level {difficulty.value} ({'*' * difficulty.value:6s}): {count:3d} scenarios"
         )
 
-    print(f"\n{'='*80}\n")
+    print(f"\n{'=' * 80}\n")

@@ -94,9 +94,7 @@ def run_ai(request: AIRequest) -> AIResponse:
             continue
 
     # All providers failed
-    raise RuntimeError(
-        f"All AI providers failed. Last error: {last_error}"
-    )
+    raise RuntimeError(f"All AI providers failed. Last error: {last_error}")
 
 
 def _call_provider(provider: AIProvider, request: AIRequest) -> AIResponse:
@@ -327,6 +325,7 @@ def _call_huggingface_local(request: AIRequest) -> AIResponse:
         del tokenizer
         try:
             import torch
+
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
         except ImportError:

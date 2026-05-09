@@ -12,9 +12,8 @@ import json
 import logging
 import os
 import threading
-import time
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -97,7 +96,7 @@ class OversightAgent(KernelRoutedAgent):
 
         with self._lock:
             self.monitors = {
-                "last_run_utc": datetime.now(timezone.utc).isoformat(),
+                "last_run_utc": datetime.now(UTC).isoformat(),
                 "window_seconds": window_seconds,
                 "actors_checked": len(deny_rates),
                 "alerts_fired": len(alerts_fired),
@@ -128,7 +127,7 @@ class OversightAgent(KernelRoutedAgent):
         if not log_file.exists():
             return []
 
-        cutoff = datetime.now(timezone.utc).timestamp() - window_seconds
+        cutoff = datetime.now(UTC).timestamp() - window_seconds
         events: list[dict] = []
 
         try:
@@ -176,9 +175,9 @@ class OversightAgent(KernelRoutedAgent):
             "deny_rate": rate,
             "window_seconds": window_seconds,
             "threshold": _DENY_RATE_THRESHOLD,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
-        ts_slug = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
+        ts_slug = datetime.now(UTC).strftime("%Y%m%d_%H%M%S_%f")
         fname = os.path.join(_ALERTS_DIR, f"oversight_{actor}_{ts_slug}.json")
         try:
             with open(fname, "w", encoding="utf-8") as fh:

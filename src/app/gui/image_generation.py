@@ -38,6 +38,7 @@ TRON_DARK = "#1a1a1a"
 # - [[source-docs/gui/image_generation.md]]
 #
 
+
 class ImageGenerationWorker(QThread):
     """Worker thread for image generation to prevent UI blocking."""
 
@@ -197,7 +198,7 @@ class ImageGenerationLeftPanel(QFrame):
 
         # Info label
         info_label = QLabel(
-            "⚠️ Content filtering enabled\n" "All images comply with safety guidelines"
+            "⚠️ Content filtering enabled\nAll images comply with safety guidelines"
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setStyleSheet(f"color: {TRON_CYAN}; font-size: 9pt;")
@@ -207,8 +208,7 @@ class ImageGenerationLeftPanel(QFrame):
         """Handle generate button click."""
         # Sanitize and validate prompt
         prompt = sanitize_input(
-            self.prompt_input.toPlainText().strip(),
-            max_length=1000
+            self.prompt_input.toPlainText().strip(), max_length=1000
         )
         if not validate_length(prompt, min_len=3, max_len=1000):
             self.status_label.setText("⚠️ Prompt must be 3-1000 characters")
@@ -363,7 +363,7 @@ class ImageGenerationRightPanel(QFrame):
             prompt = metadata.get("prompt", "Unknown")
             timestamp = metadata.get("timestamp", "")
             self.metadata_label.setText(
-                f"Prompt: {prompt[:100]}...\n" f"Generated: {timestamp}"
+                f"Prompt: {prompt[:100]}...\nGenerated: {timestamp}"
             )
 
             # Enable buttons

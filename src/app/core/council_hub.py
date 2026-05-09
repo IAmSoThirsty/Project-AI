@@ -9,6 +9,8 @@ from cryptography.fernet import Fernet
 
 from app.agents.ci_checker_agent import CICheckerAgent
 from app.agents.code_adversary_agent import CodeAdversaryAgent
+from app.agents.consigliere.consigliere_engine import ThirstyConsigliere
+from app.agents.consigliere.privacy_checker import PrivacyChecker
 from app.agents.constitutional_guardrail_agent import ConstitutionalGuardrailAgent
 from app.agents.dependency_auditor import DependencyAuditor
 from app.agents.doc_generator import DocGenerator
@@ -24,13 +26,11 @@ from app.agents.rollback_agent import RollbackAgent
 from app.agents.safety_guard_agent import SafetyGuardAgent
 from app.agents.sandbox_runner import SandboxRunner
 from app.agents.test_qa_generator import TestQAGenerator
-from app.agents.consigliere.consigliere_engine import ThirstyConsigliere
-from app.agents.consigliere.privacy_checker import PrivacyChecker
 from app.agents.ux_telemetry import UxTelemetryAgent
 from app.core.ai_systems import AIPersona, MemoryExpansionSystem
-from app.core.nirl.heart import Heart
 from app.core.cognition_kernel import CognitionKernel
 from app.core.continuous_learning import ContinuousLearningEngine
+from app.core.nirl.heart import Heart
 from app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
@@ -229,7 +229,9 @@ class CouncilHub:
 
             logger.info("Registered agent %s", agent_id)
 
-    def check_privacy(self, query: str, context: dict[str, Any] | None = None) -> dict[str, Any]:
+    def check_privacy(
+        self, query: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Run a privacy audit on a query before it reaches the kernel.
 
         Returns the PrivacyChecker audit dict: {safe, concerns, suggestions}.

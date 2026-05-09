@@ -12,7 +12,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
@@ -25,9 +25,9 @@ logger = logging.getLogger(__name__)
 class OperationMode(Enum):
     """Security operation modes for the bridge."""
 
-    STATIC = "static"    # Static analysis only — no runtime hooks
+    STATIC = "static"  # Static analysis only — no runtime hooks
     DYNAMIC = "dynamic"  # Dynamic / runtime analysis
-    HYBRID = "hybrid"    # Static + dynamic (default for production)
+    HYBRID = "hybrid"  # Static + dynamic (default for production)
 
 
 @dataclass

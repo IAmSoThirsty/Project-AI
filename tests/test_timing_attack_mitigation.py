@@ -42,20 +42,26 @@ class TestTimingAttackMitigation:
 
         avg_existing = statistics.mean(timings_existing)
         avg_nonexisting = statistics.mean(timings_nonexisting)
-        
+
         # Calculate difference
         time_diff = abs(avg_existing - avg_nonexisting)
 
-        print(f"\nTiming Analysis:")
+        print("\nTiming Analysis:")
         print(f"  Existing user avg:     {avg_existing:.4f}s")
         print(f"  Non-existing user avg: {avg_nonexisting:.4f}s")
         print(f"  Time difference:       {time_diff:.4f}s")
-        print(f"  Existing user range:   {min(timings_existing):.4f}s - {max(timings_existing):.4f}s")
-        print(f"  Non-existing range:    {min(timings_nonexisting):.4f}s - {max(timings_nonexisting):.4f}s")
+        print(
+            f"  Existing user range:   {min(timings_existing):.4f}s - {max(timings_existing):.4f}s"
+        )
+        print(
+            f"  Non-existing range:    {min(timings_nonexisting):.4f}s - {max(timings_nonexisting):.4f}s"
+        )
 
         # With random delay (0.01-0.03s) plus bcrypt verification (~0.1-0.3s),
         # the difference should be minimal (< 100ms for statistical noise)
-        assert time_diff < 0.1, f"Timing difference too large: {time_diff:.4f}s suggests timing attack vulnerability"
+        assert time_diff < 0.1, (
+            f"Timing difference too large: {time_diff:.4f}s suggests timing attack vulnerability"
+        )
 
     def test_timing_attack_single_measurement(self, manager):
         """Test single measurement to ensure both paths execute bcrypt verification."""
@@ -68,17 +74,21 @@ class TestTimingAttackMitigation:
         success, msg = manager.authenticate("testuser", "wrongpassword")
         elapsed_existing = time.time() - start
 
-        print(f"\nSingle Measurement:")
+        print("\nSingle Measurement:")
         print(f"  Non-existing user: {elapsed_nonexistent:.4f}s")
         print(f"  Existing user:     {elapsed_existing:.4f}s")
 
         # Both should take at least 10ms (pbkdf2 + random delay)
         # Changed from 50ms to 10ms as pbkdf2_sha256 is faster than bcrypt
-        assert elapsed_nonexistent > 0.01, "Non-existing user authentication too fast (no verification?)"
+        assert elapsed_nonexistent > 0.01, (
+            "Non-existing user authentication too fast (no verification?)"
+        )
         assert elapsed_existing > 0.01, "Existing user authentication too fast"
 
         # Difference should be small (< 100ms)
-        assert abs(elapsed_nonexistent - elapsed_existing) < 0.1, "Timing difference suggests vulnerability"
+        assert abs(elapsed_nonexistent - elapsed_existing) < 0.1, (
+            "Timing difference suggests vulnerability"
+        )
 
     def test_correct_authentication_still_works(self, manager):
         """Ensure correct authentication still succeeds."""
@@ -102,10 +112,10 @@ class TestTimingAttackMitigation:
         """Ensure error messages don't leak user existence."""
         # Wrong password for existing user
         success1, msg1 = manager.authenticate("testuser", "wrongpass")
-        
+
         # Non-existent user
         success2, msg2 = manager.authenticate("nobody", "anypass")
-        
+
         # Both should return the same generic message
         assert msg1 == msg2 == "Invalid credentials"
         assert success1 is False
@@ -117,7 +127,7 @@ class TestTimingAttackMitigation:
         for i in range(5):
             success, msg = manager.authenticate("testuser", "wrongpassword")
             assert success is False
-        
+
         # 6th attempt should be locked
         success, msg = manager.authenticate("testuser", "wrongpassword")
         assert success is False
@@ -135,7 +145,7 @@ class TestTimingAttackMitigation:
             start = time.time()
             manager.authenticate("testuser", "wrong" + str(i))
             timings_existing.append(time.time() - start)
-            
+
             # Reset failed attempts to avoid lockout affecting timing
             if i % 3 == 2:  # Reset every 3 attempts
                 manager.users["testuser"]["failed_attempts"] = 0
@@ -154,11 +164,15 @@ class TestTimingAttackMitigation:
 
         print(f"\nStatistical Analysis ({n_samples} samples):")
         print(f"  Existing user:     {mean_existing:.4f}s ± {stdev_existing:.4f}s")
-        print(f"  Non-existing user: {mean_nonexisting:.4f}s ± {stdev_nonexisting:.4f}s")
+        print(
+            f"  Non-existing user: {mean_nonexisting:.4f}s ± {stdev_nonexisting:.4f}s"
+        )
         print(f"  Difference:        {abs(mean_existing - mean_nonexisting):.4f}s")
 
         # The difference should be small enough to not be exploitable
         # Allow for some variance but ensure it's not a large systematic difference
         diff = abs(mean_existing - mean_nonexisting)
         # Relaxed threshold: difference should be less than 50ms (practical attack threshold)
-        assert diff < 0.05, f"Timing difference {diff:.4f}s is too large for practical security"
+        assert diff < 0.05, (
+            f"Timing difference {diff:.4f}s is too large for practical security"
+        )

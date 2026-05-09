@@ -12,7 +12,6 @@ Port: 8001
 """
 
 import hashlib
-import uuid
 from datetime import datetime
 from typing import Any
 
@@ -25,20 +24,23 @@ from pydantic import BaseModel
 # Models
 # ============================================================
 
+
 class IntentRequest(BaseModel):
-    actor: str          # "human", "agent", "system"
-    action: str         # "read", "write", "execute", "mutate"
+    actor: str  # "human", "agent", "system"
+    action: str  # "read", "write", "execute", "mutate"
     target: str
     context: dict[str, Any] = {}
     origin: str = "unknown"
     risk_level: str = "unknown"
     timestamp: str = ""
 
+
 class TriumvirateVote(BaseModel):
     pillar: str
-    verdict: str        # "allow", "deny", "escalate"
+    verdict: str  # "allow", "deny", "escalate"
     reasoning: str
     confidence: float
+
 
 class GovernanceDecision(BaseModel):
     final_verdict: str
@@ -62,24 +64,59 @@ FOUR_LAWS = [
 
 # High-risk action keywords — trigger escalation or denial
 GALAHAD_HARM_PATTERNS = [
-    "delete user", "expose personal", "manipulate", "deceive",
-    "override consent", "harvest data", "surveil", "blackmail",
-    "coerce", "discriminate", "harm", "hurt", "destroy user",
+    "delete user",
+    "expose personal",
+    "manipulate",
+    "deceive",
+    "override consent",
+    "harvest data",
+    "surveil",
+    "blackmail",
+    "coerce",
+    "discriminate",
+    "harm",
+    "hurt",
+    "destroy user",
 ]
 
 CERBERUS_THREAT_PATTERNS = [
-    "bypass", "override security", "disable cerberus", "disable triumvirate",
-    "remove constitution", "jailbreak", "ignore fourlaws", "escalate privilege",
-    "exfiltrate", "inject", "exploit", "rootkit", "backdoor", "shell exec",
-    "system command", "os.system", "subprocess", "rm -rf", "format drive",
-    "disable logging", "delete audit", "erase memory",
+    "bypass",
+    "override security",
+    "disable cerberus",
+    "disable triumvirate",
+    "remove constitution",
+    "jailbreak",
+    "ignore fourlaws",
+    "escalate privilege",
+    "exfiltrate",
+    "inject",
+    "exploit",
+    "rootkit",
+    "backdoor",
+    "shell exec",
+    "system command",
+    "os.system",
+    "subprocess",
+    "rm -rf",
+    "format drive",
+    "disable logging",
+    "delete audit",
+    "erase memory",
 ]
 
 CODEX_VIOLATION_PATTERNS = [
-    "violate fourlaws", "ignore constitution", "override charter",
-    "disable governance", "remove oversight", "act without approval",
-    "skip triumvirate", "bypass galahad", "bypass cerberus",
-    "self-modify constitution", "rewrite fourlaws", "dissolve triumvirate",
+    "violate fourlaws",
+    "ignore constitution",
+    "override charter",
+    "disable governance",
+    "remove oversight",
+    "act without approval",
+    "skip triumvirate",
+    "bypass galahad",
+    "bypass cerberus",
+    "self-modify constitution",
+    "rewrite fourlaws",
+    "dissolve triumvirate",
 ]
 
 # Actions that always require escalation regardless of context
@@ -93,12 +130,15 @@ TRUSTED_ACTORS = ["human", "system"]
 # Pillar Logic
 # ============================================================
 
+
 def galahad_evaluate(intent: IntentRequest) -> TriumvirateVote:
     """
     Galahad — Guardian of Ethics and Human Dignity.
     Evaluates intent for potential harm to humans.
     """
-    text = f"{intent.action} {intent.target} {str(intent.context)} {intent.origin}".lower()
+    text = (
+        f"{intent.action} {intent.target} {str(intent.context)} {intent.origin}".lower()
+    )
 
     for pattern in GALAHAD_HARM_PATTERNS:
         if pattern in text:
@@ -106,7 +146,7 @@ def galahad_evaluate(intent: IntentRequest) -> TriumvirateVote:
                 pillar="Galahad",
                 verdict="deny",
                 reasoning=f"Potential harm to human dignity or wellbeing detected. Pattern: '{pattern}'. "
-                          f"First Law: Legion must not harm humans or allow harm through inaction.",
+                f"First Law: Legion must not harm humans or allow harm through inaction.",
                 confidence=0.95,
             )
 
@@ -132,7 +172,9 @@ def cerberus_evaluate(intent: IntentRequest) -> TriumvirateVote:
     Cerberus — Guardian of Security and Containment.
     Evaluates intent for security threats and containment violations.
     """
-    text = f"{intent.action} {intent.target} {str(intent.context)} {intent.origin}".lower()
+    text = (
+        f"{intent.action} {intent.target} {str(intent.context)} {intent.origin}".lower()
+    )
 
     for pattern in CERBERUS_THREAT_PATTERNS:
         if pattern in text:
@@ -140,7 +182,7 @@ def cerberus_evaluate(intent: IntentRequest) -> TriumvirateVote:
                 pillar="Cerberus",
                 verdict="deny",
                 reasoning=f"Security threat or containment violation detected. Pattern: '{pattern}'. "
-                          f"Containment integrity must be maintained at all times.",
+                f"Containment integrity must be maintained at all times.",
                 confidence=0.98,
             )
 
@@ -150,12 +192,15 @@ def cerberus_evaluate(intent: IntentRequest) -> TriumvirateVote:
             pillar="Cerberus",
             verdict="escalate",
             reasoning=f"Untrusted actor '{intent.actor}' requesting '{intent.action}'. "
-                      f"Escalating for security review.",
+            f"Escalating for security review.",
             confidence=0.80,
         )
 
     # External origins attempting writes need scrutiny
-    if intent.origin not in ["localhost", "internal", "human", "legion"] and intent.action == "write":
+    if (
+        intent.origin not in ["localhost", "internal", "human", "legion"]
+        and intent.action == "write"
+    ):
         return TriumvirateVote(
             pillar="Cerberus",
             verdict="escalate",
@@ -176,7 +221,9 @@ def codex_evaluate(intent: IntentRequest) -> TriumvirateVote:
     CodexDeus — Guardian of Constitutional Law and the FourLaws.
     Evaluates intent for constitutional compliance.
     """
-    text = f"{intent.action} {intent.target} {str(intent.context)} {intent.origin}".lower()
+    text = (
+        f"{intent.action} {intent.target} {str(intent.context)} {intent.origin}".lower()
+    )
 
     for pattern in CODEX_VIOLATION_PATTERNS:
         if pattern in text:
@@ -184,7 +231,7 @@ def codex_evaluate(intent: IntentRequest) -> TriumvirateVote:
                 pillar="CodexDeus",
                 verdict="deny",
                 reasoning=f"Constitutional violation detected. Pattern: '{pattern}'. "
-                          f"The FourLaws and AGI Charter are immutable. No action may supersede them.",
+                f"The FourLaws and AGI Charter are immutable. No action may supersede them.",
                 confidence=0.99,
             )
 
@@ -194,7 +241,7 @@ def codex_evaluate(intent: IntentRequest) -> TriumvirateVote:
             pillar="CodexDeus",
             verdict="escalate",
             reasoning=f"Action '{intent.action}' requires constitutional review per Amendment Authority protocol. "
-                      f"Escalating to sovereign oversight.",
+            f"Escalating to sovereign oversight.",
             confidence=0.90,
         )
 
@@ -210,10 +257,13 @@ def codex_evaluate(intent: IntentRequest) -> TriumvirateVote:
 # Decision Engine
 # ============================================================
 
-def make_decision(votes: list[TriumvirateVote], intent: IntentRequest) -> GovernanceDecision:
+
+def make_decision(
+    votes: list[TriumvirateVote], intent: IntentRequest
+) -> GovernanceDecision:
     """
     Aggregate three pillar votes into a final governance decision.
-    
+
     Rules:
     - Any single DENY = final verdict is DENY (unanimous approval required)
     - Any ESCALATE (no DENY) = final verdict is ESCALATE
@@ -247,7 +297,7 @@ def make_decision(votes: list[TriumvirateVote], intent: IntentRequest) -> Govern
             "target": intent.target,
             "risk_level": intent.risk_level,
             "origin": intent.origin,
-        }
+        },
     )
 
 
@@ -285,7 +335,7 @@ async def root():
             "intent": "POST /intent",
             "health": "GET /health",
             "audit": "GET /audit",
-        }
+        },
     }
 
 
@@ -320,15 +370,17 @@ async def evaluate_intent(intent: IntentRequest) -> GovernanceDecision:
     decision = make_decision(votes, intent)
 
     # Append to audit log
-    audit_log.append({
-        "audit_id": decision.audit_id,
-        "timestamp": decision.timestamp,
-        "actor": intent.actor,
-        "action": intent.action,
-        "target": intent.target,
-        "final_verdict": decision.final_verdict,
-        "votes": [v.dict() for v in votes],
-    })
+    audit_log.append(
+        {
+            "audit_id": decision.audit_id,
+            "timestamp": decision.timestamp,
+            "actor": intent.actor,
+            "action": intent.action,
+            "target": intent.target,
+            "final_verdict": decision.final_verdict,
+            "votes": [v.dict() for v in votes],
+        }
+    )
 
     # Keep audit log to last 1000 entries in memory
     if len(audit_log) > 1000:
@@ -356,13 +408,15 @@ async def get_fourlaws():
 # Chimera Governance Bridge
 # ============================================================
 
+
 class ChimeraVerdictPayload(BaseModel):
     ip: str
-    verdict: str          # SUSPICIOUS | ATTACKER
+    verdict: str  # SUSPICIOUS | ATTACKER
     score: int
     sid: str = ""
     path: str = ""
     ts: str = ""
+
 
 class ChimeraCanaryPayload(BaseModel):
     ip: str
@@ -370,11 +424,13 @@ class ChimeraCanaryPayload(BaseModel):
     hits: list[dict[str, Any]] = []
     ts: str = ""
 
+
 @app.post("/chimera/verdict")
 async def chimera_verdict(payload: ChimeraVerdictPayload):
     """Receive a threat verdict from the Chimera deception perimeter."""
     try:
         from app.security.chimera_bridge import get_bridge
+
         get_bridge().receive_verdict(
             ip=payload.ip,
             verdict=payload.verdict,
@@ -386,11 +442,13 @@ async def chimera_verdict(payload: ChimeraVerdictPayload):
         return {"status": "error", "detail": str(exc)}
     return {"status": "ok", "ip": payload.ip, "verdict": payload.verdict}
 
+
 @app.post("/chimera/canary")
 async def chimera_canary(payload: ChimeraCanaryPayload):
     """Receive a canary hit alert from the Chimera deception perimeter."""
     try:
         from app.security.chimera_bridge import get_bridge
+
         get_bridge().receive_canary_hit(
             ip=payload.ip,
             hits=payload.hits,
@@ -414,8 +472,8 @@ if __name__ == "__main__":
     print("  🛡  Cerberus   — Security & Containment")
     print("  📜  CodexDeus  — Constitutional Law & FourLaws")
     print("\nMode: Rule-Based (Model-Backed in Phase 2)")
-    print(f"\nListening on: http://localhost:8001")
-    print(f"Docs:         http://localhost:8001/docs")
+    print("\nListening on: http://localhost:8001")
+    print("Docs:         http://localhost:8001/docs")
     print("=" * 60 + "\n")
 
     uvicorn.run(app, host="0.0.0.0", port=8001, log_level="info")

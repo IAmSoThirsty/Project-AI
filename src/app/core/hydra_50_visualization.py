@@ -557,7 +557,7 @@ class CollapsePredictionViz:
                 time_str = "Unknown"
 
             # Main line
-            line = f"{i:2}. {pred.collapse_mode:<25} {bar} {pred.probability*100:5.1f}% ETA:{time_str}"
+            line = f"{i:2}. {pred.collapse_mode:<25} {bar} {pred.probability * 100:5.1f}% ETA:{time_str}"
 
             # Color by severity
             if pred.severity == "CRITICAL":
@@ -732,7 +732,7 @@ class HeatMapViz:
         lines.append("")
         legend = "Intensity: "
         for i, char in enumerate(ASCIIArtRenderer.BLOCK_CHARS):
-            legend += f"{char}={i/4:.1f} "
+            legend += f"{char}={i / 4:.1f} "
         lines.append(legend)
 
         return "\n".join(lines)

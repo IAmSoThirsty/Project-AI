@@ -8,19 +8,24 @@ to ensure all workflows route through the unified governance pipeline.
 import json
 import logging
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
+
 
 def _get_redis_client():
     """Return a Redis client if Redis is available, else None."""
     try:
         import redis as _redis
+
         url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-        client = _redis.from_url(url, decode_responses=True, socket_connect_timeout=2, socket_timeout=2)
+        client = _redis.from_url(
+            url, decode_responses=True, socket_connect_timeout=2, socket_timeout=2
+        )
         client.ping()
         return client
     except Exception:
         return None
+
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +85,7 @@ async def validate_workflow_execution(
         result = route_request(
             "temporal",
             {
-                "action": f"temporal.workflow.validate",
+                "action": "temporal.workflow.validate",
                 "workflow_type": workflow_type,
                 "payload": request_dict,
                 "user": context.get("user", {}),
@@ -275,14 +280,12 @@ async def check_workflow_quota(
 
     limit = quotas.get(workflow_type, 50)  # Default: 50/day
 
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
     quota_key = f"quota:{user_id or 'anonymous'}:{workflow_type}:{today}"
 
-    next_reset = (
-        datetime.now(timezone.utc)
-        .replace(hour=0, minute=0, second=0, microsecond=0)
-        + timedelta(days=1)
-    )
+    next_reset = datetime.now(UTC).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    ) + timedelta(days=1)
 
     redis = _get_redis_client()
     if redis is not None:
@@ -296,7 +299,10 @@ async def check_workflow_quota(
             if not allowed:
                 logger.warning(
                     "Quota exceeded for %s: %s used %d/%d",
-                    user_id or "anonymous", workflow_type, current_count, limit,
+                    user_id or "anonymous",
+                    workflow_type,
+                    current_count,
+                    limit,
                 )
             return {
                 "allowed": allowed,
@@ -310,7 +316,9 @@ async def check_workflow_quota(
     # Redis unavailable — optimistic allow, log it
     logger.info(
         "Quota check (no Redis) for %s: %s (limit: %d/day)",
-        user_id or "anonymous", workflow_type, limit,
+        user_id or "anonymous",
+        workflow_type,
+        limit,
     )
     return {
         "allowed": True,
@@ -358,7 +366,7 @@ async def validate_crisis_authorization(
     alerts_dir = "data/governance_drift_alerts"
     if os.path.isdir(alerts_dir):
         try:
-            cutoff = datetime.now(timezone.utc).timestamp() - 3600  # 1 hour
+            cutoff = datetime.now(UTC).timestamp() - 3600  # 1 hour
             for fname in os.listdir(alerts_dir):
                 if not fname.endswith(".json"):
                     continue

@@ -474,7 +474,9 @@ class SituationalAwarenessSubsystem(
             _dispatch,
         )
         if not approved:
-            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+            return SubsystemResponse(
+                command.command_id, False, error=f"Governance denied: {result}"
+            )
         return result
 
     def get_supported_commands(self) -> list[str]:
@@ -594,8 +596,7 @@ class SituationalAwarenessSubsystem(
                 return
 
             contact_id = hashlib.md5(
-                f"{location[0]:.3f},{location[1]:.3f}".encode(),
-                usedforsecurity=False
+                f"{location[0]:.3f},{location[1]:.3f}".encode(), usedforsecurity=False
             ).hexdigest()[:16]
 
             if contact_id in self._threat_contacts:

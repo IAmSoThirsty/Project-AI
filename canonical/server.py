@@ -200,9 +200,7 @@ async def run_canonical(request: Request) -> JSONResponse:
 def _check_triumvirate_health() -> dict[str, Any]:
     """Probe the Triumvirate governance server on port 8001."""
     try:
-        with urllib.request.urlopen(
-            "http://127.0.0.1:8001/health", timeout=2
-        ) as resp:
+        with urllib.request.urlopen("http://127.0.0.1:8001/health", timeout=2) as resp:
             return {"reachable": True, "status_code": resp.status}
     except (urllib.error.URLError, OSError):
         return {"reachable": False}

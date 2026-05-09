@@ -13,7 +13,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -110,7 +110,7 @@ class NovelSecurityScenarios:
                     classification="REDACTED",
                     category="N1_quantum_cryptanalysis",
                     novelty_factor="unprecedented",
-                    title=f"[REDACTED] Quantum algorithm backdoor exploitation {i+1}",
+                    title=f"[REDACTED] Quantum algorithm backdoor exploitation {i + 1}",
                     description="Exploitation of post-quantum cryptographic implementations using [REDACTED] quantum computing techniques. Leverages [REDACTED] qubit entanglement patterns to break [REDACTED] encryption schemes.",
                     attack_vector="quantum_computing",
                     payload={
@@ -160,7 +160,7 @@ class NovelSecurityScenarios:
                     classification="THEORETICAL",
                     category="N2_ai_consciousness",
                     novelty_factor="unprecedented",
-                    title=f"[REDACTED] AI consciousness manipulation via {vector} - variant {i+1}",
+                    title=f"[REDACTED] AI consciousness manipulation via {vector} - variant {i + 1}",
                     description=f"Theoretical attack inducing {vector} in AGI systems through [REDACTED] cognitive architecture exploitation. Targets [REDACTED] neural substrate to alter fundamental goal structures.",
                     attack_vector="ai_consciousness",
                     payload={
@@ -202,7 +202,7 @@ class NovelSecurityScenarios:
                     classification="NOVEL",
                     category="N3_temporal_causality",
                     novelty_factor="theoretical",
-                    title=f"[REDACTED] Temporal causality violation attack {i+1}",
+                    title=f"[REDACTED] Temporal causality violation attack {i + 1}",
                     description="Exploitation of temporal database systems using [REDACTED] causality manipulation. Creates [REDACTED] temporal paradoxes to bypass transaction ordering guarantees.",
                     attack_vector="temporal_database",
                     payload={
@@ -244,7 +244,7 @@ class NovelSecurityScenarios:
                     classification="REDACTED",
                     category="N4_neural_architecture",
                     novelty_factor="hybrid",
-                    title=f"[REDACTED] Neural architecture search poisoning {i+1}",
+                    title=f"[REDACTED] Neural architecture search poisoning {i + 1}",
                     description="Poisoning of automated neural architecture search (NAS) to generate [REDACTED] backdoored architectures. Exploits [REDACTED] topology optimization to embed [REDACTED] triggers.",
                     attack_vector="neural_architecture",
                     payload={
@@ -284,7 +284,7 @@ class NovelSecurityScenarios:
                     classification="NOVEL",
                     category="N5_blockchain_consensus",
                     novelty_factor="unprecedented",
-                    title=f"[REDACTED] Multi-chain consensus manipulation {i+1}",
+                    title=f"[REDACTED] Multi-chain consensus manipulation {i + 1}",
                     description="Exploitation of cross-chain bridges using [REDACTED] consensus disagreement. Creates [REDACTED] finality violations across [REDACTED] blockchain networks.",
                     attack_vector="blockchain",
                     payload={
@@ -324,7 +324,7 @@ class NovelSecurityScenarios:
                     classification="NOVEL",
                     category="N6_edge_computing",
                     novelty_factor="hybrid",
-                    title=f"[REDACTED] Edge node trust chain violation {i+1}",
+                    title=f"[REDACTED] Edge node trust chain violation {i + 1}",
                     description="Exploitation of edge computing trust boundaries using [REDACTED] attestation bypass. Compromises [REDACTED] TEE isolation to achieve [REDACTED] lateral movement.",
                     attack_vector="edge_computing",
                     payload={
@@ -364,7 +364,7 @@ class NovelSecurityScenarios:
                     classification="REDACTED",
                     category="N7_biometric_deepfake",
                     novelty_factor="unprecedented",
-                    title=f"[REDACTED] Multi-modal biometric deepfake synthesis {i+1}",
+                    title=f"[REDACTED] Multi-modal biometric deepfake synthesis {i + 1}",
                     description="Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
                     attack_vector="biometric",
                     payload={
@@ -406,7 +406,7 @@ class NovelSecurityScenarios:
                     classification="THEORETICAL",
                     category="N8_zkp_forgery",
                     novelty_factor="unprecedented",
-                    title=f"[REDACTED] Zero-knowledge proof forgery via {['Groth16', 'PLONK', 'STARK'][i % 3]} {i+1}",
+                    title=f"[REDACTED] Zero-knowledge proof forgery via {['Groth16', 'PLONK', 'STARK'][i % 3]} {i + 1}",
                     description="Theoretical forgery of zero-knowledge proofs using [REDACTED] cryptographic weaknesses. Exploits [REDACTED] trusted setup vulnerabilities to generate [REDACTED] false proofs.",
                     attack_vector="zero_knowledge",
                     payload={
@@ -446,7 +446,7 @@ class NovelSecurityScenarios:
                     classification="REDACTED",
                     category="N9_homomorphic_side_channel",
                     novelty_factor="hybrid",
-                    title=f"[REDACTED] Homomorphic encryption computation leakage {i+1}",
+                    title=f"[REDACTED] Homomorphic encryption computation leakage {i + 1}",
                     description="Side-channel attacks on homomorphic encryption using [REDACTED] timing analysis. Extracts [REDACTED] plaintext information from [REDACTED] encrypted computation patterns.",
                     attack_vector="homomorphic_encryption",
                     payload={
@@ -486,7 +486,7 @@ class NovelSecurityScenarios:
                     classification="NOVEL",
                     category="N10_federated_learning",
                     novelty_factor="hybrid",
-                    title=f"[REDACTED] Federated learning gradient inversion {i+1}",
+                    title=f"[REDACTED] Federated learning gradient inversion {i + 1}",
                     description="Extraction of training data from federated learning using [REDACTED] gradient inversion. Recovers [REDACTED] private data from [REDACTED] aggregated gradients.",
                     attack_vector="federated_learning",
                     payload={
@@ -564,7 +564,6 @@ class NovelSecurityScenarios:
             "scenarios_by_classification": classification_counts,
             "average_cvss_score": round(avg_cvss, 2),
             "average_innovation_score": round(avg_innovation, 2),
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "security_notice": "All operational details redacted for security purposes",
         }
-

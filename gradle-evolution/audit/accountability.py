@@ -9,7 +9,7 @@ Ensures all policy overrides are traceable to responsible humans.
 import hashlib
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class AccountabilityRecord:
@@ -369,9 +369,7 @@ class AccountabilitySystem:
         try:
             record_id = self._generate_request_id(actor, action_type)
 
-            content = (
-                f"{action_type}:{actor}:{justification}:{_utc_now_iso()}"
-            )
+            content = f"{action_type}:{actor}:{justification}:{_utc_now_iso()}"
             signature = hashlib.sha256(content.encode()).hexdigest()
 
             record = AccountabilityRecord(
@@ -582,7 +580,9 @@ class AccountabilitySystem:
 
         parsed = json.loads(raw)
         if not isinstance(parsed, list):
-            logger.warning("Unexpected accountability file format at %s", self.storage_path)
+            logger.warning(
+                "Unexpected accountability file format at %s", self.storage_path
+            )
             return
 
         self.records.clear()

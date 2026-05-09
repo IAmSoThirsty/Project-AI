@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import argparse
@@ -14,7 +13,6 @@ from .package_manager import (
     ensure_hydration_dirs,
     install_package,
     list_installed_packages,
-    load_manifest,
     publish_package,
     search_gallery,
     show_gallery_item,
@@ -26,8 +24,14 @@ _ACH = Path.home() / ".thirsty_achievements.json"
 
 
 def color(text: str, name: str) -> str:
-    codes = {"green": "\033[92m", "yellow": "\033[93m", "red": "\033[91m", "blue": "\033[94m", "reset": "\033[0m"}
-    return f"{codes.get(name,'')}{text}{codes['reset']}"
+    codes = {
+        "green": "\033[92m",
+        "yellow": "\033[93m",
+        "red": "\033[91m",
+        "blue": "\033[94m",
+        "reset": "\033[0m",
+    }
+    return f"{codes.get(name, '')}{text}{codes['reset']}"
 
 
 def load_achievements() -> set[str]:
@@ -50,13 +54,22 @@ def parse_source(source: str, file: str = "<memory>"):
 
 def check_source(source: str, file: str = "<memory>"):
     from .checker import Checker
+
     program = parse_source(source, file)
     Checker().check(program)
     return program
 
 
-def run_source(source: str, file: str = "<memory>", input_values: list[str] | None = None, trace: bool = False, thirst_level: int = 1, return_interpreter: bool = False):
+def run_source(
+    source: str,
+    file: str = "<memory>",
+    input_values: list[str] | None = None,
+    trace: bool = False,
+    thirst_level: int = 1,
+    return_interpreter: bool = False,
+):
     idx = 0
+
     def input_provider() -> str:
         nonlocal idx
         if input_values is None or idx >= len(input_values):
@@ -64,9 +77,20 @@ def run_source(source: str, file: str = "<memory>", input_values: list[str] | No
         val = input_values[idx]
         idx += 1
         return val
+
     program = check_source(source, file)
-    project_root = str(Path(file).resolve().parent) if file not in {"<memory>", "<repl>"} else str(Path(".").resolve())
-    interp = Interpreter(input_provider=input_provider, trace=trace, thirst_level=thirst_level, current_file=file, project_root=project_root)
+    project_root = (
+        str(Path(file).resolve().parent)
+        if file not in {"<memory>", "<repl>"}
+        else str(Path(".").resolve())
+    )
+    interp = Interpreter(
+        input_provider=input_provider,
+        trace=trace,
+        thirst_level=thirst_level,
+        current_file=file,
+        project_root=project_root,
+    )
     out = interp.run(program)
     return (out, interp) if return_interpreter else out
 
@@ -75,6 +99,7 @@ def thirsty_fmt(text: str) -> str:
     indent = 0
     lines = []
     current = []
+
     def flush():
         nonlocal current
         if current:
@@ -82,6 +107,7 @@ def thirsty_fmt(text: str) -> str:
             if line:
                 lines.append("  " * indent + line)
             current = []
+
     for ch in text:
         if ch == "{":
             current.append(" {")
@@ -111,21 +137,26 @@ def doctor(project: Path) -> list[str]:
     except Exception as e:
         report.append(color(f"thirsty for fixes: Thirsty-Lang ({e})", "red"))
     try:
-        from tarl.core import parse_policy, evaluate, load_context
+        from tarl.core import evaluate, load_context, parse_policy
+
         p = parse_policy((ex / "policy.tarl").read_text())
         _ = evaluate(p, load_context(str(ex / "context.json")))
         report.append(color("fully hydrated: TARL", "green"))
     except Exception as e:
         report.append(color(f"parched: TARL ({e})", "yellow"))
     try:
-        from shadow_thirst.core import parse_shadow, analyze
-        m = parse_shadow((ex / "promote.shadowthirst").read_text(), str(ex / "promote.shadowthirst"))
+        from shadow_thirst.core import analyze, parse_shadow
+
+        m = parse_shadow(
+            (ex / "promote.shadowthirst").read_text(), str(ex / "promote.shadowthirst")
+        )
         _ = analyze(m)
         report.append(color("fully hydrated: Shadow Thirst", "green"))
     except Exception as e:
         report.append(color(f"parched: Shadow Thirst ({e})", "yellow"))
     try:
         from tscg.core import parse, validate
+
         validate(parse("COG -> DNT -> SHD(v1) ^ CAP -> COM"))
         report.append(color("fully hydrated: TSCG", "green"))
     except Exception as e:
@@ -141,7 +172,9 @@ def gallery_lines(term: str | None = None) -> list[str]:
     lines = [color("Great Wells:", "blue")]
     for item in items:
         tags = ",".join(item.get("tags", []))
-        lines.append(f"- {item['name']}@{item['version']} :: {item.get('description','')} [{tags}]")
+        lines.append(
+            f"- {item['name']}@{item['version']} :: {item.get('description', '')} [{tags}]"
+        )
     return lines
 
 
@@ -161,7 +194,9 @@ def scaffold_fountain(path: Path, name: str) -> None:
 }
 """
     (path / name / "src" / "main.thirsty").write_text(main_src, encoding="utf-8")
-    (path / name / "README.md").write_text(f"# {name}\n\nA freshly poured Thirsty project.\n", encoding="utf-8")
+    (path / name / "README.md").write_text(
+        f"# {name}\n\nA freshly poured Thirsty project.\n", encoding="utf-8"
+    )
 
 
 def repl() -> int:
@@ -275,7 +310,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "repl":
         return repl()
     if args.cmd == "tutorial":
-        print("Lesson 1: drink declares. Lesson 2: pour speaks. Lesson 3: thirsty decides.")
+        print(
+            "Lesson 1: drink declares. Lesson 2: pour speaks. Lesson 3: thirsty decides."
+        )
         achievements.add("tutorial_started")
         save_achievements(achievements)
         return 0
@@ -287,7 +324,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.cmd == "new":
         if args.kind != "fountain":
-            print(color("parched: only 'fountain' scaffolding is implemented", "yellow"))
+            print(
+                color("parched: only 'fountain' scaffolding is implemented", "yellow")
+            )
             return 1
         scaffold_fountain(Path("."), args.name)
         print(color(f"fully hydrated: scaffolded {args.name}", "green"))
@@ -296,11 +335,20 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.cmd == "install":
         result = install_package(Path(".").resolve(), args.package)
-        print(color(f"fully hydrated: installed {result['name']}@{result['version']}", "green"))
+        print(
+            color(
+                f"fully hydrated: installed {result['name']}@{result['version']}",
+                "green",
+            )
+        )
         return 0
     if args.cmd == "publish":
         entry = publish_package(Path(args.project).resolve())
-        print(color(f"fully hydrated: published {entry['name']}@{entry['version']}", "green"))
+        print(
+            color(
+                f"fully hydrated: published {entry['name']}@{entry['version']}", "green"
+            )
+        )
         return 0
     if args.cmd == "packages":
         for item in list_installed_packages(Path(".").resolve()):
@@ -330,20 +378,27 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.cmd == "ast":
             import dataclasses
+
             program = parse_source(text, args.file)
+
             def walk(node):
                 if dataclasses.is_dataclass(node):
                     return {k: walk(v) for k, v in dataclasses.asdict(node).items()}
                 if isinstance(node, list):
                     return [walk(x) for x in node]
                 return node
+
             print(json.dumps(walk(program), indent=2))
             return 0
         if args.cmd == "promote":
             from shadow_thirst.core import parse_shadow, promote
-            from tscg.core import canonical, parse as parse_tscg
+            from tscg.core import canonical
+            from tscg.core import parse as parse_tscg
+
             result = promote(parse_shadow(text, args.file))
-            sym = "SHD -> INV -> COM" if result["decision"] == "PROMOTE" else "SHD -> RFX"
+            sym = (
+                "SHD -> INV -> COM" if result["decision"] == "PROMOTE" else "SHD -> RFX"
+            )
             result["tscg"] = canonical(parse_tscg(sym))
             print(json.dumps(result, indent=2))
             return 0
@@ -354,7 +409,13 @@ def main(argv: list[str] | None = None) -> int:
             duration = perf_counter() - start
             print(json.dumps({"runs": 100, "seconds": duration}, indent=2))
             return 0
-        out, interp = run_source(text, args.file, trace=args.trace, thirst_level=args.thirst_level, return_interpreter=True)
+        out, interp = run_source(
+            text,
+            args.file,
+            trace=args.trace,
+            thirst_level=args.thirst_level,
+            return_interpreter=True,
+        )
         for item in out:
             print(item)
         achievements.update(interp.achievements)

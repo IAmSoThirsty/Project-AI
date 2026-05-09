@@ -10,7 +10,7 @@ Uses the five-channel memory data to track governance trends.
 
 import json
 import logging
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -31,7 +31,7 @@ class GovernanceDriftAlert:
         self.severity = severity
         self.message = message
         self.evidence = evidence
-        self.timestamp = datetime.now(timezone.utc)
+        self.timestamp = datetime.now(UTC)
 
     def __repr__(self) -> str:
         return f"GovernanceDriftAlert({self.severity}: {self.message})"
@@ -96,7 +96,7 @@ class GovernanceDriftMonitor:
         executions.sort(key=lambda e: datetime.fromisoformat(e["timestamp"]))
 
         # Split into time windows
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         cutoff = now - timedelta(days=self.window_days)
 
         recent = [
@@ -333,7 +333,7 @@ class GovernanceDriftMonitor:
 
     def _save_alerts(self, alerts: list[GovernanceDriftAlert]) -> None:
         """Save alerts to disk."""
-        timestamp = datetime.now(timezone.utc).isoformat().replace(":", "-")
+        timestamp = datetime.now(UTC).isoformat().replace(":", "-")
         filename = f"drift_alerts_{timestamp}.json"
         filepath = self.alerts_dir / filename
 
@@ -357,7 +357,7 @@ class GovernanceDriftMonitor:
 
     def get_recent_alerts(self, days: int = 7) -> list[dict[str, Any]]:
         """Get recent drift alerts."""
-        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+        cutoff = datetime.now(UTC) - timedelta(days=days)
         alerts = []
 
         for filepath in sorted(self.alerts_dir.glob("*.json"), reverse=True):
@@ -374,4 +374,3 @@ class GovernanceDriftMonitor:
                 logger.warning("Failed to load %s: %s", filepath, e)
 
         return alerts
-

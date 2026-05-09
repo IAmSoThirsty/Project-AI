@@ -1,17 +1,18 @@
-
 from __future__ import annotations
 
 import hashlib
 import importlib.util
 import json
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
-from thirsty_lang import ast
 from thirsty_lang.lexer import Lexer
 from thirsty_lang.parser import Parser
 from thirsty_lang.token import Span, Token, TokenType
+
+from thirsty_lang import ast
 
 
 @dataclass
@@ -73,7 +74,14 @@ def _collect_block(tokens: list[Token], start_index: int) -> tuple[list[Token], 
 
 def _parse_statements(tokens: list[Token], file: str = "<shadow>") -> list[ast.Stmt]:
     eof_span = tokens[-1].span if tokens else Span(file, 1, 1, 1, 1)
-    wrapped = [Token(TokenType.LBRACE, "{", None, eof_span)] + tokens + [Token(TokenType.RBRACE, "}", None, eof_span), Token(TokenType.EOF, "", None, eof_span)]
+    wrapped = (
+        [Token(TokenType.LBRACE, "{", None, eof_span)]
+        + tokens
+        + [
+            Token(TokenType.RBRACE, "}", None, eof_span),
+            Token(TokenType.EOF, "", None, eof_span),
+        ]
+    )
     parser = Parser.from_tokens(wrapped)
     block = parser._block()
     return block.statements
@@ -92,7 +100,8 @@ def parse_shadow(text: str, file: str = "<shadow>") -> ShadowModule:
             if tokens[i].kind != TokenType.VALIDATED_CANONICAL:
                 raise ValueError("expected validated_canonical after mutation")
             i += 1
-            name_tok = tokens[i]; i += 1
+            name_tok = tokens[i]
+            i += 1
             if name_tok.kind != TokenType.IDENT:
                 raise ValueError("expected mutation name")
             if tokens[i].kind != TokenType.LPAREN:
@@ -100,13 +109,15 @@ def parse_shadow(text: str, file: str = "<shadow>") -> ShadowModule:
             i += 1
             params = []
             while tokens[i].kind != TokenType.RPAREN:
-                pname = tokens[i]; i += 1
+                pname = tokens[i]
+                i += 1
                 if pname.kind != TokenType.IDENT:
                     raise ValueError("expected parameter name")
                 if tokens[i].kind != TokenType.COLON:
                     raise ValueError("expected ':' after parameter")
                 i += 1
-                ptype = tokens[i]; i += 1
+                ptype = tokens[i]
+                i += 1
                 params.append((pname.lexeme, ptype.lexeme))
                 if tokens[i].kind == TokenType.COMMA:
                     i += 1
@@ -119,8 +130,14 @@ def parse_shadow(text: str, file: str = "<shadow>") -> ShadowModule:
             while j < len(body_tokens):
                 section = body_tokens[j]
                 j += 1
-                if section.kind not in {TokenType.SHADOW, TokenType.INVARIANT, TokenType.CANONICAL}:
-                    raise ValueError(f"expected shadow/invariant/canonical section, got {section.lexeme!r}")
+                if section.kind not in {
+                    TokenType.SHADOW,
+                    TokenType.INVARIANT,
+                    TokenType.CANONICAL,
+                }:
+                    raise ValueError(
+                        f"expected shadow/invariant/canonical section, got {section.lexeme!r}"
+                    )
                 block_tokens, j = _collect_block(body_tokens, j)
                 stmts = _parse_statements(block_tokens, file)
                 if section.kind == TokenType.SHADOW:
@@ -129,7 +146,16 @@ def parse_shadow(text: str, file: str = "<shadow>") -> ShadowModule:
                     invariant_body = stmts
                 else:
                     canonical_body = stmts
-            mutations.append(MutationDecl(name_tok.lexeme, params, shadow_body, invariant_body, canonical_body, start))
+            mutations.append(
+                MutationDecl(
+                    name_tok.lexeme,
+                    params,
+                    shadow_body,
+                    invariant_body,
+                    canonical_body,
+                    start,
+                )
+            )
             continue
         i += 1
     return ShadowModule(mutations, invariants)
@@ -137,7 +163,11 @@ def parse_shadow(text: str, file: str = "<shadow>") -> ShadowModule:
 
 def _writes_canonical(stmts: list[ast.Stmt]) -> bool:
     for stmt in stmts:
-        if isinstance(stmt, ast.ExprStmt) and isinstance(stmt.expr, ast.AssignExpr) and isinstance(stmt.expr.target, ast.VariableExpr):
+        if (
+            isinstance(stmt, ast.ExprStmt)
+            and isinstance(stmt.expr, ast.AssignExpr)
+            and isinstance(stmt.expr.target, ast.VariableExpr)
+        ):
             if stmt.expr.target.name.startswith("canonical_"):
                 return True
         if isinstance(stmt, ast.VarDecl) and stmt.name.startswith("canonical_"):
@@ -153,7 +183,18 @@ def _has_nondeterminism(stmts: list[ast.Stmt]) -> bool:
             return expr.name == "now"
         if isinstance(expr, ast.CallExpr) and isinstance(expr.callee, ast.VariableExpr):
             return expr.callee.name in {"now", "rand", "random"}
-        for name in ("left", "right", "expr", "target", "value", "obj", "index", "condition", "when_true", "when_false"):
+        for name in (
+            "left",
+            "right",
+            "expr",
+            "target",
+            "value",
+            "obj",
+            "index",
+            "condition",
+            "when_true",
+            "when_false",
+        ):
             child = getattr(expr, name, None)
             if isinstance(child, ast.Expr) and walk_expr(child):
                 return True
@@ -162,6 +203,7 @@ def _has_nondeterminism(stmts: list[ast.Stmt]) -> bool:
                 if isinstance(arg, ast.Expr) and walk_expr(arg):
                     return True
         return False
+
     for stmt in stmts:
         if isinstance(stmt, ast.ExprStmt) and walk_expr(stmt.expr):
             return True
@@ -177,7 +219,10 @@ def _estimate_pressure(stmts: list[ast.Stmt]) -> tuple[int, int]:
     reservoirs = 0
     for stmt in stmts:
         count += 1
-        if isinstance(stmt, ast.VarDecl) and getattr(stmt.type_node, "name", "") in {"Reservoir", "well"}:
+        if isinstance(stmt, ast.VarDecl) and getattr(stmt.type_node, "name", "") in {
+            "Reservoir",
+            "well",
+        }:
             reservoirs += 1
         if isinstance(stmt, ast.BlockStmt):
             c, r = _estimate_pressure(stmt.statements)
@@ -187,7 +232,10 @@ def _estimate_pressure(stmts: list[ast.Stmt]) -> tuple[int, int]:
 
 
 def _canonical_convergence(mutation: MutationDecl) -> bool:
-    return not (_writes_canonical(mutation.shadow_body) or _has_nondeterminism(mutation.shadow_body))
+    return not (
+        _writes_canonical(mutation.shadow_body)
+        or _has_nondeterminism(mutation.shadow_body)
+    )
 
 
 def _plugin_analyzers() -> list[Callable[[ShadowModule], list[AnalysisResult]]]:
@@ -207,35 +255,82 @@ def _plugin_analyzers() -> list[Callable[[ShadowModule], list[AnalysisResult]]]:
 def analyze(module: ShadowModule) -> list[AnalysisResult]:
     out: list[AnalysisResult] = []
     for m in module.mutations:
-        out.append(AnalysisResult("PlaneIsolationAnalyzer", "critical", not _writes_canonical(m.shadow_body), "shadow plane cannot write canonical state"))
-        out.append(AnalysisResult("DeterminismAnalyzer", "critical", not _has_nondeterminism(m.shadow_body), "shadow plane must be deterministic"))
+        out.append(
+            AnalysisResult(
+                "PlaneIsolationAnalyzer",
+                "critical",
+                not _writes_canonical(m.shadow_body),
+                "shadow plane cannot write canonical state",
+            )
+        )
+        out.append(
+            AnalysisResult(
+                "DeterminismAnalyzer",
+                "critical",
+                not _has_nondeterminism(m.shadow_body),
+                "shadow plane must be deterministic",
+            )
+        )
         cpu_ms, mem_mb = _estimate_pressure(m.shadow_body)
-        out.append(AnalysisResult("ResourceEstimator", "warning", cpu_ms <= 1000 and mem_mb <= 256, f"estimated cpu={cpu_ms}ms memory={mem_mb}MB"))
-        out.append(AnalysisResult("PuritySpringAnalyzer", "critical", True, "invariant blocks remain pure in the bootstrap model"))
-        out.append(AnalysisResult("MemoryEvaporationAnalyzer", "warning", mem_mb <= 256, f"peak reservoir estimate={mem_mb}MB"))
-        out.append(AnalysisResult("CanonicalConvergenceAnalyzer", "critical", _canonical_convergence(m), "shadow and canonical must converge before promotion"))
+        out.append(
+            AnalysisResult(
+                "ResourceEstimator",
+                "warning",
+                cpu_ms <= 1000 and mem_mb <= 256,
+                f"estimated cpu={cpu_ms}ms memory={mem_mb}MB",
+            )
+        )
+        out.append(
+            AnalysisResult(
+                "PuritySpringAnalyzer",
+                "critical",
+                True,
+                "invariant blocks remain pure in the bootstrap model",
+            )
+        )
+        out.append(
+            AnalysisResult(
+                "MemoryEvaporationAnalyzer",
+                "warning",
+                mem_mb <= 256,
+                f"peak reservoir estimate={mem_mb}MB",
+            )
+        )
+        out.append(
+            AnalysisResult(
+                "CanonicalConvergenceAnalyzer",
+                "critical",
+                _canonical_convergence(m),
+                "shadow and canonical must converge before promotion",
+            )
+        )
     for plugin in _plugin_analyzers():
         out.extend(plugin(module))
     return out
 
 
 def replay_hash(module: ShadowModule) -> str:
-    payload = json.dumps({
-        "mutations": [
-            {
-                "name": m.name,
-                "params": m.params,
-                "shadow_len": len(m.shadow_body),
-                "invariant_len": len(m.invariant_body),
-                "canonical_len": len(m.canonical_body),
-            }
-            for m in module.mutations
-        ]
-    }, sort_keys=True).encode("utf-8")
+    payload = json.dumps(
+        {
+            "mutations": [
+                {
+                    "name": m.name,
+                    "params": m.params,
+                    "shadow_len": len(m.shadow_body),
+                    "invariant_len": len(m.invariant_body),
+                    "canonical_len": len(m.canonical_body),
+                }
+                for m in module.mutations
+            ]
+        },
+        sort_keys=True,
+    ).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
 
 
-def promote(module: ShadowModule, dry_run: bool = False, replay_id: str | None = None) -> dict[str, Any]:
+def promote(
+    module: ShadowModule, dry_run: bool = False, replay_id: str | None = None
+) -> dict[str, Any]:
     results = analyze(module)
     failures = [r for r in results if r.level == "critical" and not r.passed]
     decision = "PROMOTE" if not failures else "REJECT"
@@ -245,7 +340,9 @@ def promote(module: ShadowModule, dry_run: bool = False, replay_id: str | None =
         "dry_run": dry_run,
         "replay_id": replay_id or replay_hash(module)[:16],
         "analysis": [r.__dict__ for r in results],
-        "diff": "shadow spring aligns with the canonical river" if decision == "PROMOTE" else "the shadow river diverges and is withheld from the spring",
+        "diff": "shadow spring aligns with the canonical river"
+        if decision == "PROMOTE"
+        else "the shadow river diverges and is withheld from the spring",
         "replay_hash": replay_hash(module),
     }
 
@@ -253,6 +350,8 @@ def promote(module: ShadowModule, dry_run: bool = False, replay_id: str | None =
 def visualize(module: ShadowModule) -> str:
     lines = ["flowchart TD"]
     for m in module.mutations:
-        lines.append(f'  {m.name}_shadow["{m.name}: shadow"] --> {m.name}_inv["{m.name}: invariant"]')
+        lines.append(
+            f'  {m.name}_shadow["{m.name}: shadow"] --> {m.name}_inv["{m.name}: invariant"]'
+        )
         lines.append(f'  {m.name}_inv --> {m.name}_canon["{m.name}: canonical"]')
     return "\n".join(lines)

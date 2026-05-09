@@ -21,7 +21,6 @@ sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(project_root))
 
 # Import governance
-from app.core.runtime.router import route_request
 
 from temporalio.client import Client
 from temporalio.worker import Worker

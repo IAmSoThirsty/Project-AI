@@ -7,7 +7,7 @@ enabling real LLM calls instead of static responses.
 
 import logging
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -17,19 +17,20 @@ class OpenRouterProvider:
     OpenRouter API provider using OpenAI-compatible SDK.
     """
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """
         Initialize OpenRouter provider.
-        
+
         Args:
             api_key: OpenRouter API key. If None, reads from OPENROUTER_API_KEY env var.
         """
         self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
         self._client = None
-        
+
         if self.api_key:
             try:
                 import openai
+
                 self._client = openai.OpenAI(
                     api_key=self.api_key,
                     base_url="https://openrouter.ai/api/v1",
@@ -50,7 +51,7 @@ class OpenRouterProvider:
 
     def chat_completion(
         self,
-        messages: List[Dict[str, str]],
+        messages: list[dict[str, str]],
         model: str = "openai/gpt-3.5-turbo",
         temperature: float = 0.7,
         max_tokens: int = 1000,
@@ -58,17 +59,17 @@ class OpenRouterProvider:
     ) -> str:
         """
         Create a chat completion using OpenRouter API.
-        
+
         Args:
             messages: List of message dicts with 'role' and 'content' keys
             model: Model identifier (e.g., 'openai/gpt-3.5-turbo', 'anthropic/claude-3-opus')
             temperature: Sampling temperature (0.0-1.0)
             max_tokens: Maximum tokens to generate
             **kwargs: Additional parameters
-            
+
         Returns:
             Generated text response
-            
+
         Raises:
             RuntimeError: If API call fails or provider not available
         """
@@ -94,10 +95,10 @@ class OpenRouterProvider:
             logger.error("OpenRouter API error: %s", e)
             raise RuntimeError(f"OpenRouter API call failed: {e}")
 
-    def test_connection(self) -> Dict[str, Any]:
+    def test_connection(self) -> dict[str, Any]:
         """
         Test OpenRouter connectivity by listing available models.
-        
+
         Returns:
             Dict with 'success', 'models_count', and 'error' keys
         """
@@ -107,22 +108,22 @@ class OpenRouterProvider:
                 "error": "OpenRouter client not initialized. Check API key.",
                 "models_count": 0,
             }
-        
+
         try:
             import requests
-            
+
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "HTTP-Referer": "https://project-ai.local",
                 "X-Title": "Project-AI Galahad",
             }
-            
+
             resp = requests.get(
                 "https://openrouter.ai/api/v1/models",
                 headers=headers,
                 timeout=30,
             )
-            
+
             if resp.status_code == 200:
                 models = resp.json().get("data", [])
                 return {
@@ -145,22 +146,22 @@ class OpenRouterProvider:
 
 
 # Global provider instance
-_openrouter_provider: Optional[OpenRouterProvider] = None
+_openrouter_provider: OpenRouterProvider | None = None
 
 
-def get_openrouter_provider(api_key: Optional[str] = None) -> OpenRouterProvider:
+def get_openrouter_provider(api_key: str | None = None) -> OpenRouterProvider:
     """
     Get or create OpenRouter provider singleton.
-    
+
     Args:
         api_key: Optional API key override
-        
+
     Returns:
         OpenRouterProvider instance
     """
     global _openrouter_provider
-    
+
     if _openrouter_provider is None or api_key:
         _openrouter_provider = OpenRouterProvider(api_key=api_key)
-    
+
     return _openrouter_provider

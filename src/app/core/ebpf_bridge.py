@@ -30,9 +30,13 @@ class EBPFBridge:
 
     def __init__(self) -> None:
         if _IS_LINUX:
-            logger.info("EBPFBridge: running on Linux — BPF pinning stub active (wire real BPF here)")
+            logger.info(
+                "EBPFBridge: running on Linux — BPF pinning stub active (wire real BPF here)"
+            )
         else:
-            logger.info("EBPFBridge: non-Linux platform (%s) — stub mode", platform.system())
+            logger.info(
+                "EBPFBridge: non-Linux platform (%s) — stub mode", platform.system()
+            )
 
     def pin_allowed_execution(self, pid: int, expected_hash: str, domain: str) -> bool:
         """
@@ -48,12 +52,15 @@ class EBPFBridge:
             #   bpf["allowed_hashes"][pid] = expected_hash.encode()
             logger.debug(
                 "EBPFBridge.pin_allowed_execution [stub] pid=%s domain=%s hash=%s",
-                pid, domain, expected_hash[:16],
+                pid,
+                domain,
+                expected_hash[:16],
             )
         else:
             logger.debug(
                 "EBPFBridge.pin_allowed_execution [windows-stub] pid=%s domain=%s",
-                pid, domain,
+                pid,
+                domain,
             )
 
         return True

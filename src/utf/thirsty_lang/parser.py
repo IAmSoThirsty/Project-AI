@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -17,7 +16,7 @@ class Parser:
         self.errors: list[ThirstyError] = []
 
     @classmethod
-    def from_tokens(cls, tokens: list[Token]) -> "Parser":
+    def from_tokens(cls, tokens: list[Token]) -> Parser:
         return cls(tokens)
 
     def parse_program(self) -> ast.Program:
@@ -57,15 +56,21 @@ class Parser:
             return self._class_decl()
         if self._match(TokenType.CASCADE):
             self._consume(TokenType.GLASS, "expected 'glass' after 'cascade'")
-            return self._function_decl(is_async=True, visibility=vis, is_method=in_class)
+            return self._function_decl(
+                is_async=True, visibility=vis, is_method=in_class
+            )
         if self._match(TokenType.GLASS):
-            return self._function_decl(is_async=False, visibility=vis, is_method=in_class)
+            return self._function_decl(
+                is_async=False, visibility=vis, is_method=in_class
+            )
         if self._match(TokenType.DRINK):
             return self._var_decl(visibility=vis, is_field=in_class)
         return self._statement()
 
     def _import_decl(self) -> ast.ImportDecl:
-        mod = self._consume(TokenType.STRING, "expected string module path after import")
+        mod = self._consume(
+            TokenType.STRING, "expected string module path after import"
+        )
         alias = None
         if self._match(TokenType.AS):
             alias = self._consume(TokenType.IDENT, "expected alias after 'as'").lexeme
@@ -81,7 +86,9 @@ class Parser:
         end = self._consume(TokenType.RBRACE, "expected '}' after class body")
         return ast.ClassDecl(name.span.merge(end.span), name.lexeme, members)
 
-    def _function_decl(self, is_async: bool, visibility: str | None, is_method: bool) -> ast.FunctionDecl:
+    def _function_decl(
+        self, is_async: bool, visibility: str | None, is_method: bool
+    ) -> ast.FunctionDecl:
         name = self._consume(TokenType.IDENT, "expected function name")
         self._consume(TokenType.LPAREN, "expected '(' after function name")
         params: list[ast.Param] = []
@@ -90,7 +97,9 @@ class Parser:
                 pname = self._consume(TokenType.IDENT, "expected parameter name")
                 self._consume(TokenType.COLON, "expected ':' after parameter name")
                 ptype = self._type_node()
-                params.append(ast.Param(pname.span.merge(ptype.span), pname.lexeme, ptype))
+                params.append(
+                    ast.Param(pname.span.merge(ptype.span), pname.lexeme, ptype)
+                )
                 if not self._match(TokenType.COMMA):
                     break
         self._consume(TokenType.RPAREN, "expected ')' after parameters")
@@ -99,7 +108,16 @@ class Parser:
             return_type = self._type_node()
         body = self._block()
         span = name.span.merge(body.span)
-        return ast.FunctionDecl(span, name.lexeme, params, return_type, body, is_async=is_async, visibility=visibility, is_method=is_method)
+        return ast.FunctionDecl(
+            span,
+            name.lexeme,
+            params,
+            return_type,
+            body,
+            is_async=is_async,
+            visibility=visibility,
+            is_method=is_method,
+        )
 
     def _var_decl(self, visibility: str | None, is_field: bool) -> ast.VarDecl:
         mutable = self._match(TokenType.MUT)
@@ -108,11 +126,27 @@ class Parser:
         tnode = self._type_node()
         if is_field and self._match(TokenType.SEMICOLON):
             init = ast.LiteralExpr(name.span, None)
-            return ast.VarDecl(name.span.merge(tnode.span), name.lexeme, tnode, init, mutable, visibility, is_field=True)
+            return ast.VarDecl(
+                name.span.merge(tnode.span),
+                name.lexeme,
+                tnode,
+                init,
+                mutable,
+                visibility,
+                is_field=True,
+            )
         self._consume(TokenType.ASSIGN, "expected '=' after type annotation")
         init = self._expression()
         semi = self._consume(TokenType.SEMICOLON, "expected ';' after declaration")
-        return ast.VarDecl(name.span.merge(semi.span), name.lexeme, tnode, init, mutable, visibility, is_field=is_field)
+        return ast.VarDecl(
+            name.span.merge(semi.span),
+            name.lexeme,
+            tnode,
+            init,
+            mutable,
+            visibility,
+            is_field=is_field,
+        )
 
     def _statement(self) -> ast.Stmt:
         if self._match(TokenType.POUR):
@@ -167,12 +201,22 @@ class Parser:
                 self._consume(TokenType.LPAREN, "expected '(' after cleanup error")
                 name = self._consume(TokenType.IDENT, "expected catch binding name")
                 self._consume(TokenType.COLON, "expected ':' in catch clause")
-                typ = self._consume_any((TokenType.IDENT, TokenType.ERROR), "expected catch type")
+                typ = self._consume_any(
+                    (TokenType.IDENT, TokenType.ERROR), "expected catch type"
+                )
                 self._consume(TokenType.RPAREN, "expected ')' after catch clause")
                 block = self._block()
-                catches.append(ast.CatchClause(name.span.merge(block.span), name.lexeme, typ.lexeme, block))
+                catches.append(
+                    ast.CatchClause(
+                        name.span.merge(block.span), name.lexeme, typ.lexeme, block
+                    )
+                )
             if not catches and finally_block is None:
-                raise ThirstyError("THIRSTY-E001", "spillage requires cleanup error or cleanup finally", start)
+                raise ThirstyError(
+                    "THIRSTY-E001",
+                    "spillage requires cleanup error or cleanup finally",
+                    start,
+                )
             end_span = finally_block.span if finally_block else catches[-1].span
             return ast.TryStmt(start.merge(end_span), try_block, catches, finally_block)
         if self._match(TokenType.THROW):
@@ -208,7 +252,9 @@ class Parser:
             arg = self._type_node()
             end = self._consume(TokenType.RBRACKET, "expected ']' after well type")
             return ast.GenericType(base_tok.span.merge(end.span), "Reservoir", [arg])
-        name = self._consume_any((TokenType.IDENT, TokenType.QUENCHED, TokenType.ERROR), "expected type name")
+        name = self._consume_any(
+            (TokenType.IDENT, TokenType.QUENCHED, TokenType.ERROR), "expected type name"
+        )
         if self._match(TokenType.LBRACKET):
             args = [self._type_node()]
             while self._match(TokenType.COMMA):
@@ -224,7 +270,9 @@ class Parser:
         if self._match(TokenType.THIRST):
             start = self._previous().span
             cond = self._expression()
-            self._consume(TokenType.QUENCH, "expected 'quench' after thirst guard condition")
+            self._consume(
+                TokenType.QUENCH, "expected 'quench' after thirst guard condition"
+            )
             when_true = self._expression()
             when_false = None
             if self._match(TokenType.HYDRATED):
@@ -395,7 +443,11 @@ class Parser:
             self._consume(TokenType.RPAREN, "expected ')' after expression")
             return expr
         tok = self._peek()
-        raise ThirstyError("THIRSTY-E001", f"unexpected token '{tok.lexeme or tok.kind.name}'", tok.span)
+        raise ThirstyError(
+            "THIRSTY-E001",
+            f"unexpected token '{tok.lexeme or tok.kind.name}'",
+            tok.span,
+        )
 
     def _consume(self, kind: TokenType, message: str) -> Token:
         if self._check(kind):

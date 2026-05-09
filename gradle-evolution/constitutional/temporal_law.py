@@ -9,7 +9,7 @@ Provides time-bound policy evaluation and workflow-based governance.
 import asyncio
 import json
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -20,12 +20,12 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_naive() -> datetime:
     """Return naive UTC datetime for compatibility with legacy naive timestamps."""
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class TemporalLaw:
@@ -53,9 +53,7 @@ class TemporalLaw:
             return value
         if value is None:
             return _utc_now_naive()
-        return datetime.fromisoformat(value.replace("Z", "+00:00")).replace(
-            tzinfo=None
-        )
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).replace(tzinfo=None)
 
     def is_active(self, at: datetime | None = None) -> bool:
         """Return whether law is active at a given moment (defaults to now)."""
@@ -108,8 +106,7 @@ class TemporalLawRegistry:
             return
         data = json.loads(self.storage_path.read_text(encoding="utf-8"))
         self.laws = {
-            law_id: TemporalLaw(**law_payload)
-            for law_id, law_payload in data.items()
+            law_id: TemporalLaw(**law_payload) for law_id, law_payload in data.items()
         }
 
 
@@ -156,7 +153,7 @@ class TemporalLawEnforcer:
                 return self._local_enforcement(action, metadata)
 
             # Start enforcement workflow
-            workflow_id = f"enforce-{action}-{datetime.now(timezone.utc).timestamp()}"
+            workflow_id = f"enforce-{action}-{datetime.now(UTC).timestamp()}"
 
             handle = await self.temporal_client.start_workflow(
                 "PolicyEnforcementWorkflow",
@@ -239,7 +236,7 @@ class TemporalLawEnforcer:
             if not self.temporal_client:
                 raise RuntimeError("Temporal client not available")
 
-            workflow_id = f"review-{action}-{datetime.now(timezone.utc).timestamp()}"
+            workflow_id = f"review-{action}-{datetime.now(UTC).timestamp()}"
 
             await self.temporal_client.start_workflow(
                 "PeriodicPolicyReview",
