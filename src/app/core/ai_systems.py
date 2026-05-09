@@ -147,9 +147,9 @@ def _acquire_lock(
     while True:
         try:
             fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-            os.close(fd)
-            # write pid/timestamp for stale detection
-            _write_lockfile(lock_path, os.getpid(), time.time())
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                f.write(f"{os.getpid()}\n{time.time()}\n")
+                f.flush()
             return True
         except FileExistsError:
             # inspect existing lock
@@ -184,7 +184,12 @@ def _release_lock(lock_path: str) -> None:
         if info:
             pid, _ = info
             if pid == os.getpid() and os.path.exists(lock_path):
-                os.remove(lock_path)
+                for _ in range(3):
+                    try:
+                        os.remove(lock_path)
+                        break
+                    except PermissionError:
+                        time.sleep(0.02)
         elif os.path.exists(lock_path):
             os.remove(lock_path)
     except Exception:
@@ -746,9 +751,8 @@ class LearningRequestManager:
 
         # Internal queue & bounded worker pool for async notifications
         self._notify_queue: queue.Queue[tuple[str, dict]] = queue.Queue(maxsize=200)
-        self._notify_executor = ThreadPoolExecutor(max_workers=4)
-        self._notify_thread = threading.Thread(target=self._notify_worker, daemon=True)
-        self._notify_thread.start()
+        self._notify_executor: ThreadPoolExecutor | None = None
+        self._notify_thread: threading.Thread | None = None
 
         # SQLite DB path
         self._db_file = os.path.join(self.requests_dir, "requests.db")
@@ -763,6 +767,13 @@ class LearningRequestManager:
         if callback not in self._approval_listeners:
             self._approval_listeners.append(callback)
 
+    def _ensure_notify_worker(self) -> None:
+        if self._notify_thread and self._notify_thread.is_alive():
+            return
+        self._notify_executor = ThreadPoolExecutor(max_workers=4)
+        self._notify_thread = threading.Thread(target=self._notify_worker, daemon=True)
+        self._notify_thread.start()
+
     def _notify_worker(self) -> None:
         """Background worker that invokes approval listeners from a queue."""
         while True:
@@ -771,7 +782,8 @@ class LearningRequestManager:
                 # submit to threadpool for each listener
                 for cb in list(self._approval_listeners):
                     try:
-                        self._notify_executor.submit(cb, req_id, request)
+                        if self._notify_executor:
+                            self._notify_executor.submit(cb, req_id, request)
                     except Exception:
                         logger.exception(
                             "Failed to submit approval listener for %s", req_id
@@ -947,7 +959,9 @@ class LearningRequestManager:
         corr = new_correlation_id()
         self.requests[req_id]["correlation_id"] = corr
         try:
-            self._notify_approval_listeners(req_id, self.requests[req_id])
+            if self._approval_listeners:
+                self._ensure_notify_worker()
+                self._notify_approval_listeners(req_id, self.requests[req_id])
         except Exception:
             logger.exception("Failed to queue approval listeners for %s", req_id)
         # persist
