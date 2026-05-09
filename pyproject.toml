@@ -80,7 +80,8 @@ exclude = [
     "__pycache__",
     ".git",
     "build",
-    "dist"
+    "dist",
+    "data",
 ]
 
 # Line length for black compatibility

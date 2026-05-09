@@ -8,6 +8,7 @@ from pathlib import Path
 
 # Get all moved files in docs/reports/
 reports_dir = Path(r"T:\Project-AI-main\docs\reports")
+repo_root = Path(r"T:\Project-AI-main")
 moved_files = {f.stem for f in reports_dir.glob("*.md")}
 
 print(f"Found {len(moved_files)} moved files in docs/reports/")
@@ -52,9 +53,7 @@ for vault_path in vault_paths:
                 md_file.write_text(content, encoding="utf-8")
                 files_modified += 1
                 if files_modified <= 10:
-                    print(
-                        f"✓ Fixed links in: {md_file.relative_to(Path(r'T:\Project-AI-main'))}"
-                    )
+                    print(f"✓ Fixed links in: {md_file.relative_to(repo_root)}")
 
         except Exception as e:
             print(f"✗ Error processing {md_file}: {e}")

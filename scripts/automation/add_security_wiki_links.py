@@ -76,8 +76,8 @@ class SecurityWikiLinker:
     def get_concepts_for_doc(self, doc_path: str) -> list[tuple[str, str, str]]:
         """Get all security concepts referenced in a document."""
         query = """
-        SELECT id, concept_name, description 
-        FROM security_concepts 
+        SELECT id, concept_name, description
+        FROM security_concepts
         WHERE doc_file = ?
         ORDER BY concept_name
         """
@@ -96,11 +96,11 @@ class SecurityWikiLinker:
         FROM security_controls c
         JOIN concept_control_links ccl ON c.id = ccl.control_id
         WHERE ccl.concept_id = ?
-        ORDER BY 
-            CASE ccl.strength 
-                WHEN 'primary' THEN 1 
-                WHEN 'secondary' THEN 2 
-                ELSE 3 
+        ORDER BY
+            CASE ccl.strength
+                WHEN 'primary' THEN 1
+                WHEN 'secondary' THEN 2
+                ELSE 3
             END,
             c.control_name
         """
@@ -247,10 +247,10 @@ class SecurityWikiLinker:
 
         # Update database
         self.conn.execute(
-            """UPDATE doc_files 
-               SET processing_status = 'processed', 
-                   concept_count = ?, 
-                   link_count = ? 
+            """UPDATE doc_files
+               SET processing_status = 'processed',
+                   concept_count = ?,
+                   link_count = ?
                WHERE file_path = ?""",
             (total_concepts, total_links, doc_path),
         )
@@ -302,7 +302,7 @@ class SecurityWikiLinker:
     def generate_traceability_matrix(self, output_path: str):
         """Generate security concept-to-control traceability matrix."""
         query = """
-        SELECT 
+        SELECT
             sc.concept_name,
             sc.concept_type,
             sc.doc_file,
@@ -338,8 +338,8 @@ tags:
 
 # AGENT-081 Security Traceability Matrix
 
-**Generated:** 2026-02-08  
-**Agent:** AGENT-081 Security Concepts to Controls Links Specialist  
+**Generated:** 2026-02-08
+**Agent:** AGENT-081 Security Concepts to Controls Links Specialist
 **Mission:** ~350 bidirectional wiki links from concepts to controls
 
 ## Executive Summary

@@ -21,6 +21,10 @@ print("=" * 80)
 print()
 
 
+class SecurityError(Exception):
+    """Raised when the demonstration rejects unauthorized access."""
+
+
 # ============================================================================
 # ATTEMPT 1: Name Mangling (Common "Security" Pattern)
 # ============================================================================
