@@ -227,6 +227,17 @@ class RuntimeRandomizer:
     def __init__(self, rotation_interval_seconds: float = 300):
         self.rotation_interval = rotation_interval_seconds
         self.current_schema_version = 0
+        self.last_rotation = time.time()
+
+    def should_rotate(self) -> bool:
+        """Return True when the configured rotation interval has elapsed."""
+        return (time.time() - self.last_rotation) >= self.rotation_interval
+
+    def rotate_schema(self) -> int:
+        """Advance the runtime schema version and reset the rotation timer."""
+        self.current_schema_version += 1
+        self.last_rotation = time.time()
+        return self.current_schema_version
 
 
 class FailureRedTeamEngine:
@@ -257,6 +268,37 @@ class CognitiveTripwireDetector:
     def __init__(self):
         self.behavioral_history: dict[str, list[float]] = defaultdict(list)
         self.detections: list[Any] = []
+
+    def track_action_timing(self, user_id: str, timestamp: float | None = None) -> None:
+        """Record a user action timestamp for timing-regularity analysis."""
+        self.behavioral_history[user_id].append(timestamp if timestamp is not None else time.time())
+
+    def is_likely_bot(self, user_id: str, threshold: float = 0.7) -> bool:
+        """Detect overly regular timing patterns after enough observations exist."""
+        timings = self.behavioral_history.get(user_id, [])
+        if len(timings) < 5:
+            return False
+
+        intervals = [
+            later - earlier
+            for earlier, later in zip(timings, timings[1:], strict=False)
+            if later >= earlier
+        ]
+        if len(intervals) < 4:
+            return False
+
+        average = sum(intervals) / len(intervals)
+        if average <= 0:
+            return True
+
+        variance = sum((interval - average) ** 2 for interval in intervals) / len(intervals)
+        regularity = max(0.0, 1.0 - min(1.0, variance / average))
+        is_bot = regularity >= threshold
+        if is_bot:
+            self.detections.append(
+                {"user_id": user_id, "regularity": regularity, "timestamp": time.time()}
+            )
+        return is_bot
 
 
 class AttackerAIExploitationSystem:
