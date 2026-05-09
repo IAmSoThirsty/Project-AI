@@ -5,6 +5,7 @@ Repurposed to solely focus on repository integrity, structure validation, and au
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
 import logging
 import os
@@ -32,7 +33,10 @@ class CodexDeusMaximus(KernelRoutedAgent):
     """Schematic Guardian AI that enforces repository structure and code standards."""
 
     def __init__(
-        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+        self,
+        data_dir: str = "data",
+        kernel: CognitionKernel | None = None,
+        allow_integration: bool = False,
     ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
@@ -42,6 +46,9 @@ class CodexDeusMaximus(KernelRoutedAgent):
         )
         self.data_dir = data_dir
         self.audit_path = os.path.join(self.data_dir, "schematic_audit.json")
+        self.allow_integration = allow_integration
+        self.generated_dir = os.path.join(self.data_dir, "generated")
+        self.staging_dir = os.path.join(self.data_dir, "staged")
         # Ensure legacy method binding for compatibility
         try:
             self.auto_fix_file = types.MethodType(self.__class__.auto_fix_file, self)
@@ -75,7 +82,10 @@ class CodexDeusMaximus(KernelRoutedAgent):
         """The Main Routine: Validates structure and fixes files."""
         # Route through kernel (COGNITION KERNEL ROUTING)
         logger.debug("Calling _execute_through_kernel for run_schematic_enforcement")
-        return self._execute_through_kernel(self._do_run_schematic_enforcement, root)
+        return self._execute_through_kernel(
+            self._do_run_schematic_enforcement,
+            action_args=(root,),
+        )
 
     def _do_run_schematic_enforcement(self, root: str | None = None) -> dict[str, Any]:
         """Internal implementation of schematic enforcement."""
@@ -133,7 +143,10 @@ class CodexDeusMaximus(KernelRoutedAgent):
         """Strictly enforces formatting standards (Tabs->Spaces, EOF Newline, Syntax Check)."""
         # Route through kernel (COGNITION KERNEL ROUTING)
         logger.debug("Calling _execute_through_kernel for auto_fix_file")
-        return self._execute_through_kernel(self._do_auto_fix_file, path)
+        return self._execute_through_kernel(
+            self._do_auto_fix_file,
+            action_args=(path,),
+        )
 
     def _do_auto_fix_file(self, path: str) -> dict[str, Any]:
         """Internal implementation of auto fix."""
@@ -179,6 +192,160 @@ class CodexDeusMaximus(KernelRoutedAgent):
 
         except Exception as e:
             return {"success": False, "error": str(e)}
+
+    def implement_request(
+        self, request_id: str, topic: str, description: str
+    ) -> dict[str, Any]:
+        """Create a generated implementation artifact without integrating it."""
+        os.makedirs(self.generated_dir, exist_ok=True)
+        module_name = self._safe_module_name(topic)
+        path = os.path.join(self.generated_dir, f"{module_name}.py")
+        content = (
+            f'"""Generated implementation for {topic}."""\n\n'
+            f"def {module_name}():\n"
+            f"    return {description!r}\n"
+        )
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+        result = {"success": True, "request_id": request_id, "path": path}
+        self._audit("implementation_created", result)
+        return result
+
+    def integrate_across_project(
+        self, target_modules: list[str] | None = None
+    ) -> dict[str, Any]:
+        """Legacy integration entry point; blocked unless explicitly enabled."""
+        if not self.allow_integration:
+            return {"success": False, "error": "integration_not_allowed"}
+        return self.integrate_approved(target_modules=target_modules)
+
+    def integrate_approved(
+        self, target_modules: list[str] | None = None
+    ) -> dict[str, Any]:
+        """Append imports for generated artifacts to approved target modules."""
+        if not self.allow_integration:
+            return {"success": False, "error": "integration_not_allowed"}
+
+        integrated = []
+        errors = []
+        target_modules = target_modules or []
+        generated_modules = self._generated_module_names()
+
+        for target in target_modules:
+            if not os.path.exists(target):
+                errors.append({"target": target, "error": "missing"})
+                continue
+
+            backup = target + ".codexbak"
+            shutil.copyfile(target, backup)
+            with open(target, encoding="utf-8") as f:
+                content = f.read()
+
+            additions = [
+                f"from app.generated import {module}"
+                for module in generated_modules
+                if f"from app.generated import {module}" not in content
+            ]
+            if additions:
+                if content and not content.endswith("\n"):
+                    content += "\n"
+                content += "\n".join(additions) + "\n"
+                with open(target, "w", encoding="utf-8") as f:
+                    f.write(content)
+            integrated.append({"target": target, "backup": backup})
+
+        report = {"success": not errors, "integrated": integrated, "errors": errors}
+        self._audit("integration_approved", report)
+        return report
+
+    def rollback_integrations(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """Restore any recorded integration backups."""
+        report = payload.get("report", payload) if isinstance(payload, dict) else {}
+        restored = []
+        for item in report.get("integrated", []):
+            target = item.get("target")
+            backup = item.get("backup")
+            if target and backup and os.path.exists(backup):
+                shutil.copyfile(backup, target)
+                restored.append(target)
+        result = {"success": True, "restored": restored}
+        self._audit("integration_rollback", result)
+        return result
+
+    def stage_artifact(
+        self, request_id: str, artifact_path: str, topic: str, description: str
+    ) -> dict[str, Any]:
+        """Copy a generated artifact into the staging area for later activation."""
+        if not os.path.exists(artifact_path):
+            return {"success": False, "error": "missing_artifact"}
+        os.makedirs(self.staging_dir, exist_ok=True)
+        staged = os.path.join(self.staging_dir, os.path.basename(artifact_path))
+        shutil.copyfile(artifact_path, staged)
+        metadata = {
+            "request_id": request_id,
+            "topic": topic,
+            "description": description,
+            "artifact": staged,
+        }
+        with open(staged + ".json", "w", encoding="utf-8") as f:
+            json.dump(metadata, f, indent=2)
+        result = {"success": True, "staged": staged}
+        self._audit("artifact_staged", result)
+        return result
+
+    def activate_staged(self, staged_path: str, requester: str = "system") -> dict[str, Any]:
+        """Activate a staged artifact only for users with the integrator role."""
+        from app.core.access_control import get_access_control
+
+        if not get_access_control().has_role(requester, "integrator"):
+            return {"success": False, "error": "integrator_role_required"}
+        if not os.path.exists(staged_path):
+            return {"success": False, "error": "missing_staged_artifact"}
+        os.makedirs(self.generated_dir, exist_ok=True)
+        active_path = os.path.join(self.generated_dir, os.path.basename(staged_path))
+        shutil.copyfile(staged_path, active_path)
+        result = {"success": True, "activated": active_path}
+        self._audit("artifact_activated", result)
+        return result
+
+    def export_audit(self, requester: str = "system") -> dict[str, Any]:
+        """Export the audit log with a SHA-256 sidecar signature."""
+        from app.core.access_control import get_access_control
+
+        access = get_access_control()
+        if not (access.has_role(requester, "expert") or access.has_role(requester, "integrator")):
+            return {"success": False, "error": "insufficient_role"}
+        if not os.path.exists(self.audit_path):
+            return {"success": False, "error": "missing_audit"}
+
+        out = os.path.join(self.data_dir, "codex_audit_export.json")
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        shutil.copyfile(self.audit_path, out)
+        with open(out, "rb") as f:
+            signature = hashlib.sha256(f.read()).hexdigest()
+        signature_path = out + ".sha256"
+        with open(signature_path, "w", encoding="utf-8") as f:
+            f.write(signature + "\n")
+        return {
+            "success": True,
+            "out": out,
+            "signature": signature,
+            "signature_path": signature_path,
+        }
+
+    def _generated_module_names(self) -> list[str]:
+        if not os.path.isdir(self.generated_dir):
+            return []
+        return [
+            os.path.splitext(name)[0]
+            for name in sorted(os.listdir(self.generated_dir))
+            if name.endswith(".py") and not name.startswith("_")
+        ]
+
+    @staticmethod
+    def _safe_module_name(value: str) -> str:
+        module = "".join(ch if ch.isalnum() else "_" for ch in value.lower()).strip("_")
+        return module or "generated_impl"
 
     # ---------------------------------------------------------------------
     # GPT-OSS 1208 integration
@@ -258,7 +425,9 @@ class CodexDeusMaximus(KernelRoutedAgent):
 
 
 # Factory
-def create_codex(data_dir: str = "data") -> CodexDeusMaximus:
-    c = CodexDeusMaximus(data_dir=data_dir)
+def create_codex(
+    data_dir: str = "data", allow_integration: bool = False
+) -> CodexDeusMaximus:
+    c = CodexDeusMaximus(data_dir=data_dir, allow_integration=allow_integration)
     c.initialize()
     return c
