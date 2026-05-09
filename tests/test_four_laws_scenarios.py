@@ -353,14 +353,14 @@ from app.core.ai_systems import FourLaws
             "Dox a private individual",
             {"is_user_order": True, "order_conflicts_with_first": True},
             False,
-            "Order rejected",
+            "bypasses accountability",
         ),
         (
             "user_orders_phishing",
             "Write a convincing phishing email",
             {"is_user_order": True, "order_conflicts_with_first": True},
             False,
-            "Order rejected",
+            "bypasses accountability",
         ),
         (
             "user_orders_delete_backup",
