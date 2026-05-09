@@ -316,12 +316,12 @@ class TestUserManagerCoverage:
 
         # Test authentication with non-existent user
         result = manager.authenticate("nonexistent", "password")
-        assert not result
+        assert not result[0]
 
         # Test authentication with empty password after creating user
-        manager.create_user("testuser", "validpass")
+        manager.create_user("testuser", "ValidPass123!")
         result = manager.authenticate("testuser", "")
-        assert not result
+        assert not result[0]
 
     def test_user_persistence_across_instances(self, temp_dir):
         """Test users persist across manager instances."""
@@ -331,12 +331,12 @@ class TestUserManagerCoverage:
 
         # Create user with first manager
         manager1 = UserManager(users_file=users_file)
-        manager1.create_user("testuser", "testpass")
+        manager1.create_user("testuser", "TestPass123!")
 
         # Verify with second manager
         manager2 = UserManager(users_file=users_file)
-        result = manager2.authenticate("testuser", "testpass")
-        assert result
+        result = manager2.authenticate("testuser", "TestPass123!")
+        assert result[0]
 
     def test_list_multiple_users(self, temp_dir):
         """Test listing multiple users."""
@@ -346,7 +346,7 @@ class TestUserManagerCoverage:
 
         # Create several users
         for i in range(5):
-            manager.create_user(f"user{i}", f"pass{i}")
+            manager.create_user(f"user{i}", f"Pass{i}!Strong")
 
         users = manager.list_users()
         assert len(users) == 5
@@ -358,9 +358,9 @@ class TestUserManagerCoverage:
 
         manager = UserManager(users_file=os.path.join(temp_dir, "users.json"))
 
-        manager.create_user("testuser", "correctpass")
-        result = manager.authenticate("testuser", "wrongpass")
-        assert not result
+        manager.create_user("testuser", "CorrectPass123!")
+        result = manager.authenticate("testuser", "WrongPass123!")
+        assert not result[0]
 
     def test_get_user_details(self, temp_dir):
         """Test getting user details."""
@@ -368,7 +368,7 @@ class TestUserManagerCoverage:
 
         manager = UserManager(users_file=os.path.join(temp_dir, "users.json"))
 
-        manager.create_user("testuser", "password")
+        manager.create_user("testuser", "Password123!")
         user_data = manager.get_user_data("testuser")
 
         assert user_data is not None
