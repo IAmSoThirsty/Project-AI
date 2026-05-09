@@ -71,24 +71,32 @@ class TestImageGeneratorRemaining:
     def test_openai_default_size_validation(self, generator):
         """Test OpenAI size validation defaults to 1024x1024 (line 201)."""
         # This tests the size validation branch
-        with patch("openai.images.generate") as mock_gen:
-            mock_response = MagicMock()
-            mock_response.data = [MagicMock(url="http://example.com/image.png")]
-            mock_gen.return_value = mock_response
+        with patch("app.core.ai.orchestrator.run_ai") as mock_run_ai:
+            mock_run_ai.return_value = MagicMock(
+                status="success",
+                result="http://example.com/image.png",
+                error=None,
+            )
 
-            with patch("requests.get") as mock_get:
+            with patch("app.core.image_generator._request_with_retries") as mock_get:
                 mock_get.return_value.content = b"fake_image_data"
+                mock_get.return_value.raise_for_status = MagicMock()
 
                 # Call with invalid size
-                generator.generate_with_openai("test", "999x999")
+                result = generator.generate_with_openai("test", "999x999")
                 # Should have been called (size gets corrected to 1024x1024)
+                assert result["success"] is True
+                request = mock_run_ai.call_args.args[0]
+                assert request.config["size"] == "1024x1024"
 
     def test_openai_no_image_url_in_response(self, generator):
         """Test OpenAI generation handles no image URL (line 217)."""
-        with patch("openai.images.generate") as mock_gen:
-            mock_response = MagicMock()
-            mock_response.data = [MagicMock(url=None)]  # No URL
-            mock_gen.return_value = mock_response
+        with patch("app.core.ai.orchestrator.run_ai") as mock_run_ai:
+            mock_run_ai.return_value = MagicMock(
+                status="success",
+                result=None,
+                error=None,
+            )
 
             result = generator.generate_with_openai("test", "512x512")
             assert result["success"] is False
@@ -149,7 +157,7 @@ class TestUserManagerRemaining:
     def test_authenticate_user_not_found(self, manager):
         """Test authentication returns False for non-existent user (line 84)."""
         result = manager.authenticate("nonexistent", "password")
-        assert result is False
+        assert result[0] is False
 
     def test_load_users_corrupted_with_continue(self, manager):
         """Test loading corrupted users file and continuing (lines 103-112)."""
@@ -164,7 +172,7 @@ class TestUserManagerRemaining:
 
     def test_user_deletion_edge_case(self, manager):
         """Test user deletion edge case (lines 131-132)."""
-        manager.create_user("testuser", "password")
+        manager.create_user("testuser", "Password123!")
         assert "testuser" in manager.users
 
         result = manager.delete_user("testuser")
@@ -185,7 +193,7 @@ class TestIntegrationEdgeCases:
 
             # Create user
             manager = UserManager(users_file=users_file)
-            manager.create_user("alice", "secure_password")
+            manager.create_user("alice", "SecurePassword123!")
 
             # Create persona
             persona = AIPersona(data_dir=tmpdir, user_name="alice")

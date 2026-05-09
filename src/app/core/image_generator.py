@@ -312,6 +312,8 @@ class ImageGenerator:
             if response.status == "success":
                 # response.result is the image URL
                 image_url = response.result
+                if not image_url:
+                    return {"success": False, "error": "No image URL returned"}
 
                 # Download and save
                 img_resp = _request_with_retries("GET", str(image_url), timeout=30)
