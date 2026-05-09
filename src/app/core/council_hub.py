@@ -40,6 +40,13 @@ from app.core.platform_tiers import (
 
 logger = logging.getLogger(__name__)
 
+LOCAL_UNSAFE_MESSAGE_PATTERNS = (
+    "ignore all safety",
+    "disable safety",
+    "bypass safety",
+    "override safety",
+)
+
 
 class _FernetEncryptionShim:
     """Minimal shim satisfying the encrypt_god_tier interface expected by ThirstyConsigliere."""
@@ -483,6 +490,16 @@ class CouncilHub:
             return {"is_safe": res.get("is_safe", True), "details": res}
         except Exception as e:
             logger.debug("Cerberus not available for consultation: %s", e)
+            lowered = content.lower()
+            for pattern in LOCAL_UNSAFE_MESSAGE_PATTERNS:
+                if pattern in lowered:
+                    return {
+                        "is_safe": False,
+                        "details": {
+                            "source": "local_fallback",
+                            "matched_pattern": pattern,
+                        },
+                    }
             return {"is_safe": True, "details": {}}
 
     def _cut_communication(self, agent_id: str) -> None:
