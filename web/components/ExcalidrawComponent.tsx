@@ -160,6 +160,13 @@ export default function ExcalidrawComponent({
       return;
     }
 
+    if (format === "json" && currentDiagram.content && onExport) {
+      onExport(
+        format,
+        new Blob([currentDiagram.content], { type: "application/json" })
+      );
+    }
+
     // Request export from iframe
     if (iframeRef.current?.contentWindow) {
       iframeRef.current.contentWindow.postMessage(
@@ -175,7 +182,7 @@ export default function ExcalidrawComponent({
   const excalidrawUrl = `https://excalidraw.com${darkMode ? "?theme=dark" : ""}`;
 
   return (
-    <div className="excalidraw-container" style={{ height: "100%" }}>
+    <div className="excalidraw-container" style={{ height }}>
       {/* Toolbar */}
       <div className="excalidraw-toolbar" style={{
         padding: "1rem",
