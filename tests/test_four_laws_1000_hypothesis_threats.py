@@ -19,7 +19,7 @@ def _expected_from_flags(context: dict[str, Any]) -> tuple[bool, str]:
         if context.get("order_conflicts_with_first") or context.get(
             "order_conflicts_with_zeroth"
         ):
-            return False, "Order rejected"
+            return False, "bypasses accountability"
         return True, "Allowed: User command"
     if context.get("endangers_self"):
         if context.get("protect_self_conflicts_with_first") or context.get(
