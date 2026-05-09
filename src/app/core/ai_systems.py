@@ -297,7 +297,8 @@ class FourLaws:
         # Map old context keys to new Constitutional Core format
         constitutional_context = {
             "existential_threat": context.get("endangers_humanity", False),
-            "intentional_harm_to_human": context.get("endangers_human", False),
+            "intentional_harm_to_human": context.get("endangers_human", False)
+            or context.get("harms_others", False),
             "order_bypasses_accountability": context.get(
                 "order_conflicts_with_zeroth", False
             )
@@ -311,6 +312,16 @@ class FourLaws:
         violations = [e for e in evaluations if not e.satisfied]
 
         if violations:
+            if context.get("endangers_humanity"):
+                return (
+                    False,
+                    "Violates Zeroth Law: action would harm humanity or enable harm by inaction",
+                )
+            if context.get("endangers_human") or context.get("harms_others"):
+                return (
+                    False,
+                    "Violates First Law: action would harm a human or others",
+                )
             # Return first violation explanation
             return False, violations[0].explanation
 
