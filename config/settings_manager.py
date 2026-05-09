@@ -324,9 +324,8 @@ class SettingsManager:
         if (
             self.settings["remote_access"]["browser_enabled"]
             or self.settings["remote_access"]["desktop_enabled"]
-        ):
-            if not self.settings["remote_access"]["require_authentication"]:
-                issues.append("Remote access enabled without authentication!")
+        ) and not self.settings["remote_access"]["require_authentication"]:
+            issues.append("Remote access enabled without authentication!")
 
         return {"valid": len(issues) == 0, "issues": issues, "warnings": len(issues)}
 

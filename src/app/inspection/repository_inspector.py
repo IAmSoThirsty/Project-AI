@@ -495,9 +495,11 @@ class RepositoryInspector:
             return FileStatus.IMPLEMENTED
 
         # If it's a config file with content, it's implemented
-        if file_info.file_type in [FileType.CONFIG, FileType.YAML, FileType.JSON]:
-            if file_info.lines_of_code > 0:
-                return FileStatus.IMPLEMENTED
+        if (
+            file_info.file_type in [FileType.CONFIG, FileType.YAML, FileType.JSON]
+            and file_info.lines_of_code > 0
+        ):
+            return FileStatus.IMPLEMENTED
 
         return FileStatus.UNKNOWN
 

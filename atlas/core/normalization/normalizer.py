@@ -492,10 +492,8 @@ class Normalizer:
             return None
 
         # If already a string in ISO format, return it
-        if isinstance(raw_date, str):
-            # Basic ISO format validation
-            if re.match(r"\d{4}-\d{2}-\d{2}", raw_date):
-                return raw_date
+        if isinstance(raw_date, str) and re.match(r"\d{4}-\d{2}-\d{2}", raw_date):
+            return raw_date
 
         # Try to parse common formats
         try:

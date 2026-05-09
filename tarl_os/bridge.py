@@ -121,9 +121,8 @@ class TARLOSBridge:
         Returns:
             Function result or None on error
         """
-        if module_name not in self.module_cache:
-            if not self.load_module(module_name):
-                return None
+        if module_name not in self.module_cache and not self.load_module(module_name):
+            return None
 
         try:
             # For now, we simulate execution since full Thirsty-Lang

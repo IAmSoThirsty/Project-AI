@@ -72,11 +72,10 @@ def main() -> int:
                     f"Missing required content in {relative_path}: '{phrase}'"
                 )
 
-        if relative_path == MANDATORY_INSTRUCTION_PATH:
-            if not validate_frontmatter_apply_to(text):
-                errors.append(
-                    'Mandatory instruction file must include frontmatter applyTo: "**"'
-                )
+        if relative_path == MANDATORY_INSTRUCTION_PATH and not validate_frontmatter_apply_to(text):
+            errors.append(
+                'Mandatory instruction file must include frontmatter applyTo: "**"'
+            )
 
     if errors:
         print("❌ Agent governance default validation FAILED")

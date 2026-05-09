@@ -77,9 +77,8 @@ class AntigravitySetup:
                     issues.append(f"Missing required section: {section}")
 
             # Validate project section
-            if "project" in config:
-                if config["project"].get("name") != "Project-AI":
-                    issues.append("Project name mismatch - should be 'Project-AI'")
+            if "project" in config and config["project"].get("name") != "Project-AI":
+                issues.append("Project name mismatch - should be 'Project-AI'")
 
             # Validate AI systems configuration
             if "ai_systems" in config:

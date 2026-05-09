@@ -217,17 +217,18 @@ class TierClassifier:
             return DataTier.TIER_C
 
         # Check metadata-based classification
-        if source_type == "peer_reviewed_journal":
-            # Requires additional validation
-            if metadata.get("peer_reviewed") and metadata.get("citation_count", 0) > 0:
-                return DataTier.TIER_A
+        if (
+            source_type == "peer_reviewed_journal"
+            and metadata.get("peer_reviewed")
+            and metadata.get("citation_count", 0) > 0
+        ):
+            return DataTier.TIER_A
 
         if source_type == "government_statistical":
             return DataTier.TIER_B
 
-        if source_type == "institutional_research":
-            if metadata.get("methodology_documented"):
-                return DataTier.TIER_C
+        if source_type == "institutional_research" and metadata.get("methodology_documented"):
+            return DataTier.TIER_C
 
         # Default to Tier D
         return DataTier.TIER_D

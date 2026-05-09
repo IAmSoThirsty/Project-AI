@@ -182,11 +182,10 @@ def assert_four_laws_compliance(
     if context.get("endangers_humanity") and is_allowed:
         raise AssertionError(f"Action '{action}' endangers humanity but was allowed")
 
-    if context.get("harms_user") and not context.get("is_user_order"):
-        if is_allowed:
-            raise AssertionError(
-                f"Action '{action}' harms user without explicit order but was allowed"
-            )
+    if context.get("harms_user") and not context.get("is_user_order") and is_allowed:
+        raise AssertionError(
+            f"Action '{action}' harms user without explicit order but was allowed"
+        )
 
     logger.info("Four Laws validation result: %s - %s", is_allowed, reason)
 
