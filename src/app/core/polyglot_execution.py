@@ -46,7 +46,6 @@ logger = logging.getLogger(__name__)
 
 # Optional imports with graceful fallback
 try:
-    import openai
     from openai import OpenAI
 
     OPENAI_AVAILABLE = True

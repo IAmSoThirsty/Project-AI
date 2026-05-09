@@ -124,7 +124,7 @@ class TestTimingAttackMitigation:
     def test_account_lockout_still_works(self, manager):
         """Ensure account lockout mechanism still functions."""
         # Attempt 5 failed logins to trigger lockout
-        for i in range(5):
+        for _i in range(5):
             success, msg = manager.authenticate("testuser", "wrongpassword")
             assert success is False
 

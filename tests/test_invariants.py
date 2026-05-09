@@ -1,4 +1,7 @@
-from cognition.invariants import *
+from cognition.invariants import (
+    invariant_contraction_on_failure,
+    invariant_single_authority,
+)
 
 
 def test_single_authority():

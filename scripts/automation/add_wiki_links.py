@@ -205,7 +205,7 @@ class WikiLinkGenerator:
 
         references = self.find_source_references(content, doc_type)
 
-        for ref_text, source_path, link_type in references:
+        for ref_text, source_path, _link_type in references:
             if not self.verify_source_exists(source_path):
                 self.report.broken_links.append((doc_path, source_path))
                 continue

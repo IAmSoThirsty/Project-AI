@@ -189,7 +189,6 @@ class InlineLinker:
                             continue
 
                         # Add the link
-                        matched_text = match.group(0)
                         content = content[:start] + replacement + content[match.end() :]
                         file_links += 1
                         self.links_added += 1

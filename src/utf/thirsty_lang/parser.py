@@ -294,7 +294,6 @@ class Parser:
     def _pipe(self) -> ast.Expr:
         expr = self._or()
         while self._match(TokenType.PIPE):
-            op = self._previous()
             right = self._or()
             expr = ast.PipeExpr(expr.span.merge(right.span), expr, right)
         return expr

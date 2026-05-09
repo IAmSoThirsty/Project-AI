@@ -29,7 +29,6 @@ from pathlib import Path
 _logger = logging.getLogger(__name__)
 
 try:
-    from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.primitives.asymmetric import ed25519
     from cryptography.hazmat.primitives.serialization import (
         Encoding,

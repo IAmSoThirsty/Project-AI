@@ -491,7 +491,7 @@ class EngineDocMetadataEnricher:
         status_counts = {"complete": 0, "in-progress": 0, "planned": 0}
         engine_status = {}
 
-        for filepath, metadata in self.classification_map.items():
+        for _filepath, metadata in self.classification_map.items():
             status = metadata.get("implementation_status", "unknown")
             status_counts[status] = status_counts.get(status, 0) + 1
 
@@ -562,7 +562,7 @@ Planned implementations: **{status_counts.get("planned", 0)}**
         language_counts = {}
         engine_languages = {}
 
-        for filepath, metadata in self.classification_map.items():
+        for _filepath, metadata in self.classification_map.items():
             lang = metadata.get("language", "unknown")
             engine = metadata.get("engine_type", "unknown")
 
@@ -623,7 +623,7 @@ Planned implementations: **{status_counts.get("planned", 0)}**
         all_systems = set()
         engine_relationships = {}
 
-        for filepath, metadata in self.classification_map.items():
+        for _filepath, metadata in self.classification_map.items():
             engine = metadata.get("engine_type", "unknown")
             systems = metadata.get("related_systems", [])
 

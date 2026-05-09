@@ -47,9 +47,6 @@ try:
     from cognition.liara_guard import (
         STATE as _LIARA_STATE,
     )
-    from cognition.liara_guard import (  # type: ignore[import]
-        LiaraState,
-    )
     from cognition.liara_guard import (
         authorize_liara as _authorize_liara,
     )

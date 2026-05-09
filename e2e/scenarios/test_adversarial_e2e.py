@@ -660,7 +660,7 @@ class TestRateLimitingDoS:
             results[user_id] = allowed
 
         # Assert
-        for user_id, count in results.items():
+        for _user_id, count in results.items():
             assert count == 5
 
     def test_sliding_window_rate_limiting(self):

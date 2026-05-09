@@ -9,6 +9,7 @@ scanning, and Temporal.io workflows.
 
 import json
 import sys
+from importlib.util import find_spec
 from pathlib import Path
 
 
@@ -48,19 +49,8 @@ class AntigravitySetup:
         checks["config_exists"] = self.config_path.exists()
 
         # Check for required Python packages
-        try:
-            import temporalio
-
-            checks["temporal_installed"] = True
-        except ImportError:
-            checks["temporal_installed"] = False
-
-        try:
-            import openai
-
-            checks["openai_installed"] = True
-        except ImportError:
-            checks["openai_installed"] = False
+        checks["temporal_installed"] = find_spec("temporalio") is not None
+        checks["openai_installed"] = find_spec("openai") is not None
 
         return checks
 

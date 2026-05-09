@@ -290,7 +290,7 @@ def test_lockout_audit_log_entries(tmpdir):
     sys.set_master_password("CorrectPass123!")
 
     # Trigger lockout
-    for i in range(5):
+    for _i in range(5):
         sys.authenticate("wrong_password")
 
     # Check audit log

@@ -127,7 +127,7 @@ class SecurityWikiLinker:
 
         if primary_controls:
             impl_section += "**Primary Controls:**\n\n"
-            for control_id, control_name, link_type, _ in primary_controls:
+            for control_id, _control_name, link_type, _ in primary_controls:
                 wiki_link = self.control_link_map.get(control_id, f"[[{control_id}]]")
                 impl_section += (
                     f"- {wiki_link} - {link_type.capitalize()}s {concept_name}\n"
@@ -135,7 +135,7 @@ class SecurityWikiLinker:
 
         if secondary_controls:
             impl_section += "\n**Secondary Controls:**\n\n"
-            for control_id, control_name, link_type, _ in secondary_controls:
+            for control_id, _control_name, link_type, _ in secondary_controls:
                 wiki_link = self.control_link_map.get(control_id, f"[[{control_id}]]")
                 impl_section += (
                     f"- {wiki_link} - {link_type.capitalize()}s {concept_name}\n"
@@ -143,7 +143,7 @@ class SecurityWikiLinker:
 
         if related_controls:
             impl_section += "\n**Related Controls:**\n\n"
-            for control_id, control_name, link_type, _ in related_controls:
+            for control_id, _control_name, link_type, _ in related_controls:
                 wiki_link = self.control_link_map.get(control_id, f"[[{control_id}]]")
                 impl_section += (
                     f"- {wiki_link} - {link_type.capitalize()}s {concept_name}\n"
@@ -227,7 +227,7 @@ class SecurityWikiLinker:
         # Get concepts for this document
         concepts = self.get_concepts_for_doc(doc_path)
 
-        for concept_id, concept_name, description in concepts:
+        for concept_id, concept_name, _description in concepts:
             total_concepts += 1
 
             # Get controls for this concept

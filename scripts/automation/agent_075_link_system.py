@@ -207,7 +207,7 @@ class WikiLinkGenerator:
 
     def _add_doc_cross_references(self) -> None:
         """Add cross-references between documentation files"""
-        doc_map = self._build_doc_index()
+        self._build_doc_index()
 
         for doc_path in self.doc_paths:
             if not doc_path.exists():

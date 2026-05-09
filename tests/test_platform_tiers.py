@@ -529,7 +529,7 @@ class TestTier3Registration:
             from app.gui.dashboard_main import DashboardMainWindow
 
             # If we can import it, the registration code exists
-            assert True
+            assert DashboardMainWindow is not None
         except ImportError:
             pytest.skip("PyQt6 not available for GUI testing")
 
@@ -541,7 +541,7 @@ class TestTier3Registration:
             from app.gui.leather_book_interface import LeatherBookInterface
 
             # If we can import it, the registration code exists
-            assert True
+            assert LeatherBookInterface is not None
         except ImportError:
             pytest.skip("PyQt6 not available for GUI testing")
 

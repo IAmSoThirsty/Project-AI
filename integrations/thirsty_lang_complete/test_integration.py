@@ -124,8 +124,7 @@ class IntegrationTester:
             # Add tarl to path
             sys.path.insert(0, str(Path.cwd()))
 
-            import tarl
-            from tarl import TarlDecision, TarlPolicy, TarlRuntime, TarlVerdict
+            from tarl import TarlRuntime
 
             # Test basic initialization
             runtime = TarlRuntime([])

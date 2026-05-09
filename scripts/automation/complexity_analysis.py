@@ -48,7 +48,7 @@ def main():
     """Main analysis function."""
     all_complex = []
 
-    for root, dirs, files in os.walk("src"):
+    for root, _dirs, files in os.walk("src"):
         for file in files:
             if file.endswith(".py"):
                 filepath = os.path.join(root, file)

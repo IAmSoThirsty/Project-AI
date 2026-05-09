@@ -20,7 +20,7 @@ from app.core.ai_systems import AIPersona, FourLaws
 
 # Try to import OpenRouter provider
 try:
-    from app.core.openrouter_provider import OpenRouterProvider, get_openrouter_provider
+    from app.core.openrouter_provider import get_openrouter_provider
 
     OPENROUTER_AVAILABLE = True
 except ImportError:

@@ -54,7 +54,7 @@ except (OSError, ImportError) as _god_tier_import_err:
 try:
     import numpy as np
 
-    from app.core.sensor_fusion import SensorFusionEngine, SensorMetadata, SensorType
+    from app.core.sensor_fusion import SensorFusionEngine
 
     NUMPY_AVAILABLE = True
 except ImportError:

@@ -29,7 +29,7 @@ Architecture Contract:
 import functools
 import logging
 from collections.abc import Callable
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 

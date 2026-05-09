@@ -24,7 +24,7 @@ Architecture Contract:
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 # Try to import tomllib (Python 3.11+) or fallback to toml
 try:

@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 
 def _run_chimera_script(tmp_path, script: str) -> subprocess.CompletedProcess[str]:
@@ -10,6 +11,12 @@ def _run_chimera_script(tmp_path, script: str) -> subprocess.CompletedProcess[st
     env["CHIMERA_GOVERNANCE_DENY_DIR"] = str(tmp_path / "denials")
     env["CHIMERA_SECRET"] = "test-secret"
     env["CHIMERA_ENV"] = "dev"
+    src_path = str(Path.cwd() / "src")
+    env["PYTHONPATH"] = (
+        src_path
+        if not env.get("PYTHONPATH")
+        else f"{src_path}{os.pathsep}{env['PYTHONPATH']}"
+    )
     return subprocess.run(
         [sys.executable, "-c", script],
         check=True,

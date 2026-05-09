@@ -20,7 +20,6 @@ Architecture Contract:
 """
 
 import logging
-from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

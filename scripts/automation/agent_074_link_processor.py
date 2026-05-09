@@ -389,21 +389,6 @@ class LinkProcessor:
         """
         links_added = 0
 
-        # Common file paths to link (GUI)
-        if domain == "GUI":
-            path_patterns = {
-                r"src/app/gui/(\w+)\.py(?!\]\])": r"[[src/app/gui/\1.py]]",
-                r"src/app/core/(\w+)\.py(?!\]\])": r"[[src/app/core/\1.py]]",
-                r"src/app/interfaces/desktop/(\w+)\.py(?!\]\])": r"[[src/app/interfaces/desktop/\1.py]]",
-                r"src/app/security/(\w+)\.py(?!\]\])": r"[[src/app/security/\1.py]]",
-            }
-        else:  # Temporal
-            path_patterns = {
-                r"temporal/workflows/(\w+)\.py(?!\]\])": r"[[temporal/workflows/\1.py]]",
-                r"src/integrations/temporal/(\w+)\.py(?!\]\])": r"[[src/integrations/temporal/\1.py]]",
-                r"src/app/temporal/(\w+)\.py(?!\]\])": r"[[src/app/temporal/\1.py]]",
-            }
-
         # Apply path patterns (this won't modify content in this version, just count potential)
         # We're being conservative to avoid over-linking
 

@@ -130,8 +130,6 @@ class ComprehensiveLinkInjector:
         """Get relevant source files for a documentation directory"""
         sources = []
 
-        dir_name = directory.name
-
         if "data" in str(directory):
             sources = [
                 ("src/app/core/ai_systems.py", "AI Systems Core"),

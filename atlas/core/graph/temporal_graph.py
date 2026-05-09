@@ -28,7 +28,7 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 try:
-    from scipy.sparse import csr_matrix, lil_matrix
+    from scipy.sparse import lil_matrix
 
     SCIPY_AVAILABLE = True
 except ImportError:
