@@ -51,6 +51,7 @@ class CodexDeusMaximus(KernelRoutedAgent):
         # Initialize GPT-OSS 1208 model placeholder (lazy load)
         self._gpt_model = None
         self._gpt_tokenizer = None
+        self._gpt_torch = None
 
     def initialize(self) -> bool:
         logger.info("Schematic Guardian initialized. Mode: STRICT ENFORCEMENT.")
@@ -208,6 +209,7 @@ class CodexDeusMaximus(KernelRoutedAgent):
                     trust_remote_code=True,
                 )
                 self._gpt_model.eval()
+                self._gpt_torch = torch
                 logger.info("GPT‑OSS 1208 model loaded successfully.")
             except Exception as e:
                 logger.warning(
@@ -216,6 +218,7 @@ class CodexDeusMaximus(KernelRoutedAgent):
                 )
                 self._gpt_model = None
                 self._gpt_tokenizer = None
+                self._gpt_torch = None
 
     def generate_gpt_oss(self, prompt: str, max_new_tokens: int = 512) -> str:
         """Generate a response from GPT‑OSS 1208.
@@ -231,6 +234,10 @@ class CodexDeusMaximus(KernelRoutedAgent):
         # If loading failed, return a simple placeholder response.
         if self._gpt_model is None or self._gpt_tokenizer is None:
             logger.info("Returning dummy GPT‑OSS response (model not loaded).")
+            return f"[Dummy GPT‑OSS response] {prompt}"
+        torch = self._gpt_torch
+        if torch is None:
+            logger.info("Returning dummy GPT‑OSS response (torch runtime not loaded).")
             return f"[Dummy GPT‑OSS response] {prompt}"
         inputs = self._gpt_tokenizer(prompt, return_tensors="pt")
         inputs = {k: v.to(self._gpt_model.device) for k, v in inputs.items()}

@@ -21,6 +21,7 @@ All OpenAI calls use app.core.ai.orchestrator for compliance.
 """
 
 import hashlib
+import importlib.util
 import logging
 import os
 import queue
@@ -53,20 +54,35 @@ except ImportError:
     OPENAI_AVAILABLE = False
     logger.warning("OpenAI not available")
 
-try:
-    import torch
-    from transformers import (
-        AutoModelForCausalLM,
-        AutoTokenizer,
-        StoppingCriteria,
-        StoppingCriteriaList,
-        pipeline,
-    )
+TRANSFORMERS_AVAILABLE = (
+    importlib.util.find_spec("torch") is not None
+    and importlib.util.find_spec("transformers") is not None
+)
+_TRANSFORMERS_IMPORTS: dict[str, Any] | None = None
+_TRANSFORMERS_IMPORT_ERROR: Exception | None = None
 
-    TRANSFORMERS_AVAILABLE = True
-except ImportError:
-    TRANSFORMERS_AVAILABLE = False
-    logger.warning("Transformers not available")
+
+def _load_transformers_runtime() -> dict[str, Any] | None:
+    """Load torch/transformers only when a HuggingFace backend is executed."""
+    global _TRANSFORMERS_IMPORTS, _TRANSFORMERS_IMPORT_ERROR
+    if _TRANSFORMERS_IMPORTS is not None:
+        return _TRANSFORMERS_IMPORTS
+    if not TRANSFORMERS_AVAILABLE:
+        return None
+    try:
+        import torch
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+
+        _TRANSFORMERS_IMPORTS = {
+            "torch": torch,
+            "AutoModelForCausalLM": AutoModelForCausalLM,
+            "AutoTokenizer": AutoTokenizer,
+        }
+        return _TRANSFORMERS_IMPORTS
+    except Exception as exc:
+        _TRANSFORMERS_IMPORT_ERROR = exc
+        logger.warning("Transformers runtime unavailable: %s", exc)
+        return None
 
 
 # ============================================================================
@@ -493,7 +509,8 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
     def _load_hf_model(self, model_name: str) -> bool:
         """Load a HuggingFace model into memory"""
-        if not TRANSFORMERS_AVAILABLE:
+        runtime = _load_transformers_runtime()
+        if runtime is None:
             return False
 
         try:
@@ -502,8 +519,11 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
             self.logger.info("Loading HuggingFace model: %s", model_name)
 
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
-            model = AutoModelForCausalLM.from_pretrained(
+            torch = runtime["torch"]
+            auto_tokenizer = runtime["AutoTokenizer"]
+            auto_model = runtime["AutoModelForCausalLM"]
+            tokenizer = auto_tokenizer.from_pretrained(model_name)
+            model = auto_model.from_pretrained(
                 model_name,
                 torch_dtype=(
                     torch.float16 if torch.cuda.is_available() else torch.float32
@@ -528,6 +548,8 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
                 del self.hf_models[model_name]
                 del self.hf_tokenizers[model_name]
 
+                runtime = _load_transformers_runtime()
+                torch = runtime["torch"] if runtime else None
                 if torch and torch.cuda.is_available():
                     torch.cuda.empty_cache()
 
@@ -734,7 +756,8 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         self, request: ExecutionRequest, model: ModelConfig
     ) -> ExecutionResponse:
         """Execute request using HuggingFace transformers"""
-        if not TRANSFORMERS_AVAILABLE:
+        runtime = _load_transformers_runtime()
+        if runtime is None:
             raise RuntimeError("Transformers not available")
 
         # Load model if not already loaded
@@ -752,6 +775,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
             inputs = tokenizer(full_prompt, return_tensors="pt")
 
+            torch = runtime["torch"]
             if torch.cuda.is_available():
                 inputs = {k: v.cuda() for k, v in inputs.items()}
 
