@@ -16,7 +16,8 @@ import json
 import logging
 import time
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+UTC = timezone.utc
 from pathlib import Path
 from typing import Any
 
@@ -584,3 +585,105 @@ def end_session(context: dict | None = None) -> SessionMetadata:
 def get_temporal_context() -> dict[str, Any]:
     """Get temporal context using default register."""
     return get_state_register().get_temporal_context()
+
+
+# ===========================================================================
+# Upgrade 18: Branching State / State-Jumping Protection
+# ===========================================================================
+
+import threading as _threading
+
+_branch_lock = _threading.Lock()
+
+
+@dataclass
+class BranchRecord:
+    """Records a state chain branch event."""
+
+    sequence_number: int
+    session_id: str
+    predecessor_hash: str
+    claimed_predecessor_hash: str
+    timestamp: float
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "sequence_number": self.sequence_number,
+            "session_id": self.session_id,
+            "predecessor_hash": self.predecessor_hash,
+            "claimed_predecessor_hash": self.claimed_predecessor_hash,
+            "timestamp": self.timestamp,
+        }
+
+
+class StateBranchingProtector:
+    """Detects and prevents state branching / state-jumping attacks.
+
+    Maintains a monotonic global sequence number and predecessor hash chain.
+    If two valid-looking chains appear: HALT or ESCALATE.
+    """
+
+    def __init__(self) -> None:
+        self._sequence_number: int = 0
+        self._chain: list[str] = []           # predecessor_hash chain
+        self._branch_events: list[BranchRecord] = []
+
+    def next_sequence(self, session_id: str, predecessor_hash: str) -> int:
+        """Advance sequence counter and validate predecessor hash.
+
+        Raises BranchConflictError if a forked chain is detected.
+        Returns new sequence number on success.
+        """
+        with _branch_lock:
+            self._sequence_number += 1
+            seq = self._sequence_number
+
+            if self._chain:
+                expected = self._chain[-1]
+                if predecessor_hash != expected:
+                    event = BranchRecord(
+                        sequence_number=seq,
+                        session_id=session_id,
+                        predecessor_hash=expected,
+                        claimed_predecessor_hash=predecessor_hash,
+                        timestamp=time.time(),
+                    )
+                    self._branch_events.append(event)
+                    raise BranchConflictError(
+                        f"Branch conflict at sequence {seq}: "
+                        f"expected predecessor {expected[:8]}… "
+                        f"got {predecessor_hash[:8]}… — possible state-jumping attack. "
+                        "Outcome: HALT or ESCALATE. Council adjudication required."
+                    )
+
+            # Derive this link's hash
+            link_hash = hashlib.sha256(
+                f"{seq}:{session_id}:{predecessor_hash}".encode()
+            ).hexdigest()[:32]
+            self._chain.append(link_hash)
+            return seq
+
+    def current_hash(self) -> str:
+        with _branch_lock:
+            return self._chain[-1] if self._chain else ""
+
+    def get_branch_events(self) -> list[dict[str, Any]]:
+        return [e.to_dict() for e in self._branch_events]
+
+    @property
+    def global_sequence_number(self) -> int:
+        return self._sequence_number
+
+
+class BranchConflictError(Exception):
+    """Raised when a state branching / state-jumping attack is detected."""
+
+
+_branch_protector: StateBranchingProtector | None = None
+
+
+def get_branch_protector() -> StateBranchingProtector:
+    global _branch_protector
+    if _branch_protector is None:
+        _branch_protector = StateBranchingProtector()
+    return _branch_protector

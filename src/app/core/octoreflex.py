@@ -58,6 +58,9 @@ class ViolationType(Enum):
     INTEGRITY_FAILURE = "integrity_failure"
     TEMPORAL_DISCONTINUITY = "temporal_discontinuity"
 
+    # Cross-plane semantic collision (Upgrade 17)
+    MISMATCHED_INTENT = "mismatched_intent"
+
     # General violations
     UNAUTHORIZED_ACCESS = "unauthorized_access"
     POLICY_VIOLATION = "policy_violation"
