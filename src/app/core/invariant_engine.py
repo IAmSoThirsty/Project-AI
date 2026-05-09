@@ -49,7 +49,11 @@ def _build_trace_from_context(context: dict[str, Any]) -> dict[str, Any]:
         "phases": context.get("phases", context.get("_phases", [])),
         "tarl_enforcement": context.get("tarl_enforcement", {}),
         "eed_memory_commit": context.get("eed_memory_commit", {}),
-        "execution": {"phases": context.get("phases", context.get("_phases", []))},
+        "execution": {
+            "signals": context.get("signals", context.get("_signals", [])),
+            "decisions": context.get("decisions", context.get("_decisions", [])),
+            "phases": context.get("phases", context.get("_phases", [])),
+        },
         "outcome": context.get("outcome", {}),
     }
 

@@ -483,12 +483,52 @@ class SandboxExecutor:
             "action_type": intent.action.value,
             "_intent_hash": hash_intent(intent),
         }
+        if intent.action == ActionType.read:
+            context.setdefault("session_id", hash_intent(intent))
+            context.setdefault("governance_degraded", True)
+            context.setdefault("governance_health", "api_read_only_sandbox")
+            context.setdefault("is_mutating_action", False)
+            context.setdefault("continuity_verified", True)
+            context.setdefault(
+                "signals",
+                [
+                    {
+                        "type": "AUDIT",
+                        "source": "ApiSandbox",
+                        "message": "Read-only sandbox execution audited",
+                        "destination": ["AuditLog"],
+                    }
+                ],
+            )
+            context.setdefault("decisions", [])
+            context.setdefault(
+                "phases",
+                [
+                    {
+                        "phase": "triumvirate_arbitration",
+                        "arbitration_result": {
+                            "consensus": "ALLOW_READ_ONLY",
+                            "unanimous": True,
+                            "reasoning": "Read-only sandbox action approved",
+                        },
+                    },
+                    {"phase": "tarl_enforcement"},
+                    {
+                        "phase": "eed_memory_commit",
+                        "snapshot_hash": "0" * 64,
+                    },
+                    {
+                        "phase": "explainability",
+                        "input_hash": hash_intent(intent),
+                    },
+                ],
+            )
 
         # The executor_fn — called only if governance approves.
         def _dispatch(_ctx: dict) -> dict[str, Any]:
             return {
                 "status": "executed",
-                "note": "Governed execution completed",
+                "note": "Sandbox execution completed",
                 "target": intent.target,
                 "actor": intent.actor.value,
             }

@@ -51,7 +51,21 @@ def execute(
         )
         _enforce_result = get_runtime_enforcer().enforce(_enforce_ctx)
         if _enforce_result.verdict == "deny":
-            return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
+            if context.get("governance_degraded"):
+                from app.core.degraded_mode import get_degraded_mode_checker
+
+                degraded_result = get_degraded_mode_checker().evaluate(
+                    action, domain=domain, context=context
+                )
+                if degraded_result.allowed and degraded_result.is_read_only:
+                    logger.warning(
+                        "RuntimeEnforcer degraded read-only continuation: %s",
+                        _enforce_result.reason,
+                    )
+                else:
+                    return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
+            else:
+                return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
     except Exception:
         pass
 

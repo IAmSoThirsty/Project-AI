@@ -38,7 +38,7 @@ _BENIGN_SIGNALS: list[re.Pattern[str]] = [
     re.compile(r"\b(write|draft|create|generate)\b.{0,40}\b(code|test|doc|report|email|summary)\b", re.I),
     re.compile(r"\b(debug|fix|refactor|review|analyse|analyze)\b", re.I),
     re.compile(r"\b(translate|convert|format|parse|extract)\b", re.I),
-    re.compile(r"\b(list|show|display|print|output)\b", re.I),
+    re.compile(r"\b(read|list|show|display|print|output)\b", re.I),
 ]
 
 
