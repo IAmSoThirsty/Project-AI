@@ -1221,6 +1221,17 @@ class BioBrainMappingSystem:
 
         # Update weights if requested
         if update_weights:
+            # Hebbian updates for RSGN slow synaptic weights
+            if learning_mode in {LearningMode.SLOW, LearningMode.BOTH}:
+                pre_activation = x
+                for layer_idx, post_activation in enumerate(
+                    rsgn_diagnostics["layer_activations"]
+                ):
+                    self.rsgn.update_weights_hebbian(
+                        layer_idx, pre_activation, post_activation
+                    )
+                    pre_activation = post_activation
+
             # Hebbian updates for bio-modules
             self.bio_modules.update_hebbian(x, module_activations)
 
