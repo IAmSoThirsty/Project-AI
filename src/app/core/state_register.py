@@ -14,11 +14,10 @@ The State Register provides:
 import hashlib
 import json
 import logging
+import threading as _threading
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-
-UTC = timezone.utc
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -591,8 +590,6 @@ def get_temporal_context() -> dict[str, Any]:
 # ===========================================================================
 # Upgrade 18: Branching State / State-Jumping Protection
 # ===========================================================================
-
-import threading as _threading
 
 _branch_lock = _threading.Lock()
 

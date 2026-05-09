@@ -265,7 +265,7 @@ class GodTierVerifier:
 
         with open(codeowners) as f:
             lines = [
-                l.strip() for l in f.readlines() if l.strip() and not l.startswith("#")
+                line.strip() for line in f.readlines() if line.strip() and not line.startswith("#")
             ]
 
         if len(lines) < 5:

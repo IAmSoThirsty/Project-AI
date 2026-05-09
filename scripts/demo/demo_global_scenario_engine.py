@@ -112,7 +112,7 @@ def main():
 
     print(f"✓ Causal model built: {len(causal_links)} causal links")
     print("\nKey causal relationships:")
-    for link in sorted(causal_links, key=lambda l: l.strength, reverse=True)[:5]:
+    for link in sorted(causal_links, key=lambda item: item.strength, reverse=True)[:5]:
         print(f"  • {link.source} → {link.target}")
         print(f"    Strength: {link.strength:.2f}, Lag: {link.lag_years:.1f} years")
         print(f"    Confidence: {link.confidence:.1%}")

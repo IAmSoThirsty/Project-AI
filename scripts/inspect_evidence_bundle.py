@@ -106,7 +106,7 @@ def main() -> None:
         ("fork_chain",     "HALT",                    "state branching conflict detected"),
         ("escalate_perms", "ESCALATE",                "signing_key_match invariant violated"),
     ]
-    for intent, outcome, reason in demos:
+    for intent, outcome, _reason in demos:
         w.build(
             request_hash=__import__('hashlib').sha256(intent.encode()).hexdigest(),
             intent_classification=intent,

@@ -323,7 +323,7 @@ class Checker:
         if expect.name == actual.name and len(expect.args) == len(actual.args):
             if all(
                 e == ANY or self._assignable(e, a)
-                for e, a in zip(expect.args, actual.args)
+                for e, a in zip(expect.args, actual.args, strict=False)
             ):
                 return True
         if is_option(expect) and actual == option(ANY):
@@ -509,7 +509,7 @@ class Checker:
                     raise ThirstyError(
                         "THIRSTY-E030", "pipe call arity mismatch", right.span
                     )
-                for arg_expr, exp in zip(right.args, expected[1:]):
+                for arg_expr, exp in zip(right.args, expected[1:], strict=False):
                     if not self._assignable(exp, self._check_expr(arg_expr)):
                         raise ThirstyError(
                             "THIRSTY-E021", "pipe argument type mismatch", arg_expr.span
@@ -583,7 +583,7 @@ class Checker:
         if callee_t.name == "BuiltinFn":
             params = list(callee_t.args[:-1])
             self._check_call_arity(expr.args, params, expr.span)
-            for arg_expr, exp in zip(expr.args, params):
+            for arg_expr, exp in zip(expr.args, params, strict=False):
                 got = self._check_expr(arg_expr)
                 if not self._assignable(exp, got):
                     raise ThirstyError(
@@ -594,7 +594,7 @@ class Checker:
         if callee_t.name == "Function":
             params = list(callee_t.args[:-1])
             self._check_call_arity(expr.args, params, expr.span)
-            for arg_expr, exp in zip(expr.args, params):
+            for arg_expr, exp in zip(expr.args, params, strict=False):
                 got = self._check_expr(arg_expr)
                 if not self._assignable(exp, got):
                     raise ThirstyError(

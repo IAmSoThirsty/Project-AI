@@ -147,7 +147,7 @@ class ConstitutionalLedger:
         """Return the last n entries from the local ledger (for inspection)."""
         try:
             lines = self._local.read_text(encoding="utf-8").splitlines()
-            return [json.loads(l) for l in lines[-n:] if l.strip()]
+            return [json.loads(line) for line in lines[-n:] if line.strip()]
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 

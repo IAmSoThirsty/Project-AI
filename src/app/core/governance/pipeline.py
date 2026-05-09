@@ -646,7 +646,7 @@ def _check_user_permissions(context: dict[str, Any]) -> None:
             required_level = 2  # Own profile
 
     if user_level < required_level:
-        required_role = [r for r, l in role_hierarchy.items() if l == required_level][0]
+        required_role = [r for r, level in role_hierarchy.items() if level == required_level][0]
         raise PermissionError(
             f"Action '{action}' requires role '{required_role}' or higher "
             f"(user '{username}' has role '{user_role}')"

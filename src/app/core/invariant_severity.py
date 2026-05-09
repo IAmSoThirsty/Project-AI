@@ -40,16 +40,16 @@ class InvariantSeverity(str, Enum):
     def ordinal(self) -> int:
         return {"INFO": 0, "WARN": 1, "BLOCK": 2, "HALT": 3, "ESCALATE": 4}[self.value]
 
-    def __lt__(self, other: "InvariantSeverity") -> bool:
+    def __lt__(self, other: InvariantSeverity) -> bool:
         return self.ordinal() < other.ordinal()
 
-    def __le__(self, other: "InvariantSeverity") -> bool:
+    def __le__(self, other: InvariantSeverity) -> bool:
         return self.ordinal() <= other.ordinal()
 
-    def __gt__(self, other: "InvariantSeverity") -> bool:
+    def __gt__(self, other: InvariantSeverity) -> bool:
         return self.ordinal() > other.ordinal()
 
-    def __ge__(self, other: "InvariantSeverity") -> bool:
+    def __ge__(self, other: InvariantSeverity) -> bool:
         return self.ordinal() >= other.ordinal()
 
 

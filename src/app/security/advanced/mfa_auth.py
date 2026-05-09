@@ -860,7 +860,7 @@ class BiometricProvider(AuthenticationProvider):
         """Calculate similarity between biometric hashes"""
         # Simplified similarity calculation
         # Production systems would use sophisticated matching algorithms
-        matching_bytes = sum(a == b for a, b in zip(hash1, hash2))
+        matching_bytes = sum(a == b for a, b in zip(hash1, hash2, strict=False))
         return matching_bytes / len(hash1)
 
 

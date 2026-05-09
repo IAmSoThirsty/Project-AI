@@ -538,8 +538,8 @@ class LinkProcessor:
 - **Total Links**: {self.stats.links_added + self.stats.backlinks_added}
 
 ### Coverage
-- **GUI Documentation**: {len([f for f in self.gui_source_map.keys()])} files
-- **Temporal Documentation**: {len([f for f in self.temporal_source_map.keys()])} files
+ - **GUI Documentation**: {len(self.gui_source_map)} files
+ - **Temporal Documentation**: {len(self.temporal_source_map)} files
 - **Source Files Referenced**: {len(set(sum(self.gui_source_map.values(), []) + sum(self.temporal_source_map.values(), [])))} unique files
 
 ---

@@ -49,7 +49,7 @@ class TestThreatModelStructure:
             full_path = REPO_ROOT / rel_path
             if not full_path.exists():
                 missing.append(f"{control_name}: {rel_path}")
-        assert not missing, f"Missing control files:\n" + "\n".join(missing)
+        assert not missing, "Missing control files:\n" + "\n".join(missing)
 
     def test_implemented_modules_files_exist(self, threat_model):
         missing = []
@@ -58,7 +58,7 @@ class TestThreatModelStructure:
                 full_path = REPO_ROOT / rel_path
                 if not full_path.exists():
                     missing.append(f"Surface {key}: {rel_path}")
-        assert not missing, f"Missing module files:\n" + "\n".join(missing)
+        assert not missing, "Missing module files:\n" + "\n".join(missing)
 
     def test_trusted_zone_contains_execution_gate(self, threat_model):
         trusted = threat_model["trust_zones"]["trusted"]

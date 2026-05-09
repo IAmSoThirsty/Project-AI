@@ -269,7 +269,7 @@ class Interpreter:
                         mutable=True,
                         type_name=current_fn.bound_this.cls.name,
                     )
-                for param, value in zip(current_fn.decl.params, current_args):
+                for param, value in zip(current_fn.decl.params, current_args, strict=False):
                     env.define(param.name, value, type_name="param")
                 try:
                     self._exec(current_fn.decl.body, env)

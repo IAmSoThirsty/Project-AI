@@ -1759,7 +1759,7 @@ class Handler(BaseHTTPRequestHandler):
             path=path,
             body=body,
             ua=ua_b,
-            headers={k: v for k, v in self.headers.items()},
+            headers=dict(self.headers.items()),
         )
 
         # Boost score for IPs with recent governance denials

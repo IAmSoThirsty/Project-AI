@@ -282,6 +282,6 @@ _EVIDENCE_STORE = _EvidenceStore()
 
 
 
-def get_evidence_store() -> "_EvidenceStore":
+def get_evidence_store() -> _EvidenceStore:
     """Return the singleton in-process evidence store."""
     return _EVIDENCE_STORE

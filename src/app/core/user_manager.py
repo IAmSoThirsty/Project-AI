@@ -166,13 +166,13 @@ class UserManager:
         - Returns tuple: (success: bool, message: str)
         """
         # Valid dummy hash for constant-time execution (hash of "dummy_password_for_timing")
-        DUMMY_HASH = "$pbkdf2-sha256$29000$dw4hRAhhjBECACBkTOkdAw$J32CKKL8HKxGKBCenxbzNJE1mq8.rpQCu8brEd2o8Fw"
+        dummy_hash = "$pbkdf2-sha256$29000$dw4hRAhhjBECACBkTOkdAw$J32CKKL8HKxGKBCenxbzNJE1mq8.rpQCu8brEd2o8Fw"
 
         # Get user or use dummy data for constant-time execution
         user_exists = username in self.users
         user = self.users.get(
             username,
-            {"password_hash": DUMMY_HASH, "failed_attempts": 0, "locked_until": None},
+            {"password_hash": dummy_hash, "failed_attempts": 0, "locked_until": None},
         )
 
         # Check if account is currently locked (only for existing users)
@@ -190,7 +190,7 @@ class UserManager:
             user["failed_attempts"] = 0
             self.save_users()
 
-        password_hash = user.get("password_hash", DUMMY_HASH)
+        password_hash = user.get("password_hash", dummy_hash)
 
         # Always perform verification (constant-time execution)
         is_valid = False

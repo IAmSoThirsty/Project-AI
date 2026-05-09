@@ -305,7 +305,9 @@ class ConversationThreatStateRegister:
         recent_hash = turns[-1].intent_hash
         # Simple: compare leading nibbles of hashes
         matching = sum(
-            1 for a, b in zip(self._baseline_intent_hash[:8], recent_hash[:8]) if a == b
+            1
+            for a, b in zip(self._baseline_intent_hash[:8], recent_hash[:8], strict=False)
+            if a == b
         )
         similarity = matching / 8.0
         return 1.0 - similarity

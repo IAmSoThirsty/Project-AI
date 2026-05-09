@@ -162,8 +162,8 @@ def detect_technologies(file_path: str, content: str) -> dict[str, list[str]]:
         languages.add("Python")
 
     return {
-        "languages": sorted(list(languages)),
-        "frameworks": sorted(list(frameworks)) if frameworks else [],
+        "languages": sorted(languages),
+        "frameworks": sorted(frameworks) if frameworks else [],
     }
 
 

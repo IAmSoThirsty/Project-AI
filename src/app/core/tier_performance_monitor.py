@@ -513,11 +513,11 @@ class TierPerformanceMonitor:
         # Tier performance is worst of any component
         levels = [r.performance_level for r in reports]
 
-        if any(l == PerformanceLevel.FAILING for l in levels):
+        if any(level == PerformanceLevel.FAILING for level in levels):
             return PerformanceLevel.FAILING
-        elif any(l == PerformanceLevel.CRITICAL for l in levels):
+        elif any(level == PerformanceLevel.CRITICAL for level in levels):
             return PerformanceLevel.CRITICAL
-        elif any(l == PerformanceLevel.DEGRADED for l in levels):
+        elif any(level == PerformanceLevel.DEGRADED for level in levels):
             return PerformanceLevel.DEGRADED
         else:
             return PerformanceLevel.OPTIMAL

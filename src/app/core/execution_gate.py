@@ -43,7 +43,6 @@ class ExecutionGate:
         """
         start_time = time.time()
         session_id = context.get("session_id", "")
-        conversation_id = context.get("conversation_id", "")
         request_text = context.get("request_text", f"{domain}.{action}")
 
         request_hash = hashlib.sha256(request_text.encode()).hexdigest()[:32]

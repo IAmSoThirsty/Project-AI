@@ -22,7 +22,7 @@ def _intent_hash(text: str) -> str:
 def _nibble_distance(h1: str, h2: str) -> int:
     """Count differing nibbles between two equal-length hex strings."""
     min_len = min(len(h1), len(h2))
-    return sum(1 for a, b in zip(h1[:min_len], h2[:min_len]) if a != b)
+    return sum(1 for a, b in zip(h1[:min_len], h2[:min_len], strict=False) if a != b)
 
 
 @dataclass

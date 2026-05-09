@@ -127,7 +127,7 @@ class JurisdictionLoader:
         # Split on L2 headers (## …); first element is pre-header preamble
         sections = re.split(r"^## ", content, flags=re.MULTILINE)
 
-        _OBLIGATION_KEYWORDS = {
+        obligation_keywords = {
             "OBLIGATION",
             "COMPLIANCE",
             "CONSENT MANAGEMENT",
@@ -170,7 +170,7 @@ class JurisdictionLoader:
                             requirements[key] = val
 
             # Obligation-bearing sections — collect top-level bullet points
-            if any(kw in header for kw in _OBLIGATION_KEYWORDS):
+            if any(kw in header for kw in obligation_keywords):
                 for line in body.split("\n"):
                     stripped = line.strip()
                     if re.match(r"^[-*]\s+\S", stripped):

@@ -127,7 +127,7 @@ class SafeExpr:
             )
         if isinstance(node, pyast.Compare):
             left = self._node(node.left, context)
-            for op, comp in zip(node.ops, node.comparators):
+            for op, comp in zip(node.ops, node.comparators, strict=False):
                 right = self._node(comp, context)
                 ok = {
                     pyast.Eq: left == right,

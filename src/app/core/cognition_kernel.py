@@ -909,7 +909,7 @@ class CognitionKernel:
 
             policy_like_keys = [
                 str(key)
-                for key in decision.council_votes.keys()
+                for key in decision.council_votes
                 if key not in {"allowed", "reason", "success", "output"}
             ]
             if policy_like_keys:
@@ -929,7 +929,7 @@ class CognitionKernel:
             else:
                 votes.extend(
                     str(key)
-                    for key in decision.council_votes.keys()
+                    for key in decision.council_votes
                     if key not in {"allowed", "reason", "success", "output"}
                 )
 

@@ -14,14 +14,14 @@ from app.core.genesis_reanchor import (
 
 
 def make_request(**overrides):
-    defaults = dict(
-        requested_by="test-admin",
-        root_authority_token="test-root-token",
-        reason="Test recovery",
-        evidence={"incident_id": "INC-001"},
-        human_confirmation_id="HCI-001",
-        requesting_caller="TestScript",
-    )
+    defaults = {
+        "requested_by": "test-admin",
+        "root_authority_token": "test-root-token",
+        "reason": "Test recovery",
+        "evidence": {"incident_id": "INC-001"},
+        "human_confirmation_id": "HCI-001",
+        "requesting_caller": "TestScript",
+    }
     defaults.update(overrides)
     return GenesisReanchorRequest(**defaults)
 
