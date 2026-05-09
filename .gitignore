@@ -249,6 +249,7 @@ test-artifacts/bypass_fix_report.json
 
 # Generated runtime logs
 data/logs/
+data/audit/*.jsonl
 
 # Generated auto-save user state
 data/savepoints/auto/latest/users.json

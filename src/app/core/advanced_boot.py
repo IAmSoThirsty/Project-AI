@@ -439,6 +439,10 @@ class AdvancedBootSystem:
         """Get current boot profile."""
         return self._current_profile
 
+    def _current_profile_name(self) -> str | None:
+        """Return the current profile name for event metadata."""
+        return self._current_profile.value if self._current_profile else None
+
     def should_initialize_subsystem(
         self, subsystem_id: str, subsystem_metadata: dict[str, Any]
     ) -> tuple[bool, str | None]:
@@ -665,13 +669,14 @@ class AdvancedBootSystem:
                 requires_approval=False,
                 can_be_vetoed=False,
                 metadata={
-                    "boot_profile": self._current_profile.value,
+                    "boot_profile": self._current_profile_name(),
                     "severity": "critical",
                 },
             )
             logger.debug("Emergency mode activation event emitted")
         except Exception as e:
-            logger.warning("Failed to emit emergency mode event: %s", e)
+            logger.exception("Failed to emit emergency mode event")
+            raise RuntimeError("Emergency mode activation event emission failed") from e
 
         self._audit_event(
             event_type="emergency_mode",
@@ -717,11 +722,12 @@ class AdvancedBootSystem:
                 priority=EventPriority.HIGH,
                 requires_approval=False,
                 can_be_vetoed=False,
-                metadata={"boot_profile": self._current_profile.value},
+                metadata={"boot_profile": self._current_profile_name()},
             )
             logger.debug("Emergency mode deactivation event emitted")
         except Exception as e:
-            logger.warning("Failed to emit emergency mode deactivation event: %s", e)
+            logger.exception("Failed to emit emergency mode deactivation event")
+            raise RuntimeError("Emergency mode deactivation event emission failed") from e
 
         self._audit_event(
             event_type="emergency_mode",
