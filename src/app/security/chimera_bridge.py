@@ -11,7 +11,7 @@ Project-AI governance spine:
     • Governance denials → chimera_signals/ directory (Chimera polls)
 
   Audit relay:
-    • Tails chimera-audit.jsonl → ships events to acceptance ledger
+    • Tails chimera-audit.jsonl → ships events to the acceptance ledger
 """
 
 from __future__ import annotations
@@ -143,7 +143,7 @@ class ChimeraBridge:
     # ------------------------------------------------------------------ #
 
     def start_audit_relay(self, chimera_audit_path: str) -> None:
-        """Tail Chimera's audit JSONL in a daemon thread and ship to acceptance ledger."""
+        """Tail Chimera's audit JSONL in a daemon thread and ship to the acceptance ledger."""
         t = threading.Thread(
             target=self._relay_loop,
             args=(chimera_audit_path,),
@@ -166,23 +166,26 @@ class ChimeraBridge:
                             if line:
                                 try:
                                     self._ship_to_ledger(json.loads(line))
-                                except Exception:
-                                    pass
+                                except json.JSONDecodeError as exc:
+                                    logger.warning("chimera audit relay skipped invalid JSONL row: %s", exc)
                         last_pos = f.tell()
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning("chimera audit relay error for %s: %s", audit_path, exc)
             time.sleep(5)
 
-    def _ship_to_ledger(self, event: dict[str, Any]) -> None:
+    def _ship_to_ledger(self, event: dict[str, Any]) -> bool:
         try:
             from app.governance.acceptance_ledger import AcceptanceLedger
+
             AcceptanceLedger().record_event(
                 event_type=f"chimera.{event.get('event', 'unknown')}",
                 actor=event.get("ip", "unknown"),
                 metadata=event,
             )
-        except Exception:
-            pass
+            return True
+        except Exception as exc:
+            logger.warning("chimera audit relay failed to record ledger event: %s", exc)
+            return False
 
 
 # ── singleton ─────────────────────────────────────────────────────────

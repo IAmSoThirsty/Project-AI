@@ -165,7 +165,7 @@ def _governance_denial_boost(ip: str, max_age: float = 300.0) -> int:
     try:
         cutoff = time.time() - max_age
         count = 0
-        for f in pathlib.Path(GOVERNANCE_DENY_DIR).glob("denial_*.json"):
+        for f in Path(GOVERNANCE_DENY_DIR).glob("denial_*.json"):
             try:
                 if f.stat().st_mtime > cutoff:
                     obj = json.loads(f.read_text(encoding="utf-8"))

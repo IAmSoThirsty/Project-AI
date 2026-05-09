@@ -463,6 +463,29 @@ class AcceptanceLedger:
 
         return entry
 
+    def record_event(
+        self,
+        event_type: str,
+        actor: str = "system",
+        metadata: dict | None = None,
+    ) -> AcceptanceEntry:
+        """Append a governance/audit event to the same tamper-evident ledger."""
+        payload = {
+            "event_type": event_type,
+            "actor": actor,
+            "metadata": metadata or {},
+        }
+        canonical_payload = json.dumps(payload, sort_keys=True, default=str)
+        return self.append_acceptance(
+            user_id=f"audit:{actor}",
+            user_email="audit@project-ai.local",
+            acceptance_type=AcceptanceType.AUDIT_LOCK,
+            tier=TierLevel.ORGANIZATION,
+            jurisdiction="governance",
+            document_hash=hashlib.sha256(canonical_payload.encode("utf-8")).hexdigest(),
+            metadata=payload,
+        )
+
     def _verify_signature(self, entry: AcceptanceEntry) -> bool:
         """Verify Ed25519 signature on an entry"""
         if not CRYPTO_AVAILABLE:
