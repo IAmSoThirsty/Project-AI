@@ -1,4 +1,4 @@
-﻿"""Extended tests for LearningRequestManager (20+ cases).
+"""Extended tests for LearningRequestManager (20+ cases).
 
 Covers:
 - Create requests with varying priorities

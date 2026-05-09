@@ -1,4 +1,4 @@
-﻿"""Extended test suite for MemoryExpansionSystem with 20+ tests.
+"""Extended test suite for MemoryExpansionSystem with 20+ tests.
 
 Covers:
 - Knowledge add/get for categories and keys

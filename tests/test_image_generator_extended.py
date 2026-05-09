@@ -1,4 +1,4 @@
-﻿"""Extended tests for ImageGenerator (20+)."""
+"""Extended tests for ImageGenerator (20+)."""
 
 from __future__ import annotations
 

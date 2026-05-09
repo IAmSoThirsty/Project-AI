@@ -1,4 +1,4 @@
-﻿"""Extended tests for CommandOverrideSystem and the adapter (20+ cases)."""
+"""Extended tests for CommandOverrideSystem and the adapter (20+ cases)."""
 
 from __future__ import annotations
 

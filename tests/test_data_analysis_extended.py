@@ -1,4 +1,4 @@
-﻿"""Extended tests for DataAnalyzer (20+)."""
+"""Extended tests for DataAnalyzer (20+)."""
 
 from __future__ import annotations
 

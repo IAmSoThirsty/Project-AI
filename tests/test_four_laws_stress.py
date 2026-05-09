@@ -1,4 +1,4 @@
-﻿"""Stress tests for FourLaws: 100 scenarios across key context combinations.
+"""Stress tests for FourLaws: 100 scenarios across key context combinations.
 
 Covers:
 - Asimov's law: endangers_humanity -> always blocked
