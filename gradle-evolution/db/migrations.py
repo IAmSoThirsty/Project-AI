@@ -8,6 +8,7 @@ and data migration helpers.
 import logging
 import sqlite3
 from collections.abc import Callable
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -256,9 +257,14 @@ class MigrationManager:
         logger.info("Successfully rolled back to version %s", target)
         return True
 
-    def _get_connection(self) -> sqlite3.Connection:
+    @contextmanager
+    def _get_connection(self):
         """Get database connection."""
-        return sqlite3.connect(self.db_path, timeout=30.0)
+        conn = sqlite3.connect(self.db_path, timeout=30.0)
+        try:
+            yield conn
+        finally:
+            conn.close()
 
     def _update_version(self, conn: sqlite3.Connection, version: int) -> None:
         """Update schema version in database."""
@@ -318,9 +324,11 @@ class MigrationManager:
 
     def _migration_1_up(self, conn: sqlite3.Connection) -> None:
         """Initial schema creation."""
-        # This is handled by BuildMemoryDB._create_schema
-        # Just mark as complete
-        pass
+        from .schema import BuildMemoryDB
+
+        schema = BuildMemoryDB.__new__(BuildMemoryDB)
+        schema._create_schema(conn)
+        schema._create_indexes(conn)
 
     def _migration_1_down(self, conn: sqlite3.Connection) -> None:
         """Drop initial schema."""
@@ -646,3 +654,8 @@ class MigrationManager:
             logger.warning("Schema validation failed: %s", "; ".join(issues))
 
         return is_valid, issues
+
+
+def run_migrations(db_path: str | Path, target_version: int | None = None) -> bool:
+    """Apply build-memory database migrations for the given SQLite path."""
+    return MigrationManager(Path(db_path)).migrate(target_version=target_version)
