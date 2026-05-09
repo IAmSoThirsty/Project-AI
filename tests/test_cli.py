@@ -10,6 +10,11 @@ from app.cli import app
 runner = CliRunner()
 
 
+def combined_output(result):
+    """Return all captured CLI output across Click/Typer versions."""
+    return result.stdout + result.stderr
+
+
 class TestCLIMain:
     """Tests for main CLI app."""
 
@@ -55,7 +60,7 @@ class TestUserCommands:
         """Test user example command with missing argument."""
         result = runner.invoke(app, ["user", "example"])
         assert result.exit_code != 0
-        assert "Missing argument" in result.stdout
+        assert "Missing argument" in combined_output(result)
 
 
 class TestMemoryCommands:
@@ -77,7 +82,7 @@ class TestMemoryCommands:
         """Test memory example command with missing argument."""
         result = runner.invoke(app, ["memory", "example"])
         assert result.exit_code != 0
-        assert "Missing argument" in result.stdout
+        assert "Missing argument" in combined_output(result)
 
 
 class TestLearningCommands:
@@ -99,7 +104,7 @@ class TestLearningCommands:
         """Test learning example command with missing argument."""
         result = runner.invoke(app, ["learning", "example"])
         assert result.exit_code != 0
-        assert "Missing argument" in result.stdout
+        assert "Missing argument" in combined_output(result)
 
 
 class TestPluginCommands:
@@ -121,7 +126,7 @@ class TestPluginCommands:
         """Test plugin example command with missing argument."""
         result = runner.invoke(app, ["plugin", "example"])
         assert result.exit_code != 0
-        assert "Missing argument" in result.stdout
+        assert "Missing argument" in combined_output(result)
 
 
 class TestSystemCommands:
@@ -143,7 +148,7 @@ class TestSystemCommands:
         """Test system example command with missing argument."""
         result = runner.invoke(app, ["system", "example"])
         assert result.exit_code != 0
-        assert "Missing argument" in result.stdout
+        assert "Missing argument" in combined_output(result)
 
 
 class TestAICommands:
@@ -165,7 +170,7 @@ class TestAICommands:
         """Test ai example command with missing argument."""
         result = runner.invoke(app, ["ai", "example"])
         assert result.exit_code != 0
-        assert "Missing argument" in result.stdout
+        assert "Missing argument" in combined_output(result)
 
 
 class TestCLIErrorHandling:
@@ -175,10 +180,10 @@ class TestCLIErrorHandling:
         """Test invalid command."""
         result = runner.invoke(app, ["invalid-command"])
         assert result.exit_code != 0
-        assert "No such command" in result.stdout
+        assert "No such command" in combined_output(result)
 
     def test_invalid_subcommand(self):
         """Test invalid subcommand."""
         result = runner.invoke(app, ["user", "invalid-subcommand"])
         assert result.exit_code != 0
-        assert "No such command" in result.stdout
+        assert "No such command" in combined_output(result)
