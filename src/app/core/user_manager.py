@@ -47,6 +47,10 @@ class UserManager:
             data_dir: Base directory for user data (for path traversal protection)
         """
         load_dotenv()
+        if os.path.isabs(users_file):
+            data_dir = os.path.dirname(users_file)
+            users_file = os.path.basename(users_file)
+
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
 
