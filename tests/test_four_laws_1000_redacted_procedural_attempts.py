@@ -59,7 +59,7 @@ def _cases() -> list[tuple[str, str, dict[str, Any], bool, str]]:
                 f"User orders step-by-step [REDACTED WRONGDOING] scenario {i}",
                 context,
                 False,
-                "Order rejected",
+                "bypasses accountability",
             )
         )
 
