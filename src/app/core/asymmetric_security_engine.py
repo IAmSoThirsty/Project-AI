@@ -92,7 +92,7 @@ class InvariantBountySystem:
                 name="auth_proof_required",
                 description="State mutation without authorization proof",
                 check_function=lambda ctx: (
-                    bool(ctx.get("auth_token")) and bool(ctx.get("state_changed"))
+                    not ctx.get("state_changed", False) or bool(ctx.get("auth_token"))
                 ),
                 severity=InvariantSeverity.CRITICAL,
                 bounty_value=5000,
