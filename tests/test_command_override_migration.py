@@ -9,9 +9,9 @@ def test_sha256_to_bcrypt_migration(tmp_path):
     data_dir.mkdir()
 
     # create legacy config with sha256 password
-    password = "s3cret!"  # Test fixture password
-    # Precomputed legacy SHA-256 of "s3cret!", do not compute password hashes with SHA256 in new code
-    legacy_hash = "98830ed5c6d7d22ef9dcf6a236aa93a3c81f57ea5483cfa0409643bd5be5b92e"
+    password = "S3cret!Pass"  # Test fixture password
+    # Precomputed legacy SHA-256 of "S3cret!Pass", do not compute password hashes with SHA256 in new code
+    legacy_hash = "44aed56ed2281fb8dd8eadc1f973cbd6f4223bd4b331d50cfb6a6d113643940b"
     config = {"master_password_hash": legacy_hash, "safety_protocols": {}}
     cfg_file = data_dir / "command_override_config.json"
     with open(cfg_file, "w", encoding="utf-8") as f:
@@ -36,6 +36,6 @@ def test_set_and_verify_bcrypt(tmp_path):
     data_dir = tmp_path / "data"
     data_dir.mkdir()
     sys = CommandOverrideSystem(data_dir=str(data_dir))
-    assert sys.set_master_password("mystrongpassword") is True
-    assert sys.authenticate("mystrongpassword") is True
+    assert sys.set_master_password("MyStrongPassword123!") is True
+    assert sys.authenticate("MyStrongPassword123!") is True
     assert sys.authenticate("wrong") is False
