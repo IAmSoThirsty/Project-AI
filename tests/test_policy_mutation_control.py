@@ -1,8 +1,11 @@
 """tests/test_policy_mutation_control.py — Upgrade 16: Recursive Governance / Council Mutation Control."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
+
 from app.core.policy_registry import PolicyRecord, PolicyRegistry
 
 

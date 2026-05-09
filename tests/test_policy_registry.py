@@ -1,8 +1,11 @@
 """tests/test_policy_registry.py — Upgrade 6: PolicyRegistry versioning, drift detection, migration."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
+
 from app.core.policy_registry import PolicyRecord, PolicyRegistry
 
 

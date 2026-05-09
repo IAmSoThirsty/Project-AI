@@ -1,11 +1,13 @@
 """tests/test_degraded_mode.py — Upgrade 10: Governed Degradation Semantics."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import pytest
 from app.core.degraded_mode import (
-    DegradedModeChecker, classify_action_mutability,
-    LiaraFallbackAuthority, get_degraded_mode_checker,
+    DegradedModeChecker,
+    LiaraFallbackAuthority,
+    classify_action_mutability,
 )
 from app.core.governance_outcomes import GovernanceOutcome
 

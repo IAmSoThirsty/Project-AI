@@ -1,9 +1,14 @@
 """tests/test_evidence_bundle.py — Upgrade 9: Evidence Bundle Format."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import json, pytest
-from app.core.evidence_bundle import EvidenceBundle, EvidenceBundleWriter, EvidenceBundleValidator
+import json
+
+import pytest
+
+from app.core.evidence_bundle import EvidenceBundleValidator, EvidenceBundleWriter
 
 
 @pytest.fixture

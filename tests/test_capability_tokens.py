@@ -1,9 +1,14 @@
 """tests/test_capability_tokens.py — Upgrade 5: Capability-Scoped Execution Tokens."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import pytest, time
-from app.core.capability_token import CapabilityToken, CapabilityTokenService
+import time
+
+import pytest
+
+from app.core.capability_token import CapabilityTokenService
 
 
 @pytest.fixture

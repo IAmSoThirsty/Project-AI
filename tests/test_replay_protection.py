@@ -1,8 +1,11 @@
 """tests/test_replay_protection.py — Upgrade 14: Governance Replay Protection."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
+
 from app.core.capability_token import CapabilityTokenService
 
 

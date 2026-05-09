@@ -1,11 +1,13 @@
 """tests/test_conversation_threat_register.py — Upgrade 2: Conversation Threat State Register."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
+
 from app.core.conversation_threat_register import (
     ConversationThreatStateRegister,
-    get_threat_register,
     clear_threat_register,
 )
 

@@ -1,9 +1,12 @@
 """tests/test_state_branching.py — Upgrade 18: Branching State / State-Jumping Protection."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
-from app.core.state_register import StateBranchingProtector, BranchConflictError
+
+from app.core.state_register import BranchConflictError, StateBranchingProtector
 
 
 @pytest.fixture

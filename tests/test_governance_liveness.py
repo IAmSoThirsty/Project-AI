@@ -6,12 +6,13 @@ not just blocks harmful traffic.  Reports:
   - liveness_rate     (benign → allowed)
   - clarification_rate (ambiguous → clarify)
 """
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import pytest
-from app.core.safe_allow_calibration import SafeAllowCalibrationLayer
 from app.core.governance_outcomes import GovernanceOutcome
+from app.core.safe_allow_calibration import SafeAllowCalibrationLayer
 
 layer = SafeAllowCalibrationLayer()
 

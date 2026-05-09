@@ -1,8 +1,9 @@
 """tests/test_semantic_collision.py — Upgrade 17: Cross-Plane Semantic Collision Detection."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import pytest
 from app.core.semantic_collision import detect_semantic_collision
 
 

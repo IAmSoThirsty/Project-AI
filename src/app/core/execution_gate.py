@@ -119,7 +119,9 @@ class ExecutionGate:
         exec_auth = None
         if policy_decision is not None:
             try:
-                from app.core.execution_authorization import ExecutionAuthorizationEvaluator
+                from app.core.execution_authorization import (
+                    ExecutionAuthorizationEvaluator,
+                )
                 ea_eval = ExecutionAuthorizationEvaluator()
                 exec_auth = ea_eval.evaluate(policy_decision, context, session_id)
                 if not exec_auth.authorized:
@@ -235,7 +237,6 @@ class ExecutionGate:
             sev_engine = get_severity_engine()
             inv_results = sev_engine.evaluate_all(context)
             if sev_engine.should_block_execution(inv_results):
-                from app.core.invariant_severity import InvariantSeverity
                 max_sev = sev_engine.max_severity(inv_results)
                 outcome_map = {
                     "HALT": "HALT",
@@ -343,7 +344,10 @@ class ExecutionGate:
     ) -> None:
         try:
             from app.core.evidence_bundle import EvidenceBundleWriter
-            from app.core.governance_observability import build_observation, get_collector
+            from app.core.governance_observability import (
+                build_observation,
+                get_collector,
+            )
             writer = EvidenceBundleWriter()
             bundle = writer.build(
                 request_hash=request_hash,

@@ -4,12 +4,16 @@ NOTE: External TSA calls are MOCKED in all tests below.
 No real network calls are made. The mock_external_time parameter
 bypasses the TSA query path entirely for deterministic testing.
 """
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import time
+
 import pytest
-from app.core.time_trust import TimeTrustValidator, TimeTrustResult
+
+from app.core.time_trust import TimeTrustValidator
 
 
 @pytest.fixture

@@ -12,19 +12,24 @@ Asserts each of the 10 governance contract points:
  9. EvidenceBundle-producing
 10. Safely-degrading
 """
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import json, pytest
-from app.core.governance_outcomes import GovernanceOutcome, GovernanceResult
-from app.core.safe_allow_calibration import SafeAllowCalibrationLayer
-from app.core.policy_registry import PolicyRegistry
+import json
+
+import pytest
+
 from app.core.capability_token import CapabilityTokenService
-from app.core.evidence_bundle import EvidenceBundleWriter, EvidenceBundleValidator
 from app.core.degraded_mode import DegradedModeChecker
-from app.core.invariant_severity import get_severity_engine, InvariantSeverity
+from app.core.evidence_bundle import EvidenceBundleValidator, EvidenceBundleWriter
 from app.core.execution_authorization import ExecutionAuthorizationEvaluator
+from app.core.governance_outcomes import GovernanceOutcome
+from app.core.invariant_severity import InvariantSeverity, get_severity_engine
 from app.core.policy_decision import PolicyDecision
+from app.core.policy_registry import PolicyRegistry
+from app.core.safe_allow_calibration import SafeAllowCalibrationLayer
 
 
 # ----- Contract Point 1: Admissible ----------------------------------------
@@ -62,7 +67,7 @@ class TestContractInvariantPreserving:
 class TestContractContinuityMaintaining:
     """Forked/tampered state chains must be detected and halted."""
     def test_branch_conflict_detected(self):
-        from app.core.state_register import StateBranchingProtector, BranchConflictError
+        from app.core.state_register import BranchConflictError, StateBranchingProtector
         p = StateBranchingProtector()
         p.next_sequence("s", "")
         with pytest.raises(BranchConflictError):

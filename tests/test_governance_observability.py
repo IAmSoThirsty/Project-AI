@@ -1,11 +1,17 @@
 """tests/test_governance_observability.py — Upgrade 15: Governance Observability."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import json, pytest
+import json
+
+import pytest
+
 from app.core.governance_observability import (
-    GovernanceObservation, GovernanceObservabilityCollector,
-    build_observation, get_collector,
+    GovernanceObservabilityCollector,
+    build_observation,
+    get_collector,
 )
 
 VALID_OUTCOMES = {

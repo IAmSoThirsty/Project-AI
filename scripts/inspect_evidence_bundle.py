@@ -14,16 +14,15 @@ Note: The evidence store is in-process only. This script generates a sample
 set of bundles to demonstrate the store and inspector mechanics. In production,
 point your long-running process at get_evidence_store() directly.
 """
-import sys
-import os
-import json
 import argparse
+import json
+import os
+import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from app.core.evidence_bundle import EvidenceBundleWriter, get_evidence_store
-
 
 # ---------------------------------------------------------------------------
 # ANSI helpers

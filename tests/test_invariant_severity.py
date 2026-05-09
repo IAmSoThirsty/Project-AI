@@ -1,11 +1,13 @@
 """tests/test_invariant_severity.py — Upgrade 7: Invariant Severity Levels."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import pytest
 from app.core.invariant_severity import (
-    InvariantSeverity, InvariantResult, SeverityAwareInvariantEngine,
-    SeverityAwareInvariant, get_severity_engine,
+    InvariantSeverity,
+    SeverityAwareInvariantEngine,
+    get_severity_engine,
 )
 
 

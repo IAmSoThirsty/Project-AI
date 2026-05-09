@@ -1,10 +1,15 @@
 """tests/test_genesis_reanchor.py — Upgrade 19: Genesis Re-Anchoring / Sovereign Recovery Protocol."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 import pytest
+
 from app.core.genesis_reanchor import (
-    GenesisReanchorDenied, GenesisReanchorRequest, invoke_genesis_reanchor,
+    GenesisReanchorDenied,
+    GenesisReanchorRequest,
+    invoke_genesis_reanchor,
 )
 
 
@@ -35,7 +40,9 @@ class TestGenesisReanchor:
 
     def test_missing_reason_denied(self, monkeypatch):
         monkeypatch.setenv("GENESIS_ROOT_AUTHORITY_TOKEN", "test-root-token")
-        import importlib, app.core.genesis_reanchor as m
+        import importlib
+
+        import app.core.genesis_reanchor as m
         importlib.reload(m)
         with pytest.raises(m.GenesisReanchorDenied, match="reason"):
             m.invoke_genesis_reanchor(m.GenesisReanchorRequest(
@@ -46,7 +53,9 @@ class TestGenesisReanchor:
 
     def test_missing_evidence_denied(self, monkeypatch):
         monkeypatch.setenv("GENESIS_ROOT_AUTHORITY_TOKEN", "test-root-token")
-        import importlib, app.core.genesis_reanchor as m
+        import importlib
+
+        import app.core.genesis_reanchor as m
         importlib.reload(m)
         with pytest.raises(m.GenesisReanchorDenied, match="evidence"):
             m.invoke_genesis_reanchor(m.GenesisReanchorRequest(
@@ -57,7 +66,9 @@ class TestGenesisReanchor:
 
     def test_missing_human_confirmation_denied(self, monkeypatch):
         monkeypatch.setenv("GENESIS_ROOT_AUTHORITY_TOKEN", "test-root-token")
-        import importlib, app.core.genesis_reanchor as m
+        import importlib
+
+        import app.core.genesis_reanchor as m
         importlib.reload(m)
         with pytest.raises(m.GenesisReanchorDenied, match="human_confirmation"):
             m.invoke_genesis_reanchor(m.GenesisReanchorRequest(
@@ -68,7 +79,9 @@ class TestGenesisReanchor:
 
     def test_wrong_root_token_denied(self, monkeypatch):
         monkeypatch.setenv("GENESIS_ROOT_AUTHORITY_TOKEN", "real-token")
-        import importlib, app.core.genesis_reanchor as m
+        import importlib
+
+        import app.core.genesis_reanchor as m
         importlib.reload(m)
         with pytest.raises(m.GenesisReanchorDenied, match="token mismatch"):
             m.invoke_genesis_reanchor(m.GenesisReanchorRequest(
@@ -79,7 +92,9 @@ class TestGenesisReanchor:
 
     def test_successful_reanchor_with_root_authority(self, monkeypatch):
         monkeypatch.setenv("GENESIS_ROOT_AUTHORITY_TOKEN", "valid-root")
-        import importlib, app.core.genesis_reanchor as m
+        import importlib
+
+        import app.core.genesis_reanchor as m
         importlib.reload(m)
         result = m.invoke_genesis_reanchor(m.GenesisReanchorRequest(
             requested_by="admin", root_authority_token="valid-root",

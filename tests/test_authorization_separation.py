@@ -1,17 +1,21 @@
 """tests/test_authorization_separation.py — Upgrade 4: PolicyDecision vs ExecutionAuthorization separation."""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-import pytest, time
-from app.core.policy_decision import PolicyDecision, PolicyDecisionEvaluator
-from app.core.execution_authorization import ExecutionAuthorization, ExecutionAuthorizationEvaluator
+import time
+
+from app.core.execution_authorization import ExecutionAuthorizationEvaluator
 from app.core.governance_outcomes import GovernanceOutcome
+from app.core.policy_decision import PolicyDecision
 
 
 def make_permitted_decision(domain="files", action="read", version="1.0", phash=None) -> PolicyDecision:
     # Use the live registry's active hash so guard #8 (policy hash binding) passes
     # on the happy path. Tests that need to trigger guard #8 should pass a stale hash explicitly.
-    import sys, os as _os
+    import os as _os
+    import sys
     sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'src'))
     from app.core.policy_registry import get_policy_registry
     actual_hash = phash if phash is not None else get_policy_registry().active_hash

@@ -3,12 +3,15 @@
 Checks that every module path listed under implemented_controls and
 implemented_modules actually exists in the repository.
 """
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from pathlib import Path
 
 import pytest
 import yaml
-from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 THREAT_MODEL_PATH = REPO_ROOT / "docs" / "architecture" / "threat_model.yaml"
