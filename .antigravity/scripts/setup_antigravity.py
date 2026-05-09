@@ -133,50 +133,50 @@ class AntigravitySetup:
         print()
 
         # Prerequisites
-        print("📋 Prerequisites:")
+        print("[*] Prerequisites:")
         prereqs = self.check_prerequisites()
         for check, status in prereqs.items():
-            icon = "✅" if status else "❌"
+            icon = "[OK]" if status else "[FAIL]"
             print(f"  {icon} {check.replace('_', ' ').title()}")
         print()
 
         # Configuration
-        print("⚙️  Configuration:")
+        print("[*] Configuration:")
         is_valid, issues = self.validate_config()
         if is_valid:
-            print("  ✅ Configuration valid")
+            print("  [OK] Configuration valid")
         else:
-            print("  ❌ Configuration issues:")
+            print("  [FAIL] Configuration issues:")
             for issue in issues:
                 print(f"     - {issue}")
         print()
 
         # Agent files
-        print("🤖 Custom Agents:")
+        print("[*] Custom Agents:")
         agents = self.check_agent_files()
         for agent, exists in agents.items():
-            icon = "✅" if exists else "❌"
+            icon = "[OK]" if exists else "[FAIL]"
             print(f"  {icon} {agent.replace('_', ' ').title()}")
         print()
 
         # Workflow files
-        print("📊 Workflows:")
+        print("[*] Workflows:")
         workflows = self.check_workflow_files()
         for workflow, exists in workflows.items():
-            icon = "✅" if exists else "❌"
+            icon = "[OK]" if exists else "[FAIL]"
             print(f"  {icon} {workflow.replace('_', ' ').title()}")
         print()
 
         # Recommendations
-        print("💡 Recommendations:")
+        print("[*] Recommendations:")
         recommendations = self.generate_recommendations(
             prereqs, is_valid, agents, workflows
         )
         if recommendations:
             for rec in recommendations:
-                print(f"  • {rec}")
+                print(f"  - {rec}")
         else:
-            print("  ✅ All set! Antigravity integration is ready.")
+            print("  [OK] All set! Antigravity integration is ready.")
         print()
 
         print("=" * 60)
@@ -235,7 +235,7 @@ class AntigravitySetup:
 
 def main():
     """Main setup function."""
-    print("\n🚀 Setting up Google Antigravity IDE integration for Project-AI\n")
+    print("\nSetting up Google Antigravity IDE integration for Project-AI\n")
 
     setup = AntigravitySetup()
     setup.print_status()
@@ -254,7 +254,7 @@ def main():
     )
 
     if all_ready:
-        print("\n✅ Antigravity integration is ready!")
+        print("\n[OK] Antigravity integration is ready!")
         print("\nNext steps:")
         print(
             "1. Download and install Antigravity IDE from https://antigravity.google.com"
@@ -264,7 +264,7 @@ def main():
         print("4. Start using agent-assisted development!\n")
         return 0
     else:
-        print("\n⚠️  Setup incomplete - please address the recommendations above.\n")
+        print("\n[WARN] Setup incomplete - please address the recommendations above.\n")
         return 1
 
 
