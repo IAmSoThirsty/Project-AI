@@ -55,7 +55,7 @@ Create `.env` in repository root with required keys (do NOT commit):
 ```bash
 OPENAI_API_KEY=sk-...           # From https://platform.openai.com/api-keys
 HUGGINGFACE_API_KEY=hf_...      # From https://huggingface.co/settings/tokens
-FERNET_KEY=<generated_key>      # Generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+FERNET_KEY=<generated_key>      # Generate with: py -3.12 -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 ```
 
 **Learn More**: [[COPILOT_MANDATORY_GUIDE]] → Environment Setup for complete configuration details
@@ -67,10 +67,10 @@ FERNET_KEY=<generated_key>      # Generate with: python -c "from cryptography.fe
 ### Desktop UI
 
 ```bash
-python -m src.app.main
+py -3.12 -m src.app.main
 ```
 
-**Important**: Always use `python -m src.app.main`, NOT `python src/app/main.py` (breaks imports)
+**Important**: Always use `py -3.12 -m src.app.main`, NOT `python src/app/main.py` (breaks imports and may select an unsupported interpreter)
 
 **Learn More**:
 - Installation: [[DESKTOP_APP_QUICKSTART]]
@@ -80,10 +80,10 @@ python -m src.app.main
 ### Tests
 
 ```bash
-pytest -v                        # Run all tests with verbose output
-pytest tests/test_ai_systems.py  # Run specific test file
-pytest -k "test_persona"         # Run tests matching pattern
-pytest --cov=src                 # Run with coverage report
+py -3.12 -m pytest -v                        # Run all tests with verbose output
+py -3.12 -m pytest tests/test_ai_systems.py  # Run specific test file
+py -3.12 -m pytest -k "test_persona"         # Run tests matching pattern
+py -3.12 -m pytest --cov=src                 # Run with coverage report
 ```
 
 **Learn More**:
@@ -97,8 +97,8 @@ pytest --cov=src                 # Run with coverage report
 
 ```bash
 # Linting
-ruff check .                     # Check for issues
-ruff check . --fix              # Auto-fix issues
+py -3.12 -m ruff check .        # Check for issues
+py -3.12 -m ruff check . --fix  # Auto-fix issues
 
 # Formatting
 isort src tests --profile black  # Sort imports
@@ -192,7 +192,7 @@ The application will create these directories at runtime, but pre-creating them 
 
 **Problem**: `ModuleNotFoundError: No module named 'app'`
 
-**Solution**: Always run from project root with `python -m src.app.main`
+**Solution**: Always run from project root with `py -3.12 -m src.app.main`
 
 **Learn More**: [[COPILOT_MANDATORY_GUIDE]] → Module Imports
 

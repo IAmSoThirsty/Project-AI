@@ -1,4 +1,4 @@
-PYTHON=python
+PYTHON=py -3.12
 
 .PHONY: test lint format precommit run
 
@@ -6,14 +6,14 @@ run:
 	$(PYTHON) -m src.app.main
 
 test:
-	pytest -v
+	$(PYTHON) -m pytest -v
 
 lint:
-	ruff check .
+	$(PYTHON) -m ruff check .
 
 format:
 	isort src tests --profile black
-	ruff check . --fix
+	$(PYTHON) -m ruff check . --fix
 	black src tests
 
 precommit:

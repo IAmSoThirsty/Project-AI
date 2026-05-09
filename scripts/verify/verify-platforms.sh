@@ -105,7 +105,7 @@ if [ $verify_count -ge 8 ]; then
     echo "  ✓ Mobile: Android"
     echo "  ✓ Web: Browser (React + FastAPI)"
     echo "  ✓ Container: Docker (Multi-arch)"
-    echo "  ✓ Native: Python 3.11+ (PyQt6)"
+    echo "  ✓ Native: Python 3.12 (PyQt6)"
     echo "  ✓ Runtime: TARL Multi-Language"
     echo ""
     echo "Total Deployment Targets: 12+"

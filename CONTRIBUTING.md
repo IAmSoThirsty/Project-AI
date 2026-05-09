@@ -132,8 +132,8 @@ In AGI development, a single mistake can have cascading consequences. Trust is n
 - **For documentation**: See [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md)
 - Fork the repository
 - Create a branch with a descriptive name
-- Run tests locally: `pytest -q`
-- Run linters: `ruff check .` and `mypy src`
+- Run tests locally: `py -3.12 -m pytest -q`
+- Run linters: `py -3.12 -m ruff check .` and `py -3.12 -m mypy src`
 - Open a pull request describing your changes
 
 ## 📚 Contributing Documentation
@@ -168,8 +168,8 @@ This governance profile enforces:
 
 **Code Quality Requirements:**
 
-- **Linting:** All code must pass `ruff check .` with zero errors
-- **Type Checking:** All code must pass `mypy src` with zero errors
+- **Linting:** All code must pass `py -3.12 -m ruff check .` with zero errors
+- **Type Checking:** All code must pass `py -3.12 -m mypy src` with zero errors
 - **Testing:** All new code must have accompanying tests (80%+ coverage)
 - **Documentation:** All public APIs must have docstrings
 - **Security:** All code must pass security scans (Bandit, pip-audit)
@@ -342,10 +342,10 @@ def test_four_laws_prevents_harm():
 ## Development Setup
 
 ```bash
-python -m venv .venv
+py -3.12 -m venv .venv
 source .venv/bin/activate  # windows: .venv\Scripts\activate
-python -m pip install -r requirements.txt
-python -m pip install -r requirements-dev.txt
+py -3.12 -m pip install -r requirements.txt
+py -3.12 -m pip install -r requirements-dev.txt
 ```
 
 ## Windows Developers: Cygwin Installation (Optional but Recommended)
@@ -361,7 +361,7 @@ Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x8
 # Install with common development packages (silent mode)
 .\setup-x86_64.exe --quiet-mode --no-shortcuts --no-desktop --no-startmenu `
   --site https://mirrors.kernel.org/sourceware/cygwin/ `
-  --root C:\cygwin64 --packages git,make,gcc-core,python39,python39-pip
+  --root C:\cygwin64 --packages git,make,gcc-core,python312,python312-pip
 ```
 
 **Manual Installation**:
@@ -371,8 +371,8 @@ Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x8
    - `git` - Version control
    - `make` - Build automation
    - `gcc-core` - C compiler
-   - `python39` - Python 3.9
-   - `python39-pip` - Python package manager
+   - `python312` - Python 3.12
+   - `python312-pip` - Python package manager
    - `bash` - Unix shell
 1. Add `C:\cygwin64\bin` to your system PATH
 
@@ -398,8 +398,8 @@ When adding new CLI commands or modifying existing ones:
 
 Before submitting a PR with CLI changes:
 
-- [ ] Run CLI tests: `pytest tests/test_cli.py -v`
-- [ ] Test help output: `python -m app.cli [command] --help`
+- [ ] Run CLI tests: `py -3.12 -m pytest tests/test_cli.py -v`
+- [ ] Test help output: `py -3.12 -m app.cli [command] --help`
 - [ ] Test with various inputs (valid, invalid, edge cases)
 - [ ] Generate updated docs: `python scripts/generate_cli_docs.py`
 - [ ] Update `CHANGELOG.md` with CLI changes
@@ -557,8 +557,8 @@ Capability and safety do not always align. Sometimes the most responsible contri
 2. Create a feature branch: `git checkout -b feature/your-feature-name`
 3. Make your changes with clear, atomic commits
 4. Write/update tests
-5. Run the test suite: `pytest -v`
-6. Run linters: `ruff check . && mypy src`
+5. Run the test suite: `py -3.12 -m pytest -v`
+6. Run linters: `py -3.12 -m ruff check . && py -3.12 -m mypy src`
 7. Run security scans: `bandit -r src/ && pip-audit`
 8. Update documentation
 9. Push to your fork: `git push origin feature/your-feature-name`

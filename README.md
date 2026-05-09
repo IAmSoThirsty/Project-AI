@@ -105,6 +105,10 @@ Every action taken by the system produces a **Proof Bundle**.
 
 ## 🚀 Instant Deployment
 
+Supported development and test runtime: **Python 3.12**. On Windows, use
+`py -3.12 -m ...` for Python verification commands so local tools do not
+accidentally run under an older interpreter.
+
 To deploy the **Full Sovereign Stack** (Cerberus + Monolith + Physics):
 
 ```powershell
