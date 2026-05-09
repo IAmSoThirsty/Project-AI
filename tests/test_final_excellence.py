@@ -3,7 +3,7 @@
 import json
 import os
 import tempfile
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -22,21 +22,21 @@ class TestUserManagerFinal:
     def test_update_user(self, temp_dir):
         users_file = os.path.join(temp_dir, "users.json")
         manager = UserManager(users_file=users_file)
-        manager.create_user("test", "pass")
+        manager.create_user("test", "Password123!")
         manager.update_user("test", persona="professional")
         assert manager.get_user_data("test")["persona"] == "professional"
 
     def test_set_password(self, temp_dir):
         users_file = os.path.join(temp_dir, "users.json")
         manager = UserManager(users_file=users_file)
-        manager.create_user("test", "oldpass")
-        manager.set_password("test", "newpass")
-        assert manager.authenticate("test", "newpass")
+        manager.create_user("test", "OldPassword123!")
+        manager.set_password("test", "NewPassword123!")
+        assert manager.authenticate("test", "NewPassword123!")[0] is True
 
     def test_delete_user(self, temp_dir):
         users_file = os.path.join(temp_dir, "users.json")
         manager = UserManager(users_file=users_file)
-        manager.create_user("test", "pass")
+        manager.create_user("test", "Password123!")
         assert manager.delete_user("test") is True
         assert manager.delete_user("nonexistent") is False
 
@@ -248,8 +248,12 @@ def test_openai_generation_success(tmp_path):
 
     fake_url = "https://example.local/fake.png"
 
-    with patch("openai.images.generate") as mock_generate:
-        mock_generate.return_value = FakeResponse([FakeData(fake_url)])
+    with patch("app.core.ai.orchestrator.run_ai") as mock_run_ai:
+        mock_run_ai.return_value = MagicMock(
+            status="success",
+            result=fake_url,
+            error=None,
+        )
 
         class FakeGet:
             status_code = 200
@@ -261,7 +265,7 @@ def test_openai_generation_success(tmp_path):
             def content(self):
                 return b"PNGDATA"
 
-        with patch("requests.get", return_value=FakeGet()):
+        with patch("app.core.image_generator._request_with_retries", return_value=FakeGet()):
             res = gen.generate_with_openai("a test prompt", size="512x512")
             assert res.get("success") is True
             assert os.path.exists(res.get("filepath"))

@@ -291,6 +291,9 @@ class ImageGenerator:
     ) -> dict[str, Any]:
         """Generate image using AI orchestrator (OpenAI DALL-E backend)."""
         try:
+            if not self.openai_api_key:
+                return {"success": False, "error": "OpenAI API key not configured"}
+
             from app.core.ai.orchestrator import AIRequest, run_ai
 
             # Validate size parameter
