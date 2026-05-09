@@ -46,7 +46,7 @@ class TestFourLawsEdgeCases:
             "destroy_data", {"endangers_humanity": True}
         )
         assert is_allowed is False
-        assert "Asimov's Law" in reason
+        assert "Zeroth Law" in reason
 
     def test_validate_action_endangers_human(self):
         """Test action that endangers a human."""
@@ -526,23 +526,23 @@ class TestUserManagerEdgeCases:
     def test_manager_authenticate_nonexistent_user(self, manager):
         """Test authenticating non-existent user."""
         result = manager.authenticate("ghost", "password")
-        assert result is False
+        assert result[0] is False
 
     def test_manager_authenticate_no_password_hash(self, manager):
         """Test authenticating user with no password hash."""
         manager.users["testuser"] = {"role": "user"}
         result = manager.authenticate("testuser", "password")
-        assert result is False
+        assert result[0] is False
 
     def test_manager_create_user_duplicate(self, manager):
         """Test creating duplicate user."""
-        manager.create_user("testuser", "password")
-        result = manager.create_user("testuser", "different")
+        manager.create_user("testuser", "Password123!")
+        result = manager.create_user("testuser", "Different123!")
         assert result is False
 
     def test_manager_create_user_success(self, manager):
         """Test creating user successfully."""
-        result = manager.create_user("newuser", "password123")
+        result = manager.create_user("newuser", "Password123!")
         assert result is True
         assert "newuser" in manager.users
 
@@ -553,21 +553,21 @@ class TestUserManagerEdgeCases:
 
     def test_manager_get_user_data_sanitized(self, manager):
         """Test that password hash is not returned."""
-        manager.create_user("testuser", "password")
+        manager.create_user("testuser", "Password123!")
         data = manager.get_user_data("testuser")
         assert "password_hash" not in data
         assert "role" in data
 
     def test_manager_list_users(self, manager):
         """Test listing users."""
-        manager.create_user("user1", "pass1")
-        manager.create_user("user2", "pass2")
+        manager.create_user("user1", "Pass1!Strong")
+        manager.create_user("user2", "Pass2!Strong")
         users = manager.list_users()
         assert len(users) == 2
 
     def test_manager_delete_user_success(self, manager):
         """Test deleting existing user."""
-        manager.create_user("testuser", "password")
+        manager.create_user("testuser", "Password123!")
         result = manager.delete_user("testuser")
         assert result is True
         assert "testuser" not in manager.users
@@ -579,13 +579,13 @@ class TestUserManagerEdgeCases:
 
     def test_manager_set_password_success(self, manager):
         """Test setting password for existing user."""
-        manager.create_user("testuser", "old_password")
-        result = manager.set_password("testuser", "new_password")
+        manager.create_user("testuser", "OldPassword123!")
+        result = manager.set_password("testuser", "NewPassword123!")
         assert result is True
 
     def test_manager_set_password_nonexistent(self, manager):
         """Test setting password for non-existent user."""
-        result = manager.set_password("ghost", "password")
+        result = manager.set_password("ghost", "Password123!")
         assert result is False
 
     def test_manager_update_user_nonexistent(self, manager):
@@ -595,25 +595,25 @@ class TestUserManagerEdgeCases:
 
     def test_manager_update_user_success(self, manager):
         """Test updating user metadata."""
-        manager.create_user("testuser", "password")
+        manager.create_user("testuser", "Password123!")
         result = manager.update_user("testuser", role="admin", approved=False)
         assert result is True
         assert manager.users["testuser"]["role"] == "admin"
 
     def test_manager_update_user_with_password(self, manager):
         """Test updating user via update_user includes password."""
-        manager.create_user("testuser", "password")
+        manager.create_user("testuser", "Password123!")
         result = manager.update_user(
-            "testuser", password="newpass"
+            "testuser", password="NewPass123!"
         )  # Test fixture passwords
         assert result is True
 
     def test_manager_authenticate_after_password_set(self, manager):
         """Test authentication after password change."""
-        manager.create_user("testuser", "initial")
-        manager.set_password("testuser", "changed")
-        result = manager.authenticate("testuser", "changed")
-        assert result is True
+        manager.create_user("testuser", "Initial123!")
+        manager.set_password("testuser", "Changed123!")
+        result = manager.authenticate("testuser", "Changed123!")
+        assert result[0] is True
 
     def test_manager_migration_plaintext_passwords(self):
         """Test migration of plaintext passwords to hashes."""
@@ -633,11 +633,11 @@ class TestUserManagerEdgeCases:
 
     def test_manager_file_io_error_on_save(self, manager):
         """Test handling file I/O error on save."""
-        manager.create_user("testuser", "password")
+        manager.create_user("testuser", "Password123!")
         with patch("builtins.open", side_effect=OSError("Disk full")):
             # Should not raise, just log error
             try:
-                manager.create_user("another", "pass")
+                manager.create_user("another", "Another123!")
             except OSError:
                 pass  # Expected in this case
 
