@@ -75,7 +75,7 @@ class EthicsGovernanceSubsystem(
             self._processing_thread.start()
             self._initialized = True
             return True
-        except:
+        except Exception:
             return False
 
     def shutdown(self) -> bool:
@@ -187,14 +187,14 @@ class EthicsGovernanceSubsystem(
             with self._metrics_lock:
                 self._metrics["decisions_validated"] += 1
             return decision
-        except:
+        except Exception:
             return None
 
     def _save_state(self):
         try:
             with open(self.data_path / "state.json", "w") as f:
                 json.dump({"metrics": self._metrics}, f)
-        except:
+        except Exception:
             pass
 
     def _load_state(self):
@@ -203,5 +203,5 @@ class EthicsGovernanceSubsystem(
             if state_file.exists():
                 with open(state_file) as f:
                     self._metrics = json.load(f).get("metrics", self._metrics)
-        except:
+        except Exception:
             pass

@@ -157,7 +157,6 @@ class TSCGSemanticDictionary:
             "temporal_anchor": "ANC",
             "identity_anchor": "ANC",
             "reflex_trigger": "RFX",
-            "enforcement_action": "RFX",
         }
 
         for concept, symbol in core_mappings.items():

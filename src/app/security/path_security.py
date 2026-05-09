@@ -73,14 +73,14 @@ def safe_path_join(base_dir: str, *user_paths: str) -> str:
             raise PathTraversalError(
                 f"Path traversal detected: {user_paths} escapes {base_dir}"
             )
-    except ValueError:
+    except ValueError as e:
         # Different drives on Windows
         logger.warning(
             "Path traversal blocked: %s on different drive from %s",
             user_paths,
             base_dir,
         )
-        raise PathTraversalError("Path traversal detected: different drive")
+        raise PathTraversalError("Path traversal detected: different drive") from e
 
     # Additional check: block any .. sequences in user input
     for user_path in user_paths:

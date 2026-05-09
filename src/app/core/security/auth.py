@@ -143,8 +143,8 @@ def generate_jwt_token(username: str, role: str = "user") -> str:
     """
     try:
         import jwt
-    except ImportError:
-        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt")
+    except ImportError as e:
+        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt") from e
 
     now = datetime.now(UTC)
     expires = now + timedelta(hours=JWT_EXPIRATION_HOURS)
@@ -174,8 +174,8 @@ def verify_jwt_token(token: str) -> TokenPayload | None:
     """
     try:
         import jwt
-    except ImportError:
-        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt")
+    except ImportError as e:
+        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt") from e
 
     # Check token blacklist (revocation)
     if is_token_revoked(token):
@@ -214,8 +214,8 @@ def generate_refresh_token(username: str, role: str = "user") -> str:
     """
     try:
         import jwt
-    except ImportError:
-        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt")
+    except ImportError as e:
+        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt") from e
 
     now = datetime.now(UTC)
     expires = now + timedelta(days=JWT_REFRESH_EXPIRATION_DAYS)
@@ -253,8 +253,8 @@ def refresh_access_token(refresh_token: str) -> tuple[str, str] | None:
     """
     try:
         import jwt
-    except ImportError:
-        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt")
+    except ImportError as e:
+        raise RuntimeError("PyJWT not installed. Run: pip install pyjwt") from e
 
     # Verify refresh token
     if is_token_revoked(refresh_token):

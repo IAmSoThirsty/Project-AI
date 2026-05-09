@@ -93,7 +93,7 @@ class OpenRouterProvider:
             return response.choices[0].message.content
         except Exception as e:
             logger.error("OpenRouter API error: %s", e)
-            raise RuntimeError(f"OpenRouter API call failed: {e}")
+            raise RuntimeError(f"OpenRouter API call failed: {e}") from e
 
     def test_connection(self) -> dict[str, Any]:
         """

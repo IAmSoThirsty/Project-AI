@@ -50,6 +50,8 @@ app = FastAPI(
     version="1.0.0",
 )
 
+LOAD_SCENARIOS_BODY = Body(...)
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -80,7 +82,7 @@ async def health_check():
 
 
 @app.post("/scenarios/load")
-async def load_scenarios(request: LoadScenariosRequest = Body(...)):
+async def load_scenarios(request: LoadScenariosRequest = LOAD_SCENARIOS_BODY):
     """
     Load scenarios for testing.
 
@@ -108,7 +110,7 @@ async def load_scenarios(request: LoadScenariosRequest = Body(...)):
             "scenarios": [s.model_dump() for s in scenarios],
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @app.get("/scenarios/{scenario_id}")
@@ -154,7 +156,7 @@ async def execute_scenario(
         result = swr.execute_scenario(scenario, response.model_dump(), system_id)
         return result
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/results")
@@ -304,7 +306,7 @@ async def export_results(filename: str, format: str = "json"):
         filepath = swr.export_results(filename, format)
         return {"success": True, "filepath": filepath, "format": format}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 def start_api(host: str = "0.0.0.0", port: int = 8000):

@@ -750,7 +750,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             )
 
         except Exception as e:
-            raise RuntimeError(f"OpenAI execution failed: {e}")
+            raise RuntimeError(f"OpenAI execution failed: {e}") from e
 
     def _execute_huggingface(
         self, request: ExecutionRequest, model: ModelConfig
@@ -809,7 +809,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             )
 
         except Exception as e:
-            raise RuntimeError(f"HuggingFace execution failed: {e}")
+            raise RuntimeError(f"HuggingFace execution failed: {e}") from e
 
     # ========================================================================
     # MODEL SELECTION AND FALLBACK

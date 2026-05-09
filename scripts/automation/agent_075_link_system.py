@@ -192,7 +192,7 @@ class WikiLinkGenerator:
                     # Don't link if already linked or in code blocks
                     pattern = f"`{filename}`(?!\\s*\\[\\[)"
 
-                    def replace_config(match):
+                    def replace_config(match, filename=filename, full_path=full_path):
                         if self._file_exists(full_path):
                             self.stats.config_file_links += 1
                             return f"`{filename}` [[{full_path}]]"

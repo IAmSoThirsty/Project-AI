@@ -542,7 +542,9 @@ class Interpreter:
             try:
                 return obj[idx]
             except Exception as exc:
-                raise RuntimeFault("THIRSTY-E100", f"indexing failed: {exc}", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E100", f"indexing failed: {exc}", expr.span
+                ) from exc
         if isinstance(expr, ast.NewExpr):
             cls = env.get(expr.class_name)
             args = [self._eval(a, env) for a in expr.args]
@@ -627,8 +629,8 @@ class Interpreter:
                 return bool(left) and bool(right)
             if op == "||":
                 return bool(left) or bool(right)
-        except ZeroDivisionError:
-            raise RuntimeFault("THIRSTY-E101", "division by zero", span)
+        except ZeroDivisionError as exc:
+            raise RuntimeFault("THIRSTY-E101", "division by zero", span) from exc
         raise RuntimeFault("THIRSTY-E021", f"unsupported operator '{op}'", span)
 
     def _stringify(self, value: Any) -> str:

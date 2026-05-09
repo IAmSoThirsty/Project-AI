@@ -485,7 +485,7 @@ class PrivacyLedger:
 
             except Exception as e:
                 self.logger.error("Atomic append failed: %s", e)
-                raise RuntimeError(f"Failed to append entry atomically: {e}")
+                raise RuntimeError(f"Failed to append entry atomically: {e}") from e
 
     def _serialize_entry(self, entry: LedgerEntry) -> bytes:
         """Serialize and encrypt entry for storage"""
@@ -533,7 +533,7 @@ class PrivacyLedger:
 
         except Exception as e:
             self.logger.error("Entry deserialization failed: %s", e)
-            raise ValueError(f"Failed to deserialize entry: {e}")
+            raise ValueError(f"Failed to deserialize entry: {e}") from e
 
     def _encrypt_field(self, value: str) -> str:
         """Encrypt sensitive field (zero-knowledge)"""

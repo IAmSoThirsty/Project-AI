@@ -161,7 +161,9 @@ class GodTierEncryption:
 
         except Exception as e:
             self.logger.error("GOD TIER decryption failed: %s", e)
-            raise ValueError("Decryption failed - data may be corrupted or tampered")
+            raise ValueError(
+                "Decryption failed - data may be corrupted or tampered"
+            ) from e
 
     def _encrypt_aes_gcm(self, data: bytes) -> bytes:
         """AES-256-GCM encryption (military-grade)"""

@@ -117,9 +117,13 @@ class TriumvirateClient:
                 return self._parse_decision(data)
 
         except aiohttp.ClientError as e:
-            raise TriumvirateError(f"Network error contacting Triumvirate: {str(e)}")
-        except TimeoutError:
-            raise TriumvirateError(f"Triumvirate decision timed out after {timeout}s")
+            raise TriumvirateError(
+                f"Network error contacting Triumvirate: {str(e)}"
+            ) from e
+        except TimeoutError as e:
+            raise TriumvirateError(
+                f"Triumvirate decision timed out after {timeout}s"
+            ) from e
 
     def _parse_decision(self, data: dict[str, Any]) -> GovernanceDecision:
         """Parse Triumvirate response into decision object"""
@@ -160,7 +164,7 @@ class TriumvirateClient:
                 health_url, timeout=aiohttp.ClientTimeout(total=5)
             ) as response:
                 return response.status == 200
-        except:
+        except Exception:
             return False
 
     async def get_decision_history(self, limit: int = 10) -> list[GovernanceDecision]:
@@ -184,7 +188,7 @@ class TriumvirateClient:
 
                 data = await response.json()
                 return [self._parse_decision(d) for d in data.get("decisions", [])]
-        except:
+        except Exception:
             return []
 
 

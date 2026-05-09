@@ -123,7 +123,7 @@ def demo_varied_workload():
                 try:
                     runtime.evaluate(context)
                     evaluation_count += 1
-                except:
+                except Exception:
                     pass
 
     elapsed = time.perf_counter() - start
@@ -169,7 +169,7 @@ def demo_adaptive_optimization():
         }
         try:
             runtime.evaluate(context)
-        except:
+        except Exception:
             pass
 
     # Show stats before optimization

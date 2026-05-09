@@ -632,7 +632,7 @@ def verify_compliance_bundle(bundle_path: str):
 
         return SovereignVerifier(bundle_path).verify()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ==========================================================

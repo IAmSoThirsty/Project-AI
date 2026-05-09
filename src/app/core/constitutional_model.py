@@ -192,9 +192,9 @@ class OpenRouterProvider:
                 self._client = openai.OpenAI(
                     base_url=self.base_url, api_key=self.api_key
                 )
-            except ImportError:
+            except ImportError as e:
                 logger.error("openai package not installed")
-                raise RuntimeError("openai package required for OpenRouter")
+                raise RuntimeError("openai package required for OpenRouter") from e
         return self._client
 
     def is_available(self) -> bool:

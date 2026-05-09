@@ -133,7 +133,7 @@ class IntegrationTester:
                 raise RuntimeError("Failed to create TARLRuntime")
 
         except ImportError as e:
-            raise ImportError(f"Failed to import TARL: {e}")
+            raise ImportError(f"Failed to import TARL: {e}") from e
 
     def test_tarl_policy_evaluation(self):
         """Test TARL policy evaluation"""
@@ -233,7 +233,7 @@ class IntegrationTester:
                 with open(py_file) as f:
                     ast.parse(f.read())
             except SyntaxError as e:
-                raise SyntaxError(f"unified-security.py has syntax error: {e}")
+                raise SyntaxError(f"unified-security.py has syntax error: {e}") from e
 
     def test_shell_script_executable(self):
         """Test that shell script is executable"""
@@ -263,7 +263,7 @@ class IntegrationTester:
                     raise ValueError(f"MANIFEST.json missing key: {key}")
 
         except json.JSONDecodeError as e:
-            raise ValueError(f"MANIFEST.json is not valid JSON: {e}")
+            raise ValueError(f"MANIFEST.json is not valid JSON: {e}") from e
 
     def test_examples_exist(self):
         """Test that example files exist"""

@@ -388,7 +388,7 @@ class EngineDocMetadataEnricher:
                     else:
                         # Already in YYYY-MM-DD format
                         return date_str
-                except:
+                except Exception:
                     continue
 
         # Default fallback

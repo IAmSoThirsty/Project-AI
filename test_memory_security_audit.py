@@ -46,7 +46,7 @@ def test_injection_vulnerabilities():
             try:
                 json.loads(content)
                 print("   JSON valid: True")
-            except:
+            except Exception:
                 print("   JSON valid: False - VULNERABILITY!")
 
 

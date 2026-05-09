@@ -128,7 +128,7 @@ class EEDMemoryAdapter:
                 return data.get("memory_id", "")
 
         except aiohttp.ClientError as e:
-            raise EEDError(f"Network error storing conversation: {str(e)}")
+            raise EEDError(f"Network error storing conversation: {str(e)}") from e
 
     async def retrieve_context(
         self, user_id: str, max_tokens: int = 200000, since: datetime | None = None
@@ -169,7 +169,7 @@ class EEDMemoryAdapter:
                 return self._parse_context_window(data)
 
         except aiohttp.ClientError as e:
-            raise EEDError(f"Network error retrieving context: {str(e)}")
+            raise EEDError(f"Network error retrieving context: {str(e)}") from e
 
     def _parse_context_window(self, data: dict[str, Any]) -> ContextWindow:
         """Parse EED context window response"""
@@ -249,7 +249,7 @@ class EEDMemoryAdapter:
 
                 return results
 
-        except:
+        except Exception:
             return []
 
     async def forget_conversation(self, user_id: str, memory_id: str) -> bool:
@@ -273,7 +273,7 @@ class EEDMemoryAdapter:
                 timeout=aiohttp.ClientTimeout(total=5),
             ) as response:
                 return response.status == 200
-        except:
+        except Exception:
             return False
 
     async def clear_user_memory(self, user_id: str, confirm: bool = False) -> bool:
@@ -303,7 +303,7 @@ class EEDMemoryAdapter:
                 timeout=aiohttp.ClientTimeout(total=10),
             ) as response:
                 return response.status == 200
-        except:
+        except Exception:
             return False
 
     async def get_statistics(self, user_id: str) -> dict[str, Any]:
@@ -328,7 +328,7 @@ class EEDMemoryAdapter:
                     return {}
 
                 return await response.json()
-        except:
+        except Exception:
             return {}
 
 

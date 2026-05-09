@@ -27,7 +27,7 @@ async def create_save_point(request: CreateSaveRequest):
         result = save_manager.create_user_save(request.name, request.metadata)
         return {"success": True, "save_point": result}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/list")
@@ -36,7 +36,7 @@ async def list_save_points():
     try:
         return save_manager.list_save_points()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/restore/{save_id}")
@@ -50,7 +50,7 @@ async def restore_save_point(save_id: str):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.delete("/delete/{save_id}")
@@ -64,7 +64,7 @@ async def delete_save_point(save_id: str):
             )
         return {"success": True, "message": f"Deleted save point: {save_id}"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/auto/status")
@@ -74,7 +74,7 @@ async def auto_save_status():
         auto_service = get_auto_save_service()
         return auto_service.get_stats()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # Initialize auto-save service on module load

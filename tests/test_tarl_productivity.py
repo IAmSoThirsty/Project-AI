@@ -137,7 +137,7 @@ def test_metrics_tracking():
     for ctx in contexts:
         try:
             runtime.evaluate(ctx)
-        except:
+        except Exception:
             pass  # Some contexts may raise errors (ESCALATE)
 
     metrics = runtime.get_performance_metrics()

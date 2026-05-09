@@ -184,7 +184,7 @@ async def chat(msg: ChatMessage) -> ChatResponse:
         )
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Legion error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Legion error: {str(e)}") from e
 
 
 @app.post("/learning/start")
