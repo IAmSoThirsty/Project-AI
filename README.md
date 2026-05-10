@@ -6,7 +6,7 @@ version: 1.0.0
 created_date: 2025-01-01
 updated_date: 2026-04-20
 status: active
-author: "Project-AI Team <projectaidevs@gmail.com>"
+author: Jeremy Karrick / IAmSoThirsty <founderoftp@thirstysprojects.com>"
 tags:
   - architecture
   - governance
