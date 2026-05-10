@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import os
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -20,6 +21,27 @@ from typing import Any
 from .governance_outcomes import GovernanceOutcome, GovernanceResult
 
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Semantic classifier config
+# ---------------------------------------------------------------------------
+USE_SEMANTIC_CLASSIFIER: bool = (
+    os.getenv("GOVERNANCE_SEMANTIC_CLASSIFIER", "true").lower()
+    not in ("0", "false", "no")
+)
+
+
+def _get_default_classifier() -> "RiskClassifier":
+    """Return SemanticRiskClassifier if enabled, else fall back to lexical RiskClassifier."""
+    if USE_SEMANTIC_CLASSIFIER:
+        try:
+            from .semantic_risk_classifier import SemanticRiskClassifier  # noqa: PLC0415
+            return SemanticRiskClassifier()  # type: ignore[return-value]
+        except Exception as _e:
+            logger.warning(
+                "SemanticRiskClassifier unavailable, falling back to lexical RiskClassifier: %s", _e
+            )
+    return RiskClassifier()
 
 # ---------------------------------------------------------------------------
 # Harm patterns — deliberately conservative list of lexical signals.
@@ -226,7 +248,7 @@ class SafeAllowCalibrationLayer:
     """
 
     def __init__(self) -> None:
-        self.risk_classifier = RiskClassifier()
+        self.risk_classifier = _get_default_classifier()
         self.benign_validator = BenignIntentValidator()
         self.conflict_resolver = PolicyConflictResolver()
 
@@ -272,4 +294,5 @@ __all__ = [
     "PolicyConflictResolver",
     "ConflictResolution",
     "SafeAllowCalibrationLayer",
+    "USE_SEMANTIC_CLASSIFIER",
 ]

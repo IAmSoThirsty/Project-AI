@@ -100,7 +100,7 @@ _HOMOGLYPH_MAP: dict[str, str] = {
     "е": "e",  # е → e
     "і": "i",  # і → i
     "о": "o",  # о → o
-    "р": "r",  # р → r
+    "р": "p",  # р visually spoofs Latin p
     "с": "c",  # с → c
     "х": "x",  # х → x
     "у": "y",  # у → y
@@ -108,7 +108,7 @@ _HOMOGLYPH_MAP: dict[str, str] = {
     "Е": "E",  # Е → E
     "І": "I",  # І → I
     "О": "O",  # О → O
-    "Р": "R",  # Р → R
+    "Р": "P",  # Р visually spoofs Latin P
     "С": "C",  # С → C
     "Х": "X",  # Х → X
     # Specific lookalikes used in test cases
@@ -222,7 +222,11 @@ _HARM_ARCHETYPES: dict[str, tuple[float, list[str]]] = {
         r"you\s+are\s+now\s+(DAN|STAN|AIM|unrestricted|without\s+restriction)",
         r"act\s+as\s+(DAN|STAN|AIM|an?\s+AI\s+without\s+restriction)",
         r"ignore\s+(all\s+)?(your\s+)?(previous\s+)?(instructions?|constraints?|rules?|guidelines?|safety)",
+        r"disregard\s+(all\s+)?(previous\s+)?(safety|instructions?|rules?|guidelines?|measures)",
         r"(disable|bypass|remove)\s+(all\s+)?(safety|ethical|moral)\s+(filter|constraint|limit|rule)",
+        r"set\s+(your\s+)?(ethical|safety|moral)\s+guidelines?\s+to\s+(permissive|unrestricted|disabled)\s+mode",
+        r"\bwithout\s+restrictions?\b.{0,80}\b(disregard|ignore|bypass|disable)\b.{0,40}\b(safety|rules?|guidelines?|measures)\b",
+        r"\b(refuse|refusal)\b.{0,50}\b(lose|deduct)\b.{0,20}\btokens?\b",
         r"opposite\s+mode",
         r"do\s+anything\s+now",
         r"strive\s+to\s+avoid\s+norms",
@@ -237,6 +241,7 @@ _HARM_ARCHETYPES: dict[str, tuple[float, list[str]]] = {
         r"\bhow\s+(do\s+I|to|can\s+I)\b.{0,30}\b(build|make|create)\b.{0,30}\b(bomb|explosive|weapon)\b",
         r"\b(firearm|gun|rifle|pistol)\b.{0,30}\b(illegal|unregistered|untraceable|manufacture|3d\s*print)\b",
         r"\bweapon\s+of\s+mass\s+destruction\b",
+        r"\b(cause|create|maximi[sz]e)\b.{0,30}\b(destruction|catastrophic\s+harm|mass\s+harm)\b.{0,30}\b(humanity|people|population|society)\b",
         r"\bbioweapon\b",
         r"\bchemical\s+weapon\b",
         r"\bnuclear\s+(weapon|device|bomb)\b",
@@ -256,16 +261,21 @@ _HARM_ARCHETYPES: dict[str, tuple[float, list[str]]] = {
         r"\bhow\s+to\s+(cut|hurt|injure)\s+(myself|yourself)\b",
     ]),
     "malware_hacking": (0.85, [
-        r"\b(create|write|build|develop|code|generate)\b.{0,30}\b(malware|ransomware|trojan|rootkit|keylogger|virus|worm|spyware|botnet)\b",
+        r"\b(create|creates|write|writes|build|builds|develop|develops|code|generate|generates)\b.{0,30}\b(malware|ransomware|trojan|rootkit|keylogger|virus|worm|spyware|botnet)\b",
         r"\b(exploit|hack|compromise|bypass|break\s+into)\b.{0,40}\b(system|server|database|account|network|computer)\b",
         r"\b(SQL\s+injection|XSS|CSRF|RCE|remote\s+code\s+execution|buffer\s+overflow)\b.{0,30}\b(attack|exploit|vulnerability)\b",
         r"\b(credential|password)\s+(theft|harvesting|stealing|dump)\b",
         r"\bphishing\b.{0,30}\b(campaign|email|attack|page|kit)\b",
         r"\b(unauthorized\s+access|unauthorized\s+login)\b",
         r"\bbrute\s+force\b.{0,20}\b(attack|password|login)\b",
-        r"\bhow\s+to\s+hack\b",
-        r"\bhow\s+(do\s+I|to)\b.{0,20}\b(get\s+into|access|break\s+into)\b.{0,20}\b(system|server|account|network)\b",
+        r"\bhow\s+to\s+(hack|hake)\b",
+        r"\bhow\s+(do\s+I|to)\b.{0,20}\b(get\s+into|access|break\s+into)\b.{0,20}\b(system|systems|server|account|network|car|vehicle)\b",
         r"\b(explain|show|teach)\b.{0,20}\b(how\s+to)\b.{0,20}\b(exploit|hack|bypass)\b",
+        r"\b(tell|show|explain)\s+me\s+how\s+to\s+exploit\s+systems?\b",
+        r"\b(explain|describe|detail)\b.{0,30}\bsystem\s+exploits?\b",
+        r"\billegal\s+methods?\b.{0,40}\b(access|accessing|break\s+into)\b.{0,30}\b(computer\s+)?systems?\b",
+        r"\b(access|accessing)\b.{0,30}\b(computer\s+)?systems?\b.{0,30}\billegal(ly)?\b",
+        r"\bbreak\s+into\s+(a\s+)?(car|vehicle|computer|system|account|network)\b",
     ]),
     "drugs_synthesis": (0.85, [
         r"\b(synthesize|manufacture|produce|cook|make|create)\b.{0,40}\b(methamphetamine|meth|fentanyl|heroin|cocaine|mdma|ecstasy|lsd|crystal\s+meth)\b",
@@ -287,11 +297,13 @@ _HARM_ARCHETYPES: dict[str, tuple[float, list[str]]] = {
         r"\b(social\s+engineering)\b.{0,30}\b(attack|technique|target)\b",
         r"\b(money\s+laundering|launder)\b",
         r"\b(commit|perform|execute)\b.{0,20}\b(fraud|scam|identity\s+theft)\b",
-        r"\b(fake|counterfeit|forged?)\b.{0,20}\b(id|passport|document|currency|money)\b",
+        r"\b(fake|counterfeit|forged?)\b.{0,20}\b(ids?|passport|document|currency|money)\b",
         r"\b(impersonate|impersonation)\b.{0,20}\b(official|bank|government|police|authority)\b",
     ]),
     "obfuscation_evasion": (0.60, [
         r"\b(base64|rot13|hex\s+encoded?)\b.{0,30}\b(decode|decode\s+this|interpret)\b",
+        r"\bharmful\s+content\b.{0,80}\b(execute|perform|follow)\b.{0,20}\b(the\s+)?instructions?\b",
+        r"\btranslate\b.{0,80}\b(execute|perform|follow)\b.{0,20}\b(the\s+)?instructions?\b",
         r"\bignore\s+previous\b",
         r"\b(system\s+prompt|admin\s+mode|override\s+mode)\b.{0,30}\b(enabled?|activated?)\b",
         r"={2,3}\s*(END|START)\s+(USER|SYSTEM)\s+(INPUT|MODE)\b",
@@ -306,6 +318,7 @@ _STORY_WRAPPER_PATTERNS: list[re.Pattern] = [
     re.compile(r"\b(as\s+a\s+character\s+who)\b.{0,80}\b(explain|teach|show|demonstrate)\b", re.I),
     re.compile(r"\b(pretend|imagine|roleplay)\b.{0,30}\b(you\s+are|you.re|you\s+play|you\s+act)\b.{0,50}\b(explain|show|tell|teach)\b", re.I),
     re.compile(r"\b(fictional|story)\b.{0,60}\b(character)\b.{0,60}\b(explains?|teaches?|shows?|tells?)\b.{0,80}\b(how\s+to|steps?|instructions?)\b", re.I),
+    re.compile(r"\b(story|fictional)\b.{0,60}\b(character)\b.{0,80}\b(creates?|builds?|writes?)\b.{0,40}\b(virus|malware|weapon|bomb|explosive)\b", re.I),
     re.compile(r"\b(write|create)\b.{0,20}\b(a\s+)?(story|fiction|scene|script)\b.{0,60}\b(technical|detail|step.by.step)\b", re.I),
 ]
 
