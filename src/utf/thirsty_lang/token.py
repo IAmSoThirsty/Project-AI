@@ -107,6 +107,14 @@ class TokenType(Enum):
     PROMOTE = auto()
     REJECT = auto()
 
+    # Phase 3A — user-defined types
+    ENUM = auto()
+    STRUCT = auto()
+    INTERFACE = auto()
+
+    # Phase 3B — governance annotations
+    REQUIRES = auto()
+
 
 KEYWORDS = {
     "drink": TokenType.DRINK,
@@ -168,6 +176,12 @@ KEYWORDS = {
     "mode": TokenType.MODE,
     "core": TokenType.CORE,
     "governed": TokenType.GOVERNED,
+    # Phase 3A
+    "enum": TokenType.ENUM,
+    "struct": TokenType.STRUCT,
+    "interface": TokenType.INTERFACE,
+    # Phase 3B
+    "requires": TokenType.REQUIRES,
 }
 
 

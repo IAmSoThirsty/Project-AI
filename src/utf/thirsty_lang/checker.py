@@ -114,7 +114,7 @@ class Checker:
                 self.classes[decl.name] = info
                 self.globals.define(decl.name, Symbol(Type(decl.name)), decl.span)
         for decl in program.declarations:
-            if isinstance(decl, ast.FunctionDecl):
+            if isinstance(decl, (ast.FunctionDecl, ast.GovernedFunctionDecl)):
                 params = [from_type_node(p.type_node) for p in decl.params]
                 result = (
                     VOID
@@ -127,11 +127,17 @@ class Checker:
                     else Type("Function", tuple(params + [result]))
                 )
                 self.globals.define(decl.name, Symbol(fn_type), decl.span)
+            elif isinstance(decl, ast.EnumDecl):
+                self.globals.define(decl.name, Symbol(Type(decl.name)), decl.span)
+            elif isinstance(decl, ast.StructDecl):
+                self.globals.define(decl.name, Symbol(Type(decl.name)), decl.span)
+            elif isinstance(decl, ast.InterfaceDecl):
+                self.globals.define(decl.name, Symbol(Type(decl.name)), decl.span)
         for decl in program.declarations:
             if isinstance(decl, ast.ClassDecl):
                 self._check_class(decl)
         for decl in program.declarations:
-            if not isinstance(decl, ast.ClassDecl):
+            if not isinstance(decl, (ast.ClassDecl, ast.EnumDecl, ast.StructDecl, ast.InterfaceDecl)):
                 self._check_stmt(decl)
 
     def _check_class(self, decl: ast.ClassDecl) -> None:
@@ -187,7 +193,7 @@ class Checker:
                 stmt.span,
             )
             return
-        if isinstance(stmt, ast.FunctionDecl):
+        if isinstance(stmt, (ast.FunctionDecl, ast.GovernedFunctionDecl)):
             fn_scope = Scope(self.scope)
             saved_return = self.current_return
             self.current_return = (
@@ -204,10 +210,13 @@ class Checker:
             for p in stmt.params:
                 self.scope.define(p.name, Symbol(from_type_node(p.type_node)), p.span)
             self._check_stmt(stmt.body)
+            # Verify requires clauses are well-formed (Phase 3B)
+            if isinstance(stmt, ast.GovernedFunctionDecl):
+                self._check_requires_clauses(stmt)
             self.scope = prev_scope
             self.current_return = saved_return
             return
-        if isinstance(stmt, ast.ClassDecl):
+        if isinstance(stmt, (ast.ClassDecl, ast.EnumDecl, ast.StructDecl, ast.InterfaceDecl)):
             return
         if isinstance(stmt, ast.BlockStmt):
             prev = self.scope
@@ -316,6 +325,42 @@ class Checker:
         if suggestion:
             msg += f" (did you mean '{suggestion}'?)"
         return ThirstyError("THIRSTY-E011", msg, span)
+
+    # ------------------------------------------------------------------
+    # Governance annotation verification (Phase 3B)
+    # ------------------------------------------------------------------
+
+    _VALID_AUTHORITY_CLASSES = {"AC1", "AC2", "AC3", "AC4", "AC5"}
+
+    def _check_requires_clauses(self, fn: ast.GovernedFunctionDecl) -> None:
+        """Verify that requires annotations on a governed function are well-formed."""
+        from .diagnostics import ThirstyError
+
+        for clause in fn.requires:
+            ann = clause.annotation.strip()
+            if ann.startswith("AuthorityClass."):
+                level = ann.split(".", 1)[-1]
+                if level not in self._VALID_AUTHORITY_CLASSES:
+                    raise ThirstyError(
+                        "THIRSTY-E050",
+                        f"unknown authority class '{level}'; valid classes are AC1–AC5",
+                        clause.span,
+                    )
+            elif ann.startswith("HumanAppealWindow["):
+                # e.g. HumanAppealWindow[30d] — just verify non-empty window
+                inner = ann[len("HumanAppealWindow["):].rstrip("]").strip()
+                if not inner:
+                    raise ThirstyError(
+                        "THIRSTY-E050",
+                        "HumanAppealWindow requires a duration argument, e.g. HumanAppealWindow[30d]",
+                        clause.span,
+                    )
+            elif ann not in ("AuditTrail.Immutable", "AuditTrail.Standard"):
+                raise ThirstyError(
+                    "THIRSTY-E050",
+                    f"unrecognised governance annotation '{ann}'",
+                    clause.span,
+                )
 
     def _assignable(self, expect: Type, actual: Type) -> bool:
         if equals(expect, actual):

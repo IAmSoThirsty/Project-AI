@@ -17,6 +17,7 @@ from .package_manager import (
     search_gallery,
     show_gallery_item,
 )
+from .formatter import Formatter
 from .parser import Parser
 
 _HIST = Path.home() / ".thirsty_history"
@@ -452,7 +453,9 @@ def main(argv: list[str] | None = None) -> int:
             print(color("fully hydrated", "green"))
             return 0
         if args.cmd == "fmt":
-            out = thirsty_fmt(text)
+            tokens = Lexer(text).tokenize()
+            tree = Parser(tokens).parse()
+            out = Formatter().format(tree)
             if args.write:
                 Path(args.file).write_text(out, encoding="utf-8")
             else:

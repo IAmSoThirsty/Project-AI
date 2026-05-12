@@ -71,6 +71,12 @@ class Parser:
             return self._import_decl()
         if self._match(TokenType.FOUNTAIN):
             return self._class_decl()
+        if self._match(TokenType.ENUM):
+            return self._enum_decl()
+        if self._match(TokenType.STRUCT):
+            return self._struct_decl()
+        if self._match(TokenType.INTERFACE):
+            return self._interface_decl()
         if self._match(TokenType.CASCADE):
             self._consume(TokenType.GLASS, "expected 'glass' after 'cascade'")
             return self._function_decl(
@@ -83,6 +89,43 @@ class Parser:
         if self._match(TokenType.DRINK):
             return self._var_decl(visibility=vis, is_field=in_class)
         return self._statement()
+
+    def _enum_decl(self) -> ast.EnumDecl:
+        name = self._consume(TokenType.IDENT, "expected enum name")
+        self._consume(TokenType.LBRACE, "expected '{' after enum name")
+        variants: list[str] = []
+        while not self._check(TokenType.RBRACE) and not self._check(TokenType.EOF):
+            v = self._consume(TokenType.IDENT, "expected variant name")
+            variants.append(v.lexeme)
+            if not self._match(TokenType.COMMA):
+                break
+        end = self._consume(TokenType.RBRACE, "expected '}' after enum variants")
+        return ast.EnumDecl(name.span.merge(end.span), name.lexeme, variants)
+
+    def _struct_decl(self) -> ast.StructDecl:
+        name = self._consume(TokenType.IDENT, "expected struct name")
+        self._consume(TokenType.LBRACE, "expected '{' after struct name")
+        fields: list[ast.Param] = []
+        while not self._check(TokenType.RBRACE) and not self._check(TokenType.EOF):
+            fname = self._consume(TokenType.IDENT, "expected field name")
+            self._consume(TokenType.COLON, "expected ':' after field name")
+            ftype = self._type_node()
+            fields.append(ast.Param(fname.span.merge(ftype.span), fname.lexeme, ftype))
+            if not self._match(TokenType.COMMA):
+                break
+        end = self._consume(TokenType.RBRACE, "expected '}' after struct fields")
+        return ast.StructDecl(name.span.merge(end.span), name.lexeme, fields)
+
+    def _interface_decl(self) -> ast.InterfaceDecl:
+        name = self._consume(TokenType.IDENT, "expected interface name")
+        self._consume(TokenType.LBRACE, "expected '{' after interface name")
+        methods: list[ast.FunctionDecl] = []
+        while not self._check(TokenType.RBRACE) and not self._check(TokenType.EOF):
+            self._consume(TokenType.GLASS, "expected 'glass' in interface method")
+            fn = self._function_decl(is_async=False, visibility=None, is_method=True)
+            methods.append(fn)
+        end = self._consume(TokenType.RBRACE, "expected '}' after interface body")
+        return ast.InterfaceDecl(name.span.merge(end.span), name.lexeme, methods)
 
     def _import_decl(self) -> ast.ImportDecl:
         mod = self._consume(
@@ -123,8 +166,30 @@ class Parser:
         return_type = None
         if self._match(TokenType.ARROW):
             return_type = self._type_node()
+        # Parse optional requires clauses (governance annotations)
+        requires: list[ast.RequiresClause] = []
+        while self._check(TokenType.REQUIRES):
+            req_tok = self._advance()  # consume 'requires'
+            # Collect the annotation text until we hit a newline, '{', or another 'requires'
+            ann_parts: list[str] = []
+            while not self._check(TokenType.LBRACE) and not self._check(TokenType.REQUIRES) and not self._check(TokenType.EOF):
+                ann_parts.append(self._advance().lexeme)
+            annotation = " ".join(ann_parts)
+            requires.append(ast.RequiresClause(req_tok.span, annotation))
         body = self._block()
         span = name.span.merge(body.span)
+        if requires:
+            return ast.GovernedFunctionDecl(
+                span,
+                name.lexeme,
+                params,
+                return_type,
+                body,
+                requires=requires,
+                is_async=is_async,
+                visibility=visibility,
+                is_method=is_method,
+            )
         return ast.FunctionDecl(
             span,
             name.lexeme,

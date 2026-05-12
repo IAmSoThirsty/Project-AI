@@ -245,6 +245,46 @@ class ModuleHeader(Node):
 
 
 @dataclass
+class RequiresClause(Node):
+    """A governance annotation on a function: requires AuthorityClass.AC4"""
+    annotation: str  # e.g. "AuthorityClass.AC4" or "HumanAppealWindow[30d]"
+
+
+@dataclass
+class GovernedFunctionDecl(Stmt):
+    """FunctionDecl extended with requires clauses (Phase 3B)."""
+    name: str
+    params: list[Param]
+    return_type: TypeNode | None
+    body: BlockStmt
+    requires: list[RequiresClause] = field(default_factory=list)
+    is_async: bool = False
+    visibility: str | None = None
+    is_method: bool = False
+
+
+@dataclass
+class EnumDecl(Stmt):
+    """enum Status { Pending, Active, Closed }"""
+    name: str
+    variants: list[str]
+
+
+@dataclass
+class StructDecl(Stmt):
+    """struct Account { id: Int, balance: Float }"""
+    name: str
+    fields: list[Param]  # reuse Param: name + type_node
+
+
+@dataclass
+class InterfaceDecl(Stmt):
+    """interface Serializable { glass serialize() -> String }"""
+    name: str
+    methods: list[FunctionDecl]
+
+
+@dataclass
 class Program(Node):
     declarations: list[Stmt] = field(default_factory=list)
     header: ModuleHeader | None = None

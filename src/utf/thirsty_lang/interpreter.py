@@ -230,7 +230,7 @@ class Interpreter:
                     type_name=f"Module:{decl.module}",
                 )
         for decl in program.declarations:
-            if isinstance(decl, ast.FunctionDecl):
+            if isinstance(decl, (ast.FunctionDecl, ast.GovernedFunctionDecl)):
                 self.globals.define(
                     decl.name,
                     UserFunction(decl, self.globals, self),
@@ -241,8 +241,28 @@ class Interpreter:
                 self.globals.define(
                     decl.name, self._build_class(decl), type_name=decl.name
                 )
+            elif isinstance(decl, ast.EnumDecl):
+                # Register enum: each variant is an attribute on a namespace object
+                enum_ns = type("EnumNS", (), {v: v for v in decl.variants})()
+                self.globals.define(decl.name, enum_ns, type_name=decl.name)
+            elif isinstance(decl, ast.StructDecl):
+                # Register struct constructor function
+                field_names = [f.name for f in decl.fields]
+                def _make_struct(args, _fields=field_names, _name=decl.name):
+                    obj = type(_name, (), {})()
+                    for i, fn in enumerate(_fields):
+                        setattr(obj, fn, args[i] if i < len(args) else None)
+                    return obj
+                self.globals.define(decl.name, _make_struct, type_name=decl.name)
+            elif isinstance(decl, ast.InterfaceDecl):
+                # Interfaces are type-level only; register name so checker can validate
+                self.globals.define(decl.name, None, type_name=decl.name)
         for decl in program.declarations:
-            if isinstance(decl, (ast.FunctionDecl, ast.ClassDecl, ast.ImportDecl)):
+            if isinstance(decl, (
+                ast.FunctionDecl, ast.GovernedFunctionDecl,
+                ast.ClassDecl, ast.ImportDecl,
+                ast.EnumDecl, ast.StructDecl, ast.InterfaceDecl,
+            )):
                 continue
             self._exec(decl, self.globals)
         if call_main and "main" in self.globals.values:
@@ -375,7 +395,7 @@ class Interpreter:
                 type_name=str(getattr(stmt.type_node, "name", "Value")),
             )
             return
-        if isinstance(stmt, ast.FunctionDecl):
+        if isinstance(stmt, (ast.FunctionDecl, ast.GovernedFunctionDecl)):
             if stmt.name not in env.values:
                 env.define(
                     stmt.name, UserFunction(stmt, env, self), type_name="Function"
@@ -384,6 +404,22 @@ class Interpreter:
         if isinstance(stmt, ast.ClassDecl):
             if stmt.name not in env.values:
                 env.define(stmt.name, self._build_class(stmt), type_name=stmt.name)
+            return
+        if isinstance(stmt, ast.EnumDecl):
+            enum_ns = type("EnumNS", (), {v: v for v in stmt.variants})()
+            env.define(stmt.name, enum_ns, type_name=stmt.name)
+            return
+        if isinstance(stmt, ast.StructDecl):
+            field_names = [f.name for f in stmt.fields]
+            def _make_struct(args, _fields=field_names, _name=stmt.name):
+                obj = type(_name, (), {})()
+                for i, fn in enumerate(_fields):
+                    setattr(obj, fn, args[i] if i < len(args) else None)
+                return obj
+            env.define(stmt.name, _make_struct, type_name=stmt.name)
+            return
+        if isinstance(stmt, (ast.InterfaceDecl,)):
+            env.define(stmt.name, None, type_name=stmt.name)
             return
         if isinstance(stmt, ast.BlockStmt):
             self._exec_block(stmt.statements, Env(env))
