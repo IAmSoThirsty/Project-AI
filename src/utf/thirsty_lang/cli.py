@@ -68,6 +68,7 @@ def run_source(
     trace: bool = False,
     thirst_level: int = 1,
     return_interpreter: bool = False,
+    governance_context: dict | None = None,
 ):
     idx = 0
 
@@ -92,6 +93,8 @@ def run_source(
         current_file=file,
         project_root=project_root,
     )
+    if governance_context:
+        interp.governance_context = dict(governance_context)
     out = interp.run(program)
     return (out, interp) if return_interpreter else out
 
@@ -200,6 +203,70 @@ def scaffold_fountain(path: Path, name: str) -> None:
     )
 
 
+def emit_auto_tarl(program, module_name: str) -> str:
+    """Generate a TARL policy file from GovernedFunctionDecl requires clauses.
+
+    Each requires AuthorityClass.ACN annotation produces one policy block.
+    Returns the full .auto.tarl text (may be empty string if no governed functions).
+    """
+    from . import ast as _ast
+
+    blocks: list[str] = []
+    for decl in program.declarations:
+        if not isinstance(decl, _ast.GovernedFunctionDecl):
+            continue
+        fn_name = decl.name
+        ac_clause = None
+        has_audit = False
+        for clause in decl.requires:
+            ann = clause.annotation.strip()
+            if ann.startswith("AuthorityClass."):
+                ac_clause = ann.split(".", 1)[-1]
+            elif ann == "AuditTrail.Immutable":
+                has_audit = True
+        if ac_clause:
+            safe_name = f"{module_name}_{fn_name}_{ac_clause.lower()}"
+            block = (
+                f'policy allow_{safe_name} {{\n'
+                f'  when ctx.authority_class >= "{ac_clause}" '
+                f'and ctx.function == "{fn_name}" => ALLOW;\n'
+                f'}}'
+            )
+            blocks.append(block)
+        if has_audit:
+            safe_name = f"{module_name}_{fn_name}_audit"
+            block = (
+                f'policy audit_{safe_name} {{\n'
+                f'  when ctx.function == "{fn_name}" => ALLOW;\n'
+                f'  when ctx.audit_trail != "immutable" => DENY;\n'
+                f'}}'
+            )
+            blocks.append(block)
+    return "\n\n".join(blocks) + ("\n" if blocks else "")
+
+
+def governance_report(program, source_file: str) -> list[str]:
+    """Return a human-readable governance annotation report for a parsed program."""
+    from . import ast as _ast
+
+    lines: list[str] = []
+    total = 0
+    governed = 0
+    for decl in program.declarations:
+        if isinstance(decl, (_ast.FunctionDecl, _ast.GovernedFunctionDecl)):
+            total += 1
+            if isinstance(decl, _ast.GovernedFunctionDecl) and decl.requires:
+                governed += 1
+                lines.append(f"  ✓ glass {decl.name} — {len(decl.requires)} requires clause(s):")
+                for c in decl.requires:
+                    lines.append(f"      requires {c.annotation}")
+            else:
+                lines.append(f"  ○ glass {decl.name} — unannotated (mode core)")
+    lines.insert(0, f"Governance report: {source_file}")
+    lines.insert(1, f"  {governed}/{total} functions carry requires annotations")
+    return lines
+
+
 def scaffold_app(path: Path, name: str) -> None:
     (path / name).mkdir(parents=True, exist_ok=True)
     (path / name / "tests").mkdir(exist_ok=True)
@@ -277,6 +344,11 @@ def main(argv: list[str] | None = None) -> int:
     run_p.add_argument("file")
     run_p.add_argument("--trace", action="store_true")
     run_p.add_argument("--thirst-level", type=int, default=1)
+    run_p.add_argument(
+        "--authority", default=None,
+        help="authority class for governed mode (AC1–AC5)",
+        choices=["AC1", "AC2", "AC3", "AC4", "AC5"],
+    )
 
     check_p = sub.add_parser("check")
     check_p.add_argument("file")
@@ -412,38 +484,79 @@ def main(argv: list[str] | None = None) -> int:
         print(color("fully hydrated: thirsty.lock.json updated", "green"))
         return 0
     if args.cmd == "build":
+        import hashlib as _hl
+        import datetime as _dt
         target_file = args.file or "main.thirsty"
         text = Path(target_file).read_text(encoding="utf-8")
+        tokens = Lexer(text).tokenize()
+        program = Parser(tokens).parse()
         check_source(text, target_file)
         dist = Path("dist")
         dist.mkdir(exist_ok=True)
         if args.emit_manifest:
-            import hashlib as _hl
             prog_hash = "sha256:" + _hl.sha256(text.encode("utf-8")).hexdigest()
+            module_name = (program.header.name if program.header else Path(target_file).stem)
+            exec_mode = (program.header.mode if program.header else "core")
+            # Emit auto.tarl and hash it
+            tarl_text = emit_auto_tarl(program, module_name)
+            policy_hash = "sha256:" + _hl.sha256(tarl_text.encode("utf-8")).hexdigest()
+            if tarl_text:
+                tarl_path = dist / f"{module_name}.auto.tarl"
+                tarl_path.write_text(tarl_text, encoding="utf-8")
+            # Collect capability manifest from requires clauses
+            capabilities: list[str] = []
+            from . import ast as _ast
+            for decl in program.declarations:
+                if isinstance(decl, _ast.GovernedFunctionDecl):
+                    for clause in decl.requires:
+                        cap = clause.annotation.strip()
+                        if cap not in capabilities:
+                            capabilities.append(cap)
             manifest = {
                 "program_hash": prog_hash,
                 "source_file": target_file,
+                "module": module_name,
+                "execution_mode": exec_mode,
                 "dependency_hashes": {},
+                "policy_hash": policy_hash,
+                "capability_manifest": capabilities,
                 "governance_proof": {
-                    "tscg_expression": "COG -> COM",
-                    "build_time": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+                    "tscg_expression": "COG -> SHD -> INV -> COM",
+                    "build_time": _dt.datetime.utcnow().isoformat() + "Z",
+                    "iron_path_run_id": __import__("uuid").uuid4().hex,
                 },
             }
             (dist / "app.manifest.json").write_text(
                 json.dumps(manifest, indent=2), encoding="utf-8"
             )
             print(color("fully hydrated: dist/app.manifest.json written", "green"))
+            if capabilities:
+                print(color(f"  capabilities: {', '.join(capabilities)}", "blue"))
         else:
             print(color(f"fully hydrated: {target_file} checked and ready", "green"))
         return 0
     if args.cmd == "govern":
         text = Path(args.file).read_text(encoding="utf-8")
         try:
+            tokens = Lexer(text).tokenize()
+            program = Parser(tokens).parse()
             check_source(text, args.file)
-            print(color("governance check: no requires clauses (mode core — no governance gates active)", "green"))
         except (ThirstyError, DiagnosticBundle) as err:
             print(format_error(err, text) if isinstance(err, ThirstyError) else format_bundle(err, text))
             return 1
+        for line in governance_report(program, args.file):
+            print(line)
+        # Optionally emit the auto.tarl file
+        module_name = (program.header.name if program.header else Path(args.file).stem)
+        tarl_text = emit_auto_tarl(program, module_name)
+        if tarl_text:
+            dist = Path("dist")
+            dist.mkdir(exist_ok=True)
+            tarl_path = dist / f"{module_name}.auto.tarl"
+            tarl_path.write_text(tarl_text, encoding="utf-8")
+            print(color(f"fully hydrated: {tarl_path} emitted", "green"))
+        else:
+            print(color("no requires clauses found — no TARL policy generated", "yellow"))
         return 0
 
     text = Path(args.file).read_text(encoding="utf-8")
@@ -494,12 +607,16 @@ def main(argv: list[str] | None = None) -> int:
             duration = perf_counter() - start
             print(json.dumps({"runs": 100, "seconds": duration}, indent=2))
             return 0
+        gov_ctx = {}
+        if hasattr(args, "authority") and args.authority:
+            gov_ctx["authority_class"] = args.authority
         out, interp = run_source(
             text,
             args.file,
             trace=args.trace,
             thirst_level=args.thirst_level,
             return_interpreter=True,
+            governance_context=gov_ctx,
         )
         for item in out:
             print(item)

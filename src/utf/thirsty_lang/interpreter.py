@@ -158,6 +158,10 @@ class Interpreter:
         self.module_cache: dict[str, ModuleValue] = {}
         self.module_name: str | None = None
         self.execution_mode: str = "core"
+        # Governance context injected by caller (e.g. thirsty run --authority AC4)
+        # Keys: authority_class (str), caller_id (str), session_id (str)
+        self.governance_context: dict = {}
+        self._tarl_policy_cache: dict[str, object] = {}  # path -> Policy
         self._install_builtins()
 
     def _trace(self, message: str) -> None:
@@ -273,7 +277,38 @@ class Interpreter:
             self.achievements.add("sacred_echo")
         return self.output
 
+    def _enforce_governance(self, fn: UserFunction) -> None:
+        """Check requires clauses against governance context in governed mode."""
+        if self.execution_mode != "governed":
+            return
+        if not isinstance(fn.decl, ast.GovernedFunctionDecl):
+            return
+        if not fn.decl.requires:
+            return
+        ctx_ac = self.governance_context.get("authority_class", "AC0")
+        fn_name = fn.decl.name
+        for clause in fn.decl.requires:
+            ann = clause.annotation.strip()
+            if ann.startswith("AuthorityClass."):
+                required_ac = ann.split(".", 1)[-1]
+                # Compare authority levels lexicographically (AC1 < AC2 < AC3 < AC4 < AC5)
+                if ctx_ac < required_ac:
+                    raise RuntimeFault(
+                        "THIRSTY-E050",
+                        f"governed function '{fn_name}' requires {ann} "
+                        f"but caller has {ctx_ac}",
+                        fn.decl.span,
+                    )
+            elif ann.startswith("HumanAppealWindow["):
+                # Log the appeal window requirement — runtime cannot enforce timing,
+                # but we record it in the governance context for audit purposes
+                self.governance_context.setdefault("appeal_windows", {})[fn_name] = ann
+            elif ann == "AuditTrail.Immutable":
+                # Mark that this call must appear in the immutable audit log
+                self.governance_context.setdefault("audit_required", set()).add(fn_name)
+
     def call_function(self, fn: UserFunction, args: list[Any]) -> Any:
+        self._enforce_governance(fn)
         self.call_depth += 1
         if self.call_depth > self.recursion_limit:
             self.call_depth -= 1
