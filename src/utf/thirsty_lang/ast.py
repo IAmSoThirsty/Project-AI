@@ -239,5 +239,12 @@ class ImportDecl(Stmt):
 
 
 @dataclass
+class ModuleHeader(Node):
+    name: str
+    mode: str = "core"
+
+
+@dataclass
 class Program(Node):
     declarations: list[Stmt] = field(default_factory=list)
+    header: ModuleHeader | None = None

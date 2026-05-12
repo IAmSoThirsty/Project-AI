@@ -98,6 +98,11 @@ class TokenType(Enum):
     VALIDATED_CANONICAL = auto()
     INVARIANT = auto()
     SHADOW = auto()
+
+    MODULE = auto()
+    MODE = auto()
+    CORE = auto()
+    GOVERNED = auto()
     CANONICAL = auto()
     PROMOTE = auto()
     REJECT = auto()
@@ -159,6 +164,10 @@ KEYWORDS = {
     "canonical": TokenType.CANONICAL,
     "promote": TokenType.PROMOTE,
     "reject": TokenType.REJECT,
+    "module": TokenType.MODULE,
+    "mode": TokenType.MODE,
+    "core": TokenType.CORE,
+    "governed": TokenType.GOVERNED,
 }
 
 

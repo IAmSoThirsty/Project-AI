@@ -20,6 +20,7 @@ class Parser:
         return cls(tokens)
 
     def parse_program(self) -> ast.Program:
+        header = self._module_header()
         decls: list[ast.Stmt] = []
         while not self._check(TokenType.EOF):
             try:
@@ -29,10 +30,26 @@ class Parser:
                 self._synchronize()
         start = self.tokens[0].span if self.tokens else Span("<memory>", 1, 1, 1, 1)
         end = self.tokens[-1].span if self.tokens else start
-        program = ast.Program(start.merge(end), decls)
+        program = ast.Program(start.merge(end), decls, header)
         if self.errors:
             raise DiagnosticBundle(self.errors)
         return program
+
+    def _module_header(self) -> ast.ModuleHeader | None:
+        if not self._check(TokenType.MODULE):
+            return None
+        span = self._peek().span
+        self._advance()
+        name_tok = self._consume(TokenType.IDENT, "expected module name after 'module'")
+        mode = "core"
+        if self._match(TokenType.MODE):
+            if self._match(TokenType.GOVERNED):
+                mode = "governed"
+            elif self._match(TokenType.CORE):
+                mode = "core"
+            else:
+                raise ThirstyError("THIRSTY-E001", "expected 'core' or 'governed' after 'mode'", self._peek().span)
+        return ast.ModuleHeader(span, name_tok.lexeme, mode)
 
     def parse_block_statements(self) -> list[ast.Stmt]:
         items = []

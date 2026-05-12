@@ -156,6 +156,8 @@ class Interpreter:
             else Path(current_file).resolve().parent
         )
         self.module_cache: dict[str, ModuleValue] = {}
+        self.module_name: str | None = None
+        self.execution_mode: str = "core"
         self._install_builtins()
 
     def _trace(self, message: str) -> None:
@@ -214,6 +216,8 @@ class Interpreter:
             if self.current_file not in {"<memory>", "<repl>"}
             else self.project_root
         )
+        self.module_name = program.header.name if program.header else None
+        self.execution_mode = program.header.mode if program.header else "core"
         for decl in program.declarations:
             if isinstance(decl, ast.ImportDecl):
                 alias = (
