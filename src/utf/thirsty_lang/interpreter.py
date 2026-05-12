@@ -300,6 +300,26 @@ class Interpreter:
             return self.module_cache[module_spec]
         if module_spec.startswith("thirst::"):
             mod = builtin_modules()[module_spec]
+            # Patch higher-order functions to route through interpreter._call_any
+            # so Thirsty closures (UserFunction) are callable from module code.
+            if module_spec == "thirst::collections":
+                interp = self
+
+                def _col_map(xs, fn, _i=interp):
+                    return [_i._call_any(fn, [x]) for x in xs]
+
+                def _col_filter(xs, fn, _i=interp):
+                    return [x for x in xs if _i._call_any(fn, [x])]
+
+                def _col_reduce(xs, seed, fn, _i=interp):
+                    acc = seed
+                    for x in xs:
+                        acc = _i._call_any(fn, [acc, x])
+                    return acc
+
+                mod.members["map"] = _col_map
+                mod.members["filter"] = _col_filter
+                mod.members["reduce"] = _col_reduce
             self.module_cache[module_spec] = mod
             return mod
         source_file = resolve_module_file(

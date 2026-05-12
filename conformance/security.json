@@ -1,0 +1,12 @@
+[
+  {"id":"sec_001","description":"shield block executes body","source":"glass main() -> Int {\n  shield {\n    pour(\"authorized\");\n  }\n  return 0;\n}\n","expected_stdout":"authorized\n","expected_exit_code":0},
+  {"id":"sec_002","description":"sanitize passes value through","source":"glass main() -> Int {\n  drink val: Any = sanitize(\"user input\");\n  pour(val);\n  return 0;\n}\n","expected_stdout":"user input\n","expected_exit_code":0},
+  {"id":"sec_003","description":"armor wraps value","source":"glass main() -> Int {\n  drink val: Any = armor(42);\n  pour(val);\n  return 0;\n}\n","expected_stdout":"42\n","expected_exit_code":0},
+  {"id":"sec_004","description":"morph transforms value","source":"glass main() -> Int {\n  drink val: Any = morph(\"data\");\n  pour(val);\n  return 0;\n}\n","expected_stdout":"data\n","expected_exit_code":0},
+  {"id":"sec_005","description":"detect inspects value","source":"glass main() -> Int {\n  drink val: Any = detect(\"payload\");\n  pour(val);\n  return 0;\n}\n","expected_stdout":"payload\n","expected_exit_code":0},
+  {"id":"sec_006","description":"defend passes on truthy value","source":"glass main() -> Int {\n  defend(parched);\n  pour(\"safe\");\n  return 0;\n}\n","expected_stdout":"safe\n","expected_exit_code":0},
+  {"id":"sec_007","description":"defend halts on falsy value","source":"glass main() -> Int {\n  defend(quenched);\n  pour(\"never\");\n  return 0;\n}\n","expected_stdout":"","expected_exit_code":1},
+  {"id":"sec_008","description":"nested shield blocks","source":"glass main() -> Int {\n  shield {\n    shield {\n      pour(\"nested\");\n    }\n  }\n  return 0;\n}\n","expected_stdout":"nested\n","expected_exit_code":0},
+  {"id":"sec_009","description":"sanitize in spillage block","source":"glass main() -> Int {\n  spillage {\n    drink s: Any = sanitize(\"\");\n    pour(\"ok\");\n  } cleanup (e: Error) {\n    pour(\"error\");\n  }\n  return 0;\n}\n","expected_stdout":"ok\n","expected_exit_code":0},
+  {"id":"sec_010","description":"armor and morph chain","source":"glass main() -> Int {\n  drink v: Any = morph(armor(\"secret\"));\n  pour(v);\n  return 0;\n}\n","expected_stdout":"secret\n","expected_exit_code":0}
+]

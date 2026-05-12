@@ -46,11 +46,15 @@ inner_decl  ::= import_decl
 ## Import
 
 ```ebnf
-import_decl ::= 'import' module_path [ 'as' IDENT ]
-              | 'from' STRING_LIT 'import' IDENT
-
-module_path ::= STRING_LIT | IDENT { '::' IDENT }
+import_decl ::= 'import' STRING_LIT 'as' IDENT ';'
+              | 'from' STRING_LIT 'import' IDENT ';'
 ```
+
+> **Note**: The module path is always a string literal (e.g. `"thirst::crypto"`).
+> The bare IDENT-path form (`import thirst::crypto`) is **not implemented** in the
+> reference interpreter — `thirst` is a reserved keyword and cannot appear as an
+> IDENT in a module path. Always use the string-literal form with a required `as`
+> alias and terminating `;`.
 
 ---
 

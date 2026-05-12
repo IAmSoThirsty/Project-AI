@@ -177,41 +177,68 @@ def _writes_canonical(stmts: list[ast.Stmt]) -> bool:
     return False
 
 
-def _has_nondeterminism(stmts: list[ast.Stmt]) -> bool:
-    def walk_expr(expr: ast.Expr) -> bool:
-        if isinstance(expr, ast.VariableExpr):
-            return expr.name == "now"
-        if isinstance(expr, ast.CallExpr) and isinstance(expr.callee, ast.VariableExpr):
-            return expr.callee.name in {"now", "rand", "random"}
-        for name in (
-            "left",
-            "right",
-            "expr",
-            "target",
-            "value",
-            "obj",
-            "index",
-            "condition",
-            "when_true",
-            "when_false",
-        ):
-            child = getattr(expr, name, None)
-            if isinstance(child, ast.Expr) and walk_expr(child):
-                return True
-        if hasattr(expr, "args"):
-            for arg in getattr(expr, "args", []):
-                if isinstance(arg, ast.Expr) and walk_expr(arg):
-                    return True
-        return False
+_NONDETERMINISTIC_NAMES = frozenset({
+    "now", "epoch_ms", "rand", "random", "random_bytes", "uuid4",
+})
+_IO_NAMES = frozenset({"pour", "sip"})
+_IMPURE_NAMES = _NONDETERMINISTIC_NAMES | _IO_NAMES
 
-    for stmt in stmts:
-        if isinstance(stmt, ast.ExprStmt) and walk_expr(stmt.expr):
+
+def _walk_expr_for(expr: ast.Expr, names: frozenset[str]) -> bool:
+    if isinstance(expr, ast.VariableExpr) and expr.name in names:
+        return True
+    if isinstance(expr, ast.InputExpr):
+        return "sip" in names
+    if isinstance(expr, ast.CallExpr):
+        callee = expr.callee
+        if isinstance(callee, ast.VariableExpr) and callee.name in names:
             return True
-        if isinstance(stmt, ast.VarDecl) and walk_expr(stmt.initializer):
+        if isinstance(callee, ast.MemberExpr) and callee.name in names:
+            return True
+    for attr in ("left", "right", "expr", "target", "value", "obj",
+                 "index", "condition", "when_true", "when_false", "callee"):
+        child = getattr(expr, attr, None)
+        if isinstance(child, ast.Expr) and _walk_expr_for(child, names):
+            return True
+    for arg in getattr(expr, "args", []):
+        if isinstance(arg, ast.Expr) and _walk_expr_for(arg, names):
+            return True
+    return False
+
+
+def _has_nondeterminism(stmts: list[ast.Stmt]) -> bool:
+    for stmt in stmts:
+        if isinstance(stmt, ast.ExprStmt) and _walk_expr_for(
+            stmt.expr, _NONDETERMINISTIC_NAMES
+        ):
+            return True
+        if isinstance(stmt, ast.VarDecl) and _walk_expr_for(
+            stmt.initializer, _NONDETERMINISTIC_NAMES
+        ):
             return True
         if isinstance(stmt, ast.BlockStmt) and _has_nondeterminism(stmt.statements):
             return True
     return False
+
+
+def _has_impure_calls(stmts: list[ast.Stmt]) -> tuple[bool, str]:
+    """Return (True, offending_name) if the invariant block has I/O or non-deterministic calls."""
+    for stmt in stmts:
+        if isinstance(stmt, ast.PrintStmt):
+            return True, "pour"
+        if isinstance(stmt, ast.ExprStmt):
+            for name in _IMPURE_NAMES:
+                if _walk_expr_for(stmt.expr, frozenset({name})):
+                    return True, name
+        if isinstance(stmt, ast.VarDecl):
+            for name in _IMPURE_NAMES:
+                if _walk_expr_for(stmt.initializer, frozenset({name})):
+                    return True, name
+        if isinstance(stmt, ast.BlockStmt):
+            found, name = _has_impure_calls(stmt.statements)
+            if found:
+                return True, name
+    return False, ""
 
 
 def _estimate_pressure(stmts: list[ast.Stmt]) -> tuple[int, int]:
@@ -280,12 +307,15 @@ def analyze(module: ShadowModule) -> list[AnalysisResult]:
                 f"estimated cpu={cpu_ms}ms memory={mem_mb}MB",
             )
         )
+        impure, offender = _has_impure_calls(m.invariant_body)
         out.append(
             AnalysisResult(
                 "PuritySpringAnalyzer",
                 "critical",
-                True,
-                "invariant blocks remain pure in the bootstrap model",
+                not impure,
+                f"invariant block calls impure function '{offender}'"
+                if impure
+                else "invariant block is pure",
             )
         )
         out.append(

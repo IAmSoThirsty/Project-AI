@@ -175,6 +175,8 @@ class Lexer:
         return Span(self.file, line, col, self.line, self.col)
 
     def _peek(self) -> str:
+        if self.i >= len(self.source):
+            return "\0"
         return self.source[self.i]
 
     def _peek_next(self) -> str:

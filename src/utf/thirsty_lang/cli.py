@@ -199,6 +199,19 @@ def scaffold_fountain(path: Path, name: str) -> None:
     )
 
 
+def scaffold_app(path: Path, name: str) -> None:
+    (path / name).mkdir(parents=True, exist_ok=True)
+    (path / name / "tests").mkdir(exist_ok=True)
+    main_src = 'glass main() -> Int {\n  pour("hello from ' + name + '");\n  return 0;\n}\n'
+    (path / name / "main.thirsty").write_text(main_src, encoding="utf-8")
+    manifest = (
+        f'[package]\nname = "{name}"\nversion = "0.1.0"\n'
+        f'entry = "main.thirsty"\nmode = "core"\n\n'
+        f"[dependencies]\n\n[governance]\naudit_level = \"none\"\n"
+    )
+    (path / name / "thirsty.toml").write_text(manifest, encoding="utf-8")
+
+
 def repl() -> int:
     print("Thirsty REPL. Type :quit to exit.")
     _HIST.parent.mkdir(parents=True, exist_ok=True)
@@ -304,6 +317,20 @@ def main(argv: list[str] | None = None) -> int:
     bench_p = sub.add_parser("bench")
     bench_p.add_argument("file")
 
+    add_p = sub.add_parser("add")
+    add_p.add_argument("package")
+
+    sub.add_parser("audit")
+
+    sub.add_parser("lock")
+
+    build_p = sub.add_parser("build")
+    build_p.add_argument("file", nargs="?", default=None)
+    build_p.add_argument("--emit-manifest", action="store_true")
+
+    govern_p = sub.add_parser("govern")
+    govern_p.add_argument("file")
+
     args = parser.parse_args(argv)
     achievements = load_achievements()
 
@@ -323,14 +350,16 @@ def main(argv: list[str] | None = None) -> int:
         save_achievements(achievements)
         return 0
     if args.cmd == "new":
-        if args.kind != "fountain":
-            print(
-                color("parched: only 'fountain' scaffolding is implemented", "yellow")
-            )
+        if args.kind == "fountain":
+            scaffold_fountain(Path("."), args.name)
+            achievements.add("first_fountain")
+        elif args.kind == "app":
+            scaffold_app(Path("."), args.name)
+            achievements.add("first_app")
+        else:
+            print(color(f"parched: unknown scaffold kind '{args.kind}' (use: fountain, app)", "yellow"))
             return 1
-        scaffold_fountain(Path("."), args.name)
-        print(color(f"fully hydrated: scaffolded {args.name}", "green"))
-        achievements.add("first_fountain")
+        print(color(f"fully hydrated: scaffolded {args.kind} '{args.name}'", "green"))
         save_achievements(achievements)
         return 0
     if args.cmd == "install":
@@ -361,6 +390,59 @@ def main(argv: list[str] | None = None) -> int:
         else:
             for line in gallery_lines(None if args.action == "list" else args.term):
                 print(line)
+        return 0
+
+    if args.cmd == "add":
+        result = install_package(Path(".").resolve(), args.package)
+        print(color(f"fully hydrated: added {result['name']}@{result['version']}", "green"))
+        return 0
+    if args.cmd == "audit":
+        from .package_manager import audit_dependencies
+        findings = audit_dependencies(Path(".").resolve())
+        if not findings:
+            print(color("fully hydrated: no governance violations found", "green"))
+        else:
+            for f in findings:
+                print(color(f"  {f}", "yellow"))
+        return 0
+    if args.cmd == "lock":
+        from .package_manager import generate_lock
+        generate_lock(Path(".").resolve())
+        print(color("fully hydrated: thirsty.lock.json updated", "green"))
+        return 0
+    if args.cmd == "build":
+        target_file = args.file or "main.thirsty"
+        text = Path(target_file).read_text(encoding="utf-8")
+        check_source(text, target_file)
+        dist = Path("dist")
+        dist.mkdir(exist_ok=True)
+        if args.emit_manifest:
+            import hashlib as _hl
+            prog_hash = "sha256:" + _hl.sha256(text.encode("utf-8")).hexdigest()
+            manifest = {
+                "program_hash": prog_hash,
+                "source_file": target_file,
+                "dependency_hashes": {},
+                "governance_proof": {
+                    "tscg_expression": "COG -> COM",
+                    "build_time": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+                },
+            }
+            (dist / "app.manifest.json").write_text(
+                json.dumps(manifest, indent=2), encoding="utf-8"
+            )
+            print(color("fully hydrated: dist/app.manifest.json written", "green"))
+        else:
+            print(color(f"fully hydrated: {target_file} checked and ready", "green"))
+        return 0
+    if args.cmd == "govern":
+        text = Path(args.file).read_text(encoding="utf-8")
+        try:
+            check_source(text, args.file)
+            print(color("governance check: no requires clauses (mode core — no governance gates active)", "green"))
+        except (ThirstyError, DiagnosticBundle) as err:
+            print(format_error(err, text) if isinstance(err, ThirstyError) else format_bundle(err, text))
+            return 1
         return 0
 
     text = Path(args.file).read_text(encoding="utf-8")

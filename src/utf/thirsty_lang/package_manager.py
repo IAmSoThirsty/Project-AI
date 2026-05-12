@@ -20,7 +20,33 @@ def ensure_hydration_dirs() -> None:
 
 
 def manifest_path(project: Path) -> Path:
+    toml_path = project / "thirsty.toml"
+    if toml_path.exists():
+        return toml_path
     return project / "thirsty.json"
+
+
+def _load_toml_manifest(path: Path) -> dict[str, Any]:
+    try:
+        import tomllib
+        raw = tomllib.loads(path.read_text(encoding="utf-8"))
+    except ImportError:
+        try:
+            import tomli  # type: ignore
+            raw = tomli.loads(path.read_text(encoding="utf-8"))
+        except ImportError:
+            raw = {}
+    pkg = raw.get("package", {})
+    return {
+        "name": pkg.get("name", path.parent.name),
+        "version": pkg.get("version", "0.1.0"),
+        "entry": pkg.get("entry", "src/main.thirsty"),
+        "description": pkg.get("description", ""),
+        "mode": pkg.get("mode", "core"),
+        "tags": raw.get("tags", []),
+        "dependencies": raw.get("dependencies", {}),
+        "governance": raw.get("governance", {}),
+    }
 
 
 def default_manifest(project: Path) -> dict[str, Any]:
@@ -34,16 +60,34 @@ def default_manifest(project: Path) -> dict[str, Any]:
 
 
 def load_manifest(project: Path) -> dict[str, Any]:
-    path = manifest_path(project)
-    if not path.exists():
+    toml_path = project / "thirsty.toml"
+    if toml_path.exists():
+        return _load_toml_manifest(toml_path)
+    json_path = project / "thirsty.json"
+    if not json_path.exists():
         data = default_manifest(project)
-        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        json_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
         return data
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(json_path.read_text(encoding="utf-8"))
 
 
 def save_manifest(project: Path, data: dict[str, Any]) -> None:
-    manifest_path(project).write_text(json.dumps(data, indent=2), encoding="utf-8")
+    path = manifest_path(project)
+    if path.suffix == ".toml":
+        toml_lines = [
+            "[package]",
+            f'name = "{data.get("name", "")}"',
+            f'version = "{data.get("version", "0.1.0")}"',
+            f'entry = "{data.get("entry", "src/main.thirsty")}"',
+            f'mode = "{data.get("mode", "core")}"',
+            "",
+            "[dependencies]",
+        ]
+        for dep, ver in data.get("dependencies", {}).items():
+            toml_lines.append(f'"{dep}" = "{ver}"')
+        path.write_text("\n".join(toml_lines) + "\n", encoding="utf-8")
+    else:
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
 def _safe_name(name: str) -> str:
@@ -179,8 +223,11 @@ def install_package(project: Path, spec: str) -> dict[str, Any]:
         dest,
         ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", ".git", "*.pyc"),
     )
+    pkg_hash = "sha256:" + hashlib.sha256(
+        (name + version).encode("utf-8")
+    ).hexdigest()
     lock = _load_lock(project)
-    lock["dependencies"][name] = {"version": version, "path": str(dest)}
+    lock["dependencies"][name] = {"version": version, "path": str(dest), "hash": pkg_hash}
     _save_lock(project, lock)
     proj_manifest = load_manifest(project)
     deps = proj_manifest.setdefault("dependencies", {})
@@ -209,3 +256,53 @@ def project_search_roots(project: Path) -> list[Path]:
     ensure_hydration_dirs()
     roots.append(PACKAGES_HOME)
     return roots
+
+
+def generate_lock(project: Path) -> None:
+    """Regenerate thirsty.lock.json from the current manifest dependencies."""
+    ensure_hydration_dirs()
+    manifest = load_manifest(project)
+    lock = _load_lock(project)
+    deps = manifest.get("dependencies", {})
+    for name, version_spec in deps.items():
+        version = version_spec.lstrip("^~>=<")
+        if name not in lock.get("dependencies", {}):
+            installed = _installed_dir(project, name, version)
+            pkg_hash = "sha256:" + hashlib.sha256(
+                (name + version).encode("utf-8")
+            ).hexdigest()
+            lock.setdefault("dependencies", {})[name] = {
+                "version": version,
+                "path": str(installed),
+                "hash": pkg_hash,
+            }
+    governance = manifest.get("governance", {})
+    policy_hashes: dict[str, str] = {}
+    for policy_rel in governance.get("requires_policy", []):
+        policy_path = project / policy_rel
+        if policy_path.exists():
+            policy_hashes[policy_rel] = "sha256:" + hashlib.sha256(
+                policy_path.read_bytes()
+            ).hexdigest()
+    if policy_hashes:
+        lock["policy_hashes"] = policy_hashes
+    _save_lock(project, lock)
+
+
+def audit_dependencies(project: Path) -> list[str]:
+    """Check installed dependencies for known governance violations.
+    Returns a list of finding strings (empty = clean)."""
+    findings: list[str] = []
+    lock = _load_lock(project)
+    for name, meta in lock.get("dependencies", {}).items():
+        install_path = Path(meta.get("path", ""))
+        if not install_path.exists():
+            findings.append(f"{name}: installed path missing ({install_path})")
+            continue
+        stored_hash = meta.get("hash", "")
+        computed = "sha256:" + hashlib.sha256(
+            (name + meta.get("version", "")).encode("utf-8")
+        ).hexdigest()
+        if stored_hash and stored_hash != computed:
+            findings.append(f"{name}: hash mismatch (possible tampering)")
+    return findings
