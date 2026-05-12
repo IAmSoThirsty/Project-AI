@@ -103,6 +103,108 @@ def pack_text(text: str) -> bytes:
     )
 
 
+class StreamDecoder:
+    """
+    Streaming TSCG-B decoder for multi-frame byte streams.
+
+    Accepts arbitrary-size byte chunks via ``feed()`` and returns a list of
+    fully-decoded frame dicts for every complete frame found in the buffered
+    data.  Partial frames are retained in the internal buffer until the
+    remaining bytes arrive.
+
+    Frame wire format (all big-endian):
+        4 bytes  magic       b"TSGB"
+        1 byte   version
+        1 byte   flags
+        2 bytes  payload_len (uint16)
+        N bytes  payload
+        4 bytes  CRC32       of payload
+       32 bytes  SHA-256     of canonical text
+
+    Total frame size = 8 + payload_len + 36 bytes.
+
+    Usage::
+
+        dec = StreamDecoder()
+        for chunk in socket_or_file:
+            frames = dec.feed(chunk)
+            for frame in frames:
+                print(frame["text"])
+
+        # After all data consumed, check for leftover partial bytes:
+        remaining = dec.pending_bytes
+        if remaining:
+            raise ValueError(f"{remaining} bytes of incomplete trailing frame")
+
+    Errors in individual frames raise :exc:`TSCGBError` at the point the
+    complete frame becomes available, leaving the rest of the buffer intact.
+    """
+
+    _HEADER_LEN = 8    # magic(4) + version(1) + flags(1) + payload_len(2)
+    _TRAILER_LEN = 36  # CRC32(4) + SHA-256(32)
+    _MIN_FRAME = _HEADER_LEN + _TRAILER_LEN  # 44 bytes minimum (zero-length payload)
+
+    def __init__(self) -> None:
+        self._buf = bytearray()
+
+    def feed(self, data: bytes) -> list[dict]:
+        """
+        Consume *data*, decode all complete frames, and return them.
+
+        Returns an empty list if no complete frame is yet available.
+        Raises :exc:`TSCGBError` if a frame's magic, version, CRC, or
+        SHA-256 validation fails.
+        """
+        self._buf.extend(data)
+        return self._drain()
+
+    def _drain(self) -> list[dict]:
+        frames: list[dict] = []
+        while True:
+            if len(self._buf) < self._MIN_FRAME:
+                break  # not enough bytes even for the smallest frame
+
+            # Peek at the magic before committing
+            if self._buf[:4] != MAGIC:
+                # Scan forward to resync (skip one byte at a time)
+                idx = self._buf.find(MAGIC, 1)
+                if idx == -1:
+                    # No magic found — discard everything except the last 3 bytes
+                    # (they could be the start of a split magic sequence)
+                    self._buf = self._buf[-3:]
+                    break
+                self._buf = self._buf[idx:]
+                continue
+
+            if len(self._buf) < self._HEADER_LEN:
+                break  # header not fully buffered yet
+
+            # Read payload length from header
+            _version, _flags, payload_len = struct.unpack_from(">BBH", self._buf, 4)
+            frame_len = self._HEADER_LEN + payload_len + self._TRAILER_LEN
+
+            if len(self._buf) < frame_len:
+                break  # complete frame not yet buffered
+
+            # Extract exactly one frame and advance buffer
+            raw_frame = bytes(self._buf[:frame_len])
+            self._buf = self._buf[frame_len:]
+
+            # Unpack (validates CRC + SHA-256) — raises TSCGBError on corruption
+            frames.append(unpack_frame(raw_frame))
+
+        return frames
+
+    @property
+    def pending_bytes(self) -> int:
+        """Number of buffered bytes that have not yet formed a complete frame."""
+        return len(self._buf)
+
+    def reset(self) -> None:
+        """Discard all buffered data."""
+        self._buf.clear()
+
+
 def unpack_frame(frame: bytes) -> dict:
     if len(frame) < 4 + 1 + 1 + 2 + 4 + 32:
         raise TSCGBError("truncated frame")

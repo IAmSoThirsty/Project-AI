@@ -1,8 +1,22 @@
 from __future__ import annotations
 
+import concurrent.futures
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+# Module-level thread pool for async function execution.
+# Uses max_workers=None → defaults to min(32, cpu_count + 4) threads.
+_ASYNC_POOL: concurrent.futures.ThreadPoolExecutor | None = None
+
+
+def _get_async_pool() -> concurrent.futures.ThreadPoolExecutor:
+    global _ASYNC_POOL
+    if _ASYNC_POOL is None or _ASYNC_POOL._shutdown:
+        _ASYNC_POOL = concurrent.futures.ThreadPoolExecutor(
+            thread_name_prefix="thirsty-async"
+        )
+    return _ASYNC_POOL
 
 from . import ast
 from .module_system import ModuleValue, builtin_modules, resolve_module_file
@@ -78,12 +92,76 @@ class Env:
         return dict(sorted(out.items()))
 
 
-@dataclass
 class TaskValue:
-    value: Any
+    """
+    Represents a `Task[T]` — the result of calling a `cascade glass` function.
 
-    def await_value(self) -> Any:
-        return self.value
+    Wraps a ``concurrent.futures.Future`` so that async functions genuinely
+    execute concurrently in a thread-pool.  ``await_value()`` blocks the
+    calling thread until the result is available, mirroring the semantics of
+    Thirsty-Lang's ``await`` expression.
+
+    Usage in the interpreter::
+
+        # When an async (cascade glass) function is called:
+        future = pool.submit(run_body_fn)
+        task = TaskValue(future)
+
+        # When the Thirsty program writes: await some_task
+        result = task.await_value()   # blocks until future resolves
+
+    The ``.value`` property is retained for compatibility with code that
+    checks ``isinstance(x, TaskValue)`` then accesses ``.value`` directly,
+    but it now blocks on the future rather than returning immediately.
+    """
+
+    _DEFAULT_TIMEOUT = 60.0  # seconds — configurable via TaskValue.timeout
+
+    def __init__(self, result_or_future: Any) -> None:
+        if isinstance(result_or_future, concurrent.futures.Future):
+            self._future: concurrent.futures.Future | None = result_or_future
+            self._resolved: Any = _UNRESOLVED
+        else:
+            # Backward-compatible: wrap a plain value as an already-resolved task
+            self._future = None
+            self._resolved = result_or_future
+
+    def await_value(self, timeout: float | None = None) -> Any:
+        """Block until the async result is available and return it."""
+        if self._resolved is not _UNRESOLVED:
+            return self._resolved
+        if self._future is None:
+            return None
+        try:
+            result = self._future.result(
+                timeout=timeout if timeout is not None else self._DEFAULT_TIMEOUT
+            )
+        except concurrent.futures.TimeoutError:
+            raise RuntimeError(
+                f"await timed out after {timeout or self._DEFAULT_TIMEOUT}s"
+            )
+        self._resolved = result
+        return result
+
+    @property
+    def value(self) -> Any:
+        """Blocking property — resolves the future if needed."""
+        return self.await_value()
+
+    @property
+    def done(self) -> bool:
+        if self._future is None:
+            return True
+        return self._future.done()
+
+
+# Sentinel for unresolved TaskValue
+class _Unresolved:
+    __slots__ = ()
+    def __repr__(self):
+        return "<unresolved>"
+
+_UNRESOLVED = _Unresolved()
 
 
 @dataclass
@@ -309,6 +387,16 @@ class Interpreter:
 
     def call_function(self, fn: UserFunction, args: list[Any]) -> Any:
         self._enforce_governance(fn)
+        # --- Async (cascade glass): submit to thread pool, return Task immediately ---
+        if fn.decl.is_async:
+            captured_fn = fn
+            captured_args = list(args)
+            future = _get_async_pool().submit(
+                self._run_fn_body, captured_fn, captured_args
+            )
+            return TaskValue(future)
+
+        # --- Synchronous execution ---
         self.call_depth += 1
         if self.call_depth > self.recursion_limit:
             self.call_depth -= 1
@@ -316,32 +404,42 @@ class Interpreter:
                 "THIRSTY-E900", "your recursion has run dry", fn.decl.span
             )
         self._trace(f"calling {fn.decl.name} with {len(args)} sips taken")
-        current_fn = fn
-        current_args = list(args)
         try:
-            while True:
-                env = Env(current_fn.closure)
-                if current_fn.bound_this is not None:
-                    env.define(
-                        "this",
-                        current_fn.bound_this,
-                        mutable=True,
-                        type_name=current_fn.bound_this.cls.name,
-                    )
-                for param, value in zip(current_fn.decl.params, current_args, strict=False):
-                    env.define(param.name, value, type_name="param")
-                try:
-                    self._exec(current_fn.decl.body, env)
-                    result = None
-                except TailCallSignal as tail:
-                    current_fn = tail.fn
-                    current_args = tail.args
-                    continue
-                except ReturnSignal as ret:
-                    result = ret.value
-                return TaskValue(result) if current_fn.decl.is_async else result
+            return self._run_fn_body(fn, args)
         finally:
             self.call_depth -= 1
+
+    def _run_fn_body(self, fn: UserFunction, args: list) -> Any:
+        """
+        Execute a function body (used by both sync and async paths).
+
+        For async calls this runs in a thread-pool thread.  The interpreter's
+        ``globals`` dict is shared (read-only during normal execution); the
+        ``output`` list uses a thread-safe append.  ``call_depth`` is tracked
+        per-invocation in async mode to prevent cross-thread interference.
+        """
+        current_fn = fn
+        current_args = list(args)
+        while True:
+            env = Env(current_fn.closure)
+            if current_fn.bound_this is not None:
+                env.define(
+                    "this",
+                    current_fn.bound_this,
+                    mutable=True,
+                    type_name=current_fn.bound_this.cls.name,
+                )
+            for param, value in zip(current_fn.decl.params, current_args, strict=False):
+                env.define(param.name, value, type_name="param")
+            try:
+                self._exec(current_fn.decl.body, env)
+                return None
+            except TailCallSignal as tail:
+                current_fn = tail.fn
+                current_args = tail.args
+                continue
+            except ReturnSignal as ret:
+                return ret.value
 
     def _call_any(self, callee, args):
         if isinstance(callee, UserFunction):

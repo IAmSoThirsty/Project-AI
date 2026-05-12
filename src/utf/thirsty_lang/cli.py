@@ -498,12 +498,45 @@ def main(argv: list[str] | None = None) -> int:
     build_p.add_argument(
         "--target",
         default="check",
-        choices=["check", "wasm-pyodide", "js"],
-        help="build target: check (default), wasm-pyodide (browser bundle), js (transpile)",
+        choices=["check", "wasm-pyodide", "js", "llvm-ir", "llvm-obj", "llvm-exe", "llvm-asm"],
+        help=(
+            "build target: check (default), wasm-pyodide (browser bundle), "
+            "js (transpile), llvm-ir (LLVM IR text), llvm-obj (native .o), "
+            "llvm-exe (linked executable), llvm-asm (native assembly)"
+        ),
+    )
+    build_p.add_argument(
+        "--opt-level",
+        type=int,
+        default=2,
+        choices=[0, 1, 2, 3],
+        metavar="N",
+        help="LLVM optimisation level 0–3 (default: 2)",
     )
 
     govern_p = sub.add_parser("govern")
     govern_p.add_argument("file")
+
+    docs_p = sub.add_parser("docs", help="generate the static HTML documentation site")
+    docs_p.add_argument("--output", default=None, help="output directory (default: docs/_site/)")
+    docs_p.add_argument("--docs-dir", default=None, help="source docs directory")
+    docs_p.add_argument("--open", action="store_true", help="open the site in a browser after generation")
+
+    lsp_p = sub.add_parser("lsp", help="start the Thirsty Language Server (LSP)")
+    lsp_mode = lsp_p.add_mutually_exclusive_group()
+    lsp_mode.add_argument(
+        "--stdio",
+        action="store_true",
+        default=True,
+        help="communicate over stdin/stdout (default)",
+    )
+    lsp_mode.add_argument(
+        "--port",
+        type=int,
+        default=None,
+        metavar="PORT",
+        help="communicate over TCP on this port (for debugging)",
+    )
 
     args = parser.parse_args(argv)
     achievements = load_achievements()
@@ -664,9 +697,62 @@ def main(argv: list[str] | None = None) -> int:
                 print(color(f"  tscg_b_frame magic: {magic!r}", "blue"))
             if capabilities:
                 print(color(f"  capabilities: {', '.join(capabilities)}", "blue"))
+        # --- LLVM targets ---
+        elif args.target in ("llvm-ir", "llvm-obj", "llvm-exe", "llvm-asm"):
+            import sys as _sys
+            _sys.path.insert(0, str(Path(__file__).parents[1]))
+            try:
+                from tarl.compiler.frontend import ThirstyFrontend, FrontendError
+                from tarl.compiler.llvm_backend import LLVMBackend, LLVMBackendError
+            except ImportError as ie:
+                print(color(f"parched: llvmlite not available — {ie}", "red"))
+                return 1
+            try:
+                opt = getattr(args, "opt_level", 2)
+                ir_text = ThirstyFrontend().compile_source(text, target_file)
+                backend = LLVMBackend(opt_level=opt)
+                if args.target == "llvm-ir":
+                    out_path = dist / f"{module_name}.ll"
+                    out_path.write_text(ir_text, encoding="utf-8")
+                    print(color(f"fully hydrated: dist/{module_name}.ll written", "green"))
+                elif args.target == "llvm-obj":
+                    out_path = dist / f"{module_name}.o"
+                    backend.compile_to_object(ir_text, out_path)
+                    print(color(f"fully hydrated: dist/{module_name}.o written", "green"))
+                elif args.target == "llvm-exe":
+                    out_path = dist / module_name
+                    backend.compile_to_executable(ir_text, out_path)
+                    print(color(f"fully hydrated: dist/{module_name} executable written", "green"))
+                elif args.target == "llvm-asm":
+                    out_path = dist / f"{module_name}.s"
+                    backend.emit_assembly(ir_text, out_path)
+                    print(color(f"fully hydrated: dist/{module_name}.s written", "green"))
+            except (FrontendError, LLVMBackendError) as llvm_err:
+                print(color(f"parched: LLVM compilation error — {llvm_err}", "red"))
+                return 1
+
         elif args.target == "check":
             print(color(f"fully hydrated: {target_file} checked and ready", "green"))
         return 0
+    if args.cmd == "docs":
+        from .docs_generator import build_site
+        import pathlib as _pl
+        out_dir = _pl.Path(args.output) if args.output else None
+        docs_src = _pl.Path(args.docs_dir) if args.docs_dir else None
+        site_dir = build_site(docs_dir=docs_src, output_dir=out_dir)
+        if getattr(args, "open", False):
+            import webbrowser
+            webbrowser.open(str(site_dir / "index.html"))
+        return 0
+
+    if args.cmd == "lsp":
+        from .lsp_server import start_stdio, start_tcp
+        if args.port is not None:
+            start_tcp(args.port)
+        else:
+            start_stdio()
+        return 0
+
     if args.cmd == "govern":
         text = Path(args.file).read_text(encoding="utf-8")
         try:
