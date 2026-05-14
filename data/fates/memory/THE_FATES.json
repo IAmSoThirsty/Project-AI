@@ -1,0 +1,51 @@
+{
+  "last_written": "2026-05-10T12:42:40.310407+00:00",
+  "threads": {
+    "b8636ded": {
+      "id": "b8636ded",
+      "timestamp": "2026-05-10T12:42:38.220130+00:00",
+      "agents_involved": [
+        "/execute_test"
+      ],
+      "event_type": "governance_approved",
+      "description": "read approved for /execute_test",
+      "decision_made": "APPROVED",
+      "paths_considered": [
+        "read"
+      ],
+      "weight": 2.0,
+      "peak_weight": 2.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    },
+    "4415c550": {
+      "id": "4415c550",
+      "timestamp": "2026-05-10T12:42:40.310407+00:00",
+      "agents_involved": [
+        "/sandbox_test"
+      ],
+      "event_type": "governance_approved",
+      "description": "read approved for /sandbox_test",
+      "decision_made": "APPROVED",
+      "paths_considered": [
+        "read"
+      ],
+      "weight": 2.0,
+      "peak_weight": 2.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    }
+  },
+  "relationships": {
+    "/execute_test": {
+      "agent_id": "/execute_test",
+      "interaction_count": 1,
+      "trust_score": 1.0,
+      "last_interaction": "2026-05-10T12:42:38.220130+00:00",
+      "notable_moments": [],
+      "tends_to": "unknown"
+    }
+  }
+}

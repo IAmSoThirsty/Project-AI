@@ -13,6 +13,7 @@ setup(
     entry_points={
         "console_scripts": [
             "project-ai=app.main:main",
+            "thirstys-waterfall=thirstys_waterfall.cli:main",
         ],
     },
 )
