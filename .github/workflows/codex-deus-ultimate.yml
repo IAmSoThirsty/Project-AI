@@ -56,10 +56,6 @@ on:
     branches: [main, develop, cerberus-integration]
     types: [opened, synchronize, reopened, ready_for_review, labeled]
   
-  # Pull request target for external contributors
-  pull_request_target:
-    types: [opened, synchronize, reopened]
-  
   # Issue events for automation
   issues:
     types: [opened, labeled, reopened, edited, closed]
@@ -133,17 +129,7 @@ on:
 # COMPREHENSIVE PERMISSIONS
 # ==============================================================================
 permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-  checks: write
-  statuses: write
-  security-events: write
-  actions: write
-  id-token: write
-  deployments: write
-  packages: write
-  discussions: write
+  contents: read
 
 # ==============================================================================
 # GLOBAL ENVIRONMENT VARIABLES
@@ -1435,7 +1421,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b9c71bd67 # v0.24.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -1480,7 +1466,7 @@ jobs:
           tags: project-ai:scan
       
       - name: Run Trivy image scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b9c71bd67 # v0.24.0
         with:
           scan-type: 'image'
           image-ref: 'project-ai:scan'
@@ -1513,7 +1499,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Run Trivy config scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b9c71bd67 # v0.24.0
         with:
           scan-type: 'config'
           scan-ref: '.'
@@ -1546,7 +1532,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Run Checkov scan
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@cd8b95f1a85e1391b1a0ec8a3d31d74b896dfbea # v12.2834.0
         with:
           directory: .
           framework: all
@@ -2108,7 +2094,7 @@ jobs:
           path: dist/
       
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
         with:
           skip-existing: true
           verbose: true
