@@ -1,11 +1,6 @@
-version: '3.8'
-
 services:
   # --- THE ORCHESTRATOR ---
   cerberus:
-    build: 
-      context: ../Cerberus-main
-      dockerfile: Dockerfile
     image: projectai/cerberus:omega
     container_name: cerberus_omega
     restart: unless-stopped

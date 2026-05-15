@@ -136,7 +136,7 @@ permissions:
 # ==============================================================================
 env:
   PYTHON_VERSION: '3.12'
-  PYTHON_VERSION_MATRIX: '["3.11", "3.12"]'
+  PYTHON_VERSION_MATRIX: '["3.12"]'
   NODE_VERSION: '20'
   JAVA_VERSION: '17'
   GO_VERSION: '1.21'

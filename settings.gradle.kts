@@ -58,7 +58,7 @@ dependencyResolutionManagement {
             version("npm", "10.2.4")
             
             // Python versions (tracked for reference)
-            version("python", "3.11")
+            version("python", "3.12")
             version("pythonMax", "3.12")
             
             // Build tool versions
