@@ -1,0 +1,54 @@
+filepath,phase,verdict,priority,gap_description,inspected_at
+src/thirstys_waterfall/kill_switch.py,1,THEATER,CRITICAL,MOST CRITICAL SECURITY FEATURE IS A NO-OP,
+src/thirstys_waterfall/network/advanced_stealth.py,1,THEATER,CRITICAL,FUNDAMENTAL: no network I/O. All connections are self._active = True. Data encrypted beautifully then returned to caller.,
+src/thirstys_waterfall/privacy/onion_router.py,1,THEATER,CRITICAL,"COMPLETE FANTASY. No routing, no encryption, no anonymization.",
+src/thirstys_waterfall/security/hardware_root_of_trust.py,1,THEATER,CRITICAL,Everything fake; other components may depend on this for security decisions,
+src/thirstys_waterfall/utils/god_tier_encryption.py,1,THEATER,CRITICAL,ChaCha20 has no auth (bit-flip vulnerable); QuantumResistant unfixably broken; RSA/ECC unused; performance catastrophic; not quantum-resistant,
+src/thirstys_waterfall/vpn/kill_switch.py,1,THEATER,CRITICAL,No actual traffic blocking,
+src/app/security/advanced/hardware_root_of_trust.py,4,THEATER,CRITICAL,Same fake TPM issue,
+src/utf/shadow_thirst/__init__.py,6,BROKEN,CRITICAL,Fails on readline import,
+src/utf/tests/test_package_gallery.py,6,BROKEN,CRITICAL,readline import failure,
+src/utf/tests/test_properties.py,6,BROKEN,CRITICAL,readline import failure,
+src/utf/tests/test_shadow_thirst.py,6,BROKEN,CRITICAL,readline import failure,
+src/utf/tests/test_thirsty_flavor.py,6,BROKEN,CRITICAL,readline import failure,
+src/utf/tests/test_thirsty_lang.py,6,BROKEN,CRITICAL,readline import failure,
+src/utf/thirsty_lang/cli.py,6,BROKEN,CRITICAL,readline not available,
+atlas/safeguards/epistemic_safeguards.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+e2e/conftest.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+e2e/fixtures/mocks.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+e2e/scenarios/test_temporal_orchestration_e2e.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+engines/alien_invaders/modules/invariants.py,0,STUB,HIGH,Contains unimplemented scaffolding or placeholder methods.,2026-05-15T15:32:44.006867
+examples/super_kernel_example.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+gradle-evolution/ir/ir_executor.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+integrations/thirstys_trading_hub/core/market_data.py,0,STUB,HIGH,Contains unimplemented scaffolding or placeholder methods.,2026-05-15T15:32:44.006867
+kernel/deception.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+kernel/holographic.py,0,STUB,HIGH,Contains unimplemented scaffolding or placeholder methods.,2026-05-15T15:32:44.006867
+kernel/thirsty_super_kernel.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+src/app/core/ai/orchestrator.py,0,STUB,HIGH,Contains unimplemented scaffolding or placeholder methods.,2026-05-15T15:32:44.006867
+src/app/core/storage.py,0,STUB,HIGH,Contains unimplemented scaffolding or placeholder methods.,2026-05-15T15:32:44.006867
+src/app/core/visual_cue_models.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+src/app/security/chimera/chimera.py,0,STUB,HIGH,Contains unimplemented scaffolding or placeholder methods.,2026-05-15T15:32:44.006867
+tarl/tooling/__init__.py,0,STUB,HIGH,Contains unimplemented scaffolding or placeholder methods.,2026-05-15T15:32:44.006867
+test_mock_openrouter.py,0,THEATER,HIGH,Behavior appears simulated/nominal without concrete integration paths.,2026-05-15T15:32:44.006867
+src/thirstys_waterfall/ai_assistant/ai_engine.py,1,THEATER,HIGH,Self-described AI is a 4-branch if/else,
+src/thirstys_waterfall/ai_assistant/local_inference.py,1,THEATER,HIGH,Complete fake — returns input back as template string,
+src/thirstys_waterfall/browser/browser_engine.py,1,THEATER,HIGH,There is NO browser — not a single HTTP request in the package,
+src/thirstys_waterfall/browser/sandbox.py,1,THEATER,HIGH,No sandboxing at all,
+src/thirstys_waterfall/cli.py,1,BROKEN,HIGH,Logic bug + missing handler,
+src/thirstys_waterfall/firewalls/packet_filtering.py,1,BROKEN,HIGH,Fake firewall with actual bugs in the fake logic,
+src/thirstys_waterfall/media_downloader/media_engine.py,1,THEATER,HIGH,"Reports downloads ""completed"" without downloading; encryption ceremony around no-op",
+src/thirstys_waterfall/privacy/anti_malware.py,1,THEATER,HIGH,Cannot detect any real malware. Creates dangerously false sense of security.,
+src/thirstys_waterfall/privacy/privacy_auditor.py,1,THEATER,HIGH,Every audit hardcoded to pass. Compliance facade.,
+src/thirstys_waterfall/remote_access/secure_tunnel.py,1,THEATER,HIGH,No tunnel established; a boolean flips,
+src/thirstys_waterfall/utils/doh_resolver.py,1,STUB,HIGH,Zero DNS resolution; returns hardcoded fake IP,
+src/thirstys_waterfall/vpn/dns_protection.py,1,BROKEN,HIGH,Complete no-op with logical inconsistency,
+src/thirstys_waterfall/vpn/multi_hop.py,1,THEATER,HIGH,No actual multi-hop tunneling,
+src/app/agents/cerberus_codex_bridge.py,2,THEATER,HIGH,_implement_enhanced_monitoring returns hardcoded success dict,
+src/app/agents/long_context_agent.py,2,THEATER,HIGH,Entire core is placeholder strings; zero inference happens,
+src/app/agents/planner_agent.py,2,THEATER,HIGH,"No real execution, no dependency graph, no actual planning",
+src/app/agents/retrieval_agent.py,2,THEATER,HIGH,"Zero embeddings, zero vectors — ""vector"" is a lie, it's JSON grep",
+src/app/core/global_scenario_engine.py,2,THEATER,HIGH,98%,
+src/app/core/god_tier_integration_layer.py,2,THEATER,HIGH,95%,
+src/app/core/governance_operational_extensions.py,2,THEATER,HIGH,All failure responses are string lists; no actual degradation/failover runs,
+src/app/gui/knowledge_functions_panel.py,6,STUB,HIGH,Signals not connected,
+src/cognition/codex/escalation.py,6,STUB,HIGH,No routing,

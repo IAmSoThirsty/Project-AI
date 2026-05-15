@@ -1,0 +1,10 @@
+{
+  "total_files": 1354,
+  "genuine": 909,
+  "aspirational": 194,
+  "unresolved_gap_files": 251,
+  "critical_gaps": 14,
+  "high_gaps": 39,
+  "genuine_pct": 67.13,
+  "aspirational_pct": 14.33
+}
