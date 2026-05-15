@@ -160,6 +160,10 @@ ignore = [
 testpaths = ["tests"]
 python_files = "test_*.py"
 addopts = "--strict-markers -v"
+pythonpath = ["src", "src/utf"]
+filterwarnings = [
+    "ignore::DeprecationWarning:passlib",
+]
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
