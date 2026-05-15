@@ -84,7 +84,7 @@ See **`WORKFLOWS_TO_DEPRECATE.md`** in the repository root for:
 
 To restore any workflow:
 ```bash
-cp .github/workflows/archive/<workflow-name>.yml .github/workflows/
+cp .github/workflow-archive/<workflow-name>.yml .github/workflows/
 git add .github/workflows/<workflow-name>.yml
 git commit -m "Restore <workflow-name>"
 ```
