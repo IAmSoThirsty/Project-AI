@@ -158,6 +158,9 @@ class QuorumEngine:
         with self._lock:
             existing_proof = self._proofs.get(decision_id)
         if existing_proof is not None:
+            # Replace placeholder context hash if needed
+            if existing_proof.decision_context_hash == "PLACEHOLDER":
+                existing_proof.decision_context_hash = context_hash
             return existing_proof
 
         waiter.wait(timeout=timeout_seconds)
@@ -167,6 +170,9 @@ class QuorumEngine:
             votes = list(self._votes.get(decision_id, []))
 
         if proof is not None:
+            # Replace placeholder context hash
+            if proof.decision_context_hash == "PLACEHOLDER":
+                proof.decision_context_hash = context_hash
             return proof
 
         return self._build_inconclusive_proof(
@@ -192,8 +198,10 @@ class QuorumEngine:
         decision_id: str,
         policy: QuorumPolicy,
     ) -> QuorumProof | None:
-        # Proof construction requires the context hash stored by the caller;
-        # signal completion to wait_for_quorum via waiter, which builds the proof.
+        """Evaluate whether quorum is reached and build proof if complete.
+        
+        Returns QuorumProof if decision is final (approved/rejected), None if still pending.
+        """
         votes = list(self._votes.get(decision_id, []))
         if not votes:
             return None
@@ -210,21 +218,62 @@ class QuorumEngine:
 
         participation_fraction = total_participating / total_validators
         if participation_fraction < policy.min_participation_fraction:
-            return None
+            return None  # Not enough participation yet
 
         approving_ids = {
             v.validator_id
             for v in votes
             if v.approved and v.validator_id in validator_ids
         }
+        rejecting_ids = {
+            v.validator_id
+            for v in votes
+            if not v.approved and v.validator_id in validator_ids
+        }
         approval_fraction = len(approving_ids) / total_participating
+        rejection_fraction = len(rejecting_ids) / total_participating
 
+        # Quorum reached: sufficient approval
         if approval_fraction >= policy.min_approval_fraction:
-            return None  # Wake waiter; let wait_for_quorum build the proof
-        if (1.0 - approval_fraction) >= policy.min_approval_fraction:
-            return None
+            # Need context hash to build proof; caller must provide via wait_for_quorum
+            # For now, signal completion by returning a sentinel
+            # wait_for_quorum will build the actual proof with context hash
+            return self._build_proof_with_placeholder_context(
+                decision_id, policy, votes, QuorumDecision.APPROVED,
+                list(participating_ids), list(approving_ids), list(rejecting_ids)
+            )
 
+        # Quorum reached: sufficient rejection
+        if rejection_fraction >= policy.min_approval_fraction:
+            return self._build_proof_with_placeholder_context(
+                decision_id, policy, votes, QuorumDecision.REJECTED,
+                list(participating_ids), list(approving_ids), list(rejecting_ids)
+            )
+
+        # Participation met but no quorum decision yet
         return None
+
+    def _build_proof_with_placeholder_context(
+        self,
+        decision_id: str,
+        policy: QuorumPolicy,
+        votes: list[QuorumVote],
+        final_decision: QuorumDecision,
+        participating_ids: list[str],
+        approving_ids: list[str],
+        rejecting_ids: list[str],
+    ) -> QuorumProof:
+        """Build proof with placeholder context hash (will be replaced by wait_for_quorum)."""
+        return QuorumProof(
+            decision_id=decision_id,
+            decision_type=policy.decision_type,
+            decision_context_hash="PLACEHOLDER",  # wait_for_quorum will replace
+            final_decision=final_decision,
+            participating_validators=sorted(participating_ids),
+            approving_validators=sorted(approving_ids),
+            rejecting_validators=sorted(rejecting_ids),
+            votes=votes,
+        )
 
     def _build_inconclusive_proof(
         self,

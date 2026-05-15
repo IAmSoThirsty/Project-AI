@@ -8,6 +8,7 @@ from cryptography.fernet import Fernet
 from .multi_hop import MultiHopRouter
 from .kill_switch import KillSwitch
 from .dns_protection import DNSProtection
+from .backends import WireGuardBackend, OpenVPNBackend, IKEv2Backend
 
 
 class VPNManager:
@@ -42,6 +43,13 @@ class VPNManager:
             config.get("dns_leak_protection", True),
             config.get("ipv6_leak_protection", True),
         )
+
+        # Initialize VPN backends
+        self.backends = {
+            "wireguard": WireGuardBackend(config.get("wireguard", {})),
+            "openvpn": OpenVPNBackend(config.get("openvpn", {})),
+            "ikev2": IKEv2Backend(config.get("ikev2", {})),
+        }
 
         self._active = False
         self._connected = False
@@ -115,8 +123,19 @@ class VPNManager:
         raise ConnectionError("All VPN protocols failed")
 
     def _connect_with_protocol(self, protocol: str) -> Dict[str, Any]:
-        """Connect using specific protocol"""
-        # Simulate protocol connection
+        """Connect using specific protocol via real backend"""
+        backend = self.backends.get(protocol)
+        if backend is None:
+            raise ValueError(f"Unknown protocol: {protocol}")
+        
+        if not backend.check_availability():
+            raise RuntimeError(f"{protocol} backend not available on this platform")
+        
+        success = backend.connect()
+        if not success:
+            raise ConnectionError(f"{protocol} connection failed")
+        
+        # Return connection metadata
         return {
             "protocol": protocol,
             "endpoint": f"{protocol}.vpn.thirstys.local",
