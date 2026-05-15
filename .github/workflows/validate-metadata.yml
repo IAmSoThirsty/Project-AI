@@ -44,7 +44,7 @@ jobs:
       - name: Validate metadata (strict mode)
         shell: pwsh
         run: |
-          .\validate-metadata.ps1 `
+          .\scripts\verify\validate-metadata.ps1 `
             -Path "." `
             -Recursive `
             -Parallel `
@@ -150,7 +150,7 @@ jobs:
             comment += '\n---\n\n';
             comment += '## 💡 Quick Fix Guide\n\n';
             comment += '1. **Review error catalog:** `validation/error-catalog/error-catalog.json`\n';
-            comment += '2. **Run locally:** `.\validate-metadata.ps1 -Path "." -Recursive`\n';
+            comment += '2. **Run locally:** `.\scripts\verify\validate-metadata.ps1 -Path "." -Recursive`\n';
             comment += '3. **See validation guide:** `validation/VALIDATION_GUIDE.md`\n';
             comment += '4. **Check schema:** `validation/schemas/metadata.schema.json`\n\n';
             comment += '### Common Fixes\n\n';
