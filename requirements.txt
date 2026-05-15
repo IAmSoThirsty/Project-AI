@@ -60,5 +60,5 @@ jsonschema>=4.23.0  # Schema validation (updated for security)
 pyyaml>=6.0.2  # Configuration loading (updated for security)
 
 # CLI + platform runtime compatibility
-rich>=13.7.0  # Required by HYDRA and inspection Typer CLIs
+rich>=13.7.0,<14.0.0  # Keep compatible with flask-limiter 3.x
 pyreadline3>=3.5.4; platform_system=="Windows"  # readline compatibility on Windows

@@ -1,7 +1,7 @@
 # Multi-stage build for Project-AI
 
 # Stage 1: Build dependencies
-FROM python:3.12-slim as builder
+FROM python:3.12-slim AS builder
 
 WORKDIR /build
 
