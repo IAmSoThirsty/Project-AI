@@ -167,27 +167,21 @@ class LoginDialog(QDialog):
         # Sanitize and validate username
         username = sanitize_input(self.user_input.text().strip(), max_length=50)
         if not validate_length(username, min_len=3, max_len=50):
-            QMessageBox.warning(
-                self,
-                "Login Error",
-                "Username must be 3-50 characters"
-            )
+            QMessageBox.warning(self, "Login Error", "Username must be 3-50 characters")
             return
 
         # Sanitize and validate password
         password = sanitize_input(self.pass_input.text().strip(), max_length=128)
         if not validate_length(password, min_len=8, max_len=128):
             QMessageBox.warning(
-                self,
-                "Login Error",
-                "Password must be 8-128 characters"
+                self, "Login Error", "Password must be 8-128 characters"
             )
             return
 
         if not username or not password:
             QMessageBox.warning(self, "Login", "Enter username and password")
             return
-        
+
         # Authenticate returns (success, message) tuple
         success, msg = self.user_manager.authenticate(username, password)
         if success:

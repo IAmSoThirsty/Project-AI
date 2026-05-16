@@ -20,15 +20,15 @@ from types import ModuleType
 
 
 def _load_main_cli_module() -> ModuleType:
-	"""Load the historical ``src/app/cli.py`` module for compatibility."""
-	cli_module_path = Path(__file__).resolve().parent.parent / "cli.py"
-	spec = spec_from_file_location("app._main_cli", cli_module_path)
-	if spec is None or spec.loader is None:
-		raise ImportError(f"Unable to load CLI module from {cli_module_path}")
+    """Load the historical ``src/app/cli.py`` module for compatibility."""
+    cli_module_path = Path(__file__).resolve().parent.parent / "cli.py"
+    spec = spec_from_file_location("app._main_cli", cli_module_path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Unable to load CLI module from {cli_module_path}")
 
-	module = module_from_spec(spec)
-	spec.loader.exec_module(module)
-	return module
+    module = module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 _main_cli = _load_main_cli_module()

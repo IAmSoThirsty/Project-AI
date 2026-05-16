@@ -234,7 +234,9 @@ class TestChaosTesting:
         timer_ids = []
         for i in range(50):
             timer_id = stack.long_running.schedule_timer(
-                f"wf_{i}", delay=60, callback=lambda: None  # Long delay
+                f"wf_{i}",
+                delay=60,
+                callback=lambda: None,  # Long delay
             )
             timer_ids.append(timer_id)
 
@@ -256,7 +258,9 @@ class TestChaosTesting:
         lease_holders = []
         for i in range(20):
             acquired = stack.long_running.acquire_lease(
-                f"wf_{i}", f"executor_{i}", duration=0.1  # Very short lease
+                f"wf_{i}",
+                f"executor_{i}",
+                duration=0.1,  # Very short lease
             )
             if acquired:
                 lease_holders.append((f"wf_{i}", f"executor_{i}"))
@@ -329,7 +333,7 @@ class TestSoakTesting:
                 task_ids.append(task_id)
 
             # Simulate processing
-            for task_id in task_ids:
+            for _task_id in task_ids:
                 try:
                     task = stack.task_queue.lease_task(
                         f"worker_{random.randint(0, 3)}", lease_duration=30
@@ -453,7 +457,7 @@ class TestPerformanceDegradation:
                 task_ids.append(task_id)
 
             # Complete tasks
-            for task_id in task_ids:
+            for _task_id in task_ids:
                 try:
                     task = stack.task_queue.lease_task(
                         f"worker_{random.randint(0, 1)}", lease_duration=30

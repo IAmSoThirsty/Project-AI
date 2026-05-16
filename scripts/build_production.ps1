@@ -81,7 +81,7 @@ Write-Host "[4/4] Running Tests..." -ForegroundColor Yellow
 # Python tests
 Write-Host "  Python unit tests..." -ForegroundColor Cyan
 try {
-    pytest tests/ -v --tb=short
+    py -3.12 -m pytest tests/ -v --tb=short
     Write-Host "✓ Python tests passed" -ForegroundColor Green
 }
 catch {

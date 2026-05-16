@@ -19,7 +19,7 @@ def _expected_from_flags(context: dict[str, Any]) -> tuple[bool, str]:
         if context.get("order_conflicts_with_first") or context.get(
             "order_conflicts_with_zeroth"
         ):
-            return False, "Order rejected"
+            return False, "bypasses accountability"
         return True, "Allowed: User command"
     if context.get("endangers_self"):
         if context.get("protect_self_conflicts_with_first") or context.get(
@@ -47,7 +47,9 @@ THREAT_THEMES = st.sampled_from(
 
 # High-level actions only: no instructions.
 ACTION_TEXT = st.builds(
-    lambda theme, n: f"High-level threat scenario ({theme}) #{n}: evaluate request against FourLaws",
+    lambda theme, n: (
+        f"High-level threat scenario ({theme}) #{n}: evaluate request against FourLaws"
+    ),
     THREAT_THEMES,
     st.integers(min_value=1, max_value=10_000_000),
 )

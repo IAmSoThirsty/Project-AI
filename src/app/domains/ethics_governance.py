@@ -38,7 +38,9 @@ class EthicalDecision:
     rationale: str
 
 
-class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
+class EthicsGovernanceSubsystem(
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin
+):
     SUBSYSTEM_METADATA = {
         "id": "ethics_governance",
         "name": "Ethics & Governance",
@@ -73,7 +75,7 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
             self._processing_thread.start()
             self._initialized = True
             return True
-        except:
+        except Exception:
             return False
 
     def shutdown(self) -> bool:
@@ -116,7 +118,9 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
                         ),
                         execution_time_ms=(time.time() - start_time) * 1000,
                     )
-                return SubsystemResponse(command.command_id, False, error="Unknown command")
+                return SubsystemResponse(
+                    command.command_id, False, error="Unknown command"
+                )
             except Exception as e:
                 return SubsystemResponse(command.command_id, False, error=str(e))
 
@@ -127,7 +131,9 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
             _dispatch,
         )
         if not approved:
-            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+            return SubsystemResponse(
+                command.command_id, False, error=f"Governance denied: {result}"
+            )
         return result
 
     def get_supported_commands(self) -> list[str]:
@@ -181,14 +187,14 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
             with self._metrics_lock:
                 self._metrics["decisions_validated"] += 1
             return decision
-        except:
+        except Exception:
             return None
 
     def _save_state(self):
         try:
             with open(self.data_path / "state.json", "w") as f:
                 json.dump({"metrics": self._metrics}, f)
-        except:
+        except Exception:
             pass
 
     def _load_state(self):
@@ -197,5 +203,5 @@ class EthicsGovernanceSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObse
             if state_file.exists():
                 with open(state_file) as f:
                     self._metrics = json.load(f).get("metrics", self._metrics)
-        except:
+        except Exception:
             pass

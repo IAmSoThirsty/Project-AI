@@ -47,6 +47,10 @@ class UserManager:
             data_dir: Base directory for user data (for path traversal protection)
         """
         load_dotenv()
+        if os.path.isabs(users_file):
+            data_dir = os.path.dirname(users_file)
+            users_file = os.path.basename(users_file)
+
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
 
@@ -166,15 +170,14 @@ class UserManager:
         - Returns tuple: (success: bool, message: str)
         """
         # Valid dummy hash for constant-time execution (hash of "dummy_password_for_timing")
-        DUMMY_HASH = "$pbkdf2-sha256$29000$dw4hRAhhjBECACBkTOkdAw$J32CKKL8HKxGKBCenxbzNJE1mq8.rpQCu8brEd2o8Fw"
-        
+        dummy_hash = "$pbkdf2-sha256$29000$dw4hRAhhjBECACBkTOkdAw$J32CKKL8HKxGKBCenxbzNJE1mq8.rpQCu8brEd2o8Fw"
+
         # Get user or use dummy data for constant-time execution
         user_exists = username in self.users
-        user = self.users.get(username, {
-            "password_hash": DUMMY_HASH,
-            "failed_attempts": 0,
-            "locked_until": None
-        })
+        user = self.users.get(
+            username,
+            {"password_hash": dummy_hash, "failed_attempts": 0, "locked_until": None},
+        )
 
         # Check if account is currently locked (only for existing users)
         locked_until = user.get("locked_until")
@@ -191,7 +194,7 @@ class UserManager:
             user["failed_attempts"] = 0
             self.save_users()
 
-        password_hash = user.get("password_hash", DUMMY_HASH)
+        password_hash = user.get("password_hash", dummy_hash)
 
         # Always perform verification (constant-time execution)
         is_valid = False
@@ -222,10 +225,15 @@ class UserManager:
                 user["locked_until"] = time.time() + 900  # 15 minutes
                 self.save_users()
                 logger.warning(f"Account locked due to failed attempts: {username}")
-                return False, "Account locked due to too many failed attempts. Try again in 15 minutes"
+                return (
+                    False,
+                    "Account locked due to too many failed attempts. Try again in 15 minutes",
+                )
 
             self.save_users()
-            logger.warning(f"Failed login attempt for {username} (attempt {user['failed_attempts']}/5)")
+            logger.warning(
+                f"Failed login attempt for {username} (attempt {user['failed_attempts']}/5)"
+            )
             return False, "Invalid credentials"
         else:
             # User doesn't exist - return generic error without revealing this

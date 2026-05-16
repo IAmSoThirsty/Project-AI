@@ -3,8 +3,8 @@
 Standalone verification script for account lockout implementation.
 This script demonstrates the security features without requiring pytest.
 """
+
 import sys
-import json
 import tempfile
 import time
 from pathlib import Path
@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 try:
     from app.core.user_manager import UserManager
+
     print("✓ Successfully imported UserManager with account lockout protection")
 except ImportError as e:
     print(f"✗ Failed to import UserManager: {e}")
@@ -25,16 +26,16 @@ def verify_implementation():
     print("\n" + "=" * 70)
     print("ACCOUNT LOCKOUT SECURITY VERIFICATION")
     print("=" * 70)
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         print(f"\n📁 Using temporary directory: {tmpdir}")
         um = UserManager(users_file=str(Path(tmpdir) / "test_users.json"))
-        
+
         # Verification 1: New users have lockout fields
         print("\n[1] Creating test user...")
         um.create_user("securitytest", "TestPass123!")
         user_data = um.users["securitytest"]
-        
+
         assert "failed_attempts" in user_data, "Missing failed_attempts field"
         assert "locked_until" in user_data, "Missing locked_until field"
         assert user_data["failed_attempts"] == 0, "Initial failed_attempts should be 0"
@@ -42,23 +43,27 @@ def verify_implementation():
         print("   ✓ Lockout fields initialized correctly")
         print(f"     - failed_attempts: {user_data['failed_attempts']}")
         print(f"     - locked_until: {user_data['locked_until']}")
-        
+
         # Verification 2: Successful authentication
         print("\n[2] Testing successful authentication...")
         success, msg = um.authenticate("securitytest", "TestPass123!")
         assert success is True, "Should authenticate with correct password"
         assert msg == "Authentication successful", f"Unexpected message: {msg}"
         print(f"   ✓ Authentication successful: {msg}")
-        
+
         # Verification 3: Failed attempts counter
         print("\n[3] Testing failed attempts counter...")
         for i in range(1, 5):
             success, msg = um.authenticate("securitytest", "WrongPassword")
             assert success is False, "Should fail with wrong password"
-            assert um.users["securitytest"]["failed_attempts"] == i, f"Counter should be {i}"
-            print(f"   Attempt {i}/5: failed_attempts = {um.users['securitytest']['failed_attempts']}")
+            assert um.users["securitytest"]["failed_attempts"] == i, (
+                f"Counter should be {i}"
+            )
+            print(
+                f"   Attempt {i}/5: failed_attempts = {um.users['securitytest']['failed_attempts']}"
+            )
         print("   ✓ Counter increments correctly")
-        
+
         # Verification 4: Account lockout after 5 attempts
         print("\n[4] Testing account lockout (5th failed attempt)...")
         success, msg = um.authenticate("securitytest", "WrongPassword")
@@ -69,23 +74,25 @@ def verify_implementation():
         locked_until = um.users["securitytest"]["locked_until"]
         lockout_duration = int(locked_until - time.time())
         print(f"   ✓ Account locked for {lockout_duration} seconds (~15 minutes)")
-        print(f"     Message: \"{msg}\"")
-        
+        print(f'     Message: "{msg}"')
+
         # Verification 5: Cannot authenticate while locked
         print("\n[5] Testing locked account rejection...")
         success, msg = um.authenticate("securitytest", "TestPass123!")
         assert success is False, "Should fail even with correct password"
         assert "locked" in msg.lower(), "Message should indicate account is locked"
-        print(f"   ✓ Correct password rejected while locked")
-        print(f"     Message: \"{msg}\"")
-        
+        print("   ✓ Correct password rejected while locked")
+        print(f'     Message: "{msg}"')
+
         # Verification 6: Lock status check
         print("\n[6] Testing is_account_locked() method...")
         is_locked, time_remaining = um.is_account_locked("securitytest")
         assert is_locked is True, "Account should be locked"
-        assert time_remaining is not None and time_remaining > 0, "Should have time remaining"
+        assert time_remaining is not None and time_remaining > 0, (
+            "Should have time remaining"
+        )
         print(f"   ✓ Lock status: LOCKED ({time_remaining} seconds remaining)")
-        
+
         # Verification 7: Manual unlock
         print("\n[7] Testing manual unlock...")
         result = um.unlock_account("securitytest")
@@ -97,27 +104,31 @@ def verify_implementation():
         print("   ✓ Account manually unlocked by admin")
         print("     - failed_attempts reset to 0")
         print("     - locked_until cleared")
-        
+
         # Verification 8: Can authenticate after unlock
         print("\n[8] Testing authentication after unlock...")
         success, msg = um.authenticate("securitytest", "TestPass123!")
         assert success is True, "Should authenticate after unlock"
-        print(f"   ✓ Authentication successful after unlock")
-        
+        print("   ✓ Authentication successful after unlock")
+
         # Verification 9: Counter reset on successful login
         print("\n[9] Testing counter reset on successful login...")
         um.authenticate("securitytest", "wrong1")
         um.authenticate("securitytest", "wrong2")
-        assert um.users["securitytest"]["failed_attempts"] == 2, "Should have 2 failed attempts"
+        assert um.users["securitytest"]["failed_attempts"] == 2, (
+            "Should have 2 failed attempts"
+        )
         success, msg = um.authenticate("securitytest", "TestPass123!")
         assert success is True, "Should authenticate"
         assert um.users["securitytest"]["failed_attempts"] == 0, "Counter should reset"
         print("   ✓ Successful login resets failed attempts counter")
-        
+
         # Verification 10: Auto-unlock after timeout
         print("\n[10] Testing auto-unlock after timeout expiration...")
         um.users["securitytest"]["failed_attempts"] = 5
-        um.users["securitytest"]["locked_until"] = time.time() - 10  # Expired 10 seconds ago
+        um.users["securitytest"]["locked_until"] = (
+            time.time() - 10
+        )  # Expired 10 seconds ago
         um.save_users()
         is_locked, _ = um.is_account_locked("securitytest")
         assert is_locked is False, "Expired lockout should be detected as unlocked"
@@ -125,7 +136,7 @@ def verify_implementation():
         assert success is True, "Should authenticate after timeout"
         assert um.users["securitytest"]["failed_attempts"] == 0, "Counter should reset"
         print("   ✓ Expired lockout automatically cleared")
-        
+
     print("\n" + "=" * 70)
     print("✅ ALL VERIFICATIONS PASSED")
     print("=" * 70)
@@ -150,10 +161,12 @@ if __name__ == "__main__":
     except AssertionError as e:
         print(f"\n❌ VERIFICATION FAILED: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
     except Exception as e:
         print(f"\n❌ ERROR: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)

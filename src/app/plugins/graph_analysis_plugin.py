@@ -623,7 +623,9 @@ class GraphAnalysisEngine:
 
         return self.apply_filter(self.presets[preset_name])
 
-    def export_graph(self, filepath: str, filter_obj: GraphFilter | None = None) -> None:
+    def export_graph(
+        self, filepath: str, filter_obj: GraphFilter | None = None
+    ) -> None:
         """Export graph to JSON file."""
         if filter_obj is None:
             filter_obj = GraphPreset.FULL_SYSTEM
@@ -715,14 +717,10 @@ class GraphAnalysisPlugin(Plugin):
 
         if custom_filter:
             filter_obj = GraphFilter(
-                node_types=[
-                    NodeType(nt) for nt in custom_filter.get("node_types", [])
-                ],
+                node_types=[NodeType(nt) for nt in custom_filter.get("node_types", [])],
                 tags=custom_filter.get("tags", []),
                 folders=custom_filter.get("folders", []),
-                link_types=[
-                    LinkType(lt) for lt in custom_filter.get("link_types", [])
-                ],
+                link_types=[LinkType(lt) for lt in custom_filter.get("link_types", [])],
             )
             return self.engine.apply_filter(filter_obj)
 
@@ -735,9 +733,7 @@ class GraphAnalysisPlugin(Plugin):
 
         return self.engine.get_statistics()
 
-    def export(
-        self, filepath: str, preset: str | None = None
-    ) -> None:
+    def export(self, filepath: str, preset: str | None = None) -> None:
         """Export graph to file."""
         if not self.enabled or self.engine is None:
             raise RuntimeError("Plugin not initialized")

@@ -80,10 +80,10 @@ def demo_performance_comparison():
 
     print("\n📈 Results:")
     print(
-        f"   Non-cached time: {no_cache_time*1000:.2f}ms ({no_cache_time/iterations*1000000:.2f}μs per eval)"
+        f"   Non-cached time: {no_cache_time * 1000:.2f}ms ({no_cache_time / iterations * 1000000:.2f}μs per eval)"
     )
     print(
-        f"   Cached time: {cached_time*1000:.2f}ms ({cached_time/iterations*1000000:.2f}μs per eval)"
+        f"   Cached time: {cached_time * 1000:.2f}ms ({cached_time / iterations * 1000000:.2f}μs per eval)"
     )
     print(f"   Speedup: {speedup:.2f}x")
     print(f"   Improvement: {improvement:.1f}%")
@@ -123,7 +123,7 @@ def demo_varied_workload():
                 try:
                     runtime.evaluate(context)
                     evaluation_count += 1
-                except:
+                except Exception:
                     pass
 
     elapsed = time.perf_counter() - start
@@ -132,8 +132,8 @@ def demo_varied_workload():
     metrics = runtime.get_performance_metrics()
 
     print(f"\n📊 Results after {evaluation_count:,} evaluations:")
-    print(f"   Total time: {elapsed*1000:.2f}ms")
-    print(f"   Avg time per eval: {elapsed/evaluation_count*1000000:.2f}μs")
+    print(f"   Total time: {elapsed * 1000:.2f}ms")
+    print(f"   Avg time per eval: {elapsed / evaluation_count * 1000000:.2f}μs")
     print(f"   Cache hit rate: {metrics['cache_hit_rate_percent']:.1f}%")
     print(
         f"   Productivity improvement: {metrics['productivity_improvement_percent']:.1f}%"
@@ -163,13 +163,13 @@ def demo_adaptive_optimization():
     print("\nRunning 100 evaluations to collect performance stats...")
     for i in range(100):
         context = {
-            "agent": f"user_{i%10}",
+            "agent": f"user_{i % 10}",
             "mutation": i % 2 == 0,
             "mutation_allowed": i % 4 == 0,
         }
         try:
             runtime.evaluate(context)
-        except:
+        except Exception:
             pass
 
     # Show stats before optimization
@@ -232,7 +232,7 @@ def demo_metrics_api():
     cache_info = metrics["cache_info"]
     print(f"      Current size: {cache_info['size']}")
     print(f"      Maximum size: {cache_info['maxsize']}")
-    print(f"      Utilization: {cache_info['size']/cache_info['maxsize']*100:.1f}%")
+    print(f"      Utilization: {cache_info['size'] / cache_info['maxsize'] * 100:.1f}%")
 
     print("\n   Policy Stats:")
     for policy_name, stats in metrics["policy_stats"].items():

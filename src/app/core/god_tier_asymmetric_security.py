@@ -157,6 +157,10 @@ class StateMachineAnalyzer:
         from_state_obj = self.states[from_state]
         to_state_obj = self.states[to_state]
 
+        if from_state == to_state and to_state_obj.is_legal:
+            self.current_states[component] = to_state
+            return True, "Legal transition: state unchanged"
+
         if to_state not in from_state_obj.transitions_to:
             transition = IllegalStateTransition(
                 from_state=from_state,

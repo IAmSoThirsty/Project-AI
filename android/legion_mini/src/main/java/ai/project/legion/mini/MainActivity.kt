@@ -206,16 +206,16 @@ class MainActivity : AppCompatActivity() {
                         const input = document.getElementById('messageInput');
                         const message = input.value.trim();
                         if (!message) return;
-                        
+
                         addMessage('user', message);
                         input.value = '';
-                        
+
                         try {
-                            const response = await fetch(API_URL + '/chat', {
+                            const response = await fetch(API_URL + '/openclaw/message', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
-                                    message: message,
+                                    content: message,
                                     user_id: 'android_user',
                                     platform: 'android'
                                 })

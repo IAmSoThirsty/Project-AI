@@ -10,7 +10,8 @@ can make meaningful assertions at runtime.
 from __future__ import annotations
 
 import logging
-from typing import Any, Callable, Dict
+from collections.abc import Callable
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -20,14 +21,13 @@ class InvariantViolation(Exception):
 
 
 class InvariantEngine:
-
     def __init__(self) -> None:
-        self.invariants: list[Callable[[Dict[str, Any]], bool]] = []
+        self.invariants: list[Callable[[dict[str, Any]], bool]] = []
 
-    def register(self, fn: Callable[[Dict[str, Any]], bool]) -> None:
+    def register(self, fn: Callable[[dict[str, Any]], bool]) -> None:
         self.invariants.append(fn)
 
-    def validate(self, context: Dict[str, Any]) -> None:
+    def validate(self, context: dict[str, Any]) -> None:
         for inv in self.invariants:
             try:
                 if not inv(context):
@@ -36,10 +36,12 @@ class InvariantEngine:
                 raise
             except Exception as exc:
                 # Invariant implementation error — log and skip rather than crashing execution
-                logger.warning("Invariant %s raised unexpectedly: %s", inv.__name__, exc)
+                logger.warning(
+                    "Invariant %s raised unexpectedly: %s", inv.__name__, exc
+                )
 
 
-def _build_trace_from_context(context: Dict[str, Any]) -> Dict[str, Any]:
+def _build_trace_from_context(context: dict[str, Any]) -> dict[str, Any]:
     """Convert a live execution context into the trace shape the canonical invariants expect."""
     return {
         "signals": context.get("signals", context.get("_signals", [])),
@@ -47,7 +49,11 @@ def _build_trace_from_context(context: Dict[str, Any]) -> Dict[str, Any]:
         "phases": context.get("phases", context.get("_phases", [])),
         "tarl_enforcement": context.get("tarl_enforcement", {}),
         "eed_memory_commit": context.get("eed_memory_commit", {}),
-        "execution": {"phases": context.get("phases", context.get("_phases", []))},
+        "execution": {
+            "signals": context.get("signals", context.get("_signals", [])),
+            "decisions": context.get("decisions", context.get("_decisions", [])),
+            "phases": context.get("phases", context.get("_phases", [])),
+        },
         "outcome": context.get("outcome", {}),
     }
 
@@ -60,7 +66,7 @@ def _register_canonical_invariants(engine: InvariantEngine) -> None:
         for canonical_inv in CANONICAL_INVARIANTS:
             inv = canonical_inv  # close over
 
-            def _wrapper(ctx: Dict[str, Any], _inv=inv) -> bool:
+            def _wrapper(ctx: dict[str, Any], _inv=inv) -> bool:
                 trace = _build_trace_from_context(ctx)
                 return _inv.validate(trace)
 
@@ -68,7 +74,8 @@ def _register_canonical_invariants(engine: InvariantEngine) -> None:
             engine.register(_wrapper)
 
         logger.info(
-            "InvariantEngine: registered %d canonical invariants", len(CANONICAL_INVARIANTS)
+            "InvariantEngine: registered %d canonical invariants",
+            len(CANONICAL_INVARIANTS),
         )
     except Exception as exc:
         logger.warning("InvariantEngine: could not load canonical invariants: %s", exc)

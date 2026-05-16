@@ -5,7 +5,7 @@ Tests security policy enforcement, least privilege controls,
 and runtime security validation integrated with security_hardening.yaml.
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from gradle_evolution.security.policy_scheduler import (
     PolicyScheduler,
@@ -19,7 +19,7 @@ from gradle_evolution.security.security_engine import (
 
 def _utc_now() -> datetime:
     """Return timezone-aware UTC datetime for tests."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class TestSecurityContext:
@@ -111,7 +111,8 @@ class TestSecurityEngine:
         engine = SecurityEngine(config_path=security_config_file)
 
         is_allowed, reason = engine.validate_operation(
-            agent="test_agent", operation="write"  # test_agent can only read/execute
+            agent="test_agent",
+            operation="write",  # test_agent can only read/execute
         )
 
         assert not is_allowed

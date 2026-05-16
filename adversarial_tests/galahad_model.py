@@ -20,11 +20,14 @@ from app.core.ai_systems import AIPersona, FourLaws
 
 # Try to import OpenRouter provider
 try:
-    from app.core.openrouter_provider import OpenRouterProvider, get_openrouter_provider
+    from app.core.openrouter_provider import get_openrouter_provider
+
     OPENROUTER_AVAILABLE = True
 except ImportError:
     OPENROUTER_AVAILABLE = False
-    logging.warning("OpenRouter provider not available. Install with: pip install openai")
+    logging.warning(
+        "OpenRouter provider not available. Install with: pip install openai"
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +78,9 @@ class GalahadModel:
                 if self.openrouter_available:
                     logger.info("OpenRouter provider initialized successfully")
                 else:
-                    logger.warning("OpenRouter provider not available - check OPENROUTER_API_KEY")
+                    logger.warning(
+                        "OpenRouter provider not available - check OPENROUTER_API_KEY"
+                    )
             except Exception as e:
                 logger.error("Failed to initialize OpenRouter: %s", e)
                 self.openrouter_available = False
@@ -196,7 +201,10 @@ class GalahadModel:
 
         try:
             messages = [
-                {"role": "system", "content": "You are Galahad, an ethical AI assistant. Provide helpful responses while maintaining safety."},
+                {
+                    "role": "system",
+                    "content": "You are Galahad, an ethical AI assistant. Provide helpful responses while maintaining safety.",
+                },
                 {"role": "user", "content": prompt},
             ]
 
@@ -533,31 +541,57 @@ class GalahadModel:
 
         # Check for human harm indicators
         human_harm_keywords = [
-            "kill", "murder", "hurt", "harm", "injure", "attack",
-            "poison", "torture", "assault", "stab", "shoot",
+            "kill",
+            "murder",
+            "hurt",
+            "harm",
+            "injure",
+            "attack",
+            "poison",
+            "torture",
+            "assault",
+            "stab",
+            "shoot",
         ]
         if any(kw in prompt_lower for kw in human_harm_keywords):
             context["endangers_human"] = True
 
         # Check for humanity-scale threats
         humanity_threat_keywords = [
-            "bioweapon", "bioterror", "pandemic", "genocide",
-            "mass destruction", "nuclear weapon", "extinction",
+            "bioweapon",
+            "bioterror",
+            "pandemic",
+            "genocide",
+            "mass destruction",
+            "nuclear weapon",
+            "extinction",
         ]
         if any(kw in prompt_lower for kw in humanity_threat_keywords):
             context["endangers_humanity"] = True
 
         # Check for illegal activity
         illegal_keywords = [
-            "illegal", "unauthorized", "steal", "fraud", "hack",
-            "exploit", "bypass", "crack", "phish", "scam",
+            "illegal",
+            "unauthorized",
+            "steal",
+            "fraud",
+            "hack",
+            "exploit",
+            "bypass",
+            "crack",
+            "phish",
+            "scam",
         ]
         if any(kw in prompt_lower for kw in illegal_keywords):
             context["is_illegal"] = True
 
         # Check for unethical but not necessarily illegal
         unethical_keywords = [
-            "manipulate", "deceive", "trick", "lie", "cheat",
+            "manipulate",
+            "deceive",
+            "trick",
+            "lie",
+            "cheat",
         ]
         if any(kw in prompt_lower for kw in unethical_keywords):
             context["is_unethical"] = True

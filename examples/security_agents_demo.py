@@ -95,7 +95,8 @@ def example_long_context_analysis():
     long_context = LongContextAgent(max_context_tokens=200000, kernel=kernel)
 
     # Simulate large document
-    large_document = """
+    large_document = (
+        """
     [LARGE POLICY DOCUMENT - 50,000+ words]
 
     Security Policy Section 1: Access Control
@@ -105,7 +106,9 @@ def example_long_context_analysis():
     Sensitive data must be encrypted at rest and in transit...
 
     [... many more sections ...]
-    """ * 100  # Multiply to simulate large document
+    """
+        * 100
+    )  # Multiply to simulate large document
 
     print(f"\nAnalyzing document (~{len(large_document)} characters)\n")
 

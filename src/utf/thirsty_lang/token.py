@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -99,9 +98,22 @@ class TokenType(Enum):
     VALIDATED_CANONICAL = auto()
     INVARIANT = auto()
     SHADOW = auto()
+
+    MODULE = auto()
+    MODE = auto()
+    CORE = auto()
+    GOVERNED = auto()
     CANONICAL = auto()
     PROMOTE = auto()
     REJECT = auto()
+
+    # Phase 3A — user-defined types
+    ENUM = auto()
+    STRUCT = auto()
+    INTERFACE = auto()
+
+    # Phase 3B — governance annotations
+    REQUIRES = auto()
 
 
 KEYWORDS = {
@@ -160,6 +172,16 @@ KEYWORDS = {
     "canonical": TokenType.CANONICAL,
     "promote": TokenType.PROMOTE,
     "reject": TokenType.REJECT,
+    "module": TokenType.MODULE,
+    "mode": TokenType.MODE,
+    "core": TokenType.CORE,
+    "governed": TokenType.GOVERNED,
+    # Phase 3A
+    "enum": TokenType.ENUM,
+    "struct": TokenType.STRUCT,
+    "interface": TokenType.INTERFACE,
+    # Phase 3B
+    "requires": TokenType.REQUIRES,
 }
 
 
@@ -171,7 +193,7 @@ class Span:
     end_line: int
     end_column: int
 
-    def merge(self, other: "Span") -> "Span":
+    def merge(self, other: Span) -> Span:
         return Span(self.file, self.line, self.column, other.end_line, other.end_column)
 
 

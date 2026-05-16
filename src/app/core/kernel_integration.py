@@ -188,9 +188,11 @@ class KernelRoutedAgent:
     def _execute_through_kernel(
         self,
         action: Callable,
-        action_name: str,
+        action_name: str | None = None,
+        *legacy_action_args: Any,
         action_args: tuple = (),
         action_kwargs: dict[str, Any] | None = None,
+        operation_name: str | None = None,
         requires_approval: bool = False,
         risk_level: str | None = None,
         user_id: str | None = None,
@@ -221,6 +223,17 @@ class KernelRoutedAgent:
             PermissionError: If blocked by governance
             RuntimeError: If execution fails
         """
+        if operation_name is not None:
+            if action_name is not None:
+                action_args = (action_name, *legacy_action_args)
+            elif legacy_action_args:
+                action_args = legacy_action_args
+            action_name = operation_name
+        elif action_name is None:
+            action_name = action.__name__
+        elif legacy_action_args:
+            action_args = legacy_action_args
+
         action_kwargs = action_kwargs or {}
         metadata = metadata or {}
         mutation_targets = mutation_targets or []

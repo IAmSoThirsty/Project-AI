@@ -11,9 +11,17 @@ policy P {
   when mutation.risk > 3 => ESCALATE;
 }
 """)
-        self.assertEqual(evaluate(policy, {"actor": {"role": "builder"}, "mutation": {"risk": 1}}), "ALLOW")
-        self.assertEqual(evaluate(policy, {"actor": {"role": "x"}, "mutation": {"risk": 5}}), "ESCALATE")
-        self.assertEqual(evaluate(policy, {"actor": {"role": "x"}, "mutation": {"risk": 1}}), "DENY")
+        self.assertEqual(
+            evaluate(policy, {"actor": {"role": "builder"}, "mutation": {"risk": 1}}),
+            "ALLOW",
+        )
+        self.assertEqual(
+            evaluate(policy, {"actor": {"role": "x"}, "mutation": {"risk": 5}}),
+            "ESCALATE",
+        )
+        self.assertEqual(
+            evaluate(policy, {"actor": {"role": "x"}, "mutation": {"risk": 1}}), "DENY"
+        )
 
 
 if __name__ == "__main__":

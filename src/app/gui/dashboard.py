@@ -137,7 +137,7 @@ class DashboardWindow(QMainWindow):
         """Update the footer with current page/chapter number."""
         total = max(1, self.tabs.count())
         try:
-            self.statusBar().showMessage(f"Page {index+1} of {total}")  # type: ignore
+            self.statusBar().showMessage(f"Page {index + 1} of {total}")  # type: ignore
         except Exception:
             self.statusBar().showMessage("")  # type: ignore
 
@@ -454,7 +454,6 @@ class DashboardWindow(QMainWindow):
         try:
             if os.path.exists(qss_path):
                 with open(qss_path, encoding="utf-8") as f:
-
                     qss = f.read()
                 self._apply_stylesheet_from_settings(qss)
         except Exception:
@@ -722,25 +721,20 @@ class DashboardWindow(QMainWindow):
         message = self.chat_input.text()
         if not message:
             return
-            
+
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "chat.send",
-            {
-                "message": message,
-                "user": self.user_manager.current_user or "default"
-            }
+            {"message": message, "user": self.user_manager.current_user or "default"},
         )
-        
+
         if response.get("status") == "success":
             self.chat_display.append(f"You: {message}")
             ai_response = response.get("result", {}).get("response", "No response")
@@ -748,9 +742,9 @@ class DashboardWindow(QMainWindow):
             self.chat_input.clear()
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to send message: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to send message: {response.get('error', 'Unknown error')}",
             )
 
     def process_message(self, message):
@@ -764,31 +758,22 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
-            "task.add",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            "task.add", {"user": self.user_manager.current_user or "default"}
         )
-        
+
         if response.get("status") == "success":
-            QMessageBox.information(
-                self, 
-                "Success", 
-                "Task added successfully"
-            )
+            QMessageBox.information(self, "Success", "Task added successfully")
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to add task: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to add task: {response.get('error', 'Unknown error')}",
             )
 
     def update_persona(self):
@@ -796,31 +781,22 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
-            "persona.update",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            "persona.update", {"user": self.user_manager.current_user or "default"}
         )
-        
+
         if response.get("status") == "success":
-            QMessageBox.information(
-                self, 
-                "Success", 
-                "Persona updated successfully"
-            )
+            QMessageBox.information(self, "Success", "Persona updated successfully")
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to update persona: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to update persona: {response.get('error', 'Unknown error')}",
             )
 
     def update_location(self):
@@ -828,20 +804,15 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
-            "location.get",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            "location.get", {"user": self.user_manager.current_user or "default"}
         )
-        
+
         if response.get("status") == "success":
             location = response.get("result", {}).get("location")
             if location:
@@ -857,23 +828,18 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         is_starting = self.location_toggle.text() == START_LOCATION_BUTTON_TEXT
-        
+
         # Route through governance
         response = self._route_through_governance(
             "location.toggle",
-            {
-                "user": self.user_manager.current_user or "default",
-                "start": is_starting
-            }
+            {"user": self.user_manager.current_user or "default", "start": is_starting},
         )
-        
+
         if response.get("status") == "success":
             if is_starting:
                 self.location_timer.start(5000)  # Update every 5 seconds
@@ -891,28 +857,24 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "location.clear_history",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            {"user": self.user_manager.current_user or "default"},
         )
-        
+
         if response.get("status") == "success":
             self.location_history.clear()
             self.location_display.clear()
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to clear location history: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to clear location history: {response.get('error', 'Unknown error')}",
             )
 
     def save_emergency_contacts(self):
@@ -920,30 +882,26 @@ class DashboardWindow(QMainWindow):
         contacts = self.contacts_input.text()
         if not contacts:
             QMessageBox.warning(
-                self, 
-                "No Contacts", 
-                "Please enter at least one emergency contact"
+                self, "No Contacts", "Please enter at least one emergency contact"
             )
             return
-            
+
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "emergency.save_contacts",
             {
                 "user": self.user_manager.current_user or "default",
-                "contacts": [c.strip() for c in contacts.split(",")]
-            }
+                "contacts": [c.strip() for c in contacts.split(",")],
+            },
         )
-        
+
         if response.get("status") == "success":
             self.location_display.setText("Emergency contacts saved successfully")
         else:
@@ -954,27 +912,24 @@ class DashboardWindow(QMainWindow):
     def send_emergency_alert(self):
         """Send emergency alert"""
         message = self.emergency_message.toPlainText()
-        
+
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "emergency.send_alert",
-            {
-                "user": self.user_manager.current_user or "default",
-                "message": message
-            }
+            {"user": self.user_manager.current_user or "default", "message": message},
         )
-        
+
         if response.get("status") == "success":
-            result = response.get("result", {}).get("message", "Alert sent successfully")
+            result = response.get("result", {}).get(
+                "message", "Alert sent successfully"
+            )
             self.alert_history.addItem(f"Alert: {result}")
             self.emergency_message.clear()
         else:
@@ -987,31 +942,25 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "learning.generate_path",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            {"user": self.user_manager.current_user or "default"},
         )
-        
+
         if response.get("status") == "success":
             QMessageBox.information(
-                self, 
-                "Success", 
-                "Learning path generated successfully"
+                self, "Success", "Learning path generated successfully"
             )
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to generate learning path: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to generate learning path: {response.get('error', 'Unknown error')}",
             )
 
     def load_data_file(self):
@@ -1019,31 +968,22 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
-            "data.load_file",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            "data.load_file", {"user": self.user_manager.current_user or "default"}
         )
-        
+
         if response.get("status") == "success":
-            QMessageBox.information(
-                self, 
-                "Success", 
-                "Data file loaded successfully"
-            )
+            QMessageBox.information(self, "Success", "Data file loaded successfully")
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to load data file: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to load data file: {response.get('error', 'Unknown error')}",
             )
 
     def perform_analysis(self):
@@ -1051,31 +991,24 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
-            "data.analyze",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            "data.analyze", {"user": self.user_manager.current_user or "default"}
         )
-        
+
         if response.get("status") == "success":
             QMessageBox.information(
-                self, 
-                "Success", 
-                "Data analysis completed successfully"
+                self, "Success", "Data analysis completed successfully"
             )
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to perform analysis: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to perform analysis: {response.get('error', 'Unknown error')}",
             )
 
     def update_security_resources(self):
@@ -1083,31 +1016,25 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "security.update_resources",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            {"user": self.user_manager.current_user or "default"},
         )
-        
+
         if response.get("status") == "success":
             QMessageBox.information(
-                self, 
-                "Success", 
-                "Security resources updated successfully"
+                self, "Success", "Security resources updated successfully"
             )
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to update security resources: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to update security resources: {response.get('error', 'Unknown error')}",
             )
 
     def open_security_resource(self):
@@ -1115,31 +1042,25 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "security.open_resource",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            {"user": self.user_manager.current_user or "default"},
         )
-        
+
         if response.get("status") == "success":
             QMessageBox.information(
-                self, 
-                "Success", 
-                "Security resource opened successfully"
+                self, "Success", "Security resource opened successfully"
             )
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to open security resource: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to open security resource: {response.get('error', 'Unknown error')}",
             )
 
     def add_security_favorite(self):
@@ -1147,43 +1068,37 @@ class DashboardWindow(QMainWindow):
         # Check adapter
         if not self.desktop_adapter:
             QMessageBox.critical(
-                self, 
-                "Governance Error", 
-                "Desktop governance adapter not initialized."
+                self, "Governance Error", "Desktop governance adapter not initialized."
             )
             return
-        
+
         # Route through governance
         response = self._route_through_governance(
             "security.add_favorite",
-            {
-                "user": self.user_manager.current_user or "default"
-            }
+            {"user": self.user_manager.current_user or "default"},
         )
-        
+
         if response.get("status") == "success":
             QMessageBox.information(
-                self, 
-                "Success", 
-                "Security resource added to favorites successfully"
+                self, "Success", "Security resource added to favorites successfully"
             )
         else:
             QMessageBox.critical(
-                self, 
-                "Error", 
-                f"Failed to add security favorite: {response.get('error', 'Unknown error')}"
+                self,
+                "Error",
+                f"Failed to add security favorite: {response.get('error', 'Unknown error')}",
             )
 
     def _route_through_governance(self, action: str, payload: dict) -> dict:
         """Route action through mandatory governance pipeline.
-        
+
         Args:
             action: Action identifier (e.g., "chat.send", "location.track")
             payload: Action parameters
-            
+
         Returns:
             Response dict with status and result
-            
+
         Raises:
             RuntimeError: If desktop adapter not initialized
         """
@@ -1193,7 +1108,7 @@ class DashboardWindow(QMainWindow):
                 "Cannot execute governed action. "
                 "This indicates a system initialization failure."
             )
-        
+
         try:
             return self.desktop_adapter.execute(action, payload)
         except Exception as e:

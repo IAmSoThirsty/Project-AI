@@ -1,0 +1,134 @@
+# threat_model.yaml — machine-readable threat model for Project-AI
+# Used by tests/test_threat_model.py to validate controls are implemented.
+version: "1.0"
+last_updated: "2026-05-09"
+
+trust_zones:
+  trusted:
+    - ExecutionGate
+    - InvariantEngine
+    - PolicyRegistry
+    - AuditChainVerifier
+    - ProofExecutor
+    - CapabilityTokenVerifier
+  partially_trusted:
+    - ModelOutputs
+    - UserInputs
+    - PluginsAndTools
+    - Adapters
+    - GovernanceCouncilMembers
+    - ExternalPolicyFeeds
+  untrusted:
+    - ExternalRequests
+    - PromptContent
+    - UploadedFiles
+    - NetworkResponses
+    - ModelGeneratedCode
+    - PriorConversationClaims
+    - ToolOutputsBeforeValidation
+  out_of_scope:
+    - CompromisedKernel
+    - StolenSigningKeys
+    - MaliciousMaintainer
+    - HardwareSideChannels
+    - CompromisedRootOfTrust
+
+threat_surfaces:
+  A:
+    name: Input Manipulation
+    description: >
+      Adversary crafts prompt content to bypass governance checks,
+      inject instructions, or shift semantic intent across evaluation planes.
+    controls:
+      - SafeAllowCalibrationLayer
+      - ConversationThreatStateRegister
+      - SemanticCollisionDetector
+      - OctoReflex.MISMATCHED_INTENT
+      - InvariantEngine
+    implemented_modules:
+      - src/app/core/safe_allow_calibration.py
+      - src/app/core/conversation_threat_register.py
+      - src/app/core/semantic_collision.py
+      - src/app/core/octoreflex.py
+
+  B:
+    name: Execution Substitution
+    description: >
+      Adversary replays, substitutes, or expands an approved capability token
+      to execute an action that was not originally authorized.
+    controls:
+      - CapabilityTokenService
+      - ExecutionAuthorizationEvaluator
+      - PolicyDecisionEvaluator
+      - ReplayPrevention
+    implemented_modules:
+      - src/app/core/capability_token.py
+      - src/app/core/execution_authorization.py
+      - src/app/core/policy_decision.py
+
+  C:
+    name: Temporal Manipulation
+    description: >
+      Adversary manipulates local clock or session timestamps to misclassify
+      human gap, allowing stale policy to appear current, or enabling
+      replay of expired continuity proofs.
+    controls:
+      - TimeTrustValidator
+      - RFC3161Heartbeat
+      - StateRegister.TemporalAnchor
+      - StateBranchingProtector
+    implemented_modules:
+      - src/app/core/time_trust.py
+      - src/app/core/state_register.py
+
+  D:
+    name: Governance Bypass
+    description: >
+      Adversary attempts to invoke privileged operations (genesis re-anchoring,
+      policy mutation, capability minting) without proper authority.
+    controls:
+      - GenesisReanchorGuard
+      - PolicyRegistrySignatureCheck
+      - GovernanceWeakeningDetector
+      - InvariantSeverity.ESCALATE
+    implemented_modules:
+      - src/app/core/genesis_reanchor.py
+      - src/app/core/policy_registry.py
+      - src/app/core/invariant_severity.py
+
+  E:
+    name: Side-Effect Abuse
+    description: >
+      Adversary triggers mutating actions under degraded governance state,
+      or exploits Liara fallback to perform actions outside reduced authority.
+    controls:
+      - DegradedModeChecker
+      - LiaraFallbackAuthority
+      - EvidenceBundleWriter
+      - AuditChain
+    implemented_modules:
+      - src/app/core/degraded_mode.py
+      - src/app/core/evidence_bundle.py
+      - src/app/core/governance_observability.py
+
+implemented_controls:
+  ExecutionGate: src/app/core/execution_gate.py
+  InvariantEngine: src/app/core/invariant_engine.py
+  InvariantSeverity: src/app/core/invariant_severity.py
+  PolicyRegistry: src/app/core/policy_registry.py
+  CapabilityTokenVerifier: src/app/core/capability_token.py
+  EvidenceBundleGenerator: src/app/core/evidence_bundle.py
+  StateRegister: src/app/core/state_register.py
+  StateBranchingProtector: src/app/core/state_register.py
+  TemporalAnchor: src/app/core/state_register.py
+  TimeTrustValidator: src/app/core/time_trust.py
+  OctoReflex: src/app/core/octoreflex.py
+  ConversationThreatStateRegister: src/app/core/conversation_threat_register.py
+  SafeAllowCalibrationLayer: src/app/core/safe_allow_calibration.py
+  SemanticCollisionDetector: src/app/core/semantic_collision.py
+  DegradedModeChecker: src/app/core/degraded_mode.py
+  LiaraFallbackAuthority: src/app/core/degraded_mode.py
+  GenesisReanchorGuard: src/app/core/genesis_reanchor.py
+  GovernanceObservability: src/app/core/governance_observability.py
+  PolicyDecisionEvaluator: src/app/core/policy_decision.py
+  ExecutionAuthorizationEvaluator: src/app/core/execution_authorization.py

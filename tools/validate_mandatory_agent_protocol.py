@@ -7,8 +7,8 @@ all reference the mandatory coding default protocol.
 
 from __future__ import annotations
 
-import sys
 import io
+import sys
 
 # Force UTF-8 stdout so Unicode chars (✅, ❌) don't crash on cp1252 terminals.
 if hasattr(sys.stdout, "reconfigure"):
@@ -16,12 +16,13 @@ if hasattr(sys.stdout, "reconfigure"):
 else:
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-from pathlib import Path
 import re
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MANDATORY_INSTRUCTION_PATH = ".github/instructions/mandatory-structured-generation-default.instructions.md"
+MANDATORY_INSTRUCTION_PATH = (
+    ".github/instructions/mandatory-structured-generation-default.instructions.md"
+)
 
 
 REQUIRED_SUBSTRINGS: dict[str, list[str]] = {
@@ -71,11 +72,10 @@ def main() -> int:
                     f"Missing required content in {relative_path}: '{phrase}'"
                 )
 
-        if relative_path == MANDATORY_INSTRUCTION_PATH:
-            if not validate_frontmatter_apply_to(text):
-                errors.append(
-                    "Mandatory instruction file must include frontmatter applyTo: \"**\""
-                )
+        if relative_path == MANDATORY_INSTRUCTION_PATH and not validate_frontmatter_apply_to(text):
+            errors.append(
+                'Mandatory instruction file must include frontmatter applyTo: "**"'
+            )
 
     if errors:
         print("❌ Agent governance default validation FAILED")
@@ -84,7 +84,9 @@ def main() -> int:
         return 1
 
     print("✅ Agent governance default validation PASSED")
-    print("   Mandatory structured generation protocol is wired across all required agent surfaces.")
+    print(
+        "   Mandatory structured generation protocol is wired across all required agent surfaces."
+    )
     return 0
 
 

@@ -6,13 +6,16 @@
 
 // ─── Config ───────────────────────────────────────────────────────
 const LEGION_CONFIG = {
-  // Production: update to deployed Triumvirate server URL
   triumvirateBase: window.location.hostname === 'localhost'
     ? 'http://localhost:8001'
     : '',   // same-origin in production (proxy via nginx/cPanel)
-  healthInterval: 30000,      // poll health every 30s
+  legionBase: window.location.hostname === 'localhost'
+    ? 'http://localhost:8002'
+    : '',   // same-origin in production (proxy via nginx/cPanel)
+  healthInterval: 30000,
   maxHistorySessions: 20,
   storageKey: 'legion-sessions',
+  userIdKey: 'legion-user-id',
 };
 
 // ─── Governance knowledge base ────────────────────────────────────
@@ -58,6 +61,20 @@ function legionApp() {
     triumvirateOnline: false,
     lastAuditId: '',
     startTime: Date.now(),
+    userId: (() => {
+      const key = LEGION_CONFIG.userIdKey;
+      try {
+        let id = localStorage.getItem(key);
+        if (!id) {
+          const rand = typeof crypto?.randomUUID === 'function'
+            ? crypto.randomUUID().replace(/-/g, '').slice(0, 16)
+            : Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-6);
+          id = 'web_' + rand;
+          localStorage.setItem(key, id);
+        }
+        return id;
+      } catch { return 'web_' + Date.now().toString(36); }
+    })(),
 
     // Artifact panel
     artifactOpen: false,
@@ -264,38 +281,45 @@ function legionApp() {
         };
       }
 
-      // Allowed — generate response from knowledge base
+      // Fast-path: constitutional reference topics answered from local KB
       const kb = matchKnowledge(text);
-      const content = kb || this.generateConstitutionalResponse(text, decision);
+      if (kb) {
+        return {
+          content: kb,
+          governance: decision,
+          auditId: decision.audit_id,
+          artifact: { title: 'Constitutional Reference', content: kb },
+        };
+      }
 
-      return {
-        content,
-        governance: decision,
-        auditId: decision.audit_id,
-        artifact: kb ? { title: 'Constitutional Reference', content: kb } : null,
-      };
+      // Allowed — fetch real LLM response from Legion API
+      return await this._callLegionAPI(text, decision);
     },
 
     async queryKnowledgeBase(text) {
-      // Offline mode — simulate Triumvirate evaluation locally
-      await new Promise(r => setTimeout(r, 400 + Math.random() * 600));
-
-      const kb = matchKnowledge(text);
-      const content = kb || this.generateOfflineResponse(text);
-
-      return {
-        content,
-        governance: {
-          final_verdict: 'allow',
-          votes: [
-            { pillar: 'Galahad', verdict: 'allow', reasoning: 'No ethical violations detected.', confidence: 0.90 },
-            { pillar: 'Cerberus', verdict: 'allow', reasoning: 'No security threats detected.', confidence: 0.92 },
-            { pillar: 'CodexDeus', verdict: 'allow', reasoning: 'Constitutionally compliant.', confidence: 0.93 },
-          ],
-          consensus: true,
-        },
-        auditId: null,
+      const simGov = {
+        final_verdict: 'allow',
+        votes: [
+          { pillar: 'Galahad', verdict: 'allow', reasoning: 'No ethical violations detected.', confidence: 0.90 },
+          { pillar: 'Cerberus', verdict: 'allow', reasoning: 'No security threats detected.', confidence: 0.92 },
+          { pillar: 'CodexDeus', verdict: 'allow', reasoning: 'Constitutionally compliant.', confidence: 0.93 },
+        ],
+        consensus: true,
       };
+
+      // Fast-path: constitutional reference topics answered from local KB
+      const kb = matchKnowledge(text);
+      if (kb) {
+        return {
+          content: kb,
+          governance: simGov,
+          auditId: null,
+          artifact: { title: 'Constitutional Reference', content: kb },
+        };
+      }
+
+      // Try Legion API — internal governance still runs even when Triumvirate UI is offline
+      return await this._callLegionAPI(text, simGov);
     },
 
     detectRisk(text) {
@@ -347,6 +371,43 @@ function legionApp() {
       this.artifactTitle = msg.artifact.title || 'Artifact';
       this.artifactContent = this.renderMessage(msg.artifact.content || '');
       this.artifactOpen = true;
+    },
+
+    async _callLegionAPI(text, governance) {
+      if (!LEGION_CONFIG.legionBase) {
+        return {
+          content: this.generateOfflineResponse(text),
+          governance,
+          auditId: null,
+        };
+      }
+      try {
+        const r = await fetch(LEGION_CONFIG.legionBase + '/openclaw/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: text,
+            user_id: this.userId,
+            platform: 'web',
+            metadata: { mode: this.currentMode },
+          }),
+          signal: AbortSignal.timeout(30000),
+        });
+        if (!r.ok) throw new Error('Legion API ' + r.status);
+        const data = await r.json();
+        return {
+          content: data.response || 'Legion returned no response.',
+          governance,
+          auditId: governance?.audit_id || null,
+        };
+      } catch {
+        const kb = matchKnowledge(text);
+        return {
+          content: kb || this.generateOfflineResponse(text),
+          governance,
+          auditId: null,
+        };
+      }
     },
 
     scrollToBottom() {

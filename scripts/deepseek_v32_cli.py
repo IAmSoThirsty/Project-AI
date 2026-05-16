@@ -31,8 +31,6 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 # Import governance
-from app.core.runtime.router import route_request
-
 from app.core.deepseek_v32_inference import DeepSeekV32  # noqa: E402
 
 # Configure logging

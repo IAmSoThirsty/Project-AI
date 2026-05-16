@@ -4,14 +4,15 @@ from __future__ import annotations
 
 import hashlib
 import logging
-from typing import Any, Callable, Dict, Tuple
+from collections.abc import Callable
+from typing import Any
 
 from app.core.execution_gate import get_execution_gate
 from app.core.invariant_engine import get_invariant_engine
-from app.core.nirl.forge import Forge
-from app.core.waterfall_filter import get_waterfall_filter
 from app.core.liara_bridge import get_liara_context, liara_ttl_check
+from app.core.nirl.forge import Forge
 from app.core.state_register import get_state_register
+from app.core.waterfall_filter import get_waterfall_filter
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +20,9 @@ logger = logging.getLogger(__name__)
 def execute(
     domain: str,
     action: str,
-    context: Dict[str, Any],
-    executor_fn: Callable[[Dict[str, Any]], Any],
-) -> Tuple[bool, Any]:
+    context: dict[str, Any],
+    executor_fn: Callable[[dict[str, Any]], Any],
+) -> tuple[bool, Any]:
     """The only legal way to execute anything in the system. No exceptions."""
     # 1. Waterfall inbound filter (outermost gate).
     wf = get_waterfall_filter()
@@ -36,7 +37,11 @@ def execute(
 
     # 2.5. Runtime enforcement — consent / PAGL prohibitions / tier / sovereign.
     try:
-        from app.governance.runtime_enforcer import get_runtime_enforcer, EnforcementContext
+        from app.governance.runtime_enforcer import (
+            EnforcementContext,
+            get_runtime_enforcer,
+        )
+
         _enforce_ctx = EnforcementContext(
             user_id=context.get("user_id", "anonymous"),
             action=action,
@@ -46,7 +51,21 @@ def execute(
         )
         _enforce_result = get_runtime_enforcer().enforce(_enforce_ctx)
         if _enforce_result.verdict == "deny":
-            return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
+            if context.get("governance_degraded"):
+                from app.core.degraded_mode import get_degraded_mode_checker
+
+                degraded_result = get_degraded_mode_checker().evaluate(
+                    action, domain=domain, context=context
+                )
+                if degraded_result.allowed and degraded_result.is_read_only:
+                    logger.warning(
+                        "RuntimeEnforcer degraded read-only continuation: %s",
+                        _enforce_result.reason,
+                    )
+                else:
+                    return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
+            else:
+                return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
     except Exception:
         pass
 
@@ -61,8 +80,10 @@ def execute(
     # 3.5. Trust scoring + adversarial pattern detection.
     try:
         from app.core.tarl_operational_extensions import (
-            TrustScoringEngine, AdversarialPatternRegistry,
+            AdversarialPatternRegistry,
+            TrustScoringEngine,
         )
+
         _trust_score, _ = TrustScoringEngine().calculate_trust_score(
             context.get("user_id", "anonymous"),
             {"behavioral": 0.7, "security": 0.7, "governance": 0.7, "pattern": 0.7},
@@ -70,7 +91,11 @@ def execute(
         _adv_flags = AdversarialPatternRegistry().detect_patterns(
             str(context.get("payload", ""))
         )
-        context = {**context, "_trust_score": _trust_score, "_adversarial_flags": _adv_flags}
+        context = {
+            **context,
+            "_trust_score": _trust_score,
+            "_adversarial_flags": _adv_flags,
+        }
     except Exception:
         pass
 
@@ -101,7 +126,9 @@ def execute(
             if not forge_result.get("success"):
                 logger.warning(
                     "NIRL Forge integrity warning: domain=%s action=%s reason=%s",
-                    domain, action, forge_result.get("reason"),
+                    domain,
+                    action,
+                    forge_result.get("reason"),
                 )
         except Exception:
             logger.exception("NIRL Forge processing failed (non-fatal)")

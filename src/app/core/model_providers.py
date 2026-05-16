@@ -59,7 +59,7 @@ class ModelProvider(ABC):
 class OpenAIProvider(ModelProvider):
     """
     OpenAI API provider.
-    
+
     REFACTORED: Now uses AI orchestrator for governance compliance.
     """
 
@@ -70,6 +70,7 @@ class OpenAIProvider(ModelProvider):
         if self.api_key:
             try:
                 import openai
+
                 self._client = openai.OpenAI(api_key=self.api_key)
             except ImportError:
                 logger.error("openai package not installed")
@@ -88,19 +89,21 @@ class OpenAIProvider(ModelProvider):
         Create a chat completion using AI orchestrator (MANDATORY governance).
         """
         # MANDATORY: Use AI orchestrator for governance compliance
-        from app.core.ai.orchestrator import run_ai, AIRequest
-        
+        from app.core.ai.orchestrator import AIRequest, run_ai
+
         # Convert messages to single prompt (simple concatenation)
-        prompt = "\n".join([f"{m.get('role', 'user')}: {m.get('content', '')}" for m in messages])
-        
+        prompt = "\n".join(
+            [f"{m.get('role', 'user')}: {m.get('content', '')}" for m in messages]
+        )
+
         request = AIRequest(
             task_type="chat",
             prompt=prompt,
             model=model,
             provider="openai",
-            config={"temperature": temperature, **kwargs}
+            config={"temperature": temperature, **kwargs},
         )
-        
+
         response = run_ai(request)
         if response.status == "success":
             return response.result

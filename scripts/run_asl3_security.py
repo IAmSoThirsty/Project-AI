@@ -27,24 +27,24 @@ from app.core.security_enforcer import cli_main
 def main_governed():
     """Main function with governance routing."""
     operation = sys.argv[1] if len(sys.argv) > 1 else "status"
-    
-    result = route_request("cli", {
-        "action": "security.asl3_operation",
-        "params": {
-            "operation": operation,
-            "args": sys.argv[1:]
+
+    result = route_request(
+        "cli",
+        {
+            "action": "security.asl3_operation",
+            "params": {"operation": operation, "args": sys.argv[1:]},
+            "metadata": {
+                "script": __file__,
+                "user": "security_operator",
+                "risk_level": "high",
+            },
         },
-        "metadata": {
-            "script": __file__,
-            "user": "security_operator",
-            "risk_level": "high"
-        }
-    })
-    
+    )
+
     if not result.get("approved", False):
         print(f"❌ Security operation blocked: {result.get('reason', 'Unknown')}")
         return 1
-    
+
     # Proceed with CLI execution
     return cli_main()
 

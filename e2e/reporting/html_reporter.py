@@ -316,7 +316,9 @@ class HTMLReporter:
             coverage_class = (
                 "excellent"
                 if coverage_pct >= 80
-                else "good" if coverage_pct >= 60 else "poor"
+                else "good"
+                if coverage_pct >= 60
+                else "poor"
             )
 
             html += f"""
@@ -328,9 +330,9 @@ class HTMLReporter:
                 </div>
             </div>
             <div class="test-info">
-                <p>Total Statements: {coverage_metrics.get('total_statements', 0)}</p>
-                <p>Covered Statements: {coverage_metrics.get('covered_statements', 0)}</p>
-                <p>Missing Statements: {coverage_metrics.get('missing_statements', 0)}</p>
+                <p>Total Statements: {coverage_metrics.get("total_statements", 0)}</p>
+                <p>Covered Statements: {coverage_metrics.get("covered_statements", 0)}</p>
+                <p>Missing Statements: {coverage_metrics.get("missing_statements", 0)}</p>
             </div>
         </div>
 """
@@ -372,10 +374,10 @@ class HTMLReporter:
         <div class="section">
             <h2>Test Artifacts</h2>
             <div class="test-info">
-                <p>Logs: {artifacts.get('logs', 0)}</p>
-                <p>Screenshots: {artifacts.get('screenshots', 0)}</p>
-                <p>API Dumps: {artifacts.get('dumps', 0)}</p>
-                <p>Error Traces: {artifacts.get('errors', 0)}</p>
+                <p>Logs: {artifacts.get("logs", 0)}</p>
+                <p>Screenshots: {artifacts.get("screenshots", 0)}</p>
+                <p>API Dumps: {artifacts.get("dumps", 0)}</p>
+                <p>Error Traces: {artifacts.get("errors", 0)}</p>
             </div>
         </div>
 """
@@ -384,7 +386,7 @@ class HTMLReporter:
         html += f"""
         <footer>
             <div class="timestamp">
-                Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+                Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
             </div>
             <div>Project AI - Production-Grade E2E Testing Framework</div>
         </footer>

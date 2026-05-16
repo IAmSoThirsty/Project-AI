@@ -1,4 +1,4 @@
-﻿"""Extended test suite for AIPersona.
+"""Extended test suite for AIPersona.
 
 At least 20 tests across:
 - Trait adjustments (bounds, multiple traits)

@@ -40,13 +40,15 @@ def status():
 def login():
     """
     Authenticate user via governance pipeline.
-    
+
     Old: Direct authentication with plaintext passwords
     New: Routes through governance → secure auth (argon2/JWT)
     """
     payload = request.get_json(silent=True)
     if not payload:
-        return jsonify(error="missing-json", message="Request must include JSON body."), 400
+        return jsonify(
+            error="missing-json", message="Request must include JSON body."
+        ), 400
 
     # Route through governance pipeline
     response = route_request(
@@ -80,7 +82,7 @@ def login():
 def ai_chat():
     """
     AI chat endpoint via orchestrator.
-    
+
     Old: Direct OpenAI calls
     New: Routes through governance → AI orchestrator (fallback support)
     """
@@ -90,7 +92,11 @@ def ai_chat():
 
     # Extract auth token
     auth_header = request.headers.get("Authorization", "")
-    token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else None
+    token = (
+        auth_header.replace("Bearer ", "")
+        if auth_header.startswith("Bearer ")
+        else None
+    )
 
     # Route through governance pipeline
     response = route_request(
@@ -115,7 +121,7 @@ def ai_chat():
 def ai_image():
     """
     AI image generation via orchestrator.
-    
+
     Old: Direct OpenAI/HuggingFace calls
     New: Routes through governance → AI orchestrator
     """
@@ -124,7 +130,11 @@ def ai_image():
         return jsonify(error="missing-json"), 400
 
     auth_header = request.headers.get("Authorization", "")
-    token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else None
+    token = (
+        auth_header.replace("Bearer ", "")
+        if auth_header.startswith("Bearer ")
+        else None
+    )
 
     response = route_request(
         source="web",
@@ -153,7 +163,11 @@ def persona_update():
         return jsonify(error="missing-json"), 400
 
     auth_header = request.headers.get("Authorization", "")
-    token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else None
+    token = (
+        auth_header.replace("Bearer ", "")
+        if auth_header.startswith("Bearer ")
+        else None
+    )
 
     response = route_request(
         source="web",

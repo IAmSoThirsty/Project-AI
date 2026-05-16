@@ -707,9 +707,7 @@ class ProjectAIMCPServer:
             elif analysis_type == "correlation":
                 numeric = self.data_analyzer.data.select_dtypes(include="number")
                 if numeric.empty:
-                    results = {
-                        "error": "No numeric columns available for correlation"
-                    }
+                    results = {"error": "No numeric columns available for correlation"}
                 else:
                     results = {
                         "correlation": numeric.corr().fillna(0).to_dict(),

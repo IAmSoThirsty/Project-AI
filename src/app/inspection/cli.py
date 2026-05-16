@@ -52,34 +52,44 @@ app = typer.Typer(
 
 console = Console()
 
+AUDIT_REPO_OPTION = typer.Option(
+    Path.cwd(),
+    "--repo",
+    "-r",
+    help="Repository root directory",
+    exists=True,
+    file_okay=False,
+    dir_okay=True,
+    resolve_path=True,
+)
+AUDIT_OUTPUT_OPTION = typer.Option(
+    Path("audit_reports"),
+    "--output",
+    "-o",
+    help="Output directory for reports",
+)
+AUDIT_CONFIG_OPTION = typer.Option(
+    None,
+    "--config",
+    "-c",
+    help="Configuration file (YAML)",
+    exists=True,
+    file_okay=True,
+    dir_okay=False,
+)
+CONFIG_OUTPUT_OPTION = typer.Option(
+    Path("inspection_config.yaml"),
+    "--output",
+    "-o",
+    help="Output path for configuration file",
+)
+
 
 @app.command()
 def audit(
-    repo: Path = typer.Option(
-        Path.cwd(),
-        "--repo",
-        "-r",
-        help="Repository root directory",
-        exists=True,
-        file_okay=False,
-        dir_okay=True,
-        resolve_path=True,
-    ),
-    output: Path = typer.Option(
-        Path("audit_reports"),
-        "--output",
-        "-o",
-        help="Output directory for reports",
-    ),
-    config_file: Path | None = typer.Option(
-        None,
-        "--config",
-        "-c",
-        help="Configuration file (YAML)",
-        exists=True,
-        file_okay=True,
-        dir_okay=False,
-    ),
+    repo: Path = AUDIT_REPO_OPTION,
+    output: Path = AUDIT_OUTPUT_OPTION,
+    config_file: Path | None = AUDIT_CONFIG_OPTION,
     no_lint: bool = typer.Option(
         False,
         "--no-lint",
@@ -201,12 +211,7 @@ def config(
         "--create",
         help="Create default configuration file",
     ),
-    output: Path = typer.Option(
-        Path("inspection_config.yaml"),
-        "--output",
-        "-o",
-        help="Output path for configuration file",
-    ),
+    output: Path = CONFIG_OUTPUT_OPTION,
 ):
     """
     Manage inspection system configuration.

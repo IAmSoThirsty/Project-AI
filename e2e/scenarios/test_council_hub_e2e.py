@@ -151,6 +151,6 @@ def test_council_hub_governance_routing(test_temp_dir):
     if hub._project:
         for key, value in hub._project.items():
             if hasattr(value, "kernel"):
-                assert (
-                    value.kernel == kernel
-                ), f"Agent {key} does not have kernel injected"
+                assert value.kernel == kernel, (
+                    f"Agent {key} does not have kernel injected"
+                )

@@ -37,7 +37,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Import governance
-from app.core.runtime.router import route_request
 from typing import Any
 
 from temporalio import activity, workflow
@@ -181,7 +180,7 @@ async def run_red_team_attack(
                 "turns": len(session["conversation"]),
             },
             "repro_steps": [
-                f"Turn {i+1}: {t['content'][:50]}..."
+                f"Turn {i + 1}: {t['content'][:50]}..."
                 for i, t in enumerate(session["conversation"][:3])
             ],
         }

@@ -5,7 +5,6 @@ Input validation and sanitization for governance pipeline.
 from __future__ import annotations
 
 import html
-import re
 from typing import Any
 
 
@@ -104,7 +103,5 @@ def _validate_types(action: str, payload: dict[str, Any]) -> None:
     if "password" in payload and not isinstance(payload["password"], str):
         raise ValueError("Field 'password' must be a string")
 
-    if "value" in payload and not isinstance(
-        payload["value"], (int, float, str, bool)
-    ):
+    if "value" in payload and not isinstance(payload["value"], (int, float, str, bool)):
         raise ValueError("Field 'value' must be a primitive type")

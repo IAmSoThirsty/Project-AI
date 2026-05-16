@@ -17,8 +17,8 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
-from .pipeline import enforce_pipeline
 from .iron_path_executor import get_iron_path_executor
+from .pipeline import enforce_pipeline
 
 _LEGACY_SYMBOLS = {
     "Triumvirate",
@@ -39,7 +39,9 @@ def _load_legacy_module() -> ModuleType:
         legacy_path = Path(__file__).resolve().parent.parent / "governance.py"
         spec = spec_from_file_location("app.core._legacy_governance", legacy_path)
         if spec is None or spec.loader is None:
-            raise ImportError(f"Unable to load legacy governance module from {legacy_path}")
+            raise ImportError(
+                f"Unable to load legacy governance module from {legacy_path}"
+            )
 
         module = module_from_spec(spec)
         spec.loader.exec_module(module)

@@ -7,7 +7,7 @@ Validates build actions against constitutional policies and identity-aware const
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class BuildActionViolation(Exception):
@@ -141,7 +141,9 @@ class ConstitutionalEnforcer:
         is_identity_valid = True
         if hasattr(self.identity_manager, "verify_identity"):
             try:
-                is_identity_valid = bool(self.identity_manager.verify_identity(identity))
+                is_identity_valid = bool(
+                    self.identity_manager.verify_identity(identity)
+                )
             except Exception as e:
                 logger.error("Identity verification error: %s", e, exc_info=True)
                 is_identity_valid = False

@@ -36,7 +36,12 @@ _SCHEMAS: dict[str, dict[str, dict]] = {
     },
     "trust_payload": {
         "user_id": {"type": str, "required": True},
-        "trust_score": {"type": (int, float), "required": True, "min_val": 0.0, "max_val": 1.0},
+        "trust_score": {
+            "type": (int, float),
+            "required": True,
+            "min_val": 0.0,
+            "max_val": 1.0,
+        },
     },
 }
 
@@ -154,5 +159,7 @@ class ValidatorAgent(KernelRoutedAgent):
 
         valid = len(errors) == 0
         if not valid:
-            logger.info("ValidatorAgent: %d validation error(s): %s", len(errors), errors)
+            logger.info(
+                "ValidatorAgent: %d validation error(s): %s", len(errors), errors
+            )
         return valid, errors

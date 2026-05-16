@@ -7,7 +7,7 @@ Provides comprehensive audit trail for build operations and policy decisions.
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class BuildAuditIntegration:
@@ -129,9 +129,11 @@ class BuildAuditIntegration:
                 decision_dict = action
                 event_scope = str(decision_type)
                 action_name = decision_dict.get("policy") or decision_dict.get("action")
-                allowed_value = (
-                    decision_dict.get("outcome", "").lower() in {"allowed", "success", "ok"}
-                )
+                allowed_value = decision_dict.get("outcome", "").lower() in {
+                    "allowed",
+                    "success",
+                    "ok",
+                }
                 reason_value = decision_dict.get("reason")
                 metadata_value = decision_dict
             else:

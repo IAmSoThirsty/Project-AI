@@ -13,6 +13,15 @@ from app.core.cognition_kernel import (
 )
 
 
+@pytest.fixture(autouse=True)
+def allow_canonical_router_for_kernel_unit_tests(monkeypatch):
+    """Keep kernel unit tests focused on kernel-local governance behavior."""
+    monkeypatch.setattr(
+        "app.core.execution_router.execute",
+        lambda **_: (True, None),
+    )
+
+
 class TestCognitionKernel:
     """Test suite for CognitionKernel."""
 

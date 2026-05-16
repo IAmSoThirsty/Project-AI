@@ -1012,9 +1012,8 @@ class SecureCommunicationsKernel(
 
     def validate_config(self, config: dict[str, Any]) -> tuple[bool, str | None]:
         """Validate configuration"""
-        if "consensus_quorum" in config:
-            if not 0.5 < config["consensus_quorum"] <= 1.0:
-                return False, "consensus_quorum must be between 0.5 and 1.0"
+        if "consensus_quorum" in config and not 0.5 < config["consensus_quorum"] <= 1.0:
+            return False, "consensus_quorum must be between 0.5 and 1.0"
         return True, None
 
     def subscribe(self, event_type: str, callback: Callable) -> str:

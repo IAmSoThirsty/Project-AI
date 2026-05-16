@@ -18,6 +18,6 @@ __path__ = pkgutil.extend_path(__path__, __name__)  # type: ignore[name-defined]
 
 _src_integrations = Path(__file__).resolve().parent.parent / "src" / "integrations"
 if _src_integrations.exists():
-	_src_integrations_str = str(_src_integrations)
-	if _src_integrations_str not in __path__:
-		__path__.append(_src_integrations_str)
+    _src_integrations_str = str(_src_integrations)
+    if _src_integrations_str not in __path__:
+        __path__.append(_src_integrations_str)

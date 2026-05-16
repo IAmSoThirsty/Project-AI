@@ -124,8 +124,7 @@ class IntegrationTester:
             # Add tarl to path
             sys.path.insert(0, str(Path.cwd()))
 
-            import tarl
-            from tarl import TarlDecision, TarlPolicy, TarlRuntime, TarlVerdict
+            from tarl import TarlRuntime
 
             # Test basic initialization
             runtime = TarlRuntime([])
@@ -133,7 +132,7 @@ class IntegrationTester:
                 raise RuntimeError("Failed to create TARLRuntime")
 
         except ImportError as e:
-            raise ImportError(f"Failed to import TARL: {e}")
+            raise ImportError(f"Failed to import TARL: {e}") from e
 
     def test_tarl_policy_evaluation(self):
         """Test TARL policy evaluation"""
@@ -233,7 +232,7 @@ class IntegrationTester:
                 with open(py_file) as f:
                     ast.parse(f.read())
             except SyntaxError as e:
-                raise SyntaxError(f"unified-security.py has syntax error: {e}")
+                raise SyntaxError(f"unified-security.py has syntax error: {e}") from e
 
     def test_shell_script_executable(self):
         """Test that shell script is executable"""
@@ -263,7 +262,7 @@ class IntegrationTester:
                     raise ValueError(f"MANIFEST.json missing key: {key}")
 
         except json.JSONDecodeError as e:
-            raise ValueError(f"MANIFEST.json is not valid JSON: {e}")
+            raise ValueError(f"MANIFEST.json is not valid JSON: {e}") from e
 
     def test_examples_exist(self):
         """Test that example files exist"""
@@ -283,9 +282,9 @@ class IntegrationTester:
 
     def run_all_tests(self):
         """Run all integration tests"""
-        print(f"\n{BLUE}{'='*60}{RESET}")
+        print(f"\n{BLUE}{'=' * 60}{RESET}")
         print(f"{BLUE}Thirsty-lang + TARL Integration Test Suite{RESET}")
-        print(f"{BLUE}{'='*60}{RESET}\n")
+        print(f"{BLUE}{'=' * 60}{RESET}\n")
 
         # Core component tests
         print(f"{YELLOW}Testing Core Components...{RESET}")
@@ -317,9 +316,9 @@ class IntegrationTester:
         self.run_test("Example files exist", self.test_examples_exist)
 
         # Print summary
-        print(f"\n{BLUE}{'='*60}{RESET}")
+        print(f"\n{BLUE}{'=' * 60}{RESET}")
         print(f"{BLUE}Test Summary{RESET}")
-        print(f"{BLUE}{'='*60}{RESET}")
+        print(f"{BLUE}{'=' * 60}{RESET}")
         print(f"{GREEN}Passed: {self.passed}{RESET}")
         if self.failed > 0:
             print(f"{RED}Failed: {self.failed}{RESET}")

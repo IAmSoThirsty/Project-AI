@@ -17,9 +17,9 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, asdict
+from collections.abc import Iterable
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Iterable
 
 REPO_ROOT = Path(".").resolve()
 
@@ -87,7 +87,7 @@ JWT_BAD_PATTERNS = [
 ]
 
 PLAINTEXT_TOKEN_PATTERNS = [
-    r'token-\{username\}',
+    r"token-\{username\}",
     r'f["\']token-\{username\}["\']',
 ]
 
@@ -135,7 +135,11 @@ def rel(path: Path) -> str:
 def main() -> None:
     findings: list[FileFinding] = []
 
-    all_py_files = list(iter_py_files([SRC_DIR, REPO_ROOT / "web", REPO_ROOT / "scripts", REPO_ROOT / "tools"]))
+    all_py_files = list(
+        iter_py_files(
+            [SRC_DIR, REPO_ROOT / "web", REPO_ROOT / "scripts", REPO_ROOT / "tools"]
+        )
+    )
 
     # 1) GUI bypass scan
     for file in iter_py_files([GUI_DIR]):
@@ -158,11 +162,11 @@ def main() -> None:
     # 2) AI bypass scan
     for file in all_py_files:
         text = file.read_text(encoding="utf-8", errors="ignore")
-        
+
         # Skip if file imports orchestrator (assumed routed)
         if any(imp in text for imp in ORCHESTRATOR_IMPORTS):
             continue
-            
+
         ai_hits: list[int] = []
         for pattern in DIRECT_AI_PATTERNS:
             ai_hits.extend(find_pattern_lines(text, pattern))
@@ -243,7 +247,10 @@ def main() -> None:
         text = file.read_text(encoding="utf-8", errors="ignore")
         # Only check @workflow.defn, not @activity.defn
         if "@workflow.defn" in text:
-            if not has_any_marker(text, GOVERNANCE_MARKERS) and "validate_workflow_execution" not in text:
+            if (
+                not has_any_marker(text, GOVERNANCE_MARKERS)
+                and "validate_workflow_execution" not in text
+            ):
                 findings.append(
                     FileFinding(
                         file=rel(file),
@@ -257,18 +264,22 @@ def main() -> None:
     for root in SCRIPTS_DIRS:
         for file in iter_py_files([root]):
             text = file.read_text(encoding="utf-8", errors="ignore")
-            
+
             # Check for explicit GOVERNANCE: markers (new standard)
-            has_governance_marker = any(marker in text for marker in SCRIPT_GOVERNANCE_MARKERS)
-            
+            has_governance_marker = any(
+                marker in text for marker in SCRIPT_GOVERNANCE_MARKERS
+            )
+
             # Check for legacy markers (backward compatibility)
             governed = has_any_marker(text, GOVERNANCE_MARKERS)
             admin_marked = "ADMIN BYPASS" in text or "admin-bypass" in text
             example_marked = "EXAMPLE ONLY" in text or "example-only" in text
-            
+
             # Script is classified if it has any marker
-            is_classified = has_governance_marker or governed or admin_marked or example_marked
-            
+            is_classified = (
+                has_governance_marker or governed or admin_marked or example_marked
+            )
+
             if not is_classified:
                 findings.append(
                     FileFinding(

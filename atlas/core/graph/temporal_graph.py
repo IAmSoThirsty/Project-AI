@@ -25,8 +25,10 @@ from typing import Any
 
 import numpy as np
 
+logger = logging.getLogger(__name__)
+
 try:
-    from scipy.sparse import csr_matrix, lil_matrix
+    from scipy.sparse import lil_matrix
 
     SCIPY_AVAILABLE = True
 except ImportError:
@@ -34,8 +36,6 @@ except ImportError:
     logger.warning("scipy not available - sparse matrix optimization disabled")
 
 from atlas.audit.trail import AuditCategory, AuditLevel, get_audit_trail
-
-logger = logging.getLogger(__name__)
 
 
 class NodeType(Enum):

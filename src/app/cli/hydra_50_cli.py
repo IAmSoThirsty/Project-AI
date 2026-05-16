@@ -21,15 +21,14 @@ GOVERNANCE: This script uses the governance router for all production operations
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
-import sys
 
 # Add src to path for governance import
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 # Import governance
-from app.core.runtime.router import route_request
 
 import typer
 from rich.console import Console
@@ -91,7 +90,7 @@ def list_scenarios(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @app.command()
@@ -123,7 +122,7 @@ def activate(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @app.command()
@@ -145,7 +144,7 @@ def deactivate(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @app.command()
@@ -176,7 +175,7 @@ def status(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 # ============================================================================
@@ -213,7 +212,7 @@ def simulate(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 # ============================================================================
@@ -253,7 +252,7 @@ def query(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 # ============================================================================
@@ -278,7 +277,7 @@ def export(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @app.command()
@@ -299,7 +298,7 @@ def import_data(
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 # ============================================================================
@@ -352,7 +351,7 @@ def monitor(
         console.print("\n[yellow]Monitoring stopped[/yellow]")
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 # ============================================================================

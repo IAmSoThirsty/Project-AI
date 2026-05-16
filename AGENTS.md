@@ -149,4 +149,4 @@ Integration logic:
 
 ### Commit Convention
 All code commits require: `ALLOW_NON_VAULT_CHANGES=1 git -c core.hooksPath=/dev/null commit`  
-Verify after every code change: `PYTHONIOENCODING=utf-8 PYTHONPATH=src py -3.12 canonical/replay.py` → must show 5/5
+Verify after every code change with the supported Python 3.12 runtime: `PYTHONIOENCODING=utf-8 PYTHONPATH=src py -3.12 canonical/replay.py` → must show 5/5

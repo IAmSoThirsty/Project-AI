@@ -23,7 +23,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Import governance
-from app.core.runtime.router import route_request
 
 from app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
 from app.core.novel_security_scenarios import NovelScenario, NovelSecurityScenarios

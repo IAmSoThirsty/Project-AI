@@ -12,7 +12,7 @@ cognitive operations.
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from .kernel_types import KernelInterface, KernelType
@@ -231,7 +231,7 @@ class SuperKernel:
         import time
 
         execution_id = f"super_{uuid.uuid4().hex[:12]}"
-        timestamp = datetime.now(timezone.utc)
+        timestamp = datetime.now(UTC)
         metadata = metadata or {}
 
         logger.info(
@@ -530,4 +530,3 @@ __all__ = [
     "RegisteredKernel",
     "SuperKernelExecutionRecord",
 ]
-

@@ -100,7 +100,7 @@ class TestRuntimeManagerSecurity:
         manager.runtimes["malicious"] = bad_runtime
 
         # Run health checks - should mark as unavailable due to validation
-        summary = manager.verify_runtimes(timeout=5)
+        manager.verify_runtimes(timeout=5)
 
         # The malicious runtime should be marked unavailable
         assert manager.health_cache.get("malicious") == "unavailable"
@@ -124,7 +124,7 @@ class TestRuntimeManagerSecurity:
         manager.runtimes["quoted"] = quoted_runtime
 
         # Run health checks
-        summary = manager.verify_runtimes(timeout=5)
+        manager.verify_runtimes(timeout=5)
 
         # Should handle quoted args correctly
         assert "quoted" in manager.health_cache

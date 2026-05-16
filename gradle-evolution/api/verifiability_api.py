@@ -7,16 +7,18 @@ Provides cryptographic proof interfaces for external auditors.
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from flask import Flask, jsonify, request
 
 try:
     from flask_cors import CORS
 except ModuleNotFoundError:
+
     def CORS(_app):  # type: ignore[misc]
         """No-op fallback when flask-cors is unavailable."""
         return None
+
 
 from ..audit.audit_integration import BuildAuditIntegration
 from ..capsules.capsule_engine import CapsuleEngine
@@ -27,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class VerifiabilityAPI:

@@ -4,8 +4,8 @@ GUI Input Validation Security Fix - Demonstration Script
 This script demonstrates that all malicious inputs are properly sanitized.
 """
 
-import sys
 import os
+import sys
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
@@ -96,10 +96,14 @@ def main():
     print("=" * 70)
     print()
     print("FILES MODIFIED:")
-    print("  • src/app/security/data_validation.py - Added sanitize_input, validate_length, validate_email")
+    print(
+        "  • src/app/security/data_validation.py - Added sanitize_input, validate_length, validate_email"
+    )
     print("  • src/app/gui/login.py - Added input validation for login/registration")
     print("  • src/app/gui/persona_panel.py - Added validation for action input")
-    print("  • src/app/gui/dashboard_handlers.py - Added validation for all text inputs")
+    print(
+        "  • src/app/gui/dashboard_handlers.py - Added validation for all text inputs"
+    )
     print("  • src/app/gui/image_generation.py - Added validation for image prompts")
     print()
     print("VALIDATION RULES APPLIED:")
@@ -112,7 +116,9 @@ def main():
     print()
     print("SECURITY PROTECTIONS:")
     print("  ✅ XSS attack prevention (script tags, event handlers, javascript: URLs)")
-    print("  ✅ SQL injection prevention (DROP, DELETE, OR conditions, comment markers)")
+    print(
+        "  ✅ SQL injection prevention (DROP, DELETE, OR conditions, comment markers)"
+    )
     print("  ✅ Path traversal prevention (../ and ..\\ sequences)")
     print("  ✅ Null byte injection prevention")
     print("  ✅ Length limit enforcement")

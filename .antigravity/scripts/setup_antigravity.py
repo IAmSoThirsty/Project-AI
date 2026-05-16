@@ -9,6 +9,7 @@ scanning, and Temporal.io workflows.
 
 import json
 import sys
+from importlib.util import find_spec
 from pathlib import Path
 
 
@@ -48,19 +49,8 @@ class AntigravitySetup:
         checks["config_exists"] = self.config_path.exists()
 
         # Check for required Python packages
-        try:
-            import temporalio
-
-            checks["temporal_installed"] = True
-        except ImportError:
-            checks["temporal_installed"] = False
-
-        try:
-            import openai
-
-            checks["openai_installed"] = True
-        except ImportError:
-            checks["openai_installed"] = False
+        checks["temporal_installed"] = find_spec("temporalio") is not None
+        checks["openai_installed"] = find_spec("openai") is not None
 
         return checks
 
@@ -87,9 +77,8 @@ class AntigravitySetup:
                     issues.append(f"Missing required section: {section}")
 
             # Validate project section
-            if "project" in config:
-                if config["project"].get("name") != "Project-AI":
-                    issues.append("Project name mismatch - should be 'Project-AI'")
+            if "project" in config and config["project"].get("name") != "Project-AI":
+                issues.append("Project name mismatch - should be 'Project-AI'")
 
             # Validate AI systems configuration
             if "ai_systems" in config:
@@ -144,50 +133,50 @@ class AntigravitySetup:
         print()
 
         # Prerequisites
-        print("📋 Prerequisites:")
+        print("[*] Prerequisites:")
         prereqs = self.check_prerequisites()
         for check, status in prereqs.items():
-            icon = "✅" if status else "❌"
+            icon = "[OK]" if status else "[FAIL]"
             print(f"  {icon} {check.replace('_', ' ').title()}")
         print()
 
         # Configuration
-        print("⚙️  Configuration:")
+        print("[*] Configuration:")
         is_valid, issues = self.validate_config()
         if is_valid:
-            print("  ✅ Configuration valid")
+            print("  [OK] Configuration valid")
         else:
-            print("  ❌ Configuration issues:")
+            print("  [FAIL] Configuration issues:")
             for issue in issues:
                 print(f"     - {issue}")
         print()
 
         # Agent files
-        print("🤖 Custom Agents:")
+        print("[*] Custom Agents:")
         agents = self.check_agent_files()
         for agent, exists in agents.items():
-            icon = "✅" if exists else "❌"
+            icon = "[OK]" if exists else "[FAIL]"
             print(f"  {icon} {agent.replace('_', ' ').title()}")
         print()
 
         # Workflow files
-        print("📊 Workflows:")
+        print("[*] Workflows:")
         workflows = self.check_workflow_files()
         for workflow, exists in workflows.items():
-            icon = "✅" if exists else "❌"
+            icon = "[OK]" if exists else "[FAIL]"
             print(f"  {icon} {workflow.replace('_', ' ').title()}")
         print()
 
         # Recommendations
-        print("💡 Recommendations:")
+        print("[*] Recommendations:")
         recommendations = self.generate_recommendations(
             prereqs, is_valid, agents, workflows
         )
         if recommendations:
             for rec in recommendations:
-                print(f"  • {rec}")
+                print(f"  - {rec}")
         else:
-            print("  ✅ All set! Antigravity integration is ready.")
+            print("  [OK] All set! Antigravity integration is ready.")
         print()
 
         print("=" * 60)
@@ -246,7 +235,7 @@ class AntigravitySetup:
 
 def main():
     """Main setup function."""
-    print("\n🚀 Setting up Google Antigravity IDE integration for Project-AI\n")
+    print("\nSetting up Google Antigravity IDE integration for Project-AI\n")
 
     setup = AntigravitySetup()
     setup.print_status()
@@ -265,7 +254,7 @@ def main():
     )
 
     if all_ready:
-        print("\n✅ Antigravity integration is ready!")
+        print("\n[OK] Antigravity integration is ready!")
         print("\nNext steps:")
         print(
             "1. Download and install Antigravity IDE from https://antigravity.google.com"
@@ -275,7 +264,7 @@ def main():
         print("4. Start using agent-assisted development!\n")
         return 0
     else:
-        print("\n⚠️  Setup incomplete - please address the recommendations above.\n")
+        print("\n[WARN] Setup incomplete - please address the recommendations above.\n")
         return 1
 
 

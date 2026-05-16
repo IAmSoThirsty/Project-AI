@@ -2,7 +2,7 @@ from tarl.core import TARL
 
 
 def parse(text: str) -> TARL:
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
     data = {"constraints": []}
     key = None
     for line in lines:

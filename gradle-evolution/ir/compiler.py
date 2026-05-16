@@ -151,11 +151,15 @@ class IntentCompiler:
             return self.graph
 
         except yaml.YAMLError as e:
-            raise CompilationError(f"YAML parsing error: {e}", source_file=source_file)
+            raise CompilationError(
+                f"YAML parsing error: {e}", source_file=source_file
+            ) from e
         except Exception as e:
             if isinstance(e, CompilationError):
                 raise
-            raise CompilationError(f"Compilation error: {e}", source_file=source_file)
+            raise CompilationError(
+                f"Compilation error: {e}", source_file=source_file
+            ) from e
 
     def _validate_intent_schema(self, intent: dict[str, Any]) -> None:
         """Validate intent specification schema"""

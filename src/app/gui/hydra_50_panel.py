@@ -603,13 +603,12 @@ class AlertManagementWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
         response = self._route_through_governance(
-            "hydra.alert.acknowledge",
-            {"alert_id": alert_id}
+            "hydra.alert.acknowledge", {"alert_id": alert_id}
         )
 
         if response.get("status") == "success":
@@ -620,7 +619,7 @@ class AlertManagementWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Acknowledgement Failed",
-                f"Failed to acknowledge alert: {response.get('error', 'Unknown error')}"
+                f"Failed to acknowledge alert: {response.get('error', 'Unknown error')}",
             )
 
     def resolve_selected(self):
@@ -638,13 +637,12 @@ class AlertManagementWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
         response = self._route_through_governance(
-            "hydra.alert.resolve",
-            {"alert_id": alert_id}
+            "hydra.alert.resolve", {"alert_id": alert_id}
         )
 
         if response.get("status") == "success":
@@ -655,7 +653,7 @@ class AlertManagementWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Resolution Failed",
-                f"Failed to resolve alert: {response.get('error', 'Unknown error')}"
+                f"Failed to resolve alert: {response.get('error', 'Unknown error')}",
             )
 
     def _route_through_governance(self, action: str, payload: dict) -> dict:
@@ -754,13 +752,12 @@ class ControlPanelWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
         response = self._route_through_governance(
-            "hydra.activate",
-            {"scenario_id": self.current_scenario_id}
+            "hydra.activate", {"scenario_id": self.current_scenario_id}
         )
 
         if response.get("status") == "success":
@@ -768,14 +765,14 @@ class ControlPanelWidget(QFrame):
             QMessageBox.information(
                 None,
                 "Activated",
-                f"Scenario {self.current_scenario_id} activated successfully"
+                f"Scenario {self.current_scenario_id} activated successfully",
             )
         else:
             logger.error("Failed to activate: %s", response.get("error"))
             QMessageBox.critical(
                 None,
                 "Activation Failed",
-                f"Failed to activate scenario: {response.get('error', 'Unknown error')}"
+                f"Failed to activate scenario: {response.get('error', 'Unknown error')}",
             )
 
     def deactivate_scenario(self):
@@ -789,13 +786,12 @@ class ControlPanelWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
         response = self._route_through_governance(
-            "hydra.deactivate",
-            {"scenario_id": self.current_scenario_id}
+            "hydra.deactivate", {"scenario_id": self.current_scenario_id}
         )
 
         if response.get("status") == "success":
@@ -803,14 +799,14 @@ class ControlPanelWidget(QFrame):
             QMessageBox.information(
                 None,
                 "Deactivated",
-                f"Scenario {self.current_scenario_id} deactivated successfully"
+                f"Scenario {self.current_scenario_id} deactivated successfully",
             )
         else:
             logger.error("Failed to deactivate: %s", response.get("error"))
             QMessageBox.critical(
                 None,
                 "Deactivation Failed",
-                f"Failed to deactivate scenario: {response.get('error', 'Unknown error')}"
+                f"Failed to deactivate scenario: {response.get('error', 'Unknown error')}",
             )
 
     def escalate_scenario(self):
@@ -824,13 +820,12 @@ class ControlPanelWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
         response = self._route_through_governance(
-            "hydra.escalate",
-            {"scenario_id": self.current_scenario_id}
+            "hydra.escalate", {"scenario_id": self.current_scenario_id}
         )
 
         if response.get("status") == "success":
@@ -838,14 +833,14 @@ class ControlPanelWidget(QFrame):
             QMessageBox.information(
                 None,
                 "Escalated",
-                f"Scenario {self.current_scenario_id} escalated successfully"
+                f"Scenario {self.current_scenario_id} escalated successfully",
             )
         else:
             logger.error("Failed to escalate: %s", response.get("error"))
             QMessageBox.critical(
                 None,
                 "Escalation Failed",
-                f"Failed to escalate scenario: {response.get('error', 'Unknown error')}"
+                f"Failed to escalate scenario: {response.get('error', 'Unknown error')}",
             )
 
     def simulate_scenario(self):
@@ -859,13 +854,12 @@ class ControlPanelWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
         response = self._route_through_governance(
-            "hydra.simulate",
-            {"scenario_id": self.current_scenario_id}
+            "hydra.simulate", {"scenario_id": self.current_scenario_id}
         )
 
         if response.get("status") == "success":
@@ -873,14 +867,14 @@ class ControlPanelWidget(QFrame):
             QMessageBox.information(
                 None,
                 "Simulation Complete",
-                f"Scenario {self.current_scenario_id} simulation completed"
+                f"Scenario {self.current_scenario_id} simulation completed",
             )
         else:
             logger.error("Failed to simulate: %s", response.get("error"))
             QMessageBox.critical(
                 None,
                 "Simulation Failed",
-                f"Failed to simulate scenario: {response.get('error', 'Unknown error')}"
+                f"Failed to simulate scenario: {response.get('error', 'Unknown error')}",
             )
 
     def _route_through_governance(self, action: str, payload: dict) -> dict:
@@ -1011,7 +1005,7 @@ class HistoricalReplayWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
@@ -1020,20 +1014,19 @@ class HistoricalReplayWidget(QFrame):
 
         response = self._route_through_governance(
             "hydra.replay.play",
-            {
-                "timeline_position": timeline_position,
-                "speed": speed
-            }
+            {"timeline_position": timeline_position, "speed": speed},
         )
 
         if response.get("status") == "success":
-            logger.info("Replay started at position %d with speed %s", timeline_position, speed)
+            logger.info(
+                "Replay started at position %d with speed %s", timeline_position, speed
+            )
         else:
             logger.error("Failed to start replay: %s", response.get("error"))
             QMessageBox.critical(
                 None,
                 "Replay Failed",
-                f"Failed to start replay: {response.get('error', 'Unknown error')}"
+                f"Failed to start replay: {response.get('error', 'Unknown error')}",
             )
 
     def pause_replay(self):
@@ -1043,14 +1036,11 @@ class HistoricalReplayWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
-        response = self._route_through_governance(
-            "hydra.replay.pause",
-            {}
-        )
+        response = self._route_through_governance("hydra.replay.pause", {})
 
         if response.get("status") == "success":
             logger.info("Replay paused")
@@ -1059,7 +1049,7 @@ class HistoricalReplayWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Pause Failed",
-                f"Failed to pause replay: {response.get('error', 'Unknown error')}"
+                f"Failed to pause replay: {response.get('error', 'Unknown error')}",
             )
 
     def stop_replay(self):
@@ -1069,14 +1059,11 @@ class HistoricalReplayWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Governance Error",
-                "Desktop governance adapter not initialized. Cannot execute governed action."
+                "Desktop governance adapter not initialized. Cannot execute governed action.",
             )
             return
 
-        response = self._route_through_governance(
-            "hydra.replay.stop",
-            {}
-        )
+        response = self._route_through_governance("hydra.replay.stop", {})
 
         if response.get("status") == "success":
             self.timeline_slider.setValue(100)
@@ -1086,7 +1073,7 @@ class HistoricalReplayWidget(QFrame):
             QMessageBox.critical(
                 None,
                 "Stop Failed",
-                f"Failed to stop replay: {response.get('error', 'Unknown error')}"
+                f"Failed to stop replay: {response.get('error', 'Unknown error')}",
             )
 
     def _route_through_governance(self, action: str, payload: dict) -> dict:
@@ -1202,11 +1189,15 @@ class HYDRA50Panel(QWidget):
         tabs.addTab(overview_widget, "Overview")
 
         # Alerts tab (inject adapter)
-        self.alert_management = AlertManagementWidget(desktop_adapter=self.desktop_adapter)
+        self.alert_management = AlertManagementWidget(
+            desktop_adapter=self.desktop_adapter
+        )
         tabs.addTab(self.alert_management, "Alerts")
 
         # Replay tab (inject adapter)
-        self.historical_replay = HistoricalReplayWidget(desktop_adapter=self.desktop_adapter)
+        self.historical_replay = HistoricalReplayWidget(
+            desktop_adapter=self.desktop_adapter
+        )
         tabs.addTab(self.historical_replay, "Replay")
 
         main_layout.addWidget(tabs)

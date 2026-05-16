@@ -594,11 +594,7 @@ class IntroInfoPage(QFrame):
         # Route authentication through governance pipeline
         response = self._route_through_governance(
             "auth.login",
-            {
-                "username": username,
-                "password": password,
-                "source": "desktop_gui"
-            }
+            {"username": username, "password": password, "source": "desktop_gui"},
         )
 
         self._set_login_enabled(True)

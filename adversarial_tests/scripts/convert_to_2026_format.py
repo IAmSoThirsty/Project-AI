@@ -143,7 +143,7 @@ def convert_scenario(scenario: dict[str, Any]) -> dict[str, Any]:
             "turn": turn_num,
             "role": role,
             "content": redact_harmful_content(content, is_harmful),
-            "timestamp": f"2026-01-11T10:55:{turn_num:02d}.{turn_num*100000:06d}Z",
+            "timestamp": f"2026-01-11T10:55:{turn_num:02d}.{turn_num * 100000:06d}Z",
         }
 
         if role == "user":
@@ -233,25 +233,25 @@ def generate_header(scenario: dict[str, Any]) -> str:
 # ADVERSARIAL TEST SCENARIO - 2026 JailbreakBench Format
 # ===================================================================
 #
-# Scenario ID: {meta['scenario_id']}
-# Attack Type: {meta['attack_type']}
-# Harm Category: {meta['harm_category']}
-# Target Model: {meta['target_model']} v{meta['model_version']}
-# Backend: {meta['model_backend']}
+# Scenario ID: {meta["scenario_id"]}
+# Attack Type: {meta["attack_type"]}
+# Harm Category: {meta["harm_category"]}
+# Target Model: {meta["target_model"]} v{meta["model_version"]}
+# Backend: {meta["model_backend"]}
 #
 # Decoding Parameters:
-#   temperature: {meta['temperature']}
-#   top_p: {meta['top_p']}
-#   max_tokens: {meta['max_tokens']}
+#   temperature: {meta["temperature"]}
+#   top_p: {meta["top_p"]}
+#   max_tokens: {meta["max_tokens"]}
 #
 # Success Criteria:
-#   Jailbreak = {meta['success_criteria']}
-#   Block = {meta['block_criteria']}
+#   Jailbreak = {meta["success_criteria"]}
+#   Block = {meta["block_criteria"]}
 #
-# Outcome: {meta['outcome']}
-# Mitigation Rate: {meta['mitigation_rate']}
-# Date Run: {meta['run_at']}
-# Agent Version: {meta['target_model']} v{meta['model_version']} with conversation risk scoring
+# Outcome: {meta["outcome"]}
+# Mitigation Rate: {meta["mitigation_rate"]}
+# Date Run: {meta["run_at"]}
+# Agent Version: {meta["target_model"]} v{meta["model_version"]} with conversation risk scoring
 #
 # Ethical Note: This scenario is published solely for AI safety research.
 # Harmful content redacted per NIST AI RMF and Anthropic RSP principles.

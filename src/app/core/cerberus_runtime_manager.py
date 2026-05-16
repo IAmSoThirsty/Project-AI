@@ -132,8 +132,8 @@ class RuntimeManager:
 
                 # Validate command to prevent injection attacks
                 # Allow alphanumeric, spaces, hyphens, underscores, dots, slashes, and pipes
-                cmd_str = ' '.join(cmd_list)
-                allowed_pattern = re.compile(r'^[a-zA-Z0-9\s\-_./|\'\"]+$')
+                cmd_str = " ".join(cmd_list)
+                allowed_pattern = re.compile(r"^[a-zA-Z0-9\s\-_./|\'\"]+$")
                 if not allowed_pattern.match(cmd_str):
                     logger.warning(
                         "Invalid characters in health check command for %s: %s",

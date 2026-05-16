@@ -78,7 +78,7 @@ class ContinuousImprovementSubsystem(
             self._processing_thread.start()
             self._initialized = True
             return True
-        except:
+        except Exception:
             return False
 
     def shutdown(self) -> bool:
@@ -114,7 +114,9 @@ class ContinuousImprovementSubsystem(
                         {"analysis": analysis},
                         execution_time_ms=(time.time() - start_time) * 1000,
                     )
-                return SubsystemResponse(command.command_id, False, error="Unknown command")
+                return SubsystemResponse(
+                    command.command_id, False, error="Unknown command"
+                )
             except Exception as e:
                 return SubsystemResponse(command.command_id, False, error=str(e))
 
@@ -125,7 +127,9 @@ class ContinuousImprovementSubsystem(
             _dispatch,
         )
         if not approved:
-            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+            return SubsystemResponse(
+                command.command_id, False, error=f"Governance denied: {result}"
+            )
         return result
 
     def get_supported_commands(self) -> list[str]:
@@ -176,7 +180,7 @@ class ContinuousImprovementSubsystem(
         try:
             with open(self.data_path / "state.json", "w") as f:
                 json.dump({"metrics": self._metrics}, f)
-        except:
+        except Exception:
             pass
 
     def _load_state(self):
@@ -185,5 +189,5 @@ class ContinuousImprovementSubsystem(
             if state_file.exists():
                 with open(state_file) as f:
                     self._metrics = json.load(f).get("metrics", self._metrics)
-        except:
+        except Exception:
             pass

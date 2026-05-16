@@ -23,7 +23,7 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
-from app.security.path_security import safe_path_join, sanitize_filename
+from app.security.path_security import safe_path_join
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -36,6 +36,7 @@ BACKOFF_FACTOR = float(os.getenv("IMAGE_API_BACKOFF_FACTOR", "0.8"))
 # 📚 Documentation Links:
 # - [[relationships/gui/06_IMAGE_GENERATION_RELATIONSHIPS.md]]
 #
+
 
 def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
     """Perform an HTTP request with retries and exponential backoff for transient errors.
@@ -240,8 +241,8 @@ class ImageGenerator:
     ) -> dict[str, Any]:
         """Generate image using AI orchestrator (Hugging Face backend)."""
         try:
-            from app.core.ai.orchestrator import run_ai, AIRequest
-            
+            from app.core.ai.orchestrator import AIRequest, run_ai
+
             # Use orchestrator instead of direct API call
             request = AIRequest(
                 task_type="image",
@@ -254,11 +255,11 @@ class ImageGenerator:
                     "height": height,
                     "num_inference_steps": 50,
                     "guidance_scale": 7.5,
-                }
+                },
             )
-            
+
             response = run_ai(request)
-            
+
             if response.status == "success":
                 # Save image data
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -278,7 +279,7 @@ class ImageGenerator:
                 }
             else:
                 return {"success": False, "error": response.error}
-                
+
         except Exception as e:
             logger.error("Hugging Face generation error: %s", e)
             return {"success": False, "error": str(e)}
@@ -290,28 +291,33 @@ class ImageGenerator:
     ) -> dict[str, Any]:
         """Generate image using AI orchestrator (OpenAI DALL-E backend)."""
         try:
-            from app.core.ai.orchestrator import run_ai, AIRequest
-            
+            if not self.openai_api_key:
+                return {"success": False, "error": "OpenAI API key not configured"}
+
+            from app.core.ai.orchestrator import AIRequest, run_ai
+
             # Validate size parameter
             valid_sizes = ["256x256", "512x512", "1024x1024", "1024x1792", "1792x1024"]
             if size not in valid_sizes:
                 size = "1024x1024"  # Default to DALL-E 3 standard size
-            
+
             # Use orchestrator instead of direct API call
             request = AIRequest(
                 task_type="image",
                 prompt=prompt,
                 provider="openai",
                 model="dall-e-3",
-                config={"size": size, "quality": "standard", "n": 1}
+                config={"size": size, "quality": "standard", "n": 1},
             )
-            
+
             response = run_ai(request)
-            
+
             if response.status == "success":
                 # response.result is the image URL
                 image_url = response.result
-                
+                if not image_url:
+                    return {"success": False, "error": "No image URL returned"}
+
                 # Download and save
                 img_resp = _request_with_retries("GET", str(image_url), timeout=30)
                 img_resp.raise_for_status()
@@ -334,7 +340,7 @@ class ImageGenerator:
                 }
             else:
                 return {"success": False, "error": response.error}
-                
+
         except Exception as e:
             logger.error("OpenAI generation error: %s", e)
             return {"success": False, "error": str(e)}

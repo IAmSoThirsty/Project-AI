@@ -369,13 +369,13 @@ class TestAgentCoordination:
 
         # Act - Implement work stealing
         while any(len(wq) > 1 for wq in work_queues.values()):
-            for agent_id, queue in work_queues.items():
-                if len(queue) > 1:
+            for agent_id, work_queue in work_queues.items():
+                if len(work_queue) > 1:
                     # Find idle agent
                     for other_id, other_queue in work_queues.items():
                         if other_id != agent_id and len(other_queue) == 0:
                             # Steal work
-                            stolen_work = queue.pop()
+                            stolen_work = work_queue.pop()
                             other_queue.append(stolen_work)
                             break
 

@@ -7,7 +7,7 @@ Provides runtime security controls and agent-based security validation.
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class SecurityContext:

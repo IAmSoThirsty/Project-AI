@@ -47,7 +47,7 @@ def benchmark_endpoint(
                 errors += 1
         except Exception as e:
             errors += 1
-            print(f"   Error on iteration {i+1}: {e}")
+            print(f"   Error on iteration {i + 1}: {e}")
 
     if not times:
         return {"error": "All requests failed"}

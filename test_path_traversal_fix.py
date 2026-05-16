@@ -12,11 +12,11 @@ import tempfile
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 from app.security.path_security import (
-    safe_path_join,
-    safe_open,
-    validate_filename,
-    sanitize_filename,
     PathTraversalError,
+    safe_open,
+    safe_path_join,
+    sanitize_filename,
+    validate_filename,
 )
 
 
@@ -25,7 +25,7 @@ def test_path_traversal_attacks():
     print("=" * 70)
     print("PATH TRAVERSAL SECURITY AUDIT")
     print("=" * 70)
-    
+
     attacks = [
         ("../../../etc/passwd", "Unix /etc/passwd attack"),
         ("..\\..\\..\\Windows\\System32\\config", "Windows System32 attack"),
@@ -34,10 +34,10 @@ def test_path_traversal_attacks():
         ("user/../../../etc/passwd", "Hidden traversal attack"),
         ("user/./../../etc/passwd", "Dot notation attack"),
     ]
-    
+
     print("\n1. Testing safe_path_join() against known attacks:")
     print("-" * 70)
-    
+
     blocked_count = 0
     for attack, description in attacks:
         try:
@@ -51,13 +51,13 @@ def test_path_traversal_attacks():
             print(f"   Reason: {e}")
             blocked_count += 1
         print()
-    
+
     print(f"Result: {blocked_count}/{len(attacks)} attacks blocked\n")
-    
+
     # Test filename validation
     print("2. Testing validate_filename() against malicious filenames:")
     print("-" * 70)
-    
+
     malicious_filenames = [
         ("../../etc/passwd", "Path traversal in filename"),
         ("file..txt", "Double dot sequence"),
@@ -66,7 +66,7 @@ def test_path_traversal_attacks():
         ("CON.txt", "Reserved Windows name"),
         ("a" * 300, "Excessively long filename"),
     ]
-    
+
     blocked_count = 0
     for filename, description in malicious_filenames:
         try:
@@ -79,42 +79,44 @@ def test_path_traversal_attacks():
             print(f"   Reason: {e}")
             blocked_count += 1
         print()
-    
-    print(f"Result: {blocked_count}/{len(malicious_filenames)} malicious filenames blocked\n")
-    
+
+    print(
+        f"Result: {blocked_count}/{len(malicious_filenames)} malicious filenames blocked\n"
+    )
+
     # Test safe file operations
     print("3. Testing safe_open() with path traversal:")
     print("-" * 70)
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         # Create a safe file
         safe_file = os.path.join(tmpdir, "safe.txt")
         with open(safe_file, "w") as f:
             f.write("safe content")
-        
+
         # Try to read it safely
         try:
             with safe_open(tmpdir, "safe.txt", "r") as f:
                 content = f.read()
-            print(f"✅ Safe file access works")
+            print("✅ Safe file access works")
             print(f"   Content: {content}")
         except Exception as e:
             print(f"❌ Safe file access failed: {e}")
-        
+
         print()
-        
+
         # Try to escape directory
         try:
             with safe_open(tmpdir, "../../etc/passwd", "r") as f:
                 content = f.read()
-            print(f"❌ VULNERABLE: Escaped directory")
+            print("❌ VULNERABLE: Escaped directory")
         except PathTraversalError as e:
-            print(f"✅ BLOCKED: Directory escape attempt")
+            print("✅ BLOCKED: Directory escape attempt")
             print(f"   Reason: {e}")
-    
+
     print("\n4. Testing sanitize_filename():")
     print("-" * 70)
-    
+
     dangerous_inputs = [
         "../../../etc/passwd",
         "path/to/file.txt",
@@ -122,7 +124,7 @@ def test_path_traversal_attacks():
         ".hidden",
         "a" * 300 + ".txt",
     ]
-    
+
     for dangerous in dangerous_inputs:
         safe = sanitize_filename(dangerous)
         print(f"Input:  {dangerous[:50]}...")
@@ -135,19 +137,19 @@ def audit_vulnerable_modules():
     print("\n" + "=" * 70)
     print("MODULE AUDIT REPORT")
     print("=" * 70)
-    
+
     modules = [
         ("src/app/core/user_manager.py", "User data storage"),
         ("src/app/core/learning_paths.py", "Learning path files"),
         ("src/app/core/image_generator.py", "Generated image storage"),
         ("src/app/security/path_security.py", "Security utilities"),
     ]
-    
+
     print("\n✅ Modules audited and secured:")
     for module, description in modules:
         print(f"  • {module}")
         print(f"    {description}")
-    
+
     print("\n🔒 Security measures implemented:")
     measures = [
         "safe_path_join() - Validates paths stay within base directory",
@@ -156,7 +158,7 @@ def audit_vulnerable_modules():
         "sanitize_filename() - Cleans dangerous characters from filenames",
         "is_safe_symlink() - Prevents symlink attacks",
     ]
-    
+
     for measure in measures:
         print(f"  • {measure}")
 
@@ -166,7 +168,7 @@ def generate_security_report():
     print("\n" + "=" * 70)
     print("SECURITY AUDIT SUMMARY")
     print("=" * 70)
-    
+
     print("\n📋 VULNERABILITIES FOUND AND FIXED:")
     print("  1. ❌ user_manager.py - Unsanitized file paths")
     print("     ✅ Fixed: Added safe_path_join and filename validation")
@@ -177,7 +179,7 @@ def generate_security_report():
     print("  3. ❌ image_generator.py - Path concatenation without validation")
     print("     ✅ Fixed: Replaced os.path.join with safe_path_join")
     print()
-    
+
     print("\n🛡️  PROTECTIONS ADDED:")
     print("  • Path normalization and validation")
     print("  • Double-dot (..) sequence blocking")
@@ -186,14 +188,14 @@ def generate_security_report():
     print("  • Filename sanitization")
     print("  • Comprehensive logging of blocked attempts")
     print()
-    
+
     print("\n✅ TESTING:")
     print("  • 6 attack vectors tested and blocked")
     print("  • 6 malicious filename patterns blocked")
     print("  • Safe file operations verified")
     print("  • Module integration tested")
     print()
-    
+
     print("\n📊 COVERAGE:")
     print("  • Core modules: 3 fixed")
     print("  • Security utilities: 1 created")
@@ -207,15 +209,16 @@ if __name__ == "__main__":
         test_path_traversal_attacks()
         audit_vulnerable_modules()
         generate_security_report()
-        
+
         print("\n" + "=" * 70)
         print("✅ PATH TRAVERSAL AUDIT COMPLETE")
         print("=" * 70)
         print("\nAll path traversal vulnerabilities have been identified and fixed.")
         print("The codebase is now protected against directory traversal attacks.")
-        
+
     except Exception as e:
         print(f"\n❌ Error during audit: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)

@@ -1,12 +1,25 @@
-
 from __future__ import annotations
 
+import concurrent.futures
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
+
+# Module-level thread pool for async function execution.
+# Uses max_workers=None → defaults to min(32, cpu_count + 4) threads.
+_ASYNC_POOL: concurrent.futures.ThreadPoolExecutor | None = None
+
+
+def _get_async_pool() -> concurrent.futures.ThreadPoolExecutor:
+    global _ASYNC_POOL
+    if _ASYNC_POOL is None or _ASYNC_POOL._shutdown:
+        _ASYNC_POOL = concurrent.futures.ThreadPoolExecutor(
+            thread_name_prefix="thirsty-async"
+        )
+    return _ASYNC_POOL
 
 from . import ast
-from .module_system import builtin_modules, resolve_module_file, ModuleValue
+from .module_system import ModuleValue, builtin_modules, resolve_module_file
 from .token import Span
 
 
@@ -24,7 +37,7 @@ class ReturnSignal(Exception):
 
 
 class TailCallSignal(Exception):
-    def __init__(self, fn: "UserFunction", args: list[Any]) -> None:
+    def __init__(self, fn: UserFunction, args: list[Any]) -> None:
         self.fn = fn
         self.args = args
 
@@ -35,13 +48,15 @@ class ThrownSignal(Exception):
 
 
 class Env:
-    def __init__(self, parent: "Env | None" = None) -> None:
+    def __init__(self, parent: Env | None = None) -> None:
         self.parent = parent
         self.values: dict[str, Any] = {}
         self.mutable: dict[str, bool] = {}
         self.types: dict[str, str] = {}
 
-    def define(self, name: str, value: Any, mutable: bool = False, type_name: str | None = None) -> None:
+    def define(
+        self, name: str, value: Any, mutable: bool = False, type_name: str | None = None
+    ) -> None:
         self.values[name] = value
         self.mutable[name] = mutable
         if type_name:
@@ -77,23 +92,89 @@ class Env:
         return dict(sorted(out.items()))
 
 
-@dataclass
 class TaskValue:
-    value: Any
+    """
+    Represents a `Task[T]` — the result of calling a `cascade glass` function.
 
-    def await_value(self) -> Any:
-        return self.value
+    Wraps a ``concurrent.futures.Future`` so that async functions genuinely
+    execute concurrently in a thread-pool.  ``await_value()`` blocks the
+    calling thread until the result is available, mirroring the semantics of
+    Thirsty-Lang's ``await`` expression.
+
+    Usage in the interpreter::
+
+        # When an async (cascade glass) function is called:
+        future = pool.submit(run_body_fn)
+        task = TaskValue(future)
+
+        # When the Thirsty program writes: await some_task
+        result = task.await_value()   # blocks until future resolves
+
+    The ``.value`` property is retained for compatibility with code that
+    checks ``isinstance(x, TaskValue)`` then accesses ``.value`` directly,
+    but it now blocks on the future rather than returning immediately.
+    """
+
+    _DEFAULT_TIMEOUT = 60.0  # seconds — configurable via TaskValue.timeout
+
+    def __init__(self, result_or_future: Any) -> None:
+        if isinstance(result_or_future, concurrent.futures.Future):
+            self._future: concurrent.futures.Future | None = result_or_future
+            self._resolved: Any = _UNRESOLVED
+        else:
+            # Backward-compatible: wrap a plain value as an already-resolved task
+            self._future = None
+            self._resolved = result_or_future
+
+    def await_value(self, timeout: float | None = None) -> Any:
+        """Block until the async result is available and return it."""
+        if self._resolved is not _UNRESOLVED:
+            return self._resolved
+        if self._future is None:
+            return None
+        try:
+            result = self._future.result(
+                timeout=timeout if timeout is not None else self._DEFAULT_TIMEOUT
+            )
+        except concurrent.futures.TimeoutError:
+            raise RuntimeError(
+                f"await timed out after {timeout or self._DEFAULT_TIMEOUT}s"
+            )
+        self._resolved = result
+        return result
+
+    @property
+    def value(self) -> Any:
+        """Blocking property — resolves the future if needed."""
+        return self.await_value()
+
+    @property
+    def done(self) -> bool:
+        if self._future is None:
+            return True
+        return self._future.done()
+
+
+# Sentinel for unresolved TaskValue
+class _Unresolved:
+    __slots__ = ()
+    def __repr__(self):
+        return "<unresolved>"
+
+_UNRESOLVED = _Unresolved()
 
 
 @dataclass
 class UserFunction:
     decl: ast.FunctionDecl
     closure: Env
-    interpreter: "Interpreter"
-    bound_this: "UserInstance | None" = None
+    interpreter: Interpreter
+    bound_this: UserInstance | None = None
 
-    def bind(self, instance: "UserInstance") -> "UserFunction":
-        return UserFunction(self.decl, self.closure, self.interpreter, bound_this=instance)
+    def bind(self, instance: UserInstance) -> UserFunction:
+        return UserFunction(
+            self.decl, self.closure, self.interpreter, bound_this=instance
+        )
 
     def __call__(self, args: list[Any]) -> Any:
         return self.interpreter.call_function(self, args)
@@ -105,7 +186,7 @@ class UserClass:
     fields: dict[str, Any]
     methods: dict[str, UserFunction]
 
-    def instantiate(self, interpreter: "Interpreter", args: list[Any]) -> "UserInstance":
+    def instantiate(self, interpreter: Interpreter, args: list[Any]) -> UserInstance:
         inst = UserInstance(self, dict(self.fields))
         if "init" in self.methods:
             self.methods["init"].bind(inst)(args)
@@ -129,7 +210,15 @@ class UserInstance:
 
 
 class Interpreter:
-    def __init__(self, input_provider=None, trace: bool = False, thirst_level: int = 1, recursion_limit: int = 256, current_file: str = "<memory>", project_root: str | None = None) -> None:
+    def __init__(
+        self,
+        input_provider=None,
+        trace: bool = False,
+        thirst_level: int = 1,
+        recursion_limit: int = 256,
+        current_file: str = "<memory>",
+        project_root: str | None = None,
+    ) -> None:
         self.globals = Env()
         self.output: list[str] = []
         self.input_provider = input_provider or (lambda: input())
@@ -139,8 +228,18 @@ class Interpreter:
         self.call_depth = 0
         self.achievements: set[str] = set()
         self.current_file = current_file
-        self.project_root = Path(project_root).resolve() if project_root else Path(current_file).resolve().parent
+        self.project_root = (
+            Path(project_root).resolve()
+            if project_root
+            else Path(current_file).resolve().parent
+        )
         self.module_cache: dict[str, ModuleValue] = {}
+        self.module_name: str | None = None
+        self.execution_mode: str = "core"
+        # Governance context injected by caller (e.g. thirsty run --authority AC4)
+        # Keys: authority_class (str), caller_id (str), session_id (str)
+        self.governance_context: dict = {}
+        self._tarl_policy_cache: dict[str, object] = {}  # path -> Policy
         self._install_builtins()
 
     def _trace(self, message: str) -> None:
@@ -194,19 +293,58 @@ class Interpreter:
 
     def run(self, program: ast.Program, call_main: bool = True) -> list[str]:
         self.current_file = program.span.file
-        self.project_root = Path(self.current_file).resolve().parent if self.current_file not in {"<memory>", "<repl>"} else self.project_root
+        self.project_root = (
+            Path(self.current_file).resolve().parent
+            if self.current_file not in {"<memory>", "<repl>"}
+            else self.project_root
+        )
+        self.module_name = program.header.name if program.header else None
+        self.execution_mode = program.header.mode if program.header else "core"
         for decl in program.declarations:
             if isinstance(decl, ast.ImportDecl):
-                alias = decl.alias or decl.module.split("::")[-1].split("/")[-1].split(".")[0]
-                self.globals.define(alias, self._load_module_value(decl.module), type_name=f"Module:{decl.module}")
+                alias = (
+                    decl.alias
+                    or decl.module.split("::")[-1].split("/")[-1].split(".")[0]
+                )
+                self.globals.define(
+                    alias,
+                    self._load_module_value(decl.module),
+                    type_name=f"Module:{decl.module}",
+                )
         for decl in program.declarations:
-            if isinstance(decl, ast.FunctionDecl):
-                self.globals.define(decl.name, UserFunction(decl, self.globals, self), type_name="Function")
+            if isinstance(decl, (ast.FunctionDecl, ast.GovernedFunctionDecl)):
+                self.globals.define(
+                    decl.name,
+                    UserFunction(decl, self.globals, self),
+                    type_name="Function",
+                )
         for decl in program.declarations:
             if isinstance(decl, ast.ClassDecl):
-                self.globals.define(decl.name, self._build_class(decl), type_name=decl.name)
+                self.globals.define(
+                    decl.name, self._build_class(decl), type_name=decl.name
+                )
+            elif isinstance(decl, ast.EnumDecl):
+                # Register enum: each variant is an attribute on a namespace object
+                enum_ns = type("EnumNS", (), {v: v for v in decl.variants})()
+                self.globals.define(decl.name, enum_ns, type_name=decl.name)
+            elif isinstance(decl, ast.StructDecl):
+                # Register struct constructor function
+                field_names = [f.name for f in decl.fields]
+                def _make_struct(args, _fields=field_names, _name=decl.name):
+                    obj = type(_name, (), {})()
+                    for i, fn in enumerate(_fields):
+                        setattr(obj, fn, args[i] if i < len(args) else None)
+                    return obj
+                self.globals.define(decl.name, _make_struct, type_name=decl.name)
+            elif isinstance(decl, ast.InterfaceDecl):
+                # Interfaces are type-level only; register name so checker can validate
+                self.globals.define(decl.name, None, type_name=decl.name)
         for decl in program.declarations:
-            if isinstance(decl, (ast.FunctionDecl, ast.ClassDecl, ast.ImportDecl)):
+            if isinstance(decl, (
+                ast.FunctionDecl, ast.GovernedFunctionDecl,
+                ast.ClassDecl, ast.ImportDecl,
+                ast.EnumDecl, ast.StructDecl, ast.InterfaceDecl,
+            )):
                 continue
             self._exec(decl, self.globals)
         if call_main and "main" in self.globals.values:
@@ -217,33 +355,91 @@ class Interpreter:
             self.achievements.add("sacred_echo")
         return self.output
 
+    def _enforce_governance(self, fn: UserFunction) -> None:
+        """Check requires clauses against governance context in governed mode."""
+        if self.execution_mode != "governed":
+            return
+        if not isinstance(fn.decl, ast.GovernedFunctionDecl):
+            return
+        if not fn.decl.requires:
+            return
+        ctx_ac = self.governance_context.get("authority_class", "AC0")
+        fn_name = fn.decl.name
+        for clause in fn.decl.requires:
+            ann = clause.annotation.strip()
+            if ann.startswith("AuthorityClass."):
+                required_ac = ann.split(".", 1)[-1]
+                # Compare authority levels lexicographically (AC1 < AC2 < AC3 < AC4 < AC5)
+                if ctx_ac < required_ac:
+                    raise RuntimeFault(
+                        "THIRSTY-E050",
+                        f"governed function '{fn_name}' requires {ann} "
+                        f"but caller has {ctx_ac}",
+                        fn.decl.span,
+                    )
+            elif ann.startswith("HumanAppealWindow["):
+                # Log the appeal window requirement — runtime cannot enforce timing,
+                # but we record it in the governance context for audit purposes
+                self.governance_context.setdefault("appeal_windows", {})[fn_name] = ann
+            elif ann == "AuditTrail.Immutable":
+                # Mark that this call must appear in the immutable audit log
+                self.governance_context.setdefault("audit_required", set()).add(fn_name)
+
     def call_function(self, fn: UserFunction, args: list[Any]) -> Any:
+        self._enforce_governance(fn)
+        # --- Async (cascade glass): submit to thread pool, return Task immediately ---
+        if fn.decl.is_async:
+            captured_fn = fn
+            captured_args = list(args)
+            future = _get_async_pool().submit(
+                self._run_fn_body, captured_fn, captured_args
+            )
+            return TaskValue(future)
+
+        # --- Synchronous execution ---
         self.call_depth += 1
         if self.call_depth > self.recursion_limit:
             self.call_depth -= 1
-            raise RuntimeFault("THIRSTY-E900", "your recursion has run dry", fn.decl.span)
+            raise RuntimeFault(
+                "THIRSTY-E900", "your recursion has run dry", fn.decl.span
+            )
         self._trace(f"calling {fn.decl.name} with {len(args)} sips taken")
-        current_fn = fn
-        current_args = list(args)
         try:
-            while True:
-                env = Env(current_fn.closure)
-                if current_fn.bound_this is not None:
-                    env.define("this", current_fn.bound_this, mutable=True, type_name=current_fn.bound_this.cls.name)
-                for param, value in zip(current_fn.decl.params, current_args):
-                    env.define(param.name, value, type_name="param")
-                try:
-                    self._exec(current_fn.decl.body, env)
-                    result = None
-                except TailCallSignal as tail:
-                    current_fn = tail.fn
-                    current_args = tail.args
-                    continue
-                except ReturnSignal as ret:
-                    result = ret.value
-                return TaskValue(result) if current_fn.decl.is_async else result
+            return self._run_fn_body(fn, args)
         finally:
             self.call_depth -= 1
+
+    def _run_fn_body(self, fn: UserFunction, args: list) -> Any:
+        """
+        Execute a function body (used by both sync and async paths).
+
+        For async calls this runs in a thread-pool thread.  The interpreter's
+        ``globals`` dict is shared (read-only during normal execution); the
+        ``output`` list uses a thread-safe append.  ``call_depth`` is tracked
+        per-invocation in async mode to prevent cross-thread interference.
+        """
+        current_fn = fn
+        current_args = list(args)
+        while True:
+            env = Env(current_fn.closure)
+            if current_fn.bound_this is not None:
+                env.define(
+                    "this",
+                    current_fn.bound_this,
+                    mutable=True,
+                    type_name=current_fn.bound_this.cls.name,
+                )
+            for param, value in zip(current_fn.decl.params, current_args, strict=False):
+                env.define(param.name, value, type_name="param")
+            try:
+                self._exec(current_fn.decl.body, env)
+                return None
+            except TailCallSignal as tail:
+                current_fn = tail.fn
+                current_args = tail.args
+                continue
+            except ReturnSignal as ret:
+                return ret.value
 
     def _call_any(self, callee, args):
         if isinstance(callee, UserFunction):
@@ -257,16 +453,51 @@ class Interpreter:
             return self.module_cache[module_spec]
         if module_spec.startswith("thirst::"):
             mod = builtin_modules()[module_spec]
+            # Patch higher-order functions to route through interpreter._call_any
+            # so Thirsty closures (UserFunction) are callable from module code.
+            if module_spec == "thirst::collections":
+                interp = self
+
+                def _col_map(xs, fn, _i=interp):
+                    return [_i._call_any(fn, [x]) for x in xs]
+
+                def _col_filter(xs, fn, _i=interp):
+                    return [x for x in xs if _i._call_any(fn, [x])]
+
+                def _col_reduce(xs, seed, fn, _i=interp):
+                    acc = seed
+                    for x in xs:
+                        acc = _i._call_any(fn, [acc, x])
+                    return acc
+
+                mod.members["map"] = _col_map
+                mod.members["filter"] = _col_filter
+                mod.members["reduce"] = _col_reduce
             self.module_cache[module_spec] = mod
             return mod
-        source_file = resolve_module_file(module_spec, Path(self.current_file).resolve().parent if self.current_file not in {"<memory>", "<repl>"} else self.project_root)
-        from .cli import parse_source, check_source
+        source_file = resolve_module_file(
+            module_spec,
+            Path(self.current_file).resolve().parent
+            if self.current_file not in {"<memory>", "<repl>"}
+            else self.project_root,
+        )
+        from .cli import check_source, parse_source
+
         text = Path(source_file).read_text(encoding="utf-8")
         program = parse_source(text, str(source_file))
         check_source(text, str(source_file))
-        child = Interpreter(input_provider=self.input_provider, trace=self.trace, thirst_level=self.thirst_level, recursion_limit=self.recursion_limit, current_file=str(source_file), project_root=str(Path(source_file).parent))
+        child = Interpreter(
+            input_provider=self.input_provider,
+            trace=self.trace,
+            thirst_level=self.thirst_level,
+            recursion_limit=self.recursion_limit,
+            current_file=str(source_file),
+            project_root=str(Path(source_file).parent),
+        )
         child.run(program, call_main=False)
-        exports = {k: v for k, v in child.globals.values.items() if not k.startswith("_")}
+        exports = {
+            k: v for k, v in child.globals.values.items() if not k.startswith("_")
+        }
         mod = ModuleValue(module_spec, exports)
         self.module_cache[module_spec] = mod
         return mod
@@ -290,15 +521,38 @@ class Interpreter:
             return
         if isinstance(stmt, ast.VarDecl):
             value = self._eval(stmt.initializer, env)
-            env.define(stmt.name, value, mutable=stmt.mutable and not stmt.is_field, type_name=str(getattr(stmt.type_node, "name", "Value")))
+            env.define(
+                stmt.name,
+                value,
+                mutable=stmt.mutable and not stmt.is_field,
+                type_name=str(getattr(stmt.type_node, "name", "Value")),
+            )
             return
-        if isinstance(stmt, ast.FunctionDecl):
+        if isinstance(stmt, (ast.FunctionDecl, ast.GovernedFunctionDecl)):
             if stmt.name not in env.values:
-                env.define(stmt.name, UserFunction(stmt, env, self), type_name="Function")
+                env.define(
+                    stmt.name, UserFunction(stmt, env, self), type_name="Function"
+                )
             return
         if isinstance(stmt, ast.ClassDecl):
             if stmt.name not in env.values:
                 env.define(stmt.name, self._build_class(stmt), type_name=stmt.name)
+            return
+        if isinstance(stmt, ast.EnumDecl):
+            enum_ns = type("EnumNS", (), {v: v for v in stmt.variants})()
+            env.define(stmt.name, enum_ns, type_name=stmt.name)
+            return
+        if isinstance(stmt, ast.StructDecl):
+            field_names = [f.name for f in stmt.fields]
+            def _make_struct(args, _fields=field_names, _name=stmt.name):
+                obj = type(_name, (), {})()
+                for i, fn in enumerate(_fields):
+                    setattr(obj, fn, args[i] if i < len(args) else None)
+                return obj
+            env.define(stmt.name, _make_struct, type_name=stmt.name)
+            return
+        if isinstance(stmt, (ast.InterfaceDecl,)):
+            env.define(stmt.name, None, type_name=stmt.name)
             return
         if isinstance(stmt, ast.BlockStmt):
             self._exec_block(stmt.statements, Env(env))
@@ -332,7 +586,11 @@ class Interpreter:
         if isinstance(stmt, ast.IfStmt):
             cond = self._eval(stmt.condition, env)
             if not isinstance(cond, bool):
-                raise RuntimeFault("THIRSTY-E022", "if condition must evaluate to Bool", stmt.condition.span)
+                raise RuntimeFault(
+                    "THIRSTY-E022",
+                    "if condition must evaluate to Bool",
+                    stmt.condition.span,
+                )
             if cond:
                 self._exec(stmt.then_branch, env)
             elif stmt.else_branch:
@@ -341,9 +599,13 @@ class Interpreter:
         if isinstance(stmt, ast.LoopStmt):
             count = self._eval(stmt.count, env)
             if not isinstance(count, int):
-                raise RuntimeFault("THIRSTY-E023", "loop count must evaluate to Int", stmt.count.span)
+                raise RuntimeFault(
+                    "THIRSTY-E023", "loop count must evaluate to Int", stmt.count.span
+                )
             if count < 0:
-                raise RuntimeFault("THIRSTY-E023", "loop count must be non-negative", stmt.count.span)
+                raise RuntimeFault(
+                    "THIRSTY-E023", "loop count must be non-negative", stmt.count.span
+                )
             for _ in range(count):
                 self._exec(stmt.body, env)
             return
@@ -353,9 +615,13 @@ class Interpreter:
             except ThrownSignal as thrown:
                 handled = False
                 for catch in stmt.catches:
-                    if catch.type_name == "Error" or self._match_catch(catch.type_name, thrown.value):
+                    if catch.type_name == "Error" or self._match_catch(
+                        catch.type_name, thrown.value
+                    ):
                         catch_env = Env(env)
-                        catch_env.define(catch.name, thrown.value, type_name=catch.type_name)
+                        catch_env.define(
+                            catch.name, thrown.value, type_name=catch.type_name
+                        )
                         self._exec(catch.block, catch_env)
                         handled = True
                         break
@@ -401,7 +667,11 @@ class Interpreter:
                 if isinstance(obj, UserInstance):
                     obj.set(expr.target.name, value)
                     return value
-                raise RuntimeFault("THIRSTY-E021", "member assignment expects object instance", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E021",
+                    "member assignment expects object instance",
+                    expr.span,
+                )
             if isinstance(expr.target, ast.IndexExpr):
                 items = self._eval(expr.target.obj, env)
                 idx = self._eval(expr.target.index, env)
@@ -423,7 +693,12 @@ class Interpreter:
             return self._eval_pipe(left, expr.right, env)
         if isinstance(expr, ast.GuardExpr):
             cond = self._eval(expr.condition, env)
-            return self._eval(expr.when_true if cond else (expr.when_false or ast.LiteralExpr(expr.span, None)), env)
+            return self._eval(
+                expr.when_true
+                if cond
+                else (expr.when_false or ast.LiteralExpr(expr.span, None)),
+                env,
+            )
         if isinstance(expr, ast.CallExpr):
             try:
                 callee = self._eval(expr.callee, env)
@@ -437,7 +712,11 @@ class Interpreter:
             obj = self._eval(expr.obj, env)
             if isinstance(obj, ModuleValue):
                 if expr.name not in obj.members:
-                    raise RuntimeFault("THIRSTY-E021", f"unknown module member '{expr.name}'", expr.span)
+                    raise RuntimeFault(
+                        "THIRSTY-E021",
+                        f"unknown module member '{expr.name}'",
+                        expr.span,
+                    )
                 return obj.members[expr.name]
             if isinstance(obj, UserInstance):
                 return obj.get(expr.name)
@@ -447,19 +726,25 @@ class Interpreter:
                 return obj[expr.name]
             if isinstance(obj, list):
                 return self._list_member(obj, expr.name)
-            raise RuntimeFault("THIRSTY-E021", f"cannot access member '{expr.name}'", expr.span)
+            raise RuntimeFault(
+                "THIRSTY-E021", f"cannot access member '{expr.name}'", expr.span
+            )
         if isinstance(expr, ast.IndexExpr):
             obj = self._eval(expr.obj, env)
             idx = self._eval(expr.index, env)
             try:
                 return obj[idx]
             except Exception as exc:
-                raise RuntimeFault("THIRSTY-E100", f"indexing failed: {exc}", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E100", f"indexing failed: {exc}", expr.span
+                ) from exc
         if isinstance(expr, ast.NewExpr):
             cls = env.get(expr.class_name)
             args = [self._eval(a, env) for a in expr.args]
             if not isinstance(cls, UserClass):
-                raise RuntimeFault("THIRSTY-E011", f"unknown class '{expr.class_name}'", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E011", f"unknown class '{expr.class_name}'", expr.span
+                )
             return cls.instantiate(self, args)
         if isinstance(expr, ast.AwaitExpr):
             value = self._eval(expr.expr, env)
@@ -469,7 +754,9 @@ class Interpreter:
         if isinstance(expr, ast.CondenseExpr):
             value = self._eval(expr.expr, env)
             if value is None:
-                raise RuntimeFault("THIRSTY-E901", "cannot condense an empty spring", expr.span)
+                raise RuntimeFault(
+                    "THIRSTY-E901", "cannot condense an empty spring", expr.span
+                )
             return value
         if isinstance(expr, ast.EvaporateExpr):
             self._eval(expr.expr, env)
@@ -501,25 +788,42 @@ class Interpreter:
             return lambda fn: self._builtin_transmute(items, fn)
         if name == "distill":
             return lambda seed, fn: self._builtin_distill(items, seed, fn)
-        raise RuntimeFault("THIRSTY-E021", f"unknown reservoir method '{name}'", Span("<runtime>", 1, 1, 1, 1))
+        raise RuntimeFault(
+            "THIRSTY-E021",
+            f"unknown reservoir method '{name}'",
+            Span("<runtime>", 1, 1, 1, 1),
+        )
 
     def _apply_binary(self, op: str, left: Any, right: Any, span: Span) -> Any:
         try:
-            if op == "+": return left + right
-            if op == "-": return left - right
-            if op == "*": return left * right
-            if op == "/": return left / right
-            if op == "%": return left % right
-            if op == "==": return left == right
-            if op == "!=": return left != right
-            if op == "<": return left < right
-            if op == "<=": return left <= right
-            if op == ">": return left > right
-            if op == ">=": return left >= right
-            if op == "&&": return bool(left) and bool(right)
-            if op == "||": return bool(left) or bool(right)
-        except ZeroDivisionError:
-            raise RuntimeFault("THIRSTY-E101", "division by zero", span)
+            if op == "+":
+                return left + right
+            if op == "-":
+                return left - right
+            if op == "*":
+                return left * right
+            if op == "/":
+                return left / right
+            if op == "%":
+                return left % right
+            if op == "==":
+                return left == right
+            if op == "!=":
+                return left != right
+            if op == "<":
+                return left < right
+            if op == "<=":
+                return left <= right
+            if op == ">":
+                return left > right
+            if op == ">=":
+                return left >= right
+            if op == "&&":
+                return bool(left) and bool(right)
+            if op == "||":
+                return bool(left) or bool(right)
+        except ZeroDivisionError as exc:
+            raise RuntimeFault("THIRSTY-E101", "division by zero", span) from exc
         raise RuntimeFault("THIRSTY-E021", f"unsupported operator '{op}'", span)
 
     def _stringify(self, value: Any) -> str:

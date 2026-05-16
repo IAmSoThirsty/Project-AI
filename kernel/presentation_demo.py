@@ -91,7 +91,7 @@ class PresentationDemo:
         self.pause(duration=2)
 
         self.header("PART 2: THE SOLUTION - Holographic Defense")
-        print(ASCIIart.layer_diagram())
+        print(ASCIIArt.layer_diagram())
         self.pause("Observe the 3-layer architecture...", 0)
 
         self.narrate("Commands execute in OBSERVATION layer FIRST.")

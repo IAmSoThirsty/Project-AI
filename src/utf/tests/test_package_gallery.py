@@ -1,4 +1,3 @@
-
 import json
 import tempfile
 import unittest
@@ -21,13 +20,18 @@ class PackageAndGalleryTests(unittest.TestCase):
         pkg.mkdir()
         (pkg / "src").mkdir()
         (pkg / "src" / "main.thirsty").write_text(source, encoding="utf-8")
-        pm.manifest_path(pkg).write_text(json.dumps({
-            "name": name,
-            "version": version,
-            "entry": "src/main.thirsty",
-            "description": f"{name} from the Great Wells",
-            "tags": ["great-well", "hydrated"],
-        }), encoding="utf-8")
+        pm.manifest_path(pkg).write_text(
+            json.dumps(
+                {
+                    "name": name,
+                    "version": version,
+                    "entry": "src/main.thirsty",
+                    "description": f"{name} from the Great Wells",
+                    "tags": ["great-well", "hydrated"],
+                }
+            ),
+            encoding="utf-8",
+        )
         return pkg
 
     def test_publish_install_and_import_package(self):
@@ -52,7 +56,9 @@ glass main() -> Int {
         self.assertEqual(out, ["42"])
 
     def test_gallery_search_and_show(self):
-        pkg = self._make_package("well_of_echoes", "glass ping() -> String { return \"pong\"; }\n")
+        pkg = self._make_package(
+            "well_of_echoes", 'glass ping() -> String { return "pong"; }\n'
+        )
         pm.publish_package(pkg)
         items = pm.search_gallery("echoes")
         self.assertTrue(any(item["name"] == "well_of_echoes" for item in items))

@@ -20,32 +20,32 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from app.core.runtime.router import route_request
 from app.core.cbrn_classifier import cli_main
+from app.core.runtime.router import route_request
 
 
 def main_governed():
     """Main function with governance routing."""
     operation = sys.argv[1] if len(sys.argv) > 1 else "stats"
-    
-    result = route_request("cli", {
-        "action": "security.cbrn_classification",
-        "params": {
-            "operation": operation,
-            "args": sys.argv[1:]
+
+    result = route_request(
+        "cli",
+        {
+            "action": "security.cbrn_classification",
+            "params": {"operation": operation, "args": sys.argv[1:]},
+            "metadata": {
+                "script": __file__,
+                "user": "security_operator",
+                "risk_level": "high",
+                "safety_critical": True,
+            },
         },
-        "metadata": {
-            "script": __file__,
-            "user": "security_operator",
-            "risk_level": "high",
-            "safety_critical": True
-        }
-    })
-    
+    )
+
     if not result.get("approved", False):
         print(f"❌ CBRN operation blocked: {result.get('reason', 'Unknown')}")
         return 1
-    
+
     # Proceed with CLI execution
     return cli_main()
 

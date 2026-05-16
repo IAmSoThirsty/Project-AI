@@ -67,8 +67,9 @@ class TacticalDecision:
     timestamp: datetime = field(default_factory=datetime.now)
 
 
-class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin):
-
+class TacticalEdgeAISubsystem(
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin
+):
     SUBSYSTEM_METADATA = {
         "id": "tactical_edge_ai",
         "name": "Tactical Edge AI",
@@ -175,7 +176,9 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
                     success = decision is not None
                     result = {"decision_id": decision.decision_id} if decision else None
                 elif command.command_type == "assess_combat_effectiveness":
-                    effectiveness = self._assess_combat_effectiveness(command.parameters)
+                    effectiveness = self._assess_combat_effectiveness(
+                        command.parameters
+                    )
                     success = True
                     result = {"effectiveness": effectiveness}
                 else:
@@ -206,7 +209,9 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
             _dispatch,
         )
         if not approved:
-            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+            return SubsystemResponse(
+                command.command_id, False, error=f"Governance denied: {result}"
+            )
         return result
 
     def get_supported_commands(self) -> list[str]:

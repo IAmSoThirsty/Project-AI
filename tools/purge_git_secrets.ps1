@@ -83,7 +83,7 @@ Write-Host "   - Update SMTP_PASSWORD in .env" -ForegroundColor White
 Write-Host "   - Consider changing SMTP_USERNAME if exposed" -ForegroundColor White
 Write-Host ""
 Write-Host "5) ROTATE FERNET_KEY:" -ForegroundColor Yellow
-Write-Host "   - Generate new key: python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\"" -ForegroundColor White
+Write-Host '   - Generate new key: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"' -ForegroundColor White
 Write-Host "   - ⚠️  WARNING: Rotating Fernet key makes old encrypted data unreadable!" -ForegroundColor Red
 Write-Host "   - BEFORE rotating: Decrypt all existing data with old key" -ForegroundColor White
 Write-Host "   - Update FERNET_KEY in .env with new key" -ForegroundColor White

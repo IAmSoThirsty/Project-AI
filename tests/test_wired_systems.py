@@ -145,6 +145,7 @@ class TestWiredEthicsApprovals(unittest.TestCase):
         assert event.payload["event_type"] == "emergency_mode_activated"
         assert event.payload["reason"] == "test_emergency"
         assert event.priority == EventPriority.CRITICAL
+        assert "boot_profile" in event.metadata
 
         # Clean up
         self.event_spine.unsubscribe("test_health_subscriber")

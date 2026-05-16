@@ -176,7 +176,7 @@ class TestDeepSeekIntegration:
         # Check it's a Python file
         assert cli_path.suffix == ".py"
         # Check it has main function
-        content = cli_path.read_text()
+        content = cli_path.read_text(encoding="utf-8")
         assert "def main()" in content
         assert 'if __name__ == "__main__"' in content
 
@@ -185,7 +185,7 @@ class TestDeepSeekIntegration:
         demo_path = Path(__file__).parent.parent / "examples" / "deepseek_demo.py"
         assert demo_path.exists()
         assert demo_path.is_file()
-        content = demo_path.read_text()
+        content = demo_path.read_text(encoding="utf-8")
         assert "demo_completion" in content
         assert "demo_chat" in content
         assert "demo_content_filter" in content
@@ -194,7 +194,7 @@ class TestDeepSeekIntegration:
         """Test that README was updated with DeepSeek info."""
         readme_path = Path(__file__).parent.parent / "README.md"
         assert readme_path.exists()
-        content = readme_path.read_text()
+        content = readme_path.read_text(encoding="utf-8")
         assert "DeepSeek" in content
         assert "V3.2" in content or "v3.2" in content
         assert "Mixture-of-Experts" in content or "MoE" in content
@@ -203,7 +203,7 @@ class TestDeepSeekIntegration:
         """Test that requirements.txt was updated."""
         req_path = Path(__file__).parent.parent / "requirements.txt"
         assert req_path.exists()
-        content = req_path.read_text()
+        content = req_path.read_text(encoding="utf-8")
         assert "transformers" in content
         assert "accelerate" in content
         # torch should already be there

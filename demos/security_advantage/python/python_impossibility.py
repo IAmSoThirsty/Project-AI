@@ -21,6 +21,10 @@ print("=" * 80)
 print()
 
 
+class SecurityError(Exception):
+    """Raised when the demonstration rejects unauthorized access."""
+
+
 # ============================================================================
 # ATTEMPT 1: Name Mangling (Common "Security" Pattern)
 # ============================================================================
@@ -138,8 +142,8 @@ print("-" * 80)
 
 def get_production_key():
     """Secret embedded in bytecode constants."""
-    SECRET_KEY = "sk-PRODUCTION-SECRET-12345"
-    return SECRET_KEY
+    secret_key = "sk-PRODUCTION-SECRET-12345"
+    return secret_key
 
 
 # Bypass: Extract from code constants

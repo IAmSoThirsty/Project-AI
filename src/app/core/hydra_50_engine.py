@@ -4543,7 +4543,9 @@ class HumanFailureEmulator:
         logger.info("HumanFailureEmulator initialized")
 
     def simulate_decision_failure(
-        self, stress_level: float, decision_type: str  # 0.0-1.0
+        self,
+        stress_level: float,
+        decision_type: str,  # 0.0-1.0
     ) -> dict[str, Any]:
         """Simulate probability of human decision failure"""
         # Failure modes by decision type

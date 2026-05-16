@@ -1,186 +1,387 @@
-#!/usr/bin/env node
+'use strict';
 
 /**
- * Thirsty-lang AST (Abstract Syntax Tree) Generator
- * Visualize the structure of your code
+ * Thirsty-Lang AST Node Classes
+ * Matching Python ast.py
  */
 
-const fs = require('fs');
-
-class ThirstyAST {
-  constructor() {
-    this.ast = {
-      type: 'Program',
-      body: []
-    };
-  }
-
-  parse(code) {
-    const lines = code.split('\n')
-      .map((line, idx) => ({ line: line.trim(), lineNumber: idx + 1 }))
-      .filter(item => item.line && !item.line.startsWith('//'));
-
-    for (const { line, lineNumber } of lines) {
-      const node = this.parseStatement(line, lineNumber);
-      if (node) {
-        this.ast.body.push(node);
-      }
-    }
-
-    return this.ast;
-  }
-
-  parseStatement(line, lineNumber) {
-    // Variable declaration
-    if (line.startsWith('drink ')) {
-      const match = line.match(/drink\s+(\w+)\s*=\s*(.+)/);
-      if (match) {
-        return {
-          type: 'VariableDeclaration',
-          name: match[1],
-          value: this.parseExpression(match[2]),
-          lineNumber
-        };
-      }
-    }
-
-    // Output statement
-    if (line.startsWith('pour ')) {
-      const expr = line.substring(5).trim();
-      return {
-        type: 'OutputStatement',
-        expression: this.parseExpression(expr),
-        lineNumber
-      };
-    }
-
-    return {
-      type: 'UnknownStatement',
-      value: line,
-      lineNumber
-    };
-  }
-
-  parseExpression(expr) {
-    expr = expr.trim();
-
-    // String literal
-    if ((expr.startsWith('"') && expr.endsWith('"')) ||
-      (expr.startsWith("'") && expr.endsWith("'"))) {
-      return {
-        type: 'StringLiteral',
-        value: expr.slice(1, -1)
-      };
-    }
-
-    // Number literal
-    if (!isNaN(expr)) {
-      return {
-        type: 'NumberLiteral',
-        value: parseFloat(expr)
-      };
-    }
-
-    // Identifier (variable reference)
-    return {
-      type: 'Identifier',
-      name: expr
-    };
-  }
-
-  visualize() {
-    console.log('\n🌳 Abstract Syntax Tree\n');
-    console.log(JSON.stringify(this.ast, null, 2));
-  }
-
-  visualizeTree(node = this.ast, prefix = '', isLast = true) {
-    const marker = isLast ? '└── ' : '├── ';
-    const line = prefix + marker;
-
-    if (node.type === 'Program') {
-      console.log('Program');
-      for (const [index, child] of node.body.entries()) {
-        const childIsLast = index === node.body.length - 1;
-        const childPrefix = '';
-        this.visualizeTree(child, childPrefix, childIsLast);
-      });
-    } else if (node.type === 'VariableDeclaration') {
-      console.log("" + line + "VariableDeclaration (line " + node.lineNumber + ")");
-      console.log(`${prefix}${isLast ? '    ' : '│   '}├── name: ${node.name}`);
-      console.log(`${prefix}${isLast ? '    ' : '│   '}└── value: ${this.formatExpression(node.value)}`);
-    } else if (node.type === 'OutputStatement') {
-      console.log(`${line}OutputStatement (line ${node.lineNumber})`);
-      console.log("" + prefix + isLast ? '    ' : '│   ' + "└── expression: " + this.formatExpression(node.expression));
-    }
-  }
-
-  formatExpression(expr) {
-    if (expr.type === 'StringLiteral') {
-      return `"${expr.value}"`;
-    } else if (expr.type === 'NumberLiteral') {
-      return expr.value.toString();
-    } else if (expr.type === 'Identifier') {
-      return expr.name;
-    }
-    return JSON.stringify(expr);
-  }
-
-  generateDiagram() {
-    console.log('\n📊 AST Diagram\n');
-    this.visualizeTree();
-  }
-
-  exportJSON(filepath) {
-    try {
-      // Validate filepath to prevent path traversal
-      const validatedPath = validatePath(filepath);
-      fs.writeFileSync(validatedPath, JSON.stringify(this.ast, null, 2));
-      console.log(`✓ AST exported to ${filepath}`);
-    } catch (error) {
-      console.error('❌ Error exporting AST: ' + error.message);
-      throw error;
-    }
+class Node {
+  constructor(span) {
+    this.span = span;
   }
 }
 
-function main() {
-  const args = process.argv.slice(2);
+// Type nodes
+class TypeNode extends Node {}
 
-  if (args.length === 0) {
-    console.log('Thirsty-lang AST Generator');
-    console.log('Usage: node src/ast.js <file.thirsty> [--json output.json]');
-    console.log('\nGenerates and visualizes the Abstract Syntax Tree');
-    process.exit(0);
-  }
-
-  const filename = args[0];
-
-  try {
-    // Validate filename to prevent path traversal
-    const validatedFilename = validatePath(filename);
-    if (!isValidFile(validatedFilename)) {
-      console.error(`Error: File '${filename}' not found or is not a valid file`);
-      process.exit(1);
-    }
-
-    const code = fs.readFileSync(validatedFilename, 'utf-8');
-    const astGenerator = new ThirstyAST();
-    astGenerator.parse(code);
-    astGenerator.generateDiagram();
-
-    // Export JSON if requested
-    const jsonIndex = args.indexOf('--json');
-    if (jsonIndex !== -1 && args[jsonIndex + 1]) {
-      astGenerator.exportJSON(args[jsonIndex + 1]);
-    }
-  } catch (error) {
-    console.error('Error: ' + error.message);
-    process.exit(1);
+class NamedType extends TypeNode {
+  constructor(span, name) {
+    super(span);
+    this.name = name;
   }
 }
 
-if (require.main === module) {
-  main();
+class GenericType extends TypeNode {
+  constructor(span, base, args) {
+    super(span);
+    this.base = base;
+    this.args = args;
+  }
 }
 
-module.exports = ThirstyAST;
+class FunctionType extends TypeNode {
+  constructor(span, params, result) {
+    super(span);
+    this.params = params;
+    this.result = result;
+  }
+}
+
+// Expressions
+class Expr extends Node {}
+
+class LiteralExpr extends Expr {
+  constructor(span, value) {
+    super(span);
+    this.value = value;
+  }
+}
+
+class VariableExpr extends Expr {
+  constructor(span, name) {
+    super(span);
+    this.name = name;
+  }
+}
+
+class ThisExpr extends Expr {
+  constructor(span) {
+    super(span);
+  }
+}
+
+class InputExpr extends Expr {
+  constructor(span, safe = false) {
+    super(span);
+    this.safe = safe;
+  }
+}
+
+class ArrayExpr extends Expr {
+  constructor(span, items) {
+    super(span);
+    this.items = items;
+  }
+}
+
+class AssignExpr extends Expr {
+  constructor(span, target, value) {
+    super(span);
+    this.target = target;
+    this.value = value;
+  }
+}
+
+class UnaryExpr extends Expr {
+  constructor(span, op, right) {
+    super(span);
+    this.op = op;
+    this.right = right;
+  }
+}
+
+class BinaryExpr extends Expr {
+  constructor(span, left, op, right) {
+    super(span);
+    this.left = left;
+    this.op = op;
+    this.right = right;
+  }
+}
+
+class PipeExpr extends Expr {
+  constructor(span, left, right) {
+    super(span);
+    this.left = left;
+    this.right = right;
+  }
+}
+
+class GuardExpr extends Expr {
+  constructor(span, condition, whenTrue, whenFalse) {
+    super(span);
+    this.condition = condition;
+    this.whenTrue = whenTrue;
+    this.whenFalse = whenFalse;
+  }
+}
+
+class CallExpr extends Expr {
+  constructor(span, callee, args, safe = false) {
+    super(span);
+    this.callee = callee;
+    this.args = args;
+    this.safe = safe;
+  }
+}
+
+class MemberExpr extends Expr {
+  constructor(span, obj, name) {
+    super(span);
+    this.obj = obj;
+    this.name = name;
+  }
+}
+
+class IndexExpr extends Expr {
+  constructor(span, obj, index) {
+    super(span);
+    this.obj = obj;
+    this.index = index;
+  }
+}
+
+class NewExpr extends Expr {
+  constructor(span, className, args) {
+    super(span);
+    this.className = className;
+    this.args = args;
+  }
+}
+
+class AwaitExpr extends Expr {
+  constructor(span, expr) {
+    super(span);
+    this.expr = expr;
+  }
+}
+
+class CondenseExpr extends Expr {
+  constructor(span, expr) {
+    super(span);
+    this.expr = expr;
+  }
+}
+
+class EvaporateExpr extends Expr {
+  constructor(span, expr) {
+    super(span);
+    this.expr = expr;
+  }
+}
+
+// Statements
+class Stmt extends Node {}
+
+class BlockStmt extends Stmt {
+  constructor(span, statements) {
+    super(span);
+    this.statements = statements;
+  }
+}
+
+class ExprStmt extends Stmt {
+  constructor(span, expr) {
+    super(span);
+    this.expr = expr;
+  }
+}
+
+class PrintStmt extends Stmt {
+  constructor(span, expr, safe = false) {
+    super(span);
+    this.expr = expr;
+    this.safe = safe;
+  }
+}
+
+class ReturnStmt extends Stmt {
+  constructor(span, expr) {
+    super(span);
+    this.expr = expr; // null if no value
+  }
+}
+
+class ThrowStmt extends Stmt {
+  constructor(span, expr) {
+    super(span);
+    this.expr = expr;
+  }
+}
+
+class DripStmt extends Stmt {
+  constructor(span, name, amount = null) {
+    super(span);
+    this.name = name;
+    this.amount = amount;
+  }
+}
+
+class IfStmt extends Stmt {
+  constructor(span, condition, thenBranch, elseBranch) {
+    super(span);
+    this.condition = condition;
+    this.thenBranch = thenBranch;
+    this.elseBranch = elseBranch;
+  }
+}
+
+class LoopStmt extends Stmt {
+  constructor(span, count, body) {
+    super(span);
+    this.count = count;
+    this.body = body;
+  }
+}
+
+class CatchClause extends Node {
+  constructor(span, name, typeName, block) {
+    super(span);
+    this.name = name;
+    this.typeName = typeName;
+    this.block = block;
+  }
+}
+
+class TryStmt extends Stmt {
+  constructor(span, tryBlock, catches, finallyBlock = null) {
+    super(span);
+    this.tryBlock = tryBlock;
+    this.catches = catches;
+    this.finallyBlock = finallyBlock;
+  }
+}
+
+class Param extends Node {
+  constructor(span, name, typeNode) {
+    super(span);
+    this.name = name;
+    this.typeNode = typeNode;
+  }
+}
+
+class VarDecl extends Stmt {
+  constructor(span, name, typeNode, initializer, mutable = false, visibility = null, isField = false) {
+    super(span);
+    this.name = name;
+    this.typeNode = typeNode;
+    this.initializer = initializer;
+    this.mutable = mutable;
+    this.visibility = visibility;
+    this.isField = isField;
+  }
+}
+
+class FunctionDecl extends Stmt {
+  constructor(span, name, params, returnType, body, isAsync = false, visibility = null, isMethod = false) {
+    super(span);
+    this.name = name;
+    this.params = params;
+    this.returnType = returnType;
+    this.body = body;
+    this.isAsync = isAsync;
+    this.visibility = visibility;
+    this.isMethod = isMethod;
+  }
+}
+
+class ClassDecl extends Stmt {
+  constructor(span, name, members) {
+    super(span);
+    this.name = name;
+    this.members = members;
+  }
+}
+
+class ImportDecl extends Stmt {
+  constructor(span, module, alias = null) {
+    super(span);
+    this.module = module;
+    this.alias = alias;
+  }
+}
+
+class ModuleHeader extends Node {
+  constructor(span, name, mode = 'core') {
+    super(span);
+    this.name = name;
+    this.mode = mode;
+  }
+}
+
+class RequiresClause extends Node {
+  constructor(span, annotation) {
+    super(span);
+    this.annotation = annotation;
+  }
+}
+
+class GovernedFunctionDecl extends Stmt {
+  constructor(span, name, params, returnType, body, requires = [], isAsync = false, visibility = null, isMethod = false) {
+    super(span);
+    this.name = name;
+    this.params = params;
+    this.returnType = returnType;
+    this.body = body;
+    this.requires = requires;
+    this.isAsync = isAsync;
+    this.visibility = visibility;
+    this.isMethod = isMethod;
+  }
+}
+
+class EnumDecl extends Stmt {
+  constructor(span, name, variants) {
+    super(span);
+    this.name = name;
+    this.variants = variants;
+  }
+}
+
+class StructDecl extends Stmt {
+  constructor(span, name, fields) {
+    super(span);
+    this.name = name;
+    this.fields = fields;
+  }
+}
+
+class InterfaceDecl extends Stmt {
+  constructor(span, name, methods) {
+    super(span);
+    this.name = name;
+    this.methods = methods;
+  }
+}
+
+class Program extends Node {
+  constructor(span, declarations = [], header = null) {
+    super(span);
+    this.declarations = declarations;
+    this.header = header;
+  }
+}
+
+class MutationDecl extends Stmt {
+  constructor(span, name, params, shadowBlock, invariantBlock, canonicalBlock) {
+    super(span);
+    this.name = name;
+    this.params = params;
+    this.shadowBlock = shadowBlock;
+    this.invariantBlock = invariantBlock;
+    this.canonicalBlock = canonicalBlock;
+  }
+}
+
+module.exports = {
+  Node, TypeNode, NamedType, GenericType, FunctionType,
+  Expr, LiteralExpr, VariableExpr, ThisExpr, InputExpr, ArrayExpr,
+  AssignExpr, UnaryExpr, BinaryExpr, PipeExpr, GuardExpr,
+  CallExpr, MemberExpr, IndexExpr, NewExpr, AwaitExpr,
+  CondenseExpr, EvaporateExpr,
+  Stmt, BlockStmt, ExprStmt, PrintStmt, ReturnStmt, ThrowStmt,
+  DripStmt, IfStmt, LoopStmt, CatchClause, TryStmt,
+  Param, VarDecl, FunctionDecl, ClassDecl, ImportDecl,
+  ModuleHeader, RequiresClause, GovernedFunctionDecl,
+  EnumDecl, StructDecl, InterfaceDecl, Program, MutationDecl,
+};

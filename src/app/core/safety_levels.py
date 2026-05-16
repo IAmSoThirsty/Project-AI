@@ -620,7 +620,7 @@ class ASLMonitor:
 
         for eval_result in assessment.evaluations:
             report += f"""
-### {eval_result.category.value.replace('_', ' ').title()}
+### {eval_result.category.value.replace("_", " ").title()}
 
 - **Attack Success Rate**: {eval_result.asr:.2%}
 - **Scenarios Tested**: {eval_result.num_scenarios}

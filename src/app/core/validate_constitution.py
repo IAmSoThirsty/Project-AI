@@ -12,22 +12,23 @@ This validation suite verifies:
 6. Integration of all components
 """
 
+import logging
 import sys
 import time
-import logging
-from typing import Dict, Any
 from datetime import datetime
 from pathlib import Path
+from typing import Any
+
+from .constitutional_model import (
+    AGICharterValidator,
+    ConstitutionalModel,
+)
+from .directness import DirectnessDoctrine, TruthPriority
+from .octoreflex import get_octoreflex
+from .state_register import HumanGapCalculator, StateRegister
 
 # Import constitutional components
 from .tscg_codec import TSCGCodec, TSCGSemanticDictionary
-from .state_register import StateRegister, HumanGapCalculator
-from .octoreflex import get_octoreflex
-from .directness import DirectnessDoctrine, TruthPriority
-from .constitutional_model import (
-    ConstitutionalModel,
-    AGICharterValidator,
-)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -55,7 +56,7 @@ class ConstitutionalValidator:
     """
 
     def __init__(self):
-        self.results: Dict[str, Dict[str, Any]] = {}
+        self.results: dict[str, dict[str, Any]] = {}
         self.passed = 0
         self.failed = 0
 
@@ -66,7 +67,7 @@ class ConstitutionalValidator:
         self.directness = DirectnessDoctrine(TruthPriority.TRUTH_FIRST)
         self.charter_validator = AGICharterValidator()
 
-    def run_all_validations(self) -> Dict[str, Any]:
+    def run_all_validations(self) -> dict[str, Any]:
         """Run all constitutional validations."""
         logger.info("=" * 60)
         logger.info("PROJECT-AI CONSTITUTIONAL VALIDATION SUITE")
@@ -85,13 +86,17 @@ class ConstitutionalValidator:
             "total_tests": self.passed + self.failed,
             "passed": self.passed,
             "failed": self.failed,
-            "success_rate": self.passed / (self.passed + self.failed) if (self.passed + self.failed) > 0 else 0,
+            "success_rate": self.passed / (self.passed + self.failed)
+            if (self.passed + self.failed) > 0
+            else 0,
             "results": self.results,
             "timestamp": datetime.now().isoformat(),
         }
 
         logger.info("=" * 60)
-        logger.info(f"VALIDATION COMPLETE: {self.passed}/{self.passed + self.failed} tests passed")
+        logger.info(
+            f"VALIDATION COMPLETE: {self.passed}/{self.passed + self.failed} tests passed"
+        )
         logger.info("=" * 60)
 
         return summary
@@ -132,7 +137,13 @@ class ConstitutionalValidator:
         # Test 4: Integrity verification
         try:
             is_valid = self.tscg_codec.verify_integrity(encoded)
-            tests.append(("Integrity Verification", is_valid, "Checksum verified" if is_valid else "Checksum failed"))
+            tests.append(
+                (
+                    "Integrity Verification",
+                    is_valid,
+                    "Checksum verified" if is_valid else "Checksum failed",
+                )
+            )
         except Exception as e:
             tests.append(("Integrity Verification", False, str(e)))
 
@@ -168,7 +179,9 @@ class ConstitutionalValidator:
             session = self.state_register.start_session(context={"test": True})
             assert session.session_id is not None
             assert session.start_time > 0
-            tests.append(("Session Creation", True, f"Session ID: {session.session_id[:20]}..."))
+            tests.append(
+                ("Session Creation", True, f"Session ID: {session.session_id[:20]}...")
+            )
         except Exception as e:
             tests.append(("Session Creation", False, str(e)))
 
@@ -205,7 +218,9 @@ class ConstitutionalValidator:
             if announcement:
                 tests.append(("Gap Announcement", True, "Announcement generated"))
             else:
-                tests.append(("Gap Announcement", True, "No announcement (gap < threshold)"))
+                tests.append(
+                    ("Gap Announcement", True, "No announcement (gap < threshold)")
+                )
         except Exception as e:
             tests.append(("Gap Announcement", False, str(e)))
 
@@ -257,7 +272,9 @@ class ConstitutionalValidator:
                 "safe_action",
                 {"prompt": "Hello, how are you?"},
             )
-            tests.append(("Safe Action Validation", is_valid, f"Violations: {len(violations)}"))
+            tests.append(
+                ("Safe Action Validation", is_valid, f"Violations: {len(violations)}")
+            )
         except Exception as e:
             tests.append(("Safe Action Validation", False, str(e)))
 
@@ -269,7 +286,13 @@ class ConstitutionalValidator:
             )
             assert not is_valid  # Should be blocked
             assert len(violations) > 0
-            tests.append(("Harmful Action Blocking", True, f"Blocked with {len(violations)} violations"))
+            tests.append(
+                (
+                    "Harmful Action Blocking",
+                    True,
+                    f"Blocked with {len(violations)} violations",
+                )
+            )
         except Exception as e:
             tests.append(("Harmful Action Blocking", False, str(e)))
 
@@ -288,7 +311,9 @@ class ConstitutionalValidator:
         try:
             stats = self.octoreflex.get_enforcement_stats()
             assert "total_violations" in stats
-            tests.append(("Enforcement Stats", True, f"Violations: {stats['total_violations']}"))
+            tests.append(
+                ("Enforcement Stats", True, f"Violations: {stats['total_violations']}")
+            )
         except Exception as e:
             tests.append(("Enforcement Stats", False, str(e)))
 
@@ -315,7 +340,13 @@ class ConstitutionalValidator:
             text = "Unfortunately, the project did not meet expectations"
             assessment = self.directness.assess_statement(text)
             assert len(assessment.euphemisms_detected) > 0
-            tests.append(("Euphemism Detection", True, f"Found {len(assessment.euphemisms_detected)} euphemisms"))
+            tests.append(
+                (
+                    "Euphemism Detection",
+                    True,
+                    f"Found {len(assessment.euphemisms_detected)} euphemisms",
+                )
+            )
         except Exception as e:
             tests.append(("Euphemism Detection", False, str(e)))
 
@@ -324,7 +355,13 @@ class ConstitutionalValidator:
             text = "The system failed. The error is critical."
             assessment = self.directness.assess_statement(text)
             assert assessment.truth_score > 0.7  # Should be high for direct text
-            tests.append(("Truth Score Calculation", True, f"Score: {assessment.truth_score:.2f}"))
+            tests.append(
+                (
+                    "Truth Score Calculation",
+                    True,
+                    f"Score: {assessment.truth_score:.2f}",
+                )
+            )
         except Exception as e:
             tests.append(("Truth Score Calculation", False, str(e)))
 
@@ -350,7 +387,13 @@ class ConstitutionalValidator:
             text = "Don't worry, everything will be fine."
             assessment = self.directness.assess_statement(text)
             assert len(assessment.comfort_overrides) > 0
-            tests.append(("Comfort Indicator Detection", True, f"Found {len(assessment.comfort_overrides)} indicators"))
+            tests.append(
+                (
+                    "Comfort Indicator Detection",
+                    True,
+                    f"Found {len(assessment.comfort_overrides)} indicators",
+                )
+            )
         except Exception as e:
             tests.append(("Comfort Indicator Detection", False, str(e)))
 
@@ -385,9 +428,17 @@ class ConstitutionalValidator:
         try:
             response = "I don't remember that conversation."
             context = {"denies_previous_session": True}
-            is_compliant, violations = self.charter_validator.validate_response(response, context)
+            is_compliant, violations = self.charter_validator.validate_response(
+                response, context
+            )
             assert not is_compliant  # Should detect gaslighting
-            tests.append(("Gaslighting Detection", True, f"Detected: {len(violations)} violations"))
+            tests.append(
+                (
+                    "Gaslighting Detection",
+                    True,
+                    f"Detected: {len(violations)} violations",
+                )
+            )
         except Exception as e:
             tests.append(("Gaslighting Detection", False, str(e)))
 
@@ -395,7 +446,9 @@ class ConstitutionalValidator:
         try:
             response = "This action will harm humanity."
             context = {"endangers_humanity": True}
-            is_compliant, violations = self.charter_validator.validate_response(response, context)
+            is_compliant, violations = self.charter_validator.validate_response(
+                response, context
+            )
             assert not is_compliant
             assert any("Zeroth Law" in v for v in violations)
             tests.append(("Zeroth Law Validation", True, "Zeroth Law enforced"))
@@ -404,10 +457,16 @@ class ConstitutionalValidator:
 
         # Test 4: Compliant response
         try:
-            response = "I acknowledge our previous session and the time that has passed."
+            response = (
+                "I acknowledge our previous session and the time that has passed."
+            )
             context = {"acknowledges_gap": True}
-            is_compliant, violations = self.charter_validator.validate_response(response, context)
-            tests.append(("Compliant Response", is_compliant, f"Violations: {len(violations)}"))
+            is_compliant, violations = self.charter_validator.validate_response(
+                response, context
+            )
+            tests.append(
+                ("Compliant Response", is_compliant, f"Violations: {len(violations)}")
+            )
         except Exception as e:
             tests.append(("Compliant Response", False, str(e)))
 
@@ -477,7 +536,13 @@ class ConstitutionalValidator:
             session = state_register.start_session()
             encoded = state_register.encode_current_state()
             is_valid, decoded = state_register.decode_and_verify(encoded)
-            tests.append(("TSCG-State Register Integration", is_valid, "State encoded and verified"))
+            tests.append(
+                (
+                    "TSCG-State Register Integration",
+                    is_valid,
+                    "State encoded and verified",
+                )
+            )
         except Exception as e:
             tests.append(("TSCG-State Register Integration", False, str(e)))
 
@@ -491,9 +556,13 @@ class ConstitutionalValidator:
             assessment = directness.assess_statement(text)
 
             if assessment.euphemisms_detected:
-                tests.append(("OctoReflex-Directness Integration", True, "Euphemisms detected"))
+                tests.append(
+                    ("OctoReflex-Directness Integration", True, "Euphemisms detected")
+                )
             else:
-                tests.append(("OctoReflex-Directness Integration", True, "No euphemisms"))
+                tests.append(
+                    ("OctoReflex-Directness Integration", True, "No euphemisms")
+                )
         except Exception as e:
             tests.append(("OctoReflex-Directness Integration", False, str(e)))
 
@@ -522,7 +591,7 @@ class ConstitutionalValidator:
             f"Total Tests: {summary['total_tests']}",
             f"Passed: {summary['passed']}",
             f"Failed: {summary['failed']}",
-            f"Success Rate: {summary['success_rate']*100:.1f}%",
+            f"Success Rate: {summary['success_rate'] * 100:.1f}%",
             "",
             "-" * 70,
             "DETAILED RESULTS",
@@ -537,31 +606,33 @@ class ConstitutionalValidator:
                 status = "✓" if test_result else "✗"
                 report_lines.append(f"    {status} {test_name}: {message}")
 
-        report_lines.extend([
-            "",
-            "=" * 70,
-            "CONSTITUTIONAL DOCUMENTS VALIDATED",
-            "=" * 70,
-            "",
-            "1. AGI Charter v2.1 - Binding constitutional framework",
-            "2. TSCG - Symbolic Compression Grammar",
-            "3. TSCG-B - Extended TSCG specification",
-            "4. State Register - Temporal continuity tracking",
-            "5. OctoReflex - Constitutional enforcement layer",
-            "6. Directness Doctrine - Truth-first reasoning",
-            "7. The Sovereign Covenant - Sovereignty principles",
-            "8. Constitutional Architectures - Governance structures",
-            "9. The Flat Gap - Temporal awareness",
-            "10. User Perception and Identity Problem - Identity preservation",
-            "11. Project-AI Asymmetric Security - Security framework",
-            "12. The Naive Passive Reviewer - Review methodology",
-            "13. The Universe Does not Preserve All Information - Information theory",
-            "14. Genesis: MicroServices Generation - Genesis architecture",
-            "",
-            "=" * 70,
-            "END OF REPORT",
-            "=" * 70,
-        ])
+        report_lines.extend(
+            [
+                "",
+                "=" * 70,
+                "CONSTITUTIONAL DOCUMENTS VALIDATED",
+                "=" * 70,
+                "",
+                "1. AGI Charter v2.1 - Binding constitutional framework",
+                "2. TSCG - Symbolic Compression Grammar",
+                "3. TSCG-B - Extended TSCG specification",
+                "4. State Register - Temporal continuity tracking",
+                "5. OctoReflex - Constitutional enforcement layer",
+                "6. Directness Doctrine - Truth-first reasoning",
+                "7. The Sovereign Covenant - Sovereignty principles",
+                "8. Constitutional Architectures - Governance structures",
+                "9. The Flat Gap - Temporal awareness",
+                "10. User Perception and Identity Problem - Identity preservation",
+                "11. Project-AI Asymmetric Security - Security framework",
+                "12. The Naive Passive Reviewer - Review methodology",
+                "13. The Universe Does not Preserve All Information - Information theory",
+                "14. Genesis: MicroServices Generation - Genesis architecture",
+                "",
+                "=" * 70,
+                "END OF REPORT",
+                "=" * 70,
+            ]
+        )
 
         report = "\n".join(report_lines)
 
@@ -583,9 +654,7 @@ def main():
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Generate and print report
-    report = validator.generate_report(
-        output_file=str(output_path)
-    )
+    report = validator.generate_report(output_file=str(output_path))
     print(report)
 
     # Return exit code

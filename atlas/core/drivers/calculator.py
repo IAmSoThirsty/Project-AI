@@ -442,7 +442,7 @@ class DriverCalculator:
             try:
                 tree = ast.parse(formula, mode="eval")
             except SyntaxError as e:
-                raise FormulaError(f"Invalid formula syntax: {e}")
+                raise FormulaError(f"Invalid formula syntax: {e}") from e
 
             # Evaluate safely
             result = self._eval_node(tree.body, eval_context)

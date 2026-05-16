@@ -135,7 +135,7 @@ class HumanForcesModule:
                 event_type=EventType.COOPERATION,
                 timestamp=state.timestamp,
                 source="human_forces",
-                description=f"Cooperation event {i+1}: magnitude {magnitude:.2f}",
+                description=f"Cooperation event {i + 1}: magnitude {magnitude:.2f}",
                 magnitude=magnitude,
                 reciprocity=reciprocity,
                 participants=[

@@ -272,7 +272,7 @@ class ConfigLoader:
         seeds = self._configs["seeds"]
 
         if "timeline_seeds" in seeds:
-            for stack_name in seeds["timeline_seeds"].keys():
+            for stack_name in seeds["timeline_seeds"]:
                 if stack_name not in stacks:
                     logger.warning("Seed defined for unknown stack: %s", stack_name)
 

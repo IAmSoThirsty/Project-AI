@@ -112,7 +112,7 @@ def main():
 
     print(f"✓ Causal model built: {len(causal_links)} causal links")
     print("\nKey causal relationships:")
-    for link in sorted(causal_links, key=lambda l: l.strength, reverse=True)[:5]:
+    for link in sorted(causal_links, key=lambda item: item.strength, reverse=True)[:5]:
         print(f"  • {link.source} → {link.target}")
         print(f"    Strength: {link.strength:.2f}, Lag: {link.lag_years:.1f} years")
         print(f"    Confidence: {link.confidence:.1%}")
@@ -150,9 +150,9 @@ def main():
         for i, alert in enumerate(
             sorted(alerts, key=lambda a: a.risk_score, reverse=True)[:5], 1
         ):
-            print(f"\n{'='*70}")
+            print(f"\n{'=' * 70}")
             print(f"ALERT #{i}: {alert.scenario.title}")
-            print(f"{'='*70}")
+            print(f"{'=' * 70}")
             print(f"Risk Score: {alert.risk_score:.1f}/100")
             print(f"Likelihood: {alert.scenario.likelihood:.1%}")
             print(f"Severity: {alert.scenario.severity.value.upper()}")

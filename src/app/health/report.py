@@ -25,7 +25,7 @@ Usage:
 import logging
 import platform
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -190,7 +190,7 @@ class HealthReporter:
             health_config = self.config.get_section("health")
 
             snapshot = {
-                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "generated_at": datetime.now(UTC).isoformat(),
                 "version": "1.0.0",
             }
 
@@ -293,18 +293,18 @@ class HealthReporter:
             info_text = f"""
 System Information:
 ─────────────────────────
-OS: {platform_data.get('system', 'Unknown')} {platform_data.get('release', '')}
-Machine: {platform_data.get('machine', 'Unknown')}
-Python: {platform_data.get('python_implementation', 'Unknown')}
+OS: {platform_data.get("system", "Unknown")} {platform_data.get("release", "")}
+Machine: {platform_data.get("machine", "Unknown")}
+Python: {platform_data.get("python_implementation", "Unknown")}
         {sys.version.split()[0]}
 
-Generated: {snapshot_data.get('generated_at', 'Unknown')[:19]}
+Generated: {snapshot_data.get("generated_at", "Unknown")[:19]}
 
-Status: {"✓ Healthy" if all([
-    cpu_usage < 80,
-    memory_usage < 85,
-    disk_usage < 90
-]) else "⚠ Attention Needed"}
+Status: {
+                "✓ Healthy"
+                if all([cpu_usage < 80, memory_usage < 85, disk_usage < 90])
+                else "⚠ Attention Needed"
+            }
             """
 
             ax4.text(
@@ -362,7 +362,7 @@ Status: {"✓ Healthy" if all([
                 data={
                     "snapshot_path": str(snapshot_path),
                     "report_path": str(report_path),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 },
                 description="System health report generated successfully",
             )
@@ -431,4 +431,3 @@ if __name__ == "__main__":
 
 
 __all__ = ["HealthReporter"]
-

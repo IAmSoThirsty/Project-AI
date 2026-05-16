@@ -22,7 +22,7 @@ import threading
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -61,7 +61,7 @@ class IncidentResponse:
     """Record of an incident response action."""
 
     response_id: str = field(default_factory=lambda: str(__import__("uuid").uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     incident_id: str = ""
     action: str = ""
     target: str = ""
@@ -76,7 +76,7 @@ class SecurityIncident:
     """Security incident requiring response."""
 
     incident_id: str = field(default_factory=lambda: str(__import__("uuid").uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     severity: str = IncidentSeverity.MEDIUM.value
     incident_type: str = ""
     source_ip: str = ""
@@ -326,7 +326,7 @@ class IncidentResponder:
     def _backup_data(self, incident: SecurityIncident) -> tuple[bool, str]:
         """Create backup of critical data."""
         try:
-            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
             backup_name = f"backup_{incident.incident_id}_{timestamp}"
             backup_path = self.backup_dir / backup_name
 
@@ -386,7 +386,7 @@ Description: {incident.description}
 Time: {incident.timestamp}
 
 Automated responses executed:
-{', '.join(incident.automated_responses) if incident.automated_responses else 'None yet'}
+{", ".join(incident.automated_responses) if incident.automated_responses else "None yet"}
 
 Please review and take appropriate action.
         """
@@ -427,7 +427,7 @@ Please review and take appropriate action.
         try:
             src = Path(file_path)
             if src.exists():
-                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+                timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
                 dst = quarantine_dir / f"{timestamp}_{src.name}"
                 shutil.move(str(src), str(dst))
                 logger.info("File quarantined: %s -> %s", src, dst)
@@ -447,7 +447,7 @@ Please review and take appropriate action.
 
         forensics_data = {
             "incident": asdict(incident),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "system_state": {
                 "isolated_components": list(self.isolated_components),
                 "total_incidents": len(self.incidents),
@@ -511,7 +511,7 @@ Please review and take appropriate action.
         """Get recent incidents."""
         from datetime import timedelta
 
-        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        cutoff = datetime.now(UTC) - timedelta(hours=hours)
         recent = []
 
         for incident in self.incidents:
@@ -560,4 +560,3 @@ Please review and take appropriate action.
 
         except Exception as e:
             logger.error("Error saving incident responder state: %s", e)
-

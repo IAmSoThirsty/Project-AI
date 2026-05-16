@@ -7,7 +7,7 @@ Provides deliberation, learning, and adaptive build optimization.
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from cognition.boundary import check_boundary
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 def _utc_now_iso() -> str:
     """Return UTC timestamp in ISO-8601 format."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class BuildCognitionEngine:
@@ -123,7 +123,11 @@ class BuildCognitionEngine:
             # 2) learn_from_build(build_id, tasks, performance_dict)
             build_id: str | None = None
 
-            if len(args) >= 3 and isinstance(args[0], str) and isinstance(args[1], list):
+            if (
+                len(args) >= 3
+                and isinstance(args[0], str)
+                and isinstance(args[1], list)
+            ):
                 build_id = args[0]
                 tasks = args[1]
                 execution_data = args[2] if isinstance(args[2], dict) else {}
@@ -136,7 +140,9 @@ class BuildCognitionEngine:
                 success = (
                     args[2]
                     if len(args) > 2
-                    else kwargs.get("success", bool(execution_data.get("success", True)))
+                    else kwargs.get(
+                        "success", bool(execution_data.get("success", True))
+                    )
                 )
 
             if not isinstance(tasks, list):
@@ -181,7 +187,13 @@ class BuildCognitionEngine:
         avg_tasks_changed = 0.0
         if total:
             changed_counts = [
-                sum(1 for old, new in zip(item["original"], item["optimized"], strict=False) if old != new)
+                sum(
+                    1
+                    for old, new in zip(
+                        item["original"], item["optimized"], strict=False
+                    )
+                    if old != new
+                )
                 for item in self.optimization_history
             ]
             avg_tasks_changed = sum(changed_counts) / total if changed_counts else 0.0

@@ -9,7 +9,6 @@ This module consolidates three separate intelligence subsystems:
 - AGI Identity System: Complete identity, bonding, and governance integration
 """
 
-import json
 import logging
 import os
 
@@ -116,7 +115,8 @@ class IntelligenceRouter:
             search_terms = [word for word in query.split() if len(word) > 3]
             if search_terms:
                 results = self.memory_system.query_knowledge(
-                    " ".join(search_terms[:3]), limit=5  # Use first 3 significant words
+                    " ".join(search_terms[:3]),
+                    limit=5,  # Use first 3 significant words
                 )
                 if results:
                     return {
@@ -421,7 +421,7 @@ class IntentDetector:
 
 class LearningPathManager:
     """DEPRECATED: Moved to app.core.learning_paths module.
-    
+
     This class remains for backward compatibility but redirects to the new module.
     """
 
@@ -435,7 +435,7 @@ class LearningPathManager:
         """
         # Import the new implementation
         from app.core.learning_paths import LearningPathManager as NewLPM
-        
+
         self._impl = NewLPM(api_key=api_key, provider=provider)
         logger.warning(
             "LearningPathManager in intelligence_engine is deprecated. "

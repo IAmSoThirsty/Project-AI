@@ -259,7 +259,7 @@ class EMPDefenseEngine:
 
         # Record event
         self.state.major_events.append(
-            f"Day 0: EMP event - {self.config.grid_failure_pct*100}% grid failure"
+            f"Day 0: EMP event - {self.config.grid_failure_pct * 100}% grid failure"
         )
 
         # Inject event

@@ -61,7 +61,6 @@ class PatientRecord:
 class BiomedicalDefenseSubsystem(
     BaseSubsystem, ICommandable, IMonitorable, IObservable, DomainOperationalMixin
 ):
-
     SUBSYSTEM_METADATA = {
         "id": "biomedical_defense",
         "name": "Biomedical Defense",
@@ -196,7 +195,9 @@ class BiomedicalDefenseSubsystem(
             _dispatch,
         )
         if not approved:
-            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+            return SubsystemResponse(
+                command.command_id, False, error=f"Governance denied: {result}"
+            )
         return result
 
     def get_supported_commands(self) -> list[str]:

@@ -135,7 +135,11 @@ class CommandMessage:
 
 
 class CommandControlSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable, ICommunication,
+    BaseSubsystem,
+    ICommandable,
+    IMonitorable,
+    IObservable,
+    ICommunication,
     DomainOperationalMixin,
 ):
     """
@@ -452,7 +456,9 @@ class CommandControlSubsystem(
             _dispatch,
         )
         if not approved:
-            return SubsystemResponse(command.command_id, False, error=f"Governance denied: {result}")
+            return SubsystemResponse(
+                command.command_id, False, error=f"Governance denied: {result}"
+            )
         return result
 
     def get_supported_commands(self) -> list[str]:

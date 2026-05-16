@@ -212,13 +212,13 @@ def main():
             total_changes += changes
             files_changed += 1
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("📊 GOD TIER SUMMARY")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Files scanned: {len(files)}")
     print(f"Files modified: {files_changed}")
     print(f"Total logging calls fixed: {total_changes}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if args.dry_run:
         print("\n🚀 Run without --dry-run to execute changes")

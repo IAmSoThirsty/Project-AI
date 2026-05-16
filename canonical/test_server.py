@@ -55,7 +55,7 @@ def test_execute_canonical():
         if "invariants" in metrics:
             inv = metrics["invariants"]
             print(
-                f"   Invariants: {inv['passed']}/{inv['total']} passed ({inv['pass_rate']*100:.1f}%)"
+                f"   Invariants: {inv['passed']}/{inv['total']} passed ({inv['pass_rate'] * 100:.1f}%)"
             )
 
     # Show sample artifacts (truncated)

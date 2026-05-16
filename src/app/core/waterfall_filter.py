@@ -5,9 +5,9 @@ Sits at the outermost edge of the execution pipeline, before the invariant
 engine and the governance gate.  Every request that enters the system passes
 through here first.
 
-When the Thirstys-waterfall module is available it is loaded dynamically and
-its `filter(context)` callable is used.  Until then a safe passthrough filter
-is used so the rest of the pipeline continues to work.
+Thirstys-waterfall is vendored into Project-AI as ``thirstys_waterfall`` and is
+loaded by default. If it cannot be imported, a safe passthrough filter is used
+so the rest of the pipeline continues to work.
 
 Waterfall contract
 ------------------
@@ -24,7 +24,7 @@ Where WaterfallResult is (or duck-types to):
         reason: str | None
 
 The module is resolved via the WATERFALL_MODULE env-var, falling back to
-"app.core._waterfall_stub".
+"thirstys_waterfall.project_ai_filter".
 """
 
 from __future__ import annotations
@@ -34,19 +34,19 @@ import logging
 import os
 import threading
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 _WATERFALL_MODULE_ENV = "WATERFALL_MODULE"
-_BUILTIN_STUB = "app.core._waterfall_stub"
+_WATERFALL_DEFAULT = "thirstys_waterfall.project_ai_filter"
 
 
 @dataclass
 class WaterfallResult:
     allowed: bool
-    context: Dict[str, Any]
-    reason: Optional[str] = None
+    context: dict[str, Any]
+    reason: str | None = None
 
 
 class WaterfallFilter:
@@ -60,21 +60,20 @@ class WaterfallFilter:
         self._filter_fn = self._load_filter_fn()
 
     def _load_filter_fn(self):
-        module_path = os.environ.get(_WATERFALL_MODULE_ENV, _BUILTIN_STUB)
+        module_path = os.environ.get(_WATERFALL_MODULE_ENV, _WATERFALL_DEFAULT)
         try:
             mod = importlib.import_module(module_path)
-            fn = getattr(mod, "filter")
+            fn = mod.filter
             logger.info("WaterfallFilter: loaded from %s", module_path)
             return fn
         except (ImportError, AttributeError):
-            if module_path != _BUILTIN_STUB:
-                logger.warning(
-                    "WaterfallFilter: could not load %s — using passthrough",
-                    module_path,
-                )
+            logger.warning(
+                "WaterfallFilter: could not load %s; using passthrough",
+                module_path,
+            )
             return _passthrough
 
-    def filter(self, context: Dict[str, Any]) -> WaterfallResult:
+    def filter(self, context: dict[str, Any]) -> WaterfallResult:
         """
         Run the inbound filter.
 
@@ -85,6 +84,12 @@ class WaterfallFilter:
             result = self._filter_fn(context)
             if isinstance(result, WaterfallResult):
                 return result
+            if hasattr(result, "allowed") and hasattr(result, "context"):
+                return WaterfallResult(
+                    allowed=bool(result.allowed),
+                    context=dict(result.context),
+                    reason=getattr(result, "reason", None),
+                )
             # Duck-typing: assume dict-like
             return WaterfallResult(
                 allowed=bool(result.get("allowed", True)),
@@ -96,7 +101,7 @@ class WaterfallFilter:
             return WaterfallResult(allowed=True, context=context)
 
 
-def _passthrough(context: Dict[str, Any]) -> WaterfallResult:
+def _passthrough(context: dict[str, Any]) -> WaterfallResult:
     """Built-in passthrough — allows everything, returns context unchanged."""
     return WaterfallResult(allowed=True, context=context)
 
@@ -105,7 +110,7 @@ def _passthrough(context: Dict[str, Any]) -> WaterfallResult:
 # Singleton
 # ─────────────────────────────────────────────
 
-_filter_instance: Optional[WaterfallFilter] = None
+_filter_instance: WaterfallFilter | None = None
 _filter_lock = threading.Lock()
 
 

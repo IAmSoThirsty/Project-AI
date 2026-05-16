@@ -142,7 +142,7 @@ def example_3_execution_history():
     # Execute multiple operations
     for i in range(5):
         result = super_kernel.process(
-            f"Operation {i+1}",
+            f"Operation {i + 1}",
             kernel_type=KernelType.COGNITION,
             source="test",
         )

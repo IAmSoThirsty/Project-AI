@@ -6,13 +6,13 @@ import hashlib
 import time
 import uuid
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
-from app.core.event_spine import EventCategory, EventPriority, get_event_spine
-from app.core.governance_graph import get_governance_graph
-from app.core.fates import get_fates
 from app.core.constitutional_ledger import get_ledger
+from app.core.event_spine import EventCategory, EventPriority, get_event_spine
+from app.core.fates import get_fates
 from app.core.governance import GovernanceContext, Triumvirate
+from app.core.governance_graph import get_governance_graph
 
 
 @dataclass
@@ -21,14 +21,13 @@ class DecisionRecord:
     timestamp: float
     actor: str
     action: str
-    context: Dict[str, Any]
+    context: dict[str, Any]
     approved: bool
-    reason: Optional[str]
+    reason: str | None
     output_hash: str
 
 
 class GovernanceKernel:
-
     def __init__(self) -> None:
         self.graph = get_governance_graph()
         self.spine = get_event_spine()
@@ -38,8 +37,8 @@ class GovernanceKernel:
         self,
         domain: str,
         action: str,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[bool, DecisionRecord]:
+        context: dict[str, Any] | None = None,
+    ) -> tuple[bool, DecisionRecord]:
         context = context or {}
         decision_id = str(uuid.uuid4())
 
@@ -72,13 +71,18 @@ class GovernanceKernel:
         # ML Triumvirate — second validation layer (Codex + Galahad + Cerberus engines).
         # Runs after rule-based Triumvirate passes; only blocks on explicit error signal.
         try:
-            from cognition.triumvirate import Triumvirate as MLTriumvirate, TriumvirateConfig
+            from cognition.triumvirate import Triumvirate as MLTriumvirate
+            from cognition.triumvirate import TriumvirateConfig
+
             _ml_result = MLTriumvirate(TriumvirateConfig()).process(
                 {"domain": domain, "action": action, "context": context}
             )
             if not _ml_result.get("success", True) and _ml_result.get("error"):
                 return self._reject(
-                    decision_id, domain, action, context,
+                    decision_id,
+                    domain,
+                    action,
+                    context,
                     f"ML Triumvirate: {_ml_result.get('error')}",
                 )
         except Exception:
@@ -105,8 +109,8 @@ class GovernanceKernel:
         return self._approve(decision_id, domain, action, context)
 
     def _approve(
-        self, decision_id: str, domain: str, action: str, context: Dict[str, Any]
-    ) -> Tuple[bool, DecisionRecord]:
+        self, decision_id: str, domain: str, action: str, context: dict[str, Any]
+    ) -> tuple[bool, DecisionRecord]:
         record = DecisionRecord(
             decision_id=decision_id,
             timestamp=time.time(),
@@ -133,9 +137,14 @@ class GovernanceKernel:
             pass
         try:
             from app.governance.audit_log import AuditLog
+
             AuditLog().log_event(
                 event_type="governance_approved",
-                data={"domain": domain, "action": action, "decision_id": record.decision_id},
+                data={
+                    "domain": domain,
+                    "action": action,
+                    "decision_id": record.decision_id,
+                },
                 actor=domain,
                 description=f"{action} approved for {domain}",
             )
@@ -148,9 +157,9 @@ class GovernanceKernel:
         decision_id: str,
         domain: str,
         action: str,
-        context: Dict[str, Any],
+        context: dict[str, Any],
         reason: str,
-    ) -> Tuple[bool, DecisionRecord]:
+    ) -> tuple[bool, DecisionRecord]:
         record = DecisionRecord(
             decision_id=decision_id,
             timestamp=time.time(),
@@ -177,9 +186,14 @@ class GovernanceKernel:
             pass
         try:
             from app.governance.audit_log import AuditLog
+
             AuditLog().log_event(
                 event_type="governance_denied",
-                data={"domain": domain, "action": action, "decision_id": record.decision_id},
+                data={
+                    "domain": domain,
+                    "action": action,
+                    "decision_id": record.decision_id,
+                },
                 actor=domain,
                 description=f"{action} denied for {domain}: {reason}",
             )
@@ -187,7 +201,7 @@ class GovernanceKernel:
             pass
         return False, record
 
-    def _hash_output(self, domain: str, action: str, context: Dict[str, Any]) -> str:
+    def _hash_output(self, domain: str, action: str, context: dict[str, Any]) -> str:
         payload = f"{domain}:{action}:{context}"
         return hashlib.sha256(payload.encode()).hexdigest()
 

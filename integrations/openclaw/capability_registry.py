@@ -483,102 +483,105 @@ class CapabilityRegistry:
     async def _execute_ai_subsystem(
         self, capability_name: str, parameters: dict[str, Any]
     ) -> dict[str, Any]:
-        """Execute Project-AI subsystem capability"""
-        # Placeholder - will connect to actual subsystems
-        return {
-            "success": True,
-            "capability": capability_name,
-            "result": f"Executed {capability_name} with parameters: {parameters}",
-            "note": "Placeholder - integrate with actual Project-AI subsystems",
+        from integrations.openclaw.skills.ai_subsystems import (
+            handle_scenario_forecasting, handle_security_operations,
+            handle_defense_simulations, handle_knowledge_query,
+            handle_memory_management, handle_governance_decisions,
+            handle_code_orchestration,
+        )
+        handlers = {
+            "scenario_forecasting": handle_scenario_forecasting,
+            "security_operations": handle_security_operations,
+            "defense_simulations": handle_defense_simulations,
+            "knowledge_query": handle_knowledge_query,
+            "memory_management": handle_memory_management,
+            "governance_decisions": handle_governance_decisions,
+            "code_orchestration": handle_code_orchestration,
         }
+        handler = handlers.get(capability_name)
+        if handler:
+            return await handler(parameters)
+        return {"success": False, "result": f"Unknown AI subsystem: {capability_name}"}
 
     async def _execute_assistant_feature(
         self, capability_name: str, parameters: dict[str, Any]
     ) -> dict[str, Any]:
-        """Execute assistant feature"""
-        if capability_name == "task_management":
-            return await self._handle_task_management(parameters)
-        elif capability_name == "scheduling":
-            return await self._handle_scheduling(parameters)
-        elif capability_name == "note_taking":
-            return await self._handle_note_taking(parameters)
-        elif capability_name == "timer_alarms":
-            return await self._handle_timer_alarms(parameters)
-        else:
-            return {"success": False, "error": "Handler not implemented"}
+        from integrations.openclaw.skills.assistant import (
+            handle_tasks, handle_notes, handle_scheduling, handle_timers,
+        )
+        handlers = {
+            "task_management": handle_tasks,
+            "note_taking": handle_notes,
+            "scheduling": handle_scheduling,
+            "timer_alarms": handle_timers,
+        }
+        handler = handlers.get(capability_name)
+        if handler:
+            return await handler(parameters)
+        return {"success": False, "result": f"Unknown assistant feature: {capability_name}"}
 
     async def _execute_system_feature(
         self, capability_name: str, parameters: dict[str, Any]
     ) -> dict[str, Any]:
-        """Execute system feature"""
-        return {
-            "success": True,
-            "capability": capability_name,
-            "result": f"System feature {capability_name} placeholder",
-            "note": "Requires Triumvirate approval for execution",
+        from integrations.openclaw.skills.system_skills import (
+            handle_system_info, handle_file_operations, handle_shell,
+        )
+        handlers = {
+            "system_info": handle_system_info,
+            "file_operations": handle_file_operations,
+            "command_execution": handle_shell,
         }
+        handler = handlers.get(capability_name)
+        if handler:
+            return await handler(parameters)
+        return {"success": False, "result": f"Unknown system feature: {capability_name}"}
 
     async def _execute_research_feature(
         self, capability_name: str, parameters: dict[str, Any]
     ) -> dict[str, Any]:
-        """Execute research feature"""
-        return {
-            "success": True,
-            "capability": capability_name,
-            "result": f"Research feature {capability_name} placeholder",
+        from integrations.openclaw.skills.research import (
+            handle_web_search, handle_wikipedia, handle_knowledge_base,
+        )
+        handlers = {
+            "web_search": handle_web_search,
+            "wikipedia": handle_wikipedia,
+            "knowledge_base": handle_knowledge_base,
         }
+        handler = handlers.get(capability_name)
+        if handler:
+            return await handler(parameters)
+        return {"success": False, "result": f"Unknown research feature: {capability_name}"}
 
     async def _execute_communication_feature(
         self, capability_name: str, parameters: dict[str, Any]
     ) -> dict[str, Any]:
-        """Execute communication feature"""
-        return {
-            "success": True,
-            "capability": capability_name,
-            "result": f"Communication feature {capability_name} placeholder",
+        from integrations.openclaw.skills.communication import (
+            handle_email, handle_messaging,
+        )
+        handlers = {
+            "email": handle_email,
+            "messaging": handle_messaging,
         }
+        handler = handlers.get(capability_name)
+        if handler:
+            return await handler(parameters)
+        return {"success": False, "result": f"Unknown communication feature: {capability_name}"}
 
     async def _execute_development_feature(
         self, capability_name: str, parameters: dict[str, Any]
     ) -> dict[str, Any]:
-        """Execute development feature"""
-        return {
-            "success": True,
-            "capability": capability_name,
-            "result": f"Development feature {capability_name} placeholder",
+        from integrations.openclaw.skills.development import (
+            handle_code_execution, handle_git, handle_code_analysis,
+        )
+        handlers = {
+            "code_execution": handle_code_execution,
+            "git_operations": handle_git,
+            "code_analysis": handle_code_analysis,
         }
-
-    # Assistant feature handlers
-    async def _handle_task_management(self, params: dict[str, Any]) -> dict[str, Any]:
-        """Handle task management operations"""
-        action = params.get("action", "list")  # create, list, update, complete
-
-        return {
-            "success": True,
-            "action": action,
-            "result": f"Task {action} - placeholder implementation",
-        }
-
-    async def _handle_scheduling(self, params: dict[str, Any]) -> dict[str, Any]:
-        """Handle scheduling operations"""
-        return {
-            "success": True,
-            "result": "Scheduling feature - placeholder implementation",
-        }
-
-    async def _handle_note_taking(self, params: dict[str, Any]) -> dict[str, Any]:
-        """Handle note-taking operations"""
-        return {
-            "success": True,
-            "result": "Note-taking feature - placeholder implementation",
-        }
-
-    async def _handle_timer_alarms(self, params: dict[str, Any]) -> dict[str, Any]:
-        """Handle timers and alarms"""
-        return {
-            "success": True,
-            "result": "Timer/alarm feature - placeholder implementation",
-        }
+        handler = handlers.get(capability_name)
+        if handler:
+            return await handler(parameters)
+        return {"success": False, "result": f"Unknown development feature: {capability_name}"}
 
     def list_capabilities(
         self, category: CapabilityCategory | None = None, enabled_only: bool = True
@@ -618,10 +621,6 @@ class CapabilityError(Exception):
     """Exception raised for capability execution errors"""
 
     pass
-
-
-# Import for type hints
-from pydantic import BaseModel
 
 
 # CLI test interface

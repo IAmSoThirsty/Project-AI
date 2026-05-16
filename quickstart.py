@@ -10,9 +10,9 @@ import sys
 
 def print_header(text):
     """Print formatted header."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  {text}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
 
 def check_python_version():

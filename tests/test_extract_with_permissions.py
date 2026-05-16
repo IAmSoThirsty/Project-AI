@@ -4,6 +4,7 @@ from pathlib import Path
 from zipfile import BadZipFile, ZipFile
 
 import pytest
+
 from extract_with_permissions import extract_with_permissions
 
 
@@ -75,6 +76,10 @@ def test_extract_all_files(test_zip_with_permissions, tmp_path):
     assert (dest / "subdir" / "file3.txt").exists()
 
 
+@pytest.mark.skipif(
+    os.name == "nt",
+    reason="Windows does not preserve POSIX mode bits exactly via chmod/stat",
+)
 def test_apply_unix_permissions(test_zip_with_permissions, tmp_path):
     """Test that UNIX permissions are correctly applied."""
     dest = tmp_path / "extracted"

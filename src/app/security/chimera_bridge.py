@@ -11,7 +11,7 @@ Project-AI governance spine:
     • Governance denials → chimera_signals/ directory (Chimera polls)
 
   Audit relay:
-    • Tails chimera-audit.jsonl → ships events to acceptance ledger
+    • Tails chimera-audit.jsonl → ships events to the acceptance ledger
 """
 
 from __future__ import annotations
@@ -21,13 +21,15 @@ import logging
 import os
 import threading
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
-_DRIFT_DIR = Path(os.environ.get("GOVERNANCE_DRIFT_DIR", "data/governance_drift_alerts"))
+_DRIFT_DIR = Path(
+    os.environ.get("GOVERNANCE_DRIFT_DIR", "data/governance_drift_alerts")
+)
 _DENY_DIR = Path(os.environ.get("CHIMERA_GOVERNANCE_DENY_DIR", "data/chimera_signals"))
 
 
@@ -54,7 +56,7 @@ class ChimeraBridge:
         if verdict not in ("SUSPICIOUS", "ATTACKER"):
             return
 
-        ts = datetime.now(timezone.utc).isoformat()
+        ts = datetime.now(UTC).isoformat()
         alert: dict[str, Any] = {
             "source": "chimera",
             "event": "threat_verdict",
@@ -67,37 +69,56 @@ class ChimeraBridge:
             # OversightAgent / temporal governance scan for target_member
             "target_member": "chimera_perimeter",
         }
-        fname = _DRIFT_DIR / f"chimera_verdict_{int(time.time()*1000)}_{_safe(ip)}.json"
+        fname = (
+            _DRIFT_DIR / f"chimera_verdict_{int(time.time() * 1000)}_{_safe(ip)}.json"
+        )
         try:
             fname.write_text(json.dumps(alert), encoding="utf-8")
-            logger.info("chimera bridge: recorded %s verdict for %s (score=%d)", verdict, ip, score)
+            logger.info(
+                "chimera bridge: recorded %s verdict for %s (score=%d)",
+                verdict,
+                ip,
+                score,
+            )
         except Exception as exc:
             logger.warning("chimera bridge: failed to write verdict alert: %s", exc)
 
     def receive_canary_hit(self, ip: str, hits: list[dict[str, Any]], sid: str) -> None:
         """Called when Chimera detects a canary token. Writes drift alert + fires OctoReflex."""
-        ts = datetime.now(timezone.utc).isoformat()
+        ts = datetime.now(UTC).isoformat()
         alert: dict[str, Any] = {
             "source": "chimera",
             "event": "canary_hit",
             "ip": ip,
             "sid": sid,
-            "hits": [{"token": h.get("token", "")[:32], "kind": h.get("kind"), "form": h.get("form")} for h in hits],
+            "hits": [
+                {
+                    "token": h.get("token", "")[:32],
+                    "kind": h.get("kind"),
+                    "form": h.get("form"),
+                }
+                for h in hits
+            ],
             "hit_count": len(hits),
             "timestamp": ts,
             "target_member": "chimera_canary",
             "severity": "critical",
         }
-        fname = _DRIFT_DIR / f"chimera_canary_{int(time.time()*1000)}_{_safe(ip)}.json"
+        fname = (
+            _DRIFT_DIR / f"chimera_canary_{int(time.time() * 1000)}_{_safe(ip)}.json"
+        )
         try:
             fname.write_text(json.dumps(alert), encoding="utf-8")
-            logger.critical("chimera bridge: CANARY HIT from %s — %d token(s)", ip, len(hits))
+            logger.critical(
+                "chimera bridge: CANARY HIT from %s — %d token(s)", ip, len(hits)
+            )
         except Exception as exc:
             logger.warning("chimera bridge: failed to write canary alert: %s", exc)
 
         # Escalate immediately through OctoReflex
         try:
             from app.core.octoreflex import get_octoreflex
+
             get_octoreflex().validate_action(
                 "canary_hit",
                 {
@@ -130,7 +151,7 @@ class ChimeraBridge:
             "domain": domain,
             "action": action,
             "reason": reason,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
         fname = _DENY_DIR / f"denial_{ts}_{_safe(ip)}.json"
         try:
@@ -143,7 +164,7 @@ class ChimeraBridge:
     # ------------------------------------------------------------------ #
 
     def start_audit_relay(self, chimera_audit_path: str) -> None:
-        """Tail Chimera's audit JSONL in a daemon thread and ship to acceptance ledger."""
+        """Tail Chimera's audit JSONL in a daemon thread and ship to the acceptance ledger."""
         t = threading.Thread(
             target=self._relay_loop,
             args=(chimera_audit_path,),
@@ -166,23 +187,29 @@ class ChimeraBridge:
                             if line:
                                 try:
                                     self._ship_to_ledger(json.loads(line))
-                                except Exception:
-                                    pass
+                                except json.JSONDecodeError as exc:
+                                    logger.warning(
+                                        "chimera audit relay skipped invalid JSONL row: %s",
+                                        exc,
+                                    )
                         last_pos = f.tell()
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning("chimera audit relay error for %s: %s", audit_path, exc)
             time.sleep(5)
 
-    def _ship_to_ledger(self, event: dict[str, Any]) -> None:
+    def _ship_to_ledger(self, event: dict[str, Any]) -> bool:
         try:
             from app.governance.acceptance_ledger import AcceptanceLedger
+
             AcceptanceLedger().record_event(
                 event_type=f"chimera.{event.get('event', 'unknown')}",
                 actor=event.get("ip", "unknown"),
                 metadata=event,
             )
-        except Exception:
-            pass
+            return True
+        except Exception as exc:
+            logger.warning("chimera audit relay failed to record ledger event: %s", exc)
+            return False
 
 
 # ── singleton ─────────────────────────────────────────────────────────

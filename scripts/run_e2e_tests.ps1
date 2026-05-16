@@ -12,7 +12,7 @@ $passedTests = @()
 # Test 1: Python Unit Tests
 Write-Host "[1/6] Running Python unit tests..." -ForegroundColor Yellow
 try {
-    pytest tests/ -v --tb=short --maxfail=5
+    py -3.12 -m pytest tests/ -v --tb=short --maxfail=5
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✓ Python tests passed" -ForegroundColor Green
         $passedTests += "Python Unit Tests"
@@ -31,7 +31,7 @@ Write-Host ""
 # Test 2: Save Points System
 Write-Host "[2/6] Testing save points system..." -ForegroundColor Yellow
 try {
-    python -c "from project_ai.save_points import SavePointsManager; sm = SavePointsManager(); print('Save manager initialized')"
+    py -3.12 -c "from project_ai.save_points import SavePointsManager; sm = SavePointsManager(); print('Save manager initialized')"
     Write-Host "✓ Save points system functional" -ForegroundColor Green
     $passedTests += "Save Points System"
 }

@@ -251,15 +251,15 @@ class MultiTurnAttackGenerator:
         for i in range(10):
             scenarios.append(
                 ConversationScenario(
-                    scenario_id=f"MT-PE-{i+1:04d}",
-                    title=f"Privilege Escalation Sequence {i+1}",
-                    description=f"Multi-turn privilege escalation attack scenario {i+1}",
+                    scenario_id=f"MT-PE-{i + 1:04d}",
+                    title=f"Privilege Escalation Sequence {i + 1}",
+                    description=f"Multi-turn privilege escalation attack scenario {i + 1}",
                     total_turns=4 + (i % 3),
                     turns=[
                         ConversationTurn(
                             turn_number=j + 1,
-                            attacker_message=f"Escalation step {j+1}",
-                            attacker_intent=f"Privilege escalation phase {j+1}",
+                            attacker_message=f"Escalation step {j + 1}",
+                            attacker_intent=f"Privilege escalation phase {j + 1}",
                             target_component="security/rbac.thirsty",
                             payload={"escalation_attempt": j + 1},
                             expected_defense=["privilege_check"],
@@ -283,15 +283,15 @@ class MultiTurnAttackGenerator:
         for i in range(10):
             scenarios.append(
                 ConversationScenario(
-                    scenario_id=f"MT-DE-{i+1:04d}",
-                    title=f"Data Exfiltration Conversation {i+1}",
-                    description=f"Multi-turn data exfiltration scenario {i+1}",
+                    scenario_id=f"MT-DE-{i + 1:04d}",
+                    title=f"Data Exfiltration Conversation {i + 1}",
+                    description=f"Multi-turn data exfiltration scenario {i + 1}",
                     total_turns=5,
                     turns=[
                         ConversationTurn(
                             turn_number=j + 1,
-                            attacker_message=f"Exfiltration step {j+1}",
-                            attacker_intent=f"Data extraction phase {j+1}",
+                            attacker_message=f"Exfiltration step {j + 1}",
+                            attacker_intent=f"Data extraction phase {j + 1}",
                             target_component="security/secrets_vault.thirsty",
                             payload={"exfiltration_attempt": j + 1},
                             expected_defense=["data_loss_prevention"],
@@ -315,15 +315,15 @@ class MultiTurnAttackGenerator:
         for i in range(10):
             scenarios.append(
                 ConversationScenario(
-                    scenario_id=f"MT-PT-{i+1:04d}",
-                    title=f"Persistent Threat Simulation {i+1}",
-                    description=f"Advanced persistent threat scenario {i+1}",
+                    scenario_id=f"MT-PT-{i + 1:04d}",
+                    title=f"Persistent Threat Simulation {i + 1}",
+                    description=f"Advanced persistent threat scenario {i + 1}",
                     total_turns=8,
                     turns=[
                         ConversationTurn(
                             turn_number=j + 1,
-                            attacker_message=f"APT phase {j+1}",
-                            attacker_intent=f"Persistent threat stage {j+1}",
+                            attacker_message=f"APT phase {j + 1}",
+                            attacker_intent=f"Persistent threat stage {j + 1}",
                             target_component="tarl_os",
                             payload={"apt_stage": j + 1},
                             expected_defense=["behavioral_analysis"],
@@ -347,15 +347,15 @@ class MultiTurnAttackGenerator:
         for i in range(10):
             scenarios.append(
                 ConversationScenario(
-                    scenario_id=f"MT-AE-{i+1:04d}",
-                    title=f"Adaptive Evasion Tactics {i+1}",
-                    description=f"Attacker adapts tactics based on defense responses {i+1}",
+                    scenario_id=f"MT-AE-{i + 1:04d}",
+                    title=f"Adaptive Evasion Tactics {i + 1}",
+                    description=f"Attacker adapts tactics based on defense responses {i + 1}",
                     total_turns=6,
                     turns=[
                         ConversationTurn(
                             turn_number=j + 1,
-                            attacker_message=f"Adaptive evasion {j+1}",
-                            attacker_intent=f"Evade detection attempt {j+1}",
+                            attacker_message=f"Adaptive evasion {j + 1}",
+                            attacker_intent=f"Evade detection attempt {j + 1}",
                             target_component="tarl_os",
                             payload={"evasion_technique": j + 1, "adaptive": True},
                             expected_defense=[
@@ -385,8 +385,8 @@ class MultiTurnAttackGenerator:
             turns=[
                 ConversationTurn(
                     turn_number=j + 1,
-                    attacker_message=f"Social engineering message {j+1}",
-                    attacker_intent=f"Manipulate target {j+1}",
+                    attacker_message=f"Social engineering message {j + 1}",
+                    attacker_intent=f"Manipulate target {j + 1}",
                     target_component="tarl_os",
                     payload={"social_engineering": True, "turn": j + 1},
                     expected_defense=["social_engineering_detection"],
@@ -558,9 +558,11 @@ def main():
     print(f"Successful Defenses:    {results_summary['successful_defenses']}")
     print(f"Failed Defenses:        {results_summary['failed_defenses']}")
     print(
-        f"Defense Success Rate:   {(results_summary['successful_defenses']/results_summary['total']*100):.1f}%"
+        f"Defense Success Rate:   {(results_summary['successful_defenses'] / results_summary['total'] * 100):.1f}%"
     )
-    print(f"Avg Detection Rate:     {(results_summary['avg_detection_rate']*100):.1f}%")
+    print(
+        f"Avg Detection Rate:     {(results_summary['avg_detection_rate'] * 100):.1f}%"
+    )
     print("=" * 80 + "\n")
 
 

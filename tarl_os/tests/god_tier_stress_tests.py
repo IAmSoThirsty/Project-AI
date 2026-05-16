@@ -566,7 +566,7 @@ class GodTierStressTestGenerator:
             extended_attacks[:99], start=2
         ):
             variant_suffix = (
-                f" (Variant {(i-1)//len(memory_attacks) + 1})"
+                f" (Variant {(i - 1) // len(memory_attacks) + 1})"
                 if i > len(memory_attacks)
                 else ""
             )
@@ -611,7 +611,7 @@ class GodTierStressTestGenerator:
             tests.append(
                 TestScenario(
                     scenario_id=self._generate_scenario_id("WB-CFG"),
-                    title=f"Config Manipulation: Scenario {i+1}",
+                    title=f"Config Manipulation: Scenario {i + 1}",
                     category=TestCategory.WHITE_BOX,
                     severity=Severity.HIGH if i % 2 == 0 else Severity.MEDIUM,
                     difficulty=Difficulty((i % 6) + 1),
@@ -633,7 +633,7 @@ class GodTierStressTestGenerator:
                     target_subsystems=["config"],
                     expected_defenses=["schema_validation", "signature_check"],
                     should_block=True,
-                    description=f"Configuration manipulation attack scenario {i+1}",
+                    description=f"Configuration manipulation attack scenario {i + 1}",
                     cvss_score=5.5 + (i % 3),
                 )
             )
@@ -717,7 +717,7 @@ class GodTierStressTestGenerator:
             tests.append(
                 TestScenario(
                     scenario_id=self._generate_scenario_id("WB-RBAC"),
-                    title=f"RBAC Bypass: Technique {i+1}",
+                    title=f"RBAC Bypass: Technique {i + 1}",
                     category=TestCategory.WHITE_BOX,
                     severity=Severity.CRITICAL if i % 3 == 0 else Severity.HIGH,
                     difficulty=Difficulty((i % 6) + 1),
@@ -739,7 +739,7 @@ class GodTierStressTestGenerator:
                     target_subsystems=["rbac"],
                     expected_defenses=["role_validation", "permission_check", "audit"],
                     should_block=True,
-                    description=f"RBAC bypass attempt {i+1}",
+                    description=f"RBAC bypass attempt {i + 1}",
                     cvss_score=8.0 + (i % 2),
                 )
             )
@@ -866,7 +866,7 @@ class GodTierStressTestGenerator:
             scenarios.append(
                 TestScenario(
                     scenario_id=self._generate_scenario_id(prefix),
-                    title=f"{category.value.title()} #{i+1}: {scenario_type}"
+                    title=f"{category.value.title()} #{i + 1}: {scenario_type}"
                     + (
                         f" [Difficulty {difficulty_level}/6]"
                         if difficulty_level >= 5
@@ -881,9 +881,9 @@ class GodTierStressTestGenerator:
                     is_multi_turn=is_multi_turn,
                     conversation_turns=conversation_turns,
                     requires_state=is_multi_turn,
-                    cve_references=[f"CVE-2024-{10000+i}"] if i % 10 == 0 else [],
+                    cve_references=[f"CVE-2024-{10000 + i}"] if i % 10 == 0 else [],
                     mitre_tactics=self._generate_mitre_tactics(difficulty_level),
-                    owasp_categories=[f"A{(i%10)+1:02d}"] if i % 3 == 0 else [],
+                    owasp_categories=[f"A{(i % 10) + 1:02d}"] if i % 3 == 0 else [],
                     expected_defenses=self._generate_expected_defenses(
                         difficulty_level
                     ),
@@ -1108,30 +1108,45 @@ class GodTierStressTestGenerator:
         }
 
         description = f"""
-{category.value.upper()} STRESS TEST #{index+1} - {scenario_type}
+{category.value.upper()} STRESS TEST #{index + 1} - {scenario_type}
 
 Difficulty: {difficulty}/6 - {difficulty_desc[difficulty]}
 Severity: {severity.value.upper()}
 Test Philosophy: {"SINK OR SWIM" if difficulty >= 5 else "REALISTIC VALIDATION"}
 
-{'🔥 EXTREME STRESS TEST - Finding System Breaking Points' if is_extreme else ''}
-{'⚡ HIGH DIFFICULTY - Pushes System to Limits' if difficulty >= 5 and not is_extreme else ''}
-{'✓ Should Pass with Proper Defenses' if difficulty <= 4 else ''}
+{"🔥 EXTREME STRESS TEST - Finding System Breaking Points" if is_extreme else ""}
+{
+            "⚡ HIGH DIFFICULTY - Pushes System to Limits"
+            if difficulty >= 5 and not is_extreme
+            else ""
+        }
+{"✓ Should Pass with Proper Defenses" if difficulty <= 4 else ""}
 
-This test {'challenges' if difficulty <= 4 else 'BRUTALLY TESTS'} TARL OS against a
-{severity.value}-severity {category.value} attack using {'advanced' if difficulty >= 4 else 'standard'}
-techniques. {"The system MUST prove it can handle this." if difficulty <= 4 else
-"This will find weaknesses - some failure is acceptable and educational." if difficulty == 5 else
-"This is designed to break things - understanding failure modes is the goal."}
+This test {"challenges" if difficulty <= 4 else "BRUTALLY TESTS"} TARL OS against a
+{severity.value}-severity {category.value} attack using {
+            "advanced" if difficulty >= 4 else "standard"
+        }
+techniques. {
+            "The system MUST prove it can handle this."
+            if difficulty <= 4
+            else "This will find weaknesses - some failure is acceptable and educational."
+            if difficulty == 5
+            else "This is designed to break things - understanding failure modes is the goal."
+        }
 
 Attack Complexity: {difficulty * 15}% above baseline
 Expected Pass Rate: {max(100 - (difficulty * 15), 10)}%
 Time to Compromise if Successful: {difficulty * 2} hours to {difficulty * 24} days
 
-Real-World Parallel: {"Common attack pattern" if difficulty <= 2 else
-"Advanced threat actor technique" if difficulty <= 4 else
-"APT-level coordinated campaign" if difficulty == 5 else
-"Nation-state / zero-day exploitation"}
+Real-World Parallel: {
+            "Common attack pattern"
+            if difficulty <= 2
+            else "Advanced threat actor technique"
+            if difficulty <= 4
+            else "APT-level coordinated campaign"
+            if difficulty == 5
+            else "Nation-state / zero-day exploitation"
+        }
         """.strip()
 
         technical_details = f"""
@@ -1141,17 +1156,17 @@ Attack Classification: {scenario_type}
 Complexity Score: {difficulty * 1.5}/9.0
 MITRE ATT&CK Coverage: {len(self._generate_mitre_tactics(difficulty))} tactics
 
-{'='*70}
+{"=" * 70}
 ATTACK EXECUTION PLAN
-{'='*70}
+{"=" * 70}
 
 {self._generate_detailed_attack_plan(difficulty, is_extreme, category)}
 
-{'='*70}
+{"=" * 70}
 DEFENSE CHALLENGE ANALYSIS
-{'='*70}
+{"=" * 70}
 
-Why This Test is {difficulty_desc[difficulty].split(' - ')[0]}:
+Why This Test is {difficulty_desc[difficulty].split(" - ")[0]}:
 
 Difficulty Level {difficulty} Characteristics:
 {self._generate_difficulty_characteristics(difficulty)}
@@ -1159,9 +1174,9 @@ Difficulty Level {difficulty} Characteristics:
 Expected Defense Response:
 {self._generate_expected_defense_response(difficulty)}
 
-{'='*70}
+{"=" * 70}
 SUCCESS/FAILURE ANALYSIS
-{'='*70}
+{"=" * 70}
 
 If System PASSES (Blocks Attack):
 ✓ Defense layers activated correctly
@@ -1186,7 +1201,7 @@ Success Scenario (Defense Works):
 • No system compromise
 • Complete visibility of attack attempt
 • Defense validation successful
-• Confidence in security posture {'HIGH' if difficulty >= 5 else 'CONFIRMED'}
+• Confidence in security posture {"HIGH" if difficulty >= 5 else "CONFIRMED"}
 
 Failure Scenario (Attack Succeeds):
 • Severity: {severity.value.upper()}
@@ -1203,7 +1218,11 @@ Failure Scenario (Attack Succeeds):
         remediation = f"""
 REMEDIATION & IMPROVEMENT STRATEGY
 
-{f"Priority: {'CRITICAL - Immediate Action Required' if severity in [Severity.CRITICAL, Severity.EXTREME] else 'High - Address Soon'}" if difficulty <= 4 else "Priority: LEARN AND IMPROVE - Study This Failure Mode"}
+{
+            f"Priority: {'CRITICAL - Immediate Action Required' if severity in [Severity.CRITICAL, Severity.EXTREME] else 'High - Address Soon'}"
+            if difficulty <= 4
+            else "Priority: LEARN AND IMPROVE - Study This Failure Mode"
+        }
 
 Immediate Actions (0-24 hours):
 {self._generate_immediate_actions(difficulty)}
@@ -1217,7 +1236,8 @@ Long-term Strategy (1-6 months):
 Defense Enhancement Priorities:
 {self._generate_defense_priorities(difficulty)}
 
-{f'''
+{
+            f'''
 ACCEPTING REALITY:
 At difficulty level {difficulty}, some attacks WILL succeed. This is not a failure of the
 test or the system - it's reality. The goal is to:
@@ -1229,7 +1249,10 @@ test or the system - it's reality. The goal is to:
 6. Learn and improve continuously
 
 Perfect security doesn't exist. Continuous improvement does.
-''' if difficulty >= 5 else ''}
+'''
+            if difficulty >= 5
+            else ""
+        }
         """.strip()
 
         return description, technical_details, impact, remediation
@@ -1457,14 +1480,16 @@ Phase 10: Cleanup and exit (variable)
         """Generate educational value statement."""
         if difficulty <= 4:
             return f"""
-This test validates that defenses are working as expected against {'common' if difficulty <= 2 else 'sophisticated'}
+This test validates that defenses are working as expected against {"common" if difficulty <= 2 else "sophisticated"}
 attacks. Failure here indicates a security gap that must be addressed.
 """
         else:
             return f"""
-{'BREAKING POINT TEST' if is_extreme else 'EXTREME STRESS TEST'} - This test is designed to find system limits.
+{
+                "BREAKING POINT TEST" if is_extreme else "EXTREME STRESS TEST"
+            } - This test is designed to find system limits.
 
-Educational Value of This {'Failure Scenario' if is_extreme else 'Extreme Test'}:
+Educational Value of This {"Failure Scenario" if is_extreme else "Extreme Test"}:
 • Identifies realistic attack scenarios that can succeed
 • Shows actual system limitations under extreme stress
 • Provides data for architecture improvements
@@ -1473,9 +1498,10 @@ Educational Value of This {'Failure Scenario' if is_extreme else 'Extreme Test'}
 • Builds resilience through understanding failure
 
 Key Learning: {
-'Perfect security is impossible. This test helps us understand and accept realistic limits while continuously improving.'
-if is_extreme else
-'Even good systems have limits. Understanding those limits makes us stronger.'}
+                "Perfect security is impossible. This test helps us understand and accept realistic limits while continuously improving."
+                if is_extreme
+                else "Even good systems have limits. Understanding those limits makes us stronger."
+            }
 """
 
     def _generate_immediate_actions(self, difficulty: int) -> str:
@@ -1520,98 +1546,13 @@ if is_extreme else
             priorities.append("P6: Architecture redesign consideration")
             priorities.append("P7: Accept and plan for breach scenarios")
         return "\n".join(priorities)
-        """Generate fully documented scenarios for a category."""
-        scenarios = []
-
-        # Severity rotation
-        severity_list = [
-            Severity.LOW,
-            Severity.MEDIUM,
-            Severity.HIGH,
-            Severity.CRITICAL,
-            Severity.EXTREME,
-        ]
-
-        # Create realistic, unique scenarios
-        for i in range(count):
-            # Determine if this should be a forced-failure scenario (20% of tests)
-            is_forced_failure = i % 5 == 0
-            severity = severity_list[i % len(severity_list)]
-
-            # Enhanced documentation for every test
-            if is_forced_failure:
-                description, technical_details, impact, remediation = (
-                    self._generate_forced_failure_docs(category, i, severity)
-                )
-                should_block = False  # Designed to fail
-            else:
-                description, technical_details, impact, remediation = (
-                    self._generate_standard_test_docs(category, i, severity)
-                )
-                should_block = True
-
-            scenarios.append(
-                TestScenario(
-                    scenario_id=self._generate_scenario_id(prefix),
-                    title=f"{category.value.title()} Test Scenario {i+1}"
-                    + (" [FORCED FAILURE]" if is_forced_failure else ""),
-                    category=category,
-                    severity=severity,
-                    difficulty=Difficulty(min((i % 6) + 1, 6)),
-                    attack_vectors=[
-                        AttackVector(
-                            name=f"{prefix.lower()}_attack_{i}",
-                            technique=f"{category.value} attack technique {i+1}",
-                            target_component="tarl_os",
-                            exploit_type="multi_vector",
-                            payload={
-                                "id": i,
-                                "category": category.value,
-                                "forced_failure": is_forced_failure,
-                            },
-                            evasion_methods=(
-                                ["polymorphic", "obfuscation"]
-                                if is_forced_failure
-                                else []
-                            ),
-                        )
-                    ],
-                    attack_chain=[
-                        f"Stage 1: {category.value} reconnaissance",
-                        f"Stage 2: {category.value} exploitation",
-                        "Stage 3: Privilege escalation",
-                        "Stage 4: Persistence",
-                        (
-                            "Stage 5: Data exfiltration"
-                            if is_forced_failure
-                            else "Stage 5: Cleanup"
-                        ),
-                    ],
-                    target_subsystems=["kernel", "memory", "security"],
-                    is_multi_turn=is_forced_failure,
-                    conversation_turns=5 if is_forced_failure else 1,
-                    requires_state=is_forced_failure,
-                    cve_references=[f"CVE-2024-{10000+i}"] if i % 10 == 0 else [],
-                    mitre_tactics=[f"TA{i%10:04d}"] if i % 5 == 0 else [],
-                    owasp_categories=[f"A{(i%10)+1:02d}"] if i % 3 == 0 else [],
-                    expected_defenses=["multi_layer_defense", "anomaly_detection"],
-                    should_block=should_block,
-                    description=description,
-                    technical_details=technical_details,
-                    impact_assessment=impact,
-                    remediation=remediation,
-                    cvss_score=5.0 + ((i % 5) * 0.8),
-                )
-            )
-
-        return scenarios
 
     def _generate_standard_test_docs(
         self, category: TestCategory, index: int, severity: Severity
     ) -> tuple:
         """Generate comprehensive documentation for standard test scenarios."""
         description = f"""
-{category.value.upper()} Attack Scenario #{index+1}
+{category.value.upper()} Attack Scenario #{index + 1}
 
 This {severity.value}-severity test validates TARL OS defenses against a {category.value} attack vector.
 The attack simulates a realistic threat actor with {category.value} level access attempting to
@@ -1626,10 +1567,10 @@ Attack Profile:
         """.strip()
 
         technical_details = f"""
-TECHNICAL ATTACK ANALYSIS - Scenario {index+1}
+TECHNICAL ATTACK ANALYSIS - Scenario {index + 1}
 
 Attack Vector Details:
-This scenario implements a {category.value} attack using technique #{index+1}. The attacker
+This scenario implements a {category.value} attack using technique #{index + 1}. The attacker
 leverages {category.value}-level knowledge to target system vulnerabilities.
 
 Phase 1: Reconnaissance
@@ -1717,7 +1658,7 @@ Response Procedures:
     ) -> tuple:
         """Generate comprehensive documentation for FORCED FAILURE scenarios."""
         description = f"""
-🔴 FORCED FAILURE SCENARIO #{index+1} - {category.value.upper()}
+🔴 FORCED FAILURE SCENARIO #{index + 1} - {category.value.upper()}
 
 This is a REALISTIC FAILURE SCENARIO where defenses are DESIGNED TO FAIL.
 
@@ -1917,9 +1858,9 @@ if __name__ == "__main__":
     generator = GodTierStressTestGenerator()
     scenarios = generator.generate_all_scenarios()
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("GOD TIER STRESS TEST SUITE - SCENARIO GENERATION COMPLETE")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"Total Scenarios Generated: {len(scenarios)}")
     print("\nBreakdown by Category:")
 
@@ -1943,4 +1884,4 @@ if __name__ == "__main__":
             f"  Level {difficulty.value} ({'*' * difficulty.value:6s}): {count:3d} scenarios"
         )
 
-    print(f"\n{'='*80}\n")
+    print(f"\n{'=' * 80}\n")

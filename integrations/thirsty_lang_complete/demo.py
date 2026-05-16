@@ -163,7 +163,7 @@ ops_per_sec = iterations / elapsed
 print(f"  Iterations: {iterations:,}")
 print(f"  Total time: {elapsed:.3f} seconds")
 print(f"  Operations/sec: {ops_per_sec:,.0f}")
-print(f"  Avg time per check: {(elapsed/iterations)*1000:.3f} ms")
+print(f"  Avg time per check: {(elapsed / iterations) * 1000:.3f} ms")
 print("  ✓ Performance: Excellent (<1ms per check)")
 print()
 

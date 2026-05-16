@@ -1,0 +1,52 @@
+module governed_agent_runner
+mode governed
+
+import "thirst::crypto" as crypto;
+import "thirst::time" as t;
+import "thirst::env" as env;
+
+glass log_step(msg: String) -> Void {
+  pour(msg);
+}
+
+glass approve_task(task_id: String) -> Governed[String]
+  requires AuthorityClass.AC3
+  requires AuditTrail.Immutable
+{
+  drink ts: Int = t.now();
+  drink sig: String = crypto.sign(task_id);
+  pour("APPROVED");
+  return sig;
+}
+
+glass review_task(task_id: String) -> Governed[String]
+  requires AuthorityClass.AC2
+  requires HumanAppealWindow[30d]
+{
+  drink h: String = crypto.sha256(task_id);
+  pour("REVIEWED");
+  return h;
+}
+
+glass run_agent(task_id: String) -> Int {
+  log_step("--- Governed Agent Runner ---");
+  log_step("Step 1: Identify task");
+  pour(task_id);
+
+  log_step("Step 2: Review phase (AC2 required)");
+  drink review_result: Any = review_task(task_id);
+  pour(review_result);
+
+  log_step("Step 3: Approval phase (AC3 required)");
+  drink approval: Any = approve_task(task_id);
+  pour(approval);
+
+  log_step("Step 4: Execution complete");
+  pour("DONE");
+  return 0;
+}
+
+glass main() -> Int {
+  drink task: String = "agent-task-001";
+  return run_agent(task);
+}

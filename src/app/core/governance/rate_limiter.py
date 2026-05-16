@@ -11,14 +11,13 @@ This module provides a production-ready rate limiter that:
 
 from __future__ import annotations
 
-import hashlib
 import logging
 import os
 import threading
 import time
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -82,11 +81,13 @@ class RedisRateLimiter(RateLimiter):
         """
         try:
             import redis
-            
-            self.redis_url = redis_url or os.getenv("REDIS_URL", "redis://localhost:6379/0")
+
+            self.redis_url = redis_url or os.getenv(
+                "REDIS_URL", "redis://localhost:6379/0"
+            )
             self.prefix = prefix
             self.enable_metrics = enable_metrics
-            
+
             # Initialize Redis connection with retry logic
             self.redis_client = redis.from_url(
                 self.redis_url,
@@ -95,11 +96,11 @@ class RedisRateLimiter(RateLimiter):
                 socket_timeout=5,
                 retry_on_timeout=True,
             )
-            
+
             # Test connection
             self.redis_client.ping()
             logger.info(f"Redis rate limiter connected to {self.redis_url}")
-            
+
             self._metrics = {
                 "total_checks": 0,
                 "allowed": 0,
@@ -107,7 +108,7 @@ class RedisRateLimiter(RateLimiter):
                 "errors": 0,
             }
             self._metrics_lock = threading.Lock()
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize Redis rate limiter: {e}")
             raise
@@ -168,7 +169,9 @@ class RedisRateLimiter(RateLimiter):
             # Calculate retry_after if blocked
             if not allowed:
                 # Get oldest timestamp in window
-                oldest_entries = self.redis_client.zrange(redis_key, 0, 0, withscores=True)
+                oldest_entries = self.redis_client.zrange(
+                    redis_key, 0, 0, withscores=True
+                )
                 if oldest_entries:
                     oldest_timestamp = oldest_entries[0][1]
                     retry_after = int(oldest_timestamp + window_seconds - now) + 1
@@ -212,7 +215,7 @@ class RedisRateLimiter(RateLimiter):
         """Get rate limiter statistics."""
         with self._metrics_lock:
             stats = self._metrics.copy()
-            
+
         # Add Redis connection info
         try:
             info = self.redis_client.info()
@@ -248,13 +251,13 @@ class InMemoryRateLimiter(RateLimiter):
         self._requests: dict[str, list[float]] = defaultdict(list)
         self._lock = threading.Lock()
         self.enable_metrics = enable_metrics
-        
+
         self._metrics = {
             "total_checks": 0,
             "allowed": 0,
             "denied": 0,
         }
-        
+
         logger.warning(
             "Using in-memory rate limiter - not suitable for production "
             "with multiple processes/servers"
@@ -266,7 +269,7 @@ class InMemoryRateLimiter(RateLimiter):
         """Check rate limit using in-memory sliding window."""
         with self._lock:
             self._metrics["total_checks"] += 1
-            
+
             now = time.time()
             window_start = now - window_seconds
 
@@ -450,17 +453,13 @@ class GlobalRateLimiter:
         }
         return stats
 
-    def update_action_limit(
-        self, action: str, max_requests: int, window: int
-    ) -> None:
+    def update_action_limit(self, action: str, max_requests: int, window: int) -> None:
         """Update rate limit for a specific action."""
         self.action_limits[action] = {
             "max_requests": max_requests,
             "window": window,
         }
-        logger.info(
-            f"Updated rate limit for {action}: {max_requests}/{window}s"
-        )
+        logger.info(f"Updated rate limit for {action}: {max_requests}/{window}s")
 
     def health_check(self) -> dict[str, Any]:
         """Perform health check on rate limiter."""

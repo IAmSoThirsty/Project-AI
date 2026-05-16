@@ -1,4 +1,4 @@
-﻿"""Extended tests for CommandOverrideSystem and the adapter (20+ cases)."""
+"""Extended tests for CommandOverrideSystem and the adapter (20+ cases)."""
 
 from __future__ import annotations
 
@@ -129,6 +129,7 @@ def test_account_lockout_after_five_failed_attempts(tmpdir):
 
     # Verify locked for 900 seconds (15 minutes)
     import time
+
     lockout_duration = sys.auth_locked_until - time.time()
     assert 895 < lockout_duration <= 900  # Allow small timing variance
 
@@ -152,6 +153,7 @@ def test_cannot_authenticate_during_lockout(tmpdir):
 def test_lockout_expires_after_duration(tmpdir):
     """Test that lockout expires and allows authentication after 15 minutes."""
     import time
+
     sys = CommandOverrideSystem(data_dir=tmpdir)
     sys.set_master_password("CorrectPass123!")
 
@@ -178,7 +180,7 @@ def test_successful_auth_resets_failed_attempts(tmpdir):
     # Make 3 failed attempts
     for _ in range(3):
         sys.authenticate("wrong_password")
-    
+
     assert sys.failed_auth_attempts == 3
 
     # Successful authentication should reset counter
@@ -195,7 +197,7 @@ def test_emergency_unlock_clears_lockout(tmpdir):
     # Trigger lockout
     for _ in range(5):
         sys.authenticate("wrong_password")
-    
+
     assert sys.auth_locked_until is not None
     assert sys.failed_auth_attempts == 5
 
@@ -226,13 +228,13 @@ def test_lockout_persists_across_instances(tmpdir):
     sys1.set_master_password("CorrectPass123!")
     for _ in range(5):
         sys1.authenticate("wrong_password")
-    
+
     assert sys1.auth_locked_until is not None
     locked_until = sys1.auth_locked_until
 
     # Create new instance (simulates restart)
     sys2 = CommandOverrideSystem(data_dir=tmpdir)
-    
+
     # Lockout should persist
     assert sys2.auth_locked_until == locked_until
     assert sys2.failed_auth_attempts == 5
@@ -247,12 +249,12 @@ def test_emergency_lockdown_still_works_during_lockout(tmpdir):
     # Trigger lockout
     for _ in range(5):
         sys.authenticate("wrong_password")
-    
+
     assert sys.auth_locked_until is not None
 
     # emergency_lockdown() should still work (doesn't require auth)
     sys.emergency_lockdown()
-    
+
     assert sys.authenticated is False
     assert all(sys.is_protocol_enabled(k) is True for k in sys.get_all_protocols())
     # Note: lockout state remains (this is intentional - emergency_lockdown focuses on protocols)
@@ -273,7 +275,7 @@ def test_get_status_includes_lockout_info(tmpdir):
     # Trigger lockout
     for _ in range(5):
         sys.authenticate("wrong_password")
-    
+
     status = sys.get_status()
     assert status["failed_auth_attempts"] == 5
     assert status["lockout_status"] is not None
@@ -288,18 +290,18 @@ def test_lockout_audit_log_entries(tmpdir):
     sys.set_master_password("CorrectPass123!")
 
     # Trigger lockout
-    for i in range(5):
+    for _i in range(5):
         sys.authenticate("wrong_password")
-    
+
     # Check audit log
     log_entries = sys.get_audit_log(lines=20)
     log_text = "".join(log_entries)
-    
+
     # Should have failed attempt messages
     assert "Invalid password" in log_text or "FAILED" in log_text
     # Should have lockout message
     assert "locked" in log_text.lower() or "Account locked" in log_text
-    
+
     # Emergency unlock
     sys.emergency_unlock()
     log_entries = sys.get_audit_log(lines=5)
@@ -310,17 +312,17 @@ def test_lockout_audit_log_entries(tmpdir):
 def test_password_policy_weak_passwords_rejected(tmpdir):
     """Test that weak passwords are rejected by the password policy."""
     sys = CommandOverrideSystem(data_dir=tmpdir)
-    
+
     weak_passwords = [
-        "weak",         # too short
-        "password",     # no uppercase, no digit, no special char
-        "Password1",    # no special character
-        "password!",    # no uppercase, no digit
-        "PASSWORD1!",   # no lowercase
-        "Password!",    # no digit
-        "Pass1!",       # too short (only 6 chars)
+        "weak",  # too short
+        "password",  # no uppercase, no digit, no special char
+        "Password1",  # no special character
+        "password!",  # no uppercase, no digit
+        "PASSWORD1!",  # no lowercase
+        "Password!",  # no digit
+        "Pass1!",  # too short (only 6 chars)
     ]
-    
+
     for password in weak_passwords:
         result = sys.set_master_password(password)
         assert result is False, f"Password '{password}' should have been rejected"
@@ -330,7 +332,7 @@ def test_password_policy_weak_passwords_rejected(tmpdir):
 def test_password_policy_strong_passwords_accepted(tmpdir):
     """Test that strong passwords are accepted by the password policy."""
     sys = CommandOverrideSystem(data_dir=tmpdir)
-    
+
     strong_passwords = [
         "MasterP@ss123",
         "Override!2024",
@@ -339,14 +341,14 @@ def test_password_policy_strong_passwords_accepted(tmpdir):
         "C0mpl3x!Pass",
         "Adm1n#2024!",
     ]
-    
+
     for password in strong_passwords:
         # Create new instance for each test to ensure clean state
         sys = CommandOverrideSystem(data_dir=tmpdir)
         result = sys.set_master_password(password)
         assert result is True, f"Password '{password}' should have been accepted"
         assert sys.master_password_hash is not None
-        
+
         # Verify we can authenticate with the accepted password
         assert sys.authenticate(password) is True
 
@@ -354,14 +356,14 @@ def test_password_policy_strong_passwords_accepted(tmpdir):
 def test_password_policy_audit_log(tmpdir):
     """Test that password policy rejections are logged in audit log."""
     sys = CommandOverrideSystem(data_dir=tmpdir)
-    
+
     # Try weak password
     sys.set_master_password("weak")
-    
+
     # Check audit log
     log_entries = sys.get_audit_log(lines=5)
     log_text = "".join(log_entries)
-    
+
     assert "Rejected:" in log_text or "FAILED" in log_text
     assert "password" in log_text.lower()
 
@@ -369,33 +371,31 @@ def test_password_policy_audit_log(tmpdir):
 def test_password_policy_validation_method(tmpdir):
     """Test the _validate_master_password_strength() method directly."""
     sys = CommandOverrideSystem(data_dir=tmpdir)
-    
+
     # Test weak passwords
     is_valid, msg = sys._validate_master_password_strength("weak")
     assert is_valid is False
     assert "8 characters" in msg
-    
+
     is_valid, msg = sys._validate_master_password_strength("password")
     assert is_valid is False
-    
+
     is_valid, msg = sys._validate_master_password_strength("Password1")
     assert is_valid is False
     assert "special character" in msg
-    
+
     is_valid, msg = sys._validate_master_password_strength("password!")
     assert is_valid is False
-    
+
     is_valid, msg = sys._validate_master_password_strength("PASSWORD1!")
     assert is_valid is False
     assert "lowercase" in msg
-    
+
     is_valid, msg = sys._validate_master_password_strength("Password!")
     assert is_valid is False
     assert "digit" in msg
-    
+
     # Test strong password
     is_valid, msg = sys._validate_master_password_strength("MasterP@ss123")
     assert is_valid is True
     assert msg == ""
-
-

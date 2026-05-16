@@ -21,6 +21,8 @@ eggs/
 .eggs/
 lib/
 lib64/
+!web/lib/
+!web/lib/**
 parts/
 sdist/
 var/
@@ -186,6 +188,8 @@ node_modules/
 audit_reports/
 test_audit_sample/
 test_audit_output/
+test-artifacts/bypass_fix_report.json
+test-artifacts/fourlaws-*.jsonl
 
 # Obsidian vault team settings (shared-safe subset)
 # Track shared plugin manifests + graph presets for multi-agent/collaborative docs.
@@ -242,3 +246,13 @@ test_audit_output/
 !.obsidian/plugins/dataview/data.json
 !.obsidian/plugins/templater-obsidian/
 !.obsidian/plugins/templater-obsidian/data.json
+
+# Local agent workspace state
+.claude/
+
+# Generated runtime logs
+data/logs/
+data/audit/*.jsonl
+
+# Generated auto-save user state
+data/savepoints/auto/latest/users.json

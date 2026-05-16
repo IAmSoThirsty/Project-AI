@@ -32,7 +32,9 @@ from app.core.platform_tiers import get_tier_registry
 from app.core.reflection_cycle import ReflectionCycle
 from app.core.tier_health_dashboard import get_health_monitor
 from app.gui.dashboard_main import DashboardMainWindow
-from app.interfaces.desktop.integration import initialize_desktop_adapter, get_desktop_adapter
+from app.interfaces.desktop.integration import (
+    initialize_desktop_adapter,
+)
 from src.cognition.triumvirate import Triumvirate
 
 try:
@@ -829,6 +831,7 @@ def _start_triumvirate_server() -> threading.Thread | None:
     """
     try:
         import uvicorn
+
         from governance.triumvirate_server import app as triumvirate_app
 
         def _run():

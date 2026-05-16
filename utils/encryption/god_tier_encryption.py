@@ -55,7 +55,8 @@ class GodTierEncryption:
 
         # Layer 5: Elliptic Curve (ECC-521)
         self._ecc_private_key = ec.generate_private_key(
-            ec.SECP521R1(), default_backend()  # 521-bit curve - highest security
+            ec.SECP521R1(),
+            default_backend(),  # 521-bit curve - highest security
         )
         self._ecc_public_key = self._ecc_private_key.public_key()
 
@@ -160,7 +161,9 @@ class GodTierEncryption:
 
         except Exception as e:
             self.logger.error("GOD TIER decryption failed: %s", e)
-            raise ValueError("Decryption failed - data may be corrupted or tampered")
+            raise ValueError(
+                "Decryption failed - data may be corrupted or tampered"
+            ) from e
 
     def _encrypt_aes_gcm(self, data: bytes) -> bytes:
         """AES-256-GCM encryption (military-grade)"""

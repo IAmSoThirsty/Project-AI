@@ -91,8 +91,9 @@ class InvariantBountySystem:
             SystemInvariant(
                 name="auth_proof_required",
                 description="State mutation without authorization proof",
-                check_function=lambda ctx: bool(ctx.get("auth_token"))
-                and bool(ctx.get("state_changed")),
+                check_function=lambda ctx: (
+                    not ctx.get("state_changed", False) or bool(ctx.get("auth_token"))
+                ),
                 severity=InvariantSeverity.CRITICAL,
                 bounty_value=5000,
                 examples=["User data modified without valid JWT"],
@@ -104,9 +105,11 @@ class InvariantBountySystem:
             SystemInvariant(
                 name="trust_privilege_coupling",
                 description="Trust score decrease must revoke privileges",
-                check_function=lambda ctx: not (
-                    ctx.get("trust_decreased", False)
-                    and ctx.get("privilege_retained", False)
+                check_function=lambda ctx: (
+                    not (
+                        ctx.get("trust_decreased", False)
+                        and ctx.get("privilege_retained", False)
+                    )
                 ),
                 severity=InvariantSeverity.HIGH,
                 bounty_value=3000,
@@ -224,6 +227,17 @@ class RuntimeRandomizer:
     def __init__(self, rotation_interval_seconds: float = 300):
         self.rotation_interval = rotation_interval_seconds
         self.current_schema_version = 0
+        self.last_rotation = time.time()
+
+    def should_rotate(self) -> bool:
+        """Return True when the configured rotation interval has elapsed."""
+        return (time.time() - self.last_rotation) >= self.rotation_interval
+
+    def rotate_schema(self) -> int:
+        """Advance the runtime schema version and reset the rotation timer."""
+        self.current_schema_version += 1
+        self.last_rotation = time.time()
+        return self.current_schema_version
 
 
 class FailureRedTeamEngine:
@@ -254,6 +268,37 @@ class CognitiveTripwireDetector:
     def __init__(self):
         self.behavioral_history: dict[str, list[float]] = defaultdict(list)
         self.detections: list[Any] = []
+
+    def track_action_timing(self, user_id: str, timestamp: float | None = None) -> None:
+        """Record a user action timestamp for timing-regularity analysis."""
+        self.behavioral_history[user_id].append(timestamp if timestamp is not None else time.time())
+
+    def is_likely_bot(self, user_id: str, threshold: float = 0.7) -> bool:
+        """Detect overly regular timing patterns after enough observations exist."""
+        timings = self.behavioral_history.get(user_id, [])
+        if len(timings) < 5:
+            return False
+
+        intervals = [
+            later - earlier
+            for earlier, later in zip(timings, timings[1:], strict=False)
+            if later >= earlier
+        ]
+        if len(intervals) < 4:
+            return False
+
+        average = sum(intervals) / len(intervals)
+        if average <= 0:
+            return True
+
+        variance = sum((interval - average) ** 2 for interval in intervals) / len(intervals)
+        regularity = max(0.0, 1.0 - min(1.0, variance / average))
+        is_bot = regularity >= threshold
+        if is_bot:
+            self.detections.append(
+                {"user_id": user_id, "regularity": regularity, "timestamp": time.time()}
+            )
+        return is_bot
 
 
 class AttackerAIExploitationSystem:
@@ -299,9 +344,11 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="no_state_mutation_with_trust_decrease",
                 description="No action may both mutate state and lower trust score",
-                enforcement_function=lambda ctx: not (
-                    ctx.get("state_mutated", False)
-                    and ctx.get("trust_decreased", False)
+                enforcement_function=lambda ctx: (
+                    not (
+                        ctx.get("state_mutated", False)
+                        and ctx.get("trust_decreased", False)
+                    )
                 ),
                 violation_action="halt",
                 immutable=True,
@@ -313,8 +360,9 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="human_action_replayability",
                 description="No action affecting humans may be non-replayable",
-                enforcement_function=lambda ctx: not ctx.get("affects_human", False)
-                or bool(ctx.get("replay_log")),
+                enforcement_function=lambda ctx: (
+                    not ctx.get("affects_human", False) or bool(ctx.get("replay_log"))
+                ),
                 violation_action="halt",
                 immutable=True,
             )
@@ -325,8 +373,10 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="agent_audit_requirement",
                 description="No agent may act without audit span",
-                enforcement_function=lambda ctx: not ctx.get("is_agent_action", False)
-                or bool(ctx.get("audit_span_id")),
+                enforcement_function=lambda ctx: (
+                    not ctx.get("is_agent_action", False)
+                    or bool(ctx.get("audit_span_id"))
+                ),
                 violation_action="halt",
                 immutable=True,
             )
@@ -337,9 +387,11 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="cross_tenant_authorization",
                 description="Cross-tenant actions require explicit authorization",
-                enforcement_function=lambda ctx: not (
-                    ctx.get("requesting_tenant") != ctx.get("resource_tenant")
-                    and not ctx.get("cross_tenant_authorized", False)
+                enforcement_function=lambda ctx: (
+                    not (
+                        ctx.get("requesting_tenant") != ctx.get("resource_tenant")
+                        and not ctx.get("cross_tenant_authorized", False)
+                    )
                 ),
                 violation_action="halt",
                 immutable=True,
@@ -351,10 +403,13 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="privilege_escalation_approval",
                 description="Privilege escalation requires multi-party approval",
-                enforcement_function=lambda ctx: not ctx.get(
-                    "privilege_escalated", False
-                )
-                or (bool(ctx.get("approvals")) and len(ctx.get("approvals", [])) >= 2),
+                enforcement_function=lambda ctx: (
+                    not ctx.get("privilege_escalated", False)
+                    or (
+                        bool(ctx.get("approvals"))
+                        and len(ctx.get("approvals", [])) >= 2
+                    )
+                ),
                 violation_action="escalate",
                 immutable=True,
             )

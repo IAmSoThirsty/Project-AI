@@ -8,10 +8,10 @@ security, audit, and API components.
 from __future__ import annotations
 
 import tempfile
+import unittest.mock as mock
 from collections.abc import Generator
 from pathlib import Path
 from typing import Any
-import unittest.mock as mock
 
 import pytest
 import yaml

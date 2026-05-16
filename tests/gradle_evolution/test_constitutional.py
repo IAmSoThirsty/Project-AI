@@ -5,7 +5,7 @@ Tests constitutional principle enforcement, temporal law evolution,
 and integration with existing governance infrastructure.
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from gradle_evolution.constitutional.enforcer import ConstitutionalEnforcer
@@ -18,7 +18,7 @@ from gradle_evolution.constitutional.temporal_law import (
 
 def _utc_now() -> datetime:
     """Return timezone-aware UTC datetime for tests."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class TestConstitutionalEngine:

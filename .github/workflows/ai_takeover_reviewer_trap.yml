@@ -182,41 +182,42 @@ jobs:
               failuresList += `- ${f}\n`;
             });
             
-            const comment = `## ❌ Reviewer Trap Enforcement Failed
-
-This PR has been automatically rejected by the AI Takeover Engine's constraint enforcement system.
-
-### Reasons
-
-**Optimism injection detected**
-
-**Semantic reframing of terminal states**
-
-**Irreversibility accounting missing**
-
-### Detailed Failures
-
-${failuresList}
-
-### Final Verdict
-
-${verdict}
-
-### Required Actions
-
-- Remove forbidden phrases and probabilistic softening
-- Restore canonical terminology
-- Complete the constraint-safe PR template
-- Provide structural reasoning, not reassurance
-
-### 📄 References
-
-- [THREAT_MODEL.md](../engines/ai_takeover/THREAT_MODEL.md)
-- [EXECUTIVE_TRAP_SUMMARY.md](../engines/ai_takeover/EXECUTIVE_TRAP_SUMMARY.md)
-- [.github/PULL_REQUEST_TEMPLATE.md](../engines/ai_takeover/.github/PULL_REQUEST_TEMPLATE.md)
-
-**This PR cannot be merged in its current form.**
-`;
+            const comment = [
+              '## ❌ Reviewer Trap Enforcement Failed',
+              '',
+              "This PR has been automatically rejected by the AI Takeover Engine's constraint enforcement system.",
+              '',
+              '### Reasons',
+              '',
+              '**Optimism injection detected**',
+              '',
+              '**Semantic reframing of terminal states**',
+              '',
+              '**Irreversibility accounting missing**',
+              '',
+              '### Detailed Failures',
+              '',
+              failuresList,
+              '',
+              '### Final Verdict',
+              '',
+              verdict,
+              '',
+              '### Required Actions',
+              '',
+              '- Remove forbidden phrases and probabilistic softening',
+              '- Restore canonical terminology',
+              '- Complete the constraint-safe PR template',
+              '- Provide structural reasoning, not reassurance',
+              '',
+              '### 📄 References',
+              '',
+              '- [THREAT_MODEL.md](../engines/ai_takeover/THREAT_MODEL.md)',
+              '- [EXECUTIVE_TRAP_SUMMARY.md](../engines/ai_takeover/EXECUTIVE_TRAP_SUMMARY.md)',
+              '- [.github/PULL_REQUEST_TEMPLATE.md](../engines/ai_takeover/.github/PULL_REQUEST_TEMPLATE.md)',
+              '',
+              '**This PR cannot be merged in its current form.**',
+            ].join('\n');
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,

@@ -204,7 +204,7 @@ def compare_json_objects(
     differences = []
 
     def compare_recursive(o1, o2, path=""):
-        if type(o1) != type(o2):
+        if type(o1) is not type(o2):
             differences.append(f"{path}: Type mismatch ({type(o1)} vs {type(o2)})")
             return
 

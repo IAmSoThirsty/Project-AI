@@ -20,7 +20,7 @@ from __future__ import annotations
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 # Dynamic import — cognition/ lives at the repo root, not under src/.
 # Add repo root if needed.
 # ---------------------------------------------------------------------------
+
 
 def _ensure_cognition_on_path() -> None:
     repo_root = str(Path(__file__).resolve().parents[4])  # src/app/core/.. → repo root
@@ -43,13 +44,19 @@ _LiaraState_ref = None
 
 try:
     _ensure_cognition_on_path()
-    from cognition.liara_guard import (  # type: ignore[import]
-        LiaraState,
+    from cognition.liara_guard import (
         STATE as _LIARA_STATE,
+    )
+    from cognition.liara_guard import (
         authorize_liara as _authorize_liara,
+    )
+    from cognition.liara_guard import (
         check_liara_state as _check_liara_state,
+    )
+    from cognition.liara_guard import (
         revoke_liara as _revoke_liara,
     )
+
     _LiaraState_ref = _LIARA_STATE
     _liara_available = True
     logger.info("LiaraBridge: cognition.liara_guard loaded")
@@ -61,7 +68,8 @@ except (ImportError, Exception) as _e:
 # Public helpers
 # ---------------------------------------------------------------------------
 
-def liara_ttl_check(context: Dict[str, Any]) -> bool:
+
+def liara_ttl_check(context: dict[str, Any]) -> bool:
     """
     Pre-execution invariant: auto-revoke Liara if TTL expired.
 
@@ -77,7 +85,7 @@ def liara_ttl_check(context: Dict[str, Any]) -> bool:
     return True
 
 
-def get_liara_context() -> Dict[str, Any]:
+def get_liara_context() -> dict[str, Any]:
     """
     Return current Liara state for context injection.
 
@@ -90,6 +98,7 @@ def get_liara_context() -> Dict[str, Any]:
 
     try:
         from datetime import datetime
+
         state = _LiaraState_ref
         active = (
             state.active_role is not None

@@ -93,7 +93,7 @@ Tier-3 must be swappable without threatening Tier-1 or Tier-2.
 
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -167,7 +167,7 @@ class TierComponent:
     dependencies: list[str] = field(default_factory=list)
     can_be_paused: bool = True
     can_be_replaced: bool = False
-    registered_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    registered_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 @dataclass
@@ -183,7 +183,7 @@ class TierBoundaryViolation:
     source_tier: PlatformTier
     target_tier: PlatformTier
     description: str
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 @dataclass
@@ -196,7 +196,7 @@ class TierHealthStatus:
     active_components: int
     paused_components: int
     failed_components: int
-    last_check: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    last_check: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 # ============================================================================
@@ -554,4 +554,3 @@ def get_tier_registry() -> TierRegistry:
         TierRegistry: Global registry singleton
     """
     return TierRegistry()
-

@@ -11,13 +11,14 @@ import logging
 import uuid
 from typing import Any
 
-from .rate_limiter import check_rate_limit as redis_check_rate_limit
 from .iron_path_executor import GovernanceBindingError, get_iron_path_executor
+from .rate_limiter import check_rate_limit as redis_check_rate_limit
 
 logger = logging.getLogger(__name__)
 
 try:
-    from utf.shadow_thirst.core import parse_shadow as _parse_shadow, promote as _promote_shadow
+    from utf.shadow_thirst.core import parse_shadow as _parse_shadow
+    from utf.shadow_thirst.core import promote as _promote_shadow
 except ImportError:
     _parse_shadow = None  # type: ignore[assignment]
     _promote_shadow = None  # type: ignore[assignment]
@@ -27,37 +28,51 @@ except ImportError:
 # This prevents unknown/malicious actions from bypassing validation
 VALID_ACTIONS = {
     # AI Operations
-    "ai.chat", "ai.image", "ai.code", "ai.analyze",
-    
+    "ai.chat",
+    "ai.image",
+    "ai.code",
+    "ai.analyze",
     # User Management
-    "user.login", "user.logout", "user.create", "user.update", "user.delete",
-    
+    "user.login",
+    "user.logout",
+    "user.create",
+    "user.update",
+    "user.delete",
     # Persona Operations
-    "persona.update", "persona.query", "persona.reset",
-    
+    "persona.update",
+    "persona.query",
+    "persona.reset",
     # Agent Operations
-    "agent.execute", "agent.plan", "agent.validate",
-    
+    "agent.execute",
+    "agent.plan",
+    "agent.validate",
     # Temporal Operations
-    "temporal.workflow.validate", "temporal.workflow.execute", 
-    "temporal.activity.validate", "temporal.activity.execute",
-    
+    "temporal.workflow.validate",
+    "temporal.workflow.execute",
+    "temporal.activity.validate",
+    "temporal.activity.execute",
     # System Operations
-    "system.status", "system.config", "system.shutdown",
-    
+    "system.status",
+    "system.config",
+    "system.shutdown",
     # Data Operations
-    "data.query", "data.update", "data.export",
-    
+    "data.query",
+    "data.update",
+    "data.export",
     # Learning Operations
-    "learning.request", "learning.approve", "learning.deny",
-
+    "learning.request",
+    "learning.approve",
+    "learning.deny",
     # Dashboard Operations (governed desktop actions)
-    "codex.fix", "codex.activate", "codex.qa",
-    "access.grant", "audit.export", "agents.toggle",
-
+    "codex.fix",
+    "codex.activate",
+    "codex.qa",
+    "access.grant",
+    "audit.export",
+    "agents.toggle",
     # External ecosystem integration (read-only governed inventory)
-    "ecosystem.scan", "ecosystem.capabilities",
-
+    "ecosystem.scan",
+    "ecosystem.capabilities",
     # Auth aliases (backward compatibility)
     "auth.login",
 }
@@ -66,9 +81,21 @@ VALID_ACTIONS = {
 ACTION_METADATA = {
     "ai.chat": {"requires_auth": True, "rate_limit": 30, "resource_intensive": False},
     "ai.image": {"requires_auth": True, "rate_limit": 10, "resource_intensive": True},
-    "user.login": {"requires_auth": False, "rate_limit": 5, "resource_intensive": False},
-    "user.delete": {"requires_auth": True, "admin_only": True, "resource_intensive": False},
-    "system.shutdown": {"requires_auth": True, "admin_only": True, "resource_intensive": False},
+    "user.login": {
+        "requires_auth": False,
+        "rate_limit": 5,
+        "resource_intensive": False,
+    },
+    "user.delete": {
+        "requires_auth": True,
+        "admin_only": True,
+        "resource_intensive": False,
+    },
+    "system.shutdown": {
+        "requires_auth": True,
+        "admin_only": True,
+        "resource_intensive": False,
+    },
 }
 
 
@@ -146,7 +173,7 @@ def _validate(context: dict[str, Any]) -> dict[str, Any]:
         - Input sanitization (XSS, injection prevention)
         - Schema validation
     """
-    from .validators import validate_input, sanitize_payload
+    from .validators import sanitize_payload, validate_input
 
     logger.debug("Governance Phase 1: Validation")
 
@@ -158,12 +185,11 @@ def _validate(context: dict[str, Any]) -> dict[str, Any]:
 
     # ACTION REGISTRY CHECK: Reject unknown actions
     action = context["action"]
-    
+
     # STRICT ACTION REGISTRY CHECK (no prefix/wildcard bypass)
     if action not in VALID_ACTIONS:
         raise ValueError(
-            f"Action '{action}' not in registry. "
-            f"Valid actions: {sorted(VALID_ACTIONS)}"
+            f"Action '{action}' not in registry. Valid actions: {sorted(VALID_ACTIONS)}"
         )
 
     # Sanitize payload to prevent injection attacks
@@ -189,7 +215,7 @@ def _simulate(context: dict[str, Any]) -> dict[str, Any]:
 
     action = context["action"]
     payload = context.get("payload", {})
-    
+
     # Build simulation result based on action type
     simulation = {
         "estimated_impact": "low",
@@ -199,21 +225,21 @@ def _simulate(context: dict[str, Any]) -> dict[str, Any]:
         "risk_level": "low",
         "requires_admin": False,
     }
-    
+
     # Analyze based on action metadata
     if action in ACTION_METADATA:
         metadata = ACTION_METADATA[action]
-        
+
         if metadata.get("resource_intensive"):
             simulation["estimated_impact"] = "high"
             simulation["resource_usage"]["cpu"] = "high"
             simulation["resource_usage"]["memory"] = "high"
             simulation["risk_level"] = "medium"
-        
+
         if metadata.get("admin_only"):
             simulation["requires_admin"] = True
             simulation["risk_level"] = "high"
-    
+
     # Predict state changes based on action
     if action.startswith("user."):
         simulation["state_changes"].append("user_database")
@@ -222,40 +248,40 @@ def _simulate(context: dict[str, Any]) -> dict[str, Any]:
     elif action.startswith("system."):
         simulation["state_changes"].append("system_config")
         simulation["estimated_impact"] = "high"
-    
+
     # AI operations
     if action.startswith("ai."):
         simulation["resource_usage"]["network"] = "high"
         if action == "ai.image":
             simulation["resource_usage"]["cpu"] = "high"
             simulation["estimated_impact"] = "medium"
-    
+
     # Agent operations
     if action.startswith("agent."):
         simulation["resource_usage"]["cpu"] = "medium"
         simulation["state_changes"].append("agent_state")
-    
+
     # Temporal workflows
     if action.startswith("temporal."):
         simulation["resource_usage"]["memory"] = "medium"
         simulation["state_changes"].append("workflow_state")
-    
+
     # Predict potential failures
     simulation["potential_failures"] = []
-    
+
     if simulation["requires_admin"]:
         user_role = context.get("user", {}).get("role", "user")
         if user_role != "admin":
             simulation["predicted_outcome"] = "failure"
             simulation["potential_failures"].append("insufficient_permissions")
-    
+
     # Check for required fields in payload
     required_fields = _get_required_fields(action)
     missing_fields = [f for f in required_fields if f not in payload]
     if missing_fields:
         simulation["predicted_outcome"] = "failure"
         simulation["potential_failures"].append(f"missing_fields: {missing_fields}")
-    
+
     return simulation
 
 
@@ -368,9 +394,7 @@ def _resolve_user_context(context: dict[str, Any]) -> dict[str, Any]:
     return resolved
 
 
-def _gate(
-    context: dict[str, Any], simulation: dict[str, Any]
-) -> dict[str, Any]:
+def _gate(context: dict[str, Any], simulation: dict[str, Any]) -> dict[str, Any]:
     """
     Phase 3: Authorization and compliance gate.
 
@@ -507,18 +531,22 @@ def _enforce_mutation_governance_binding(
             promotion = _promote_shadow(shadow_module, replay_id=trace_id)
             if promotion["decision"] == "REJECT":
                 failed = [
-                    r["message"] for r in promotion["analysis"]
+                    r["message"]
+                    for r in promotion["analysis"]
                     if r["level"] == "critical" and not r["passed"]
                 ]
                 raise PermissionError(
                     f"Shadow Thirst REJECT (replay={promotion['replay_id']}): "
                     + "; ".join(failed)
                 )
-            payload.setdefault("_shadow_promotion", {
-                "decision": promotion["decision"],
-                "replay_id": promotion["replay_id"],
-                "replay_hash": promotion["replay_hash"],
-            })
+            payload.setdefault(
+                "_shadow_promotion",
+                {
+                    "decision": promotion["decision"],
+                    "replay_id": promotion["replay_id"],
+                    "replay_hash": promotion["replay_hash"],
+                },
+            )
         except PermissionError:
             raise
         except Exception as exc:
@@ -535,14 +563,14 @@ def _enforce_mutation_governance_binding(
 def _check_rate_limit(context: dict[str, Any]) -> None:
     """
     Enforce rate limits using Redis-based distributed rate limiter.
-    
+
     This replaces the old in-memory implementation with production-ready
     Redis-based rate limiting that supports:
     - Multi-tier limits (per-action, per-user, global)
     - Distributed rate limiting across processes/servers
     - Accurate sliding window algorithm
     - Automatic fallback to in-memory if Redis unavailable
-    
+
     Raises:
         PermissionError: If rate limit exceeded
     """
@@ -553,7 +581,7 @@ def _check_rate_limit(context: dict[str, Any]) -> None:
 def _check_user_permissions(context: dict[str, Any]) -> None:
     """
     Check user permissions for action with full RBAC implementation.
-    
+
     Raises:
         PermissionError: If user lacks permission
     """
@@ -561,23 +589,27 @@ def _check_user_permissions(context: dict[str, Any]) -> None:
     user = context.get("user", {})
     user_role = user.get("role", "anonymous")
     username = user.get("username", "anonymous")
-    
+
     # Role hierarchy: admin > power_user > user > guest
-    role_hierarchy = {"admin": 4, "power_user": 3, "user": 2, "guest": 1, "anonymous": 0}
+    role_hierarchy = {
+        "admin": 4,
+        "power_user": 3,
+        "user": 2,
+        "guest": 1,
+        "anonymous": 0,
+    }
     user_level = role_hierarchy.get(user_role, 0)
-    
+
     # Permission matrix: action -> minimum role level required
     permission_matrix = {
         # Admin-only actions
         "user.delete": 4,
         "system.shutdown": 4,
         "system.config": 4,
-        
         # Power user actions
         "user.create": 3,
         "user.update": 3,
         "data.export": 3,
-        
         # Authenticated user actions
         "ai.chat": 2,
         "ai.image": 2,
@@ -587,7 +619,6 @@ def _check_user_permissions(context: dict[str, Any]) -> None:
         "learning.approve": 3,
         "learning.deny": 3,
         "agent.execute": 2,
-
         # Governance-powered dashboard operations
         "codex.fix": 3,
         "codex.activate": 3,
@@ -595,49 +626,49 @@ def _check_user_permissions(context: dict[str, Any]) -> None:
         "access.grant": 3,
         "audit.export": 3,
         "agents.toggle": 3,
-        
         # Guest actions
         "system.status": 1,
         "data.query": 1,
-        
         # Anonymous actions
         "user.login": 0,
         "auth.login": 0,
     }
-    
+
     # Check action permission
-    required_level = permission_matrix.get(action, 2)  # Default: require authenticated user
-    
+    required_level = permission_matrix.get(
+        action, 2
+    )  # Default: require authenticated user
+
     # Special case: users can always update their own data
     if action == "user.update":
         target_user = context.get("payload", {}).get("username")
         if target_user == username:
             required_level = 2  # Own profile
-    
+
     if user_level < required_level:
-        required_role = [r for r, l in role_hierarchy.items() if l == required_level][0]
+        required_role = [r for r, level in role_hierarchy.items() if level == required_level][0]
         raise PermissionError(
             f"Action '{action}' requires role '{required_role}' or higher "
             f"(user '{username}' has role '{user_role}')"
         )
-    
+
     logger.debug(f"Permission check passed: {username} ({user_role}) for {action}")
 
 
 def _check_resource_quotas(context: dict[str, Any]) -> None:
     """
     Check resource quotas with persistent tracking via file-based storage.
-    
+
     Raises:
         PermissionError: If quota exceeded
     """
     import json
     import os
     from datetime import datetime, timedelta
-    
+
     action = context["action"]
     user = context.get("user", {}).get("username", "anonymous")
-    
+
     # Quota definitions: action -> limits
     quotas = {
         "ai.chat": {"hourly_limit": 100, "daily_limit": 1000},
@@ -646,81 +677,76 @@ def _check_resource_quotas(context: dict[str, Any]) -> None:
         "data.export": {"daily_limit": 10},
         "agent.execute": {"hourly_limit": 20, "daily_limit": 200},
     }
-    
+
     if action not in quotas:
         return  # No quota for this action
-    
+
     limits = quotas[action]
-    
+
     # Load quota tracking data
     quota_file = "data/runtime/quotas.json"
     os.makedirs("data/runtime", exist_ok=True)
-    
+
     try:
         if os.path.exists(quota_file):
-            with open(quota_file, "r") as f:
+            with open(quota_file) as f:
                 quota_data = json.load(f)
         else:
             quota_data = {}
     except Exception as e:
         logger.warning(f"Failed to load quota data: {e}")
         quota_data = {}
-    
+
     # Initialize user quota tracking
     if user not in quota_data:
         quota_data[user] = {}
     if action not in quota_data[user]:
         quota_data[user][action] = {"requests": []}
-    
+
     # Get request history
     requests = quota_data[user][action]["requests"]
     now = datetime.now()
-    
+
     # Clean old requests (older than 24 hours)
     requests = [
-        ts for ts in requests
-        if datetime.fromisoformat(ts) > now - timedelta(hours=24)
+        ts for ts in requests if datetime.fromisoformat(ts) > now - timedelta(hours=24)
     ]
-    
+
     # Check hourly limit
     if "hourly_limit" in limits:
         hour_ago = now - timedelta(hours=1)
         hourly_requests = [
-            ts for ts in requests
-            if datetime.fromisoformat(ts) > hour_ago
+            ts for ts in requests if datetime.fromisoformat(ts) > hour_ago
         ]
-        
+
         if len(hourly_requests) >= limits["hourly_limit"]:
             raise PermissionError(
                 f"Hourly quota exceeded for {action}: "
                 f"{len(hourly_requests)}/{limits['hourly_limit']} requests in last hour"
             )
-    
+
     # Check daily limit
     if "daily_limit" in limits:
         day_ago = now - timedelta(hours=24)
-        daily_requests = [
-            ts for ts in requests
-            if datetime.fromisoformat(ts) > day_ago
-        ]
-        
+        daily_requests = [ts for ts in requests if datetime.fromisoformat(ts) > day_ago]
+
         if len(daily_requests) >= limits["daily_limit"]:
             raise PermissionError(
                 f"Daily quota exceeded for {action}: "
                 f"{len(daily_requests)}/{limits['daily_limit']} requests in last 24 hours"
             )
-    
+
     # Record this request
     requests.append(now.isoformat())
     quota_data[user][action]["requests"] = requests
-    
+
     # Save updated quota data
     try:
         with open(quota_file, "w") as f:
             json.dump(quota_data, f)
     except Exception as e:
         logger.warning(f"Failed to save quota data: {e}")
-    
+
     logger.debug(f"Quota check passed for {user}: {action}")
 
 
@@ -767,10 +793,10 @@ def _execute(context: dict[str, Any]) -> Any:
             raise RuntimeError(result.error or "Kernel-routed agent action failed")
 
         return result
-    
+
     # Route AI operations to orchestrator
     elif action.startswith("ai."):
-        from app.core.ai.orchestrator import run_ai, AIRequest
+        from app.core.ai.orchestrator import AIRequest, run_ai
 
         # Convert payload to AIRequest
         ai_request = AIRequest(
@@ -788,8 +814,8 @@ def _execute(context: dict[str, Any]) -> Any:
     # Route system operations to existing core modules
     # This preserves all existing functionality
     elif action in {"user.login", "auth.login"}:
-        from app.core.user_manager import UserManager
         from app.core.security.auth import generate_jwt_token
+        from app.core.user_manager import UserManager
 
         manager = UserManager()
         auth_result = manager.authenticate(
@@ -808,13 +834,12 @@ def _execute(context: dict[str, Any]) -> Any:
             user = manager.users.get(payload.get("username"), {})
             # Generate secure JWT token
             token = generate_jwt_token(
-                username=payload.get("username"),
-                role=user.get("role", "user")
+                username=payload.get("username"), role=user.get("role", "user")
             )
             return {
                 "username": payload.get("username"),
                 "token": token,
-                "role": user.get("role", "user")
+                "role": user.get("role", "user"),
             }
         else:
             raise PermissionError(auth_message or "Invalid credentials")
@@ -1046,7 +1071,7 @@ def _commit(context: dict[str, Any], result: Any) -> None:
     logger.debug("Governance Phase 5: Commit")
 
     action = context["action"]
-    
+
     # State-modifying actions that require persistence
     state_actions = [
         "user.login",
@@ -1055,11 +1080,11 @@ def _commit(context: dict[str, Any], result: Any) -> None:
         "user.create",
         "user.update",
     ]
-    
+
     if action in state_actions:
         # Record state change in audit log
         _record_state_change(context, result)
-        
+
         # Validate state consistency
         if not _validate_state_consistency(context, result):
             logger.error(f"State consistency check failed for {action}")
@@ -1071,7 +1096,7 @@ def _record_state_change(context: dict[str, Any], result: Any) -> None:
     """Record state change for audit and potential rollback."""
     import json
     from datetime import datetime
-    
+
     change_record = {
         "timestamp": datetime.now().isoformat(),
         "action": context["action"],
@@ -1079,7 +1104,7 @@ def _record_state_change(context: dict[str, Any], result: Any) -> None:
         "user": context.get("user", {}).get("username", "anonymous"),
         "result_summary": str(result)[:200],  # Truncated for logging
     }
-    
+
     # Write to audit log (append-only)
     try:
         with open("data/runtime/state_changes.log", "a") as f:
@@ -1091,7 +1116,7 @@ def _record_state_change(context: dict[str, Any], result: Any) -> None:
 def _validate_state_consistency(context: dict[str, Any], result: Any) -> bool:
     """
     Validate state consistency after operation.
-    
+
     Returns:
         True if state is consistent, False otherwise
     """
@@ -1146,7 +1171,7 @@ def _log(
     """
     import json
     from datetime import datetime
-    
+
     payload = context.get("payload", {})
     if not isinstance(payload, dict):
         payload = {}
@@ -1160,29 +1185,32 @@ def _log(
         "status": status,
         "result_type": type(result).__name__,
         "payload_summary": {
-            k: str(v)[:50] for k, v in payload.items()
+            k: str(v)[:50]
+            for k, v in payload.items()
             if k not in ["password", "token", "api_key"]  # Redact sensitive fields
-        }
+        },
     }
 
     if error:
         audit_entry["error"] = error
-    
+
     # Write to structured audit log
     try:
         import os
+
         os.makedirs("data/runtime", exist_ok=True)
         with open("data/runtime/governance_audit.log", "a") as f:
             f.write(json.dumps(audit_entry) + "\n")
     except Exception as e:
         logger.warning(f"Failed to write audit log: {e}")
-    
+
     # Also log to standard logger
     logger.info(
         f"Governance audit: {context['action']} from {context['source']} "
         f"by {audit_entry['user']} - Status: {audit_entry['status']}"
     )
-    
+
+
 def _execute_temporal_action(
     action: str, payload: dict[str, Any], context: dict[str, Any]
 ) -> Any:
@@ -1212,7 +1240,7 @@ def _execute_temporal_action(
     if action == "temporal.workflow.validate":
         # Validate workflow execution request
         workflow_type = payload.get("workflow_type")
-        
+
         # Workflow-specific validation rules
         validation_rules = {
             "ai_learning": _validate_learning_workflow,
@@ -1221,17 +1249,17 @@ def _execute_temporal_action(
             "memory_expansion": _validate_memory_workflow,
             "crisis_response": _validate_crisis_workflow,
         }
-        
+
         validator = validation_rules.get(workflow_type)
         if not validator:
             raise ValueError(f"Unknown workflow type: {workflow_type}")
-        
+
         # Run validation
         validation_result = validator(payload, context)
-        
+
         if not validation_result["valid"]:
             raise PermissionError(validation_result["reason"])
-        
+
         return {"status": "validated", "metadata": validation_result}
 
     elif action == "temporal.workflow.execute":
@@ -1258,13 +1286,13 @@ def _execute_temporal_action(
     elif action == "temporal.activity.validate":
         # Validate activity execution
         activity_type = payload.get("activity_type")
-        
+
         # Activity-specific validation (e.g., agent_mission requires auth)
         if activity_type == "agent_mission":
             mission = payload.get("payload", {})
             if not mission.get("agent_id") or not mission.get("target"):
                 raise PermissionError("Agent mission requires agent_id and target")
-        
+
         return {"status": "validated", "activity_type": activity_type}
 
     elif action == "temporal.activity.execute":
@@ -1405,11 +1433,15 @@ def _validate_learning_workflow(
 ) -> dict[str, Any]:
     """Validate AI learning workflow request."""
     request = payload.get("payload", {})
-    
+
     # Check category is valid
     valid_categories = [
-        "security", "programming", "data_science", 
-        "general", "tips", "facts"
+        "security",
+        "programming",
+        "data_science",
+        "general",
+        "tips",
+        "facts",
     ]
     category = request.get("category")
     if category not in valid_categories:
@@ -1417,14 +1449,14 @@ def _validate_learning_workflow(
             "valid": False,
             "reason": f"Invalid category: {category}. Must be one of {valid_categories}",
         }
-    
+
     # Check content length
     content = request.get("content", "")
     if len(content) < 10:
         return {"valid": False, "reason": "Content too short (minimum 10 characters)"}
     if len(content) > 100000:
         return {"valid": False, "reason": "Content too large (maximum 100KB)"}
-    
+
     return {"valid": True, "reason": "Learning workflow validation passed"}
 
 
@@ -1433,12 +1465,12 @@ def _validate_image_workflow(
 ) -> dict[str, Any]:
     """Validate image generation workflow request."""
     request = payload.get("payload", {})
-    
+
     # Check prompt exists
     prompt = request.get("prompt", "")
     if not prompt or len(prompt) < 3:
         return {"valid": False, "reason": "Prompt too short (minimum 3 characters)"}
-    
+
     # Check quota (10 images/hour per user) with lightweight rolling window file.
     user_id = context.get("user", {}).get("username", "anonymous")
     if not _check_image_workflow_quota(user_id):
@@ -1446,7 +1478,7 @@ def _validate_image_workflow(
             "valid": False,
             "reason": "Image workflow quota exceeded (10 requests/hour)",
         }
-    
+
     return {"valid": True, "reason": "Image workflow validation passed"}
 
 
@@ -1461,7 +1493,7 @@ def _check_image_workflow_quota(user_id: str) -> bool:
 
     try:
         if os.path.exists(quota_file):
-            with open(quota_file, "r", encoding="utf-8") as f:
+            with open(quota_file, encoding="utf-8") as f:
                 quota_data = json.load(f)
         else:
             quota_data = {}
@@ -1501,12 +1533,12 @@ def _validate_data_workflow(
 ) -> dict[str, Any]:
     """Validate data analysis workflow request."""
     request = payload.get("payload", {})
-    
+
     # Check file path exists
     file_path = request.get("file_path", "")
     if not file_path:
         return {"valid": False, "reason": "File path required"}
-    
+
     # Check analysis type is valid
     valid_types = ["clustering", "statistics", "visualization"]
     analysis_type = request.get("analysis_type")
@@ -1515,7 +1547,7 @@ def _validate_data_workflow(
             "valid": False,
             "reason": f"Invalid analysis type: {analysis_type}. Must be one of {valid_types}",
         }
-    
+
     return {"valid": True, "reason": "Data workflow validation passed"}
 
 
@@ -1524,17 +1556,17 @@ def _validate_memory_workflow(
 ) -> dict[str, Any]:
     """Validate memory expansion workflow request."""
     request = payload.get("payload", {})
-    
+
     # Check conversation_id exists
     conversation_id = request.get("conversation_id", "")
     if not conversation_id:
         return {"valid": False, "reason": "Conversation ID required"}
-    
+
     # Check messages list exists
     messages = request.get("messages", [])
     if not messages or not isinstance(messages, list):
         return {"valid": False, "reason": "Messages list required"}
-    
+
     return {"valid": True, "reason": "Memory workflow validation passed"}
 
 
@@ -1544,29 +1576,29 @@ def _validate_crisis_workflow(
     """Validate crisis response workflow request."""
     request = payload.get("payload", {})
     user = context.get("user", {})
-    
+
     # Check 1: Admin role required
     if user.get("role") != "admin":
         return {
             "valid": False,
             "reason": f"Crisis response requires admin role (user has: {user.get('role', 'none')})",
         }
-    
+
     # Check 2: Target member exists
     target = request.get("target_member", "")
     if not target or len(target) < 3:
         return {"valid": False, "reason": "Valid target member required"}
-    
+
     # Check 3: Missions list exists and is non-empty
     missions = request.get("missions", [])
     if not missions or not isinstance(missions, list):
         return {"valid": False, "reason": "Missions list required"}
-    
+
     # Check 4: Each mission has required fields
     for mission in missions:
         if not isinstance(mission, dict):
             return {"valid": False, "reason": "Invalid mission structure"}
-        
+
         required_fields = ["phase_id", "agent_id", "action", "target"]
         for field in required_fields:
             if field not in mission:
@@ -1574,6 +1606,5 @@ def _validate_crisis_workflow(
                     "valid": False,
                     "reason": f"Mission missing required field: {field}",
                 }
-    
-    return {"valid": True, "reason": "Crisis workflow validation passed"}
 
+    return {"valid": True, "reason": "Crisis workflow validation passed"}

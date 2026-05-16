@@ -412,7 +412,7 @@ class RAGSystem:
             Dictionary with answer, context, and metadata
         """
         try:
-            from app.core.ai.orchestrator import run_ai, AIRequest
+            from app.core.ai.orchestrator import AIRequest, run_ai
 
             # Retrieve relevant context
             context = self.build_context(query, top_k=top_k)
@@ -444,7 +444,7 @@ Answer:"""
                 config={
                     "temperature": 0.3,
                     "system_message": "You are a helpful assistant that answers questions based on provided context.",
-                }
+                },
             )
 
             response = run_ai(request)

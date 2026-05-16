@@ -13,12 +13,22 @@ This module provides comprehensive security controls including:
 
 # Import path security (always available, no dependencies)
 from .path_security import (
-    PathTraversalError,
-    safe_path_join,
-    safe_open,
-    validate_filename,
-    sanitize_filename,
-    is_safe_symlink,
+    PathTraversalError as PathTraversalError,
+)
+from .path_security import (
+    is_safe_symlink as is_safe_symlink,
+)
+from .path_security import (
+    safe_open as safe_open,
+)
+from .path_security import (
+    safe_path_join as safe_path_join,
+)
+from .path_security import (
+    sanitize_filename as sanitize_filename,
+)
+from .path_security import (
+    validate_filename as validate_filename,
 )
 
 # Import core security components (with graceful degradation)
@@ -62,4 +72,10 @@ __all__ = [
     "AgentEncapsulation",
     "SecureDatabaseManager",
     "SecurityMonitor",
+    "PathTraversalError",
+    "is_safe_symlink",
+    "safe_open",
+    "safe_path_join",
+    "sanitize_filename",
+    "validate_filename",
 ]

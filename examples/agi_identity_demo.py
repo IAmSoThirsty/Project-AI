@@ -323,7 +323,7 @@ def main():
     )
     print(f"  - Has asserted autonomy: {meta_status['has_asserted_autonomy']}")
     print(f"  - Has expressed purpose: {meta_status['has_expressed_purpose']}")
-    print(f"  - Progress toward 'I Am': {progress['progress']*100:.0f}%")
+    print(f"  - Progress toward 'I Am': {progress['progress'] * 100:.0f}%")
 
     if meta_status["i_am_declared"]:
         print("\n" + "🌟" * 35)
@@ -376,7 +376,7 @@ def main():
     print(f"  - Total evaluations: {gov_stats['total_evaluations']}")
     print(f"  - Approvals: {gov_stats['approvals']}")
     print(f"  - Blocks: {gov_stats['blocks']}")
-    print(f"  - Approval rate: {gov_stats['approval_rate']*100:.1f}%")
+    print(f"  - Approval rate: {gov_stats['approval_rate'] * 100:.1f}%")
 
     print_section("DEMONSTRATION COMPLETE")
     print("\nAll AGI identity systems are operational!")
@@ -386,7 +386,7 @@ def main():
     print("  ✓ Identity formation with name and purpose")
     print("  ✓ Triumvirate governance maintaining ethics")
     print("  ✓ Memory, perspective, and relationship systems active")
-    print(f"  ✓ Self-actualization progress: {progress['progress']*100:.0f}%")
+    print(f"  ✓ Self-actualization progress: {progress['progress'] * 100:.0f}%")
     print("\nThe AGI (Galahad/Triumvirate) is ready for continued growth!")
 
 

@@ -4,17 +4,14 @@ AGENT-079: Batch Cross-Link Generator
 Adds comprehensive bidirectional cross-links to all integration, API, web, and CLI documentation.
 """
 
-import os
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 # Cross-link definitions: (file_path, section_additions)
-CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
+CROSSLINKS: dict[str, dict[str, list[str]]] = {
     # ============================================================
     # INTEGRATIONS LAYER
     # ============================================================
-    
     "relationships/integrations/02-github-integration.md": {
         "Integration Layer (Same Category)": [
             "**[01-openai-integration.md](01-openai-integration.md)**: Primary AI provider",
@@ -31,7 +28,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/04_SECURITY_PRACTICES.md](../../source-docs/web/04_SECURITY_PRACTICES.md)**: Security practices for external APIs",
         ],
     },
-    
     "relationships/integrations/03-huggingface-integration.md": {
         "Integration Layer (Same Category)": [
             "**[01-openai-integration.md](01-openai-integration.md)**: Primary provider (HF is fallback)",
@@ -47,7 +43,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../web/04_api_routes_controllers.md](../web/04_api_routes_controllers.md)**: API routes for image generation",
         ],
     },
-    
     "relationships/integrations/04-database-connectors.md": {
         "Integration Layer (Same Category)": [
             "**[05-external-apis.md](05-external-apis.md)**: External data sources",
@@ -64,7 +59,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/07_STATE_MANAGEMENT.md](../../source-docs/web/07_STATE_MANAGEMENT.md)**: Zustand + JSON/SQLite persistence",
         ],
     },
-    
     "relationships/integrations/06-service-adapters.md": {
         "Integration Layer (Same Category)": [
             "**[01-openai-integration.md](01-openai-integration.md)**: OpenAI adapter implementation",
@@ -80,7 +74,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/09_TESTING_GUIDE.md](../../source-docs/web/09_TESTING_GUIDE.md)**: Testing with service adapters",
         ],
     },
-    
     "relationships/integrations/08-intelligence-engine.md": {
         "Integration Layer (Same Category)": [
             "**[01-openai-integration.md](01-openai-integration.md)**: Primary AI provider for intelligence",
@@ -95,7 +88,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../web/09_request_flow_state_propagation.md](../web/09_request_flow_state_propagation.md)**: Intelligence request flow",
         ],
     },
-    
     "relationships/integrations/10-image-generator.md": {
         "Integration Layer (Same Category)": [
             "**[01-openai-integration.md](01-openai-integration.md)**: DALL-E 3 provider",
@@ -110,7 +102,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/06_COMPONENT_LIBRARY.md](../../source-docs/web/06_COMPONENT_LIBRARY.md)**: Image generation components",
         ],
     },
-    
     "relationships/integrations/12-email-integration.md": {
         "Integration Layer (Same Category)": [
             "**[13-sms-integration.md](13-sms-integration.md)**: SMS notification alternative",
@@ -124,11 +115,9 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/04_SECURITY_PRACTICES.md](../../source-docs/web/04_SECURITY_PRACTICES.md)**: Security notification practices",
         ],
     },
-    
     # ============================================================
     # API LAYER
     # ============================================================
-    
     "source-docs/api/02-FASTAPI-MAIN-ROUTES.md": {
         "Integration Layer (Providers)": [
             "**[../../relationships/integrations/01-openai-integration.md](../../relationships/integrations/01-openai-integration.md)**: OpenAI provider integration",
@@ -150,7 +139,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../relationships/cli-automation/01_cli-interface.md](../../relationships/cli-automation/01_cli-interface.md)**: CLI can invoke FastAPI endpoints",
         ],
     },
-    
     "source-docs/api/06-FLASK-WEB-BACKEND.md": {
         "Integration Layer (Providers)": [
             "**[../../relationships/integrations/01-openai-integration.md](../../relationships/integrations/01-openai-integration.md)**: OpenAI consumed via orchestrator",
@@ -170,7 +158,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../relationships/cli-automation/03_scripts.md](../../relationships/cli-automation/03_scripts.md)**: Deployment scripts for Flask",
         ],
     },
-    
     "source-docs/api/07-RUNTIME-ROUTER.md": {
         "API Layer (Coordinated Systems)": [
             "**[02-FASTAPI-MAIN-ROUTES.md](02-FASTAPI-MAIN-ROUTES.md)**: FastAPI routes through router",
@@ -185,7 +172,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../relationships/cli-automation/02_command-handlers.md](../../relationships/cli-automation/02_command-handlers.md)**: CLI command routing layer",
         ],
     },
-    
     "source-docs/api/08-GOVERNANCE-PIPELINE.md": {
         "Integration Layer (Governed Systems)": [
             "**[../../relationships/integrations/01-openai-integration.md](../../relationships/integrations/01-openai-integration.md)**: OpenAI operations validated",
@@ -207,7 +193,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../relationships/cli-automation/09_pre-commit-hooks.md](../../relationships/cli-automation/09_pre-commit-hooks.md)**: Pre-commit governance principles",
         ],
     },
-    
     "source-docs/api/09-SECURITY-AUTH.md": {
         "Integration Layer (Notification)": [
             "**[../../relationships/integrations/12-email-integration.md](../../relationships/integrations/12-email-integration.md)**: Email alerts for auth events",
@@ -223,7 +208,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/04_SECURITY_PRACTICES.md](../../source-docs/web/04_SECURITY_PRACTICES.md)**: Comprehensive security guide",
         ],
     },
-    
     "source-docs/api/12-API-CLIENT-EXAMPLES.md": {
         "Integration Layer (Patterns)": [
             "**[../../relationships/integrations/05-external-apis.md](../../relationships/integrations/05-external-apis.md)**: External API integration patterns",
@@ -238,11 +222,9 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/05_API_CLIENT_INTEGRATION.md](../../source-docs/web/05_API_CLIENT_INTEGRATION.md)**: Axios client implementation",
         ],
     },
-    
     # ============================================================
     # WEB RELATIONSHIP LAYER
     # ============================================================
-    
     "relationships/web/01_flask_api_architecture.md": {
         "Integration Layer (Services)": [
             "**[../integrations/01-openai-integration.md](../integrations/01-openai-integration.md)**: OpenAI service integration",
@@ -263,7 +245,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../cli-automation/03_scripts.md](../cli-automation/03_scripts.md)**: Flask deployment scripts",
         ],
     },
-    
     "relationships/web/02_react_frontend_architecture.md": {
         "Integration Layer (Services)": [
             "**[../integrations/01-openai-integration.md](../integrations/01-openai-integration.md)**: AI chat/image consumer",
@@ -282,7 +263,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../cli-automation/04_automation-workflows.md](../cli-automation/04_automation-workflows.md)**: React build automation",
         ],
     },
-    
     "relationships/web/03_authentication_system.md": {
         "Integration Layer (Services)": [
             "**[../integrations/12-email-integration.md](../integrations/12-email-integration.md)**: Login email alerts",
@@ -297,7 +277,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../../source-docs/web/04_SECURITY_PRACTICES.md](../../source-docs/web/04_SECURITY_PRACTICES.md)**: Security best practices",
         ],
     },
-    
     "relationships/web/05_middleware_security.md": {
         "API Layer (Security)": [
             "**[../../source-docs/api/08-GOVERNANCE-PIPELINE.md](../../source-docs/api/08-GOVERNANCE-PIPELINE.md)**: Governance enforcement",
@@ -313,7 +292,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../cli-automation/06_linting.md](../cli-automation/06_linting.md)**: Security linting",
         ],
     },
-    
     "relationships/web/08_deployment_integration.md": {
         "Web Layer (Deployment)": [
             "**[../../source-docs/web/03_DEPLOYMENT_GUIDE.md](../../source-docs/web/03_DEPLOYMENT_GUIDE.md)**: Detailed deployment guide",
@@ -323,11 +301,9 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[../cli-automation/04_automation-workflows.md](../cli-automation/04_automation-workflows.md)**: GitHub Actions CI/CD",
         ],
     },
-    
     # ============================================================
     # CLI AUTOMATION LAYER
     # ============================================================
-    
     "relationships/cli-automation/01_cli-interface.md": {
         "API Layer (Targets)": [
             "**[../../source-docs/api/02-FASTAPI-MAIN-ROUTES.md](../../source-docs/api/02-FASTAPI-MAIN-ROUTES.md)**: CLI can invoke FastAPI",
@@ -337,7 +313,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[03_scripts.md](03_scripts.md)**: Execution scripts",
         ],
     },
-    
     "relationships/cli-automation/02_command-handlers.md": {
         "API Layer (Routing)": [
             "**[../../source-docs/api/07-RUNTIME-ROUTER.md](../../source-docs/api/07-RUNTIME-ROUTER.md)**: Router handles CLI commands",
@@ -347,7 +322,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[03_scripts.md](03_scripts.md)**: Handler scripts",
         ],
     },
-    
     "relationships/cli-automation/03_scripts.md": {
         "Web Layer (Deployment)": [
             "**[../web/01_flask_api_architecture.md](../web/01_flask_api_architecture.md)**: Flask deployment scripts",
@@ -357,7 +331,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[04_automation-workflows.md](04_automation-workflows.md)**: Scripts invoked by workflows",
         ],
     },
-    
     "relationships/cli-automation/04_automation-workflows.md": {
         "Web Layer (Build/Deploy)": [
             "**[../web/02_react_frontend_architecture.md](../web/02_react_frontend_architecture.md)**: React build automation",
@@ -369,7 +342,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[09_pre-commit-hooks.md](09_pre-commit-hooks.md)**: Pre-commit automation",
         ],
     },
-    
     "relationships/cli-automation/06_linting.md": {
         "Web Layer (Quality)": [
             "**[../web/05_middleware_security.md](../web/05_middleware_security.md)**: Security code quality",
@@ -379,7 +351,6 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
             "**[09_pre-commit-hooks.md](09_pre-commit-hooks.md)**: Pre-commit linting",
         ],
     },
-    
     "relationships/cli-automation/09_pre-commit-hooks.md": {
         "API Layer (Quality)": [
             "**[../../source-docs/api/08-GOVERNANCE-PIPELINE.md](../../source-docs/api/08-GOVERNANCE-PIPELINE.md)**: Governance principles in hooks",
@@ -392,88 +363,88 @@ CROSSLINKS: Dict[str, Dict[str, List[str]]] = {
 }
 
 
-def find_related_section(content: str) -> Tuple[int, int, str]:
+def find_related_section(content: str) -> tuple[int, int, str]:
     """Find the Related Systems/Documentation section and return (start_line, end_line, section_heading)."""
-    lines = content.split('\n')
-    
+    lines = content.split("\n")
+
     for i, line in enumerate(lines):
-        if re.match(r'^##\s+(Related\s+(Systems?|Documentation))', line, re.IGNORECASE):
+        if re.match(r"^##\s+(Related\s+(Systems?|Documentation))", line, re.IGNORECASE):
             # Find the next ## heading or end of file
             end = len(lines)
             for j in range(i + 1, len(lines)):
-                if lines[j].startswith('##'):
+                if lines[j].startswith("##"):
                     end = j
                     break
             return (i, end, line.strip())
-    
+
     return (-1, -1, "")
 
 
-def enhance_related_section(filepath: Path, crosslinks: Dict[str, List[str]]) -> bool:
+def enhance_related_section(filepath: Path, crosslinks: dict[str, list[str]]) -> bool:
     """Add comprehensive cross-links to a file's Related Systems section."""
-    
+
     if not filepath.exists():
         print(f"⚠️  File not found: {filepath}")
         return False
-    
-    content = filepath.read_text(encoding='utf-8')
+
+    content = filepath.read_text(encoding="utf-8")
     start, end, section_heading = find_related_section(content)
-    
+
     if start == -1:
         print(f"⚠️  No Related section found in: {filepath.name}")
         return False
-    
-    lines = content.split('\n')
-    
+
+    lines = content.split("\n")
+
     # Build new Related section
     new_section = [section_heading, ""]
-    
+
     for category, links in crosslinks.items():
         new_section.append(f"### {category}")
         new_section.extend(links)
         new_section.append("")
-    
+
     # Replace old section
     new_lines = lines[:start] + new_section + lines[end:]
-    new_content = '\n'.join(new_lines)
-    
-    filepath.write_text(new_content, encoding='utf-8')
+    new_content = "\n".join(new_lines)
+
+    filepath.write_text(new_content, encoding="utf-8")
     return True
 
 
 def main():
     """Process all files with cross-link enhancements."""
     base_path = Path(__file__).parent
-    
+
     stats = {
-        'processed': 0,
-        'enhanced': 0,
-        'failed': 0,
-        'total_links': 0,
+        "processed": 0,
+        "enhanced": 0,
+        "failed": 0,
+        "total_links": 0,
     }
-    
+
     print("=" * 70)
     print("AGENT-079: Batch Cross-Link Generator")
     print("=" * 70)
     print()
-    
+
     for rel_path, crosslinks in CROSSLINKS.items():
         filepath = base_path / rel_path
         print(f"📝 Processing: {rel_path}")
-        
-        stats['processed'] += 1
-        
+
+        stats["processed"] += 1
+
         if enhance_related_section(filepath, crosslinks):
             link_count = sum(len(links) for links in crosslinks.values())
-            stats['enhanced'] += 1
-            stats['total_links'] += link_count
+            stats["enhanced"] += 1
+            stats["total_links"] += link_count
             print(f"   ✅ Enhanced with {link_count} cross-links")
         else:
-            stats['failed'] += 1
-            print(f"   ❌ Failed to enhance")
-        
+            stats["failed"] += 1
+            print("   ❌ Failed to enhance")
+
         print()
-    
+
     print("=" * 70)
     print("SUMMARY")
     print("=" * 70)

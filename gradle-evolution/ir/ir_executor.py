@@ -212,7 +212,7 @@ class IRExecutor:
             try:
                 execution_order = graph.topological_sort()
             except ValueError as e:
-                raise ExecutionError(f"Cannot determine execution order: {e}")
+                raise ExecutionError(f"Cannot determine execution order: {e}") from e
 
             # Execute nodes in order
             for node in execution_order:
@@ -254,7 +254,7 @@ class IRExecutor:
             logger.error("Execution failed: %s", e)
             if isinstance(e, ExecutionError):
                 raise
-            raise ExecutionError(str(e), trace=self.trace)
+            raise ExecutionError(str(e), trace=self.trace) from e
 
     def _execute_node(self, node: IRNode, graph: IRGraph) -> Any:
         """Execute single IR node"""
@@ -339,7 +339,7 @@ class IRExecutor:
         except Exception as e:
             raise ExecutionError(
                 f"Node execution failed: {e}", node_id=node.id, trace=self.trace
-            )
+            ) from e
 
     def _execute_sequence(self, node: IRNode, graph: IRGraph) -> Any:
         """Execute sequence of nodes"""

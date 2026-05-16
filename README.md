@@ -6,7 +6,7 @@ version: 1.0.0
 created_date: 2025-01-01
 updated_date: 2026-04-20
 status: active
-author: Jeremy Karrick / IAmSoThirsty <founderoftp@thirstysprojects.com>"
+author: "Jeremy Karrick / IAmSoThirsty <founderoftp@thirstysprojects.com>"
 tags:
   - architecture
   - governance
@@ -101,9 +101,20 @@ Every action taken by the system produces a **Proof Bundle**.
 - **Audit Ready**: Export history for third-party verification.
 - **Tamper Proof**: SHA-256 chained and Ed25519 signed.
 
+### 4. DeepSeek V3.2 Runtime
+Project-AI includes a DeepSeek V3.2 integration path for governed local
+inference experiments. The runtime documents Mixture-of-Experts (MoE)
+execution through `scripts/deepseek_v32_cli.py` and
+`examples/deepseek_demo.py`, keeping model access behind the same
+governance and content-safety expectations as the rest of the stack.
+
 ---
 
 ## 🚀 Instant Deployment
+
+Supported development and test runtime: **Python 3.12**. On Windows, use
+`py -3.12 -m ...` for Python verification commands so local tools do not
+accidentally run under an older interpreter.
 
 To deploy the **Full Sovereign Stack** (Cerberus + Monolith + Physics):
 

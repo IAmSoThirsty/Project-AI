@@ -26,7 +26,6 @@ from kernel.visualize import DemoVisualizer, VisualizationMode
 try:
     from kernel.advanced_visualizations import (
         AnimatedAttackFlow,
-        AttackFlowStep,
         SplitScreenVisualizer,
     )
     from kernel.learning_engine import DefenseEvolutionEngine

@@ -236,7 +236,7 @@ class FailureStatesEngine:
         num_splinters = self.rng.randint(3, 7)
 
         for i in range(num_splinters):
-            entity_name = f"Splinter_{chr(65+i)}"  # A, B, C, etc.
+            entity_name = f"Splinter_{chr(65 + i)}"  # A, B, C, etc.
             state.governance.splinter_entities.append(entity_name)
 
         state.governance.competing_authorities = 1 + num_splinters

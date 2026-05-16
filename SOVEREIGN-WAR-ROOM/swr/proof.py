@@ -386,7 +386,7 @@ class ProofSystem:
                 hashes.append(hashes[-1])  # Duplicate last hash if odd
 
             hashes = [
-                hashlib.sha3_256(f"{hashes[i]}:{hashes[i+1]}".encode()).hexdigest()
+                hashlib.sha3_256(f"{hashes[i]}:{hashes[i + 1]}".encode()).hexdigest()
                 for i in range(0, len(hashes), 2)
             ]
 

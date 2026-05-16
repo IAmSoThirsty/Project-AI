@@ -221,7 +221,9 @@ class SovereignVerifier:
                         and "..." not in signature_hex
                         and len(signature_hex) == 128
                     )
-                    has_payload_hash = isinstance(payload_hash, str) and len(payload_hash) > 0
+                    has_payload_hash = (
+                        isinstance(payload_hash, str) and len(payload_hash) > 0
+                    )
 
                     if not is_hex_signature or not has_payload_hash:
                         result["details"]["signatures_unverifiable"] += 1
@@ -452,9 +454,9 @@ class SovereignVerifier:
         # 2. Signature authority mapping
         logger.info("2. Mapping signature authorities...")
         signature_result = self._map_signature_authorities()
-        self.verification_report["checks"][
-            "signature_authority_mapping"
-        ] = signature_result
+        self.verification_report["checks"]["signature_authority_mapping"] = (
+            signature_result
+        )
         logger.info("   Status: %s", signature_result["status"])
         logger.info("")
 

@@ -127,7 +127,7 @@ class TestUserManagerErrors:
         manager = UserManager(users_file=users_file)
 
         result = manager.authenticate("nonexistent", "password")
-        assert not result
+        assert not result[0]
 
     def test_authenticate_missing_hash(self, temp_dir):
         """Test authenticating user without password hash."""
@@ -139,7 +139,7 @@ class TestUserManagerErrors:
 
         manager = UserManager(users_file=users_file)
         result = manager.authenticate("testuser", "password")
-        assert not result
+        assert not result[0]
 
     def test_get_nonexistent_user_data(self, temp_dir):
         """Test getting data for non-existent user."""

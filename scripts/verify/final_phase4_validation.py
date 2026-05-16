@@ -69,7 +69,7 @@ def main():
             print(f"  {status} {name}")
 
         print()
-        print(f"README Size: {len(content)} chars ({len(content)//1024}KB)")
+        print(f"README Size: {len(content)} chars ({len(content) // 1024}KB)")
         print(f"README Lines: {content.count(chr(10))}")
 
     print()

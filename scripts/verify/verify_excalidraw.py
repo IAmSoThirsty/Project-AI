@@ -8,7 +8,6 @@ and functional without requiring pytest or external dependencies.
 import json
 import os
 import sys
-from pathlib import Path
 
 
 def check_file_exists(path: str, description: str) -> bool:
@@ -47,17 +46,17 @@ def verify_excalidraw_plugin():
     if check_file_exists(plugin_file, "Plugin source file"):
         checks_passed += 1
         # Verify it contains required classes
-        with open(plugin_file, 'r', encoding='utf-8') as f:
+        with open(plugin_file, encoding="utf-8") as f:
             content = f.read()
-            if 'class ExcalidrawPlugin' in content:
+            if "class ExcalidrawPlugin" in content:
                 print("  ✓ ExcalidrawPlugin class found")
-            if 'def initialize' in content:
+            if "def initialize" in content:
                 print("  ✓ initialize method found")
-            if 'def create_diagram' in content:
+            if "def create_diagram" in content:
                 print("  ✓ create_diagram method found")
-            if 'def save_diagram' in content:
+            if "def save_diagram" in content:
                 print("  ✓ save_diagram method found")
-            if 'def export_diagram' in content:
+            if "def export_diagram" in content:
                 print("  ✓ export_diagram method found")
     print()
 
@@ -66,9 +65,9 @@ def verify_excalidraw_plugin():
     test_file = "tests/plugins/test_excalidraw_plugin.py"
     if check_file_exists(test_file, "Test file"):
         checks_passed += 1
-        with open(test_file, 'r', encoding='utf-8') as f:
+        with open(test_file, encoding="utf-8") as f:
             content = f.read()
-            num_tests = content.count('def test_')
+            num_tests = content.count("def test_")
             print(f"  ✓ Contains {num_tests} test cases")
     print()
 
@@ -77,13 +76,13 @@ def verify_excalidraw_plugin():
     web_component = "web/components/ExcalidrawComponent.tsx"
     if check_file_exists(web_component, "Web component"):
         checks_passed += 1
-        with open(web_component, 'r', encoding='utf-8') as f:
+        with open(web_component, encoding="utf-8") as f:
             content = f.read()
-            if 'ExcalidrawComponent' in content:
+            if "ExcalidrawComponent" in content:
                 print("  ✓ Component export found")
-            if 'onSave' in content:
+            if "onSave" in content:
                 print("  ✓ Save functionality found")
-            if 'onExport' in content:
+            if "onExport" in content:
                 print("  ✓ Export functionality found")
     print()
 
@@ -92,13 +91,13 @@ def verify_excalidraw_plugin():
         ("EXCALIDRAW_GUIDE.md", "User guide"),
         ("EXCALIDRAW_WORKFLOW.md", "Workflow documentation"),
     ]
-    
+
     for doc_file, doc_desc in docs:
         total_checks += 1
         if check_file_exists(doc_file, doc_desc):
             checks_passed += 1
             # Check word count
-            with open(doc_file, 'r', encoding='utf-8') as f:
+            with open(doc_file, encoding="utf-8") as f:
                 content = f.read()
                 word_count = len(content.split())
                 print(f"  ✓ {word_count} words (requirement: 400+)")
@@ -111,11 +110,11 @@ def verify_excalidraw_plugin():
         checks_passed += 1
         # Verify it's valid JSON
         try:
-            with open(sample_diagram, 'r', encoding='utf-8') as f:
+            with open(sample_diagram, encoding="utf-8") as f:
                 data = json.load(f)
-                if data.get('type') == 'excalidraw':
+                if data.get("type") == "excalidraw":
                     print("  ✓ Valid Excalidraw format")
-                if 'elements' in data:
+                if "elements" in data:
                     print(f"  ✓ Contains {len(data['elements'])} elements")
         except json.JSONDecodeError:
             print("  ✗ Invalid JSON format")
@@ -205,10 +204,10 @@ if __name__ == "__main__":
     print()
     success = verify_excalidraw_plugin()
     check_capabilities()
-    
+
     print()
     print("=" * 70)
-    
+
     if success:
         print("STATUS: ✓ VERIFICATION COMPLETE - Plugin ready for use")
         sys.exit(0)

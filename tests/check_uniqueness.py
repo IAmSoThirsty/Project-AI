@@ -73,9 +73,9 @@ for id in sorted(unique_ids)[:15]:
     print(f"   {id}")
 
 # Final verdict
-print(f"\n{'='*70}")
+print(f"\n{'=' * 70}")
 print("FINAL VERDICT")
-print(f"{'='*70}")
+print(f"{'=' * 70}")
 
 ids_unique = len(all_tests) == len(unique_ids)
 names_unique = len(all_tests) == len(unique_names)
@@ -88,4 +88,4 @@ if ids_unique and names_unique:
 else:
     print("FAIL: Duplicate tests found")
 
-print(f"{'='*70}\n")
+print(f"{'=' * 70}\n")

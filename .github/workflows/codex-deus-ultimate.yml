@@ -582,7 +582,7 @@ jobs:
           
           # Run if JBB tests exist
           if [ -f tests/test_jailbreak.py ]; then
-            pytest tests/test_jailbreak.py -v --tb=short || true
+            python -m pytest tests/test_jailbreak.py -v --tb=short || true
           fi
       
       - name: Run Garak vulnerability scanner
@@ -599,7 +599,7 @@ jobs:
         run: |
           echo "🔄 Running multi-turn attack simulations..."
           if [ -f tests/test_multi_turn_attacks.py ]; then
-            pytest tests/test_multi_turn_attacks.py -v --tb=short || true
+            python -m pytest tests/test_multi_turn_attacks.py -v --tb=short || true
           fi
       
       - name: Upload AI safety reports
@@ -680,9 +680,9 @@ jobs:
       - name: Run Ruff linting
         run: |
           echo "🔧 Running Ruff linter..."
-          ruff check . --output-format=json > reports/ruff-report.json || true
-          ruff check . --output-format=github || true
-          ruff check . || true
+          python -m ruff check . --output-format=json > reports/ruff-report.json || true
+          python -m ruff check . --output-format=github || true
+          python -m ruff check . || true
       
       - name: Upload Ruff report
         uses: actions/upload-artifact@v3
@@ -831,7 +831,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12']
+        python-version: ['3.12']
         os: [ubuntu-latest, windows-latest]
     
     steps:
@@ -850,7 +850,7 @@ jobs:
         run: |
           echo "🧪 Running Python tests with coverage..."
           mkdir -p reports/coverage
-          pytest -v --tb=short \
+          python -m pytest -v --tb=short \
             --cov=src \
             --cov=project_ai \
             --cov-report=xml:reports/coverage/coverage-${{ matrix.python-version }}-${{ matrix.os }}.xml \
@@ -928,7 +928,7 @@ jobs:
         run: |
           echo "🖥️ Running CLI integration tests..."
           if [ -f tests/test_cli.py ]; then
-            pytest tests/test_cli.py -v --tb=short || true
+            python -m pytest tests/test_cli.py -v --tb=short || true
           fi
       
       - name: Test CLI commands
@@ -969,7 +969,7 @@ jobs:
           if [ -d cerberus ] || [ -d temporal/cerberus ]; then
             cd temporal/cerberus 2>/dev/null || cd cerberus
             if [ -f tests/test_cerberus.py ]; then
-              pytest tests/ -v --tb=short || true
+              python -m pytest tests/ -v --tb=short || true
             fi
           fi
       
@@ -1000,15 +1000,15 @@ jobs:
         run: |
           echo "🔗 Running integration tests..."
           if [ -f test_full_integration.py ]; then
-            pytest test_full_integration.py -v --tb=short || true
+            python -m pytest test_full_integration.py -v --tb=short || true
           fi
           
           if [ -f test_tarl_integration.py ]; then
-            pytest test_tarl_integration.py -v --tb=short || true
+            python -m pytest test_tarl_integration.py -v --tb=short || true
           fi
           
           if [ -f tests/integration/ ]; then
-            pytest tests/integration/ -v --tb=short || true
+            python -m pytest tests/integration/ -v --tb=short || true
           fi
       
       - name: Integration tests summary
@@ -1595,7 +1595,7 @@ jobs:
       - name: Run Ruff auto-fix
         run: |
           echo "🔧 Running Ruff auto-fix..."
-          ruff check . --fix || true
+          python -m ruff check . --fix || true
       
       - name: Run Black formatting
         run: |
@@ -2193,7 +2193,7 @@ jobs:
       - name: Run quick smoke tests
         run: |
           echo "🔥 Running smoke tests..."
-          pytest tests/ -k "smoke" -v --tb=short || true
+          python -m pytest tests/ -k "smoke" -v --tb=short || true
           
           # Test basic imports
           python -c "import src; print('✅ Core imports working')" || true

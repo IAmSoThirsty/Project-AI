@@ -24,10 +24,9 @@ import hashlib
 import json
 import logging
 import threading
-import time
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 from urllib import request as urllib_request
 from urllib.error import URLError
 
@@ -47,13 +46,13 @@ class LedgerEntry:
     actor: str
     action: str
     approved: bool
-    reason: Optional[str]
+    reason: str | None
     output_hash: str
     timestamp: float
     ledger_hash: str  # SHA-256 of the serialised entry (tamper-evidence)
     attested_remote: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "decision_id": self.decision_id,
             "actor": self.actor,
@@ -67,7 +66,7 @@ class LedgerEntry:
         }
 
 
-def _compute_entry_hash(entry_dict: Dict[str, Any]) -> str:
+def _compute_entry_hash(entry_dict: dict[str, Any]) -> str:
     """SHA-256 of sorted JSON (excludes ledger_hash itself)."""
     payload = {k: v for k, v in entry_dict.items() if k != "ledger_hash"}
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
@@ -85,7 +84,7 @@ class ConstitutionalLedger:
         self,
         sidecar_host: str = _DEFAULT_SIDECAR_HOST,
         sidecar_port: int = _DEFAULT_SIDECAR_PORT,
-        local_path: Optional[Path] = None,
+        local_path: Path | None = None,
     ) -> None:
         self._url = f"http://{sidecar_host}:{sidecar_port}/attest"
         self._local = local_path or _LOCAL_LEDGER_FILE
@@ -141,15 +140,14 @@ class ConstitutionalLedger:
 
     def _write_local(self, entry: LedgerEntry) -> None:
         """Append entry to the local JSONL fallback ledger."""
-        with self._lock:
-            with self._local.open("a", encoding="utf-8") as fh:
-                fh.write(json.dumps(entry.to_dict()) + "\n")
+        with self._lock, self._local.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry.to_dict()) + "\n")
 
     def tail(self, n: int = 20) -> list:
         """Return the last n entries from the local ledger (for inspection)."""
         try:
             lines = self._local.read_text(encoding="utf-8").splitlines()
-            return [json.loads(l) for l in lines[-n:] if l.strip()]
+            return [json.loads(line) for line in lines[-n:] if line.strip()]
         except (FileNotFoundError, json.JSONDecodeError):
             return []
 
@@ -158,7 +156,7 @@ class ConstitutionalLedger:
 # Singleton
 # ─────────────────────────────────────────────
 
-_ledger_instance: Optional[ConstitutionalLedger] = None
+_ledger_instance: ConstitutionalLedger | None = None
 _ledger_lock = threading.Lock()
 
 

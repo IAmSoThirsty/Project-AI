@@ -17,9 +17,9 @@ import sys
 # Add the src directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from app.core.runtime.router import route_request
 from app.core.ai_systems import MemoryExpansionSystem
 from app.core.cybersecurity_knowledge import CybersecurityKnowledge
+from app.core.runtime.router import route_request
 
 # Configure logging
 logging.basicConfig(
@@ -33,23 +33,23 @@ logger = logging.getLogger(__name__)
 def main_governed():
     """Main function with governance routing."""
     # Route through governance
-    result = route_request("cli", {
-        "action": "content.populate_knowledge_base",
-        "params": {
-            "category": "cybersecurity_education",
-            "sections": 6
+    result = route_request(
+        "cli",
+        {
+            "action": "content.populate_knowledge_base",
+            "params": {"category": "cybersecurity_education", "sections": 6},
+            "metadata": {
+                "script": __file__,
+                "user": "content_admin",
+                "risk_level": "medium",
+            },
         },
-        "metadata": {
-            "script": __file__,
-            "user": "content_admin",
-            "risk_level": "medium"
-        }
-    })
-    
+    )
+
     if not result.get("approved", False):
         print(f"❌ Knowledge base update blocked: {result.get('reason', 'Unknown')}")
         return 1
-    
+
     # Proceed with population
     try:
         # Initialize the systems
