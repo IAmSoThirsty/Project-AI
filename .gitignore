@@ -3,6 +3,11 @@ data/health_snapshots/
 docs/assets/health_report_*.png
 governance/audit_log.yaml
 
+# Runtime artifacts — generated output, not source code
+audit.log
+canonical/execution_trace.json
+ci-reports/*.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
