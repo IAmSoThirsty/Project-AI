@@ -76,6 +76,17 @@ LEGION_CONFIG = {
         "auto_reconnect": True,
         "message_queue_size": 100,
     },
+    "llm": {
+        # Provider: "groq" (free API, recommended) or "ollama" (local)
+        # Set via LEGION_LLM_PROVIDER env var
+        "provider": "groq",
+        # Groq default: llama-3.3-70b-versatile (free tier, 70B capability)
+        # Ollama default: qwen3:8b (runs on ~8GB RAM)
+        # Override via LEGION_MODEL env var
+        "groq_default_model": "llama-3.3-70b-versatile",
+        "ollama_default_model": "qwen3:8b",
+        "ollama_base_url": "http://localhost:11434/v1",
+    },
 }
 
 

@@ -1243,8 +1243,10 @@ Aggregation rules (strict priority order): any DENY → final verdict `deny`; an
 
 | Method | Path | Description |
 |---|---|---|
-| `POST` | `/intent` | Submit `IntentRequest` → receive `GovernanceDecision` |
-| `GET` | `/audit?limit=N` | Most recent N decisions (in-memory ring buffer, max 1000) |
+| `POST` | `/intent` | Submit `IntentRequest` → receive `GovernanceDecision`; decision written to SQLite |
+| `GET` | `/audit` | Query SQLite audit log — params: `limit`, `offset`, `actor`, `verdict`, `since` (ISO 8601) |
+| `GET` | `/audit/{audit_id}` | Retrieve a single governance decision by its 16-char hex audit_id |
+| `GET` | `/health` | Service health + total decisions persisted in SQLite |
 | `GET` | `/fourlaws` | Return the immutable FourLaws |
 | `POST` | `/chimera/verdict` | Receive threat verdict from Chimera deception perimeter |
 | `POST` | `/chimera/canary` | Receive canary-hit alert from Chimera perimeter |
@@ -1295,7 +1297,7 @@ Each plane has an immutable dataclass (`RawFrame`, `ValidatedFrame`, `Classified
 
 **Stage 5 — Canonical Log**: Append-only hash-chained JSONL log with monotonic sequence numbers. Chain integrity verifiable at any time.
 
-**Stage 6 — Seal**: Proper Merkle tree over all canonical log entry hashes (SHA-256 leaves, paired internal nodes, inclusion proofs) + Ed25519 signature over `block_hash`. Ed25519 key loaded from env var or falls back to software-only mode (signature field is empty string — visible in output, not silently omitted).
+**Stage 6 — Seal**: Proper Merkle tree over all canonical log entry hashes (SHA-256 leaves, paired internal nodes, inclusion proofs) + Ed25519 signature over `block_hash`. Ed25519 key loaded from env var or falls back to software-only mode (signature field is empty string — visible in output, not silently omitted). The anchor supports live key rotation via `anchor.rotate_key(new_seed_hex, reason=...)` and historical signature verification via `anchor.verify_with_history(data_hex, sig_hex)` — see Section 10.3c.
 
 ### Pre-Screen Gate
 
@@ -1319,6 +1321,78 @@ else:
 ### PSIA vs Shadow Thirst
 
 Shadow Thirst (`src/utf/shadow_thirst/`) simulates `.shadowthirst` mutation blocks written in Thirsty-Lang. PSIA Stage 3 simulates intent requests flowing through the HTTP gateway. Both share the plane-separation philosophy — shadow never writes canonical — but are independent systems with separate codebases.
+
+## 10.3c Triumvirate SQLite Audit Log
+
+**Source:** `governance/triumvirate_server.py` v2.0.0 — **Implemented (Phase 6).**
+
+The in-memory ring buffer (max 1000 entries) is replaced with an append-only SQLite database at `governance/audit.db` (path overridable via `TRIUMVIRATE_DB` env var). The database is initialized at service startup via `_init_db()` — tables and indexes are created idempotently.
+
+**Schema: `governance_decisions`**
+
+| Column | Type | Description |
+|---|---|---|
+| `id` | INTEGER PK AUTOINCREMENT | Monotonic row ID |
+| `audit_id` | TEXT | 16-char hex SHA-256 fingerprint (indexed) |
+| `timestamp` | TEXT | ISO 8601 UTC decision time (indexed) |
+| `actor` | TEXT | Request actor — `human`, `agent`, `system` (indexed) |
+| `action` | TEXT | `read`, `write`, `execute`, `mutate` |
+| `target` | TEXT | Intent target string |
+| `origin` | TEXT | Request origin |
+| `risk_level` | TEXT | `low`, `medium`, `high`, `critical`, `unknown` |
+| `final_verdict` | TEXT | `allow`, `deny`, `escalate` (indexed) |
+| `consensus` | INTEGER | 1 if all three pillars agreed, 0 otherwise |
+| `votes_json` | TEXT | JSON array of all three TriumvirateVote objects |
+| `metadata_json` | TEXT | JSON metadata dict |
+
+**Persistence guarantees**: every `POST /intent` call writes to SQLite before returning the response. The write uses an explicit transaction; rollback occurs on failure and the error is logged — the HTTP response is never suppressed by a DB failure. The database is never truncated.
+
+**Query API:**
+
+```
+GET /audit?limit=20&offset=0&actor=agent&verdict=deny&since=2026-05-01T00:00:00
+GET /audit/{audit_id}
+```
+
+`since` is an ISO 8601 lower bound on the `timestamp` column. Results are ordered by `id DESC` (most recent first). Max `limit` is 1000. The `_query_decisions()` function builds parameterized SQL from optional filter arguments — no string interpolation.
+
+## 10.3d Ed25519 Key Rotation
+
+**Source:** `src/psia/crypto/anchor.py` — **Implemented (Phase 6).**
+
+`Ed25519Anchor` now supports live key rotation without restarting the pipeline. Each key epoch is tracked as a `KeyVersion` dataclass: `key_id` (monotonic integer), `public_key_hex`, `activated_at` (ISO 8601 UTC), `retired_at`, `rotation_reason`.
+
+**Rotation:**
+
+```python
+anchor = Ed25519Anchor()          # loads initial key from env var
+new_version = anchor.rotate_key(
+    new_seed_hex="a1b2c3...",     # 32-byte hex Ed25519 seed
+    reason="scheduled_90d",       # free-text tag stored in rotation log
+)
+print(new_version.key_id)         # 1  (initial key was key_id 0)
+```
+
+The old key is moved to `anchor.key_history` (list of retired `KeyVersion` dicts). The rotation event is appended to `anchor.rotation_log` (in-process list) and, if `PSIA_ED25519_ROTATION_LOG` env var points to a file path, to that JSONL file.
+
+**Historical verification:**
+
+```python
+ok, matched_key_id = anchor.verify_with_history(data_hex, sig_hex)
+# tries active key first (O(1)), then retired keys in reverse-chronological order
+# returns (True, 0) if sig was produced by key_id 0 (now retired)
+```
+
+This allows PSIA sealed frames produced before a rotation to remain verifiable. All retired public keys are retained in-process for the lifetime of the anchor instance.
+
+**Key introspection:**
+
+```python
+anchor.current_key_info   # dict: key_id, public_key_hex, activated_at, ...
+anchor.key_history        # list of retired KeyVersion dicts
+anchor.rotation_log       # list of rotation events (dicts)
+anchor.key_id             # int: current active key_id
+```
 
 ## 10.4 Cerberus
 
@@ -2032,18 +2106,13 @@ Thirsty-Lang ships a native package manager (`thirsty add/audit/lock`). Package 
 
 | Component | Status | Notes |
 |---|---|---|
-| JS implementation rewrite | Open | Parity analysis complete; rewrite estimated 4–6 weeks |
 | TARL OS v3.0 vs v2.0 version conflict | Open | README says v2.0, Implementation Report says v3.0 |
-| TARL Source-level Debugger | Partial | Port 9899 configured; implementation unconfirmed |
-| Ed25519 key rotation / HSM support in PSIA | Future phase | Manual env var only; no rotation protocol |
-| Persistent Triumvirate audit log | Future phase | In-memory ring buffer only (max 1000 entries) |
-| T-SECA/GHOST threshold cryptography | Future phase | Not implemented; listed in PSIA spec as known limitation |
 
 ---
 
 # 15. Roadmap
 
-Based on repository evidence and stated roadmaps, updated to reflect Phases 1–4 completion (2026-05-12).
+Based on repository evidence and stated roadmaps, updated to reflect Phases 1–6 completion (2026-05-15).
 
 ## Completed (Phases 1–4)
 
@@ -2088,19 +2157,28 @@ Based on repository evidence and stated roadmaps, updated to reflect Phases 1–
 | Central registry server (FastAPI, port 9000, publish/search/yank) | ✓ Implemented |
 | Docs site generator (`thirsty docs`, static HTML + search) | ✓ Implemented |
 
-## Near-Term (Open)
+## Phase 6 — All 7 Advanced Items Completed (2026-05-15)
 
-1. **JS implementation rewrite** — Option A (full AST-based rewrite, 4–6 weeks) to reach 200/200 conformance. Option B (Python wrapper) available for expedience.
-2. **TARL Source-level Debugger** — Port 9899 configured; actual implementation unconfirmed.
-3. **Persistent Triumvirate audit log** — In-memory ring buffer only; SQLite or append-only file is a future phase.
-4. **Ed25519 key rotation / HSM** — PSIA anchor loads key from env var; no rotation protocol yet.
+| Item | Status | Source |
+|---|---|---|
+| Full JS AST interpreter rewrite | ✓ Implemented | `src/thirsty_lang/src/` — lexer, parser, ast, checker, interpreter, cli, index |
+| T-SECA/GHOST threshold cryptography | ✓ Implemented | `src/psia/crypto/threshold.py` — GF(257), Shamir k-of-n, GHOSTCommitment+Ed25519 |
+| BFT consensus for governance mutations | ✓ Implemented | `src/psia/consensus/bft.py` — PBFT-lite 3-phase; wired into PSIA Stage 4 |
+| Thirst of Gods production spec | ✓ Implemented | `src/utf/docs/THIRST_OF_GODS_SPEC.md` — 260-line spec (replaces 9-line stub) |
+| Source-level debugger | ✓ Implemented | `src/utf/thirsty_lang/debugger_server.py` — DAP-style TCP server, port 9899 |
+| Persistent Triumvirate audit log | ✓ Implemented | `governance/triumvirate_server.py` v2.0 — SQLite, append-only, filterable `/audit` |
+| Ed25519 key rotation | ✓ Implemented | `src/psia/crypto/anchor.py` — `rotate_key()`, key history, `verify_with_history()` |
+
+## Open
+
+TARL OS v3.0 vs v2.0 version conflict — README says v2.0, Implementation Report says v3.0. No active work item.
 
 ## Medium-Term
 
-5. **Thirst of Gods stable spec** — `THIRST_OF_GODS_SPEC.md` exists but is a minimal sketch.
-6. **Governance certification program** — Formal process for certifying governance-compliant UTF implementations.
-7. **T-SECA/GHOST threshold cryptography** — Listed in PSIA spec as a future phase (GF(257) threshold cryptography).
-8. **BFT consensus for governance mutations** — Stage 4 uses Triumvirate majority rule; full BFT is future work.
+- **Governance certification program** — Formal process for certifying governance-compliant UTF implementations.
+- **T-SECA/GHOST HSM integration** — Key material currently in-process; HSM (hardware security module) backend is a future integration point.
+- **BFT consensus persistence** — Current BFT consensus runs in-process per request; a persistent quorum log across restarts is future work.
+- **TARL OS version reconciliation** — Resolve the v2.0/v3.0 discrepancy in documentation.
 
 ---
 
@@ -2165,7 +2243,7 @@ Based on repository evidence and stated roadmaps, updated to reflect Phases 1–
 | **pour** | Thirsty-Lang keyword. Outputs a value (the output "pours" out of the program). |
 | **promote** | Shadow Thirst operation. Commits a mutation to canonical state after all analyzers pass. |
 | **proof-carrying execution** | The Iron Path concept: every stage carries cryptographic proof (SHA-256, role signature, policy binding) of its governance compliance. |
-| **PSIA** | Plane Separation / Isolation Architecture. Referenced directory in `src/psia/`. Full acronym and content: undocumented / needs confirmation. |
+| **PSIA (duplicate entry removed)** | See PSIA entry above. |
 | **quenched** | Thirsty-Lang keyword/type. The satisfied/success state. Also the option type `Quenched[T]` wrapping optional values. |
 | **quorum (QRM)** | TSCG symbol. Represents a quorum decision — multiple parties must agree before the expression resolves. |
 | **refill** | Thirsty-Lang keyword. Loop construct (the loop "refills" until the condition is no longer met). |
@@ -2185,7 +2263,10 @@ Based on repository evidence and stated roadmaps, updated to reflect Phases 1–
 | **thirsty** | Thirsty-Lang keyword. The `if` conditional — the system "thirsts" for a condition to be true. |
 | **Thirsty-Lang** | The water-metaphor source language that is the human-readable tier of the UTF. Defensive by design. |
 | **Thirst of Gods** | The advanced dialect of Thirsty-Lang, adding OOP (fountain classes), async (cascade), error handling (spillage/cleanup), and object instantiation. |
-| **Triumvirate** | Project-AI multi-party governance mechanism. `triumvirate_server.py` exists; full details undocumented. |
+| **Triumvirate** | Project-AI three-pillar constitutional governance service (Galahad + Cerberus + CodexDeus) on port 8001. Any DENY from any pillar blocks execution permanently. Audit log is SQLite-backed (`governance/audit.db`), append-only, queryable via `GET /audit`. |
+| **KeyVersion** | Immutable record of one Ed25519 key epoch in the PSIA anchor. Fields: `key_id` (monotonic int), `public_key_hex`, `activated_at`, `retired_at`, `rotation_reason`. Retired keys are retained for historical signature verification. |
+| **key rotation (PSIA)** | The process of replacing the active Ed25519 signing key in `Ed25519Anchor` while preserving the ability to verify signatures made under retired keys. Performed via `anchor.rotate_key(new_seed_hex, reason=...)`. |
+| **verify_with_history** | `Ed25519Anchor` method. Checks a signature against the active key first, then all retired keys in reverse-chronological order. Returns `(bool, matched_key_id)`. |
 | **TSCG** | Thirsty's Symbolic Constitutional Grammar. Compact deterministic symbolic encoding of governance flows using 9 core symbols. |
 | **TSCG-B** | Binary frame protocol for TSCG. Wire format with magic `TSGB`, CRC32 + SHA-256 integrity. |
 | **UTF** | Universal Thirsty Family. The complete umbrella of languages, encodings, runtimes, and symbolic systems in the Thirsty ecosystem. |
@@ -2335,7 +2416,7 @@ Promotion Decision:
                            │
           ┌────────────────┴────────────────┐
           │                                 │
-┌─────────▼────────────┐       ┌───────────▼───────────────┐
+┌─────────▼────────────┐       ┌───────────▼─────────────────▼──────────────┐       ┌───────────▼─────────────┐
 │   T.A.R.L. Policy    │       │     SHADOW THIRST          │
 │  (Governance Gate)   │       │   (Mutation Gate)          │
 │                      │       │                            │
@@ -2346,70 +2427,42 @@ Promotion Decision:
 │  }                   │       │    canonical { }           │
 │                      │       │  }                         │
 │  Default = DENY      │       │  PROMOTE | REJECT          │
-└─────────┬────────────┘       └───────────┬───────────────┘
-          │                                 │
-          └────────────────┬────────────────┘
-                           │
-┌─────────────────────────▼───────────────────────────────┐
-│                 TARL RUNTIME                             │
-│     TarlRuntime → VM → JIT → Sandbox Enforcement        │
-│     TARL OS: kernel / security / AI / I/O / API         │
-│     Constitutional Rules: 5 immutable gates             │
-│     Enforcement Gateway: allowed=false = impossible      │
-└─────────────────────────┬───────────────────────────────┘
-                           │
-┌─────────────────────────▼───────────────────────────────┐
-│                   TSCG / TSCG-B                          │
-│   Symbolic: COG->SHD->INV->COM  (governance flow repr.) │
-│   Binary:   TSGB frame + CRC32 + SHA-256                │
-└─────────────────────────┬───────────────────────────────┘
-                           │
-┌─────────────────────────▼───────────────────────────────┐
-│              IRON PATH / SOVEREIGN RUNTIME               │
-│   Role signatures + Policy bindings + SHA-256 artifacts │
-│   Immutable audit log + Compliance bundle                │
-│   Audit trail integrity verification                     │
-└─────────────────────────────────────────────────────────┘
+└──────────┬───────────┘       └─────────────┬─────────────┘
+           │                                 │
+           └────────────────┬────────────────┘
+                            │
+        ┌───────────────────▼────────────────────┐
+        │       PSIA  (port 8002)                │
+        │  7-stage waterfall pipeline             │
+        │  Ingestion -> Schema -> Classification  │
+        │  -> Shadow -> Governance -> Canonical   │
+        │  -> Seal (Merkle + Ed25519)             │
+        │                                        │
+        │  Ed25519 key rotation: rotate_key()    │
+        │  verify_with_history() for old sigs    │
+        └───────────────────┬────────────────────┘
+                            │
+        ┌───────────────────▼────────────────────┐
+        │     TRIUMVIRATE  (port 8001)           │
+        │  Galahad  -- Ethics & Human Dignity    │
+        │  Cerberus -- Security & Containment    │
+        │  CodexDeus-- Constitutional Law        │
+        │                                        │
+        │  ANY DENY = blocked permanently        │
+        │  Audit log: SQLite governance/audit.db │
+        └───────────────────┬────────────────────┘
+                            │
+        ┌───────────────────▼────────────────────┐
+        │         T-SECA / GHOST                 │
+        │  Threshold Shamir k-of-n over GF(257)  │
+        │  GHOSTCommitment: Ed25519 anchor       │
+        │  BFT consensus: PBFT-lite 3-phase      │
+        └───────────────────┬────────────────────┘
+                            │
+        ┌───────────────────▼────────────────────┐
+        │       CANONICAL STATE                  │
+        │  Append-only JSONL + SHA-256 chain     │
+        │  Merkle root + Ed25519 seal            │
+        │  Immutable audit log (SQLite)          │
+        └────────────────────────────────────────┘
 ```
-
-## F. Unresolved Questions
-
-1. What is the exact full expansion of PSIA? The `src/psia/` directory exists but its README or index was not read.
-2. What does `triumvirate_server.py` implement? The quorum/multi-party governance mechanism is referenced but the file content was not inspected.
-3. Is the TARL LSP server (`tarl/tooling/lsp/`) fully implemented or only scaffolded? The README says "planned — infrastructure ready."
-4. What is the relationship between the JS `src/thirsty_lang/` implementation and the Python `src/utf/thirsty_lang/` implementation? Are they maintained in sync or is one deprecated?
-5. Is `registry.tarl-lang.org` live and operational?
-6. What does `src/thirsty_lang/src/security/threat-detector.js` implement in detail? It is referenced by TARL architecture docs but not read.
-7. Does the TARL OS Tier 6 (API layer) provide actual HTTP servers or only `.thirsty` declarations interpreted via the bridge?
-8. Is `src/utf/thirsty_lang/typesys.py` a complete type system or a placeholder?
-
-## G. Test Commands
-
-```bash
-# Thirsty-Lang / UTF full test suite
-PYTHONPATH=src python -m unittest discover -s tests -v
-
-# Individual test modules
-PYTHONPATH=src python -m pytest src/utf/tests/test_thirsty_lang.py -v
-PYTHONPATH=src python -m pytest src/utf/tests/test_tarl.py -v
-PYTHONPATH=src python -m pytest src/utf/tests/test_shadow_thirst.py -v
-PYTHONPATH=src python -m pytest src/utf/tests/test_tscg.py -v
-
-# TARL runtime tests
-pytest tarl/tests/test_tarl_integration.py -v
-pytest tarl/tests/test_tarl_integration.py --cov=tarl --cov-report=html
-
-# TARL OS tests
-pytest tarl_os/tests/test_tarl_os.py -v
-
-# Iron Path
-python -m governance.iron_path sovereign-demo.yaml
-
-# TARL OS bridge
-python tarl_os/bridge.py
-```
-
----
-
-*End of Thirsty-Lang and UTF: Universal Thirsty Family — Complete Technical, Architectural, and Governance Reference*  
-*Version 1.0 | Compiled from repository sources | 2026-05-11*

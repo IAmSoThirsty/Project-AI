@@ -2,21 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "../Cerberus-main"
-		},
-		{
-			"path": "../Thirstys-Monolith-master"
-		},
-		{
-			"path": "../Thirstys-waterfall-main"
-		},
-		{
-			"path": "../Thirsty-lang-main"
-		},
-		{
-			"path": "../the_triumvirate-main"
 		}
 	],
 	"settings": {

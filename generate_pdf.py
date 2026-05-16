@@ -52,15 +52,21 @@ PDF_FILE = BASE / "Thirsty-Lang_UTF_Reference_v1.pdf"
 CSV_FILE = BASE / "Thirsty-Lang_UTF_Source_Map.csv"
 
 # ── Colour palette ─────────────────────────────────────────────────────────────
-BLUE_DARK  = colors.HexColor("#0D2B55")
-BLUE_MID   = colors.HexColor("#1A4A8A")
-BLUE_LIGHT = colors.HexColor("#E8F0FB")
-TEAL       = colors.HexColor("#006666")
-ORANGE     = colors.HexColor("#C0510A")
-GREY_LIGHT = colors.HexColor("#F5F5F5")
-GREY_RULE  = colors.HexColor("#CCCCCC")
+BLUE_DARK  = colors.HexColor("#0D2B55")   # Deep navy — headings, bars
+BLUE_MID   = colors.HexColor("#1A4A8A")   # Medium blue — H2, table headers
+BLUE_LIGHT = colors.HexColor("#E8F0FB")   # Pale blue — code block background
+TEAL       = colors.HexColor("#006666")   # Teal — H3
+ORANGE     = colors.HexColor("#C0510A")   # Orange — H4
+GREY_LIGHT = colors.HexColor("#F5F5F5")   # Light grey — table alt rows
+GREY_RULE  = colors.HexColor("#CCCCCC")   # Rule / grid lines
 WHITE      = colors.white
 BLACK      = colors.black
+
+# Code colour family — blues for readability against light backgrounds
+CODE_TEXT   = colors.HexColor("#0A2744")   # Near-navy — code block text
+CODE_INLINE = colors.HexColor("#1A4A8A")   # BLUE_MID — inline `backtick` spans
+CODE_TABLE  = colors.HexColor("#005F8A")   # Teal-blue — code in table cells
+CODE_BG     = colors.HexColor("#E8F0FB")   # Pale blue — code block background (= BLUE_LIGHT)
 
 # ── Styles ─────────────────────────────────────────────────────────────────────
 def make_styles():
@@ -97,10 +103,10 @@ def make_styles():
                          textColor=BLACK, spaceBefore=2, spaceAfter=4,
                          leftIndent=20),
 
-        # Code / monospace
+        # Code / monospace — blue family on pale-blue background
         "Code": ps("Code", fontSize=8, leading=11, fontName="Courier",
-                   textColor=colors.HexColor("#1A1A1A"),
-                   backColor=GREY_LIGHT, borderPad=4,
+                   textColor=CODE_TEXT,
+                   backColor=CODE_BG, borderPad=4,
                    spaceBefore=4, spaceAfter=4, leftIndent=12),
 
         # Blockquote / callout
@@ -122,7 +128,7 @@ def make_styles():
         "TD": ps("TD", fontSize=8, leading=11, fontName="Helvetica",
                  textColor=BLACK, alignment=TA_LEFT),
         "TDCode": ps("TDCode", fontSize=7.5, leading=10, fontName="Courier",
-                     textColor=BLACK, alignment=TA_LEFT),
+                     textColor=CODE_TABLE, alignment=TA_LEFT),
     }
     return styles
 
@@ -160,12 +166,13 @@ def esc(text):
 
 # ── Inline code formatter ───────────────────────────────────────────────────────
 def fmt_inline(text):
-    """Replace `backtick` spans with Courier font tags."""
+    """Replace `backtick` spans with Courier font tags in BLUE_MID (#1A4A8A)."""
     parts = re.split(r"`([^`]+)`", esc(text))
     out = []
     for i, p in enumerate(parts):
         if i % 2 == 1:
-            out.append(f'<font name="Courier" size="8" color="#1A1A1A">{p}</font>')
+            # Blue inline code — visible against both white body and light-grey table rows
+            out.append(f'<font name="Courier" size="8" color="#1A4A8A">{p}</font>')
         else:
             out.append(p)
     return "".join(out)
@@ -361,16 +368,16 @@ class DocTemplate(SimpleDocTemplate):
         canvas.drawString(0.4 * inch, h - 20,
                           "Thirsty-Lang & UTF — Universal Thirsty Family Reference v1.0")
         canvas.setFont("Helvetica", 8)
-        canvas.drawRightString(w - 0.4 * inch, h - 20, "Project-AI | Confidential")
+        canvas.drawRightString(w - 0.4 * inch, h - 20, "Thirsty's Projects LLC | Confidential")
 
         # Footer
         canvas.setFillColor(BLUE_DARK)
         canvas.rect(0, 0, w, 22, fill=1, stroke=0)
         canvas.setFillColor(WHITE)
         canvas.setFont("Helvetica", 8)
-        canvas.drawString(0.4 * inch, 7, "© 2026 Project-AI Team | MIT License")
+        canvas.drawString(0.4 * inch, 7, "© 2026 Thirsty's Projects LLC | MIT License")
         canvas.drawCentredString(w / 2, 7, f"Page {self.page}")
-        canvas.drawRightString(w - 0.4 * inch, 7, "2026-05-11")
+        canvas.drawRightString(w - 0.4 * inch, 7, "2026-05-15")
         canvas.restoreState()
 
 
@@ -404,11 +411,12 @@ def title_page():
     story.append(Spacer(1, 0.3 * inch))
 
     meta = [
-        ("Version", "1.0"),
-        ("Date", "2026-05-11"),
+        ("Author",     "Thirsty's Projects LLC"),
+        ("Version",    "1.2"),
+        ("Date",       "2026-05-15"),
         ("Repository", "IAmSoThirsty/Project-AI"),
-        ("Status", "Authoritative Reference — Compiled from Repository Sources"),
-        ("License", "MIT"),
+        ("Status",     "Authoritative Reference — Compiled from Repository Sources"),
+        ("License",    "MIT"),
     ]
     for k, v in meta:
         story.append(Paragraph(
@@ -577,6 +585,41 @@ def build_pdf():
         str(PDF_FILE),
         pagesize=letter,
         doc_title="Thirsty-Lang & UTF Reference v1.0",
+        leftMargin=0.75 * inch,
+        rightMargin=0.75 * inch,
+        topMargin=0.7 * inch,
+        bottomMargin=0.5 * inch,
+    )
+
+    story = []
+
+    # Title page
+    story.extend(title_page())
+
+    # Body from Markdown
+    body_story = parse_md(md_body)
+    story.extend(body_story)
+
+    print(f"Building PDF ({len(story)} flowables)...")
+    doc.build(story)
+    print(f"PDF written: {PDF_FILE}")
+
+
+if __name__ == "__main__":
+    write_csv()
+    build_pdf()
+    print("Done.")
+        if re.match(r"^---+$", ln.strip()):
+            hr_count += 1
+            if hr_count == 1:
+                start = idx + 1
+                break
+    md_body = "\n".join(lines[start:])
+
+    doc = DocTemplate(
+        str(PDF_FILE),
+        pagesize=letter,
+        doc_title="Thirsty-Lang & UTF Reference v1.2",
         leftMargin=0.75 * inch,
         rightMargin=0.75 * inch,
         topMargin=0.7 * inch,

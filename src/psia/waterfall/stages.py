@@ -185,10 +185,31 @@ class Stage4Governance:
     Connects to the Triumvirate service at http://localhost:8001/intent.
     If the service is unavailable, falls back to a local rule-based evaluation
     (same logic as triumvirate_server.py — no silent pass-through).
+
+    For intents classified as "governance_mutation", a BFT consensus round is
+    run *before* the Triumvirate submission.  The BFT digest is injected into
+    the intent dict (under key "bft_digest") and becomes part of the resulting
+    GovernedFrame's audit metadata.  If BFT consensus fails, the stage raises
+    PipelineStageError and the frame is rejected.
     """
 
-    def __init__(self, triumvirate_url: str = "http://localhost:8001") -> None:
+    def __init__(
+        self,
+        triumvirate_url: str = "http://localhost:8001",
+        bft_n_nodes: int = 1,
+        bft_f: int = 0,
+    ) -> None:
         self._url = triumvirate_url.rstrip("/")
+        self._bft_n = bft_n_nodes
+        self._bft_f = bft_f
+        # Lazily instantiated to avoid import overhead on non-governance frames
+        self._bft: Any | None = None
+
+    def _get_bft(self) -> Any:
+        if self._bft is None:
+            from ..consensus.bft import BFTConsensus
+            self._bft = BFTConsensus(n_nodes=self._bft_n, f=self._bft_f)
+        return self._bft
 
     def process(self, shadow: ShadowFrame) -> GovernedFrame:
         v = shadow.classified.validated
@@ -201,11 +222,39 @@ class Stage4Governance:
             "risk_level": shadow.classified.risk_level,
             "timestamp": "",
         }
+
+        # BFT pre-consensus for governance mutations
+        bft_digest = ""
+        if shadow.classified.intent_class == "governance_mutation":
+            bft = self._get_bft()
+            bft_result = bft.run(intent_dict)
+            if not bft_result.decided:
+                raise PipelineStageError(
+                    4,
+                    "Governance",
+                    f"BFT consensus ABORT — {bft_result.error} "
+                    f"(view={bft_result.view_number} seq={bft_result.sequence_number})",
+                )
+            bft_digest = bft_result.digest
+            # Inject BFT digest into the intent dict forwarded to Triumvirate
+            intent_dict["bft_digest"] = bft_digest
+            intent_dict["bft_view"] = bft_result.view_number
+            intent_dict["bft_seq"] = bft_result.sequence_number
+
         verdict, audit_id, votes = self._evaluate(intent_dict)
         if verdict == "deny":
             raise PipelineStageError(
                 4, "Governance", f"Triumvirate DENY (audit_id={audit_id})"
             )
+
+        # Embed BFT metadata in pillar_votes if a BFT round ran
+        if bft_digest:
+            votes = list(votes) + [{
+                "pillar": "BFT",
+                "vote": "commit",
+                "bft_digest": bft_digest,
+            }]
+
         return GovernedFrame(
             shadow=shadow,
             final_verdict=verdict,

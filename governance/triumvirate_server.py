@@ -9,16 +9,152 @@ Pillars:
   CodexDeus — Constitutional Law & FourLaws
 
 Port: 8001
+
+Audit log: SQLite (governance/audit.db) — append-only, never truncated.
+  Table: governance_decisions
+  Query: GET /audit?limit=N&offset=N&actor=X&verdict=X&since=ISO8601
 """
 
 import hashlib
+import os
+import sqlite3
+import json
+from contextlib import contextmanager
 from datetime import datetime
-from typing import Any
+from pathlib import Path
+from typing import Any, Optional
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+# ============================================================
+# SQLite Audit Database
+# ============================================================
+
+_DB_PATH = Path(os.environ.get("TRIUMVIRATE_DB", "governance/audit.db"))
+_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+
+def _init_db() -> None:
+    """Create the governance_decisions table if it doesn't exist."""
+    with _get_conn() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS governance_decisions (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                audit_id    TEXT NOT NULL,
+                timestamp   TEXT NOT NULL,
+                actor       TEXT NOT NULL,
+                action      TEXT NOT NULL,
+                target      TEXT NOT NULL,
+                origin      TEXT NOT NULL DEFAULT '',
+                risk_level  TEXT NOT NULL DEFAULT 'unknown',
+                final_verdict TEXT NOT NULL,
+                consensus   INTEGER NOT NULL DEFAULT 0,
+                votes_json  TEXT NOT NULL,
+                metadata_json TEXT NOT NULL DEFAULT '{}'
+            )
+        """)
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_audit_id    ON governance_decisions(audit_id)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_timestamp   ON governance_decisions(timestamp)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_verdict     ON governance_decisions(final_verdict)"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_actor       ON governance_decisions(actor)"
+        )
+
+
+@contextmanager
+def _get_conn():
+    conn = sqlite3.connect(str(_DB_PATH), check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def _write_decision(decision_dict: dict, intent_dict: dict, votes_list: list) -> None:
+    """Persist a governance decision to SQLite. Never raises — logs on failure."""
+    try:
+        with _get_conn() as conn:
+            conn.execute(
+                """
+                INSERT INTO governance_decisions
+                    (audit_id, timestamp, actor, action, target, origin,
+                     risk_level, final_verdict, consensus, votes_json, metadata_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    decision_dict["audit_id"],
+                    decision_dict["timestamp"],
+                    intent_dict["actor"],
+                    intent_dict["action"],
+                    intent_dict["target"],
+                    intent_dict.get("origin", ""),
+                    intent_dict.get("risk_level", "unknown"),
+                    decision_dict["final_verdict"],
+                    1 if decision_dict["consensus"] else 0,
+                    json.dumps(votes_list),
+                    json.dumps(decision_dict.get("metadata", {})),
+                ),
+            )
+    except Exception as exc:
+        import logging
+        logging.getLogger("triumvirate.audit").error("SQLite write failed: %s", exc)
+
+
+def _query_decisions(
+    limit: int = 20,
+    offset: int = 0,
+    actor: Optional[str] = None,
+    verdict: Optional[str] = None,
+    since: Optional[str] = None,
+) -> tuple[int, list[dict]]:
+    """
+    Query governance_decisions with optional filters.
+    Returns (total_matching, rows_as_dicts).
+    """
+    conditions = []
+    params: list = []
+
+    if actor:
+        conditions.append("actor = ?")
+        params.append(actor)
+    if verdict:
+        conditions.append("final_verdict = ?")
+        params.append(verdict)
+    if since:
+        conditions.append("timestamp >= ?")
+        params.append(since)
+
+    where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+
+    with _get_conn() as conn:
+        total = conn.execute(
+            f"SELECT COUNT(*) FROM governance_decisions {where}", params
+        ).fetchone()[0]
+
+        rows = conn.execute(
+            f"""
+            SELECT * FROM governance_decisions {where}
+            ORDER BY id DESC LIMIT ? OFFSET ?
+            """,
+            params + [limit, offset],
+        ).fetchall()
+
+    return total, [dict(r) for r in rows]
+
 
 # ============================================================
 # Models
@@ -308,7 +444,7 @@ def make_decision(
 app = FastAPI(
     title="Triumvirate Governance Service",
     description="Constitutional evaluation engine — Galahad, Cerberus, CodexDeus",
-    version="1.0.0",
+    version="2.0.0",
 )
 
 app.add_middleware(
@@ -319,28 +455,40 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Audit log — in memory for now, persistent in Phase 2
-audit_log: list[dict] = []
+
+@app.on_event("startup")
+async def _startup():
+    """Initialize SQLite audit database on service start."""
+    _init_db()
 
 
 @app.get("/")
 async def root():
     return {
         "service": "Triumvirate Governance Service",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "pillars": ["Galahad", "Cerberus", "CodexDeus"],
         "mode": "rule-based",
+        "audit_backend": "sqlite",
+        "audit_db": str(_DB_PATH),
         "fourlaws": FOUR_LAWS,
         "endpoints": {
             "intent": "POST /intent",
             "health": "GET /health",
-            "audit": "GET /audit",
+            "audit": "GET /audit?limit=N&offset=N&actor=X&verdict=X&since=ISO8601",
+            "fourlaws": "GET /fourlaws",
         },
     }
 
 
 @app.get("/health")
 async def health():
+    # Count total decisions from DB
+    try:
+        total, _ = _query_decisions(limit=0, offset=0)
+    except Exception:
+        total = -1
+
     return {
         "status": "healthy",
         "triumvirate": "active",
@@ -350,7 +498,9 @@ async def health():
             "codex_deus": "online",
         },
         "mode": "rule-based",
-        "audit_entries": len(audit_log),
+        "audit_backend": "sqlite",
+        "audit_db": str(_DB_PATH),
+        "total_decisions_persisted": total,
     }
 
 
@@ -360,6 +510,9 @@ async def evaluate_intent(intent: IntentRequest) -> GovernanceDecision:
     Submit an intent to the Triumvirate for constitutional evaluation.
     All three pillars vote. Any deny = denied. Any escalate = escalated.
     All allow = approved.
+
+    Every decision is written to the SQLite audit log immediately.
+    The log is append-only and never truncated.
     """
     # Evaluate all three pillars
     galahad_vote = galahad_evaluate(intent)
@@ -369,33 +522,100 @@ async def evaluate_intent(intent: IntentRequest) -> GovernanceDecision:
     votes = [galahad_vote, cerberus_vote, codex_vote]
     decision = make_decision(votes, intent)
 
-    # Append to audit log
-    audit_log.append(
-        {
+    # Persist to SQLite — non-blocking on failure (logs error, never raises)
+    _write_decision(
+        decision_dict={
             "audit_id": decision.audit_id,
             "timestamp": decision.timestamp,
+            "final_verdict": decision.final_verdict,
+            "consensus": decision.consensus,
+            "metadata": decision.metadata,
+        },
+        intent_dict={
             "actor": intent.actor,
             "action": intent.action,
             "target": intent.target,
-            "final_verdict": decision.final_verdict,
-            "votes": [v.dict() for v in votes],
-        }
+            "origin": intent.origin,
+            "risk_level": intent.risk_level,
+        },
+        votes_list=[v.dict() for v in votes],
     )
-
-    # Keep audit log to last 1000 entries in memory
-    if len(audit_log) > 1000:
-        audit_log.pop(0)
 
     return decision
 
 
 @app.get("/audit")
-async def get_audit(limit: int = 20):
-    """Retrieve recent governance decisions"""
+async def get_audit(
+    limit: int = Query(default=20, ge=1, le=1000),
+    offset: int = Query(default=0, ge=0),
+    actor: Optional[str] = Query(default=None),
+    verdict: Optional[str] = Query(default=None),
+    since: Optional[str] = Query(default=None, description="ISO 8601 timestamp lower bound"),
+):
+    """
+    Query the SQLite governance audit log.
+
+    Filters (all optional):
+      actor   — exact match on actor field ("human", "agent", "system")
+      verdict — exact match on final_verdict ("allow", "deny", "escalate")
+      since   — ISO 8601 timestamp; returns decisions at or after this time
+      limit   — max rows returned (default 20, max 1000)
+      offset  — pagination offset (default 0)
+
+    Results ordered by most recent first.
+    """
+    total, rows = _query_decisions(
+        limit=limit,
+        offset=offset,
+        actor=actor,
+        verdict=verdict,
+        since=since,
+    )
+
+    # Deserialize JSON columns
+    for row in rows:
+        try:
+            row["votes_json"] = json.loads(row["votes_json"])
+        except Exception:
+            pass
+        try:
+            row["metadata_json"] = json.loads(row["metadata_json"])
+        except Exception:
+            pass
+
     return {
-        "total_decisions": len(audit_log),
-        "recent": audit_log[-limit:][::-1],
+        "total_matching": total,
+        "limit": limit,
+        "offset": offset,
+        "filters": {"actor": actor, "verdict": verdict, "since": since},
+        "decisions": rows,
     }
+
+
+@app.get("/audit/{audit_id}")
+async def get_audit_entry(audit_id: str):
+    """Retrieve a single governance decision by its audit_id."""
+    _, rows = _query_decisions(limit=1, offset=0)  # not used for filter — do direct query
+    with _get_conn() as conn:
+        row = conn.execute(
+            "SELECT * FROM governance_decisions WHERE audit_id = ? LIMIT 1",
+            (audit_id,),
+        ).fetchone()
+
+    if row is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail=f"audit_id '{audit_id}' not found")
+
+    result = dict(row)
+    try:
+        result["votes_json"] = json.loads(result["votes_json"])
+    except Exception:
+        pass
+    try:
+        result["metadata_json"] = json.loads(result["metadata_json"])
+    except Exception:
+        pass
+    return result
 
 
 @app.get("/fourlaws")
@@ -464,15 +684,17 @@ async def chimera_canary(payload: ChimeraCanaryPayload):
 # ============================================================
 
 if __name__ == "__main__":
+    _init_db()
     print("\n" + "=" * 60)
-    print("Triumvirate Governance Service")
+    print("Triumvirate Governance Service v2.0")
     print("=" * 60)
     print("\nPillars:")
-    print("  ⚖  Galahad    — Ethics & Human Dignity")
-    print("  🛡  Cerberus   — Security & Containment")
-    print("  📜  CodexDeus  — Constitutional Law & FourLaws")
-    print("\nMode: Rule-Based (Model-Backed in Phase 2)")
-    print("\nListening on: http://localhost:8001")
+    print("  Galahad    — Ethics & Human Dignity")
+    print("  Cerberus   — Security & Containment")
+    print("  CodexDeus  — Constitutional Law & FourLaws")
+    print("\nMode: Rule-Based")
+    print(f"\nAudit DB:     {_DB_PATH.resolve()}")
+    print("Listening on: http://localhost:8001")
     print("Docs:         http://localhost:8001/docs")
     print("=" * 60 + "\n")
 

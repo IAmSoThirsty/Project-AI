@@ -522,6 +522,10 @@ def main(argv: list[str] | None = None) -> int:
     docs_p.add_argument("--docs-dir", default=None, help="source docs directory")
     docs_p.add_argument("--open", action="store_true", help="open the site in a browser after generation")
 
+    debug_p = sub.add_parser("debug", help="start the TARL source-level debugger (DAP-style, port 9899)")
+    debug_p.add_argument("file", nargs="?", default=None, help="Thirsty source file to debug")
+    debug_p.add_argument("--port", type=int, default=9899, metavar="PORT", help="TCP port for the debug server (default: 9899)")
+
     lsp_p = sub.add_parser("lsp", help="start the Thirsty Language Server (LSP)")
     lsp_mode = lsp_p.add_mutually_exclusive_group()
     lsp_mode.add_argument(
@@ -743,6 +747,13 @@ def main(argv: list[str] | None = None) -> int:
         if getattr(args, "open", False):
             import webbrowser
             webbrowser.open(str(site_dir / "index.html"))
+        return 0
+
+    if args.cmd == "debug":
+        from .debugger_server import start_debug_server
+        file_arg = args.file
+        port_arg = args.port
+        start_debug_server(file=file_arg, port=port_arg)
         return 0
 
     if args.cmd == "lsp":
