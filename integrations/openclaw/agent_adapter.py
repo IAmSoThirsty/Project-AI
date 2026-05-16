@@ -11,6 +11,14 @@ from typing import Any
 
 from pydantic import BaseModel
 
+# LLM provider (Groq / Ollama)
+try:
+    from .llm_provider import LegionLLM
+    _LLM_AVAILABLE = True
+except ImportError:
+    LegionLLM = None  # type: ignore[assignment,misc]
+    _LLM_AVAILABLE = False
+
 # Import Phase 2A components
 try:
     from .autonomous_learning import (
@@ -73,6 +81,7 @@ class LegionAgent:
         self._init_context_manager()
         self._init_capability_registry()
         self._init_moltbook_client()  # NEW: Social network integration
+        self._init_llm()
 
         print(f"[OK] Legion Agent initialized: {self.agent_id}")
         print("   For we are many, and we are one")
@@ -135,6 +144,16 @@ class LegionAgent:
             self.learning_engine = None
             self.collective = None
             print("   [!] Capability registry not available (import failed)")
+
+    def _init_llm(self):
+        """Initialize LLM provider (Groq or Ollama)"""
+        if _LLM_AVAILABLE and LegionLLM:
+            self.llm = LegionLLM()
+            if not self.llm.available:
+                print("   [!] Legion LLM inactive — conversational AI disabled")
+        else:
+            self.llm = None
+            print("   [!] LLM provider not available (import failed)")
 
     def _init_moltbook_client(self):
         """Initialize Moltbook social network client"""
@@ -207,19 +226,26 @@ class LegionAgent:
         return {"allowed": True, "reason": "security_passed", "threat_level": "low"}
 
     async def _parse_intent(self, message: str, user_id: str, platform: str) -> Intent:
-        """
-        Parse natural language into structured Intent
-        Uses simple heuristics for now, will integrate LLM later
-        """
-        # Determine action type from message
-        action = ActionType.read  # Default to safe action
+        """Parse natural language into structured Intent via LLM (heuristic fallback)."""
+        if self.llm and self.llm.available:
+            classified = await self.llm.classify_intent(message)
+            action_str = classified.get("action", "read")
+        else:
+            # Heuristic fallback
+            msg = message.lower()
+            if any(w in msg for w in ["execute", "run", "start"]):
+                action_str = "execute"
+            elif any(w in msg for w in ["write", "save", "create"]):
+                action_str = "write"
+            elif any(w in msg for w in ["modify", "update", "change"]):
+                action_str = "mutate"
+            else:
+                action_str = "read"
 
-        if any(word in message.lower() for word in ["execute", "run", "start"]):
-            action = ActionType.execute
-        elif any(word in message.lower() for word in ["write", "save", "create"]):
-            action = ActionType.write
-        elif any(word in message.lower() for word in ["modify", "update", "change"]):
-            action = ActionType.mutate
+        try:
+            action = ActionType(action_str)
+        except ValueError:
+            action = ActionType.read
 
         return Intent(
             actor=ActorType.human,
@@ -299,9 +325,8 @@ class LegionAgent:
         and OpenClaw assistant features
         """
         if not self.capability_registry:
-            # Fallback response
             message = intent.context.get("message", "")
-            return f"Legion received: {message}\n\nStatus: Triumvirate approved. Phase 2A active."
+            return await self._default_response(message, context)
 
         try:
             # Match message to capability
@@ -311,11 +336,15 @@ class LegionAgent:
             )
 
             if not capability_name:
-                return self._default_response(message)
+                return await self._default_response(message, context)
 
-            # Execute capability
+            # Execute capability — merge user_id so skill handlers can access it
+            capability_params = {
+                **intent.context,
+                "user_id": context.get("user_id", "default"),
+            }
             result = await self.capability_registry.execute_capability(
-                capability_name, intent.context
+                capability_name, capability_params
             )
 
             # Contribute to collective intelligence
@@ -330,27 +359,17 @@ class LegionAgent:
             return f"Legion: Capability execution error - {str(e)}"
 
     async def _store_conversation(self, user_id: str, message: str, response: str):
-        """Store conversation in EED memory"""
-        if not self.eed:
-            # Fallback to local storage
-            if user_id not in self.conversation_history:
-                self.conversation_history[user_id] = []
-
-            self.conversation_history[user_id].append(
-                {"user": message, "legion": response}
-            )
-            return
-
+        """Persist conversation to JSONL event log and keep in-memory fallback."""
         try:
-            await self.eed.store_conversation(
-                user_id=user_id,
-                message=message,
-                response=response,
-                context={"platform": "openclaw"},
-                metadata={"agent_id": self.agent_id},
-            )
+            from .legion_memory import log_event
+            log_event(user_id, message, response)
         except Exception as e:
-            print(f"[Legion] Conversation storage error: {str(e)}")
+            print(f"[Legion] Event log error: {str(e)}")
+
+        # Keep in-memory copy for same-session context retrieval
+        if user_id not in self.conversation_history:
+            self.conversation_history[user_id] = []
+        self.conversation_history[user_id].append({"user": message, "legion": response})
 
     def _format_security_denial(self, result: dict[str, Any]) -> str:
         """Format security denial message"""
@@ -363,9 +382,35 @@ class LegionAgent:
         )
         return f"🛡️ Triumvirate Decision: Denied\n{votes}"
 
-    def _default_response(self, message: str) -> str:
-        """Default response when no capability matches"""
-        return f"Legion: I received your message: '{message}'\n\nI'm ready to help with Project-AI capabilities, assistant features, and more."
+    async def _default_response(self, message: str, context: dict | None = None) -> str:
+        """Generate a Legion response via LLM, personalized to user memory."""
+        if self.llm and self.llm.available:
+            user_id = context.get("user_id") if context else None
+            history = None
+            if user_id:
+                try:
+                    from .legion_memory import load_recent_history
+                    history = load_recent_history(user_id, n=10)
+                except Exception:
+                    pass
+            if history is None and context and "history" in context:
+                raw = context["history"]
+                history = [
+                    turn
+                    for entry in raw
+                    for turn in (
+                        {"role": "user", "content": entry.get("user", "")},
+                        {"role": "assistant", "content": entry.get("legion", "")},
+                    )
+                ]
+            result = await self.llm.respond_as_legion(message, history=history, user_id=user_id)
+            if result:
+                return result
+
+        return (
+            "Legion: I received your message.\n\n"
+            "I am ready. The Triumvirate stands. What do you need?"
+        )
 
     def _format_capability_result(self, result: dict[str, Any]) -> str:
         """Format capability execution result"""

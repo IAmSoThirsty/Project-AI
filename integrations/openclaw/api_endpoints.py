@@ -182,3 +182,72 @@ async def get_status():
         "conversations": len(legion.conversation_history),
         "security": {"enabled": True, "hydra_active": True},
     }
+
+
+# ── Memory endpoints ──────────────────────────────────────────────────────────
+
+class MemoryLearnRequest(BaseModel):
+    user_id: str
+    section: str  # fact, preference, goal, skill
+    text: str
+
+
+class MemoryForgetRequest(BaseModel):
+    user_id: str
+    memory_id: str
+
+
+class MemoryNoteRequest(BaseModel):
+    user_id: str
+    note: str
+
+
+@router.post("/memory/learn")
+async def memory_learn(request: MemoryLearnRequest):
+    """Add a fact, preference, goal, or skill to the user's Legion memory."""
+    from integrations.openclaw.legion_memory import CATEGORY_ALIASES, add_memory
+    section = CATEGORY_ALIASES.get(request.section.lower())
+    if not section:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown section '{request.section}'. Use: fact, preference, goal, skill.",
+        )
+    memory_id = add_memory(request.user_id, section, request.text)
+    return {"status": "learned", "memory_id": memory_id, "section": section}
+
+
+@router.post("/memory/forget")
+async def memory_forget(request: MemoryForgetRequest):
+    """Remove a memory item by ID."""
+    from integrations.openclaw.legion_memory import forget_memory
+    removed = forget_memory(request.user_id, request.memory_id)
+    if not removed:
+        raise HTTPException(status_code=404, detail=f"Memory ID '{request.memory_id}' not found.")
+    return {"status": "forgotten", "memory_id": request.memory_id}
+
+
+@router.get("/memory/view/{user_id}")
+async def memory_view(user_id: str):
+    """View a user's full structured memory profile and freeform notes."""
+    from integrations.openclaw.legion_memory import format_profile, load_notes
+    return {
+        "user_id": user_id,
+        "profile": format_profile(user_id),
+        "notes": load_notes(user_id) or "No notes yet.",
+    }
+
+
+@router.post("/memory/note")
+async def memory_note(request: MemoryNoteRequest):
+    """Append a freeform note to the user's memory."""
+    from integrations.openclaw.legion_memory import append_note
+    append_note(request.user_id, request.note)
+    return {"status": "noted"}
+
+
+@router.post("/memory/export/{user_id}")
+async def memory_export(user_id: str):
+    """Export conversation history as fine-tuning JSONL data."""
+    from integrations.openclaw.legion_memory import export_training_data
+    count, path = export_training_data(user_id)
+    return {"status": "exported", "examples": count, "path": str(path)}
