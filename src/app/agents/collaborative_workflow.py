@@ -11,11 +11,16 @@ from __future__ import annotations
 import json
 import logging
 import os
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
+
+try:
+    import openai
+except ImportError:
+    openai = None  # type: ignore[assignment]
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
@@ -60,8 +65,7 @@ class CollaborativeAgent(KernelRoutedAgent):
         self.openai_available = False
         self.client = None
         
-        try:
-            import openai
+        if openai is not None:
             api_key = os.getenv("OPENAI_API_KEY")
             if api_key:
                 self.client = openai.OpenAI(api_key=api_key)
@@ -69,7 +73,7 @@ class CollaborativeAgent(KernelRoutedAgent):
                 logger.info(f"{role} agent: OpenAI client initialized")
             else:
                 logger.warning(f"{role} agent: OPENAI_API_KEY not found")
-        except ImportError:
+        else:
             logger.warning(f"{role} agent: openai package not installed")
     
     def generate_response(self, prompt: str, context: str | None = None) -> str:
