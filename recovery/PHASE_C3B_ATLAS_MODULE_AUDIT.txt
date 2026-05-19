@@ -1,0 +1,70 @@
+PHASE C3B — ATLAS MODULE AUDIT
+Date: 2026-05-19
+Branch: integrate/phase-c3b-atlas-isolation-20260519
+
+=== ATLAS PACKAGE LOCATIONS ===
+
+Two copies of Atlas exist in the repo with identical content:
+
+  atlas/           (top-level, 51 .py files)  — AUTHORITATIVE Python package
+  engines/atlas/   (organizational container, 51 .py files) — MIRROR
+
+Both have the same structure and identical source (diff shows only timestamp headers differ).
+Atlas imports use 'from atlas.*' — they require the REPO ROOT on sys.path,
+not 'engines/' on sys.path.
+
+=== FULL MODULE LIST (engines/atlas/) ===
+
+engines/atlas/__init__.py
+engines/atlas/analysis/__init__.py
+engines/atlas/analysis/failure_surveillance.py
+engines/atlas/analysis/sensitivity_analyzer.py
+engines/atlas/audit/__init__.py
+engines/atlas/audit/trail.py
+engines/atlas/cli/__init__.py
+engines/atlas/cli/atlas_cli.py
+engines/atlas/config/__init__.py
+engines/atlas/config/loader.py
+engines/atlas/core/__init__.py
+engines/atlas/core/bayesian_engine.py
+engines/atlas/core/drivers/__init__.py
+engines/atlas/core/drivers/calculator.py
+engines/atlas/core/drivers/driver_engine_10d.py
+engines/atlas/core/graph/__init__.py
+engines/atlas/core/graph/builder.py
+engines/atlas/core/graph/temporal_graph.py
+engines/atlas/core/ingestion/__init__.py
+engines/atlas/core/ingestion/ingester.py
+engines/atlas/core/ingestion/tier_classifier.py
+engines/atlas/core/normalization/__init__.py
+engines/atlas/core/normalization/normalizer.py
+engines/atlas/core/projections/__init__.py
+engines/atlas/core/projections/simulator.py
+engines/atlas/core/scoring/__init__.py
+engines/atlas/core/scoring/scorer.py
+engines/atlas/council/__init__.py
+engines/atlas/data/__init__.py
+engines/atlas/data/normalized/__init__.py
+engines/atlas/data/raw/__init__.py
+engines/atlas/data/stacks/__init__.py
+engines/atlas/export/__init__.py
+engines/atlas/governance/__init__.py
+engines/atlas/governance/constitutional_kernel.py
+engines/atlas/logs/__init__.py
+engines/atlas/reports/__init__.py
+engines/atlas/safeguards/__init__.py
+engines/atlas/safeguards/epistemic_safeguards.py
+engines/atlas/safety/__init__.py
+engines/atlas/sandbox/__init__.py
+engines/atlas/sandbox/sludge_sandbox.py
+engines/atlas/schemas/__init__.py
+engines/atlas/schemas/validator.py
+engines/atlas/simulation/__init__.py
+engines/atlas/simulation/agent_simulator.py
+engines/atlas/simulation/contingency_triggers.py
+engines/atlas/simulation/monte_carlo_engine.py
+engines/atlas/simulation/timeline_divergence.py
+engines/atlas/verification/__init__.py
+engines/atlas/verification/replay_system.py
+
+Total: 51 Python files

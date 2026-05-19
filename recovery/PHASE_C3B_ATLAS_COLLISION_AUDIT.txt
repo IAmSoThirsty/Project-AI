@@ -1,0 +1,78 @@
+PHASE C3B — ATLAS PACKAGE COLLISION AUDIT
+Date: 2026-05-19
+Branch: integrate/phase-c3b-atlas-isolation-20260519
+
+=== COLLISION SUMMARY ===
+
+Risk: LOW (controlled) — no installed package named "atlas" conflicts in .venv.
+The collision is STRUCTURAL (two repo directories) not name-registry-level.
+
+=== TWO-COPY STRUCTURE ===
+
+  atlas/           Top-level directory, 51 .py files.
+                   importlib.util.find_spec("atlas") resolves here:
+                     origin: T:\Project-AI-main\atlas\__init__.py
+                     search_locations: ['T:\Project-AI-main\atlas']
+
+  engines/atlas/   Organizational mirror, 51 .py files.
+                   importlib.util.find_spec("engines.atlas") resolves here:
+                     origin: T:\Project-AI-main\engines\atlas\__init__.py
+                     search_locations: ['T:\Project-AI-main\engines\atlas']
+
+The two copies have identical source. Only header timestamps differ.
+
+=== AUTHORITATIVE PACKAGE ===
+
+  atlas/  is authoritative.
+
+  Evidence:
+  - All intra-Atlas imports use 'from atlas.*' (NOT 'from engines.atlas.*').
+  - If 'engines/' were on sys.path instead of repo root, all 'from atlas.*'
+    imports would fail with ModuleNotFoundError.
+  - The registry module_path "engines.atlas" is for spec-check locating only.
+    It does NOT reflect a safe import path for Atlas internals.
+
+=== COLLISION SCENARIOS ===
+
+Scenario 1: engines/ added to sys.path (WRONG)
+  - find_spec("atlas") resolves to engines/atlas/ instead of atlas/
+  - All 'from atlas.*' intra-Atlas imports become ambiguous
+  - Could silently break or double-load modules
+  STATUS: FORBIDDEN — must not add engines/ to sys.path globally
+
+Scenario 2: Repo root added to sys.path (CORRECT, scoped)
+  - find_spec("atlas") resolves to atlas/ (correct authoritative copy)
+  - All 'from atlas.*' imports work
+  - Activation must be scoped to an isolated context manager, NOT global
+  STATUS: ALLOWED only inside AtlasIsolatedContext
+
+Scenario 3: No path manipulation (current/default)
+  - find_spec("atlas") resolves to atlas/ (repo root already on pytest sys.path)
+  - Engine is still disabled-by-default; finding the spec is safe
+  - No Atlas code executes on registry import
+  STATUS: CURRENT SAFE STATE
+
+=== INSTALLED PACKAGE COLLISION ===
+
+  pip show atlas: Package not found (no external 'atlas' installed in .venv)
+  pip list | grep atlas: (empty)
+
+  No third-party 'atlas' package in the active environment.
+  Future risk: if 'atlas' is ever pip-installed, it would shadow atlas/ unless
+  the repo root precedes site-packages in sys.path.
+
+=== PYTHONPATH GLOBAL MUTATION RULES ===
+
+  - Do NOT add engines/ to PYTHONPATH or sys.path at module level.
+  - Do NOT add engines/ to sys.path inside conftest.py or pyproject.toml pythonpath.
+  - sys.path manipulation for Atlas is allowed ONLY inside AtlasIsolatedContext
+    (scripts/verify/verify_atlas_isolation.py), and must restore on exit.
+  - The engine registry engine_registry.py never imports Atlas directly;
+    it only calls importlib.util.find_spec("engines.atlas") as a probe.
+
+=== REGISTRY METADATA NOTE ===
+
+  engine_registry.py lists module_path="engines.atlas" for spec-check locating.
+  This is correct for discovery purposes. The actual activation import path
+  when enabled would be "atlas" (via repo root on sys.path), not "engines.atlas".
+  The known_blockers in the registry entry document this distinction.
