@@ -1,0 +1,98 @@
+PHASE C3C-R1 -- HYDRA MINIMUM SAFE REPAIR PLAN
+Date: 2026-05-19
+Branch: integrate/phase-c3c-hydra-diagnosis-20260519
+
+Do not activate Hydra.
+Do not wire Hydra into runtime execution.
+Repair only test/API drift and missing recovered convenience methods.
+
+=== REPAIR SCOPE ===
+
+Only engines/hydra_50/hydra_50_engine.py and tests/test_hydra_comprehensive.py.
+No changes to src/ runtime paths.
+No changes to cerberus_hydra.py (passing).
+No changes to hydra_50_engine other 4 test files (all passing).
+
+=== MINIMUM REPAIRS ===
+
+1. Add Hydra50Engine.tick() shim
+   -> delegates to self.run_tick()
+   -> covers: test_engine_global_tick, test_scenario_coupling, test_cascade_detection
+
+2. Add Hydra50Engine.get_status() shim
+   -> delegates to self.get_dashboard_state()
+   -> covers: test_engine_get_status
+
+3. Add public Hydra50Engine.save_state() / load_state() wrappers
+   -> save_state() calls self._save_state()
+   -> load_state() calls self._load_state()
+   -> covers: test_engine_save_state, test_engine_load_state
+
+4. Add Hydra50Engine.get_critical_scenarios() -> list[str]
+   -> iterate self.scenarios, return IDs where escalation_level.value >= 4
+   -> covers: test_engine_get_critical_scenarios
+
+5. Add Hydra50Engine.reset_scenario(scenario_id: str) -> None
+   -> re-instantiate the one scenario via _initialize_all_scenarios subset or fresh init
+   -> covers: test_engine_reset_scenario
+
+6. Add Hydra50Engine.reset_all_scenarios() -> None
+   -> calls self._initialize_all_scenarios()
+   -> covers: test_engine_reset_all
+
+7. Add Hydra50Engine.execute_control_plane_command(plane, command, params) -> dict
+   -> minimal router: if command == "status" return get_dashboard_state()
+   -> if plane == HUMAN_OVERRIDE call activate_human_override()
+   -> covers: test_control_plane_command, test_human_override
+
+8. Add BaseScenario.tick() shim
+   -> calls self.evaluate_escalation()
+   -> covers: test_ai_reality_flood_tick, test_trading_war_flash_crash,
+              test_legitimacy_collapse_progression, test_grid_warfare_cascade,
+              test_pandemic_progression, test_debt_cascade_contagion,
+              test_scenario_extreme_values, test_scenario_metrics_persistence
+
+9. Add BaseScenario.escalate() direct escalation method
+   -> advance escalation_level by 1 step (up to LEVEL_5_COLLAPSE max)
+   -> update self.status to ESCALATING if >= LEVEL_1
+   -> covers: test_ai_reality_flood_escalation, test_engine_get_critical_scenarios,
+              test_rapid_escalation, test_cascade_detection
+
+10. Update stale tests for correct scenario IDs and call path:
+    test_legitimacy_collapse_trigger    -> change "S03" to "S41"
+    test_legitimacy_collapse_progression -> change "S03" to "S41"
+    test_grid_warfare_trigger           -> change "S04" to "S21"
+    test_grid_warfare_cascade           -> change "S04" to "S21"
+    test_pandemic_trigger               -> change "S05" to "S31"
+    test_pandemic_progression           -> change "S05" to "S31"
+    test_debt_cascade_trigger           -> change "S06" to "S11",
+                                           fix metric key to "default_count" w/ value >= 3.0,
+                                           use engine.update_scenario_metrics() not direct scenario call
+    test_debt_cascade_contagion         -> change "S06" to "S11"
+    test_ai_reality_flood_trigger       -> use engine.update_scenario_metrics() not direct scenario call
+    test_trading_war_trigger            -> use engine.update_scenario_metrics() not direct scenario call
+
+=== REPAIR CONSTRAINTS ===
+
+- Do not suppress failures.
+- Do not mark xfail without documented reason.
+- All shims must be minimal -- no new logic beyond what the test requires.
+- No external imports added to hydra_50_engine.py.
+- No activation of Hydra in src/ runtime path.
+- After repair, all 33 tests in test_hydra_comprehensive.py must pass.
+- All 532 passing tests in other 4 hydra files must remain passing.
+
+=== EXPECTED POST-REPAIR STATE ===
+
+- test_hydra_comprehensive.py: 33/33 pass
+- test_cerberus_hydra.py:       17/17 pass (unchanged)
+- test_hydra_50_engine.py:      96/96 pass (unchanged)
+- test_hydra_guard.py:          14/14 pass (unchanged)
+- test_hydra_coverage_boost.py: 405/405 pass (unchanged)
+- Total hydra: 565/565 pass
+
+=== NEXT PHASE ===
+
+After C3C-R1 repair passes, C3D follows:
+  C3D -- Sovereign War Room: _cffi_backend/cryptography dependency isolation
+  (identical pattern to C3B Atlas isolation audit)

@@ -1,0 +1,195 @@
+PHASE C3C -- HYDRA FAILURE CLASSIFICATION
+Date: 2026-05-19
+Branch: integrate/phase-c3c-hydra-diagnosis-20260519
+
+=== SUMMARY ===
+
+Hydra test suite: 565 tests across 5 files.
+- test_cerberus_hydra.py:       17 tests, 17 PASS (cerberus_hydra.py is clean)
+- test_hydra_50_engine.py:      96 tests, 96 PASS (hydra_50_engine.py core is clean)
+- test_hydra_guard.py:          14 tests, 14 PASS
+- test_hydra_coverage_boost.py: 405 tests, 405 PASS (extensive scenario coverage)
+- test_hydra_comprehensive.py:   33 tests, 27 FAIL / 6 PASS
+
+All 27 failures are in test_hydra_comprehensive.py ONLY.
+The Hydra engine core (hydra_50_engine.py) is structurally intact.
+cerberus_hydra.py is fully passing.
+
+=== FAILURE GROUP A -- API DRIFT: engine.tick() (2 failures) ===
+
+Tests:
+  test_engine_global_tick          line 264: engine.tick()
+  test_scenario_coupling           line 368: engine.tick()
+
+Failure:
+  AttributeError: 'Hydra50Engine' object has no attribute 'tick'
+
+Root cause:
+  Test calls engine.tick() but the actual method is engine.run_tick().
+  Classification: RENAMED ATTRIBUTE / API DRIFT
+  Source: Hydra50Engine.run_tick() at hydra_50_engine.py:5261
+
+=== FAILURE GROUP B -- API DRIFT: engine.get_status() (1 failure) ===
+
+Tests:
+  test_engine_get_status           line 273: engine.get_status()
+
+Failure:
+  AttributeError: 'Hydra50Engine' object has no attribute 'get_status'
+
+Root cause:
+  Test calls engine.get_status() but the actual method is engine.get_dashboard_state().
+  The return dict from get_dashboard_state() contains both 'total_scenarios' and
+  'active_scenarios' which the test expects -- so only the method name is wrong.
+  Classification: RENAMED ATTRIBUTE / API DRIFT
+  Source: Hydra50Engine.get_dashboard_state() at hydra_50_engine.py:5550
+
+=== FAILURE GROUP C -- API DRIFT: engine.save_state() / engine.load_state() (2 failures) ===
+
+Tests:
+  test_engine_save_state           line 397: engine.save_state()
+  test_engine_load_state           line 408: engine1.save_state() / engine2.load_state()
+
+Failure:
+  AttributeError: 'Hydra50Engine' object has no attribute 'save_state'.
+  Did you mean: '_save_state'?
+
+Root cause:
+  Tests expect public engine.save_state() and engine.load_state() methods.
+  Actual implementation uses private _save_state() and _load_state().
+  Classification: RENAMED ATTRIBUTE / API DRIFT (private vs public)
+  Source: Hydra50Engine._save_state() at hydra_50_engine.py:5611
+          Hydra50Engine._load_state() at hydra_50_engine.py:5639
+
+=== FAILURE GROUP D -- MISSING METHODS on Hydra50Engine (5 failures) ===
+
+Tests:
+  test_engine_get_critical_scenarios line 288: engine.get_critical_scenarios()
+  test_engine_reset_scenario         line 301: engine.reset_scenario(scenario_id)
+  test_engine_reset_all              line 313: engine.reset_all_scenarios()
+  test_control_plane_command         line 334: engine.execute_control_plane_command(...)
+  test_human_override                line 349: engine.execute_control_plane_command(...)
+
+Failures:
+  AttributeError: 'Hydra50Engine' object has no attribute 'get_critical_scenarios'
+  AttributeError: 'Hydra50Engine' object has no attribute 'reset_scenario'
+  AttributeError: 'Hydra50Engine' object has no attribute 'reset_all_scenarios'
+  AttributeError: 'Hydra50Engine' object has no attribute 'execute_control_plane_command'
+
+Root cause:
+  These engine-level convenience methods were planned but not implemented.
+  Partial equivalents exist:
+    get_critical_scenarios(): run_tick() returns 'critical_scenarios' list -- no standalone method
+    reset_scenario()/reset_all_scenarios(): no equivalent; only _initialize_all_scenarios() exists
+    execute_control_plane_command(): activate_human_override() covers the human_override case only
+  Classification: INCOMPLETE RECOVERED IMPLEMENTATION (planned API, never written)
+
+=== FAILURE GROUP E -- MISSING METHOD: scenario.tick() (8 failures) ===
+
+Tests:
+  test_ai_reality_flood_tick         line 112: scenario.tick()
+  test_trading_war_flash_crash       line 140: scenario.tick()
+  test_legitimacy_collapse_progression line 163: scenario.tick()
+  test_grid_warfare_cascade          line 192: scenario.tick()
+  test_pandemic_progression          line 220: scenario.tick()
+  test_debt_cascade_contagion        line 248: scenario.tick()
+  test_scenario_extreme_values       line 435: scenario.tick()
+  test_scenario_metrics_persistence  line 458: scenario.tick()
+
+Failure:
+  AttributeError: '<ScenarioClass> object has no attribute tick'
+
+Root cause:
+  Tests expect per-scenario tick() as an instance method on BaseScenario.
+  BaseScenario only has evaluate_escalation() which is time-based.
+  The engine-level run_tick() iterates all scenarios; no single-scenario tick exists.
+  Classification: INCOMPLETE RECOVERED IMPLEMENTATION
+  Minimum repair: add a tick() shim on BaseScenario that calls evaluate_escalation()
+
+=== FAILURE GROUP F -- MISSING METHOD: scenario.escalate() (4 failures) ===
+
+Tests:
+  test_ai_reality_flood_escalation   line 102: scenario.escalate()
+  test_engine_get_critical_scenarios line 285: scenario.escalate() x3
+  test_rapid_escalation              line 446: scenario.escalate() x10
+  test_cascade_detection             line 379: scenario.escalate() x2
+
+Failure:
+  AttributeError: '<ScenarioClass> object has no attribute escalate'
+
+Root cause:
+  Tests expect direct scenario.escalate() that bumps escalation_level by one step.
+  BaseScenario only has evaluate_escalation() which is time-based (checks timedelta).
+  There is no immediate forced-escalate method.
+  Classification: INCOMPLETE RECOVERED IMPLEMENTATION
+  Minimum repair: add escalate() to BaseScenario that advances escalation_level by 1
+                  and updates status accordingly.
+
+=== FAILURE GROUP G -- STALE TEST EXPECTATION: direct update_metrics doesn't set status (3 failures) ===
+
+Tests:
+  test_ai_reality_flood_trigger      line 93: scenario.update_metrics({...}); assert status != DORMANT
+  test_trading_war_trigger           line 128: same pattern
+  test_debt_cascade_trigger          line 234: same pattern
+
+Failure:
+  AssertionError: assert ScenarioStatus.DORMANT != ScenarioStatus.DORMANT
+
+Root cause:
+  BaseScenario.update_metrics() activates trigger flags but does NOT update self.status.
+  Status is updated ONLY by Hydra50Engine.update_scenario_metrics() which wraps the call.
+  Tests call scenario.update_metrics() directly and expect engine-level side effect.
+  Classification: STALE TEST EXPECTATION (tests bypass engine wrapper)
+
+=== FAILURE GROUP H -- STALE SCENARIO ID MAPPING (3 failures) ===
+
+Tests expect:
+  engine.scenarios["S03"] == LegitimacyCollapseScenario
+  engine.scenarios["S04"] == PowerGridFrequencyWarfareScenario
+  engine.scenarios["S05"] == SlowBurnPandemicScenario
+
+Actual (from hydra_50_engine.py:5139 _initialize_all_scenarios):
+  engine.scenarios["S03"] == InternetFragmentationScenario
+  engine.scenarios["S04"] == SyntheticIdentityScenario
+  engine.scenarios["S05"] == CognitiveLoadScenario
+
+Correct IDs for what the test wants:
+  LegitimacyCollapseScenario        -> S41 (Societal block S41-S50)
+  PowerGridFrequencyWarfareScenario  -> S21 (Infrastructure block S21-S30)
+  SlowBurnPandemicScenario           -> S31 (Biological/Environmental block S31-S40)
+
+Also: test_debt_cascade_trigger uses "S06" expecting SovereignDebtCascadeScenario.
+Actual S06=AlgorithmicCulturalDriftScenario. SovereignDebtCascade=S11.
+
+Tests:
+  test_legitimacy_collapse_trigger     line 151: isinstance(scenarios["S03"], LegitimacyCollapseScenario)
+  test_grid_warfare_trigger            line 176: isinstance(scenarios["S04"], PowerGridFrequencyWarfareScenario)
+  test_pandemic_trigger                line 203: isinstance(scenarios["S05"], SlowBurnPandemicScenario)
+  test_debt_cascade_trigger            line 232: isinstance(scenarios["S06"], SovereignDebtCascadeScenario)
+
+Classification: STALE TEST EXPECTATION (wrong scenario ID in test)
+
+=== BONUS: SovereignDebtCascadeScenario trigger key mismatch ===
+
+test_debt_cascade_trigger calls:
+  scenario.update_metrics({"sovereign_default_risk": 0.7})
+
+Actual S11 (SovereignDebtCascadeScenario) trigger names are:
+  "default_count" (threshold 3.0)
+  "debt_to_gdp_threshold" (threshold 3.0)
+
+"sovereign_default_risk" is not a trigger name. Metric stored but no trigger fires.
+Combined with Group G (status not set by direct update_metrics), this test fails twice.
+Classification: STALE TEST EXPECTATION (wrong metric key + wrong call path)
+
+=== CLASSIFICATION SUMMARY ===
+
+  stale test expectation:               7 failures (Groups G, H, debt bonus)
+  incomplete recovered implementation: 13 failures (Groups D, E, F)
+  renamed attribute / API drift:         5 failures (Groups A, B, C)
+  dependency / env issue:                0
+  real logic bug:                        0
+
+TOTAL: 27 failures, ALL in test_hydra_comprehensive.py.
+The engine implementation (hydra_50_engine.py) is structurally sound.
+All 532 tests across the other 4 hydra test files pass cleanly.

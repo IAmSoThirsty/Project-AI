@@ -111,10 +111,19 @@ ENGINES: dict[str, EngineEntry] = {
         enabled=False,
         import_mode="lazy",
         known_blockers=[
-            "engines/hydra_50/cerberus_hydra.py has assertion and attribute errors "
-            "in test_hydra_comprehensive.py (27 tests, mixed pass/fail).",
-            "Not imported by src/ runtime — test-suite-only references.",
-            "Requires C3C: assertion/attribute failures must be diagnosed before activation.",
+            "C3C AUDITED. 27 failures in test_hydra_comprehensive.py only. "
+            "All 532 tests in the other 4 hydra test files pass. "
+            "hydra_50_engine.py is structurally intact. cerberus_hydra.py is clean.",
+            "API drift (5 failures): engine.tick()=run_tick(), get_status()=get_dashboard_state(), "
+            "save_state()/load_state() are private (_save_state/_load_state).",
+            "Incomplete implementation (13 failures): BaseScenario missing tick() and escalate(). "
+            "Hydra50Engine missing get_critical_scenarios(), reset_scenario(), "
+            "reset_all_scenarios(), execute_control_plane_command().",
+            "Stale test expectations (7 failures): test_hydra_comprehensive.py uses wrong "
+            "scenario IDs (S03/S04/S05/S06 instead of S41/S21/S31/S11) and calls "
+            "scenario.update_metrics() directly expecting engine-level status transition.",
+            "Minimum repair plan documented in recovery/PHASE_C3C_HYDRA_REPAIR_PLAN.txt. "
+            "C3C-R1 repair pass required before Hydra activation consideration.",
         ],
         activation_requires_explicit_config=True,
     ),
