@@ -1,10 +1,10 @@
-"""Command-line interface for Thirstys Waterfall"""
-
-import json
 import argparse
+import json
+import os
 import sys
 
 from .orchestrator import ThirstysWaterfall
+from .runtime_controls import ACTIVE_CONTROLS_ENV, DESTRUCTIVE_RESPONSES_ENV
 
 def main():
     """Main CLI entry point."""
@@ -21,8 +21,22 @@ def main():
     parser.add_argument("--status", action="store_true", help="Show system status")
 
     parser.add_argument("--audit", action="store_true", help="Run privacy audit")
+    parser.add_argument(
+        "--enable-active-controls",
+        action="store_true",
+        help="Allow host/network controls for this process",
+    )
+    parser.add_argument(
+        "--enable-destructive-responses",
+        action="store_true",
+        help="Allow destructive emergency responses for this process",
+    )
 
     args = parser.parse_args()
+    if args.enable_active_controls:
+        os.environ[ACTIVE_CONTROLS_ENV] = "1"
+    if args.enable_destructive_responses:
+        os.environ[DESTRUCTIVE_RESPONSES_ENV] = "1"
 
     # Initialize system
     try:

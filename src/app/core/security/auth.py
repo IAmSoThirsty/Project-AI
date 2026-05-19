@@ -35,14 +35,34 @@ def _resolve_jwt_secret() -> str:
     local fallback is allowed to avoid import-time failure when auth helpers are
     monkeypatched.
     """
-    secret = os.getenv("JWT_SECRET_KEY")
-    if secret:
-        return secret
-
     allow_test_fallback = (
         bool(os.getenv("PYTEST_CURRENT_TEST"))
         or os.getenv("PROJECT_AI_ALLOW_INSECURE_JWT_FOR_TESTS") == "1"
     )
+
+    secret = os.getenv("JWT_SECRET_KEY")
+    if secret:
+        normalized = secret.strip()
+        weak_values = {
+            "secret",
+            "changeme",
+            "default",
+            "jwt-secret",
+            "project-ai-test-only-jwt-secret",
+        }
+        if len(normalized) < 32 or normalized.lower() in weak_values:
+            if allow_test_fallback:
+                logger.warning(
+                    "JWT_SECRET_KEY is weak but test fallback mode is enabled; "
+                    "continuing for test execution only."
+                )
+                return normalized
+            raise RuntimeError(
+                "JWT_SECRET_KEY is too weak for production. "
+                "Use at least 32 random characters."
+            )
+        return normalized
+
     if allow_test_fallback:
         logger.warning(
             "JWT_SECRET_KEY missing; using test-only fallback key. "

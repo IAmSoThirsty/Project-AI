@@ -3,8 +3,25 @@ version: '3.8'
 services:
   web-backend:
     build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: project-ai-api-dev
+    ports:
+      - "8001:8001"
+    environment:
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./api:/app/api
+      - ./src:/app/src
+      - ./data:/app/data
+    command: uvicorn api.main:app --host=0.0.0.0 --port=8001 --reload
+
+  # Noncanonical Flask compatibility adapter (opt-in only)
+  web-backend-adapter:
+    profiles: ["dev-adapter"]
+    build:
       context: ./web/backend
-    container_name: project-ai-backend-dev
+    container_name: project-ai-backend-adapter-dev
     ports:
       - "5000:5000"
     environment:

@@ -16,6 +16,9 @@ def start_dev():
     print("[*] Starting Project AI Governance Backend (Development)")
     print("[*] API: http://localhost:8001")
     print("[*] Docs: http://localhost:8001/docs")
+    print("[*] Health (liveness): http://localhost:8001/health/live")
+    print("[*] Health (readiness): http://localhost:8001/health/ready")
+    print("[*] Metrics: http://localhost:8001/metrics")
     print("[*] Save Points: Enabled (15-min auto-save)")
     print("")
 
@@ -38,6 +41,9 @@ def start_prod():
     """Start in production mode"""
     print("[*] Starting Project AI Governance Backend (Production)")
     print("[*] API: http://localhost:8001")
+    print("[*] Health (liveness): http://localhost:8001/health/live")
+    print("[*] Health (readiness): http://localhost:8001/health/ready")
+    print("[*] Metrics: http://localhost:8001/metrics")
     print("")
 
     subprocess.run(

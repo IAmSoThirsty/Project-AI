@@ -48,5 +48,23 @@ logs/
 
 # Temporary files
 .tmp/
+.env
+.env.*
+!.env.example
 .env.local
 .env.*.local
+
+# Phase 0 containment denylist (do not remove)
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+id_rsa
+id_ed25519
+secrets/
+private/
+credentials*
+token*
+*.sqlite
+*.db

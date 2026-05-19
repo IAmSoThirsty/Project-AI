@@ -24,6 +24,26 @@ class TestGovernancePipelineRegressions:
         with pytest.raises(ValueError, match="not in registry"):
             pipeline._validate(context)
 
+    def test_validate_rejects_governed_action_without_schema(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Governed actions without schemas must fail closed."""
+        from app.core.governance import validators
+
+        # Simulate accidental schema omission for an otherwise valid governed action.
+        reduced = dict(validators.ACTION_SCHEMAS)
+        reduced.pop("ai.chat", None)
+        monkeypatch.setattr(validators, "ACTION_SCHEMAS", reduced)
+
+        context = {
+            "source": "web",
+            "payload": {"action": "ai.chat", "prompt": "hello"},
+            "action": "ai.chat",
+        }
+
+        with pytest.raises(ValueError, match="No validation schema defined"):
+            pipeline._validate(context)
+
     def test_user_login_handles_tuple_auth_result(
         self, monkeypatch: pytest.MonkeyPatch
     ):

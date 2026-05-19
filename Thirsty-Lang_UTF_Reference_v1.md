@@ -10,6 +10,7 @@
 
 # Table of Contents
 
+0. [How to Read This Document — Claim Classification](#0-how-to-read-this-document)
 1. [Executive Overview](#1-executive-overview)
 2. [Conceptual Foundation — The Water-Language Metaphor](#2-conceptual-foundation)
 3. [UTF — Universal Thirsty Family](#3-utf-universal-thirsty-family)
@@ -28,6 +29,49 @@
 16. [Glossary](#16-glossary)
 17. [Source Map](#17-source-map)
 18. [Appendix](#18-appendix)
+
+---
+
+# 0. How to Read This Document
+
+## Claim Classification
+
+Every architectural and capability claim in this reference is classified using the scheme below. Claims are tagged inline as **[Label]** at the point they first appear, and summarised in the table that follows. Where tags are absent, check Section 17 (Source Map) for the underlying evidence.
+
+| Label | Meaning |
+|---|---|
+| **[Implemented]** | Code is present in the repository and appears directly executable |
+| **[Specified]** | A formal specification document exists; implementation completeness may vary |
+| **[Claimed]** | Stated by an internal report, whitepaper, or README; not independently confirmed by external evidence |
+| **[Verified]** | Conformance test, integration test, or audit trail provides execution evidence |
+| **[Open]** | Known conflict, missing cross-reference, or unresolved discrepancy — treat with caution |
+
+> Absent a tag, assume **[Implemented]** for items listed in Section 14's "Implemented" tables, and **[Claimed]** for items that appear only in architecture diagrams or prose without a source-file citation.
+
+## High-Stakes Claims at a Glance
+
+| Claim | Class | Notes |
+|---|---|---|
+| Thirsty-Lang full interpreter (lexer → AST → eval) | **[Implemented / Verified]** | `src/utf/thirsty_lang/` — 10+ Python modules; 150+ conformance tests pass |
+| TARL policy evaluator (default DENY, fail-closed) | **[Implemented / Verified]** | `src/utf/tarl/core.py`; `tarl/tests/test_tarl_integration.py` |
+| TARL bytecode compiler + VM | **[Implemented]** | `tarl/compiler/`, `tarl/runtime/` — present; not independently runtime-confirmed |
+| TARL LLVM backend (IR / obj / exe / jit) | **[Implemented]** | `tarl/llvm_backend.py`; requires `llvmlite` at runtime — no execution trace confirmed |
+| TARL OS v3.0 — 29 subsystems, ~13,600 LOC | **[Claimed]** | Self-reported in `tarl_os/TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md` |
+| TARL OS version (v2.0 vs v3.0) | **[Open]** | `tarl_os/README.md` → v2.0 (2026-01-30); Implementation Report → v3.0 (2026-02-08) |
+| TARL OS subsystems executable via Python bridge | **[Claimed]** | `.thirsty` files exist; `bridge.py` present; full end-to-end execution unconfirmed |
+| TARL performance benchmarks (50K lines/sec, 10M instr/sec JIT) | **[Claimed]** | Stated in `tarl/docs/WHITEPAPER.md`; no benchmark harness found |
+| Shadow Thirst 6 analyzers (incl. PuritySpringAnalyzer) | **[Implemented / Verified]** | `src/utf/shadow_thirst/core.py`; Phase 2 confirmed real impl |
+| Triumvirate 3-pillar governance (Galahad / Cerberus / CodexDeus) | **[Implemented]** | `governance/triumvirate_server.py`; SQLite audit log; FourLaws enforced |
+| PSIA 7-stage waterfall pipeline | **[Implemented]** | `src/psia/` — full module; Ed25519 anchor; Merkle seal |
+| Ed25519 key rotation + `verify_with_history` | **[Implemented / Verified]** | `src/psia/crypto/anchor.py`; rotation log + history lookup confirmed |
+| T-SECA / GHOST threshold Shamir crypto | **[Specified]** | Defined in PSIA spec (Shamir k-of-n over GF(257), PBFT-lite); impl. status unconfirmed |
+| JS/Python conformance parity | **[Open]** | `JS_PYTHON_PARITY.md` — 0 of 200 tests pass; JS needs full rewrite from scratch |
+| Green threads / `cascade glass` async | **[Implemented]** | `interpreter.py`; `ThreadPoolExecutor`-backed `TaskValue`; `await` blocks on `future.result()` |
+| Conformance suite (150+ tests) | **[Implemented / Verified]** | `conformance/runner.py`, `verify.py`, `smoke.py`; subprocess + in-process |
+| LSP server (`thirsty lsp`) | **[Implemented]** | `lsp_server.py` 420 lines; stdio + TCP; editor integration not independently confirmed |
+| Iron Path full pipeline | **[Implemented / Verified]** | `governance/iron_path.py`; SHA-256 stage artifacts; immutable audit log |
+| TSCG-B CRC32 + SHA-256 integrity | **[Implemented / Verified]** | `src/utf/tscg_b/core.py`; both checks enforced; `TSCGBError` on mismatch |
+| 5 Constitutional Rules (Thirsty's Constitution) | **[Implemented]** | `tarl_os/security/thirstys_constitution.thirsty`; fail-closed gateway confirmed |
 
 ---
 
@@ -165,11 +209,11 @@ UTF — Universal Thirsty Family
 
 The `src/utf/` module is described as an "amplified bootstrap" — not a claim of full industrial completeness but a living, executable stack that contains the soul of the language in syntax, tooling, diagnostics, and flow. The following are confirmed executable as of the repository's last verified date (2026-04-20):
 
-- Thirsty-Lang / Thirst of Gods: lexer, parser, AST, checker, interpreter, CLI, REPL, formatter, doctor, scaffold, bench, promote bridge, true tail-call optimization, namespace module imports.
-- T.A.R.L.: deterministic policy parser/evaluator.
-- Shadow Thirst: mutation parser, analyzer suite, replay/promote scaffolding, visualization, plugin loader.
-- TSCG: symbolic parser/encoder/decoder/checksum.
-- TSCG-B: binary frame codec with CRC32 + SHA-256.
+- Thirsty-Lang / Thirst of Gods: lexer, parser, AST, checker, interpreter, CLI, REPL, formatter, doctor, scaffold, bench, promote bridge, true tail-call optimization, namespace module imports. **[Implemented / Verified]**
+- T.A.R.L.: deterministic policy parser/evaluator. **[Implemented / Verified]**
+- Shadow Thirst: mutation parser, analyzer suite, replay/promote scaffolding, visualization, plugin loader. **[Implemented / Verified]**
+- TSCG: symbolic parser/encoder/decoder/checksum. **[Implemented]**
+- TSCG-B: binary frame codec with CRC32 + SHA-256. **[Implemented / Verified]**
 
 ---
 
@@ -655,7 +699,9 @@ decision = runtime.evaluate(context)
 
 TARL OS is described as a "God Tier AI Operating System" implemented in Thirsty-Lang / T.A.R.L. It is a monolithic AI operating substrate — all subsystems written in `.thirsty` files — providing the execution environment for AI workloads under full governance enforcement.
 
-**Source:** `tarl_os/README.md` (version 2.0, status: Production Ready, last updated 2026-01-30). The implementation report (`tarl_os/TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md`) claims version 3.0 with 100% completeness, 29 production-grade subsystems, and approximately 13,600 lines of Thirsty-Lang code.
+**Source:** `tarl_os/README.md` (version 2.0, status: Production Ready, last updated 2026-01-30). The implementation report (`tarl_os/TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md`) claims version 3.0 with 100% completeness, 29 production-grade subsystems, and approximately 13,600 lines of Thirsty-Lang code. **[Claimed]**
+
+> **[Open — Version Conflict]** `tarl_os/README.md` declares v2.0 (dated 2026-01-30). `TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md` declares v3.0 (dated 2026-02-08). The report is the newer document and supersedes the README on version number, but the discrepancy is unresolved. The 29-subsystem and 13,600 LOC figures are self-reported and have not been independently verified. See Section 17 Source Map.
 
 ## 6.2 Architecture — 7 Tiers
 
@@ -2076,37 +2122,41 @@ Thirsty-Lang ships a native package manager (`thirsty add/audit/lock`). Package 
 
 ## Phase 5 New Implementations
 
-| Component | Status | Evidence |
-|---|---|---|
-| LSP server (`thirsty lsp`) | Implemented | `src/utf/thirsty_lang/lsp_server.py` (420 lines); stdio + TCP modes |
-| Triumvirate governance (full spec + impl) | Implemented | `governance/triumvirate_server.py`; `TRIUMVIRATE_SPEC.md`; 3 pillars, FourLaws, Chimera bridge |
-| PSIA — Plane Separation / Isolation Architecture | Implemented | `src/psia/` (full module, 7 stages, Merkle tree, Ed25519); `PSIA_SPEC.md`; acronym confirmed |
-| TSCG-B `StreamDecoder` | Implemented | `src/utf/tscg_b/core.py`; buffered multi-frame, magic resync, `pending_bytes` |
-| JS/Python parity analysis | Implemented | `src/utf/docs/JS_PYTHON_PARITY.md`; verdict: 0/200 conformance; root cause: no AST pipeline in JS |
-| LLVM backend | Implemented | `src/utf/tarl/compiler/frontend.py`, `llvm_backend.py`; targets: llvm-ir/obj/exe/asm/jit |
-| Green threads / async (`cascade glass`) | Implemented | `interpreter.py`; `TaskValue` → `concurrent.futures.Future`; `ThreadPoolExecutor`; `await` blocks on `future.result()` |
-| Central package registry | Implemented | `src/utf/thirsty_lang/registry_server.py` (FastAPI, port 9000); publish/search/yank/download endpoints; `THIRSTY_REGISTRY_URL` env var routing |
-| Docs site generator (`thirsty docs`) | Implemented | `src/utf/thirsty_lang/docs_generator.py` (508 lines); static HTML; sidebar TOC; search index; syntax highlighting; responsive dark CSS |
+| Component | Status | Claim Class | Evidence |
+|---|---|---|---|
+| LSP server (`thirsty lsp`) | Implemented | **[Implemented]** | `src/utf/thirsty_lang/lsp_server.py` (420 lines); stdio + TCP modes; editor integration unconfirmed |
+| Triumvirate governance (full spec + impl) | Implemented | **[Implemented]** | `governance/triumvirate_server.py`; `TRIUMVIRATE_SPEC.md`; 3 pillars, FourLaws, Chimera bridge |
+| PSIA — Plane Separation / Isolation Architecture | Implemented | **[Implemented]** | `src/psia/` (full module, 7 stages, Merkle tree, Ed25519); `PSIA_SPEC.md` |
+| TSCG-B `StreamDecoder` | Implemented | **[Implemented / Verified]** | `src/utf/tscg_b/core.py`; buffered multi-frame, magic resync, `pending_bytes` |
+| JS/Python parity analysis | Documented | **[Open]** | `JS_PYTHON_PARITY.md`; verdict: **0 of 200 conformance tests pass**; root cause: no AST pipeline in JS implementation; full rewrite required |
+| LLVM backend | Implemented | **[Implemented]** | `tarl/compiler/frontend.py`, `llvm_backend.py`; targets: llvm-ir/obj/exe/asm/jit; requires `llvmlite`; no runtime execution trace confirmed |
+| Green threads / async (`cascade glass`) | Implemented | **[Implemented]** | `interpreter.py`; `TaskValue` → `concurrent.futures.Future`; `ThreadPoolExecutor`; `await` blocks on `future.result()` |
+| Central package registry | Implemented | **[Implemented]** | `src/utf/thirsty_lang/registry_server.py` (FastAPI, port 9000); publish/search/yank/download; `THIRSTY_REGISTRY_URL` env var |
+| Docs site generator (`thirsty docs`) | Implemented | **[Implemented]** | `src/utf/thirsty_lang/docs_generator.py` (508 lines); static HTML; sidebar TOC; search index; responsive dark CSS |
 
 ## Previously Partial — Now Fully Implemented
 
-| Item | Prior Status | Current Status |
-|---|---|---|
-| Triumvirate governance | Stub (`triumvirate_server.py` present, unread) | **Implemented** — 3 pillars (Galahad/Cerberus/CodexDeus), FourLaws, Chimera bridge, full FastAPI service |
-| PSIA planes | Directory existed, no docs | **Implemented** — 7-stage waterfall, Merkle tree with inclusion proofs, Ed25519 anchor, FastAPI gateway; acronym confirmed |
-| LSP server | Port 9898 configured only | **Implemented** — `lsp_server.py`, `thirsty lsp` CLI subcommand |
-| TSCG-B streaming decoder | Single-frame only | **Implemented** — `StreamDecoder` class with magic resync |
-| TARL LLVM backend | Planned | **Implemented** — `ThirstyFrontend` + `LLVMBackend` via llvmlite |
-| Green threads / async | Synchronous wrapper only | **Implemented** — true concurrent `Future`-based `TaskValue` |
-| Central package registry | URL referenced only | **Implemented** — local FastAPI registry server, port 9000 |
-| UTF docs site | Referenced, not found | **Implemented** — `docs_generator.py`, `thirsty docs` command |
-| JS/Python parity | Unclarified | **Documented** — 0/200 conformance; JS needs full rewrite (Option A recommended) |
+| Item | Prior Status | Current Status | Claim Class |
+|---|---|---|---|
+| Triumvirate governance | Stub (`triumvirate_server.py` present, unread) | **Implemented** — 3 pillars (Galahad/Cerberus/CodexDeus), FourLaws, Chimera bridge, full FastAPI service | **[Implemented]** |
+| PSIA planes | Directory existed, no docs | **Implemented** — 7-stage waterfall, Merkle tree with inclusion proofs, Ed25519 anchor, FastAPI gateway; acronym confirmed | **[Implemented]** |
+| LSP server | Port 9898 configured only | **Implemented** — `lsp_server.py`, `thirsty lsp` CLI subcommand | **[Implemented]** |
+| TSCG-B streaming decoder | Single-frame only | **Implemented** — `StreamDecoder` class with magic resync | **[Implemented / Verified]** |
+| TARL LLVM backend | Planned | **Implemented** — `ThirstyFrontend` + `LLVMBackend` via llvmlite; requires llvmlite install; no confirmed execution trace | **[Implemented]** |
+| Green threads / async | Synchronous wrapper only | **Implemented** — true concurrent `Future`-based `TaskValue` | **[Implemented]** |
+| Central package registry | URL referenced only | **Implemented** — local FastAPI registry server, port 9000 | **[Implemented]** |
+| UTF docs site | Referenced, not found | **Implemented** — `docs_generator.py`, `thirsty docs` command | **[Implemented]** |
+| JS/Python parity | Unclarified | **Documented** — 0/200 conformance; JS needs full rewrite (Option A recommended) | **[Open]** |
 
 ## Still Open
 
-| Component | Status | Notes |
-|---|---|---|
-| TARL OS v3.0 vs v2.0 version conflict | Open | README says v2.0, Implementation Report says v3.0 |
+| Component | Status | Claim Class | Notes |
+|---|---|---|---|
+| TARL OS v3.0 vs v2.0 version conflict | Open | **[Open]** | `tarl_os/README.md` → v2.0 (2026-01-30); `TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md` → v3.0 (2026-02-08). Report is newer; conflict is unresolved |
+| TARL LLVM backend runtime confirmation | Open | **[Implemented / Unverified]** | Source exists; `llvmlite` dependency required; no execution trace or test output on record |
+| JS conformance parity | Open | **[Open]** | 0 of 200 tests pass; JS implementation lacks AST pipeline; recommended path: full rewrite |
+| TARL OS execution via Python bridge | Open | **[Claimed]** | `.thirsty` files present; `bridge.py` exists; full end-to-end execution from Python not confirmed |
+| TARL performance benchmarks | Open | **[Claimed]** | 50K lines/sec compile, 10M instr/sec JIT stated in whitepaper; no benchmark harness found in repo |
 
 ---
 

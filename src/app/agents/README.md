@@ -4,7 +4,7 @@ Quick reference for all agents in this directory.
 
 ## 📚 Documentation
 
-- **[AGENT_CLASSIFICATION.md](AGENT_CLASSIFICATION.md)** - Comprehensive classification and governance status of all 32 agents
+- **[AGENT_CLASSIFICATION.md](AGENT_CLASSIFICATION.md)** - Comprehensive classification and governance status of all 34 agents
 
 ## 🔍 Quick Lookup
 
@@ -32,13 +32,15 @@ Quick reference for all agents in this directory.
 - `codex_deus_maximus.py` - Schematic guardian and auto-fix
 - `thirsty_lang_validator.py` - T-A-R-L capability validation
 
-**Code Quality & CI (6 agents)**
+**Code Quality & CI (8 agents)**
 - `ci_checker_agent.py` - Pytest, ruff, static analysis
 - `test_qa_generator.py` - Test generation
 - `doc_generator.py` - Documentation generation
 - `refactor_agent.py` - Code refactoring with black/ruff
 - `dependency_auditor.py` - Dependency security auditing
 - `rollback_agent.py` - Incident response and rollback
+- `evidence_harvester.py` - Evidence collection, verification, and reporting
+- `production_auditor.py` - Production readiness auditing with 12-point checklist
 
 **Knowledge & Retrieval (4 agents)**
 - `knowledge_curator.py` - Knowledge curation and deduplication
@@ -57,7 +59,7 @@ Quick reference for all agents in this directory.
 
 ### By Governance Status
 
-**✅ Governed (30 agents)** - Routed through CognitionKernel
+**✅ Governed (32 agents)** - Routed through CognitionKernel
 - See [AGENT_CLASSIFICATION.md](AGENT_CLASSIFICATION.md#governed-agents-route-through-cognitionkernel)
 
 **⚠️ Bypass-by-Design (2 agents)** - Explicit bypass with justification
@@ -134,11 +136,11 @@ Only for agents with:
 
 ## 📊 Statistics
 
-- **Total Agents**: 32
+- **Total Agents**: 34
 - **Governance Coverage**: 100%
-- **Integration Rate**: 93.8% (30/32 governed)
+- **Integration Rate**: 94.1% (32/34 governed)
 - **Average Risk**: Medium-High
-- **AI Integration**: 28% planned, 72% no AI needed
+- **AI Integration**: 26% planned, 74% no AI needed
 
 ## 🎯 Next Steps
 

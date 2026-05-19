@@ -24,6 +24,7 @@ from .privacy import (
 )
 from .storage import PrivacyVault, EphemeralStorage
 from .kill_switch import GlobalKillSwitch
+from .runtime_controls import require_active_controls
 from .utils.encrypted_logging import EncryptedLogger
 from .utils.encrypted_network import EncryptedNetworkHandler
 from .utils.god_tier_encryption import GodTierEncryption, QuantumResistantEncryption
@@ -154,6 +155,8 @@ class ThirstysWaterfall:
 
     def start(self):
         """Start all subsystems"""
+        require_active_controls(self.config.export_config())
+
         self.logger.info("=" * 70)
         self.logger.info("STARTING THIRSTYS WATERFALL")
         self.logger.info("GOD TIER ENCRYPTION - 7 LAYERS ACTIVE")

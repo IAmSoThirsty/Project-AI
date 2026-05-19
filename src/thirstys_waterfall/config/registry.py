@@ -120,6 +120,10 @@ class ConfigRegistry:
                 "secure_delete": True,
                 "memory_only": False,
             },
+            "project_ai": {
+                "allow_active_controls": False,
+                "allow_destructive_responses": False,
+            },
         }
 
     def get(self, key: str, default: Any = None) -> Any:

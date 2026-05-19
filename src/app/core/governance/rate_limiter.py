@@ -194,11 +194,11 @@ class RedisRateLimiter(RateLimiter):
             logger.error(f"Redis rate limit check failed for {key}: {e}")
             with self._metrics_lock:
                 self._metrics["errors"] += 1
-            # Fail open - allow request if Redis is down
-            return True, {
-                "remaining": max_requests,
+            # Fail closed on backend errors for security-sensitive governance paths.
+            return False, {
+                "remaining": 0,
                 "reset_at": time.time() + window_seconds,
-                "retry_after": 0,
+                "retry_after": window_seconds,
                 "error": str(e),
             }
 

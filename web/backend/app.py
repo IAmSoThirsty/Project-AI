@@ -4,6 +4,10 @@ Web interface adapter: Routes Flask requests through governance pipeline.
 This is a THIN adapter that preserves all web functionality while
 ensuring every request flows through the runtime router.
 
+NONCANONICAL RUNTIME NOTE:
+    - This Flask app is a compatibility/development adapter.
+    - Canonical production API runtime is FastAPI at api/main.py.
+
 Old behavior: Flask → Direct business logic
 New behavior: Flask → Router → Governance → AI Orchestrator → Systems
 """
@@ -186,4 +190,10 @@ def persona_update():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    import os
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=os.getenv("FLASK_DEBUG", "0") == "1",
+    )

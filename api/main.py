@@ -12,6 +12,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 
 # Ensure src/ and repo root are on the path.
@@ -31,6 +32,7 @@ except ImportError:
     _GOVERNANCE_PIPELINE_AVAILABLE = False
 
 app = FastAPI(title="Project AI Governance Host", version="0.1.0")
+SERVICE_START_TIME = time.time()
 
 # CORS for web frontend
 app.add_middleware(
@@ -379,7 +381,51 @@ def get_tarl():
 
 @app.get("/health")
 def health():
-    return {"status": "governance-online", "tarl": TARL_V1["version"]}
+    return {
+        "status": "governance-online",
+        "readiness": "ready" if _GOVERNANCE_PIPELINE_AVAILABLE else "degraded",
+        "tarl": TARL_V1["version"],
+    }
+
+
+@app.get("/health/live")
+def health_live():
+    return {
+        "status": "live",
+        "service": "project-ai-governance-host",
+    }
+
+
+@app.get("/health/ready")
+def health_ready():
+    if not _GOVERNANCE_PIPELINE_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail="Governance execution pipeline unavailable",
+        )
+    return {
+        "status": "ready",
+        "service": "project-ai-governance-host",
+        "governance_pipeline": "available",
+    }
+
+
+@app.get("/metrics", response_class=PlainTextResponse)
+def metrics():
+    uptime_seconds = max(0.0, time.time() - SERVICE_START_TIME)
+    governance_available = 1 if _GOVERNANCE_PIPELINE_AVAILABLE else 0
+    body = [
+        "# HELP project_ai_up Process liveness (1 = up)",
+        "# TYPE project_ai_up gauge",
+        "project_ai_up 1",
+        "# HELP project_ai_governance_pipeline_available Governance pipeline availability (1 = available)",
+        "# TYPE project_ai_governance_pipeline_available gauge",
+        f"project_ai_governance_pipeline_available {governance_available}",
+        "# HELP project_ai_uptime_seconds Process uptime in seconds",
+        "# TYPE project_ai_uptime_seconds gauge",
+        f"project_ai_uptime_seconds {uptime_seconds:.0f}",
+    ]
+    return "\n".join(body) + "\n"
 
 
 @app.get("/")

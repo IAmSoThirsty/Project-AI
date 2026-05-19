@@ -76,14 +76,31 @@ cover/
 
 # Environments
 .env
+.env.*
 .env.local
 .env.*.local
+!.env.example
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Phase 0 containment denylist (do not remove)
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+id_rsa
+id_ed25519
+secrets/
+private/
+credentials*
+token*
+*.sqlite
+*.db
 
 # Security and secrets
 *.key
@@ -97,6 +114,11 @@ secret_scan_report.json
 
 # IDEs
 .vscode/
+!.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
 .idea/
 .vs/
 

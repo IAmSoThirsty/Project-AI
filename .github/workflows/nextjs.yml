@@ -7,7 +7,7 @@ name: Deploy Next.js site to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["main", "master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,6 +31,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Enforce deployment freeze
+        run: |
+          if [ -f .github/DEPLOY_FREEZE_PRE_DOCKER_2026-05-18.md ]; then
+            echo "❌ Deployment freeze file detected; web deploy is blocked."
+            exit 1
+          fi
       - name: Detect package manager
         id: detect-package-manager
         working-directory: ./web
@@ -76,6 +82,17 @@ jobs:
       - name: Install dependencies
         working-directory: ./web
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: Lint web application
+        working-directory: ./web
+        run: ${{ steps.detect-package-manager.outputs.manager }} run lint
+      - name: Type-check web application
+        working-directory: ./web
+        run: ${{ steps.detect-package-manager.outputs.manager }} run type-check
+      - name: Run web tests
+        working-directory: ./web
+        env:
+          CI: true
+        run: ${{ steps.detect-package-manager.outputs.manager }} run test:js -- --ci
       - name: Build with Next.js
         working-directory: ./web
         run: ${{ steps.detect-package-manager.outputs.runner }} next build

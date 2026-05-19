@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  # --- CANONICAL PRODUCTION API (FastAPI) ---
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    image: projectai/api:1.0.0
+    container_name: project-ai-api
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    networks:
+      - sovereign_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health/live', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # --- THE ORCHESTRATOR ---
   cerberus:
     build: 
@@ -21,7 +39,7 @@ services:
 
   # --- THE GUARDIAN (Monolith) ---
   monolith:
-    image: projectai/monolith:latest
+    image: projectai/monolith:omega
     # Build context would be Thirstys-Monolith-master if we had a Dockerfile there
     container_name: thirsty_monolith
     networks:

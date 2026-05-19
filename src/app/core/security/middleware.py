@@ -22,7 +22,7 @@ def configure_cors(app: Any, allowed_origins: list[str] | None = None) -> None:
         from flask_cors import CORS
     except ImportError:
         logger.error("flask-cors not installed. Run: pip install flask-cors")
-        return
+        raise RuntimeError("CORS middleware dependency missing: flask-cors")
 
     if allowed_origins is None:
         allowed_origins = [
@@ -55,7 +55,7 @@ def configure_rate_limiting(app: Any) -> None:
         from flask_limiter.util import get_remote_address
     except ImportError:
         logger.error("flask-limiter not installed. Run: pip install flask-limiter")
-        return
+        raise RuntimeError("Rate limiting dependency missing: flask-limiter")
 
     limiter = Limiter(
         app=app,

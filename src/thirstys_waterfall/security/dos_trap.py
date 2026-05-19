@@ -18,6 +18,8 @@ from enum import Enum
 from dataclasses import dataclass, field
 from collections import deque
 
+from thirstys_waterfall.runtime_controls import require_destructive_responses
+
 # Cryptography imports removed - not used in current implementation
 # These were placeholders for future hardware-based encryption features
 
@@ -1016,6 +1018,8 @@ class DiskSanitizer:
             file_path: Path to file to sanitize
             mode: Sanitization method
         """
+        require_destructive_responses()
+
         try:
             if not os.path.exists(file_path):
                 return False
@@ -1163,7 +1167,7 @@ class DOSTrapMode:
             "monitor_interval": 60,
             "response_threshold": ThreatLevel.HIGH,
             "auto_sanitize": False,
-            "emergency_shutdown": True,
+            "emergency_shutdown": False,
         }
 
         # Response callbacks
@@ -1371,6 +1375,7 @@ class DOSTrapMode:
                     self.logger.error("Kill switch not available")
 
             elif action == ResponseAction.WIPE_SECRETS:
+                require_destructive_responses()
                 self.wipe_all_secrets()
 
             elif action == ResponseAction.ISOLATE:
@@ -1378,6 +1383,7 @@ class DOSTrapMode:
 
             elif action == ResponseAction.SANITIZE_RAM:
                 if self.config["auto_sanitize"]:
+                    require_destructive_responses()
                     self.memory_sanitizer.sanitize_ram(SanitizationMode.THREE_PASS)
 
             elif action == ResponseAction.SANITIZE_DISK:
@@ -1388,6 +1394,7 @@ class DOSTrapMode:
 
             elif action == ResponseAction.SHUTDOWN:
                 if self.config["emergency_shutdown"]:
+                    require_destructive_responses()
                     self._emergency_shutdown()
 
         except Exception as e:
@@ -1395,6 +1402,7 @@ class DOSTrapMode:
 
     def wipe_all_secrets(self):
         """Wipe all secrets from system"""
+        require_destructive_responses()
         self.logger.critical("WIPING ALL SECRETS")
 
         try:
@@ -1421,6 +1429,7 @@ class DOSTrapMode:
 
     def _emergency_shutdown(self):
         """Emergency system shutdown"""
+        require_destructive_responses()
         self.logger.critical("INITIATING EMERGENCY SHUTDOWN")
 
         try:
