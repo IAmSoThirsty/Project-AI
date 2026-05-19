@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import argparse
@@ -42,11 +43,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(mermaid)
         return 0
-    print(
-        json.dumps(
-            promote(module, dry_run=args.dry_run, replay_id=args.replay_id), indent=2
-        )
-    )
+    print(json.dumps(promote(module, dry_run=args.dry_run, replay_id=args.replay_id), indent=2))
     return 0
 
 

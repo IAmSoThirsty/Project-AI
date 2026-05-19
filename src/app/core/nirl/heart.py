@@ -16,9 +16,8 @@ import hashlib
 import logging
 import threading
 import time
-from collections.abc import Callable
 from enum import Enum, auto
-from typing import Any
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +63,7 @@ class Heart:
         self._on_strain = on_strain
 
         self.state = HeartState.TICK_WAIT
-        self._sections: dict[
-            str, dict[str, Any]
-        ] = {}  # section_id → {last_beat, strain}
+        self._sections: dict[str, dict[str, Any]] = {}  # section_id → {last_beat, strain}
         self._lock = threading.Lock()
         self._stop_event = threading.Event()
         self._thread: threading.Thread | None = None
@@ -78,10 +75,7 @@ class Heart:
         """Register a MiniBrain section so the Heart tracks its heartbeat."""
         with self._lock:
             if section_id not in self._sections:
-                self._sections[section_id] = {
-                    "last_beat": time.monotonic(),
-                    "strain": None,
-                }
+                self._sections[section_id] = {"last_beat": time.monotonic(), "strain": None}
                 logger.debug("Heart: registered section %s", section_id)
 
     def heartbeat(self, section_id: str) -> None:

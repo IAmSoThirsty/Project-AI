@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import re
-from collections.abc import Iterable
 from dataclasses import dataclass, field
+from typing import Iterable
 
 CORE_SYMBOLS = {
     "COG": "cognition proposal",
@@ -28,14 +28,14 @@ class Symbol:
 
 @dataclass
 class Pipeline:
-    items: list[Expr]
+    items: list["Expr"]
 
 
 @dataclass
 class Combine:
     op: str
-    left: Expr
-    right: Expr
+    left: "Expr"
+    right: "Expr"
 
 
 Expr = Symbol | Pipeline | Combine
@@ -134,15 +134,7 @@ def checksum(expr: Expr) -> str:
 
 def validate(expr: Expr) -> None:
     for sym in iter_symbols(expr):
-        if sym.name not in CORE_SYMBOLS and sym.name not in {
-            "ING",
-            "LED",
-            "SAFE",
-            "MUT",
-            "SEL",
-            "QRM_LINEAR",
-            "QRM_STATIC",
-        }:
+        if sym.name not in CORE_SYMBOLS and sym.name not in {"ING", "LED", "SAFE", "MUT", "SEL", "QRM_LINEAR", "QRM_STATIC"}:
             raise ValueError(f"undefined TSCG symbol '{sym.name}'")
 
 

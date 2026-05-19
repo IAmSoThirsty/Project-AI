@@ -1,8 +1,9 @@
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .diagnostics import ThirstyError
+from .diagnostics import ThirstyError, nearest_word
 from .token import KEYWORDS, Span, Token, TokenType
 
 
@@ -89,12 +90,7 @@ class Lexer:
             ch = self._peek()
             if ch == '"':
                 self._advance()
-                return Token(
-                    TokenType.STRING,
-                    self.source_span_text(start),
-                    "".join(chars),
-                    self._span_from_start(start),
-                )
+                return Token(TokenType.STRING, self.source_span_text(start), "".join(chars), self._span_from_start(start))
             if ch == "\\":
                 self._advance()
                 if self._at_end():
@@ -104,15 +100,9 @@ class Lexer:
                 chars.append(mapping.get(esc, esc))
                 continue
             if ch == "\n":
-                raise ThirstyError(
-                    "THIRSTY-E002",
-                    "unterminated string literal",
-                    self._span_from_start(start),
-                )
+                raise ThirstyError("THIRSTY-E002", "unterminated string literal", self._span_from_start(start))
             chars.append(self._advance())
-        raise ThirstyError(
-            "THIRSTY-E002", "unterminated string literal", self._span_from_start(start)
-        )
+        raise ThirstyError("THIRSTY-E002", "unterminated string literal", self._span_from_start(start))
 
     def _punct_or_op(self, line: int, col: int) -> Token | None:
         ch = self._advance()
@@ -130,12 +120,7 @@ class Lexer:
         }
         if two in mapping2:
             self._advance()
-            return Token(
-                mapping2[two],
-                two,
-                None,
-                Span(self.file, line, col, self.line, self.col),
-            )
+            return Token(mapping2[two], two, None, Span(self.file, line, col, self.line, self.col))
         mapping1 = {
             "(": TokenType.LPAREN,
             ")": TokenType.RPAREN,
@@ -165,7 +150,7 @@ class Lexer:
 
     def source_span_text(self, start: tuple[int, int, int]) -> str:
         start_idx, _, _ = start
-        return self.source[start_idx : self.i]
+        return self.source[start_idx:self.i]
 
     def _span_start(self) -> tuple[int, int, int]:
         return self.i, self.line, self.col
@@ -175,8 +160,6 @@ class Lexer:
         return Span(self.file, line, col, self.line, self.col)
 
     def _peek(self) -> str:
-        if self.i >= len(self.source):
-            return "\0"
         return self.source[self.i]
 
     def _peek_next(self) -> str:

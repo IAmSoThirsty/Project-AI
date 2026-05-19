@@ -12,8 +12,6 @@ Agents:
 - CodeAdversaryAgent: DARPA-grade MUSE-style vulnerability detection
 - RedTeamPersonaAgent: DeepMind-style typed red team personas
 - Border Patrol: Quarantine, verification, and watch tower defense
-- EvidenceHarvesterAgent: Evidence collection, verification, and report generation
-- ProductionAuditor: Production readiness auditing and deployment verification
 """
 
 from .border_patrol import (
@@ -28,11 +26,9 @@ from .border_patrol import (
 from .code_adversary_agent import CodeAdversaryAgent
 from .constitutional_guardrail_agent import ConstitutionalGuardrailAgent
 from .explainability import ExplainabilityAgent
-from .evidence_harvester import EvidenceHarvesterAgent, EvidenceItem
 from .jailbreak_bench_agent import JailbreakBenchAgent
 from .long_context_agent import LongContextAgent
 from .oversight import OversightAgent
-from .production_auditor import ProductionAuditor
 from .red_team_agent import RedTeamAgent
 from .red_team_persona_agent import RedTeamPersonaAgent
 from .safety_guard_agent import SafetyGuardAgent
@@ -42,14 +38,11 @@ __all__ = [
     "Cerberus",
     "CodeAdversaryAgent",
     "ConstitutionalGuardrailAgent",
-    "EvidenceHarvesterAgent",
-    "EvidenceItem",
     "ExplainabilityAgent",
     "GateGuardian",
     "JailbreakBenchAgent",
     "LongContextAgent",
     "OversightAgent",
-    "ProductionAuditor",
     "PortAdmin",
     "QuarantineBox",
     "RedTeamAgent",

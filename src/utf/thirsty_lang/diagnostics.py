@@ -1,57 +1,10 @@
+
 from __future__ import annotations
 
-from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import Iterable
 
 from .token import Span
-
-
-# Canonical registry of all THIRSTY-Exxx codes.
-# Source of truth for THIRSTY_ERROR_CODES.md.
-ERROR_CODES: dict[str, str] = {
-    "THIRSTY-E001": "Unexpected token",
-    "THIRSTY-E002": "Undefined variable",
-    "THIRSTY-E003": "Type mismatch",
-    "THIRSTY-E004": "Missing return statement",
-    "THIRSTY-E005": "Immutable variable reassignment",
-    "THIRSTY-E006": "Invalid operation for type",
-    "THIRSTY-E007": "Module not found",
-    "THIRSTY-E008": "Unknown module function",
-    "THIRSTY-E009": "Argument count mismatch",
-    "THIRSTY-E010": "Division by zero",
-    "THIRSTY-E011": "Index out of bounds",
-    "THIRSTY-E012": "Null dereference (empty access without guard)",
-    "THIRSTY-E013": "Unknown attribute on object",
-    "THIRSTY-E014": "Duplicate symbol definition",
-    "THIRSTY-E015": "Invalid import path",
-    "THIRSTY-E016": "Circular import detected",
-    "THIRSTY-E017": "Expected expression",
-    "THIRSTY-E018": "Unexpected end of input",
-    "THIRSTY-E019": "Invalid string escape sequence",
-    "THIRSTY-E020": "Class not found",
-    "THIRSTY-E021": "Method not found on class",
-    "THIRSTY-E022": "Condition must evaluate to Bool",
-    "THIRSTY-E023": "Loop count must be a non-negative Int",
-    "THIRSTY-E024": "Return type mismatch",
-    "THIRSTY-E025": "Unhandled spillage (uncaught throw)",
-    "THIRSTY-E026": "Shield violation: sanitize required before use",
-    "THIRSTY-E027": "Armor constraint violated",
-    "THIRSTY-E028": "Mutation without validated_canonical",
-    "THIRSTY-E029": "Shadow Thirst promotion rejected",
-    "THIRSTY-E030": "Invalid TARL policy expression",
-    "THIRSTY-E031": "TARL policy denied execution",
-    "THIRSTY-E032": "TARL policy escalated (requires human review)",
-    "THIRSTY-E033": "TSCG expression invalid",
-    "THIRSTY-E034": "Pipe target must be a callable",
-    "THIRSTY-E035": "Await used outside async glass",
-    "THIRSTY-E036": "Invalid generic type argument count",
-    "THIRSTY-E037": "Struct field missing in constructor",
-    "THIRSTY-E038": "Enum variant not exhaustively matched",
-    "THIRSTY-E039": "Interface method not implemented",
-    "THIRSTY-E040": "Result[T,E] used outside spillage context",
-    "THIRSTY-E050": "Governance annotation violation (requires clause)",
-    "THIRSTY-E901": "condense called on empty value",
-}
 
 
 def levenshtein(a: str, b: str) -> int:
@@ -73,9 +26,7 @@ def levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-def nearest_word(
-    word: str, candidates: Iterable[str], max_distance: int = 3
-) -> str | None:
+def nearest_word(word: str, candidates: Iterable[str], max_distance: int = 3) -> str | None:
     scored = []
     for cand in candidates:
         d = levenshtein(word, cand)

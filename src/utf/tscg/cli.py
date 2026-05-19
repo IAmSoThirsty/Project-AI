@@ -20,11 +20,7 @@ def main(argv: list[str] | None = None) -> int:
     expr = parse(args.text)
     validate(expr)
     if args.cmd == "encode":
-        print(
-            json.dumps(
-                {"canonical": canonical(expr), "checksum": checksum(expr)}, indent=2
-            )
-        )
+        print(json.dumps({"canonical": canonical(expr), "checksum": checksum(expr)}, indent=2))
         return 0
     print(canonical(expr))
     return 0

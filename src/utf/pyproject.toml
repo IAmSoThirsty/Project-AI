@@ -3,24 +3,12 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "thirsty-lang"
-version = "1.0.0"
-description = "Thirsty-Lang — a governance-first programming language. Includes TARL policy engine, Shadow Thirst mutation framework, TSCG/TSCG-B symbolic encoding, and 15-namespace standard library."
+name = "thirsty-stack-bootstrap"
+version = "0.1.0"
+description = "Bootstrap implementation of Thirsty-Lang, Thirst of Gods, TARL, Shadow Thirst, TSCG, and TSCG-B."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
-license = {text = "MIT"}
-keywords = ["programming-language", "governance", "policy", "safety"]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Software Development :: Compilers",
-  "Topic :: Software Development :: Interpreters",
-]
 
 [project.scripts]
 thirsty = "thirsty_lang.cli:main"

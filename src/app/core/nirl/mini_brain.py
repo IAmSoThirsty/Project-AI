@@ -13,12 +13,13 @@ State machine:
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import logging
 import threading
 import time
-from collections.abc import Callable
 from enum import Enum, auto
-from typing import Any
+from typing import Any, Callable
 
 from .antibody import Antibody
 from .forge import Forge
@@ -93,9 +94,7 @@ class MiniBrain:
             return
         self._stop_event.clear()
         self._thread = threading.Thread(
-            target=self._tick_loop,
-            name=f"nirl-minibrain-{self.section_id}",
-            daemon=True,
+            target=self._tick_loop, name=f"nirl-minibrain-{self.section_id}", daemon=True
         )
         self._thread.start()
         logger.info("MiniBrain %s started", self.section_id)
@@ -104,9 +103,7 @@ class MiniBrain:
         self._stop_event.set()
         if self._thread:
             self._thread.join(timeout=self._tick_interval + 1)
-        logger.info(
-            "MiniBrain %s stopped after %d ticks", self.section_id, self._tick_count
-        )
+        logger.info("MiniBrain %s stopped after %d ticks", self.section_id, self._tick_count)
 
     def receive_probe(self, probe_id: str) -> dict[str, Any]:
         """Process one probe skeleton distributed by the Heart.
@@ -120,15 +117,9 @@ class MiniBrain:
         # Validate template
         if self.template is None:
             self.state = MiniBrainState.ALERT_TEMPLATE
-            logger.warning(
-                "MiniBrain %s: invalid template, using fallback", self.section_id
-            )
+            logger.warning("MiniBrain %s: invalid template, using fallback", self.section_id)
             self.state = MiniBrainState.FALLBACK_SKELETON
-            return {
-                "success": False,
-                "reason": "invalid_template",
-                "probe_id": probe_id,
-            }
+            return {"success": False, "reason": "invalid_template", "probe_id": probe_id}
 
         # SPAWN_ANTIBODY
         self.state = MiniBrainState.SPAWN_ANTIBODY
@@ -156,11 +147,7 @@ class MiniBrain:
 
         if not sig_valid:
             self.state = MiniBrainState.INVALID
-            logger.error(
-                "MiniBrain %s: signature invalid for probe %s",
-                self.section_id,
-                probe_id,
-            )
+            logger.error("MiniBrain %s: signature invalid for probe %s", self.section_id, probe_id)
             self.state = MiniBrainState.BLOCK_REGEN
             self._completions.append({**forge_result, "sig_valid": False})
             return {**forge_result, "sig_valid": False}
@@ -171,17 +158,11 @@ class MiniBrain:
 
         if forge_result.get("success"):
             self.state = MiniBrainState.RELEASE_NEXT
-            logger.debug(
-                "MiniBrain %s: RELEASE_NEXT probe=%s", self.section_id, probe_id
-            )
+            logger.debug("MiniBrain %s: RELEASE_NEXT probe=%s", self.section_id, probe_id)
         else:
             self.state = MiniBrainState.ALERT
-            logger.warning(
-                "MiniBrain %s: ALERT probe=%s reason=%s",
-                self.section_id,
-                probe_id,
-                forge_result.get("reason"),
-            )
+            logger.warning("MiniBrain %s: ALERT probe=%s reason=%s",
+                           self.section_id, probe_id, forge_result.get("reason"))
 
         self._completions.append({**forge_result, "sig_valid": True})
         self.state = MiniBrainState.LOCAL_TICK_WAIT
@@ -214,22 +195,16 @@ class MiniBrain:
             try:
                 self._heart_heartbeat(self.section_id)
             except Exception:
-                logger.exception(
-                    "MiniBrain %s: heartbeat callback failed", self.section_id
-                )
+                logger.exception("MiniBrain %s: heartbeat callback failed", self.section_id)
 
         # Report strain if completion backlog is large
         with self._lock:
             backlog = len(self._completions)
         if backlog > 50 and self._heart_strain:
             try:
-                self._heart_strain(
-                    self.section_id, {"backlog": backlog, "ts": time.time()}
-                )
+                self._heart_strain(self.section_id, {"backlog": backlog, "ts": time.time()})
             except Exception:
-                logger.exception(
-                    "MiniBrain %s: strain callback failed", self.section_id
-                )
+                logger.exception("MiniBrain %s: strain callback failed", self.section_id)
 
     def _verify_forge_signature(self, forge_result: dict[str, Any]) -> bool:
         """Re-derive expected HMAC and compare against forge_result['signature']."""
@@ -239,8 +214,4 @@ class MiniBrain:
         # The Forge signs: section_id:probe_id:success:reason:timestamp_ns
         # We cannot replay the exact timestamp, so we trust the HMAC length/format
         # and verify it's a 64-char lowercase hex string (SHA-256 output).
-        return (
-            isinstance(sig, str)
-            and len(sig) == 64
-            and all(c in "0123456789abcdef" for c in sig)
-        )
+        return isinstance(sig, str) and len(sig) == 64 and all(c in "0123456789abcdef" for c in sig)
