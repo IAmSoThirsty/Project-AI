@@ -76,6 +76,7 @@ Project-AI Documentation Universe
 │  ├─ [[relationships/agents/02_planner_agent.md|Planner Agent]] ✓ Active
 │  ├─ [[relationships/agents/03_validator_agent.md|Validator Agent]] ✓ Implemented
 │  ├─ [[relationships/agents/04_explainability_agent.md|Explainability Agent]] ✓ Implemented
+│  ├─ [[.github/agents/governance-auditor.agent.md|Governance Auditor]] ✓ Active — bypass detection
 │  ├─ Consigliere (ThirstyConsigliere) ✓ Wired → CouncilHub
 │  ├─ CerberusCodexBridge ✓ Wired → GateGuardian
 │  └─ ThirstyLangValidator ✓ Wired → TarlRuntime · validates src/utf/

@@ -15,6 +15,7 @@
 | **Planner** | Task decomposition | OpenAI GPT, Memory | Complex tasks | ✅ Active | [[relationships/agents/02_planner_agent.md|Docs]] |
 | **Validator** | Input/output validation | Regex, Schema validation | All I/O | ✅ Active | [[relationships/agents/03_validator_agent.md|Docs]] |
 | **Explainability** | Decision transparency | Logging, Analysis | All decisions | ✅ Active | [[relationships/agents/04_explainability_agent.md|Docs]] |
+| **Governance Auditor** | Execution bypass detection | grep, glob, view, SQL | Codebase scanning | ✅ Active | [[.github/agents/governance-auditor.agent.md|Docs]] |
 
 ---
 
