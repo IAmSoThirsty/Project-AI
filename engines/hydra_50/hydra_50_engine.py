@@ -444,6 +444,31 @@ class BaseScenario(ABC):
                     self.escalation_level = step.level
                     logger.warning("%s escalated to %s", self.name, step.level.name)
 
+    def tick(self) -> None:
+        """Single-scenario tick: evaluate escalation for this scenario."""
+        self.evaluate_escalation()
+
+    def escalate(self) -> None:
+        """Force-advance escalation level by one step (up to LEVEL_5 max).
+
+        Sets activation_time if not already set, then bumps escalation_level
+        and updates status to ESCALATING when level >= 1.
+        """
+        if not self.activation_time:
+            self.activation_time = datetime.utcnow()
+
+        current_value = self.escalation_level.value
+        if current_value < EscalationLevel.LEVEL_5_COLLAPSE.value:
+            next_value = current_value + 1
+            self.escalation_level = EscalationLevel(next_value)
+
+        if self.escalation_level.value >= 1 and self.status == ScenarioStatus.DORMANT:
+            self.status = ScenarioStatus.TRIGGERED
+        if self.escalation_level.value >= 2:
+            self.status = ScenarioStatus.ESCALATING
+        if self.escalation_level.value >= 5:
+            self.status = ScenarioStatus.COLLAPSE
+
     def get_active_couplings(self) -> list[DomainCoupling]:
         """Return couplings that should activate based on current state"""
         if self.escalation_level.value < 2:
@@ -5607,6 +5632,100 @@ class Hydra50Engine:
 
         logger.warning("HUMAN OVERRIDE ACTIVATED by %s: %s", user_id, reason)
         self._save_state()
+
+    def tick(self, user_id: str | None = None) -> dict[str, Any]:
+        """Alias for run_tick() — convenience wrapper."""
+        return self.run_tick(user_id=user_id)
+
+    def get_status(self) -> dict[str, Any]:
+        """Alias for get_dashboard_state() — convenience wrapper."""
+        return self.get_dashboard_state()
+
+    def save_state(self) -> None:
+        """Public wrapper around _save_state()."""
+        self._save_state()
+
+    def load_state(self) -> None:
+        """Public wrapper around _load_state()."""
+        self._load_state()
+
+    def get_critical_scenarios(self) -> list[str]:
+        """Return scenario IDs where escalation_level >= LEVEL_4_CASCADE_THRESHOLD."""
+        return [
+            sid
+            for sid, scenario in self.scenarios.items()
+            if scenario.escalation_level.value >= EscalationLevel.LEVEL_4_CASCADE_THRESHOLD.value
+        ]
+
+    def reset_scenario(self, scenario_id: str) -> None:
+        """Reset a single scenario to its initial state."""
+        if scenario_id not in self.scenarios:
+            raise ValueError(f"Unknown scenario: {scenario_id}")
+        scenario = self.scenarios[scenario_id]
+        scenario.status = ScenarioStatus.DORMANT
+        scenario.escalation_level = EscalationLevel.LEVEL_0_BASELINE
+        scenario.metrics = {}
+        scenario.activation_time = None
+        scenario.state_history = []
+        scenario.active_locks = []
+        for trigger in scenario.triggers:
+            trigger.activated = False
+            trigger.current_value = 0.0
+            trigger.activation_time = None
+        for step in scenario.escalation_ladder:
+            step.reached = False
+            step.reached_time = None
+
+    def reset_all_scenarios(self) -> None:
+        """Reset all scenarios to initial state."""
+        for scenario_id in list(self.scenarios.keys()):
+            self.reset_scenario(scenario_id)
+
+    def execute_control_plane_command(
+        self,
+        plane: ControlPlane,
+        command: str,
+        params: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Execute a control plane command.
+
+        Supported commands:
+          "status"   — return get_dashboard_state()
+          "override" — activate human override (requires user_id in params)
+
+        Args:
+            plane:   ControlPlane authority level
+            command: Command name string
+            params:  Optional command parameters dict
+
+        Returns:
+            Result dict with at least {"success": bool, "command": str}
+        """
+        params = params or {}
+
+        if command == "status":
+            result = self.get_dashboard_state()
+            result["command"] = "status"
+            result["plane"] = plane.value
+            return result
+
+        if command == "override" or plane == ControlPlane.HUMAN_OVERRIDE:
+            user_id = params.get("user_id", "control_plane")
+            reason = params.get("reason", f"override via {plane.value}")
+            self.activate_human_override(user_id=user_id, reason=reason)
+            return {
+                "success": True,
+                "command": command,
+                "plane": plane.value,
+                "human_override_active": self.human_override_active,
+            }
+
+        return {
+            "success": False,
+            "command": command,
+            "plane": plane.value,
+            "reason": f"Unknown command: {command!r}",
+        }
 
     def _save_state(self) -> None:
         """Persist engine state to disk"""

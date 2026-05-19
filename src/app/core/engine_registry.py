@@ -111,19 +111,23 @@ ENGINES: dict[str, EngineEntry] = {
         enabled=False,
         import_mode="lazy",
         known_blockers=[
-            "C3C AUDITED. 27 failures in test_hydra_comprehensive.py only. "
-            "All 532 tests in the other 4 hydra test files pass. "
-            "hydra_50_engine.py is structurally intact. cerberus_hydra.py is clean.",
-            "API drift (5 failures): engine.tick()=run_tick(), get_status()=get_dashboard_state(), "
-            "save_state()/load_state() are private (_save_state/_load_state).",
-            "Incomplete implementation (13 failures): BaseScenario missing tick() and escalate(). "
-            "Hydra50Engine missing get_critical_scenarios(), reset_scenario(), "
-            "reset_all_scenarios(), execute_control_plane_command().",
-            "Stale test expectations (7 failures): test_hydra_comprehensive.py uses wrong "
-            "scenario IDs (S03/S04/S05/S06 instead of S41/S21/S31/S11) and calls "
-            "scenario.update_metrics() directly expecting engine-level status transition.",
-            "Minimum repair plan documented in recovery/PHASE_C3C_HYDRA_REPAIR_PLAN.txt. "
-            "C3C-R1 repair pass required before Hydra activation consideration.",
+            "C3C-R1 COMPLETE. 585/585 hydra tests pass (0 failures). "
+            "Engine core logic is intact. cerberus_hydra.py is clean. "
+            "API drift, missing convenience methods, and stale test expectations "
+            "were all resolved. Full repair log: recovery/PHASE_C3C_R1_HYDRA_REPAIR_SUMMARY.txt.",
+            "Pre-existing runtime wiring NOT introduced by C3C-R1: "
+            "src/app/core/hydra_50_integration.py (top-level import at module load), "
+            "src/app/cli/hydra_50_cli.py (lazy inside function bodies), "
+            "src/app/core/hydra_50_deep_integration.py (lazy, class-instantiation-gated), "
+            "src/app/core/security_enforcer.py (lazy, enable_cerberus_hydra=False default), "
+            "src/app/gui/hydra_50_panel.py (lazy inside widget render methods). "
+            "None of these activate through the engine registry.",
+            "Stub scenarios (S21/S31/S41 and others in ranges S12-S20, S22-S30, S32-S40, S42-S50) "
+            "use placeholder trigger keys and minimal evaluate_escalation() stubs. "
+            "Full scenario implementation is post-C3C-R1 work.",
+            "Activation prerequisite: resolve hydra_50_integration.py top-level import "
+            "(it constructs Hydra50Engine at call time but the import executes unconditionally). "
+            "Minimum: gate that module behind an explicit activation flag before enabling.",
         ],
         activation_requires_explicit_config=True,
     ),

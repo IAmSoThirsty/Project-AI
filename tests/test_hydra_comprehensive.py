@@ -9,16 +9,12 @@ Strategy: Test all 50 scenarios, all escalation paths, all control planes
 
 import tempfile
 import pytest
-from pathlib import Path
-from datetime import datetime, timedelta
-
 from src.app.core.hydra_50_engine import (
     Hydra50Engine,
     ScenarioCategory,
     ScenarioStatus,
     EscalationLevel,
     ControlPlane,
-    SCENARIO_REGISTRY,
     AIRealityFloodScenario,
     AutonomousTradingWarScenario,
     LegitimacyCollapseScenario,
@@ -86,10 +82,10 @@ def test_ai_reality_flood_trigger(engine):
     """Test AI Reality Flood triggering"""
     scenario = engine.scenarios["S01"]
     assert isinstance(scenario, AIRealityFloodScenario)
-    
-    # Update metrics to trigger
-    scenario.update_metrics({"synthetic_content_ratio": 0.7})
-    
+
+    # Status transition requires engine wrapper; direct update_metrics only activates triggers
+    engine.update_scenario_metrics("S01", {"synthetic_content_ratio": 0.7})
+
     assert scenario.status in [ScenarioStatus.TRIGGERED, ScenarioStatus.ESCALATING]
 
 
@@ -122,9 +118,11 @@ def test_trading_war_trigger(engine):
     """Test Autonomous Trading War triggering"""
     scenario = engine.scenarios["S02"]
     assert isinstance(scenario, AutonomousTradingWarScenario)
-    
-    scenario.update_metrics({"algo_trade_volume_ratio": 0.95})
-    
+
+    # Status transition requires engine wrapper; direct update_metrics only activates triggers
+    # Actual trigger key is "algorithmic_trading_dominance" (threshold 0.8)
+    engine.update_scenario_metrics("S02", {"algorithmic_trading_dominance": 0.95})
+
     assert scenario.status != ScenarioStatus.DORMANT
 
 
@@ -147,22 +145,25 @@ def test_trading_war_flash_crash(engine):
 
 def test_legitimacy_collapse_trigger(engine):
     """Test Legitimacy Collapse triggering"""
-    scenario = engine.scenarios["S03"]
+    # LegitimacyCollapseScenario is S41 (Societal block), not S03
+    # Stub trigger key is "s41_indicator" (threshold 0.5)
+    scenario = engine.scenarios["S41"]
     assert isinstance(scenario, LegitimacyCollapseScenario)
-    
-    scenario.update_metrics({"trust_in_institutions": 0.2})
-    
+
+    engine.update_scenario_metrics("S41", {"s41_indicator": 0.6})
+
     assert scenario.status != ScenarioStatus.DORMANT
 
 
 def test_legitimacy_collapse_progression(engine):
     """Test legitimacy collapse progression"""
-    scenario = engine.scenarios["S03"]
-    
+    # LegitimacyCollapseScenario is S41 (Societal block), not S03
+    scenario = engine.scenarios["S41"]
+
     scenario.update_metrics({"trust_in_institutions": 0.15})
     scenario.tick()
     scenario.escalate()
-    
+
     assert scenario.escalation_level.value >= 1
 
 
@@ -172,23 +173,26 @@ def test_legitimacy_collapse_progression(engine):
 
 def test_grid_warfare_trigger(engine):
     """Test Power Grid Frequency Warfare triggering"""
-    scenario = engine.scenarios["S04"]
+    # PowerGridFrequencyWarfareScenario is S21 (Infrastructure block), not S04
+    # Stub trigger key is "s21_trigger" (threshold 0.5)
+    scenario = engine.scenarios["S21"]
     assert isinstance(scenario, PowerGridFrequencyWarfareScenario)
-    
-    scenario.update_metrics({"grid_frequency_deviation": 0.55})
-    
+
+    engine.update_scenario_metrics("S21", {"s21_trigger": 0.6})
+
     assert scenario.status != ScenarioStatus.DORMANT
 
 
 def test_grid_warfare_cascade(engine):
     """Test grid warfare cascade"""
-    scenario = engine.scenarios["S04"]
-    
+    # PowerGridFrequencyWarfareScenario is S21 (Infrastructure block), not S04
+    scenario = engine.scenarios["S21"]
+
     scenario.update_metrics({
         "grid_frequency_deviation": 0.7,
         "synchronized_load": 0.8
     })
-    
+
     scenario.tick()
     assert True
 
@@ -199,23 +203,26 @@ def test_grid_warfare_cascade(engine):
 
 def test_pandemic_trigger(engine):
     """Test Slow Burn Pandemic triggering"""
-    scenario = engine.scenarios["S05"]
+    # SlowBurnPandemicScenario is S31 (Biological/Environmental block), not S05
+    # Stub trigger key is "s31_metric" (threshold 0.5)
+    scenario = engine.scenarios["S31"]
     assert isinstance(scenario, SlowBurnPandemicScenario)
-    
-    scenario.update_metrics({"infection_rate": 0.12})
-    
+
+    engine.update_scenario_metrics("S31", {"s31_metric": 0.6})
+
     assert scenario.status != ScenarioStatus.DORMANT
 
 
 def test_pandemic_progression(engine):
     """Test pandemic progression"""
-    scenario = engine.scenarios["S05"]
-    
+    # SlowBurnPandemicScenario is S31 (Biological/Environmental block), not S05
+    scenario = engine.scenarios["S31"]
+
     scenario.update_metrics({
-        "infection_rate": 0.15,
+        "s31_metric": 0.6,
         "healthcare_capacity": 0.4
     })
-    
+
     for _ in range(5):
         scenario.tick()
     
@@ -228,23 +235,26 @@ def test_pandemic_progression(engine):
 
 def test_debt_cascade_trigger(engine):
     """Test Sovereign Debt Cascade triggering"""
-    scenario = engine.scenarios["S06"]
+    # SovereignDebtCascadeScenario is S11 (Economic block), not S06
+    # Trigger key is "default_count" (threshold 3.0), not "sovereign_default_risk"
+    scenario = engine.scenarios["S11"]
     assert isinstance(scenario, SovereignDebtCascadeScenario)
-    
-    scenario.update_metrics({"sovereign_default_risk": 0.7})
-    
+
+    engine.update_scenario_metrics("S11", {"default_count": 3.5})
+
     assert scenario.status != ScenarioStatus.DORMANT
 
 
 def test_debt_cascade_contagion(engine):
     """Test debt cascade contagion"""
-    scenario = engine.scenarios["S06"]
-    
+    # SovereignDebtCascadeScenario is S11 (Economic block), not S06
+    scenario = engine.scenarios["S11"]
+
     scenario.update_metrics({
-        "sovereign_default_risk": 0.8,
-        "cross_border_exposure": 0.9
+        "default_count": 3.5,
+        "debt_to_gdp_threshold": 3.5
     })
-    
+
     scenario.tick()
     assert True
 
@@ -346,7 +356,7 @@ def test_human_override(engine):
     engine.scenarios["S01"].update_metrics({"synthetic_content_ratio": 0.9})
     
     # Human override
-    result = engine.execute_control_plane_command(
+    engine.execute_control_plane_command(
         plane=ControlPlane.TACTICAL,
         command="override",
         params={"scenario_id": "S01", "action": "suppress"}

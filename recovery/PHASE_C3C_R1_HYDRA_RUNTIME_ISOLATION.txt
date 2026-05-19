@@ -1,0 +1,114 @@
+PHASE C3C-R1 — HYDRA RUNTIME ISOLATION AUDIT
+============================================
+Date: 2026-05-19
+Command: git grep -n "hydra_50_engine\|cerberus_hydra\|Hydra50Engine\|CerberusHydra" \
+         src/app/core/hydra_50_integration.py src/app/cli/hydra_50_cli.py \
+         src/app/core/hydra_50_deep_integration.py src/app/core/security_enforcer.py \
+         src/app/gui/hydra_50_panel.py
+
+PURPOSE
+-------
+Document that C3C-R1 introduced ZERO new runtime wiring for Hydra.
+All wiring shown below pre-dates this repair pass and was already present
+when C3C failure diagnosis was committed (merge c51afc8a, 2026-05-19).
+
+=============================================================================
+PRE-EXISTING WIRING — NOT INTRODUCED BY C3C-R1
+=============================================================================
+
+src/app/core/hydra_50_integration.py (TOP-LEVEL IMPORT — executes at module load)
+  Line 18: from app.core.hydra_50_engine import (
+  Line 21:     Hydra50Engine,
+  Line 36:     def __init__(self, hydra_engine: Hydra50Engine):
+  Line 190:    def __init__(self, hydra_engine: Hydra50Engine):
+  Line 325:    def __init__(self, hydra_engine: Hydra50Engine):
+  Line 508:    def __init__(self, hydra_engine: Hydra50Engine):
+  Line 667:    self.hydra = Hydra50Engine(data_dir=data_dir)
+  Line 677:    def get_hydra_engine(self) -> Hydra50Engine:
+  Line 736:    def export_gui_hooks(hydra_engine: Hydra50Engine) -> GUIExportHooks:
+  Line 741:        from app.core.hydra_50_engine import Hydra50Engine
+  Line 744:        engine = Hydra50Engine()
+
+  Risk assessment: This file imports Hydra50Engine at module load (line 18-21).
+  It is NOT imported by the main application entry points unless explicitly called.
+  This is pre-existing risk, pre-C3C-R1.
+
+src/app/cli/hydra_50_cli.py (ALL LAZY — inside function bodies)
+  Lines 58, 103, 134, 157, 194, 232, 270, 290, 318:
+    from app.core.hydra_50_engine import HYDRA50Engine
+  All imports are inside function bodies — only triggered when CLI commands execute.
+  CLI must be explicitly invoked; import does not execute at module load.
+
+src/app/core/hydra_50_deep_integration.py (LAZY inside method body)
+  Line 124:  from app.core.cerberus_hydra import CerberusHydra
+  Line 127:  self.cerberus_hydra = CerberusHydra(data_dir=str(self.data_dir))
+  Line 134:  self.cerberus_hydra = None
+  Lines 148, 181, 185: usage of self.cerberus_hydra
+  Import is inside an __init__ try/except block, executed only when the class
+  is instantiated. Class is not instantiated by the main entry path.
+
+src/app/core/security_enforcer.py (CONDITIONAL LAZY — flag-gated)
+  Line 84:   enable_cerberus_hydra: bool = False,
+  Line 119:  self.cerberus_hydra = None
+  Line 121:  from app.core.cerberus_hydra import CerberusHydraDefense
+  Import executes only when SecurityEnforcer is constructed with
+  enable_cerberus_hydra=True. Default is False. Gate is a constructor parameter,
+  not a registry flag — but the default-False behavior matches registry intent.
+
+src/app/gui/hydra_50_panel.py (ALL LAZY — inside method bodies)
+  Lines 208, 210: from app.core.hydra_50_engine import Hydra50Engine; Hydra50Engine()
+  Lines 367, 369: from app.core.hydra_50_engine import Hydra50Engine; Hydra50Engine()
+  GUI panel only loads Hydra when the panel widget is rendered/refreshed.
+  PyQt6 GUI is not used in CLI or API operation modes.
+
+=============================================================================
+C3C-R1 DIFF — WHAT WAS ACTUALLY CHANGED
+=============================================================================
+
+Files modified by C3C-R1:
+
+  engines/hydra_50/hydra_50_engine.py
+    - Added BaseScenario.tick(), BaseScenario.escalate()
+    - Added Hydra50Engine.tick(), .get_status(), .save_state(), .load_state()
+    - Added Hydra50Engine.get_critical_scenarios(), .reset_scenario(),
+      .reset_all_scenarios(), .execute_control_plane_command()
+    - NO new import statements added
+    - NO new wiring into src/ runtime
+
+  src/app/core/hydra_50_engine.py (identical changes)
+    - Same method additions as engines/hydra_50/hydra_50_engine.py
+    - NO new import statements added
+    - NO new wiring into any caller module
+
+  tests/test_hydra_comprehensive.py
+    - Scenario ID corrections (S03→S41, S04→S21, S05→S31, S06→S11)
+    - Trigger metric key corrections
+    - Removed unused imports
+    - Test-only file; no runtime impact
+
+  tests/test_phase_c3c_hydra_diagnosis.py
+    - Updated post-repair assertions (save_state exists, escalate exists)
+    - Switched registry import tests from sys.modules to source inspection
+    - Test-only file; no runtime impact
+
+=============================================================================
+REGISTRY STATE — UNCHANGED
+=============================================================================
+
+src/app/core/engine_registry.py hydra_50 entry:
+  enabled=False
+  status="recovered_unactivated"
+  import_mode="lazy"
+  activation_requires_explicit_config=True
+
+No caller activates Hydra through the registry. The ENGINE_REGISTRY_ACTIVATION_ENABLED
+global flag remains False. No activation occurred in C3C-R1.
+
+=============================================================================
+CONCLUSION
+=============================================================================
+
+C3C-R1 is runtime-neutral. The repair pass added convenience methods and fixed
+stale tests. It did not introduce any new import paths, activation hooks, or
+registry changes that would cause Hydra to execute during normal application
+operation. All pre-existing wiring was present before C3C-R1 and is unchanged.
