@@ -1,0 +1,10 @@
+ .github/Active_Governance_Policy.md          | 816 +++++++++++++++++++++++++++
+ .github/BRANCH_PROTECTION.md                 | 271 +++++++++
+ .github/GITHUB_SECURITY_COMPLIANCE.md        | 377 +++++++++++++
+ .github/SECURITY_ADVISORY_TEMPLATE.md        | 175 ++++++
+ .github/SECURITY_VALIDATION_CHECKLIST.md     | 265 +++++++++
+ .github/SECURITY_VALIDATION_POLICY.md        | 289 ++++++++++
+ .github/THIRST_BRANCH_ACCEPTANCE_CRITERIA.md | 319 +++++++++++
+ .github/branch-transfer-matrix.yaml          | 146 +++++
+ .github/instructions/README.md               |  49 ++
+ 9 files changed, 2707 insertions(+)

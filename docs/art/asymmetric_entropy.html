@@ -1,0 +1,363 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASYMMETRIC ENTROPY | Algorithmic Artwork</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #08080c;
+            --sidebar-color: #12121a;
+            --accent-color: #4a9eff;
+            --text-color: #d1d1e0;
+            --border-color: #2a2a3a;
+            --header-font: 'JetBrains Mono', monospace;
+            --body-font: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--body-font);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #sidebar {
+            width: 320px;
+            background-color: var(--sidebar-color);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            box-sizing: border-box;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        #canvas-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            position: relative;
+        }
+
+        h1 {
+            font-family: var(--header-font);
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .status-tag {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border: 1px solid var(--accent-color);
+            border-radius: 3px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .section-title {
+            font-family: var(--header-font);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #777;
+            margin-top: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .seed-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            background: #1a1a25;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        #seed-display {
+            background: #000;
+            border: 1px solid #333;
+            padding: 4px 10px;
+            font-family: var(--header-font);
+            font-size: 0.9rem;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .value-display {
+            font-family: var(--header-font);
+            color: var(--accent-color);
+        }
+
+        #info-overlay {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-family: var(--header-font);
+            font-size: 0.7rem;
+            color: #444;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <aside id="sidebar">
+        <div>
+            <h1>Abyss Topology <span class="status-tag">Active</span></h1>
+            <p style="font-size: 0.7rem; color: #666; margin-top: 5px;">Meticulously crafted algorithmic expression of
+                Asymmetric Entropy.</p>
+        </div>
+
+        <div class="section-title">Seed Protocol</div>
+        <div class="control-group">
+            <div class="seed-controls">
+                <div id="seed-display">000000</div>
+                <button onclick="randomSeedValue()">RAND</button>
+            </div>
+            <div class="seed-controls">
+                <button onclick="prevSeed()" style="flex:1">PREV</button>
+                <button onclick="nextSeed()" style="flex:1">NEXT</button>
+            </div>
+        </div>
+
+        <div class="section-title">Entropy Dynamics</div>
+        <div class="control-group">
+            <label>Particle Density <span class="value-display" id="density-val"></span></label>
+            <input type="range" id="density" min="500" max="5000" step="100"
+                oninput="updateParam('density', this.value)">
+        </div>
+        <div class="control-group">
+            <label>Field Turbulence <span class="value-display" id="noise-val"></span></label>
+            <input type="range" id="noiseScale" min="0.001" max="0.02" step="0.001"
+                oninput="updateParam('noiseScale', this.value)">
+        </div>
+        <div class="control-group">
+            <label>Temporal Decay <span class="value-display" id="decay-val"></span></label>
+            <input type="range" id="decay" min="2" max="25" step="1" oninput="updateParam('decay', this.value)">
+        </div>
+
+        <div class="section-title">Goblin Angler Lures</div>
+        <div class="control-group">
+            <label>Lure Count <span class="value-display" id="lureCount-val"></span></label>
+            <input type="range" id="lureCount" min="0" max="20" step="1" oninput="updateParam('lureCount', this.value)">
+        </div>
+        <div class="control-group">
+            <label>Lure Attraction <span class="value-display" id="lureStrength-val"></span></label>
+            <input type="range" id="lureStrength" min="0.01" max="0.5" step="0.01"
+                oninput="updateParam('lureStrength', this.value)">
+        </div>
+
+        <div class="section-title">Constitutional Controls</div>
+        <div class="seed-controls">
+            <button onclick="regenerate()"
+                style="flex:1; background: var(--accent-color); color: #000; border:none; font-weight:bold;">REGENERATE</button>
+            <button onclick="resetParams()" style="flex:1">RESET</button>
+        </div>
+        <button onclick="saveArtwork()">DOWNLOAD EXPORT (.PNG)</button>
+    </aside>
+
+    <main id="canvas-container">
+        <div id="info-overlay">PROJECT-AI // ASYMMETRIC SECURITY GATEWAY // V2.1 HARDENED</div>
+    </main>
+
+    <script>
+        // --- Algorithmic Core ---
+        let particles = [];
+        let lures = [];
+        let seed = 42;
+
+        let params = {
+            density: 2500,
+            noiseScale: 0.005,
+            decay: 10,
+            lureCount: 6,
+            lureStrength: 0.15,
+            lineWeight: 1.2
+        };
+
+        const defaultParams = { ...params };
+
+        function setup() {
+            let container = document.getElementById('canvas-container');
+            let canvas = createCanvas(container.offsetWidth, container.offsetHeight);
+            canvas.parent('canvas-container');
+
+            colorMode(HSB, 360, 100, 100, 100);
+            initSystem();
+            updateUI();
+        }
+
+        function initSystem() {
+            randomSeed(seed);
+            noiseSeed(seed);
+            background(0);
+
+            particles = [];
+            for (let i = 0; i < params.density; i++) {
+                particles.push(new Particle());
+            }
+
+            lures = [];
+            for (let i = 0; i < params.lureCount; i++) {
+                lures.push(createVector(random(width), random(height)));
+            }
+        }
+
+        function draw() {
+            // Subtle fade for trails
+            fill(0, 0, 0, params.decay);
+            noStroke();
+            rect(0, 0, width, height);
+
+            // Draw Lures (Glints in the dark)
+            noStroke();
+            for (let l of lures) {
+                let d = sin(frameCount * 0.05 + lures.indexOf(l)) * 5;
+                fill(200, 80, 100, 5);
+                circle(l.x, l.y, 20 + d);
+            }
+
+            // Update and draw particles
+            strokeWeight(params.lineWeight);
+            for (let p of particles) {
+                p.follow(lures);
+                p.update();
+                p.display();
+                p.edges();
+            }
+        }
+
+        class Particle {
+            constructor() {
+                this.pos = createVector(random(width), random(height));
+                this.vel = createVector(0, 0);
+                this.acc = createVector(0, 0);
+                this.maxSpeed = random(1, 3);
+                this.prevPos = this.pos.copy();
+                this.hue = random(190, 240); // Asymmetric blue spectrum
+            }
+
+            update() {
+                this.vel.add(this.acc);
+                this.vel.limit(this.maxSpeed);
+                this.prevPos = this.pos.copy();
+                this.pos.add(this.vel);
+                this.acc.mult(0);
+            }
+
+            follow(lureNodes) {
+                // Background Flow Field
+                let angle = noise(this.pos.x * params.noiseScale, this.pos.y * params.noiseScale, frameCount * 0.001) * TWO_PI * 4;
+                let v = p5.Vector.fromAngle(angle);
+                v.setMag(0.1);
+                this.applyForce(v);
+
+                // Goblin Angler Lures (Predatory Attraction)
+                for (let l of lureNodes) {
+                    let d = dist(this.pos.x, this.pos.y, l.x, l.y);
+                    if (d < 250) {
+                        let force = p5.Vector.sub(l, this.pos);
+                        force.setMag(map(d, 0, 250, params.lureStrength, 0));
+                        this.applyForce(force);
+                    }
+                }
+            }
+
+            applyForce(force) {
+                this.acc.add(force);
+            }
+
+            display() {
+                let speedMag = this.vel.mag();
+                let alpha = map(speedMag, 0, this.maxSpeed, 20, 100);
+                stroke(this.hue, 70, 100, alpha);
+                line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
+            }
+
+            edges() {
+                if (this.pos.x > width) { this.pos.x = 0; this.prevPos = this.pos.copy(); }
+                if (this.pos.x < 0) { this.pos.x = width; this.prevPos = this.pos.copy(); }
+                if (this.pos.y > height) { this.pos.y = 0; this.prevPos = this.pos.copy(); }
+                if (this.pos.y < 0) { this.pos.y = height; this.prevPos = this.pos.copy(); }
+            }
+        }
+
+        // --- UI Logic ---
+        function updateParam(id, val) {
+            params[id] = parseFloat(val);
+            document.getElementById(id + '-val').innerText = val;
+            if (id === 'density' || id === 'lureCount') initSystem();
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('seed-display').innerText = seed.toString().padStart(6, '0');
+            for (let key in params) {
+                let el = document.getElementById(key);
+                if (el) el.value = params[key];
+                let display = document.getElementById(key + '-val');
+                if (display) display.innerText = params[key];
+            }
+        }
+
+        function regenerate() { initSystem(); }
+        function resetParams() { params = { ...defaultParams }; updateUI(); initSystem(); }
+        function randomSeedValue() { seed = floor(random(1000000)); updateUI(); initSystem(); }
+        function nextSeed() { seed++; updateUI(); initSystem(); }
+        function prevSeed() { seed--; updateUI(); initSystem(); }
+        function saveArtwork() { saveCanvas('asymmetric_entropy_' + seed, 'png'); }
+
+        window.onresize = function () {
+            let container = document.getElementById('canvas-container');
+            resizeCanvas(container.offsetWidth, container.offsetHeight);
+            background(0);
+        }
+    </script>
+</body>
+
+</html>

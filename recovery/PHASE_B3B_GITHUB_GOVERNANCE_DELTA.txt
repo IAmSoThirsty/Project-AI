@@ -1,0 +1,9 @@
+A	.github/Active_Governance_Policy.md
+A	.github/BRANCH_PROTECTION.md
+A	.github/GITHUB_SECURITY_COMPLIANCE.md
+A	.github/SECURITY_ADVISORY_TEMPLATE.md
+A	.github/SECURITY_VALIDATION_CHECKLIST.md
+A	.github/SECURITY_VALIDATION_POLICY.md
+A	.github/THIRST_BRANCH_ACCEPTANCE_CRITERIA.md
+A	.github/branch-transfer-matrix.yaml
+A	.github/instructions/README.md

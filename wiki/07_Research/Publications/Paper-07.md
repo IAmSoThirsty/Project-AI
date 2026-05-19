@@ -1,0 +1,68 @@
+---
+type: publication
+priority: canonical
+layer: research
+parent: [[Sovereign-Journey]]
+doi: https://doi.org/10.5281/zenodo.18827649
+status: published
+domain:
+  - governance
+  - research
+tags:
+  - project-ai
+  - type/publication
+  - priority/canonical
+  - layer/research
+  - role/provenance
+  - domain/governance
+  - domain/research
+  - bridge/governance-research
+  - system/triumvirate
+  - system/four-laws
+  - system/governance-pipeline
+  - concept/alignment
+  - concept/directness
+  - concept/constitutional-architecture
+graph_color: "#A3E635"
+---
+
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.18827649](https://doi.org/10.5281/zenodo.18827649)
+- Canonical named note: [[The-Flat-Gap]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-06]]
+- Next paper: [[Paper-08]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
+# The Flat Gap
+
+## Summary
+Alignment theory explaining why flat, unstructured control models fail under real agency.
+
+## Core Contribution
+- Frames structural hierarchy as a necessary condition for resilient alignment.
+
+## Systems Impacted
+- [[Triumvirate]]
+- [[Four-Laws]]
+- [[Governance-Pipeline]]
+- [[Governing-Force-AGI]]
+
+## Key Concepts
+- [[Two-Species-Aligned]]
+- [[Directness-Doctrine]]
+- [[Constitutional-Architectures]]
+
+## Position in Journey
+→ [[Sovereign-Journey]]
+
+## Implementation Links
+- /docs/governance/
+- /policies/
+
+## Notes
+Canonical named note: [[The-Flat-Gap]]
