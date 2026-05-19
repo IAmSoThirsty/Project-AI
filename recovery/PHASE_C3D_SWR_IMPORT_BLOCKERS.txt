@@ -1,0 +1,140 @@
+PHASE C3D — SOVEREIGN WAR ROOM IMPORT BLOCKERS
+===============================================
+Date: 2026-05-19
+Branch: integrate/phase-c3d-swr-dependency-isolation-20260519
+
+=============================================================================
+EXACT PANIC CHAIN (confirmed by live probe)
+=============================================================================
+
+Command run:
+  python -c "import importlib.util; importlib.util.find_spec('engines.sovereign_war_room.swr')"
+
+Full traceback captured:
+
+  ModuleNotFoundError: No module named '_cffi_backend'
+  thread '<unnamed>' panicked at
+    C:\Users\runneradmin\.cargo\registry\src\index.crates.io-6f17d22bba15001f\
+    pyo3-0.20.2\src\err\mod.rs:788:5:
+  Python API call failed
+
+  Traceback (most recent call last):
+    File "<string>", line 1, in <module>
+    File "<frozen importlib.util>", line 91, in find_spec
+    File "T:\Project-AI-main\engines\sovereign_war_room\swr\__init__.py", line 14
+      from .core import SovereignWarRoom
+    File "T:\Project-AI-main\engines\sovereign_war_room\swr\core.py", line 15
+      from .crypto import CryptoEngine
+    File "T:\Project-AI-main\engines\sovereign_war_room\swr\crypto.py", line 23
+      from cryptography.fernet import Fernet
+    File "T:\Project-AI-main\.venv\Lib\site-packages\cryptography\fernet.py", line 14
+      from cryptography.exceptions import InvalidSignature
+    File "T:\Project-AI-main\.venv\Lib\site-packages\cryptography\exceptions.py", line 9
+      from cryptography.hazmat.bindings._rust import exceptions as rust_exceptions
+  pyo3_runtime.PanicException: Python API call failed
+
+=============================================================================
+ROOT CAUSE ANALYSIS
+=============================================================================
+
+Step 1 — _cffi_backend missing:
+  The .venv installs cryptography>=42.0.5. Starting with cryptography 42.x,
+  the C extension backend changed from cffi (_cffi_backend.pyd) to a Rust/pyo3
+  extension (_rust.pyd at cryptography/hazmat/bindings/_rust.pyd: 6.88 MB).
+
+  However, the pyo3-0.20.2 Rust extension in this build still attempts to load
+  _cffi_backend as part of its initialization or error handling path.
+  _cffi_backend is not present in this environment's Python installation
+  (it is a cffi package artifact, not shipped with CPython).
+
+Step 2 — pyo3 panic instead of clean exception:
+  When _cffi_backend is missing, Python raises ModuleNotFoundError.
+  The Rust pyo3 runtime (version 0.20.2) does not catch this exception
+  through the standard Python error path. Instead, it calls Python API
+  functions that fail because the expected C extension is absent, causing
+  a Rust thread panic: "Python API call failed".
+
+  Unlike ImportError/ModuleNotFoundError, a pyo3 panic:
+  - Cannot be caught by try/except ImportError
+  - Cannot be caught by try/except Exception in Python
+  - Terminates the Python interpreter thread
+
+Step 3 — Why find_spec triggers this:
+  importlib.util.find_spec('engines.sovereign_war_room.swr') EXECUTES
+  swr/__init__.py because swr/ is a regular package (has __init__.py).
+  Python must run __init__.py to resolve submodule names from the package.
+  This is different from find_spec('engines.sovereign_war_room') which is
+  a namespace package (no __init__.py) — loader=None, no code executed.
+
+=============================================================================
+BLOCKER TABLE — PER IMPORT ATTEMPT (Python 3.12 confirmed)
+=============================================================================
+
+Import attempt                                      | Safe? | Reason
+----------------------------------------------------|-------|------------------
+find_spec('engines.sovereign_war_room')             | YES   | Namespace pkg, no __init__.py, loader=None
+find_spec('engines.sovereign_war_room.swr')         | YES*  | Python 3.12: find_spec of direct subpackage
+                                                    |       | of namespace pkg does NOT execute __init__.py
+                                                    |       | Returns spec but does not load the package.
+find_spec('engines.sovereign_war_room.swr.crypto')  | NO    | Must import swr first to resolve swr.crypto;
+                                                    |       | importing swr executes swr/__init__.py → panic
+find_spec('engines.sovereign_war_room.cli')         | YES   | cli.py is a .py module (no subpackage init)
+import engines.sovereign_war_room                   | YES   | Namespace pkg, no code run
+import engines.sovereign_war_room.swr               | NO    | Executes swr/__init__.py → pyo3 panic
+from engines.sovereign_war_room.swr import ...      | NO    | pyo3 panic
+import engines.sovereign_war_room.cli               | NO    | from swr import at top → pyo3 panic
+from engines.sovereign_war_room.cli import cli      | NO    | pyo3 panic
+
+*Note: find_spec('engines.sovereign_war_room.swr') returns the spec safely in Python 3.12
+because importlib defers package initialization for namespace package subpackage discovery.
+Any ACTUAL import of swr (not just spec lookup) triggers the panic.
+
+=============================================================================
+SAFE PROBE PATTERN (C3D-approved)
+=============================================================================
+
+The only safe probe is:
+
+  spec = importlib.util.find_spec("engines.sovereign_war_room")
+  assert spec is not None
+  assert spec.loader is None          # namespace package, no code executed
+  assert spec.origin is None          # no __init__.py file path
+
+This is what engine_registry.py does for module_locatable. It probes
+"engines.sovereign_war_room" — the namespace package — not "engines.sovereign_war_room.swr".
+
+NO submodule probe is safe without a passing crypto preflight:
+  subprocess.run([sys.executable, "-c", "from cryptography.fernet import Fernet"],
+                 capture_output=True)  # non-zero exit = blocked
+
+=============================================================================
+ENVIRONMENT STATE
+=============================================================================
+
+Installed:
+  cryptography              ← .venv/Lib/site-packages/cryptography/__init__.py present
+  _rust.pyd                 ← .venv/Lib/site-packages/cryptography/hazmat/bindings/_rust.pyd (6.88 MB)
+
+Missing:
+  _cffi_backend             ← ModuleNotFoundError: No module named '_cffi_backend'
+  cffi package              ← not installed in .venv (cffi would provide _cffi_backend.pyd)
+
+Note: Many src/ files (e.g. src/app/core/data_persistence.py) import from
+cryptography successfully ONLY because they use the cryptography package through
+Python paths where pyo3 doesn't panic. The panic is triggered specifically when
+the Rust extension tries to raise a Python exception for _cffi_backend absence
+and finds it cannot do so cleanly. The exact failure mode may be path- or
+order-dependent; C3D treats any environment without a confirmed preflight pass
+as blocked.
+
+=============================================================================
+CONCLUSION
+=============================================================================
+
+Classification: dependency-isolation blocker.
+  Type:    Missing transitive dependency (_cffi_backend / cffi)
+  Effect:  pyo3 panic — uncatchable by Python exception handling
+  Scope:   All SWR imports that reach swr/crypto.py
+  Fix:     pip install cffi (provides _cffi_backend) OR move crypto imports
+           behind lazy function-level guards
+  Status:  BLOCKED until C3D-R1 repair pass
