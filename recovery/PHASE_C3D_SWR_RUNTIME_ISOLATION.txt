@@ -1,0 +1,118 @@
+PHASE C3D — SOVEREIGN WAR ROOM RUNTIME ISOLATION AUDIT
+=======================================================
+Date: 2026-05-19
+Branch: integrate/phase-c3d-swr-dependency-isolation-20260519
+
+PURPOSE
+-------
+Prove that:
+1. engine_registry.py does NOT import SWR code.
+2. No src/ runtime file imports from engines.sovereign_war_room or swr.
+3. The engine_registry namespace-package probe is safe.
+4. engine_registry activation gate is disabled.
+
+=============================================================================
+1. ENGINE REGISTRY — IMPORT SAFETY
+=============================================================================
+
+Command:
+  grep -n "sovereign_war_room\|SovereignWarRoom\|from swr\|import swr" \
+       src/app/core/engine_registry.py
+
+Result:
+  Line 142: "_cffi_backend not installed in this environment — cryptography package "
+  Line 147: "cryptography/_cffi_backend pyo3 panic.",
+  Line 148: "Requires C3D: _cffi_backend / cryptography dependency isolation "
+
+These are STRING LITERALS inside known_blockers list values — not import statements.
+engine_registry.py contains ZERO import statements referencing sovereign_war_room,
+SovereignWarRoom, swr, cffi, or cryptography.
+
+The registry module_path for sovereign_war_room is "engines.sovereign_war_room".
+engine_registry.__post_init__ probes this with:
+  importlib.util.find_spec("engines.sovereign_war_room")
+This returns a namespace package spec with loader=None and origin=None.
+No code is executed. The probe is safe. ✓
+
+=============================================================================
+2. SRC/ RUNTIME — NO SWR WIRING
+=============================================================================
+
+Command:
+  git grep -n "sovereign_war_room\|SovereignWarRoom\|from swr\|import swr" \
+       src/ --include="*.py"
+
+Result: NO MATCHES.
+
+No file in src/ imports from SWR. SWR is completely absent from the active
+runtime execution path. This is the correct state for a recovered_unactivated engine.
+
+=============================================================================
+3. NAMESPACE PACKAGE PROBE — CONFIRMED SAFE
+=============================================================================
+
+Command:
+  python -c "
+  import importlib.util
+  spec = importlib.util.find_spec('engines.sovereign_war_room')
+  print('spec:', spec)
+  print('loader:', spec.loader)
+  print('origin:', spec.origin)
+  "
+
+Output:
+  spec: ModuleSpec(name='engines.sovereign_war_room', loader=None,
+                   submodule_search_locations=_NamespacePath([...]))
+  loader: None
+  origin: None
+
+loader=None confirms namespace package. No __init__.py executed. Safe. ✓
+
+Contrast with UNSAFE subpackage probe:
+  python -c "import importlib.util; importlib.util.find_spec('engines.sovereign_war_room.swr')"
+  → pyo3_runtime.PanicException (see PHASE_C3D_SWR_IMPORT_BLOCKERS.txt)
+
+=============================================================================
+4. ACTIVATION GATE
+=============================================================================
+
+engine_registry.py:
+  ENGINE_REGISTRY_ACTIVATION_ENABLED: bool = False   (line 156)
+
+sovereign_war_room entry:
+  enabled=False
+  status="recovered_unactivated"
+  activation_requires_explicit_config=True
+
+No caller sets ENGINE_REGISTRY_ACTIVATION_ENABLED to True.
+No caller sets the sovereign_war_room entry enabled=True.
+No activation hook runs on registry import.
+SWR does not start automatically. ✓
+
+=============================================================================
+5. SUMMARY TABLE
+=============================================================================
+
+Check                                               | Result
+----------------------------------------------------|----------
+engine_registry.py imports SWR code?               | NO ✓
+src/ files import SWR code?                         | NO ✓
+engine_registry probe triggers pyo3 panic?          | NO ✓ (namespace pkg)
+sovereign_war_room enabled=False?                   | YES ✓
+ENGINE_REGISTRY_ACTIVATION_ENABLED=False?           | YES ✓
+SWR imported at application startup?                | NO ✓
+find_spec('engines.sovereign_war_room') safe?       | YES ✓
+find_spec('engines.sovereign_war_room.swr') safe?   | NO ✗ (documented blocker)
+
+=============================================================================
+CONCLUSION
+=============================================================================
+
+Sovereign War Room is safely isolated. Registry registration is metadata-only.
+The engine cannot execute until:
+  1. cffi is installed (or crypto imports are lazy-gated) — C3D-R1 prerequisite
+  2. engine_registry entry enabled=True — explicit config change
+  3. ENGINE_REGISTRY_ACTIVATION_ENABLED=True — explicit flag change
+  4. Calling code explicitly instantiates SovereignWarRoom — no auto-start
+
+C3D proves SWR is isolated safely. It does not repair or activate SWR.

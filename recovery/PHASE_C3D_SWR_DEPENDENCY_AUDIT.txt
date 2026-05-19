@@ -1,0 +1,136 @@
+PHASE C3D — SOVEREIGN WAR ROOM DEPENDENCY AUDIT
+================================================
+Date: 2026-05-19
+Branch: integrate/phase-c3d-swr-dependency-isolation-20260519
+Scope: engines/sovereign_war_room/
+
+Goal: Identify all files importing cryptography / cffi / nacl / OpenSSL or related
+crypto packages. Map the import cascade that triggers _cffi_backend / pyo3 panic.
+
+=============================================================================
+DIRECTORY STRUCTURE
+=============================================================================
+
+engines/sovereign_war_room/               ← namespace package (NO __init__.py)
+├── cli.py                                ← CLI entry point
+├── demo.py                               ← demo runner
+├── requirements.txt                      ← declares: cryptography>=42.0.5
+├── README.md
+├── DEPLOYMENT_SUMMARY.md
+├── IMPLEMENTATION_COMPLETE.md
+├── verify_quality.tarl
+├── swr/                                  ← main sub-package (HAS __init__.py)
+│   ├── __init__.py                       ← DANGER: imports CryptoEngine at module load
+│   ├── core.py                           ← DANGER: imports from .crypto
+│   ├── crypto.py                         ← ROOT CAUSE: top-level cryptography imports
+│   ├── api.py                            ← DANGER: imports from .core (cascades to crypto)
+│   ├── governance.py                     ← SAFE: pydantic + stdlib only
+│   ├── bundle.py                         ← SAFE: stdlib only
+│   ├── scenario.py                       ← SAFE: pydantic + stdlib only
+│   ├── scoreboard.py                     ← SAFE: pydantic + stdlib only
+│   └── proof.py                          ← SAFE: pydantic + stdlib only
+├── tests/
+│   ├── test_core.py                      ← from swr import SovereignWarRoom (UNSAFE if run)
+│   ├── test_governance.py                ← from swr.governance import ... (cascades)
+│   └── test_proof.py                     ← from swr.proof import ... (probably safe)
+└── web/
+    └── app.py                            ← not audited (Flask app)
+
+=============================================================================
+CRYPTO IMPORT DETAIL — PER FILE
+=============================================================================
+
+engines/sovereign_war_room/swr/crypto.py (ROOT CAUSE — lines 23-26):
+  from cryptography.fernet import Fernet
+  from cryptography.hazmat.backends import default_backend
+  from cryptography.hazmat.primitives import hashes
+  from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+  These are MODULE-LEVEL imports. They execute immediately when the module
+  is loaded — there is no lazy guard or try/except wrapper.
+
+engines/sovereign_war_room/swr/__init__.py (lines 13-19):
+  from .bundle import BundleManager         ← SAFE (no crypto)
+  from .core import SovereignWarRoom        ← UNSAFE (imports .crypto)
+  from .crypto import CryptoEngine          ← UNSAFE (direct crypto import)
+  from .governance import ComplianceLevel, GovernanceEngine  ← SAFE
+  from .proof import ProofSystem, ProofType ← SAFE
+  from .scenario import DifficultyLevel, Scenario, ScenarioType  ← SAFE
+  from .scoreboard import Score, Scoreboard ← SAFE
+
+  __init__.py pulls CryptoEngine directly AND via .core. Both paths reach crypto.py.
+
+engines/sovereign_war_room/swr/core.py (line 15):
+  from .crypto import CryptoEngine          ← UNSAFE
+
+engines/sovereign_war_room/swr/api.py (line 16):
+  from .core import SovereignWarRoom        ← UNSAFE (cascades to crypto)
+
+engines/sovereign_war_room/cli.py (line 14):
+  from swr import SovereignWarRoom          ← UNSAFE
+  Note: uses bare "swr" import, not "engines.sovereign_war_room.swr".
+  Requires swr/ to be on sys.path (engine's own directory on path).
+  Top-level import — executes at module load.
+
+=============================================================================
+SAFE FILES (no direct or transitive crypto dependency)
+=============================================================================
+
+swr/governance.py:  pydantic, stdlib only — SAFE
+swr/bundle.py:      stdlib only — SAFE
+swr/scenario.py:    pydantic, stdlib only — SAFE
+swr/scoreboard.py:  pydantic, stdlib only — SAFE
+swr/proof.py:       pydantic, stdlib only — SAFE
+
+These can each be imported individually IF swr/ is on sys.path AND
+the import does not go through swr/__init__.py (which would cascade to crypto).
+
+=============================================================================
+REQUIREMENTS.TXT — DECLARED DEPENDENCIES
+=============================================================================
+
+cryptography>=42.0.5    ← root cause; requires functional _rust extension
+pydantic>=2.0.0         ← installed, working
+fastapi>=0.112.2        ← not in .venv; api.py blocked
+uvicorn>=0.24.0         ← not audited
+flask>=3.0.3            ← web/app.py; not audited
+pytest>=7.4.0           ← test runner
+pytest-asyncio>=0.21.0  ← test plugin
+httpx>=0.25.0           ← not audited
+python-multipart>=0.0.6 ← not audited
+jinja2>=3.1.4           ← not audited
+sqlalchemy>=2.0.0       ← not audited
+
+=============================================================================
+NAMESPACE PACKAGE STATUS
+=============================================================================
+
+engines/sovereign_war_room/ has NO __init__.py.
+Python treats it as a namespace package.
+
+importlib.util.find_spec('engines.sovereign_war_room'):
+  → ModuleSpec(name='engines.sovereign_war_room', loader=None,
+               origin=None,
+               submodule_search_locations=_NamespacePath([...]))
+  → loader=None confirms namespace package
+  → NO code executed — SAFE for registry probe
+
+importlib.util.find_spec('engines.sovereign_war_room.swr'):
+  → EXECUTES swr/__init__.py (because swr/ HAS an __init__.py)
+  → Triggers full import cascade → pyo3 PANIC
+  → UNSAFE — must not be called without crypto preflight passing
+
+This asymmetry is the critical boundary: the registry probes
+'engines.sovereign_war_room' (safe), not 'engines.sovereign_war_room.swr' (unsafe).
+
+=============================================================================
+CONCLUSION
+=============================================================================
+
+Single root cause: swr/crypto.py top-level cryptography imports.
+Blast radius: __init__.py, core.py, api.py, cli.py all cascade to crypto.py.
+Safe modules (governance, bundle, scenario, scoreboard, proof) cannot be
+reached without going through __init__.py (which imports CryptoEngine directly).
+
+Classification: dependency-isolation issue, not engine logic failure.
+Engine logic in all 8 modules is structurally sound. No logic bugs found.

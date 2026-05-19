@@ -139,14 +139,26 @@ ENGINES: dict[str, EngineEntry] = {
         enabled=False,
         import_mode="lazy",
         known_blockers=[
-            "_cffi_backend not installed in this environment — cryptography package "
-            "panics at pyo3 level when imported, bypassing try/except ImportError.",
-            "No __init__.py (namespace package) — module_path resolves as namespace "
-            "but submodules may fail to import.",
-            "CLI (engines/sovereign_war_room/cli.py) crashes on import due to "
-            "cryptography/_cffi_backend pyo3 panic.",
-            "Requires C3D: _cffi_backend / cryptography dependency isolation "
-            "before any submodule import is safe.",
+            "C3D AUDITED. Root cause: swr/crypto.py imports cryptography at module level "
+            "(from cryptography.fernet import Fernet, lines 23-26). "
+            "_cffi_backend is not installed in this environment. "
+            "The pyo3-0.20.2 Rust extension panics when _cffi_backend is absent, "
+            "bypassing try/except ImportError. Panic is uncatchable from Python.",
+            "Cascade: swr/__init__.py imports CryptoEngine directly AND via swr/core.py. "
+            "Any import of swr/ (package) or swr.core / swr.api / swr/__init__.py "
+            "reaches swr/crypto.py and triggers the panic. "
+            "Safe modules (governance, bundle, scenario, scoreboard, proof) cannot be "
+            "reached without going through swr/__init__.py.",
+            "CLI (engines/sovereign_war_room/cli.py) has top-level 'from swr import "
+            "SovereignWarRoom' — unsafe. Demo similarly affected.",
+            "No __init__.py at top level — engines.sovereign_war_room is a namespace "
+            "package (loader=None). find_spec('engines.sovereign_war_room') is SAFE. "
+            "find_spec('engines.sovereign_war_room.swr') is UNSAFE (executes __init__.py).",
+            "Minimum to unblock (C3D-R1): pip install cffi (adds _cffi_backend) OR "
+            "move all cryptography imports inside function/method bodies in swr/crypto.py. "
+            "After either fix, run: python -c 'from cryptography.fernet import Fernet' "
+            "to confirm preflight passes before activation. "
+            "Full repair plan: recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt.",
         ],
         activation_requires_explicit_config=True,
     ),

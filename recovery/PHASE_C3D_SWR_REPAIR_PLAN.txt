@@ -1,0 +1,161 @@
+PHASE C3D-R1 — SOVEREIGN WAR ROOM SAFE REPAIR PLAN
+====================================================
+Date: 2026-05-19
+Branch: integrate/phase-c3d-swr-dependency-isolation-20260519
+
+Core rule:
+
+  C3D proves SWR is isolated safely.
+  It does not repair or activate SWR.
+
+Do not activate SWR.
+Do not wire SWR into runtime execution.
+
+=============================================================================
+MINIMUM FUTURE REPAIR (C3D-R1)
+=============================================================================
+
+1. Add dependency preflight before any cryptography import.
+
+   Add a module-level preflight in swr/crypto.py (or a new swr/_preflight.py):
+
+     import subprocess, sys
+     def _crypto_preflight() -> bool:
+         result = subprocess.run(
+             [sys.executable, "-c", "from cryptography.fernet import Fernet"],
+             capture_output=True, timeout=10
+         )
+         return result.returncode == 0
+
+   Do not import cryptography until _crypto_preflight() returns True.
+
+2. Move crypto-heavy imports inside functions/classes.
+
+   In swr/crypto.py, convert all module-level imports to function-level:
+
+     class CryptoEngine:
+         def __init__(self, master_key=None):
+             from cryptography.fernet import Fernet
+             from cryptography.hazmat.backends import default_backend
+             from cryptography.hazmat.primitives import hashes
+             from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+             ...
+
+   This makes swr/crypto.py safe to import (the class definition does not
+   execute crypto imports — only instantiation does).
+
+3. Add safe error type for missing/broken crypto backend.
+
+   Define a CryptoUnavailableError in swr/crypto.py:
+
+     class CryptoUnavailableError(RuntimeError):
+         pass
+
+   In CryptoEngine.__init__(), catch ImportError and re-raise as
+   CryptoUnavailableError with a clear message. This gives callers a
+   catchable Python exception instead of an uncatchable pyo3 panic.
+
+4. Add isolated subprocess smoke test for CLI import.
+
+   In scripts/verify/verify_swr_isolation.py, add a subprocess-based
+   smoke test:
+
+     result = subprocess.run(
+         [sys.executable, "-c",
+          "from engines.sovereign_war_room.swr.governance import GovernanceEngine"],
+         capture_output=True, timeout=15
+     )
+     # If exit 0: safe modules are importable (crypto not in path)
+     # If exit non-0: crypto cascade is still active — repair not complete
+
+5. Keep registry metadata-only.
+
+   engine_registry.py sovereign_war_room entry must remain:
+     enabled=False
+     status="recovered_unactivated"
+     activation_requires_explicit_config=True
+
+   Do not change these flags during C3D-R1. Only a deliberate activation
+   decision (separate commit, explicit config) should change them.
+
+6. Activation requires explicit config.
+
+   Activation path (post-C3D-R1, when crypto is safe):
+     a. pip install cffi (adds _cffi_backend to environment)
+        OR apply lazy-import fix from step 2 above.
+     b. Run preflight: subprocess call to verify cryptography imports cleanly.
+     c. Only if preflight passes: set enabled=True in registry.
+     d. Set ENGINE_REGISTRY_ACTIVATION_ENABLED=True in application config.
+     e. Instantiate SovereignWarRoom from explicit application code.
+     f. Do NOT auto-instantiate from any import path.
+
+7. Do not enable SWR until crypto backend imports cleanly in target environment.
+
+   The test for "clean" is:
+     subprocess.run([sys.executable, "-c",
+                     "from cryptography.fernet import Fernet; print('OK')"],
+                    capture_output=True).returncode == 0
+   AND stdout contains "OK".
+
+   Any non-zero return code or missing "OK" means the environment is
+   still blocked. Do not activate.
+
+=============================================================================
+OPTIONAL ADDITIONAL REPAIRS (post-C3D-R1)
+=============================================================================
+
+8. Decouple swr/__init__.py from CryptoEngine.
+
+   Remove "from .crypto import CryptoEngine" from swr/__init__.py.
+   CryptoEngine should be an opt-in import:
+     from swr.crypto import CryptoEngine  # explicit, not in __all__
+
+   This makes the swr package importable without triggering crypto.
+
+9. Split swr into safe_core and crypto sub-packages.
+
+   swr/safe/    ← governance, bundle, scenario, scoreboard, proof (no crypto)
+   swr/crypto/  ← CryptoEngine only (explicit import required)
+
+   This allows tests and safe module usage without any crypto dependency.
+
+10. Add cffi to requirements.txt or pin cryptography to a cffi-compatible version.
+
+    Short-term fix: pip install cffi
+    Long-term: ensure requirements.txt pins a cryptography version whose
+    _rust.pyd does not panic on _cffi_backend absence.
+
+=============================================================================
+VERIFICATION SEQUENCE FOR C3D-R1
+=============================================================================
+
+After applying minimum repair:
+
+  python -m py_compile engines/sovereign_war_room/swr/crypto.py
+  python -c "from engines.sovereign_war_room.swr.crypto import CryptoEngine"
+    → should not panic (lazy imports mean class definition is safe)
+  python -c "from engines.sovereign_war_room.swr import SovereignWarRoom"
+    → should not panic (class definition only, no instantiation)
+  pytest tests/test_phase_c3d_swr_isolation.py -q
+    → all tests pass
+
+  Only after all above pass: consider enabling SWR in registry.
+
+=============================================================================
+COMMIT SEQUENCE FOR C3D-R1
+=============================================================================
+
+Commit 1: "repair(c3d-r1): Add CryptoUnavailableError and lazy crypto imports"
+  - swr/crypto.py: lazy imports inside __init__, CryptoUnavailableError
+  - swr/__init__.py: remove direct CryptoEngine import
+
+Commit 2: "repair(c3d-r1): Add crypto preflight to verify_swr_isolation.py"
+  - scripts/verify/verify_swr_isolation.py: subprocess-based preflight
+
+Commit 3: "test(c3d-r1): Verify SWR imports cleanly post-repair"
+  - tests/test_phase_c3d_swr_isolation.py: post-repair assertions
+  - pytest results: all pass
+
+Commit 4 (separate, deliberate decision): "activate(swr): Enable SWR in registry"
+  - engine_registry.py: enabled=True, status="activated"
+  - Only after crypto preflight passes in target environment
