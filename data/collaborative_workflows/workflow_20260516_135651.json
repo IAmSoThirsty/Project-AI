@@ -1,0 +1,25 @@
+{
+  "workflow_trace": {
+    "request": "Explain collaborative AI",
+    "timestamp": "2026-05-16T13:56:51.277897+00:00",
+    "iterations": [
+      {
+        "iteration": 1,
+        "writer_output": "[Writer - OpenAI not available] Mock response to: Explain collaborative AI...",
+        "reviewer_feedback": "[Reviewer - OpenAI not available] Mock response to: Please review this content:\n\n[Writer - OpenAI not ...",
+        "decision": "REFINE"
+      },
+      {
+        "iteration": 2,
+        "writer_output": "[Writer - OpenAI not available] Mock response to: Please refine the content based on this feedback:\n...",
+        "reviewer_feedback": "[Reviewer - OpenAI not available] Mock response to: Please review this content:\n\n[Writer - OpenAI not ...",
+        "decision": "REFINE"
+      }
+    ]
+  },
+  "result_summary": {
+    "iterations": 2,
+    "max_iterations_reached": true,
+    "final_content_length": 103
+  }
+}

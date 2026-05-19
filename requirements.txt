@@ -4,7 +4,7 @@
 fastapi==0.109.1
 uvicorn[standard]==0.27.0
 pydantic==2.5.3
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 
 # Web server (production)
 gunicorn==22.0.0
@@ -18,20 +18,20 @@ alembic==1.13.1
 redis>=5.0.0
 
 # Security
-python-multipart==0.0.22
-python-jose[cryptography]==3.3.0
+python-multipart==0.0.27
+python-jose[cryptography]==3.4.0
 passlib[bcrypt]==1.7.4
-cryptography==42.0.4
+cryptography==46.0.6
 argon2-cffi==23.1.0  # Secure password hashing for governance pipeline
-PyJWT==2.8.0  # JWT token generation and verification
+PyJWT==2.12.0  # JWT token generation and verification
 pyotp>=2.9.0  # MFA (TOTP) support for two-factor authentication
-flask-cors==4.0.0  # CORS middleware for web backend
+flask-cors==6.0.0  # CORS middleware for web backend
 flask-limiter==3.5.0  # Rate limiting for web backend
 flask==3.0.2  # Web framework for interface adapters
 
 # HTTP client
 httpx==0.26.0
-requests==2.31.0
+requests==2.32.4
 
 # Save points system dependencies
 # Note: uses Python standard library only
@@ -42,7 +42,7 @@ pytest-asyncio==0.23.3
 pytest-cov==4.1.0
 
 # Development
-black==24.1.1
+black==26.3.1
 flake8==7.0.0
 mypy==1.8.0
 
@@ -55,6 +55,10 @@ mypy==1.8.0
 # accelerate==0.26.0
 
 # ATLAS Ω Constitutional Engine Dependencies
-cbor2>=5.6.0  # Canonical binary encoding for hash integrity (updated for security)
+cbor2>=5.9.0  # Canonical binary encoding for hash integrity (updated for security)
 jsonschema>=4.23.0  # Schema validation (updated for security)
 pyyaml>=6.0.2  # Configuration loading (updated for security)
+
+# CLI + platform runtime compatibility
+rich>=13.7.0,<14.0.0  # Keep compatible with flask-limiter 3.x
+pyreadline3>=3.5.4; platform_system=="Windows"  # readline compatibility on Windows

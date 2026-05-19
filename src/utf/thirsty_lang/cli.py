@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import readline
 from pathlib import Path
 from time import perf_counter
 
@@ -20,6 +19,11 @@ from .package_manager import (
     show_gallery_item,
 )
 from .parser import Parser
+
+try:
+    import readline
+except ModuleNotFoundError:
+    readline = None  # type: ignore[assignment]
 
 _HIST = Path.home() / ".thirsty_history"
 _ACH = Path.home() / ".thirsty_achievements.json"
@@ -167,10 +171,11 @@ def scaffold_fountain(path: Path, name: str) -> None:
 def repl() -> int:
     print("Thirsty REPL. Type :quit to exit.")
     _HIST.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        readline.read_history_file(_HIST)
-    except Exception:
-        pass
+    if readline is not None:
+        try:
+            readline.read_history_file(_HIST)
+        except Exception:
+            pass
     env_lines: list[str] = []
     last_interp = None
     while True:
@@ -178,16 +183,18 @@ def repl() -> int:
             line = input("thirsty> ")
         except EOFError:
             print()
-            try:
-                readline.write_history_file(_HIST)
-            except Exception:
-                pass
+            if readline is not None:
+                try:
+                    readline.write_history_file(_HIST)
+                except Exception:
+                    pass
             return 0
         if line.strip() == ":quit":
-            try:
-                readline.write_history_file(_HIST)
-            except Exception:
-                pass
+            if readline is not None:
+                try:
+                    readline.write_history_file(_HIST)
+                except Exception:
+                    pass
             return 0
         if line.strip() == ":thirst":
             if last_interp is None:

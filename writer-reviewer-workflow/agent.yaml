@@ -1,0 +1,20 @@
+# Writer-Reviewer Workflow Agent Configuration
+name: writer-reviewer-workflow
+description: Multi-agent workflow for collaborative content creation with Writer and Reviewer agents
+version: "1.0.0"
+
+template:
+  kind: hosted
+  
+  # Protocols supported by this agent
+  protocols:
+    - name: responses
+      version: "1.0"
+  
+  # Environment variables required at runtime
+  # Note: Do NOT include FOUNDRY_* or other platform-reserved variables here
+  environment_variables:
+    - name: FOUNDRY_MODEL_DEPLOYMENT_NAME
+      description: "Name of the Azure OpenAI model deployment to use for both Writer and Reviewer agents"
+      required: true
+      example: "gpt-4o"

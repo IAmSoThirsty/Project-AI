@@ -1,7 +1,7 @@
 # Multi-stage build for Project-AI
 
 # Stage 1: Build dependencies
-FROM python:3.11-slim as builder
+FROM python:3.12-slim AS builder
 
 WORKDIR /build
 
@@ -20,7 +20,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements
 
 
 # Stage 2: Runtime
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -35,7 +35,7 @@ COPY --from=builder /build/wheels /wheels
 
 # Install wheels
 COPY requirements.txt .
-RUN pip install --no-cache /wheels/*
+RUN pip install --no-cache-dir /wheels/*
 
 # Copy application
 COPY src/ /app/src/
@@ -48,6 +48,10 @@ ENV PYTHONPATH=/app/src:/app
 
 # Expose canonical API port
 EXPOSE 8001
+
+# Drop root privileges in runtime container
+RUN groupadd -r app && useradd -r -g app app && chown -R app:app /app /wheels
+USER app
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

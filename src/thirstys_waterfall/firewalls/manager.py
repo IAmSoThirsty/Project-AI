@@ -10,6 +10,7 @@ from .next_generation import NextGenerationFirewall
 from .software import SoftwareFirewall
 from .hardware import HardwareFirewall
 from .cloud import CloudFirewall
+from .backends import NftablesBackend, WindowsFirewallBackend, PFBackend
 
 
 class FirewallManager:
@@ -40,12 +41,32 @@ class FirewallManager:
             "cloud": CloudFirewall(config.get("cloud", {})),
         }
 
+        # Initialize OS-level firewall backends
+        self.backends = {
+            "nftables": NftablesBackend(config.get("nftables", {})),
+            "windows": WindowsFirewallBackend(config.get("windows_firewall", {})),
+            "pf": PFBackend(config.get("pf", {})),
+        }
+
         self._active = False
 
     def start(self):
         """Start all enabled firewalls"""
         self.logger.info("Starting Firewall Manager")
 
+        # Initialize OS-level backends first
+        for name, backend in self.backends.items():
+            if backend.check_availability():
+                try:
+                    if backend.initialize():
+                        backend.enable()
+                        self.logger.info(f"Initialized {name} backend")
+                except Exception as e:
+                    self.logger.warning(f"Failed to initialize {name} backend: {e}")
+            else:
+                self.logger.debug(f"{name} backend not available on this platform")
+
+        # Start application-level firewalls
         for name, firewall in self.firewalls.items():
             if firewall.enabled:
                 try:
@@ -60,11 +81,19 @@ class FirewallManager:
         """Stop all firewalls"""
         self.logger.info("Stopping Firewall Manager")
 
+        # Stop application-level firewalls
         for name, firewall in self.firewalls.items():
             try:
                 firewall.stop()
             except Exception as e:
                 self.logger.error(f"Failed to stop {name}: {e}")
+
+        # Disable OS-level backends
+        for name, backend in self.backends.items():
+            try:
+                backend.disable()
+            except Exception as e:
+                self.logger.warning(f"Failed to disable {name} backend: {e}")
 
         self._active = False
 
