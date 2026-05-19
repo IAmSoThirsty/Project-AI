@@ -1,0 +1,104 @@
+PHASE C3B — ATLAS IMPORT BLOCKERS
+Date: 2026-05-19
+Branch: integrate/phase-c3b-atlas-isolation-20260519
+
+=== ENVIRONMENT STATUS ===
+
+  Python:      3.12 (T:\Project-AI-main\.venv)
+  numpy:       NOT INSTALLED (import fails immediately)
+  scipy:       NOT INSTALLED (import fails immediately)
+  jsonschema:  INSTALLED but BROKEN (rpds.rpds internal dep missing)
+  yaml:        OK (PyYAML available)
+  requests:    OK (available)
+
+=== UNGUARDED TOP-LEVEL IMPORTS — FILES THAT WILL FAIL ON IMPORT ===
+
+These files have module-level imports of unavailable packages.
+Any attempt to import these files will raise ImportError or similar.
+They are BLOCKED until the missing packages are installed or imports are guarded.
+
+--- numpy (6 files) ---
+
+  engines/atlas/analysis/failure_surveillance.py:23    import numpy as np
+  engines/atlas/analysis/sensitivity_analyzer.py:23    import numpy as np
+  engines/atlas/core/drivers/driver_engine_10d.py:25   import numpy as np
+  engines/atlas/core/graph/temporal_graph.py:28        import numpy as np
+  engines/atlas/simulation/agent_simulator.py:24       import numpy as np
+  engines/atlas/simulation/monte_carlo_engine.py:23    import numpy as np
+  engines/atlas/simulation/timeline_divergence.py:24   import numpy as np
+
+--- scipy (1 file) ---
+
+  engines/atlas/analysis/sensitivity_analyzer.py:25    from scipy import linalg
+
+--- jsonschema (1 file, broken even if importable) ---
+
+  engines/atlas/schemas/validator.py:19    import jsonschema
+  engines/atlas/schemas/validator.py:20    from jsonschema import Draft7Validator
+
+  Note: jsonschema package exists in site-packages but fails at runtime because
+  rpds.rpds (Rust-backed internal dep) is missing. The import appears to succeed
+  at find_spec level but fails on actual import. This is a silent blocker.
+
+=== MODULES SAFE TO IMPORT (no unguarded optional deps) ===
+
+  engines/atlas/__init__.py                      — lightweight, lists version
+  engines/atlas/audit/trail.py                   — stdlib only
+  engines/atlas/config/loader.py                 — yaml only (yaml OK)
+  engines/atlas/core/constitution.py             — stdlib only
+  engines/atlas/core/drivers/calculator.py       — depends on audit+config (safe)
+  engines/atlas/governance/constitutional_kernel.py — depends on audit+config (safe)
+  engines/atlas/cli/atlas_cli.py                 — depends on governance+schemas (schemas blocked)
+
+  Partial activation (safe-subset only) would require bypassing the schemas
+  subsystem entirely. The CLI entry point depends on schemas/validator.py which
+  is blocked by jsonschema.
+
+=== CASCADE EFFECTS ===
+
+  atlas/__init__.py imports:
+    from atlas.governance.constitutional_kernel import get_constitutional_kernel
+    from atlas.audit.trail import get_audit_trail
+    from atlas.config.loader import get_config_loader
+    from atlas.schemas.validator import get_schema_validator   ← BLOCKED (jsonschema)
+    from atlas.core.bayesian_engine import get_bayesian_engine
+
+  Cascade: importing atlas (top-level) will FAIL because __init__.py imports
+  schemas/validator.py which imports jsonschema which is broken.
+  Atlas cannot be fully imported even with repo root on sys.path until
+  jsonschema is fixed or the __init__.py import is guarded.
+
+=== ACTIVATION BLOCKERS SUMMARY ===
+
+  1. numpy not installed          — 7 files unimportable
+  2. scipy not installed          — 1 additional file unimportable
+  3. jsonschema broken            — schemas/validator.py unimportable
+  4. jsonschema cascades to       — atlas/__init__.py import fails
+  5. Package name collision       — engines/ must not be on sys.path
+  6. CLI untested in this env     — atlas_cli.py depends on blocked schemas
+
+  Minimum to enable safe subset import:
+    pip install numpy scipy
+    pip install rpds-py  (or upgrade jsonschema to version with bundled rpds)
+
+  Minimum to enable full atlas import (including atlas.__init__):
+    All of the above
+
+=== REGISTRY STATUS ===
+
+  engine_registry.py entry for "atlas":
+    enabled: False
+    status:  "recovered_unactivated"
+    import_mode: "lazy"
+    activation_requires_explicit_config: True
+
+  The engine registry (src/app/core/engine_registry.py) does NOT import Atlas.
+  It only calls importlib.util.find_spec("engines.atlas") which is safe.
+  All blockers listed here are deferred to C3B activation work, not C3A/C3B audit.
+
+=== NEXT STEPS (C3C and beyond) ===
+
+  C3B proves: Atlas is safely audited and isolated. Registry metadata updated.
+  C3C would be: install numpy/scipy/rpds-py, guard jsonschema import in
+               schemas/validator.py and atlas/__init__.py, run Atlas test suite.
+  C3D: Hydra assertion/attribute failures (separate phase).

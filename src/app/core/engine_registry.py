@@ -84,11 +84,22 @@ ENGINES: dict[str, EngineEntry] = {
         enabled=False,
         import_mode="lazy",
         known_blockers=[
-            "Package name collision: 'atlas/' top-level dir shadows 'engines/atlas/' "
-            "when PYTHONPATH includes project root — atlas CLI resolves wrong package.",
-            "CLI entry point (engines/atlas/cli/atlas_cli.py) untested in this env.",
-            "No runtime src/ wiring — only docs and README reference atlas.",
-            "Requires C3B: import path audit and PYTHONPATH isolation before activation.",
+            "C3B AUDITED. Two copies: atlas/ (authoritative, top-level) and "
+            "engines/atlas/ (mirror). All intra-Atlas imports use 'from atlas.*' — "
+            "requires repo root on sys.path, NOT engines/ on sys.path.",
+            "engines/ must NOT be added to sys.path globally — it shadows atlas/ "
+            "with engines/atlas/ causing ambiguous resolution. Use "
+            "AtlasIsolatedContext (scripts/verify/verify_atlas_isolation.py) only.",
+            "numpy not installed: 7 files fail on import "
+            "(failure_surveillance.py, sensitivity_analyzer.py, driver_engine_10d.py, "
+            "temporal_graph.py, agent_simulator.py, monte_carlo_engine.py, "
+            "timeline_divergence.py).",
+            "scipy not installed: sensitivity_analyzer.py additionally blocked.",
+            "jsonschema broken (rpds.rpds missing): schemas/validator.py unimportable. "
+            "Cascades to atlas/__init__.py — full atlas package import fails.",
+            "CLI entry point (engines/atlas/cli/atlas_cli.py) depends on "
+            "schemas/validator.py which is blocked by jsonschema breakage.",
+            "Minimum to unblock: pip install numpy scipy rpds-py (or jsonschema upgrade).",
         ],
         activation_requires_explicit_config=True,
     ),
