@@ -1,0 +1,346 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.4, pluggy-1.6.0
+rootdir: T:\Project-AI-main
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-0.23.3, cov-4.1.0
+asyncio: mode=Mode.STRICT
+collected 585 items
+
+tests\test_hydra_comprehensive.py .................................      [  5%]
+tests\test_hydra_50_engine.py .......................................... [ 12%]
+..............                                                           [ 15%]
+tests\test_cerberus_hydra.py ...................                         [ 18%]
+tests\test_hydra_guard.py .                                              [ 18%]
+tests\test_hydra_coverage_boost.py ..................................... [ 24%]
+........................................................................ [ 37%]
+........................................................................ [ 49%]
+........................................................................ [ 61%]
+........................................................................ [ 74%]
+........................................................................ [ 86%]
+...........................................................              [ 96%]
+tests\test_phase_c3c_hydra_diagnosis.py ....................             [100%]
+
+============================== warnings summary ===============================
+tests/test_hydra_comprehensive.py: 21 warnings
+tests/test_hydra_50_engine.py: 28 warnings
+tests/test_hydra_coverage_boost.py: 3 warnings
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:103: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    self.activation_time = datetime.utcnow()
+
+tests/test_hydra_comprehensive.py: 6 warnings
+tests/test_hydra_50_engine.py: 19 warnings
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    scenario.activation_time = datetime.utcnow()
+
+tests/test_hydra_comprehensive.py: 9 warnings
+tests/test_hydra_50_engine.py: 51 warnings
+tests/test_hydra_coverage_boost.py: 1 warning
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:437: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    elapsed = datetime.utcnow() - self.activation_time
+
+tests/test_hydra_comprehensive.py: 2 warnings
+tests/test_hydra_50_engine.py: 15 warnings
+tests/test_hydra_coverage_boost.py: 1 warning
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:446: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    step.reached_time = datetime.utcnow()
+
+tests/test_hydra_comprehensive.py: 6 warnings
+tests/test_hydra_50_engine.py: 21 warnings
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5258: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_hydra_comprehensive.py: 6 warnings
+tests/test_hydra_50_engine.py: 22 warnings
+tests/test_hydra_coverage_boost.py: 50 warnings
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_hydra_comprehensive.py: 12 warnings
+tests/test_hydra_50_engine.py: 44 warnings
+tests/test_hydra_coverage_boost.py: 1 warning
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5740: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_comprehensive.py::test_ai_reality_flood_escalation
+tests/test_hydra_comprehensive.py::test_legitimacy_collapse_progression
+tests/test_hydra_comprehensive.py::test_engine_get_critical_scenarios
+tests/test_hydra_comprehensive.py::test_cascade_detection
+tests/test_hydra_comprehensive.py::test_cascade_detection
+tests/test_hydra_comprehensive.py::test_cascade_detection
+tests/test_hydra_comprehensive.py::test_rapid_escalation
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:461: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    self.activation_time = datetime.utcnow()
+
+tests/test_hydra_comprehensive.py: 3 warnings
+tests/test_hydra_50_engine.py: 20 warnings
+tests/test_hydra_coverage_boost.py: 1 warning
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5294: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_comprehensive.py: 3 warnings
+tests/test_hydra_50_engine.py: 20 warnings
+tests/test_hydra_coverage_boost.py: 1 warning
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5382: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_hydra_comprehensive.py: 2 warnings
+tests/test_hydra_50_engine.py: 11 warnings
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5593: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_comprehensive.py::test_human_override
+tests/test_hydra_50_engine.py::TestControlPlanes::test_human_override_activation
+tests/test_hydra_50_engine.py::TestControlPlanes::test_control_plane_event_logging
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5629: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_hydra_comprehensive.py: 3 warnings
+tests/test_hydra_50_engine.py: 29 warnings
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5325: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    elapsed = datetime.utcnow() - scenario.activation_time
+
+tests/test_hydra_comprehensive.py::test_cascade_detection
+tests/test_hydra_50_engine.py::TestAdversarialRealityGenerator::test_compound_scenario_generation
+tests/test_hydra_50_engine.py::TestFullSystem::test_multi_scenario_simulation
+tests/test_hydra_50_engine.py::TestFullSystem::test_multi_scenario_simulation
+tests/test_hydra_50_engine.py::TestFullSystem::test_multi_scenario_simulation
+tests/test_hydra_50_engine.py::TestFullSystem::test_multi_scenario_simulation
+tests/test_hydra_50_engine.py::TestFullSystem::test_multi_scenario_simulation
+tests/test_hydra_50_engine.py::TestPerformance::test_tick_execution_time
+tests/test_hydra_coverage_boost.py::TestAdversarialRealityGenerator::test_compound_scenario
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4465: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "generated_at": datetime.utcnow().isoformat(),
+
+tests/test_hydra_50_engine.py::TestDigitalCognitiveScenarios::test_s01_escalation_ladder
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:91: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    scenario.activation_time = datetime.utcnow() - timedelta(days=100)
+
+tests/test_hydra_50_engine.py::TestCrossScenarioCoupler::test_cascading_activation
+tests/test_hydra_50_engine.py::TestCrossScenarioCoupler::test_cascading_activation
+tests/test_hydra_50_engine.py::TestCrossScenarioCoupler::test_cascading_activation
+tests/test_hydra_50_engine.py::TestCrossScenarioCoupler::test_coupling_history_tracking
+tests/test_hydra_50_engine.py::TestCrossScenarioCoupler::test_coupling_history_tracking
+tests/test_hydra_50_engine.py::TestCrossScenarioCoupler::test_coupling_history_tracking
+tests/test_hydra_coverage_boost.py::TestCrossScenarioCoupler::test_propagate_cascading
+tests/test_hydra_coverage_boost.py::TestCrossScenarioCoupler::test_propagate_synchronizing
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4541: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_50_engine.py: 6 warnings
+tests/test_hydra_coverage_boost.py: 4 warnings
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4609: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_50_engine.py: 10 warnings
+tests/test_hydra_coverage_boost.py: 1 warning
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4596: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    > datetime.utcnow() - timedelta(days=7)
+
+tests/test_hydra_50_engine.py::TestIrreversibilityDetector::test_irreversibility_assessment
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:373: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    scenario.activation_time = datetime.utcnow() - timedelta(days=800)
+
+tests/test_hydra_50_engine.py::TestIrreversibilityDetector::test_irreversibility_assessment
+tests/test_hydra_50_engine.py::TestIrreversibilityDetector::test_irreversible_threshold
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_assess_irreversible
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4673: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_50_engine.py::TestIrreversibilityDetector::test_irreversible_threshold
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:386: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    scenario.activation_time = datetime.utcnow() - timedelta(days=1000)
+
+tests/test_hydra_50_engine.py::TestFalseRecoveryEngine::test_recovery_poison_detection
+tests/test_hydra_50_engine.py::TestFalseRecoveryEngine::test_cumulative_poison_cost
+tests/test_hydra_50_engine.py::TestFalseRecoveryEngine::test_cumulative_poison_cost
+tests/test_hydra_coverage_boost.py::TestFalseRecoveryEngine::test_poison_detected
+tests/test_hydra_coverage_boost.py::TestFalseRecoveryEngine::test_cumulative_cost_with_poisons
+tests/test_hydra_coverage_boost.py::TestFalseRecoveryEngine::test_cumulative_cost_with_poisons
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5085: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_50_engine.py::TestTimeTravel::test_replay_to_timestamp
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:477: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    t1 = datetime.utcnow()
+
+tests/test_hydra_50_engine.py::TestTimeTravel::test_replay_to_timestamp
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:480: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    datetime.utcnow()
+
+tests/test_hydra_50_engine.py::TestTimeTravel::test_counterfactual_branching
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:493: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    branch_point = datetime.utcnow()
+
+tests/test_hydra_50_engine.py::TestIntegrationManager::test_integrated_tick
+tests/test_hydra_50_engine.py::TestFullSystem::test_full_integration_workflow
+  T:\Project-AI-main\src\app\core\hydra_50_integration.py:409: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_50_engine.py::TestIntegrationManager::test_gui_export
+tests/test_hydra_50_engine.py::TestFullSystem::test_full_integration_workflow
+  T:\Project-AI-main\src\app\core\hydra_50_integration.py:706: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_50_engine.py::TestFullSystem::test_scenario_lifecycle
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:693: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    scenario.activation_time = datetime.utcnow() - timedelta(days=100)
+
+tests/test_hydra_50_engine.py::TestErrorHandling::test_replay_with_no_events
+  T:\Project-AI-main\tests\test_hydra_50_engine.py:816: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    result = engine.replay_to_timestamp(datetime.utcnow())
+
+tests/test_hydra_guard.py::test_hydra_block
+  T:\Project-AI-main\cognition\audit.py:8: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    f.write(f"{datetime.utcnow().isoformat()} | {event} | {detail}\n")
+
+tests/test_hydra_coverage_boost.py::TestVariableConstraint::test_ceiling_allows_below
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:142: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestVariableConstraint::test_ceiling_blocks_above
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:153: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestVariableConstraint::test_floor_allows_above
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:164: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestVariableConstraint::test_floor_blocks_below
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:175: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestVariableConstraint::test_can_never_increase
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:186: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestVariableConstraint::test_can_never_decrease
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:198: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestGovernanceCeiling::test_effective_ceiling
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:226: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    lowered_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestScenarioState::test_compute_hash
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:277: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestScenarioState::test_post_init_hash
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:289: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestBaseScenarioMethods::test_evaluate_escalation_with_activation
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:406: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    s.activation_time = datetime.utcnow() - timedelta(days=1)
+
+tests/test_hydra_coverage_boost.py::TestBaseScenarioMethods::test_check_recovery_event_blocked
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:430: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestBaseScenarioMethods::test_check_recovery_event_blocked
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:435: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    disabled_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestBaseScenarioMethods::test_get_governance_ceiling_with_lock
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:455: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestBaseScenarioMethods::test_get_governance_ceiling_with_lock
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:462: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    lowered_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestBaseScenarioMethods::test_update_metrics_constraint_violation
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:478: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestBaseScenarioMethods::test_update_metrics_constraint_violation
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:485: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_digital
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_economic
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_infrastructure
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_bio
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_societal
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_validate_state_lock_compliance_fail
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_lock_summary
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_all_active_locks
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4754: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    current_time = datetime.utcnow()
+
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_digital
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_economic
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_infrastructure
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_bio
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_societal
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_validate_state_lock_compliance_fail
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_lock_summary
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_all_active_locks
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4884: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    current_time = datetime.utcnow()
+
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_digital
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_economic
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_infrastructure
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_bio
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_societal
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_validate_state_lock_compliance_fail
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_lock_summary
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_all_active_locks
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4951: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    current_time = datetime.utcnow()
+
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_digital
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_economic
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_infrastructure
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_bio
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_create_state_lock_societal
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_validate_state_lock_compliance_fail
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_lock_summary
+tests/test_hydra_coverage_boost.py::TestIrreversibilityDetector::test_get_all_active_locks
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:4725: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    locked_at=datetime.utcnow(),
+
+tests/test_hydra_coverage_boost.py::TestFalseRecoveryEngine::test_no_poison
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5104: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_hydra_coverage_boost.py::TestHydra50Engine::test_replay_to_timestamp
+  T:\Project-AI-main\tests\test_hydra_coverage_boost.py:692: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    result = engine.replay_to_timestamp(datetime.utcnow())
+
+tests/test_hydra_coverage_boost.py::TestHydra50Engine::test_get_state_lock_summary_empty
+  T:\Project-AI-main\src\app\core\hydra_50_engine.py:5566: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_phase_c3c_hydra_diagnosis.py::test_direct_update_metrics_does_not_set_triggered_status
+tests/test_phase_c3c_hydra_diagnosis.py::test_engine_update_scenario_metrics_sets_triggered_status
+  T:\Project-AI-main\engines\hydra_50\hydra_50_engine.py:105: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    self.activation_time = datetime.utcnow()
+
+tests/test_phase_c3c_hydra_diagnosis.py::test_engine_update_scenario_metrics_sets_triggered_status
+  T:\Project-AI-main\engines\hydra_50\hydra_50_engine.py:5245: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    scenario.activation_time = datetime.utcnow()
+
+tests/test_phase_c3c_hydra_diagnosis.py::test_engine_update_scenario_metrics_sets_triggered_status
+  T:\Project-AI-main\engines\hydra_50\hydra_50_engine.py:434: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    elapsed = datetime.utcnow() - self.activation_time
+
+tests/test_phase_c3c_hydra_diagnosis.py::test_engine_update_scenario_metrics_sets_triggered_status
+  T:\Project-AI-main\engines\hydra_50\hydra_50_engine.py:443: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    step.reached_time = datetime.utcnow()
+
+tests/test_phase_c3c_hydra_diagnosis.py::test_engine_update_scenario_metrics_sets_triggered_status
+  T:\Project-AI-main\engines\hydra_50\hydra_50_engine.py:5253: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_phase_c3c_hydra_diagnosis.py::test_engine_update_scenario_metrics_sets_triggered_status
+  T:\Project-AI-main\engines\hydra_50\hydra_50_engine.py:485: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+tests/test_phase_c3c_hydra_diagnosis.py::test_engine_update_scenario_metrics_sets_triggered_status
+  T:\Project-AI-main\engines\hydra_50\hydra_50_engine.py:5735: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+====================== 585 passed, 540 warnings in 2.92s ======================
