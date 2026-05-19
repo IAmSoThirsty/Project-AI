@@ -139,26 +139,29 @@ ENGINES: dict[str, EngineEntry] = {
         enabled=False,
         import_mode="lazy",
         known_blockers=[
-            "C3D AUDITED. Root cause: swr/crypto.py imports cryptography at module level "
-            "(from cryptography.fernet import Fernet, lines 23-26). "
-            "_cffi_backend is not installed in this environment. "
-            "The pyo3-0.20.2 Rust extension panics when _cffi_backend is absent, "
-            "bypassing try/except ImportError. Panic is uncatchable from Python.",
-            "Cascade: swr/__init__.py imports CryptoEngine directly AND via swr/core.py. "
-            "Any import of swr/ (package) or swr.core / swr.api / swr/__init__.py "
-            "reaches swr/crypto.py and triggers the panic. "
-            "Safe modules (governance, bundle, scenario, scoreboard, proof) cannot be "
-            "reached without going through swr/__init__.py.",
+            "C3D-R1 COMPLETE. swr/crypto.py module-level cryptography imports removed. "
+            "All 4 imports (Fernet, default_backend, hashes, PBKDF2HMAC) moved inside "
+            "CryptoEngine.__init__(). CryptoUnavailableError(RuntimeError) added as "
+            "controlled sentinel. pyo3_runtime.PanicException caught via except BaseException "
+            "and re-raised cleanly. Importing swr package no longer panics. "
+            "Full repair log: recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt.",
+            "Remaining blocker: CryptoEngine() instantiation raises CryptoUnavailableError "
+            "because _cffi_backend is absent in this environment (_cffi_backend is provided "
+            "by the cffi package). pyo3-0.20.2 panics on _cffi_backend absence; "
+            "this is now caught and re-raised as a controlled Python exception. "
+            "Resolution: pip install cffi (adds _cffi_backend.pyd to the environment).",
             "CLI (engines/sovereign_war_room/cli.py) has top-level 'from swr import "
-            "SovereignWarRoom' — unsafe. Demo similarly affected.",
+            "SovereignWarRoom' — module-level import is now safe post-C3D-R1, but "
+            "any CLI command that constructs SovereignWarRoom will raise CryptoUnavailableError "
+            "until cffi is installed.",
             "No __init__.py at top level — engines.sovereign_war_room is a namespace "
-            "package (loader=None). find_spec('engines.sovereign_war_room') is SAFE. "
-            "find_spec('engines.sovereign_war_room.swr') is UNSAFE (executes __init__.py).",
-            "Minimum to unblock (C3D-R1): pip install cffi (adds _cffi_backend) OR "
-            "move all cryptography imports inside function/method bodies in swr/crypto.py. "
-            "After either fix, run: python -c 'from cryptography.fernet import Fernet' "
-            "to confirm preflight passes before activation. "
-            "Full repair plan: recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt.",
+            "package. find_spec('engines.sovereign_war_room') is SAFE (no code executed). "
+            "find_spec('engines.sovereign_war_room.swr') is SAFE post-C3D-R1 "
+            "(Python 3.12 defers subpackage init for namespace-package discovery).",
+            "Activation prerequisite: pip install cffi to unblock CryptoEngine instantiation, "
+            "then verify: python -c 'from engines.sovereign_war_room.swr.crypto import "
+            "CryptoEngine; CryptoEngine()' exits without error. "
+            "Then set enabled=True and ENGINE_REGISTRY_ACTIVATION_ENABLED=True explicitly.",
         ],
         activation_requires_explicit_config=True,
     ),

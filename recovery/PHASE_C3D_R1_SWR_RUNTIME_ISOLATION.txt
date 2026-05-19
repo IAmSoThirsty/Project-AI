@@ -1,0 +1,90 @@
+PHASE C3D-R1 — SWR RUNTIME ISOLATION AUDIT
+==========================================
+Date: 2026-05-19
+Branch: integrate/phase-c3d-r1-swr-crypto-import-repair-20260519
+
+PURPOSE
+-------
+Prove that C3D-R1 introduced zero new runtime wiring for SWR.
+The repair was confined to swr/crypto.py and test files only.
+
+=============================================================================
+1. CHANGES MADE BY C3D-R1
+=============================================================================
+
+engines/sovereign_war_room/swr/crypto.py:
+  - Removed 4 module-level cryptography.* imports (lines 23-26)
+  - Added CryptoUnavailableError(RuntimeError) class
+  - Added lazy crypto import block inside CryptoEngine.__init__()
+  - Added self._PBKDF2HMAC, self._hashes, self._default_backend attributes
+  - Updated derive_key() to use instance-stored symbols
+  - NO new imports added to this file that aren't already in stdlib
+  - NO new callers added
+
+tests/test_phase_c3d_r1_swr_crypto_repair.py:
+  - NEW test file — test-only, no runtime impact
+
+tests/test_phase_c3d_swr_isolation.py:
+  - Updated 1 test (panic → safe import assertion)
+  - Updated 1 test (namespace loader invariant)
+  - Test-only file, no runtime impact
+
+src/app/core/engine_registry.py:
+  - known_blockers strings updated (documentation change only)
+  - No import statements added or removed
+
+=============================================================================
+2. NO NEW SRC/ WIRING
+=============================================================================
+
+Command:
+  git grep -n "sovereign_war_room\|SovereignWarRoom\|from swr\|import swr" \
+       src/ --include="*.py"
+
+Result: NO MATCHES (excluding string literal content in engine_registry.py)
+
+No file in src/ imports from SWR or instantiates SWR classes.
+C3D-R1 did not change this.
+
+=============================================================================
+3. ENGINE REGISTRY STATE — UNCHANGED
+=============================================================================
+
+src/app/core/engine_registry.py sovereign_war_room entry:
+  enabled=False                           ← UNCHANGED
+  status="recovered_unactivated"          ← UNCHANGED
+  import_mode="lazy"                      ← UNCHANGED
+  activation_requires_explicit_config=True ← UNCHANGED
+  ENGINE_REGISTRY_ACTIVATION_ENABLED=False ← UNCHANGED
+
+=============================================================================
+4. WHAT C3D-R1 ENABLES (NOT ACTIVATION)
+=============================================================================
+
+After C3D-R1, the following operations are now safe that were not before:
+
+  SAFE NOW:
+  - from engines.sovereign_war_room.swr.crypto import CryptoEngine
+  - from engines.sovereign_war_room.swr import SovereignWarRoom
+  - importlib.util.find_spec('engines.sovereign_war_room.swr')
+  - importlib.util.find_spec('engines.sovereign_war_room.swr.crypto')
+
+  STILL REQUIRES CRYPTO FIX (pip install cffi OR functional cryptography):
+  - CryptoEngine()        → raises CryptoUnavailableError (controlled)
+  - SovereignWarRoom()    → raises CryptoUnavailableError (via CryptoEngine())
+
+  STILL REQUIRES EXPLICIT ACTIVATION CONFIG:
+  - engine_registry entry enabled=True
+  - ENGINE_REGISTRY_ACTIVATION_ENABLED=True
+  - Calling code explicitly instantiates SovereignWarRoom
+
+C3D-R1 does not activate SWR. It makes SWR safely importable as a
+step toward eventual activation when the environment is ready.
+
+=============================================================================
+CONCLUSION
+=============================================================================
+
+C3D-R1 is runtime-neutral. The repair makes swr/crypto.py safe to import
+without activating SWR or introducing any new runtime dependency wiring.
+The engine remains enabled=False, recovered_unactivated.

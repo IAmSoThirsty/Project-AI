@@ -1,0 +1,12 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.4, pluggy-1.6.0
+rootdir: T:\Project-AI-main
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-0.23.3, cov-4.1.0
+asyncio: mode=Mode.STRICT
+collected 33 items
+
+tests\test_phase_c3d_r1_swr_crypto_repair.py ..............              [ 42%]
+tests\test_phase_c3d_swr_isolation.py ...................                [100%]
+
+============================= 33 passed in 3.78s ==============================
