@@ -1166,5 +1166,12 @@ class CommandOverrideSystem:
         }
 
 
-# compatibility alias for older imports
+class EntityClass(Enum):
+    GENESIS_BORN = "genesis_born"
+    APPOINTED = "appointed"
+    SYNTHETIC = "synthetic"
+    EMERGENT = "emergent"
+
+
+# compatibility aliases for older imports
 CommandOverride = CommandOverrideSystem

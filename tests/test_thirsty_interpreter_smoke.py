@@ -8,14 +8,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "src"
+_THIRSTY_SRC = ROOT / "src" / "thirsty_lang" / "src"
 
-for path in (ROOT, SRC):
-    path_str = str(path)
-    if path_str not in sys.path:
-        sys.path.insert(0, path_str)
+if str(_THIRSTY_SRC) not in sys.path:
+    sys.path.insert(0, str(_THIRSTY_SRC))
 
-from thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
+from thirsty_interpreter import ThirstyInterpreter
 
 
 def test_thirsty_interpreter_smoke():
