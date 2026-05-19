@@ -6,26 +6,24 @@ UTF README describes amplified bootstrap,src/utf/README.md,Full document; 'What 
 Thirsty-Lang keyword set (complete),src/utf/thirsty_lang/token.py,KEYWORDS dict + TokenType enum,HIGH,Definitive keyword list
 Thirsty-Lang lexer fully implemented,src/utf/thirsty_lang/lexer.py,Complete Python class; Lexer.lex(),HIGH,
 Shadow Thirst 6 analyzers,src/utf/shadow_thirst/core.py,analyze() function returns 6 AnalysisResult per mutation,HIGH,
-Shadow Thirst promote/reject verdict,src/utf/shadow_thirst/core.py,promote() returns PROMOTE or REJECT,HIGH,
+Shadow Thirst promote/reject verdict,src/utf/shadow_thirst/core.py,promote() function returns PROMOTE or REJECT,HIGH,
 TSCG 9 core symbols,src/utf/tscg/core.py,CORE_SYMBOLS dict,HIGH,COG DNT SHD INV CAP QRM COM ANC RFX
 TSCG-B magic = TSGB,src/utf/tscg_b/core.py,MAGIC = b'TSGB',HIGH,
 TSCG-B CRC32 + SHA-256 integrity,src/utf/tscg_b/core.py,pack_text() and unpack_frame(),HIGH,
-TARL policy default = DENY,src/utf/tarl/core.py,evaluate() returns 'DENY' when no rule matches,HIGH,Fail-closed behavior
+TARL policy default = DENY,src/utf/tarl/core.py,evaluate() returns 'DENY' when no rule matches (line 151),HIGH,Fail-closed behavior
 TarlVerdict: ALLOW/DENY/ESCALATE,tarl/spec.py,TarlVerdict enum,HIGH,
 TarlRuntime LRU cache + parallel eval,tarl/runtime.py,TarlRuntime class with _decision_cache and ThreadPoolExecutor,HIGH,
 TARL 8 subsystems layered architecture,tarl/docs/ARCHITECTURE.md; tarl/docs/WHITEPAPER.md,Layer 0-7 documented in both docs,HIGH,
 TARL bytecode format TARL_BYTECODE_V1,tarl/docs/WHITEPAPER.md,Section 3.2 Bytecode Format,HIGH,
 TARL OS 29 subsystems ~13600 LOC,tarl_os/TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md,Executive Summary section,MEDIUM,Self-reported; not independently verified
-TARL OS v2 vs v3 conflict,tarl_os/README.md (v2) vs tarl_os/TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md (v3),Two documents with different version numbers,DOCUMENTED CONFLICT,Report is newer (2026-02-08 vs 2026-01-30)
-5 constitutional rules with actions,tarl_os/security/thirstys_constitution.thirsty,initConstitution() pushes 5 rule objects,HIGH,
-Enforcement gateway fail-closed,tarl_os/security/thirstys_enforcement_gateway.thirsty,!enforcementActive → allowed:false 'Gateway offline',HIGH,
-Iron Path full pipeline with crypto,governance/iron_path.py,"_execute_stage() with role_sig, policy_binding, sha256",HIGH,
-build.tarl uses Thirsty-Lang syntax,build.tarl,drink/glass/pour/shield/thirsty keywords,HIGH,
+TARL OS v2 vs v3 conflict,tarl_os/README.md (v2.0) vs tarl_os/TARL_OS_COMPLETE_IMPLEMENTATION_REPORT.md (v3.0),Two documents with different version numbers,DOCUMENTED CONFLICT,Report is newer (2026-02-08 vs 2026-01-30)
+5 constitutional rules with actions,tarl_os/security/thirstys_constitution.thirsty,initConstitution() pushes 5 rule objects with action fields,HIGH,
+Enforcement gateway fail-closed,tarl_os/security/thirstys_enforcement_gateway.thirsty,!enforcementActive branch returns allowed:false 'Gateway offline',HIGH,
+Iron Path full pipeline with crypto,governance/iron_path.py,"_execute_stage() with role_sig, policy_binding, sha256 hash",HIGH,
+build.tarl uses Thirsty-Lang syntax,build.tarl,Full file: drink/glass/pour/shield/thirsty keywords,HIGH,
 Scheduler 8 priority levels,tarl_os/kernel/scheduler.thirsty,PRIORITY_REALTIME=0 through PRIORITY_IDLE=7,HIGH,
-PSIA acronym expansion,None,Inferred from src/psia/ directory,LOW,Undocumented — needs confirmation
-Triumvirate server implementation,governance/triumvirate_server.py,"SQLite-backed audit log, 3-pillar consensus, port 8001",HIGH,
+PSIA acronym expansion,None,Inferred from src/psia/ directory name and Shadow Thirst spec,LOW,Undocumented — needs confirmation
+Triumvirate server implementation,governance/triumvirate_server.py,File exists — content not read,LOW,Needs further inspection
 Hello Thirsty example,src/utf/examples/hello.thirsty,"glass main() -> Int { pour('hello, thirsty world'); return 0; }",HIGH,
 PromotionGate policy example,src/utf/examples/policy.tarl,policy PromotionGate { ... } with 3 rules,HIGH,
-Shadow mutation example,src/utf/examples/promote.shadowthirst,mutation validated_canonical set_counter(value: Int) {...},HIGH,
-Ed25519 key rotation,src/psia/crypto/anchor.py,"rotate_key(), verify_with_history(), KeyVersion dataclass",HIGH,Phase 6 implementation
-Triumvirate SQLite audit persistence,governance/triumvirate_server.py,"_init_db(), _write_decision(), governance/audit.db",HIGH,Phase 6 implementation
+Shadow mutation example,src/utf/examples/promote.shadowthirst,mutation validated_canonical set_counter(value: Int) { shadow invariant canonical },HIGH,
