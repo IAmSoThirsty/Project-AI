@@ -1,0 +1,122 @@
+# Phase D3A — Dependency Baseline Repair Report
+# Date: 2026-05-19
+# Branch: harden/d3a-dependency-baseline-repair-20260519
+
+# ============================================================
+# SCOPE
+# ============================================================
+# Installed missing pip dependencies classified in D2 Group A.
+# Added missing pytest markers classified in D2 Group G.
+# No structural module repairs performed.
+# No PSIA package creation.
+# No app sub-module stubs created.
+# No Shadow Thirst UTF work.
+# No engine activation.
+
+# ============================================================
+# PACKAGES INSTALLED
+# ============================================================
+
+# Tier 1 — Core science/numeric stack
+#   numpy 2.4.6          (was missing from .venv, only in .venv_airllm)
+#   temporalio 1.27.2    (workflow SDK — unblocks collection; tests need infra)
+#   flask 3.1.3          (web backend)
+#   pandas 3.0.3         (data analysis)
+#   typer 0.25.1         (CLI framework)
+#   defusedxml 0.7.1     (secure XML parsing)
+#   joblib 1.5.3         (ML utility)
+#   toml 0.10.2          (config parsing)
+#   hypothesis 6.152.9   (property-based testing)
+#   mcp 1.27.1           (Model Context Protocol SDK)
+#   matplotlib 3.10.9    (visualization)
+
+# Secondary blockers revealed after primary installs
+#   scikit-learn 1.8.0   (intelligence_engine.py:18 — masked behind numpy)
+#   psutil 7.2.2         (health/report.py:34, kernel/performance_benchmark.py:18)
+#   flask-cors 6.0.2     (src/app/core/security/middleware.py:22)
+
+# Dependency conflict resolution
+#   starlette 0.35.1     (pinned: fastapi<0.36.0 requirement vs mcp pulling 1.0.0)
+#   sse-starlette 1.8.2  (pinned <2.0.0: last version compatible with starlette 0.35.1)
+#   httpx 0.27.2         (pinned <0.28.0: 0.28.0 removed app= kwarg, breaks starlette TestClient)
+
+# Platform wheel fix
+#   rpds-py 0.30.0       (force-reinstalled: wrong-platform wheel → correct cp312-cp312-win_amd64)
+
+# Not installed (per D3A scope)
+#   PyQt6                (platform-specific: requires Qt6 system libs; Windows dev only — deferred)
+
+# ============================================================
+# PYTEST MARKERS ADDED (pyproject.toml)
+# ============================================================
+# Added to [tool.pytest.ini_options] markers:
+#   chaos    — Chaos engineering tests
+#   slow     — Slow-running integration or soak tests
+#   load     — Load and soak tests
+#   soak     — Soak / endurance tests
+#   timeout  — Tests with an explicit timeout requirement
+
+# ============================================================
+# COLLECTION DELTA
+# ============================================================
+# D2 baseline:  7675 collected / 102 errors
+# D3A result:   8480 collected /  62 errors
+#
+# Improvement:  +805 items collected  (-40 errors)
+# Remaining:     62 errors (all structural — no pip installs will resolve)
+
+# ============================================================
+# REMAINING 62 ERRORS — ROOT CAUSE BREAKDOWN
+# ============================================================
+# Group B (18) — PSIA package never written
+#   psia.* imports across 18 test files
+#   Action: D3D — skip/isolate decision
+
+# Group C subset (~21) — App sub-modules never written
+#   sovereign_audit_log, signal_flows, vault.core.vault,
+#   containment, substrate, normalization, audit_manager,
+#   agent_lounge, meta_security_dept, repair_crew,
+#   personal_agent, immutable_audit_log, company_pricing,
+#   government_pricing, tseca_ghost_protocol, repo_scan_contract,
+#   asymmetric_security, exceptions (core.exceptions)
+#   Action: D3C — create stubs or skip
+
+# Group D (2) — Shadow Thirst UTF incomplete
+#   shadow_thirst.bytecode, shadow_thirst.type_system
+#   Action: D3E — UTF completion phase
+
+# Group E (3) — Stale test imports (symbol gone)
+#   EntityClass from app.core.ai_systems
+#   AntiSovereignStressTestGenerator from src.app.testing
+#   BootSequence from project_ai.orchestrator
+#   Action: D3B — fix or remove stale import
+
+# Group F (2) — Wrong import path
+#   thirsty_lang.src.thirsty_interpreter (should be thirsty_lang.thirsty_interpreter)
+#   api.vr_routes (api/ not on sys.path)
+#   Action: D3B — fix import path
+
+# Group G (0) — Marker config: RESOLVED in this phase
+
+# Secondary structural (newly visible, ~16)
+#   monitoring.entropy_slope (test_entropy_slope.py)
+#   src.cognition.reasoning_matrix (test_reasoning_matrix.py, test_cognition_comprehensive.py)
+#   governance package/directory conflict (test_rate_limiter.py)
+#   Action: D3C investigation
+
+# ============================================================
+# PIP CHECK STATUS
+# ============================================================
+# 12 pre-existing "not supported on this platform" warnings —
+# same wheel set as D2 baseline, no new conflicts introduced.
+# Warnings: black, cbor2, charset-normalizer, coverage, greenlet,
+#   httptools, MarkupSafe, mypy, PyYAML, SQLAlchemy, watchfiles, websockets.
+# No version incompatibility errors.
+
+# ============================================================
+# RESULT
+# ============================================================
+# PASS — Collection improved from 102 → 62 errors (-40).
+# All remaining errors are structural; no further pip installs required.
+# Proceed to D3B (stale imports / path drift), D3C (sub-module decisions),
+# D3D (PSIA), D3E (Shadow Thirst UTF).

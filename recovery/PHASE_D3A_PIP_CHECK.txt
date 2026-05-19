@@ -1,0 +1,12 @@
+black 24.1.1 is not supported on this platform
+cbor2 5.8.0 is not supported on this platform
+charset-normalizer 3.4.4 is not supported on this platform
+coverage 7.13.4 is not supported on this platform
+greenlet 3.3.1 is not supported on this platform
+httptools 0.7.1 is not supported on this platform
+MarkupSafe 3.0.3 is not supported on this platform
+mypy 1.8.0 is not supported on this platform
+PyYAML 6.0.3 is not supported on this platform
+SQLAlchemy 2.0.25 is not supported on this platform
+watchfiles 1.1.1 is not supported on this platform
+websockets 16.0 is not supported on this platform
