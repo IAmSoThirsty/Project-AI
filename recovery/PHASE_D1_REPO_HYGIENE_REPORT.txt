@@ -1,0 +1,67 @@
+# Phase D1 Repository Hygiene Verification
+# Date: 2026-05-19
+# Repo: T:\Project-AI-main
+
+## .gitignore pattern checks
+  PASS: Log files (*.log) ('*.log')
+  PASS: Rotated logs (*.log.1, etc.) ('*.log.*')
+  PASS: JSON Lines runtime artifacts ('*.jsonl')
+  PASS: Data logs directory ('data/logs/')
+  PASS: Data audit directory ('data/audit/')
+  PASS: Test artifact outputs ('test-artifacts/')
+  PASS: CI report directory ('ci-reports/')
+  PASS: Primary venv (.venv/) ('.venv/')
+  PASS: All venv variants (.venv_airllm etc.) ('.venv_*/')
+  PASS: Windows DLL binaries ('*.dll')
+  PASS: Windows static libraries ('*.lib')
+  PASS: Generated PDFs ('*.pdf')
+  PASS: BundleManager working directory ('bundles/')
+  PASS: Execution trace artifact ('execution_trace.json')
+  PASS: TARL test result directory ('tarl_os/tests/results/')
+  PASS: Runtime arch_angel data ('data/arch_angel/')
+  PASS: Runtime savepoints ('data/savepoints/')
+  PASS: Shadow test output ('shadow_test_output.txt')
+  PASS: Preview PNG artifacts ('page1_preview.png')
+
+## git check-ignore path checks
+  PASS: god_tier.log ('data/logs/god_tier.log')
+  PASS: rotated log (*.log.1) ('data/logs/god_tier.log.1')
+  PASS: test artifact JSONL ('test-artifacts/test_run.jsonl')
+  PASS: CI report ('ci-reports/report.txt')
+  PASS: SWR bundle ('bundles/swr_scenarios.zip')
+  PASS: execution trace ('execution_trace.json')
+  PASS: audit JSONL ('data/audit/audit_20260101.jsonl')
+  PASS: preview PNG ('page1_preview.png')
+  PASS: generated PDF ('output.pdf')
+  PASS: .venv_airllm directory ('.venv_airllm/lib/libpython.so')
+  PASS: .venv_prod directory ('.venv_prod/bin/python')
+  PASS: shadow test output ('shadow_test_output.txt')
+  PASS: TARL test result JSON ('tarl_os/tests/results/run.json')
+  PASS: arch_angel runtime data ('data/arch_angel/state.json')
+
+## .dockerignore pattern checks
+  PASS: Primary venv (docker) ('.venv')
+  PASS: All venv variants (docker) ('.venv_*/')
+  PASS: Log files (docker) ('*.log')
+  PASS: Windows .pyd (docker) ('*.pyd')
+  PASS: Windows DLL (docker) ('*.dll')
+  PASS: SQLite databases (docker) ('*.sqlite')
+  PASS: JSONL runtime artifacts (docker) ('*.jsonl')
+  PASS: Test artifacts (docker) ('test-artifacts/')
+  PASS: CI reports (docker) ('ci-reports/')
+  PASS: Data logs (docker) ('data/logs/')
+  PASS: BundleManager directory (docker) ('bundles/')
+  PASS: mypy cache (docker) ('.mypy_cache/')
+  PASS: Obsidian vault (docker) ('.obsidian/')
+
+## Already-tracked runtime files (documented, require follow-up)
+  TRACKED / NOT IGNORED: cognition/governance_audit.log
+    Note: Tracked runtime log — requires git rm --cached in a future phase
+  TRACKED / NOT IGNORED: docs/security_compliance/fourlaws-test-runs-latest.jsonl
+    Note: Tracked test run JSONL — intentional evidence record; size growth warrants LFS review
+  TRACKED / NOT IGNORED: tarl_os/tests/results/stress_test_results_1769808374.json
+    Note: Tracked 20MB test result — requires git rm --cached; gitignore rule now prevents re-add
+  TRACKED / NOT IGNORED: test-data/adversarial_stress_tests_2000.json
+    Note: Tracked 3.2MB test data — intentional test fixture; LFS recommended if growing
+
+# RESULT: PASS — all artifact categories properly excluded from git and Docker

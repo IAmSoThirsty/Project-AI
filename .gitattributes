@@ -31,4 +31,17 @@ src/thirsty_lang/node_modules/** linguist-vendored
 src/thirsty_lang/vscode-extension/** linguist-vendored
 src/thirsty_lang/.venv/** linguist-vendored
 
+# Phase D1 — Binary file markers (2026-05-19)
+# Prevent line-ending conversion on binary artifacts if ever committed.
+*.dll binary
+*.lib binary
+*.pdb binary
+*.exe binary
+*.pdf binary
+*.sqlite binary
+*.db binary
+
+# Large test data — track via LFS if intentionally versioned
+*.jsonl text=auto eol=lf
+
 # End of .gitattributes
