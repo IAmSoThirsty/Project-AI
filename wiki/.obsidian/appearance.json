@@ -1,0 +1,10 @@
+{
+  "accentColor": "#ffd166",
+  "cssTheme": "",
+  "enabledCssSnippets": [
+    "sovereign-glow",
+    "project-ai-tag-colors"
+  ],
+  "baseFontSize": 16,
+  "theme": "obsidian"
+}
