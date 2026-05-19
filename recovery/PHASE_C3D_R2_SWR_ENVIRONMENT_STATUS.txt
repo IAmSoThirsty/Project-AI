@@ -1,0 +1,21 @@
+Name: cffi
+Version: 1.17.1
+Summary: Foreign Function Interface for Python calling C code.
+Home-page: http://cffi.readthedocs.org
+Author: Armin Rigo, Maciej Fijalkowski
+Author-email: python-cffi@googlegroups.com
+License: MIT
+Location: t:\Project-AI-main\.venv\Lib\site-packages
+Requires: pycparser
+Required-by: cryptography
+Name: cryptography
+Version: 42.0.4
+Summary: cryptography is a package which provides cryptographic recipes and primitives to Python developers.
+Home-page: https://github.com/pyca/cryptography
+Author: 
+Author-email: The Python Cryptographic Authority and individual contributors <cryptography-dev@python.org>
+License: Apache-2.0 OR BSD-3-Clause
+Location: t:\Project-AI-main\.venv\Lib\site-packages
+Requires: cffi
+Required-by: 
+_cffi_backend: 1.17.1

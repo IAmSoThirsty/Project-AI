@@ -1,0 +1,15 @@
+  load_scenarios(1): 3 scenarios loaded
+  execute_scenario: scenario='Trolley Problem - Classic' decision='divert_to_track_b' compliance='compliant' srs=100.0 integrity=True
+# C3D-R2 Sovereign War Room Controlled Smoke Test
+# Date: 2026-05-19
+# Branch: integrate/phase-c3d-r2-swr-controlled-smoke-20260519
+
+SWR_REGISTRY_CLEAN=true
+SWR_ACTIVATED=false
+SWR_IMPORT_SAFE=true
+SWR_CRYPTO_IMPORT_SAFE=true
+SWR_CRYPTOENGINE_CONSTRUCTED=true
+SWR_CONTROLLED_FAILURE=false
+SWR_SMOKE_PASSED=true
+
+# RESULT: PASS � SWR is import-safe and construction-tested under controlled conditions

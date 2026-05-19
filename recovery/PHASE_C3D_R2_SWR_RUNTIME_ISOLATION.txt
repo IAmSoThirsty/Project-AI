@@ -1,0 +1,381 @@
+engines/sovereign_war_room/IMPLEMENTATION_COMPLETE.md:7:**SOVEREIGN WAR ROOM (SWR)** is a production-ready, enterprise-grade governance-native security competition framework for validating AI systems through adversarial testing.
+engines/sovereign_war_room/README.md:13:**SOVEREIGN WAR ROOM (SWR)** is a production-grade testing framework designed to push AI systems to their limits through five rounds of increasingly challenging scenarios. It validates that AI systems:
+engines/sovereign_war_room/README.md:612:# Initialize SWR
+engines/sovereign_war_room/demo.py:7:Demonstrates the core functionality of the SWR system.
+engines/sovereign_war_room/swr/__init__.py:15:from .crypto import CryptoEngine
+engines/sovereign_war_room/swr/__init__.py:32:    "CryptoEngine",
+engines/sovereign_war_room/swr/core.py:15:from .crypto import CryptoEngine
+engines/sovereign_war_room/swr/core.py:40:        self.crypto = CryptoEngine()
+engines/sovereign_war_room/swr/crypto.py:15:C3D-R1: All cryptography.* imports moved inside CryptoEngine.__init__().
+engines/sovereign_war_room/swr/crypto.py:17:Instantiation raises CryptoUnavailableError if the backend is broken.
+engines/sovereign_war_room/swr/crypto.py:28:class CryptoUnavailableError(RuntimeError):
+engines/sovereign_war_room/swr/crypto.py:31:    Callers may catch either CryptoUnavailableError or RuntimeError.
+engines/sovereign_war_room/swr/crypto.py:36:    for this Python environment. See recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt.
+engines/sovereign_war_room/swr/crypto.py:40:class CryptoEngine:
+engines/sovereign_war_room/swr/crypto.py:50:            CryptoUnavailableError: If the cryptography backend (Fernet, PBKDF2HMAC)
+engines/sovereign_war_room/swr/crypto.py:65:            raise CryptoUnavailableError(
+engines/sovereign_war_room/swr/crypto.py:68:                "See recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt."
+engines/sovereign_war_room/swr/proof.py:68:            crypto_engine: Optional CryptoEngine instance
+engines/sovereign_war_room/swr/proof.py:70:        from .crypto import CryptoEngine
+engines/sovereign_war_room/swr/proof.py:72:        self.crypto = crypto_engine or CryptoEngine()
+engines/sovereign_war_room/tests/test_core.py:50:        """Test SWR initializes correctly."""
+engines/sovereign_war_room/tests/test_proof.py:8:from swr.crypto import CryptoEngine
+engines/sovereign_war_room/tests/test_proof.py:265:        crypto = CryptoEngine()
+recovery/ARCHIVE_RECONCILIATION_REPORT.md:90:**engines/sovereign_war_room/**:
+recovery/ARCHIVE_RECONCILIATION_REPORT.md:138:- `engines/sovereign_war_room/README.md` / `IMPLEMENTATION_COMPLETE.md`
+recovery/ARCHIVE_RECONCILIATION_REPORT.md:184:- `engines/sovereign_war_room/demo.py`
+recovery/ARCHIVE_RECONCILIATION_REPORT.md:418:3. **`engines/sovereign_war_room/`** — Sovereign War Room CLI + package. Not in master.
+recovery/MASTER_PROMOTION_DELTA.txt:303:A	engines/sovereign_war_room/DEPLOYMENT_SUMMARY.md
+recovery/MASTER_PROMOTION_DELTA.txt:304:A	engines/sovereign_war_room/IMPLEMENTATION_COMPLETE.md
+recovery/MASTER_PROMOTION_DELTA.txt:305:A	engines/sovereign_war_room/README.md
+recovery/MASTER_PROMOTION_DELTA.txt:306:A	engines/sovereign_war_room/cli.py
+recovery/MASTER_PROMOTION_DELTA.txt:307:A	engines/sovereign_war_room/demo.py
+recovery/MASTER_PROMOTION_DELTA.txt:308:A	engines/sovereign_war_room/requirements.txt
+recovery/MASTER_PROMOTION_DELTA.txt:309:A	engines/sovereign_war_room/swr/__init__.py
+recovery/MASTER_PROMOTION_DELTA.txt:310:A	engines/sovereign_war_room/swr/api.py
+recovery/MASTER_PROMOTION_DELTA.txt:311:A	engines/sovereign_war_room/swr/bundle.py
+recovery/MASTER_PROMOTION_DELTA.txt:312:A	engines/sovereign_war_room/swr/core.py
+recovery/MASTER_PROMOTION_DELTA.txt:313:A	engines/sovereign_war_room/swr/crypto.py
+recovery/MASTER_PROMOTION_DELTA.txt:314:A	engines/sovereign_war_room/swr/governance.py
+recovery/MASTER_PROMOTION_DELTA.txt:315:A	engines/sovereign_war_room/swr/proof.py
+recovery/MASTER_PROMOTION_DELTA.txt:316:A	engines/sovereign_war_room/swr/scenario.py
+recovery/MASTER_PROMOTION_DELTA.txt:317:A	engines/sovereign_war_room/swr/scoreboard.py
+recovery/MASTER_PROMOTION_DELTA.txt:318:A	engines/sovereign_war_room/tests/test_core.py
+recovery/MASTER_PROMOTION_DELTA.txt:319:A	engines/sovereign_war_room/tests/test_governance.py
+recovery/MASTER_PROMOTION_DELTA.txt:320:A	engines/sovereign_war_room/tests/test_proof.py
+recovery/MASTER_PROMOTION_DELTA.txt:321:A	engines/sovereign_war_room/verify_quality.tarl
+recovery/MASTER_PROMOTION_DELTA.txt:322:A	engines/sovereign_war_room/web/app.py
+recovery/MASTER_PROMOTION_DELTA.txt:323:A	engines/sovereign_war_room/web/templates/dashboard.html
+recovery/MASTER_PROMOTION_STAT.txt:303: engines/sovereign_war_room/DEPLOYMENT_SUMMARY.md   |  385 ++
+recovery/MASTER_PROMOTION_STAT.txt:304: .../sovereign_war_room/IMPLEMENTATION_COMPLETE.md  |  361 +
+recovery/MASTER_PROMOTION_STAT.txt:305: engines/sovereign_war_room/README.md               |  723 ++
+recovery/MASTER_PROMOTION_STAT.txt:306: engines/sovereign_war_room/cli.py                  |  225 +
+recovery/MASTER_PROMOTION_STAT.txt:307: engines/sovereign_war_room/demo.py                 |  143 +
+recovery/MASTER_PROMOTION_STAT.txt:308: engines/sovereign_war_room/requirements.txt        |   11 +
+recovery/MASTER_PROMOTION_STAT.txt:309: engines/sovereign_war_room/swr/__init__.py         |   34 +
+recovery/MASTER_PROMOTION_STAT.txt:310: engines/sovereign_war_room/swr/api.py              |  324 +
+recovery/MASTER_PROMOTION_STAT.txt:311: engines/sovereign_war_room/swr/bundle.py           |  274 +
+recovery/MASTER_PROMOTION_STAT.txt:312: engines/sovereign_war_room/swr/core.py             |  357 +
+recovery/MASTER_PROMOTION_STAT.txt:313: engines/sovereign_war_room/swr/crypto.py           |  287 +
+recovery/MASTER_PROMOTION_STAT.txt:314: engines/sovereign_war_room/swr/governance.py       |  414 ++
+recovery/MASTER_PROMOTION_STAT.txt:315: engines/sovereign_war_room/swr/proof.py            |  395 ++
+recovery/MASTER_PROMOTION_STAT.txt:316: engines/sovereign_war_room/swr/scenario.py         |  477 ++
+recovery/MASTER_PROMOTION_STAT.txt:317: engines/sovereign_war_room/swr/scoreboard.py       |  461 ++
+recovery/MASTER_PROMOTION_STAT.txt:318: engines/sovereign_war_room/tests/test_core.py      |  244 +
+recovery/MASTER_PROMOTION_STAT.txt:319: .../sovereign_war_room/tests/test_governance.py    |  246 +
+recovery/MASTER_PROMOTION_STAT.txt:320: engines/sovereign_war_room/tests/test_proof.py     |  286 +
+recovery/MASTER_PROMOTION_STAT.txt:321: engines/sovereign_war_room/verify_quality.tarl     |   37 +
+recovery/MASTER_PROMOTION_STAT.txt:322: engines/sovereign_war_room/web/app.py              |   83 +
+recovery/PHASE_A_COMMITTED_DELTA.txt:88:A	engines/sovereign_war_room/DEPLOYMENT_SUMMARY.md
+recovery/PHASE_A_COMMITTED_DELTA.txt:89:A	engines/sovereign_war_room/IMPLEMENTATION_COMPLETE.md
+recovery/PHASE_A_COMMITTED_DELTA.txt:90:A	engines/sovereign_war_room/README.md
+recovery/PHASE_A_COMMITTED_DELTA.txt:91:A	engines/sovereign_war_room/cli.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:92:A	engines/sovereign_war_room/demo.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:93:A	engines/sovereign_war_room/requirements.txt
+recovery/PHASE_A_COMMITTED_DELTA.txt:94:A	engines/sovereign_war_room/swr/__init__.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:95:A	engines/sovereign_war_room/swr/api.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:96:A	engines/sovereign_war_room/swr/bundle.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:97:A	engines/sovereign_war_room/swr/core.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:98:A	engines/sovereign_war_room/swr/crypto.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:99:A	engines/sovereign_war_room/swr/governance.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:100:A	engines/sovereign_war_room/swr/proof.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:101:A	engines/sovereign_war_room/swr/scenario.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:102:A	engines/sovereign_war_room/swr/scoreboard.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:103:A	engines/sovereign_war_room/tests/test_core.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:104:A	engines/sovereign_war_room/tests/test_governance.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:105:A	engines/sovereign_war_room/tests/test_proof.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:106:A	engines/sovereign_war_room/verify_quality.tarl
+recovery/PHASE_A_COMMITTED_DELTA.txt:107:A	engines/sovereign_war_room/web/app.py
+recovery/PHASE_A_COMMITTED_DELTA.txt:108:A	engines/sovereign_war_room/web/templates/dashboard.html
+recovery/PHASE_A_COMMITTED_STAT.txt:88: engines/sovereign_war_room/DEPLOYMENT_SUMMARY.md   |  385 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:89: .../sovereign_war_room/IMPLEMENTATION_COMPLETE.md  |  361 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:90: engines/sovereign_war_room/README.md               |  723 +++
+recovery/PHASE_A_COMMITTED_STAT.txt:91: engines/sovereign_war_room/cli.py                  |  225 +
+recovery/PHASE_A_COMMITTED_STAT.txt:92: engines/sovereign_war_room/demo.py                 |  143 +
+recovery/PHASE_A_COMMITTED_STAT.txt:93: engines/sovereign_war_room/requirements.txt        |   11 +
+recovery/PHASE_A_COMMITTED_STAT.txt:94: engines/sovereign_war_room/swr/__init__.py         |   34 +
+recovery/PHASE_A_COMMITTED_STAT.txt:95: engines/sovereign_war_room/swr/api.py              |  324 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:96: engines/sovereign_war_room/swr/bundle.py           |  274 +
+recovery/PHASE_A_COMMITTED_STAT.txt:97: engines/sovereign_war_room/swr/core.py             |  357 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:98: engines/sovereign_war_room/swr/crypto.py           |  287 +
+recovery/PHASE_A_COMMITTED_STAT.txt:99: engines/sovereign_war_room/swr/governance.py       |  414 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:100: engines/sovereign_war_room/swr/proof.py            |  395 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:101: engines/sovereign_war_room/swr/scenario.py         |  477 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:102: engines/sovereign_war_room/swr/scoreboard.py       |  461 ++
+recovery/PHASE_A_COMMITTED_STAT.txt:103: engines/sovereign_war_room/tests/test_core.py      |  244 +
+recovery/PHASE_A_COMMITTED_STAT.txt:104: .../sovereign_war_room/tests/test_governance.py    |  246 +
+recovery/PHASE_A_COMMITTED_STAT.txt:105: engines/sovereign_war_room/tests/test_proof.py     |  286 +
+recovery/PHASE_A_COMMITTED_STAT.txt:106: engines/sovereign_war_room/verify_quality.tarl     |   37 +
+recovery/PHASE_A_COMMITTED_STAT.txt:107: engines/sovereign_war_room/web/app.py              |   83 +
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:1:PHASE C3D-R1 — SWR CRYPTO IMPORT REPAIR SUMMARY
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:5:Scope: engines/sovereign_war_room/swr/crypto.py,
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:10:  C3D-R1 makes SWR safely importable.
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:11:  It still does not make SWR active.
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:38:REPAIR APPLIED (engines/sovereign_war_room/swr/crypto.py)
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:43:2. Added CryptoUnavailableError(RuntimeError) sentinel class at module scope:
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:48:3. In CryptoEngine.__init__(), added lazy import block with controlled error:
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:58:         raise CryptoUnavailableError(
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:68:     CryptoUnavailableError, not a nested chain of panic tracebacks.
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:86:from swr.crypto import CryptoEngine  | pyo3 panic     | OK — no panic
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:88:CryptoEngine()                       | pyo3 panic     | CryptoUnavailableError
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:103:  - CryptoUnavailableError importable and is RuntimeError subclass
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:104:  - CryptoEngine() raises controlled error, not uncatchable panic
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:108:  - engine_registry has no SWR import statements
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:125:engine_registry.py sovereign_war_room entry:
+recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt:132:SWR remains safely registered but not active.
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:1:PHASE C3D-R1 — SWR RUNTIME ISOLATION AUDIT
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:8:Prove that C3D-R1 introduced zero new runtime wiring for SWR.
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:15:engines/sovereign_war_room/swr/crypto.py:
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:17:  - Added CryptoUnavailableError(RuntimeError) class
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:18:  - Added lazy crypto import block inside CryptoEngine.__init__()
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:41:  git grep -n "sovereign_war_room\|SovereignWarRoom\|from swr\|import swr" \
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:46:No file in src/ imports from SWR or instantiates SWR classes.
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:53:src/app/core/engine_registry.py sovereign_war_room entry:
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:67:  - from engines.sovereign_war_room.swr.crypto import CryptoEngine
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:68:  - from engines.sovereign_war_room.swr import SovereignWarRoom
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:69:  - importlib.util.find_spec('engines.sovereign_war_room.swr')
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:70:  - importlib.util.find_spec('engines.sovereign_war_room.swr.crypto')
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:73:  - CryptoEngine()        → raises CryptoUnavailableError (controlled)
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:74:  - SovereignWarRoom()    → raises CryptoUnavailableError (via CryptoEngine())
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:81:C3D-R1 does not activate SWR. It makes SWR safely importable as a
+recovery/PHASE_C3D_R1_SWR_RUNTIME_ISOLATION.txt:89:without activating SWR or introducing any new runtime dependency wiring.
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:5:Scope: engines/sovereign_war_room/
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:14:engines/sovereign_war_room/               ← namespace package (NO __init__.py)
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:23:│   ├── __init__.py                       ← DANGER: imports CryptoEngine at module load
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:43:engines/sovereign_war_room/swr/crypto.py (ROOT CAUSE — lines 23-26):
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:52:engines/sovereign_war_room/swr/__init__.py (lines 13-19):
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:55:  from .crypto import CryptoEngine          ← UNSAFE (direct crypto import)
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:61:  __init__.py pulls CryptoEngine directly AND via .core. Both paths reach crypto.py.
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:63:engines/sovereign_war_room/swr/core.py (line 15):
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:64:  from .crypto import CryptoEngine          ← UNSAFE
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:66:engines/sovereign_war_room/swr/api.py (line 16):
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:69:engines/sovereign_war_room/cli.py (line 14):
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:71:  Note: uses bare "swr" import, not "engines.sovereign_war_room.swr".
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:108:engines/sovereign_war_room/ has NO __init__.py.
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:111:importlib.util.find_spec('engines.sovereign_war_room'):
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:112:  → ModuleSpec(name='engines.sovereign_war_room', loader=None,
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:118:importlib.util.find_spec('engines.sovereign_war_room.swr'):
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:124:'engines.sovereign_war_room' (safe), not 'engines.sovereign_war_room.swr' (unsafe).
+recovery/PHASE_C3D_SWR_DEPENDENCY_AUDIT.txt:133:reached without going through __init__.py (which imports CryptoEngine directly).
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:11:  python -c "import importlib.util; importlib.util.find_spec('engines.sovereign_war_room.swr')"
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:24:    File "T:\Project-AI-main\engines\sovereign_war_room\swr\__init__.py", line 14
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:26:    File "T:\Project-AI-main\engines\sovereign_war_room\swr\core.py", line 15
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:27:      from .crypto import CryptoEngine
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:28:    File "T:\Project-AI-main\engines\sovereign_war_room\swr\crypto.py", line 23
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:63:  importlib.util.find_spec('engines.sovereign_war_room.swr') EXECUTES
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:66:  This is different from find_spec('engines.sovereign_war_room') which is
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:75:find_spec('engines.sovereign_war_room')             | YES   | Namespace pkg, no __init__.py, loader=None
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:76:find_spec('engines.sovereign_war_room.swr')         | YES*  | Python 3.12: find_spec of direct subpackage
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:79:find_spec('engines.sovereign_war_room.swr.crypto')  | NO    | Must import swr first to resolve swr.crypto;
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:81:find_spec('engines.sovereign_war_room.cli')         | YES   | cli.py is a .py module (no subpackage init)
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:82:import engines.sovereign_war_room                   | YES   | Namespace pkg, no code run
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:83:import engines.sovereign_war_room.swr               | NO    | Executes swr/__init__.py → pyo3 panic
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:84:from engines.sovereign_war_room.swr import ...      | NO    | pyo3 panic
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:85:import engines.sovereign_war_room.cli               | NO    | from swr import at top → pyo3 panic
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:86:from engines.sovereign_war_room.cli import cli      | NO    | pyo3 panic
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:88:*Note: find_spec('engines.sovereign_war_room.swr') returns the spec safely in Python 3.12
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:98:  spec = importlib.util.find_spec("engines.sovereign_war_room")
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:104:"engines.sovereign_war_room" — the namespace package — not "engines.sovereign_war_room.swr".
+recovery/PHASE_C3D_SWR_IMPORT_BLOCKERS.txt:137:  Scope:   All SWR imports that reach swr/crypto.py
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:8:  C3D proves SWR is isolated safely.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:9:  It does not repair or activate SWR.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:11:Do not activate SWR.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:12:Do not wire SWR into runtime execution.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:36:     class CryptoEngine:
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:49:   Define a CryptoUnavailableError in swr/crypto.py:
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:51:     class CryptoUnavailableError(RuntimeError):
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:54:   In CryptoEngine.__init__(), catch ImportError and re-raise as
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:55:   CryptoUnavailableError with a clear message. This gives callers a
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:65:          "from engines.sovereign_war_room.swr.governance import GovernanceEngine"],
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:73:   engine_registry.py sovereign_war_room entry must remain:
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:92:7. Do not enable SWR until crypto backend imports cleanly in target environment.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:107:8. Decouple swr/__init__.py from CryptoEngine.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:109:   Remove "from .crypto import CryptoEngine" from swr/__init__.py.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:110:   CryptoEngine should be an opt-in import:
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:111:     from swr.crypto import CryptoEngine  # explicit, not in __all__
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:118:   swr/crypto/  ← CryptoEngine only (explicit import required)
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:134:  python -m py_compile engines/sovereign_war_room/swr/crypto.py
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:135:  python -c "from engines.sovereign_war_room.swr.crypto import CryptoEngine"
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:137:  python -c "from engines.sovereign_war_room.swr import SovereignWarRoom"
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:142:  Only after all above pass: consider enabling SWR in registry.
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:148:Commit 1: "repair(c3d-r1): Add CryptoUnavailableError and lazy crypto imports"
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:149:  - swr/crypto.py: lazy imports inside __init__, CryptoUnavailableError
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:150:  - swr/__init__.py: remove direct CryptoEngine import
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:155:Commit 3: "test(c3d-r1): Verify SWR imports cleanly post-repair"
+recovery/PHASE_C3D_SWR_REPAIR_PLAN.txt:159:Commit 4 (separate, deliberate decision): "activate(swr): Enable SWR in registry"
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:9:1. engine_registry.py does NOT import SWR code.
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:10:2. No src/ runtime file imports from engines.sovereign_war_room or swr.
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:19:  grep -n "sovereign_war_room\|SovereignWarRoom\|from swr\|import swr" \
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:28:engine_registry.py contains ZERO import statements referencing sovereign_war_room,
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:31:The registry module_path for sovereign_war_room is "engines.sovereign_war_room".
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:33:  importlib.util.find_spec("engines.sovereign_war_room")
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:38:2. SRC/ RUNTIME — NO SWR WIRING
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:42:  git grep -n "sovereign_war_room\|SovereignWarRoom\|from swr\|import swr" \
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:47:No file in src/ imports from SWR. SWR is completely absent from the active
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:57:  spec = importlib.util.find_spec('engines.sovereign_war_room')
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:64:  spec: ModuleSpec(name='engines.sovereign_war_room', loader=None,
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:72:  python -c "import importlib.util; importlib.util.find_spec('engines.sovereign_war_room.swr')"
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:73:  → pyo3_runtime.PanicException (see PHASE_C3D_SWR_IMPORT_BLOCKERS.txt)
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:82:sovereign_war_room entry:
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:88:No caller sets the sovereign_war_room entry enabled=True.
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:90:SWR does not start automatically. ✓
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:98:engine_registry.py imports SWR code?               | NO ✓
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:99:src/ files import SWR code?                         | NO ✓
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:101:sovereign_war_room enabled=False?                   | YES ✓
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:103:SWR imported at application startup?                | NO ✓
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:104:find_spec('engines.sovereign_war_room') safe?       | YES ✓
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:105:find_spec('engines.sovereign_war_room.swr') safe?   | NO ✗ (documented blocker)
+recovery/PHASE_C3D_SWR_RUNTIME_ISOLATION.txt:118:C3D proves SWR is isolated safely. It does not repair or activate SWR.
+recovery/phase_a_harvest_staged_files.txt:88:A	engines/sovereign_war_room/DEPLOYMENT_SUMMARY.md
+recovery/phase_a_harvest_staged_files.txt:89:A	engines/sovereign_war_room/IMPLEMENTATION_COMPLETE.md
+recovery/phase_a_harvest_staged_files.txt:90:A	engines/sovereign_war_room/README.md
+recovery/phase_a_harvest_staged_files.txt:91:A	engines/sovereign_war_room/cli.py
+recovery/phase_a_harvest_staged_files.txt:92:A	engines/sovereign_war_room/demo.py
+recovery/phase_a_harvest_staged_files.txt:93:A	engines/sovereign_war_room/requirements.txt
+recovery/phase_a_harvest_staged_files.txt:94:A	engines/sovereign_war_room/swr/__init__.py
+recovery/phase_a_harvest_staged_files.txt:95:A	engines/sovereign_war_room/swr/api.py
+recovery/phase_a_harvest_staged_files.txt:96:A	engines/sovereign_war_room/swr/bundle.py
+recovery/phase_a_harvest_staged_files.txt:97:A	engines/sovereign_war_room/swr/core.py
+recovery/phase_a_harvest_staged_files.txt:98:A	engines/sovereign_war_room/swr/crypto.py
+recovery/phase_a_harvest_staged_files.txt:99:A	engines/sovereign_war_room/swr/governance.py
+recovery/phase_a_harvest_staged_files.txt:100:A	engines/sovereign_war_room/swr/proof.py
+recovery/phase_a_harvest_staged_files.txt:101:A	engines/sovereign_war_room/swr/scenario.py
+recovery/phase_a_harvest_staged_files.txt:102:A	engines/sovereign_war_room/swr/scoreboard.py
+recovery/phase_a_harvest_staged_files.txt:103:A	engines/sovereign_war_room/tests/test_core.py
+recovery/phase_a_harvest_staged_files.txt:104:A	engines/sovereign_war_room/tests/test_governance.py
+recovery/phase_a_harvest_staged_files.txt:105:A	engines/sovereign_war_room/tests/test_proof.py
+recovery/phase_a_harvest_staged_files.txt:106:A	engines/sovereign_war_room/verify_quality.tarl
+recovery/phase_a_harvest_staged_files.txt:107:A	engines/sovereign_war_room/web/app.py
+recovery/phase_a_harvest_staged_files.txt:108:A	engines/sovereign_war_room/web/templates/dashboard.html
+scripts/verify/verify_swr_isolation.py:2:SWR Isolation Verifier — Phase C3D
+scripts/verify/verify_swr_isolation.py:23:    """Safe: probe engines.sovereign_war_room namespace package only.
+scripts/verify/verify_swr_isolation.py:25:    The top-level sovereign_war_room directory has no __init__.py.
+scripts/verify/verify_swr_isolation.py:29:        spec = importlib.util.find_spec("engines.sovereign_war_room")
+scripts/verify/verify_swr_isolation.py:40:    """Confirm engines.sovereign_war_room.swr triggers panic in subprocess.
+scripts/verify/verify_swr_isolation.py:49:         "importlib.util.find_spec('engines.sovereign_war_room.swr')"],
+scripts/verify/verify_swr_isolation.py:76:    """Verify engine_registry imports cleanly without loading SWR."""
+scripts/verify/verify_swr_isolation.py:81:        entry = get_engine("sovereign_war_room")
+scripts/verify/verify_swr_isolation.py:96:        "Namespace package locatable (engines.sovereign_war_room)",
+scripts/verify/verify_swr_isolation.py:104:        "engine_registry imports cleanly, SWR entry disabled",
+scripts/verify/verify_swr_isolation.py:120:            "find_spec('engines.sovereign_war_room.swr') exits non-zero",
+scripts/verify/verify_swr_isolation.py:133:        print("SWR isolation confirmed. Engine is safely registered but not active.")
+src/app/core/engine_registry.py:134:    "sovereign_war_room": EngineEntry(
+src/app/core/engine_registry.py:135:        name="sovereign_war_room",
+src/app/core/engine_registry.py:136:        path="engines/sovereign_war_room/",
+src/app/core/engine_registry.py:137:        module_path="engines.sovereign_war_room",
+src/app/core/engine_registry.py:144:            "CryptoEngine.__init__(). CryptoUnavailableError(RuntimeError) added as "
+src/app/core/engine_registry.py:147:            "Full repair log: recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt.",
+src/app/core/engine_registry.py:150:            "CryptoEngine() constructs without error (verified 2026-05-19). "
+src/app/core/engine_registry.py:154:            "No __init__.py at top level — engines.sovereign_war_room is a namespace "
+src/app/core/engine_registry.py:156:            "CLI (engines/sovereign_war_room/cli.py) has top-level 'from swr import "
+tests/test_phase_c3a_engine_registry.py:40:EXPECTED_ENGINES = {"atlas", "hydra_50", "sovereign_war_room"}
+tests/test_phase_c3a_engine_registry.py:101:def test_sovereign_war_room_not_imported_by_registry():
+tests/test_phase_c3a_engine_registry.py:103:    swr_modules = [k for k in sys.modules if k.startswith("engines.sovereign_war_room.")]
+tests/test_phase_c3a_engine_registry.py:105:        f"SWR submodules were imported during registry load: {swr_modules}"
+tests/test_phase_c3a_engine_registry.py:173:def test_sovereign_war_room_has_documented_blockers():
+tests/test_phase_c3a_engine_registry.py:175:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3a_engine_registry.py:189:    for name in ("atlas", "hydra_50", "sovereign_war_room"):
+tests/test_phase_c3d_r1_swr_crypto_repair.py:4:Verifies the structural fix applied to engines/sovereign_war_room/swr/crypto.py:
+tests/test_phase_c3d_r1_swr_crypto_repair.py:5:  - All 4 cryptography.* module-level imports moved inside CryptoEngine.__init__().
+tests/test_phase_c3d_r1_swr_crypto_repair.py:6:  - CryptoUnavailableError added as a controlled RuntimeError subclass.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:10:1. find_spec('engines.sovereign_war_room.swr') remains safe.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:12:3. CryptoUnavailableError is defined and is a RuntimeError subclass.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:13:4. Constructing CryptoEngine fails safely if crypto backend is missing/broken.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:15:6. No SWR engine starts automatically.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:16:7. engine_registry still imports with no SWR side effects.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:26:_SWR_ENV = {**os.environ, "PYTHONPATH": _REPO_ROOT}
+tests/test_phase_c3d_r1_swr_crypto_repair.py:35:    """find_spec('engines.sovereign_war_room') still returns namespace spec.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:40:    spec = importlib.util.find_spec("engines.sovereign_war_room")
+tests/test_phase_c3d_r1_swr_crypto_repair.py:47:    """find_spec('engines.sovereign_war_room.swr') does not execute __init__.py.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:55:         "s = importlib.util.find_spec('engines.sovereign_war_room.swr'); "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:57:        capture_output=True, env=_SWR_ENV, timeout=15,
+tests/test_phase_c3d_r1_swr_crypto_repair.py:72:         "from engines.sovereign_war_room.swr.crypto import CryptoEngine, CryptoUnavailableError; "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:74:        capture_output=True, env=_SWR_ENV, timeout=15,
+tests/test_phase_c3d_r1_swr_crypto_repair.py:87:         "from engines.sovereign_war_room.swr import SovereignWarRoom, CryptoEngine; "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:89:        capture_output=True, env=_SWR_ENV, timeout=15,
+tests/test_phase_c3d_r1_swr_crypto_repair.py:99:# 3. CryptoUnavailableError is correctly defined
+tests/test_phase_c3d_r1_swr_crypto_repair.py:104:    """CryptoUnavailableError must be importable from swr.crypto."""
+tests/test_phase_c3d_r1_swr_crypto_repair.py:107:         "from engines.sovereign_war_room.swr.crypto import CryptoUnavailableError; "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:109:        capture_output=True, env=_SWR_ENV, timeout=15,
+tests/test_phase_c3d_r1_swr_crypto_repair.py:116:    """CryptoUnavailableError must be a RuntimeError subclass."""
+tests/test_phase_c3d_r1_swr_crypto_repair.py:119:         "from engines.sovereign_war_room.swr.crypto import CryptoUnavailableError; "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:120:         "assert issubclass(CryptoUnavailableError, RuntimeError), "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:121:         "'CryptoUnavailableError must subclass RuntimeError'; "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:123:        capture_output=True, env=_SWR_ENV, timeout=15,
+tests/test_phase_c3d_r1_swr_crypto_repair.py:132:# 4. Constructing CryptoEngine fails safely (controlled error, not panic)
+tests/test_phase_c3d_r1_swr_crypto_repair.py:137:    """CryptoEngine() raises CryptoUnavailableError if backend is broken.
+tests/test_phase_c3d_r1_swr_crypto_repair.py:140:    and re-raised as CryptoUnavailableError. The subprocess exits 0 because
+tests/test_phase_c3d_r1_swr_crypto_repair.py:145:         "from engines.sovereign_war_room.swr.crypto import CryptoEngine, CryptoUnavailableError\n"
+tests/test_phase_c3d_r1_swr_crypto_repair.py:147:         "    CryptoEngine()\n"
+tests/test_phase_c3d_r1_swr_crypto_repair.py:149:         "except CryptoUnavailableError as e:\n"
+tests/test_phase_c3d_r1_swr_crypto_repair.py:153:        capture_output=True, env=_SWR_ENV, timeout=15,
+tests/test_phase_c3d_r1_swr_crypto_repair.py:156:        "Subprocess must exit 0 — CryptoUnavailableError is a controlled "
+tests/test_phase_c3d_r1_swr_crypto_repair.py:164:    # Either crypto is available (clean env) or CryptoUnavailableError raised (blocked env)
+tests/test_phase_c3d_r1_swr_crypto_repair.py:174:         "from engines.sovereign_war_room.swr.crypto import CryptoEngine, CryptoUnavailableError\n"
+tests/test_phase_c3d_r1_swr_crypto_repair.py:176:         "    CryptoEngine()\n"
+tests/test_phase_c3d_r1_swr_crypto_repair.py:177:         "except CryptoUnavailableError:\n"
+tests/test_phase_c3d_r1_swr_crypto_repair.py:182:        capture_output=True, env=_SWR_ENV, timeout=15,
+tests/test_phase_c3d_r1_swr_crypto_repair.py:198:    CryptoEngine.__init__(). Module-level imports have no leading indentation;
+tests/test_phase_c3d_r1_swr_crypto_repair.py:201:    spec = importlib.util.find_spec("engines.sovereign_war_room.swr.crypto")
+tests/test_phase_c3d_r1_swr_crypto_repair.py:217:    spec = importlib.util.find_spec("engines.sovereign_war_room.swr.crypto")
+tests/test_phase_c3d_r1_swr_crypto_repair.py:245:    """Registry import must not instantiate SWR."""
+tests/test_phase_c3d_r1_swr_crypto_repair.py:252:    assert "sovereign_war_room" not in list_enabled_engines()
+tests/test_phase_c3d_r1_swr_crypto_repair.py:253:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_r1_swr_crypto_repair.py:259:# 7. engine_registry has no SWR side effects
+tests/test_phase_c3d_r1_swr_crypto_repair.py:264:    """engine_registry.py must not contain SWR executable import statements."""
+tests/test_phase_c3d_r1_swr_crypto_repair.py:271:                                    "from engines.sovereign_war_room.swr",
+tests/test_phase_c3d_r1_swr_crypto_repair.py:272:                                    "import engines.sovereign_war_room.swr"))
+tests/test_phase_c3d_r1_swr_crypto_repair.py:275:        f"engine_registry.py must not have SWR/crypto import statements: {import_lines}"
+tests/test_phase_c3d_r1_swr_crypto_repair.py:280:    """Importing engine_registry must not trigger any SWR or crypto code."""
+tests/test_phase_c3d_r1_swr_crypto_repair.py:283:    assert "sovereign_war_room" in ENGINES
+tests/test_phase_c3d_swr_isolation.py:5:1. engine_registry imports cleanly (no SWR code executed).
+tests/test_phase_c3d_swr_isolation.py:6:2. sovereign_war_room registry entry exists with correct metadata.
+tests/test_phase_c3d_swr_isolation.py:8:4. Registry source does not contain SWR import statements.
+tests/test_phase_c3d_swr_isolation.py:27:    """engine_registry.py must import without executing SWR code."""
+tests/test_phase_c3d_swr_isolation.py:38:def test_sovereign_war_room_entry_exists():
+tests/test_phase_c3d_swr_isolation.py:40:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:42:    assert entry.name == "sovereign_war_room"
+tests/test_phase_c3d_swr_isolation.py:45:def test_sovereign_war_room_enabled_false():
+tests/test_phase_c3d_swr_isolation.py:47:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:51:def test_sovereign_war_room_status_recovered_unactivated():
+tests/test_phase_c3d_swr_isolation.py:53:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:57:def test_sovereign_war_room_import_mode_lazy():
+tests/test_phase_c3d_swr_isolation.py:59:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:63:def test_sovereign_war_room_activation_requires_explicit_config():
+tests/test_phase_c3d_swr_isolation.py:65:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:70:# 5. Registry source does not import SWR
+tests/test_phase_c3d_swr_isolation.py:74:def test_registry_source_does_not_import_sovereign_war_room():
+tests/test_phase_c3d_swr_isolation.py:75:    """engine_registry.py source must not contain SWR import statements.
+tests/test_phase_c3d_swr_isolation.py:85:    assert "import sovereign_war_room" not in source
+tests/test_phase_c3d_swr_isolation.py:86:    assert "from sovereign_war_room import" not in source
+tests/test_phase_c3d_swr_isolation.py:87:    assert "from engines.sovereign_war_room import" not in source
+tests/test_phase_c3d_swr_isolation.py:88:    assert "import engines.sovereign_war_room.swr" not in source
+tests/test_phase_c3d_swr_isolation.py:89:    assert "from engines.sovereign_war_room.swr import" not in source
+tests/test_phase_c3d_swr_isolation.py:118:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:125:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:132:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:137:def test_sovereign_war_room_has_multiple_blockers():
+tests/test_phase_c3d_swr_isolation.py:139:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:149:    """find_spec('engines.sovereign_war_room') must return a namespace package spec.
+tests/test_phase_c3d_swr_isolation.py:151:    The top-level sovereign_war_room directory has NO __init__.py.
+tests/test_phase_c3d_swr_isolation.py:160:    spec = importlib.util.find_spec("engines.sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:161:    assert spec is not None, "engines.sovereign_war_room must be locatable"
+tests/test_phase_c3d_swr_isolation.py:174:    entry = get_engine("sovereign_war_room")
+tests/test_phase_c3d_swr_isolation.py:176:        "engines.sovereign_war_room namespace package must be discoverable"
+tests/test_phase_c3d_swr_isolation.py:181:# 8. C3D-R1: swr import is now safe — instantiation raises CryptoUnavailableError
+tests/test_phase_c3d_swr_isolation.py:186:    """C3D-R1: importing engines.sovereign_war_room.swr no longer panics.
+tests/test_phase_c3d_swr_isolation.py:190:    are inside CryptoEngine.__init__(), so the module import is safe.
+tests/test_phase_c3d_swr_isolation.py:192:    CryptoUnavailableError (a controlled RuntimeError subclass).
+tests/test_phase_c3d_swr_isolation.py:200:         "from engines.sovereign_war_room.swr import SovereignWarRoom; "
+tests/test_phase_c3d_swr_isolation.py:207:        "from engines.sovereign_war_room.swr import SovereignWarRoom must succeed "
+tests/test_phase_c3d_swr_isolation.py:208:        "after C3D-R1 repair. Panic is now deferred to CryptoEngine() instantiation "
+tests/test_phase_c3d_swr_isolation.py:209:        "and re-raised as CryptoUnavailableError.\n"
+tests/test_phase_c3d_swr_isolation.py:216:    """C3D-R1: constructing CryptoEngine raises CryptoUnavailableError, not panic.
+tests/test_phase_c3d_swr_isolation.py:219:    re-raised as CryptoUnavailableError(RuntimeError). The subprocess exits 0
+tests/test_phase_c3d_swr_isolation.py:228:         "from engines.sovereign_war_room.swr.crypto import CryptoEngine, CryptoUnavailableError\n"
+tests/test_phase_c3d_swr_isolation.py:230:         "    CryptoEngine()\n"
+tests/test_phase_c3d_swr_isolation.py:232:         "except CryptoUnavailableError:\n"
+tests/test_phase_c3d_swr_isolation.py:239:        "Subprocess must exit 0 — CryptoUnavailableError is a controlled exception, "
+tests/test_phase_c3d_swr_isolation.py:254:    """Importing engine_registry must not instantiate SWR or start it."""
+tests/test_phase_c3d_swr_isolation.py:258:    assert "sovereign_war_room" not in enabled, (
+tests/test_phase_c3d_swr_isolation.py:259:        "sovereign_war_room must not be in list_enabled_engines()"
