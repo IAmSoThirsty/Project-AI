@@ -1,0 +1,132 @@
+PHASE C3D-R1 — SWR CRYPTO IMPORT REPAIR SUMMARY
+================================================
+Date: 2026-05-19
+Branch: integrate/phase-c3d-r1-swr-crypto-import-repair-20260519
+Scope: engines/sovereign_war_room/swr/crypto.py,
+       tests/test_phase_c3d_r1_swr_crypto_repair.py,
+       tests/test_phase_c3d_swr_isolation.py (updated)
+
+Core rule:
+  C3D-R1 makes SWR safely importable.
+  It still does not make SWR active.
+
+=============================================================================
+GOAL
+=============================================================================
+
+Prevent swr/crypto.py module-level imports from triggering
+cryptography/_cffi_backend/pyo3 failure during package discovery or import.
+The fix is structural — not an environment patch (pip install cffi).
+The engine remains enabled=False, status=recovered_unactivated.
+
+=============================================================================
+ROOT CAUSE (from C3D)
+=============================================================================
+
+swr/crypto.py lines 23-26 contained four module-level imports:
+  from cryptography.fernet import Fernet
+  from cryptography.hazmat.backends import default_backend
+  from cryptography.hazmat.primitives import hashes
+  from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+These execute at module import time. Importing swr/ (via swr/__init__.py →
+swr/core.py → swr/crypto.py) triggered the imports, which caused
+pyo3_runtime.PanicException — a BaseException subclass that bypasses
+try/except Exception and makes it appear to be an uncatchable process crash.
+
+=============================================================================
+REPAIR APPLIED (engines/sovereign_war_room/swr/crypto.py)
+=============================================================================
+
+1. Removed all four module-level cryptography.* imports.
+
+2. Added CryptoUnavailableError(RuntimeError) sentinel class at module scope:
+   - Inherits from RuntimeError (catchable by callers using except RuntimeError)
+   - Clearly documents the cause and resolution
+   - Importable without any crypto dependency
+
+3. In CryptoEngine.__init__(), added lazy import block with controlled error:
+
+     try:
+         from cryptography.fernet import Fernet
+         from cryptography.hazmat.backends import default_backend
+         from cryptography.hazmat.primitives import hashes
+         from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+     except (SystemExit, KeyboardInterrupt):
+         raise
+     except BaseException as e:
+         raise CryptoUnavailableError(
+             f"cryptography backend unavailable ({type(e).__name__}: {e}). ..."
+         ) from None
+
+   Key design decisions:
+   - except BaseException: pyo3_runtime.PanicException inherits from BaseException,
+     NOT from Exception. except Exception would miss it.
+   - Re-raise SystemExit and KeyboardInterrupt before the BaseException catch
+     to avoid swallowing legitimate process signals.
+   - from None suppresses exception chaining — callers see a clean
+     CryptoUnavailableError, not a nested chain of panic tracebacks.
+
+4. Stored KDF symbols on instance for derive_key():
+   - self._PBKDF2HMAC = PBKDF2HMAC
+   - self._hashes = hashes
+   - self._default_backend = default_backend
+   derive_key() updated to use self._PBKDF2HMAC, self._hashes, self._default_backend.
+   This avoids re-importing on each derive_key() call.
+
+5. All other methods unchanged — they use self.cipher, self.master_key, hashlib,
+   hmac (stdlib). No other method needed cryptography symbols at call time.
+
+=============================================================================
+BEHAVIOR BEFORE AND AFTER
+=============================================================================
+
+Operation                            | Before C3D-R1  | After C3D-R1
+-------------------------------------|----------------|------------------
+from swr.crypto import CryptoEngine  | pyo3 panic     | OK — no panic
+from swr import SovereignWarRoom     | pyo3 panic     | OK — no panic
+CryptoEngine()                       | pyo3 panic     | CryptoUnavailableError
+except Exception can catch failure   | NO             | YES (RuntimeError)
+Process exits cleanly after error    | NO (panic)     | YES (returncode 0)
+Module-level cryptography imports    | 4 (line 23-26) | 0
+engine_registry enabled              | False          | False (unchanged)
+engine_registry status               | recovered_unact| recovered_unact (unchanged)
+
+=============================================================================
+TEST COVERAGE
+=============================================================================
+
+New file: tests/test_phase_c3d_r1_swr_crypto_repair.py (14 tests)
+  - find_spec namespace and subpackage safety
+  - swr.crypto module import does not panic
+  - swr package import does not panic
+  - CryptoUnavailableError importable and is RuntimeError subclass
+  - CryptoEngine() raises controlled error, not uncatchable panic
+  - crypto.py has no module-level cryptography import statements
+  - crypto.py module-level imports are stdlib only
+  - No engine starts automatically
+  - engine_registry has no SWR import statements
+  - C3D isolation test suite still passes (regression check)
+
+Updated: tests/test_phase_c3d_swr_isolation.py
+  - test_swr_import_triggers_panic_in_subprocess REPLACED with:
+    test_swr_import_is_safe_post_c3d_r1 (import succeeds, returncode 0)
+    test_swr_instantiation_raises_crypto_unavailable (controlled error)
+  - test_namespace_package_probe_is_safe: updated to check spec.origin is None
+    (stable invariant) instead of spec.loader is None (changes with sys.modules cache)
+
+Total C3D/R1 tests: 33 passed, 0 failed.
+Collection baseline: 7019 collected, 131 errors (unchanged from pre-R1).
+
+=============================================================================
+ACTIVATION STATUS — UNCHANGED
+=============================================================================
+
+engine_registry.py sovereign_war_room entry:
+  enabled=False
+  status="recovered_unactivated"
+  import_mode="lazy"
+  activation_requires_explicit_config=True
+
+No src/ runtime imports were added. No wiring changed.
+SWR remains safely registered but not active.

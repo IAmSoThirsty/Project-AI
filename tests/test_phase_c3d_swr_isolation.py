@@ -146,19 +146,25 @@ def test_sovereign_war_room_has_multiple_blockers():
 
 
 def test_namespace_package_probe_is_safe():
-    """find_spec('engines.sovereign_war_room') must not execute any SWR code.
+    """find_spec('engines.sovereign_war_room') must return a namespace package spec.
 
     The top-level sovereign_war_room directory has NO __init__.py.
-    Python treats it as a namespace package: loader=None, origin=None.
-    No code is executed during the probe.
+    Python treats it as a namespace package. The stable invariants are:
+    - spec.origin is None (no __init__.py file path)
+    - spec.submodule_search_locations is not None (search locations exist)
+
+    Note: spec.loader may be None or NamespaceLoader depending on whether the
+    package has been previously accessed in sys.modules. Both are valid namespace
+    package states; origin=None is the reliable check.
     """
     spec = importlib.util.find_spec("engines.sovereign_war_room")
     assert spec is not None, "engines.sovereign_war_room must be locatable"
-    assert spec.loader is None, (
-        "namespace package must have loader=None (no __init__.py executed)"
-    )
     assert spec.origin is None, (
-        "namespace package must have origin=None (no __init__.py file)"
+        "namespace package must have origin=None (no __init__.py file path). "
+        f"Got origin={spec.origin!r}"
+    )
+    assert spec.submodule_search_locations is not None, (
+        "namespace package must have submodule_search_locations"
     )
 
 
@@ -172,21 +178,18 @@ def test_module_locatable_via_registry():
 
 
 # ---------------------------------------------------------------------------
-# 8. Subpackage probe triggers pyo3 panic — documented, isolated in subprocess
+# 8. C3D-R1: swr import is now safe — instantiation raises CryptoUnavailableError
 # ---------------------------------------------------------------------------
 
 
-def test_swr_import_triggers_panic_in_subprocess():
-    """Importing engines.sovereign_war_room.swr causes pyo3 panic.
+def test_swr_import_is_safe_post_c3d_r1():
+    """C3D-R1: importing engines.sovereign_war_room.swr no longer panics.
 
-    Python 3.12: find_spec of a direct subpackage of a namespace package does
-    NOT execute __init__.py. The panic only fires on an actual import.
-    This test confirms the import blocker is real by running in a subprocess
-    so the pyo3 panic cannot crash the test runner.
-    A non-zero exit code confirms the panic is active.
-
-    If this assertion fails (returncode == 0), cffi is installed in the
-    environment and C3D-R1 repair may proceed.
+    Before C3D-R1: importing swr triggered pyo3 panic via swr/crypto.py
+    module-level cryptography imports. After C3D-R1: all cryptography imports
+    are inside CryptoEngine.__init__(), so the module import is safe.
+    The panic is now deferred to instantiation and re-raised as
+    CryptoUnavailableError (a controlled RuntimeError subclass).
     """
     repo_root = str(__import__("pathlib").Path(__file__).parent.parent)
     import os
@@ -194,23 +197,52 @@ def test_swr_import_triggers_panic_in_subprocess():
     env["PYTHONPATH"] = repo_root
     result = subprocess.run(
         [sys.executable, "-c",
-         "from engines.sovereign_war_room.swr import SovereignWarRoom"],
+         "from engines.sovereign_war_room.swr import SovereignWarRoom; "
+         "print('import ok')"],
         capture_output=True,
         env=env,
         timeout=15,
     )
-    assert result.returncode != 0, (
-        "from engines.sovereign_war_room.swr import SovereignWarRoom must fail — "
-        "swr/__init__.py cascades to swr/crypto.py which triggers pyo3 panic. "
-        "If this assertion fails, cffi is now installed and C3D-R1 may proceed."
+    assert result.returncode == 0, (
+        "from engines.sovereign_war_room.swr import SovereignWarRoom must succeed "
+        "after C3D-R1 repair. Panic is now deferred to CryptoEngine() instantiation "
+        "and re-raised as CryptoUnavailableError.\n"
+        f"stderr: {result.stderr.decode('utf-8', errors='replace')[:300]}"
     )
-    stderr = result.stderr.decode("utf-8", errors="replace")
-    assert (
-        "pyo3" in stderr.lower()
-        or "cffi" in stderr.lower()
-        or "panic" in stderr.lower()
-        or "error" in stderr.lower()
-    ), f"Expected pyo3/cffi/panic/error in stderr, got: {stderr[:500]}"
+    assert b"import ok" in result.stdout
+
+
+def test_swr_instantiation_raises_crypto_unavailable():
+    """C3D-R1: constructing CryptoEngine raises CryptoUnavailableError, not panic.
+
+    The pyo3 panic (BaseException subclass) is caught inside __init__() and
+    re-raised as CryptoUnavailableError(RuntimeError). The subprocess exits 0
+    because the error is caught and handled gracefully.
+    """
+    repo_root = str(__import__("pathlib").Path(__file__).parent.parent)
+    import os
+    env = dict(os.environ)
+    env["PYTHONPATH"] = repo_root
+    result = subprocess.run(
+        [sys.executable, "-c",
+         "from engines.sovereign_war_room.swr.crypto import CryptoEngine, CryptoUnavailableError\n"
+         "try:\n"
+         "    CryptoEngine()\n"
+         "    print('crypto_ok')\n"
+         "except CryptoUnavailableError:\n"
+         "    print('crypto_unavailable_error')\n"],
+        capture_output=True,
+        env=env,
+        timeout=15,
+    )
+    assert result.returncode == 0, (
+        "Subprocess must exit 0 — CryptoUnavailableError is a controlled exception, "
+        f"not a panic.\nstderr: {result.stderr.decode('utf-8', errors='replace')[:300]}"
+    )
+    stdout = result.stdout.decode("utf-8", errors="replace").strip()
+    assert stdout in ("crypto_ok", "crypto_unavailable_error"), (
+        f"Expected 'crypto_ok' or 'crypto_unavailable_error', got: {stdout!r}"
+    )
 
 
 # ---------------------------------------------------------------------------
