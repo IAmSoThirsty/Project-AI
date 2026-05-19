@@ -27,12 +27,26 @@ from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
-try:
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import serialization
-except ImportError:
-    serialization = None
-    default_backend = None
+import importlib.util as _importlib_util
+
+# Pre-flight: cryptography's Rust backend requires _cffi_backend.
+# If it's absent, importing cryptography panics at the pyo3 level and cannot
+# be caught by a normal try/except. Check the spec first to stay safe.
+_CRYPTO_AVAILABLE = (
+    _importlib_util.find_spec("_cffi_backend") is not None
+    and _importlib_util.find_spec("cryptography") is not None
+)
+if _CRYPTO_AVAILABLE:
+    try:
+        from cryptography.hazmat.backends import default_backend
+        from cryptography.hazmat.primitives import serialization
+    except Exception:
+        serialization = None  # type: ignore[assignment]
+        default_backend = None  # type: ignore[assignment]
+        _CRYPTO_AVAILABLE = False
+else:
+    serialization = None  # type: ignore[assignment]
+    default_backend = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
