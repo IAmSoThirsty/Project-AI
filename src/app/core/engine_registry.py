@@ -145,23 +145,22 @@ ENGINES: dict[str, EngineEntry] = {
             "controlled sentinel. pyo3_runtime.PanicException caught via except BaseException "
             "and re-raised cleanly. Importing swr package no longer panics. "
             "Full repair log: recovery/PHASE_C3D_R1_SWR_CRYPTO_REPAIR_SUMMARY.txt.",
-            "Remaining blocker: CryptoEngine() instantiation raises CryptoUnavailableError "
-            "because _cffi_backend is absent in this environment (_cffi_backend is provided "
-            "by the cffi package). pyo3-0.20.2 panics on _cffi_backend absence; "
-            "this is now caught and re-raised as a controlled Python exception. "
-            "Resolution: pip install cffi (adds _cffi_backend.pyd to the environment).",
-            "CLI (engines/sovereign_war_room/cli.py) has top-level 'from swr import "
-            "SovereignWarRoom' — module-level import is now safe post-C3D-R1, but "
-            "any CLI command that constructs SovereignWarRoom will raise CryptoUnavailableError "
-            "until cffi is installed.",
+            "DEPENDENCY PREFLIGHT SATISFIED in current environment. "
+            "cffi 1.17.1 installed; _cffi_backend available. "
+            "CryptoEngine() constructs without error (verified 2026-05-19). "
+            "Engine remains recovered_unactivated pending explicit activation review. "
+            "Note: cffi 2.x removed _cffi_backend; cffi<2 (specifically 1.17.1) required. "
+            "Next phase: C3D-R2 controlled smoke test before any activation consideration.",
             "No __init__.py at top level — engines.sovereign_war_room is a namespace "
-            "package. find_spec('engines.sovereign_war_room') is SAFE (no code executed). "
-            "find_spec('engines.sovereign_war_room.swr') is SAFE post-C3D-R1 "
-            "(Python 3.12 defers subpackage init for namespace-package discovery).",
-            "Activation prerequisite: pip install cffi to unblock CryptoEngine instantiation, "
-            "then verify: python -c 'from engines.sovereign_war_room.swr.crypto import "
-            "CryptoEngine; CryptoEngine()' exits without error. "
-            "Then set enabled=True and ENGINE_REGISTRY_ACTIVATION_ENABLED=True explicitly.",
+            "package. All import paths safe post-C3D-R1. "
+            "CLI (engines/sovereign_war_room/cli.py) has top-level 'from swr import "
+            "SovereignWarRoom' — import is safe; SovereignWarRoom() constructs cleanly "
+            "in this environment (cffi 1.17.1 present).",
+            "Activation requires explicit decision: set enabled=True and "
+            "ENGINE_REGISTRY_ACTIVATION_ENABLED=True. "
+            "Do not activate until C3D-R2 smoke test passes. "
+            "C3D-R2 scope: controlled SovereignWarRoom() instantiation, "
+            "load_scenarios(), execute one scenario — no production traffic.",
         ],
         activation_requires_explicit_config=True,
     ),

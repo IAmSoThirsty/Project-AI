@@ -225,11 +225,33 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Audit log continuity
+
+**Engineering Equivalent:** Audit trail gap detection / log integrity verification  
+**Actual Function:** Validates that audit event sequences have no missing entries or timestamp gaps. Critical for proving no tampering occurred during a recovery window. Verified during TSA timestamp validation and canonical replay.  
+**Lives in:** `canonical/replay.py`, `src/app/governance/acceptance_ledger.py`
+
+---
+
 ### Cerberus *(Triumvirate voter — security)*
 
 **Engineering Equivalent:** Security policy evaluator / input sanitization voter  
 **Actual Function:** One of three Triumvirate voters. Checks requests against ~20 threat patterns including `bypass`, `jailbreak`, `ignore fourlaws`, `rootkit`, `backdoor`, `shell exec`, `rm -rf`, `format drive`, `delete audit`. Blocks untrusted actors requesting `execute`/`mutate`. Named after the mythological three-headed guard dog of the underworld.  
 **Lives in:** `src/cognition/cerberus/engine.py`, `src/app/core/planetary_defense_monolith.py:160`
+
+---
+
+### Canonical replay
+
+**Engineering Equivalent:** Deterministic audit log replay / governance invariant verification  
+**Actual Function:** Runs `canonical/replay.py` to replay the entire audit log and verify all five FourLaws invariants still hold. Critical recovery validation step — proves restored system maintains constitutional integrity. Expected output: `Verdict: 5/5 PASS`.
+
+```bash
+ALLOW_NON_VAULT_CHANGES=1 PYTHONPATH=src py -3.12 canonical/replay.py
+# Expected: Verdict: 5/5 PASS
+```
+
+**Lives in:** `canonical/replay.py`
 
 ---
 
@@ -302,6 +324,14 @@ Every request entering the system passes through a staged waterfall. Each "frame
 **Engineering Equivalent:** Policy severity enum  
 **Actual Function:** `CRITICAL` (fundamental law violation), `HIGH` (major concern requiring immediate response), `MEDIUM` (concern requiring discussion), `LOW` (minor warning). Used to classify the severity of governance decisions and alerts.  
 **Lives in:** `src/app/core/governance.py:83`
+
+---
+
+### Governance continuity
+
+**Engineering Equivalent:** Constitutional legitimacy preservation / legal authority continuity  
+**Actual Function:** Proves the governance system retains legal legitimacy after a restore operation. Verified by: (1) canonical replay showing 5/5 FourLaws PASS, (2) TSA timestamps proving audit log integrity, (3) acceptance ledger continuity showing no governance gaps. Answers: "Can we legally trust decisions made by the restored system?"  
+**Lives in:** `canonical/replay.py`, `src/app/governance/acceptance_ledger.py`
 
 ---
 
@@ -393,6 +423,14 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### 7-year retention
+
+**Engineering Equivalent:** Compliance audit log retention period  
+**Actual Function:** Mandatory 7-year retention requirement for all audit logs per regulatory compliance. Audit events stored in CanonicalLog with TSA timestamps must be retained for 7 years minimum. Git history provides infinite retention backup.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 4.2`
+
+---
+
 ### AgentRelationship
 
 **Engineering Equivalent:** Agent interaction history record  
@@ -409,6 +447,14 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Auto-save
+
+**Engineering Equivalent:** Automatic checkpoint creation / scheduled state backup  
+**Actual Function:** Automatically creates Save Points every 15 minutes. Retains last 7 days or 20 most recent saves, whichever is greater. Stored in `data/savepoints/auto/`. Provides granular recovery points with 15-minute RPO for operational state.  
+**Lives in:** `src/app/api/routes/savepoints.py`, `data/savepoints/auto/`
+
+---
+
 ### CanonicalLog
 
 **Engineering Equivalent:** Append-only, hash-chained audit log  
@@ -422,6 +468,14 @@ Every request entering the system passes through a staged waterfall. Each "frame
 **Engineering Equivalent:** Event write path / memory recorder  
 **Actual Function:** The write component of the Fates memory system. Records every significant moment as a `MemoryThread` via its `.spin()` method. Assigns an initial weight from `EMOTIONAL_WEIGHTS` based on event type (e.g., `terror_denied = 10.0`, `harm_prevented = 9.0`, `routine_approval = 1.0`). Named after the Greek Fate who spins the thread of life.  
 **Lives in:** `src/app/core/fates/fates.py:107`
+
+---
+
+### Emergency backup
+
+**Engineering Equivalent:** Pre-operation snapshot / rollback point  
+**Actual Function:** User-triggered Save Point created before risky operations (major refactoring, governance changes, dependency upgrades). Provides immediate rollback capability if operation fails. Stored in `data/savepoints/user/` with unlimited retention.  
+**Lives in:** `src/app/api/routes/savepoints.py`
 
 ---
 
@@ -449,6 +503,25 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Save Points API
+
+**Engineering Equivalent:** State snapshot and restoration system  
+**Actual Function:** REST API providing 15-minute auto-save + on-demand user-save checkpoint system. Snapshots operational state (users, capabilities, pending tasks). Enables recovery to any checkpoint with verified integrity. Three tiers: auto (15-min, 7-day retention), user (on-demand, unlimited retention), emergency (pre-operation rollback).
+
+```bash
+# Create user save point
+curl -X POST http://localhost:8001/api/savepoints/create \
+  -H "Content-Type: application/json" \
+  -d '{"name": "my-checkpoint", "metadata": {}}'
+
+# Restore from save point
+curl -X POST http://localhost:8001/api/savepoints/restore/auto_20260519_120000
+```
+
+**Lives in:** `src/app/api/routes/savepoints.py`, `data/savepoints/`
+
+---
+
 ### StateRegister
 
 **Engineering Equivalent:** System state checkpoint store / continuity tracker  
@@ -462,6 +535,14 @@ Every request entering the system passes through a staged waterfall. Each "frame
 **Engineering Equivalent:** Weighted event memory system (write + read + decay)  
 **Actual Function:** Three-component persistent memory layer for the governance system. Clotho writes, Lachesis reads, Atropos manages retention/decay. Persists to `data/fates/memory/THE_FATES.json` and `.md`. Not a log — a judgment-weighted memory system where different event types carry different retention weights. Woven passively between all governance agents.  
 **Lives in:** `src/app/core/fates/fates.py`
+
+---
+
+### User-save
+
+**Engineering Equivalent:** On-demand checkpoint / manual state snapshot  
+**Actual Function:** User-triggered Save Point with unlimited retention. Created via `/api/savepoints/create` endpoint with custom name and metadata. Used for critical milestones, before risky operations, or when automatic 15-minute granularity is insufficient. Stored in `data/savepoints/user/`.  
+**Lives in:** `src/app/api/routes/savepoints.py`, `data/savepoints/user/`
 
 ---
 
@@ -693,6 +774,22 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Backup tier
+
+**Engineering Equivalent:** Hierarchical backup classification system  
+**Actual Function:** Four-tier backup classification: Auto (15-min saves, 7-day retention), User (on-demand, unlimited retention), Windows (file system backup, manual), Docker (image snapshots, manual). Different tiers provide different RPO/retention guarantees. Critical for recovery planning.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 5`
+
+---
+
+### DR test
+
+**Engineering Equivalent:** Disaster recovery simulation / quarterly recovery drill  
+**Actual Function:** Quarterly full-system disaster recovery simulation. Tests complete workstation loss and recovery from zero. Validates RTO targets, verifies backup integrity, proves recovery procedures work. Annual full simulation required per BCDR plan.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 11`
+
+---
+
 ### Genesis Re-Anchoring / GenesisReanchor
 
 **Engineering Equivalent:** Emergency re-initialization protocol (human-gated, jailbreak-proof)  
@@ -709,11 +806,51 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### MTTR (Mean Time To Recovery)
+
+**Engineering Equivalent:** Average recovery duration metric  
+**Actual Function:** Average time to complete recovery of a component. Measured across all recovery operations. Used to assess recovery efficiency and identify bottlenecks. Target MTTR varies by component criticality.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 14`
+
+---
+
+### Offsite backup
+
+**Engineering Equivalent:** External/cloud/air-gapped backup storage (future capability)  
+**Actual Function:** Planned capability for storing backups outside primary workstation. Future implementation will use cloud storage (Azure/AWS) or physical air-gapped media. Currently, GitHub serves as de-facto offsite for committed code.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 5.5`
+
+---
+
 ### Rebirth Protocol / RebirthManager
 
 **Engineering Equivalent:** Controlled agent state reset protocol  
 **Actual Function:** Manages controlled reset of agent state in a governed manner. Unlike a hard restart, a rebirth preserves audit history and governance continuity while clearing operational state.  
 **Lives in:** `src/app/core/rebirth_protocol.py:114`
+
+---
+
+### Recovery validation
+
+**Engineering Equivalent:** Post-recovery integrity verification / trustworthiness tests  
+**Actual Function:** Battery of tests proving restored system is trustworthy: (1) canonical replay shows 5/5 FourLaws PASS, (2) TSA timestamps verify audit log integrity, (3) acceptance ledger continuity verified, (4) health checks pass, (5) git fsck clean. Answers: "Can we trust the recovered system?"  
+**Lives in:** `canonical/replay.py`, `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 7`
+
+---
+
+### RPO (Recovery Point Objective)
+
+**Engineering Equivalent:** Acceptable data loss window / maximum age of recovered data  
+**Actual Function:** Maximum acceptable data loss measured in time. Targets: Committed code (0), Operational state (15 min via auto-save), Docker config (24 hours), Windows file system (manual, varies). Determines backup frequency requirements.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 4`
+
+---
+
+### RTO (Recovery Time Objective)
+
+**Engineering Equivalent:** Target recovery duration / maximum acceptable downtime  
+**Actual Function:** Target time to restore component to operational state. Targets: Source code (0 via git), Operational state (15 min via save points), FastAPI/Cerberus (2-5 min), Database (10 min). Drives recovery procedure design.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 3`
 
 ---
 
@@ -901,11 +1038,109 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Container restart
+
+**Engineering Equivalent:** Docker service restart / container lifecycle recovery  
+**Actual Function:** Restarts a failed Docker container using `docker-compose restart <service>`. Fast recovery path (2-5 minutes RTO) that preserves container configuration. Used when service crashes but image and configuration are intact.  
+**Lives in:** `docker-compose.yml`, Docker CLI
+
+---
+
+### docker-compose.yml
+
+**Engineering Equivalent:** Multi-container orchestration configuration  
+**Actual Function:** Defines FastAPI (`project-ai-api`) and Cerberus (`cerberus_omega`) service configurations including ports, volumes, health checks, and dependencies. Single source of truth for Docker service architecture. Required for container recovery operations.  
+**Lives in:** `docker-compose.yml`
+
+---
+
+### git clone
+
+**Engineering Equivalent:** Fresh repository copy / source code recovery  
+**Actual Function:** Creates complete local copy of Project-AI repository from GitHub. Primary recovery mechanism for catastrophic local data loss (RTO: 0 for committed code). Provides instant recovery to last committed state.
+
+```bash
+git clone https://github.com/IAmSoThirsty/Project-AI.git
+```
+
+**Lives in:** Git CLI, GitHub
+
+---
+
+### git fsck
+
+**Engineering Equivalent:** Git filesystem integrity check / corruption detection  
+**Actual Function:** Verifies Git repository integrity by checking all objects, refs, and the index. Detects corruption, dangling commits, or broken links. Critical post-recovery validation step — proves git clone succeeded and repository is trustworthy.
+
+```bash
+git fsck --full
+```
+
+**Lives in:** Git CLI
+
+---
+
+### git gc
+
+**Engineering Equivalent:** Git garbage collection / repository cleanup  
+**Actual Function:** Compresses git repository, removes unreachable objects, and optimizes storage. Run after large recovery operations to clean up repository state. Uses `--prune=now` for immediate cleanup.
+
+```bash
+git gc --prune=now
+```
+
+**Lives in:** Git CLI
+
+---
+
+### git revert
+
+**Engineering Equivalent:** Safe commit undo / rollback to known-good state  
+**Actual Function:** Creates new commit that undoes changes from a bad commit. Preserves history (unlike reset). Used to recover from bad changes that were already pushed. Safer than force-push for shared branches.
+
+```bash
+git revert <commit-sha>
+```
+
+**Lives in:** Git CLI
+
+---
+
+### GitHub remote
+
+**Engineering Equivalent:** Authoritative repository source / offsite code backup  
+**Actual Function:** `https://github.com/IAmSoThirsty/Project-AI.git` — authoritative source of truth for all committed code. Provides zero-RPO recovery for committed code via git clone. Acts as de-facto offsite backup for source code tier.  
+**Lives in:** GitHub, `.git/config`
+
+---
+
 ### Hardware Root of Trust
 
 **Engineering Equivalent:** Hardware security module integration layer  
 **Actual Function:** Integrates with hardware security primitives: `TPMInterface` (Trusted Platform Module), `SecureEnclaveInterface` (secure execution environment), `HSMInterface` (Hardware Security Module). Provides hardware-backed key storage and attestation.  
 **Lives in:** `src/thirstys_waterfall/security/hardware_root_of_trust.py`
+
+---
+
+### Health check
+
+**Engineering Equivalent:** Service liveness probe / operational status verification  
+**Actual Function:** HTTP endpoints verifying service operational status. FastAPI: `/health/live` returns 200 when healthy. Cerberus: `docker exec` command checks container liveness. Critical post-recovery validation — proves services are operational.
+
+```bash
+curl http://localhost:8001/health/live  # FastAPI
+docker exec cerberus_omega /bin/sh -c 'echo alive'  # Cerberus
+```
+
+**Lives in:** `src/app/api/routes/health.py`, `docker-compose.yml`
+
+---
+
+### Image rebuild
+
+**Engineering Equivalent:** Docker image reconstruction from Dockerfile  
+**Actual Function:** Rebuilds Docker images from Dockerfile using `docker-compose build`. Slower than container restart (10+ minute RTO) but required when Dockerfile or dependencies change. Recovers from corrupted or missing container images.  
+**Lives in:** `docker-compose.yml`, `Dockerfile`, Docker CLI
 
 ---
 
@@ -977,10 +1212,18 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Annual DR simulation
+
+**Engineering Equivalent:** Yearly disaster recovery drill / full workstation recovery test  
+**Actual Function:** Mandatory annual disaster recovery simulation testing complete workstation loss and recovery from zero. Validates all RTO/RPO targets, verifies backup integrity across all tiers, proves recovery procedures work. Required per BCDR compliance. Last successful test documented in BCDR plan Section 11.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 11`
+
+---
+
 ### Acceptance Ledger
 
 **Engineering Equivalent:** Governance acceptance record with TSA timestamps  
-**Actual Function:** Tracks governance acceptance decisions with `CRYPTO_AVAILABLE` flag controlling whether entries are cryptographically signed. When crypto is available, entries are timestamped via RFC 3161 TSA for legally defensible audit trails.  
+**Actual Function:** Tracks governance acceptance decisions with `CRYPTO_AVAILABLE` flag controlling whether entries are cryptographically signed. When crypto is available, entries are timestamped via DigiCert RFC 3161 Time Stamp Authority (TSA) for legally defensible, non-repudiable audit trails. TSA timestamps prove events occurred at specific times and cannot be backdated or tampered with. Critical for governance continuity verification after recovery.  
 **Lives in:** `src/app/governance/acceptance_ledger.py`
 
 ---
@@ -1009,6 +1252,22 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Criticality Rating
+
+**Engineering Equivalent:** Asset importance classification / business impact tier  
+**Actual Function:** Four-tier asset classification: CRITICAL (zero downtime tolerance, requires immediate recovery), HIGH (production-impacting, fast recovery required), MEDIUM (important but tolerates delays), LOW (convenience features). Drives RTO/RPO targets and recovery priority. Defined in BCDR asset inventory.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 1`
+
+---
+
+### Data Loss Tolerance
+
+**Engineering Equivalent:** Acceptable data loss categories / RPO classification  
+**Actual Function:** Four categories of acceptable data loss: Zero (committed code), 15-minute (operational state via auto-save), 1-hour (certain configurations), 24-hour (manual backups). Maps directly to RPO targets and backup frequency requirements.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 4`
+
+---
+
 ### Evidence Bundle
 
 **Engineering Equivalent:** Compiled audit evidence package  
@@ -1017,11 +1276,43 @@ Every request entering the system passes through a staged waterfall. Each "frame
 
 ---
 
+### Forensic investigation
+
+**Engineering Equivalent:** Mandatory audit tampering investigation / security incident response  
+**Actual Function:** Required procedure triggered when audit log tampering is detected. Involves: (1) freezing all operations, (2) preserving evidence via TSA timestamps, (3) analyzing what was changed and when, (4) determining if governance continuity can be verified, (5) deciding whether Genesis Re-Anchoring is required. Non-optional when audit integrity is compromised.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 7.3`
+
+---
+
 ### Governance Observability
 
 **Engineering Equivalent:** Governance decision telemetry / observability collector  
 **Actual Function:** `GovernanceObservation` records a single governance decision observation; `GovernanceObservabilityCollector` aggregates up to `_MAX_OBSERVATIONS = 10,000` observations for analysis. Provides metrics on governance decision rates, denial rates, and escalation patterns.  
 **Lives in:** `src/app/core/governance_observability.py:23`
+
+---
+
+### Non-repudiation
+
+**Engineering Equivalent:** Cryptographic proof of event occurrence / undeniable evidence  
+**Actual Function:** Cryptographic guarantee that an event occurred and cannot be denied or backdated. Achieved via DigiCert TSA RFC 3161 timestamps on audit log entries. TSA timestamps are legally binding proof of when governance decisions were made. Essential for proving governance continuity after recovery.  
+**Lives in:** `src/app/governance/acceptance_ledger.py`, DigiCert TSA
+
+---
+
+### Retention policy
+
+**Engineering Equivalent:** Data retention schedule / backup lifecycle rules  
+**Actual Function:** Defines how long each backup tier is retained: Auto-save (7 days or 20 saves), User-save (unlimited), Git history (infinite), Audit logs (7 years minimum per compliance). Balances storage costs against recovery needs and regulatory requirements.  
+**Lives in:** `docs/operations/PROJECT_AI_BCDR_PLAN.md:Section 4.2`
+
+---
+
+### TSA (Time Stamp Authority)
+
+**Engineering Equivalent:** RFC 3161 cryptographic timestamping service  
+**Actual Function:** DigiCert RFC 3161 Time Stamp Authority providing legally binding, non-repudiable timestamps for audit log entries. Proves events occurred at specific times and cannot be backdated. Critical for governance continuity verification — TSA timestamps prove acceptance ledger integrity after recovery. Used when `CRYPTO_AVAILABLE` flag is set.  
+**Lives in:** `src/app/governance/acceptance_ledger.py`, `src/app/core/time_trust.py`, DigiCert
 
 ---
 
