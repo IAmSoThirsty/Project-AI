@@ -14,7 +14,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.app.core.governance.rate_limiter import (
+from app.core.governance.rate_limiter import (
     GlobalRateLimiter,
     InMemoryRateLimiter,
     RedisRateLimiter,
