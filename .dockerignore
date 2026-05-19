@@ -68,3 +68,58 @@ credentials*
 token*
 *.sqlite
 *.db
+
+# Phase D1 — Docker build context hygiene (2026-05-19)
+
+# Virtual environments — all variants
+.venv/
+.venv_*/
+.venv_airllm/
+.venv_prod/
+
+# Windows native binaries not needed in Docker (Linux builds)
+*.pyd
+*.dll
+*.lib
+
+# Runtime logs (all variants)
+*.log.*
+data/logs/
+cognition/
+
+# Runtime artifacts
+*.jsonl
+data/audit/
+execution_trace.json
+canonical/execution_trace.json
+
+# Test outputs and CI artifacts
+test-artifacts/
+ci-reports/
+tarl_os/tests/results/
+htmlcov/
+.coverage
+
+# Large runtime data directories
+data/arch_angel/
+data/savepoints/
+data/triumvirate_notifications/
+data/fates/
+bundles/
+
+# Generated outputs
+*.pdf
+page1_preview.png
+
+# IDE and tool state
+.mypy_cache/
+.ruff_cache/
+.obsidian/
+.claude/
+.antigravity/
+demos/**/*.lscache
+
+# Unity, Android, Temporal — not needed in Docker build
+unity/
+.env.temporal
+data/temporal/
