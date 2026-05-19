@@ -197,7 +197,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 if payload:
                     authenticated = True
                     user = payload.get("sub")
-if not authenticated:
+        if not authenticated:
             logger.warning(f"Unauthorized access attempt: {request.url.path}")
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,

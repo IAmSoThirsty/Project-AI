@@ -65,10 +65,10 @@ async def lifespan(app: FastAPI):
     logger.info("Database connection established")
     
     # Run migrations if needed
-from .repository import run_migrations
+    from .repository import run_migrations
     await run_migrations()
     logger.info("Database migrations completed")
-logger.info("Service startup complete")
+    logger.info("Service startup complete")
     
     yield
     
@@ -85,19 +85,19 @@ logger.info("Service startup complete")
 # Create FastAPI application
 app = FastAPI(
     title="AI Mutation Governance Firewall",
-    description="build a runtime AI mutation gate.
+    description="""build a runtime AI mutation gate.
 Microservices:
 Model change proposal intake
 Deterministic shadow simulation
 Quorum validation engine
 Rollback + snapshot manager
 Cryptographic replay verification
-This becomes: “A Kubernetes admission controller for AI evolution.”
+This becomes: "A Kubernetes admission controller for AI evolution."
 This is niche but elite.
-DARPA, defense, sovereign AI labs would care.",
+DARPA, defense, sovereign AI labs would care.""",
     version="1.0.0",
     lifespan=lifespan,
-docs_url="/api/v1/docs",
+    docs_url="/api/v1/docs",
     redoc_url="/api/v1/redoc",
     openapi_url="/api/v1/openapi.json",
 )

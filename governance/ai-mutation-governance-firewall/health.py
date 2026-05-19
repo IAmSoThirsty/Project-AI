@@ -93,7 +93,7 @@ async def startup_check():
         checks["database"] = "error"
         startup_complete = False
     
-# Check migrations
+    # Check migrations
     try:
         from .repository import check_migrations
         migrations_ok = await check_migrations()
@@ -104,7 +104,7 @@ async def startup_check():
         logger.error(f"Migration check failed: {e}")
         checks["migrations"] = "error"
         startup_complete = False
-response_status = "started" if startup_complete else "starting"
+    response_status = "started" if startup_complete else "starting"
     status_code = status.HTTP_200_OK if startup_complete else status.HTTP_503_SERVICE_UNAVAILABLE
     
     return HealthResponse(
