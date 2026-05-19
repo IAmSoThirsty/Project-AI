@@ -1,0 +1,1543 @@
+M	.antigravity/scripts/setup_antigravity.py
+M	.codacy/cli.sh
+M	.codacy/codacy.yaml
+D	.cpanel.yml
+M	.dockerignore
+M	.env.example
+M	.githooks/pre-commit
+M	.github/AUTOMATION.md
+M	.github/COPILOT_MANDATORY_GUIDE.md
+M	.github/actions/run-security-scan/action.yml
+D	.github/agents/README.md
+D	.github/agents/awesome-copilot/ai-team-dev.agent.md
+D	.github/agents/awesome-copilot/ai-team-producer.agent.md
+D	.github/agents/awesome-copilot/ai-team-qa.agent.md
+D	.github/agents/awesome-copilot/debug.agent.md
+D	.github/agents/awesome-copilot/implementation-plan.agent.md
+D	.github/agents/awesome-copilot/planner.agent.md
+D	.github/agents/awesome-copilot/principal-software-engineer.agent.md
+D	.github/agents/awesome-copilot/project-architecture-planner.agent.md
+D	.github/agents/awesome-copilot/project-documenter.agent.md
+D	.github/agents/awesome-copilot/prompt-builder.agent.md
+D	.github/agents/awesome-copilot/prompt-engineer.agent.md
+D	.github/agents/awesome-copilot/qa-subagent.agent.md
+D	.github/agents/awesome-copilot/repo-architect.agent.md
+D	.github/agents/awesome-copilot/se-security-reviewer.agent.md
+D	.github/agents/awesome-copilot/se-system-architecture-reviewer.agent.md
+D	.github/agents/awesome-copilot/tdd-green.agent.md
+D	.github/agents/awesome-copilot/tdd-red.agent.md
+D	.github/agents/awesome-copilot/tdd-refactor.agent.md
+D	.github/agents/governance-auditor.agent.md
+D	.github/agents/release-captain.agent.md
+D	.github/agents/security-reviewer.agent.md
+D	.github/agents/test-builder.agent.md
+M	.github/copilot-instructions.md
+M	.github/copilot_workspace_profile.md
+D	.github/instructions/GOVERNANCE_INSTRUCTIONS_INDEX.md
+D	.github/instructions/agent-development-protocol.instructions.md
+D	.github/instructions/audit-evidence-protocol.instructions.md
+D	.github/instructions/awesome-copilot/agent-safety.instructions.md
+D	.github/instructions/awesome-copilot/agent-skills.instructions.md
+D	.github/instructions/awesome-copilot/agents.instructions.md
+D	.github/instructions/awesome-copilot/ai-prompt-engineering-safety-best-practices.instructions.md
+D	.github/instructions/awesome-copilot/containerization-docker-best-practices.instructions.md
+D	.github/instructions/awesome-copilot/copilot-sdk-python.instructions.md
+D	.github/instructions/awesome-copilot/devops-core-principles.instructions.md
+D	.github/instructions/awesome-copilot/github-actions-ci-cd-best-practices.instructions.md
+D	.github/instructions/awesome-copilot/langchain-python.instructions.md
+D	.github/instructions/awesome-copilot/nodejs-javascript-vitest.instructions.md
+D	.github/instructions/awesome-copilot/playwright-python.instructions.md
+D	.github/instructions/awesome-copilot/prompt.instructions.md
+D	.github/instructions/awesome-copilot/python-mcp-server.instructions.md
+D	.github/instructions/awesome-copilot/security-and-owasp.instructions.md
+M	.github/instructions/codacy.instructions.md
+D	.github/instructions/execution-governance-invariant.instructions.md
+D	.github/instructions/governance-code-review.instructions.md
+D	.github/instructions/governance-enforced-development.instructions.md
+D	.github/instructions/governance-testing-protocol.instructions.md
+D	.github/instructions/mandatory-structured-generation-default.instructions.md
+D	.github/instructions/refactor-engineer.agent.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/README.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/iteration.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/phase1.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/phase2.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/phase3.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/phase4.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/phase5.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/phase6.md
+D	.github/prompts/awesome-copilot/quality-playbook/phase_prompts/single_pass.md
+A	.github/workflows/GOD_TIER_CODEX_COMPLETE.md
+A	.github/workflows/GOD_TIER_VALIDATION_100_PERCENT.md
+M	.github/workflows/SECURITY_CHECKLIST.md
+D	.github/workflows/agent-governance-default-enforcement.yml
+M	.github/workflows/ai_takeover_reviewer_trap.yml
+R097	.github/workflow-archive/README.md	.github/workflows/archive/README.md
+R100	.github/workflow-archive/adversarial-redteam.yml	.github/workflows/archive/adversarial-redteam.yml
+R100	.github/workflow-archive/ai-model-security.yml	.github/workflows/archive/ai-model-security.yml
+R100	.github/workflow-archive/auto-create-branch-prs.yml	.github/workflows/archive/auto-create-branch-prs.yml
+R100	.github/workflow-archive/build-release.yml	.github/workflows/archive/build-release.yml
+R100	.github/workflow-archive/checkov-cloud-config.yml	.github/workflows/archive/checkov-cloud-config.yml
+R100	.github/workflow-archive/ci-consolidated.yml	.github/workflows/archive/ci-consolidated.yml
+R098	.github/workflow-archive/ci.yml	.github/workflows/archive/ci.yml
+R099	.github/workflow-archive/codex-deus-monolith.yml	.github/workflows/archive/codex-deus-monolith.yml
+R100	.github/workflow-archive/coverage-threshold-enforcement.yml	.github/workflows/archive/coverage-threshold-enforcement.yml
+R100	.github/workflow-archive/dependabot.yml	.github/workflows/archive/dependabot.yml
+R100	.github/workflow-archive/gpt_oss_integration.yml	.github/workflows/archive/gpt_oss_integration.yml
+R100	.github/workflow-archive/issue-management-consolidated.yml	.github/workflows/archive/issue-management-consolidated.yml
+R100	.github/workflow-archive/jekyll-gh-pages.yml	.github/workflows/archive/jekyll-gh-pages.yml
+R100	.github/workflow-archive/main.yml	.github/workflows/archive/main.yml
+R100	.github/workflow-archive/node-ci.yml	.github/workflows/archive/node-ci.yml
+R100	.github/workflow-archive/periodic-security-verification.yml	.github/workflows/archive/periodic-security-verification.yml
+R100	.github/workflow-archive/post-merge-validation.yml	.github/workflows/archive/post-merge-validation.yml
+R099	.github/workflow-archive/pr-automation-consolidated.yml	.github/workflows/archive/pr-automation-consolidated.yml
+R100	.github/workflow-archive/prune-artifacts.yml	.github/workflows/archive/prune-artifacts.yml
+R100	.github/workflow-archive/release.yml	.github/workflows/archive/release.yml
+R100	.github/workflow-archive/sbom.yml	.github/workflows/archive/sbom.yml
+R098	.github/workflow-archive/security-consolidated.yml	.github/workflows/archive/security-consolidated.yml
+R100	.github/workflow-archive/sign-release-artifacts.yml	.github/workflows/archive/sign-release-artifacts.yml
+R100	.github/workflow-archive/snn-mlops-cicd.yml	.github/workflows/archive/snn-mlops-cicd.yml
+R096	.github/workflow-archive/tarl-ci.yml	.github/workflows/archive/tarl-ci.yml
+R100	.github/workflow-archive/trivy-container-security.yml	.github/workflows/archive/trivy-container-security.yml
+R100	.github/workflow-archive/validate-guardians.yml	.github/workflows/archive/validate-guardians.yml
+R100	.github/workflow-archive/validate-waivers.yml	.github/workflows/archive/validate-waivers.yml
+M	.github/workflows/codex-deus-ultimate.yml
+D	.github/workflows/deploy-hub.yml
+D	.github/workflows/deploy-site.yml
+M	.github/workflows/doc-code-alignment.yml
+M	.github/workflows/enforce-root-structure.yml
+M	.github/workflows/generate-sbom.yml
+M	.github/workflows/nextjs.yml
+M	.github/workflows/validate-metadata.yml
+M	.gitignore
+D	.obsidian/app.json
+D	.obsidian/core-plugins.json
+D	.obsidian/hotkeys.json
+D	.obsidian/plugins/dataview/data.json
+D	.obsidian/plugins/templater-obsidian/data.json
+D	.obsidian/workspace.json
+M	.python-version
+A	ACCOUNT_LOCKOUT_IMPLEMENTATION_REPORT.md
+A	AGENT-007-DOCUMENTATION-INDEX.md
+A	AGENT-007-MISSION-SUMMARY.md
+A	AGENT-040-DEPLOYMENT-DOCS-COMPLETE.md
+A	AGENT-046-MISSION-COMPLETE.md
+A	AGENT-069-MISSION-COMPLETE.md
+A	AGENT-072-EXECUTIVE-SUMMARY.md
+A	AGENT-072-LINK-REPORT.md
+A	AGENT-072-link-generator.py
+A	AGENT-073-LINK-REPORT.md
+A	AGENT-073-MISSION-COMPLETE.md
+A	AGENT-074-FINAL-MISSION-REPORT.md
+A	AGENT-074-LINK-REPORT.md
+A	AGENT-074-MISSION-COMPLETE.md
+A	AGENT-075-LINK-REPORT.md
+A	AGENT-075-MISSION-COMPLETE.md
+A	AGENT-075-QUICK-REFERENCE.md
+A	AGENT-079-CROSSLINK-REPORT.md
+A	AGENT-079-DELIVERABLES-INDEX.md
+A	AGENT-079-INTEGRATION-MAP.md
+A	AGENT-079-MISSION-SUMMARY.md
+A	AGENT-081-FINAL-EXECUTION-REPORT.md
+A	AGENT-081-MISSION-COMPLETE.md
+A	AGENT-081-QUICK-REFERENCE.md
+A	AGENT-081-SECURITY-TRACEABILITY.md
+A	AGENT-082-MISSION-SUMMARY.md
+A	AGENT-082-PATTERN-INDEX.md
+A	AGENT-082-PATTERN-USAGE-CATALOG.md
+A	AGENT-083-API-COVERAGE-REPORT.md
+A	AGENT-083-GUIDE-API-MAP.md
+A	AGENT-083-MISSION-SUMMARY.md
+A	AGENT-084-LEARNING-PATHS.md
+A	AGENT-084-MISSION-COMPLETE.md
+A	AGENT-085-COMMON-ISSUES-INDEX.md
+A	AGENT-085-MISSION-COMPLETE.md
+A	AGENT-085-PROBLEM-SYSTEM-MAP.md
+A	AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE.md
+A	AGENT-086-INDEX.md
+A	AGENT-086-MISSION-COMPLETE.md
+A	AGENT-086-MISSION-SUMMARY.txt
+A	AGENT-086-SECURITY-COVERAGE-MATRIX.md
+A	AGENT-087-MISSION-REPORT.md
+A	AGENT-087-THREAT-DEFENSE-MATRIX.md
+A	AGENT-088-COMPLIANCE-MATRIX.md
+A	AGENT-088-DELIVERABLES-INDEX.md
+A	AGENT-088-MISSION-SUMMARY.md
+A	AGENT-088-UNENFORCED-REQUIREMENTS.md
+A	AGENT-089-DELIVERABLES-INDEX.md
+A	AGENT-089-MISSION-SUMMARY.md
+A	AGENT-089-POLICY-ENFORCEMENT-MATRIX.md
+A	AGENT-089-UNENFORCED-POLICIES.md
+A	AGENT-090-COMPLETION-REPORT.md
+A	AGENT-090-INDEX.md
+A	AGENT-090-RBAC-MATRIX.md
+A	AGENT-091-AUDIT-TRAIL-MATRIX.md
+A	AGENT-091-MISSION-COMPLETE.md
+A	AGENT-092-INDEX.md
+A	AGENT-093-DASHBOARD-QUERIES-REPORT.md
+A	AGENT-094-INDEX-QUERIES-REPORT.md
+A	AGENT-095-TAG-QUERIES-REPORT.md
+A	AGENT-096-RELATIONSHIP-QUERIES-REPORT.md
+A	AGENT-097-METADATA-QUERIES-REPORT.md
+A	AGENT-098-101-GRAPH-VIEWS-REPORT.md
+A	AGENT-102-105-TEMPLATES-REPORT.md
+A	AGENT-106-ARCHITECTURE-DIAGRAMS-REPORT.md
+A	AGENT-107-FLOW-DIAGRAMS-REPORT.md
+A	AGENT-108-SEQUENCE-DIAGRAMS-REPORT.md
+A	AGENT-109-EXCALIDRAW-REPORT.md
+A	AGENT-110-111-NAVIGATION-REPORT.md
+A	AGENT-110-MOC-REFINEMENT-REPORT.md
+A	AGENT-111-INDEX-OPTIMIZATION-REPORT.md
+A	AGENT-112-DELIVERABLES-INDEX.md
+M	AGENTS.md
+A	AGENT_008_P0_METADATA_ENRICHMENT_REPORT.md
+A	AGENT_009_CLASSIFICATION_REPORT.md
+A	AGENT_009_MISSION_COMPLETE_CHECKLIST.md
+A	AGENT_009_P0_GOVERNANCE_SECURITY_METADATA_REPORT.md
+A	AGENT_010_FINAL_MISSION_REPORT.md
+A	AGENT_011_AUDIENCE_CLASSIFICATION_REPORT.md
+A	AGENT_011_DATAVIEW_MISSION_COMPLETE.md
+A	AGENT_011_METADATA_ENRICHMENT_REPORT.md
+A	AGENT_011_PREREQUISITES_MATRIX.md
+A	AGENT_011_TIME_ESTIMATION_REPORT.md
+A	AGENT_011_VALIDATION_CHECKLIST.md
+A	AGENT_012_P1_METADATA_COMPLETION_REPORT.md
+A	AGENT_014_GRAPH_ANALYSIS_PLUGIN_REPORT.md
+A	AGENT_014_P2_METADATA_COMPLETION_REPORT.md
+A	AGENT_015_BULK_PROCESSING_REPORT.md
+A	AGENT_015_COMPLETION_CHECKLIST.md
+A	AGENT_015_P3_ARCHIVE_ENRICHMENT_COMPLETE.md
+A	AGENT_017_COMPLETION.md
+A	AGENT_018_COMPLETION_CHECKLIST.md
+A	AGENT_018_EXECUTIVE_SUMMARY.md
+A	AGENT_018_IMPLEMENTATION_STATUS_REPORT.md
+A	AGENT_018_INDEX.md
+A	AGENT_018_LANGUAGE_MATRIX.md
+A	AGENT_018_MISSION_COMPLETE.md
+A	AGENT_018_RELATIONSHIP_MAP.md
+A	AGENT_018_VALIDATION_REPORT.md
+A	AGENT_019_COMPLETION_CHECKLIST.md
+A	AGENT_020_GOVERNANCE_METADATA_COMPLETE.md
+A	AGENT_022_DATA_UTILITIES_METADATA_COMPLETE.md
+A	AGENT_023_COMPLETION_CHECKLIST.md
+A	AGENT_023_DEPLOYMENT_METADATA_REPORT.md
+A	AGENT_024_COMPLETION_CHECKLIST.md
+A	AGENT_024_METADATA_ENRICHMENT_COMPLETE.md
+A	AGENT_026_COMPLETION_CHECKLIST.md
+A	AGENT_026_MISSION_COMPLETE.md
+A	AGENT_026_VALIDATION_AUDIT_METADATA_ENRICHMENT_REPORT.md
+A	AGENT_029_MISSION_ACCOMPLISHMENT_SUMMARY.md
+A	AGENT_02_SHELL_INJECTION_REPORT.md
+A	AGENT_051_MISSION_SUMMARY.md
+A	AGENT_057_MISSION_COMPLETE.md
+A	AGENT_20_ACCOUNT_LOCKOUT_REPORT.md
+A	AGENT_22_PASSWORD_POLICY_REPORT.md
+A	AGENT_23_SHELL_INJECTION_FIX_REPORT.md
+D	AGENT_CREATION_SUMMARY.md
+A	AGENT_DEPLOYMENT_QUEUE.md
+A	AI_SYSTEMS_INTEGRATION_AUDIT_REPORT.md
+A	ARCHITECTURAL_LAYER_ASSIGNMENT_REPORT.md
+R100	docs/reports/ARCHITECTURE_DESIGN_PATTERNS_EVALUATION.md	ARCHITECTURE_DESIGN_PATTERNS_EVALUATION.md
+A	AUTHENTICATION_SECURITY_AUDIT_REPORT.md
+A	AUTOMATION_STATUS_REPORT.md
+R100	scripts/automation/Add-WikiLinks-Phase2.ps1	Add-WikiLinks-Phase2.ps1
+R100	scripts/automation/Add-WikiLinks.ps1	Add-WikiLinks.ps1
+A	BYPASS_FIX_REPORT.md
+R100	docs/reports/CI_CD_PIPELINE_ASSESSMENT.md	CI_CD_PIPELINE_ASSESSMENT.md
+R100	docs/reports/CODACY_COMPREHENSIVE_PATCH.md	CODACY_COMPREHENSIVE_PATCH.md
+A	CODE_QUALITY_REPORT.md
+R100	docs/reports/COMPONENT_DEPENDENCY_GRAPH.md	COMPONENT_DEPENDENCY_GRAPH.md
+A	CONFIG_MANAGEMENT_AUDIT_REPORT.md
+A	CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT.md
+M	CONTRIBUTING.md
+R100	docs/reports/CONVERGENCE_SUMMARY_leather_book_panels.md	CONVERGENCE_SUMMARY_leather_book_panels.md
+R100	docs/reports/CROSS-SYSTEM-NAVIGATION.md	CROSS-SYSTEM-NAVIGATION.md
+R100	docs/reports/CROSS_LINK_MAP.md	CROSS_LINK_MAP.md
+R100	docs/reports/CROSS_REFERENCE_VALIDATION.md	CROSS_REFERENCE_VALIDATION.md
+R100	docs/reports/DASHBOARD_CONVERGENCE_COMPLETE.md	DASHBOARD_CONVERGENCE_COMPLETE.md
+A	DATABASE_PERSISTENCE_AUDIT_REPORT.md
+R100	docs/reports/DATAVIEW_SETUP_GUIDE.md	DATAVIEW_SETUP_GUIDE.md
+A	DATA_ENCRYPTION_PRIVACY_AUDIT_REPORT.md
+A	DEPENDENCY_AUDIT_REPORT.md
+R100	docs/reports/DEPENDENCY_GRAPH_COMPREHENSIVE.md	DEPENDENCY_GRAPH_COMPREHENSIVE.md
+R100	docs/reports/DESIGN_PATTERN_USAGE_MATRIX.md	DESIGN_PATTERN_USAGE_MATRIX.md
+R100	docs/reports/DESKTOP_CONVERGENCE_COMPLETE.md	DESKTOP_CONVERGENCE_COMPLETE.md
+M	DEVELOPER_QUICK_REFERENCE.md
+R100	docs/reports/DEVOPS_ENHANCEMENT_IDEAS.md	DEVOPS_ENHANCEMENT_IDEAS.md
+D	DOCUMENTATION_COMPILER_AGENT_README.md
+M	Dockerfile
+A	EMERGENCY_SYSTEMS_AUDIT_REPORT.md
+R100	docs/reports/EXCALIDRAW_GUIDE.md	EXCALIDRAW_GUIDE.md
+R100	docs/reports/EXCALIDRAW_IMPLEMENTATION_SUMMARY.md	EXCALIDRAW_IMPLEMENTATION_SUMMARY.md
+R100	docs/reports/EXCALIDRAW_QUICK_REFERENCE.md	EXCALIDRAW_QUICK_REFERENCE.md
+R100	docs/reports/EXCALIDRAW_WORKFLOW.md	EXCALIDRAW_WORKFLOW.md
+R100	docs/reports/EXECUTION_CONVERGENCE_PLAN.md	EXECUTION_CONVERGENCE_PLAN.md
+R100	scripts/automation/Enrich-P3ArchiveMetadata.ps1	Enrich-P3ArchiveMetadata.ps1
+A	FEATURE_VALIDATION_REPORT.md
+R100	docs/reports/FINAL_EXECUTION_SUMMARY.md	FINAL_EXECUTION_SUMMARY.md
+A	FINAL_VERIFICATION_REPORT.md
+R100	docs/reports/FLEET_DEPLOYMENT_STATUS.md	FLEET_DEPLOYMENT_STATUS.md
+R100	docs/reports/GAP_ANALYSIS.md	GAP_ANALYSIS.md
+R100	docs/reports/GLOBAL_RATE_LIMITING_SUMMARY.md	GLOBAL_RATE_LIMITING_SUMMARY.md
+R100	docs/reports/GRAPH_PLUGIN_QUICK_REFERENCE.md	GRAPH_PLUGIN_QUICK_REFERENCE.md
+R100	docs/reports/GRAPH_VIEW_GUIDE.md	GRAPH_VIEW_GUIDE.md
+R100	docs/reports/GROUP1_AGENT3_DASHBOARD_HANDLERS_COMPLETE.md	GROUP1_AGENT3_DASHBOARD_HANDLERS_COMPLETE.md
+A	GUI_ARCHITECTURE_EVALUATION_REPORT.md
+A	GUI_INPUT_VALIDATION_FIX_REPORT.md
+R100	docs/reports/HARD_RESET_POINTS.md	HARD_RESET_POINTS.md
+A	HEALTH_REPORT.md
+R098	docs/reports/HONEST-ACCOUNTABILITY-REPORT.md	HONEST-ACCOUNTABILITY-REPORT.md
+R100	docs/reports/HONEST_ASSESSMENT_FINAL.md	HONEST_ASSESSMENT_FINAL.md
+R100	docs/reports/HONEST_LEVEL_2_STATUS.md	HONEST_LEVEL_2_STATUS.md
+A	I18N_EVALUATION_REPORT.md
+R100	docs/reports/INPUT_VALIDATION_SECURITY_AUDIT.md	INPUT_VALIDATION_SECURITY_AUDIT.md
+A	INTEGRATION_METADATA_REPORT.md
+R100	docs/reports/INTEGRATION_POINTS_CATALOG.md	INTEGRATION_POINTS_CATALOG.md
+R100	docs/reports/ISSUE_B324_MD5_WEAK_HASH.md	ISSUE_B324_MD5_WEAK_HASH.md
+R100	docs/reports/ISSUE_SHELL_INJECTION_B602.md	ISSUE_SHELL_INJECTION_B602.md
+A	LEVEL_2_COMPLETION_REPORT.md
+R100	docs/reports/LEVEL_2_EXECUTION_SUMMARY.md	LEVEL_2_EXECUTION_SUMMARY.md
+R100	docs/reports/LEVEL_2_FINAL_STATUS.md	LEVEL_2_FINAL_STATUS.md
+R100	docs/reports/LEVEL_2_HONEST_STATUS.md	LEVEL_2_HONEST_STATUS.md
+R100	docs/reports/LEVEL_2_VERIFICATION_AUDIT.md	LEVEL_2_VERIFICATION_AUDIT.md
+R100	docs/reports/LINK_INTEGRITY_VALIDATION.md	LINK_INTEGRITY_VALIDATION.md
+R100	docs/reports/LIVE_PROGRESS_UPDATE.md	LIVE_PROGRESS_UPDATE.md
+R100	docs/reports/MECHANICAL_VERIFICATION_COMPLETE.md	MECHANICAL_VERIFICATION_COMPLETE.md
+A	METADATA_ENRICHMENT_COMPLETION_REPORT.md
+R100	docs/reports/METADATA_ENRICHMENT_SUMMARY.md	METADATA_ENRICHMENT_SUMMARY.md
+A	METADATA_P0_CORE_REPORT.md
+A	METADATA_P0_GOVERNANCE_REPORT.md
+A	METADATA_P1_DEVELOPER_REPORT.md
+R100	docs/reports/METADATA_P2_ROOT_REPORTS.md	METADATA_P2_ROOT_REPORTS.md
+A	METADATA_P3_ARCHIVE_REPORT.md
+R100	docs/reports/METADATA_QUICK_REFERENCE.md	METADATA_QUICK_REFERENCE.md
+R100	docs/reports/METADATA_VALIDATION_MATRIX.md	METADATA_VALIDATION_MATRIX.md
+R100	docs/reports/MISSION_COMPLETION_CHECKLIST.md	MISSION_COMPLETION_CHECKLIST.md
+R100	docs/reports/MODULE_COVERAGE_MATRIX.md	MODULE_COVERAGE_MATRIX.md
+R100	docs/reports/MULTI_PATH_GOVERNANCE_ARCHITECTURE.md	MULTI_PATH_GOVERNANCE_ARCHITECTURE.md
+R100	docs/reports/MULTI_PATH_GOVERNANCE_COMPLETE.md	MULTI_PATH_GOVERNANCE_COMPLETE.md
+M	Makefile
+A	NAVIGATION_TESTING_REPORT.md
+R100	docs/reports/OBSIDIAN_CONFIG_COMPLETION.md	OBSIDIAN_CONFIG_COMPLETION.md
+R100	docs/reports/OBSIDIAN_GIT_DECISION_MATRIX.md	OBSIDIAN_GIT_DECISION_MATRIX.md
+A	OBSIDIAN_VAULT_FINAL_REPORT.md
+R100	docs/reports/OBSIDIAN_VAULT_MASTER_DASHBOARD.md	OBSIDIAN_VAULT_MASTER_DASHBOARD.md
+R100	docs/reports/OBSIDIAN_VAULT_PHASES_2-6_STATUS.md	OBSIDIAN_VAULT_PHASES_2-6_STATUS.md
+R100	docs/reports/P0_MANDATORY_GOVERNANCE_COMPLETE.md	P0_MANDATORY_GOVERNANCE_COMPLETE.md
+R100	docs/reports/P4_TEMPORAL_GOVERNANCE_PARTIAL.md	P4_TEMPORAL_GOVERNANCE_PARTIAL.md
+A	PATH_TRAVERSAL_FIX_REPORT.md
+A	PERFORMANCE_ANALYSIS_REPORT.md
+R100	docs/reports/PHASES_3-4_COMPLETE_STATUS.md	PHASES_3-4_COMPLETE_STATUS.md
+R100	docs/reports/PHASES_5-6_DEPLOYMENT_STATUS.md	PHASES_5-6_DEPLOYMENT_STATUS.md
+R100	docs/reports/PHASE_2_COMPLETION_REPORT_COMPREHENSIVE.md	PHASE_2_COMPLETION_REPORT_COMPREHENSIVE.md
+R100	docs/reports/PHASE_2_DEPLOYMENT_STATUS.md	PHASE_2_DEPLOYMENT_STATUS.md
+A	PHASE_2_TAG_TAXONOMY_REPORT.md
+A	PHASE_3_COMPLETION_REPORT.md
+R100	docs/reports/PHASE_3_HANDOFF_DOCUMENTATION.md	PHASE_3_HANDOFF_DOCUMENTATION.md
+R100	docs/reports/PHASE_4-6_AGENT_CHARTERS.md	PHASE_4-6_AGENT_CHARTERS.md
+A	PHASE_4_COMPLETION_REPORT.md
+R100	docs/reports/PHASE_4_HANDOFF_DOCUMENTATION.md	PHASE_4_HANDOFF_DOCUMENTATION.md
+A	PHASE_5_COMPLETION_REPORT.md
+R100	docs/reports/PHASE_5_HANDOFF_DOCUMENTATION.md	PHASE_5_HANDOFF_DOCUMENTATION.md
+A	PHASE_6_COMPLETION_REPORT.md
+R100	docs/reports/PHASE_6_HANDOFF_DOCUMENTATION_UPDATED.md	PHASE_6_HANDOFF_DOCUMENTATION_UPDATED.md
+A	PLUGIN_SYSTEM_REVIEW_REPORT.md
+R100	docs/reports/PRINCIPAL-ARCHITECT-PEER-REVIEW.md	PRINCIPAL-ARCHITECT-PEER-REVIEW.md
+D	PRODUCTION_AUDITOR_QUICKREF.md
+D	PRODUCTION_AUDITOR_SUMMARY.md
+M	Project-AI.code-workspace
+D	Project-Ai/.obsidian/app.json
+D	Project-Ai/.obsidian/appearance.json
+D	Project-Ai/.obsidian/core-plugins.json
+D	Project-Ai/.obsidian/graph.json
+D	Project-Ai/.obsidian/workspace.json
+D	Project-Ai/Welcome.md
+D	Project_AI.pdf
+M	README.md
+R100	docs/reports/REAL_WORLD_INFRASTRUCTURE_ADVANTAGES.md	REAL_WORLD_INFRASTRUCTURE_ADVANTAGES.md
+R100	docs/reports/RELATIONSHIP_VALIDATION.md	RELATIONSHIP_VALIDATION.md
+R100	docs/reports/REPORT_METADATA_BATCH_SUMMARY.md	REPORT_METADATA_BATCH_SUMMARY.md
+A	RESOURCE_MANAGEMENT_AUDIT_REPORT.md
+R100	docs/reports/SECURITY_BRIEFING_CRITICAL_FINDINGS.md	SECURITY_BRIEFING_CRITICAL_FINDINGS.md
+A	SECURITY_VULNERABILITY_ASSESSMENT_REPORT.md
+A	SHA256_AUDIT_REPORT.md
+M	SOVEREIGN-WAR-ROOM/cli.py
+M	SOVEREIGN-WAR-ROOM/demo.py
+M	SOVEREIGN-WAR-ROOM/requirements.txt
+M	SOVEREIGN-WAR-ROOM/swr/api.py
+M	SOVEREIGN-WAR-ROOM/swr/proof.py
+D	STABILITY.md
+R100	docs/reports/STAKEHOLDER_MATRIX.md	STAKEHOLDER_MATRIX.md
+R100	docs/reports/STRESS_TEST_RESULTS.md	STRESS_TEST_RESULTS.md
+R100	docs/reports/SYNCHRONIZATION-AUDIT-REPORT.md	SYNCHRONIZATION-AUDIT-REPORT.md
+R100	docs/reports/TAG_WRANGLER_GUIDE.md	TAG_WRANGLER_GUIDE.md
+A	TECHNICAL_DEBT_REPORT.md
+R100	docs/reports/TEMPLATER_COMMAND_REFERENCE.md	TEMPLATER_COMMAND_REFERENCE.md
+R100	docs/reports/TEMPLATER_INSTALLATION_COMPLETE.md	TEMPLATER_INSTALLATION_COMPLETE.md
+R100	docs/reports/TEMPLATER_QUICK_REFERENCE.md	TEMPLATER_QUICK_REFERENCE.md
+R100	docs/reports/TEMPLATER_SETUP_GUIDE.md	TEMPLATER_SETUP_GUIDE.md
+R100	docs/reports/TEMPLATER_TROUBLESHOOTING_GUIDE.md	TEMPLATER_TROUBLESHOOTING_GUIDE.md
+R100	docs/reports/TEMPLATE_EXAMPLES_METADATA_SUMMARY.md	TEMPLATE_EXAMPLES_METADATA_SUMMARY.md
+R100	docs/reports/TESTED_SYSTEMS_MATRIX.md	TESTED_SYSTEMS_MATRIX.md
+A	TEST_DOCUMENTATION_ENRICHMENT_REPORT.md
+R100	docs/reports/THREE_LAYER_PROOF.md	THREE_LAYER_PROOF.md
+A	TIMING_ATTACK_FIX_REPORT.md
+R100	docs/reports/TRUTH_MAP.md	TRUTH_MAP.md
+D	Thirsty-Lang_UTF_Reference_v1.md
+D	Thirsty-Lang_UTF_Reference_v1.pdf
+D	Thirsty-Lang_UTF_Source_Map.csv
+R100	docs/reports/VAULT-INTEGRITY-VERIFICATION-REPORT.md	VAULT-INTEGRITY-VERIFICATION-REPORT.md
+R100	docs/reports/VAULT_GIT_STRATEGY.md	VAULT_GIT_STRATEGY.md
+R100	docs/reports/VERIFICATION_ACTION_PLAN.md	VERIFICATION_ACTION_PLAN.md
+R100	docs/reports/VERIFICATION_COMPLETE.md	VERIFICATION_COMPLETE.md
+R100	docs/reports/VERIFICATION_REALITY_CHECK.md	VERIFICATION_REALITY_CHECK.md
+R100	docs/reports/VERIFICATION_RESULTS.md	VERIFICATION_RESULTS.md
+R100	scripts/verify/Validate-P3ArchiveMetadata.ps1	Validate-P3ArchiveMetadata.ps1
+R100	scripts/verify/Validate-WikiLinks.ps1	Validate-WikiLinks.ps1
+R100	docs/reports/WEB_ARCHITECTURE_ASSESSMENT.md	WEB_ARCHITECTURE_ASSESSMENT.md
+R100	docs/reports/WHAT-IS-A-GOD-OBJECT.md	WHAT-IS-A-GOD-OBJECT.md
+R100	docs/reports/WIKI-LINK-MAINTENANCE-GUIDE.md	WIKI-LINK-MAINTENANCE-GUIDE.md
+R100	docs/reports/WIKI-LINKS-DEVELOPER-GUIDE.md	WIKI-LINKS-DEVELOPER-GUIDE.md
+A	YAML_VALIDATION_REPORT.md
+R076	scripts/automation/add_crosslinks.py	add_crosslinks.py
+A	add_developer_metadata.py
+R100	scripts/automation/add_inline_links.ps1	add_inline_links.ps1
+R053	scripts/automation/add_security_wiki_links.py	add_security_wiki_links.py
+R067	scripts/automation/add_wiki_links.py	add_wiki_links.py
+D	adversarial_tests/__init__.py
+M	adversarial_tests/galahad_model.py
+M	adversarial_tests/hydra/run_hydra.py
+D	adversarial_tests/jbb/__init__.py
+M	adversarial_tests/multiturn/run_multiturn.py
+D	adversarial_tests/post_upgrade_eval.py
+M	adversarial_tests/scripts/convert_to_2026_format.py
+R082	scripts/automation/agent_074_cross_doc_linker.py	agent_074_cross_doc_linker.py
+R089	scripts/automation/agent_074_inline_linker.py	agent_074_inline_linker.py
+R084	scripts/automation/agent_074_link_processor.py	agent_074_link_processor.py
+R067	scripts/automation/agent_075_link_system.py	agent_075_link_system.py
+R054	scripts/automation/agent_075_phase2_links.py	agent_075_phase2_links.py
+R096	scripts/automation/agent_079_crosslink_batch.py	agent_079_crosslink_batch.py
+A	analyze_coverage.py
+R058	scripts/automation/analyze_metadata.py	analyze_metadata.py
+R062	scripts/automation/analyze_security_mapping.py	analyze_security_mapping.py
+M	android/legion_mini/src/main/java/ai/project/legion/mini/MainActivity.kt
+M	api/Dockerfile
+M	api/main.py
+M	api/requirements.txt
+M	api/save_points_routes.py
+M	atlas/config/loader.py
+M	atlas/core/drivers/calculator.py
+M	atlas/core/graph/temporal_graph.py
+M	atlas/core/ingestion/tier_classifier.py
+M	atlas/core/normalization/normalizer.py
+M	atlas/schemas/validator.py
+M	atlas/simulation/contingency_triggers.py
+D	audit.log
+A	automation-backups/wiki-conversion-20260420-104830/docs/architecture/GOD_TIER_PLATFORM_IMPLEMENTATION_20260420_104836.md
+A	automation-backups/wiki-conversion-20260420-104830/docs/architecture/GOD_TIER_SYSTEMS_DOCUMENTATION_20260420_104836.md
+R100	test-artifacts/bandit-report-post-fix.json	bandit-report-post-fix.json
+R100	test-artifacts/bandit-report.json	bandit-report.json
+D	baseline/AWESOME_COPILOT_COMPARISON.md
+D	baseline/EFFORT_ESTIMATES.md
+D	baseline/GAP_ANALYSIS_REPORT.md
+D	baseline/IMPLEMENTATION_ROADMAP.md
+D	baseline/PHASE_A_RELEASE_READINESS.md
+D	baseline/phase0_current_phase_progress.csv
+D	baseline/phase0_execution_templates.md
+D	baseline/phase0_high_priority_gaps.csv
+D	baseline/phase0_release_readiness_snapshot.json
+M	build.gradle.kts
+D	buildSrc/build.gradle.kts
+D	buildSrc/src/main/kotlin/com/projectai/evolution/EvolutionAttributeRules.kt
+D	buildSrc/src/main/kotlin/com/projectai/evolution/EvolutionSharedServices.kt
+D	buildSrc/src/main/kotlin/com/projectai/evolution/EvolutionTasks.kt
+R100	session.sqlite	bypass_fix_report.json
+A	canonical/execution_trace.json
+M	canonical/server.py
+M	canonical/test_server.py
+R086	scripts/verify/check_lockout_syntax.py	check_lockout_syntax.py
+A	ci-reports/garak-latest.json
+A	ci-reports/hydra-latest.json
+A	ci-reports/jbb-latest.json
+A	ci-reports/multiturn-latest.json
+A	ci-reports/unified-report.json
+R100	test-artifacts/classification_plan.json	classification_plan.json
+M	cognition/boundary.py
+M	cognition/governance_audit.log
+A	compare_bandit_results.py
+R056	scripts/automation/complexity_analysis.py	complexity_analysis.py
+M	config/prometheus/prometheus.yml
+M	config/settings_manager.py
+D	conformance/advanced.json
+D	conformance/errors.json
+D	conformance/governance.json
+D	conformance/modules.json
+D	conformance/runner.py
+D	conformance/runner_js.py
+D	conformance/security.json
+D	conformance/shadow_mutation.json
+D	conformance/smoke.py
+D	conformance/stdlib.json
+D	conformance/syntax.json
+D	conformance/types.json
+D	conformance/verify.py
+R100	test-artifacts/constitutional_validation_report.txt	constitutional_validation_report.txt
+R100	test-artifacts/coverage.json	coverage.json
+R100	scripts/automation/create_shell_injection_issue.ps1	create_shell_injection_issue.ps1
+D	data/audit/audit_20260502.jsonl
+D	data/collaborative_workflows/workflow_20260516_135651.json
+M	data/continuous_learning/reports.json
+D	data/fates/memory/THE_FATES.json
+D	data/fates/memory/THE_FATES.md
+M	data/graph_analysis/constitutional_view.json
+D	data/learning_requests/requests.json
+D	data/ledger/constitutional.jsonl
+D	data/legal/acceptance_ledger.db
+M	data/monitoring/cerberus_incidents.json
+D	data/overrides/audit.json
+D	data/runtime/governance_audit.log
+D	data/runtime/iron_path_decisions.jsonl
+R060	scripts/automation/debug_auth.py	debug_auth.py
+R092	scripts/demo/demo_input_validation.py	demo_input_validation.py
+R093	scripts/demo/demo_timing_attack_fix.py	demo_timing_attack_fix.py
+M	demos/god_tier_performance_monitoring_demo.py
+M	demos/security_advantage/python/python_impossibility.py
+M	diagrams/architecture/04-security-systems.md
+M	diagrams/architecture/10-infrastructure.md
+M	diagrams/excalidraw/convert_to_svg.py
+M	docker-compose.override.yml
+M	docker-compose.yml
+M	docs/00_INDEX.md
+D	docs/ANTIGRAVITY_QUICKSTART.md
+A	docs/GOD_TIER_CROSS_TIER_PERFORMANCE_MONITORING.md
+A	docs/GOD_TIER_SUGGESTIONS_IMPLEMENTATION.md
+D	docs/GOOGLE_ANTIGRAVITY_IDE_INTEGRATION.md
+D	docs/PROJECT_AI_SKILL_CREATOR.md
+D	docs/agents/EVIDENCE_HARVESTER.md
+A	docs/architecture/GOD_TIER_DISTRIBUTED_ARCHITECTURE.md
+A	docs/architecture/GOD_TIER_INTELLIGENCE_SYSTEM.md
+A	docs/architecture/GOD_TIER_PLATFORM_IMPLEMENTATION.md
+A	docs/architecture/GOD_TIER_SYSTEMS_DOCUMENTATION.md
+D	docs/architecture/GOVERNANCE_CONTRACT.md
+D	docs/architecture/GOVERNANCE_MICROKERNEL.md
+D	docs/architecture/RECOVERY_PROTOCOL.md
+M	docs/architecture/SOVEREIGN_RUNTIME.md
+M	docs/architecture/SOVEREIGN_VERIFICATION_GUIDE.md
+D	docs/architecture/THREAT_MODEL.md
+D	docs/architecture/threat_model.yaml
+D	docs/compiled/documentation_compiler_agent_technical_documentation.md
+D	docs/compiled/documentationcompileragent_technical_documentation.md
+D	docs/design/OMPT_luxury_dark_mode_site.md
+D	docs/governance/COMPLIANCE_BUNDLE_EXCEPTION_REGISTER.md
+D	docs/governance/COMPREHENSIVE_STRATEGY_GUIDE_PROJECT_AI.md
+D	docs/governance/Legion_Commission.docx
+D	docs/governance/Local_Coding_CareTaker_Agent_API_enhanced.yaml
+D	docs/governance/ORP_Constitutional_Integration_Karrick.docx
+D	docs/governance/PROJECT_AI_SOVEREIGN_VERIFICATION_RUNBOOK.md
+D	docs/governance/Project_AEGIS.pdf
+D	docs/governance/TAMS_OMEGA_v1.0.md
+D	docs/governance/TRIUMVIRATE_DOMAIN_MAPPING.md
+D	docs/governance/The_STATE_REGISTER_Karrick_Jeremy.docx
+D	docs/governance/dual_governance_kernel_disclosure.pdf
+D	docs/governance/meta_governance_segment_1_3.pdf
+D	docs/hardware/oculus_go_project_ai.md
+A	docs/internal/archive/GOD_TIER_EXPANSION_COMPLETE.md
+A	docs/internal/archive/GOD_TIER_EXPANSION_SUMMARY.md
+A	docs/internal/archive/GOD_TIER_IMPLEMENTATION_EXECUTIVE_SUMMARY.md
+A	docs/internal/archive/GOD_TIER_IMPLEMENTATION_SUMMARY_NEW.md
+D	docs/nirl/NIRL_IMPLEMENTATION.md
+D	docs/nirl/NIRL_Spec_v1.1.docx
+D	docs/nirl/nirl_state_machines.html
+D	docs/papers/PROJECT_AI_PAPERS_INDEX.md
+D	docs/papers/Why_I_Am_Doing_This_ProjectAI.pdf
+D	docs/papers/project_ai_patent_portfolio_map.pdf
+D	docs/plan/awesome-copilot-import/plan.yaml
+M	docs/reports/AGENT-007-DOCUMENTATION-INDEX.md
+M	docs/reports/AGENT-007-MISSION-SUMMARY.md
+A	docs/reports/AGENT-072-link-generator.py
+M	docs/reports/AGENT-079-DELIVERABLES-INDEX.md
+M	docs/reports/AGENT-083-API-COVERAGE-REPORT.md
+M	docs/reports/AGENT-083-MISSION-SUMMARY.md
+M	docs/reports/AGENT-084-LEARNING-PATHS.md
+M	docs/reports/AGENT-084-MISSION-COMPLETE.md
+M	docs/reports/AGENT-085-COMMON-ISSUES-INDEX.md
+M	docs/reports/AGENT-085-PROBLEM-SYSTEM-MAP.md
+M	docs/reports/AGENT-086-DOCUMENTATION-ENHANCEMENT-GUIDE.md
+M	docs/reports/AGENT-086-INDEX.md
+M	docs/reports/AGENT-086-SECURITY-COVERAGE-MATRIX.md
+M	docs/reports/AGENT-088-COMPLIANCE-MATRIX.md
+M	docs/reports/AGENT-091-MISSION-COMPLETE.md
+M	docs/reports/AGENT_008_P0_METADATA_ENRICHMENT_REPORT.md
+M	docs/reports/AGENT_009_MISSION_COMPLETE_CHECKLIST.md
+M	docs/reports/AGENT_009_P0_GOVERNANCE_SECURITY_METADATA_REPORT.md
+M	docs/reports/AGENT_017_COMPLETION.md
+M	docs/reports/REMEDIATION_VERIFICATION.md
+D	docs/reports/ROOT_CLEANUP_KNOWN_PROBLEMS.md
+M	docs/reports/SECURITY_VULNERABILITY_ASSESSMENT_REPORT.md
+A	docs/reports/agent_074_cross_doc_linker.py
+A	docs/reports/agent_074_inline_linker.py
+A	docs/reports/agent_074_link_processor.py
+A	docs/reports/agent_075_link_system.py
+A	docs/reports/agent_075_phase2_links.py
+A	docs/reports/agent_079_crosslink_batch.py
+D	docs/reports/root_conflicts/README.md
+M	docs/reports/vault-validation-report.md
+D	docs/security_compliance/SECURITY_TRIAGE_2026-04-27.md
+M	e2e/cli.py
+M	e2e/reporting/html_reporter.py
+M	e2e/scenarios/test_adversarial_e2e.py
+M	e2e/scenarios/test_council_hub_e2e.py
+M	e2e/scenarios/test_multi_agent_e2e.py
+M	e2e/utils/assertions.py
+M	e2e/utils/test_helpers.py
+M	engines/ai_takeover/tests/test_engine.py
+M	engines/ai_takeover/tests/test_proof_and_trap.py
+M	engines/alien_invaders/integration.py
+M	engines/django_state/modules/human_forces.py
+A	engines/emp_defense/GOD_TIER_ESCALATION_COMPLETE.md
+M	engines/emp_defense/engine.py
+M	engines/emp_defense/modules/coupling.py
+M	engines/emp_defense/modules/event_consequences.py
+M	engines/emp_defense/modules/failure_states.py
+R060	scripts/automation/enrich_architecture_metadata.py	enrich_architecture_metadata.py
+A	enrich_engine_docs.py
+R057	scripts/automation/enrich_p3_archive_metadata.py	enrich_p3_archive_metadata.py
+D	example_production_audit.py
+M	examples/agi_identity_demo.py
+M	examples/asymmetric_security_demo.py
+D	examples/documentation_compiler_integration.py
+D	examples/evidence_harvester_example.py
+M	examples/global_watch_tower_demo.py
+M	examples/hydra_50_examples.py
+M	examples/security_agents_demo.py
+M	examples/super_kernel_example.py
+D	export_baseline.py
+R075	scripts/automation/extract_examples.py	extract_examples.py
+D	extract_with_permissions.py
+R080	scripts/automation/fix_vault_links.py	fix_vault_links.py
+R075	scripts/automation/generate_mission_reports.py	generate_mission_reports.py
+D	generate_pdf.py
+R100	test-artifacts/god_tier_bandit.json	god_tier_bandit.json
+M	governance/iron_path.py
+D	governance/sovereign_data/artifacts/20260427_053208/execution_summary.json
+D	governance/sovereign_data/artifacts/20260427_053208/stage_data_preparation_only_534ef5a1.json
+D	governance/sovereign_data/artifacts/20260427_053243/compliance_bundle.json
+D	governance/sovereign_data/artifacts/20260427_053243/execution_summary.json
+D	governance/sovereign_data/artifacts/20260427_053243/stage_audit_export_only_3f398858.json
+D	governance/sovereign_data/artifacts/20260427_053243/stage_data_preparation_only_ba3e44cd.json
+M	governance/sovereign_data/immutable_audit.jsonl
+M	governance/sovereign_verifier.py
+D	governance/triumvirate_server.py
+R100	test-artifacts/governance_enrichment.json	governance_enrichment.json
+M	gradle-evolution/api/documentation_generator.py
+M	gradle-evolution/api/verifiability_api.py
+M	gradle-evolution/audit/__init__.py
+M	gradle-evolution/audit/accountability.py
+M	gradle-evolution/audit/audit_integration.py
+M	gradle-evolution/capsules/capsule_engine.py
+M	gradle-evolution/capsules/replay_engine.py
+M	gradle-evolution/cognition/build_cognition.py
+M	gradle-evolution/cognition/state_integration.py
+M	gradle-evolution/constitutional/enforcer.py
+M	gradle-evolution/constitutional/engine.py
+M	gradle-evolution/constitutional/temporal_law.py
+M	gradle-evolution/db/migrations.py
+M	gradle-evolution/gradle_integration.py
+M	gradle-evolution/ir/compiler.py
+M	gradle-evolution/ir/ir_executor.py
+M	gradle-evolution/security/policy_scheduler.py
+M	gradle-evolution/security/security_engine.py
+M	gradle-evolution/test_ir.py
+M	gradle.properties
+M	h323_sec_profile/H323_SEC_PROFILE_v1.py
+R100	test-artifacts/hydra_bandit.json	hydra_bandit.json
+M	indexes/agent_capabilities_index.md
+D	indexes/code_file_paths_index.md
+R100	scripts/automation/inspection_cli.py	inspection_cli.py
+R100	test-artifacts/integration_metadata_inventory.json	integration_metadata_inventory.json
+M	integrations/__init__.py
+M	integrations/openclaw/agent_adapter.py
+M	integrations/openclaw/api_endpoints.py
+M	integrations/openclaw/capability_registry.py
+M	integrations/openclaw/config.py
+M	integrations/openclaw/eed_memory.py
+M	integrations/openclaw/legion_api.py
+D	integrations/openclaw/legion_memory.py
+D	integrations/openclaw/llm_provider.py
+M	integrations/openclaw/security_wrapper.py
+D	integrations/openclaw/skills/__init__.py
+D	integrations/openclaw/skills/ai_subsystems.py
+D	integrations/openclaw/skills/assistant.py
+D	integrations/openclaw/skills/communication.py
+D	integrations/openclaw/skills/development.py
+D	integrations/openclaw/skills/research.py
+D	integrations/openclaw/skills/system_skills.py
+M	integrations/openclaw/triumvirate_client.py
+M	integrations/thirsty_lang_complete/demo.py
+M	integrations/thirsty_lang_complete/test_integration.py
+D	integrations/thirsty_lang_security.py
+R100	test-artifacts/issue_body.txt	issue_body.txt
+M	kernel/advanced_visualizations.py
+M	kernel/demo_holographic.py
+M	kernel/presentation_demo.py
+M	kernel/thirsty_super_kernel.py
+R100	test-artifacts/local_fbo_bandit.json	local_fbo_bandit.json
+R100	test-artifacts/metadata_validation_report.json	metadata_validation_report.json
+R100	test-artifacts/module_inventory.csv	module_inventory.csv
+D	policies/__init__.py
+M	project_ai/tarl/integrations/golden_paths.py
+M	project_ai_cli.py
+M	pyproject.toml
+A	pytest.ini
+M	quickstart.py
+M	relationships/agents/00_AGENTS_MOC.md
+M	relationships/cli-automation/04_automation-workflows.md
+M	relationships/governance/00_GOVERNANCE_MOC.md
+M	relationships/testing/09_test_runners_relationships.md
+M	relationships/testing/10_coverage_tools_relationships.md
+R070	scripts/automation/remove_frontmatter.py	remove_frontmatter.py
+M	requirements.txt
+R100	test-artifacts/resume_artifact_scan_results.txt	resume_artifact_scan_results.txt
+R100	test-artifacts/ruff_results.json	ruff_results.json
+R100	scripts/automation/scan_resume_artifacts.ps1	scan_resume_artifacts.ps1
+D	scripts/automation/AGENT-072-link-generator.py
+D	scripts/automation/add_developer_metadata.py
+D	scripts/automation/analyze_coverage.py
+D	scripts/automation/compare_bandit_results.py
+D	scripts/automation/enrich_engine_docs.py
+M	scripts/benchmark.py
+M	scripts/build_production.ps1
+M	scripts/deepseek_v32_cli.py
+M	scripts/demo/demo_advanced_boot.py
+M	scripts/demo/demo_global_scenario_engine.py
+M	scripts/demo/demo_tarl_productivity.py
+M	scripts/fix_assert_statements.py
+M	scripts/fix_logging_performance.py
+M	scripts/fix_logging_performance_surgical.py
+M	scripts/fix_logging_phase2.py
+M	scripts/fix_syntax_errors.py
+D	scripts/inspect_evidence_bundle.py
+M	scripts/populate_cybersecurity_knowledge.py
+M	scripts/redteam_workflow.py
+M	scripts/run_asl3_security.py
+M	scripts/run_asl_assessment.py
+M	scripts/run_cbrn_classifier.py
+M	scripts/run_comprehensive_expansion.py
+M	scripts/run_e2e_tests.ps1
+M	scripts/run_novel_scenarios.py
+M	scripts/run_red_hat_expert_simulations.py
+M	scripts/run_red_team_stress_tests.py
+M	scripts/run_robustness_benchmarks.py
+M	scripts/run_security_worker.py
+M	scripts/validate_index_names.py
+M	scripts/verify/final_phase4_validation.py
+M	scripts/verify/god_tier_verification.py
+M	scripts/verify/validate_thirstys_security.py
+M	scripts/verify/verify-platforms.sh
+M	scripts/verify/verify_constitution.py
+M	scripts/verify_governance.py
+R100	test-artifacts/security_enrichment_status.json	security_enrichment_status.json
+R100	test-artifacts/security_mapping_summary.txt	security_mapping_summary.txt
+M	settings.gradle.kts
+M	setup.cfg
+M	setup.py
+R100	test-artifacts/situational_bandit.json	situational_bandit.json
+M	source-docs/cli-automation/04-SOVEREIGN-CLI.md
+D	source-docs/constitutional/TSCG_B_SPECIFICATION_v1.0.md
+M	source-docs/deployment/10_cicd_pipeline.md
+M	source-docs/validate_structure.py
+D	src/app/agents/PRODUCTION_AUDITOR.md
+M	src/app/agents/README.md
+D	src/app/agents/README_EVIDENCE_HARVESTER.md
+M	src/app/agents/__init__.py
+D	src/app/agents/__main__.py
+A	src/app/agents/alpha_red.py
+A	src/app/agents/attack_train_loop.py
+M	src/app/agents/border_patrol.py
+M	src/app/agents/cerberus_codex_bridge.py
+M	src/app/agents/code_adversary_agent.py
+M	src/app/agents/codex_deus_maximus.py
+D	src/app/agents/collaborative_workflow.py
+M	src/app/agents/constitutional_guardrail_agent.py
+D	src/app/agents/documentation_compiler.py
+D	src/app/agents/documentation_compiler_README.md
+D	src/app/agents/evidence_harvester.py
+M	src/app/agents/explainability.py
+M	src/app/agents/jailbreak_bench_agent.py
+M	src/app/agents/oversight.py
+A	src/app/agents/planner.py
+D	src/app/agents/production_auditor.py
+M	src/app/agents/red_team_agent.py
+M	src/app/agents/red_team_persona_agent.py
+M	src/app/agents/tarl_protector.py
+M	src/app/agents/thirsty_lang_validator.py
+M	src/app/agents/validator.py
+M	src/app/cli.py
+M	src/app/cli/__init__.py
+M	src/app/cli/hydra_50_cli.py
+M	src/app/core/advanced_behavioral_validation.py
+M	src/app/core/advanced_boot.py
+M	src/app/core/ai/__init__.py
+M	src/app/core/ai/orchestrator.py
+M	src/app/core/ai_systems.py
+M	src/app/core/asymmetric_security_engine.py
+M	src/app/core/bio_brain_mapper.py
+M	src/app/core/bonding_protocol.py
+D	src/app/core/capability_token.py
+M	src/app/core/cbrn_classifier.py
+M	src/app/core/cerberus_hydra.py
+M	src/app/core/cerberus_runtime_manager.py
+M	src/app/core/cognition_kernel.py
+M	src/app/core/command_override.py
+M	src/app/core/comprehensive_security_expansion.py
+D	src/app/core/constitutional_ledger.py
+M	src/app/core/constitutional_model.py
+M	src/app/core/conversation_context_engine.py
+D	src/app/core/conversation_threat_register.py
+M	src/app/core/council_hub.py
+D	src/app/core/degraded_mode.py
+M	src/app/core/directness.py
+M	src/app/core/distributed_cluster_coordinator.py
+M	src/app/core/distributed_event_streaming.py
+D	src/app/core/ebpf_bridge.py
+M	src/app/core/enhanced_bootstrap.py
+D	src/app/core/evidence_bundle.py
+D	src/app/core/execution_authorization.py
+D	src/app/core/execution_gate.py
+D	src/app/core/execution_router.py
+D	src/app/core/fates/__init__.py
+D	src/app/core/fates/fates.py
+D	src/app/core/genesis_reanchor.py
+M	src/app/core/global_scenario_engine.py
+M	src/app/core/god_tier_asymmetric_security.py
+M	src/app/core/god_tier_command_center.py
+M	src/app/core/god_tier_config.py
+M	src/app/core/god_tier_integration.py
+M	src/app/core/god_tier_integration_layer.py
+M	src/app/core/god_tier_intelligence_system.py
+M	src/app/core/governance/__init__.py
+M	src/app/core/governance/external_ecosystem_bridge.py
+M	src/app/core/governance/iron_path_executor.py
+M	src/app/core/governance/pipeline.py
+M	src/app/core/governance/rate_limiter.py
+M	src/app/core/governance/validators.py
+M	src/app/core/governance_drift_monitor.py
+D	src/app/core/governance_kernel.py
+D	src/app/core/governance_mode.py
+D	src/app/core/governance_observability.py
+D	src/app/core/governance_outcomes.py
+D	src/app/core/governance_quorum.py
+M	src/app/core/guardian_approval_system.py
+M	src/app/core/health_monitoring_continuity.py
+M	src/app/core/honeypot_detector.py
+M	src/app/core/hydra_50_engine.py
+M	src/app/core/hydra_50_performance.py
+M	src/app/core/hydra_50_visualization.py
+M	src/app/core/identity.py
+M	src/app/core/identity_operational_extensions.py
+M	src/app/core/image_generator.py
+M	src/app/core/incident_responder.py
+M	src/app/core/intelligence/attack_simulator.py
+M	src/app/core/intelligence/autonomy_engine.py
+M	src/app/core/intelligence/emotional_palette.py
+M	src/app/core/intelligence/meta_agents.py
+M	src/app/core/intelligence_engine.py
+D	src/app/core/invariant_engine.py
+D	src/app/core/invariant_severity.py
+M	src/app/core/ip_blocking_system.py
+M	src/app/core/kernel_integration.py
+M	src/app/core/learning_paths.py
+D	src/app/core/liara_bridge.py
+M	src/app/core/live_metrics_dashboard.py
+M	src/app/core/local_fbo.py
+M	src/app/core/mcp_server.py
+M	src/app/core/memory_engine.py
+M	src/app/core/memory_optimization/compression_engine.py
+M	src/app/core/memory_optimization/deduplication_engine.py
+M	src/app/core/memory_optimization/telemetry_collector.py
+M	src/app/core/memory_optimization/tiered_storage.py
+M	src/app/core/meta_identity.py
+M	src/app/core/model_providers.py
+D	src/app/core/mutation_binding.py
+D	src/app/core/nirl/__init__.py
+D	src/app/core/nirl/antibody.py
+D	src/app/core/nirl/forge.py
+D	src/app/core/nirl/heart.py
+D	src/app/core/nirl/mini_brain.py
+M	src/app/core/novel_security_scenarios.py
+M	src/app/core/octoreflex.py
+M	src/app/core/openrouter_mock.py
+M	src/app/core/openrouter_provider.py
+M	src/app/core/operational_substructure.py
+M	src/app/core/perspective_engine.py
+M	src/app/core/platform_tiers.py
+D	src/app/core/policy_decision.py
+D	src/app/core/policy_registry.py
+M	src/app/core/polyglot_execution.py
+M	src/app/core/rag_system.py
+M	src/app/core/realtime_monitoring.py
+M	src/app/core/rebirth_protocol.py
+M	src/app/core/red_hat_expert_defense.py
+M	src/app/core/red_team_stress_test.py
+M	src/app/core/reflection_cycle.py
+M	src/app/core/relationship_model.py
+M	src/app/core/risingwave_integration.py
+M	src/app/core/robotic_controller_manager.py
+M	src/app/core/runtime/router.py
+D	src/app/core/safe_allow_calibration.py
+M	src/app/core/safety_levels.py
+M	src/app/core/secure_comms.py
+M	src/app/core/security/__init__.py
+M	src/app/core/security/auth.py
+M	src/app/core/security/middleware.py
+M	src/app/core/security_enforcer.py
+M	src/app/core/security_operations_center.py
+D	src/app/core/semantic_collision.py
+D	src/app/core/semantic_risk_classifier.py
+M	src/app/core/sensor_fusion.py
+M	src/app/core/services/governance_service.py
+M	src/app/core/state_register.py
+M	src/app/core/super_kernel.py
+M	src/app/core/system_registry.py
+M	src/app/core/tarl_operational_extensions.py
+M	src/app/core/tier_governance_policies.py
+M	src/app/core/tier_health_dashboard.py
+M	src/app/core/tier_interfaces.py
+M	src/app/core/tier_performance_monitor.py
+D	src/app/core/time_trust.py
+M	src/app/core/tscg_codec.py
+M	src/app/core/user_manager.py
+M	src/app/core/validate_constitution.py
+M	src/app/core/visual_cue_models.py
+M	src/app/core/voice_bonding_protocol.py
+D	src/app/core/waterfall_filter.py
+M	src/app/domains/agi_safeguards.py
+M	src/app/domains/biomedical_defense.py
+M	src/app/domains/command_control.py
+M	src/app/domains/continuous_improvement.py
+M	src/app/domains/deep_expansion.py
+M	src/app/domains/ethics_governance.py
+M	src/app/domains/situational_awareness.py
+M	src/app/domains/supply_logistics.py
+M	src/app/domains/survivor_support.py
+M	src/app/domains/tactical_edge_ai.py
+M	src/app/governance/acceptance_ledger.py
+M	src/app/governance/audit_log.py
+M	src/app/governance/jurisdiction_loader.py
+D	src/app/gui/collaborative_workflow_panel.py
+M	src/app/gui/dashboard.py
+M	src/app/gui/dashboard_handlers.py
+M	src/app/gui/dashboard_main.py
+M	src/app/gui/dashboard_utils.py
+M	src/app/gui/hydra_50_panel.py
+M	src/app/gui/image_generation.py
+M	src/app/gui/leather_book_dashboard.py
+M	src/app/gui/leather_book_interface.py
+M	src/app/gui/leather_book_panels.py
+M	src/app/gui/login.py
+M	src/app/gui/persona_panel.py
+M	src/app/health/report.py
+M	src/app/inspection/api.py
+M	src/app/inspection/audit_pipeline.py
+M	src/app/inspection/catalog_builder.py
+M	src/app/inspection/cli.py
+M	src/app/inspection/report_generator.py
+M	src/app/inspection/repository_inspector.py
+M	src/app/interfaces/agents/adapter.py
+M	src/app/interfaces/cli/main.py
+M	src/app/interfaces/desktop/adapter.py
+M	src/app/interfaces/desktop/integration.py
+M	src/app/interfaces/web/app.py
+M	src/app/main.py
+M	src/app/monitoring/alert_manager.py
+M	src/app/monitoring/security_metrics.py
+M	src/app/plugins/excalidraw_plugin.py
+M	src/app/plugins/graph_analysis_plugin.py
+M	src/app/security/__init__.py
+M	src/app/security/advanced/mfa_auth.py
+M	src/app/security/advanced/privacy_ledger.py
+M	src/app/security/ai_security_framework.py
+M	src/app/security/asymmetric_enforcement_gateway.py
+D	src/app/security/chimera/__init__.py
+D	src/app/security/chimera/chimera.env.template
+D	src/app/security/chimera/chimera.py
+D	src/app/security/chimera_bridge.py
+M	src/app/security/database_security.py
+M	src/app/security/monitoring.py
+M	src/app/security/path_security.py
+M	src/app/temporal/governance_integration.py
+M	src/app/temporal/workflows.py
+M	src/cognition/adapters/model_adapter.py
+D	src/psia/__init__.py
+D	src/psia/bootstrap/__init__.py
+D	src/psia/bootstrap/init.py
+D	src/psia/canonical/__init__.py
+D	src/psia/canonical/log.py
+D	src/psia/consensus/__init__.py
+D	src/psia/consensus/bft.py
+D	src/psia/core.py
+D	src/psia/crypto/__init__.py
+D	src/psia/crypto/anchor.py
+D	src/psia/crypto/merkle.py
+D	src/psia/crypto/threshold.py
+D	src/psia/gate/__init__.py
+D	src/psia/gate/prescreen.py
+D	src/psia/observability/__init__.py
+D	src/psia/observability/trace.py
+D	src/psia/schemas/__init__.py
+D	src/psia/schemas/models.py
+D	src/psia/server/__init__.py
+D	src/psia/server/app.py
+D	src/psia/shadow/__init__.py
+D	src/psia/shadow/simulator.py
+D	src/psia/waterfall/__init__.py
+D	src/psia/waterfall/stages.py
+M	src/thirsty_lang/src/ast.js
+D	src/thirsty_lang/src/checker.js
+M	src/thirsty_lang/src/cli.js
+M	src/thirsty_lang/src/index.js
+D	src/thirsty_lang/src/interpreter.js
+D	src/thirsty_lang/src/lexer.js
+D	src/thirsty_lang/src/parser.js
+D	src/thirstys_waterfall/LICENSE
+D	src/thirstys_waterfall/__init__.py
+D	src/thirstys_waterfall/ad_annihilator/__init__.py
+D	src/thirstys_waterfall/ad_annihilator/ad_database.py
+D	src/thirstys_waterfall/ad_annihilator/autoplay_killer.py
+D	src/thirstys_waterfall/ad_annihilator/holy_war_engine.py
+D	src/thirstys_waterfall/ad_annihilator/tracker_destroyer.py
+D	src/thirstys_waterfall/ai_assistant/__init__.py
+D	src/thirstys_waterfall/ai_assistant/ai_engine.py
+D	src/thirstys_waterfall/ai_assistant/context_manager.py
+D	src/thirstys_waterfall/ai_assistant/local_inference.py
+D	src/thirstys_waterfall/browser/__init__.py
+D	src/thirstys_waterfall/browser/browser_engine.py
+D	src/thirstys_waterfall/browser/content_blocker.py
+D	src/thirstys_waterfall/browser/encrypted_navigation.py
+D	src/thirstys_waterfall/browser/encrypted_search.py
+D	src/thirstys_waterfall/browser/sandbox.py
+D	src/thirstys_waterfall/browser/tab_manager.py
+D	src/thirstys_waterfall/cli.py
+D	src/thirstys_waterfall/config/__init__.py
+D	src/thirstys_waterfall/config/registry.py
+D	src/thirstys_waterfall/config/validator.py
+D	src/thirstys_waterfall/consigliere/__init__.py
+D	src/thirstys_waterfall/consigliere/action_ledger.py
+D	src/thirstys_waterfall/consigliere/capability_manager.py
+D	src/thirstys_waterfall/consigliere/consigliere_engine.py
+D	src/thirstys_waterfall/consigliere/privacy_checker.py
+D	src/thirstys_waterfall/firewalls/__init__.py
+D	src/thirstys_waterfall/firewalls/backends.py
+D	src/thirstys_waterfall/firewalls/base.py
+D	src/thirstys_waterfall/firewalls/circuit_level.py
+D	src/thirstys_waterfall/firewalls/cloud.py
+D	src/thirstys_waterfall/firewalls/hardware.py
+D	src/thirstys_waterfall/firewalls/honeypot_swarm.py
+D	src/thirstys_waterfall/firewalls/manager.py
+D	src/thirstys_waterfall/firewalls/next_generation.py
+D	src/thirstys_waterfall/firewalls/packet_filtering.py
+D	src/thirstys_waterfall/firewalls/proxy.py
+D	src/thirstys_waterfall/firewalls/software.py
+D	src/thirstys_waterfall/firewalls/stateful_inspection.py
+D	src/thirstys_waterfall/kill_switch.py
+D	src/thirstys_waterfall/media_downloader/__init__.py
+D	src/thirstys_waterfall/media_downloader/format_converter.py
+D	src/thirstys_waterfall/media_downloader/media_engine.py
+D	src/thirstys_waterfall/media_downloader/media_library.py
+D	src/thirstys_waterfall/network/__init__.py
+D	src/thirstys_waterfall/network/advanced_stealth.py
+D	src/thirstys_waterfall/orchestrator.py
+D	src/thirstys_waterfall/privacy/__init__.py
+D	src/thirstys_waterfall/privacy/anti_fingerprint.py
+D	src/thirstys_waterfall/privacy/anti_malware.py
+D	src/thirstys_waterfall/privacy/anti_phishing.py
+D	src/thirstys_waterfall/privacy/anti_tracker.py
+D	src/thirstys_waterfall/privacy/onion_router.py
+D	src/thirstys_waterfall/privacy/privacy_auditor.py
+D	src/thirstys_waterfall/project_ai_filter.py
+D	src/thirstys_waterfall/remote_access/__init__.py
+D	src/thirstys_waterfall/remote_access/remote_browser.py
+D	src/thirstys_waterfall/remote_access/remote_desktop.py
+D	src/thirstys_waterfall/remote_access/secure_tunnel.py
+D	src/thirstys_waterfall/runtime_controls.py
+D	src/thirstys_waterfall/security/__init__.py
+D	src/thirstys_waterfall/security/dos_trap.py
+D	src/thirstys_waterfall/security/hardware_root_of_trust.py
+D	src/thirstys_waterfall/security/mfa_auth.py
+D	src/thirstys_waterfall/security/microvm_isolation.py
+D	src/thirstys_waterfall/security/privacy_ledger.py
+D	src/thirstys_waterfall/security/privacy_risk_engine.py
+D	src/thirstys_waterfall/settings/__init__.py
+D	src/thirstys_waterfall/settings/contact_system.py
+D	src/thirstys_waterfall/settings/feedback_manager.py
+D	src/thirstys_waterfall/settings/qa_system.py
+D	src/thirstys_waterfall/settings/settings_manager.py
+D	src/thirstys_waterfall/setup/__init__.py
+D	src/thirstys_waterfall/setup/captcha_system.py
+D	src/thirstys_waterfall/setup/notice_letter.py
+D	src/thirstys_waterfall/setup/setup_wizard.py
+D	src/thirstys_waterfall/setup/usage_tutorial.py
+D	src/thirstys_waterfall/storage/__init__.py
+D	src/thirstys_waterfall/storage/ephemeral_storage.py
+D	src/thirstys_waterfall/storage/privacy_vault.py
+D	src/thirstys_waterfall/themes/__init__.py
+D	src/thirstys_waterfall/themes/theme_detector.py
+D	src/thirstys_waterfall/themes/theme_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/LICENSE
+D	src/thirstys_waterfall/thirstys_waterfall/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/ad_annihilator/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/ad_annihilator/ad_database.py
+D	src/thirstys_waterfall/thirstys_waterfall/ad_annihilator/autoplay_killer.py
+D	src/thirstys_waterfall/thirstys_waterfall/ad_annihilator/holy_war_engine.py
+D	src/thirstys_waterfall/thirstys_waterfall/ad_annihilator/tracker_destroyer.py
+D	src/thirstys_waterfall/thirstys_waterfall/ai_assistant/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/ai_assistant/ai_engine.py
+D	src/thirstys_waterfall/thirstys_waterfall/ai_assistant/context_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/ai_assistant/local_inference.py
+D	src/thirstys_waterfall/thirstys_waterfall/browser/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/browser/browser_engine.py
+D	src/thirstys_waterfall/thirstys_waterfall/browser/content_blocker.py
+D	src/thirstys_waterfall/thirstys_waterfall/browser/encrypted_navigation.py
+D	src/thirstys_waterfall/thirstys_waterfall/browser/encrypted_search.py
+D	src/thirstys_waterfall/thirstys_waterfall/browser/sandbox.py
+D	src/thirstys_waterfall/thirstys_waterfall/browser/tab_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/cli.py
+D	src/thirstys_waterfall/thirstys_waterfall/config/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/config/registry.py
+D	src/thirstys_waterfall/thirstys_waterfall/config/validator.py
+D	src/thirstys_waterfall/thirstys_waterfall/consigliere/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/consigliere/action_ledger.py
+D	src/thirstys_waterfall/thirstys_waterfall/consigliere/capability_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/consigliere/consigliere_engine.py
+D	src/thirstys_waterfall/thirstys_waterfall/consigliere/privacy_checker.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/backends.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/base.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/circuit_level.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/cloud.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/hardware.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/honeypot_swarm.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/next_generation.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/packet_filtering.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/proxy.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/software.py
+D	src/thirstys_waterfall/thirstys_waterfall/firewalls/stateful_inspection.py
+D	src/thirstys_waterfall/thirstys_waterfall/kill_switch.py
+D	src/thirstys_waterfall/thirstys_waterfall/media_downloader/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/media_downloader/format_converter.py
+D	src/thirstys_waterfall/thirstys_waterfall/media_downloader/media_engine.py
+D	src/thirstys_waterfall/thirstys_waterfall/media_downloader/media_library.py
+D	src/thirstys_waterfall/thirstys_waterfall/network/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/network/advanced_stealth.py
+D	src/thirstys_waterfall/thirstys_waterfall/orchestrator.py
+D	src/thirstys_waterfall/thirstys_waterfall/privacy/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/privacy/anti_fingerprint.py
+D	src/thirstys_waterfall/thirstys_waterfall/privacy/anti_malware.py
+D	src/thirstys_waterfall/thirstys_waterfall/privacy/anti_phishing.py
+D	src/thirstys_waterfall/thirstys_waterfall/privacy/anti_tracker.py
+D	src/thirstys_waterfall/thirstys_waterfall/privacy/onion_router.py
+D	src/thirstys_waterfall/thirstys_waterfall/privacy/privacy_auditor.py
+D	src/thirstys_waterfall/thirstys_waterfall/project_ai_filter.py
+D	src/thirstys_waterfall/thirstys_waterfall/remote_access/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/remote_access/remote_browser.py
+D	src/thirstys_waterfall/thirstys_waterfall/remote_access/remote_desktop.py
+D	src/thirstys_waterfall/thirstys_waterfall/remote_access/secure_tunnel.py
+D	src/thirstys_waterfall/thirstys_waterfall/security/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/security/dos_trap.py
+D	src/thirstys_waterfall/thirstys_waterfall/security/hardware_root_of_trust.py
+D	src/thirstys_waterfall/thirstys_waterfall/security/mfa_auth.py
+D	src/thirstys_waterfall/thirstys_waterfall/security/microvm_isolation.py
+D	src/thirstys_waterfall/thirstys_waterfall/security/privacy_ledger.py
+D	src/thirstys_waterfall/thirstys_waterfall/security/privacy_risk_engine.py
+D	src/thirstys_waterfall/thirstys_waterfall/settings/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/settings/contact_system.py
+D	src/thirstys_waterfall/thirstys_waterfall/settings/feedback_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/settings/qa_system.py
+D	src/thirstys_waterfall/thirstys_waterfall/settings/settings_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/setup/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/setup/captcha_system.py
+D	src/thirstys_waterfall/thirstys_waterfall/setup/notice_letter.py
+D	src/thirstys_waterfall/thirstys_waterfall/setup/setup_wizard.py
+D	src/thirstys_waterfall/thirstys_waterfall/setup/usage_tutorial.py
+D	src/thirstys_waterfall/thirstys_waterfall/storage/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/storage/ephemeral_storage.py
+D	src/thirstys_waterfall/thirstys_waterfall/storage/privacy_vault.py
+D	src/thirstys_waterfall/thirstys_waterfall/themes/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/themes/theme_detector.py
+D	src/thirstys_waterfall/thirstys_waterfall/themes/theme_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/utils/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/utils/doh_resolver.py
+D	src/thirstys_waterfall/thirstys_waterfall/utils/encrypted_logging.py
+D	src/thirstys_waterfall/thirstys_waterfall/utils/encrypted_network.py
+D	src/thirstys_waterfall/thirstys_waterfall/utils/god_tier_encryption.py
+D	src/thirstys_waterfall/thirstys_waterfall/vpn/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/vpn/backends.py
+D	src/thirstys_waterfall/thirstys_waterfall/vpn/dns_protection.py
+D	src/thirstys_waterfall/thirstys_waterfall/vpn/kill_switch.py
+D	src/thirstys_waterfall/thirstys_waterfall/vpn/multi_hop.py
+D	src/thirstys_waterfall/thirstys_waterfall/vpn/vpn_manager.py
+D	src/thirstys_waterfall/thirstys_waterfall/wifi_network/__init__.py
+D	src/thirstys_waterfall/thirstys_waterfall/wifi_network/mesh_networking.py
+D	src/thirstys_waterfall/thirstys_waterfall/wifi_network/spectrum_analyzer.py
+D	src/thirstys_waterfall/thirstys_waterfall/wifi_network/wifi_controller.py
+D	src/thirstys_waterfall/thirstys_waterfall/wifi_network/wifi_security.py
+D	src/thirstys_waterfall/utils/__init__.py
+D	src/thirstys_waterfall/utils/doh_resolver.py
+D	src/thirstys_waterfall/utils/encrypted_logging.py
+D	src/thirstys_waterfall/utils/encrypted_network.py
+D	src/thirstys_waterfall/utils/god_tier_encryption.py
+D	src/thirstys_waterfall/vpn/__init__.py
+D	src/thirstys_waterfall/vpn/backends.py
+D	src/thirstys_waterfall/vpn/dns_protection.py
+D	src/thirstys_waterfall/vpn/kill_switch.py
+D	src/thirstys_waterfall/vpn/multi_hop.py
+D	src/thirstys_waterfall/vpn/vpn_manager.py
+D	src/thirstys_waterfall/wifi_network/__init__.py
+D	src/thirstys_waterfall/wifi_network/mesh_networking.py
+D	src/thirstys_waterfall/wifi_network/spectrum_analyzer.py
+D	src/thirstys_waterfall/wifi_network/wifi_controller.py
+D	src/thirstys_waterfall/wifi_network/wifi_security.py
+D	src/utf/README.md
+D	src/utf/__init__.py
+D	src/utf/docs/CANONICAL_STACK.md
+D	src/utf/docs/GREAT_WELLS.md
+D	src/utf/docs/JS_PYTHON_PARITY.md
+D	src/utf/docs/PACKAGES_AND_GREAT_WELLS.md
+D	src/utf/docs/PSIA_SPEC.md
+D	src/utf/docs/SACRED_TEXTS.md
+D	src/utf/docs/SHADOW_THIRST_SPEC.md
+D	src/utf/docs/TARL_BOUNDARY.md
+D	src/utf/docs/THIRSTY_CONFORMANCE.md
+D	src/utf/docs/THIRSTY_EBNF_GRAMMAR.md
+D	src/utf/docs/THIRSTY_ERROR_CODES.md
+D	src/utf/docs/THIRSTY_LANG_SPEC.md
+D	src/utf/docs/THIRSTY_MODULE_SYSTEM.md
+D	src/utf/docs/THIRSTY_RUNTIME_SEMANTICS.md
+D	src/utf/docs/THIRSTY_STANDARD_LIBRARY.md
+D	src/utf/docs/THIRSTY_TYPE_SYSTEM.md
+D	src/utf/docs/THIRST_MANIFESTO.md
+D	src/utf/docs/THIRST_OF_GODS_SPEC.md
+D	src/utf/docs/TRIUMVIRATE_SPEC.md
+D	src/utf/docs/TSCG_B_ROLE.md
+D	src/utf/docs/TSCG_ROLE.md
+D	src/utf/examples/context.json
+D	src/utf/examples/flavor.thirsty
+D	src/utf/examples/gods.thirstofgods
+D	src/utf/examples/hello.thirsty
+D	src/utf/examples/namespace_imports.thirsty
+D	src/utf/examples/policy.tarl
+D	src/utf/examples/promote.shadowthirst
+D	src/utf/examples/showcase/governed_agent_runner/main.thirsty
+D	src/utf/pyproject.toml
+D	src/utf/shadow_thirst/__init__.py
+D	src/utf/shadow_thirst/cli.py
+D	src/utf/shadow_thirst/core.py
+D	src/utf/tarl/__init__.py
+D	src/utf/tarl/cli.py
+D	src/utf/tarl/compiler/__init__.py
+D	src/utf/tarl/compiler/frontend.py
+D	src/utf/tarl/compiler/llvm_backend.py
+D	src/utf/tarl/core.py
+D	src/utf/tests/conftest.py
+D	src/utf/tests/test_package_gallery.py
+D	src/utf/tests/test_properties.py
+D	src/utf/tests/test_shadow_thirst.py
+D	src/utf/tests/test_tarl.py
+D	src/utf/tests/test_thirsty_flavor.py
+D	src/utf/tests/test_thirsty_lang.py
+D	src/utf/tests/test_tscg.py
+D	src/utf/thirsty_lang/__init__.py
+D	src/utf/thirsty_lang/ast.py
+D	src/utf/thirsty_lang/checker.py
+D	src/utf/thirsty_lang/cli.py
+D	src/utf/thirsty_lang/debugger_server.py
+D	src/utf/thirsty_lang/diagnostics.py
+D	src/utf/thirsty_lang/docs_generator.py
+D	src/utf/thirsty_lang/formatter.py
+D	src/utf/thirsty_lang/interpreter.py
+D	src/utf/thirsty_lang/lexer.py
+D	src/utf/thirsty_lang/lsp_server.py
+D	src/utf/thirsty_lang/module_system.py
+D	src/utf/thirsty_lang/package_manager.py
+D	src/utf/thirsty_lang/parser.py
+D	src/utf/thirsty_lang/registry_server.py
+D	src/utf/thirsty_lang/token.py
+D	src/utf/thirsty_lang/typesys.py
+D	src/utf/tscg/__init__.py
+D	src/utf/tscg/cli.py
+D	src/utf/tscg/core.py
+D	src/utf/tscg_b/__init__.py
+D	src/utf/tscg_b/cli.py
+D	src/utf/tscg_b/core.py
+M	start_api.py
+M	tarl/__init__.py
+M	tarl/config/__init__.py
+M	tarl/diagnostics/__init__.py
+M	tarl/ffi/__init__.py
+M	tarl/modules/__init__.py
+M	tarl/parser.py
+M	tarl/runtime.py
+M	tarl/stdlib/__init__.py
+M	tarl/tooling/__init__.py
+A	tarl_os/GOD_TIER_IMPLEMENTATION_COMPLETE.md
+M	tarl_os/bridge.py
+M	tarl_os/tests/god_tier_stress_tests.py
+M	tarl_os/tests/god_tier_stress_tests_backup.py
+M	tarl_os/tests/multi_turn_tests.py
+D	templates/code-review-template.md
+D	test-artifacts/fourlaws-deterministic-1000-20260502T193318Z.jsonl
+D	test-artifacts/fourlaws-disallowed-highlevel-1000-20260502T193327Z.jsonl
+D	test-artifacts/fourlaws-hypothesis-threats-1000-20260502T193329Z.jsonl
+D	test-artifacts/fourlaws-property-1000-20260502T193332Z.jsonl
+D	test-artifacts/fourlaws-redacted-procedural-1000-20260502T193340Z.jsonl
+M	test_connection.py
+M	test_memory_security_audit.py
+M	test_mock_openrouter.py
+M	test_openrouter_integration.py
+M	test_path_traversal_fix.py
+M	tests/check_uniqueness.py
+M	tests/generate_1000_stress_tests.py
+M	tests/generate_2000_stress_tests.py
+M	tests/generate_owasp_tests.py
+M	tests/gradle_evolution/conftest.py
+M	tests/gradle_evolution/test_audit.py
+M	tests/gradle_evolution/test_constitutional.py
+M	tests/gradle_evolution/test_security.py
+M	tests/monitoring/test_cerberus_metrics.py
+M	tests/plugins/test_excalidraw_plugin.py
+M	tests/run_exhaustive_tests.py
+M	tests/test_antigravity_integration.py
+M	tests/test_atomic_writes.py
+D	tests/test_authorization_separation.py
+M	tests/test_backend_client_extended.py
+D	tests/test_capability_tokens.py
+M	tests/test_cerberus_behaviors.py
+M	tests/test_cerberus_runtime_manager_security.py
+D	tests/test_chimera_runtime.py
+M	tests/test_cli.py
+M	tests/test_cognition_kernel.py
+D	tests/test_collaborative_workflow.py
+M	tests/test_command_override_extended.py
+M	tests/test_command_override_migration.py
+D	tests/test_conversation_threat_register.py
+M	tests/test_coverage_boost.py
+M	tests/test_data_analysis_extended.py
+M	tests/test_deepseek_integration.py
+M	tests/test_deepseek_v32.py
+D	tests/test_degraded_mode.py
+D	tests/test_documentation_compiler.py
+M	tests/test_edge_cases_complete.py
+M	tests/test_error_paths.py
+D	tests/test_evidence_bundle.py
+D	tests/test_evidence_harvester.py
+D	tests/test_execution_gate_enforcement.py
+M	tests/test_external_ecosystem_bridge.py
+M	tests/test_extract_with_permissions.py
+M	tests/test_final_coverage_push.py
+M	tests/test_final_excellence.py
+M	tests/test_four_laws_1000_hypothesis_threats.py
+M	tests/test_four_laws_1000_property_based.py
+M	tests/test_four_laws_1000_redacted_procedural_attempts.py
+M	tests/test_four_laws_scenarios.py
+M	tests/test_four_laws_stress.py
+D	tests/test_genesis_reanchor.py
+M	tests/test_god_tier_systems.py
+D	tests/test_governance_contract.py
+D	tests/test_governance_liveness.py
+D	tests/test_governance_mode.py
+D	tests/test_governance_observability.py
+M	tests/test_governance_pipeline_regressions.py
+M	tests/test_gpt_oss.py
+M	tests/test_graph_analysis_plugin.py
+M	tests/test_humanity_first_invariants.py
+M	tests/test_hydra_50_engine.py
+M	tests/test_image_generator_extended.py
+M	tests/test_input_validation_security.py
+D	tests/test_invariant_severity.py
+M	tests/test_invariants.py
+M	tests/test_iron_path.py
+M	tests/test_iron_path_executor.py
+M	tests/test_learning_requests_extended.py
+M	tests/test_memory_extended.py
+M	tests/test_path_security.py
+M	tests/test_persona_extended.py
+M	tests/test_platform_tiers.py
+D	tests/test_policy_mutation_control.py
+D	tests/test_policy_registry.py
+D	tests/test_production_auditor.py
+M	tests/test_rate_limiter.py
+D	tests/test_replay_protection.py
+D	tests/test_safe_allow_calibration.py
+M	tests/test_security_stress.py
+D	tests/test_semantic_collision.py
+D	tests/test_semantic_risk_classifier.py
+M	tests/test_sovereign_verifier.py
+D	tests/test_state_branching.py
+M	tests/test_state_register_continuity_hash.py
+M	tests/test_tarl_load_chaos_soak.py
+M	tests/test_tarl_productivity.py
+D	tests/test_thirstys_waterfall_integration.py
+D	tests/test_thirstys_waterfall_license.py
+D	tests/test_threat_model.py
+D	tests/test_time_trust.py
+M	tests/test_timing_attack_mitigation.py
+M	tests/test_user_manager.py
+M	tests/test_user_manager_extended.py
+M	tests/test_wired_systems.py
+D	tests/thirstys_waterfall/test_project_ai_runtime_controls.py
+D	tests/thirstys_waterfall/test_waterfall_upstream_basic.py
+M	tests/verify_test_uniqueness.py
+R100	docs/reports/timing_attack_issue_body.md	timing_attack_issue_body.md
+M	tools/SECURITY_SCANNING.md
+M	tools/enforce_vault_write_scope.py
+D	tools/oculus/project_ai_oculus_go_unlock.bat
+D	tools/oculus/project_ai_oculus_go_unlock.sh
+M	tools/purge_git_secrets.ps1
+D	tools/validate_mandatory_agent_protocol.py
+M	tools/verify_zero_bypass.py
+M	utils/encryption/god_tier_encryption.py
+R100	scripts/verify/validate-metadata.ps1	validate-metadata.ps1
+R100	scripts/verify/validate-vault-structure.ps1	validate-vault-structure.ps1
+R075	scripts/verify/validate_graph_plugin.py	validate_graph_plugin.py
+R063	scripts/verify/validate_metadata.py	validate_metadata.py
+R099	docs/reports/vault-sign-off-document.md	vault-sign-off-document.md
+R100	docs/reports/vault-troubleshooting-guide.md	vault-troubleshooting-guide.md
+A	vault-validation-report.md
+R100	test-artifacts/vault-validation-results.json	vault-validation-results.json
+R100	test-artifacts/verification_report.json	verification_report.json
+R088	scripts/verify/verify_excalidraw.py	verify_excalidraw.py
+R091	scripts/verify/verify_lockout_implementation.py	verify_lockout_implementation.py
+R087	scripts/verify/verify_rate_limiting.py	verify_rate_limiting.py
+M	web/backend/app.py
+M	web/components/ExcalidrawComponent.tsx
+D	web/hub-epstein/404.html
+D	web/hub-epstein/README.md
+D	web/hub-epstein/about.html
+D	web/hub-epstein/assets/favicon.svg
+D	web/hub-epstein/category.html
+D	web/hub-epstein/changelog.html
+D	web/hub-epstein/characters.html
+D	web/hub-epstein/codex.html
+D	web/hub-epstein/contribute.html
+D	web/hub-epstein/css/styles.css
+D	web/hub-epstein/data/characters_index.json
+D	web/hub-epstein/data/search-index.json
+D	web/hub-epstein/disclaimer.html
+D	web/hub-epstein/faq.html
+D	web/hub-epstein/index.html
+D	web/hub-epstein/infographics.html
+D	web/hub-epstein/js/.gitkeep
+D	web/hub-epstein/js/characters.js
+D	web/hub-epstein/js/locations.js
+D	web/hub-epstein/js/main.js
+D	web/hub-epstein/js/particles.js
+D	web/hub-epstein/js/search-index.js
+D	web/hub-epstein/js/search-metadata.json
+D	web/hub-epstein/js/search-stats.json
+D	web/hub-epstein/js/search.js
+D	web/hub-epstein/js/upload.js
+D	web/hub-epstein/locations.html
+D	web/hub-epstein/locations/great_st_james.html
+D	web/hub-epstein/locations/little_st_james.html
+D	web/hub-epstein/locations/manhattan_jail.html
+D	web/hub-epstein/locations/mar_a_lago.html
+D	web/hub-epstein/locations/new_mexico.html
+D	web/hub-epstein/locations/new_york.html
+D	web/hub-epstein/locations/palm_beach.html
+D	web/hub-epstein/locations/paris.html
+D	web/hub-epstein/methodology.html
+D	web/hub-epstein/privacy.html
+D	web/hub-epstein/profiles/adriana_ross.html
+D	web/hub-epstein/profiles/alan_dershowitz.html
+D	web/hub-epstein/profiles/alexander_acosta.html
+D	web/hub-epstein/profiles/bill_clinton.html
+D	web/hub-epstein/profiles/chris_tucker.html
+D	web/hub-epstein/profiles/donald_trump.html
+D	web/hub-epstein/profiles/ehud_barak.html
+D	web/hub-epstein/profiles/eva_dubin.html
+D	web/hub-epstein/profiles/ghislaine_maxwell.html
+D	web/hub-epstein/profiles/glenn_dubin.html
+D	web/hub-epstein/profiles/jean_luc_brunel.html
+D	web/hub-epstein/profiles/jeffrey_epstein.html
+D	web/hub-epstein/profiles/juan_alessi.html
+D	web/hub-epstein/profiles/kevin_spacey.html
+D	web/hub-epstein/profiles/lesley_groff.html
+D	web/hub-epstein/profiles/leslie_wexner.html
+D	web/hub-epstein/profiles/nadia_marcinkova.html
+D	web/hub-epstein/profiles/naomi_campbell.html
+D	web/hub-epstein/profiles/prince_andrew.html
+D	web/hub-epstein/profiles/sarah_kellen.html
+D	web/hub-epstein/profiles/steven_hoffenberg.html
+D	web/hub-epstein/profiles/virginia_giuffre.html
+D	web/hub-epstein/robots.txt
+D	web/hub-epstein/search.html
+D	web/hub-epstein/sitemap.xml
+D	web/hub-epstein/slideshow.html
+D	web/hub-epstein/sources.html
+D	web/hub-epstein/staff/calendar.html
+D	web/hub-epstein/staff/js/tasks.js
+D	web/hub-epstein/staff/tasks.html
+D	web/hub-epstein/updates.html
+D	web/hub-epstein/upload.html
+D	web/hub-epstein/volunteer.html
+D	web/lib/api-client.ts
+D	web/lib/env.ts
+D	web/lib/store.ts
+M	web/package.json
+D	web/site/.deploy
+D	web/site/.htaccess
+D	web/site/404.html
+D	web/site/README-DEPLOY.md
+D	web/site/about.html
+D	web/site/assets/css/site.css
+D	web/site/assets/css/theme-cerberus.css
+D	web/site/assets/css/theme-civic-attest.css
+D	web/site/assets/css/theme-hub-epstein.css
+D	web/site/assets/css/theme-legion.css
+D	web/site/assets/css/theme-mhe-router.css
+D	web/site/assets/css/theme-monolith.css
+D	web/site/assets/css/theme-ocee.css
+D	web/site/assets/css/theme-project-ai.css
+D	web/site/assets/css/theme-thirsty-lang.css
+D	web/site/assets/css/theme-waterfall.css
+D	web/site/assets/data/papers.json
+D	web/site/assets/data/posts.json
+D	web/site/assets/data/projects.json
+D	web/site/assets/img/favicon.svg
+D	web/site/assets/img/og.svg
+D	web/site/assets/js/blog.js
+D	web/site/assets/js/papers.js
+D	web/site/assets/js/particles.js
+D	web/site/assets/js/projects.js
+D	web/site/assets/js/site.js
+D	web/site/blog.html
+D	web/site/blog/post-template.html
+D	web/site/cerberus.html
+D	web/site/contact.html
+D	web/site/hub-epstein.html
+D	web/site/index.html
+D	web/site/legal.html
+D	web/site/legion/assets/legion.css
+D	web/site/legion/assets/legion.js
+D	web/site/legion/index.html
+D	web/site/papers.html
+D	web/site/project-ai.html
+D	web/site/projects.html
+D	web/site/projects/cerberus/index.html
+D	web/site/projects/civic-attest/index.html
+D	web/site/projects/mhe-router/index.html
+D	web/site/projects/monolith/index.html
+D	web/site/projects/ocee/index.html
+D	web/site/projects/project-ai/index.html
+D	web/site/projects/thirsty-lang/index.html
+D	web/site/projects/waterfall/index.html
+D	web/site/robots.txt
+D	web/site/sitemap.xml
+D	writer-reviewer-workflow/.env.example
+D	writer-reviewer-workflow/.gitignore
+D	writer-reviewer-workflow/Dockerfile
+D	writer-reviewer-workflow/README.md
+D	writer-reviewer-workflow/agent.yaml
+D	writer-reviewer-workflow/app.py
+D	writer-reviewer-workflow/main.py
+D	writer-reviewer-workflow/requirements.txt
