@@ -1,0 +1,283 @@
+# Phase D2 — pytest collection error classification
+# Date: 2026-05-19
+# Total errors: 102  Unique missing imports: 49  Test modules affected: 102
+
+# ============================================================
+# GROUP A: Missing Python package (not installed in .venv)
+# ============================================================
+# Count: 46 test modules blocked
+# Action: pip install — unblocks immediately after install
+
+## numpy (19 tests)
+# Root cause: src/cognition/adapters/memory_adapter.py:14 imports numpy at
+# module level. kernel/__init__.py imports kernel.execution which chains through
+# kernel.tarl_codex_bridge → src.cognition.__init__ → triumvirate → cerberus
+# engine → adapters → memory_adapter. Any test touching kernel/ or cognition/
+# fails via this chain even if the test itself doesn't use numpy directly.
+tests/test_advanced_learning_systems.py
+tests/test_bio_brain_mapper.py
+tests/test_cognition_comprehensive.py
+tests/test_enhanced_scenario_engine.py
+tests/test_entropy_slope.py
+tests/test_global_scenario_engine.py
+tests/test_god_tier_integration.py
+tests/test_god_tier_system.py
+tests/test_kernel_sovereign.py
+tests/test_local_fbo.py
+tests/test_memory_optimization.py
+tests/test_optical_flow.py
+tests/test_reasoning_matrix.py
+tests/test_robotic_mainframe.py
+tests/test_security_phase2.py
+tests/test_security_stress.py
+tests/test_tarl_integration.py
+tests/kernel/test_holographic.py
+tests/kernel/test_integration.py
+
+## temporalio (8 tests)
+# Root cause: src/app/temporal/activities.py:14 and
+# gradle-evolution/capsules/replay_engine.py:17 import temporalio at module
+# level. The Temporal.io SDK (pip install temporalio) is the fix but these
+# tests also require a running Temporal server — install unblocks collection,
+# but tests may still need infra or @pytest.mark.skip for CI without server.
+tests/temporal/test_client.py
+tests/temporal/test_config.py
+tests/temporal/test_liara_workflows.py
+tests/temporal/test_workflows.py
+tests/gradle_evolution/test_api.py
+tests/gradle_evolution/test_capsules.py
+tests/gradle_evolution/test_constitutional.py
+tests/test_temporal_integration.py
+
+## flask (5 tests)
+# Root cause: web/backend/app.py raises RuntimeError if flask not installed.
+# web/__init__.py re-exports web.backend.app at import time, so any test
+# importing web.backend fails. Also gradle-evolution/api/verifiability_api.py
+# imports flask directly.
+tests/test_web_backend.py
+tests/e2e/test_system_integration_e2e.py
+tests/e2e/test_web_backend_complete_e2e.py
+tests/e2e/test_web_backend_endpoints.py
+tests/gradle_evolution/test_integration.py
+
+## pandas (3 tests)
+# Root cause: direct import in test files and src/app/core/intelligence_engine.py
+tests/test_data_analysis.py
+tests/test_data_analysis_extended.py
+tests/test_intelligence_engine_coverage.py
+
+## typer (2 tests)
+# Root cause: direct import of typer.testing.CliRunner in test files
+tests/test_cli.py
+tests/test_cli_commands.py
+
+## defusedxml (2 tests)
+# Root cause: src/app/security/data_validation.py:23 imports defusedxml at
+# module level. Required for secure XML parsing.
+tests/test_input_validation_security.py
+tests/test_security_phase1.py
+
+## PyQt6 (2 tests)
+# Root cause: direct import in test/launch files for GUI E2E tests.
+# Platform-specific: PyQt6 requires Qt6 system libraries on Linux/Docker.
+tests/test_leather_book_smoke.py
+tests/gui_e2e/test_launch_and_login.py
+
+## matplotlib (1 test)
+# Root cause: src/app/health/report.py:32 imports matplotlib at module level.
+tests/test_health_report.py
+
+## hypothesis (1 test)
+# Root cause: direct import of hypothesis library for property-based tests.
+tests/test_four_laws_1000_hypothesis_threats.py
+
+## mcp (1 test)
+# Root cause: src/app/core/mcp_server.py:28 imports mcp.server.
+# The 'mcp' package is the Model Context Protocol SDK (pip install mcp).
+tests/test_mcp_server.py
+
+## toml (1 test)
+# Root cause: src/app/core/bootstrap_orchestrator.py:33 imports toml.
+# NOTE: Python 3.11+ has tomllib built-in (stdlib). This code uses the
+# third-party 'toml' package (read/write). Fix options: pip install toml
+# OR replace with tomllib (stdlib, read-only) — see D3 for assessment.
+tests/test_defense_engine_integration.py
+
+## joblib (1 test)
+# Root cause: src/app/core/intelligence_engine.py:15 imports joblib.
+tests/test_intelligence_router.py
+
+# ============================================================
+# GROUP B: PSIA package missing — never written in this repo
+# ============================================================
+# Count: 18 test modules blocked
+# Action: SKIP/ISOLATE — psia.* is a planned package not yet implemented.
+# These tests describe PSIA (Protocol for Sovereign Intelligence Auditing)
+# sub-modules. The package does not exist in src/ or anywhere in the repo.
+# Do NOT attempt to create stub modules — these tests document intended future
+# behavior. Add @pytest.mark.skip or move to tests/psia/ with conftest skip.
+
+tests/test_psia_bootstrap.py          # psia.bootstrap.genesis
+tests/test_psia_canonical.py          # psia.canonical.capability_authority
+tests/test_psia_comprehensive.py      # psia.bootstrap.genesis
+tests/test_psia_concurrency.py        # psia.concurrency
+tests/test_psia_gate.py               # psia.gate.capability_head
+tests/test_psia_integration.py        # psia.bootstrap.genesis
+tests/test_psia_invariants.py         # psia.invariants
+tests/test_psia_liveness.py           # psia.liveness
+tests/test_psia_observability.py      # psia.observability.autoimmune_dampener
+tests/test_psia_schemas.py            # psia.schemas.capability
+tests/test_psia_threat_model.py       # psia.threat_model
+tests/test_psia_waterfall.py          # psia.events
+tests/test_bft_deployed.py            # psia.gate.quorum_engine
+tests/test_ed25519_crypto.py          # psia.crypto.ed25519_provider
+tests/test_formal_properties.py       # psia.canonical.capability_authority
+tests/test_governance_server.py       # psia.server.governance_server
+tests/test_rfc3161.py                 # psia.crypto.ed25519_provider
+tests/test_shadow_operational_semantics.py  # psia.shadow.operational_semantics
+
+# ============================================================
+# GROUP C: Missing app sub-module — module never written
+# ============================================================
+# Count: 27 test modules blocked
+# Action: Requires either (a) creating the missing module, or (b) marking
+# the tests as skip until the module is implemented.
+# These are internal app modules referenced by tests but not yet written.
+
+## sovereign_audit_log family (7 tests)
+# Both 'app.governance.sovereign_audit_log' and fallback
+# 'src.app.governance.sovereign_audit_log' fail — module does not exist.
+# The class SovereignAuditLog is referenced in many tests. Creating a stub
+# or full implementation in src/app/governance/sovereign_audit_log.py
+# would unblock 7 tests at once.
+tests/test_12_vector_constitutional_break.py
+tests/test_attack_simulation_suite.py
+tests/test_external_merkle_anchor.py
+tests/test_sovereign_audit_log.py
+tests/test_tsa_integration.py
+tests/manual/test_12_vector_break_suite.py
+tests/manual/test_sovereign_manual.py
+
+## audit_manager (1 test)
+# app.governance.audit_manager — module does not exist
+tests/manual/test_audit_integration.py
+
+## miniature_office sub-modules (3 tests)
+# src/app/miniature_office/ package may not contain all referenced modules.
+tests/test_agent_lounge.py            # app.miniature_office.agent_lounge
+tests/test_meta_security_dept.py      # app.miniature_office.meta_security_dept
+tests/test_repair_crew.py             # app.miniature_office.repair_crew
+
+## personal_agent (1 test)
+# app.personal_agent — module does not exist at src/app/personal_agent.py
+tests/test_personal_agent.py
+
+## security sub-modules (3 tests)
+tests/test_immutable_audit_log.py     # app.security.immutable_audit_log
+tests/test_asymmetric_security_coverage.py   # src.security.asymmetric_security
+tests/test_security_comprehensive.py  # src.security.asymmetric_security
+
+## governance pricing modules (3 tests)
+tests/test_company_pricing.py         # src.app.governance.company_pricing
+tests/test_government_pricing.py      # src.app.governance.government_pricing
+tests/test_government_pricing_manual.py  # src.app.governance.government_pricing
+
+## pipeline signal_flows (2 tests)
+tests/test_signal_flows_100_percent.py       # src.app.pipeline.signal_flows
+tests/test_signal_flows_complete_coverage.py # src.app.pipeline.signal_flows
+
+## security / vault / infrastructure singletons (4 tests)
+tests/test_tseca_ghost_protocol.py    # src.app.security.tseca_ghost_protocol
+tests/test_vault_comprehensive.py     # src.app.vault.core.vault
+tests/test_cathedral_infrastructure.py  # src.app.core.exceptions
+
+## cerberus.sase sub-modules (3 tests)
+# These import cerberus.sase.* which may exist under src/cerberus/sase/ but
+# the correct path under pythonpath ["src"] would be cerberus.sase.*. The
+# sase/test_normalization.py uses src. prefix (path drift, see Group F).
+tests/test_containment.py             # cerberus.sase.policy.containment
+tests/test_substrate.py               # cerberus.sase.core.substrate
+tests/sase/core/test_normalization.py # src.cerberus.sase.core.normalization
+
+## repo_scan_contract (1 test)
+# Freestanding module with no src/ prefix — not on sys.path, not in src/.
+tests/test_repo_scan_contract.py
+
+# ============================================================
+# GROUP D: Shadow Thirst UTF sub-modules — not yet written
+# ============================================================
+# Count: 2 test modules blocked
+# Action: shadow_thirst.bytecode and shadow_thirst.type_system are planned
+# Shadow Thirst (UTF tier 4) sub-modules. The existing shadow_thirst package
+# in src/utf/shadow_thirst/ does not yet implement these sub-modules.
+# Scope for D3/D4 UTF completion or test isolation until ready.
+
+tests/test_shadow_thirst.py           # shadow_thirst.bytecode
+tests/test_shadow_thirst_type_system.py  # shadow_thirst.type_system
+
+# ============================================================
+# GROUP E: Stale test import — module exists, symbol missing
+# ============================================================
+# Count: 3 test modules blocked
+# Action: Update the test import or the source module to align.
+# The module resolves fine; the specific name being imported does not exist.
+
+tests/test_ai_systems_coverage.py
+# ImportError: cannot import name 'EntityClass' from 'app.core.ai_systems'
+# (T:\Project-AI-main\src\app\core\ai_systems.py)
+# EntityClass was likely removed or renamed in ai_systems.py
+
+tests/test_anti_sovereign_stress_tests.py
+# ImportError: cannot import name 'AntiSovereignStressTestGenerator'
+# from 'src.app.testing' (unknown location)
+# The AntiSovereignStressTestGenerator class no longer exists.
+
+tests/integration/test_sovereign_stack.py
+# ImportError: cannot import name 'BootSequence'
+# from 'project_ai.orchestrator' (unknown location)
+# BootSequence was removed from orchestrator; test references stale API.
+
+# ============================================================
+# GROUP F: Path / import drift — wrong import path structure
+# ============================================================
+# Count: 2 test modules blocked
+# Action: Fix the import path in the test or add the directory to pythonpath.
+
+tests/test_thirsty_interpreter_smoke.py
+# from thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
+# 'thirsty_lang.src' is not a valid module path. The interpreter likely lives
+# at src/thirsty_lang/thirsty_interpreter.py → correct import would be:
+# from thirsty_lang.thirsty_interpreter import ThirstyInterpreter
+# (with pythonpath = ["src"] already configured in pyproject.toml)
+
+tests/test_vr_routes.py
+# from api.vr_routes import ...
+# The api/ directory exists but is not on sys.path (pythonpath = ["src"]).
+# Fix: add repo root to pythonpath, or move module under src/, or fix import.
+
+# ============================================================
+# GROUP G: Pytest marker not registered in pyproject.toml
+# ============================================================
+# Count: 4 test modules blocked
+# Action: Add the marker declarations to [tool.pytest.ini_options] markers
+# in pyproject.toml. This is a zero-code-change fix — just config.
+
+tests/chaos/test_chaos_engineering.py     # 'chaos' not found in markers
+tests/e2e/test_production_readiness.py    # 'slow' not found in markers
+tests/test_tarl_load_chaos_soak.py        # 'load' not found in markers
+tests/plugins/test_plugin_runner.py       # 'timeout' not found in markers
+
+# ============================================================
+# SUMMARY TABLE
+# ============================================================
+# Group  | Cause                          | Tests | Action
+# -------|--------------------------------|-------|----------------------
+# A      | Missing pip package            |    46 | pip install
+# B      | PSIA package never written     |    18 | pytest.mark.skip
+# C      | App sub-module never written   |    27 | create module or skip
+# D      | UTF shadow_thirst incomplete   |     2 | skip or complete UTF
+# E      | Stale test import (symbol gone)|     3 | fix import or symbol
+# F      | Wrong import path              |     2 | fix import path
+# G      | Unregistered pytest marker     |     4 | add to pyproject.toml
+# -------|--------------------------------|-------|----------------------
+# TOTAL  |                                |   102 |
