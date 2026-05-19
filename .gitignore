@@ -3,11 +3,6 @@ data/health_snapshots/
 docs/assets/health_report_*.png
 governance/audit_log.yaml
 
-# Runtime artifacts — generated output, not source code
-audit.log
-canonical/execution_trace.json
-ci-reports/*.json
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -26,8 +21,6 @@ eggs/
 .eggs/
 lib/
 lib64/
-!web/lib/
-!web/lib/**
 parts/
 sdist/
 var/
@@ -76,31 +69,14 @@ cover/
 
 # Environments
 .env
-.env.*
 .env.local
 .env.*.local
-!.env.example
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
-
-# Phase 0 containment denylist (do not remove)
-*.pem
-*.key
-*.p12
-*.pfx
-*.crt
-id_rsa
-id_ed25519
-secrets/
-private/
-credentials*
-token*
-*.sqlite
-*.db
 
 # Security and secrets
 *.key
@@ -114,11 +90,6 @@ secret_scan_report.json
 
 # IDEs
 .vscode/
-!.vscode/
-!.vscode/settings.json
-!.vscode/extensions.json
-!.vscode/launch.json
-!.vscode/tasks.json
 .idea/
 .vs/
 
@@ -215,8 +186,6 @@ node_modules/
 audit_reports/
 test_audit_sample/
 test_audit_output/
-test-artifacts/bypass_fix_report.json
-test-artifacts/fourlaws-*.jsonl
 
 # Obsidian vault team settings (shared-safe subset)
 # Track shared plugin manifests + graph presets for multi-agent/collaborative docs.
@@ -273,13 +242,3 @@ test-artifacts/fourlaws-*.jsonl
 !.obsidian/plugins/dataview/data.json
 !.obsidian/plugins/templater-obsidian/
 !.obsidian/plugins/templater-obsidian/data.json
-
-# Local agent workspace state
-.claude/
-
-# Generated runtime logs
-data/logs/
-data/audit/*.jsonl
-
-# Generated auto-save user state
-data/savepoints/auto/latest/users.json
