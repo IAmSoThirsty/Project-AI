@@ -1,0 +1,91 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.4, pluggy-1.6.0
+rootdir: T:\Project-AI-main
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-0.23.3, cov-4.1.0
+asyncio: mode=Mode.STRICT
+collected 27 items
+
+tests\test_phase_c3d_r2_swr_smoke.py ...........................         [100%]
+
+============================== warnings summary ===============================
+tests/test_phase_c3d_r2_swr_smoke.py: 15 warnings
+  T:\Project-AI-main\engines\sovereign_war_room\swr\scenario.py:64: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\crypto.py:90: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp = datetime.utcnow().isoformat()
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\governance.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\governance.py:381: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\proof.py:98: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\proof.py:129: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    f"{scenario_id}:{datetime.utcnow().isoformat()}".encode()
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\proof.py:36: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\proof.py:162: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\proof.py:182: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    f"{scenario_id}:compliance:{datetime.utcnow().isoformat()}".encode()
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\scoreboard.py:32: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\crypto.py:193: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp = datetime.utcnow().isoformat()
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_completes
+tests/test_phase_c3d_r2_swr_smoke.py::test_execute_scenario_audit_entry_has_hash_and_signature
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\core.py:166: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+tests/test_phase_c3d_r2_swr_smoke.py::test_verify_result_integrity_passes
+  T:\Project-AI-main\engines\sovereign_war_room\swr\proof.py:278: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 27 passed, 53 warnings in 4.96s =======================
