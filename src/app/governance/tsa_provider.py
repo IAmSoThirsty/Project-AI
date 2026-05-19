@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
 """
@@ -39,12 +41,31 @@ import logging
 from dataclasses import dataclass
 from datetime import timezone, datetime
 
-import requests
-from asn1crypto import cms, tsp
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding, rsa
+import importlib.util as _importlib_util
+
+_TSA_DEPS_AVAILABLE = (
+    _importlib_util.find_spec("_cffi_backend") is not None
+    and _importlib_util.find_spec("cryptography") is not None
+    and _importlib_util.find_spec("asn1crypto") is not None
+    and _importlib_util.find_spec("requests") is not None
+)
+if _TSA_DEPS_AVAILABLE:
+    try:
+        import requests
+        from asn1crypto import cms, tsp
+        from cryptography import x509
+        from cryptography.hazmat.backends import default_backend
+        from cryptography.hazmat.primitives import hashes
+        from cryptography.hazmat.primitives.asymmetric import padding, rsa
+    except Exception:
+        requests = None  # type: ignore[assignment]
+        cms = tsp = x509 = None  # type: ignore[assignment]
+        default_backend = hashes = padding = rsa = None  # type: ignore[assignment]
+        _TSA_DEPS_AVAILABLE = False
+else:
+    requests = None  # type: ignore[assignment]
+    cms = tsp = x509 = None  # type: ignore[assignment]
+    default_backend = hashes = padding = rsa = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
@@ -140,6 +161,11 @@ class TSAProvider:
             timeout: Request timeout in seconds
             max_clock_skew: Maximum allowed clock skew in seconds
         """
+        if not _TSA_DEPS_AVAILABLE:
+            raise RuntimeError(
+                "TSAProvider requires: requests, asn1crypto, cryptography. "
+                "Install them or set GOVERNANCE_ANCHORING_ENABLED=False."
+            )
         self.tsa_url = tsa_url
         self.fallback_urls = fallback_urls or FALLBACK_TSA_URLS
         self.timeout = timeout

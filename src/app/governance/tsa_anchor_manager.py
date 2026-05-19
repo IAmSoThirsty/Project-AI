@@ -54,15 +54,27 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from cryptography.hazmat.primitives.asymmetric.ed25519 import (
-    Ed25519PrivateKey,
-    Ed25519PublicKey,
-)
+import importlib.util as _importlib_util
 
-try:
-    from app.governance.tsa_provider import TSAProvider, TSAToken
-except ImportError:
-    from src.app.governance.tsa_provider import TSAProvider
+_CRYPTO_AVAILABLE = (
+    _importlib_util.find_spec("_cffi_backend") is not None
+    and _importlib_util.find_spec("cryptography") is not None
+)
+if _CRYPTO_AVAILABLE:
+    try:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PrivateKey,
+            Ed25519PublicKey,
+        )
+    except Exception:
+        Ed25519PrivateKey = None  # type: ignore[assignment,misc]
+        Ed25519PublicKey = None  # type: ignore[assignment,misc]
+        _CRYPTO_AVAILABLE = False
+else:
+    Ed25519PrivateKey = None  # type: ignore[assignment,misc]
+    Ed25519PublicKey = None  # type: ignore[assignment,misc]
+
+from .tsa_provider import TSAProvider, _TSA_DEPS_AVAILABLE  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -173,6 +185,11 @@ class TSAAnchorManager:
             anchor_path: Path to anchor chain storage file
             tsa_provider: Optional TSA provider (creates default if None)
         """
+        if not _CRYPTO_AVAILABLE or not _TSA_DEPS_AVAILABLE:
+            raise RuntimeError(
+                "TSAAnchorManager requires cryptography and TSA dependencies. "
+                "Install them or set GOVERNANCE_ANCHORING_ENABLED=False."
+            )
         self.genesis_private_key = genesis_private_key
         self.anchor_path = Path(anchor_path)
         self.tsa = tsa_provider or TSAProvider()
