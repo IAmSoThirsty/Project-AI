@@ -1,0 +1,155 @@
+# Phase D2 — Minimum dependency installation plan
+# Date: 2026-05-19
+#
+# Goal: identify the pip packages whose installation would unblock the most
+# collection errors with the lowest risk. Does NOT change application code.
+# Install order is by impact (tests unblocked descending).
+#
+# Reference: PHASE_D2_COLLECTION_ERROR_CLASSIFICATION.txt Group A
+
+# ============================================================
+# TIER 1 — Install now: core science/numeric stack (unblocks 19 tests)
+# ============================================================
+
+# numpy — 19 tests blocked. Root chain: src/cognition/adapters/memory_adapter.py
+# This single install unblocks the entire kernel + cognition test chain.
+# numpy is already installed in .venv_airllm but NOT in .venv (the active venv).
+# The D3 Atlas repair phase will address numpy/scipy/pandas as a group.
+# Recommended version: >=1.24,<3 (compatible with Python 3.12)
+pip install "numpy>=1.24"
+
+# ============================================================
+# TIER 2 — Install for web/API tests (unblocks 5 + 3 + 1 = 9 tests)
+# ============================================================
+
+# flask — 5 tests blocked. web/backend/app.py needs Flask for import to succeed.
+# web/__init__.py re-exports at import time, so flask must be present for
+# any test that touches the web.backend module tree.
+pip install flask
+
+# pandas — 3 tests blocked. Direct imports in test files and intelligence_engine.
+# Also a dependency of the broader data-science stack (aligns with D3).
+pip install pandas
+
+# joblib — 1 test blocked (src/app/core/intelligence_engine.py:15).
+# Small utility package, no system deps.
+pip install joblib
+
+# ============================================================
+# TIER 3 — Install for security and validation (unblocks 2 + 1 = 3 tests)
+# ============================================================
+
+# defusedxml — 2 tests blocked (src/app/security/data_validation.py).
+# Security-critical XML parsing library. Should be in requirements.txt.
+pip install defusedxml
+
+# toml — 1 test blocked (src/app/core/bootstrap_orchestrator.py).
+# NOTE: Python 3.11+ stdlib provides tomllib (read-only). If bootstrap_orchestrator
+# only reads TOML (not writes), prefer replacing `import toml` with
+# `import tomllib as toml` (stdlib). If write support is needed, install:
+pip install toml
+# Defer to D3 assessment: check if tomllib suffices.
+
+# ============================================================
+# TIER 4 — Install for property-based + CLI tests (unblocks 1 + 2 = 3 tests)
+# ============================================================
+
+# hypothesis — 1 test blocked (test_four_laws_1000_hypothesis_threats).
+# The FourLaws test suite uses property-based testing. Already used in 7590
+# passing tests (via pytest-hypothesis plugin). Missing in .venv directly.
+pip install hypothesis
+
+# typer — 2 tests blocked (test_cli, test_cli_commands).
+# CLI framework for the project's command-line interface.
+pip install "typer[all]"
+
+# ============================================================
+# TIER 5 — Install for optional/infra (conditional)
+# ============================================================
+
+# temporalio — 8 tests blocked. Temporal.io workflow SDK.
+# CAUTION: These tests require a running Temporal.io server to pass.
+# Install unblocks collection; tests will still fail without infra.
+# Consider adding @pytest.mark.skip(reason="requires Temporal server")
+# to the temporal/ and gradle_evolution/ test directories in D3.
+pip install temporalio
+
+# mcp — 1 test blocked (src/app/core/mcp_server.py).
+# Model Context Protocol SDK. Optional feature.
+pip install mcp
+
+# matplotlib — 1 test blocked (src/app/health/report.py).
+# Large dependency. Health report visualization is optional.
+pip install matplotlib
+
+# ============================================================
+# TIER 6 — Platform-specific (install only on appropriate platform)
+# ============================================================
+
+# PyQt6 — 2 tests blocked (leather_book_smoke, gui_e2e).
+# Requires Qt6 system libraries. Do NOT install in Docker/CI without Qt.
+# Windows desktop only. If already installed on dev machine, skip.
+pip install PyQt6   # Windows dev machine only; skip in CI/Docker
+
+# ============================================================
+# DO NOT INSTALL — skip/isolate instead
+# ============================================================
+
+# psia (Group B, 18 tests): No psia package exists anywhere. This is a
+# planned future system. Installing random stubs would give false confidence.
+# Action: add conftest.py skip to tests/ for psia_* test files.
+#   pytest.ini_options: addopts = "--ignore=tests/test_psia_*.py"
+#   OR: conftest.py skip marker on psia imports
+
+# ============================================================
+# ZERO-CODE-CHANGE FIXES (apply before pip installs)
+# ============================================================
+
+# 1. Register missing pytest markers in pyproject.toml (unblocks 4 tests)
+#    Add to [tool.pytest.ini_options] markers:
+#      "chaos: mark tests as chaos engineering tests"
+#      "slow: mark tests as slow-running integration tests"
+#      "load: mark tests as load/soak tests"
+#      "timeout: mark tests with a timeout"
+
+# 2. Fix test_thirsty_interpreter_smoke.py import (Group F, 1 test)
+#    Change: from thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
+#    To:     from thirsty_lang.thirsty_interpreter import ThirstyInterpreter
+
+# 3. Add api/ to pythonpath or fix test_vr_routes.py (Group F, 1 test)
+#    Add "api" to pythonpath in pyproject.toml, OR
+#    fix: from api.vr_routes import ... → check if file is at api/vr_routes.py
+
+# ============================================================
+# PROJECTED IMPACT IF ALL TIER 1-4 INSTALLED + MARKERS FIXED
+# ============================================================
+# Current:  7675 collected / 102 errors
+# After:    ~7675 collected / ~37 remaining errors
+# Remaining after Tier 1-4 + markers:
+#   - 18 PSIA (Group B)  — skip
+#   - 11 app sub-modules (Group C, sovereign_audit_log etc.)
+#   -  2 shadow_thirst UTF (Group D)
+#   -  3 stale imports (Group E)
+#   -  1 path drift (Group F — vr_routes after thirsty fix)
+#   -  0 markers (fixed by config change)
+#   Total remaining: ~35 (down from 102)
+#
+# Note: "remaining" errors are structural (missing modules, stale tests)
+# that require code changes beyond dependency installation.
+
+# ============================================================
+# REQUIREMENTS.TXT GAPS IDENTIFIED
+# ============================================================
+# These packages appear to be application dependencies missing from
+# requirements files. Should be added to requirements.txt or pyproject.toml:
+#   defusedxml      — security dep, should be present
+#   toml or tomllib — config parsing dep
+#   joblib          — ML utility dep
+#   numpy           — core numeric dep (missing from main venv)
+#   pandas          — data analysis dep
+#   flask           — web backend dep
+#   hypothesis      — test dep (goes in dev-requirements)
+#   typer           — CLI dep
+#   matplotlib      — visualization dep (optional)
+#   temporalio      — workflow dep (optional, infra-required)
+#   mcp             — MCP server dep (optional feature)
