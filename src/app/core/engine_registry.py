@@ -159,10 +159,15 @@ ENGINES: dict[str, EngineEntry] = {
             "package. All import paths safe post-C3D-R1. "
             "CLI (engines/sovereign_war_room/cli.py) has top-level 'from swr import "
             "SovereignWarRoom' — import is safe; SovereignWarRoom() constructs cleanly.",
-            "Activation requires explicit decision: set enabled=True and "
-            "ENGINE_REGISTRY_ACTIVATION_ENABLED=True. "
-            "C3D-R2 smoke test passed — activation gate is the remaining step. "
-            "Engine remains recovered_unactivated until explicit activation config is set.",
+            "C3D-R3 COMPLETE. Four-gate activation contract defined 2026-05-19. "
+            "Contract module: src/app/core/swr_activation.py. "
+            "Gate 1: ENGINE_REGISTRY_ACTIVATION_ENABLED=True. "
+            "Gate 2: ENGINES['sovereign_war_room'].enabled=True. "
+            "Gate 3: SWR_ACTIVATION_KEY env var set (non-empty). "
+            "Gate 4: CryptoEngine() preflight passes (cffi 1.17.1). "
+            "All gates currently CLOSED. 33/33 activation-contract tests pass. "
+            "No implicit activation path exists. "
+            "Evidence: recovery/PHASE_C3D_R3_SWR_ACTIVATION_CONTRACT.txt.",
         ],
         activation_requires_explicit_config=True,
     ),

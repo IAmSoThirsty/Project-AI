@@ -1,0 +1,170 @@
+PHASE C3D-R3 — SWR ACTIVATION CONTRACT
+=======================================
+Date: 2026-05-19
+Branch: integrate/phase-c3d-r3-swr-activation-contract-20260519
+
+PURPOSE
+-------
+Define the explicit, tested, auditable activation path for Sovereign War Room.
+SWR is operationally plausible after C3D-R2 but not yet active.
+C3D-R3 proves that activation cannot happen implicitly — it requires all four
+gates to be opened simultaneously and deliberately.
+
+SWR remains enabled=False, status=recovered_unactivated after this phase.
+
+=============================================================================
+1. ACTIVATION CONTRACT MODULE
+=============================================================================
+
+File: src/app/core/swr_activation.py
+
+The ONLY permitted path to a SovereignWarRoom instance.
+Importing this module does NOT activate SWR.
+Calling activate_swr() does NOT activate SWR unless ALL gates pass.
+
+=============================================================================
+2. FOUR-GATE ACTIVATION REQUIREMENTS
+=============================================================================
+
+Gate 1: ENGINE_REGISTRY_ACTIVATION_ENABLED = True
+  - Module-level flag in src/app/core/engine_registry.py
+  - Currently False (default). Must be set True explicitly in code.
+  - An operator changing this in the source file is a deliberate, visible,
+    code-review-visible action.
+
+Gate 2: ENGINES['sovereign_war_room'].enabled = True
+  - Per-engine flag in the registry entry.
+  - Currently False (default). Must be set True explicitly in code.
+  - A second independent code-visible action, separate from Gate 1.
+
+Gate 3: SWR_ACTIVATION_KEY environment variable is set and non-empty.
+  - Must be set at runtime by an operator before the process starts.
+  - Value content is not validated — presence confirms deliberate intent.
+  - Example: export SWR_ACTIVATION_KEY="c3d-r3-controlled"
+  - Prevents accidental activation when test environments inherit prod config.
+
+Gate 4: CryptoEngine() preflight succeeds.
+  - cffi 1.17.1 (_cffi_backend) must be available.
+  - CryptoEngine() must construct without CryptoUnavailableError.
+  - Currently passes (cffi 1.17.1 installed, verified 2026-05-19).
+
+Fail-closed invariant: any single gate closed → SWRActivationError, no partial
+activation, no silent success.
+
+=============================================================================
+3. WHAT ACTIVATION IS ALLOWED TO DO
+=============================================================================
+
+After all four gates pass, activate_swr() is permitted to:
+  - Import the swr package (engines/sovereign_war_room/swr/)
+  - Construct SovereignWarRoom(bundle_dir=<explicit_path>)
+  - Call load_scenarios()
+  - Call execute_scenario()
+  - Call verify_result_integrity()
+  - Return the SovereignWarRoom instance to the caller
+
+=============================================================================
+4. WHAT ACTIVATION IS FORBIDDEN TO DO
+=============================================================================
+
+  - Start a web server (Flask, FastAPI, uvicorn) — swr/web/app.py, swr/api.py
+  - Open network sockets or listeners
+  - Launch background threads, subprocesses, or event loops
+  - Write to production databases, audit trails, or persistent state
+  - Execute automatically on any import, find_spec, or registry lookup
+  - Skip or weaken any gate check
+  - Proceed if any gate is closed
+  - Swallow SWRActivationError silently
+  - Swallow pyo3 panics or BaseException subclasses without re-raising
+  - Return a partial result if preflight is incomplete
+
+=============================================================================
+5. IMPLICIT ACTIVATION PATHS — ALL BLOCKED
+=============================================================================
+
+The following operations do NOT activate SWR:
+  - import src.app.core.swr_activation          → module-only, no SWR code
+  - import src.app.core.engine_registry          → metadata-only
+  - engine_registry.get_engine('swr')            → metadata-only
+  - engine_registry.list_engines()               → metadata-only
+  - importlib.util.find_spec('engines.swr...')   → locate only, no import
+  - python -c "from engines.sovereign_war_room.swr import SovereignWarRoom"
+    → safe (C3D-R1 confirmed no module-level panic)
+  - scripts/verify/verify_swr_smoke.py           → smoke probe, not activation
+  - pytest tests/test_phase_c3d_r2_swr_smoke.py  → smoke tests, not activation
+
+None of these change ENGINE_REGISTRY_ACTIVATION_ENABLED or entry.enabled.
+
+=============================================================================
+6. TEST RESULTS
+=============================================================================
+
+tests/test_phase_c3d_r3_swr_activation_contract.py: 33 PASSED
+
+Test coverage:
+  - Module imports cleanly (1 test)
+  - SWRActivationError type hierarchy (3 tests)
+  - Default state all gates closed (3 tests)
+  - Gate 1 fail-closed (3 tests)
+  - Gate 2 fail-closed (3 tests)
+  - Gate 3 fail-closed (4 tests)
+  - Gate 4 fail-closed (3 tests)
+  - run_preflight() never returns partial results (2 tests)
+  - No implicit activation from import/find_spec/registry (5 tests)
+  - Positive: all gates open → returns SovereignWarRoom (2 tests)
+  - Registry unmodified after all tests (1 test)
+  - Regression: C3D-R2 and C3D isolation suites (2 tests)
+
+=============================================================================
+7. COLLECTION BASELINE
+=============================================================================
+
+Before C3D-R3: 7590 collected, 102 errors
+After  C3D-R3: 7623 collected, 102 errors (+33 tests, same error count)
+
+=============================================================================
+8. PRIOR SUITE REGRESSION CHECK
+=============================================================================
+
+test_phase_c3d_r2_swr_smoke.py       27/27 PASSED (no regression)
+test_phase_c3d_swr_isolation.py       19/19 PASSED (no regression)
+test_phase_c3d_r1_swr_crypto_repair.py 14/14 PASSED (no regression)
+
+=============================================================================
+9. REGISTRY STATE — UNCHANGED
+=============================================================================
+
+sovereign_war_room:
+  enabled                          = False   (UNCHANGED)
+  status                           = "recovered_unactivated"  (UNCHANGED)
+  import_mode                      = "lazy"  (UNCHANGED)
+  activation_requires_explicit_config = True  (UNCHANGED)
+  ENGINE_REGISTRY_ACTIVATION_ENABLED = False  (UNCHANGED)
+
+=============================================================================
+10. WHAT C3D-R3 ESTABLISHES (NOT ACTIVATION)
+=============================================================================
+
+After C3D-R3:
+  - An explicit, tested activation path exists at src/app/core/swr_activation.py
+  - That path is guarded by four independent gates
+  - All four gates are closed by default and verified by tests
+  - No implicit activation path is possible
+  - SWR remains recovered_unactivated
+
+To activate SWR (C3D-R4 scope, not this phase):
+  1. Set ENGINE_REGISTRY_ACTIVATION_ENABLED = True
+  2. Set ENGINES['sovereign_war_room'].enabled = True
+  3. Set SWR_ACTIVATION_KEY in the process environment
+  4. Verify CryptoEngine() preflight passes
+  5. Call activate_swr(bundle_dir=<explicit_path>)
+
+=============================================================================
+CONCLUSION
+=============================================================================
+
+C3D-R3 is activation-config-neutral. It defines the contract without
+opening any gate. SWR cannot be activated without deliberate, auditable,
+multi-step operator action.
+
+Core rule: Registered != Executed. Import-safe != Active. Smoke-tested != Production.
