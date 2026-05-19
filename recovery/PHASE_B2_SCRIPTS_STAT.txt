@@ -1,0 +1,19 @@
+ scripts/arch_angel_docs_guard.py                 | 113 ++++
+ scripts/generate_coverage_tests.py               | 147 +++++
+ scripts/maintenance/Heal_Sovereign_Substrate.ps1 |  29 +
+ scripts/maintenance/archive_files.py             |  49 ++
+ scripts/maintenance/audit_repo.py                | 101 ++++
+ scripts/maintenance/fix_toml_descriptions.py     |  51 ++
+ scripts/maintenance/verify_system.py             | 134 +++++
+ scripts/run_daily_tests.py                       |  32 ++
+ scripts/run_weekly_tests.py                      |  33 ++
+ scripts/validate_all_code.py                     | 330 +++++++++++
+ scripts/validate_production_claims.py            | 317 +++++++++++
+ scripts/verify/phase3_validation.py              |  80 +++
+ scripts/verify/startup-test-suite.ps1            |  80 +++
+ scripts/verify/utf_master_runner.js              | 101 ++++
+ scripts/verify/verify_runbook.py                 | 250 +++++++++
+ scripts/verify/verify_thirsty_interpreter.py     |  44 ++
+ scripts/verify_heart_restore_map.py              | 661 +++++++++++++++++++++++
+ scripts/verify_poc_surface.py                    |  91 ++++
+ 18 files changed, 2643 insertions(+)
