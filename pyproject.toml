@@ -167,6 +167,11 @@ filterwarnings = [
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
+    "chaos: Chaos engineering tests",
+    "slow: Slow-running integration or soak tests",
+    "load: Load and soak tests",
+    "soak: Soak / endurance tests",
+    "timeout: Tests with an explicit timeout requirement",
 ]
 
 [tool.black]
