@@ -36,7 +36,7 @@ become collectable once it exists.
 
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
-| `src/app/vault/core/vault.py` | test_vault_comprehensive |
+| ~~`src/app/vault/core/vault.py`~~ | ~~test_vault_comprehensive~~ DONE (2026-05-20) |
 
 ### Pipeline
 
