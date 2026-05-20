@@ -17,7 +17,7 @@ This test suite validates constitutional-grade audit logging features:
 import base64
 import tempfile
 import time
-from datetime import timezone, datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
