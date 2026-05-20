@@ -65,9 +65,9 @@ _GROUP_C_TESTS = [
     # test_asymmetric_security_coverage.py — implemented 2026-05-20
     # test_immutable_audit_log.py — implemented 2026-05-20
     # test_security_comprehensive.py — implemented 2026-05-20
-    # signal_flows (2)
-    "test_signal_flows_100_percent.py",
-    "test_signal_flows_complete_coverage.py",
+    # signal_flows (2) — implemented 2026-05-20
+    # test_signal_flows_100_percent.py — implemented 2026-05-20
+    # test_signal_flows_complete_coverage.py — implemented 2026-05-20
     # vault (1)
     # test_vault_comprehensive.py — implemented 2026-05-20
     # infrastructure / singletons (3)

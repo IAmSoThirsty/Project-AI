@@ -42,7 +42,7 @@ become collectable once it exists.
 
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
-| `src/app/pipeline/signal_flows.py` | test_signal_flows_100_percent, test_signal_flows_complete_coverage |
+| ~~`src/app/pipeline/signal_flows.py`~~ | ✅ DONE 2026-05-20 — 119 tests passing |
 
 ### Infrastructure
 
