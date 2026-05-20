@@ -30,7 +30,7 @@ become collectable once it exists.
 |---------------------|-----------------|
 | ~~`src/app/security/immutable_audit_log.py`~~ | ~~test_immutable_audit_log~~ DONE (2026-05-20) |
 | ~~`src/app/security/tseca_ghost_protocol.py`~~ | ~~test_tseca_ghost_protocol~~ DONE (2026-05-20) |
-| `src/security/asymmetric_security.py` | test_asymmetric_security_coverage, test_security_comprehensive |
+| ~~`src/security/asymmetric_security.py`~~ | ~~test_asymmetric_security_coverage, test_security_comprehensive~~ DONE (2026-05-20) |
 
 ### Vault
 
