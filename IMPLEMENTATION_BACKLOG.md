@@ -49,7 +49,7 @@ become collectable once it exists.
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
 | ~~`src/app/core/exceptions.py`~~ | ✅ DONE 2026-05-20 — 38 tests passing |
-| `src/app/personal_agent.py` | test_personal_agent |
+| ~~`src/app/personal_agent.py`~~ | ~~test_personal_agent~~ DONE (2026-05-20) |
 
 ### Miniature Office
 
