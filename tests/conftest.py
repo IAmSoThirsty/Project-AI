@@ -72,7 +72,7 @@ _GROUP_C_TESTS = [
     # test_vault_comprehensive.py — implemented 2026-05-20
     # infrastructure / singletons (3) — test_cathedral_infrastructure.py implemented 2026-05-20
     # test_tseca_ghost_protocol.py — implemented 2026-05-20
-    "test_personal_agent.py",            # app.personal_agent
+    # test_personal_agent.py — implemented 2026-05-20
     # cerberus.sase sub-modules (2)
     "test_containment.py",               # cerberus.sase.policy.containment
     "test_substrate.py",                 # cerberus.sase.core.substrate
