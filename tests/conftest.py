@@ -59,8 +59,8 @@ _GROUP_C_TESTS = [
     "test_repair_crew.py",
     # governance / pricing modules (3)
     # test_company_pricing.py — implemented 2026-05-20
-    "test_government_pricing.py",
-    "test_government_pricing_manual.py",
+    # test_government_pricing.py — implemented 2026-05-20
+    # test_government_pricing_manual.py — implemented 2026-05-20
     # security sub-modules (3)
     "test_asymmetric_security_coverage.py",
     "test_immutable_audit_log.py",

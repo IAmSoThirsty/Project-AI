@@ -22,7 +22,7 @@ become collectable once it exists.
 | ~~`src/app/governance/sovereign_audit_log.py`~~ | ~~test_sovereign_audit_log~~ DONE (2026-05-20) — remaining: test_12_vector_constitutional_break, test_attack_simulation_suite, test_external_merkle_anchor, test_tsa_integration, manual/test_12_vector_break_suite, manual/test_sovereign_manual |
 | ~~`src/app/governance/audit_manager.py`~~ | ~~manual/test_audit_integration~~ DONE (2026-05-20) |
 | ~~`src/app/governance/company_pricing.py`~~ | ~~test_company_pricing~~ DONE (2026-05-20) |
-| `src/app/governance/government_pricing.py` | test_government_pricing, test_government_pricing_manual |
+| ~~`src/app/governance/government_pricing.py`~~ | ~~test_government_pricing, test_government_pricing_manual~~ DONE (2026-05-20) |
 
 ### Security
 

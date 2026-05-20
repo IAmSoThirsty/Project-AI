@@ -79,9 +79,9 @@ class TestGovernmentTierMultiplier:
         assert increase == 75.0
 
     def test_tier_10_large_deployment(self):
-        """Test large deployment (250 seats)"""
+        """Test large deployment (250 seats) — tier 9 (0-indexed), +135%."""
         multiplier, tier, increase = calculate_government_tier_multiplier(250)
-        assert multiplier == 2.50
+        assert multiplier == pytest.approx(2.35)  # 1.0 + 0.15*9; test name refers to 10th band
         assert tier == 9
         assert increase == 135.0
 
