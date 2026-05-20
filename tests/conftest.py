@@ -74,8 +74,8 @@ _GROUP_C_TESTS = [
     # test_tseca_ghost_protocol.py — implemented 2026-05-20
     # test_personal_agent.py — implemented 2026-05-20
     # cerberus.sase sub-modules (2)
-    "test_containment.py",               # cerberus.sase.policy.containment
-    "test_substrate.py",                 # cerberus.sase.core.substrate
+    # test_containment.py — implemented 2026-05-20
+    # test_substrate.py — implemented 2026-05-20
     # misc structural (3)
     "test_entropy_slope.py",             # monitoring.entropy_slope
     "test_reasoning_matrix.py",          # src.cognition.reasoning_matrix
@@ -85,7 +85,7 @@ _GROUP_C_TESTS = [
     "manual/test_12_vector_break_suite.py",
     # manual/test_audit_integration.py — implemented 2026-05-20
     "manual/test_sovereign_manual.py",
-    "sase/core/test_normalization.py",   # src.cerberus.sase.core.normalization
+    # sase/core/test_normalization.py — implemented 2026-05-20
 ]
 
 # ── Platform-specific: PyQt6 not available in CI / Docker ────────────────────
