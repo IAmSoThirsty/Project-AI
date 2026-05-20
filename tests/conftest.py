@@ -54,7 +54,7 @@ _GROUP_C_TESTS = [
     "test_external_merkle_anchor.py",
     "test_tsa_integration.py",
     # miniature_office sub-modules (3)
-    "test_agent_lounge.py",
+    # test_agent_lounge.py — implemented 2026-05-20
     "test_meta_security_dept.py",
     "test_repair_crew.py",
     # governance / pricing modules (3)

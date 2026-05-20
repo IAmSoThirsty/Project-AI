@@ -55,7 +55,7 @@ become collectable once it exists.
 
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
-| `src/app/miniature_office/agent_lounge.py` | test_agent_lounge |
+| ~~`src/app/miniature_office/agent_lounge.py`~~ | ~~test_agent_lounge~~ DONE (2026-05-20) |
 | `src/app/miniature_office/meta_security_dept.py` | test_meta_security_dept |
 | `src/app/miniature_office/repair_crew.py` | test_repair_crew |
 
