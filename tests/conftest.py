@@ -63,7 +63,7 @@ _GROUP_C_TESTS = [
     # test_government_pricing_manual.py — implemented 2026-05-20
     # security sub-modules (3)
     "test_asymmetric_security_coverage.py",
-    "test_immutable_audit_log.py",
+    # test_immutable_audit_log.py — implemented 2026-05-20
     "test_security_comprehensive.py",
     # signal_flows (2)
     "test_signal_flows_100_percent.py",
