@@ -63,9 +63,9 @@ become collectable once it exists.
 
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
-| `src/cerberus/sase/policy/containment.py` | test_containment |
-| `src/cerberus/sase/core/substrate.py` | test_substrate |
-| `src/cerberus/sase/core/normalization.py` | sase/core/test_normalization |
+| ~~`src/cerberus/sase/policy/containment.py`~~ | ~~test_containment~~ DONE (2026-05-20) |
+| ~~`src/cerberus/sase/core/substrate.py`~~ | ~~test_substrate~~ DONE (2026-05-20) |
+| ~~`src/cerberus/sase/core/normalization.py`~~ | ~~sase/core/test_normalization~~ DONE (2026-05-20) |
 
 ### Cognition / Monitoring
 
