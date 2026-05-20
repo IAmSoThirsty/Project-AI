@@ -48,11 +48,10 @@ _SHADOW_THIRST_TESTS = [
 # These tests reference internal app modules that were never written.
 # Isolated here until the corresponding modules are implemented.
 _GROUP_C_TESTS = [
-    # sovereign_audit_log family (7)
+    # sovereign_audit_log family (6) — test_sovereign_audit_log.py implemented
     "test_12_vector_constitutional_break.py",
     "test_attack_simulation_suite.py",
     "test_external_merkle_anchor.py",
-    "test_sovereign_audit_log.py",
     "test_tsa_integration.py",
     # miniature_office sub-modules (3)
     "test_agent_lounge.py",
