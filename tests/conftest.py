@@ -70,8 +70,7 @@ _GROUP_C_TESTS = [
     # test_signal_flows_complete_coverage.py — implemented 2026-05-20
     # vault (1)
     # test_vault_comprehensive.py — implemented 2026-05-20
-    # infrastructure / singletons (3)
-    "test_cathedral_infrastructure.py",   # src.app.core.exceptions missing
+    # infrastructure / singletons (3) — test_cathedral_infrastructure.py implemented 2026-05-20
     # test_tseca_ghost_protocol.py — implemented 2026-05-20
     "test_personal_agent.py",            # app.personal_agent
     # cerberus.sase sub-modules (2)
