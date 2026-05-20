@@ -56,7 +56,7 @@ _GROUP_C_TESTS = [
     # miniature_office sub-modules (3)
     # test_agent_lounge.py — implemented 2026-05-20
     # test_meta_security_dept.py — implemented 2026-05-20
-    "test_repair_crew.py",
+    # test_repair_crew.py — implemented 2026-05-20
     # governance / pricing modules (3)
     # test_company_pricing.py — implemented 2026-05-20
     # test_government_pricing.py — implemented 2026-05-20

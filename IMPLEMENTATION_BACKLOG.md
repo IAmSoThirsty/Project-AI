@@ -57,7 +57,7 @@ become collectable once it exists.
 |---------------------|-----------------|
 | ~~`src/app/miniature_office/agent_lounge.py`~~ | ~~test_agent_lounge~~ DONE (2026-05-20) |
 | ~~`src/app/miniature_office/meta_security_dept.py`~~ | ~~test_meta_security_dept~~ DONE (2026-05-20) |
-| `src/app/miniature_office/repair_crew.py` | test_repair_crew |
+| ~~`src/app/miniature_office/repair_crew.py`~~ | ~~test_repair_crew~~ DONE (2026-05-20) |
 
 ### Cerberus SASE
 
