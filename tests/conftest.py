@@ -72,7 +72,7 @@ _GROUP_C_TESTS = [
     "test_vault_comprehensive.py",
     # infrastructure / singletons (3)
     "test_cathedral_infrastructure.py",   # src.app.core.exceptions missing
-    "test_tseca_ghost_protocol.py",       # src.app.security.tseca_ghost_protocol
+    # test_tseca_ghost_protocol.py — implemented 2026-05-20
     "test_personal_agent.py",            # app.personal_agent
     # cerberus.sase sub-modules (2)
     "test_containment.py",               # cerberus.sase.policy.containment
