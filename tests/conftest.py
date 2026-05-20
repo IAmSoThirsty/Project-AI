@@ -69,7 +69,7 @@ _GROUP_C_TESTS = [
     "test_signal_flows_100_percent.py",
     "test_signal_flows_complete_coverage.py",
     # vault (1)
-    "test_vault_comprehensive.py",
+    # test_vault_comprehensive.py — implemented 2026-05-20
     # infrastructure / singletons (3)
     "test_cathedral_infrastructure.py",   # src.app.core.exceptions missing
     # test_tseca_ghost_protocol.py — implemented 2026-05-20
