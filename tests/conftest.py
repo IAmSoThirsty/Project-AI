@@ -84,7 +84,7 @@ _GROUP_C_TESTS = [
     "test_repo_scan_contract.py",        # repo_scan_contract (not on sys.path)
     # subdirectory tests
     "manual/test_12_vector_break_suite.py",
-    "manual/test_audit_integration.py",  # app.governance.audit_manager
+    # manual/test_audit_integration.py — implemented 2026-05-20
     "manual/test_sovereign_manual.py",
     "sase/core/test_normalization.py",   # src.cerberus.sase.core.normalization
 ]

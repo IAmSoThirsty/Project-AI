@@ -107,7 +107,7 @@ def test_deterministic_mode():
         )
 
         # Log events with fixed timestamps
-        base_time = datetime(2025, 1, 15, 10, 0, 0, tzinfo=UTC)
+        base_time = datetime(2025, 1, 15, 10, 0, 0, tzinfo=timezone.utc)
 
         manager.audit_log.log_event(
             "deterministic_test", {"sequence": 1}, deterministic_timestamp=base_time
