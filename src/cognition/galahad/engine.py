@@ -8,9 +8,14 @@ Provides reasoning abstraction with:
 - Explanation generation
 """
 
+from __future__ import annotations
+
 import logging
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from src.cognition.reasoning_matrix.core import ReasoningMatrix
 
 logger = logging.getLogger(__name__)
 
@@ -36,14 +41,20 @@ class GalahadEngine:
     - Explanation generation
     """
 
-    def __init__(self, config: GalahadConfig | None = None):
+    def __init__(
+        self,
+        config: GalahadConfig | None = None,
+        reasoning_matrix: ReasoningMatrix | None = None,
+    ):
         """
         Initialize Galahad engine.
 
         Args:
             config: Engine configuration
+            reasoning_matrix: Optional matrix for recording reasoning traces
         """
         self.config = config or GalahadConfig()
+        self._reasoning_matrix = reasoning_matrix
         self.curiosity_score = 0.0
         self.reasoning_history: list[dict] = []
 
@@ -94,12 +105,62 @@ class GalahadEngine:
             }
             self.reasoning_history.append(reasoning_record)
 
+            # Matrix integration
+            reasoning_entry_id: str | None = None
+            if self._reasoning_matrix is not None:
+                eid = self._reasoning_matrix.begin_reasoning(
+                    "galahad_reasoning",
+                    metadata=context,
+                )
+                self._reasoning_matrix.add_factor(
+                    eid,
+                    "contradictions_detected",
+                    len(contradictions),
+                    weight=1.0,
+                    score=1.0 if contradictions else 0.0,
+                    source="galahad",
+                    rationale=f"{len(contradictions)} contradiction(s) detected",
+                )
+                self._reasoning_matrix.add_factor(
+                    eid,
+                    "curiosity_signal",
+                    self.curiosity_score,
+                    weight=0.5,
+                    score=min(1.0, self.curiosity_score),
+                    source="galahad",
+                    rationale="Curiosity score post-update",
+                )
+                strategy = "arbitration" if contradictions else "synthesis"
+                self._reasoning_matrix.add_factor(
+                    eid,
+                    "resolution_strategy",
+                    strategy,
+                    weight=0.8,
+                    score=0.8,
+                    source="galahad",
+                    rationale=f"Used {strategy} to resolve inputs",
+                )
+                avg_confidence = (
+                    sum(a["confidence"] for a in analyses) / len(analyses)
+                    if analyses
+                    else 0.7
+                )
+                decision = "arbitrated" if contradictions else "synthesized"
+                self._reasoning_matrix.render_verdict(
+                    eid,
+                    decision,
+                    min(1.0, avg_confidence),
+                    explanation=explanation,
+                )
+                reasoning_entry_id = eid
+
             return {
                 "success": True,
                 "conclusion": result,
                 "explanation": explanation,
                 "contradictions": contradictions,
                 "curiosity_score": self.curiosity_score,
+                "reasoning_entry_id": reasoning_entry_id,
                 "metadata": {
                     "depth": self.config.reasoning_depth,
                     "context": context or {},
