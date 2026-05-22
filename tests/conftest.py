@@ -77,9 +77,9 @@ _GROUP_C_TESTS = [
     # test_containment.py — implemented 2026-05-20
     # test_substrate.py — implemented 2026-05-20
     # misc structural (3)
-    "test_entropy_slope.py",             # monitoring.entropy_slope
-    "test_reasoning_matrix.py",          # src.cognition.reasoning_matrix
-    "test_cognition_comprehensive.py",   # src.cognition.reasoning_matrix
+    # test_entropy_slope.py — implemented 2026-05-21
+    # test_reasoning_matrix.py — implemented 2026-05-20
+    # test_cognition_comprehensive.py — enabled 2026-05-20
     "test_repo_scan_contract.py",        # repo_scan_contract (not on sys.path)
     # subdirectory tests
     "manual/test_12_vector_break_suite.py",
