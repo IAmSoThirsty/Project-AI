@@ -10,6 +10,24 @@ from pathlib import Path
 
 import numpy as np
 
+__all__ = ["EntropyState", "EntropySnapshot", "EntropySlopeMonitor"]
+
+# ── completion convergence ────────────────────────────────────────────────────
+_COMPLETION_MIN_YEARS: float = 10.0
+_COMPLETION_SLOPE_PER_YEAR: float = 0.005   # max annual drift to call "complete"
+_COMPLETION_RESIDUAL_STD: float = 0.05       # max residual σ; above → "Poor fit"
+
+# ── creep detection ───────────────────────────────────────────────────────────
+_CREEP_WINDOW_DAYS: int = 90                 # look-back window for recency
+_CREEP_MIN_SPAN_DAYS: float = 7.0            # minimum span to assess a trend
+_CREEP_MIN_POINTS: int = 5                   # minimum recent points
+_CREEP_SLOPE_PER_DAY: float = 0.001          # threshold: below → "below creep threshold"
+_CREEP_SLOPE_EPSILON: float = 1e-10          # treat slopes ≤ this as zero
+
+# ── collapse / converging ─────────────────────────────────────────────────────
+_COLLAPSE_FRACTION: float = 0.5             # current < fraction*baseline → collapsed
+_CONVERGING_SLOPE_PER_YEAR: float = 0.05    # stable but not yet complete
+
 
 class EntropyState(Enum):
     COLLAPSED = "COLLAPSED"
@@ -35,16 +53,6 @@ class EntropySnapshot:
         }
 
 
-_COMPLETION_MIN_YEARS: float = 10.0
-_COMPLETION_SLOPE_PER_YEAR: float = 0.005
-_COMPLETION_RESIDUAL_STD: float = 0.05
-_CREEP_WINDOW_DAYS: int = 90
-_CREEP_MIN_POINTS: int = 5
-_CREEP_SLOPE_PER_DAY: float = 0.001
-_COLLAPSE_FRACTION: float = 0.5
-_CONVERGING_SLOPE_PER_YEAR: float = 0.05
-
-
 class EntropySlopeMonitor:
     """Ledger-backed entropy monitor. Fully stateless beyond init-time constants."""
 
@@ -59,10 +67,15 @@ class EntropySlopeMonitor:
         genesis_bytes = genesis_path.read_bytes()
         self.oracle_seed = hashlib.sha256(genesis_bytes + b"ORACLE_SEED").hexdigest()
 
+        # Use full 256-bit hash to derive baseline so it is never exactly 0.0.
+        # int(hex_str, 16) / (2**256 - 1) maps to [~0, 1]; all-zero SHA-256 output
+        # is computationally impossible, so baseline_entropy > 0 is guaranteed.
         baseline_raw = hashlib.sha256(genesis_bytes + b"BASELINE").hexdigest()
-        self.baseline_entropy = int(baseline_raw[:8], 16) / 0xFFFFFFFF
+        self.baseline_entropy = int(baseline_raw, 16) / (2**256 - 1)
 
         self.entropy_ledger_path = self.data_dir / "entropy_ledger.jsonl"
+
+    # ── ledger I/O ────────────────────────────────────────────────────────────
 
     def record_entropy_snapshot(
         self, entropy_value: float, source: str, ledger_state: dict
@@ -74,11 +87,11 @@ class EntropySlopeMonitor:
             "ledger_state": ledger_state,
         }
         ledger_hash = hashlib.sha256(
-            json.dumps(record, sort_keys=True).encode()
+            json.dumps(record, sort_keys=True).encode("utf-8")
         ).hexdigest()
         record["ledger_hash"] = ledger_hash
 
-        with open(self.entropy_ledger_path, "a") as f:
+        with open(self.entropy_ledger_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
 
     def load_entropy_snapshots(
@@ -90,12 +103,16 @@ class EntropySlopeMonitor:
             return []
 
         snapshots: list[EntropySnapshot] = []
-        with open(self.entropy_ledger_path) as f:
+        with open(self.entropy_ledger_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:
                     continue
-                data = json.loads(line)
+                try:
+                    data = json.loads(line)
+                except json.JSONDecodeError:
+                    # Skip corrupted lines (e.g. from a crash mid-write)
+                    continue
                 ts = float(data["timestamp"])
                 if start_time is not None and ts < start_time:
                     continue
@@ -111,14 +128,18 @@ class EntropySlopeMonitor:
                 )
         return snapshots
 
+    # ── slope regression ──────────────────────────────────────────────────────
+
     def compute_entropy_slope(
         self, snapshots: list[EntropySnapshot]
     ) -> tuple[float, float]:
         if len(snapshots) < 2:
             return 0.0, 0.0
 
-        timestamps = np.array([s.timestamp for s in snapshots])
-        values = np.array([s.entropy_value for s in snapshots])
+        # Sort by timestamp so x is always monotonically increasing from 0.
+        ordered = sorted(snapshots, key=lambda s: s.timestamp)
+        timestamps = np.array([s.timestamp for s in ordered])
+        values = np.array([s.entropy_value for s in ordered])
 
         x = (timestamps - timestamps[0]) / 86400.0
         coeffs = np.polyfit(x, values, 1)
@@ -134,6 +155,8 @@ class EntropySlopeMonitor:
             r_squared = max(0.0, 1.0 - ss_res / ss_tot)
 
         return slope, r_squared
+
+    # ── detector: completion convergence ──────────────────────────────────────
 
     def detect_completion_convergence(
         self, snapshots: list[EntropySnapshot]
@@ -151,8 +174,9 @@ class EntropySlopeMonitor:
                 "duration_years": duration_years,
             }
 
-        timestamps = np.array([s.timestamp for s in snapshots])
-        values = np.array([s.entropy_value for s in snapshots])
+        ordered = sorted(snapshots, key=lambda s: s.timestamp)
+        timestamps = np.array([s.timestamp for s in ordered])
+        values = np.array([s.entropy_value for s in ordered])
         x = (timestamps - timestamps[0]) / 86400.0
         coeffs = np.polyfit(x, values, 1)
         slope = float(coeffs[0])
@@ -185,6 +209,8 @@ class EntropySlopeMonitor:
             "r_squared": r_squared,
         }
 
+    # ── detector: entropy creep ───────────────────────────────────────────────
+
     def detect_entropy_creep(
         self, snapshots: list[EntropySnapshot]
     ) -> tuple[bool, dict]:
@@ -193,21 +219,27 @@ class EntropySlopeMonitor:
         recent = [s for s in snapshots if s.timestamp >= cutoff]
 
         recent_span_days = (
-            (max(s.timestamp for s in recent) - min(s.timestamp for s in recent)) / 86400.0
-            if recent else 0.0
+            (max(s.timestamp for s in recent) - min(s.timestamp for s in recent))
+            / 86400.0
+            if recent
+            else 0.0
         )
-        if len(recent) < _CREEP_MIN_POINTS or recent_span_days < 7.0:
+        if len(recent) < _CREEP_MIN_POINTS or recent_span_days < _CREEP_MIN_SPAN_DAYS:
             return False, {"reason": "Insufficient recent data"}
 
-        slope, _ = self.compute_entropy_slope(recent)
+        raw_slope, _ = self.compute_entropy_slope(recent)
+        # Clamp floating-point noise to zero so metadata is honest.
+        slope = 0.0 if abs(raw_slope) <= _CREEP_SLOPE_EPSILON else raw_slope
 
-        if slope <= 1e-10:
+        if slope <= 0.0:
             return False, {"reason": "Entropy not increasing", "slope": slope}
 
         if slope < _CREEP_SLOPE_PER_DAY:
             return False, {"reason": "Slope below creep threshold", "slope": slope}
 
         return True, {"slope": slope, "is_creeping": True}
+
+    # ── detector: entropy collapse ────────────────────────────────────────────
 
     def detect_entropy_collapse(
         self, snapshots: list[EntropySnapshot]
@@ -226,6 +258,8 @@ class EntropySlopeMonitor:
             "reason": "Entropy above collapse threshold",
             "current_entropy": current_entropy,
         }
+
+    # ── state classification ──────────────────────────────────────────────────
 
     def get_entropy_state(
         self, snapshots: list[EntropySnapshot] | None = None
@@ -255,6 +289,8 @@ class EntropySlopeMonitor:
 
         return EntropyState.NORMAL, {}
 
+    # ── composite metrics ─────────────────────────────────────────────────────
+
     def compute_dual_baseline_metrics(
         self, snapshots: list[EntropySnapshot]
     ) -> dict:
@@ -274,7 +310,23 @@ class EntropySlopeMonitor:
         is_collapsed, collapse_meta = self.detect_entropy_collapse(snapshots)
         collapse_meta["is_collapsed"] = is_collapsed
 
-        state, _ = self.get_entropy_state(snapshots)
+        # Derive state from already-computed booleans to avoid re-running every
+        # detector a second time through get_entropy_state.
+        if is_collapsed:
+            state = EntropyState.COLLAPSED
+        elif is_complete:
+            state = EntropyState.COMPLETE
+        elif is_creeping:
+            state = EntropyState.CREEPING
+        elif len(snapshots) >= _CREEP_MIN_POINTS:
+            slope, _ = self.compute_entropy_slope(snapshots)
+            state = (
+                EntropyState.CONVERGING
+                if abs(slope) * 365.25 < _CONVERGING_SLOPE_PER_YEAR
+                else EntropyState.NORMAL
+            )
+        else:
+            state = EntropyState.NORMAL
 
         return {
             "oracle_seed": self.oracle_seed,
