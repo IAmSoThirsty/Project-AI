@@ -28,6 +28,7 @@ class GalahadConfig:
     enable_curiosity: bool = True
     curiosity_threshold: float = 0.5
     arbitration_strategy: str = "weighted"  # 'weighted', 'unanimous', 'majority'
+    sovereign_mode: bool = False
 
 
 class GalahadEngine:

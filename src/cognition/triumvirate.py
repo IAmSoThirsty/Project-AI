@@ -10,15 +10,20 @@ Provides unified interface for complex AI workflows with
 telemetry, error handling, and production-ready features.
 """
 
+from __future__ import annotations
+
 import logging
 import uuid
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from src.cognition.cerberus.engine import CerberusConfig, CerberusEngine
 from src.cognition.codex.engine import CodexConfig, CodexEngine
 from src.cognition.galahad.engine import GalahadConfig, GalahadEngine
+
+if TYPE_CHECKING:
+    from src.cognition.reasoning_matrix.core import ReasoningMatrix
 
 logger = logging.getLogger(__name__)
 
@@ -45,23 +50,29 @@ class Triumvirate:
     4. Output enforcement (Cerberus)
     """
 
-    def __init__(self, config: TriumvirateConfig | None = None):
+    def __init__(
+        self,
+        config: TriumvirateConfig | None = None,
+        reasoning_matrix: ReasoningMatrix | None = None,
+    ):
         """
         Initialize Triumvirate orchestrator.
 
         Args:
             config: Orchestrator configuration
+            reasoning_matrix: Optional matrix for decision audit trail
         """
         if config is None:
             config = TriumvirateConfig()
 
         self.config = config
+        self._matrix = reasoning_matrix
 
         # Initialize engines
         logger.info("Initializing Triumvirate orchestrator")
 
         self.codex = CodexEngine(config.codex_config)
-        self.galahad = GalahadEngine(config.galahad_config)
+        self.galahad = GalahadEngine(config.galahad_config, reasoning_matrix=reasoning_matrix)
         self.cerberus = CerberusEngine(config.cerberus_config)
 
         # Telemetry
@@ -154,6 +165,7 @@ class Triumvirate:
                 "output": enforcement_result["output"],
                 "correlation_id": correlation_id,
                 "duration_ms": duration_ms,
+                "reasoning_entry_id": reasoning_result.get("reasoning_entry_id"),
                 "pipeline": {
                     "validation": validation_result,
                     "codex": codex_result,
