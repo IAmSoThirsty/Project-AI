@@ -67,9 +67,8 @@ class EntropySlopeMonitor:
         genesis_bytes = genesis_path.read_bytes()
         self.oracle_seed = hashlib.sha256(genesis_bytes + b"ORACLE_SEED").hexdigest()
 
-        # Use full 256-bit hash to derive baseline so it is never exactly 0.0.
-        # int(hex_str, 16) / (2**256 - 1) maps to [~0, 1]; all-zero SHA-256 output
-        # is computationally impossible, so baseline_entropy > 0 is guaranteed.
+        # Full 256-bit hash: an exact-zero baseline is cryptographically negligible,
+        # not realistically reachable (not a hard guarantee).
         baseline_raw = hashlib.sha256(genesis_bytes + b"BASELINE").hexdigest()
         self.baseline_entropy = int(baseline_raw, 16) / (2**256 - 1)
 
