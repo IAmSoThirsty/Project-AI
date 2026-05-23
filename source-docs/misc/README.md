@@ -2,7 +2,7 @@
 type: source-doc
 tags: [source-docs, miscellaneous-modules, technical-reference, remaining-systems]
 created: 2025-01-26
-last_verified: 2026-04-20
+last_verified: 2026-05-20
 status: current
 related_systems: [ad_blocking, domains, privacy, browser, monitoring, inspection, governance, triumvirate, thirsty_lang]
 stakeholders: [content-team, knowledge-management, developers, system-architects]
@@ -13,8 +13,8 @@ review_cycle: quarterly
 # Miscellaneous Systems Documentation
 
 **Directory:** `source-docs/misc/`  
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-26
+**Version:** 1.1.0  
+**Last Updated:** 2026-05-20
 
 ## Purpose
 
@@ -145,11 +145,16 @@ This directory contains comprehensive documentation for all remaining Python mod
     - Escalation System - Multi-tier decision escalation
     - Adapters - Memory, model, and policy adapters
 
-21. **[ThirstyLang Interpreter](./21-thirsty-lang.md)** - `src/thirsty_lang/`
-    - Interpreter - ThirstyLang language implementation
-    - REPL - Interactive interpreter
-    - Utils - Language utilities
-    - GitHub Recognition Tests
+21. **[Thirsty-Lang + UTF Reference](./21-thirsty-lang.md)** - `src/utf/` + `src/thirsty_lang/`
+    - Canonical UTF v1.2 reference (6-tier stack)
+    - TARL policy/runtime and TARL OS architecture
+    - Shadow Thirst mutation simulation model
+    - TSCG + TSCG-B governance encoding/protocol
+
+21a. **[Thirsty-Lang Quickstart](./21a-thirsty-lang-quickstart.md)** - `src/utf/thirsty_lang/`
+    - Core keywords and first program
+    - Run/check/REPL commands for UTF Python runtime
+    - On-ramp to governance-first execution model
 
 22. **[Features & Capabilities](./22-features.md)** - `src/features/`
     - Sovereign Messaging - End-to-end encrypted messaging
@@ -184,7 +189,7 @@ This directory contains comprehensive documentation for all remaining Python mod
 - [Inspection](./06-inspection.md) - Code analysis
 - [Reporting](./13-reporting.md) - Security reports
 - [Plugins](./16-plugins.md) - Extensibility framework
-- [ThirstyLang](./21-thirsty-lang.md) - Custom language
+- [Thirsty-Lang + UTF](./21-thirsty-lang.md) - Governance-first language stack
 
 **User Experience:**
 - [Setup](./15-setup.md) - Onboarding and configuration
@@ -342,8 +347,8 @@ python -m src.app.privacy.privacy_auditor
 # Code inspection
 python -m src.app.inspection.cli --path ./src
 
-# ThirstyLang interpreter
-python -m src.thirsty_lang.src.thirsty_repl
+# Thirsty-Lang UTF runtime
+py -3.12 -m src.utf.thirsty_lang.cli repl
 ```
 
 ### Testing Modules
@@ -405,3 +410,5 @@ When adding new modules to this documentation:
 **Quality Gate:** PASSED - 23 categories, 80+ modules documented  
 **Compliance:** Fully compliant with Project-AI Governance Profile  
 **Coverage:** 100% of remaining undocumented modules
+
+

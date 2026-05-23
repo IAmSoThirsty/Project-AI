@@ -807,7 +807,7 @@ def test_integration():
 - **Ad Blocking:** [01-ad-blocking.md](./01-ad-blocking.md)
 - **Domains:** [02-domains.md](./02-domains.md)
 - **Cognition:** [20-cognition.md](./20-cognition.md)
-- **ThirstyLang:** [21-thirsty-lang.md](./21-thirsty-lang.md)
+- **Thirsty-Lang + UTF:** [21-thirsty-lang.md](./21-thirsty-lang.md)
 
 ---
 
@@ -816,3 +816,4 @@ def test_integration():
 **Compliance:** Fully compliant with Project-AI Governance Profile  
 **Coverage:** 100% of miscellaneous systems documented  
 **Last Verified:** 2026-04-20
+
