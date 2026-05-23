@@ -19,7 +19,7 @@ become collectable once it exists.
 
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
-| ~~`src/app/governance/sovereign_audit_log.py`~~ | ~~test_sovereign_audit_log~~ DONE (2026-05-20) — remaining: test_12_vector_constitutional_break, test_attack_simulation_suite, test_external_merkle_anchor, test_tsa_integration, manual/test_12_vector_break_suite, manual/test_sovereign_manual |
+| ~~`src/app/governance/sovereign_audit_log.py`~~ | ✅ DONE 2026-05-22 — 84 passed / 10 skipped (live TSA) across all 7 governance test files |
 | ~~`src/app/governance/audit_manager.py`~~ | ~~manual/test_audit_integration~~ DONE (2026-05-20) |
 | ~~`src/app/governance/company_pricing.py`~~ | ~~test_company_pricing~~ DONE (2026-05-20) |
 | ~~`src/app/governance/government_pricing.py`~~ | ~~test_government_pricing, test_government_pricing_manual~~ DONE (2026-05-20) |
@@ -71,14 +71,14 @@ become collectable once it exists.
 
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
-| `src/cognition/reasoning_matrix.py` | test_reasoning_matrix, test_cognition_comprehensive |
-| `src/monitoring/entropy_slope.py` (or `monitoring/entropy_slope.py` on sys.path) | test_entropy_slope |
+| ~~`src/cognition/reasoning_matrix.py`~~ | ✅ DONE 2026-05-20 — test_reasoning_matrix, test_cognition_comprehensive passing |
+| ~~`src/monitoring/entropy_slope.py`~~ | ✅ DONE 2026-05-21 — test_entropy_slope passing |
 
 ### Repo Scan Contract
 
 | Module to implement | Tests unblocked |
 |---------------------|-----------------|
-| `repo_scan_contract.py` at repo root (or add its directory to pythonpath) | test_repo_scan_contract |
+| ~~`repo_scan_contract.py`~~ | ✅ DONE 2026-05-22 — test_repo_scan_contract passing |
 
 ---
 
