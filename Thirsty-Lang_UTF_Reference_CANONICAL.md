@@ -1,15 +1,62 @@
+# Thirsty-Lang UTF Canonical Reference
+## Fact-Checked and Verified Canonical Document
+
+**Version:** 1.3-canonical
+**Date:** 2026-05-20
+**Repository:** IAmSoThirsty/Project-AI
+**Status:** Canonical merged reference built from v1 and v1.2 PDFs with repository fact-check validation
+
 ---
-type: source-doc
-tags: [thirsty-lang, utf, tarl, tarl-os, tscg, tscg-b, shadow-thirst, governance, constitutional-runtime]
-created: 2025-01-26
-last_verified: 2026-05-20
-status: current
-related_systems: [utf, thirsty-lang, tarl, tarl-os, shadow-thirst, tscg, tscg-b, triumvirate, psia, iron-path]
-stakeholders: [language-team, governance-team, developers, security-team, system-architects]
-content_category: technical
-review_cycle: monthly
-source_reference: ../../Thirsty-Lang_UTF_Reference_v1.md
+
+## Canonical Merge Provenance
+
+- Source PDF A: `C:\Users\Quencher\Downloads\Thirsty-Lang_UTF_Reference_v1.pdf`
+- Source PDF B: `T:\Thirsty-Lang_UTF_Reference_v1.2.pdf`
+- Side-by-side export: `T:\UTF_Side_by_Side_Comparison.md`
+- Fact-check report: `T:\UTF_Repository_Fact_Check.md`
+
+## Side-by-Side Extraction Summary
+
+- v1 pages: **79**, words: **16,693**
+- v1.2 pages: **76**, words: **15,886**
+- text similarity ratio: **0.635**
+
+## Repository Fact-Check Summary
+
+- ✅ **UTF Python file count** — expected `41`, actual `41`
+- ⚠️ **UTF total lines of code** — expected `5,995`, actual `7,037`
+- ✅ **UTF examples count** — expected `7`, actual `7`
+- ✅ **UTF test file count (test_*.py)** — expected `7`, actual `7`
+- ✅ **UTF canonical stack tiers** — expected `6`, actual `6`
+- ✅ **Triumvirate mapping doc exists** — expected `Present`, actual `Present`
+- ✅ **Triumvirate pillars named** — expected `Cerberus, Codex, Galahad`, actual `Cerberus, Codex, Galahad`
+- ✅ **TSCG 9-symbol set present in UTF code** — expected `COG,DNT,SHD,INV,CAP,QRM,COM,ANC,RFX`, actual `COG,DNT,SHD,INV,CAP,QRM,COM,ANC,RFX`
+
+## Verified UTF Implementation Statistics
+
+| Metric | Value |
+|---|---:|
+| Total Python files (`src/utf`) | 41 |
+| Total lines | 7,037 |
+| Total size | 246.73 KB |
+| Examples | 7 |
+| UTF tests (`test_*.py`) | 7 |
+
+## Module Breakdown (Verified)
+
+| Module | Files | Lines |
+|---|---:|---:|
+| `thirsty_lang` | 17 | 5,056 |
+| `tarl` | 6 | 906 |
+| `shadow_thirst` | 3 | 310 |
+| `tscg` | 3 | 180 |
+| `tscg_b` | 3 | 158 |
+| `tests` | 8 | 417 |
+
 ---
+
+## Canonical Technical Reference Body
+
 # Thirsty-Lang and the UTF: Universal Thirsty Family
 ## A Complete Technical, Architectural, and Governance Reference
 
@@ -472,7 +519,7 @@ All toolchain errors carry a stable `THIRSTY-Exxx` code. Error objects include `
 
 # 5. T.A.R.L. / TARL
 
-## 6.1 Name Disambiguation — A Documented Conflict
+## 5.1 Name Disambiguation — A Documented Conflict
 
 **The repository contains two conflicting definitions of the T.A.R.L. acronym.** This is documented here as a conflict, not silently resolved.
 
