@@ -29,8 +29,8 @@ class ReasoningFactor:
         value: Any,
         weight: float = 1.0,
         score: float | None = None,
-        source: str | None = None,
-        rationale: str | None = None,
+        source: str = "",
+        rationale: str = "",
         timestamp: float | None = None,
     ):
         if not (0.0 <= weight <= 1.0):
@@ -217,24 +217,24 @@ class ReasoningMatrix:
         value: Any,
         weight: float = 1.0,
         score: float | None = None,
-        source: str | None = None,
-        rationale: str | None = None,
-    ) -> None:
+        source: str = "",
+        rationale: str = "",
+    ) -> ReasoningFactor:
         if entry_id not in self._entries:
             raise KeyError(f"Unknown entry: {entry_id}")
         entry = self._entries[entry_id]
         if entry.is_finalized:
             raise ValueError(f"Entry {entry_id} is finalized")
-        entry.factors.append(
-            ReasoningFactor(
-                name=name,
-                value=value,
-                weight=weight,
-                score=score,
-                source=source,
-                rationale=rationale,
-            )
+        factor = ReasoningFactor(
+            name=name,
+            value=value,
+            weight=weight,
+            score=score,
+            source=source,
+            rationale=rationale,
         )
+        entry.factors.append(factor)
+        return factor
 
     def score_factor(self, entry_id: str, factor_name: str, score: float) -> None:
         if entry_id not in self._entries:
