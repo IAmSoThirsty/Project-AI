@@ -80,7 +80,7 @@ _GROUP_C_TESTS = [
     # test_entropy_slope.py — implemented 2026-05-21
     # test_reasoning_matrix.py — implemented 2026-05-20
     # test_cognition_comprehensive.py — enabled 2026-05-20
-    "test_repo_scan_contract.py",        # repo_scan_contract (not on sys.path)
+    # test_repo_scan_contract.py — implemented 2026-05-22
     # subdirectory tests
     "manual/test_12_vector_break_suite.py",
     # manual/test_audit_integration.py — implemented 2026-05-20
