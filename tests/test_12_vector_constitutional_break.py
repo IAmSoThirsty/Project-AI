@@ -25,7 +25,7 @@ Test Vectors:
 import shutil
 import tempfile
 import threading
-from datetime import timezone, datetime, timedelta
+from datetime import UTC, timezone, datetime, timedelta
 from pathlib import Path
 
 import pytest

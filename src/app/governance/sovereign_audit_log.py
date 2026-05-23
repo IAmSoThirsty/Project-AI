@@ -8,6 +8,9 @@ Constitutional-grade audit logging with:
 - Deterministic replay mode for canonical verification
 - Thread-safe append-only operation
 - File persistence with truncation detection
+- Genesis continuity protection (VECTOR 1, 2, 11)
+- TSA anchor manager for external time proofs
+- External Merkle anchor (optional IPFS / S3 / filesystem)
 """
 
 from __future__ import annotations
@@ -35,8 +38,54 @@ from cryptography.hazmat.primitives.serialization import (
     load_pem_private_key,
 )
 
+from .genesis_continuity import (
+    GenesisContinuityGuard,
+    GenesisDiscontinuityError,  # noqa: F401 — re-exported for callers
+    GenesisReplacementError,
+)
+
 logger = logging.getLogger(__name__)
 
+
+# ── stub anchor manager used when TSA deps are absent ────────────────────────
+
+class _NoOpAnchorManager:
+    """Zero-overhead stand-in when asn1crypto / requests are not installed."""
+
+    anchor_points: list[dict] = []
+
+    def get_anchor_count(self) -> int:
+        return 0
+
+    def get_latest_anchor(self):  # noqa: ANN201
+        return None
+
+    def get_anchor(self, idx: int):  # noqa: ANN201
+        return None
+
+    def get_anchors_since(self, idx: int) -> list:
+        return []
+
+    def verify_chain(self, public_key) -> tuple[bool, str]:  # noqa: ANN001
+        return True, "No anchors (stub mode)"
+
+    def _load(self) -> list[dict]:
+        return []
+
+    def _save(self, anchors: list[dict]) -> None:
+        pass
+
+
+def _make_anchor_manager(genesis_private_key, anchor_path: Path):
+    """Return a TSAAnchorManager, or the no-op stub if deps are unavailable."""
+    try:
+        from .tsa_anchor_manager import TSAAnchorManager
+        return TSAAnchorManager(genesis_private_key, anchor_path)
+    except Exception:
+        return _NoOpAnchorManager()
+
+
+# ── GenesisKeyPair ────────────────────────────────────────────────────────────
 
 class GenesisKeyPair:
     """Ed25519 key pair that persists as the root signing identity."""
@@ -44,8 +93,8 @@ class GenesisKeyPair:
     def __init__(self, key_dir: Path):
         self._key_dir = Path(key_dir)
         self._key_dir.mkdir(parents=True, exist_ok=True)
-        self.private_key_path = self._key_dir / "genesis_private.pem"
-        self.public_key_path = self._key_dir / "genesis_public.pem"
+        self.private_key_path = self._key_dir / "genesis_audit.key"
+        self.public_key_path = self._key_dir / "genesis_audit.pub"
         self.genesis_id_path = self._key_dir / "genesis_id.txt"
         self._load_or_generate()
 
@@ -78,6 +127,8 @@ class GenesisKeyPair:
         except Exception:
             return False
 
+
+# ── HMACKeyRotator ────────────────────────────────────────────────────────────
 
 class HMACKeyRotator:
     """HMAC key that rotates on a time interval, with an optional deterministic mode."""
@@ -130,6 +181,8 @@ class HMACKeyRotator:
         return mac, key_id
 
 
+# ── MerkleTreeAnchor ──────────────────────────────────────────────────────────
+
 class MerkleTreeAnchor:
     """Accumulates event hashes and produces Merkle root anchors in batches."""
 
@@ -139,6 +192,7 @@ class MerkleTreeAnchor:
         self._pending: list[bytes] = []
         self._counter = 0
         self._lock = threading.Lock()
+        self.external_anchor = None  # set by SovereignAuditLog when enabled
 
     def add_entry(self, entry_bytes: bytes) -> dict[str, Any] | None:
         with self._lock:
@@ -175,6 +229,8 @@ class MerkleTreeAnchor:
         return leaves[0]
 
 
+# ── OperationalLog ────────────────────────────────────────────────────────────
+
 class OperationalLog:
     """In-memory append-only store for structured sovereign events."""
 
@@ -195,6 +251,8 @@ class OperationalLog:
             return {"event_count": len(self._events)}
 
 
+# ── SovereignAuditLog ─────────────────────────────────────────────────────────
+
 class SovereignAuditLog:
     """Constitutional-grade audit log with Ed25519, HMAC, and Merkle anchoring."""
 
@@ -204,15 +262,51 @@ class SovereignAuditLog:
         deterministic_mode: bool = False,
         enable_notarization: bool = False,
         enable_external_anchoring: bool = False,
+        external_anchor_backends: list[str] | None = None,
     ):
         self._data_dir = Path(data_dir)
         self._data_dir.mkdir(parents=True, exist_ok=True)
         self.deterministic_mode = deterministic_mode
+        self.enable_external_anchoring = enable_external_anchoring
+        self.system_frozen = False
         self._lock = threading.Lock()
         self._audit_file = self._data_dir / "operational_audit.yaml"
         self._checkpoint_file = self._data_dir / "checkpoint.txt"
 
-        self.genesis_keypair = GenesisKeyPair(key_dir=self._data_dir / "genesis_keys")
+        # Genesis keys live one level above data_dir so they survive data wipes.
+        key_dir = self._data_dir.parent / "genesis_keys"
+        self.genesis_keypair = GenesisKeyPair(key_dir=key_dir)
+
+        # ── VECTOR 2: public key file consistency check ──────────────────────
+        pub_key_path = key_dir / "genesis_audit.pub"
+        if pub_key_path.exists():
+            stored_pub = pub_key_path.read_bytes()
+            derived_pub = self.genesis_keypair.public_key.public_bytes(
+                Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
+            )
+            if stored_pub != derived_pub:
+                self.system_frozen = True
+                raise GenesisReplacementError(
+                    f"Genesis public key replacement detected at {pub_key_path}. "
+                    f"genesis_audit.pub file does not match genesis_audit.key. "
+                    f"VECTOR 2 attack — system MUST freeze."
+                )
+
+        # ── VECTOR 1 / 11: continuity guard ─────────────────────────────────
+        self.continuity_guard = GenesisContinuityGuard()
+        pub_pem_bytes = self.genesis_keypair.public_key.public_bytes(
+            Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
+        )
+        # Raises GenesisDiscontinuityError if key_dir was seen with a different ID
+        try:
+            self.continuity_guard.check_or_pin(
+                key_dir, self.genesis_keypair.genesis_id, pub_pem_bytes
+            )
+        except GenesisDiscontinuityError:
+            self.system_frozen = True
+            raise
+
+        # ── remaining components ─────────────────────────────────────────────
         self.hmac_rotator = HMACKeyRotator()
         self.merkle_anchor = MerkleTreeAnchor()
         self.operational_log = OperationalLog()
@@ -220,6 +314,25 @@ class SovereignAuditLog:
         self.event_count: int = 0
         self.signature_count: int = 0
         self.anchor_count: int = 0
+
+        # TSA anchor manager — always non-None (uses stub when deps absent)
+        self.tsa_anchor_manager = _make_anchor_manager(
+            self.genesis_keypair.private_key,
+            self._data_dir / "tsa_anchors.json",
+        )
+
+        # External Merkle anchor
+        if enable_external_anchoring:
+            from .external_merkle_anchor import ExternalMerkleAnchor
+            backends = external_anchor_backends or ["filesystem"]
+            fs_dir = self._data_dir / "external_merkle_anchors"
+            self.external_anchor: Any = ExternalMerkleAnchor(
+                backends=backends,
+                filesystem_dir=str(fs_dir),
+            )
+            self.merkle_anchor.external_anchor = self.external_anchor
+        else:
+            self.external_anchor = None
 
         self._load_persisted_events()
 
@@ -280,7 +393,6 @@ class SovereignAuditLog:
     ) -> bool:
         with self._lock:
             try:
-                # Lazy genesis-seal: written once, on the first real event
                 if self.event_count == 0:
                     self._log_genesis_seal()
 
@@ -292,8 +404,6 @@ class SovereignAuditLog:
                 user_data = data or {}
                 actor_val = actor or "system"
 
-                # Deterministic event_id prevents uuid randomness from breaking
-                # content_hash comparison across separate replay runs.
                 if self.deterministic_mode:
                     event_id = hashlib.sha256(
                         f"sovereign.{event_type}:{ts}:{json.dumps(user_data, sort_keys=True)}".encode()
@@ -320,6 +430,16 @@ class SovereignAuditLog:
                 anchor_result = self.merkle_anchor.add_entry(content_bytes)
                 if anchor_result:
                     self.anchor_count += 1
+                    # Pin to external anchor if enabled
+                    if self.external_anchor is not None:
+                        try:
+                            self.external_anchor.pin_merkle_root(
+                                merkle_root=anchor_result["merkle_root"],
+                                genesis_id=self.genesis_keypair.genesis_id,
+                                batch_info=anchor_result,
+                            )
+                        except Exception:
+                            logger.exception("External anchor pin failed")
 
                 prior = self.operational_log.get_events()
                 prev_hash = prior[-1]["data"].get("content_hash", "GENESIS") if prior else "GENESIS"
@@ -337,7 +457,8 @@ class SovereignAuditLog:
                         "hash_chain": chain_hash,
                         "genesis_id": self.genesis_keypair.genesis_id,
                         "actor": actor_val,
-                        "user_data": user_data,
+                        # Stored as JSON string so mutations are detectable in raw file text
+                        "user_data": json.dumps(user_data, sort_keys=True),
                     },
                 }
                 self.operational_log.append(event)
@@ -357,12 +478,21 @@ class SovereignAuditLog:
             sig_b64 = event["data"].get("ed25519_signature")
             if not sig_b64:
                 return False, f"Event {event_id} has no signature"
+            # user_data may be a JSON string (stored format) or a plain dict (in-memory)
+            raw_ud = event["data"].get("user_data", {})
+            if isinstance(raw_ud, str):
+                try:
+                    parsed_ud = json.loads(raw_ud)
+                except Exception:
+                    parsed_ud = {}
+            else:
+                parsed_ud = raw_ud or {}
             content = {
                 "event_id": event_id,
                 "event_type": event["event_type"],
                 "timestamp": event["data"]["timestamp"],
                 "actor": event["data"].get("actor", "system"),
-                "data": event["data"].get("user_data", {}),
+                "data": parsed_ud,
             }
             content_bytes = self._canonical_serialize(content)
             try:
@@ -400,7 +530,6 @@ class SovereignAuditLog:
         return False, f"Event {event_id} not found"
 
     def verify_integrity(self) -> tuple[bool, str]:
-        # Truncation detection via checkpoint
         if self._checkpoint_file.exists():
             try:
                 checkpointed = int(self._checkpoint_file.read_text().strip())

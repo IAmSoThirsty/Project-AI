@@ -60,6 +60,7 @@ try:
 
     IPFS_AVAILABLE = True
 except ImportError:
+    ipfshttpclient = None  # type: ignore[assignment]
     IPFS_AVAILABLE = False
     logger.warning("ipfshttpclient not available - IPFS backend disabled")
 
@@ -69,6 +70,8 @@ try:
 
     S3_AVAILABLE = True
 except ImportError:
+    boto3 = None  # type: ignore[assignment]
+    ClientError = Exception  # type: ignore[assignment,misc]
     S3_AVAILABLE = False
     logger.warning("boto3 not available - S3 backend disabled")
 
@@ -126,12 +129,13 @@ class ExternalMerkleAnchor:
                     f"Invalid backend: {backend}. Must be one of {valid_backends}"
                 )
 
-            # Check availability
-            if backend == "ipfs" and not IPFS_AVAILABLE:
+            # Only raise for unavailable deps when it is the sole backend;
+            # multi-backend configs gracefully degrade the unavailable ones.
+            if backend == "ipfs" and not IPFS_AVAILABLE and self.backends == ["ipfs"]:
                 raise ValueError(
                     "IPFS backend requested but ipfshttpclient not installed"
                 )
-            if backend == "s3" and not S3_AVAILABLE:
+            if backend == "s3" and not S3_AVAILABLE and self.backends == ["s3"]:
                 raise ValueError("S3 backend requested but boto3 not installed")
 
         # Setup filesystem backend

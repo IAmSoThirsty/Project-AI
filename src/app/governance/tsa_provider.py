@@ -161,21 +161,23 @@ class TSAProvider:
             timeout: Request timeout in seconds
             max_clock_skew: Maximum allowed clock skew in seconds
         """
-        if not _TSA_DEPS_AVAILABLE:
-            raise RuntimeError(
-                "TSAProvider requires: requests, asn1crypto, cryptography. "
-                "Install them or set GOVERNANCE_ANCHORING_ENABLED=False."
-            )
+        self._degraded = not _TSA_DEPS_AVAILABLE
         self.tsa_url = tsa_url
         self.fallback_urls = fallback_urls or FALLBACK_TSA_URLS
         self.timeout = timeout
         self.max_clock_skew = max_clock_skew
 
-        logger.info(
-            "TSAProvider initialized (primary=%s, fallbacks=%d)",
-            tsa_url,
-            len(self.fallback_urls),
-        )
+        if self._degraded:
+            logger.warning(
+                "TSAProvider running in degraded mode "
+                "(requests/asn1crypto/cryptography not available)"
+            )
+        else:
+            logger.info(
+                "TSAProvider initialized (primary=%s, fallbacks=%d)",
+                tsa_url,
+                len(self.fallback_urls),
+            )
 
     # ==============================
     # REQUEST TIMESTAMP
