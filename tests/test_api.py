@@ -2,6 +2,8 @@
 API Tests - Project AI Governance Backend
 """
 
+from unittest.mock import MagicMock, patch
+
 from fastapi.testclient import TestClient
 
 from api.main import app
@@ -157,7 +159,7 @@ def test_tarl_signature():
 
 
 def test_governed_execute_allow():
-    """Test governed execution (allowed)"""
+    """Test governed execution (allowed) — mock RuntimeEnforcer ledger check"""
     intent = {
         "actor": "human",
         "action": "read",
@@ -165,7 +167,10 @@ def test_governed_execute_allow():
         "context": {},
         "origin": "test",
     }
-    response = client.post("/execute", json=intent)
+    _allow = MagicMock(verdict="allow", reason="test bypass")
+    with patch("app.governance.runtime_enforcer.get_runtime_enforcer") as mock_re:
+        mock_re.return_value.enforce.return_value = _allow
+        response = client.post("/execute", json=intent)
     assert response.status_code == 200
     data = response.json()
     assert data["message"] == "Execution completed under governance"
@@ -217,7 +222,10 @@ def test_sandbox_executor():
         "context": {},
         "origin": "test",
     }
-    response = client.post("/execute", json=intent)
+    _allow = MagicMock(verdict="allow", reason="test bypass")
+    with patch("app.governance.runtime_enforcer.get_runtime_enforcer") as mock_re:
+        mock_re.return_value.enforce.return_value = _allow
+        response = client.post("/execute", json=intent)
     execution = response.json()["execution"]
 
     assert execution["status"] == "executed"

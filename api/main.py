@@ -6,6 +6,7 @@ import hashlib
 import json
 import sys
 import time
+from contextlib import asynccontextmanager
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -31,7 +32,43 @@ try:
 except ImportError:
     _GOVERNANCE_PIPELINE_AVAILABLE = False
 
-app = FastAPI(title="Project AI Governance Host", version="0.1.0")
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    try:
+        from api.save_points_routes import start_auto_save
+        await start_auto_save()
+        print("[OK] Auto-save service started (15-min intervals)")
+    except ImportError:
+        pass
+
+    try:
+        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+        orchestrator = get_orchestrator()
+        await orchestrator.start()
+        print("[OK] Contrarian Firewall Orchestrator started")
+    except ImportError:
+        pass
+
+    yield
+
+    try:
+        from api.save_points_routes import stop_auto_save
+        await stop_auto_save()
+        print("[OK] Auto-save service stopped")
+    except ImportError:
+        pass
+
+    try:
+        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+        orchestrator = get_orchestrator()
+        await orchestrator.stop()
+        print("[OK] Contrarian Firewall Orchestrator stopped")
+    except ImportError:
+        pass
+
+
+app = FastAPI(title="Project AI Governance Host", version="0.1.0", lifespan=_lifespan)
 SERVICE_START_TIME = time.time()
 
 # CORS for web frontend
@@ -93,22 +130,8 @@ except ImportError as e:
 # Include Save Points router
 try:
     from api.save_points_routes import router as save_points_router
-    from api.save_points_routes import start_auto_save, stop_auto_save
 
     app.include_router(save_points_router)
-
-    @app.on_event("startup")
-    async def startup_auto_save():
-        """Start auto-save service on app startup"""
-        await start_auto_save()
-        print("[OK] Auto-save service started (15-min intervals)")
-
-    @app.on_event("shutdown")
-    async def shutdown_auto_save():
-        """Stop auto-save service on app shutdown"""
-        await stop_auto_save()
-        print("[OK] Auto-save service stopped")
-
     print("[OK] Save Points API endpoints registered")
 except ImportError as e:
     print(f"[WARN] Save Points endpoints not available: {e}")
@@ -119,26 +142,6 @@ try:
 
     app.include_router(firewall_router)
     print("[OK] Contrarian Firewall endpoints registered")
-
-    # Initialize orchestrator on startup
-    from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
-
-    @app.on_event("startup")
-    async def startup_firewall_orchestrator():
-        """Start the Contrarian Firewall Orchestrator"""
-        orchestrator = get_orchestrator()
-        await orchestrator.start()
-        print("[OK] Contrarian Firewall Orchestrator started")
-
-    @app.on_event("shutdown")
-    async def shutdown_firewall_orchestrator():
-        """Stop the Contrarian Firewall Orchestrator"""
-        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
-
-        orchestrator = get_orchestrator()
-        await orchestrator.stop()
-        print("[OK] Contrarian Firewall Orchestrator stopped")
-
 except ImportError as e:
     print(f"[WARN] Contrarian Firewall endpoints not available: {e}")
 
@@ -228,7 +231,7 @@ TARL_V1 = {
 
 
 def hash_intent(intent: Intent) -> str:
-    payload = json.dumps(intent.dict(), sort_keys=True).encode()
+    payload = json.dumps(intent.model_dump(), sort_keys=True).encode()
     return hashlib.sha256(payload).hexdigest()
 
 
@@ -361,11 +364,11 @@ async def submit_intent(intent: Intent, request: Request):
             status_code=403,
             detail={
                 "message": "Governance denied this request",
-                "governance": result.dict(),
+                "governance": result.model_dump(),
             },
         )
 
-    return {"message": "Intent accepted under governance", "governance": result.dict()}
+    return {"message": "Intent accepted under governance", "governance": result.model_dump()}
 
 
 # ==========================================================
@@ -481,7 +484,7 @@ def write_audit(record: GovernanceResult):
     entry = {
         "intent_hash": record.intent_hash,
         "tarl_version": record.tarl_version,
-        "votes": [v.dict() for v in record.votes],
+        "votes": [v.model_dump() for v in record.votes],
         "final_verdict": record.final_verdict,
         "timestamp": record.timestamp,
     }
@@ -518,10 +521,7 @@ class SandboxExecutor:
             }
 
         # Build context from the intent.
-        try:
-            ctx = intent.dict()
-        except AttributeError:
-            ctx = intent.model_dump()  # Pydantic v2 compat
+        ctx = intent.model_dump()
         context = {
             **ctx.get("context", {}),
             "actor": intent.actor.value,
@@ -642,7 +642,7 @@ async def governed_execute(intent: Intent):
             status_code=403,
             detail={
                 "message": "Execution denied by governance",
-                "governance": result.dict(),
+                "governance": result.model_dump(),
             },
         )
 
@@ -650,7 +650,7 @@ async def governed_execute(intent: Intent):
 
     return {
         "message": "Execution completed under governance",
-        "governance": result.dict(),
+        "governance": result.model_dump(),
         "execution": execution,
     }
 

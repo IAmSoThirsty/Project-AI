@@ -167,6 +167,9 @@ addopts = "--strict-markers -v"
 pythonpath = ["src", "src/utf"]
 filterwarnings = [
     "ignore::DeprecationWarning:passlib",
+    "ignore:The 'app' shortcut is now deprecated.*:DeprecationWarning:httpx",
+    "ignore:Support for class-based `config` is deprecated.*:pydantic.warnings.PydanticDeprecatedSince20",
+    "ignore:The `dict` method is deprecated.*:pydantic.warnings.PydanticDeprecatedSince20",
 ]
 markers = [
     "unit: Unit tests",

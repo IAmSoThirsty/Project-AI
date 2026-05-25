@@ -7,7 +7,7 @@ and workflow/activity parameters.
 
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 from pydantic_settings import BaseSettings
 
 
@@ -88,13 +88,12 @@ class TemporalConfig(BaseSettings):
         description="Maximum retry interval in seconds",
     )
 
-    class Config:
-        """Pydantic config."""
-
-        env_prefix = "TEMPORAL_"
-        env_file = ".env.temporal"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    model_config = ConfigDict(
+        env_prefix="TEMPORAL_",
+        env_file=".env.temporal",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+    )
 
     @property
     def is_cloud(self) -> bool:

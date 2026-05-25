@@ -212,6 +212,10 @@ class FourLaws:
     ]
 
     @classmethod
+    def get_laws(cls) -> list[str]:
+        return list(cls.LAWS)
+
+    @classmethod
     def validate_action(
         cls, action: str, context: dict[str, Any] | None = None
     ) -> tuple[bool, str]:
@@ -1004,8 +1008,31 @@ class PluginManager:
         self.plugins[plugin.name] = plugin
         return plugin.enable()
 
+    def list_plugins(self) -> list[str]:
+        return list(self.plugins.keys())
+
+    def enable_plugin(self, name: str) -> bool:
+        if name not in self.plugins:
+            return False
+        return self.plugins[name].enable()
+
+    def disable_plugin(self, name: str) -> bool:
+        if name not in self.plugins:
+            return False
+        return self.plugins[name].disable()
+
+    def is_enabled(self, name: str) -> bool:
+        if name not in self.plugins:
+            return False
+        return self.plugins[name].enabled
+
+    def get_plugin_status(self, name: str) -> dict[str, Any]:
+        if name not in self.plugins:
+            return {"name": name, "loaded": False}
+        p = self.plugins[name]
+        return {"name": p.name, "loaded": True, "enabled": p.enabled}
+
     def get_statistics(self) -> dict[str, Any]:
-        """Get stats."""
         return {
             "total": len(self.plugins),
             "enabled": len([p for p in self.plugins.values() if p.enabled]),
