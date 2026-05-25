@@ -65,8 +65,8 @@
     "node_count": 3,
     "link_count": 1,
     "node_types": [
-      "constitutional",
-      "agent"
+      "agent",
+      "constitutional"
     ]
   }
 }

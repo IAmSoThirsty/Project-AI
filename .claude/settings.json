@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(gh pr *)",
+      "Bash(gh api *)",
+      "Bash(gh issue *)",
+      "Bash(gh run *)",
+      "Bash(gh repo *)",
+      "Bash(for *)",
+      "Bash(ls *)",
+      "Bash(py -3.12 *)",
+      "Bash(PYTHONIOENCODING=* py *)",
+      "PowerShell(*)"
+    ]
+  }
+}
