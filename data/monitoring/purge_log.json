@@ -1,0 +1,31 @@
+[
+  {
+    "event": "STALE_FILE_PURGE",
+    "timestamp": "2026-05-25T00:00:00+00:00",
+    "performed_by": "IAmSoThirsty",
+    "session": "D3D/D3E completion session",
+    "rationale": "Post-milestone cleanup — four untracked files confirmed to contain no unrecovered work before deletion.",
+    "files_purged": [
+      {
+        "path": "Project-Ai/2026-05-20.md",
+        "content_summary": "Empty file (0 bytes). No content.",
+        "disposition": "DELETED"
+      },
+      {
+        "path": "Project-Ai/Untitled.base",
+        "content_summary": "3-line empty Obsidian Base table view stub. No data.",
+        "disposition": "DELETED"
+      },
+      {
+        "path": "Project-Ai/Untitled.canvas",
+        "content_summary": "Empty Obsidian canvas file containing only '{}'. No nodes or edges.",
+        "disposition": "DELETED"
+      },
+      {
+        "path": "TTempproject-ai-pre-psia-classificationcognition_dirty_diff.patch",
+        "content_summary": "Pre-PSIA classification diff for src/cognition/galahad/engine.py (sovereign_mode field) and src/cognition/reasoning_matrix/core.py (source/rationale defaults, add_factor return type). Verified: all changes already applied to master in commit 5b1c73d1.",
+        "disposition": "DELETED"
+      }
+    ]
+  }
+]
