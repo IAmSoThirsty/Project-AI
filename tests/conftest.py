@@ -37,16 +37,14 @@ def pytest_configure(config) -> None:  # noqa: ANN001
         except ImportError:
             pass
 
-# ── D3D: PSIA package — implemented 2026-05-23 ───────────────────────────────
-# All test_psia_*.py files and most PSIA-dependent tests now pass.
-# test_governance_server.py remains isolated (psia.server.governance_server
-# not yet implemented).
+
+# ── D3D: PSIA package — implemented 2026-05-23; governance_server 2026-05-25 ──
+# All test_psia_*.py files and all PSIA-dependent tests now pass.
 collect_ignore_glob: list[str] = []
 
 # Additional PSIA-dependent tests not matching the psia_ prefix:
-_PSIA_TESTS = [
-    "test_governance_server.py",          # psia.server.governance_server
-]
+# test_governance_server.py — implemented 2026-05-25 (psia.server.governance_server)
+_PSIA_TESTS: list[str] = []
 
 # ── D3E: Shadow Thirst UTF sub-modules not yet implemented ───────────────────
 # shadow_thirst.bytecode and shadow_thirst.type_system are planned Tier 4 UTF
