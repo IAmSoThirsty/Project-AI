@@ -46,14 +46,11 @@ collect_ignore_glob: list[str] = []
 # test_governance_server.py — implemented 2026-05-25 (psia.server.governance_server)
 _PSIA_TESTS: list[str] = []
 
-# ── D3E: Shadow Thirst UTF sub-modules not yet implemented ───────────────────
-# shadow_thirst.bytecode and shadow_thirst.type_system are planned Tier 4 UTF
-# sub-modules. The shadow_thirst package exists but these sub-modules are not
-# yet written. Isolate until D3E UTF completion phase.
-_SHADOW_THIRST_TESTS = [
-    "test_shadow_thirst.py",              # shadow_thirst.bytecode
-    "test_shadow_thirst_type_system.py",  # shadow_thirst.type_system
-]
+# ── D3E: Shadow Thirst UTF sub-modules — implemented 2026-05-25 ──────────────
+# shadow_thirst package (src/shadow_thirst/) implements lexer, parser, IR,
+# static analysis, bytecode, VM, constitutional, compiler, type_system.
+# All 41 tests passing.
+_SHADOW_THIRST_TESTS: list[str] = []
 
 # ── D3C: App sub-modules not yet implemented ─────────────────────────────────
 # These tests reference internal app modules that were never written.
