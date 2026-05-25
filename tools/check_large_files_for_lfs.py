@@ -76,8 +76,11 @@ def main(argv: list[str]) -> int:
         "[LFS CHECK] WARNING: The following files exceed 2MB and are not covered by LFS patterns:"
     )
     for f in large_files:
-        size_mb = f.stat().st_size / (1024 * 1024)
-        print(f"  - {f} ({size_mb:.2f} MB)")
+        try:
+            size_mb = f.stat().st_size / (1024 * 1024)
+            print(f"  - {f} ({size_mb:.2f} MB)")
+        except OSError:
+            pass  # file removed between scan and print
     print(
         "Consider adding a pattern to .gitattributes or relocating large generated artifacts."
     )
