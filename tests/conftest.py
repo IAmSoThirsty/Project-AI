@@ -37,23 +37,15 @@ def pytest_configure(config) -> None:  # noqa: ANN001
         except ImportError:
             pass
 
-# ── D3D: PSIA package not yet implemented ────────────────────────────────────
-# psia.* modules are a planned system (Protocol for Sovereign Intelligence
-# Auditing). No psia package exists anywhere in the repo. These test files
-# describe intended future behavior and must not be collected until psia/ is
-# written. Do not create stubs — stubs give false confidence.
-collect_ignore_glob = [
-    "test_psia_*.py",
-]
+# ── D3D: PSIA package — implemented 2026-05-23 ───────────────────────────────
+# All test_psia_*.py files and most PSIA-dependent tests now pass.
+# test_governance_server.py remains isolated (psia.server.governance_server
+# not yet implemented).
+collect_ignore_glob: list[str] = []
 
 # Additional PSIA-dependent tests not matching the psia_ prefix:
 _PSIA_TESTS = [
-    "test_bft_deployed.py",               # psia.gate.quorum_engine
-    "test_ed25519_crypto.py",             # psia.crypto.ed25519_provider
-    "test_formal_properties.py",          # psia.canonical.capability_authority
     "test_governance_server.py",          # psia.server.governance_server
-    "test_rfc3161.py",                    # psia.crypto.ed25519_provider
-    "test_shadow_operational_semantics.py",  # psia.shadow.operational_semantics
 ]
 
 # ── D3E: Shadow Thirst UTF sub-modules not yet implemented ───────────────────
