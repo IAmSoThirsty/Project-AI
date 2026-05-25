@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Overview — Project-AI · Why It Exists · Thirsty's Projects</title>
+<meta name="description" content="The human origin story behind Project-AI. From NPR researcher to constitutional AGI architect — the 21-paper thesis in plain language."/>
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--cyan); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+  .premise-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.25rem; margin-top:2rem; }
+  @media (max-width:700px) { .premise-grid { grid-template-columns:1fr; } }
+  .milestone { display:grid; grid-template-columns:48px 1fr; gap:1rem; padding:1.2rem 0; border-bottom:1px solid var(--line); align-items:start; }
+  .milestone:last-child { border-bottom:none; }
+  .milestone .yr { font-family:var(--font-mono); font-size:.75rem; color:var(--cyan); font-weight:600; line-height:1.4; }
+  .milestone h4 { font-size:1.05rem; margin:0 0 .3rem; }
+  .milestone p { font-size:.9rem; color:var(--ink-2); line-height:1.6; margin:0; }
+  .pull-quote { border-left:3px solid var(--cyan); padding:1.2rem 1.4rem; background:rgba(0,212,255,.04); border-radius:0 12px 12px 0; margin:2rem 0; }
+  .pull-quote p { font-size:1.1rem; font-style:italic; color:var(--ink); line-height:1.65; margin:0; }
+  .pull-quote small { display:block; margin-top:.6rem; font-family:var(--font-mono); font-size:.72rem; color:var(--ink-3); }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="index.html">Project-AI</a><span>›</span>
+    Overview
+  </div>
+</nav>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow reveal">Origin Story · Project-AI</span>
+    <h1 class="reveal" style="margin-top:1rem">
+      <span class="gradient-text">Why it exists.</span><br/>
+      Where it came from.
+    </h1>
+    <p class="lead reveal">
+      An NPR researcher with no background in software engineering built a constitutional governance framework for AGI — and published 21 peer-reviewable papers proving it. This is that story.
+    </p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href="https://doi.org/10.5281/zenodo.19582420" target="_blank" rel="noopener">Read the system paper →</a>
+      <a class="btn btn-ghost" href="galahad/">Enter the library →</a>
+    </div>
+  </div>
+</section>
+
+<!-- THE PREMISE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">The Problem</span>
+    <h2 class="reveal" style="margin-top:.8rem">Every other alignment approach runs inside the model's privilege domain.</h2>
+    <div class="premise-grid reveal">
+      <div class="card" style="padding:1.8rem">
+        <span class="eyebrow" style="font-size:.65rem">What everyone else does</span>
+        <h3 style="margin-top:.8rem">Trust the model to govern itself.</h3>
+        <p style="margin-top:.5rem">RLHF, constitution prompts, chain-of-thought reflection — every major alignment technique today runs <em>inside</em> the same process as the model being aligned. If the model is compromised, so is the alignment layer. The guard and the prisoner share a cell.</p>
+      </div>
+      <div class="card" style="padding:1.8rem;border-color:rgba(0,212,255,.28)">
+        <span class="eyebrow" style="font-size:.65rem">Project-AI's position</span>
+        <h3 style="margin-top:.8rem">Move governance to a layer the model can never reach.</h3>
+        <p style="margin-top:.5rem">The operating system kernel is structurally outside the model's privilege domain. eBPF programs attached to the kernel's syscall surface intercept every consequential action before it executes — not after, not concurrently, but before. Governance that happens at the kernel level cannot be overridden by anything running in user space.</p>
+      </div>
+    </div>
+
+    <div class="pull-quote reveal">
+      <p>"Capability without enforced constraint is theatre. The constraint must sit at a layer the actor cannot reach. For AI, that layer is the kernel."</p>
+      <small>— Jeremy Karrick, Project-AI System Paper · DOI: 10.5281/zenodo.19582420</small>
+    </div>
+  </div>
+</section>
+
+<!-- ORIGIN TIMELINE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">The Path</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.6rem">From nonprofit research to kernel-authoritative AGI governance.</h2>
+    <div class="reveal" style="border:1px solid var(--line);border-radius:16px;padding:1.6rem;background:var(--panel)">
+      <div class="milestone">
+        <span class="yr">Start</span>
+        <div>
+          <h4>Public-sector researcher, no software background</h4>
+          <p>Jeremy Karrick worked in nonprofit and public research — closest to journalism. No formal computer science training. No prior codebase. The work you see here was built from first principles, not from a CS degree.</p>
+        </div>
+      </div>
+      <div class="milestone">
+        <span class="yr">Year 1</span>
+        <div>
+          <h4>The constitutional question</h4>
+          <p>The central question: what would it mean for an AI system to be governed by law rather than by preference? Not "helpful, harmless, honest" as training labels — but law, with enforcement, with record, with veto. The Triumvirate concept emerged from this framing.</p>
+        </div>
+      </div>
+      <div class="milestone">
+        <span class="yr">Year 2</span>
+        <div>
+          <h4>OctoReflex and the kernel insight</h4>
+          <p>The insight that eBPF could intercept model actions at the syscall surface — before execution, in kernel space, at sub-millisecond latency — was the technical breakthrough that made the architecture non-fictional. OctoReflex became the containment engine.</p>
+        </div>
+      </div>
+      <div class="milestone">
+        <span class="yr">21 Papers</span>
+        <div>
+          <h4>A constitutional library, in writing</h4>
+          <p>Every component of the architecture is documented in peer-reviewable, DOI-anchored papers on Zenodo. Not as documentation of existing software — as prior art, as a constitutional record, as a standing proof that this approach was conceived and written before anyone could claim otherwise.</p>
+        </div>
+      </div>
+      <div class="milestone">
+        <span class="yr">Now</span>
+        <div>
+          <h4>16 modules, a governance spine, and an open library</h4>
+          <p>Project-AI is a live codebase with 16 named subsystems, 7,913 lines in the AEGIS core, 5 canonical invariants verified, and the library you are reading now. The work continues. The constitution is not finished — constitutions are never finished.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY IT MATTERS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">The Thesis</span>
+    <h2 class="reveal" style="margin-top:.8rem">The 21-paper argument, in plain language.</h2>
+    <div class="grid grid-3 reveal" style="margin-top:1.6rem">
+      <div class="card" style="padding:1.5rem">
+        <div class="tag cyan" style="margin-bottom:.8rem">Galahad</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Ethics must be structural, not instructed.</h3>
+        <p style="font-size:.88rem">A model told to be ethical can be told otherwise. A model whose syscalls are filtered by an ethics engine that runs in kernel space cannot override that filter — not through clever prompting, not through fine-tuning drift, not through any means available to user-space processes.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;border-color:rgba(139,92,246,.22)">
+        <div class="tag violet" style="margin-bottom:.8rem">Cerberus</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Security must be unfinishable, not just hard.</h3>
+        <p style="font-size:.88rem">One bypass attempt spawns three new guardians. Exploitation is structurally recursive: the act of attacking the system makes it harder to attack. NIRL's reflex architecture means the threat surface shrinks as adversarial pressure increases.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;border-color:rgba(52,211,153,.2)">
+        <div class="tag emerald" style="margin-bottom:.8rem">CodexDeus</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Law must be executable, not aspirational.</h3>
+        <p style="font-size:.88rem">The AGI Charter is not a policy document — it compiles to deterministic checks via the Iron Path. T.A.R.L. rules are namespaced, immutable, and auditable at runtime. Thirsty-Lang is a programming language in which law is the only legal program.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENTER THE LIBRARY -->
+<section class="section--tight">
+  <div class="container">
+    <div class="card reveal" style="padding:2.5rem;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;align-items:center;border-color:rgba(0,212,255,.25)">
+      <div>
+        <span class="eyebrow">Walk-In Library</span>
+        <h2 style="margin-top:.6rem;font-size:1.5rem">Now go deeper.</h2>
+        <p style="margin-top:.5rem;max-width:52ch">Three wings. Fourteen subsystems. Twenty-one papers. The architecture that proves governance at the kernel is not science fiction — it is running software.</p>
+      </div>
+      <div style="display:flex;gap:.7rem;flex-wrap:wrap">
+        <a class="btn btn-ghost" href="galahad/">Galahad →</a>
+        <a class="btn btn-ghost" href="cerberus/" style="border-color:rgba(139,92,246,.3);color:#a78bfa">Cerberus →</a>
+        <a class="btn btn-primary" href="codexdeus/">CodexDeus →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

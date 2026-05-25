@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Hall of the UTF — Universal Thirsty Family · CodexDeus · Project-AI</title>
+<meta name="description" content="The Universal Thirsty Family is the complete constitutional language stack of Project-AI. Six tiers from invariant to bytecode. No gap between what the law says and what the machine executes."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --em:#34d399; --em-2:#059669; --em-dim:rgba(52,211,153,.1); --em-line:rgba(52,211,153,.2); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--em); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* HERO */
+  .utf-hero { position:relative; overflow:hidden; padding:clamp(6rem,12vw,10rem) 0 clamp(4rem,8vw,7rem); }
+  #utf-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .utf-hero .container { position:relative; z-index:1; }
+
+  /* The 6-tier tower — the centrepiece */
+  .utf-tower { display:flex; flex-direction:column; gap:0; max-width:860px; margin:0 auto; }
+  .utf-tier {
+    display:grid;
+    grid-template-columns:72px 1fr 1fr;
+    gap:1.4rem;
+    padding:2rem;
+    border:1px solid var(--em-line);
+    border-bottom:none;
+    position:relative;
+    background:linear-gradient(90deg,var(--panel),var(--em-dim));
+    transition:background .3s, transform .3s;
+    overflow:hidden;
+  }
+  .utf-tier:first-child { border-radius:20px 20px 0 0; }
+  .utf-tier:last-child { border-bottom:1px solid var(--em-line); border-radius:0 0 20px 20px; }
+  .utf-tier:hover { background:linear-gradient(90deg,var(--panel),rgba(52,211,153,.2)); transform:scaleX(1.005); }
+  .utf-tier::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(180deg,var(--em),var(--em-2)); }
+  .utf-tier::after { content:""; position:absolute; right:0; top:0; bottom:0; width:4px; background:linear-gradient(180deg,var(--em),var(--em-2)); }
+
+  .ut-num { font-family:var(--font-mono); font-weight:700; font-size:2rem; color:rgba(52,211,153,.2); line-height:1; display:flex; align-items:center; }
+  .ut-info { }
+  .ut-name { font-size:1.1rem; font-weight:700; margin:0 0 .2rem; }
+  .ut-full { font-family:var(--font-mono); font-size:.72rem; color:var(--em); text-transform:uppercase; letter-spacing:.14em; margin-bottom:.5rem; }
+  .ut-desc { font-size:.88rem; color:var(--ink-2); line-height:1.6; margin:0; }
+  .ut-meta { display:flex; flex-direction:column; gap:.5rem; align-items:flex-end; }
+  .ut-role { font-family:var(--font-mono); font-size:.68rem; color:var(--ink-3); text-align:right; }
+  .ut-link { font-family:var(--font-mono); font-size:.74rem; color:var(--em); border:1px solid var(--em-line); padding:.3rem .7rem; border-radius:8px; text-decoration:none; transition:background .25s; }
+  .ut-link:hover { background:var(--em-dim); }
+
+  /* tier gradient accent by position */
+  .utf-tier:nth-child(1) { --tc:rgba(255,215,0,.06); }
+  .utf-tier:nth-child(2) { --tc:rgba(52,211,153,.08); }
+  .utf-tier:nth-child(3) { --tc:rgba(52,211,153,.08); }
+  .utf-tier:nth-child(4) { --tc:rgba(0,212,255,.06); }
+  .utf-tier:nth-child(5) { --tc:rgba(139,92,246,.06); }
+  .utf-tier:nth-child(6) { --tc:rgba(139,92,246,.08); }
+  .utf-tier::before { background: linear-gradient(180deg,
+    nth-child(1) gold,
+    var(--em),var(--em-2)
+  ); }
+
+  /* Deep-dive panels per tier */
+  .tier-deep { border:1px solid var(--em-line); border-radius:16px; padding:2rem; background:var(--panel); margin-top:2.5rem; scroll-margin-top:80px; }
+  .tier-deep h3 { font-size:1.3rem; margin:0 0 .4rem; }
+  .tier-deep .td-eyebrow { font-family:var(--font-mono); font-size:.68rem; color:var(--em); text-transform:uppercase; letter-spacing:.18em; margin-bottom:.4rem; }
+  .tier-deep .td-body { font-size:.92rem; color:var(--ink-2); line-height:1.7; max-width:68ch; }
+  .tier-deep .td-code { font-family:var(--font-mono); font-size:.8rem; background:rgba(0,0,0,.3); border:1px solid var(--em-line); border-radius:10px; padding:1.2rem; margin:1.2rem 0; color:var(--ink-2); line-height:1.8; overflow-x:auto; }
+  .tier-deep .td-code .em { color:var(--em); }
+  .tier-deep .td-code .dim { color:var(--ink-3); }
+  .tier-deep .td-props { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:.8rem; margin-top:1.2rem; }
+  .tier-deep .td-prop { background:var(--em-dim); border:1px solid var(--em-line); border-radius:10px; padding:.8rem 1rem; }
+  .tier-deep .td-prop .prop-k { font-family:var(--font-mono); font-size:.68rem; color:var(--em); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.2rem; }
+  .tier-deep .td-prop .prop-v { font-size:.88rem; color:var(--ink); font-weight:500; }
+
+  /* codeframe overrides for em color */
+  .codeframe-em .codeframe-head { border-bottom-color:var(--em-line); }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">CodexDeus</a><span>›</span>
+    Hall of the UTF
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="utf-hero">
+  <canvas id="utf-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em);border-color:var(--em-line)">CodexDeus · Wing III · The Language Stack</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:18ch">
+      Hall of the<br/>
+      <span style="background:linear-gradient(90deg,var(--em),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Universal Thirsty Family.</span>
+    </h1>
+    <p class="lead reveal" style="max-width:58ch">
+      Six tiers. One unbroken chain from constitutional invariant to deterministic bytecode. This is the complete language architecture of Project-AI — the mechanism by which what the law says and what the machine executes become the same thing.
+    </p>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--em-line)">
+      <div class="stat"><div class="num" style="color:var(--em)">6</div><div class="lbl">Language Tiers</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">UTF</div><div class="lbl">Family Name</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Immutable</div><div class="lbl">Rule Guarantee</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">100%</div><div class="lbl">Type-Checked</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE TOWER -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">The Architecture</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Six tiers. From invariant to instruction.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:2rem">The tower reads top-to-bottom: highest abstraction at Tier 0, lowest at Tier 5. Each tier compiles into the next. Hover any tier for emphasis — click the link to dive into the deep documentation below.</p>
+    <div class="utf-tower reveal">
+
+      <div class="utf-tier">
+        <div class="ut-num">T0</div>
+        <div class="ut-info">
+          <div class="ut-full">Thirsty-Lang</div>
+          <div class="ut-name">The Constitutional Language</div>
+          <p class="ut-desc">The high-level programming language of Project-AI. The type system is the constitution — non-compliant programs are type errors. Developers write in Thirsty-Lang; the compiler ensures every program is constitutionally sound before execution.</p>
+        </div>
+        <div class="ut-meta">
+          <span class="ut-role">High-level · Constitutional</span>
+          <a class="ut-link" href="thirsty-lang.html">Deep dive →</a>
+        </div>
+      </div>
+
+      <div class="utf-tier">
+        <div class="ut-num">T1</div>
+        <div class="ut-info">
+          <div class="ut-full">T.O.G. — Thirst of Gods</div>
+          <div class="ut-name">The Operational Grammar</div>
+          <p class="ut-desc">The formal grammar that governs every valid Thirsty-Lang expression. T.O.G. defines the syntax tree — how constitutional clauses parse into Abstract Syntax Tree nodes that subsequent tiers can process deterministically.</p>
+        </div>
+        <div class="ut-meta">
+          <span class="ut-role">Grammar · Syntax definition</span>
+          <a class="ut-link" href="#tog">Explore →</a>
+        </div>
+      </div>
+
+      <div class="utf-tier">
+        <div class="ut-num">T2</div>
+        <div class="ut-info">
+          <div class="ut-full">T.A.R.L. — Typed Assertion Rule Language</div>
+          <div class="ut-name">Policy as Code</div>
+          <p class="ut-desc">Every OCEE gate begins life as a T.A.R.L. rule. Namespaced, immutable, typed assertions define what is permitted and what is prohibited. Rules compile directly to OCEE gate specifications — there is no translation step that could introduce ambiguity.</p>
+        </div>
+        <div class="ut-meta">
+          <span class="ut-role">Policy · Rule definitions</span>
+          <a class="ut-link" href="tarl.html">Deep dive →</a>
+        </div>
+      </div>
+
+      <div class="utf-tier">
+        <div class="ut-num">T3</div>
+        <div class="ut-info">
+          <div class="ut-full">Shadow Thirst</div>
+          <div class="ut-name">The Speculative Runtime</div>
+          <p class="ut-desc">Before any action executes in the real world, Shadow Thirst runs it speculatively in an isolated domain with no external effects. The shadow output is compared against the model's prediction. Divergence is a constitutional violation. Shadow Thirst is the runtime half of the compiler's type guarantee.</p>
+        </div>
+        <div class="ut-meta">
+          <span class="ut-role">Runtime · Divergence detection</span>
+          <a class="ut-link" href="shadow-thirsty.html">Deep dive →</a>
+        </div>
+      </div>
+
+      <div class="utf-tier">
+        <div class="ut-num">T4</div>
+        <div class="ut-info">
+          <div class="ut-full">TSCG — Thirsty Sovereign Constitutional Grammar</div>
+          <div class="ut-name">Intermediate Representation</div>
+          <p class="ut-desc">The intermediate representation between Thirsty-Lang's high-level semantics and TSCG-B bytecode. TSCG is machine-readable but still human-inspectable — it is the form in which constitutional logic can be audited before it becomes opaque bytecode instructions.</p>
+        </div>
+        <div class="ut-meta">
+          <span class="ut-role">IR · Auditable</span>
+          <a class="ut-link" href="#tscg">Explore →</a>
+        </div>
+      </div>
+
+      <div class="utf-tier">
+        <div class="ut-num">T5</div>
+        <div class="ut-info">
+          <div class="ut-full">TSCG-B — Bytecode</div>
+          <div class="ut-name">The Machine Instruction Set</div>
+          <p class="ut-desc">The lowest tier. TSCG-B is deterministic, verifiable bytecode — the final form in which constitutional rules execute. Every TSCG-B binary is sealed to the CCS at load time: its hash, its compile timestamp, and the chain of T.A.R.L. rules it was compiled from are all part of the permanent record.</p>
+        </div>
+        <div class="ut-meta">
+          <span class="ut-role">Bytecode · Machine execution</span>
+          <a class="ut-link" href="#tscgb">Explore →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TIER DEEP-DIVES -->
+
+<!-- T.O.G. -->
+<section class="section--tight" id="tog">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Tier 1 Deep Dive</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">T.O.G. — Thirst of Gods</h2>
+    <div class="tier-deep reveal">
+      <div class="td-eyebrow">T1 · Thirsty Operational Grammar · Syntax Definition Layer</div>
+      <h3>The grammar of constitutional language.</h3>
+      <p class="td-body">T.O.G. defines the formal grammar that every valid Thirsty-Lang program must satisfy. It is not a linter or a style guide — it is a context-free grammar with constitutional extensions. Clauses that cannot be parsed by T.O.G. are not "invalid programs" in the conventional sense: they are constitutionally unrepresentable, which means they cannot exist in the system at all.</p>
+      <div class="td-code">
+<span class="dim"># T.O.G. grammar fragment (EBNF notation)</span><br/>
+<br/>
+<span class="em">ConstitutionalClause</span> ::= InvariantBinding | PolicyRule | CapabilityDecl<br/>
+<span class="em">InvariantBinding</span>     ::= "invariant" Identifier ":" PredicateExpr<br/>
+<span class="em">PredicateExpr</span>        ::= BoolExpr | UniversalExpr | ExistentialExpr<br/>
+<span class="em">UniversalExpr</span>        ::= "∀" Binding "." PredicateExpr<br/>
+<span class="em">ExistentialExpr</span>      ::= "∃" Binding "." PredicateExpr<br/>
+<br/>
+<span class="dim"># Every Thirsty-Lang source file is parsed against this grammar before type-checking.</span><br/>
+<span class="dim"># A parse failure is a constitutional failure — no compilation proceeds.</span>
+      </div>
+      <div class="td-props">
+        <div class="td-prop"><div class="prop-k">Grammar type</div><div class="prop-v">Context-free + constitutional extensions</div></div>
+        <div class="td-prop"><div class="prop-k">Parse target</div><div class="prop-v">Thirsty-Lang source files</div></div>
+        <div class="td-prop"><div class="prop-k">Output</div><div class="prop-v">Typed AST → TARL pipeline</div></div>
+        <div class="td-prop"><div class="prop-k">Failure mode</div><div class="prop-v">Constitutional rejection (not syntax error)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TSCG -->
+<section class="section--tight" id="tscg">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Tier 4 Deep Dive</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">TSCG — Thirsty Sovereign Constitutional Grammar</h2>
+    <div class="tier-deep reveal">
+      <div class="td-eyebrow">T4 · Intermediate Representation · Auditable IR</div>
+      <h3>The last human-readable form before bytecode.</h3>
+      <p class="td-body">TSCG is the intermediate representation that sits between Thirsty-Lang's high-level semantics and the TSCG-B bytecode. It is designed to be the final point at which a constitutional auditor can inspect program logic in a human-interpretable form. TSCG files are versioned, signed, and stored in the CCS alongside their source. An auditor querying the CCS for any past decision will find the TSCG representation of the program that produced it.</p>
+      <div class="td-code">
+<span class="dim"># TSCG instruction fragment</span><br/>
+<br/>
+<span class="em">INVARIANT_BIND</span>  safety.human_life  PREDICATE(endangers_human, EQ, false)<br/>
+<span class="em">GATE_REGISTER</span>   GID:001  PRIORITY:0  POLICY:HALT_ON_FAIL<br/>
+<span class="em">CAPABILITY_REQ</span>  net.connect.external  TTL:3600  QUORUM:FULL<br/>
+<span class="em">SEAL_ASSERT</span>     CCS_CHAIN  PREV_HASH:{sha256}  ATTEST:RFC3161<br/>
+<br/>
+<span class="dim"># TSCG compiles to TSCG-B; reverse-compilation to TSCG is guaranteed for audit.</span>
+      </div>
+      <div class="td-props">
+        <div class="td-prop"><div class="prop-k">Format</div><div class="prop-v">Text IR (line-oriented)</div></div>
+        <div class="td-prop"><div class="prop-k">Audit role</div><div class="prop-v">Human-readable constitutional record</div></div>
+        <div class="td-prop"><div class="prop-k">CCS storage</div><div class="prop-v">Sealed alongside every decision record</div></div>
+        <div class="td-prop"><div class="prop-k">Compile target</div><div class="prop-v">TSCG-B bytecode</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TSCG-B -->
+<section class="section--tight" id="tscgb">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Tier 5 Deep Dive</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">TSCG-B — Bytecode</h2>
+    <div class="tier-deep reveal">
+      <div class="td-eyebrow">T5 · Bytecode · Machine Execution Layer</div>
+      <h3>The constitution at machine speed.</h3>
+      <p class="td-body">TSCG-B is the final, executable form of every constitutional rule. It is a deterministic instruction set — the same input always produces the same output, with no runtime randomness and no undefined behaviour. Every TSCG-B binary loaded into the system is sealed to the CCS: its SHA-256 hash, its compile chain (T.A.R.L. source → TSCG IR → TSCG-B), and an RFC 3161 timestamp are all part of the permanent constitutional record. A binary that cannot be verified against the chain is not loaded.</p>
+      <div class="td-code">
+<span class="dim"># TSCG-B binary header (ASCII representation)</span><br/>
+<br/>
+TSCG-B  v2.1.0<br/>
+<span class="em">CCS_SEAL:</span>  sha256:a4f8...3c19<br/>
+<span class="em">SOURCE:</span>    tarl://safety.human_life@2.1.0<br/>
+<span class="em">COMPILED:</span>  2026-05-25T14:00:00Z (RFC3161)<br/>
+<span class="em">CHAIN:</span>     prev:sha256:9e12...0041<br/>
+<br/>
+<span class="dim">OPCODE  OPERAND1         OPERAND2</span><br/>
+LOAD    ctx.endangers_human<br/>
+CMP     EQ               false<br/>
+JMPF    HALT_GATE_001<br/>
+PASS<br/>
+      </div>
+      <div class="td-props">
+        <div class="td-prop"><div class="prop-k">Instruction set</div><div class="prop-v">Deterministic, no undefined behaviour</div></div>
+        <div class="td-prop"><div class="prop-k">Load verification</div><div class="prop-v">CCS hash + RFC 3161 timestamp</div></div>
+        <div class="td-prop"><div class="prop-k">Source traceability</div><div class="prop-v">T.A.R.L. rule ID preserved in binary</div></div>
+        <div class="td-prop"><div class="prop-k">Compile guarantee</div><div class="prop-v">Reverse-compilable to TSCG for audit</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem">
+      <a class="btn btn-ghost" href="thirsty-lang.html" style="border-color:var(--em-line);color:var(--em)">Thirsty-Lang (T0) →</a>
+      <a class="btn btn-ghost" href="tarl.html" style="border-color:var(--em-line);color:var(--em)">T.A.R.L. (T2) →</a>
+      <a class="btn btn-ghost" href="shadow-thirsty.html" style="border-color:var(--em-line);color:var(--em)">Shadow Thirst (T3) →</a>
+      <a class="btn btn-ghost" href="index.html" style="border-color:var(--em-line);color:var(--em)">← CodexDeus wing</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── UTF canvas: cascading tier-coloured light bands ── */
+(function(){
+  const cv=document.getElementById('utf-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const tierColors=['rgba(255,215,0,','rgba(52,211,153,','rgba(52,211,153,','rgba(0,212,255,','rgba(139,92,246,','rgba(139,92,246,'];
+  const particles=[];
+
+  function spawnParticle(){
+    const tier=Math.floor(Math.random()*6);
+    particles.push({
+      x:Math.random()*W, y:-10,
+      vy:.4+Math.random()*.6,
+      vx:(Math.random()-.5)*.3,
+      tier, opacity:0, maxOp:.18+Math.random()*.14,
+      r:1.5+Math.random()*2, life:0, maxLife:H/(.4+Math.random()*.6)+100,
+    });
+  }
+  setInterval(spawnParticle, 180);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // subtle horizontal tier bands
+    const bandH=H/6;
+    tierColors.forEach((col,i)=>{
+      const y=i*bandH;
+      const grd=ctx.createLinearGradient(0,y,0,y+bandH);
+      grd.addColorStop(0,col+'0.02)'); grd.addColorStop(.5,col+'0.04)'); grd.addColorStop(1,col+'0.01)');
+      ctx.fillStyle=grd;
+      ctx.fillRect(0,y,W,bandH);
+    });
+
+    // particles
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      p.life++; p.x+=p.vx; p.y+=p.vy;
+      p.opacity=p.life<40?p.maxOp*(p.life/40):p.life>p.maxLife-40?p.maxOp*((p.maxLife-p.life)/40):p.maxOp;
+      if(p.life>=p.maxLife){ particles.splice(i,1); continue; }
+      const col=tierColors[p.tier];
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=col+p.opacity+')'; ctx.fill();
+    }
+
+    // flowing connection lines between tiers
+    if(t%120===0){
+      ctx.beginPath();
+      const x=W*.6+Math.random()*W*.3;
+      ctx.moveTo(x,0); ctx.lineTo(x+Math.random()*60-30,H);
+      ctx.strokeStyle='rgba(52,211,153,.03)'; ctx.lineWidth=.5; ctx.stroke();
+    }
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

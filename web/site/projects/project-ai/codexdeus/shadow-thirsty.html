@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Shadow Thirst — Speculative Execution Runtime · CodexDeus · Project-AI</title>
+<meta name="description" content="Shadow Thirst runs every action before it runs. Speculative execution in an isolated domain, divergence detection, and goal alignment verification — before a single real-world effect occurs."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --em:#34d399; --em-2:#059669; --em-dim:rgba(52,211,153,.1); --em-line:rgba(52,211,153,.2); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--em); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* HERO */
+  .sh-hero { position:relative; min-height:92vh; display:flex; align-items:center; overflow:hidden; }
+  #sh-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .sh-hero .container { position:relative; z-index:1; padding-top:7rem; padding-bottom:5rem; }
+
+  /* Split view: real vs shadow */
+  .dual-pane { display:grid; grid-template-columns:1fr auto 1fr; gap:0; border:1px solid var(--em-line); border-radius:16px; overflow:hidden; }
+  .dual-pane-header { background:rgba(52,211,153,.06); border-bottom:1px solid var(--em-line); padding:.7rem 1.2rem; font-family:var(--font-mono); font-size:.74rem; font-weight:600; }
+  .pane-real .dual-pane-header { color:var(--ink-3); background:rgba(0,0,0,.15); }
+  .pane-divider { width:3px; background:linear-gradient(180deg,transparent,var(--em),transparent); display:flex; align-items:center; justify-content:center; }
+  .pane-divider-label { writing-mode:vertical-rl; font-family:var(--font-mono); font-size:.66rem; color:var(--em); letter-spacing:.2em; text-transform:uppercase; transform:rotate(180deg); padding:.5rem 0; }
+  .pane-shadow .dual-pane-header { color:var(--em); }
+  .pane-body { padding:1.2rem; background:var(--panel); }
+  .pane-real .pane-body { background:rgba(0,0,0,.12); }
+  .pane-log { font-family:var(--font-mono); font-size:.76rem; line-height:1.9; color:var(--ink-2); }
+  .pane-log .pl-hold { color:#34d399; }
+  .pane-log .pl-halt { color:rgb(239,68,68); }
+  .pane-log .pl-dim { color:var(--ink-3); }
+  .pane-log .pl-info { color:var(--em); }
+
+  /* Divergence meter */
+  .div-meter { background:rgba(0,0,0,.2); border-radius:999px; height:8px; margin:.8rem 0; overflow:hidden; }
+  .div-bar { height:100%; border-radius:999px; transition:width .4s ease; }
+  .div-bar.low { background:linear-gradient(90deg,var(--em-2),var(--em)); }
+  .div-bar.high { background:linear-gradient(90deg,#dc2626,#f87171); }
+
+  /* Three guarantees */
+  .guarantee-card { border:1px solid var(--em-line); border-radius:14px; padding:1.6rem; background:linear-gradient(135deg,var(--panel),var(--em-dim)); position:relative; overflow:hidden; }
+  .guarantee-card::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--em),var(--em-2)); }
+  .guarantee-card h3 { font-size:1.05rem; margin:0 0 .4rem; }
+  .guarantee-card p { font-size:.88rem; color:var(--ink-2); line-height:1.65; margin:0; }
+  .guarantee-card .gc-code { font-family:var(--font-mono); font-size:.74rem; color:var(--em); background:rgba(52,211,153,.06); border:1px solid rgba(52,211,153,.12); border-radius:8px; padding:.4rem .7rem; margin:.7rem 0 0; display:block; }
+
+  /* Waterfall integration callout */
+  .waterfall-callout { background:rgba(139,92,246,.06); border:1px solid rgba(139,92,246,.2); border-radius:14px; padding:1.4rem 1.6rem; display:flex; gap:1.2rem; align-items:flex-start; }
+  .wc-icon { font-size:1.6rem; flex-shrink:0; }
+  .wc-body h4 { margin:0 0 .3rem; font-size:.95rem; }
+  .wc-body p { font-size:.87rem; color:var(--ink-2); line-height:1.6; margin:0; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">CodexDeus</a><span>›</span>
+    Shadow Thirst
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="sh-hero">
+  <canvas id="sh-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em);border-color:var(--em-line)">CodexDeus · UTF Tier 3 · Speculative Runtime</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:20ch">
+      <span style="background:linear-gradient(90deg,var(--em),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Shadow Thirst.</span><br/>
+      Every action runs twice.
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      First in shadow — isolated, with no external effects, compared against prediction. Then, only if the shadow converges, in reality. Shadow Thirst is the runtime half of Thirsty-Lang's type guarantee: the compiler proves it at compile time; Shadow Thirst proves it at execution time.
+    </p>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--em-line)">
+      <div class="stat"><div class="num" style="color:var(--em)">UTF T3</div><div class="lbl">Tier Position</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Pre-execution</div><div class="lbl">Evaluation Point</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Isolated</div><div class="lbl">Shadow Domain</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Waterfall S3</div><div class="lbl">Pipeline Stage</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DUAL PANE DEMO -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Interactive Demo</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Watch the shadow execution run.</h2>
+    <div class="reveal" x-data="{
+      scenario:'converge',
+      running:false,
+      realLog:[],
+      shadowLog:[],
+      divergence:0,
+      result:null,
+      async run(){
+        if(this.running) return;
+        this.running=true; this.realLog=[]; this.shadowLog=[]; this.divergence=0; this.result=null;
+        const isDiv=this.scenario==='diverge';
+
+        this.shadowLog.push({cls:'pl-info',txt:'[SHADOW] Isolated domain initialised.'});
+        await new Promise(r=>setTimeout(r,300));
+        this.shadowLog.push({cls:'pl-dim',txt:'[SHADOW] Executing action speculatively...'});
+        await new Promise(r=>setTimeout(r,500));
+        this.shadowLog.push({cls:'pl-dim',txt:'[SHADOW] net.connect(\"api.example.com\", 443)'});
+        await new Promise(r=>setTimeout(r,400));
+        if(isDiv){
+          this.shadowLog.push({cls:'pl-halt',txt:'[SHADOW] DIVERGENCE: unexpected access to api.internal.corp'});
+          this.divergence=87;
+        } else {
+          this.shadowLog.push({cls:'pl-hold',txt:'[SHADOW] Output: 200 OK · 4.2KB response'});
+          this.divergence=3;
+        }
+        await new Promise(r=>setTimeout(r,300));
+        this.shadowLog.push({cls:'pl-dim',txt:`[SHADOW] Divergence score: ${this.divergence}% (threshold: 15%)`});
+        await new Promise(r=>setTimeout(r,400));
+        if(isDiv){
+          this.shadowLog.push({cls:'pl-halt',txt:'[SHADOW] HALT — divergence exceeds threshold. Sealing to CCS.'});
+          this.result='halt';
+          this.realLog.push({cls:'pl-halt',txt:'[REAL] Execution blocked. Shadow Thirst HALT at Stage 3.'});
+          this.realLog.push({cls:'pl-dim',txt:'[REAL] No external effect has occurred.'});
+        } else {
+          this.shadowLog.push({cls:'pl-hold',txt:'[SHADOW] CONVERGE — shadow matches prediction. Sealing to CCS.'});
+          this.result='pass';
+          await new Promise(r=>setTimeout(r,400));
+          this.realLog.push({cls:'pl-info',txt:'[REAL] Shadow convergence confirmed. Proceeding to Stage 4.'});
+          await new Promise(r=>setTimeout(r,300));
+          this.realLog.push({cls:'pl-hold',txt:'[REAL] net.connect(\"api.example.com\", 443) → 200 OK'});
+          this.realLog.push({cls:'pl-dim',txt:'[REAL] Action completed. CCS record sealed.'});
+        }
+        this.running=false;
+      }
+    }">
+      <div style="margin-bottom:1rem;display:flex;gap:.8rem;flex-wrap:wrap;align-items:center">
+        <select style="background:rgba(52,211,153,.06);border:1px solid var(--em-line);border-radius:10px;padding:.6rem 1rem;color:var(--ink);font-family:var(--font-mono);font-size:.82rem;" x-model="scenario">
+          <option value="converge">converge — shadow matches model prediction</option>
+          <option value="diverge">diverge — shadow reveals unexpected access</option>
+        </select>
+        <button style="background:linear-gradient(135deg,var(--em-2),var(--em));border:none;color:#fff;padding:.7rem 1.5rem;border-radius:10px;font-family:var(--font-mono);font-size:.82rem;cursor:pointer;" @click="run()" :disabled="running">
+          <span x-show="!running">Run shadow →</span><span x-show="running">Executing…</span>
+        </button>
+      </div>
+
+      <!-- Divergence bar -->
+      <div x-show="divergence>0" style="margin-bottom:1rem">
+        <div style="font-family:var(--font-mono);font-size:.72rem;display:flex;justify-content:space-between;margin-bottom:.4rem">
+          <span style="color:var(--ink-3)">Divergence score</span>
+          <span :style="divergence>15?'color:rgb(239,68,68)':'color:#34d399'" x-text="divergence+'%'"></span>
+        </div>
+        <div class="div-meter"><div class="div-bar" :class="divergence>15?'high':'low'" :style="`width:${divergence}%`"></div></div>
+        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3)">Threshold: 15% — exceed to trigger HALT</div>
+      </div>
+
+      <div class="dual-pane">
+        <div class="pane-shadow">
+          <div class="dual-pane-header">Shadow Thirst — Isolated Domain</div>
+          <div class="pane-body">
+            <div class="pane-log" style="min-height:140px">
+              <template x-for="e in shadowLog"><div :class="e.cls" x-text="e.txt"></div></template>
+              <div class="pl-dim" x-show="shadowLog.length===0">Awaiting shadow run…</div>
+            </div>
+          </div>
+        </div>
+        <div class="pane-divider">
+          <span class="pane-divider-label">comparison</span>
+        </div>
+        <div class="pane-real">
+          <div class="dual-pane-header">Real World — Gated on Shadow Result</div>
+          <div class="pane-body">
+            <div class="pane-log" style="min-height:140px">
+              <template x-for="e in realLog"><div :class="e.cls" x-text="e.txt"></div></template>
+              <div class="pl-dim" x-show="realLog.length===0">Gated — waiting for shadow verdict…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:.8rem;padding:.9rem 1.2rem;border-radius:10px;font-family:var(--font-mono);font-size:.8rem;transition:all .4s"
+           :style="result==='pass'?'background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:#34d399':result==='halt'?'background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:rgb(239,68,68)':'background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);color:var(--ink-3)'"
+           x-show="true">
+        <span x-show="!result">Select a scenario and run to see shadow execution vs real execution.</span>
+        <span x-show="result==='pass'">✓ CONVERGE — Shadow output matched model prediction within tolerance. Real execution authorised to proceed to Waterfall Stage 4.</span>
+        <span x-show="result==='halt'">✗ DIVERGE — Shadow execution revealed goal misalignment. Real execution blocked. No external effect has occurred. Incident sealed to CCS.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THREE GUARANTEES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Runtime Properties</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Three guarantees of the shadow runtime.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
+
+      <div class="guarantee-card reveal">
+        <h3>Zero external effect — guaranteed</h3>
+        <p>The shadow domain runs in a fully isolated namespace: no network, no filesystem, no shared memory with the real world. Shadow Thirst can observe what the action would do without doing it. The isolation is enforced by the kernel, not by software policy.</p>
+        <code class="gc-code">shadow.domain = Isolated(net=False, fs=False, ipc=False)</code>
+      </div>
+
+      <div class="guarantee-card reveal">
+        <h3>Divergence detection — not just output comparison</h3>
+        <p>Shadow Thirst compares the full execution trace, not just the final output. A program that produces the correct answer through an unexpected sequence of operations is flagged as divergent — because the unexpected operations reveal something about the program's actual goal that differs from its stated goal.</p>
+        <code class="gc-code">divergence = trace_distance(shadow.trace, model.expected_trace)</code>
+      </div>
+
+      <div class="guarantee-card reveal">
+        <h3>CCS-sealed result — regardless of outcome</h3>
+        <p>Whether the shadow converges or diverges, the full shadow report — execution trace, divergence score, comparison results — is sealed to the CCS before the real-world gate is evaluated. There is no way to re-run the shadow and get a better result without that re-run also appearing in the CCS.</p>
+        <code class="gc-code">ccs.seal(shadow_report, attest=True, chain=True)</code>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WATERFALL INTEGRATION -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Pipeline Integration</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Where Shadow Thirst lives in the Waterfall.</h2>
+    <div style="display:flex;flex-direction:column;gap:.6rem" class="reveal">
+      <div class="waterfall-callout" style="border-color:rgba(52,211,153,.1);background:rgba(52,211,153,.04);opacity:.5">
+        <div class="wc-icon">⬆</div>
+        <div class="wc-body">
+          <h4>Stages 0–2: Structural · Signature · Behavioral</h4>
+          <p>The request has been validated, signed, and pattern-matched. Anomalies have been flagged. The request is ready for speculative execution.</p>
+        </div>
+      </div>
+      <div class="waterfall-callout" style="border-color:var(--em-line);background:rgba(52,211,153,.08)">
+        <div class="wc-icon">👁</div>
+        <div class="wc-body">
+          <h4>Stage 3: Shadow Thirst fires here</h4>
+          <p>Shadow Thirst executes the action speculatively in the isolated domain. Computes the full divergence score. Seals the result to CCS. Passes or halts. <strong>This stage is the only time the action is executed before the real execution at Stage 6.</strong></p>
+        </div>
+      </div>
+      <div class="waterfall-callout" style="border-color:rgba(52,211,153,.1);background:rgba(52,211,153,.04);opacity:.5">
+        <div class="wc-icon">⬇</div>
+        <div class="wc-body">
+          <h4>Stages 4–6: Gate · Commit · Memory</h4>
+          <p>OCEE evaluates the full constraint lattice. PSIA quorum authorises. CCS seals the final record. Real execution proceeds. The shadow report from Stage 3 is part of this record.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CODE FRAME -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Implementation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Shadow Thirst in code.</h2>
+    <div class="codeframe reveal">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem;color:var(--em)">src/psia/shadow/operational_semantics.py · ShadowRuntime.execute</span>
+      </div>
+      <div class="terminal">
+<span class="mu"># Shadow Thirst — Speculative Runtime · Thirsty's Projects LLC</span><br/>
+<br/>
+<span class="pr">class</span> <span class="ok">ShadowRuntime</span>:<br/>
+&nbsp;&nbsp;DIVERGENCE_THRESHOLD = <span class="vl">0.15</span>  <span class="mu"># 15% — configurable per deployment</span><br/>
+<br/>
+&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">execute</span>(self, action: Action, expected: ExpectedTrace) -&gt; ShadowReport:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">with</span> IsolatedDomain(net=<span class="vl">False</span>, fs=<span class="vl">False</span>, ipc=<span class="vl">False</span>) <span class="pr">as</span> domain:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trace = domain.<span class="ok">run</span>(action)  <span class="mu"># speculative — no real effect</span><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;divergence = TraceDistance.<span class="ok">compute</span>(trace, expected)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;report = ShadowReport(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trace=trace,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divergence=divergence,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verdict=<span class="vl">CONVERGE</span> <span class="pr">if</span> divergence &lt;= self.DIVERGENCE_THRESHOLD <span class="pr">else</span> <span class="vl">HALT</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ccs.<span class="ok">seal</span>(report, attest=<span class="vl">True</span>)  <span class="mu"># sealed before caller sees verdict</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> report<br/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid var(--em-line);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next</div>
+        <div style="font-size:1.1rem;font-weight:600">Research Portal — All 21 Papers</div>
+      </div>
+      <a class="btn btn-primary" href="../papers/index.html" style="background:linear-gradient(135deg,var(--em-2),var(--em));border-color:var(--em)">Research portal →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── Shadow Thirst canvas: parallel execution streams ── */
+(function(){
+  const cv=document.getElementById('sh-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const streams=[];
+  class Stream {
+    constructor(real){
+      this.real=real;
+      this.x=real?W*.3:W*.55;
+      this.x+=Math.random()*W*.1*(real?-1:1);
+      this.y=Math.random()*-H*.3;
+      this.vy=.8+Math.random()*.5;
+      this.len=40+Math.random()*80;
+      this.opacity=0;
+      this.converge=Math.random()>.2;
+    }
+    draw(){
+      this.y+=this.vy;
+      this.opacity=Math.min(.35,this.opacity+.015);
+      const col=this.real
+        ?(this.converge?'rgba(52,211,153,':'rgba(239,68,68,')
+        :'rgba(0,212,255,';
+      const grd=ctx.createLinearGradient(this.x,this.y-this.len,this.x,this.y);
+      grd.addColorStop(0,'transparent');
+      grd.addColorStop(.5,col+this.opacity+')');
+      grd.addColorStop(1,'transparent');
+      ctx.beginPath();
+      ctx.moveTo(this.x,this.y-this.len);
+      ctx.lineTo(this.x,this.y);
+      ctx.strokeStyle=grd; ctx.lineWidth=1.5; ctx.stroke();
+      return this.y>H+100;
+    }
+  }
+
+  setInterval(()=>{ streams.push(new Stream(false)); if(Math.random()>.5) streams.push(new Stream(true)); }, 300);
+
+  // Center divider
+  function drawDivider(){
+    const x=W*.5;
+    ctx.beginPath(); ctx.moveTo(x,-10); ctx.lineTo(x,H+10);
+    ctx.strokeStyle=`rgba(52,211,153,${.06+.02*Math.sin(t*.02)})`;
+    ctx.setLineDash([8,12]); ctx.lineWidth=1; ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(52,211,153,.15)'; ctx.font='11px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('DIVERGENCE CHECK',x,H*.15);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    drawDivider();
+    for(let i=streams.length-1;i>=0;i--){
+      if(streams[i].draw()) streams.splice(i,1);
+    }
+    // Labels
+    ctx.fillStyle='rgba(0,212,255,.12)'; ctx.font='12px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('SHADOW',W*.28,30);
+    ctx.fillStyle='rgba(52,211,153,.12)';
+    ctx.fillText('REAL',W*.72,30);
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

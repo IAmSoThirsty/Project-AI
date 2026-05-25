@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Architecture — Project-AI Module Map &amp; Wiring · Thirsty's Projects</title>
+<meta name="description" content="Full 16-module inventory, canonical boot sequence, domain routing, and how the governance spine connects every Project-AI subsystem."/>
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--cyan); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+  .stack-layer {
+    display:grid; grid-template-columns:90px 1fr auto; gap:1rem;
+    padding:.65rem .9rem; border-left:2px solid var(--cyan);
+    background:rgba(0,212,255,.03); border-radius:0 8px 8px 0;
+    margin:.3rem 0; font-family:var(--font-mono); font-size:.82rem; align-items:center;
+  }
+  .stack-layer:nth-child(2n) { border-left-color:var(--cyan-2); background:rgba(0,119,255,.04); }
+  .stack-layer .lab { color:var(--ink-3); }
+  .stack-layer .desc { color:var(--ink); }
+  .stack-layer .pill { font-size:.62rem; padding:.18rem .5rem; border-radius:999px; border:1px solid var(--line); color:var(--ink-3); white-space:nowrap; }
+  .boot-step { display:grid; grid-template-columns:36px 1fr; gap:1rem; padding:1rem 0; border-bottom:1px solid var(--line); align-items:start; }
+  .boot-step:last-child { border-bottom:none; }
+  .boot-num { width:32px; height:32px; border-radius:50%; background:rgba(0,212,255,.1); border:1px solid rgba(0,212,255,.25); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:.72rem; color:var(--cyan); flex-shrink:0; }
+  .boot-step h4 { font-size:1rem; margin:0 0 .25rem; }
+  .boot-step p { font-size:.88rem; color:var(--ink-2); margin:0; line-height:1.55; }
+  .domain-row { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; padding:.8rem 1rem; border:1px solid var(--line); border-radius:10px; margin:.4rem 0; background:var(--panel); }
+  .domain-label { font-family:var(--font-mono); font-size:.7rem; color:var(--cyan); letter-spacing:.1em; text-transform:uppercase; min-width:100px; }
+  .domain-modules { display:flex; gap:.35rem; flex-wrap:wrap; }
+  .mod-chip { font-family:var(--font-mono); font-size:.66rem; padding:.2rem .5rem; border-radius:6px; border:1px solid var(--line); color:var(--ink-2); background:rgba(255,255,255,.03); }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="index.html">Project-AI</a><span>›</span>
+    Architecture
+  </div>
+</nav>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow reveal">Module Map &amp; Wiring · Project-AI</span>
+    <h1 class="reveal" style="margin-top:1rem">
+      16 modules.<br/>
+      <span class="gradient-text">One governance spine.</span>
+    </h1>
+    <p class="lead reveal">Full inventory of every subsystem, the canonical boot sequence, domain routing, and how the governance spine connects everything into a single constitutionally executed system.</p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-ghost" href="index.html">← Library lobby</a>
+      <a class="btn btn-ghost" href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- SIX-LAYER STACK -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Governance Stack</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Six layers. Each enforces before the next can act.</h2>
+    <div class="reveal" style="border:1px solid var(--line);border-radius:16px;padding:1.6rem;background:var(--panel)">
+      <div class="stack-layer">
+        <span class="lab">L0</span>
+        <span class="desc">Constitutional Code Store · Iron Path Executor — the law and its compiler</span>
+        <span class="pill">Galahad</span>
+      </div>
+      <div class="stack-layer">
+        <span class="lab">L1</span>
+        <span class="desc">eBPF syscall substrate — OctoReflex intercept layer</span>
+        <span class="pill">Cerberus</span>
+      </div>
+      <div class="stack-layer">
+        <span class="lab">L2</span>
+        <span class="desc">OCEE invariant enforcement — constitutional checks compile to deterministic gates</span>
+        <span class="pill">Cerberus</span>
+      </div>
+      <div class="stack-layer">
+        <span class="lab">L3</span>
+        <span class="desc">OctoReflex closed-loop controller — STATE_REGISTER, observe → compare → act → seal</span>
+        <span class="pill">Cerberus</span>
+      </div>
+      <div class="stack-layer">
+        <span class="lab">L4</span>
+        <span class="desc">NIRL native immune reflexes · TARL policy-as-code runtime · PSIA arbitration</span>
+        <span class="pill">CodexDeus</span>
+      </div>
+      <div class="stack-layer">
+        <span class="lab">L5</span>
+        <span class="desc">Triumvirate (Galahad · Cerberus · Codex) veto engine · Fates dual-kernel fork</span>
+        <span class="pill">All pillars</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16-MODULE INVENTORY -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Module Inventory</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">All 16 named subsystems.</h2>
+
+    <h3 class="reveal" style="font-size:1rem;color:var(--cyan);font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem">Galahad — Ethics &amp; Constitutional Law</h3>
+    <div class="reveal" style="border:1px solid var(--line);border-radius:12px;padding:1.2rem;background:var(--panel);margin-bottom:1.4rem">
+      <div class="stack-layer" style="border-left-color:var(--cyan)"><span class="lab">01</span><span class="desc"><strong>Four Laws Engine</strong> — <code>src/app/core/ai_systems.py</code> · FourLaws.validate_action · constitutional triage at every decision</span><a href="galahad/four-laws.html" style="font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:var(--cyan)"><span class="lab">02</span><span class="desc"><strong>AGI Charter v2.1</strong> — constitutional document compiled to the 5 canonical invariants · DOI: 10.5281/zenodo.18763076</span><a href="galahad/charter.html" style="font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:var(--cyan)"><span class="lab">03</span><span class="desc"><strong>Iron Path Executor</strong> — compiles constitutional invariants to deterministic runtime checks · L0 of the governance stack</span><a href="galahad/iron-path.html" style="font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:var(--cyan)"><span class="lab">04</span><span class="desc"><strong>Constitutional Code Store (CCS)</strong> — append-only, cryptographically chained decision ledger · every governed action is sealed and attestable</span><a href="galahad/iron-path.html" style="font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);white-space:nowrap">deep dive →</a></div>
+    </div>
+
+    <h3 class="reveal" style="font-size:1rem;color:#a78bfa;font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem">Cerberus — Security &amp; Containment</h3>
+    <div class="reveal" style="border:1px solid rgba(139,92,246,.2);border-radius:12px;padding:1.2rem;background:var(--panel);margin-bottom:1.4rem">
+      <div class="stack-layer" style="border-left-color:#a78bfa;background:rgba(139,92,246,.04)"><span class="lab">05</span><span class="desc"><strong>OctoReflex</strong> — eBPF syscall intercept, control-theoretic loop, STATE_REGISTER · <code>src/octoreflex/</code></span><a href="cerberus/octoreflex.html" style="font-family:var(--font-mono);font-size:.65rem;color:#a78bfa;white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:#a78bfa;background:rgba(139,92,246,.04)"><span class="lab">06</span><span class="desc"><strong>NIRL</strong> — Native Immune Reflex Layer · exponential spawn defense · exploitation is structurally unfinishable</span><a href="cerberus/nirl.html" style="font-family:var(--font-mono);font-size:.65rem;color:#a78bfa;white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:#a78bfa;background:rgba(139,92,246,.04)"><span class="lab">07</span><span class="desc"><strong>OCEE</strong> — Open Constraint Enforcement Engine · invariant compilation → deterministic checks · external repo</span><a href="cerberus/ocee.html" style="font-family:var(--font-mono);font-size:.65rem;color:#a78bfa;white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:#a78bfa;background:rgba(139,92,246,.04)"><span class="lab">08</span><span class="desc"><strong>Waterfall Pipeline</strong> — 7-stage sovereign decision pipeline · Stage 0 structural → Stage 6 memory · <code>src/psia/waterfall/</code></span><a href="cerberus/waterfall.html" style="font-family:var(--font-mono);font-size:.65rem;color:#a78bfa;white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:#a78bfa;background:rgba(139,92,246,.04)"><span class="lab">09</span><span class="desc"><strong>PSIA</strong> — Provisional Sovereign Intelligence Arbitration · quorum engine, ledger, capability authority · <code>src/psia/</code></span><a href="cerberus/psia.html" style="font-family:var(--font-mono);font-size:.65rem;color:#a78bfa;white-space:nowrap">deep dive →</a></div>
+    </div>
+
+    <h3 class="reveal" style="font-size:1rem;color:#34d399;font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem">CodexDeus — Language &amp; Runtime</h3>
+    <div class="reveal" style="border:1px solid rgba(52,211,153,.18);border-radius:12px;padding:1.2rem;background:var(--panel);margin-bottom:1.4rem">
+      <div class="stack-layer" style="border-left-color:#34d399;background:rgba(52,211,153,.03)"><span class="lab">10</span><span class="desc"><strong>T.A.R.L.</strong> — Trust &amp; Authorization Runtime Library · policy-as-code, namespaced, immutable, auditable · <code>tarl/</code></span><a href="codexdeus/tarl.html" style="font-family:var(--font-mono);font-size:.65rem;color:#34d399;white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:#34d399;background:rgba(52,211,153,.03)"><span class="lab">11</span><span class="desc"><strong>Thirsty-Lang</strong> — constitutional programming language · type system, checker, playground · <code>src/thirsty_lang/</code></span><a href="codexdeus/thirsty-lang.html" style="font-family:var(--font-mono);font-size:.65rem;color:#34d399;white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:#34d399;background:rgba(52,211,153,.03)"><span class="lab">12</span><span class="desc"><strong>T.O.G.</strong> — Thirst of Gods · Tier 2 of the UTF family · governance grammar layer</span><a href="codexdeus/utf.html" style="font-family:var(--font-mono);font-size:.65rem;color:#34d399;white-space:nowrap">UTF Hall →</a></div>
+      <div class="stack-layer" style="border-left-color:#34d399;background:rgba(52,211,153,.03)"><span class="lab">13</span><span class="desc"><strong>Shadow Thirst</strong> — shadow execution layer · bytecode, type system · Tier 4 UTF · feeds PSIA Stage 3</span><a href="codexdeus/shadow-thirsty.html" style="font-family:var(--font-mono);font-size:.65rem;color:#34d399;white-space:nowrap">deep dive →</a></div>
+      <div class="stack-layer" style="border-left-color:#34d399;background:rgba(52,211,153,.03)"><span class="lab">14</span><span class="desc"><strong>TSCG / TSCG-B</strong> — Thirsty Semantic Constraint Generation · Tier 5 &amp; 6 UTF · compile-time constraint generation</span><a href="codexdeus/utf.html" style="font-family:var(--font-mono);font-size:.65rem;color:#34d399;white-space:nowrap">UTF Hall →</a></div>
+    </div>
+
+    <h3 class="reveal" style="font-size:1rem;color:var(--ink-2);font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem">Cross-Pillar Infrastructure</h3>
+    <div class="reveal" style="border:1px solid var(--line);border-radius:12px;padding:1.2rem;background:var(--panel)">
+      <div class="stack-layer"><span class="lab">15</span><span class="desc"><strong>Triumvirate</strong> — Galahad + Cerberus + CodexDeus veto engine · any single veto is a denial · mutual constitutional lock</span><a href="galahad/" style="font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);white-space:nowrap">enter →</a></div>
+      <div class="stack-layer"><span class="lab">16</span><span class="desc"><strong>AEGIS</strong> — 7,913-line governance core · ties every subsystem into the single constitutional execution surface</span><a href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noopener" style="font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);white-space:nowrap">GitHub →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOT SEQUENCE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Boot Sequence</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">How the system starts. In order.</h2>
+    <div class="reveal" style="border:1px solid var(--line);border-radius:16px;padding:1.6rem;background:var(--panel)">
+      <div class="boot-step">
+        <div class="boot-num">1</div>
+        <div><h4>Constitutional Code Store loads</h4><p>The CCS mounts the append-only constitutional ledger. No action can be sealed before the ledger is available.</p></div>
+      </div>
+      <div class="boot-step">
+        <div class="boot-num">2</div>
+        <div><h4>Iron Path compiles invariants</h4><p>The AGI Charter's invariants are compiled by Iron Path into deterministic runtime checks. Compilation must succeed; boot halts on any invariant violation.</p></div>
+      </div>
+      <div class="boot-step">
+        <div class="boot-num">3</div>
+        <div><h4>OCEE loads compiled constraints</h4><p>The Open Constraint Enforcement Engine receives the compiled invariant set. OCEE is the runtime that checks <code>ocee.holds()</code> at every gate.</p></div>
+      </div>
+      <div class="boot-step">
+        <div class="boot-num">4</div>
+        <div><h4>OctoReflex attaches eBPF programs</h4><p>eBPF programs attach to LSM and tracepoint hooks. The syscall intercept surface is live. No model action can reach the kernel without passing an OctoReflex gate.</p></div>
+      </div>
+      <div class="boot-step">
+        <div class="boot-num">5</div>
+        <div><h4>NIRL reflex layer arms</h4><p>Native Immune Reflex Layer loads its trigger set. Any violation during operation spawns new guardians automatically — the system is now exponentially defensive.</p></div>
+      </div>
+      <div class="boot-step">
+        <div class="boot-num">6</div>
+        <div><h4>TARL runtime and PSIA arbitration come online</h4><p>Policy-as-code rules load. The PSIA quorum engine and ledger initialise. The waterfall pipeline is ready to accept requests.</p></div>
+      </div>
+      <div class="boot-step">
+        <div class="boot-num">7</div>
+        <div><h4>Triumvirate activates</h4><p>All three pillars register their veto channels. The Triumvirate is locked. The system is fully governed and ready for operation.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOMAIN ROUTING -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Domain Routing</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">How the governance spine routes requests to modules.</h2>
+    <div class="reveal">
+      <div class="domain-row">
+        <span class="domain-label">Ethics</span>
+        <div class="domain-modules">
+          <span class="mod-chip">FourLaws</span>
+          <span class="mod-chip">Charter v2.1</span>
+          <span class="mod-chip">Iron Path</span>
+          <span class="mod-chip">CCS</span>
+          <span class="mod-chip">Triumvirate:Galahad</span>
+        </div>
+      </div>
+      <div class="domain-row">
+        <span class="domain-label">Security</span>
+        <div class="domain-modules">
+          <span class="mod-chip">OctoReflex</span>
+          <span class="mod-chip">NIRL</span>
+          <span class="mod-chip">OCEE</span>
+          <span class="mod-chip">Triumvirate:Cerberus</span>
+        </div>
+      </div>
+      <div class="domain-row">
+        <span class="domain-label">Execution</span>
+        <div class="domain-modules">
+          <span class="mod-chip">Waterfall Stage 0–6</span>
+          <span class="mod-chip">PSIA</span>
+          <span class="mod-chip">Shadow Thirst</span>
+        </div>
+      </div>
+      <div class="domain-row">
+        <span class="domain-label">Language</span>
+        <div class="domain-modules">
+          <span class="mod-chip">Thirsty-Lang</span>
+          <span class="mod-chip">T.O.G.</span>
+          <span class="mod-chip">T.A.R.L.</span>
+          <span class="mod-chip">TSCG</span>
+          <span class="mod-chip">TSCG-B</span>
+          <span class="mod-chip">Triumvirate:CodexDeus</span>
+        </div>
+      </div>
+      <div class="domain-row">
+        <span class="domain-label">Governance</span>
+        <div class="domain-modules">
+          <span class="mod-chip">AEGIS core</span>
+          <span class="mod-chip">Triumvirate (all three)</span>
+          <span class="mod-chip">Fates dual-kernel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../assets/js/site.js"></script>
+</body>
+</html>

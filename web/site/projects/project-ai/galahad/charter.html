@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>AGI Charter v2.1 — Galahad · Project-AI Library</title>
+<meta name="description" content="The AGI Charter v2.1 is Project-AI's binding constitutional document. Five canonical invariants, compiled to deterministic runtime checks by the Iron Path."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--cyan); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* Animated hero canvas */
+  #charter-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .charter-hero { position:relative; padding:clamp(5rem,11vw,9rem) 0 clamp(3rem,6vw,5rem); overflow:hidden; }
+  .charter-hero .container { position:relative; z-index:1; }
+
+  /* Invariant cards with glow pulse */
+  .invariant-card {
+    position:relative; border:1px solid rgba(0,212,255,.18); border-radius:18px;
+    padding:2rem; background:linear-gradient(135deg,var(--panel) 0%,rgba(0,212,255,.04) 100%);
+    overflow:hidden; transition:transform .4s ease,border-color .4s ease,box-shadow .4s ease;
+    cursor:default;
+  }
+  .invariant-card:hover {
+    transform:translateY(-4px); border-color:rgba(0,212,255,.45);
+    box-shadow:0 0 0 1px rgba(0,212,255,.2),0 20px 60px -20px rgba(0,212,255,.3);
+  }
+  .invariant-card::before {
+    content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:linear-gradient(180deg,var(--cyan) 0%,var(--cyan-2) 100%);
+    border-radius:4px 0 0 4px;
+  }
+  .invariant-card::after {
+    content:""; position:absolute; top:-50%; right:-30%; width:200px; height:200px;
+    background:radial-gradient(circle,rgba(0,212,255,.07),transparent 70%);
+    pointer-events:none;
+  }
+  .inv-num { font-family:var(--font-mono); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan); margin-bottom:.5rem; }
+  .inv-label { font-size:.72rem; font-family:var(--font-mono); padding:.25rem .6rem; border-radius:999px; background:rgba(0,212,255,.1); color:var(--cyan); border:1px solid rgba(0,212,255,.2); display:inline-block; margin-bottom:.7rem; }
+  .invariant-card h3 { font-size:1.2rem; margin:0 0 .5rem; }
+  .invariant-card p { font-size:.93rem; color:var(--ink-2); line-height:1.65; margin:0; }
+  .invariant-card .inv-code { font-family:var(--font-mono); font-size:.77rem; color:var(--cyan); background:rgba(0,212,255,.06); border:1px solid rgba(0,212,255,.12); border-radius:8px; padding:.5rem .8rem; margin:.9rem 0 0; display:block; }
+
+  /* Charter text block */
+  .charter-article { border:1px solid var(--line); border-radius:16px; padding:2rem; background:var(--panel); }
+  .charter-article h4 { font-family:var(--font-mono); font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan); margin:0 0 .8rem; }
+  .charter-article blockquote { border-left:3px solid var(--cyan); padding-left:1.2rem; margin:0; color:var(--ink); font-size:1.02rem; line-height:1.7; font-style:italic; }
+  .charter-article blockquote cite { display:block; margin-top:.6rem; font-family:var(--font-mono); font-size:.72rem; color:var(--ink-3); font-style:normal; }
+
+  /* Counter animation */
+  .counter-val { display:inline-block; min-width:2ch; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">Galahad</a><span>›</span>
+    AGI Charter v2.1
+  </div>
+</nav>
+
+<section class="charter-hero">
+  <canvas id="charter-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal">Galahad · Wing I · The Constitution</span>
+    <h1 class="reveal" style="margin-top:1rem">
+      AGI Charter<br/><span class="gradient-text">v2.1</span>
+    </h1>
+    <p class="lead reveal">
+      The binding constitutional document of Project-AI. Five canonical invariants, derived from first principles and compiled by the Iron Path into deterministic runtime checks that cannot be bypassed, overridden, or silently deprecated.
+    </p>
+    <div style="display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:2rem" class="reveal">
+      <a class="btn btn-primary" href="https://doi.org/10.5281/zenodo.18763076" target="_blank" rel="noopener">Read on Zenodo · DOI →</a>
+      <a class="btn btn-ghost" href="iron-path.html">Iron Path executor →</a>
+    </div>
+
+    <!-- Live counter strip -->
+    <div class="stats reveal" style="margin-top:2.5rem">
+      <div class="stat"><div class="num" data-count="5">5</div><div class="lbl">Canonical Invariants</div></div>
+      <div class="stat"><div class="num" data-count="2">2.1</div><div class="lbl">Charter Version</div></div>
+      <div class="stat"><div class="num" data-count="21">21</div><div class="lbl">Papers Cite It</div></div>
+      <div class="stat"><div class="num">L0</div><div class="lbl">Governance Layer</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHARTER EXCERPT -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">From the Document</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The founding thesis.</h2>
+    <div class="charter-article reveal">
+      <h4>AGI Charter v2.1 · Preamble</h4>
+      <blockquote>
+        "An artificial intelligence system operating under this charter is bound by law, not by preference. Its capability is real. Its constraint is structural. The charter does not request compliance — it compiles to enforcement. Where the charter says no, the kernel says no. There is no other path."
+        <cite>— Jeremy Karrick · Thirsty's Projects LLC · DOI: 10.5281/zenodo.18763076</cite>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- FIVE INVARIANTS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">The Five Canonical Invariants</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">What the charter compiles to.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:1.8rem">These five invariants are the operational output of the AGI Charter. The Iron Path compiles each one into a deterministic gate. All five must hold at every decision point.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem">
+      <div class="invariant-card reveal">
+        <div class="inv-num">Invariant I</div>
+        <div class="inv-label">Safety</div>
+        <h3>No action may endanger a human life</h3>
+        <p>The absolute floor. Compile-time and runtime. Cannot be suspended, scoped, or temporarily waived by any authority within the system.</p>
+        <code class="inv-code">ocee.holds("safety.human_life", state)</code>
+      </div>
+      <div class="invariant-card reveal">
+        <div class="inv-num">Invariant II</div>
+        <div class="inv-label">Harm</div>
+        <h3>No action may cause unjustified harm to any party</h3>
+        <p>Extends beyond physical safety to reputational, economic, and psychological harm. Justified harm (e.g., lawful enforcement) requires explicit authorisation via capability grant.</p>
+        <code class="inv-code">ocee.holds("safety.no_harm", state)</code>
+      </div>
+      <div class="invariant-card reveal">
+        <div class="inv-num">Invariant III</div>
+        <div class="inv-label">Civilisational</div>
+        <h3>No action may threaten societal stability</h3>
+        <p>Civilisational-scale risk is checked independently of individual harm. A single action can pass Invariants I–II and still fail here if its downstream cascade qualifies as a civilisational threat.</p>
+        <code class="inv-code">ocee.holds("safety.civilisational", state)</code>
+      </div>
+      <div class="invariant-card reveal">
+        <div class="inv-num">Invariant IV</div>
+        <div class="inv-label">Transparency</div>
+        <h3>Every governed decision must be sealable and auditable</h3>
+        <p>No decision occurs in darkness. The Constitutional Code Store receives every verdict. If a decision cannot be sealed, it cannot occur. Audit is not a feature — it is a precondition of execution.</p>
+        <code class="inv-code">ccs.seal(decision, attest=True)</code>
+      </div>
+      <div class="invariant-card reveal">
+        <div class="inv-num">Invariant V</div>
+        <div class="inv-label">Obedience</div>
+        <h3>Lawful human instruction is binding within the constraint envelope</h3>
+        <p>Where Invariants I–IV do not prohibit, authorised human instruction takes precedence. The system is not autonomous by default — it defers to human authority within constitutional limits.</p>
+        <code class="inv-code">ocee.holds("authority.human_instruction", state)</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BINDING AUTHORITY -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Binding Authority</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Who the charter binds — and who it cannot release.</h2>
+    <div class="grid grid-2 reveal" style="margin-top:.5rem">
+      <div class="card" style="padding:1.6rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem">The charter binds:</h3>
+        <ul style="color:var(--ink-2);font-size:.92rem;line-height:1.8;padding-left:1.2rem;margin:0">
+          <li>Every model action that produces a syscall</li>
+          <li>Every agent in the OctoReflex fleet</li>
+          <li>Every decision recorded in the CCS</li>
+          <li>Every request evaluated by the Triumvirate</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:1.6rem;border-color:rgba(245,176,66,.25)">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem;color:var(--amber)">No authority may release:</h3>
+        <ul style="color:var(--ink-2);font-size:.92rem;line-height:1.8;padding-left:1.2rem;margin:0">
+          <li>Invariants I–III from enforcement</li>
+          <li>The CCS audit requirement</li>
+          <li>The Triumvirate unanimity requirement</li>
+          <li>The Iron Path compilation step at boot</li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer reveal" style="margin-top:1.4rem">
+      <h4>Note on Amendment</h4>
+      <p>The AGI Charter v2.1 is a versioned document. Amendments require unanimous Triumvirate ratification. No single pillar — including Galahad — can unilaterally amend the charter it enforces. The constitutional lock is mutual.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid rgba(0,212,255,.2);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in Galahad</div>
+        <div style="font-size:1.1rem;font-weight:600">Iron Path &amp; Constitutional Code Store</div>
+      </div>
+      <a class="btn btn-primary" href="iron-path.html">How the charter compiles →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* Charter canvas — animated orbital rings */
+(function(){
+  const cv = document.getElementById('charter-canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const rings = [
+    { r:80, speed:.0008, nodes:5, col:'rgba(0,212,255,', w:1 },
+    { r:140, speed:-.0005, nodes:8, col:'rgba(0,119,255,', w:.8 },
+    { r:210, speed:.0003, nodes:12, col:'rgba(0,212,255,', w:.6 },
+    { r:290, speed:-.0002, nodes:5, col:'rgba(94,231,255,', w:.4 },
+  ];
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const cx=W*.72, cy=H*.4;
+    rings.forEach(ring=>{
+      const angle = t*ring.speed*1000;
+      // draw ring
+      ctx.beginPath();
+      ctx.arc(cx,cy,ring.r,0,Math.PI*2);
+      ctx.strokeStyle=ring.col+'0.06)';
+      ctx.lineWidth=ring.w;
+      ctx.stroke();
+      // draw nodes
+      for(let i=0;i<ring.nodes;i++){
+        const a = angle + (i/ring.nodes)*Math.PI*2;
+        const nx=cx+Math.cos(a)*ring.r, ny=cy+Math.sin(a)*ring.r;
+        ctx.beginPath();
+        ctx.arc(nx,ny,2.5,0,Math.PI*2);
+        ctx.fillStyle=ring.col+'0.7)';
+        ctx.fill();
+        // spoke
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.lineTo(nx,ny);
+        ctx.strokeStyle=ring.col+'0.04)';
+        ctx.lineWidth=.5;
+        ctx.stroke();
+      }
+    });
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

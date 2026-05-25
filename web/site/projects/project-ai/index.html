@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Project-AI — Sovereign Constitutional AGI Ecosystem</title>
+<title>Project-AI — Sovereign Constitutional AGI Ecosystem · Thirsty's Projects</title>
 <meta name="description" content="Project-AI is a syscall-authoritative, constitutionally governed AGI ecosystem. OctoReflex, TARL, Triumvirate, Iron Path, and 16 modules of ethics-first runtime safety."/>
 <link rel="canonical" href="https://www.thirstysprojects.com/projects/project-ai/"/>
 <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml"/>
@@ -15,18 +15,6 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <style>
   .project-hero { padding: clamp(5rem,11vw,9rem) 0 clamp(3rem,6vw,5rem); }
-  .subpages { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.2rem; margin-top:2rem; }
-  .subpage-card {
-    border:1px solid var(--line); border-radius:14px; padding:1.4rem;
-    background:var(--panel);
-    transition:border-color .3s,transform .3s;
-    display:flex; flex-direction:column; gap:.6rem;
-  }
-  .subpage-card:hover { border-color:var(--line-strong); transform:translateY(-3px); }
-  .subpage-card .num { font-family:var(--font-mono); font-size:.68rem; letter-spacing:.2em; color:var(--ink-3); text-transform:uppercase; }
-  .subpage-card h3 { font-size:1.1rem; margin:0; }
-  .subpage-card p { font-size:.88rem; color:var(--ink-2); line-height:1.55; margin:0; flex:1; }
-  .subpage-card a.btn { margin-top:.4rem; }
   .stat-row { display:flex; gap:2rem; flex-wrap:wrap; margin:2rem 0; }
   .stat { text-align:left; }
   .stat .n { font-family:var(--font-display); font-size:2.2rem; color:var(--cyan); line-height:1; }
@@ -40,12 +28,57 @@
   .stack-layer:nth-child(2n) { border-left-color:var(--cyan-2); background:rgba(0,119,255,.04); }
   .stack-layer .lab { color:var(--ink-3); }
   .stack-layer .desc { color:var(--ink); }
+  /* Pillar wing cards */
+  .pillar-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.25rem; margin-top:2rem; }
+  @media (max-width:860px) { .pillar-grid { grid-template-columns:1fr; } }
+  .pillar-card {
+    position:relative; border-radius:18px; padding:2rem 1.6rem;
+    border:1px solid var(--line); overflow:hidden;
+    background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 120%);
+    transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease;
+    display:flex; flex-direction:column; gap:.8rem;
+  }
+  .pillar-card::before {
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(500px 200px at var(--mx,50%) 0%,var(--glow-col,rgba(0,212,255,.14)),transparent 60%);
+    opacity:0; transition:opacity .35s ease; pointer-events:none;
+  }
+  .pillar-card:hover { transform:translateY(-4px); border-color:var(--line-strong); box-shadow:0 20px 60px -20px rgba(0,0,0,.5); }
+  .pillar-card:hover::before { opacity:1; }
+  .pillar-card.galahad { --glow-col:rgba(0,212,255,.14); }
+  .pillar-card.cerberus { --glow-col:rgba(139,92,246,.14); border-color:rgba(139,92,246,.18); }
+  .pillar-card.cerberus:hover { border-color:rgba(139,92,246,.35); }
+  .pillar-card.codexdeus { --glow-col:rgba(52,211,153,.12); border-color:rgba(52,211,153,.16); }
+  .pillar-card.codexdeus:hover { border-color:rgba(52,211,153,.3); }
+  .pillar-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:.72rem; font-weight:600; letter-spacing:.08em; }
+  .pillar-icon.g { background:rgba(0,212,255,.12); color:var(--cyan); border:1px solid rgba(0,212,255,.2); }
+  .pillar-icon.c { background:rgba(139,92,246,.12); color:#a78bfa; border:1px solid rgba(139,92,246,.2); }
+  .pillar-icon.d { background:rgba(52,211,153,.10); color:#34d399; border:1px solid rgba(52,211,153,.2); }
+  .pillar-title { font-family:var(--font-display); font-size:1.4rem; font-weight:600; margin:0; }
+  .pillar-sub { font-family:var(--font-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; }
+  .pillar-sub.g { color:var(--cyan); }
+  .pillar-sub.c { color:#a78bfa; }
+  .pillar-sub.d { color:#34d399; }
+  .pillar-desc { color:var(--ink-2); font-size:.93rem; line-height:1.6; margin:0; flex:1; }
+  .pillar-count { font-family:var(--font-mono); font-size:.72rem; color:var(--ink-3); }
+  .pillar-link {
+    display:inline-flex; align-items:center; gap:.45rem;
+    font-family:var(--font-mono); font-size:.82rem; margin-top:.4rem;
+    transition:gap .2s ease;
+  }
+  .pillar-link.g { color:var(--cyan); }
+  .pillar-link.c { color:#a78bfa; }
+  .pillar-link.d { color:#34d399; }
+  .pillar-card:hover .pillar-link { gap:.7rem; }
+  /* Cross-cutting cards */
+  .cc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; margin-top:1.2rem; }
 </style>
 </head>
 <body>
 <div class="bg-cosmos" aria-hidden="true"></div>
 <div id="site-nav"></div>
 
+<!-- HERO -->
 <section class="project-hero">
   <div class="container">
     <span class="eyebrow reveal">Project-AI · Sovereign Constitutional AGI Ecosystem</span>
@@ -56,14 +89,12 @@
     <p class="reveal" style="max-width:58ch;font-size:1.1rem;line-height:1.7;color:var(--ink-2);margin-top:1.4rem">
       Project-AI is not a framework layered on top of AI — it is governance wired into the kernel itself. OctoReflex intercepts every model action via eBPF. The Triumvirate holds veto authority. The Iron Path compiles invariants into deterministic checks. If policy says no, the kernel says no.
     </p>
-
     <div class="stat-row reveal">
       <div class="stat"><div class="n">16</div><div class="l">Core Modules</div></div>
       <div class="stat"><div class="n">7,913</div><div class="l">Lines — AEGIS</div></div>
       <div class="stat"><div class="n">21</div><div class="l">Zenodo Papers</div></div>
       <div class="stat"><div class="n">5/5</div><div class="l">Invariants — Canon</div></div>
     </div>
-
     <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.4rem" class="reveal">
       <a class="btn btn-primary" href="overview.html">Read the overview →</a>
       <a class="btn btn-ghost" href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noopener">GitHub</a>
@@ -88,42 +119,98 @@
   </div>
 </section>
 
-<!-- SUBPAGE CARDS -->
+<!-- THREE PILLARS -->
 <section class="section section--tight">
   <div class="container">
-    <span class="eyebrow reveal">Deep Dives</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.4rem">Explore the subsystems.</h2>
-    <div class="subpages">
-      <div class="subpage-card reveal">
-        <span class="num">01 · Overview</span>
-        <h3>The Full Picture</h3>
-        <p>What Project-AI is, why it exists, and the 21 papers that prove it. The human origin story behind a constitutional framework for AGI.</p>
-        <a class="btn btn-ghost" href="overview.html">Read overview →</a>
-      </div>
-      <div class="subpage-card reveal">
-        <span class="num">02 · Triumvirate</span>
-        <h3>Galahad · Cerberus · Codex</h3>
-        <p>Three-pillar constitutional evaluation engine. Any single veto is a denial. Ethics, security, and constitutional law — all three must agree.</p>
-        <a class="btn btn-ghost" href="triumvirate.html">Explore →</a>
-      </div>
-      <div class="subpage-card reveal">
-        <span class="num">03 · OctoReflex</span>
-        <h3>Syscall-Level Containment</h3>
-        <p>eBPF programs intercept the syscall surface. A closed-loop controller enforces policy at the kernel level. Benchmark results from canonical replay.</p>
-        <a class="btn btn-ghost" href="octoreflex.html">Explore →</a>
-      </div>
-      <div class="subpage-card reveal">
-        <span class="num">04 · TARL</span>
-        <h3>Trust &amp; Authorization Runtime</h3>
-        <p>The reactive defensive governance layer. Policy as code, enforcement as runtime. T.A.R.L. rules are namespaced, auditable, and immutable.</p>
-        <a class="btn btn-ghost" href="tarl.html">Explore →</a>
-      </div>
-      <div class="subpage-card reveal">
-        <span class="num">05 · Architecture</span>
-        <h3>Module Map &amp; Wiring</h3>
-        <p>Full inventory of 16 modules, the canonical boot sequence, domain routing, and how the governance spine connects every subsystem.</p>
-        <a class="btn btn-ghost" href="architecture.html">Explore →</a>
-      </div>
+    <span class="eyebrow reveal">The Library</span>
+    <h2 class="reveal" style="margin-top:.8rem">Three pillars. One unbreakable contract.</h2>
+    <p class="reveal" style="max-width:60ch;color:var(--ink-2);margin-top:.6rem;font-size:.97rem">
+      The walk-in library is organized by the three pillars of the Triumvirate. Each wing is a complete subsystem deep-dive — architecture, proofs, and code.
+    </p>
+    <div class="pillar-grid">
+
+      <!-- GALAHAD -->
+      <a class="pillar-card galahad reveal" href="galahad/" style="text-decoration:none;color:inherit">
+        <div class="pillar-icon g">GAL</div>
+        <div>
+          <div class="pillar-sub g">Wing I · Ethics &amp; Law</div>
+          <div class="pillar-title">Galahad</div>
+        </div>
+        <p class="pillar-desc">The ethical sovereign. Galahad holds a unilateral veto over every action. Four Laws, AGI Charter v2.1, Iron Path executor, and Constitutional Code Store.</p>
+        <div class="pillar-count">4 subsystems · 3 papers</div>
+        <span class="pillar-link g">Enter the wing →</span>
+      </a>
+
+      <!-- CERBERUS -->
+      <a class="pillar-card cerberus reveal" href="cerberus/" style="text-decoration:none;color:inherit">
+        <div class="pillar-icon c">CRB</div>
+        <div>
+          <div class="pillar-sub c">Wing II · Security &amp; Containment</div>
+          <div class="pillar-title">Cerberus</div>
+        </div>
+        <p class="pillar-desc">The guardian. OctoReflex intercepts at the syscall surface via eBPF. NIRL makes exploitation structurally unfinishable. OCEE, Waterfall, and PSIA complete the defense.</p>
+        <div class="pillar-count">5 subsystems · 6 papers</div>
+        <span class="pillar-link c">Enter the wing →</span>
+      </a>
+
+      <!-- CODEXDEUS -->
+      <a class="pillar-card codexdeus reveal" href="codexdeus/" style="text-decoration:none;color:inherit">
+        <div class="pillar-icon d">CDX</div>
+        <div>
+          <div class="pillar-sub d">Wing III · Language &amp; Runtime</div>
+          <div class="pillar-title">CodexDeus</div>
+        </div>
+        <p class="pillar-desc">The constitutional law itself. T.A.R.L. makes policy immutable code. The Universal Thirsty Family — six tiers from language to shadow execution — is the runtime constitution.</p>
+        <div class="pillar-count">5 subsystems · 8 papers</div>
+        <span class="pillar-link d">Enter the wing →</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- CROSS-CUTTING -->
+<section class="section section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Also in the library</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.4rem">Reference, proof, and live demos.</h2>
+    <div class="cc-grid">
+      <a class="card reveal" href="overview.html" style="text-decoration:none">
+        <div class="card-ix" style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.8rem">Origin Story</div>
+        <h3 style="font-size:1.05rem;margin:0 0 .45rem">Overview</h3>
+        <p style="font-size:.88rem">Why this exists. Jeremy Karrick's path from NPR researcher to constitutional AGI architect. The 21-paper thesis in plain language.</p>
+        <span class="card-arrow">Read →<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="card reveal" href="architecture.html" style="text-decoration:none">
+        <div class="card-ix" style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.8rem">Module Map</div>
+        <h3 style="font-size:1.05rem;margin:0 0 .45rem">Architecture</h3>
+        <p style="font-size:.88rem">Full 16-module inventory, canonical boot sequence, domain routing, and governance spine wiring.</p>
+        <span class="card-arrow">Explore →<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="card reveal" href="papers/" style="text-decoration:none">
+        <div class="card-ix" style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.8rem">21 Papers</div>
+        <h3 style="font-size:1.05rem;margin:0 0 .45rem">Research Portal</h3>
+        <p style="font-size:.88rem">Every Zenodo paper, searchable and filterable by pillar. DOI-anchored, abstract-indexed, on-site.</p>
+        <span class="card-arrow">Browse →<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="card reveal" href="demos/" style="text-decoration:none">
+        <div class="card-ix" style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.8rem">Interactive</div>
+        <h3 style="font-size:1.05rem;margin:0 0 .45rem">Demos</h3>
+        <p style="font-size:.88rem">See the governance pipeline run. Waterfall step-through, Triumvirate voting, OctoReflex syscall intercept.</p>
+        <span class="card-arrow">Try →<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="card reveal" href="codexdeus/utf.html" style="text-decoration:none">
+        <div class="card-ix" style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.8rem">UTF · 6 Tiers</div>
+        <h3 style="font-size:1.05rem;margin:0 0 .45rem">Hall of Thirsty-Lang</h3>
+        <p style="font-size:.88rem">The Universal Thirsty Family — from Thirsty-Lang itself through T.O.G., T.A.R.L., Shadow Thirst, TSCG, and TSCG-B.</p>
+        <span class="card-arrow">Enter →<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="card reveal" href="../../legion/" style="text-decoration:none">
+        <div class="card-ix" style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.8rem">Live Agent</div>
+        <h3 style="font-size:1.05rem;margin:0 0 .45rem">Legion Portal</h3>
+        <p style="font-size:.88rem">The constitutional AI ambassador. Ask Legion anything about the system — it answers under the same governance rules it describes.</p>
+        <span class="card-arrow">Speak to Legion →<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
     </div>
   </div>
 </section>
@@ -151,7 +238,7 @@
       </a>
     </div>
     <div style="margin-top:1.2rem" class="reveal">
-      <a class="btn btn-ghost" href="../../papers.html">All 21 papers →</a>
+      <a class="btn btn-ghost" href="papers/">All 21 papers in the research portal →</a>
     </div>
   </div>
 </section>

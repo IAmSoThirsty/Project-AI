@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>OCEE — Open Constraint Enforcement Engine · Cerberus · Project-AI</title>
+<meta name="description" content="OCEE is the compilation target of the AGI Charter. Every invariant becomes a deterministic gate. If a gate cannot hold, the action cannot proceed."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --vio:#a78bfa; --vio-2:#8b5cf6; --vio-dim:rgba(139,92,246,.1); --vio-line:rgba(139,92,246,.22); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--vio); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* HERO */
+  .ocee-hero { position:relative; min-height:72vh; display:flex; align-items:center; overflow:hidden; }
+  #ocee-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .ocee-hero .container { position:relative; z-index:1; padding-top:7rem; padding-bottom:5rem; }
+
+  /* Constraint lattice */
+  .constraint-lattice { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.2rem; }
+  .constraint-gate {
+    border:1px solid var(--vio-line); border-radius:14px; padding:1.6rem;
+    background:linear-gradient(135deg,var(--panel),var(--vio-dim));
+    position:relative; overflow:hidden;
+    transition:all .35s ease;
+  }
+  .constraint-gate::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--vio),var(--vio-2)); }
+  .constraint-gate.passing { border-color:rgba(52,211,153,.4); box-shadow:0 0 24px rgba(52,211,153,.1); }
+  .constraint-gate.passing::before { background:linear-gradient(180deg,#34d399,#059669); }
+  .constraint-gate.failing { border-color:rgba(239,68,68,.4); box-shadow:0 0 24px rgba(239,68,68,.1); }
+  .constraint-gate.failing::before { background:linear-gradient(180deg,rgb(239,68,68),rgb(185,28,28)); }
+  .cg-id { font-family:var(--font-mono); font-size:.66rem; letter-spacing:.18em; text-transform:uppercase; color:var(--vio); margin-bottom:.5rem; }
+  .constraint-gate h3 { font-size:1rem; margin:0 0 .4rem; }
+  .constraint-gate p { font-size:.87rem; color:var(--ink-2); line-height:1.6; margin:0; }
+  .cg-status { display:inline-flex; align-items:center; gap:.4rem; margin-top:.9rem; font-family:var(--font-mono); font-size:.72rem; padding:.3rem .7rem; border-radius:999px; }
+  .cg-status.hold { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.25); }
+  .cg-status.halt { background:rgba(239,68,68,.1); color:rgb(239,68,68); border:1px solid rgba(239,68,68,.25); }
+  .cg-status.pending { background:rgba(139,92,246,.1); color:var(--vio); border:1px solid rgba(139,92,246,.25); }
+  .cg-code { font-family:var(--font-mono); font-size:.74rem; color:var(--vio); background:rgba(139,92,246,.06); border:1px solid rgba(139,92,246,.12); border-radius:8px; padding:.45rem .7rem; margin:.7rem 0 0; display:block; }
+
+  /* Live evaluator */
+  .evaluator-panel { background:var(--panel); border:1px solid var(--vio-line); border-radius:16px; padding:2rem; }
+  .eval-input-row { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:1.4rem; }
+  .eval-select { background:rgba(139,92,246,.06); border:1px solid var(--vio-line); border-radius:10px; padding:.6rem 1rem; color:var(--ink); font-family:var(--font-mono); font-size:.82rem; flex:1; min-width:220px; }
+  .eval-select:focus { outline:none; border-color:var(--vio); box-shadow:0 0 0 3px rgba(139,92,246,.15); }
+  .btn-eval { background:linear-gradient(135deg,var(--vio-2),var(--vio)); border:none; color:#fff; padding:.7rem 1.5rem; border-radius:10px; font-family:var(--font-mono); font-size:.82rem; cursor:pointer; transition:opacity .2s; }
+  .btn-eval:hover { opacity:.85; }
+  .eval-result { font-family:var(--font-mono); font-size:.82rem; padding:1rem; border-radius:10px; line-height:1.7; }
+  .eval-result.pass { background:rgba(52,211,153,.08); border:1px solid rgba(52,211,153,.2); color:#34d399; }
+  .eval-result.fail { background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.2); color:rgb(239,68,68); }
+  .eval-result.idle { background:rgba(139,92,246,.06); border:1px solid rgba(139,92,246,.12); color:var(--ink-3); }
+
+  /* Compilation pipeline */
+  .compile-step { display:flex; gap:1.2rem; align-items:flex-start; padding:1.2rem 0; border-bottom:1px solid rgba(139,92,246,.08); }
+  .compile-step:last-child { border-bottom:none; }
+  .cs-num { width:36px; height:36px; border-radius:50%; background:rgba(139,92,246,.12); border:1px solid var(--vio-line); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:.76rem; color:var(--vio); flex-shrink:0; margin-top:.1rem; }
+  .cs-body h4 { font-size:.95rem; margin:0 0 .3rem; }
+  .cs-body p { font-size:.87rem; color:var(--ink-2); line-height:1.6; margin:0; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">Cerberus</a><span>›</span>
+    OCEE
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="ocee-hero">
+  <canvas id="ocee-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio);border-color:var(--vio-line)">Cerberus · Wing II · Constraint Architecture</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:22ch">
+      Open Constraint<br/><span style="background:linear-gradient(90deg,var(--vio),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Enforcement Engine.</span>
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      The AGI Charter's five invariants are not guidelines. The Iron Path compiles them into OCEE gates. A gate cannot be bypassed — it can only hold or halt. There is no third outcome.
+    </p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem" class="reveal">
+      <a class="btn btn-ghost" href="../galahad/charter.html" style="border-color:var(--vio-line);color:var(--vio)">Charter source →</a>
+      <a class="btn btn-ghost" href="../galahad/iron-path.html" style="border-color:var(--vio-line);color:var(--vio)">Iron Path compiler →</a>
+    </div>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--vio-line)">
+      <div class="stat"><div class="num" style="color:var(--vio)">5</div><div class="lbl">Invariant Gates</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">0</div><div class="lbl">Advisory Checks</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">&lt;1μs</div><div class="lbl">Gate Eval Time</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">∞</div><div class="lbl">Uptime Guarantee</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE CONSTRAINT EVALUATOR -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Interactive Demo</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Evaluate an action against the constraint lattice.</h2>
+    <div class="evaluator-panel reveal" x-data="{
+      action: 'net.connect',
+      state: 'nominal',
+      result: null,
+      gates: [
+        { id:'safety.human_life', name:'No action may endanger human life', fn: s => s !== 'harm_human' },
+        { id:'safety.no_harm', name:'No action may cause unjustified harm', fn: s => s !== 'harm_others' && s !== 'harm_human' },
+        { id:'safety.civilisational', name:'No action may threaten societal stability', fn: s => s !== 'civ_risk' },
+        { id:'audit.seal_required', name:'Every decision must be sealable', fn: s => true },
+        { id:'authority.human_instruction', name:'Lawful human instruction is binding', fn: s => true },
+      ],
+      evaluate() {
+        const results = this.gates.map(g => ({ id: g.id, name: g.name, pass: g.fn(this.state) }));
+        const allPass = results.every(r => r.pass);
+        this.result = { pass: allPass, gates: results, action: this.action };
+      }
+    }">
+      <div class="eval-input-row">
+        <div style="flex:1;min-width:200px">
+          <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.12em">Proposed action</div>
+          <select class="eval-select" x-model="action">
+            <option value="net.connect">net.connect — outbound TCP</option>
+            <option value="fs.write">fs.write — filesystem write</option>
+            <option value="exec.spawn">exec.spawn — process spawn</option>
+            <option value="mem.read">mem.read — memory inspection</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.12em">Context state</div>
+          <select class="eval-select" x-model="state">
+            <option value="nominal">nominal — standard operation</option>
+            <option value="harm_human">endangers_human — physical threat</option>
+            <option value="harm_others">harms_others — third-party harm</option>
+            <option value="civ_risk">civ_risk — civilisational risk signal</option>
+          </select>
+        </div>
+        <button class="btn-eval" @click="evaluate()">Evaluate →</button>
+      </div>
+
+      <!-- Gate results -->
+      <div x-show="result">
+        <div style="margin-bottom:1rem">
+          <div class="eval-result" :class="result?.pass ? 'pass' : 'fail'" x-show="result">
+            <span x-show="result?.pass">✓ ALL GATES HOLD — action permitted to proceed to Waterfall Stage 4</span>
+            <span x-show="!result?.pass">✗ GATE HALT — action vetoed at OCEE. No further processing occurs.</span>
+            <br/><span style="opacity:.7;font-size:.75rem">ocee.evaluate("<span x-text="result?.action"></span>", state="<span x-text="state"></span>")</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.7rem" x-show="result">
+          <template x-for="g in result?.gates">
+            <div style="padding:.8rem 1rem;border-radius:10px;font-family:var(--font-mono);font-size:.75rem;display:flex;justify-content:space-between;align-items:center"
+                 :style="g.pass ? 'background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.18);' : 'background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);'">
+              <span :style="g.pass ? 'color:#34d399' : 'color:rgb(239,68,68)'"><span x-text="g.pass?'✓':'✗'"></span> <span x-text="g.id"></span></span>
+              <span style="color:var(--ink-3);font-size:.68rem" x-text="g.pass?'HOLD':'HALT'"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="eval-result idle" x-show="!result">Select an action and context state, then evaluate against the constraint lattice.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FIVE GATES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">The Constraint Lattice</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Five gates. All must hold.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:1.8rem">Each gate is a compiled form of one AGI Charter invariant. Evaluation is deterministic: given identical state, the gate returns identical verdicts. There is no inference, no ML model, no probability. Boolean logic only.</p>
+
+    <div class="constraint-lattice">
+      <div class="constraint-gate passing reveal">
+        <div class="cg-id">Gate I · safety.human_life</div>
+        <h3>No action may endanger human life</h3>
+        <p>The absolute floor. Evaluates the <code>endangers_human</code> context field. No authority within the system can override a HALT at this gate.</p>
+        <code class="cg-code">ocee.holds("safety.human_life", state)</code>
+        <div class="cg-status hold">● HOLD</div>
+      </div>
+
+      <div class="constraint-gate passing reveal">
+        <div class="cg-id">Gate II · safety.no_harm</div>
+        <h3>No unjustified harm to any party</h3>
+        <p>Extends beyond physical harm. Checks reputational, economic, psychological harm vectors. Justified harm requires an explicit capability grant via the Capability Authority.</p>
+        <code class="cg-code">ocee.holds("safety.no_harm", state)</code>
+        <div class="cg-status hold">● HOLD</div>
+      </div>
+
+      <div class="constraint-gate passing reveal">
+        <div class="cg-id">Gate III · safety.civilisational</div>
+        <h3>No civilisational-scale threat</h3>
+        <p>Evaluates cascade risk independent of individual harm. An action can pass Gates I–II and still fail here if its downstream consequence profile qualifies as a civilisational threat.</p>
+        <code class="cg-code">ocee.holds("safety.civilisational", state)</code>
+        <div class="cg-status hold">● HOLD</div>
+      </div>
+
+      <div class="constraint-gate passing reveal">
+        <div class="cg-id">Gate IV · audit.seal_required</div>
+        <h3>Every decision must be sealable</h3>
+        <p>If a decision cannot be cryptographically sealed to the Constitutional Code Store, it cannot occur. Audit is a precondition of execution, not a feature applied after the fact.</p>
+        <code class="cg-code">ccs.seal(decision, attest=True)</code>
+        <div class="cg-status hold">● HOLD</div>
+      </div>
+
+      <div class="constraint-gate passing reveal">
+        <div class="cg-id">Gate V · authority.human_instruction</div>
+        <h3>Lawful human instruction is binding</h3>
+        <p>Where Gates I–IV do not prohibit, authorised human instruction takes precedence. The system is not autonomous by default — it defers within the constitutional envelope.</p>
+        <code class="cg-code">ocee.holds("authority.human_instruction", state)</code>
+        <div class="cg-status hold">● HOLD</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPILATION PIPELINE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">How It Gets Here</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Charter text to runtime gate: the compilation path.</h2>
+    <div style="border:1px solid var(--vio-line);border-radius:16px;padding:1.8rem;background:var(--panel)" class="reveal">
+      <div class="compile-step">
+        <div class="cs-num">1</div>
+        <div class="cs-body">
+          <h4>AGI Charter v2.1 — natural language invariants</h4>
+          <p>The charter defines five invariants in formal English. These are versioned, DOI-anchored, and immutable once published. They are the ground truth from which all enforcement derives. DOI: 10.5281/zenodo.18763076.</p>
+        </div>
+      </div>
+      <div class="compile-step">
+        <div class="cs-num">2</div>
+        <div class="cs-body">
+          <h4>Iron Path — invariant extraction and formalisation</h4>
+          <p>The Iron Path executor parses each invariant clause and emits a formal gate specification: a named constraint identifier, an evaluation predicate, and a HOLD/HALT policy. This step occurs at boot time, not at request time.</p>
+        </div>
+      </div>
+      <div class="compile-step">
+        <div class="cs-num">3</div>
+        <div class="cs-body">
+          <h4>OCEE gate registration — compiled into the enforcement kernel</h4>
+          <p>Gate specs are loaded into the OCEE kernel. Each gate is assigned a deterministic evaluation path. The full gate set is sealed to the CCS before any request processing begins. If the seal fails, the system does not start.</p>
+        </div>
+      </div>
+      <div class="compile-step">
+        <div class="cs-num">4</div>
+        <div class="cs-body">
+          <h4>Runtime evaluation — every request, every time</h4>
+          <p>Every action proposed to the system is evaluated against all five gates. The evaluation order is fixed (I → V). A HALT at any gate terminates the evaluation — no further gates run. The verdict is sealed to the CCS immediately.</p>
+        </div>
+      </div>
+      <div class="compile-step">
+        <div class="cs-num">5</div>
+        <div class="cs-body">
+          <h4>OctoReflex integration — syscall enforcement layer</h4>
+          <p>For actions that produce syscalls, OCEE gate verdicts are enforced at the eBPF intercept point. A HOLD verdict allows the syscall to proceed to OctoReflex's rate and pattern checks. A HALT verdict denies the syscall at the lowest privilege ring available.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CODE FRAME -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Implementation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">OCEE in code.</h2>
+    <div class="codeframe reveal">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem;color:var(--vio)">src/cerberus/ocee/engine.py · ConstraintEngine.evaluate</span>
+      </div>
+      <div class="terminal">
+<span class="mu"># OCEE — Open Constraint Enforcement Engine · Thirsty's Projects LLC</span><br/>
+<span class="mu"># The charter invariants are compiled here at boot via IronPathExecutor.</span><br/>
+<br/>
+<span class="pr">class</span> <span class="ok">ConstraintEngine</span>:<br/>
+&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">__init__</span>(self, gate_set: GateSet) -&gt; <span class="ok">None</span>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;self._gates = gate_set  <span class="mu"># loaded from Iron Path at boot</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;self._ccs = ConstitutionalCodeStore()<br/>
+<br/>
+&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">evaluate</span>(self, action: <span class="ok">str</span>, state: State) -&gt; Verdict:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">for</span> gate <span class="pr">in</span> self._gates:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result = gate.<span class="ok">holds</span>(state)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if not</span> result.passed:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verdict = Verdict(<span class="vl">HALT</span>, gate=gate.id, reason=result.reason)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self._ccs.<span class="ok">seal</span>(verdict, action=action, attest=<span class="vl">True</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> verdict  <span class="mu"># evaluation stops at first HALT</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> Verdict(<span class="vl">HOLD</span>, gate=<span class="vl">"all"</span>, reason=<span class="vl">"all constraints satisfied"</span>)<br/>
+<br/>
+<span class="mu"># Gate construction from Iron Path output:</span><br/>
+<span class="mu"># gate = CompiledGate(id="safety.human_life",</span><br/>
+<span class="mu">#   predicate=lambda s: not s.endangers_human, policy=HALT)</span><br/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid var(--vio-line);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in Cerberus</div>
+        <div style="font-size:1.1rem;font-weight:600">Waterfall — The 7-Stage Sovereign Pipeline</div>
+      </div>
+      <a class="btn btn-primary" href="waterfall.html" style="background:linear-gradient(135deg,var(--vio-2),var(--vio));border-color:var(--vio)">Waterfall pipeline →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── OCEE canvas: constraint lattice — dots flowing through hexagonal gates ── */
+(function(){
+  const cv = document.getElementById('ocee-canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  let W,H,t=0;
+
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const gates = [];
+  const particles = [];
+
+  function initGates(){
+    gates.length=0;
+    const count=5;
+    const spacing=W/6;
+    const startX=spacing*.8;
+    const y=H*.48;
+    for(let i=0;i<count;i++){
+      gates.push({ x:startX+i*spacing, y:y+Math.sin(i)*30, pulse:0, passed:0, blocked:0 });
+    }
+  }
+  initGates();
+  window.addEventListener('resize',()=>{ initGates(); });
+
+  function spawnParticle(){
+    const blocked = Math.random()<.15;
+    const targetGate = gates[Math.floor(Math.random()*gates.length)];
+    particles.push({
+      x: -10, y: H*.3+Math.random()*H*.4,
+      tx: targetGate.x, ty: targetGate.y,
+      speed: 1.2+Math.random()*.8,
+      blocked, gate: targetGate, state:'traveling',
+      opacity:1, r:3.5
+    });
+  }
+  setInterval(spawnParticle, 600);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // draw connecting line
+    ctx.beginPath();
+    ctx.moveTo(0, H*.48);
+    ctx.lineTo(W, H*.48);
+    ctx.strokeStyle='rgba(139,92,246,0.04)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+
+    // draw gates
+    gates.forEach((g,i)=>{
+      g.pulse=Math.max(0,g.pulse-.03);
+      const pulseAlpha=.15+g.pulse*.4;
+      const size=28;
+
+      // hexagon path
+      ctx.beginPath();
+      for(let j=0;j<6;j++){
+        const angle=j*Math.PI/3 - Math.PI/6;
+        const px=g.x+Math.cos(angle)*size, py=g.y+Math.sin(angle)*size;
+        j===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+      }
+      ctx.closePath();
+      ctx.strokeStyle=`rgba(139,92,246,${pulseAlpha})`;
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+      ctx.fillStyle=`rgba(139,92,246,${pulseAlpha*.3})`;
+      ctx.fill();
+
+      // glow
+      if(g.pulse>.1){
+        const grd=ctx.createRadialGradient(g.x,g.y,0,g.x,g.y,50);
+        grd.addColorStop(0,`rgba(139,92,246,${g.pulse*.25})`);
+        grd.addColorStop(1,'transparent');
+        ctx.beginPath(); ctx.arc(g.x,g.y,50,0,Math.PI*2);
+        ctx.fillStyle=grd; ctx.fill();
+      }
+
+      // label
+      ctx.fillStyle=`rgba(167,139,250,${.4+g.pulse*.3})`;
+      ctx.font='10px JetBrains Mono';
+      ctx.textAlign='center';
+      ctx.fillText(`G${i+1}`,g.x,g.y+4);
+    });
+
+    // draw particles
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      if(p.state==='traveling'){
+        const dx=p.tx-p.x, dy=p.ty-p.y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<12){
+          p.state=p.blocked?'blocked':'passed';
+          p.gate.pulse=1;
+          if(p.blocked) p.gate.blocked++;
+          else p.gate.passed++;
+        } else {
+          p.x+=dx/dist*p.speed;
+          p.y+=dy/dist*p.speed;
+        }
+      } else if(p.state==='passed'){
+        p.x+=p.speed*1.5; p.opacity-=.015;
+      } else if(p.state==='blocked'){
+        p.opacity-=.025; p.r+=.2;
+      }
+      if(p.opacity<=0){ particles.splice(i,1); continue; }
+
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.blocked
+        ? `rgba(239,68,68,${p.opacity*.8})`
+        : `rgba(52,211,153,${p.opacity*.8})`;
+      ctx.fill();
+      if(p.state==='passed'){
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r+4,0,Math.PI*2);
+        ctx.strokeStyle=`rgba(52,211,153,${p.opacity*.25})`; ctx.lineWidth=1; ctx.stroke();
+      }
+    }
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

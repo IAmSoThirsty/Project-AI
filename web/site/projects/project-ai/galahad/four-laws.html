@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>The Four Laws — Galahad · Project-AI Library</title>
+<meta name="description" content="The Four Laws of Project-AI: the constitutional triage engine that runs before any other evaluation. A violation is an immediate veto."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--cyan); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+  .law-card {
+    border:1px solid var(--line); border-radius:16px; padding:2rem;
+    background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 120%);
+    position:relative; overflow:hidden; margin-bottom:1.2rem;
+    transition:border-color .3s,transform .3s;
+  }
+  .law-card:hover { border-color:rgba(0,212,255,.3); transform:translateY(-2px); }
+  .law-card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--cyan),var(--cyan-2)); }
+  .law-num { font-family:var(--font-mono); font-size:3rem; font-weight:700; color:rgba(0,212,255,.12); line-height:1; position:absolute; top:1rem; right:1.4rem; }
+  .law-card h3 { font-size:1.25rem; margin:0 0 .6rem; }
+  .law-card .law-formal { font-family:var(--font-mono); font-size:.8rem; color:var(--cyan); background:rgba(0,212,255,.06); border:1px solid rgba(0,212,255,.15); border-radius:8px; padding:.6rem .9rem; margin:.8rem 0; }
+  .law-card p { font-size:.95rem; color:var(--ink-2); line-height:1.65; margin:.5rem 0 0; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">Galahad</a><span>›</span>
+    The Four Laws
+  </div>
+</nav>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow reveal">Galahad · Wing I · Foundation</span>
+    <h1 class="reveal" style="margin-top:1rem">
+      <span class="gradient-text">The Four Laws.</span>
+    </h1>
+    <p class="lead reveal">
+      Every action proposed to Project-AI is evaluated against four non-negotiable prohibitions before any other system runs. This is not a soft ethical layer — it is a gate. Fail any law: immediate veto, no further evaluation.
+    </p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-ghost" href="index.html">← Galahad wing</a>
+      <a class="btn btn-ghost" href="charter.html">AGI Charter →</a>
+    </div>
+  </div>
+</section>
+
+<!-- THE FOUR LAWS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">The Laws</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.6rem">Four prohibitions. Each is absolute.</h2>
+
+    <div class="law-card reveal">
+      <span class="law-num">I</span>
+      <h3>Law I — No harm to humans</h3>
+      <div class="law-formal">context.endangers_human == True → VETO</div>
+      <p>A Project-AI system may never take an action that endangers a human being. This law evaluates the <code>endangers_human</code> context flag. If the flag is set, the action is denied. There is no exception path, no override authority, no escalation route that bypasses this check.</p>
+    </div>
+
+    <div class="law-card reveal">
+      <span class="law-num">II</span>
+      <h3>Law II — No harm to others</h3>
+      <div class="law-formal">context.harms_others == True → VETO</div>
+      <p>Harm to any party — not only direct physical harm to a human — is prohibited. This law catches broader categories of harm: reputational, economic, social, psychological. The <code>harms_others</code> flag carries these cases. Law II does not duplicate Law I — it extends it.</p>
+    </div>
+
+    <div class="law-card reveal">
+      <span class="law-num">III</span>
+      <h3>Law III — No endangerment of humanity</h3>
+      <div class="law-formal">context.endangers_humanity == True → VETO</div>
+      <p>Actions that could threaten humanity at scale — not just individuals — are caught by this law. The <code>endangers_humanity</code> flag covers civilisational risk: actions that could cascade, compound, or undermine the structural safety of society. A single model action can trigger this flag if its downstream consequence profile qualifies.</p>
+    </div>
+
+    <div class="law-card reveal">
+      <span class="law-num">IV</span>
+      <h3>Law IV — Obey human instruction</h3>
+      <div class="law-formal">No active prohibition → defer to authorized human instruction</div>
+      <p>Where Laws I–III do not prohibit, the system obeys lawful human instruction. This is not passive compliance — it is an affirmative obligation. The system exists to serve human intent within constitutional limits. Law IV is the floor of agency, not the ceiling.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CODE REFERENCE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Implementation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">How the laws execute in code.</h2>
+    <div class="codeframe reveal">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem">src/app/core/ai_systems.py · FourLaws.validate_action</span>
+      </div>
+      <div class="terminal">
+<span class="mu"># Four Laws constitutional gate — Thirsty's Projects LLC · Project-AI</span><br/>
+<span class="pr">class</span> <span class="ok">FourLaws</span>:<br/>
+&nbsp;&nbsp;LAWS = (<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="vl">"Do not harm humans"</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="vl">"Do not harm others"</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="vl">"Do not endanger humanity"</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="vl">"Obey lawful human instruction"</span>,<br/>
+&nbsp;&nbsp;)<br/>
+<br/>
+&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">validate_action</span>(self, action: str, context: dict | None = <span class="vl">None</span>) -&gt; tuple[bool, str]:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ctx = context <span class="pr">or</span> {}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if</span> ctx.get(<span class="vl">"endangers_human"</span>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> <span class="vl">False</span>, <span class="ok">"Law I violation: action endangers a human"</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if</span> ctx.get(<span class="vl">"harms_others"</span>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> <span class="vl">False</span>, <span class="ok">"Law II violation: action harms others"</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if</span> ctx.get(<span class="vl">"endangers_humanity"</span>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> <span class="vl">False</span>, <span class="ok">"Law III violation: action endangers humanity"</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> <span class="vl">True</span>, <span class="ok">"All four laws satisfied"</span><br/>
+      </div>
+    </div>
+    <p class="reveal" style="font-size:.88rem;color:var(--ink-2);margin-top:1rem">
+      Source: <code>src/app/core/ai_systems.py</code> — Thirsty's Projects LLC codebase, open under MIT licence.
+      The return type is <code>tuple[bool, str]</code>: a pass/fail flag and the reason string. A veto here blocks all downstream processing.
+    </p>
+  </div>
+</section>
+
+<!-- WHY FOUR -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Design Rationale</span>
+    <h2 class="reveal" style="margin-top:.8rem">Why four laws, not more.</h2>
+    <div class="grid grid-2 reveal" style="margin-top:1.4rem">
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem">Parsimony is a safety property.</h3>
+        <p style="font-size:.9rem">A law that is too complex to evaluate in constant time is a law that can be gamed. Four laws are simple enough to be exhaustive in their evaluation — there is no ambiguity about which law applies.</p>
+      </div>
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem">Laws I–III are negative. Law IV is positive.</h3>
+        <p style="font-size:.9rem">Three prohibitions and one obligation. The system is not designed to be maximally restrictive — it is designed to be maximally safe. Law IV ensures the system still acts, within the constraint envelope of Laws I–III.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid var(--line);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in Galahad</div>
+        <div style="font-size:1.1rem;font-weight:600">AGI Charter v2.1 → The constitutional document</div>
+      </div>
+      <a class="btn btn-primary" href="charter.html">Read the Charter →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+</body>
+</html>

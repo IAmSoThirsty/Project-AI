@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Demos — Interactive Experiences · Project-AI · Thirsty's Projects</title>
+<meta name="description" content="Interactive demonstrations of Project-AI's constitutional governance systems — live pipeline simulators, constraint evaluators, shadow execution, and the Legion Agent portal."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--cyan); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* HERO */
+  .demos-hero { position:relative; overflow:hidden; padding:clamp(6rem,12vw,10rem) 0 clamp(3rem,6vw,5rem); }
+  #demo-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .demos-hero .container { position:relative; z-index:1; }
+
+  /* Demo cards */
+  .demo-card {
+    border:1px solid var(--line); border-radius:20px; padding:2rem;
+    background:linear-gradient(135deg,var(--panel),rgba(0,212,255,.04));
+    position:relative; overflow:hidden;
+    transition:transform .35s,border-color .35s,box-shadow .35s;
+    text-decoration:none; display:block; color:inherit;
+  }
+  .demo-card:hover { transform:translateY(-5px); border-color:rgba(0,212,255,.35); box-shadow:0 0 50px rgba(0,212,255,.1); }
+  .demo-card.cerberus-card { background:linear-gradient(135deg,var(--panel),rgba(139,92,246,.04)); }
+  .demo-card.cerberus-card:hover { border-color:rgba(139,92,246,.4); box-shadow:0 0 50px rgba(139,92,246,.1); }
+  .demo-card.codex-card { background:linear-gradient(135deg,var(--panel),rgba(52,211,153,.04)); }
+  .demo-card.codex-card:hover { border-color:rgba(52,211,153,.4); box-shadow:0 0 50px rgba(52,211,153,.1); }
+  .demo-card.featured { border-color:rgba(0,212,255,.3); grid-column:span 2; }
+  .demo-card.featured:hover { border-color:rgba(0,212,255,.6); box-shadow:0 0 80px rgba(0,212,255,.15); }
+
+  .dc-status { display:inline-flex; align-items:center; gap:.35rem; font-family:var(--font-mono); font-size:.68rem; padding:.25rem .7rem; border-radius:999px; margin-bottom:1rem; }
+  .dc-status.live { background:rgba(52,211,153,.12); color:#34d399; border:1px solid rgba(52,211,153,.25); }
+  .dc-status.live::before { content:""; width:6px; height:6px; border-radius:50%; background:#34d399; animation:pulseDot 1.4s ease-in-out infinite; }
+  .dc-status.coming { background:rgba(245,176,66,.1); color:#f5b042; border:1px solid rgba(245,176,66,.2); }
+  @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+  .dc-icon { font-size:2.4rem; margin-bottom:.8rem; display:block; }
+  .demo-card h3 { font-size:1.15rem; margin:0 0 .5rem; }
+  .demo-card p { font-size:.9rem; color:var(--ink-2); line-height:1.65; margin:0 0 1.2rem; }
+  .dc-arrow { display:flex; align-items:center; gap:.4rem; font-family:var(--font-mono); font-size:.78rem; color:var(--cyan); transition:gap .3s; }
+  .demo-card:hover .dc-arrow { gap:.7rem; }
+  .demo-card.cerberus-card .dc-arrow { color:#a78bfa; }
+  .demo-card.codex-card .dc-arrow { color:#34d399; }
+
+  /* Featured Legion card special treatment */
+  .demo-card.featured .dc-icon { font-size:3rem; }
+  .demo-card.featured h3 { font-size:1.5rem; }
+  .demo-card.featured p { font-size:.95rem; max-width:60ch; }
+
+  /* Embedded mini-demo preview panel */
+  .mini-demo { background:rgba(0,0,0,.25); border:1px solid rgba(0,212,255,.1); border-radius:12px; padding:1rem; margin-top:1rem; font-family:var(--font-mono); font-size:.74rem; color:var(--ink-2); line-height:1.8; min-height:80px; }
+  .mini-demo .md-ok { color:#34d399; }
+  .mini-demo .md-halt { color:rgb(239,68,68); }
+  .mini-demo .md-info { color:var(--cyan); }
+
+  @media(max-width:640px){ .demo-card.featured { grid-column:span 1; } }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    Demos
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="demos-hero">
+  <canvas id="demo-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal">Project-AI · Interactive Experiences</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:20ch">
+      See it work.<br/>
+      <span class="gradient-text">In real time.</span>
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      Project-AI's governance systems are not theoretical. Every demo on this page runs live — pipeline evaluations, constraint checks, quorum votes, shadow executions — as the systems documented in the library actually operate.
+    </p>
+  </div>
+</section>
+
+<!-- DEMO GRID -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Available Demos</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.6rem">Live experiences — no installation required.</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem">
+
+      <!-- FEATURED: Legion Portal -->
+      <a class="demo-card featured reveal" href="../../../legion/index.html">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">🤖</span>
+        <h3>Legion — The Project-AI Agent</h3>
+        <p>A full constitutional AI agent portal — streaming conversations, Triumvirate vote display, constitutional compliance monitoring, capability status, and sovereign governance at every interaction. This is Project-AI in operation.</p>
+        <div class="dc-arrow">Enter Legion portal <span>→</span></div>
+      </a>
+
+      <!-- Waterfall simulator -->
+      <a class="demo-card cerberus-card reveal" href="../cerberus/waterfall.html#demo">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">🌊</span>
+        <h3>Waterfall Pipeline Simulator</h3>
+        <p>Send a request through all seven stages of the sovereign pipeline. Choose a scenario — nominal, malformed, unsigned, shadow divergence, charter violation — and watch each stage evaluate in real time.</p>
+        <div class="dc-arrow">Run pipeline <span>→</span></div>
+      </a>
+
+      <!-- OCEE evaluator -->
+      <a class="demo-card cerberus-card reveal" href="../cerberus/ocee.html#demo">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">⚖</span>
+        <h3>OCEE Constraint Lattice Evaluator</h3>
+        <p>Evaluate any proposed action against the full five-gate constraint lattice. Select an action type and context state — all five invariant gates evaluate instantly, showing HOLD or HALT at each gate.</p>
+        <div class="dc-arrow">Evaluate constraints <span>→</span></div>
+      </a>
+
+      <!-- PSIA quorum -->
+      <a class="demo-card cerberus-card reveal" href="../cerberus/psia.html#demo">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">🗳</span>
+        <h3>PSIA Quorum Vote Simulator</h3>
+        <p>Simulate a capability grant quorum vote. Choose a scenario where one or more pillars veto, and watch the three-pillar unanimous vote play out — and see the Capability Authority respond.</p>
+        <div class="dc-arrow">Run quorum <span>→</span></div>
+      </a>
+
+      <!-- Shadow Thirst -->
+      <a class="demo-card codex-card reveal" href="../codexdeus/shadow-thirsty.html#demo">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">👁</span>
+        <h3>Shadow Thirst Execution Demo</h3>
+        <p>Watch an action run speculatively in the isolated shadow domain before real-world execution. See convergence and divergence scenarios — and understand why divergence triggers a permanent HALT.</p>
+        <div class="dc-arrow">Run shadow execution <span>→</span></div>
+      </a>
+
+      <!-- NIRL spawn -->
+      <a class="demo-card cerberus-card reveal" href="../cerberus/nirl.html#demo">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">🛡</span>
+        <h3>NIRL Spawn Tree Simulator</h3>
+        <p>Trigger a bypass attempt and watch guardian processes spawn exponentially — 1 → 3 → 9 → 27 — until saturation locks the kernel domain. The attacker's cost grows without bound.</p>
+        <div class="dc-arrow">Trigger spawn <span>→</span></div>
+      </a>
+
+      <!-- Thirsty-Lang REPL -->
+      <a class="demo-card codex-card reveal" href="../codexdeus/thirsty-lang.html#demo">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">📝</span>
+        <h3>Thirsty-Lang Code Sampler</h3>
+        <p>Browse syntax examples of the constitutional programming language — invariant bindings, capability types, type errors from constitutional violations, and constitutional closures. The type system as law.</p>
+        <div class="dc-arrow">View language <span>→</span></div>
+      </a>
+
+      <!-- TARL rule builder — coming -->
+      <div class="demo-card codex-card reveal" style="cursor:default;opacity:.75">
+        <div class="dc-status coming">Coming soon</div>
+        <span class="dc-icon">📋</span>
+        <h3>T.A.R.L. Rule Builder</h3>
+        <p>Compose T.A.R.L. rules interactively — define a namespace, write a typed predicate, and compile it to an OCEE gate specification in real time. See the policy-to-enforcement chain live.</p>
+        <div class="dc-arrow" style="color:var(--ink-3)">In development</div>
+      </div>
+
+      <!-- OctoReflex live log -->
+      <a class="demo-card cerberus-card reveal" href="../cerberus/octoreflex.html#demo">
+        <div class="dc-status live">Live</div>
+        <span class="dc-icon">⚡</span>
+        <h3>OctoReflex Live Log Feed</h3>
+        <p>Watch the eBPF syscall interceptor processing live — a simulated stream of ALLOW and DENY decisions, rate-limit events, and gate verdicts scrolling in real time at sub-millisecond latency.</p>
+        <div class="dc-arrow">View live feed <span>→</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT DEMOS -->
+<section class="section--tight">
+  <div class="container">
+    <div class="disclaimer reveal">
+      <h4>About these demos</h4>
+      <p>The interactive demos in the library pages are simulation-accurate representations of the actual governance systems. They use the same logic as the production components, running in-browser via Alpine.js. Some demos (OctoReflex live feed, NIRL canvas) are animated simulations of real-time kernel behaviour that cannot run in-browser; they accurately represent the system's operational semantics. The Legion portal runs against the Project-AI agent API.</p>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── Demos canvas: scattered demo-node constellation ── */
+(function(){
+  const cv=document.getElementById('demo-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const icons=['🌊','⚖','🗳','👁','🛡','📝','⚡','🤖'];
+  const nodes=icons.map((ic,i)=>({
+    x:W*.1+Math.random()*W*.8, y:Math.random()*H,
+    vx:(Math.random()-.5)*.15, vy:(Math.random()-.5)*.15,
+    ic, r:20, opacity:.12+Math.random()*.1
+  }));
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>{
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<-30) n.x=W+30;
+      if(n.x>W+30) n.x=-30;
+      if(n.y<-30) n.y=H+30;
+      if(n.y>H+30) n.y=-30;
+      ctx.globalAlpha=n.opacity;
+      ctx.font='28px serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillText(n.ic,n.x,n.y);
+    });
+    ctx.globalAlpha=1;
+
+    // Soft glow at top right
+    const grd=ctx.createRadialGradient(W*.7,H*.3,0,W*.7,H*.3,280);
+    grd.addColorStop(0,'rgba(0,212,255,.05)');
+    grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd;
+    ctx.fillRect(0,0,W,H);
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

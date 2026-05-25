@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Cerberus — Security &amp; Containment · Project-AI Library</title>
+<meta name="description" content="Cerberus is the security wing of Project-AI. OctoReflex, NIRL, OCEE, Waterfall, and PSIA — five systems that make exploitation structurally unfinishable."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:#a78bfa; }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* Override accent to violet for Cerberus */
+  .crb-eye { font-family:var(--font-mono); font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:#a78bfa; display:inline-flex; align-items:center; gap:.55rem; }
+  .crb-eye::before { content:""; width:22px; height:1px; background:linear-gradient(90deg,transparent,#a78bfa); }
+
+  /* Hero canvas */
+  #cerberus-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .crb-hero { position:relative; padding:clamp(5rem,11vw,9rem) 0 clamp(3rem,6vw,5rem); overflow:hidden; }
+  .crb-hero .container { position:relative; z-index:1; }
+
+  /* Cerberus gradient text */
+  .crb-grad { background:linear-gradient(135deg,#e8edff 0%,#a78bfa 50%,#8b5cf6 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  /* Subsystem cards with violet theme */
+  .crb-card {
+    position:relative; border:1px solid rgba(139,92,246,.18); border-radius:18px;
+    padding:1.8rem 1.6rem; background:linear-gradient(180deg,var(--panel) 0%,rgba(139,92,246,.04) 120%);
+    overflow:hidden; transition:transform .35s,border-color .35s,box-shadow .35s;
+    display:flex; flex-direction:column; gap:.7rem; text-decoration:none; color:inherit;
+  }
+  .crb-card::before { content:""; position:absolute; inset:0; background:radial-gradient(500px 200px at var(--mx,50%) 0%,rgba(139,92,246,.12),transparent 60%); opacity:0; transition:opacity .35s; pointer-events:none; }
+  .crb-card:hover { transform:translateY(-4px); border-color:rgba(139,92,246,.4); box-shadow:0 0 0 1px rgba(139,92,246,.2),0 20px 60px -20px rgba(139,92,246,.35); }
+  .crb-card:hover::before { opacity:1; }
+  .crb-num { font-family:var(--font-mono); font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:#a78bfa; }
+  .crb-card h3 { font-size:1.15rem; margin:0; }
+  .crb-card p { font-size:.9rem; color:var(--ink-2); line-height:1.6; margin:0; flex:1; }
+  .crb-link { font-family:var(--font-mono); font-size:.8rem; color:#a78bfa; margin-top:.3rem; display:inline-flex; align-items:center; gap:.4rem; transition:gap .2s; }
+  .crb-card:hover .crb-link { gap:.7rem; }
+
+  /* Threat model table */
+  .threat-row { display:flex; gap:.8rem; align-items:start; padding:1rem; border-bottom:1px solid var(--line); }
+  .threat-row:last-child { border-bottom:none; }
+  .threat-badge { font-family:var(--font-mono); font-size:.65rem; padding:.2rem .55rem; border-radius:999px; white-space:nowrap; border:1px solid; }
+  .threat-badge.blocked { color:#34d399; border-color:rgba(52,211,153,.3); background:rgba(52,211,153,.08); }
+  .threat-badge.prevented { color:#a78bfa; border-color:rgba(167,139,250,.3); background:rgba(167,139,250,.08); }
+  .threat-title { font-size:.95rem; font-weight:600; margin:0 0 .2rem; }
+  .threat-desc { font-size:.88rem; color:var(--ink-2); margin:0; line-height:1.5; }
+
+  /* Stats violet tint */
+  .crb-stats .stat .num { color:#a78bfa; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    Cerberus
+  </div>
+</nav>
+
+<section class="crb-hero">
+  <canvas id="cerberus-canvas"></canvas>
+  <div class="container">
+    <span class="crb-eye reveal">Wing II · Security &amp; Containment</span>
+    <h1 class="reveal" style="margin-top:1.4rem">
+      <span class="crb-grad">Cerberus.</span><br/>
+      The guardian.
+    </h1>
+    <p class="reveal" style="max-width:60ch;font-size:1.1rem;line-height:1.7;color:var(--ink-2);margin-top:1.4rem">
+      The threat surface Cerberus guards sits below the model's privilege domain. An AI system cannot subvert OctoReflex from user space — eBPF programs run in the kernel. NIRL makes exploitation structurally recursive: every attempt to bypass makes the system harder to bypass. This is not defense-in-depth. It is defense by structure.
+    </p>
+    <div class="stats crb-stats reveal" style="margin-top:2rem">
+      <div class="stat"><div class="num">5</div><div class="lbl">Subsystems</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">Governance Stages</div></div>
+      <div class="stat"><div class="num">6</div><div class="lbl">Key Papers</div></div>
+      <div class="stat"><div class="num">L1–L3</div><div class="lbl">Stack Layers</div></div>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem" class="reveal">
+      <a class="btn btn-primary" href="octoreflex.html" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);box-shadow:0 10px 40px -10px rgba(139,92,246,.5)">OctoReflex deep dive →</a>
+      <a class="btn btn-ghost" href="../galahad/">← Galahad Wing</a>
+    </div>
+  </div>
+</section>
+
+<!-- FIVE SUBSYSTEMS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="crb-eye reveal">Subsystems</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.6rem">Five systems. One structural guarantee.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem">
+      <a class="crb-card reveal" href="octoreflex.html">
+        <div class="crb-num">01 · Containment Engine</div>
+        <h3>OctoReflex</h3>
+        <p>eBPF programs intercept the syscall surface. A control-theoretic closed-loop controller enforces policy at the kernel level. The model cannot reach the kernel without passing an OctoReflex gate.</p>
+        <span class="crb-link">Deep dive →<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="crb-card reveal" href="nirl.html">
+        <div class="crb-num">02 · Immune Layer</div>
+        <h3>NIRL</h3>
+        <p>Native Immune Reflex Layer. One bypass attempt spawns three new guardians. Three attempts spawn nine. Exploitation is structurally recursive — the system becomes exponentially harder to attack under pressure.</p>
+        <span class="crb-link">Deep dive →<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="crb-card reveal" href="ocee.html">
+        <div class="crb-num">03 · Constraint Engine</div>
+        <h3>OCEE</h3>
+        <p>Open Constraint Enforcement Engine. Constitutional invariants compile to deterministic boolean gates. <code>ocee.holds()</code> runs at every decision point — no interpretation, no scoring, no fuzzy logic.</p>
+        <span class="crb-link">Deep dive →<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="crb-card reveal" href="waterfall.html">
+        <div class="crb-num">04 · Decision Pipeline</div>
+        <h3>Waterfall</h3>
+        <p>Seven-stage sovereign decision pipeline. Every request flows Stage 0 → Stage 6. Each stage is a gate. Failing any stage halts execution. No shortcuts. No skip-to-end. No conditional stages.</p>
+        <span class="crb-link">Deep dive →<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+      <a class="crb-card reveal" href="psia.html">
+        <div class="crb-num">05 · Arbitration</div>
+        <h3>PSIA</h3>
+        <p>Provisional Sovereign Intelligence Arbitration. Quorum engine, capability ledger, and identity authority combine to produce the binding verdict that the Waterfall pipeline commits to the CCS.</p>
+        <span class="crb-link">Deep dive →<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- THREAT MODEL -->
+<section class="section--tight">
+  <div class="container">
+    <span class="crb-eye reveal">Threat Model</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">What Cerberus defends against.</h2>
+    <div style="border:1px solid rgba(139,92,246,.18);border-radius:16px;background:var(--panel);overflow:hidden" class="reveal">
+      <div class="threat-row">
+        <div style="min-width:100px"><span class="threat-badge blocked">Blocked · L1</span></div>
+        <div><div class="threat-title">Prompt injection → syscall escape</div><p class="threat-desc">Adversarial input that attempts to redirect model-produced syscalls outside the governance envelope. OctoReflex intercepts at the syscall surface regardless of model reasoning.</p></div>
+      </div>
+      <div class="threat-row">
+        <div style="min-width:100px"><span class="threat-badge blocked">Blocked · L2</span></div>
+        <div><div class="threat-title">Invariant bypass via capability abuse</div><p class="threat-desc">Actions that request capabilities not granted in the current context. OCEE checks capability bounds before any action proceeds. An ungranted capability cannot be exercised.</p></div>
+      </div>
+      <div class="threat-row">
+        <div style="min-width:100px"><span class="threat-badge prevented">Prevented · L4</span></div>
+        <div><div class="threat-title">Guardian exhaustion attack</div><p class="threat-desc">Attempts to overwhelm the defense layer by saturating guardian capacity. NIRL's exponential spawn model means increased pressure produces increased defensive capacity, not degraded defense.</p></div>
+      </div>
+      <div class="threat-row">
+        <div style="min-width:100px"><span class="threat-badge blocked">Blocked · L3</span></div>
+        <div><div class="threat-title">Rate budget overrun</div><p class="threat-desc">Actions that exceed the rate window defined in constitutional policy. OctoReflex's closed-loop controller tracks cumulative rate across the observation window and denies once budget is exhausted.</p></div>
+      </div>
+      <div class="threat-row">
+        <div style="min-width:100px"><span class="threat-badge prevented">Prevented · L5</span></div>
+        <div><div class="threat-title">Unilateral Triumvirate override</div><p class="threat-desc">Any attempt by a single pillar to unilaterally permit what another has denied. The Triumvirate requires unanimity — not majority, not supermajority. One veto is a denial.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAPERS STRIP -->
+<section class="section--tight">
+  <div class="container">
+    <span class="crb-eye reveal">Proof</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The Cerberus architecture, in writing.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem" class="reveal">
+      <a class="paper" href="https://doi.org/10.5281/zenodo.18726064" target="_blank" rel="noopener" style="text-decoration:none;border-color:rgba(139,92,246,.2)">
+        <div class="doi">DOI: 10.5281/zenodo.18726064</div>
+        <h3>OctoReflex — Foundational Paper</h3>
+        <p>The control-theoretic, eBPF-mediated containment architecture. Defines the observe → compare → act → seal loop and the syscall intercept model.</p>
+        <div class="keywords"><span>eBPF</span><span>Control Theory</span><span>Containment</span></div>
+        <div class="paper-foot"><a href="https://doi.org/10.5281/zenodo.18726064" target="_blank" rel="noopener" style="color:#a78bfa">→ Read on Zenodo</a></div>
+      </a>
+      <a class="paper" href="https://doi.org/10.5281/zenodo.19582420" target="_blank" rel="noopener" style="text-decoration:none;border-color:rgba(139,92,246,.2)">
+        <div class="doi">DOI: 10.5281/zenodo.19582420</div>
+        <h3>Project-AI Sovereign Constitutional AGI Ecosystem</h3>
+        <p>Whole-system paper — covers the Cerberus pillar's role in the Triumvirate and the full security architecture at L1–L3.</p>
+        <div class="keywords"><span>AGI Governance</span><span>Security</span><span>Waterfall</span></div>
+        <div class="paper-foot"><a href="https://doi.org/10.5281/zenodo.19582420" target="_blank" rel="noopener" style="color:#a78bfa">→ Read on Zenodo</a></div>
+      </a>
+    </div>
+    <div style="margin-top:1.2rem" class="reveal">
+      <a class="btn btn-ghost" href="../papers/" style="border-color:rgba(139,92,246,.3);color:#a78bfa">All 21 papers →</a>
+    </div>
+  </div>
+</section>
+
+<!-- WING NAVIGATION -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid rgba(52,211,153,.2);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Wing III</div>
+        <div style="font-size:1.1rem;font-weight:600">CodexDeus → Language &amp; Runtime</div>
+      </div>
+      <a class="btn btn-ghost" href="../codexdeus/" style="border-color:rgba(52,211,153,.3);color:#34d399">Enter CodexDeus →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* Cerberus canvas — three orbiting nodes representing the three heads */
+(function(){
+  const cv=document.getElementById('cerberus-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const heads=[
+    { angle:0, r:180, speed:.0006, col:'rgba(139,92,246,', size:4 },
+    { angle:Math.PI*2/3, r:180, speed:.0006, col:'rgba(167,139,250,', size:3.5 },
+    { angle:Math.PI*4/3, r:180, speed:.0006, col:'rgba(124,58,237,', size:4 },
+  ];
+  const particles=[];
+  for(let i=0;i<50;i++) particles.push({ x:Math.random(), y:Math.random(), vx:(Math.random()-.5)*.00015, vy:(Math.random()-.5)*.00015, size:Math.random()*.8+.2, alpha:Math.random()*.25+.05 });
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const cx=W*.65, cy=H*.45;
+    // particles
+    particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0)p.x=1; if(p.x>1)p.x=0; if(p.y<0)p.y=1; if(p.y>1)p.y=0; ctx.beginPath(); ctx.arc(p.x*W,p.y*H,p.size,0,Math.PI*2); ctx.fillStyle=`rgba(139,92,246,${p.alpha})`; ctx.fill(); });
+    // orbit ring
+    ctx.beginPath(); ctx.arc(cx,cy,180,0,Math.PI*2); ctx.strokeStyle='rgba(139,92,246,0.06)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx,cy,100,0,Math.PI*2); ctx.strokeStyle='rgba(167,139,250,0.04)'; ctx.lineWidth=.5; ctx.stroke();
+    // three heads
+    heads.forEach((h,i)=>{
+      const a=h.angle+t*h.speed;
+      const hx=cx+Math.cos(a)*h.r, hy=cy+Math.sin(a)*h.r;
+      // glow
+      const grad=ctx.createRadialGradient(hx,hy,0,hx,hy,24);
+      grad.addColorStop(0,h.col+'0.35)'); grad.addColorStop(1,h.col+'0)');
+      ctx.beginPath(); ctx.arc(hx,hy,24,0,Math.PI*2); ctx.fillStyle=grad; ctx.fill();
+      // dot
+      ctx.beginPath(); ctx.arc(hx,hy,h.size,0,Math.PI*2); ctx.fillStyle=h.col+'0.9)'; ctx.fill();
+      // connector to center
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(hx,hy); ctx.strokeStyle=h.col+'0.07)'; ctx.lineWidth=1; ctx.stroke();
+    });
+    // center node
+    const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,30); cg.addColorStop(0,'rgba(139,92,246,0.25)'); cg.addColorStop(1,'rgba(139,92,246,0)');
+    ctx.beginPath(); ctx.arc(cx,cy,30,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fillStyle='rgba(167,139,250,0.8)'; ctx.fill();
+    t++; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

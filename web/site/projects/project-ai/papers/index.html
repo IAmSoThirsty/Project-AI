@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Research Portal — 21 Papers · Project-AI · Thirsty's Projects</title>
+<meta name="description" content="All 21 published Zenodo papers from Project-AI — Thirsty's Projects LLC. Browse by pillar, search by keyword, read on Zenodo."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--cyan); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* Hero */
+  .papers-hero { position:relative; overflow:hidden; padding:clamp(6rem,12vw,10rem) 0 clamp(3rem,7vw,6rem); }
+  #ph-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .papers-hero .container { position:relative; z-index:1; }
+
+  /* Filter bar */
+  .filter-bar { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
+  .pf-btn {
+    padding:.45rem 1.1rem; border-radius:999px; font-family:var(--font-mono); font-size:.74rem;
+    cursor:pointer; border:1px solid var(--line); background:transparent; color:var(--ink-3);
+    transition:all .25s;
+  }
+  .pf-btn:hover { border-color:var(--cyan); color:var(--ink); }
+  .pf-btn.active-all { background:rgba(0,212,255,.12); border-color:var(--cyan); color:var(--cyan); }
+  .pf-btn.active-galahad { background:rgba(0,212,255,.12); border-color:var(--cyan); color:var(--cyan); }
+  .pf-btn.active-cerberus { background:rgba(139,92,246,.12); border-color:#a78bfa; color:#a78bfa; }
+  .pf-btn.active-codexdeus { background:rgba(52,211,153,.12); border-color:#34d399; color:#34d399; }
+
+  /* Search */
+  .papers-search { width:100%; background:rgba(0,212,255,.04); border:1px solid var(--line); border-radius:12px; padding:.8rem 1.2rem; color:var(--ink); font-family:var(--font-mono); font-size:.88rem; transition:border-color .25s; }
+  .papers-search:focus { outline:none; border-color:var(--cyan); box-shadow:0 0 0 3px rgba(0,212,255,.1); }
+
+  /* Paper cards */
+  .papers-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1.2rem; }
+  .pcard {
+    border:1px solid var(--line); border-radius:16px; padding:1.6rem;
+    background:var(--panel); position:relative; overflow:hidden;
+    transition:transform .3s, border-color .3s, box-shadow .3s;
+  }
+  .pcard:hover { transform:translateY(-3px); border-color:rgba(0,212,255,.35); box-shadow:0 0 40px rgba(0,212,255,.08); }
+  .pcard::before {
+    content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
+    border-radius:3px 0 0 3px;
+  }
+  .pcard.pillar-galahad::before { background:linear-gradient(180deg,var(--cyan),var(--cyan-2)); }
+  .pcard.pillar-cerberus::before { background:linear-gradient(180deg,#a78bfa,#8b5cf6); }
+  .pcard.pillar-codexdeus::before { background:linear-gradient(180deg,#34d399,#059669); }
+  .pcard.pillar-all::before { background:linear-gradient(180deg,var(--cyan),#a78bfa,#34d399); }
+
+  .pcard-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:.7rem; gap:.6rem; flex-wrap:wrap; }
+  .pcard-doi { font-family:var(--font-mono); font-size:.68rem; color:var(--ink-3); }
+  .pcard-pillar-badge { font-family:var(--font-mono); font-size:.64rem; padding:.2rem .6rem; border-radius:999px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; }
+  .pcard-pillar-badge.galahad { background:rgba(0,212,255,.1); color:var(--cyan); border:1px solid rgba(0,212,255,.2); }
+  .pcard-pillar-badge.cerberus { background:rgba(139,92,246,.1); color:#a78bfa; border:1px solid rgba(139,92,246,.2); }
+  .pcard-pillar-badge.codexdeus { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
+  .pcard-pillar-badge.all { background:rgba(255,255,255,.05); color:var(--ink-3); border:1px solid var(--line); }
+  .pcard h3 { font-size:.97rem; margin:0 0 .5rem; line-height:1.4; }
+  .pcard p { font-size:.84rem; color:var(--ink-2); line-height:1.65; margin:0 0 .9rem; }
+  .pcard-kw { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.9rem; }
+  .pcard-kw span { font-family:var(--font-mono); font-size:.65rem; padding:.18rem .55rem; border-radius:999px; background:rgba(0,212,255,.06); color:var(--ink-3); border:1px solid rgba(0,212,255,.1); }
+  .pcard-foot { display:flex; gap:1rem; align-items:center; }
+  .pcard-foot a { font-family:var(--font-mono); font-size:.75rem; color:var(--cyan); text-decoration:none; transition:opacity .2s; }
+  .pcard-foot a:hover { opacity:.7; }
+  .pcard-date { font-family:var(--font-mono); font-size:.68rem; color:var(--ink-3); margin-left:auto; }
+
+  /* Stats bar */
+  .stat-bar { display:flex; gap:1.5rem; flex-wrap:wrap; padding:1rem 1.4rem; background:var(--panel); border:1px solid var(--line); border-radius:12px; }
+  .sb-item { display:flex; align-items:center; gap:.5rem; font-family:var(--font-mono); font-size:.78rem; }
+  .sb-dot { width:8px; height:8px; border-radius:50%; }
+  .sb-dot.cyan { background:var(--cyan); }
+  .sb-dot.violet { background:#a78bfa; }
+  .sb-dot.green { background:#34d399; }
+  .sb-dot.grey { background:var(--ink-3); }
+  .sb-label { color:var(--ink-3); }
+  .sb-count { color:var(--ink); font-weight:600; }
+
+  /* No results */
+  .no-results { text-align:center; padding:3rem; color:var(--ink-3); font-family:var(--font-mono); font-size:.88rem; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    Research Portal
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="papers-hero">
+  <canvas id="ph-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal">Project-AI · Research &amp; Proof</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:18ch">
+      21 papers.<br/>
+      <span class="gradient-text">Open. Citable. Permanent.</span>
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      Every claim in Project-AI is backed by a published, DOI-anchored paper on Zenodo. Browse the complete research output of Thirsty's Projects LLC — filterable by governance pillar, searchable by keyword.
+    </p>
+    <div class="stats reveal" style="margin-top:2.5rem">
+      <div class="stat"><div class="num">21</div><div class="lbl">Papers Published</div></div>
+      <div class="stat"><div class="num">3</div><div class="lbl">Governance Pillars</div></div>
+      <div class="stat"><div class="num">Zenodo</div><div class="lbl">Repository</div></div>
+      <div class="stat"><div class="num">Open</div><div class="lbl">Access</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTAL -->
+<section class="section--tight" x-data="papersPortal()" x-init="init()">
+  <div class="container">
+
+    <!-- Stat bar -->
+    <div class="stat-bar reveal" style="margin-bottom:1.4rem">
+      <div class="sb-item"><div class="sb-dot cyan"></div><span class="sb-label">Galahad:</span><span class="sb-count" x-text="counts.galahad"></span></div>
+      <div class="sb-item"><div class="sb-dot violet"></div><span class="sb-label">Cerberus:</span><span class="sb-count" x-text="counts.cerberus"></span></div>
+      <div class="sb-item"><div class="sb-dot green"></div><span class="sb-label">CodexDeus:</span><span class="sb-count" x-text="counts.codexdeus"></span></div>
+      <div class="sb-item"><div class="sb-dot grey"></div><span class="sb-label">Cross-pillar:</span><span class="sb-count" x-text="counts.all"></span></div>
+      <div class="sb-item" style="margin-left:auto"><span class="sb-label">Showing:</span><span class="sb-count" x-text="filtered.length + ' / ' + papers.length"></span></div>
+    </div>
+
+    <!-- Search + filter -->
+    <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1.8rem" class="reveal">
+      <input class="papers-search" type="text" placeholder="Search titles, abstracts, keywords…" x-model="query" @input="applyFilter()"/>
+      <div class="filter-bar">
+        <template x-for="p in pillars">
+          <button class="pf-btn" :class="pillar===p.id ? 'active-'+p.id : ''" @click="pillar=p.id; applyFilter()" x-text="p.label"></button>
+        </template>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="papers-grid" x-show="filtered.length > 0">
+      <template x-for="p in filtered" :key="p.doi">
+        <div class="pcard" :class="'pillar-'+p.pillar">
+          <div class="pcard-meta">
+            <span class="pcard-doi" x-text="p.doi"></span>
+            <span class="pcard-pillar-badge" :class="p.pillar" x-text="p.pillarLabel"></span>
+          </div>
+          <h3 x-text="p.title"></h3>
+          <p x-text="p.abstract.slice(0,220)+(p.abstract.length>220?'…':'')"></p>
+          <div class="pcard-kw">
+            <template x-for="kw in (p.keywords||[]).slice(0,4)" :key="kw">
+              <span x-text="kw"></span>
+            </template>
+          </div>
+          <div class="pcard-foot">
+            <a :href="p.doi_url" target="_blank" rel="noopener">→ Read on Zenodo</a>
+            <a :href="p.zenodo_url" target="_blank" rel="noopener" style="color:var(--ink-3)">Record</a>
+            <span class="pcard-date" x-text="fmtDate(p.date)"></span>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="no-results" x-show="filtered.length === 0">No papers match your search.</div>
+
+    <!-- Load state -->
+    <div class="no-results" x-show="papers.length === 0 && !error">Loading papers…</div>
+    <div class="no-results" x-show="error" style="color:rgb(239,68,68)" x-text="error"></div>
+
+  </div>
+</section>
+
+<!-- ABOUT THE CORPUS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">About the Corpus</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">21 papers. What they prove.</h2>
+    <div class="grid grid-3 reveal">
+      <div class="card" style="padding:1.5rem">
+        <div style="font-family:var(--font-mono);font-size:.66rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem">Galahad</div>
+        <p style="font-size:.88rem;color:var(--ink-2)">The constitutional and ethics papers: AGI Charter v2.1, Four Laws, Iron Path, CCS chain architecture. These papers prove that the charter invariants compile to deterministic enforcement.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;border-color:rgba(139,92,246,.2)">
+        <div style="font-family:var(--font-mono);font-size:.66rem;color:#a78bfa;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem">Cerberus</div>
+        <p style="font-size:.88rem;color:var(--ink-2)">The security papers: OctoReflex eBPF interception, asymmetric security, NIRL exponential defense. These papers prove that exploitation is structurally unfinishable.</p>
+      </div>
+      <div class="card" style="padding:1.5rem;border-color:rgba(52,211,153,.2)">
+        <div style="font-family:var(--font-mono);font-size:.66rem;color:#34d399;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem">CodexDeus</div>
+        <p style="font-size:.88rem;color:var(--ink-2)">The language papers: TSCG, TSCG-B, GENESIS compiler, constitutional architectures. These papers prove the unbroken compile chain from invariant to bytecode.</p>
+      </div>
+    </div>
+    <div class="disclaimer reveal" style="margin-top:1.4rem">
+      <h4>Open Access</h4>
+      <p>All papers are published open-access on Zenodo under the Project-AI research community. Every DOI is permanent and citable. Thirsty's Projects LLC, 2025–2026.</p>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── Pillar → paper mapping (by Zenodo record ID) ── */
+const PILLAR_MAP = {
+  18826409: 'codexdeus',  // TSCG-B
+  18794292: 'codexdeus',  // TSCG
+  18794646: 'all',        // Constitutional Architectures
+  18763076: 'galahad',    // AGI Charter v2.1
+  18726064: 'cerberus',   // OctoReflex
+  18726221: 'all',        // Sovereign Covenant
+  19030041: 'all',        // Directness Doctrine
+  19055819: 'all',        // User Perception & Identity
+  19101877: 'all',        // State Register
+  19162019: 'cerberus',   // Asymmetric Security
+  19453224: 'all',        // Naive Passive Reviewer
+  19481152: 'all',        // Universe Does Not Preserve
+  19488571: 'codexdeus',  // GENESIS compiler
+  19582420: 'cerberus',   // Governing Force in AGI
+  19582479: 'all',        // Two Species, Aligned
+  19582539: 'all',        // Project-AI Sovereign Ecosystem
+  19583170: 'galahad',    // Iron Path Executor
+  19591259: 'all',        // YGGDRASIL
+  19591660: 'galahad',    // Constitutional Code Store
+  19592336: 'all',        // Why I Am Doing This
+  18827649: 'all',        // The Flat Gap
+};
+
+const PILLAR_LABELS = {
+  galahad: 'Galahad',
+  cerberus: 'Cerberus',
+  codexdeus: 'CodexDeus',
+  all: 'Cross-pillar',
+};
+
+function papersPortal() {
+  return {
+    papers: [],
+    filtered: [],
+    pillar: 'all-papers',
+    query: '',
+    error: null,
+    pillars: [
+      { id: 'all-papers', label: 'All · 21' },
+      { id: 'galahad',    label: 'Galahad' },
+      { id: 'cerberus',   label: 'Cerberus' },
+      { id: 'codexdeus',  label: 'CodexDeus' },
+      { id: 'all',        label: 'Cross-pillar' },
+    ],
+    counts: { galahad:0, cerberus:0, codexdeus:0, all:0 },
+
+    async init() {
+      try {
+        const res = await fetch('../../../assets/data/papers.json');
+        const raw = await res.json();
+        this.papers = raw.map(p => ({
+          ...p,
+          pillar: PILLAR_MAP[p.id] || 'all',
+          pillarLabel: PILLAR_LABELS[PILLAR_MAP[p.id] || 'all'],
+        }));
+        this.counts.galahad = this.papers.filter(p=>p.pillar==='galahad').length;
+        this.counts.cerberus = this.papers.filter(p=>p.pillar==='cerberus').length;
+        this.counts.codexdeus = this.papers.filter(p=>p.pillar==='codexdeus').length;
+        this.counts.all = this.papers.filter(p=>p.pillar==='all').length;
+        this.applyFilter();
+      } catch(e) {
+        this.error = 'Could not load papers. (' + e.message + ')';
+      }
+    },
+
+    applyFilter() {
+      const q = this.query.toLowerCase().trim();
+      this.filtered = this.papers.filter(p => {
+        const matchPillar = this.pillar === 'all-papers' || p.pillar === this.pillar;
+        const matchQ = !q || (p.title + ' ' + (p.abstract||'') + ' ' + (p.keywords||[]).join(' ')).toLowerCase().includes(q);
+        return matchPillar && matchQ;
+      });
+    },
+
+    fmtDate(d) {
+      try { return new Date(d).toLocaleDateString(undefined, {year:'numeric',month:'short'}); }
+      catch { return d; }
+    },
+  };
+}
+
+/* ── Papers hero canvas: orbiting DOI nodes ── */
+(function(){
+  const cv=document.getElementById('ph-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const nodes=[];
+  const cols=['rgba(0,212,255,','rgba(139,92,246,','rgba(52,211,153,'];
+  for(let i=0;i<21;i++){
+    const r=80+Math.random()*Math.min(W,H)*.35;
+    const angle=Math.random()*Math.PI*2;
+    nodes.push({
+      r, angle, speed:(Math.random()-.5)*.0004,
+      col:cols[Math.floor(Math.random()*3)],
+      size:2+Math.random()*3, pulse:Math.random()*Math.PI*2
+    });
+  }
+
+  const cx=()=>W*.68, cy=()=>H*.42;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach((n,i)=>{
+      n.angle+=n.speed;
+      n.pulse+=.04;
+      const x=cx()+Math.cos(n.angle)*n.r, y=cy()+Math.sin(n.angle)*n.r;
+      const alpha=.15+.1*Math.sin(n.pulse);
+
+      // spoke
+      ctx.beginPath(); ctx.moveTo(cx(),cy()); ctx.lineTo(x,y);
+      ctx.strokeStyle=n.col+alpha*.5+')'; ctx.lineWidth=.4; ctx.stroke();
+
+      // glow
+      const grd=ctx.createRadialGradient(x,y,0,x,y,n.size*4);
+      grd.addColorStop(0,n.col+alpha*1.5+')');
+      grd.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(x,y,n.size*4,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+
+      // node
+      ctx.beginPath(); ctx.arc(x,y,n.size,0,Math.PI*2);
+      ctx.fillStyle=n.col+(alpha+.3)+')'; ctx.fill();
+    });
+
+    // center hub
+    const grd=ctx.createRadialGradient(cx(),cy(),0,cx(),cy(),50);
+    grd.addColorStop(0,'rgba(0,212,255,.12)');
+    grd.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(cx(),cy(),50,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx(),cy(),6,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,212,255,.5)'; ctx.fill();
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

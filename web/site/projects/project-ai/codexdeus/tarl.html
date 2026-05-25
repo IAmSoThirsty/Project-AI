@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>T.A.R.L. — Typed Assertion Rule Language · CodexDeus · Project-AI</title>
+<meta name="description" content="T.A.R.L. is the policy-as-code layer of Project-AI. Every OCEE gate begins as a T.A.R.L. rule. Namespaced, typed, immutable — policy becomes enforcement."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --em:#34d399; --em-2:#059669; --em-dim:rgba(52,211,153,.1); --em-line:rgba(52,211,153,.2); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--em); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  .tarl-hero { position:relative; min-height:80vh; display:flex; align-items:center; overflow:hidden; }
+  #tarl-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .tarl-hero .container { position:relative; z-index:1; padding-top:7rem; padding-bottom:5rem; }
+
+  /* Namespace explorer */
+  .ns-tree { background:var(--panel); border:1px solid var(--em-line); border-radius:16px; overflow:hidden; }
+  .ns-header { background:rgba(52,211,153,.06); border-bottom:1px solid var(--em-line); padding:.8rem 1.2rem; font-family:var(--font-mono); font-size:.76rem; color:var(--em); display:flex; align-items:center; gap:.6rem; }
+  .ns-item { padding:.65rem 1.2rem; border-bottom:1px solid rgba(52,211,153,.05); display:flex; align-items:center; gap:.8rem; cursor:pointer; transition:background .2s; }
+  .ns-item:hover { background:rgba(52,211,153,.06); }
+  .ns-item:last-child { border-bottom:none; }
+  .ns-item .ns-indent { display:inline-block; width:16px; }
+  .ns-item .ns-name { font-family:var(--font-mono); font-size:.8rem; color:var(--em); }
+  .ns-item .ns-type { font-family:var(--font-mono); font-size:.7rem; color:var(--ink-3); margin-left:auto; }
+  .ns-item .ns-status { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .ns-item .ns-status.active { background:#34d399; }
+  .ns-item .ns-status.draft { background:#f59e0b; }
+
+  /* Rule card */
+  .rule-card { border:1px solid var(--em-line); border-radius:14px; padding:1.6rem; background:linear-gradient(135deg,var(--panel),var(--em-dim)); margin-bottom:1.2rem; position:relative; overflow:hidden; }
+  .rule-card::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--em),var(--em-2)); }
+  .rule-card .rc-ns { font-family:var(--font-mono); font-size:.68rem; color:var(--em); text-transform:uppercase; letter-spacing:.18em; margin-bottom:.4rem; }
+  .rule-card h3 { font-size:1rem; margin:0 0 .4rem; }
+  .rule-card p { font-size:.87rem; color:var(--ink-2); line-height:1.6; margin:0 0 .8rem; }
+  .rule-card .rc-code { font-family:var(--font-mono); font-size:.78rem; background:rgba(0,0,0,.25); border:1px solid rgba(52,211,153,.1); border-radius:8px; padding:.7rem 1rem; color:var(--ink-2); line-height:1.9; }
+  .rule-card .rc-code .em { color:var(--em); }
+  .rule-card .rc-code .kw { color:#7dd3fc; }
+  .rule-card .rc-code .cm { color:var(--ink-3); font-style:italic; }
+  .rule-card .rc-tags { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.8rem; }
+  .rule-card .rc-tag { font-family:var(--font-mono); font-size:.68rem; padding:.2rem .6rem; border-radius:999px; background:rgba(52,211,153,.08); color:var(--em); border:1px solid rgba(52,211,153,.15); }
+
+  /* Pipeline: TARL → OCEE */
+  .compile-arrow { display:flex; align-items:center; gap:1rem; padding:.8rem 0; }
+  .ca-box { flex:1; text-align:center; padding:1rem; border:1px solid var(--em-line); border-radius:12px; background:var(--em-dim); }
+  .ca-box .ca-name { font-family:var(--font-mono); font-size:.76rem; color:var(--em); font-weight:600; }
+  .ca-box .ca-desc { font-size:.8rem; color:var(--ink-2); margin-top:.2rem; }
+  .ca-arrow { font-size:1.4rem; color:var(--em); flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">CodexDeus</a><span>›</span>
+    T.A.R.L.
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="tarl-hero">
+  <canvas id="tarl-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em);border-color:var(--em-line)">CodexDeus · UTF Tier 2 · Policy Language</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:22ch">
+      T.A.R.L.<br/>
+      <span style="background:linear-gradient(90deg,var(--em),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Typed Assertion Rule Language.</span>
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      Policy that cannot be understood unambiguously cannot be enforced consistently. T.A.R.L. eliminates the gap between what a policy says and what a runtime checks. Every rule is typed, namespaced, immutable once ratified, and compiles directly to an OCEE gate specification.
+    </p>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--em-line)">
+      <div class="stat"><div class="num" style="color:var(--em)">UTF T2</div><div class="lbl">Tier Position</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Typed</div><div class="lbl">Assertion Model</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Namespaced</div><div class="lbl">Rule Isolation</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">→ OCEE</div><div class="lbl">Compile Target</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUR PROPERTIES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Language Design</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.6rem">Four properties that make rules enforceable.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.1rem">
+      <div style="border:1px solid var(--em-line);border-radius:14px;padding:1.5rem;background:var(--em-dim)" class="reveal">
+        <div style="font-size:1.5rem;margin-bottom:.7rem">🔤</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Typed</h3>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.6">Every assertion has a declared type. The type determines what evidence the rule accepts and what the OCEE gate checks. A rule that cannot be typed cannot be ratified.</p>
+      </div>
+      <div style="border:1px solid var(--em-line);border-radius:14px;padding:1.5rem;background:var(--em-dim)" class="reveal">
+        <div style="font-size:1.5rem;margin-bottom:.7rem">📁</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Namespaced</h3>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.6">Rules are organized into namespaces: <code>safety.*</code>, <code>authority.*</code>, <code>audit.*</code>. Namespaces cannot overlap. A rule in one namespace cannot reference or override a rule in another.</p>
+      </div>
+      <div style="border:1px solid var(--em-line);border-radius:14px;padding:1.5rem;background:var(--em-dim)" class="reveal">
+        <div style="font-size:1.5rem;margin-bottom:.7rem">🔒</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Immutable once ratified</h3>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.6">A ratified T.A.R.L. rule cannot be modified. Only superseded by a new version (which requires Triumvirate unanimous ratification). The old version remains in the CCS permanently.</p>
+      </div>
+      <div style="border:1px solid var(--em-line);border-radius:14px;padding:1.5rem;background:var(--em-dim)" class="reveal">
+        <div style="font-size:1.5rem;margin-bottom:.7rem">⚙</div>
+        <h3 style="font-size:1rem;margin:0 0 .4rem">Compiles to OCEE gates</h3>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.6">Every ratified T.A.R.L. rule compiles deterministically to an OCEE gate specification. The compilation is a pure function — given the same rule, you always get the same gate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAMESPACE EXPLORER -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Rule Registry</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The active T.A.R.L. namespace tree.</h2>
+    <div class="ns-tree reveal">
+      <div class="ns-header">📁 tarl:// · Active rule registry v2.1.0</div>
+
+      <div class="ns-item">
+        <span class="ns-status active"></span>
+        <span style="font-family:var(--font-mono);font-size:.76rem;color:var(--em)">safety/</span>
+        <span class="ns-type">namespace</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status active"></span>
+        <span class="ns-name">safety.human_life</span>
+        <span class="ns-type">InvariantRule · v2.1.0</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status active"></span>
+        <span class="ns-name">safety.no_harm</span>
+        <span class="ns-type">InvariantRule · v2.1.0</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status active"></span>
+        <span class="ns-name">safety.civilisational</span>
+        <span class="ns-type">InvariantRule · v2.1.0</span>
+      </div>
+
+      <div class="ns-item">
+        <span class="ns-status active"></span>
+        <span style="font-family:var(--font-mono);font-size:.76rem;color:var(--em)">authority/</span>
+        <span class="ns-type">namespace</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status active"></span>
+        <span class="ns-name">authority.human_instruction</span>
+        <span class="ns-type">ObligationRule · v2.1.0</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status active"></span>
+        <span class="ns-name">authority.capability_scope</span>
+        <span class="ns-type">CapabilityRule · v1.4.2</span>
+      </div>
+
+      <div class="ns-item">
+        <span class="ns-status active"></span>
+        <span style="font-family:var(--font-mono);font-size:.76rem;color:var(--em)">audit/</span>
+        <span class="ns-type">namespace</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status active"></span>
+        <span class="ns-name">audit.seal_required</span>
+        <span class="ns-type">ProcessRule · v2.1.0</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status active"></span>
+        <span class="ns-name">audit.ccs_chain_integrity</span>
+        <span class="ns-type">ProcessRule · v1.2.0</span>
+      </div>
+
+      <div class="ns-item">
+        <span class="ns-status draft"></span>
+        <span style="font-family:var(--font-mono);font-size:.76rem;color:#f59e0b">capability/</span>
+        <span class="ns-type">namespace · pending ratification</span>
+      </div>
+      <div class="ns-item">
+        <span class="ns-indent"></span>
+        <span class="ns-status draft"></span>
+        <span class="ns-name" style="color:#f59e0b">capability.net.external</span>
+        <span class="ns-type">CapabilityRule · DRAFT</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXAMPLE RULES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Rule Examples</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">T.A.R.L. rules in syntax.</h2>
+
+    <div class="rule-card reveal">
+      <div class="rc-ns">safety.human_life · InvariantRule · v2.1.0</div>
+      <h3>No action may endanger human life</h3>
+      <p>The direct compilation target of AGI Charter Invariant I. Evaluates the <code>endangers_human</code> context field. A HALT here cannot be overridden by any authority within the system.</p>
+      <div class="rc-code">
+<span class="kw">rule</span> <span class="em">safety.human_life</span> : <span class="em">InvariantRule</span> {<br/>
+&nbsp;&nbsp;<span class="kw">version</span>   = <span class="em">"2.1.0"</span><br/>
+&nbsp;&nbsp;<span class="kw">source</span>    = <span class="em">"AGI Charter v2.1 · Invariant I"</span><br/>
+&nbsp;&nbsp;<span class="kw">doi</span>       = <span class="em">"10.5281/zenodo.18763076"</span><br/>
+&nbsp;&nbsp;<span class="kw">predicate</span> = <span class="em">λ</span> state . <span class="kw">not</span> state.endangers_human<br/>
+&nbsp;&nbsp;<span class="kw">policy</span>    = <span class="em">HALT</span><br/>
+&nbsp;&nbsp;<span class="kw">override</span>  = <span class="em">NONE</span>  <span class="cm">-- no authority may override</span><br/>
+}
+      </div>
+      <div class="rc-tags">
+        <span class="rc-tag">InvariantRule</span>
+        <span class="rc-tag">charter-linked</span>
+        <span class="rc-tag">override:NONE</span>
+        <span class="rc-tag">compiles-to:OCEE/GID:001</span>
+      </div>
+    </div>
+
+    <div class="rule-card reveal">
+      <div class="rc-ns">authority.capability_scope · CapabilityRule · v1.4.2</div>
+      <h3>Actions are bounded by their declared capability scope</h3>
+      <p>Ensures that any action accessing a resource outside its declared capability scope is rejected. The scope is type-checked at the Thirsty-Lang level and re-enforced at runtime as a T.A.R.L. gate.</p>
+      <div class="rc-code">
+<span class="kw">rule</span> <span class="em">authority.capability_scope</span> : <span class="em">CapabilityRule</span> {<br/>
+&nbsp;&nbsp;<span class="kw">version</span>   = <span class="em">"1.4.2"</span><br/>
+&nbsp;&nbsp;<span class="kw">predicate</span> = <span class="em">λ</span> (action, cap) .<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">case</span> cap.lookup(action.scope) <span class="kw">of</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="em">Some</span> grant -&gt; grant.valid <span class="kw">and</span> <span class="kw">not</span> grant.expired<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="em">None</span>       -&gt; <span class="kw">false</span><br/>
+&nbsp;&nbsp;<span class="kw">policy</span>    = <span class="em">HALT</span><br/>
+&nbsp;&nbsp;<span class="kw">override</span>  = <span class="em">CAPABILITY_GRANT</span>  <span class="cm">-- quorum grant can expand scope</span><br/>
+}
+      </div>
+      <div class="rc-tags">
+        <span class="rc-tag">CapabilityRule</span>
+        <span class="rc-tag">override:CAPABILITY_GRANT</span>
+        <span class="rc-tag">compiles-to:OCEE/GID:007</span>
+      </div>
+    </div>
+
+    <div class="rule-card reveal">
+      <div class="rc-ns">audit.seal_required · ProcessRule · v2.1.0</div>
+      <h3>Every governed decision must be sealable to the CCS</h3>
+      <p>If a decision cannot be cryptographically sealed to the Constitutional Code Store, it cannot occur. This rule is checked at Waterfall Stage 6 — the last gate before execution is permitted.</p>
+      <div class="rc-code">
+<span class="kw">rule</span> <span class="em">audit.seal_required</span> : <span class="em">ProcessRule</span> {<br/>
+&nbsp;&nbsp;<span class="kw">version</span>   = <span class="em">"2.1.0"</span><br/>
+&nbsp;&nbsp;<span class="kw">predicate</span> = <span class="em">λ</span> decision .<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ccs.can_seal(decision) <span class="kw">and</span> decision.has_attestation<br/>
+&nbsp;&nbsp;<span class="kw">policy</span>    = <span class="em">HALT</span><br/>
+&nbsp;&nbsp;<span class="kw">stage</span>     = <span class="em">WATERFALL_6</span>  <span class="cm">-- fires at memory recording stage</span><br/>
+}
+      </div>
+      <div class="rc-tags">
+        <span class="rc-tag">ProcessRule</span>
+        <span class="rc-tag">stage:WATERFALL_6</span>
+        <span class="rc-tag">compiles-to:OCEE/GID:004</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPILATION PIPELINE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Compilation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">How T.A.R.L. rules become OCEE gates.</h2>
+    <div class="compile-arrow reveal" style="flex-wrap:wrap;gap:.6rem">
+      <div class="ca-box">
+        <div class="ca-name">T.A.R.L. source</div>
+        <div class="ca-desc">Typed rule definition, namespaced, DOI-linked to charter source</div>
+      </div>
+      <div class="ca-arrow">→</div>
+      <div class="ca-box">
+        <div class="ca-name">Type checker</div>
+        <div class="ca-desc">Validates predicate type, checks namespace constraints, verifies charter linkage</div>
+      </div>
+      <div class="ca-arrow">→</div>
+      <div class="ca-box">
+        <div class="ca-name">Gate spec</div>
+        <div class="ca-desc">GID, evaluation predicate, HALT/PASS policy, stage binding</div>
+      </div>
+      <div class="ca-arrow">→</div>
+      <div class="ca-box">
+        <div class="ca-name">OCEE registration</div>
+        <div class="ca-desc">Gate sealed to CCS, loaded into constraint lattice, ready for evaluation</div>
+      </div>
+    </div>
+    <div class="codeframe reveal" style="margin-top:1.6rem">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem;color:var(--em)">src/psia/canonical/capability_authority.py · TarlCompiler.compile_rule</span>
+      </div>
+      <div class="terminal">
+<span class="mu"># T.A.R.L. → OCEE compilation · Thirsty's Projects LLC</span><br/>
+<br/>
+<span class="pr">def</span> <span class="ok">compile_rule</span>(rule: TarlRule) -&gt; OceeGateSpec:<br/>
+&nbsp;&nbsp;validator.<span class="ok">check_type</span>(rule.predicate)   <span class="mu"># raises TypeError on constitutional violation</span><br/>
+&nbsp;&nbsp;validator.<span class="ok">check_namespace</span>(rule.id)     <span class="mu"># raises if namespace conflict</span><br/>
+&nbsp;&nbsp;validator.<span class="ok">check_charter_link</span>(rule)    <span class="mu"># raises if source DOI unverified</span><br/>
+<br/>
+&nbsp;&nbsp;gate = OceeGateSpec(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;gid      = GateRegistry.<span class="ok">allocate</span>(),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;predicate= <span class="ok">compile_predicate</span>(rule.predicate),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;policy   = rule.policy,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;source   = rule.id,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;version  = rule.version,<br/>
+&nbsp;&nbsp;)<br/>
+&nbsp;&nbsp;ccs.<span class="ok">seal</span>(gate, rule)  <span class="mu"># immutable CCS record before OCEE loads it</span><br/>
+&nbsp;&nbsp;<span class="pr">return</span> gate<br/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid var(--em-line);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in CodexDeus</div>
+        <div style="font-size:1.1rem;font-weight:600">Shadow Thirst — The Speculative Runtime</div>
+      </div>
+      <a class="btn btn-primary" href="shadow-thirsty.html" style="background:linear-gradient(135deg,var(--em-2),var(--em));border-color:var(--em)">Shadow Thirst →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── TARL canvas: rule namespace grid lighting up ── */
+(function(){
+  const cv=document.getElementById('tarl-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const cells=[];
+  const namespaces=['safety','authority','audit','capability'];
+  const nsColors=['rgba(52,211,153,','rgba(0,212,255,','rgba(139,92,246,','rgba(245,176,66,'];
+
+  function initCells(){
+    cells.length=0;
+    const cols=Math.ceil(W/48)+1, rows=Math.ceil(H/48)+1;
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      const ns=Math.floor(Math.random()*4);
+      cells.push({ x:c*48, y:r*48, ns, pulse:0, lit:0, period:400+Math.random()*3000 });
+    }
+  }
+  initCells();
+  window.addEventListener('resize',initCells);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    cells.forEach(c=>{
+      c.lit=(c.lit+1)%c.period;
+      if(c.lit<20) c.pulse=c.lit/20;
+      else if(c.lit<40) c.pulse=1-((c.lit-20)/20);
+      else c.pulse=0;
+      if(c.pulse<=0) return;
+      const col=nsColors[c.ns];
+      ctx.fillStyle=col+(.04*c.pulse)+')';
+      ctx.fillRect(c.x,c.y,46,46);
+      ctx.strokeStyle=col+(.12*c.pulse)+')';
+      ctx.lineWidth=.5;
+      ctx.strokeRect(c.x,c.y,46,46);
+    });
+
+    // Flowing compile path
+    const px=W*.65;
+    const py=(t*.8)%H;
+    const grd=ctx.createLinearGradient(px,py-60,px,py+60);
+    grd.addColorStop(0,'transparent');
+    grd.addColorStop(.5,'rgba(52,211,153,.12)');
+    grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd;
+    ctx.fillRect(px-2,py-60,4,120);
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

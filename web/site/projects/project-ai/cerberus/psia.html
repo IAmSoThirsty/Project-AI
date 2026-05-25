@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>PSIA — Provisional Sovereign Intelligence Arbitration · Cerberus · Project-AI</title>
+<meta name="description" content="PSIA is the arbitration layer above the model's privilege ring. Three components — Quorum Engine, Ledger, Capability Authority — coordinate to grant, deny, and record every elevated action."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --vio:#a78bfa; --vio-2:#8b5cf6; --vio-dim:rgba(139,92,246,.1); --vio-line:rgba(139,92,246,.22); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--vio); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* HERO */
+  .psia-hero { position:relative; min-height:88vh; display:flex; align-items:center; overflow:hidden; }
+  #psia-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .psia-hero .container { position:relative; z-index:1; padding-top:7rem; padding-bottom:5rem; }
+
+  /* Three-component cards */
+  .psia-component {
+    border:1px solid var(--vio-line); border-radius:20px; padding:2.2rem;
+    background:linear-gradient(135deg,var(--panel),var(--vio-dim));
+    position:relative; overflow:hidden;
+    transition:transform .35s, border-color .35s, box-shadow .35s;
+  }
+  .psia-component:hover { transform:translateY(-5px); border-color:rgba(139,92,246,.5); box-shadow:0 0 60px rgba(139,92,246,.15); }
+  .psia-component::before { content:""; position:absolute; left:0; top:0; right:0; height:3px; background:linear-gradient(90deg,var(--vio-2),var(--vio),var(--cyan)); }
+  .psia-component .pc-icon { font-size:2.2rem; margin-bottom:1rem; display:block; }
+  .psia-component h3 { font-size:1.2rem; margin:0 0 .5rem; }
+  .psia-component .pc-id { font-family:var(--font-mono); font-size:.68rem; color:var(--vio); text-transform:uppercase; letter-spacing:.2em; margin-bottom:.5rem; }
+  .psia-component p { font-size:.9rem; color:var(--ink-2); line-height:1.65; margin:0; }
+  .psia-component .pc-key { font-family:var(--font-mono); font-size:.76rem; color:var(--vio); background:rgba(139,92,246,.07); border:1px solid rgba(139,92,246,.14); border-radius:8px; padding:.45rem .7rem; margin:.9rem 0 0; display:block; }
+
+  /* Quorum vote visualizer */
+  .quorum-demo { background:var(--panel); border:1px solid var(--vio-line); border-radius:16px; padding:2rem; }
+  .quorum-nodes { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+  .quorum-node {
+    display:flex; flex-direction:column; align-items:center; gap:.7rem;
+    background:rgba(139,92,246,.06); border:1px solid var(--vio-line);
+    border-radius:16px; padding:1.4rem 1.8rem; min-width:140px;
+    transition:all .4s ease;
+  }
+  .quorum-node.pillar-galahad { --pc:#00d4ff; }
+  .quorum-node.pillar-cerberus { --pc:#a78bfa; }
+  .quorum-node.pillar-codexdeus { --pc:#34d399; }
+  .quorum-node.voted-yes { border-color:var(--pc); box-shadow:0 0 24px color-mix(in srgb,var(--pc) 30%,transparent); }
+  .quorum-node.voted-no { border-color:rgb(239,68,68); box-shadow:0 0 24px rgba(239,68,68,.2); }
+  .qn-icon { width:48px; height:48px; border-radius:50%; border:2px solid var(--vio-line); display:flex; align-items:center; justify-content:center; font-size:1.4rem; transition:all .4s; }
+  .quorum-node.voted-yes .qn-icon { border-color:var(--pc); background:color-mix(in srgb,var(--pc) 15%,transparent); }
+  .quorum-node.voted-no .qn-icon { border-color:rgb(239,68,68); background:rgba(239,68,68,.1); }
+  .qn-name { font-family:var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-2); }
+  .qn-vote { font-family:var(--font-mono); font-size:.82rem; font-weight:700; padding:.3rem .8rem; border-radius:999px; transition:all .4s; }
+  .quorum-node.idle .qn-vote { background:rgba(139,92,246,.08); color:var(--vio); }
+  .quorum-node.voted-yes .qn-vote { background:color-mix(in srgb,var(--pc) 15%,transparent); color:var(--pc); }
+  .quorum-node.voted-no .qn-vote { background:rgba(239,68,68,.12); color:rgb(239,68,68); }
+
+  .quorum-result { text-align:center; padding:1.2rem; border-radius:12px; font-family:var(--font-mono); font-size:.88rem; transition:all .4s; }
+  .quorum-result.idle { background:rgba(139,92,246,.06); border:1px solid rgba(139,92,246,.15); color:var(--ink-3); }
+  .quorum-result.pass { background:rgba(52,211,153,.08); border:1px solid rgba(52,211,153,.25); color:#34d399; }
+  .quorum-result.fail { background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.25); color:rgb(239,68,68); }
+  .quorum-result.pending { background:rgba(139,92,246,.08); border:1px solid rgba(139,92,246,.2); color:var(--vio); animation:pulseBadge 1.2s ease-in-out infinite; }
+  @keyframes pulseBadge { 0%,100%{opacity:1}50%{opacity:.5} }
+
+  .btn-quorum { background:linear-gradient(135deg,var(--vio-2),var(--vio)); border:none; color:#fff; padding:.7rem 1.5rem; border-radius:10px; font-family:var(--font-mono); font-size:.82rem; cursor:pointer; margin-top:1.2rem; width:100%; transition:opacity .2s; }
+  .btn-quorum:hover { opacity:.85; }
+
+  /* Capability table */
+  .cap-table { width:100%; border-collapse:collapse; }
+  .cap-table th { font-family:var(--font-mono); font-size:.68rem; text-transform:uppercase; letter-spacing:.14em; color:var(--ink-3); padding:.6rem 1rem; border-bottom:1px solid var(--vio-line); text-align:left; }
+  .cap-table td { padding:.7rem 1rem; font-size:.88rem; border-bottom:1px solid rgba(139,92,246,.06); color:var(--ink-2); }
+  .cap-table td:first-child { font-family:var(--font-mono); font-size:.78rem; color:var(--vio); }
+  .cap-badge { padding:.2rem .6rem; border-radius:999px; font-family:var(--font-mono); font-size:.68rem; }
+  .cap-badge.active { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
+  .cap-badge.provisional { background:rgba(245,176,66,.1); color:#f5b042; border:1px solid rgba(245,176,66,.2); }
+  .cap-badge.expired { background:rgba(107,114,128,.1); color:rgb(107,114,128); border:1px solid rgba(107,114,128,.2); }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">Cerberus</a><span>›</span>
+    PSIA
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="psia-hero">
+  <canvas id="psia-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio);border-color:var(--vio-line)">Cerberus · Wing II · Sovereignty Architecture</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:20ch">
+      Provisional Sovereign<br/><span style="background:linear-gradient(90deg,var(--vio),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Intelligence Arbitration.</span>
+    </h1>
+    <p class="lead reveal" style="max-width:58ch">
+      PSIA is the sovereign arbitration layer that operates above the model's privilege ring. Every elevated action must pass through it. Three components work in concert — Quorum Engine, Ledger, Capability Authority — and no single component can act without the others.
+    </p>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--vio-line)">
+      <div class="stat"><div class="num" style="color:var(--vio)">3-of-3</div><div class="lbl">Quorum Requirement</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">Provisional</div><div class="lbl">Permission Model</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">Sovereign</div><div class="lbl">Privilege Ring</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">Append-Only</div><div class="lbl">Ledger Type</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- THREE COMPONENTS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Architecture</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Three components. One sovereign layer.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:1.8rem">Each component has a distinct role. They are not interchangeable and cannot substitute for one another. The architecture is intentionally non-monolithic — a compromise of one component does not grant authority exercised by another.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.4rem">
+
+      <div class="psia-component reveal">
+        <span class="pc-icon">⚖</span>
+        <div class="pc-id">Component I · Quorum Engine</div>
+        <h3>Unanimous consent — all three pillars</h3>
+        <p>Elevated capability grants require votes from all three Triumvirate pillars: Galahad (ethics), Cerberus (security), and CodexDeus (language/runtime). All three must vote YES. A single NO vote from any pillar blocks the grant — there is no majority, no tie-breaking, no override.</p>
+        <code class="pc-key">quorum.vote(pillar, capability) → YES | NO</code>
+      </div>
+
+      <div class="psia-component reveal">
+        <span class="pc-icon">📒</span>
+        <div class="pc-id">Component II · PSIA Ledger</div>
+        <h3>Append-only record of every arbitration</h3>
+        <p>Every quorum vote, every capability grant, every DENY decision, and every expiry event is recorded in the PSIA Ledger. The ledger is append-only and cryptographically chained — each entry seals the previous. Nothing can be removed. Audit is permanent by design.</p>
+        <code class="pc-key">ledger.append(event, seal=ed25519, chain=sha256)</code>
+      </div>
+
+      <div class="psia-component reveal">
+        <span class="pc-icon">🔑</span>
+        <div class="pc-id">Component III · Capability Authority</div>
+        <h3>Time-bounded permissions — provisional by default</h3>
+        <p>Following a successful quorum vote, the Capability Authority issues a time-bounded capability token. There are no permanent grants. Every capability expires. Renewal requires a new quorum vote. A revoked capability cannot be re-activated — only newly granted by fresh quorum.</p>
+        <code class="pc-key">capability.grant(action, ttl=3600, revocable=True)</code>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- QUORUM DEMO -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Interactive Demo</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Simulate a quorum vote.</h2>
+    <div class="quorum-demo reveal" x-data="{
+      pillars:[
+        {id:'galahad',name:'Galahad',icon:'⚔',col:'#00d4ff',vote:null},
+        {id:'cerberus',name:'Cerberus',icon:'🐺',col:'#a78bfa',vote:null},
+        {id:'codexdeus',name:'CodexDeus',icon:'📜',col:'#34d399',vote:null},
+      ],
+      scenario:'nominal',
+      running:false,
+      result:null,
+      async run(){
+        if(this.running) return;
+        this.running=true; this.result='pending';
+        this.pillars.forEach(p=>{ p.vote=null; });
+
+        const voteMap={
+          nominal:[true,true,true],
+          galahad_no:[false,true,true],
+          cerberus_no:[true,false,true],
+          codexdeus_no:[true,true,false],
+          all_no:[false,false,false],
+        };
+        const votes=voteMap[this.scenario]||[true,true,true];
+
+        for(let i=0;i<this.pillars.length;i++){
+          await new Promise(r=>setTimeout(r,700+i*400));
+          this.pillars[i].vote=votes[i];
+        }
+        await new Promise(r=>setTimeout(r,400));
+        this.result=votes.every(v=>v) ? 'pass' : 'fail';
+        this.running=false;
+      },
+      reset(){ this.pillars.forEach(p=>p.vote=null); this.result=null; this.running=false; }
+    }">
+      <div style="margin-bottom:1.4rem">
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem">Capability request scenario</div>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+          <template x-for="s in [
+            {v:'nominal',l:'All three approve'},
+            {v:'galahad_no',l:'Galahad vetoes'},
+            {v:'cerberus_no',l:'Cerberus vetoes'},
+            {v:'codexdeus_no',l:'CodexDeus vetoes'},
+            {v:'all_no',l:'All three veto'}
+          ]">
+            <button
+              style="padding:.4rem .9rem;border-radius:8px;font-family:var(--font-mono);font-size:.74rem;cursor:pointer;transition:all .25s;border:1px solid var(--vio-line)"
+              :style="scenario===s.v ? 'background:rgba(139,92,246,.25);border-color:var(--vio);color:var(--vio)' : 'background:transparent;color:var(--ink-3)'"
+              @click="scenario=s.v;reset()"
+              x-text="s.l">
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <div class="quorum-nodes">
+        <template x-for="p in pillars">
+          <div class="quorum-node"
+               :class="`pillar-${p.id} ${p.vote===null?'idle':p.vote?'voted-yes':'voted-no'}`">
+            <div class="qn-icon" x-text="p.icon"></div>
+            <div class="qn-name" x-text="p.name"></div>
+            <div class="qn-vote">
+              <span x-show="p.vote===null">—</span>
+              <span x-show="p.vote===true">✓ YES</span>
+              <span x-show="p.vote===false">✗ NO</span>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div class="quorum-result" :class="result??'idle'">
+        <span x-show="!result">Select a scenario and run the quorum vote.</span>
+        <span x-show="result==='pending'">Collecting votes from all three pillars…</span>
+        <span x-show="result==='pass'">✓ UNANIMOUS — Capability granted. Capability Authority issues time-bounded token. Ledger sealed.</span>
+        <span x-show="result==='fail'">✗ VETO — Quorum not reached. Capability denied. No grant issued. Denial sealed to Ledger.</span>
+      </div>
+
+      <button class="btn-quorum" @click="run()" :disabled="running">
+        <span x-show="!running">Run quorum vote →</span>
+        <span x-show="running">Collecting votes…</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITY TABLE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Capability Registry</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Sample active capability set.</h2>
+    <div style="border:1px solid var(--vio-line);border-radius:16px;overflow:hidden;background:var(--panel)" class="reveal">
+      <table class="cap-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Scope</th>
+            <th>TTL</th>
+            <th>Status</th>
+            <th>Quorum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>net.connect.external</td>
+            <td>Outbound TCP to approved hosts</td>
+            <td>1h</td>
+            <td><span class="cap-badge active">Active</span></td>
+            <td>3/3</td>
+          </tr>
+          <tr>
+            <td>fs.write.workspace</td>
+            <td>Write to designated workspace path</td>
+            <td>30m</td>
+            <td><span class="cap-badge active">Active</span></td>
+            <td>3/3</td>
+          </tr>
+          <tr>
+            <td>exec.spawn.isolated</td>
+            <td>Spawn child process in isolated namespace</td>
+            <td>15m</td>
+            <td><span class="cap-badge provisional">Provisional</span></td>
+            <td>3/3 (pending renewal)</td>
+          </tr>
+          <tr>
+            <td>mem.inspect.stack</td>
+            <td>Stack memory read for debugger</td>
+            <td>Expired</td>
+            <td><span class="cap-badge expired">Expired</span></td>
+            <td>3/3 (renewal required)</td>
+          </tr>
+          <tr>
+            <td>net.connect.unrestricted</td>
+            <td>Unrestricted outbound connections</td>
+            <td>—</td>
+            <td><span class="cap-badge expired">Denied</span></td>
+            <td>1/3 (Cerberus vetoed)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.82rem;color:var(--ink-3);margin-top:.8rem;font-family:var(--font-mono)">
+      Sample only — illustrates provisional permission model. All grants are time-bounded. Expired or denied capabilities require fresh quorum to re-grant.
+    </p>
+  </div>
+</section>
+
+<!-- CODE FRAME -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Implementation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">PSIA in code.</h2>
+    <div class="codeframe reveal">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem;color:var(--vio)">src/psia/gate/quorum_engine.py · QuorumEngine.arbitrate</span>
+      </div>
+      <div class="terminal">
+<span class="mu"># PSIA — Provisional Sovereign Intelligence Arbitration · Thirsty's Projects LLC</span><br/>
+<br/>
+<span class="pr">class</span> <span class="ok">QuorumEngine</span>:<br/>
+&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">arbitrate</span>(self, request: CapabilityRequest) -&gt; ArbitrationResult:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;votes: dict[Pillar, Vote] = {}<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">for</span> pillar <span class="pr">in</span> (Galahad, Cerberus, CodexDeus):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;votes[pillar] = pillar.<span class="ok">vote</span>(request)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if</span> votes[pillar] == Vote.NO:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="mu"># One NO immediately closes the vote — no point continuing</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">break</span><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;unanimous = <span class="ok">all</span>(v == Vote.YES <span class="pr">for</span> v <span class="pr">in</span> votes.values())<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;result = ArbitrationResult(<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;granted=unanimous,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;votes=votes,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;capability=self._cap_authority.<span class="ok">issue</span>(request) <span class="pr">if</span> unanimous <span class="pr">else</span> <span class="vl">None</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;self._ledger.<span class="ok">append</span>(result)  <span class="mu"># seal regardless of outcome</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> result<br/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RELATIONSHIP TO WATERFALL -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Pipeline Relationship</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Where PSIA sits in the Waterfall.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem" class="reveal">
+      <div style="border:1px solid rgba(139,92,246,.1);border-radius:12px;padding:1.2rem;background:rgba(139,92,246,.03);opacity:.5">
+        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);margin-bottom:.4rem">Stages 0–3</div>
+        <div style="font-size:.9rem;color:var(--ink-2)">Structural · Signature · Behavioral · Shadow</div>
+      </div>
+      <div style="border:1px solid rgba(139,92,246,.1);border-radius:12px;padding:1.2rem;background:rgba(139,92,246,.03);opacity:.5">
+        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);margin-bottom:.4rem">Stage 4</div>
+        <div style="font-size:.9rem;color:var(--ink-2)">OCEE constraint lattice evaluation</div>
+      </div>
+      <div style="border:2px solid var(--vio);border-radius:12px;padding:1.2rem;background:rgba(139,92,246,.08)">
+        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--vio);margin-bottom:.4rem">Stage 5 ← PSIA</div>
+        <div style="font-size:.9rem;color:var(--ink)">Quorum vote + capability grant. This is where PSIA fires.</div>
+      </div>
+      <div style="border:1px solid rgba(139,92,246,.1);border-radius:12px;padding:1.2rem;background:rgba(139,92,246,.03);opacity:.5">
+        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);margin-bottom:.4rem">Stage 6</div>
+        <div style="font-size:.9rem;color:var(--ink-2)">CCS memory seal — permanent audit record</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid var(--vio-line);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next wing</div>
+        <div style="font-size:1.1rem;font-weight:600">CodexDeus — Language &amp; Runtime</div>
+      </div>
+      <a class="btn btn-primary" href="../codexdeus/index.html">Enter CodexDeus →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── PSIA canvas: three Triumvirate nodes in triangle, vote packets flying ── */
+(function(){
+  const cv=document.getElementById('psia-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const packets=[];
+
+  function getNodes(){
+    const cx=W*.72, cy=H*.46, r=140;
+    return [
+      { x:cx+Math.cos(-Math.PI/2)*r, y:cy+Math.sin(-Math.PI/2)*r, col:'rgba(0,212,255,', name:'G' },
+      { x:cx+Math.cos(-Math.PI/2+Math.PI*2/3)*r, y:cy+Math.sin(-Math.PI/2+Math.PI*2/3)*r, col:'rgba(139,92,246,', name:'C' },
+      { x:cx+Math.cos(-Math.PI/2+Math.PI*4/3)*r, y:cy+Math.sin(-Math.PI/2+Math.PI*4/3)*r, col:'rgba(52,211,153,', name:'D' },
+    ];
+  }
+
+  function getCenter(){ return {x:W*.72, y:H*.46}; }
+
+  function spawnPacket(){
+    const nodes=getNodes();
+    const center=getCenter();
+    const from=nodes[Math.floor(Math.random()*3)];
+    const toCenter=Math.random()<.6;
+    const to=toCenter ? center : nodes[Math.floor(Math.random()*3)];
+    if(!toCenter && to===from) return;
+    const yes=Math.random()<.82;
+    packets.push({ x:from.x, y:from.y, tx:to.x, ty:to.y, col:from.col, yes, speed:2+Math.random(), opacity:1, r:3 });
+  }
+  setInterval(spawnPacket, 600);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const nodes=getNodes();
+    const center=getCenter();
+
+    // triangle connections
+    for(let i=0;i<3;i++){
+      const a=nodes[i], b=nodes[(i+1)%3];
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle='rgba(139,92,246,0.08)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    // center spokes
+    nodes.forEach(n=>{
+      ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(center.x,center.y);
+      ctx.strokeStyle='rgba(139,92,246,0.06)'; ctx.lineWidth=.8; ctx.stroke();
+    });
+
+    // center node
+    const cGrd=ctx.createRadialGradient(center.x,center.y,0,center.x,center.y,28);
+    cGrd.addColorStop(0,'rgba(139,92,246,.4)');
+    cGrd.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(center.x,center.y,28,0,Math.PI*2);
+    ctx.fillStyle=cGrd; ctx.fill();
+    ctx.beginPath(); ctx.arc(center.x,center.y,14,0,Math.PI*2);
+    ctx.strokeStyle='rgba(139,92,246,.6)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='rgba(139,92,246,.2)'; ctx.fill();
+    ctx.fillStyle='rgba(167,139,250,.7)'; ctx.font='bold 11px JetBrains Mono'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('⚖',center.x,center.y);
+
+    // pillar nodes
+    nodes.forEach(n=>{
+      const grd=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,34);
+      grd.addColorStop(0,n.col+'0.35)');
+      grd.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(n.x,n.y,34,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+
+      ctx.beginPath(); ctx.arc(n.x,n.y,18,0,Math.PI*2);
+      ctx.strokeStyle=n.col+'0.7)'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.fillStyle=n.col+'0.2)'; ctx.fill();
+      ctx.fillStyle=n.col+'0.9)'; ctx.font='bold 12px JetBrains Mono'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(n.name,n.x,n.y);
+    });
+
+    // packets
+    for(let i=packets.length-1;i>=0;i--){
+      const p=packets[i];
+      const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<6){ p.opacity-=.08; }
+      else{ p.x+=dx/dist*p.speed; p.y+=dy/dist*p.speed; }
+      if(p.opacity<=0){ packets.splice(i,1); continue; }
+      const col=p.yes?p.col:`rgba(239,68,68,`;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=col+`${p.opacity*.8})`; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r+4,0,Math.PI*2);
+      ctx.strokeStyle=col+`${p.opacity*.2})`; ctx.lineWidth=1; ctx.stroke();
+    }
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

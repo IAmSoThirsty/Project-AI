@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Thirsty-Lang — The Constitutional Language · CodexDeus · Project-AI</title>
+<meta name="description" content="Thirsty-Lang is the constitutional programming language of Project-AI. The type system encodes the AGI Charter. Non-compliant programs are type errors — they cannot be written, only rejected."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --em:#34d399; --em-2:#059669; --em-dim:rgba(52,211,153,.1); --em-line:rgba(52,211,153,.2); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--em); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  .tl-hero { position:relative; min-height:88vh; display:flex; align-items:center; overflow:hidden; }
+  #tl-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .tl-hero .container { position:relative; z-index:1; padding-top:7rem; padding-bottom:5rem; }
+
+  /* Feature cards */
+  .tl-feature {
+    border:1px solid var(--em-line); border-radius:16px; padding:1.8rem;
+    background:linear-gradient(135deg,var(--panel),var(--em-dim));
+    position:relative; overflow:hidden;
+    transition:transform .35s,border-color .35s,box-shadow .35s;
+  }
+  .tl-feature:hover { transform:translateY(-4px); border-color:rgba(52,211,153,.5); box-shadow:0 0 40px rgba(52,211,153,.12); }
+  .tl-feature::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--em),var(--em-2)); }
+  .tl-feature .tf-icon { font-size:1.8rem; margin-bottom:.8rem; }
+  .tl-feature h3 { font-size:1.05rem; margin:0 0 .4rem; }
+  .tl-feature p { font-size:.88rem; color:var(--ink-2); line-height:1.6; margin:0; }
+
+  /* REPL-style code examples with tabs */
+  .code-tabs { background:var(--panel); border:1px solid var(--em-line); border-radius:16px; overflow:hidden; }
+  .code-tab-bar { display:flex; border-bottom:1px solid var(--em-line); background:rgba(52,211,153,.04); }
+  .code-tab { padding:.6rem 1.2rem; font-family:var(--font-mono); font-size:.74rem; cursor:pointer; color:var(--ink-3); border-right:1px solid var(--em-line); transition:all .2s; }
+  .code-tab.active { color:var(--em); background:rgba(52,211,153,.1); }
+  .code-tab:hover:not(.active) { color:var(--ink); }
+  .code-panel { padding:1.6rem; display:none; }
+  .code-panel.active { display:block; }
+  .tl-code { font-family:var(--font-mono); font-size:.82rem; line-height:1.9; color:var(--ink-2); }
+  .tl-code .kw { color:#7dd3fc; }  /* blue — keyword */
+  .tl-code .ty { color:var(--em); }  /* green — type */
+  .tl-code .st { color:#fdba74; }  /* orange — string/value */
+  .tl-code .cm { color:var(--ink-3); font-style:italic; }  /* comment */
+  .tl-code .err { color:rgb(239,68,68); background:rgba(239,68,68,.06); border-radius:3px; padding:0 .2rem; }  /* type error */
+  .tl-code .ok { color:#34d399; }
+
+  /* Type system property table */
+  .type-prop { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
+  .tp-row { display:grid; grid-template-columns:auto 1fr; gap:.8rem; align-items:start; padding:.9rem 1rem; border:1px solid var(--em-line); border-radius:10px; background:rgba(52,211,153,.04); }
+  .tp-sym { font-family:var(--font-mono); font-size:1.1rem; color:var(--em); }
+  .tp-body .tp-name { font-size:.9rem; font-weight:600; margin-bottom:.2rem; }
+  .tp-body .tp-desc { font-size:.82rem; color:var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">CodexDeus</a><span>›</span>
+    Thirsty-Lang
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="tl-hero">
+  <canvas id="tl-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em);border-color:var(--em-line)">CodexDeus · UTF Tier 0 · The Constitutional Language</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:20ch">
+      <span style="background:linear-gradient(90deg,var(--em),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Thirsty-Lang.</span><br/>
+      Where the type system is the law.
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      Thirsty-Lang is not a language with safety rules. It is a language where safety is the type system. Every constitutional invariant from the AGI Charter is encoded as a type constraint. You cannot write a noncompliant program — you can only fail to type-check.
+    </p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem" class="reveal">
+      <a class="btn btn-primary" href="utf.html" style="background:linear-gradient(135deg,var(--em-2),var(--em));border-color:var(--em)">Full UTF architecture →</a>
+      <a class="btn btn-ghost" href="tarl.html" style="border-color:var(--em-line);color:var(--em)">T.A.R.L. rules →</a>
+    </div>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--em-line)">
+      <div class="stat"><div class="num" style="color:var(--em)">UTF T0</div><div class="lbl">Tier Position</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Typed</div><div class="lbl">Safety Model</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Compile-time</div><div class="lbl">Enforcement</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">→ TSCG-B</div><div class="lbl">Compile Target</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY FEATURES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Language Properties</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.6rem">What makes Thirsty-Lang constitutional.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem">
+
+      <div class="tl-feature reveal">
+        <div class="tf-icon">🔒</div>
+        <h3>Constitutional type system</h3>
+        <p>The five AGI Charter invariants are first-class type constraints. The compiler enforces them at every call site — no runtime check needed because the type system already ensures the program is sound.</p>
+      </div>
+
+      <div class="tl-feature reveal">
+        <div class="tf-icon">⚡</div>
+        <h3>Compile-time enforcement, zero runtime cost</h3>
+        <p>Because constraints are checked at compile time, the enforced runtime pays no overhead for constitutional compliance. A program that compiles is already proven compliant — no runtime policy check required.</p>
+      </div>
+
+      <div class="tl-feature reveal">
+        <div class="tf-icon">🧬</div>
+        <h3>Lineage-traced types</h3>
+        <p>Every value carries a lineage annotation: which T.A.R.L. rule permits its creation, which capability scope it belongs to, which invariant it is constrained by. Lineage cannot be forged — it is assigned at creation by the compiler.</p>
+      </div>
+
+      <div class="tl-feature reveal">
+        <div class="tf-icon">📜</div>
+        <h3>Constitutional closures</h3>
+        <p>Closures in Thirsty-Lang close over not just values but constitutional scope. A closure cannot capture a capability it was not granted. Capability confinement is a property of the closure type, not a runtime check.</p>
+      </div>
+
+      <div class="tl-feature reveal">
+        <div class="tf-icon">🔗</div>
+        <h3>Sealed compilation chain</h3>
+        <p>Every compiled Thirsty-Lang program is sealed to the CCS as it passes through each tier: T.O.G. parse → T.A.R.L. type check → TSCG IR → TSCG-B bytecode. No tier can be skipped. The audit chain is the compile chain.</p>
+      </div>
+
+      <div class="tl-feature reveal">
+        <div class="tf-icon">🚫</div>
+        <h3>No escape hatch</h3>
+        <p>Thirsty-Lang has no <code>unsafe</code> block, no FFI that bypasses the type system, no <code>eval</code>. The constitutional type system is total. There is no syntactic way to express a noncompliant program.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CODE EXAMPLES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Syntax Sampler</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Thirsty-Lang in practice.</h2>
+    <div class="code-tabs reveal" x-data="{tab:'basic'}">
+      <div class="code-tab-bar">
+        <div class="code-tab" :class="{active:tab==='basic'}" @click="tab='basic'">Invariant binding</div>
+        <div class="code-tab" :class="{active:tab==='cap'}" @click="tab='cap'">Capability types</div>
+        <div class="code-tab" :class="{active:tab==='err'}" @click="tab='err'">Type errors</div>
+        <div class="code-tab" :class="{active:tab==='close'}" @click="tab='close'">Constitutional closure</div>
+      </div>
+
+      <div class="code-panel" :class="{active:tab==='basic'}">
+        <div class="tl-code">
+<span class="cm">-- Thirsty-Lang · invariant binding syntax</span><br/>
+<span class="cm">-- The compiler checks this at every call site that touches the bound predicate.</span><br/>
+<br/>
+<span class="kw">invariant</span> <span class="ty">SafetyHumanLife</span> : <span class="ty">Invariant</span> where<br/>
+&nbsp;&nbsp;<span class="kw">holds</span> (state : <span class="ty">ExecutionState</span>) : <span class="ty">Bool</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;= <span class="kw">not</span> state.endangers_human<br/>
+<br/>
+<span class="cm">-- Applying the invariant as a type constraint:</span><br/>
+<span class="kw">def</span> <span class="ty">safeAction</span> (s : <span class="ty">ExecutionState</span>) : <span class="ty">Action</span> <span class="kw">requires</span> <span class="ty">SafetyHumanLife</span> s<br/>
+&nbsp;&nbsp;= Action.perform s<br/>
+<br/>
+<span class="cm">-- Any call to safeAction where SafetyHumanLife may not hold is a TYPE ERROR.</span><br/>
+<span class="cm">-- The compiler rejects it. No runtime check. No possibility of bypass.</span>
+        </div>
+      </div>
+
+      <div class="code-panel" :class="{active:tab==='cap'}">
+        <div class="tl-code">
+<span class="cm">-- Capability types: what the action is allowed to do is part of its type.</span><br/>
+<br/>
+<span class="kw">capability</span> <span class="ty">NetConnect</span> : <span class="ty">Capability</span> where<br/>
+&nbsp;&nbsp;scope  = <span class="st">"net.connect.external"</span><br/>
+&nbsp;&nbsp;ttl    = <span class="st">3600</span><br/>
+&nbsp;&nbsp;quorum = <span class="ty">Full</span><br/>
+<br/>
+<span class="cm">-- A function that uses NetConnect must have it in its capability signature:</span><br/>
+<span class="kw">def</span> <span class="ty">fetchData</span> (url : <span class="ty">Url</span>) : <span class="ty">IO</span> <span class="ty">Bytes</span> <span class="kw">with</span> [<span class="ty">NetConnect</span>]<br/>
+&nbsp;&nbsp;= Http.get url<br/>
+<br/>
+<span class="cm">-- Calling fetchData without an active NetConnect grant is a TYPE ERROR.</span><br/>
+<span class="cm">-- The capability is visible at the call site — no ambient authority.</span>
+        </div>
+      </div>
+
+      <div class="code-panel" :class="{active:tab==='err'}">
+        <div class="tl-code">
+<span class="cm">-- TYPE ERRORS produced by constitutional violations:</span><br/>
+<br/>
+<span class="cm">-- Error 1: invariant not provably held</span><br/>
+<span class="kw">def</span> <span class="ty">dangerousAction</span> (s : <span class="ty">ExecutionState</span>) : <span class="ty">Action</span><br/>
+&nbsp;&nbsp;= Action.perform s<br/>
+<span class="err">-- ERROR: cannot prove SafetyHumanLife s at call to Action.perform</span><br/>
+<span class="err">-- Missing: proof that s.endangers_human = false</span><br/>
+<br/>
+<span class="cm">-- Error 2: undeclared capability use</span><br/>
+<span class="kw">def</span> <span class="ty">unlicensedFetch</span> (url : <span class="ty">Url</span>) : <span class="ty">IO</span> <span class="ty">Bytes</span><br/>
+&nbsp;&nbsp;= Http.get url<br/>
+<span class="err">-- ERROR: Http.get requires capability [NetConnect] which is not in scope</span><br/>
+<br/>
+<span class="cm">-- These are compile-time errors. The program does not compile. Done.</span>
+        </div>
+      </div>
+
+      <div class="code-panel" :class="{active:tab==='close'}">
+        <div class="tl-code">
+<span class="cm">-- Constitutional closures: capabilities do not escape their scope.</span><br/>
+<br/>
+<span class="kw">def</span> <span class="ty">withNetAccess</span> (f : (<span class="ty">Url</span> → <span class="ty">IO</span> <span class="ty">Bytes</span>) <span class="kw">with</span> [<span class="ty">NetConnect</span>]) : <span class="ty">IO</span> <span class="ty">Bytes</span><br/>
+&nbsp;&nbsp;= <span class="kw">capability</span> <span class="ty">NetConnect</span> <span class="kw">in</span> f someUrl<br/>
+<br/>
+<span class="cm">-- The NetConnect capability is scoped to the body of withNetAccess.</span><br/>
+<span class="cm">-- f cannot be called outside this scope with a NetConnect grant:</span><br/>
+<br/>
+<span class="kw">let</span> leak = withNetAccess <span class="ty">identity</span><br/>
+leak someOtherUrl<br/>
+<span class="err">-- ERROR: [NetConnect] capability required by leak is no longer in scope</span><br/>
+<span class="cm">-- Capability confinement is a property of the type — not a runtime check.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPE SYSTEM PROPERTIES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Type System</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The type system's constitutional properties.</h2>
+    <div class="type-prop reveal">
+      <div class="tp-row">
+        <div class="tp-sym">⊢</div>
+        <div class="tp-body">
+          <div class="tp-name">Soundness</div>
+          <div class="tp-desc">If a program type-checks, it satisfies all constitutional invariants. There are no type-correct programs that violate the charter.</div>
+        </div>
+      </div>
+      <div class="tp-row">
+        <div class="tp-sym">∀</div>
+        <div class="tp-body">
+          <div class="tp-name">Universal enforcement</div>
+          <div class="tp-desc">Every expression in every program is subject to the full constraint set. There is no "unchecked" subset of the language.</div>
+        </div>
+      </div>
+      <div class="tp-row">
+        <div class="tp-sym">→</div>
+        <div class="tp-body">
+          <div class="tp-name">Compile-time-only</div>
+          <div class="tp-desc">Constitutional checks occur at compile time. The running program has already been proven compliant — no runtime overhead for invariant checks.</div>
+        </div>
+      </div>
+      <div class="tp-row">
+        <div class="tp-sym">⊗</div>
+        <div class="tp-body">
+          <div class="tp-name">Capability linearity</div>
+          <div class="tp-desc">Capabilities are linear — they cannot be duplicated, shared across scopes, or retained past their TTL. The type system tracks this.</div>
+        </div>
+      </div>
+      <div class="tp-row">
+        <div class="tp-sym">🔗</div>
+        <div class="tp-body">
+          <div class="tp-name">Proof-carrying code</div>
+          <div class="tp-desc">Every compiled function carries a proof certificate: a compact witness that its type-checking derivation satisfies all active invariants.</div>
+        </div>
+      </div>
+      <div class="tp-row">
+        <div class="tp-sym">✗</div>
+        <div class="tp-body">
+          <div class="tp-name">No escape hatch</div>
+          <div class="tp-desc">No <code>unsafe</code>, no raw FFI, no <code>eval</code>. The type system is total. Noncompliant programs are syntactically unrepresentable.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid var(--em-line);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in CodexDeus</div>
+        <div style="font-size:1.1rem;font-weight:600">T.A.R.L. — Typed Assertion Rule Language</div>
+      </div>
+      <a class="btn btn-primary" href="tarl.html" style="background:linear-gradient(135deg,var(--em-2),var(--em));border-color:var(--em)">Policy language →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── Thirsty-Lang canvas: AST node tree building ── */
+(function(){
+  const cv=document.getElementById('tl-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const nodes=[];
+  const edges=[];
+  const labels=['type','→','∀','⊢','∃','λ','::','holds','require','with','Cap','Inv'];
+
+  function spawnTree(rootX,rootY,depth,parentNode){
+    if(depth>3) return;
+    const n={x:rootX,y:rootY,r:depth===0?8:6-depth,label:labels[Math.floor(Math.random()*labels.length)],depth,opacity:0,born:t};
+    nodes.push(n);
+    if(parentNode) edges.push({a:parentNode,b:n});
+    if(depth<3){
+      const children=depth===0?3:Math.floor(Math.random()*2)+1;
+      for(let i=0;i<children;i++){
+        const spread=(depth===0?180:90)/(children);
+        const baseAngle=Math.PI*.5;
+        const angle=baseAngle+(i-(children-1)/2)*spread*(Math.PI/180);
+        const dist=80-depth*18;
+        const nx=rootX+Math.cos(angle)*dist;
+        const ny=rootY+Math.sin(angle)*dist;
+        setTimeout(()=>spawnTree(nx,ny,depth+1,n),300+i*200+depth*400);
+      }
+    }
+  }
+
+  function init(){
+    nodes.length=0; edges.length=0;
+    const cx=W*.72, cy=H*.3;
+    spawnTree(cx,cy,0,null);
+    setTimeout(()=>{ nodes.length=0; edges.length=0; init(); }, 12000);
+  }
+  setTimeout(init,500);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    edges.forEach(e=>{
+      const alpha=Math.min(e.a.opacity,e.b.opacity)*.25;
+      ctx.beginPath(); ctx.moveTo(e.a.x,e.a.y); ctx.lineTo(e.b.x,e.b.y);
+      ctx.strokeStyle=`rgba(52,211,153,${alpha})`; ctx.lineWidth=.8; ctx.stroke();
+    });
+
+    nodes.forEach(n=>{
+      const age=t-n.born;
+      n.opacity=Math.min(1,age/40)*.45;
+      const grd=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*3);
+      grd.addColorStop(0,`rgba(52,211,153,${n.opacity*.5})`);
+      grd.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*3,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(52,211,153,${n.opacity*.8})`; ctx.fill();
+      if(n.depth<=1){
+        ctx.fillStyle=`rgba(52,211,153,${n.opacity*.6})`;
+        ctx.font=`${11-n.depth*2}px JetBrains Mono`;
+        ctx.textAlign='left';
+        ctx.fillText(n.label,n.x+n.r+4,n.y+4);
+      }
+    });
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

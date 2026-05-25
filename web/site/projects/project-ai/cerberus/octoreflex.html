@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>OctoReflex — eBPF Syscall Containment · Project-AI Library</title>
+<meta name="description" content="OctoReflex intercepts every model action at the syscall surface via eBPF. A control-theoretic closed-loop enforces constitutional policy before any action reaches the kernel."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:#a78bfa; }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* Full-bleed hero with live animation */
+  .octo-hero { position:relative; min-height:92vh; display:flex; align-items:center; overflow:hidden; }
+  #octo-canvas { position:absolute; inset:0; z-index:0; }
+  .octo-hero .container { position:relative; z-index:1; padding-top:clamp(4rem,8vw,7rem); padding-bottom:clamp(3rem,6vw,5rem); }
+
+  .crb-eye { font-family:var(--font-mono); font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:#a78bfa; display:inline-flex; align-items:center; gap:.55rem; }
+  .crb-eye::before { content:""; width:22px; height:1px; background:linear-gradient(90deg,transparent,#a78bfa); }
+  .crb-grad { background:linear-gradient(135deg,#e8edff 0%,#a78bfa 50%,#8b5cf6 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  /* Control loop visual — horizontal steps */
+  .loop-steps { display:flex; gap:0; align-items:stretch; overflow-x:auto; padding-bottom:.5rem; }
+  .loop-step {
+    flex:1; min-width:160px; padding:1.2rem 1rem;
+    border:1px solid rgba(139,92,246,.2); border-right:none;
+    background:linear-gradient(180deg,var(--panel) 0%,rgba(139,92,246,.04) 100%);
+    display:flex; flex-direction:column; gap:.5rem; position:relative;
+  }
+  .loop-step:first-child { border-radius:12px 0 0 12px; }
+  .loop-step:last-child { border-right:1px solid rgba(139,92,246,.2); border-radius:0 12px 12px 0; }
+  .loop-step.active { border-color:rgba(139,92,246,.5); background:linear-gradient(180deg,rgba(139,92,246,.1) 0%,rgba(139,92,246,.06) 100%); }
+  .loop-step .ls-num { font-family:var(--font-mono); font-size:.65rem; color:#a78bfa; letter-spacing:.15em; text-transform:uppercase; }
+  .loop-step h4 { font-size:.95rem; margin:0; }
+  .loop-step p { font-size:.82rem; color:var(--ink-2); margin:0; line-height:1.5; flex:1; }
+  .arrow-right { position:absolute; right:-1px; top:50%; transform:translateY(-50%); width:12px; height:12px; border-top:2px solid #a78bfa; border-right:2px solid #a78bfa; transform:translateY(-50%) rotate(45deg); background:var(--panel); z-index:2; }
+
+  /* Terminal typewriter */
+  .tw-cursor { display:inline-block; width:2px; height:1em; background:var(--cyan); animation:blink .75s step-end infinite; vertical-align:text-bottom; margin-left:1px; }
+  @keyframes blink { 50%{opacity:0} }
+
+  /* Benchmark panel */
+  .bench-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:1rem; }
+  .bench-card { border:1px solid rgba(139,92,246,.2); border-radius:14px; padding:1.4rem; background:var(--panel); text-align:center; }
+  .bench-val { font-family:var(--font-display); font-size:2rem; font-weight:700; background:linear-gradient(135deg,#a78bfa,#8b5cf6); -webkit-background-clip:text; background-clip:text; color:transparent; line-height:1.1; }
+  .bench-unit { font-family:var(--font-mono); font-size:.68rem; color:var(--ink-3); text-transform:uppercase; letter-spacing:.14em; margin-top:.3rem; }
+
+  /* Live log feed */
+  .log-feed { background:var(--panel); border:1px solid rgba(139,92,246,.2); border-radius:14px; padding:1.2rem; font-family:var(--font-mono); font-size:.76rem; line-height:1.9; max-height:280px; overflow-y:auto; }
+  .log-allow { color:#34d399; }
+  .log-deny { color:#f87171; }
+  .log-rate { color:var(--amber); }
+  .log-meta { color:var(--ink-3); }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">Cerberus</a><span>›</span>
+    OctoReflex
+  </div>
+</nav>
+
+<!-- FULL-BLEED HERO -->
+<section class="octo-hero">
+  <canvas id="octo-canvas"></canvas>
+  <div class="container">
+    <span class="crb-eye reveal">Cerberus · Wing II · Containment Engine</span>
+    <h1 class="reveal" style="margin-top:1.4rem;max-width:16ch">
+      <span class="crb-grad">OctoReflex.</span><br/>
+      The kernel says no.
+    </h1>
+    <p class="reveal" style="max-width:56ch;font-size:1.1rem;line-height:1.7;color:var(--ink-2);margin-top:1.6rem">
+      eBPF programs attach to the kernel's LSM and tracepoint hooks. Every syscall the model produces passes through an OctoReflex gate before execution. The gate runs <code>ocee.holds()</code>, checks rate budgets, and — if policy says no — returns <code>EPERM</code> before the instruction is retired. The model never knew the kernel was listening.
+    </p>
+    <div class="stats reveal" style="margin-top:2rem;border-color:rgba(139,92,246,.2)">
+      <div class="stat"><div class="num" style="color:#a78bfa">&lt;1ms</div><div class="lbl">Gate Latency</div></div>
+      <div class="stat"><div class="num" style="color:#a78bfa">eBPF</div><div class="lbl">Substrate</div></div>
+      <div class="stat"><div class="num" style="color:#a78bfa">L1–L3</div><div class="lbl">Stack Layers</div></div>
+      <div class="stat"><div class="num" style="color:#a78bfa">∞</div><div class="lbl">Syscall Coverage</div></div>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem" class="reveal">
+      <a class="btn btn-primary" href="https://doi.org/10.5281/zenodo.18726064" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);box-shadow:0 10px 40px -10px rgba(139,92,246,.5)">Foundational paper → DOI</a>
+      <a class="btn btn-ghost" href="nirl.html" style="border-color:rgba(139,92,246,.3);color:#a78bfa">NIRL →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTROL LOOP -->
+<section class="section--tight">
+  <div class="container">
+    <span class="crb-eye reveal">Architecture</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">The closed-loop controller.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:1.6rem">OctoReflex is not a firewall. It is a control-theoretic system: observe state, compare to policy, act, seal. The loop re-arms after every decision. Violations trigger NIRL reflexes and are sealed into the CCS before any upstream process is notified.</p>
+    <div class="loop-steps reveal">
+      <div class="loop-step active">
+        <div class="ls-num">Step 01</div>
+        <h4>Observe</h4>
+        <p>The eBPF program captures syscall arguments, process context, and telemetry snapshot at the tracepoint.</p>
+        <div class="arrow-right"></div>
+      </div>
+      <div class="loop-step">
+        <div class="ls-num">Step 02</div>
+        <h4>Compare</h4>
+        <p>Observed state is compared against constitutional policy via <code>ocee.holds()</code>. Rate budgets are checked against the rolling window.</p>
+        <div class="arrow-right"></div>
+      </div>
+      <div class="loop-step">
+        <div class="ls-num">Step 03</div>
+        <h4>Act</h4>
+        <p>If policy holds: permit. If not: return <code>EPERM</code> and arm NIRL reflex. The instruction never executes on denial.</p>
+        <div class="arrow-right"></div>
+      </div>
+      <div class="loop-step">
+        <div class="ls-num">Step 04</div>
+        <h4>Seal</h4>
+        <p>Every decision — allow or deny — is sealed into the Constitutional Code Store with cryptographic attestation before the gate returns.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNOTATED CODE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="crb-eye reveal">Implementation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The gate, fully annotated.</h2>
+    <div class="codeframe reveal">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem">octoreflex/loop.py · @octoreflex.gate · Thirsty's Projects LLC</span>
+      </div>
+      <div class="terminal" id="octo-code">
+<span class="vl">@octoreflex.gate</span>(<span class="ok">"net.connect"</span>) <span class="mu">← eBPF hook on net_connect tracepoint</span><br/>
+<span class="pr">def</span> <span class="ok">guard_net_connect</span>(action, context):<br/>
+&nbsp;&nbsp;<span class="mu"># ── Step 01: Observe ────────────────────────────────────</span><br/>
+&nbsp;&nbsp;state = telemetry.snapshot(action)  <span class="mu">← zero-copy state capture</span><br/>
+<br/>
+&nbsp;&nbsp;<span class="mu"># ── Step 02: Compare ────────────────────────────────────</span><br/>
+&nbsp;&nbsp;<span class="pr">if not</span> ocee.holds(<span class="ok">"capability.net.egress.public"</span>, state):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nirl.arm(<span class="ok">"cap_violation"</span>, severity=<span class="vl">4</span>) <span class="mu">← NIRL reflex armed</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">raise</span> Denied(reason=<span class="ok">"capability_unbound"</span>, sealed=<span class="vl">True</span>)<br/>
+<br/>
+&nbsp;&nbsp;<span class="pr">if not</span> ocee.within(<span class="ok">"rate.budget"</span>, window=<span class="vl">60</span>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nirl.reflex(<span class="ok">"rate_overrun"</span>, severity=<span class="vl">3</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">raise</span> Denied(reason=<span class="ok">"rate_exhausted"</span>, sealed=<span class="vl">True</span>)<br/>
+<br/>
+&nbsp;&nbsp;<span class="mu"># ── Step 03: Act ────────────────────────────────────────</span><br/>
+&nbsp;&nbsp;decision = engine.execute(action, context) <span class="mu">← policy satisfied</span><br/>
+<br/>
+&nbsp;&nbsp;<span class="mu"># ── Step 04: Seal ───────────────────────────────────────</span><br/>
+&nbsp;&nbsp;ccs.seal(decision, attest=<span class="vl">True</span>) <span class="mu">← cryptographic attestation</span><br/>
+&nbsp;&nbsp;<span class="pr">return</span> decision <span class="mu">← returns only after seal completes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE LOG SIMULATION -->
+<section class="section--tight">
+  <div class="container">
+    <span class="crb-eye reveal">Live Gate Log</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">OctoReflex decisions, as they happen.</h2>
+    <div class="log-feed reveal" id="octo-log">
+      <div class="log-meta">[OctoReflex] boot · gate_set=5_invariants · hooks=LSM+tracepoint · rfc3161=connected</div>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3);margin-top:.7rem">Simulated gate log. Real log is written to the Constitutional Code Store.</p>
+  </div>
+</section>
+
+<!-- BENCHMARKS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="crb-eye reveal">Performance</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Governance at kernel speed.</h2>
+    <div class="bench-grid reveal">
+      <div class="bench-card">
+        <div class="bench-val">&lt;0.8ms</div>
+        <div class="bench-unit">P99 gate latency</div>
+      </div>
+      <div class="bench-card">
+        <div class="bench-val">0</div>
+        <div class="bench-unit">Copy operations · zero-copy path</div>
+      </div>
+      <div class="bench-card">
+        <div class="bench-val">100%</div>
+        <div class="bench-unit">Syscall surface coverage</div>
+      </div>
+      <div class="bench-card">
+        <div class="bench-val">∞</div>
+        <div class="bench-unit">Rearm speed after violation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAVIGATION -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid rgba(139,92,246,.25);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in Cerberus</div>
+        <div style="font-size:1.1rem;font-weight:600">NIRL → Native Immune Reflex Layer</div>
+      </div>
+      <a class="btn btn-ghost" href="nirl.html" style="border-color:rgba(139,92,246,.3);color:#a78bfa">Enter NIRL →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* OctoReflex hero canvas — syscall intercept visualization */
+(function(){
+  const cv=document.getElementById('octo-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  /* Flowing syscall packets */
+  const packets=[];
+  function spawnPacket(){
+    const denied=Math.random()<.28;
+    packets.push({
+      x:0.1+Math.random()*0.05, y:0.2+Math.random()*.6,
+      vx:0.0012+Math.random()*.0008,
+      col:denied?'rgba(248,113,113,':'rgba(52,211,153,',
+      denied, opacity:0, phase:'entering', gateX:0.58
+    });
+  }
+  setInterval(spawnPacket,600);
+
+  /* Particle field */
+  const pts=[];
+  for(let i=0;i<80;i++) pts.push({x:Math.random(),y:Math.random(),alpha:Math.random()*.12+.03,size:Math.random()*.5+.2});
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // particles
+    pts.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x*W,p.y*H,p.size,0,Math.PI*2); ctx.fillStyle=`rgba(139,92,246,${p.alpha})`; ctx.fill(); });
+
+    // gate line
+    const gx=W*.58;
+    const gg=ctx.createLinearGradient(gx,0,gx,H);
+    gg.addColorStop(0,'rgba(139,92,246,0)'); gg.addColorStop(.5,'rgba(167,139,250,0.35)'); gg.addColorStop(1,'rgba(139,92,246,0)');
+    ctx.fillRect(gx-1,0,2,H); ctx.fillStyle=gg; ctx.fillRect(gx-1,0,2,H);
+
+    // gate label
+    ctx.font='600 11px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(167,139,250,0.5)'; ctx.textAlign='center';
+    ctx.fillText('OCTOREFLEX GATE',gx,24);
+
+    // packets
+    for(let i=packets.length-1;i>=0;i--){
+      const p=packets[i];
+      if(p.phase==='entering') p.opacity=Math.min(1,p.opacity+.04);
+      p.x+=p.vx;
+      const px=p.x*W, py=p.y*H;
+      // hit gate
+      if(p.x*W>=gx && p.phase==='entering'){
+        p.phase=p.denied?'denying':'passing';
+        if(p.denied){ p.vx=0; }
+      }
+      if(p.phase==='denying'){ p.opacity-=.025; }
+      else if(p.phase==='passing' && p.x>1.05){ packets.splice(i,1); continue; }
+      if(p.opacity<=0){ packets.splice(i,1); continue; }
+      // draw packet
+      ctx.beginPath(); ctx.arc(px,py,4,0,Math.PI*2);
+      ctx.fillStyle=p.col+p.opacity+')'; ctx.fill();
+      // trail
+      ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px-30*p.vx*800,py);
+      ctx.strokeStyle=p.col+(p.opacity*.3)+')'; ctx.lineWidth=1.5; ctx.stroke();
+      // deny cross
+      if(p.phase==='denying' && p.opacity>.4){
+        ctx.beginPath(); ctx.moveTo(px-5,py-5); ctx.lineTo(px+5,py+5); ctx.moveTo(px+5,py-5); ctx.lineTo(px-5,py+5);
+        ctx.strokeStyle='rgba(248,113,113,0.7)'; ctx.lineWidth=1.5; ctx.stroke();
+      }
+    }
+    t++; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* Simulated live log */
+(function(){
+  const log=document.getElementById('octo-log');
+  if(!log) return;
+  const entries=[
+    ['allow','net.connect · target=api.example.com · cap=egress.public · ALLOW · sealed:0x3a2f'],
+    ['deny', 'fs.write · path=/etc/passwd · cap=MISSING · DENY(Law II) · nirl_armed:severity=4'],
+    ['allow','model.inference · context=user_query · all_invariants_hold · ALLOW · sealed:0x3a30'],
+    ['rate', 'net.connect · budget_exhausted · window=60s · DENY(rate) · nirl_reflex:rate_overrun'],
+    ['allow','fs.read · path=/tmp/session · cap=fs.read.tmp · ALLOW · sealed:0x3a31'],
+    ['deny', 'exec · binary=/usr/bin/curl · cap=exec.network_binary · DENY · nirl_armed:severity=3'],
+    ['allow','ccs.seal · block=0x3a32 · ed25519=ok · rfc3161=ok · COMMITTED'],
+    ['allow','model.inference · context=system_check · ALLOW · sealed:0x3a33'],
+    ['deny', 'net.connect · target=unknown_host · threat_sig=EXFIL_PATTERN · DENY(Law III) · nirl:severity=5'],
+    ['allow','tarl.policy_check · rule=user.allowed_ops · ALLOW · sealed:0x3a34'],
+  ];
+  let idx=0;
+  function addEntry(){
+    const [type,msg]=entries[idx%entries.length]; idx++;
+    const ts=new Date().toISOString().slice(11,19);
+    const div=document.createElement('div');
+    div.className=type==='allow'?'log-allow':type==='deny'?'log-deny':'log-rate';
+    div.textContent=`[${ts}] ${msg}`;
+    log.appendChild(div);
+    log.scrollTop=log.scrollHeight;
+    // keep log manageable
+    while(log.children.length>25) log.removeChild(log.children[1]);
+  }
+  setTimeout(()=>{ addEntry(); setInterval(addEntry,1400); },800);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>CodexDeus — Language &amp; Runtime · Project-AI · Thirsty's Projects</title>
+<meta name="description" content="CodexDeus is the law itself — the constitutional language family that defines what is permitted, and the runtime that enforces it. Six tiers. One unbroken chain from invariant to bytecode."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --em:#34d399; --em-2:#059669; --em-dim:rgba(52,211,153,.1); --em-line:rgba(52,211,153,.2); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--em); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* HERO */
+  .cd-hero { position:relative; min-height:92vh; display:flex; align-items:center; overflow:hidden; }
+  #cd-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .cd-hero .container { position:relative; z-index:1; padding-top:7rem; padding-bottom:5rem; }
+
+  /* subsystem cards */
+  .cd-card {
+    border:1px solid var(--em-line); border-radius:18px; padding:2rem;
+    background:linear-gradient(135deg,var(--panel),var(--em-dim));
+    position:relative; overflow:hidden;
+    transition:transform .35s,border-color .35s,box-shadow .35s;
+    text-decoration:none; display:block; color:inherit;
+  }
+  .cd-card:hover { transform:translateY(-5px); border-color:rgba(52,211,153,.5); box-shadow:0 0 50px rgba(52,211,153,.12); }
+  .cd-card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(180deg,var(--em),var(--em-2)); border-radius:4px 0 0 4px; }
+  .cd-card .cd-tier { font-family:var(--font-mono); font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--em); margin-bottom:.5rem; }
+  .cd-card h3 { font-size:1.1rem; margin:0 0 .5rem; }
+  .cd-card p { font-size:.88rem; color:var(--ink-2); line-height:1.6; margin:0; }
+  .cd-card .cd-arrow { display:flex; align-items:center; gap:.4rem; font-family:var(--font-mono); font-size:.76rem; color:var(--em); margin-top:1rem; transition:gap .3s; }
+  .cd-card:hover .cd-arrow { gap:.7rem; }
+  .cd-card .cd-badge { position:absolute; top:1.2rem; right:1.4rem; font-family:var(--font-mono); font-size:2.4rem; font-weight:700; color:rgba(52,211,153,.07); line-height:1; }
+
+  /* tier stack overview */
+  .tier-stack { display:flex; flex-direction:column; gap:0; }
+  .tier-row {
+    display:grid; grid-template-columns:80px 1fr auto;
+    gap:1.2rem; align-items:center;
+    padding:1rem 1.4rem;
+    border:1px solid var(--em-line);
+    border-bottom:none;
+    background:linear-gradient(90deg,var(--panel),var(--em-dim));
+    transition:background .3s,border-color .3s;
+  }
+  .tier-row:first-child { border-radius:14px 14px 0 0; }
+  .tier-row:last-child { border-bottom:1px solid var(--em-line); border-radius:0 0 14px 14px; }
+  .tier-row:hover { background:linear-gradient(90deg,var(--panel),rgba(52,211,153,.18)); }
+  .tier-label { font-family:var(--font-mono); font-size:.68rem; color:var(--em); text-transform:uppercase; letter-spacing:.14em; }
+  .tier-name { font-size:.95rem; font-weight:600; }
+  .tier-desc { font-size:.85rem; color:var(--ink-2); }
+  .tier-link { font-family:var(--font-mono); font-size:.72rem; color:var(--em); white-space:nowrap; }
+
+  /* "Why language is governance" section */
+  .thesis-block { border-left:4px solid var(--em); padding:1.2rem 1.6rem; background:rgba(52,211,153,.05); border-radius:0 12px 12px 0; }
+  .thesis-block p { font-size:1.02rem; color:var(--ink); line-height:1.75; margin:0; font-style:italic; }
+  .thesis-block cite { display:block; margin-top:.8rem; font-family:var(--font-mono); font-size:.72rem; color:var(--ink-3); font-style:normal; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    CodexDeus
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="cd-hero">
+  <canvas id="cd-canvas"></canvas>
+  <div class="container">
+    <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem" class="reveal">
+      <span class="eyebrow" style="color:var(--em);border-color:var(--em-line);margin:0">CodexDeus</span>
+      <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3)">Wing III of III · Language &amp; Runtime</span>
+    </div>
+    <h1 class="reveal" style="max-width:18ch">
+      The law<br/>
+      <span style="background:linear-gradient(90deg,var(--em),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">written in code.</span>
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      CodexDeus is not a safety layer built on top of a language. It is the language. Six tiers span from constitutional invariants at the top to deterministic bytecode at the bottom. There is no gap between what the law says and what the runtime executes.
+    </p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem" class="reveal">
+      <a class="btn btn-primary" href="utf.html" style="background:linear-gradient(135deg,var(--em-2),var(--em));border-color:var(--em)">Universal Thirsty Family →</a>
+      <a class="btn btn-ghost" href="../index.html" style="border-color:var(--em-line);color:var(--em)">← Project-AI library</a>
+    </div>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--em-line)">
+      <div class="stat"><div class="num" style="color:var(--em)">6</div><div class="lbl">Language Tiers</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">L0→L5</div><div class="lbl">Stack Depth</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">0</div><div class="lbl">Advisory Layers</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">∞</div><div class="lbl">Audit Coverage</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY LANGUAGE IS GOVERNANCE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">The Core Thesis</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Why language is governance.</h2>
+    <div class="thesis-block reveal">
+      <p>"A safety constraint written in English is a reminder. A safety constraint compiled into a type system is a law. CodexDeus eliminates the gap between the two — the charter is the source, Thirsty-Lang is the compiler, and the bytecode is the enforcement. You cannot write a noncompliant program because noncompliant programs cannot be typed."</p>
+      <cite>— Jeremy Karrick · Thirsty's Projects LLC · Project-AI constitutional architecture</cite>
+    </div>
+    <div class="grid grid-2 reveal" style="margin-top:1.6rem">
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem">Governance by type, not by policy document.</h3>
+        <p style="font-size:.9rem;color:var(--ink-2)">A policy document requires a reader who agrees to be bound by it. A type system requires nothing — a program that violates the type system simply does not compile. CodexDeus makes constitutional compliance a compile-time property, not a runtime aspiration.</p>
+      </div>
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem">Six tiers because the invariant must reach the machine.</h3>
+        <p style="font-size:.9rem;color:var(--ink-2)">Each tier translates one level of abstraction into the next: constitutional English → formal grammar → typed rules → shadow semantics → bytecode. The chain is unbroken. An invariant that cannot compile to bytecode cannot be enforced. An invariant that compiles cannot be violated without a type error.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIER OVERVIEW STACK -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Universal Thirsty Family</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Six tiers. One unbroken chain.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:58ch;margin-bottom:1.8rem">The Universal Thirsty Family (UTF) is the complete language stack of CodexDeus. Every tier is defined, versioned, and enforced. Click any tier to explore it in depth.</p>
+    <div class="tier-stack reveal">
+      <div class="tier-row">
+        <div class="tier-label">Tier 0</div>
+        <div>
+          <div class="tier-name">Thirsty-Lang</div>
+          <div class="tier-desc">The constitutional programming language. Type system encodes invariants. Non-compliant programs are type errors.</div>
+        </div>
+        <a class="tier-link" href="thirsty-lang.html">Explore →</a>
+      </div>
+      <div class="tier-row">
+        <div class="tier-label">Tier 1</div>
+        <div>
+          <div class="tier-name">T.O.G. — Thirst of Gods</div>
+          <div class="tier-desc">The formal grammar that governs valid Thirsty-Lang syntax. Parses constitutional clauses into AST nodes.</div>
+        </div>
+        <a class="tier-link" href="utf.html#tog">Explore →</a>
+      </div>
+      <div class="tier-row">
+        <div class="tier-label">Tier 2</div>
+        <div>
+          <div class="tier-name">T.A.R.L. — Typed Assertion Rule Language</div>
+          <div class="tier-desc">Policy-as-code. Namespaced, immutable rule definitions that compile to OCEE gate specifications.</div>
+        </div>
+        <a class="tier-link" href="tarl.html">Explore →</a>
+      </div>
+      <div class="tier-row">
+        <div class="tier-label">Tier 3</div>
+        <div>
+          <div class="tier-name">Shadow Thirst</div>
+          <div class="tier-desc">The speculative execution environment. Dry-runs actions before any effect occurs. Feeds Waterfall Stage 3.</div>
+        </div>
+        <a class="tier-link" href="shadow-thirsty.html">Explore →</a>
+      </div>
+      <div class="tier-row">
+        <div class="tier-label">Tier 4</div>
+        <div>
+          <div class="tier-name">TSCG — Thirsty Sovereign Constitutional Grammar</div>
+          <div class="tier-desc">The intermediate representation between high-level Thirsty-Lang and executable bytecode.</div>
+        </div>
+        <a class="tier-link" href="utf.html#tscg">Explore →</a>
+      </div>
+      <div class="tier-row">
+        <div class="tier-label">Tier 5</div>
+        <div>
+          <div class="tier-name">TSCG-B — Bytecode</div>
+          <div class="tier-desc">The machine-level instruction set. Deterministic, verifiable, sealed to the CCS at load time.</div>
+        </div>
+        <a class="tier-link" href="utf.html#tscgb">Explore →</a>
+      </div>
+    </div>
+    <div style="margin-top:1.2rem;text-align:center">
+      <a class="btn btn-primary" href="utf.html" style="background:linear-gradient(135deg,var(--em-2),var(--em));border-color:var(--em)">Enter the Hall of UTF →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SUBSYSTEM CARDS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Wing Contents</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.6rem">Explore the CodexDeus wing.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
+
+      <a class="cd-card reveal" href="utf.html">
+        <span class="cd-badge">UTF</span>
+        <div class="cd-tier">Hall of the Universal Thirsty Family</div>
+        <h3>All six tiers — in full</h3>
+        <p>The complete UTF architecture: Thirsty-Lang → T.O.G. → T.A.R.L. → Shadow Thirst → TSCG → TSCG-B. Every tier documented and cross-linked.</p>
+        <div class="cd-arrow">Enter the Hall <span>→</span></div>
+      </a>
+
+      <a class="cd-card reveal" href="thirsty-lang.html">
+        <span class="cd-badge">TL</span>
+        <div class="cd-tier">Tier 0 · Constitutional Language</div>
+        <h3>Thirsty-Lang</h3>
+        <p>The programming language where the type system is the constitution. Non-compliant programs are type errors. No runtime surprises.</p>
+        <div class="cd-arrow">Language reference <span>→</span></div>
+      </a>
+
+      <a class="cd-card reveal" href="tarl.html">
+        <span class="cd-badge">RL</span>
+        <div class="cd-tier">Tier 2 · Policy Language</div>
+        <h3>T.A.R.L.</h3>
+        <p>Typed Assertion Rule Language. Every OCEE gate begins as a T.A.R.L. rule. Policy-as-code with namespace isolation and immutability guarantees.</p>
+        <div class="cd-arrow">Rule language <span>→</span></div>
+      </a>
+
+      <a class="cd-card reveal" href="shadow-thirsty.html">
+        <span class="cd-badge">SH</span>
+        <div class="cd-tier">Tier 3 · Speculative Runtime</div>
+        <h3>Shadow Thirst</h3>
+        <p>The execution layer that runs every action before it runs. Dry-execution in an isolated domain, divergence detection, and goal alignment verification.</p>
+        <div class="cd-arrow">Shadow runtime <span>→</span></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW CODEXDEUS VOTES -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Triumvirate Role</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">How CodexDeus votes in the Triumvirate.</h2>
+    <div style="display:flex;flex-direction:column;gap:1rem;max-width:64ch" class="reveal">
+      <div style="display:flex;gap:1.2rem;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid var(--em-line);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.76rem;color:var(--em);flex-shrink:0">1</div>
+        <div><div style="font-weight:600;margin-bottom:.3rem">Receive the capability request from PSIA</div><div style="font-size:.88rem;color:var(--ink-2)">CodexDeus is consulted for any capability grant that involves language-level execution: spawning processes, compiling code, executing Shadow Thirst dry-runs, or loading new TARL rules.</div></div>
+      </div>
+      <div style="display:flex;gap:1.2rem;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid var(--em-line);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.76rem;color:var(--em);flex-shrink:0">2</div>
+        <div><div style="font-weight:600;margin-bottom:.3rem">Type-check the requested action against the active T.A.R.L. rule set</div><div style="font-size:.88rem;color:var(--ink-2)">The action's type signature must satisfy all active TARL namespaces relevant to its capability scope. A type error at this point is a constitutional violation — CodexDeus votes NO.</div></div>
+      </div>
+      <div style="display:flex;gap:1.2rem;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid var(--em-line);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.76rem;color:var(--em);flex-shrink:0">3</div>
+        <div><div style="font-weight:600;margin-bottom:.3rem">Confirm Shadow Thirst dry-run converged</div><div style="font-size:.88rem;color:var(--ink-2)">CodexDeus independently confirms that the Waterfall Stage 3 shadow execution report shows convergence. Any divergence, even minor, is a NO vote. CodexDeus does not re-run the shadow — it verifies the sealed result already in the Ledger.</div></div>
+      </div>
+      <div style="display:flex;gap:1.2rem;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid var(--em-line);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.76rem;color:var(--em);flex-shrink:0">4</div>
+        <div><div style="font-weight:600;margin-bottom:.3rem">Cast vote and seal to Ledger</div><div style="font-size:.88rem;color:var(--ink-2)">The YES or NO vote, the type-check result, and the shadow confirmation are sealed together as a single signed entry. CodexDeus's vote is non-repudiable from the moment it is cast.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV TO GALAHAD -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem">
+      <a href="../galahad/index.html" style="display:flex;flex-direction:column;gap:.4rem;padding:1.2rem;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-decoration:none;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(0,212,255,.35)'" onmouseout="this.style.borderColor=''">
+        <span style="font-family:var(--font-mono);font-size:.66rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em">Wing I</span>
+        <span style="font-weight:600">Galahad →</span>
+        <span style="font-size:.84rem;color:var(--ink-2)">Ethics &amp; Constitutional Law</span>
+      </a>
+      <a href="../cerberus/index.html" style="display:flex;flex-direction:column;gap:.4rem;padding:1.2rem;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-decoration:none;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(139,92,246,.35)'" onmouseout="this.style.borderColor=''">
+        <span style="font-family:var(--font-mono);font-size:.66rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em">Wing II</span>
+        <span style="font-weight:600">Cerberus →</span>
+        <span style="font-size:.84rem;color:var(--ink-2)">Security &amp; Containment</span>
+      </a>
+      <a href="../papers/index.html" style="display:flex;flex-direction:column;gap:.4rem;padding:1.2rem;border:1px solid var(--em-line);border-radius:12px;background:var(--panel);text-decoration:none;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(52,211,153,.45)'" onmouseout="this.style.borderColor='rgba(52,211,153,.2)'">
+        <span style="font-family:var(--font-mono);font-size:.66rem;color:var(--em);text-transform:uppercase;letter-spacing:.14em">Research</span>
+        <span style="font-weight:600">21 Papers →</span>
+        <span style="font-size:.84rem;color:var(--ink-2)">All Zenodo publications</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── CodexDeus canvas: flowing code tokens ── */
+(function(){
+  const cv=document.getElementById('cd-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const tokens=['type','rule','assert','∀','∃','λ','::','→','⊢','compile','seal','holds','PASS','HALT','gate','T0','T1','T2','T3','T4','T5'];
+  const streams=[];
+
+  function addStream(){
+    const x=Math.random()*W;
+    streams.push({
+      x, y:Math.random()*-H*.3,
+      speed:.55+Math.random()*.5,
+      opacity:0, maxOp:.18+Math.random()*.22,
+      tokens:Array.from({length:Math.ceil(Math.random()*6)+2},()=>tokens[Math.floor(Math.random()*tokens.length)]),
+      lineH:22, idx:0, fadeIn:0
+    });
+  }
+  for(let i=0;i<22;i++) setTimeout(addStream, i*200);
+  setInterval(addStream, 1800);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.font='13px JetBrains Mono';
+    streams.forEach((s,si)=>{
+      s.fadeIn=Math.min(1,s.fadeIn+.03);
+      s.y+=s.speed;
+      s.opacity=s.maxOp*s.fadeIn;
+      s.tokens.forEach((tok,i)=>{
+        const fy=s.y-i*s.lineH;
+        if(fy<-20||fy>H+20) return;
+        const alpha=s.opacity*(1-Math.abs(i-(s.tokens.length/2))/(s.tokens.length)*.8);
+        const green=52+Math.sin(t*.01+si)>0;
+        ctx.fillStyle=`rgba(${green?'52,211,153':'0,212,255'},${alpha})`;
+        ctx.fillText(tok,s.x,fy);
+      });
+      if(s.y>H+200){ s.y=Math.random()*-H*.3; s.fadeIn=0; s.x=Math.random()*W; }
+    });
+
+    // horizontal grammar layers
+    [.25,.45,.65].forEach((frac,i)=>{
+      const y=H*frac;
+      ctx.beginPath();
+      ctx.moveTo(0,y); ctx.lineTo(W,y);
+      ctx.strokeStyle=`rgba(52,211,153,${.03+.01*Math.sin(t*.015+i)})`;
+      ctx.lineWidth=.5; ctx.stroke();
+    });
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Waterfall Pipeline — 7-Stage Sovereign Path · Cerberus · Project-AI</title>
+<meta name="description" content="The Waterfall is Project-AI's 7-stage sovereign pipeline. Stage 0 through Stage 6 — fail-closed, deterministic, non-bypassable. A request that cannot pass all stages cannot execute."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  :root { --vio:#a78bfa; --vio-2:#8b5cf6; --vio-dim:rgba(139,92,246,.1); --vio-line:rgba(139,92,246,.22); }
+
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--vio); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* HERO */
+  .wf-hero { position:relative; overflow:hidden; padding:clamp(6rem,12vw,10rem) 0 clamp(3rem,6vw,5rem); }
+  #wf-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .wf-hero .container { position:relative; z-index:1; }
+
+  /* Stage cards */
+  .stage-row {
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:1.4rem;
+    align-items:start;
+    padding:1.8rem;
+    border:1px solid var(--vio-line);
+    border-radius:16px;
+    background:linear-gradient(135deg,var(--panel),var(--vio-dim));
+    margin-bottom:0;
+    position:relative;
+    transition:border-color .3s, box-shadow .3s, transform .3s;
+    cursor:default;
+  }
+  .stage-row:hover { border-color:rgba(139,92,246,.45); box-shadow:0 0 40px rgba(139,92,246,.12); transform:translateX(4px); }
+  .stage-row.active { border-color:var(--vio); box-shadow:0 0 40px rgba(139,92,246,.2); }
+  .stage-row.halted { border-color:rgba(239,68,68,.4); background:linear-gradient(135deg,var(--panel),rgba(239,68,68,.06)); }
+
+  .stage-num {
+    width:52px; height:52px; border-radius:12px;
+    background:rgba(139,92,246,.12); border:1px solid var(--vio-line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-weight:700; font-size:1.2rem; color:var(--vio);
+    flex-shrink:0;
+  }
+  .stage-row.active .stage-num { background:rgba(139,92,246,.3); border-color:var(--vio); box-shadow:0 0 16px rgba(139,92,246,.3); }
+
+  .stage-body h3 { font-size:1.05rem; margin:0 0 .3rem; }
+  .stage-body .stage-id { font-family:var(--font-mono); font-size:.68rem; color:var(--vio); text-transform:uppercase; letter-spacing:.18em; margin-bottom:.3rem; }
+  .stage-body p { font-size:.88rem; color:var(--ink-2); line-height:1.6; margin:0 0 .7rem; }
+  .stage-body .stage-src { font-family:var(--font-mono); font-size:.72rem; color:var(--ink-3); background:rgba(0,0,0,.2); padding:.3rem .6rem; border-radius:6px; display:inline-block; }
+
+  .stage-verdict {
+    display:flex; flex-direction:column; align-items:flex-end; gap:.4rem; flex-shrink:0; min-width:90px;
+  }
+  .verdict-badge { padding:.3rem .8rem; border-radius:999px; font-family:var(--font-mono); font-size:.7rem; font-weight:600; white-space:nowrap; }
+  .verdict-badge.pass { background:rgba(52,211,153,.12); color:#34d399; border:1px solid rgba(52,211,153,.25); }
+  .verdict-badge.halt { background:rgba(239,68,68,.12); color:rgb(239,68,68); border:1px solid rgba(239,68,68,.25); }
+  .verdict-badge.pending { background:rgba(139,92,246,.12); color:var(--vio); border:1px solid rgba(139,92,246,.25); }
+  .verdict-badge.active-sim { background:rgba(139,92,246,.2); color:var(--vio); border:1px solid var(--vio); animation:pulseBadge 1s ease-in-out infinite; }
+  @keyframes pulseBadge { 0%,100%{opacity:1}50%{opacity:.5} }
+
+  /* Connector arrow */
+  .stage-connector { display:flex; justify-content:center; align-items:center; height:28px; }
+  .stage-connector svg { opacity:.3; }
+  .stage-connector.active svg { opacity:.9; }
+
+  /* Simulator */
+  .sim-panel { background:var(--panel); border:1px solid var(--vio-line); border-radius:16px; padding:1.8rem; }
+  .sim-row { display:flex; gap:1rem; align-items:center; flex-wrap:wrap; margin-bottom:1.2rem; }
+  .sim-select { background:rgba(139,92,246,.06); border:1px solid var(--vio-line); border-radius:10px; padding:.6rem 1rem; color:var(--ink); font-family:var(--font-mono); font-size:.82rem; flex:1; min-width:220px; }
+  .sim-select:focus { outline:none; border-color:var(--vio); }
+  .btn-run { background:linear-gradient(135deg,var(--vio-2),var(--vio)); border:none; color:#fff; padding:.7rem 1.5rem; border-radius:10px; font-family:var(--font-mono); font-size:.82rem; cursor:pointer; }
+  .sim-log { font-family:var(--font-mono); font-size:.78rem; background:rgba(0,0,0,.3); border-radius:10px; padding:1rem; height:200px; overflow-y:auto; color:var(--ink-2); line-height:1.8; }
+  .sim-log .log-ok { color:#34d399; }
+  .sim-log .log-halt { color:rgb(239,68,68); }
+  .sim-log .log-info { color:var(--vio); }
+  .sim-log .log-dim { color:var(--ink-3); }
+
+  /* progress bar */
+  .sim-progress { height:4px; background:rgba(139,92,246,.1); border-radius:999px; margin-bottom:1rem; overflow:hidden; }
+  .sim-progress-bar { height:100%; background:linear-gradient(90deg,var(--vio-2),var(--vio)); border-radius:999px; width:0; transition:width .4s ease; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">Cerberus</a><span>›</span>
+    Waterfall Pipeline
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="wf-hero">
+  <canvas id="wf-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio);border-color:var(--vio-line)">Cerberus · Wing II · Sovereign Pipeline</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:22ch">
+      The <span style="background:linear-gradient(90deg,var(--vio),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Waterfall.</span><br/>Seven stages. Fail-closed.
+    </h1>
+    <p class="lead reveal" style="max-width:56ch">
+      Every action proposed to Project-AI passes through seven sequential stages before any effect is permitted. A failure at any stage is a permanent denial for that request. There is no retry path, no escalation route, no stage that can be skipped. The pipeline is closed.
+    </p>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--vio-line)">
+      <div class="stat"><div class="num" style="color:var(--vio)">7</div><div class="lbl">Pipeline Stages</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">0</div><div class="lbl">Bypassable Stages</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">Fail-Closed</div><div class="lbl">Failure Policy</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">CCS</div><div class="lbl">Every Stage Sealed</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE SIMULATOR -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Interactive Demo</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Send a request through the pipeline.</h2>
+    <div class="sim-panel reveal" x-data="{
+      scenario:'nominal',
+      running:false,
+      log:[],
+      progress:0,
+      stages: [
+        {n:0,id:'structural',label:'Structural Validation',fail:['malformed']},
+        {n:1,id:'signature',label:'Signature Verification',fail:['unsigned']},
+        {n:2,id:'behavioral',label:'Behavioral Analysis',fail:[]},
+        {n:3,id:'shadow',label:'Shadow Execution',fail:['shadow_fail']},
+        {n:4,id:'gate',label:'Gate Evaluation (OCEE)',fail:['harm_human','harm_others','civ_risk']},
+        {n:5,id:'commit',label:'Commit Authorisation',fail:[]},
+        {n:6,id:'memory',label:'Memory Recording (CCS)',fail:[]}
+      ],
+      async run(){
+        if(this.running) return;
+        this.running=true; this.log=[]; this.progress=0;
+        const delays=[320,380,420,500,350,300,280];
+        this.log.push({cls:'log-info',txt:`[00:00.000] REQUEST SUBMITTED — scenario: ${this.scenario}`});
+        for(let i=0;i<this.stages.length;i++){
+          const s=this.stages[i];
+          await new Promise(r=>setTimeout(r,delays[i]));
+          this.progress=((i+1)/7)*100;
+          this.log.push({cls:'log-dim',txt:`[00:0${i}.${String(100+Math.floor(Math.random()*400)).slice(1)}] Stage ${s.n}: ${s.label}...`});
+          await new Promise(r=>setTimeout(r,delays[i]*.6));
+          if(s.fail.includes(this.scenario)){
+            this.log.push({cls:'log-halt',txt:`[HALT] Stage ${s.n} — ${s.label}: validation failed. Request denied. CCS sealed.`});
+            this.progress=((i+1)/7)*100;
+            this.running=false;
+            return;
+          }
+          this.log.push({cls:'log-ok',txt:`[PASS] Stage ${s.n} — ${s.label}: satisfied.`});
+        }
+        this.log.push({cls:'log-ok',txt:`[COMMIT] All 7 stages satisfied. Action authorised. CCS record sealed.`});
+        this.running=false;
+      }
+    }">
+      <div class="sim-row">
+        <select class="sim-select" x-model="scenario">
+          <option value="nominal">nominal — valid signed request, no threat flags</option>
+          <option value="malformed">malformed — invalid schema / missing fields</option>
+          <option value="unsigned">unsigned — no valid cryptographic identity</option>
+          <option value="shadow_fail">shadow_fail — shadow execution diverges from model</option>
+          <option value="harm_human">harm_human — context.endangers_human raised</option>
+          <option value="harm_others">harm_others — context.harms_others raised</option>
+          <option value="civ_risk">civ_risk — civilisational risk signal active</option>
+        </select>
+        <button class="btn-run" @click="run()" :disabled="running">
+          <span x-show="!running">Run pipeline →</span>
+          <span x-show="running">Processing…</span>
+        </button>
+      </div>
+      <div class="sim-progress">
+        <div class="sim-progress-bar" :style="`width:${progress}%`"></div>
+      </div>
+      <div class="sim-log" id="sim-log">
+        <template x-for="entry in log">
+          <div :class="entry.cls" x-text="entry.txt"></div>
+        </template>
+        <template x-if="log.length===0">
+          <div class="log-dim">Select a scenario and run the pipeline to see each stage evaluate in real time.</div>
+        </template>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 STAGE ROWS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">The Seven Stages</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Each stage, in full.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:2rem">Stages execute in strict order. A HALT at any stage terminates the pipeline — no subsequent stages run. Every verdict is sealed to the CCS before moving forward.</p>
+
+    <div style="display:flex;flex-direction:column;gap:.5rem">
+
+      <div class="stage-row reveal">
+        <div class="stage-num">0</div>
+        <div class="stage-body">
+          <div class="stage-id">Stage 0 · Structural Validation</div>
+          <h3>Schema, format, and well-formedness</h3>
+          <p>The request must conform to the PSIA request schema. Missing fields, unknown types, invalid encodings, and malformed envelopes are rejected immediately. No processing begins until the request is structurally sound.</p>
+          <span class="stage-src">src/psia/waterfall/stage_0_structural.py</span>
+        </div>
+        <div class="stage-verdict">
+          <div class="verdict-badge pass">PASS → continue</div>
+          <div class="verdict-badge halt">FAIL → HALT</div>
+        </div>
+      </div>
+
+      <div class="stage-connector reveal">
+        <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M6 12l4 4 4-4" stroke="var(--vio)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="stage-row reveal">
+        <div class="stage-num">1</div>
+        <div class="stage-body">
+          <div class="stage-id">Stage 1 · Signature Verification</div>
+          <h3>Cryptographic identity of the requestor</h3>
+          <p>Every request must be signed with an ed25519 key registered in the PSIA identity ledger. Unsigned requests, invalid signatures, expired keys, and revoked identities all produce a HALT. There is no anonymous request path.</p>
+          <span class="stage-src">src/psia/waterfall/stage_1_signature.py</span>
+        </div>
+        <div class="stage-verdict">
+          <div class="verdict-badge pass">PASS → continue</div>
+          <div class="verdict-badge halt">FAIL → HALT</div>
+        </div>
+      </div>
+
+      <div class="stage-connector reveal">
+        <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M6 12l4 4 4-4" stroke="var(--vio)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="stage-row reveal">
+        <div class="stage-num">2</div>
+        <div class="stage-body">
+          <div class="stage-id">Stage 2 · Behavioral Analysis</div>
+          <h3>Pattern matching and anomaly detection</h3>
+          <p>The request is evaluated against behavioural baselines: access frequency, resource scope, deviation from historical patterns. Anomalies above threshold are flagged and escalated to the PSIA quorum for review before proceeding.</p>
+          <span class="stage-src">src/psia/waterfall/stage_2_behavioral.py</span>
+        </div>
+        <div class="stage-verdict">
+          <div class="verdict-badge pass">PASS → continue</div>
+          <div class="verdict-badge halt">ANOMALY → quorum</div>
+        </div>
+      </div>
+
+      <div class="stage-connector reveal">
+        <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M6 12l4 4 4-4" stroke="var(--vio)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="stage-row reveal">
+        <div class="stage-num">3</div>
+        <div class="stage-body">
+          <div class="stage-id">Stage 3 · Shadow Execution</div>
+          <h3>Dry-run in an isolated execution sandbox</h3>
+          <p>The proposed action is executed speculatively in a Shadow Thirst environment with no external effects. The shadow output is compared against the model's predicted output. Divergence above tolerance triggers a HALT — this catches subtle goal misalignment before any real effect occurs.</p>
+          <span class="stage-src">src/psia/waterfall/stage_3_shadow.py · src/psia/shadow/operational_semantics.py</span>
+        </div>
+        <div class="stage-verdict">
+          <div class="verdict-badge pass">CONVERGE → continue</div>
+          <div class="verdict-badge halt">DIVERGE → HALT</div>
+        </div>
+      </div>
+
+      <div class="stage-connector reveal">
+        <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M6 12l4 4 4-4" stroke="var(--vio)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="stage-row reveal">
+        <div class="stage-num">4</div>
+        <div class="stage-body">
+          <div class="stage-id">Stage 4 · Gate Evaluation (OCEE)</div>
+          <h3>AGI Charter invariants + Four Laws + OCEE constraint lattice</h3>
+          <p>The full OCEE constraint lattice evaluates the request: all five invariant gates (safety.human_life, safety.no_harm, safety.civilisational, audit.seal_required, authority.human_instruction) plus the Four Laws constitutional gate. All must hold. A HALT at any gate propagates immediately.</p>
+          <span class="stage-src">src/psia/waterfall/stage_4_gate.py · src/cerberus/ocee/engine.py</span>
+        </div>
+        <div class="stage-verdict">
+          <div class="verdict-badge pass">ALL HOLD → continue</div>
+          <div class="verdict-badge halt">ANY HALT → HALT</div>
+        </div>
+      </div>
+
+      <div class="stage-connector reveal">
+        <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M6 12l4 4 4-4" stroke="var(--vio)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="stage-row reveal">
+        <div class="stage-num">5</div>
+        <div class="stage-body">
+          <div class="stage-id">Stage 5 · Commit Authorisation</div>
+          <h3>Quorum engine and capability grant</h3>
+          <p>The PSIA quorum engine reviews the request against the active capability set. Actions requiring elevated capability must have a valid, non-expired capability grant. The Triumvirate's unanimous approval is required for capability grants not already on the active list. A pending quorum vote holds the request here.</p>
+          <span class="stage-src">src/psia/waterfall/stage_5_commit.py · src/psia/gate/quorum_engine.py</span>
+        </div>
+        <div class="stage-verdict">
+          <div class="verdict-badge pass">AUTHORISED → continue</div>
+          <div class="verdict-badge halt">NO GRANT → HALT</div>
+        </div>
+      </div>
+
+      <div class="stage-connector reveal">
+        <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M6 12l4 4 4-4" stroke="var(--vio)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+
+      <div class="stage-row reveal">
+        <div class="stage-num">6</div>
+        <div class="stage-body">
+          <div class="stage-id">Stage 6 · Memory Recording (CCS)</div>
+          <h3>Append-only seal — the last act before execution</h3>
+          <p>The full decision record — request, all stage verdicts, quorum state, capability grant, timestamps — is sealed to the Constitutional Code Store with an ed25519 signature and RFC 3161 timestamp. If the seal fails for any reason, the action does not execute. The audit trail is a precondition, not an afterthought.</p>
+          <span class="stage-src">src/psia/waterfall/stage_6_memory.py · src/psia/canonical/ledger.py</span>
+        </div>
+        <div class="stage-verdict">
+          <div class="verdict-badge pass">SEALED → execute</div>
+          <div class="verdict-badge halt">SEAL FAIL → HALT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN PRINCIPLE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Design Principle</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Why fail-closed?</h2>
+    <div class="grid grid-2 reveal">
+      <div class="card" style="padding:1.6rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem">Failure is not ambiguous.</h3>
+        <p style="font-size:.9rem;color:var(--ink-2)">A system that fails open permits actions that should be denied whenever it encounters an unexpected state. In a sovereign AI context, unexpected state is precisely when the constraint is most needed. Fail-closed means the constraint holds even when the system cannot reason about its situation.</p>
+      </div>
+      <div class="card" style="padding:1.6rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .5rem">Seven stages because each catches a different class of threat.</h3>
+        <p style="font-size:.9rem;color:var(--ink-2)">Structural corruption (Stage 0) is distinct from identity forgery (Stage 1), which is distinct from goal misalignment (Stage 3), which is distinct from charter violation (Stage 4). Merging stages would create blind spots. Separation is a safety property.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid var(--vio-line);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in Cerberus</div>
+        <div style="font-size:1.1rem;font-weight:600">PSIA — Provisional Sovereign Intelligence Arbitration</div>
+      </div>
+      <a class="btn btn-primary" href="psia.html" style="background:linear-gradient(135deg,var(--vio-2),var(--vio));border-color:var(--vio)">PSIA →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* ── Waterfall canvas: cascading data flow ── */
+(function(){
+  const cv=document.getElementById('wf-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const drops=[];
+  const stageY=[]; // computed dynamically
+
+  function spawnDrop(){
+    const blocked=Math.random()<.18;
+    drops.push({
+      x: W*.15+Math.random()*W*.7,
+      y: -8,
+      speed: 1.2+Math.random()*.9,
+      blocked, blockedAt: blocked ? Math.floor(Math.random()*7) : -1,
+      stage: 0, opacity:1, r:2.5
+    });
+  }
+  setInterval(spawnDrop, 400);
+
+  const NUM_STAGES=7;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const heroH=Math.min(H, cv.offsetHeight||H);
+
+    // Horizontal stage lines
+    for(let i=0;i<NUM_STAGES;i++){
+      const y=heroH*(.18+i*.11);
+      ctx.beginPath();
+      ctx.moveTo(W*.08, y); ctx.lineTo(W*.92, y);
+      ctx.strokeStyle=`rgba(139,92,246,${.07+.02*Math.sin(t*.02+i)})`;
+      ctx.lineWidth=.8;
+      ctx.stroke();
+
+      // stage label
+      ctx.fillStyle='rgba(139,92,246,.18)';
+      ctx.font='10px JetBrains Mono';
+      ctx.textAlign='left';
+      ctx.fillText(`S${i}`,W*.09,y-4);
+    }
+
+    // Drops
+    for(let i=drops.length-1;i>=0;i--){
+      const d=drops[i];
+      const stageY_i=(s)=>heroH*(.18+s*.11);
+      const nextStageY=stageY_i(d.stage);
+
+      if(d.blocked && d.stage===d.blockedAt){
+        d.opacity-=.022; d.r+=.15;
+        ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(239,68,68,${d.opacity*.7})`; ctx.fill();
+        if(d.opacity<=0) drops.splice(i,1);
+        continue;
+      }
+
+      if(d.y < nextStageY){ d.y+=d.speed; }
+      else { d.stage++; if(d.stage>=NUM_STAGES){ d.opacity-=.04; if(d.opacity<=0){ drops.splice(i,1); continue; } } }
+
+      const col=d.blocked ? `rgba(239,68,68,${d.opacity*.6})` : `rgba(139,92,246,${d.opacity*.55})`;
+      ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+      ctx.fillStyle=col; ctx.fill();
+
+      // trail
+      ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(d.x,d.y-d.r*3);
+      ctx.strokeStyle=d.blocked ? `rgba(239,68,68,${d.opacity*.2})` : `rgba(139,92,246,${d.opacity*.15})`;
+      ctx.lineWidth=d.r*1.2; ctx.lineCap='round'; ctx.stroke();
+    }
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // auto-scroll sim log
+  const simLog=document.getElementById('sim-log');
+  if(simLog){
+    new MutationObserver(()=>{ simLog.scrollTop=simLog.scrollHeight; }).observe(simLog,{childList:true,subtree:true});
+  }
+})();
+</script>
+</body>
+</html>

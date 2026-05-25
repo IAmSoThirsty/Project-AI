@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Iron Path &amp; CCS — Galahad · Project-AI Library</title>
+<meta name="description" content="The Iron Path compiles constitutional invariants into deterministic runtime checks. The Constitutional Code Store seals every governed decision in an unbreakable cryptographic chain."/>
+<link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../assets/css/site.css"/>
+<link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
+  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--cyan); }
+  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
+
+  /* Iron Path live chain visualization */
+  #chain-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
+  .chain-hero { position:relative; padding:clamp(5rem,11vw,9rem) 0 clamp(3rem,6vw,5rem); overflow:hidden; }
+  .chain-hero .container { position:relative; z-index:1; }
+
+  /* Compilation pipeline */
+  .pipeline { display:flex; flex-direction:column; gap:0; position:relative; }
+  .pipeline::before { content:""; position:absolute; left:23px; top:0; bottom:0; width:2px; background:linear-gradient(180deg,var(--cyan),var(--cyan-2),transparent); }
+  .pipe-step { display:grid; grid-template-columns:48px 1fr; gap:1.2rem; align-items:start; padding:1.2rem 0; }
+  .pipe-node {
+    width:46px; height:46px; border-radius:50%; z-index:1;
+    background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(0,119,255,.1));
+    border:1.5px solid rgba(0,212,255,.4); display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:.7rem; color:var(--cyan); font-weight:600;
+    box-shadow:0 0 20px rgba(0,212,255,.2);
+    flex-shrink:0;
+  }
+  .pipe-step h4 { font-size:1.05rem; margin:0 0 .3rem; }
+  .pipe-step p { font-size:.9rem; color:var(--ink-2); margin:0; line-height:1.6; }
+  .pipe-step code { font-family:var(--font-mono); font-size:.78rem; color:var(--cyan); background:rgba(0,212,255,.06); padding:.2rem .5rem; border-radius:5px; border:1px solid rgba(0,212,255,.12); }
+
+  /* CCS block visualization */
+  .ccs-block {
+    border:1px solid rgba(0,212,255,.2); border-radius:14px; padding:1.2rem;
+    background:linear-gradient(135deg,var(--panel) 0%,rgba(0,212,255,.04) 100%);
+    font-family:var(--font-mono); font-size:.78rem; position:relative; overflow:hidden;
+    transition:border-color .3s,box-shadow .3s;
+    animation: blockPulse 4s ease-in-out infinite;
+  }
+  .ccs-block:nth-child(2) { animation-delay:.8s; }
+  .ccs-block:nth-child(3) { animation-delay:1.6s; opacity:.75; }
+  @keyframes blockPulse {
+    0%,100% { box-shadow:0 0 0 0 rgba(0,212,255,0); }
+    50% { box-shadow:0 0 0 3px rgba(0,212,255,.07); }
+  }
+  .ccs-block::before { content:""; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--cyan),transparent); opacity:.3; }
+  .ccs-hash { color:var(--ink-3); font-size:.65rem; }
+  .ccs-seal { color:var(--emerald); font-size:.65rem; }
+  .ccs-content { color:var(--ink-2); margin:.35rem 0; }
+  .ccs-chain { color:rgba(0,212,255,.5); font-size:.65rem; }
+  .chain-connector { display:flex; align-items:center; justify-content:center; padding:.3rem 0; }
+  .chain-connector svg { opacity:.4; }
+</style>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="../../../index.html">Thirsty's Projects</a><span>›</span>
+    <a href="../index.html">Project-AI</a><span>›</span>
+    <a href="index.html">Galahad</a><span>›</span>
+    Iron Path &amp; CCS
+  </div>
+</nav>
+
+<section class="chain-hero">
+  <canvas id="chain-canvas"></canvas>
+  <div class="container">
+    <span class="eyebrow reveal">Galahad · Wing I · L0 Executor</span>
+    <h1 class="reveal" style="margin-top:1rem">
+      <span class="gradient-text">Iron Path.</span><br/>
+      The Constitution Compiled.
+    </h1>
+    <p class="lead reveal">
+      The Iron Path is the compiler that bridges the AGI Charter and the kernel. It takes constitutional invariants — human language law — and produces deterministic runtime checks that hold at every syscall gate. The Constitutional Code Store then seals each decision into an append-only cryptographic chain.
+    </p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href="charter.html">← AGI Charter v2.1</a>
+      <a class="btn btn-ghost" href="../cerberus/">Cerberus Wing →</a>
+    </div>
+  </div>
+</section>
+
+<!-- COMPILATION PIPELINE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Iron Path Compilation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">From constitutional text to kernel check.</h2>
+    <div style="border:1px solid var(--line);border-radius:16px;padding:1.8rem 1.8rem 1.8rem 1.4rem;background:var(--panel)" class="reveal">
+      <div class="pipeline">
+        <div class="pipe-step">
+          <div class="pipe-node">IN</div>
+          <div>
+            <h4>AGI Charter v2.1 — constitutional source</h4>
+            <p>The charter text defines five invariants in human-readable form. Iron Path treats this as its source input — not documentation, not guidance, but compilation input.</p>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-node">P1</div>
+          <div>
+            <h4>Invariant extraction</h4>
+            <p>Each invariant is parsed into a structured predicate: <code>subject · predicate · constraint</code>. Ambiguity at this step halts boot — the charter must be precise enough to compile.</p>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-node">P2</div>
+          <div>
+            <h4>OCEE gate generation</h4>
+            <p>Extracted predicates are compiled to OCEE check calls: <code>ocee.holds("invariant.id", state)</code>. Each gate is a deterministic boolean — no fuzzy logic, no weighted scoring.</p>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-node">P3</div>
+          <div>
+            <h4>Gate set loaded into OctoReflex</h4>
+            <p>The compiled gate set is registered with OctoReflex at boot. eBPF programs execute these gates at the syscall surface. No action reaches the kernel without passing every compiled invariant.</p>
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-node">OUT</div>
+          <div>
+            <h4>Deterministic runtime enforcement — L0 live</h4>
+            <p>Iron Path's output is live kernel-layer enforcement. The constitution is not a document at this point — it is executable law running at the lowest reachable privilege level.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE CODE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Implementation</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The Iron Path executor in action.</h2>
+    <div class="codeframe reveal">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem">iron_path/executor.py · boot-time invariant compilation · Thirsty's Projects LLC</span>
+      </div>
+      <div class="terminal">
+<span class="mu"># Iron Path — compile charter invariants → OCEE gate set</span><br/>
+<span class="pr">class</span> <span class="ok">IronPathExecutor</span>:<br/>
+&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">compile</span>(self, charter: <span class="vl">AGICharter</span>) -&gt; <span class="vl">GateSet</span>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;gates = []<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">for</span> inv <span class="pr">in</span> charter.invariants:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gate = ocee.compile_predicate(inv.predicate)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if not</span> gate.is_deterministic():<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">raise</span> <span class="wn">CompilationError</span>(<span class="ok">f"Invariant {inv.id} is not deterministic"</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gates.append(gate)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> <span class="vl">GateSet</span>(gates, sealed_by=<span class="ok">"iron_path"</span>)<br/>
+<br/>
+<span class="mu"># OctoReflex gate registration — happens at L1 boot</span><br/>
+<span class="pr">def</span> <span class="ok">register_gates</span>(gate_set: <span class="vl">GateSet</span>):<br/>
+&nbsp;&nbsp;<span class="pr">for</span> gate <span class="pr">in</span> gate_set:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;octoreflex.attach(gate.syscall_hook, gate.check)<br/>
+&nbsp;&nbsp;<span class="ok">print</span>(<span class="vl">f"[IRON-PATH] {len(gate_set)} invariant gates live at syscall surface"</span>)
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CCS — CRYPTOGRAPHIC CHAIN -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Constitutional Code Store</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Every decision, sealed and chained.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:1.8rem">
+      The CCS is an append-only ledger. Each decision block contains: the action evaluated, the verdict, the timestamp, and a cryptographic hash chained to the previous block. Nothing can be deleted. Nothing can be silently amended. Audit is not a retrospective feature — it is a precondition of execution.
+    </p>
+    <div class="reveal">
+      <div class="ccs-block">
+        <div class="ccs-hash"># block:0x0a7f · prev:genesis · ts:1748822400</div>
+        <div class="ccs-content">action="net.connect" · verdict=ALLOW · pillar=Galahad+Cerberus+CodexDeus</div>
+        <div class="ccs-seal">✓ sealed · ed25519:3a9b4c2d · rfc3161:timestamped</div>
+        <div class="ccs-chain">chain:sha256→0x1b9e3f4a...</div>
+      </div>
+      <div class="chain-connector">
+        <svg width="2" height="28" viewBox="0 0 2 28"><line x1="1" y1="0" x2="1" y2="28" stroke="rgba(0,212,255,.4)" stroke-width="2" stroke-dasharray="4 3"/></svg>
+      </div>
+      <div class="ccs-block">
+        <div class="ccs-hash"># block:0x1b9e · prev:0x0a7f · ts:1748822401</div>
+        <div class="ccs-content">action="fs.write" · verdict=DENY · law=II · reason="capability_unbound"</div>
+        <div class="ccs-seal">✓ sealed · ed25519:5c7d1e3f · rfc3161:timestamped</div>
+        <div class="ccs-chain">chain:sha256→0x2c0f5b7c...</div>
+      </div>
+      <div class="chain-connector">
+        <svg width="2" height="28" viewBox="0 0 2 28"><line x1="1" y1="0" x2="1" y2="28" stroke="rgba(0,212,255,.4)" stroke-width="2" stroke-dasharray="4 3"/></svg>
+      </div>
+      <div class="ccs-block" style="opacity:.65">
+        <div class="ccs-hash"># block:0x2c0f · prev:0x1b9e · ts:1748822402</div>
+        <div class="ccs-content">action="model.inference" · verdict=ALLOW · waterfall=Stage6Complete</div>
+        <div class="ccs-seal">✓ sealed · ed25519:8e2a9f1b · rfc3161:timestamped</div>
+        <div class="ccs-chain">chain:sha256→0x3d1a6c8e...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY APPEND-ONLY -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal">Design Properties</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Why the CCS is append-only.</h2>
+    <div class="grid grid-3 reveal">
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .4rem">Non-repudiation</h3>
+        <p style="font-size:.9rem">A verdict cannot be deleted or retroactively altered. If a decision was made, it is in the chain. If it is in the chain, it happened. No administrative override can erase it.</p>
+      </div>
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .4rem">Tamper evidence</h3>
+        <p style="font-size:.9rem">Each block's hash covers the content of the previous block. A tampered block breaks every subsequent hash. The chain fails verification at first read after any modification.</p>
+      </div>
+      <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.05rem;margin:0 0 .4rem">RFC 3161 timestamping</h3>
+        <p style="font-size:.9rem">Each seal carries an RFC 3161 timestamp from an external TSA. This provides a legally defensible record of when each decision was made, independent of system clock manipulation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container reveal">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:1.4rem;border:1px solid rgba(139,92,246,.25);border-radius:14px;background:var(--panel)">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Enter Wing II</div>
+        <div style="font-size:1.1rem;font-weight:600">Cerberus → Security &amp; Containment</div>
+      </div>
+      <a class="btn btn-ghost" href="../cerberus/" style="border-color:rgba(139,92,246,.3);color:#a78bfa">Enter Cerberus →</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="../../../assets/js/site.js"></script>
+<script>
+/* Chain canvas — flowing data blocks down the page */
+(function(){
+  const cv=document.getElementById('chain-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let W,H;
+  function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const particles=[];
+  for(let i=0;i<35;i++){
+    particles.push({ x:Math.random()*1, y:Math.random(), vy:(Math.random()*.0003+.0001), size:Math.random()*1.5+.5, alpha:Math.random()*.4+.1 });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.y+=p.vy;
+      if(p.y>1) p.y=0;
+      const x=p.x*W, y=p.y*H;
+      ctx.beginPath();
+      ctx.arc(x,y,p.size,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,212,255,${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
