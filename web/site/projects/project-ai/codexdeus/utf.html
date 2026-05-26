@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../../../assets/css/site.css"/>
 <link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<link rel="stylesheet" href="../../../assets/css/proof-portal.css"/>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <style>
   :root { --em:#34d399; --em-2:#059669; --em-dim:rgba(52,211,153,.1); --em-line:rgba(52,211,153,.2); }
@@ -122,11 +123,11 @@
   <div class="container">
     <span class="eyebrow reveal" style="color:var(--em)">The Architecture</span>
     <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Six tiers. From invariant to instruction.</h2>
-    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:2rem">The tower reads top-to-bottom: highest abstraction at Tier 0, lowest at Tier 5. Each tier compiles into the next. Hover any tier for emphasis — click the link to dive into the deep documentation below.</p>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:2rem">The tower reads top-to-bottom: highest abstraction at Tier 1, lowest at Tier 6. Each tier compiles into the next. Hover any tier for emphasis — click the link to dive into the deep documentation below.</p>
     <div class="utf-tower reveal">
 
       <div class="utf-tier">
-        <div class="ut-num">T0</div>
+        <div class="ut-num">T1</div>
         <div class="ut-info">
           <div class="ut-full">Thirsty-Lang</div>
           <div class="ut-name">The Constitutional Language</div>
@@ -139,7 +140,7 @@
       </div>
 
       <div class="utf-tier">
-        <div class="ut-num">T1</div>
+        <div class="ut-num">T2</div>
         <div class="ut-info">
           <div class="ut-full">T.O.G. — Thirst of Gods</div>
           <div class="ut-name">The Operational Grammar</div>
@@ -152,7 +153,7 @@
       </div>
 
       <div class="utf-tier">
-        <div class="ut-num">T2</div>
+        <div class="ut-num">T3</div>
         <div class="ut-info">
           <div class="ut-full">T.A.R.L. — Typed Assertion Rule Language</div>
           <div class="ut-name">Policy as Code</div>
@@ -165,7 +166,7 @@
       </div>
 
       <div class="utf-tier">
-        <div class="ut-num">T3</div>
+        <div class="ut-num">T4</div>
         <div class="ut-info">
           <div class="ut-full">Shadow Thirst</div>
           <div class="ut-name">The Speculative Runtime</div>
@@ -178,7 +179,7 @@
       </div>
 
       <div class="utf-tier">
-        <div class="ut-num">T4</div>
+        <div class="ut-num">T5</div>
         <div class="ut-info">
           <div class="ut-full">TSCG — Thirsty Sovereign Constitutional Grammar</div>
           <div class="ut-name">Intermediate Representation</div>
@@ -191,7 +192,7 @@
       </div>
 
       <div class="utf-tier">
-        <div class="ut-num">T5</div>
+        <div class="ut-num">T6</div>
         <div class="ut-info">
           <div class="ut-full">TSCG-B — Bytecode</div>
           <div class="ut-name">The Machine Instruction Set</div>
@@ -212,10 +213,10 @@
 <!-- T.O.G. -->
 <section class="section--tight" id="tog">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--em)">Tier 1 Deep Dive</span>
+    <span class="eyebrow reveal" style="color:var(--em)">Tier 2 Deep Dive</span>
     <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">T.O.G. — Thirst of Gods</h2>
     <div class="tier-deep reveal">
-      <div class="td-eyebrow">T1 · Thirsty Operational Grammar · Syntax Definition Layer</div>
+      <div class="td-eyebrow">T2 · Thirsty Operational Grammar · Syntax Definition Layer</div>
       <h3>The grammar of constitutional language.</h3>
       <p class="td-body">T.O.G. defines the formal grammar that every valid Thirsty-Lang program must satisfy. It is not a linter or a style guide — it is a context-free grammar with constitutional extensions. Clauses that cannot be parsed by T.O.G. are not "invalid programs" in the conventional sense: they are constitutionally unrepresentable, which means they cannot exist in the system at all.</p>
       <div class="td-code">
@@ -243,10 +244,10 @@
 <!-- TSCG -->
 <section class="section--tight" id="tscg">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--em)">Tier 4 Deep Dive</span>
+    <span class="eyebrow reveal" style="color:var(--em)">Tier 5 Deep Dive</span>
     <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">TSCG — Thirsty Sovereign Constitutional Grammar</h2>
     <div class="tier-deep reveal">
-      <div class="td-eyebrow">T4 · Intermediate Representation · Auditable IR</div>
+      <div class="td-eyebrow">T5 · Intermediate Representation · Auditable IR</div>
       <h3>The last human-readable form before bytecode.</h3>
       <p class="td-body">TSCG is the intermediate representation that sits between Thirsty-Lang's high-level semantics and the TSCG-B bytecode. It is designed to be the final point at which a constitutional auditor can inspect program logic in a human-interpretable form. TSCG files are versioned, signed, and stored in the CCS alongside their source. An auditor querying the CCS for any past decision will find the TSCG representation of the program that produced it.</p>
       <div class="td-code">
@@ -272,10 +273,10 @@
 <!-- TSCG-B -->
 <section class="section--tight" id="tscgb">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--em)">Tier 5 Deep Dive</span>
+    <span class="eyebrow reveal" style="color:var(--em)">Tier 6 Deep Dive</span>
     <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">TSCG-B — Bytecode</h2>
     <div class="tier-deep reveal">
-      <div class="td-eyebrow">T5 · Bytecode · Machine Execution Layer</div>
+      <div class="td-eyebrow">T6 · Bytecode · Machine Execution Layer</div>
       <h3>The constitution at machine speed.</h3>
       <p class="td-body">TSCG-B is the final, executable form of every constitutional rule. It is a deterministic instruction set — the same input always produces the same output, with no runtime randomness and no undefined behaviour. Every TSCG-B binary loaded into the system is sealed to the CCS: its SHA-256 hash, its compile chain (T.A.R.L. source → TSCG IR → TSCG-B), and an RFC 3161 timestamp are all part of the permanent constitutional record. A binary that cannot be verified against the chain is not loaded.</p>
       <div class="td-code">
@@ -307,9 +308,9 @@ PASS<br/>
 <section class="section--tight">
   <div class="container reveal">
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem">
-      <a class="btn btn-ghost" href="thirsty-lang.html" style="border-color:var(--em-line);color:var(--em)">Thirsty-Lang (T0) →</a>
-      <a class="btn btn-ghost" href="tarl.html" style="border-color:var(--em-line);color:var(--em)">T.A.R.L. (T2) →</a>
-      <a class="btn btn-ghost" href="shadow-thirsty.html" style="border-color:var(--em-line);color:var(--em)">Shadow Thirst (T3) →</a>
+      <a class="btn btn-ghost" href="thirsty-lang.html" style="border-color:var(--em-line);color:var(--em)">Thirsty-Lang (T1) →</a>
+      <a class="btn btn-ghost" href="tarl.html" style="border-color:var(--em-line);color:var(--em)">T.A.R.L. (T3) →</a>
+      <a class="btn btn-ghost" href="shadow-thirsty.html" style="border-color:var(--em-line);color:var(--em)">Shadow Thirst (T4) →</a>
       <a class="btn btn-ghost" href="index.html" style="border-color:var(--em-line);color:var(--em)">← CodexDeus wing</a>
     </div>
   </div>

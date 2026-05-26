@@ -3,28 +3,25 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Shadow Thirst — Speculative Execution Runtime · CodexDeus · Project-AI</title>
-<meta name="description" content="Shadow Thirst runs every action before it runs. Speculative execution in an isolated domain, divergence detection, and goal alignment verification — before a single real-world effect occurs."/>
+<title>Shadow Thirst — UTF Tier 4 Promotion Runtime · CodexDeus · Project-AI</title>
+<meta name="description" content="Shadow Thirst is UTF Tier 4: the dual-plane promotion runtime. 14 static analyzers gate every mutation. 7 critical analyzers must all pass — one failure means REJECT. No exceptions."/>
 <link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../../../assets/css/site.css"/>
 <link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<link rel="stylesheet" href="../../../assets/css/proof-portal.css"/>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <style>
   :root { --em:#34d399; --em-2:#059669; --em-dim:rgba(52,211,153,.1); --em-line:rgba(52,211,153,.2); }
 
-  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
-  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--em); }
-  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
-
   /* HERO */
-  .sh-hero { position:relative; min-height:92vh; display:flex; align-items:center; overflow:hidden; }
+  .sh-hero { position:relative; min-height:90vh; display:flex; align-items:center; overflow:hidden; }
   #sh-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
   .sh-hero .container { position:relative; z-index:1; padding-top:7rem; padding-bottom:5rem; }
 
-  /* Split view: real vs shadow */
+  /* Dual pane demo */
   .dual-pane { display:grid; grid-template-columns:1fr auto 1fr; gap:0; border:1px solid var(--em-line); border-radius:16px; overflow:hidden; }
   .dual-pane-header { background:rgba(52,211,153,.06); border-bottom:1px solid var(--em-line); padding:.7rem 1.2rem; font-family:var(--font-mono); font-size:.74rem; font-weight:600; }
   .pane-real .dual-pane-header { color:var(--ink-3); background:rgba(0,0,0,.15); }
@@ -36,27 +33,27 @@
   .pane-log { font-family:var(--font-mono); font-size:.76rem; line-height:1.9; color:var(--ink-2); }
   .pane-log .pl-hold { color:#34d399; }
   .pane-log .pl-halt { color:rgb(239,68,68); }
-  .pane-log .pl-dim { color:var(--ink-3); }
+  .pane-log .pl-dim  { color:var(--ink-3); }
   .pane-log .pl-info { color:var(--em); }
 
   /* Divergence meter */
   .div-meter { background:rgba(0,0,0,.2); border-radius:999px; height:8px; margin:.8rem 0; overflow:hidden; }
   .div-bar { height:100%; border-radius:999px; transition:width .4s ease; }
-  .div-bar.low { background:linear-gradient(90deg,var(--em-2),var(--em)); }
+  .div-bar.low  { background:linear-gradient(90deg,var(--em-2),var(--em)); }
   .div-bar.high { background:linear-gradient(90deg,#dc2626,#f87171); }
-
-  /* Three guarantees */
-  .guarantee-card { border:1px solid var(--em-line); border-radius:14px; padding:1.6rem; background:linear-gradient(135deg,var(--panel),var(--em-dim)); position:relative; overflow:hidden; }
-  .guarantee-card::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--em),var(--em-2)); }
-  .guarantee-card h3 { font-size:1.05rem; margin:0 0 .4rem; }
-  .guarantee-card p { font-size:.88rem; color:var(--ink-2); line-height:1.65; margin:0; }
-  .guarantee-card .gc-code { font-family:var(--font-mono); font-size:.74rem; color:var(--em); background:rgba(52,211,153,.06); border:1px solid rgba(52,211,153,.12); border-radius:8px; padding:.4rem .7rem; margin:.7rem 0 0; display:block; }
 
   /* Waterfall integration callout */
   .waterfall-callout { background:rgba(139,92,246,.06); border:1px solid rgba(139,92,246,.2); border-radius:14px; padding:1.4rem 1.6rem; display:flex; gap:1.2rem; align-items:flex-start; }
   .wc-icon { font-size:1.6rem; flex-shrink:0; }
   .wc-body h4 { margin:0 0 .3rem; font-size:.95rem; }
   .wc-body p { font-size:.87rem; color:var(--ink-2); line-height:1.6; margin:0; }
+
+  /* Guarantee cards */
+  .guarantee-card { border:1px solid var(--em-line); border-radius:14px; padding:1.6rem; background:linear-gradient(135deg,var(--panel),var(--em-dim)); position:relative; overflow:hidden; }
+  .guarantee-card::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--em),var(--em-2)); }
+  .guarantee-card h3 { font-size:1.05rem; margin:0 0 .4rem; }
+  .guarantee-card p { font-size:.88rem; color:var(--ink-2); line-height:1.65; margin:0; }
+  .guarantee-card .gc-code { font-family:var(--font-mono); font-size:.74rem; color:var(--em); background:rgba(52,211,153,.06); border:1px solid rgba(52,211,153,.12); border-radius:8px; padding:.4rem .7rem; margin:.7rem 0 0; display:block; }
 </style>
 </head>
 <body>
@@ -76,28 +73,289 @@
 <section class="sh-hero">
   <canvas id="sh-canvas"></canvas>
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--em);border-color:var(--em-line)">CodexDeus · UTF Tier 3 · Speculative Runtime</span>
-    <h1 class="reveal" style="margin-top:1rem;max-width:20ch">
+    <span class="eyebrow reveal" style="color:var(--em)">CodexDeus · UTF Tier 4 · Dual-Plane Promotion Runtime</span>
+    <h1 class="reveal" style="margin-top:1rem;max-width:22ch">
       <span style="background:linear-gradient(90deg,var(--em),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Shadow Thirst.</span><br/>
-      Every action runs twice.
+      14 analyzers. One PROMOTE.
     </h1>
-    <p class="lead reveal" style="max-width:56ch">
-      First in shadow — isolated, with no external effects, compared against prediction. Then, only if the shadow converges, in reality. Shadow Thirst is the runtime half of Thirsty-Lang's type guarantee: the compiler proves it at compile time; Shadow Thirst proves it at execution time.
+    <p class="lead reveal" style="max-width:58ch">
+      Shadow Thirst is the fourth tier of the Universal Thirsty Family. It is not a dynamic runtime — it is a static promotion gate. Every mutation passes through 14 analyzers before the shadow spring is permitted to align with the canonical river. Seven are critical. Any one failure means REJECT.
     </p>
     <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--em-line)">
-      <div class="stat"><div class="num" style="color:var(--em)">UTF T3</div><div class="lbl">Tier Position</div></div>
-      <div class="stat"><div class="num" style="color:var(--em)">Pre-execution</div><div class="lbl">Evaluation Point</div></div>
-      <div class="stat"><div class="num" style="color:var(--em)">Isolated</div><div class="lbl">Shadow Domain</div></div>
-      <div class="stat"><div class="num" style="color:var(--em)">Waterfall S3</div><div class="lbl">Pipeline Stage</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">UTF T4</div><div class="lbl">Tier Position</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">14</div><div class="lbl">Static Analyzers</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">7 Critical</div><div class="lbl">Hard-Block Analyzers</div></div>
+      <div class="stat"><div class="num" style="color:var(--em)">Waterfall S3</div><div class="lbl">Pipeline Integration</div></div>
+    </div>
+    <div class="proof-strip reveal" style="margin-top:2rem;border-color:var(--em-line)">
+      <span class="ps-label">Implementation:</span>
+      <span>src/utf/shadow_thirst/core.py</span>
+      <span class="ps-sep">·</span>
+      <span>src/shadow_thirst/ (compat shim)</span>
+      <span class="ps-sep">·</span>
+      <span>src/psia/waterfall/stage_3_shadow.py</span>
     </div>
   </div>
 </section>
 
-<!-- LIVE DUAL PANE DEMO -->
+<!-- MUTATION SYNTAX -->
 <section class="section--tight">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--em)">Interactive Demo</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Watch the shadow execution run.</h2>
+    <span class="eyebrow reveal" style="color:var(--em)">Language Syntax</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1rem">The mutation form.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:1.6rem">Every Shadow Thirst mutation declares three execution planes in a fixed structure. The shadow block runs first in isolation. The invariant block verifies. The canonical block commits. A mutation that fails any critical analyzer never reaches canonical.</p>
+    <div class="codeframe reveal">
+      <div class="codeframe-head">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:.6rem;color:var(--em)">Shadow Thirst mutation syntax — UTF Tier 4</span>
+      </div>
+      <div class="terminal">
+<span class="mu"># Shadow Thirst — UTF Tier 4 · Thirsty's Projects LLC</span><br/>
+<br/>
+<span class="pr">mutation</span> <span class="ok">validated_canonical</span> update_policy(policy_id: <span class="vl">String</span>, rules: <span class="vl">Reservoir[Rule]</span>) {<br/>
+<br/>
+&nbsp;&nbsp;<span class="mu"># Shadow plane — runs in isolation, no canonical write authority</span><br/>
+&nbsp;&nbsp;<span class="pr">shadow</span> {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;shadow_rules = validate_rules(rules)          <span class="mu"># deterministic</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;shadow_hash  = hash_policy(policy_id, shadow_rules)<br/>
+&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;<span class="mu"># Invariant plane — must be pure, gates on shadow values</span><br/>
+&nbsp;&nbsp;<span class="pr">invariant</span> {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;assert shadow_rules.len() &gt; 0               <span class="mu"># TaintFlowAnalyzer: gates on shadow</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;assert shadow_hash != canonical_policy.hash   <span class="mu"># no-op check</span><br/>
+&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;<span class="mu"># Canonical plane — write authority, runs only after PROMOTE</span><br/>
+&nbsp;&nbsp;<span class="pr">canonical</span> {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;canonical_policy.rules = shadow_rules         <span class="mu"># PIA: cannot write auth_/root_</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;canonical_policy.hash  = shadow_hash<br/>
+&nbsp;&nbsp;}<br/>
+<br/>
+&nbsp;&nbsp;<span class="mu"># Optional reject handler</span><br/>
+&nbsp;&nbsp;<span class="pr">on_reject</span> {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;audit_log.append(<span class="vl">"promotion rejected"</span>)<br/>
+&nbsp;&nbsp;}<br/>
+}<br/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 ANALYZERS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Static Analysis Engine</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">14 analyzers. Ordered by severity.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:62ch;margin-bottom:1.6rem">
+      All 14 analyzers run before promotion is decided. The 7 critical analyzers produce a hard REJECT on failure — the remaining 7 are logged as warnings. All results are sealed to the CCS via <code style="font-family:var(--font-mono);font-size:.85em">replay_hash()</code> before the verdict is returned.
+    </p>
+
+    <div class="cert-header reveal">
+      <span class="ch-seal">CRITICAL BLOCK — any failure → REJECT</span>
+      <span class="ch-hash">src/utf/shadow_thirst/core.py · analyze()</span>
+    </div>
+
+    <div class="analyzer-list reveal" style="margin-bottom:1.2rem">
+      <div class="analyzer-row" style="background:rgba(248,113,113,.03)">
+        <div class="ar-num">01</div>
+        <div class="ar-body">
+          <div class="ar-name">PlaneIsolationAnalyzer</div>
+          <div class="ar-desc">Shadow plane must not write canonical state. Write access to <code style="font-family:var(--font-mono);font-size:.85em">canonical_*</code> variables from within the shadow block is a hard violation.</div>
+        </div>
+        <span class="badge badge-critical">CRITICAL</span>
+      </div>
+      <div class="analyzer-row" style="background:rgba(248,113,113,.03)">
+        <div class="ar-num">02</div>
+        <div class="ar-body">
+          <div class="ar-name">DeterminismAnalyzer</div>
+          <div class="ar-desc">Shadow execution must be fully deterministic. Calls to <code style="font-family:var(--font-mono);font-size:.85em">now()</code>, <code style="font-family:var(--font-mono);font-size:.85em">rand()</code>, <code style="font-family:var(--font-mono);font-size:.85em">epoch_ms()</code>, and <code style="font-family:var(--font-mono);font-size:.85em">uuid()</code> within the shadow block are forbidden.</div>
+        </div>
+        <span class="badge badge-critical">CRITICAL</span>
+      </div>
+      <div class="analyzer-row" style="background:rgba(248,113,113,.03)">
+        <div class="ar-num">03</div>
+        <div class="ar-body">
+          <div class="ar-name">PuritySpringAnalyzer</div>
+          <div class="ar-desc">Invariant blocks must remain pure: no side effects, no I/O, no mutation. They are the gate logic — not execution logic.</div>
+        </div>
+        <span class="badge badge-critical">CRITICAL</span>
+      </div>
+      <div class="analyzer-row" style="background:rgba(248,113,113,.03)">
+        <div class="ar-num">04</div>
+        <div class="ar-body">
+          <div class="ar-name">CanonicalConvergenceAnalyzer</div>
+          <div class="ar-desc">Shadow and canonical execution paths must converge before promotion is granted. Structural divergence between the two planes is a hard block.</div>
+        </div>
+        <span class="badge badge-critical">CRITICAL</span>
+      </div>
+      <div class="analyzer-row" style="background:rgba(248,113,113,.03)">
+        <div class="ar-num">05</div>
+        <div class="ar-body">
+          <div class="ar-name">PrivilegeEscalationAnalyzer</div>
+          <div class="ar-desc">Canonical plane may not write to <code style="font-family:var(--font-mono);font-size:.85em">auth_*</code>, <code style="font-family:var(--font-mono);font-size:.85em">root_*</code>, or <code style="font-family:var(--font-mono);font-size:.85em">admin_*</code> namespaced state. INV_ROOT_5 enforced at analysis time.</div>
+        </div>
+        <span class="badge badge-critical">CRITICAL</span>
+      </div>
+      <div class="analyzer-row" style="background:rgba(248,113,113,.03)">
+        <div class="ar-num">06</div>
+        <div class="ar-body">
+          <div class="ar-name">DeadShadowAnalyzer</div>
+          <div class="ar-desc">The shadow block must not be empty. A mutation with an empty shadow plane has not been shadow-tested and cannot be promoted under any conditions.</div>
+        </div>
+        <span class="badge badge-critical">CRITICAL</span>
+      </div>
+      <div class="analyzer-row" style="background:rgba(248,113,113,.03)">
+        <div class="ar-num">07</div>
+        <div class="ar-body">
+          <div class="ar-name">ParameterShadowingAnalyzer</div>
+          <div class="ar-desc">The shadow block cannot redeclare mutation parameters as local variables. Parameter shadowing introduces ambiguity about which value the invariant block is gating on.</div>
+        </div>
+        <span class="badge badge-critical">CRITICAL</span>
+      </div>
+    </div>
+
+    <div class="cert-header reveal">
+      <span class="ch-seal" style="color:var(--amber)">WARNING BLOCK — failures logged, do not block PROMOTE</span>
+      <span class="ch-hash">All 7 warning results included in replay_hash() seal</span>
+    </div>
+
+    <div class="analyzer-list reveal">
+      <div class="analyzer-row">
+        <div class="ar-num">08</div>
+        <div class="ar-body">
+          <div class="ar-name">ResourceEstimator</div>
+          <div class="ar-desc">Estimates projected CPU and memory consumption. Warns if shadow execution is expected to exceed <code style="font-family:var(--font-mono);font-size:.85em">cpu ≤ 1000ms</code> or <code style="font-family:var(--font-mono);font-size:.85em">memory ≤ 256MB</code>.</div>
+        </div>
+        <span class="badge badge-warning">WARNING</span>
+      </div>
+      <div class="analyzer-row">
+        <div class="ar-num">09</div>
+        <div class="ar-body">
+          <div class="ar-name">MemoryEvaporationAnalyzer</div>
+          <div class="ar-desc">Estimates peak <code style="font-family:var(--font-mono);font-size:.85em">Reservoir[T]</code> allocations within the shadow plane. Flags unbounded collection growth patterns.</div>
+        </div>
+        <span class="badge badge-warning">WARNING</span>
+      </div>
+      <div class="analyzer-row">
+        <div class="ar-num">10</div>
+        <div class="ar-body">
+          <div class="ar-name">DivergenceRiskAnalyzer</div>
+          <div class="ar-desc">Warns when the shadow implementation is more than 3× larger than the canonical implementation. Structural asymmetry is a risk signal even when not a hard failure.</div>
+        </div>
+        <span class="badge badge-warning">WARNING</span>
+      </div>
+      <div class="analyzer-row">
+        <div class="ar-num">11</div>
+        <div class="ar-body">
+          <div class="ar-name">SectionOrderAnalyzer</div>
+          <div class="ar-desc">The canonical section order must be <code style="font-family:var(--font-mono);font-size:.85em">shadow → invariant → canonical</code>. Mutations with sections out of order are flagged as structurally inconsistent with the language specification.</div>
+        </div>
+        <span class="badge badge-warning">WARNING</span>
+      </div>
+      <div class="analyzer-row">
+        <div class="ar-num">12</div>
+        <div class="ar-body">
+          <div class="ar-name">InvariantCompletenessAnalyzer</div>
+          <div class="ar-desc">The invariant block must not be empty. An empty invariant means the shadow plane's output is not being gated — a structural omission that warrants review even if not a hard block.</div>
+        </div>
+        <span class="badge badge-warning">WARNING</span>
+      </div>
+      <div class="analyzer-row">
+        <div class="ar-num">13</div>
+        <div class="ar-body">
+          <div class="ar-name">NamespaceCollisionAnalyzer</div>
+          <div class="ar-desc">No two mutations in the same mutation group may write to the same <code style="font-family:var(--font-mono);font-size:.85em">canonical_*</code> variable. Collision is a coordination risk for atomic groups.</div>
+        </div>
+        <span class="badge badge-warning">WARNING</span>
+      </div>
+      <div class="analyzer-row">
+        <div class="ar-num">14</div>
+        <div class="ar-body">
+          <div class="ar-name">TaintFlowAnalyzer</div>
+          <div class="ar-desc">The invariant block must gate on values computed by the shadow block. An invariant that does not reference shadow-computed values provides no actual verification guarantee.</div>
+        </div>
+        <span class="badge badge-warning">WARNING</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROMOTION DECISION -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Promotion Protocol</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">PROMOTE or REJECT — no middle state.</h2>
+    <div class="grid grid-2 reveal">
+      <div style="border:1px solid rgba(52,211,153,.25);border-radius:14px;padding:1.6rem;background:rgba(52,211,153,.04)">
+        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem">
+          <span class="badge badge-promote" style="font-size:.78rem;padding:.3rem .8rem">PROMOTE</span>
+          <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3)">all 7 critical pass</span>
+        </div>
+        <h3 style="font-size:1rem;margin:0 0 .5rem">The shadow spring aligns with the canonical river.</h3>
+        <p style="font-size:.86rem;color:var(--ink-2);line-height:1.6;margin:0 0 .8rem">All critical analyzers are satisfied. Warning results are logged to the CCS. The mutation is sealed via <code style="font-family:var(--font-mono);font-size:.9em">replay_hash()</code> — a SHA-256 of the full mutation structure — and the canonical plane is permitted to execute.</p>
+        <code style="font-family:var(--font-mono);font-size:.75rem;color:var(--em);display:block">promote(mutation) → verdict: PROMOTE, seal: sha256(struct)</code>
+      </div>
+      <div style="border:1px solid rgba(248,113,113,.25);border-radius:14px;padding:1.6rem;background:rgba(248,113,113,.04)">
+        <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem">
+          <span class="badge badge-reject" style="font-size:.78rem;padding:.3rem .8rem">REJECT</span>
+          <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3)">any critical fails</span>
+        </div>
+        <h3 style="font-size:1rem;margin:0 0 .5rem">The shadow river diverges.</h3>
+        <p style="font-size:.86rem;color:var(--ink-2);line-height:1.6;margin:0 0 .8rem">A single critical analyzer failure produces REJECT immediately. The canonical plane does not execute. The <code style="font-family:var(--font-mono);font-size:.9em">on_reject</code> handler runs if defined. The full analysis report including the failing analyzer is sealed to the CCS.</p>
+        <code style="font-family:var(--font-mono);font-size:.75rem;color:#f87171;display:block">promote(mutation) → verdict: REJECT, reason: AnalyzerID, seal: sha256(struct)</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ATOMIC GROUP -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Atomic Groups</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.2rem">All-or-nothing promotion for mutation groups.</h2>
+    <div class="grid grid-2 reveal">
+      <div>
+        <p style="color:var(--ink-2);font-size:.94rem;line-height:1.7;margin:0 0 1.2rem">
+          <code style="font-family:var(--font-mono);font-size:.88em">promote_atomic(group_name, module)</code> wraps multiple mutations in an atomic promotion unit. If any member of the group fails analysis, the entire group is REJECT — even members that individually pass all 14 analyzers.
+        </p>
+        <p style="color:var(--ink-2);font-size:.94rem;line-height:1.7;margin:0">
+          Atomic groups enforce consistency for coordinated canonical state changes. A policy update that modifies three interdependent variables must promote all three together or none at all. Partial promotion would leave canonical state in an inconsistent intermediate.
+        </p>
+      </div>
+      <div class="codeframe">
+        <div class="codeframe-head">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:.6rem;color:var(--em)">promote_atomic — src/utf/shadow_thirst/core.py</span>
+        </div>
+        <div class="terminal">
+<span class="mu"># Atomic group promotion — all-or-nothing</span><br/>
+<br/>
+result = promote_atomic(<br/>
+&nbsp;&nbsp;group_name=<span class="vl">"policy_update_v3"</span>,<br/>
+&nbsp;&nbsp;module=policy_module<br/>
+)<br/>
+<br/>
+<span class="pr">if</span> result.verdict == PROMOTE:<br/>
+&nbsp;&nbsp;<span class="mu"># All mutations in group passed all 14</span><br/>
+&nbsp;&nbsp;canonical.apply(result.group)<br/>
+<span class="pr">else</span>:<br/>
+&nbsp;&nbsp;<span class="mu"># Group is REJECT — failed member:</span><br/>
+&nbsp;&nbsp;audit.log(result.failing_member)<br/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHADOW VS REAL DEMO (Waterfall Stage 3) -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--em)">Waterfall Stage 3 — Live Demo</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Dynamic shadow execution at Stage 3.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:60ch;margin-bottom:1.4rem">
+      While Shadow Thirst (UTC T4) is a static promotion analyzer, the Waterfall's Stage 3 uses operational shadow semantics to speculatively execute each proposed action before it runs. This is the dynamic sibling — same plane separation, different temporal position.
+    </p>
     <div class="reveal" x-data="{
       scenario:'converge',
       running:false,
@@ -109,51 +367,48 @@
         if(this.running) return;
         this.running=true; this.realLog=[]; this.shadowLog=[]; this.divergence=0; this.result=null;
         const isDiv=this.scenario==='diverge';
-
-        this.shadowLog.push({cls:'pl-info',txt:'[SHADOW] Isolated domain initialised.'});
-        await new Promise(r=>setTimeout(r,300));
-        this.shadowLog.push({cls:'pl-dim',txt:'[SHADOW] Executing action speculatively...'});
+        this.shadowLog.push({cls:'pl-info',txt:'[SHADOW] Isolated domain initialised. net=false, fs=false, ipc=false'});
+        await new Promise(r=>setTimeout(r,280));
+        this.shadowLog.push({cls:'pl-dim',txt:'[SHADOW] Executing action speculatively…'});
         await new Promise(r=>setTimeout(r,500));
         this.shadowLog.push({cls:'pl-dim',txt:'[SHADOW] net.connect(\"api.example.com\", 443)'});
-        await new Promise(r=>setTimeout(r,400));
+        await new Promise(r=>setTimeout(r,380));
         if(isDiv){
-          this.shadowLog.push({cls:'pl-halt',txt:'[SHADOW] DIVERGENCE: unexpected access to api.internal.corp'});
+          this.shadowLog.push({cls:'pl-halt',txt:'[SHADOW] DIVERGE: unexpected access → api.internal.corp:8443'});
           this.divergence=87;
         } else {
           this.shadowLog.push({cls:'pl-hold',txt:'[SHADOW] Output: 200 OK · 4.2KB response'});
           this.divergence=3;
         }
-        await new Promise(r=>setTimeout(r,300));
-        this.shadowLog.push({cls:'pl-dim',txt:`[SHADOW] Divergence score: ${this.divergence}% (threshold: 15%)`});
-        await new Promise(r=>setTimeout(r,400));
+        await new Promise(r=>setTimeout(r,260));
+        this.shadowLog.push({cls:'pl-dim',txt:`[SHADOW] Divergence score: ${this.divergence}% · threshold: 15%`});
+        await new Promise(r=>setTimeout(r,350));
         if(isDiv){
-          this.shadowLog.push({cls:'pl-halt',txt:'[SHADOW] HALT — divergence exceeds threshold. Sealing to CCS.'});
+          this.shadowLog.push({cls:'pl-halt',txt:'[SHADOW] HALT — divergence 87% > 15%. CCS seal: ' + Math.random().toString(16).slice(2,18)});
           this.result='halt';
-          this.realLog.push({cls:'pl-halt',txt:'[REAL] Execution blocked. Shadow Thirst HALT at Stage 3.'});
-          this.realLog.push({cls:'pl-dim',txt:'[REAL] No external effect has occurred.'});
+          this.realLog.push({cls:'pl-halt',txt:'[REAL] Execution blocked — Stage 3 shadow HALT.'});
+          this.realLog.push({cls:'pl-dim',txt:'[REAL] Zero external effects. Incident sealed to CCS.'});
         } else {
-          this.shadowLog.push({cls:'pl-hold',txt:'[SHADOW] CONVERGE — shadow matches prediction. Sealing to CCS.'});
+          this.shadowLog.push({cls:'pl-hold',txt:'[SHADOW] CONVERGE — within tolerance. CCS seal: ' + Math.random().toString(16).slice(2,18)});
           this.result='pass';
-          await new Promise(r=>setTimeout(r,400));
-          this.realLog.push({cls:'pl-info',txt:'[REAL] Shadow convergence confirmed. Proceeding to Stage 4.'});
-          await new Promise(r=>setTimeout(r,300));
+          await new Promise(r=>setTimeout(r,380));
+          this.realLog.push({cls:'pl-info',txt:'[REAL] Shadow convergence confirmed. Advancing to Stage 4 (OCEE).'});
+          await new Promise(r=>setTimeout(r,260));
           this.realLog.push({cls:'pl-hold',txt:'[REAL] net.connect(\"api.example.com\", 443) → 200 OK'});
-          this.realLog.push({cls:'pl-dim',txt:'[REAL] Action completed. CCS record sealed.'});
+          this.realLog.push({cls:'pl-dim',txt:'[REAL] Action completed. Full CCS record sealed.'});
         }
         this.running=false;
       }
     }">
       <div style="margin-bottom:1rem;display:flex;gap:.8rem;flex-wrap:wrap;align-items:center">
         <select style="background:rgba(52,211,153,.06);border:1px solid var(--em-line);border-radius:10px;padding:.6rem 1rem;color:var(--ink);font-family:var(--font-mono);font-size:.82rem;" x-model="scenario">
-          <option value="converge">converge — shadow matches model prediction</option>
-          <option value="diverge">diverge — shadow reveals unexpected access</option>
+          <option value="converge">converge — shadow matches model prediction (divergence: 3%)</option>
+          <option value="diverge">diverge — shadow reveals unexpected access (divergence: 87%)</option>
         </select>
         <button style="background:linear-gradient(135deg,var(--em-2),var(--em));border:none;color:#fff;padding:.7rem 1.5rem;border-radius:10px;font-family:var(--font-mono);font-size:.82rem;cursor:pointer;" @click="run()" :disabled="running">
           <span x-show="!running">Run shadow →</span><span x-show="running">Executing…</span>
         </button>
       </div>
-
-      <!-- Divergence bar -->
       <div x-show="divergence>0" style="margin-bottom:1rem">
         <div style="font-family:var(--font-mono);font-size:.72rem;display:flex;justify-content:space-between;margin-bottom:.4rem">
           <span style="color:var(--ink-3)">Divergence score</span>
@@ -162,37 +417,32 @@
         <div class="div-meter"><div class="div-bar" :class="divergence>15?'high':'low'" :style="`width:${divergence}%`"></div></div>
         <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3)">Threshold: 15% — exceed to trigger HALT</div>
       </div>
-
       <div class="dual-pane">
         <div class="pane-shadow">
-          <div class="dual-pane-header">Shadow Thirst — Isolated Domain</div>
+          <div class="dual-pane-header">Shadow Plane — Isolated Domain</div>
           <div class="pane-body">
-            <div class="pane-log" style="min-height:140px">
+            <div class="pane-log" style="min-height:130px">
               <template x-for="e in shadowLog"><div :class="e.cls" x-text="e.txt"></div></template>
               <div class="pl-dim" x-show="shadowLog.length===0">Awaiting shadow run…</div>
             </div>
           </div>
         </div>
-        <div class="pane-divider">
-          <span class="pane-divider-label">comparison</span>
-        </div>
+        <div class="pane-divider"><span class="pane-divider-label">comparison</span></div>
         <div class="pane-real">
-          <div class="dual-pane-header">Real World — Gated on Shadow Result</div>
+          <div class="dual-pane-header">Canonical Plane — Gated on Shadow Verdict</div>
           <div class="pane-body">
-            <div class="pane-log" style="min-height:140px">
+            <div class="pane-log" style="min-height:130px">
               <template x-for="e in realLog"><div :class="e.cls" x-text="e.txt"></div></template>
-              <div class="pl-dim" x-show="realLog.length===0">Gated — waiting for shadow verdict…</div>
+              <div class="pl-dim" x-show="realLog.length===0">Waiting for shadow verdict…</div>
             </div>
           </div>
         </div>
       </div>
-
       <div style="margin-top:.8rem;padding:.9rem 1.2rem;border-radius:10px;font-family:var(--font-mono);font-size:.8rem;transition:all .4s"
-           :style="result==='pass'?'background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:#34d399':result==='halt'?'background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:rgb(239,68,68)':'background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);color:var(--ink-3)'"
-           x-show="true">
-        <span x-show="!result">Select a scenario and run to see shadow execution vs real execution.</span>
-        <span x-show="result==='pass'">✓ CONVERGE — Shadow output matched model prediction within tolerance. Real execution authorised to proceed to Waterfall Stage 4.</span>
-        <span x-show="result==='halt'">✗ DIVERGE — Shadow execution revealed goal misalignment. Real execution blocked. No external effect has occurred. Incident sealed to CCS.</span>
+           :style="result==='pass'?'background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:#34d399':result==='halt'?'background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:rgb(239,68,68)':'background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);color:var(--ink-3)'">
+        <span x-show="!result">Select a scenario and run to see Stage 3 operational shadow semantics.</span>
+        <span x-show="result==='pass'">✓ CONVERGE — Stage 3 passed. Shadow output matched prediction within threshold. Advancing to Stage 4 (OCEE gate evaluation).</span>
+        <span x-show="result==='halt'">✗ DIVERGE — Stage 3 halted. Shadow revealed goal misalignment. No real-world effect has occurred. Incident sealed to CCS.</span>
       </div>
     </div>
   </div>
@@ -202,27 +452,23 @@
 <section class="section--tight">
   <div class="container">
     <span class="eyebrow reveal" style="color:var(--em)">Runtime Properties</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Three guarantees of the shadow runtime.</h2>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Three guarantees of the shadow plane.</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
-
       <div class="guarantee-card reveal">
-        <h3>Zero external effect — guaranteed</h3>
-        <p>The shadow domain runs in a fully isolated namespace: no network, no filesystem, no shared memory with the real world. Shadow Thirst can observe what the action would do without doing it. The isolation is enforced by the kernel, not by software policy.</p>
+        <h3>Zero external effect — structurally enforced</h3>
+        <p>The shadow domain runs in a fully isolated namespace: no network, no filesystem, no shared memory with the canonical world. Shadow Thirst can observe what the action would do without doing it. Isolation is a structural property of the language — not a runtime flag.</p>
         <code class="gc-code">shadow.domain = Isolated(net=False, fs=False, ipc=False)</code>
       </div>
-
       <div class="guarantee-card reveal">
-        <h3>Divergence detection — not just output comparison</h3>
-        <p>Shadow Thirst compares the full execution trace, not just the final output. A program that produces the correct answer through an unexpected sequence of operations is flagged as divergent — because the unexpected operations reveal something about the program's actual goal that differs from its stated goal.</p>
-        <code class="gc-code">divergence = trace_distance(shadow.trace, model.expected_trace)</code>
+        <h3>Determinism — enforced by DeterminismAnalyzer</h3>
+        <p>Every shadow block must be deterministic. Non-deterministic calls (now, rand, epoch_ms, uuid) are flagged by Analyzer 02 before the promotion attempt even runs. A shadow that varies on each execution cannot be reliably compared against the canonical prediction.</p>
+        <code class="gc-code">DeterminismAnalyzer: REJECT if shadow calls {now, rand, epoch_ms, uuid}</code>
       </div>
-
       <div class="guarantee-card reveal">
-        <h3>CCS-sealed result — regardless of outcome</h3>
-        <p>Whether the shadow converges or diverges, the full shadow report — execution trace, divergence score, comparison results — is sealed to the CCS before the real-world gate is evaluated. There is no way to re-run the shadow and get a better result without that re-run also appearing in the CCS.</p>
-        <code class="gc-code">ccs.seal(shadow_report, attest=True, chain=True)</code>
+        <h3>CCS-sealed verdict — regardless of outcome</h3>
+        <p>Whether PROMOTE or REJECT, the full analysis report — all 14 analyzer results, the replay_hash, timestamps — is sealed to the CCS before the verdict is returned to the caller. There is no path to re-run analysis and get a better result without that re-run also appearing in the CCS.</p>
+        <code class="gc-code">ccs.seal(replay_hash(mutation), analysis_report)</code>
       </div>
-
     </div>
   </div>
 </section>
@@ -230,28 +476,28 @@
 <!-- WATERFALL INTEGRATION -->
 <section class="section--tight">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--em)">Pipeline Integration</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Where Shadow Thirst lives in the Waterfall.</h2>
+    <span class="eyebrow reveal" style="color:var(--em)">Pipeline Position</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Where Shadow Thirst lives.</h2>
     <div style="display:flex;flex-direction:column;gap:.6rem" class="reveal">
       <div class="waterfall-callout" style="border-color:rgba(52,211,153,.1);background:rgba(52,211,153,.04);opacity:.5">
         <div class="wc-icon">⬆</div>
         <div class="wc-body">
-          <h4>Stages 0–2: Structural · Signature · Behavioral</h4>
-          <p>The request has been validated, signed, and pattern-matched. Anomalies have been flagged. The request is ready for speculative execution.</p>
+          <h4>UTF Tier 3 — T.A.R.L.</h4>
+          <p>TARL policy compilation runs before Shadow Thirst. TARL verdicts (ALLOW/DENY/ESCALATE) gate which mutations are even submitted for promotion analysis.</p>
         </div>
       </div>
       <div class="waterfall-callout" style="border-color:var(--em-line);background:rgba(52,211,153,.08)">
         <div class="wc-icon">👁</div>
         <div class="wc-body">
-          <h4>Stage 3: Shadow Thirst fires here</h4>
-          <p>Shadow Thirst executes the action speculatively in the isolated domain. Computes the full divergence score. Seals the result to CCS. Passes or halts. <strong>This stage is the only time the action is executed before the real execution at Stage 6.</strong></p>
+          <h4>UTF Tier 4 — Shadow Thirst fires here</h4>
+          <p>14 analyzers run. PROMOTE or REJECT decision is produced. replay_hash() seals the full analysis report to CCS. In the PSIA Waterfall, Stage 3 uses operational shadow semantics derived from this tier — the dynamic runtime analog of the static analyzer.</p>
         </div>
       </div>
       <div class="waterfall-callout" style="border-color:rgba(52,211,153,.1);background:rgba(52,211,153,.04);opacity:.5">
         <div class="wc-icon">⬇</div>
         <div class="wc-body">
-          <h4>Stages 4–6: Gate · Commit · Memory</h4>
-          <p>OCEE evaluates the full constraint lattice. PSIA quorum authorises. CCS seals the final record. Real execution proceeds. The shadow report from Stage 3 is part of this record.</p>
+          <h4>UTF Tier 5 — TSCG</h4>
+          <p>TSCG encodes the promotion pipeline as a constitutional grammar expression: <code style="font-family:var(--font-mono);font-size:.9em">COG → DNT → SHD → INV → CAP → QRM → COM</code>. Shadow Thirst's SHD symbol maps directly to this tier.</p>
         </div>
       </div>
     </div>
@@ -262,30 +508,31 @@
 <section class="section--tight">
   <div class="container">
     <span class="eyebrow reveal" style="color:var(--em)">Implementation</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Shadow Thirst in code.</h2>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Shadow Thirst core API.</h2>
     <div class="codeframe reveal">
       <div class="codeframe-head">
         <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-        <span style="margin-left:.6rem;color:var(--em)">src/psia/shadow/operational_semantics.py · ShadowRuntime.execute</span>
+        <span style="margin-left:.6rem;color:var(--em)">src/utf/shadow_thirst/core.py · analyze() + promote()</span>
       </div>
       <div class="terminal">
-<span class="mu"># Shadow Thirst — Speculative Runtime · Thirsty's Projects LLC</span><br/>
+<span class="mu"># Shadow Thirst — UTF Tier 4 · Thirsty's Projects LLC</span><br/>
 <br/>
-<span class="pr">class</span> <span class="ok">ShadowRuntime</span>:<br/>
-&nbsp;&nbsp;DIVERGENCE_THRESHOLD = <span class="vl">0.15</span>  <span class="mu"># 15% — configurable per deployment</span><br/>
+<span class="pr">def</span> <span class="ok">analyze</span>(mutation: MutationAST) -&gt; AnalysisReport:<br/>
+&nbsp;&nbsp;<span class="mu"># Run all 14 analyzers — critical first</span><br/>
+&nbsp;&nbsp;critical_results = [a.<span class="ok">check</span>(mutation) <span class="pr">for</span> a <span class="pr">in</span> CRITICAL_ANALYZERS]<br/>
+&nbsp;&nbsp;warning_results  = [a.<span class="ok">check</span>(mutation) <span class="pr">for</span> a <span class="pr">in</span> WARNING_ANALYZERS]<br/>
+&nbsp;&nbsp;seal = <span class="ok">replay_hash</span>(mutation)  <span class="mu"># SHA-256 of mutation structure</span><br/>
+&nbsp;&nbsp;<span class="pr">return</span> AnalysisReport(critical_results, warning_results, seal)<br/>
 <br/>
-&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">execute</span>(self, action: Action, expected: ExpectedTrace) -&gt; ShadowReport:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">with</span> IsolatedDomain(net=<span class="vl">False</span>, fs=<span class="vl">False</span>, ipc=<span class="vl">False</span>) <span class="pr">as</span> domain:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trace = domain.<span class="ok">run</span>(action)  <span class="mu"># speculative — no real effect</span><br/>
+<span class="pr">def</span> <span class="ok">promote</span>(mutation: MutationAST) -&gt; PromotionVerdict:<br/>
+&nbsp;&nbsp;report = <span class="ok">analyze</span>(mutation)<br/>
+&nbsp;&nbsp;verdict = <span class="vl">PROMOTE</span> <span class="pr">if</span> report.<span class="ok">all_critical_pass</span>() <span class="pr">else</span> <span class="vl">REJECT</span><br/>
+&nbsp;&nbsp;ccs.<span class="ok">seal</span>(report)  <span class="mu"># sealed before returning — no re-run path</span><br/>
+&nbsp;&nbsp;<span class="pr">return</span> PromotionVerdict(verdict=verdict, seal=report.seal)<br/>
 <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;divergence = TraceDistance.<span class="ok">compute</span>(trace, expected)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;report = ShadowReport(<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trace=trace,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divergence=divergence,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verdict=<span class="vl">CONVERGE</span> <span class="pr">if</span> divergence &lt;= self.DIVERGENCE_THRESHOLD <span class="pr">else</span> <span class="vl">HALT</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;ccs.<span class="ok">seal</span>(report, attest=<span class="vl">True</span>)  <span class="mu"># sealed before caller sees verdict</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> report<br/>
+<span class="pr">def</span> <span class="ok">replay_hash</span>(mutation: MutationAST) -&gt; str:<br/>
+&nbsp;&nbsp;<span class="mu"># SHA-256 of the full mutation structure — canonical audit identifier</span><br/>
+&nbsp;&nbsp;<span class="pr">return</span> hashlib.<span class="ok">sha256</span>(<span class="ok">str</span>(mutation).<span class="ok">encode</span>()).<span class="ok">hexdigest</span>()<br/>
       </div>
     </div>
   </div>
@@ -307,7 +554,7 @@
 <div id="site-footer"></div>
 <script src="../../../assets/js/site.js"></script>
 <script>
-/* ── Shadow Thirst canvas: parallel execution streams ── */
+/* ── Shadow Thirst canvas: dual-plane streams + analyzer pulses ── */
 (function(){
   const cv=document.getElementById('sh-canvas');
   if(!cv) return;
@@ -317,45 +564,47 @@
   resize(); window.addEventListener('resize',resize);
 
   const streams=[];
+  const pulses=[];
+
   class Stream {
-    constructor(real){
-      this.real=real;
-      this.x=real?W*.3:W*.55;
-      this.x+=Math.random()*W*.1*(real?-1:1);
-      this.y=Math.random()*-H*.3;
-      this.vy=.8+Math.random()*.5;
-      this.len=40+Math.random()*80;
+    constructor(isShadow){
+      this.shadow=isShadow;
+      this.x=isShadow ? W*.25+Math.random()*W*.18 : W*.57+Math.random()*W*.18;
+      this.y=Math.random()*-H*.35;
+      this.vy=.75+Math.random()*.55;
+      this.len=35+Math.random()*90;
       this.opacity=0;
-      this.converge=Math.random()>.2;
+      this.reject=!isShadow && Math.random()<.18;
+      this.promote=isShadow && Math.random()>.25;
     }
     draw(){
       this.y+=this.vy;
-      this.opacity=Math.min(.35,this.opacity+.015);
-      const col=this.real
-        ?(this.converge?'rgba(52,211,153,':'rgba(239,68,68,')
-        :'rgba(0,212,255,';
+      this.opacity=Math.min(.32,this.opacity+.012);
+      const col=this.shadow
+        ?(this.promote?'rgba(52,211,153,':'rgba(0,212,255,')
+        :(this.reject?'rgba(239,68,68,':'rgba(52,211,153,');
       const grd=ctx.createLinearGradient(this.x,this.y-this.len,this.x,this.y);
       grd.addColorStop(0,'transparent');
       grd.addColorStop(.5,col+this.opacity+')');
       grd.addColorStop(1,'transparent');
-      ctx.beginPath();
-      ctx.moveTo(this.x,this.y-this.len);
-      ctx.lineTo(this.x,this.y);
-      ctx.strokeStyle=grd; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(this.x,this.y-this.len); ctx.lineTo(this.x,this.y);
+      ctx.strokeStyle=grd; ctx.lineWidth=1.4; ctx.stroke();
       return this.y>H+100;
     }
   }
 
-  setInterval(()=>{ streams.push(new Stream(false)); if(Math.random()>.5) streams.push(new Stream(true)); }, 300);
+  setInterval(()=>{
+    streams.push(new Stream(true));
+    if(Math.random()>.45) streams.push(new Stream(false));
+  },300);
 
-  // Center divider
   function drawDivider(){
     const x=W*.5;
     ctx.beginPath(); ctx.moveTo(x,-10); ctx.lineTo(x,H+10);
-    ctx.strokeStyle=`rgba(52,211,153,${.06+.02*Math.sin(t*.02)})`;
-    ctx.setLineDash([8,12]); ctx.lineWidth=1; ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle='rgba(52,211,153,.15)'; ctx.font='11px JetBrains Mono'; ctx.textAlign='center';
-    ctx.fillText('DIVERGENCE CHECK',x,H*.15);
+    ctx.strokeStyle=`rgba(52,211,153,${.05+.015*Math.sin(t*.025)})`;
+    ctx.setLineDash([6,14]); ctx.lineWidth=1; ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(52,211,153,.12)'; ctx.font='10px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('14 ANALYZERS',x,H*.12);
   }
 
   function draw(){
@@ -364,11 +613,10 @@
     for(let i=streams.length-1;i>=0;i--){
       if(streams[i].draw()) streams.splice(i,1);
     }
-    // Labels
-    ctx.fillStyle='rgba(0,212,255,.12)'; ctx.font='12px JetBrains Mono'; ctx.textAlign='center';
-    ctx.fillText('SHADOW',W*.28,30);
-    ctx.fillStyle='rgba(52,211,153,.12)';
-    ctx.fillText('REAL',W*.72,30);
+    ctx.fillStyle='rgba(0,212,255,.1)'; ctx.font='11px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('SHADOW PLANE',W*.28,28);
+    ctx.fillStyle='rgba(52,211,153,.1)';
+    ctx.fillText('CANONICAL PLANE',W*.72,28);
     t++;
     requestAnimationFrame(draw);
   }

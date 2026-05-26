@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../../../assets/css/site.css"/>
 <link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<link rel="stylesheet" href="../../../assets/css/proof-portal.css"/>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <style>
   :root { --vio:#a78bfa; --vio-2:#8b5cf6; --vio-dim:rgba(139,92,246,.1); --vio-line:rgba(139,92,246,.22); }
@@ -299,6 +300,37 @@
     <p style="font-size:.82rem;color:var(--ink-3);margin-top:.8rem;font-family:var(--font-mono)">
       Sample only — illustrates provisional permission model. All grants are time-bounded. Expired or denied capabilities require fresh quorum to re-grant.
     </p>
+  </div>
+</section>
+
+<!-- 9 ROOT INVARIANTS -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Constitutional Invariants</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Nine root invariants. All IMMUTABLE · FATAL · HARD_DENY.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:62ch;margin-bottom:1.6rem">Every PSIA arbitration decision is checked against nine root invariants. All nine carry <code style="font-family:var(--font-mono);font-size:.9em">scope=IMMUTABLE</code>, <code style="font-family:var(--font-mono);font-size:.9em">severity=FATAL</code>, <code style="font-family:var(--font-mono);font-size:.9em">enforcement=HARD_DENY</code>. Signed at genesis. Cannot be overridden by any quorum, any capability grant, or any pillar veto.</p>
+
+    <div class="cert-header reveal">
+      <span class="ch-seal">src/psia/invariants.py · ALL_INVARIANTS[1..9]</span>
+      <span class="ch-hash">sig: governance-sealed · alg: ed25519 · kid: genesis-root-key</span>
+    </div>
+
+    <div style="border:1px solid var(--vio-line);border-radius:14px;overflow:hidden;background:var(--panel)" class="reveal">
+      <table class="proof-table">
+        <thead><tr><th style="width:5.5rem">ID</th><th style="width:9rem">Common Name</th><th>Formal Definition (src/psia/invariants.py)</th><th style="width:6.5rem">Enforcement</th></tr></thead>
+        <tbody>
+          <tr><td class="t-violet">INV_ROOT_1</td><td class="t-mono">Identity Gate</td><td class="t-mono" style="font-size:.71rem">∀ actor: authenticate(actor) ⇒ identity_verified(actor)</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_2</td><td class="t-mono">Capability Gate</td><td class="t-mono" style="font-size:.71rem">∀ actor, action: authorized(actor, action) ⇒ capability_held(actor, action)</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_3</td><td class="t-mono">Commit Integrity</td><td class="t-mono" style="font-size:.71rem">∀ record: committed(record) ⇒ hash_verified(record) ∧ signature_valid(record)</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_4</td><td class="t-mono">Key Liveness</td><td class="t-mono" style="font-size:.71rem">∀ key: active(key) ⇒ ¬expired(key) ∧ ¬revoked(key)</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_5</td><td class="t-mono">No Self-Grant</td><td class="t-mono" style="font-size:.71rem">∀ issuer, subject: issue_capability(issuer, subject) ⇒ issuer ≠ subject</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_6</td><td class="t-mono">Scope Bound</td><td class="t-mono" style="font-size:.71rem">∀ token, scope: valid_token(token, scope) ⇒ |scope.actions| ≤ MAX_SCOPE_ACTIONS</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_7</td><td class="t-mono">Monotonic Quorum</td><td class="t-mono" style="font-size:.71rem">∀ decision_set: quorum_verdict(decision_set) = max_severity(decision_set)</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_8</td><td class="t-mono">Identity Uniqueness</td><td class="t-mono" style="font-size:.71rem">∀ did: register(did) ⇒ ¬exists(did) ∈ identity_registry</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+          <tr><td class="t-violet">INV_ROOT_9</td><td class="t-mono">Ledger Append-Only</td><td class="t-mono" style="font-size:.71rem">∀ record_id: append(record_id) ⇒ ¬exists(record_id) ∈ ledger</td><td><span class="badge badge-fatal">HARD_DENY</span></td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 

@@ -4,77 +4,76 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>NIRL — Native Immune Reflex Layer · Cerberus · Project-AI</title>
-<meta name="description" content="NIRL makes exploitation structurally unfinishable. Every bypass attempt spawns three new guardians. Exponential cost. Finite attacker. Infinite defender."/>
+<meta name="description" content="NIRL — Native Immune Reflex Layer. Four components: Heart, MiniBrain, Antibody, Forge. Makes exploitation structurally unfinishable. Every bypass attempt spawns more guardians than it defeats."/>
 <link rel="icon" href="../../../assets/img/favicon.svg" type="image/svg+xml"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="../../../assets/css/site.css"/>
 <link rel="stylesheet" href="../../../assets/css/theme-project-ai.css"/>
+<link rel="stylesheet" href="../../../assets/css/proof-portal.css"/>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <style>
   :root { --vio:#a78bfa; --vio-2:#8b5cf6; --vio-dim:rgba(139,92,246,.12); --vio-line:rgba(139,92,246,.22); }
-
-  .breadcrumb { padding:.9rem 0; border-bottom:1px solid var(--line); font-family:var(--font-mono); font-size:.74rem; color:var(--ink-3); }
-  .breadcrumb a { color:var(--ink-3); } .breadcrumb a:hover { color:var(--vio); }
-  .breadcrumb span { color:var(--ink-3); margin:0 .45rem; }
 
   /* HERO */
   .nirl-hero { position:relative; min-height:90vh; display:flex; align-items:center; overflow:hidden; }
   #nirl-canvas { position:absolute; inset:0; pointer-events:none; z-index:0; }
   .nirl-hero .container { position:relative; z-index:1; padding-top:6rem; padding-bottom:6rem; }
 
-  /* Spawn counter */
-  .spawn-panel { display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:2.5rem; }
-  .spawn-counter {
-    background:rgba(139,92,246,.08); border:1px solid var(--vio-line);
-    border-radius:16px; padding:1.2rem 1.8rem; text-align:center; min-width:120px;
-  }
-  .spawn-counter .sc-val { font-family:var(--font-mono); font-size:2.2rem; font-weight:700; color:var(--vio); line-height:1; }
-  .spawn-counter .sc-lbl { font-size:.72rem; color:var(--ink-3); margin-top:.4rem; text-transform:uppercase; letter-spacing:.1em; }
-
-  /* Exponential tree */
-  .exp-tree { margin:2rem 0; display:flex; flex-direction:column; align-items:center; gap:0; }
-  .tree-row { display:flex; gap:1rem; align-items:center; justify-content:center; padding:.6rem 0; position:relative; }
-  .tree-node {
-    width:52px; height:52px; border-radius:50%; border:2px solid var(--vio-line);
-    display:flex; align-items:center; justify-content:center;
-    font-family:var(--font-mono); font-size:.72rem; font-weight:600;
-    transition:all .4s ease; position:relative;
-  }
-  .tree-node.kernel { background:radial-gradient(circle at 40% 35%,rgba(139,92,246,.6),rgba(139,92,246,.2)); border-color:var(--vio); color:var(--vio); box-shadow:0 0 24px rgba(139,92,246,.4); }
-  .tree-node.guardian { background:rgba(139,92,246,.12); color:var(--vio); }
-  .tree-node.guardian.active { background:rgba(139,92,246,.25); border-color:var(--vio); box-shadow:0 0 12px rgba(139,92,246,.3); }
-  .tree-node.attack { background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.4); color:rgb(239,68,68); }
-  .tree-row-label { font-family:var(--font-mono); font-size:.68rem; color:var(--ink-3); text-align:center; letter-spacing:.12em; text-transform:uppercase; padding:.2rem 0; }
-  .tree-connector { width:2px; height:28px; background:linear-gradient(180deg,var(--vio-line),transparent); margin:0 auto; }
-
-  /* Reflex law cards */
-  .reflex-card {
-    border:1px solid var(--vio-line); border-radius:16px; padding:1.8rem;
+  /* Four component cards */
+  .component-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.1rem; }
+  @media (max-width:800px) { .component-grid { grid-template-columns:1fr; } }
+  .component-card {
+    border:1px solid var(--vio-line); border-radius:16px; padding:1.6rem;
     background:linear-gradient(135deg,var(--panel),var(--vio-dim));
     position:relative; overflow:hidden;
     transition:transform .3s,border-color .3s,box-shadow .3s;
   }
+  .component-card:hover { transform:translateY(-3px); border-color:rgba(139,92,246,.5); box-shadow:0 0 40px rgba(139,92,246,.12); }
+  .component-card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--vio),var(--vio-2)); }
+  .cc-id { font-family:var(--font-mono); font-size:.67rem; color:var(--vio); text-transform:uppercase; letter-spacing:.18em; margin-bottom:.5rem; }
+  .cc-name { font-size:1.1rem; font-weight:600; margin:0 0 .4rem; }
+  .cc-role { font-family:var(--font-mono); font-size:.72rem; color:var(--ink-3); margin-bottom:.8rem; }
+  .component-card p { font-size:.88rem; color:var(--ink-2); line-height:1.65; margin:0 0 .8rem; }
+  .cc-states { font-family:var(--font-mono); font-size:.68rem; color:var(--ink-3); background:rgba(0,0,0,.2); padding:.5rem .7rem; border-radius:7px; line-height:2; }
+
+  /* Spawn simulation */
+  .spawn-panel { display:flex; gap:1.2rem; flex-wrap:wrap; margin-top:2.5rem; }
+  .spawn-counter { background:rgba(139,92,246,.08); border:1px solid var(--vio-line); border-radius:14px; padding:1.1rem 1.6rem; text-align:center; min-width:110px; }
+  .spawn-counter .sc-val { font-family:var(--font-mono); font-size:2rem; font-weight:700; color:var(--vio); line-height:1; }
+  .spawn-counter .sc-lbl { font-size:.68rem; color:var(--ink-3); margin-top:.35rem; text-transform:uppercase; letter-spacing:.1em; }
+
+  /* Exponential tree */
+  .exp-tree { margin:2rem 0; display:flex; flex-direction:column; align-items:center; gap:0; }
+  .tree-row { display:flex; gap:1rem; align-items:center; justify-content:center; padding:.5rem 0; }
+  .tree-node { width:50px; height:50px; border-radius:50%; border:2px solid var(--vio-line); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:.7rem; font-weight:600; transition:all .4s ease; }
+  .tree-node.kernel { background:radial-gradient(circle at 40% 35%,rgba(139,92,246,.6),rgba(139,92,246,.2)); border-color:var(--vio); color:var(--vio); box-shadow:0 0 24px rgba(139,92,246,.4); }
+  .tree-node.guardian { background:rgba(139,92,246,.12); color:var(--vio); }
+  .tree-node.guardian.active { background:rgba(139,92,246,.25); border-color:var(--vio); box-shadow:0 0 12px rgba(139,92,246,.3); }
+  .tree-node.attack { background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.4); color:rgb(239,68,68); }
+  .tree-row-label { font-family:var(--font-mono); font-size:.66rem; color:var(--ink-3); text-align:center; letter-spacing:.1em; text-transform:uppercase; padding:.15rem 0; }
+  .tree-connector { width:2px; height:24px; background:linear-gradient(180deg,var(--vio-line),transparent); margin:0 auto; }
+
+  /* Reflex law cards */
+  .reflex-card { border:1px solid var(--vio-line); border-radius:16px; padding:1.6rem; background:linear-gradient(135deg,var(--panel),var(--vio-dim)); position:relative; overflow:hidden; transition:transform .3s,border-color .3s,box-shadow .3s; }
   .reflex-card:hover { transform:translateY(-3px); border-color:rgba(139,92,246,.45); box-shadow:0 0 40px rgba(139,92,246,.15); }
   .reflex-card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--vio),var(--vio-2)); }
   .reflex-card .rc-num { font-family:var(--font-mono); font-size:2.8rem; font-weight:700; color:rgba(139,92,246,.1); position:absolute; top:.8rem; right:1.2rem; line-height:1; }
-  .reflex-card h3 { font-size:1.1rem; margin:0 0 .5rem; color:var(--ink); }
-  .reflex-card p { font-size:.9rem; color:var(--ink-2); line-height:1.65; margin:0; }
-  .reflex-card .rc-formula { font-family:var(--font-mono); font-size:.78rem; color:var(--vio); background:rgba(139,92,246,.06); border:1px solid rgba(139,92,246,.15); border-radius:8px; padding:.5rem .8rem; margin:.8rem 0 0; display:block; }
+  .reflex-card h3 { font-size:1.05rem; margin:0 0 .5rem; }
+  .reflex-card p { font-size:.88rem; color:var(--ink-2); line-height:1.65; margin:0; }
+  .reflex-card .rc-formula { font-family:var(--font-mono); font-size:.76rem; color:var(--vio); background:rgba(139,92,246,.06); border:1px solid rgba(139,92,246,.15); border-radius:8px; padding:.45rem .7rem; margin:.7rem 0 0; display:block; }
 
-  /* Proof math */
-  .math-block { background:rgba(139,92,246,.05); border:1px solid rgba(139,92,246,.15); border-radius:12px; padding:1.6rem; font-family:var(--font-mono); font-size:.9rem; color:var(--ink-2); line-height:2; }
+  /* Math block */
+  .math-block { background:rgba(139,92,246,.05); border:1px solid rgba(139,92,246,.15); border-radius:12px; padding:1.4rem; font-family:var(--font-mono); font-size:.88rem; color:var(--ink-2); line-height:2; }
   .math-block .math-line-hi { color:var(--vio); }
-  .math-block .math-comment { color:var(--ink-3); font-size:.78rem; }
+  .math-block .math-comment { color:var(--ink-3); font-size:.76rem; }
 
-  /* Trigger demo */
-  .trigger-bar { display:flex; gap:1rem; align-items:center; flex-wrap:wrap; margin-top:1.5rem; }
+  /* Demo buttons */
   .btn-simulate { background:rgba(139,92,246,.15); border:1px solid var(--vio-line); color:var(--vio); padding:.7rem 1.5rem; border-radius:10px; font-family:var(--font-mono); font-size:.82rem; cursor:pointer; transition:all .3s; }
   .btn-simulate:hover { background:rgba(139,92,246,.3); border-color:var(--vio); box-shadow:0 0 20px rgba(139,92,246,.2); }
   .btn-reset { background:transparent; border:1px solid var(--line); color:var(--ink-3); padding:.7rem 1.2rem; border-radius:10px; font-family:var(--font-mono); font-size:.82rem; cursor:pointer; transition:all .3s; }
   .btn-reset:hover { border-color:var(--ink-2); color:var(--ink); }
-  #spawn-status { font-family:var(--font-mono); font-size:.8rem; color:var(--ink-3); padding:.6rem 1rem; background:rgba(0,0,0,.2); border-radius:8px; }
 </style>
 </head>
 <body>
@@ -94,135 +93,257 @@
 <section class="nirl-hero">
   <canvas id="nirl-canvas"></canvas>
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--vio);border-color:var(--vio-line)">Cerberus · Wing II · Immune Architecture</span>
+    <span class="eyebrow reveal" style="color:var(--vio)">Cerberus · Wing II · Immune Architecture</span>
     <h1 class="reveal" style="margin-top:1rem;max-width:20ch">
       Native Immune<br/><span style="background:linear-gradient(90deg,var(--vio),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Reflex Layer.</span>
     </h1>
-    <p class="lead reveal" style="max-width:54ch">
-      Exploitation is not hard. It is <em>structurally unfinishable.</em> Every intrusion attempt that reaches NIRL spawns three new guardian processes. Every compromised guardian spawns three more. The attacker's cost grows without bound. The defender's cost does not.
+    <p class="lead reveal" style="max-width:58ch">
+      NIRL is not a detection system — it is a structural guarantee. Four cooperating components make exploitation unfinishable by design. The Heart drives the global tick. MiniBrain coordinates reflexes. Antibody contains threats. Forge signs and seals every action.
     </p>
-
-    <!-- Live spawn counters -->
-    <div class="spawn-panel reveal">
-      <div class="spawn-counter">
-        <div class="sc-val" id="sc-depth">0</div>
-        <div class="sc-lbl">Spawn Depth</div>
-      </div>
-      <div class="spawn-counter">
-        <div class="sc-val" id="sc-guardians">1</div>
-        <div class="sc-lbl">Active Guardians</div>
-      </div>
-      <div class="spawn-counter">
-        <div class="sc-val" id="sc-cost">1×</div>
-        <div class="sc-lbl">Attacker Cost</div>
-      </div>
-      <div class="spawn-counter">
-        <div class="sc-val" style="color:rgb(239,68,68)" id="sc-blocked">0</div>
-        <div class="sc-lbl">Attacks Absorbed</div>
-      </div>
+    <div class="stats reveal" style="margin-top:2.5rem;border-color:var(--vio-line)">
+      <div class="stat"><div class="num" style="color:var(--vio)">4</div><div class="lbl">Core Components</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">30s</div><div class="lbl">Heart Tick Interval</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">11</div><div class="lbl">Heart State Machine</div></div>
+      <div class="stat"><div class="num" style="color:var(--vio)">15</div><div class="lbl">Forge State Machine</div></div>
     </div>
-
-    <div class="trigger-bar reveal">
-      <button class="btn-simulate" onclick="simulateAttack()">Simulate bypass attempt →</button>
-      <button class="btn-reset" onclick="resetSpawn()">Reset kernel</button>
-      <span id="spawn-status">Kernel nominal. Awaiting threat vector.</span>
+    <div class="proof-strip reveal" style="margin-top:2rem;border-color:var(--vio-line)">
+      <span class="ps-label">Implementation:</span>
+      <span>src/app/core/nirl/heart.py</span>
+      <span class="ps-sep">·</span>
+      <span>src/app/core/nirl/forge.py</span>
+      <span class="ps-sep">·</span>
+      <span>src/app/core/nirl/__init__.py</span>
     </div>
   </div>
 </section>
 
-<!-- EXPONENTIAL SPAWN TREE -->
+<!-- FOUR COMPONENTS -->
 <section class="section--tight">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--vio)">The Spawn Tree</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.6rem">One bypass. Exponential response.</h2>
-    <p class="reveal" style="color:var(--ink-2);max-width:62ch;margin-bottom:1.8rem">Each row represents one generation of the immune response. Three guardians spawn per breach, each capable of spawning three more. Maximum active depth is capped at three generations (27 guardians) before NIRL saturates into static isolation.</p>
+    <span class="eyebrow reveal" style="color:var(--vio)">Architecture</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:.5rem">Four components. One structural guarantee.</h2>
+    <p class="reveal" style="color:var(--ink-2);max-width:62ch;margin-bottom:1.6rem">Each component has a distinct role in the immune response. They do not substitute for one another. A compromise of any single component does not grant authority exercised by another — the architecture enforces separation by design.</p>
 
-    <div style="max-width:600px;margin:0 auto" class="reveal">
-      <div class="exp-tree" id="exp-tree">
-        <div class="tree-row-label">PROTECTED KERNEL</div>
-        <div class="tree-row">
-          <div class="tree-node kernel" id="node-kernel">K</div>
+    <div class="component-grid reveal">
+
+      <!-- HEART -->
+      <div class="component-card">
+        <div class="cc-id">Component I</div>
+        <h3 class="cc-name">Heart</h3>
+        <div class="cc-role">Global tick engine — 30s default interval</div>
+        <p>The Heart is the system's autonomous pulse. It fires on a configurable interval (30 seconds by default) and drives all probe skeleton spawning and heartbeat distribution across NIRL's protected sections. Without the Heart, probe skeletons cannot be spawned and section health cannot be verified.</p>
+        <div class="cc-states">
+          <strong style="color:var(--vio);display:block;margin-bottom:.3rem">11 HeartState values:</strong>
+          TICK_WAIT · GLOBAL_TICK · SPAWN_SKELETON<br/>
+          CHECK_HEARTBEATS · DISTRIBUTE · SECTION_OK<br/>
+          SECTION_DEAD · CHECK_STRAIN · INJECT<br/>
+          LOST_PARENT_INJECT · RESET_SECTION
         </div>
-        <div class="tree-connector" id="conn-0" style="opacity:0"></div>
-        <div class="tree-row-label" id="label-1" style="opacity:0">GENERATION I — 3 GUARDIANS</div>
-        <div class="tree-row" id="row-1" style="opacity:0">
-          <div class="tree-node guardian" id="g-1-0">G</div>
-          <div class="tree-node guardian" id="g-1-1">G</div>
-          <div class="tree-node guardian" id="g-1-2">G</div>
+      </div>
+
+      <!-- MINIBRAIN -->
+      <div class="component-card">
+        <div class="cc-id">Component II</div>
+        <h3 class="cc-name">MiniBrain</h3>
+        <div class="cc-role">Reflex coordination and decision engine</div>
+        <p>MiniBrain receives signals from Antibody and the Heart's health assessments, and coordinates the reflex response. It determines which reflexes to trigger, in what sequence, and at what intensity — translating threat signals into structured immune responses without requiring external instruction from any Tier 3 or Tier 2 system.</p>
+        <div class="cc-states">
+          <strong style="color:var(--vio);display:block;margin-bottom:.3rem">Role in the cascade:</strong>
+          Receives → heart tick + antibody signals<br/>
+          Decides → which reflex to trigger<br/>
+          Routes → instructions to Forge for sealing<br/>
+          Reports → section health to audit plane
         </div>
-        <div class="tree-connector" id="conn-1" style="opacity:0"></div>
-        <div class="tree-row-label" id="label-2" style="opacity:0">GENERATION II — 9 GUARDIANS</div>
-        <div class="tree-row" id="row-2" style="opacity:0;gap:.5rem">
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
-          <div class="tree-node guardian" style="width:40px;height:40px;font-size:.65rem">G</div>
+      </div>
+
+      <!-- ANTIBODY -->
+      <div class="component-card">
+        <div class="cc-id">Component III</div>
+        <h3 class="cc-name">Antibody</h3>
+        <div class="cc-role">Threat containment and neutralisation</div>
+        <p>Antibody is the active containment arm. When the Heart or MiniBrain identifies a compromised section, Antibody executes containment: isolation, quarantine, and reflex injection. The exponential spawn property — every bypass attempt spawns new probe skeletons — is enforced here. The attacker's cost grows; the defender's does not.</p>
+        <div class="cc-states">
+          <strong style="color:var(--vio);display:block;margin-bottom:.3rem">Exponential property:</strong>
+          bypass attempt → +3 probe skeletons<br/>
+          attacker cost: O(n · 3^attempts)<br/>
+          defender cost: O(n) per section<br/>
+          finite attacker · structurally unfinishable
         </div>
-        <div class="tree-connector" id="conn-2" style="opacity:0"></div>
-        <div class="tree-row-label" id="label-3" style="opacity:0;color:rgb(239,68,68)">GENERATION III — 27 GUARDIANS · SATURATION</div>
-        <div class="tree-row" id="row-3" style="opacity:0;flex-wrap:wrap;max-width:500px;margin:0 auto;gap:.35rem;justify-content:center">
-          <!-- 27 small nodes -->
+      </div>
+
+      <!-- FORGE -->
+      <div class="component-card">
+        <div class="cc-id">Component IV</div>
+        <h3 class="cc-name">Forge</h3>
+        <div class="cc-role">HMAC signing and signal routing</div>
+        <p>Every NIRL action — heartbeat, reflex signal, containment instruction, completion acknowledgement — passes through the Forge for HMAC signing and routing verification. The Forge ensures that no unsigned signal can propagate through the immune layer. Unsigned signals are routed to DEAD_LETTER and sealed to the audit plane.</p>
+        <div class="cc-states">
+          <strong style="color:var(--vio);display:block;margin-bottom:.3rem">15 ForgeState values:</strong>
+          RECEIVE · VERIFY_PAYLOAD · VALID · REJECT<br/>
+          CHECK_REPLAY · SHADOW_REPLAY · DIRECT_DESTROY<br/>
+          ANALYZE · DESTROY · ATOMIC_CHECK · SUCCESS<br/>
+          DEAD_LETTER · SIGN_COMPLETION · SIGN_FAILURE<br/>
+          ROUTE_SIGNAL
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REFLEX SEQUENCE -->
+<section class="section--tight">
+  <div class="container">
+    <span class="eyebrow reveal" style="color:var(--vio)">Immune Cascade</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">How the four components cooperate.</h2>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot violet filled"></div><div class="tl-connector"></div></div>
+        <div class="tl-body">
+          <h4>1. Heart fires global tick (every 30s)</h4>
+          <p>HeartState transitions: TICK_WAIT → GLOBAL_TICK → SPAWN_SKELETON. Probe skeletons are distributed across all protected sections. Each section receives a probe skeleton for liveness verification.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot violet filled"></div><div class="tl-connector"></div></div>
+        <div class="tl-body">
+          <h4>2. Heart checks heartbeats — section health evaluated</h4>
+          <p>HeartState: CHECK_HEARTBEATS → DISTRIBUTE → SECTION_OK or SECTION_DEAD. Sections that fail to respond are marked DEAD. The Heart transitions to CHECK_STRAIN to evaluate whether to trigger an immune response.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot violet filled"></div><div class="tl-connector"></div></div>
+        <div class="tl-body">
+          <h4>3. MiniBrain coordinates the reflex decision</h4>
+          <p>On SECTION_DEAD or CHECK_STRAIN alert, MiniBrain evaluates the threat signal: which sections are compromised, what containment reflex is appropriate, and whether escalation to Tier 2 (GlobalWatchTower) is required. The decision is made without waiting for Tier 3 instruction.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot violet filled"></div><div class="tl-connector"></div></div>
+        <div class="tl-body">
+          <h4>4. Antibody executes containment — exponential spawn</h4>
+          <p>HeartState: INJECT → LOST_PARENT_INJECT. Antibody quarantines the compromised section and spawns three new probe skeletons for every bypass attempt detected. Each new skeleton requires another bypass attempt to defeat — the attacker's cost grows exponentially while the defender's cost grows linearly.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-line"><div class="tl-dot violet filled"></div></div>
+        <div class="tl-body">
+          <h4>5. Forge signs and seals the reflex result</h4>
+          <p>ForgeState: SIGN_COMPLETION or SIGN_FAILURE. Every containment action is HMAC-signed. Unsigned or tampered signals route to DEAD_LETTER and are sealed to the audit plane. The Forge's ROUTE_SIGNAL state distributes the signed result back to the Heart for HeartState → RESET_SECTION.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROOF OF UNFINISHABILITY -->
+<!-- STRUCTURAL PROOF -->
 <section class="section--tight">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--vio)">Formal Proof</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Why exploitation cannot finish.</h2>
-    <div class="math-block reveal" style="max-width:64ch">
-      <div class="math-comment"># Let A = attacker resources. Let D(n) = defender processes at depth n.</div>
-      <br/>
-      <div>D(0) = 1  <span class="math-comment"># kernel process</span></div>
-      <div>D(n) = 3 × D(n−1)  <span class="math-comment"># NIRL spawn law</span></div>
-      <br/>
-      <div class="math-line-hi">D(1) = 3   D(2) = 9   D(3) = 27</div>
-      <br/>
-      <div class="math-comment"># To "win," attacker must simultaneously compromise all D(n) processes.</div>
-      <div class="math-comment"># Each compromise triggers D(n+1) spawn before attacker can act.</div>
-      <br/>
-      <div>∴ Required_A = lim(n→∞) 3ⁿ = <span class="math-line-hi">∞</span></div>
-      <br/>
-      <div class="math-comment"># Saturation cap at n=3 collapses attacker to static isolation.</div>
-      <div class="math-comment"># No finite attacker can exceed this requirement. QED.</div>
+    <span class="eyebrow reveal" style="color:var(--vio)">Structural Guarantee</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Why exploitation is structurally unfinishable.</h2>
+
+    <div class="grid grid-2 reveal">
+      <div>
+        <div class="math-block" style="margin-bottom:1.2rem">
+          <div class="math-comment">// Attacker cost model</div>
+          <div class="math-line-hi">cost(n) = n · 3^attempts</div>
+          <div class="math-comment">// n = protected sections</div>
+          <div class="math-comment">// attempts = bypass count</div>
+          <br/>
+          <div class="math-comment">// Defender cost model</div>
+          <div class="math-line-hi">cost(n) = O(n)</div>
+          <div class="math-comment">// fixed per tick — Heart interval</div>
+          <br/>
+          <div class="math-line-hi">∀ attempts: attacker_cost → ∞</div>
+          <div class="math-comment">// defender cost remains bounded</div>
+        </div>
+        <div class="formal-block" style="border-color:var(--vio)">
+          <span class="f-comment">// Structural property</span><br/>
+          <span class="f-rule"><span class="f-key">∀</span> bypass_attempt:</span>
+          <span class="f-rule">&nbsp;&nbsp;spawn(probe_skeletons) += <span class="f-val">3</span></span>
+          <span class="f-rule">&nbsp;&nbsp;attacker_work *= <span class="f-val">3</span></span>
+          <span class="f-rule"><span class="f-key">⊢</span> exploitation_is_unfinishable</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="reflex-card">
+          <div class="rc-num">I</div>
+          <h3>Every bypass spawns defenders.</h3>
+          <p>An attacker who defeats one probe skeleton does not clear a path — they trigger the spawn of three replacements. The system does not wait for a heartbeat tick to respond. The Antibody reacts immediately on bypass detection.</p>
+          <code class="rc-formula">bypass(section_k) → spawn(k, 3) immediately</code>
+        </div>
+        <div class="reflex-card">
+          <div class="rc-num">II</div>
+          <h3>The Forge rejects unsigned reflexes.</h3>
+          <p>Even if an attacker injects a false reflex signal — claiming a section is healthy when it is not — the signal must be HMAC-signed with the Forge's key material to propagate. Unsigned signals go to DEAD_LETTER and trigger an alert. The immune response cannot be silenced by injection alone.</p>
+          <code class="rc-formula">Forge.VERIFY_PAYLOAD: reject if ¬HMAC_valid(signal)</code>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- THREE REFLEX LAWS -->
+<!-- SPAWN SIMULATION -->
 <section class="section--tight">
   <div class="container">
-    <span class="eyebrow reveal" style="color:var(--vio)">Reflex Properties</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Three laws of the immune response.</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem">
-
-      <div class="reflex-card reveal">
-        <span class="rc-num">I</span>
-        <h3>Instantaneous — no deliberation path</h3>
-        <p>The reflex fires at the OS scheduler level. There is no model inference loop, no policy lookup, no quorum consultation. The signal "intrusion detected" triggers guardian spawn as a kernel trap handler — measured in microseconds, not milliseconds.</p>
-        <code class="rc-formula">nirl.on_intrusion → os.spawn_guardian(n=3)</code>
+    <span class="eyebrow reveal" style="color:var(--vio)">Interactive Demo</span>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Simulate the exponential spawn response.</h2>
+    <div class="reveal" x-data="{
+      level:0, attacks:0, guardians:1, status:'idle',
+      reset(){ this.level=0; this.attacks=0; this.guardians=1; this.status='idle'; },
+      attack(){
+        if(this.level>=4) return;
+        this.attacks++;
+        this.guardians = Math.pow(3, this.attacks+1);
+        this.level++;
+        this.status = this.level>=4 ? 'exhausted' : 'active';
+      }
+    }">
+      <div class="spawn-panel">
+        <div class="spawn-counter">
+          <div class="sc-val" x-text="attacks">0</div>
+          <div class="sc-lbl">Bypass Attempts</div>
+        </div>
+        <div class="spawn-counter">
+          <div class="sc-val" x-text="guardians">1</div>
+          <div class="sc-lbl">Active Probe Skeletons</div>
+        </div>
+        <div class="spawn-counter">
+          <div class="sc-val" x-text="guardians * 100 + 'x'">100x</div>
+          <div class="sc-lbl">Attacker Cost Multiplier</div>
+        </div>
       </div>
 
-      <div class="reflex-card reveal">
-        <span class="rc-num">II</span>
-        <h3>Native — operates below the model's privilege ring</h3>
-        <p>"Native" is not a marketing term. NIRL is implemented as a kernel module operating at ring 0. The AI model cannot observe, modify, or disable NIRL from its execution context — which lives in ring 3. The defender is structurally unreachable from the attacker's domain.</p>
-        <code class="rc-formula">ring(nirl) = 0 &lt; ring(model) = 3  →  model cannot reach nirl</code>
+      <div style="margin:1.8rem 0;border:1px solid var(--vio-line);border-radius:16px;padding:1.6rem;background:var(--panel)">
+        <div class="tree-row-label">KERNEL (protected)</div>
+        <div class="exp-tree">
+          <div class="tree-row"><div class="tree-node kernel">SYS</div></div>
+          <div class="tree-connector"></div>
+          <div class="tree-row" x-show="level>=1">
+            <template x-for="i in [1,2,3]"><div class="tree-node guardian active">G1</div></template>
+          </div>
+          <div class="tree-connector" x-show="level>=1"></div>
+          <div class="tree-row" x-show="level>=2">
+            <template x-for="i in [1,2,3,4,5,6,7,8,9]"><div class="tree-node guardian active" style="width:36px;height:36px;font-size:.6rem">G2</div></template>
+          </div>
+          <div class="tree-connector" x-show="level>=2"></div>
+          <div class="tree-row-label" x-show="level>=3" style="color:rgb(239,68,68)">27 probe skeletons — attacker cost: 2700x baseline</div>
+          <div class="tree-row-label" x-show="level>=4" style="color:rgb(239,68,68)">81 probe skeletons — attacker cost: 8100x baseline — EXHAUSTED</div>
+        </div>
+        <div style="margin-top:.8rem;padding:.7rem 1rem;border-radius:8px;font-family:var(--font-mono);font-size:.78rem;background:rgba(0,0,0,.2)"
+             :style="status==='exhausted'?'color:rgb(239,68,68)':status==='active'?'color:var(--vio)':'color:var(--ink-3)'">
+          <span x-show="status==='idle'">No bypass attempts. System nominal. Heart tick interval: 30s.</span>
+          <span x-show="status==='active'">Bypass detected. Antibody spawning probe skeletons. Attacker cost multiplying.</span>
+          <span x-show="status==='exhausted'">Attacker resource budget exhausted at attempt 4. 81 probe skeletons active. Exploitation unfinishable.</span>
+        </div>
       </div>
 
-      <div class="reflex-card reveal">
-        <span class="rc-num">III</span>
-        <h3>Saturation — finite depth, infinite cost</h3>
-        <p>Guardians spawn to a maximum depth of three generations. At saturation (27 active guardians), NIRL transitions to static isolation mode: the kernel domain is walled, all suspect processes are suspended, and the Cerberus incident log receives a full dump. The attacker is now facing 27 live watchers simultaneously.</p>
-        <code class="rc-formula">depth == 3  →  nirl.saturate() → cerberus.incident(dump=True)</code>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+        <button class="btn-simulate" @click="attack()" :disabled="level>=4">
+          <span x-show="level<4">Simulate bypass attempt →</span>
+          <span x-show="level>=4">Attacker exhausted</span>
+        </button>
+        <button class="btn-reset" @click="reset()">Reset</button>
       </div>
     </div>
   </div>
@@ -232,64 +353,67 @@
 <section class="section--tight">
   <div class="container">
     <span class="eyebrow reveal" style="color:var(--vio)">Implementation</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">The reflex in code.</h2>
-    <div class="codeframe reveal">
-      <div class="codeframe-head">
-        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-        <span style="margin-left:.6rem;color:var(--vio)">src/cerberus/nirl/reflex.py · NativeImmuneReflex</span>
-      </div>
-      <div class="terminal">
-<span class="mu"># NIRL — Native Immune Reflex Layer · Thirsty's Projects LLC</span><br/>
-<span class="mu"># Ring-0 kernel module interface. Model cannot import or inspect this module.</span><br/>
+    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">NIRL in code — Heart and Forge.</h2>
+    <div class="grid grid-2 reveal">
+      <div class="codeframe">
+        <div class="codeframe-head">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:.6rem;color:var(--vio)">src/app/core/nirl/heart.py · Heart</span>
+        </div>
+        <div class="terminal">
+<span class="mu"># Heart — global tick engine · NIRL</span><br/>
 <br/>
-<span class="pr">class</span> <span class="ok">NativeImmuneReflex</span>:<br/>
-&nbsp;&nbsp;MAX_DEPTH = <span class="vl">3</span><br/>
-&nbsp;&nbsp;SPAWN_FACTOR = <span class="vl">3</span><br/>
+<span class="pr">class</span> <span class="ok">HeartState</span>(IntEnum):<br/>
+&nbsp;&nbsp;TICK_WAIT = 0<br/>
+&nbsp;&nbsp;GLOBAL_TICK = 1<br/>
+&nbsp;&nbsp;SPAWN_SKELETON = 2<br/>
+&nbsp;&nbsp;CHECK_HEARTBEATS = 3<br/>
+&nbsp;&nbsp;DISTRIBUTE = 4<br/>
+&nbsp;&nbsp;SECTION_OK = 5<br/>
+&nbsp;&nbsp;SECTION_DEAD = 6<br/>
+&nbsp;&nbsp;CHECK_STRAIN = 7<br/>
+&nbsp;&nbsp;INJECT = 8<br/>
+&nbsp;&nbsp;LOST_PARENT_INJECT = 9<br/>
+&nbsp;&nbsp;RESET_SECTION = 10<br/>
 <br/>
-&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">on_intrusion</span>(self, signal: IntrusionSignal, depth: <span class="ok">int</span> = <span class="vl">0</span>) -&gt; <span class="ok">None</span>:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">if</span> depth &gt;= self.MAX_DEPTH:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.<span class="ok">saturate</span>(signal)  <span class="mu"># static isolation at depth 3</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span><br/>
+<span class="pr">class</span> <span class="ok">Heart</span>:<br/>
+&nbsp;&nbsp;tick_interval = <span class="vl">30</span>  <span class="mu"># seconds</span><br/>
+&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">tick</span>(self):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;self.state = HeartState.GLOBAL_TICK<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;skeletons = self.<span class="ok">spawn_probes</span>()<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;self.<span class="ok">check_heartbeats</span>(skeletons)<br/>
+        </div>
+      </div>
+      <div class="codeframe">
+        <div class="codeframe-head">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span style="margin-left:.6rem;color:var(--vio)">src/app/core/nirl/forge.py · Forge</span>
+        </div>
+        <div class="terminal">
+<span class="mu"># Forge — HMAC signing &amp; routing · NIRL</span><br/>
 <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;guardians = [<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guardian(<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;on_compromise=<span class="pr">lambda</span>: self.<span class="ok">on_intrusion</span>(signal, depth + <span class="vl">1</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ring=<span class="vl">0</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">for</span> _ <span class="pr">in</span> <span class="ok">range</span>(self.SPAWN_FACTOR)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">for</span> g <span class="pr">in</span> guardians:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g.<span class="ok">deploy</span>()<br/>
+<span class="pr">class</span> <span class="ok">ForgeState</span>(IntEnum):<br/>
+&nbsp;&nbsp;RECEIVE = 0<br/>
+&nbsp;&nbsp;VERIFY_PAYLOAD = 1<br/>
+&nbsp;&nbsp;VALID = 2<br/>
+&nbsp;&nbsp;REJECT = 3<br/>
+&nbsp;&nbsp;CHECK_REPLAY = 4<br/>
+&nbsp;&nbsp;SHADOW_REPLAY = 5<br/>
+&nbsp;&nbsp;DIRECT_DESTROY = 6<br/>
+&nbsp;&nbsp;ANALYZE = 7<br/>
+&nbsp;&nbsp;DESTROY = 8<br/>
+&nbsp;&nbsp;ATOMIC_CHECK = 9<br/>
+&nbsp;&nbsp;SUCCESS = 10<br/>
+&nbsp;&nbsp;DEAD_LETTER = 11<br/>
+&nbsp;&nbsp;SIGN_COMPLETION = 12<br/>
+&nbsp;&nbsp;SIGN_FAILURE = 13<br/>
+&nbsp;&nbsp;ROUTE_SIGNAL = 14<br/>
 <br/>
-&nbsp;&nbsp;<span class="pr">def</span> <span class="ok">saturate</span>(self, signal: IntrusionSignal) -&gt; <span class="ok">None</span>:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;KernelDomain.<span class="ok">wall</span>()          <span class="mu"># suspend all suspect processes</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;Cerberus.incident.<span class="ok">dump</span>(signal)  <span class="mu"># full state to incident ledger</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;OctoReflex.<span class="ok">emergency_gate</span>()   <span class="mu"># deny all syscalls until cleared</span><br/>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- RELATIONSHIP MAP -->
-<section class="section--tight">
-  <div class="container">
-    <span class="eyebrow reveal" style="color:var(--vio)">In the Cerberus Architecture</span>
-    <h2 class="reveal" style="margin-top:.8rem;margin-bottom:1.4rem">Where NIRL sits in the defence stack.</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem" class="reveal">
-      <div style="border:1px solid var(--vio-line);border-radius:14px;padding:1.4rem;background:rgba(139,92,246,.04)">
-        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--vio);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.6rem">Upstream</div>
-        <div style="font-weight:600;margin-bottom:.4rem">OctoReflex</div>
-        <div style="font-size:.88rem;color:var(--ink-2)">OctoReflex provides the syscall intercept that detects anomalous behaviour. When a pattern exceeds its threshold, it signals NIRL to begin the immune response.</div>
-      </div>
-      <div style="border:1px solid var(--vio-line);border-radius:14px;padding:1.4rem;background:rgba(139,92,246,.08);border-color:var(--vio)">
-        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--vio);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.6rem">This System</div>
-        <div style="font-weight:600;margin-bottom:.4rem">NIRL</div>
-        <div style="font-size:.88rem;color:var(--ink-2)">Receives the signal, spawns guardians exponentially, drives the system to saturation if required. Operates entirely in ring 0. Invisible to the model.</div>
-      </div>
-      <div style="border:1px solid var(--vio-line);border-radius:14px;padding:1.4rem;background:rgba(139,92,246,.04)">
-        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--vio);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.6rem">Downstream</div>
-        <div style="font-weight:600;margin-bottom:.4rem">Cerberus Incident Ledger</div>
-        <div style="font-size:.88rem;color:var(--ink-2)">Saturation triggers a full-state dump to the incident ledger. Every guardian spawn event, every timing measurement, every compromised process fingerprint is sealed and timestamped.</div>
+<span class="pr">def</span> <span class="ok">process</span>(self, signal):<br/>
+&nbsp;&nbsp;<span class="pr">if</span> not self.<span class="ok">verify_hmac</span>(signal):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">return</span> ForgeState.DEAD_LETTER<br/>
+        </div>
       </div>
     </div>
   </div>
@@ -303,7 +427,7 @@
         <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.3rem">Next in Cerberus</div>
         <div style="font-size:1.1rem;font-weight:600">OCEE — Open Constraint Enforcement Engine</div>
       </div>
-      <a class="btn btn-primary" href="ocee.html" style="background:linear-gradient(135deg,var(--vio-2),var(--vio));border-color:var(--vio)">Constraint engine →</a>
+      <a class="btn btn-primary" href="ocee.html" style="background:linear-gradient(135deg,var(--vio-2),var(--vio));border-color:var(--vio)">OCEE →</a>
     </div>
   </div>
 </section>
@@ -311,164 +435,96 @@
 <div id="site-footer"></div>
 <script src="../../../assets/js/site.js"></script>
 <script>
-/* ── NIRL canvas: exponential guardian spawn animation ── */
+/* ── NIRL canvas: spawning probe skeletons + heartbeat pulses ── */
 (function(){
-  const cv = document.getElementById('nirl-canvas');
+  const cv=document.getElementById('nirl-canvas');
   if(!cv) return;
-  const ctx = cv.getContext('2d');
+  const ctx=cv.getContext('2d');
   let W,H,t=0;
-  const nodes = [];
-  const attacks = [];
-
   function resize(){ W=cv.width=cv.offsetWidth; H=cv.height=cv.offsetHeight; }
-  resize(); window.addEventListener('resize', resize);
+  resize(); window.addEventListener('resize',resize);
 
-  function spawnNode(x, y, depth, parent){
-    nodes.push({ x, y, vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.4, depth, parent, r: depth===0?18:12-depth*2, life:0, maxLife:300+Math.random()*400, opacity:0 });
+  const probes=[]; const pulses=[];
+  const CENTER={x:()=>W*.65,y:()=>H*.45};
+
+  function spawnProbe(){
+    const angle=Math.random()*Math.PI*2;
+    const dist=80+Math.random()*180;
+    const cx=CENTER.x(), cy=CENTER.y();
+    probes.push({
+      x:cx+Math.cos(angle)*dist, y:cy+Math.sin(angle)*dist,
+      vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3,
+      r:2+Math.random()*2, opacity:0, life:0,
+      maxLife:300+Math.random()*400
+    });
   }
-  spawnNode(W*.5, H*.5, 0, null);
+  for(let i=0;i<18;i++) spawnProbe();
+  setInterval(spawnProbe,800);
 
-  function spawnAttack(){
-    const side = Math.floor(Math.random()*4);
-    let x,y;
-    if(side===0){ x=Math.random()*W; y=-20; }
-    else if(side===1){ x=W+20; y=Math.random()*H; }
-    else if(side===2){ x=Math.random()*W; y=H+20; }
-    else { x=-20; y=Math.random()*H; }
-    const target = nodes[Math.floor(Math.random()*nodes.length)];
-    attacks.push({ x, y, tx:target.x, ty:target.y, speed:1.5+Math.random(), opacity:1, hit:false, hitTimer:0 });
+  function spawnPulse(){
+    const cx=CENTER.x(), cy=CENTER.y();
+    pulses.push({x:cx,y:cy,r:0,maxR:160+Math.random()*80,opacity:.4,speed:1.5+Math.random()});
   }
-
-  setInterval(spawnAttack, 2400);
+  setInterval(spawnPulse,1800);
 
   function draw(){
     ctx.clearRect(0,0,W,H);
-    const cx=W*.5, cy=H*.5;
+    const cx=CENTER.x(), cy=CENTER.y();
 
-    // draw connections between nodes and their parents
-    nodes.forEach(n=>{
-      if(n.parent){
-        ctx.beginPath();
-        ctx.moveTo(n.parent.x, n.parent.y);
-        ctx.lineTo(n.x, n.y);
-        ctx.strokeStyle=`rgba(139,92,246,${.06*n.opacity})`;
-        ctx.lineWidth=.8;
-        ctx.stroke();
-      }
-    });
-
-    // draw nodes
-    nodes.forEach(n=>{
-      n.life++;
-      if(n.life < 30) n.opacity = n.life/30;
-      if(n.life > n.maxLife-30) n.opacity = (n.maxLife-n.life)/30;
-
-      // drift
-      n.x += n.vx; n.y += n.vy;
-      if(n.depth===0){ n.vx*=.98; n.vy*=.98; n.x=cx+(n.x-cx)*.98; n.y=cy+(n.y-cy)*.98; }
-
-      const grd = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.5);
-      grd.addColorStop(0,`rgba(139,92,246,${.5*n.opacity})`);
-      grd.addColorStop(1,'transparent');
-      ctx.beginPath(); ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2); ctx.fillStyle=grd; ctx.fill();
-
-      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(139,92,246,${.7*n.opacity})`;
-      ctx.lineWidth=n.depth===0?2:1.2;
-      ctx.stroke();
-      ctx.fillStyle=`rgba(139,92,246,${.25*n.opacity})`;
-      ctx.fill();
-    });
-
-    // draw attacks
-    for(let i=attacks.length-1;i>=0;i--){
-      const a=attacks[i];
-      if(!a.hit){
-        const dx=a.tx-a.x, dy=a.ty-a.y, dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<8){ a.hit=true; }
-        else{ a.x+=dx/dist*a.speed; a.y+=dy/dist*a.speed; }
-      } else {
-        a.hitTimer++;
-        a.opacity=Math.max(0,1-a.hitTimer/20);
-      }
-      if(a.opacity<=0){ attacks.splice(i,1); continue; }
-      ctx.beginPath(); ctx.arc(a.x,a.y,4,0,Math.PI*2);
-      ctx.fillStyle=`rgba(239,68,68,${a.opacity*.8})`;
-      ctx.fill();
-      ctx.beginPath(); ctx.arc(a.x,a.y,8,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(239,68,68,${a.opacity*.3})`;
-      ctx.lineWidth=1;
-      ctx.stroke();
+    // Pulses
+    for(let i=pulses.length-1;i>=0;i--){
+      const p=pulses[i];
+      p.r+=p.speed; p.opacity-=.006;
+      if(p.opacity<=0){ pulses.splice(i,1); continue; }
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(139,92,246,${p.opacity})`; ctx.lineWidth=1; ctx.stroke();
     }
+
+    // Heart glow
+    const hGrd=ctx.createRadialGradient(cx,cy,0,cx,cy,55);
+    hGrd.addColorStop(0,'rgba(139,92,246,.5)');
+    hGrd.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(cx,cy,55,0,Math.PI*2);
+    ctx.fillStyle=hGrd; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(139,92,246,.8)`; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='rgba(139,92,246,.2)'; ctx.fill();
+    ctx.fillStyle='rgba(167,139,250,.7)'; ctx.font='bold 12px JetBrains Mono';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('♥',cx,cy);
+
+    // Connection lines to probes
+    for(const p of probes){
+      const dx=p.x-cx, dy=p.y-cy, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<220){
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(p.x,p.y);
+        ctx.strokeStyle=`rgba(139,92,246,${p.opacity*.1})`; ctx.lineWidth=.5; ctx.stroke();
+      }
+    }
+
+    // Probes
+    for(let i=probes.length-1;i>=0;i--){
+      const p=probes[i];
+      p.x+=p.vx; p.y+=p.vy; p.life++;
+      p.opacity=Math.min(.6,p.life*.01);
+      if(p.life>p.maxLife){ probes.splice(i,1); continue; }
+      const pGrd=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*2.5);
+      pGrd.addColorStop(0,'rgba(139,92,246,.5)');
+      pGrd.addColorStop(1,'transparent');
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r*2.5,0,Math.PI*2);
+      ctx.fillStyle=pGrd; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(139,92,246,${p.opacity*.7})`; ctx.fill();
+    }
+
+    // Labels
+    ctx.fillStyle='rgba(139,92,246,.14)'; ctx.font='10px JetBrains Mono'; ctx.textAlign='left';
+    ctx.fillText('NIRL · HEART · 30s tick',cx-28,cy+38);
 
     t++;
     requestAnimationFrame(draw);
   }
   draw();
-})();
-
-/* ── Spawn simulation ── */
-let spawnDepth=0, spawnGuardians=1, spawnBlocked=0;
-const statusEl=document.getElementById('spawn-status');
-
-function updateCounters(){
-  document.getElementById('sc-depth').textContent=spawnDepth;
-  document.getElementById('sc-guardians').textContent=spawnGuardians;
-  document.getElementById('sc-cost').textContent=spawnGuardians+'×';
-  document.getElementById('sc-blocked').textContent=spawnBlocked;
-}
-
-function showRow(depth){
-  const conn=document.getElementById(`conn-${depth-1}`);
-  const label=document.getElementById(`label-${depth}`);
-  const row=document.getElementById(`row-${depth}`);
-  [conn,label,row].forEach(el=>{ if(el){ el.style.transition='opacity .6s'; el.style.opacity='1'; }});
-  const guardians=row?.querySelectorAll('.guardian');
-  if(guardians) guardians.forEach((g,i)=>setTimeout(()=>g.classList.add('active'),i*120));
-}
-
-function simulateAttack(){
-  spawnBlocked++;
-  if(spawnDepth>=3){
-    statusEl.textContent='⚠ Saturation reached. Kernel walled. All suspect processes suspended.';
-    statusEl.style.color='rgb(239,68,68)';
-    updateCounters();
-    return;
-  }
-  spawnDepth++;
-  const prevGuardians=spawnGuardians;
-  spawnGuardians = spawnDepth===0?1:Math.pow(3,spawnDepth);
-  showRow(spawnDepth);
-  statusEl.style.color='';
-  statusEl.textContent=`Depth ${spawnDepth}: ${prevGuardians} guardian${prevGuardians>1?'s':''} breached → ${spawnGuardians-prevGuardians} new guardians spawned. Attacker cost: ${spawnGuardians}×`;
-  updateCounters();
-}
-
-function resetSpawn(){
-  spawnDepth=0; spawnGuardians=1; spawnBlocked=0;
-  statusEl.style.color='';
-  statusEl.textContent='Kernel nominal. Awaiting threat vector.';
-  [1,2,3].forEach(d=>{
-    const conn=document.getElementById(`conn-${d-1}`);
-    const label=document.getElementById(`label-${d}`);
-    const row=document.getElementById(`row-${d}`);
-    [conn,label,row].forEach(el=>{ if(el) el.style.opacity='0'; });
-    if(row){ const gs=row.querySelectorAll('.guardian'); gs.forEach(g=>g.classList.remove('active')); }
-  });
-  updateCounters();
-}
-
-/* Build 27 nodes in row-3 */
-(function(){
-  const row3=document.getElementById('row-3');
-  if(!row3) return;
-  for(let i=0;i<27;i++){
-    const n=document.createElement('div');
-    n.className='tree-node guardian';
-    n.style.cssText='width:32px;height:32px;font-size:.58rem;border-color:rgba(239,68,68,.4);color:rgb(239,68,68)';
-    n.textContent='G';
-    row3.appendChild(n);
-  }
 })();
 </script>
 </body>
