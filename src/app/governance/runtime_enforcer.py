@@ -8,6 +8,12 @@ layer before execution.
 Zero tolerance. Zero placeholders. Zero bypass.
 """
 
+# IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+# IRON_PATH_2_STOP_CONDITION: RuntimeEnforcer zero-bypass claim contradicted
+# Current behavior: execution_router.py can silently pass RuntimeEnforcer failures, so this module's zero-bypass claim is not system-wide true.
+# Required before Phase 2+: Replace silent router bypass with fail-closed behavior or an EvidenceBundle-producing BYPASS_RECORDED outcome.
+# Do not change behavior in Phase 1.
+
 import logging
 from dataclasses import dataclass
 from enum import StrEnum

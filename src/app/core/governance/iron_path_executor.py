@@ -543,6 +543,11 @@ class IronPathExecutor:
         evaluation_result: PolicyEvaluationResponse,
         quorum_proof: dict[str, Any] | None,
     ) -> MutationGovernanceBinding:
+        # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+        # IRON_PATH_2_STOP_CONDITION: IronPathExecutor direct binding authority fragment
+        # Current behavior: bind_mutation() can be reached directly from pipeline.py, so mutation binding may occur outside the full execution_router plus ExecutionGate lifecycle.
+        # Required before Phase 2+: Consolidate callers so this executor is downstream of the canonical authority path or explicitly scoped as non-authoritative.
+        # Do not change behavior in Phase 1.
         mutation_class = self.classify_mutation(action)
 
         req_fingerprint = _sha256_hex(_stable_json(asdict(evaluation_request)))

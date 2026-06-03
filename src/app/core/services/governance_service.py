@@ -347,6 +347,11 @@ class GovernanceService:
         context: Any,
         decision_id: str,
     ) -> Decision:
+        # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+        # IRON_PATH_2_STOP_CONDITION: auto-approval parallel authority
+        # Current behavior: _auto_approve() can approve low-risk or routine actions when no Triumvirate or governance system is configured, without producing the canonical EvidenceBundle path.
+        # Required before Phase 2+: Disable it, route it through ExecutionGate/EvidenceBundle/audit_manager, or constrain it as explicitly non-authoritative.
+        # Do not change behavior in Phase 1.
         """
         Auto-approve low-risk actions when no governance is configured.
 

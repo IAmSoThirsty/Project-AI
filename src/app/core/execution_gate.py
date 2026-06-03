@@ -175,6 +175,11 @@ class ExecutionGate:
             logger.warning("Sovereign policy binding degraded read-only continuation: %s", exc)
 
         # --- Stage 6: Capability Token verification ---
+        # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+        # IRON_PATH_2_STOP_CONDITION: ExecutionGate legacy capability validation
+        # Current behavior: Stage 6 validates _capability_token with app.core.capability_token.CapabilityTokenService instead of the canonical Ed25519 CapabilityAuthority.
+        # Required before Phase 2+: Introduce a compatibility bridge before canonical authority migration and prove fail-closed behavior for expired, replayed, wrong-scope, revoked, legacy, and malformed tokens.
+        # Do not change behavior in Phase 1.
         cap_token = context.get("_capability_token")
         token_required = self._requires_capability_token(action, context, degraded_read_only_allowed)
         if cap_token is None and token_required:

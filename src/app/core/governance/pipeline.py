@@ -455,6 +455,11 @@ def _enforce_mutation_governance_binding(
     if not isinstance(payload, dict):
         payload = {}
 
+    # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+    # IRON_PATH_2_STOP_CONDITION: pipeline execution authority fragment
+    # Current behavior: pipeline.py calls IronPathExecutor directly for mutation binding instead of entering through execution_router.py and the full ExecutionGate wrapper.
+    # Required before Phase 2+: Use a caller-map-driven consolidation so no authoritative execution path bypasses ExecutionGate unless explicitly test-only or non-authoritative.
+    # Do not change behavior in Phase 1.
     executor = get_iron_path_executor()
     mutation_class = executor.classify_mutation(action)
 

@@ -19,6 +19,12 @@ from typing import Any
 logger = logging.getLogger(__name__)
 GENESIS_CONTINUITY_LOG_ENV = "PROJECT_AI_GENESIS_CONTINUITY_LOG"
 
+# IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+# IRON_PATH_2_STOP_CONDITION: genesis continuity working-tree state unresolved
+# Current behavior: genesis_continuity.py has unstaged modifications, so this core substrate's current state is not clean.
+# Required before Phase 2+: The user must decide whether to keep, commit, or revert the existing modifications, then baseline tests must be re-run.
+# Do not change behavior in Phase 1.
+
 # ── module-level shared state (process-wide, resets on interpreter restart) ────
 _LOCK = threading.Lock()
 _KEY_DIR_PINS: dict[str, str] = {}        # key_dir_str → genesis_id

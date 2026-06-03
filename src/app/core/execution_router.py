@@ -1,5 +1,11 @@
 """Unified execution router — the ONLY legal execution path in the system."""
 
+# IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+# IRON_PATH_2_STOP_CONDITION: execution authority fragmentation
+# Current behavior: execution_router.py is one execution authority fragment, while pipeline.py and OctoReflex can enter governance through other paths.
+# Required before Phase 2+: Build a caller-map-driven consolidation so no execution path bypasses ExecutionGate unless explicitly classified as test-only or non-authoritative.
+# Do not change behavior in Phase 1.
+
 from __future__ import annotations
 
 import hashlib
@@ -48,6 +54,11 @@ def execute(
         if _enforce_result.verdict == "deny":
             return False, f"RuntimeEnforcer denied: {_enforce_result.reason}"
     except Exception:
+        # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+        # IRON_PATH_2_STOP_CONDITION: silent RuntimeEnforcer bypass
+        # Current behavior: any RuntimeEnforcer import, init, or enforcement exception is silently ignored and execution continues without a RuntimeEnforcer receipt.
+        # Required before Phase 2+: Replace silent pass with fail-closed behavior or an EvidenceBundle-producing BYPASS_RECORDED outcome.
+        # Do not change behavior in Phase 1.
         pass
 
     # 3. State Register — inject temporal context for anti-gaslighting checks.
@@ -56,6 +67,11 @@ def execute(
         temporal = sr.get_temporal_context()
         context = {**context, "_temporal": temporal}
     except Exception:
+        # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+        # IRON_PATH_2_STOP_CONDITION: silent StateRegister context bypass
+        # Current behavior: any StateRegister exception is silently ignored and execution continues without temporal context.
+        # Required before Phase 2+: Replace silent pass with fail-closed behavior or an EvidenceBundle-producing BYPASS_RECORDED outcome.
+        # Do not change behavior in Phase 1.
         pass
 
     # 3.5. Trust scoring + adversarial pattern detection.
@@ -72,6 +88,11 @@ def execute(
         )
         context = {**context, "_trust_score": _trust_score, "_adversarial_flags": _adv_flags}
     except Exception:
+        # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+        # IRON_PATH_2_STOP_CONDITION: silent trust/adversarial context bypass
+        # Current behavior: trust scoring or adversarial pattern failures are silently ignored and execution continues without those context signals.
+        # Required before Phase 2+: Replace silent pass with fail-closed behavior or an EvidenceBundle-producing BYPASS_RECORDED outcome.
+        # Do not change behavior in Phase 1.
         pass
 
     # 4. Invariant pre-checks.

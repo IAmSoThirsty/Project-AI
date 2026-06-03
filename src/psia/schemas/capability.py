@@ -40,6 +40,11 @@ class TokenBinding(BaseModel):
 
 
 class CapabilityToken(BaseModel):
+    # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+    # IRON_PATH_2_STOP_CONDITION: canonical capability schema not active authority
+    # Current behavior: this Ed25519-backed schema supports the intended canonical authority, but ExecutionGate validates the legacy app.core capability token path.
+    # Required before Phase 2+: Add a compatibility bridge before canonical authority migration and prove fail-closed handling for invalid token states.
+    # Do not change behavior in Phase 1.
     token_id: str
     issuer: str
     subject: str

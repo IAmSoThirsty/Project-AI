@@ -30,6 +30,11 @@ class RevocationEntry:
 
 
 class CapabilityAuthority:
+    # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+    # IRON_PATH_2_STOP_CONDITION: canonical capability authority not wired
+    # Current behavior: CapabilityAuthority is the intended Ed25519 authority, but production execution paths do not call it.
+    # Required before Phase 2+: Wire it through a compatibility bridge with tests for expired, replayed, wrong-scope, revoked, legacy, and malformed tokens.
+    # Do not change behavior in Phase 1.
     def __init__(
         self,
         authority_did: str | None = None,

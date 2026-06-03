@@ -370,6 +370,11 @@ class OctoReflex:
         """Route enforcement action through ExecutionGate so it becomes a formal governance decision."""
         try:
             from app.core.execution_gate import get_execution_gate
+            # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+            # IRON_PATH_2_STOP_CONDITION: OctoReflex direct gate authority fragment
+            # Current behavior: OctoReflex calls ExecutionGate directly, bypassing the execution_router wrapper and its pre-gate RuntimeEnforcer, StateRegister, and trust/adversarial context steps.
+            # Required before Phase 2+: Use a caller-map-driven consolidation so direct gate calls are either routed through the canonical wrapper or classified as explicit enforcement-only exceptions.
+            # Do not change behavior in Phase 1.
             get_execution_gate().execute(
                 "constitutional_enforcement",
                 f"{action}:{violation_type}",

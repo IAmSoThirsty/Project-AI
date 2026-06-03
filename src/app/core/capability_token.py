@@ -25,6 +25,11 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 _SECRET = os.environ.get("CAPABILITY_TOKEN_SECRET", "dev-secret-change-in-production")
+# IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
+# IRON_PATH_2_STOP_CONDITION: active legacy HMAC capability authority
+# Current behavior: capability_token.py is the active HMAC-SHA256 token issuer/validator and can fall back to a dev-default secret.
+# Required before Phase 2+: Introduce a compatibility bridge before wiring canonical Ed25519 CapabilityAuthority; prove fail-closed behavior for expired, replayed, wrong-scope, revoked, legacy, and malformed tokens.
+# Do not change behavior in Phase 1.
 _TOKEN_TTL = int(os.environ.get("CAPABILITY_TOKEN_TTL", "300"))  # seconds
 
 # In-process replay prevention store (bounded; production → Redis/DB)
