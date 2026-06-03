@@ -349,14 +349,21 @@ class GovernanceService:
     ) -> Decision:
         # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
         # IRON_PATH_2_STOP_CONDITION: auto-approval parallel authority
-        # Current behavior: _auto_approve() can approve low-risk or routine actions when no Triumvirate or governance system is configured, without producing the canonical EvidenceBundle path.
-        # Required before Phase 2+: Disable it, route it through ExecutionGate/EvidenceBundle/audit_manager, or constrain it as explicitly non-authoritative.
-        # Do not change behavior in Phase 1.
+        # Phase 5 repair (Option C): fail-closed non-authoritative fallback.
+        # Low/routine no-governance cases return approved=False with an explicit
+        # non-authoritative reason. This path does not produce EvidenceBundle,
+        # does not reach AuditManager/SovereignAuditLog, and must not be treated
+        # as an authoritative approval source. Callers requiring approval must
+        # supply a Triumvirate or governance_system, or route through the
+        # canonical execution path (execution_router → ExecutionGate).
         """
-        Auto-approve low-risk actions when no governance is configured.
+        Fail-closed non-authoritative fallback when no governance is configured.
 
-        This is a fallback for degraded mode operation.
-        Only low-risk actions are auto-approved; high-risk are blocked.
+        This path is reached only when neither Triumvirate nor governance_system
+        is configured. It returns approved=False for all cases — low/routine with
+        an explicit non-authoritative reason, high-risk with a governance-required
+        reason. It is not an approval source and does not produce EvidenceBundle
+        or reach AuditManager.
 
         Args:
             action: Action to evaluate
@@ -364,22 +371,21 @@ class GovernanceService:
             decision_id: Unique decision identifier
 
         Returns:
-            Decision with auto-approval logic
+            Decision with approved=False and non-authoritative reason
         """
-        # Check risk level
         is_low_risk = action.risk_level in ["low", "routine"]
-        approved = is_low_risk
+        approved = False  # fail-closed: no authoritative approval without Triumvirate or governance_system
 
         reason = (
-            "Auto-approved: Low-risk action (no governance configured)"
-            if approved
+            "Governance unavailable: low-risk classification is non-authoritative; canonical approval required"
+            if is_low_risk
             else "Blocked: High-risk action requires governance"
         )
 
         logger.warning(
             "[%s] No governance configured - %s: %s",
             context.trace_id,
-            "auto-approving" if approved else "blocking",
+            "blocking (non-authoritative fallback)" if is_low_risk else "blocking",
             action.action_name,
         )
 

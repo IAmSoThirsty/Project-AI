@@ -164,7 +164,7 @@ class TestGovernanceService:
         assert decision.approved is True
 
     def test_auto_approve_low_risk(self):
-        """Test auto-approval for low-risk actions when no governance."""
+        """Test that low-risk actions are fail-closed when no governance is configured."""
         service = GovernanceService()  # No governance configured
 
         action = Mock()
@@ -180,9 +180,36 @@ class TestGovernanceService:
         # Evaluate action
         decision = service.evaluate_action(action, context)
 
-        # Verify auto-approval
-        assert decision.approved is True
-        assert "Auto-approved" in decision.reason
+        # Verify fail-closed non-authoritative fallback
+        assert decision.approved is False
+        assert "non-authoritative" in decision.reason or "canonical approval required" in decision.reason
+        assert service.approval_count == 0
+        assert service.block_count == 1
+        assert len(service.decision_log) == 1
+
+    def test_no_governance_routine_fail_closed(self):
+        """Test that routine actions are fail-closed when no governance is configured."""
+        service = GovernanceService()  # No governance configured
+
+        action = Mock()
+        action.action_id = "act_routine"
+        action.action_name = "routine_action"
+        action.action_type = Mock(value="agent_action")
+        action.risk_level = "routine"
+        action.metadata = {}
+
+        context = Mock()
+        context.trace_id = "trace_routine"
+
+        # Evaluate action
+        decision = service.evaluate_action(action, context)
+
+        # Verify fail-closed non-authoritative fallback
+        assert decision.approved is False
+        assert "non-authoritative" in decision.reason or "canonical approval required" in decision.reason
+        assert service.approval_count == 0
+        assert service.block_count == 1
+        assert len(service.decision_log) == 1
 
     def test_block_high_risk_without_governance(self):
         """Test blocking high-risk actions when no governance."""
