@@ -10,12 +10,14 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+GENESIS_CONTINUITY_LOG_ENV = "PROJECT_AI_GENESIS_CONTINUITY_LOG"
 
 # ── module-level shared state (process-wide, resets on interpreter restart) ────
 _LOCK = threading.Lock()
@@ -169,15 +171,18 @@ class GenesisContinuityGuard:
                 logger.debug("Failed to persist violation to %s: %s", path, exc)
 
     def _violation_paths(self) -> list[Path]:
-        paths: list[Path] = []
+        if self._log_file:
+            return [self._log_file]
+
+        env_path = os.environ.get(GENESIS_CONTINUITY_LOG_ENV)
+        if env_path:
+            return [Path(env_path)]
+
         default = (
             Path(__file__).resolve().parents[3]
             / "data" / "genesis_pins" / "continuity_log.json"
         )
-        paths.append(default)
-        if self._log_file and self._log_file != default:
-            paths.append(self._log_file)
-        return paths
+        return [default]
 
 
 __all__ = [
