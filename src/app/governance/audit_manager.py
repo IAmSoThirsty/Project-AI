@@ -9,10 +9,19 @@ Two modes:
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
+from .audit_log import AuditLog
 from .sovereign_audit_log import SovereignAuditLog
+
+
+DEFAULT_AUDIT_DATA_DIR = (
+    Path(__file__).resolve().parents[3] / "data" / "governance_audit"
+)
+AUDIT_MANAGER_DATA_DIR_ENV = "PROJECT_AI_AUDIT_DATA_DIR"
+AUDIT_MANAGER_SOVEREIGN_ENV = "PROJECT_AI_AUDIT_SOVEREIGN_MODE"
 
 
 class _OperationalLog:
@@ -88,9 +97,52 @@ class AuditManager:
         return self.log_system_event(event_type, payload)
 
     def log_governance_event(
-        self, event_type: str, data: dict[str, Any] | None = None
+        self,
+        event_type: str,
+        data: dict[str, Any] | None = None,
+        actor: str = "system",
+        description: str = "",
     ) -> bool:
-        return self.log_system_event(event_type, data)
+        payload = data or {}
+        try:
+            if self.sovereign_mode:
+                return self.audit_log.log_event(
+                    event_type,
+                    payload,
+                    actor=actor,
+                    description=description,
+                )
+
+            self._op_log.append(event_type, payload)
+            return AuditLog().log_event(
+                event_type=event_type,
+                data=payload,
+                actor=actor,
+                description=description,
+            )
+        except Exception:
+            return False
+
+    def log_governance_decision(
+        self,
+        event_type: str,
+        *,
+        domain: str,
+        action: str,
+        decision_id: str,
+        actor: str | None = None,
+        description: str = "",
+    ) -> bool:
+        return self.log_governance_event(
+            event_type=event_type,
+            data={
+                "domain": domain,
+                "action": action,
+                "decision_id": decision_id,
+            },
+            actor=actor or domain,
+            description=description,
+        )
 
     # ── sovereign-only ─────────────────────────────────────────────────────────
 
@@ -133,3 +185,21 @@ class AuditManager:
                 "total_events": self._op_log.total_events,
             },
         }
+
+
+_audit_manager_instance: AuditManager | None = None
+
+
+def _env_truthy(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def get_audit_manager() -> AuditManager:
+    global _audit_manager_instance
+    if _audit_manager_instance is None:
+        data_dir = os.getenv(AUDIT_MANAGER_DATA_DIR_ENV, str(DEFAULT_AUDIT_DATA_DIR))
+        _audit_manager_instance = AuditManager(
+            data_dir=data_dir,
+            sovereign_mode=_env_truthy(AUDIT_MANAGER_SOVEREIGN_ENV),
+        )
+    return _audit_manager_instance

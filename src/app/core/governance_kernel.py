@@ -136,20 +136,13 @@ class GovernanceKernel:
         except Exception:
             pass
         try:
-            from app.governance.audit_log import AuditLog
+            from app.governance.audit_manager import get_audit_manager
 
-            # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
-            # IRON_PATH_2_STOP_CONDITION: audit path direct AuditLog approval write
-            # Current behavior: governance_kernel.py writes approval events directly through AuditLog(), so AuditManager and SovereignAuditLog are not reached on this normal kernel path.
-            # Required before Phase 2+: Route governance audit writes through audit_manager.py, with sovereign-grade events reaching sovereign_audit_log.py.
-            # Do not change behavior in Phase 1.
-            AuditLog().log_event(
+            get_audit_manager().log_governance_decision(
                 event_type="governance_approved",
-                data={
-                    "domain": domain,
-                    "action": action,
-                    "decision_id": record.decision_id,
-                },
+                domain=domain,
+                action=action,
+                decision_id=record.decision_id,
                 actor=domain,
                 description=f"{action} approved for {domain}",
             )
@@ -190,20 +183,13 @@ class GovernanceKernel:
         except Exception:
             pass
         try:
-            from app.governance.audit_log import AuditLog
+            from app.governance.audit_manager import get_audit_manager
 
-            # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
-            # IRON_PATH_2_STOP_CONDITION: audit path direct AuditLog denial write
-            # Current behavior: governance_kernel.py writes denial events directly through AuditLog(), so AuditManager and SovereignAuditLog are not reached on this normal kernel path.
-            # Required before Phase 2+: Route governance audit writes through audit_manager.py, with sovereign-grade events reaching sovereign_audit_log.py.
-            # Do not change behavior in Phase 1.
-            AuditLog().log_event(
+            get_audit_manager().log_governance_decision(
                 event_type="governance_denied",
-                data={
-                    "domain": domain,
-                    "action": action,
-                    "decision_id": record.decision_id,
-                },
+                domain=domain,
+                action=action,
+                decision_id=record.decision_id,
                 actor=domain,
                 description=f"{action} denied for {domain}: {reason}",
             )
