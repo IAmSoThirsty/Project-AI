@@ -73,7 +73,7 @@ class TestCognitionKernel:
         assert len(kernel.execution_history) == 0
 
     def test_simple_execution(self, kernel):
-        """Test a simple execution through the kernel using new API."""
+        """Test a simple execution approved by configured governance."""
 
         # Define a test action
         def test_action(x, y):
@@ -100,10 +100,12 @@ class TestCognitionKernel:
         assert result.success is True
         assert result.result == 5
         assert result.governance_approved is True
+        assert result.governance_reason == "Test approved"
         assert result.error is None
         assert result.policy_evaluation_id is not None
         assert result.post_evaluation_id is not None
         assert result.decision_record_id is not None
+        kernel.governance_system.validate_action.assert_called_once()
 
         # Verify kernel state
         assert kernel.execution_count == 1
@@ -166,6 +168,104 @@ class TestCognitionKernel:
         assert result.error is not None
         assert "blocked" in result.error.lower() or "Test blocked" in result.error
 
+    def test_low_risk_governance_denial_is_not_short_circuited(
+        self, kernel, mock_subsystems
+    ):
+        """Low-risk actions must still honor configured governance denial."""
+        mock_subsystems["governance"].validate_action = Mock(
+            return_value={"allowed": False, "reason": "Low risk blocked"}
+        )
+        called = {"count": 0}
+
+        def test_action():
+            called["count"] += 1
+            return "Should not execute"
+
+        task = {
+            "action_name": "low_risk_blocked",
+            "requires_approval": False,
+            "risk_level": "low",
+            "execution_type": "tool_invocation",
+            "_action_callable": test_action,
+            "_action_args": (),
+            "_action_kwargs": {},
+        }
+
+        result = kernel.route(task, source="test_tool", metadata={})
+
+        mock_subsystems["governance"].validate_action.assert_called_once()
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "Low risk blocked" in result.error
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
+
+    def test_router_exception_fails_closed_without_calling_action(
+        self, kernel, monkeypatch
+    ):
+        """Router unavailability must not fall through to local approval."""
+        called = {"count": 0}
+
+        def router_failure(**_kwargs):
+            raise RuntimeError("router offline")
+
+        def test_action():
+            called["count"] += 1
+            return "Should not execute"
+
+        monkeypatch.setattr("app.core.execution_router.execute", router_failure)
+
+        task = {
+            "action_name": "router_exception_test",
+            "requires_approval": False,
+            "risk_level": "low",
+            "execution_type": "agent_action",
+            "_action_callable": test_action,
+            "_action_args": (),
+            "_action_kwargs": {},
+        }
+
+        result = kernel.route(task, source="test_agent", metadata={})
+
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "Governance pipeline unavailable" in result.error
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
+
+    def test_router_explicit_denial_still_blocks_without_calling_action(
+        self, kernel, monkeypatch
+    ):
+        """Explicit router denial remains fail-closed."""
+        called = {"count": 0}
+
+        def router_denial(**_kwargs):
+            return False, "router denied"
+
+        def test_action():
+            called["count"] += 1
+            return "Should not execute"
+
+        monkeypatch.setattr("app.core.execution_router.execute", router_denial)
+
+        task = {
+            "action_name": "router_denial_test",
+            "requires_approval": False,
+            "risk_level": "low",
+            "execution_type": "agent_action",
+            "_action_callable": test_action,
+            "_action_args": (),
+            "_action_kwargs": {},
+        }
+
+        result = kernel.route(task, source="test_agent", metadata={})
+
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "Governance pipeline denied: router denied" in result.error
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
+
     def test_execution_with_triumvirate_approval(self, kernel, mock_subsystems):
         """Test execution with Triumvirate approval (when governance system is not configured)."""
         # Remove governance system so Triumvirate is used
@@ -192,6 +292,70 @@ class TestCognitionKernel:
         # Verify execution succeeded
         assert result.success is True
         assert result.governance_approved is True
+
+    def test_governance_system_exception_fails_closed(
+        self, kernel, mock_subsystems
+    ):
+        """Configured governance exceptions must not fall through to approval."""
+        mock_subsystems["governance"].validate_action = Mock(
+            side_effect=RuntimeError("governance offline")
+        )
+        called = {"count": 0}
+
+        def test_action():
+            called["count"] += 1
+            return "Should not execute"
+
+        task = {
+            "action_name": "governance_exception",
+            "requires_approval": True,
+            "risk_level": "high",
+            "execution_type": "agent_action",
+            "_action_callable": test_action,
+            "_action_args": (),
+            "_action_kwargs": {},
+        }
+
+        result = kernel.route(task, source="test_agent", metadata={})
+
+        mock_subsystems["governance"].validate_action.assert_called_once()
+        mock_subsystems["triumvirate"].process.assert_not_called()
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "Governance system failed closed" in result.error
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
+
+    def test_triumvirate_exception_fails_closed(self, kernel, mock_subsystems):
+        """Triumvirate exceptions must not fall through to default approval."""
+        kernel.governance_system = None
+        mock_subsystems["triumvirate"].process = Mock(
+            side_effect=RuntimeError("triumvirate offline")
+        )
+        called = {"count": 0}
+
+        def test_action():
+            called["count"] += 1
+            return "Should not execute"
+
+        task = {
+            "action_name": "triumvirate_exception",
+            "requires_approval": True,
+            "risk_level": "high",
+            "execution_type": "agent_action",
+            "_action_callable": test_action,
+            "_action_args": (),
+            "_action_kwargs": {},
+        }
+
+        result = kernel.route(task, source="test_agent", metadata={})
+
+        mock_subsystems["triumvirate"].process.assert_called_once()
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "Triumvirate failed closed" in result.error
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
 
     def test_execution_failure_handling(self, kernel):
         """Test that execution failures are properly handled."""
@@ -406,11 +570,14 @@ class TestCognitionKernel:
         assert stats["subsystems"]["identity"] is True
         assert stats["subsystems"]["memory"] is True
 
-    def test_low_risk_auto_approval(self, kernel):
-        """Test that low-risk actions are auto-approved."""
+    def test_low_risk_without_governance_fails_closed(self):
+        """Low-risk no-approval actions are non-authoritative without governance."""
+        kernel = CognitionKernel()
+        called = {"count": 0}
 
         def test_action():
-            return "auto_approved"
+            called["count"] += 1
+            return "Should not execute"
 
         task = {
             "action_name": "low_risk_test",
@@ -424,9 +591,39 @@ class TestCognitionKernel:
 
         result = kernel.route(task, source="test_tool", metadata={})
 
-        assert result.success is True
-        assert result.governance_approved is True
-        assert "auto-approved" in result.governance_reason.lower()
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "non-authoritative" in result.governance_reason
+        assert "canonical approval required" in result.governance_reason
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
+
+    def test_high_risk_without_governance_fails_closed(self):
+        """High-risk approval-required actions deny without local governance."""
+        kernel = CognitionKernel()
+        called = {"count": 0}
+
+        def test_action():
+            called["count"] += 1
+            return "Should not execute"
+
+        task = {
+            "action_name": "high_risk_no_governance",
+            "requires_approval": True,
+            "risk_level": "high",
+            "execution_type": "system_operation",
+            "_action_callable": test_action,
+            "_action_args": (),
+            "_action_kwargs": {},
+        }
+
+        result = kernel.route(task, source="test_system", metadata={})
+
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "canonical approval required" in result.governance_reason
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
 
     def test_metadata_preservation(self, kernel):
         """Test that metadata is preserved through execution."""
@@ -474,7 +671,7 @@ class TestCognitionKernelWithoutSubsystems:
     """Test kernel behavior when subsystems are not available."""
 
     def test_kernel_without_subsystems(self):
-        """Test kernel can operate without subsystems (degraded mode)."""
+        """Kernel fails closed when no governance authority is configured."""
         kernel = CognitionKernel(
             identity_system=None,
             memory_engine=None,
@@ -482,8 +679,10 @@ class TestCognitionKernelWithoutSubsystems:
             reflection_engine=None,
             triumvirate=None,
         )
+        called = {"count": 0}
 
         def test_action():
+            called["count"] += 1
             return "works"
 
         task = {
@@ -498,13 +697,19 @@ class TestCognitionKernelWithoutSubsystems:
 
         result = kernel.route(task, source="test_agent", metadata={})
 
-        # Should still execute successfully
-        assert result.success is True
-        assert result.result == "works"
+        assert result.success is False
+        assert result.governance_approved is False
+        assert "non-authoritative" in result.governance_reason
+        assert result.decision_record_id is not None
+        assert called["count"] == 0
 
     def test_memory_recording_without_memory_engine(self):
         """Test that execution succeeds even if memory recording fails."""
-        kernel = CognitionKernel(memory_engine=None)
+        governance = Mock()
+        governance.validate_action = Mock(
+            return_value={"allowed": True, "reason": "Test approved"}
+        )
+        kernel = CognitionKernel(memory_engine=None, governance_system=governance)
 
         def test_action():
             return "success"
@@ -530,7 +735,11 @@ class TestExecutionTypes:
 
     @pytest.fixture
     def kernel(self):
-        return CognitionKernel()
+        governance = Mock()
+        governance.validate_action = Mock(
+            return_value={"allowed": True, "reason": "Test approved"}
+        )
+        return CognitionKernel(governance_system=governance)
 
     def test_agent_action_type(self, kernel):
         """Test AGENT_ACTION execution type."""

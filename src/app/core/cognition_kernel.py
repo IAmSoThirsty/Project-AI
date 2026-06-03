@@ -570,8 +570,11 @@ class CognitionKernel:
                 raise ConstitutionalFault(f"Governance pipeline denied: {_reason}")
         except ConstitutionalFault:
             raise
-        except Exception:
-            pass  # bridge unavailable — fall through to internal governance
+        except Exception as e:
+            context.status = ExecutionStatus.BLOCKED
+            raise ConstitutionalFault(
+                f"Governance pipeline unavailable; failed closed: {e}"
+            ) from e
 
         # Check governance with frozen snapshot
         decision = self._check_governance(action, context, identity_snapshot)
@@ -1175,7 +1178,7 @@ class CognitionKernel:
         """
         Check governance approval for the action.
 
-        Priority: governance_system > triumvirate > auto-approve
+        Priority: governance_system > triumvirate > fail-closed fallback
         """
         decision_id = f"decision_{uuid.uuid4().hex[:8]}"
 
@@ -1184,18 +1187,6 @@ class CognitionKernel:
 
         # Determine if consensus is required
         consensus_required = mutation_intent == MutationIntent.CORE
-
-        # If no governance required and low risk, auto-approve
-        if not action.metadata.get("requires_approval") and action.risk_level == "low":
-            return Decision(
-                decision_id=decision_id,
-                action_id=action.action_id,
-                approved=True,
-                reason="Auto-approved (low risk, no approval required)",
-                mutation_intent=mutation_intent,
-                consensus_required=False,
-                consensus_achieved=False,
-            )
 
         # Check with governance system first (highest priority)
         if self.governance_system:
@@ -1220,6 +1211,16 @@ class CognitionKernel:
                     )
             except Exception as e:
                 logger.error("Governance check failed: %s", e)
+                return Decision(
+                    decision_id=decision_id,
+                    action_id=action.action_id,
+                    approved=False,
+                    reason=f"Governance system failed closed: {e}",
+                    council_votes={"governance_system_error": str(e)},
+                    mutation_intent=mutation_intent,
+                    consensus_required=consensus_required,
+                    consensus_achieved=False,
+                )
 
         # Check with Triumvirate if available (secondary priority)
         if self.triumvirate:
@@ -1249,18 +1250,31 @@ class CognitionKernel:
                     council_votes=result.get("pipeline", {}),
                     mutation_intent=mutation_intent,
                     consensus_required=consensus_required,
-                    consensus_achieved=approved,
+                        consensus_achieved=approved,
                 )
             except Exception as e:
                 logger.error("Triumvirate check failed: %s", e)
+                return Decision(
+                    decision_id=decision_id,
+                    action_id=action.action_id,
+                    approved=False,
+                    reason=f"Triumvirate failed closed: {e}",
+                    council_votes={"triumvirate_error": str(e)},
+                    mutation_intent=mutation_intent,
+                    consensus_required=consensus_required,
+                    consensus_achieved=False,
+                )
 
-        # Default: approve with warning if no governance available
+        # Default: fail closed if no authoritative local governance is available.
         logger.warning("No governance system available for %s", action.action_name)
         return Decision(
             decision_id=decision_id,
             action_id=action.action_id,
-            approved=True,
-            reason="No governance system configured (approved by default)",
+            approved=False,
+            reason=(
+                "Governance unavailable: CognitionKernel local fallback is "
+                "non-authoritative; canonical approval required"
+            ),
             mutation_intent=mutation_intent,
             consensus_required=False,
             consensus_achieved=False,
