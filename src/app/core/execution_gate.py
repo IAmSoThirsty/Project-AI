@@ -175,11 +175,6 @@ class ExecutionGate:
             logger.warning("Sovereign policy binding degraded read-only continuation: %s", exc)
 
         # --- Stage 6: Capability Token verification ---
-        # IRON_PATH_2_PHASE_1_ANNOTATION_ONLY
-        # IRON_PATH_2_STOP_CONDITION: ExecutionGate legacy capability validation
-        # Current behavior: Stage 6 validates _capability_token with app.core.capability_token.CapabilityTokenService instead of the canonical Ed25519 CapabilityAuthority.
-        # Required before Phase 2+: Introduce a compatibility bridge before canonical authority migration and prove fail-closed behavior for expired, replayed, wrong-scope, revoked, legacy, and malformed tokens.
-        # Do not change behavior in Phase 1.
         cap_token = context.get("_capability_token")
         token_required = self._requires_capability_token(action, context, degraded_read_only_allowed)
         if cap_token is None and token_required:
@@ -193,13 +188,19 @@ class ExecutionGate:
             return False, "CapabilityToken required for protected execution"
         if cap_token is not None:
             try:
-                from app.core.capability_token import CapabilityTokenService
-                cts = CapabilityTokenService()
-                ok, reason = cts.verify(
-                    cap_token, action,
+                from app.core.capability_authority_bridge import (
+                    get_capability_authority_bridge,
+                )
+                bridge = get_capability_authority_bridge()
+                ok, reason = bridge.verify(
+                    token=cap_token,
+                    action=action,
                     required_scope=context.get("required_scope", []),
+                    resource=context.get("required_resource") or context.get("resource", ""),
+                    actor=context.get("actor") or domain,
                     current_context_hash=context_hash,
                     current_policy_hash=policy_hash_val,
+                    allow_legacy_hmac=context.get("capability_token_format") == "legacy_hmac",
                 )
                 if not ok:
                     self._emit_evidence_bundle(

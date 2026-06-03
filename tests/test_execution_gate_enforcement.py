@@ -9,6 +9,8 @@ from app.core.execution_authorization import ExecutionAuthorization
 from app.core.execution_gate import ExecutionGate
 from app.core.governance_outcomes import GovernanceOutcome, GovernanceResult
 from app.core.policy_decision import PolicyDecision
+from psia.canonical.capability_authority import CapabilityAuthority
+from psia.schemas.capability import CapabilityScope
 
 
 def _legacy_decision(action: str = "read") -> SimpleNamespace:
@@ -106,6 +108,28 @@ def _install_happy_path(monkeypatch, action: str = "read") -> ExecutionGate:
     return gate
 
 
+def _canonical_authority_and_token(
+    action: str = "write_file",
+    resource: str = "state://data/*",
+) -> tuple[CapabilityAuthority, object]:
+    authority = CapabilityAuthority()
+    token = authority.issue(
+        subject="tests",
+        scopes=[CapabilityScope(resource=resource, actions=[action])],
+    )
+    return authority, token
+
+
+def _install_bridge(monkeypatch, bridge):
+    import app.core.capability_authority_bridge as capability_authority_bridge
+
+    monkeypatch.setattr(
+        capability_authority_bridge,
+        "get_capability_authority_bridge",
+        lambda: bridge,
+    )
+
+
 def test_safe_allow_exception_fails_closed(monkeypatch):
     import app.core.safe_allow_calibration as safe_allow_calibration
 
@@ -159,6 +183,160 @@ def test_missing_capability_token_denies_protected_execution(monkeypatch):
     assert not ok
     assert not executed
     assert "CapabilityToken required" in reason
+
+
+def test_valid_canonical_capability_token_executes(monkeypatch):
+    from app.core.capability_authority_bridge import CapabilityAuthorityBridge
+
+    gate = _install_happy_path(monkeypatch, action="write_file")
+    authority, token = _canonical_authority_and_token()
+    _install_bridge(monkeypatch, CapabilityAuthorityBridge(authority=authority))
+
+    executed = False
+
+    def executor(_context):
+        nonlocal executed
+        executed = True
+        return "executed"
+
+    ok, result = gate.execute(
+        "tests",
+        "write_file",
+        {
+            "actor": "tests",
+            "session_id": "sess-1",
+            "request_text": "write file",
+            "requires_capability_token": True,
+            "required_resource": "state://data/item",
+            "_capability_token": token,
+        },
+        executor,
+    )
+
+    assert ok
+    assert result == "executed"
+    assert executed
+
+
+def test_revoked_canonical_capability_token_does_not_execute(monkeypatch):
+    from app.core.capability_authority_bridge import CapabilityAuthorityBridge
+
+    gate = _install_happy_path(monkeypatch, action="write_file")
+    authority, token = _canonical_authority_and_token()
+    authority.revoke(token.token_id, reason="test")
+    _install_bridge(monkeypatch, CapabilityAuthorityBridge(authority=authority))
+
+    executed = False
+
+    def executor(_context):
+        nonlocal executed
+        executed = True
+        return "executed"
+
+    ok, reason = gate.execute(
+        "tests",
+        "write_file",
+        {
+            "actor": "tests",
+            "session_id": "sess-1",
+            "request_text": "write file",
+            "requires_capability_token": True,
+            "required_resource": "state://data/item",
+            "_capability_token": token,
+        },
+        executor,
+    )
+
+    assert not ok
+    assert not executed
+    assert "CapabilityToken rejected" in reason
+    assert "revoked" in reason.lower()
+
+
+def test_replayed_canonical_capability_token_does_not_execute_second_time(
+    monkeypatch,
+):
+    from app.core.capability_authority_bridge import CapabilityAuthorityBridge
+
+    gate = _install_happy_path(monkeypatch, action="write_file")
+    authority, token = _canonical_authority_and_token()
+    _install_bridge(monkeypatch, CapabilityAuthorityBridge(authority=authority))
+
+    executions = 0
+
+    def executor(_context):
+        nonlocal executions
+        executions += 1
+        return "executed"
+
+    context = {
+        "actor": "tests",
+        "session_id": "sess-1",
+        "request_text": "write file",
+        "requires_capability_token": True,
+        "required_resource": "state://data/item",
+        "_capability_token": token,
+    }
+
+    first_ok, first_result = gate.execute("tests", "write_file", context, executor)
+    second_ok, second_reason = gate.execute("tests", "write_file", context, executor)
+
+    assert first_ok
+    assert first_result == "executed"
+    assert not second_ok
+    assert executions == 1
+    assert "replay" in second_reason.lower() or "consumed" in second_reason.lower()
+
+
+def test_default_secret_legacy_hmac_capability_token_does_not_execute(monkeypatch):
+    import app.core.capability_token as capability_token
+    from app.core.capability_authority_bridge import CapabilityAuthorityBridge
+    from app.core.capability_token import CapabilityTokenService
+
+    monkeypatch.delenv("CAPABILITY_TOKEN_SECRET", raising=False)
+    monkeypatch.setattr(
+        capability_token,
+        "_SECRET",
+        "dev-secret-change-in-production",
+    )
+    capability_token._USED_TOKENS.clear()
+
+    gate = _install_happy_path(monkeypatch, action="write_file")
+    token = CapabilityTokenService().mint(
+        "write_file",
+        ["files:write"],
+        "sess-1",
+        "conv-1",
+        "ctx",
+        "auth",
+        policy_hash="test-policy-hash",
+    )
+    _install_bridge(monkeypatch, CapabilityAuthorityBridge())
+
+    executed = False
+
+    def executor(_context):
+        nonlocal executed
+        executed = True
+        return "executed"
+
+    ok, reason = gate.execute(
+        "tests",
+        "write_file",
+        {
+            "session_id": "sess-1",
+            "request_text": "write file",
+            "requires_capability_token": True,
+            "capability_token_format": "legacy_hmac",
+            "required_scope": ["files:write"],
+            "_capability_token": token,
+        },
+        executor,
+    )
+
+    assert not ok
+    assert not executed
+    assert "secret" in reason.lower()
 
 
 def test_degraded_read_only_can_continue_without_capability_token(monkeypatch):
