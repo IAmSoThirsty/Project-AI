@@ -83,6 +83,7 @@ METRICS_TOKEN = os.environ.get("CHIMERA_METRICS_TOKEN", "")
 WEBHOOK_URL = os.environ.get("CHIMERA_WEBHOOK_URL", "")
 GOVERNANCE_DENY_DIR = os.environ.get("CHIMERA_GOVERNANCE_DENY_DIR", "")
 WEBHOOK_SCORE_MIN = int(os.environ.get("CHIMERA_WEBHOOK_SCORE_MIN", "15"))
+WEBHOOK_SECRET = os.environ.get("CHIMERA_WEBHOOK_SECRET", "")
 
 log = logging.getLogger("chimera")
 logging.basicConfig(
@@ -127,21 +128,33 @@ def _notify_governance(ip: str, verdict: str, score: int, sid: str, path: str) -
     """POST verdict to the Project-AI governance bridge (fire-and-forget)."""
     if not WEBHOOK_URL:
         return
+    ts = datetime.now(UTC).isoformat()
+    payload_obj = {
+        "event": "threat_verdict",
+        "event_id": _webhook_event_id("threat_verdict", ip, sid, path),
+        "ip": ip,
+        "verdict": verdict,
+        "score": score,
+        "sid": sid,
+        "path": path[:256],
+        "timestamp": ts,
+        "ts": ts,
+    }
+    signature = _sign_webhook_payload(payload_obj)
+    if not signature:
+        return
+    payload_obj["signature"] = signature
     try:
-        payload = json.dumps(
-            {
-                "ip": ip,
-                "verdict": verdict,
-                "score": score,
-                "sid": sid,
-                "path": path[:256],
-                "ts": datetime.now(UTC).isoformat(),
-            }
-        ).encode()
+        payload = json.dumps(payload_obj).encode()
         req = urllib.request.Request(
             WEBHOOK_URL + "/chimera/verdict",
             data=payload,
-            headers={"Content-Type": "application/json"},
+            headers={
+                "Content-Type": "application/json",
+                "X-Chimera-Event-Id": payload_obj["event_id"],
+                "X-Chimera-Timestamp": ts,
+                "X-Chimera-Signature": f"sha256={signature}",
+            },
             method="POST",
         )
         urllib.request.urlopen(req, timeout=1)
@@ -153,26 +166,94 @@ def _notify_canary(ip: str, hits: list) -> None:
     """POST canary hit details to the Project-AI governance bridge."""
     if not WEBHOOK_URL or not hits:
         return
+    ts = datetime.now(UTC).isoformat()
+    sanitized_hits = [
+        {"token": h["token"][:32], "kind": h["kind"], "form": h["form"]}
+        for h in hits
+    ]
+    payload_obj = {
+        "event": "canary_hit",
+        "event_id": _webhook_event_id("canary_hit", ip, "", str(len(hits))),
+        "ip": ip,
+        "hits": sanitized_hits,
+        "timestamp": ts,
+        "ts": ts,
+    }
+    signature = _sign_webhook_payload(payload_obj)
+    if not signature:
+        return
+    payload_obj["signature"] = signature
     try:
-        payload = json.dumps(
-            {
-                "ip": ip,
-                "hits": [
-                    {"token": h["token"][:32], "kind": h["kind"], "form": h["form"]}
-                    for h in hits
-                ],
-                "ts": datetime.now(UTC).isoformat(),
-            }
-        ).encode()
+        payload = json.dumps(payload_obj).encode()
         req = urllib.request.Request(
             WEBHOOK_URL + "/chimera/canary",
             data=payload,
-            headers={"Content-Type": "application/json"},
+            headers={
+                "Content-Type": "application/json",
+                "X-Chimera-Event-Id": payload_obj["event_id"],
+                "X-Chimera-Timestamp": ts,
+                "X-Chimera-Signature": f"sha256={signature}",
+            },
             method="POST",
         )
         urllib.request.urlopen(req, timeout=1)
     except Exception:
         pass
+
+
+def _webhook_event_id(event: str, ip: str, sid: str, marker: str) -> str:
+    seed = f"{event}:{ip}:{sid}:{marker}:{time.time_ns()}"
+    return hashlib.sha256(seed.encode("utf-8")).hexdigest()[:32]
+
+
+def _sign_webhook_payload(payload: dict) -> str:
+    """Sign sanitized webhook payloads; missing secret means do not send."""
+    if not WEBHOOK_SECRET:
+        return ""
+    return hmac.new(
+        WEBHOOK_SECRET.encode("utf-8"),
+        _canonical_webhook_payload(payload),
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def _canonical_webhook_payload(payload: dict) -> bytes:
+    event = str(payload.get("event") or payload.get("type") or "")
+    sanitized = {
+        "event": event,
+        "event_id": str(payload.get("event_id") or payload.get("nonce") or ""),
+        "timestamp": payload.get("timestamp") or payload.get("ts"),
+        "ip": str(payload.get("ip", "")),
+        "sid": str(payload.get("sid", "")),
+    }
+    if event == "threat_verdict":
+        sanitized.update(
+            {
+                "verdict": str(payload.get("verdict", "")),
+                "score": int(payload.get("score") or 0),
+                "path": str(payload.get("path", ""))[:256],
+            }
+        )
+    elif event == "canary_hit":
+        sanitized["hits"] = [
+            {
+                "token": str(hit.get("token", ""))[:32],
+                "kind": hit.get("kind"),
+                "form": hit.get("form"),
+            }
+            for hit in payload.get("hits", [])
+            if isinstance(hit, dict)
+        ]
+    else:
+        sanitized["payload_hash"] = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
+        ).hexdigest()
+    return json.dumps(
+        sanitized,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    ).encode("utf-8")
 
 
 def _governance_denial_boost(ip: str, max_age: float = 300.0) -> int:
