@@ -25,7 +25,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import uvicorn
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -629,54 +629,142 @@ async def get_fourlaws():
 # ============================================================
 
 
-class ChimeraVerdictPayload(BaseModel):
-    ip: str
-    verdict: str  # SUSPICIOUS | ATTACKER
-    score: int
-    sid: str = ""
-    path: str = ""
-    ts: str = ""
+_CHIMERA_SIGNATURE_HEADER = "X-Chimera-Signature"
+_CHIMERA_EVENT_ID_HEADER = "X-Chimera-Event-Id"
+_CHIMERA_TIMESTAMP_HEADER = "X-Chimera-Timestamp"
 
 
-class ChimeraCanaryPayload(BaseModel):
-    ip: str
-    sid: str = ""
-    hits: list[dict[str, Any]] = []
-    ts: str = ""
+def _normalize_chimera_signature(value: Any) -> str:
+    return str(value or "").strip().removeprefix("sha256=").strip()
+
+
+def _chimera_auth_failure(detail: str) -> HTTPException:
+    return HTTPException(status_code=401, detail=detail)
+
+
+def _chimera_malformed(detail: str) -> HTTPException:
+    return HTTPException(status_code=400, detail=detail)
+
+
+def _chimera_event_id(event: dict[str, Any]) -> str:
+    return str(event.get("event_id") or event.get("nonce") or "")
+
+
+def _chimera_timestamp(event: dict[str, Any]) -> Any:
+    return event.get("timestamp") or event.get("ts")
+
+
+def _chimera_signature(event: dict[str, Any], request: Request) -> str:
+    header_signature = request.headers.get(_CHIMERA_SIGNATURE_HEADER, "")
+    body_signature = str(event.get("signature") or "")
+
+    if not header_signature and not body_signature:
+        raise _chimera_auth_failure("Missing Chimera webhook signature")
+
+    if header_signature and body_signature:
+        if _normalize_chimera_signature(header_signature) != _normalize_chimera_signature(
+            body_signature
+        ):
+            raise _chimera_auth_failure("Invalid Chimera webhook signature")
+
+    return header_signature or body_signature
+
+
+def _validate_chimera_header_consistency(
+    event: dict[str, Any],
+    request: Request,
+) -> None:
+    header_event_id = request.headers.get(_CHIMERA_EVENT_ID_HEADER, "")
+    body_event_id = _chimera_event_id(event)
+    if header_event_id and body_event_id and header_event_id.strip() != body_event_id:
+        raise _chimera_auth_failure("Chimera event_id header mismatch")
+
+    header_timestamp = request.headers.get(_CHIMERA_TIMESTAMP_HEADER, "")
+    body_timestamp = _chimera_timestamp(event)
+    if (
+        header_timestamp
+        and body_timestamp not in (None, "")
+        and header_timestamp.strip() != str(body_timestamp).strip()
+    ):
+        raise _chimera_auth_failure("Chimera timestamp header mismatch")
+
+
+def _validate_chimera_event_type(event: dict[str, Any], expected: str) -> None:
+    event_type = str(event.get("event") or event.get("type") or "")
+    if event_type != expected:
+        raise _chimera_malformed(f"Expected Chimera event '{expected}'")
+
+
+def _validate_chimera_verdict_event(event: dict[str, Any]) -> None:
+    if not str(event.get("ip") or ""):
+        raise _chimera_malformed("Missing Chimera verdict ip")
+    if not str(event.get("verdict") or ""):
+        raise _chimera_malformed("Missing Chimera verdict")
+    if event.get("score") is None:
+        raise _chimera_malformed("Missing Chimera verdict score")
+    try:
+        int(event.get("score") or 0)
+    except (TypeError, ValueError) as exc:
+        raise _chimera_malformed("Invalid Chimera verdict score") from exc
+
+
+def _validate_chimera_canary_event(event: dict[str, Any]) -> None:
+    if not str(event.get("ip") or ""):
+        raise _chimera_malformed("Missing Chimera canary ip")
+    if not isinstance(event.get("hits"), list):
+        raise _chimera_malformed("Invalid Chimera canary hits")
+
+
+def _chimera_event_payload(payload: Any) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise _chimera_malformed("Malformed Chimera webhook payload")
+    return dict(payload)
 
 
 @app.post("/chimera/verdict")
-async def chimera_verdict(payload: ChimeraVerdictPayload):
+async def chimera_verdict(payload: dict[str, Any], request: Request):
     """Receive a threat verdict from the Chimera deception perimeter."""
-    try:
-        from app.security.chimera_bridge import get_bridge
+    event = _chimera_event_payload(payload)
+    signature = _chimera_signature(event, request)
+    _validate_chimera_header_consistency(event, request)
+    _validate_chimera_event_type(event, "threat_verdict")
+    _validate_chimera_verdict_event(event)
 
-        get_bridge().receive_verdict(
-            ip=payload.ip,
-            verdict=payload.verdict,
-            score=payload.score,
-            sid=payload.sid,
-            path=payload.path,
+    try:
+        from app.security.chimera_bridge import ChimeraWebhookAuthError, get_bridge
+
+        get_bridge().receive_authenticated_event(
+            event,
+            signature=signature,
         )
+    except ChimeraWebhookAuthError as exc:
+        raise _chimera_auth_failure(str(exc)) from exc
     except Exception as exc:
         return {"status": "error", "detail": str(exc)}
-    return {"status": "ok", "ip": payload.ip, "verdict": payload.verdict}
+    return {"status": "ok", "ip": event["ip"], "verdict": event["verdict"]}
 
 
 @app.post("/chimera/canary")
-async def chimera_canary(payload: ChimeraCanaryPayload):
+async def chimera_canary(payload: dict[str, Any], request: Request):
     """Receive a canary hit alert from the Chimera deception perimeter."""
-    try:
-        from app.security.chimera_bridge import get_bridge
+    event = _chimera_event_payload(payload)
+    signature = _chimera_signature(event, request)
+    _validate_chimera_header_consistency(event, request)
+    _validate_chimera_event_type(event, "canary_hit")
+    _validate_chimera_canary_event(event)
 
-        get_bridge().receive_canary_hit(
-            ip=payload.ip,
-            hits=payload.hits,
-            sid=payload.sid,
+    try:
+        from app.security.chimera_bridge import ChimeraWebhookAuthError, get_bridge
+
+        get_bridge().receive_authenticated_event(
+            event,
+            signature=signature,
         )
+    except ChimeraWebhookAuthError as exc:
+        raise _chimera_auth_failure(str(exc)) from exc
     except Exception as exc:
         return {"status": "error", "detail": str(exc)}
-    return {"status": "ok", "ip": payload.ip, "hits": len(payload.hits)}
+    return {"status": "ok", "ip": event["ip"], "hits": len(event["hits"])}
 
 
 # ============================================================
