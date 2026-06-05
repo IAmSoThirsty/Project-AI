@@ -1,0 +1,623 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Project-AI Governance Caretaker API",
+    "description": "Sovereign, enforcement-first governance interface for Project-AI. Defines the machine-enforceable contract for constitutional enforcement, reflexive defense (Cerberus), ethical arbitration (Codex Deus / Galahad), temporal state registration (STATEREGISTER), Iron Path cryptographic invariants, and caretaker self-governance. All operations prioritize user sovereignty, cryptographic binding, temporal honesty, and structural enforcement. Local-first and air-gapped capable by design.",
+    "version": "v1.0.0",
+    "x-project-ai": {
+      "governance-layer": "Triumvirate",
+      "enforcement-philosophy": "enforcement-first",
+      "related-papers": [
+        "Project-AI Origin Paper",
+        "Enforcement-First AI Governance Spec"
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/governance",
+      "description": "Local sovereign caretaker instance (recommended for development and air-gapped use)"
+    },
+    {
+      "url": "/governance",
+      "description": "Relative path - use when API and documentation are served from the same origin"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Governance",
+      "description": "Core constitutional and policy operations"
+    },
+    {
+      "name": "Enforcement",
+      "description": "Decision and action enforcement endpoints"
+    },
+    {
+      "name": "Audit",
+      "description": "Immutable audit trail and temporal state operations"
+    },
+    {
+      "name": "Reflex",
+      "description": "Reflexive defense and misalignment detection (Cerberus layer)"
+    },
+    {
+      "name": "Caretaker",
+      "description": "Self-governance and schema evolution operations for the caretaker itself"
+    },
+    {
+      "name": "Crypto",
+      "description": "Iron Path cryptographic verification and proof operations"
+    }
+  ],
+  "paths": {
+    "/constitution/current": {
+      "get": {
+        "tags": ["Governance"],
+        "summary": "Retrieve the currently active constitution",
+        "description": "Returns the active Constitution document with version, axioms, effective date, hash chain, and signatures.",
+        "operationId": "getCurrentConstitution",
+        "responses": {
+          "200": {
+            "description": "Current active constitution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Constitution"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Governance error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GovernanceError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enforce": {
+      "post": {
+        "tags": ["Enforcement"],
+        "summary": "Submit an action for constitutional enforcement decision",
+        "description": "Core enforcement endpoint. The caretaker evaluates the proposed action against active policies and constitution, returning a structured EnforcementDecision.",
+        "operationId": "enforceAction",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnforcementRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Enforcement decision rendered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnforcementDecision"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Governance error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GovernanceError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audit/log": {
+      "post": {
+        "tags": ["Audit"],
+        "summary": "Append an immutable audit event",
+        "description": "Records a governance-relevant event with cryptographic anchoring and temporal proof for STATEREGISTER compatibility.",
+        "operationId": "logAuditEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Audit event recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditEvent"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Governance error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GovernanceError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audit/trail": {
+      "get": {
+        "tags": ["Audit"],
+        "summary": "Query the immutable audit trail",
+        "description": "Retrieves audit events with filtering, pagination, and optional Merkle proof verification.",
+        "operationId": "queryAuditTrail",
+        "parameters": [
+          {
+            "name": "event_type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated audit trail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AuditEvent"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Governance error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GovernanceError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reflex/trigger": {
+      "post": {
+        "tags": ["Reflex"],
+        "summary": "Report a reflexive defense trigger",
+        "description": "Allows agents or the system to report potential misalignment, drift, anomaly, or jailbreak attempt.",
+        "operationId": "triggerReflex",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReflexTrigger"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reflex action decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReflexAction"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Governance error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GovernanceError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/caretaker/status": {
+      "get": {
+        "tags": ["Caretaker"],
+        "summary": "Get current caretaker status and drift metrics",
+        "description": "Returns health, schema version, pending proposals, last enforcement statistics, and detected drift.",
+        "operationId": "getCaretakerStatus",
+        "responses": {
+          "200": {
+            "description": "Caretaker status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaretakerStatus"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Governance error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GovernanceError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/caretaker/propose-patch": {
+      "post": {
+        "tags": ["Caretaker"],
+        "summary": "Submit a self-governance patch proposal",
+        "description": "Allows the Governance Caretaker GPT to propose updates to this schema or policies. The proposal itself is subject to enforcement evaluation.",
+        "operationId": "proposeCaretakerPatch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CaretakerProposal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Proposal accepted for evaluation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnforcementDecision"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Governance error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GovernanceError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SovereigntyMetadata": {
+        "type": "object",
+        "description": "Base metadata required on all governance requests and responses for sovereignty, temporal honesty, and cryptographic binding.",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requester_id": {
+            "type": "string"
+          },
+          "nonce": {
+            "type": "string"
+          },
+          "signature": {
+            "type": "string"
+          },
+          "previous_state_hash": {
+            "type": "string"
+          }
+        },
+        "required": ["timestamp", "requester_id"]
+      },
+      "Constitution": {
+        "type": "object",
+        "description": "Active constitution document with version history and cryptographic anchoring.",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "effective_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "axioms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "content_hash": {
+            "type": "string"
+          },
+          "signatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "previous_version_hash": {
+            "type": "string"
+          }
+        },
+        "required": ["version", "effective_date", "axioms", "content_hash"]
+      },
+      "Policy": {
+        "type": "object",
+        "description": "A single enforceable policy with rules and enforcement mode.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "object"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "enforcement_mode": {
+            "type": "string",
+            "enum": ["hard", "soft", "advisory"]
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "enforcement_mode"]
+      },
+      "EnforcementRequest": {
+        "type": "object",
+        "description": "Request payload for enforcement evaluation.",
+        "properties": {
+          "proposed_action": {
+            "type": "object"
+          },
+          "context": {
+            "type": "object"
+          },
+          "sovereignty": {
+            "$ref": "#/components/schemas/SovereigntyMetadata"
+          }
+        },
+        "required": ["proposed_action", "sovereignty"]
+      },
+      "EnforcementDecision": {
+        "type": "object",
+        "description": "Structured decision returned by the enforcement engine.",
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": ["allow", "deny", "modify", "log_only"]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "applied_policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Policy"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "sovereignty": {
+            "$ref": "#/components/schemas/SovereigntyMetadata"
+          }
+        },
+        "required": ["decision", "rationale", "sovereignty"]
+      },
+      "AuditEvent": {
+        "type": "object",
+        "description": "Immutable audit record with temporal and cryptographic proof.",
+        "properties": {
+          "event_id": {
+            "type": "string"
+          },
+          "event_type": {
+            "type": "string"
+          },
+          "actor": {
+            "type": "string"
+          },
+          "action": {
+            "type": "object"
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object"
+          },
+          "sovereignty": {
+            "$ref": "#/components/schemas/SovereigntyMetadata"
+          }
+        },
+        "required": ["event_id", "event_type", "actor", "action", "outcome", "sovereignty"]
+      },
+      "ReflexTrigger": {
+        "type": "object",
+        "description": "Report of potential misalignment or threat for reflexive response.",
+        "properties": {
+          "trigger_type": {
+            "type": "string",
+            "enum": ["drift", "anomaly", "jailbreak_attempt", "policy_violation", "other"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "object"
+          },
+          "sovereignty": {
+            "$ref": "#/components/schemas/SovereigntyMetadata"
+          }
+        },
+        "required": ["trigger_type", "severity", "sovereignty"]
+      },
+      "ReflexAction": {
+        "type": "object",
+        "description": "Response action decided by the reflexive defense layer.",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": ["monitor", "warn", "restrict", "isolate", "escalate_to_codex"]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "executed": {
+            "type": "boolean"
+          },
+          "sovereignty": {
+            "$ref": "#/components/schemas/SovereigntyMetadata"
+          }
+        },
+        "required": ["action", "rationale", "executed", "sovereignty"]
+      },
+      "CaretakerStatus": {
+        "type": "object",
+        "description": "Current operational status and drift metrics of the caretaker.",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "last_enforcement_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pending_proposals": {
+            "type": "integer"
+          },
+          "drift_detected": {
+            "type": "boolean"
+          },
+          "health": {
+            "type": "string",
+            "enum": ["healthy", "degraded", "critical"]
+          }
+        },
+        "required": ["schema_version", "health"]
+      },
+      "CaretakerProposal": {
+        "type": "object",
+        "description": "Self-governance proposal from the caretaker GPT for schema or policy changes.",
+        "properties": {
+          "proposal_type": {
+            "type": "string",
+            "enum": ["schema_update", "new_policy", "policy_amendment", "endpoint_addition"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "proposed_changes": {
+            "type": "object"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "sovereignty": {
+            "$ref": "#/components/schemas/SovereigntyMetadata"
+          }
+        },
+        "required": ["proposal_type", "description", "proposed_changes", "sovereignty"]
+      },
+      "GovernanceError": {
+        "type": "object",
+        "description": "Standard error response aligned with Project-AI constitutional error handling.",
+        "properties": {
+          "error_code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object"
+          },
+          "sovereignty": {
+            "$ref": "#/components/schemas/SovereigntyMetadata"
+          }
+        },
+        "required": ["error_code", "message"]
+      }
+    },
+    "securitySchemes": {
+      "IronPath": {
+        "type": "apiKey",
+        "name": "X-IronPath-Signature",
+        "in": "header",
+        "description": "Ed25519 or Iron Path cryptographic signature for request authentication and integrity"
+      }
+    }
+  },
+  "security": [
+    {
+      "IronPath": []
+    }
+  ]
+}
