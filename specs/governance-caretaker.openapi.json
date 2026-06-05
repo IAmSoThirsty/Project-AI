@@ -7,6 +7,10 @@
     "x-project-ai": {
       "governance-layer": "Triumvirate",
       "enforcement-philosophy": "enforcement-first",
+      "source": {
+        "raw_url": "https://raw.githubusercontent.com/IAmSoThirsty/Project-AI/substrate-consolidation/specs/governance-caretaker.openapi.json",
+        "repo_path": "https://github.com/IAmSoThirsty/Project-AI/tree/substrate-consolidation/specs"
+      },
       "related-papers": [
         "Project-AI Origin Paper",
         "Enforcement-First AI Governance Spec"
