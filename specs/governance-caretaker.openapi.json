@@ -19,12 +19,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080/governance",
-      "description": "Local sovereign caretaker instance (recommended for development and air-gapped use)"
-    },
-    {
-      "url": "/governance",
-      "description": "Relative path - use when API and documentation are served from the same origin"
+      "url": "https://www.thirstysystems.com/governance",
+      "description": "Public Governance Caretaker adapter for ChatGPT Actions"
     }
   ],
   "tags": [
@@ -611,17 +607,17 @@
       }
     },
     "securitySchemes": {
-      "IronPath": {
+      "GovernanceActionKey": {
         "type": "apiKey",
-        "name": "X-IronPath-Signature",
+        "name": "X-Governance-Action-Key",
         "in": "header",
-        "description": "Ed25519 or Iron Path cryptographic signature for request authentication and integrity"
+        "description": "API key used by the public Governance Caretaker adapter. Iron Path signing, if required, is performed server-side by the adapter."
       }
     }
   },
   "security": [
     {
-      "IronPath": []
+      "GovernanceActionKey": []
     }
   ]
 }
