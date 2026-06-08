@@ -11,6 +11,7 @@ Features:
 """
 
 import hashlib
+import re
 import json
 import secrets
 import string
@@ -224,20 +225,7 @@ class SovereignMessaging:
         Returns:
             True if valid format, False otherwise
         """
-        # Check format: XXXX-XXXX-XXXX-XXXX
-        parts = code.split("-")
-        if len(parts) != 4:
-            return False
-
-        # Each part should be 4 alphanumeric characters
-        chars = string.ascii_uppercase + string.digits
-        for part in parts:
-            if len(part) != 4:
-                return False
-            if not all(c in chars for c in part):
-                return False
-
-        return True
+        return bool(re.fullmatch(r"^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$", str(code)))
 
     def pair_with_contact(
         self,
