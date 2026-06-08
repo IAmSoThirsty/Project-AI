@@ -1,0 +1,20 @@
+{
+  "name": "storm-desk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Real-time breaking-news command center with multi-channel monitoring and automatic escalation.",
+  "scripts": {
+    "dev:ui": "cd apps/desktop-ui && npx vite dev --port 4318",
+    "dev:worker": "cd apps/event-worker && npx tsx watch src/index.ts",
+    "dev": "concurrently \"npm:dev:worker\" \"npm:dev:ui\"",
+    "build:ui": "cd apps/desktop-ui && vite build",
+    "build:worker": "cd apps/event-worker && tsc",
+    "build": "npm run build:ui && npm run build:worker",
+    "tauri:dev": "cd tauri/src-tauri && cargo tauri dev",
+    "tauri:build": "cd tauri/src-tauri && cargo tauri build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3"
+  }
+}

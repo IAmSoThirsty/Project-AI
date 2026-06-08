@@ -1,0 +1,29 @@
+
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+apps/desktop-ui/dist/
+apps/event-worker/dist/
+tauri/src-tauri/target/
+
+# Environment
+.env
+.env.local
+
+# Data
+data/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# IDE
+.idea/
+*.swp
+*.swo

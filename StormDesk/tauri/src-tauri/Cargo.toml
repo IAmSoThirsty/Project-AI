@@ -1,0 +1,18 @@
+[package]
+name = "storm-desk"
+version = "0.1.0"
+edition = "2021"
+description = "Real-time breaking-news command center desktop application."
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-notification = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[[bin]]
+name = "storm-desk"
+path = "src/main.rs"

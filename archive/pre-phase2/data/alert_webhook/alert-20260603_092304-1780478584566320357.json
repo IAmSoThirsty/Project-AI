@@ -1,0 +1,47 @@
+{
+  "alerts": [
+    {
+      "annotations": {
+        "description": "Load average is above 4",
+        "summary": "High load average detected"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3327fb377f597ee1",
+      "generatorURL": "http://7ffa8f900c01:9090/graph?g0.expr=node_load15+%3E+4&g0.tab=1",
+      "labels": {
+        "alertname": "HighLoadAverage",
+        "environment": "production",
+        "instance": "node-exporter:9100",
+        "job": "node-exporter",
+        "monitor": "project-ai-monitor",
+        "service": "system",
+        "severity": "warning"
+      },
+      "startsAt": "2026-06-03T09:22:53.356Z",
+      "status": "firing"
+    }
+  ],
+  "commonAnnotations": {
+    "description": "Load average is above 4",
+    "summary": "High load average detected"
+  },
+  "commonLabels": {
+    "alertname": "HighLoadAverage",
+    "environment": "production",
+    "instance": "node-exporter:9100",
+    "job": "node-exporter",
+    "monitor": "project-ai-monitor",
+    "service": "system",
+    "severity": "warning"
+  },
+  "externalURL": "http://975be3899c4b:9093",
+  "groupKey": "{}/{severity=\"warning\"}:{alertname=\"HighLoadAverage\", service=\"system\"}",
+  "groupLabels": {
+    "alertname": "HighLoadAverage",
+    "service": "system"
+  },
+  "receiver": "webhook-notifications",
+  "status": "firing",
+  "truncatedAlerts": 0,
+  "version": "4"
+}

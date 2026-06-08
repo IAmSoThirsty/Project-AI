@@ -295,3 +295,5 @@ demos/**/*.lscache
 .claude/launch.json
 .claude/worktrees/
 shadow_test_output.txt
+
+docs/system/SSH_KEY_INFO.txt

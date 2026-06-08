@@ -1,0 +1,51 @@
+diff --git a/data/genesis_pins/continuity_log.json b/data/genesis_pins/continuity_log.json
+index bfa562ab..98b0f4eb 100644
+--- a/data/genesis_pins/continuity_log.json
++++ b/data/genesis_pins/continuity_log.json
+@@ -318,5 +318,45 @@
+     "genesis_id_actual": "GENESIS-FC5BA0BD",
+     "key_dir": "T:/Temp/tmpatdtm9no/genesis_keys",
+     "attack_vector": "VECTOR 1"
++  },
++  {
++    "violation_type": "GENESIS_DISCONTINUITY",
++    "detected_at": "2026-06-03T13:02:35.129689+00:00",
++    "genesis_id_expected": "GENESIS-3479D88C",
++    "genesis_id_actual": "GENESIS-1B02595F",
++    "key_dir": "T:/Temp/tmpw_pfukvw/genesis_keys",
++    "attack_vector": "VECTOR 1"
++  },
++  {
++    "violation_type": "GENESIS_DISCONTINUITY",
++    "detected_at": "2026-06-03T13:02:35.141871+00:00",
++    "genesis_id_expected": "GENESIS-351196F5",
++    "genesis_id_actual": "GENESIS-22303BB2",
++    "key_dir": "T:/Temp/tmpnc1iyogd/genesis_keys",
++    "attack_vector": "VECTOR 1"
++  },
++  {
++    "violation_type": "GENESIS_DISCONTINUITY",
++    "detected_at": "2026-06-03T13:02:35.149677+00:00",
++    "genesis_id_expected": "GENESIS-351196F5",
++    "genesis_id_actual": "GENESIS-22303BB2",
++    "key_dir": "T:/Temp/tmpnc1iyogd/genesis_keys",
++    "attack_vector": "VECTOR 1"
++  },
++  {
++    "violation_type": "GENESIS_DISCONTINUITY",
++    "detected_at": "2026-06-03T13:02:35.192687+00:00",
++    "genesis_id_expected": "GENESIS-60FA2D0E",
++    "genesis_id_actual": "GENESIS-D5BD0502",
++    "key_dir": "T:/Temp/tmp7x5_a6v2/genesis_keys",
++    "attack_vector": "VECTOR 1"
++  },
++  {
++    "violation_type": "GENESIS_DISCONTINUITY",
++    "detected_at": "2026-06-03T13:02:35.213210+00:00",
++    "genesis_id_expected": "GENESIS-7EB2587B",
++    "genesis_id_actual": "GENESIS-EE6FB9EE",
++    "key_dir": "T:/Temp/tmpwfyab7lq/genesis_keys",
++    "attack_vector": "VECTOR 1"
+   }
+ ]
+\ No newline at end of file
