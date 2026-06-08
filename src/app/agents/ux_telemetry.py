@@ -27,11 +27,25 @@ class UxTelemetryAgent(KernelRoutedAgent):
             default_risk_level="low",
         )
         self.data_dir = data_dir
-        self.telemetry_path = os.path.join(self.data_dir, "telemetry.json")
+        self.telemetry_path = os.path.join(self.data_dir, "telemetry.jsonl")
+        old_telemetry_path = os.path.join(self.data_dir, "telemetry.json")
         os.makedirs(self.data_dir, exist_ok=True)
+
+        # Migrate old JSON array format to JSONL if it exists
+        if os.path.exists(old_telemetry_path):
+            try:
+                with open(old_telemetry_path, "r", encoding="utf-8") as f:
+                    old_data = json.load(f)
+                with open(self.telemetry_path, "w", encoding="utf-8") as f:
+                    for item in old_data:
+                        f.write(json.dumps(item) + "\n")
+                os.remove(old_telemetry_path)
+            except Exception:
+                logger.exception("Failed to migrate old telemetry.json")
+
         if not os.path.exists(self.telemetry_path):
-            with open(self.telemetry_path, "w", encoding="utf-8") as f:
-                json.dump([], f)
+            # Create an empty file
+            open(self.telemetry_path, "w").close()
 
     def record_event(self, evt: dict[str, Any]) -> None:
         # Route through kernel (COGNITION KERNEL ROUTING)
@@ -46,18 +60,18 @@ class UxTelemetryAgent(KernelRoutedAgent):
     def _do_record_event(self, evt: dict[str, Any]) -> None:
         """Internal implementation of event recording."""
         try:
-            with open(self.telemetry_path, encoding="utf-8") as f:
-                data = json.load(f)
-            data.append(evt)
-            with open(self.telemetry_path, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=2)
+            with open(self.telemetry_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(evt) + "\n")
         except Exception:
             logger.exception("Failed to record telemetry")
 
     def get_summary(self) -> dict[str, Any]:
         try:
-            with open(self.telemetry_path, encoding="utf-8") as f:
-                data = json.load(f)
-            return {"count": len(data)}
+            count = 0
+            with open(self.telemetry_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.strip():
+                        count += 1
+            return {"count": count}
         except Exception:
             return {"count": 0}
