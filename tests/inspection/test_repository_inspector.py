@@ -167,6 +167,29 @@ class TestRepositoryInspector:
         assert "components" in data
         assert "statistics" in data
 
+    def test_todo_extraction(self, temp_repo):
+        """Test TODO extraction from Python comments."""
+        test_file = temp_repo / "src" / "todo_test.py"
+        test_file.write_text("def fn():\n    # TODO: Refactor this later\n    pass\n")
+
+        inspector = RepositoryInspector(temp_repo)
+        inspector._discover_files()
+        inspector._analyze_files()
+
+        # Find todo_test.py
+        file_info = next(
+            (f for f in inspector.files.values() if "todo_test.py" in f.relative_path),
+            None,
+        )
+
+        assert file_info is not None
+        assert len(file_info.todos) > 0
+        assert "Refactor this later" in file_info.todos[0]
+        # Depending on STATUS_PATTERNS matching "TODO", it should be PLANNED
+        from app.inspection.repository_inspector import FileStatus
+
+        assert file_info.status == FileStatus.PLANNED
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
