@@ -4,6 +4,7 @@ AGENT-010: P0 Architecture Documentation Metadata Enrichment
 Adds missing YAML frontmatter fields to architecture documentation.
 """
 
+import ast
 import os
 import re
 from pathlib import Path
@@ -60,7 +61,7 @@ def parse_yaml_dict(yaml_str: str) -> Dict[str, any]:
             # Check if value is a list indicator
             if value.startswith('['):
                 # Inline list
-                result[key] = eval(value) if value else []
+                result[key] = ast.literal_eval(value) if value else []
             elif not value:
                 # Next lines might be a list
                 current_key = key
