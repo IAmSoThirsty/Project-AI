@@ -665,7 +665,11 @@ def main():
         elif choice == "2":
             print("\n👥 PAIR WITH CONTACT")
             name = input("Contact name: ").strip()
-            code = input("Contact code (XXXX-XXXX-XXXX-XXXX): ").strip()
+            while True:
+                code = input("Contact code (XXXX-XXXX-XXXX-XXXX): ").strip().upper()
+                if messaging.validate_communication_code(code):
+                    break
+                print("❌ Invalid code format. Please use XXXX-XXXX-XXXX-XXXX.")
             print("Paste contact's public key (end with empty line):")
             key_lines = []
             while True:
