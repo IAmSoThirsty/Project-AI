@@ -86,14 +86,19 @@ def _scan_file(fpath: Path) -> list[Issue]:
                 description="Hardcoded secret detected in source",
                 suggested_fix="Move secret to environment variable or secrets manager",
             ))
-        if _TODO.search(line):
+        todo_match = _TODO.search(line)
+        if todo_match:
+            todo_text = line[todo_match.end():].strip()
+            if todo_text.startswith(":"):
+                todo_text = todo_text[1:].strip()
+            description = f"TODO comment found: {todo_text}" if todo_text else "TODO comment found"
             issues.append(Issue(
                 issue_id=str(uuid.uuid4()),
                 category="technical_debt",
                 severity=IssueSeverity.INFO,
                 file_path=str(fpath),
                 line=lineno,
-                description="TODO comment found",
+                description=description,
                 suggested_fix="",
             ))
     return issues

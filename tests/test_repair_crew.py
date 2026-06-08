@@ -66,6 +66,7 @@ class TestRepairCrewDiagnose:
         report = crew.diagnose(os.path.dirname(sample_py_file))
         todos = [i for i in report.issues if i.category == "technical_debt"]
         assert len(todos) >= 1
+        assert todos[0].description == "TODO comment found: fix this later"
 
 
 class TestRepairCrewRepair:
