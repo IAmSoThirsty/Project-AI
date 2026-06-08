@@ -54,7 +54,7 @@ _BARE_EXCEPT = re.compile(r"^\s*except\s*:\s*$", re.MULTILINE)
 _HARDCODED_SECRET = re.compile(
     r'(?i)\b(password|secret|passwd|api_key|token|auth_key)\s*=\s*["\'][^"\']{3,}["\']'
 )
-_TODO = re.compile(r"#\s*TODO\b", re.IGNORECASE)
+_TODO = re.compile(r"#.*\bTODO\b", re.IGNORECASE)
 
 
 def _scan_file(fpath: Path) -> list[Issue]:
