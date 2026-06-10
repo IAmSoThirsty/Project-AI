@@ -1,0 +1,128 @@
+{
+  "version": "0.3",
+  "date": "2026-06-10",
+  "status": "advisory_keyword_rules",
+  "default_profile": "baseline",
+  "rules": [
+    {
+      "profile": "handoff_readiness",
+      "priority": 100,
+      "keywords": [
+        "project-ai main",
+        "handoff",
+        "integration",
+        "readiness",
+        "mainline",
+        "project-ai handoff",
+        "project-ai integration",
+        "ready for project-ai",
+        "migration",
+        "promotion",
+        "promote"
+      ],
+      "rationale": "Project-AI handoff, readiness, migration, or legacy promotion language requires the handoff readiness controls."
+    },
+    {
+      "profile": "roadmap_meta",
+      "priority": 90,
+      "keywords": [
+        "roadmap",
+        "change control",
+        "deprecation",
+        "claims boundary",
+        "can't compare",
+        "cant compare",
+        "constitution",
+        "option c",
+        "now next later reject"
+      ],
+      "rationale": "Meta-governance work must load roadmap and change controls."
+    },
+    {
+      "profile": "technical_tooling",
+      "priority": 80,
+      "keywords": [
+        "validator",
+        "validate",
+        "cli",
+        "doctor",
+        "classify",
+        "schema",
+        "package",
+        "pyproject",
+        "tooling"
+      ],
+      "rationale": "Tooling work requires validator, CLI, and schema context."
+    },
+    {
+      "profile": "provenance_planning",
+      "priority": 70,
+      "keywords": [
+        "provenance",
+        "merkle",
+        "manifest",
+        "hash",
+        "evidence bundle",
+        "root of trust",
+        "tamper"
+      ],
+      "rationale": "Provenance work must load claim and evidence boundaries."
+    },
+    {
+      "profile": "human_review",
+      "priority": 60,
+      "keywords": [
+        "handoff",
+        "override",
+        "signoff",
+        "sign-off",
+        "review fatigue",
+        "human review",
+        "disagreement",
+        "authority",
+        "async review",
+        "second human",
+        "second-human",
+        "review debt",
+        "delegation"
+      ],
+      "rationale": "Human-review work must load protocols and bottleneck/fatigue failures."
+    },
+    {
+      "profile": "portable_agent_runtime",
+      "priority": 55,
+      "keywords": [
+        "portable agent",
+        "chatgpt",
+        "claude",
+        "local model",
+        "prompting standards",
+        "agent runtime",
+        "cross-model"
+      ],
+      "rationale": "Portable runtime work must load prompt and context-load guidance."
+    },
+    {
+      "profile": "external_claims",
+      "priority": 50,
+      "keywords": [
+        "external",
+        "adoption",
+        "public",
+        "audit",
+        "benchmark",
+        "comparison",
+        "maturity model",
+        "cargo-cult",
+        "misuse"
+      ],
+      "rationale": "External-facing work must load the claims boundary."
+    }
+  ],
+  "limitations": [
+    "Keyword rules are advisory and may miss ambiguous tasks.",
+    "Classification does not approve work.",
+    "Owner has directed and executed integration into Project-AI Main per explicit instruction (see PROJECT_AI_HANDOFF_READINESS.md human decision record).",
+    "Validator enforcement is not yet wired to these rules."
+  ]
+}

@@ -17,5 +17,162 @@
     "agent_runtime_training": "usage/agent-runtime-training-pack.md",
     "deprecation_review_register": "governance/DEPRECATION_REVIEW_REGISTER.md",
     "external_review_readiness": "external_review/EXTERNAL_REVIEW_READINESS_CHECKLIST.md"
-  }
+  },
+  "maturity_bands": [
+    {
+      "id": "S0",
+      "name": "Seeded scaffold",
+      "claim_limit": "Documents, templates, and examples exist, but enforcement is incomplete"
+    },
+    {
+      "id": "S1",
+      "name": "Excellent scaffold",
+      "claim_limit": "Strong docs, review templates, anti-patterns, failures, protocols, and roadmap discipline"
+    },
+    {
+      "id": "S2",
+      "name": "Executable substrate",
+      "claim_limit": "Machine-readable rules, validator enforcement, CLI behavior, provenance checks, and handoff gates exist"
+    },
+    {
+      "id": "S3",
+      "name": "Handoff candidate",
+      "claim_limit": "S2 plus signed handoff evidence, passing validation, human signoff, and bounded Project-AI handoff review readiness"
+    },
+    {
+      "id": "S4",
+      "name": "External audit hardened",
+      "claim_limit": "S3 plus signed releases, independent review, reproducible evidence bundles, and public claims discipline"
+    },
+    {
+      "id": "S5",
+      "name": "Can't compare",
+      "claim_limit": "S4 plus demonstrated failure memory, drift detection, health metrics, attack-resistance exercises, and mature deprecation/change control"
+    }
+  ],
+  "current_maturity_band": "S2",
+  "claim_levels": [
+    {
+      "id": "C0",
+      "name": "Proposal",
+      "required_evidence": "Roadmap or review entry"
+    },
+    {
+      "id": "C1",
+      "name": "Documented scaffold",
+      "required_evidence": "Existing file and index link"
+    },
+    {
+      "id": "C2",
+      "name": "Implemented manual capability",
+      "required_evidence": "File exists and manual command/procedure is documented"
+    },
+    {
+      "id": "C3",
+      "name": "Machine-validated capability",
+      "required_evidence": "Passing command output or evidence bundle"
+    },
+    {
+      "id": "C4",
+      "name": "Handoff candidate",
+      "required_evidence": "Passing PROJECT_AI_HANDOFF_READINESS.md evidence bundle"
+    },
+    {
+      "id": "C5",
+      "name": "External audit hardened",
+      "required_evidence": "Signed release, independent review record, reproducible evidence"
+    }
+  ],
+  "provenance_statuses": [
+    "absent",
+    "descriptive only",
+    "hash-backed",
+    "signature-backed",
+    "externally timestamped"
+  ],
+  "promotion_states": [
+    "blocked",
+    "candidate",
+    "approved",
+    "rejected"
+  ],
+  "handoff_states": [
+    "blocked",
+    "candidate",
+    "approved",
+    "rejected",
+    "applied"
+  ],
+  "current_handoff_state": "applied",
+  "current_promotion_state": "applied",
+  "roadmap_classes": [
+    "Now",
+    "Next",
+    "Later",
+    "Reject"
+  ],
+  "change_classes": [
+    {
+      "id": "CC0",
+      "name": "Editorial correction"
+    },
+    {
+      "id": "CC1",
+      "name": "Routine scaffold update"
+    },
+    {
+      "id": "CC2",
+      "name": "Governance control update"
+    },
+    {
+      "id": "CC3",
+      "name": "Constitutional or handoff boundary change"
+    },
+    {
+      "id": "CC4",
+      "name": "Emergency containment"
+    }
+  ],
+  "blocked_claims": [
+    "Project-AI Main integration approval (superseded by owner directive 2026-06-10; integration executed)",
+    "External audit hardening",
+    "Independent validation",
+    "Signed release provenance",
+    "Externally timestamped evidence",
+    "Signature-backed evidence without a valid signature, documented public key, and passing verification command",
+    "Full release provenance beyond manifest, Merkle, and signature checks",
+    "Doctor approval of Project-AI Main handoff",
+    "Machine judgment of human signoff rationale quality",
+    "Machine-complete semantic validation of reasoning quality",
+    "Second-human review, independent validation, or external review without a real qualified human reviewer record",
+    "Handoff candidate state without a completed handoff evidence bundle",
+    "Validator-enforced classifier and load-profile compliance",
+    "Validated cross-model portability without runtime-specific evidence",
+    "The can't compare target as achieved"
+  ],
+  "active_controls": [
+    "CANT_COMPARE_STANDARD.md",
+    "CLAIMS_BOUNDARY.md",
+    "PROJECT_AI_HANDOFF_READINESS.md",
+    "PROJECT_AI_PROMOTION_GATE.md",
+    "CHANGE_CONTROL.md",
+    "DEPRECATION_POLICY.md",
+    "ROADMAP_GOVERNANCE.md",
+    "ROADMAP_INTEGRATION_REVIEW.md",
+    "provenance/TRUST_ROOT.md",
+    "governance/PROMOTION_GATE_REQUIREMENTS.json",
+    "templates/human_signoff_record.md",
+    "templates/promotion_evidence_bundle.md",
+    "protocols/ASYNC_REVIEW.md",
+    "protocols/AUTHORITY_CONTINUITY.md",
+    "protocols/REVIEW_DEBT.md",
+    "protocols/SECOND_HUMAN_REVIEW.md",
+    "usage/portable-agent-prompting-standards.md",
+    "usage/agent-runtime-training-pack.md",
+    "governance/DEPRECATION_REVIEW_REGISTER.md",
+    "templates/deprecation_record.md",
+    "external_review/SECOND_HUMAN_REVIEW_PACKET.md",
+    "external_review/REVIEWER_OUTREACH_TEMPLATE.md",
+    "external_review/EXTERNAL_REVIEW_READINESS_CHECKLIST.md"
+  ]
 }
