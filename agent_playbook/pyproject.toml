@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-playbook"
+version = "0.12.0"
+description = "Agent Playbook governance scaffold with signed handoff evidence, schemas, semantic checks, and trust-root validation"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Jeremy Karrick", email = "project-ai@example.com"}
+]
+keywords = ["ai-governance", "sovereign-ai", "agentic-systems", "governance", "reflexive-systems"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "cryptography>=42.0.0",
+    "typer[all]>=0.9.0",
+]
+
+[project.scripts]
+ap = "agent_playbook.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/IAmSoThirsty/Project-AI"
+Documentation = "https://github.com/IAmSoThirsty/Project-AI/tree/main/agent_playbook"
+
+[tool.setuptools.packages.find]
+where = ["src"]
