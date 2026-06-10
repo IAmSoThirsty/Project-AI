@@ -43,7 +43,7 @@ dependencies:
   - bindsnet
   - sinabs
 scope: "Integration of 10 production-ready SNN libraries for neuromorphic computing and continual learning"
-description: Documentation for Spiking Neural Networks integration with 10 production-ready libraries, enabling neuromorphic computing, continual learning, and energy-efficient AI.
+description: Documentation for Spiking Neural Networks integration with 10 production-ready libraries, enabling neuromorphic computing, continual learning, and energy-efficient AI
 ---
 
 # Spiking Neural Networks (SNNs) Integration

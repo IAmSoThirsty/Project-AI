@@ -32,7 +32,7 @@ dependencies:
   - torch
   - scikit-learn
 scope: "CLI helper and behavior documentation for retraining AI Persona Zeroth/First-law detectors"
-description: Documentation for the CLI retraining helper and retraining behavior for AI Persona's Zeroth/First-law detectors, including model artifacts, vocabulary management, and audit logging.
+description: Documentation for the CLI retraining helper and retraining behavior for AI Persona's Zeroth/First-law detectors, including model artifacts, vocabulary management, and audit logging
 ---
 
 # Retraining the AI Persona Detectors

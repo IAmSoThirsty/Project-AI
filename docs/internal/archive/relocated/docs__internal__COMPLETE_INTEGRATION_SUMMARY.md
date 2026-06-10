@@ -46,7 +46,7 @@ findings:
   - eBPF observability integrated
   - 10 SNN libraries integrated
   - Supports 12,000+ nodes
-description: Complete integration summary for production-grade observability and neuromorphic computing capabilities, supporting deployments from homelabs to CERN-scale infrastructure.
+description: Complete integration summary for production-grade observability and neuromorphic computing capabilities, supporting deployments from homelabs to CERN-scale infrastructure
 ---
 
 # Complete Integration Summary - Monitoring & Neuromorphic AI

@@ -37,7 +37,7 @@ related_docs:
 dependencies:
   - cryptography
 scope: "Secure P2P end-to-end encrypted messaging system with self-destruct capabilities for user-AI communication"
-description: Specification for the Sovereign Messaging System providing industry-standard end-to-end encrypted P2P communication with hybrid RSA/AES encryption and automatic message self-destruct.
+description: Specification for the Sovereign Messaging System providing industry-standard end-to-end encrypted P2P communication with hybrid RSA/AES encryption and automatic message self-destruct
 ---
 
 # 🔐 Sovereign Messaging System

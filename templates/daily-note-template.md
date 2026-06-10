@@ -1,8 +1,8 @@
 ---
-title: "Daily Note - <% tp.date.now("YYYY-MM-DD") %>"
-date: <% tp.date.now("YYYY-MM-DD") %>
-day: <% tp.date.now("dddd") %>
-week: <% tp.date.now("YYYY-[W]WW") %>
+title: 'Daily Note - <% tp.date.now("YYYY-MM-DD") %>'
+date: '<% tp.date.now("YYYY-MM-DD") %>'
+day: '<% tp.date.now("dddd") %>'
+week: '<% tp.date.now("YYYY-[W]WW") %>'
 type: template
 template_type: daily-note
 tags: [template, daily-note, journal, productivity, templater]

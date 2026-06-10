@@ -31,7 +31,7 @@ related_docs:
 dependencies:
   - cryptography
 scope: "Encrypted cross-device data synchronization with device identification, conflict resolution, and auto-sync"
-description: Implementation documentation for the Cloud Synchronization module providing encrypted cross-device data synchronization with end-to-end encryption, bidirectional sync, and automatic conflict resolution.
+description: Implementation documentation for the Cloud Synchronization module providing encrypted cross-device data synchronization with end-to-end encryption, bidirectional sync, and automatic conflict resolution
 ---
 
 # Cloud Synchronization Module

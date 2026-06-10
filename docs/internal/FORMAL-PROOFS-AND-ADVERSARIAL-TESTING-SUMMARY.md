@@ -39,7 +39,7 @@ findings:
   - 100+ parameterized test cases
   - Property-based fuzzing (100 iterations)
   - System resists emotional leverage attacks
-description: Implementation summary for formal proofs and adversarial testing transforming humanity-first principles into machine-checkable invariants with comprehensive property-based tests and emotional manipulation resistance.
+description: Implementation summary for formal proofs and adversarial testing transforming humanity-first principles into machine-checkable invariants with comprehensive property-based tests and emotional manipulation resistance
 ---
 
 # Formal Proofs and Adversarial Testing: Implementation Summary

@@ -29,7 +29,7 @@ related_docs:
   - E2E_IMPLEMENTATION_COMPLETE.md
   - ../E2E_SETUP_GUIDE.md
 scope: "Complete documentation for production-grade E2E evaluation pipeline with comprehensive test scenarios, reporting, and CI/CD integration"
-description: Comprehensive documentation for God Tier E2E evaluation pipeline covering architecture, test scenarios, reporting infrastructure, artifact management, and CI/CD integration.
+description: Comprehensive documentation for God Tier E2E evaluation pipeline covering architecture, test scenarios, reporting infrastructure, artifact management, and CI/CD integration
 ---
 
 # E2E Evaluation Pipeline - Complete Documentation

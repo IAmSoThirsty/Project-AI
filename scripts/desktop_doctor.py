@@ -15,7 +15,7 @@ import argparse
 import importlib
 import os
 import platform
-import subprocess
+import subprocess  # nosec B404 - used only to launch the app with a fixed argv
 import sys
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -171,8 +171,8 @@ def main():
                 os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")
             ):
                 env["QT_QPA_PLATFORM"] = "offscreen"
-            sys.exit(subprocess.call([sys.executable, "-m", "app.main"],
-                                     env=env, cwd=REPO_ROOT))
+            sys.exit(subprocess.call(  # nosec B603 - fixed argv, no user input
+                [sys.executable, "-m", "app.main"], env=env, cwd=REPO_ROOT))
     else:
         print(f"{RED}NOT READY.{RESET} Apply the FIX lines above, then re-run:")
         print(f"    {sys.executable} scripts/desktop_doctor.py")

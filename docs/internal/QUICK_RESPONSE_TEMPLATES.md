@@ -26,7 +26,7 @@ related_docs:
   - ../operations/incident-response-playbook.md
   - ../security/security-incident-procedures.md
 scope: "Quick reference templates for incident reporting, triage, and response communications"
-description: Collection of standardized templates for incident reporting, Slack/channel posts, Triumvirate triage checklists, and response procedures.
+description: Collection of standardized templates for incident reporting, Slack/channel posts, Triumvirate triage checklists, and response procedures
 ---
 
 # Quick Response Templates

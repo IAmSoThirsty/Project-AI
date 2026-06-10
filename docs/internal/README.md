@@ -21,7 +21,7 @@ tags:
 related_docs:
   - ../public/README.md
   - ../architecture/README.md
-description: Index and navigation guide for internal engineering documentation, including implementation summaries, integration notes, and work-in-progress materials.
+description: Index and navigation guide for internal engineering documentation, including implementation summaries, integration notes, and work-in-progress materials
 ---
 
 # Internal Documentation

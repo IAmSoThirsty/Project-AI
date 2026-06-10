@@ -7,7 +7,7 @@ status: production
 related_systems: [react-frontend, components, api-client]
 stakeholders: [qa-team, frontend-team, devops-team]
 platform: web
-dependencies: [jest@29, @testing-library/react@16, vitest]
+dependencies: ["jest@29", "@testing-library/react@16", "vitest"]
 ---
 
 # Testing Guide for Web Application

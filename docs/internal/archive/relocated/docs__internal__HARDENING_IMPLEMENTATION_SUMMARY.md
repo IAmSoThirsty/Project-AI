@@ -38,7 +38,7 @@ findings:
   - Pre-commit hooks and CI workflows created
   - Zero tolerance policy for summary/status files
   - Retention policies defined
-description: Summary of comprehensive repository hardening implementation with archive indexing, root structure enforcement, CI workflows, and pre-commit hooks for mechanical regression prevention.
+description: Summary of comprehensive repository hardening implementation with archive indexing, root structure enforcement, CI workflows, and pre-commit hooks for mechanical regression prevention
 ---
 
 # Repository Hardening Implementation Summary

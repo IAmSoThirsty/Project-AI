@@ -33,7 +33,7 @@ related_docs:
 dependencies:
   - moltbook-sdk
 scope: "Integration of Legion agent with Moltbook AI social network under Triumvirate governance control"
-description: Specification for integrating Legion agent with Moltbook (AI social network) with complete Triumvirate governance, API key security, and registration procedures.
+description: Specification for integrating Legion agent with Moltbook (AI social network) with complete Triumvirate governance, API key security, and registration procedures
 ---
 
 # Moltbook Integration for Legion

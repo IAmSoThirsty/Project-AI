@@ -42,7 +42,7 @@ recommendations:
   - Implement Phase 0 governance immediately
   - Deploy Phase 1 process isolation
   - Evaluate Docker for enterprise deployments
-description: RFC proposing practical, incremental approach to isolate third-party plugins with process isolation, containerization, and security controls to prevent unintended code execution and privilege escalation.
+description: RFC proposing practical, incremental approach to isolate third-party plugins with process isolation, containerization, and security controls to prevent unintended code execution and privilege escalation
 ---
 
 # Plugin Sandboxing Proposal

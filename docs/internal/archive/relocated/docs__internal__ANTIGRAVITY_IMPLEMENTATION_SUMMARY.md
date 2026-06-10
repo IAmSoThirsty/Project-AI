@@ -37,7 +37,7 @@ findings:
   - Workflow definitions completed (2 files)
   - Security policies configured
   - Ethical review integration active
-description: Implementation summary for Google Antigravity IDE integration enabling AI-powered agent-first development with ethical compliance, security scanning, and automated workflows.
+description: Implementation summary for Google Antigravity IDE integration enabling AI-powered agent-first development with ethical compliance, security scanning, and automated workflows
 ---
 
 # Google Antigravity IDE Implementation Summary
