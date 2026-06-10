@@ -22,7 +22,9 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(REPO_ROOT, "src")
 
 GREEN, RED, YELLOW, RESET = "\033[92m", "\033[91m", "\033[93m", "\033[0m"
-if platform.system() == "Windows" and not os.environ.get("WT_SESSION"):
+if not sys.stdout.isatty() or (
+    platform.system() == "Windows" and not os.environ.get("WT_SESSION")
+):
     GREEN = RED = YELLOW = RESET = ""
 
 # (import name, pip name) — every third-party import on app.main's startup path
@@ -62,8 +64,14 @@ def warn(msg):  print(f"  {YELLOW}[WARN]{RESET} {msg}")
 def check_python():
     print("\n-- Python --")
     v = sys.version_info
-    if (v.major, v.minor) >= (3, 11):
+    if (v.major, v.minor) >= (3, 12):
         ok(f"Python {platform.python_version()}")
+        return True
+    if (v.major, v.minor) == (3, 11):
+        # pyproject.toml declares >=3.12, but the full app boot was verified
+        # on 3.11 (2026-06-10). Accept it, recommend upgrading.
+        warn(f"Python {platform.python_version()} — works (verified), but "
+             "pyproject.toml recommends 3.12+")
         return True
     fail(f"Python {platform.python_version()} — need 3.11 or newer")
     print("        FIX: install Python 3.12 from https://python.org and re-run")
@@ -148,13 +156,17 @@ def main():
     if all(results):
         print(f"{GREEN}READY.{RESET} Launch the desktop app FROM THE REPO ROOT with:")
         if platform.system() == "Windows":
-            print(r"    set PYTHONPATH=src && python -m app.main")
+            print(r'    set "PYTHONPATH=src" && python -m app.main')
         else:
             print("    PYTHONPATH=src python -m app.main")
         print("    (or: python scripts/desktop_doctor.py --launch)")
         if args.launch:
             print("\nLaunching now...\n")
-            env = dict(os.environ, PYTHONPATH=SRC)
+            env = dict(os.environ)
+            existing_pp = env.get("PYTHONPATH")
+            env["PYTHONPATH"] = (
+                f"{SRC}{os.pathsep}{existing_pp}" if existing_pp else SRC
+            )
             if platform.system() == "Linux" and not (
                 os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")
             ):

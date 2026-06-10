@@ -55,8 +55,12 @@ Windows and macOS need nothing here.
 # Linux / macOS
 PYTHONPATH=src python -m app.main
 
-# Windows (cmd)
-set PYTHONPATH=src && python -m app.main
+# Windows (cmd) — the quotes matter: without them cmd puts a trailing
+# space in PYTHONPATH and you get "No module named 'app'"
+set "PYTHONPATH=src" && python -m app.main
+
+# Windows (PowerShell)
+$env:PYTHONPATH = "src"; python -m app.main
 
 # Or, on any platform — diagnose and launch in one step:
 python scripts/desktop_doctor.py --launch
