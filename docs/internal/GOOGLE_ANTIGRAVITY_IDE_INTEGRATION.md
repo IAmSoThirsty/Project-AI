@@ -27,7 +27,7 @@ related_docs:
   - ../development/ide-setup.md
   - ../architecture/agent-architecture.md
 scope: "Integration guide for Google Antigravity AI-powered IDE with autonomous agent development capabilities"
-description: Comprehensive guide for integrating Google Antigravity IDE, an AI-agent-first development environment enabling autonomous multi-step engineering tasks with Mission Control supervision.
+description: Comprehensive guide for integrating Google Antigravity IDE, an AI-agent-first development environment enabling autonomous multi-step engineering tasks with Mission Control supervision
 ---
 
 # Google Antigravity IDE Integration Guide

@@ -34,7 +34,7 @@ related_docs:
   - ../security/adversarial-defense.md
   - ../research/ai-safety-metrics.md
 scope: "Comprehensive robustness metrics framework for measuring attack proximity, defense margins, transferability, and uncertainty"
-description: Specification for the robustness metrics system providing deep analysis beyond binary pass/fail, measuring attack proximity, effort metrics, sensitivity, uncertainty, and transferability aligned with frontier AI safety standards.
+description: Specification for the robustness metrics system providing deep analysis beyond binary pass/fail, measuring attack proximity, effort metrics, sensitivity, uncertainty, and transferability aligned with frontier AI safety standards
 ---
 
 # Robustness Metrics & Deep Defense Analysis

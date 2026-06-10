@@ -29,7 +29,7 @@ related_docs:
 dependencies:
   - perplexity-sdk
 scope: "Integration guide for using Perplexity AI as alternative model provider for learning paths and RAG queries"
-description: Guide for integrating Perplexity AI as an alternative model provider alongside OpenAI, covering configuration, API key setup, and usage examples.
+description: Guide for integrating Perplexity AI as an alternative model provider alongside OpenAI, covering configuration, API key setup, and usage examples
 ---
 
 # Perplexity API Integration

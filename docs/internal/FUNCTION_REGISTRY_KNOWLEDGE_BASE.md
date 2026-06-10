@@ -29,7 +29,7 @@ related_docs:
   - AI_PERSONA_IMPLEMENTATION.md
   - LEARNING_REQUEST_IMPLEMENTATION.md
 scope: "Modular function registry and knowledge base querying system for LLM-style tool calling and structured knowledge recall"
-description: Specification for FunctionRegistry, enhanced MemoryExpansionSystem, and IntelligenceRouter providing dynamic tool registration, OpenAI-compatible function calling, and extensible knowledge base querying.
+description: Specification for FunctionRegistry, enhanced MemoryExpansionSystem, and IntelligenceRouter providing dynamic tool registration, OpenAI-compatible function calling, and extensible knowledge base querying
 ---
 
 # Function Registry & Knowledge Base Querying

@@ -340,3 +340,123 @@ git log --follow docs/internal/archive/FILENAME.md
 
 **Last Audit**: 2026-02-08  
 **Next Review**: 2026-03-08 (monthly)
+
+
+## Relocated by root-structure enforcement (2026-06-10)
+
+Files matching archived-document patterns (`*_COMPLETE.md`, `*_SUMMARY.md`, `*_STATUS.md`, root implementation docs) moved here from their original locations to satisfy `enforce-root-structure.yml`. Original path is preserved in each filename (`__` = `/`).
+
+| Archived file | Original location | Date | Reason |
+|---|---|---|---|
+| `AGENT_CREATION_SUMMARY.md` | originally `AGENT_CREATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `IMPLEMENTATION_BACKLOG.md` | originally `IMPLEMENTATION_BACKLOG.md` | 2026-06-10 | root-structure gate relocation |
+| `PRODUCTION_AUDITOR_SUMMARY.md` | originally `PRODUCTION_AUDITOR_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `SOVEREIGN-WAR-ROOM__DEPLOYMENT_SUMMARY.md` | originally `SOVEREIGN-WAR-ROOM/DEPLOYMENT_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `SOVEREIGN-WAR-ROOM__IMPLEMENTATION_COMPLETE.md` | originally `SOVEREIGN-WAR-ROOM/IMPLEMENTATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `VAULT_IMPLEMENTATION_PHASES.md` | originally `VAULT_IMPLEMENTATION_PHASES.md` | 2026-06-10 | root-structure gate relocation |
+| `archive__docs__architecture__KERNEL_MODULARIZATION_SUMMARY.md` | originally `archive/docs/architecture/KERNEL_MODULARIZATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `archive__docs__reports__CODE_QUALITY_IMPROVEMENTS_SUMMARY.md` | originally `archive/docs/reports/CODE_QUALITY_IMPROVEMENTS_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `archive__docs__reports__PRODUCTION_READINESS_STATUS.md` | originally `archive/docs/reports/PRODUCTION_READINESS_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `atlas__IMPLEMENTATION_SUMMARY.md` | originally `atlas/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__CONSTITUTION_COMPLETE.md` | originally `docs/CONSTITUTION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__PHASE2_ENFORCEMENT_COMPLETE.md` | originally `docs/PHASE2_ENFORCEMENT_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__SECURITY_IMPLEMENTATION_SUMMARY.md` | originally `docs/SECURITY_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__TAG_WRANGLER_IMPLEMENTATION_SUMMARY.md` | originally `docs/TAG_WRANGLER_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__THREE_TIER_IMPLEMENTATION_SUMMARY.md` | originally `docs/THREE_TIER_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__THREE_TIER_POLISH_COMPLETE.md` | originally `docs/THREE_TIER_POLISH_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__architecture__KERNEL_MODULARIZATION_SUMMARY.md` | originally `docs/architecture/KERNEL_MODULARIZATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__architecture__LAYER_0_INTEGRATION_SUMMARY.md` | originally `docs/architecture/LAYER_0_INTEGRATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__developer__COVERAGE_ACHIEVEMENT_SUMMARY.md` | originally `docs/developer/COVERAGE_ACHIEVEMENT_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__developer__IMPLEMENTATION_COMPLETE.md` | originally `docs/developer/IMPLEMENTATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__developer__LEATHER_BOOK_UI_COMPLETE.md` | originally `docs/developer/LEATHER_BOOK_UI_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__executive__WORKFLOW_CONSOLIDATION_EXECUTIVE_SUMMARY.md` | originally `docs/executive/WORKFLOW_CONSOLIDATION_EXECUTIVE_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__executive__whitepapers__WHITEPAPER_SUMMARY.md` | originally `docs/executive/whitepapers/WHITEPAPER_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__governance__CODEX_DEUS_ULTIMATE_SUMMARY.md` | originally `docs/governance/CODEX_DEUS_ULTIMATE_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__governance__LICENSING_SUMMARY.md` | originally `docs/governance/LICENSING_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md` | originally `docs/internal/AGI_IDENTITY_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__ANTIGRAVITY_IMPLEMENTATION_SUMMARY.md` | originally `docs/internal/ANTIGRAVITY_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__AUTOMATION_IMPLEMENTATION_SUMMARY.md` | originally `docs/internal/AUTOMATION_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__COMPLETE_INTEGRATION_SUMMARY.md` | originally `docs/internal/COMPLETE_INTEGRATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__CONFIDENTIALITY_SUMMARY.md` | originally `docs/internal/CONFIDENTIALITY_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__E2E_IMPLEMENTATION_COMPLETE.md` | originally `docs/internal/E2E_IMPLEMENTATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__HARDENING_IMPLEMENTATION_SUMMARY.md` | originally `docs/internal/HARDENING_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__IMPLEMENTATION_COMPLETE.md` | originally `docs/internal/IMPLEMENTATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__MCP_IMPLEMENTATION_SUMMARY.md` | originally `docs/internal/MCP_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__MONITORING_IMPLEMENTATION_SUMMARY.md` | originally `docs/internal/MONITORING_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__internal__NEW_TEMPORAL_INTEGRATION_SUMMARY.md` | originally `docs/internal/NEW_TEMPORAL_INTEGRATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__project_ai_god_tier_diagrams__IMPLEMENTATION_SUMMARY.md` | originally `docs/project_ai_god_tier_diagrams/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__project_ai_god_tier_diagrams__PHASE_2_STATUS.md` | originally `docs/project_ai_god_tier_diagrams/PHASE_2_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__project_ai_god_tier_diagrams__PHASE_2_SUMMARY.md` | originally `docs/project_ai_god_tier_diagrams/PHASE_2_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_011_DATAVIEW_MISSION_COMPLETE.md` | originally `docs/reports/AGENT_011_DATAVIEW_MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_015_P3_ARCHIVE_ENRICHMENT_COMPLETE.md` | originally `docs/reports/AGENT_015_P3_ARCHIVE_ENRICHMENT_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_018_EXECUTIVE_SUMMARY.md` | originally `docs/reports/AGENT_018_EXECUTIVE_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_018_MISSION_COMPLETE.md` | originally `docs/reports/AGENT_018_MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_020_GOVERNANCE_METADATA_COMPLETE.md` | originally `docs/reports/AGENT_020_GOVERNANCE_METADATA_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_022_DATA_UTILITIES_METADATA_COMPLETE.md` | originally `docs/reports/AGENT_022_DATA_UTILITIES_METADATA_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_024_METADATA_ENRICHMENT_COMPLETE.md` | originally `docs/reports/AGENT_024_METADATA_ENRICHMENT_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_026_MISSION_COMPLETE.md` | originally `docs/reports/AGENT_026_MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_029_MISSION_ACCOMPLISHMENT_SUMMARY.md` | originally `docs/reports/AGENT_029_MISSION_ACCOMPLISHMENT_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_051_MISSION_SUMMARY.md` | originally `docs/reports/AGENT_051_MISSION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__AGENT_057_MISSION_COMPLETE.md` | originally `docs/reports/AGENT_057_MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__CONSTITUTIONAL_SOVEREIGNTY_STATUS.md` | originally `docs/reports/CONSTITUTIONAL_SOVEREIGNTY_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__DASHBOARD_CONVERGENCE_COMPLETE.md` | originally `docs/reports/DASHBOARD_CONVERGENCE_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__DESKTOP_CONVERGENCE_COMPLETE.md` | originally `docs/reports/DESKTOP_CONVERGENCE_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__EXCALIDRAW_IMPLEMENTATION_SUMMARY.md` | originally `docs/reports/EXCALIDRAW_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__FINAL_EXECUTION_SUMMARY.md` | originally `docs/reports/FINAL_EXECUTION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__FLEET_DEPLOYMENT_STATUS.md` | originally `docs/reports/FLEET_DEPLOYMENT_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__GLOBAL_RATE_LIMITING_SUMMARY.md` | originally `docs/reports/GLOBAL_RATE_LIMITING_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__GROUP1_AGENT3_DASHBOARD_HANDLERS_COMPLETE.md` | originally `docs/reports/GROUP1_AGENT3_DASHBOARD_HANDLERS_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__HONEST_LEVEL_2_STATUS.md` | originally `docs/reports/HONEST_LEVEL_2_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__LEVEL_2_EXECUTION_SUMMARY.md` | originally `docs/reports/LEVEL_2_EXECUTION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__LEVEL_2_FINAL_STATUS.md` | originally `docs/reports/LEVEL_2_FINAL_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__LEVEL_2_HONEST_STATUS.md` | originally `docs/reports/LEVEL_2_HONEST_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__MECHANICAL_VERIFICATION_COMPLETE.md` | originally `docs/reports/MECHANICAL_VERIFICATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__METADATA_ENRICHMENT_SUMMARY.md` | originally `docs/reports/METADATA_ENRICHMENT_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__MULTI_PATH_GOVERNANCE_COMPLETE.md` | originally `docs/reports/MULTI_PATH_GOVERNANCE_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__OBSIDIAN_VAULT_PHASES_2-6_STATUS.md` | originally `docs/reports/OBSIDIAN_VAULT_PHASES_2-6_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__P0_MANDATORY_GOVERNANCE_COMPLETE.md` | originally `docs/reports/P0_MANDATORY_GOVERNANCE_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__PHASES_3-4_COMPLETE_STATUS.md` | originally `docs/reports/PHASES_3-4_COMPLETE_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__PHASES_5-6_DEPLOYMENT_STATUS.md` | originally `docs/reports/PHASES_5-6_DEPLOYMENT_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__PHASE_2_DEPLOYMENT_STATUS.md` | originally `docs/reports/PHASE_2_DEPLOYMENT_STATUS.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__REPORT_METADATA_BATCH_SUMMARY.md` | originally `docs/reports/REPORT_METADATA_BATCH_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__TECHNICAL_DELIVERABLES_SUMMARY.md` | originally `docs/reports/TECHNICAL_DELIVERABLES_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__TEMPLATER_INSTALLATION_COMPLETE.md` | originally `docs/reports/TEMPLATER_INSTALLATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__TEMPLATE_EXAMPLES_METADATA_SUMMARY.md` | originally `docs/reports/TEMPLATE_EXAMPLES_METADATA_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__reports__VERIFICATION_COMPLETE.md` | originally `docs/reports/VERIFICATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__security_compliance__CERBERUS_IMPLEMENTATION_SUMMARY.md` | originally `docs/security_compliance/CERBERUS_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__security_compliance__SECURITY_AGENTS_INTEGRATION_SUMMARY.md` | originally `docs/security_compliance/SECURITY_AGENTS_INTEGRATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__security_compliance__SECURITY_AUDIT_EXECUTIVE_SUMMARY.md` | originally `docs/security_compliance/SECURITY_AUDIT_EXECUTIVE_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `docs__shadow_thirst__IMPLEMENTATION_SUMMARY.md` | originally `docs/shadow_thirst/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__ai_takeover__EXECUTIVE_TRAP_SUMMARY.md` | originally `engines/ai_takeover/EXECUTIVE_TRAP_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__ai_takeover__FINAL_INTEGRATION_SUMMARY.md` | originally `engines/ai_takeover/FINAL_INTEGRATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__ai_takeover__IMPLEMENTATION_SUMMARY.md` | originally `engines/ai_takeover/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__ai_takeover__RED_TEAM_COMPLETE.md` | originally `engines/ai_takeover/RED_TEAM_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__alien_invaders__IMPLEMENTATION_SUMMARY.md` | originally `engines/alien_invaders/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__alien_invaders__docs__INTEGRATION_SUMMARY.md` | originally `engines/alien_invaders/docs/INTEGRATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__django_state__IMPLEMENTATION_SUMMARY.md` | originally `engines/django_state/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__emp_defense__CODE_REVIEW_COMPLETE.md` | originally `engines/emp_defense/CODE_REVIEW_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__emp_defense__IMPLEMENTATION_SUMMARY.md` | originally `engines/emp_defense/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__sovereign_war_room__DEPLOYMENT_SUMMARY.md` | originally `engines/sovereign_war_room/DEPLOYMENT_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `engines__sovereign_war_room__IMPLEMENTATION_COMPLETE.md` | originally `engines/sovereign_war_room/IMPLEMENTATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `gradle-evolution__db__IMPLEMENTATION_SUMMARY.md` | originally `gradle-evolution/db/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `gradle-evolution__ir__IMPLEMENTATION_SUMMARY.md` | originally `gradle-evolution/ir/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `integrations__thirsty_lang_complete__IMPLEMENTATION_COMPLETE.md` | originally `integrations/thirsty_lang_complete/IMPLEMENTATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `integrations__thirsty_lang_complete__INTEGRATION_COMPLETE.md` | originally `integrations/thirsty_lang_complete/INTEGRATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `relationships__cli-automation__MISSION_COMPLETE.md` | originally `relationships/cli-automation/MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `relationships__core-ai__MISSION_COMPLETE.md` | originally `relationships/core-ai/MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `relationships__governance__MISSION_COMPLETE.md` | originally `relationships/governance/MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `relationships__security__MISSION_COMPLETE.md` | originally `relationships/security/MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `source-docs__agents__MISSION_SUMMARY.md` | originally `source-docs/agents/MISSION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `source-docs__api__MISSION_COMPLETE.md` | originally `source-docs/api/MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `source-docs__configuration__MISSION_COMPLETE.md` | originally `source-docs/configuration/MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `source-docs__monitoring__MISSION_COMPLETE.md` | originally `source-docs/monitoring/MISSION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `src__thirsty_lang__DEFENSIVE_IMPLEMENTATION_SUMMARY.md` | originally `src/thirsty_lang/DEFENSIVE_IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `src__thirsty_lang__IMPLEMENTATION_SUMMARY.md` | originally `src/thirsty_lang/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `src__thirsty_lang__PROJECT_SUMMARY.md` | originally `src/thirsty_lang/PROJECT_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `tarl_os__IMPLEMENTATION_COMPLETE.md` | originally `tarl_os/IMPLEMENTATION_COMPLETE.md` | 2026-06-10 | root-structure gate relocation |
+| `unity__IMPLEMENTATION_SUMMARY.md` | originally `unity/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `web__IMPLEMENTATION_SUMMARY.md` | originally `web/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `.github__WORKFLOW_HARDENING_SUMMARY.md` | originally `.github/WORKFLOW_HARDENING_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `.github__instructions__IMPLEMENTATION_SUMMARY.md` | originally `.github/instructions/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `.github__workflows__IMPLEMENTATION_SUMMARY.md` | originally `.github/workflows/IMPLEMENTATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |
+| `.github__workflows__CONSOLIDATION_SUMMARY.md` | originally `.github/workflows/CONSOLIDATION_SUMMARY.md` | 2026-06-10 | root-structure gate relocation |

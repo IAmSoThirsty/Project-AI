@@ -23,7 +23,7 @@ related_docs:
 event_date: 2026-01-31
 event_type: maintenance
 resolution: "Synchronized repository with upstream, discarded outdated local commits"
-description: Log of repository synchronization and cleanup operations performed on January 31, 2026, including discarding outdated verification commits and cleaning working directory.
+description: Log of repository synchronization and cleanup operations performed on January 31, 2026, including discarding outdated verification commits and cleaning working directory
 ---
 
 # Repository Sync Cleanup - January 31, 2026

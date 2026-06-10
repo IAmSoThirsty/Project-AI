@@ -31,7 +31,7 @@ related_docs:
   - ../architecture/frontend-architecture.md
 dependencies:
   - PyQt6
-description: Implementation guide for modern UI enhancements including glassmorphism design, gradient systems, accessibility improvements, and PyQt6 stylesheet architecture.
+description: Implementation guide for modern UI enhancements including glassmorphism design, gradient systems, accessibility improvements, and PyQt6 stylesheet architecture
 ---
 
 # UI Modernization Guide

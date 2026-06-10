@@ -40,7 +40,7 @@ dependencies:
   - cryptography
   - toml
 scope: "Monolithic defense system for catastrophic outbreak scenarios with 10 functional domains, encrypted state management, and federated cell deployment"
-description: Production-ready defense engine system specification covering situational awareness, command & control, supply logistics, biomedical defense, tactical AI, and AGI safeguards for catastrophic scenarios.
+description: Production-ready defense engine system specification covering situational awareness, command & control, supply logistics, biomedical defense, tactical AI, and AGI safeguards for catastrophic scenarios
 ---
 
 # Project-AI God Tier Zombie Apocalypse Defense Engine

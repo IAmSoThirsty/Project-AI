@@ -51,7 +51,7 @@ findings:
   - eBPF kernel-level monitoring integrated
   - Federation support for 12K+ nodes
   - Battle-tested at CERN-level scale
-description: Summary of production-grade monitoring stack implementation with Prometheus, Grafana, Helm charts, eBPF observability, and comprehensive Kubernetes deployment supporting deployments from homelabs to 12,000+ node infrastructure.
+description: Summary of production-grade monitoring stack implementation with Prometheus, Grafana, Helm charts, eBPF observability, and comprehensive Kubernetes deployment supporting deployments from homelabs to 12,000+ node infrastructure
 ---
 
 # Monitoring Stack Implementation Summary

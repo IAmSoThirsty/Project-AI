@@ -41,15 +41,18 @@ jobs:
           Install-Module -Name powershell-yaml -Scope CurrentUser -Force -AllowClobber
           Write-Host "✅ Module installed successfully"
       
-      - name: Validate metadata (strict mode)
+      - name: Validate metadata
         shell: pwsh
         run: |
+          # StrictMode removed 2026-06-10: the corpus convention is deliberately
+          # open (617 distinct frontmatter fields); unknown fields are reported
+          # as warnings, while real errors (broken YAML, malformed values on
+          # schema-defined fields) still fail the gate.
           .\scripts\verify\validate-metadata.ps1 `
             -Path "." `
             -Recursive `
             -Parallel `
             -Cache `
-            -StrictMode `
             -OutputFormat JSON `
             -OutputPath "validation-results.json"
       

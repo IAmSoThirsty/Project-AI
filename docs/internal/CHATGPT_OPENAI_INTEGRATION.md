@@ -37,7 +37,7 @@ related_docs:
 dependencies:
   - openai
 scope: "Integration guide for OpenAI GPT models and APIs across conversational AI, learning paths, image generation, and RAG systems"
-description: Comprehensive integration guide for ChatGPT/OpenAI services including GPT-3.5/4 for conversational AI, DALL-E 3 for image generation, and embeddings for semantic search and RAG.
+description: Comprehensive integration guide for ChatGPT/OpenAI services including GPT-3.5/4 for conversational AI, DALL-E 3 for image generation, and embeddings for semantic search and RAG
 ---
 
 # ChatGPT/OpenAI Integration Guide
