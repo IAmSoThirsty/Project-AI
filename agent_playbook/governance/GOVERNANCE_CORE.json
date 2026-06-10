@@ -1,0 +1,21 @@
+{
+  "version": "0.9",
+  "date": "2026-06-10",
+  "status": "integrated_into_project_ai_main_per_owner_directive_2026-06-10",
+  "source_documents": {
+    "standard": "CANT_COMPARE_STANDARD.md",
+    "claims_boundary": "CLAIMS_BOUNDARY.md",
+    "handoff_readiness": "PROJECT_AI_HANDOFF_READINESS.md",
+    "promotion_gate": "PROJECT_AI_PROMOTION_GATE.md",
+    "promotion_gate_requirements": "governance/PROMOTION_GATE_REQUIREMENTS.json",
+    "trust_root": "provenance/TRUST_ROOT.md",
+    "change_control": "CHANGE_CONTROL.md",
+    "deprecation_policy": "DEPRECATION_POLICY.md",
+    "roadmap_governance": "ROADMAP_GOVERNANCE.md",
+    "human_review_protocols": "protocols/README.md",
+    "portable_agent_guidance": "usage/portable-agent-prompting-standards.md",
+    "agent_runtime_training": "usage/agent-runtime-training-pack.md",
+    "deprecation_review_register": "governance/DEPRECATION_REVIEW_REGISTER.md",
+    "external_review_readiness": "external_review/EXTERNAL_REVIEW_READINESS_CHECKLIST.md"
+  }
+}
