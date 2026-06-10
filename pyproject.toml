@@ -57,6 +57,9 @@ dependencies = [
     "temporalio>=1.5.0",
     "protobuf>=4.0.0",
     "PyYAML>=6.0.0",
+    "PyQt6>=6.6.0",
+    "uvicorn>=0.27.0",
+    "fastapi>=0.110.0",
     "pyreadline3>=3.5.4; platform_system == 'Windows'",
 ]
 
