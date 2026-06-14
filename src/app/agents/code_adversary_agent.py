@@ -315,7 +315,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
         Returns:
             Dictionary of patterns by vulnerability type
         """
-        return {
+        patterns_dict = {
             VulnerabilityType.HARDCODED_SECRET.value: {
                 "patterns": [
                     r'["\']?api[_-]?key["\']?\s*[:=]\s*["\'][^"\']{20,}["\']',
@@ -365,6 +365,16 @@ class CodeAdversaryAgent(KernelRoutedAgent):
             },
         }
 
+        # Pre-compile all patterns for performance
+        for vuln_type, pattern_info in patterns_dict.items():
+            compiled_patterns = []
+            for p in pattern_info["patterns"]:
+                compiled_patterns.append(re.compile(p, re.IGNORECASE))
+            pattern_info["patterns"] = compiled_patterns
+
+        return patterns_dict
+
+
     def _get_files_to_scan(self, scope_files: list[str] | None) -> list[Path]:
         """Get list of files to scan.
 
@@ -405,7 +415,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
             for vuln_type, pattern_info in self.patterns.items():
                 for pattern in pattern_info["patterns"]:
                     for line_num, line in enumerate(lines, 1):
-                        if re.search(pattern, line, re.IGNORECASE):
+                        if pattern.search(line):
                             finding = Finding(
                                 id=f"{file_path.name}_{line_num}_{vuln_type}",
                                 type=vuln_type,
