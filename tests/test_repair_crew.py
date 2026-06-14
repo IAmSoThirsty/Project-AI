@@ -66,6 +66,15 @@ class TestRepairCrewDiagnose:
         report = crew.diagnose(os.path.dirname(sample_py_file))
         todos = [i for i in report.issues if i.category == "technical_debt"]
         assert len(todos) >= 1
+        assert todos[0].description == "TODO found: fix this later"
+
+    def test_diagnose_detects_empty_todo(self, crew, tmp_path):
+        fpath = tmp_path / "empty_todo.py"
+        fpath.write_text("import os\n# TODO\n")
+        report = crew.diagnose(str(tmp_path))
+        todos = [i for i in report.issues if i.category == "technical_debt"]
+        assert len(todos) >= 1
+        assert todos[0].description == "TODO comment found"
 
 
 class TestRepairCrewRepair:

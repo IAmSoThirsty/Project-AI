@@ -54,7 +54,7 @@ _BARE_EXCEPT = re.compile(r"^\s*except\s*:\s*$", re.MULTILINE)
 _HARDCODED_SECRET = re.compile(
     r'(?i)\b(password|secret|passwd|api_key|token|auth_key)\s*=\s*["\'][^"\']{3,}["\']'
 )
-_TODO = re.compile(r"#\s*TODO\b", re.IGNORECASE)
+_TODO = re.compile(r"#\s*TODO\b(.*)", re.IGNORECASE)
 
 
 def _scan_file(fpath: Path) -> list[Issue]:
@@ -86,14 +86,17 @@ def _scan_file(fpath: Path) -> list[Issue]:
                 description="Hardcoded secret detected in source",
                 suggested_fix="Move secret to environment variable or secrets manager",
             ))
-        if _TODO.search(line):
+        todo_match = _TODO.search(line)
+        if todo_match:
+            extracted = todo_match.group(1).strip(" :-")
+            description = f"TODO found: {extracted}" if extracted else "TODO comment found"
             issues.append(Issue(
                 issue_id=str(uuid.uuid4()),
                 category="technical_debt",
                 severity=IssueSeverity.INFO,
                 file_path=str(fpath),
                 line=lineno,
-                description="TODO comment found",
+                description=description,
                 suggested_fix="",
             ))
     return issues
