@@ -97,6 +97,7 @@ class FileInfo:
     docstring: str = ""
     complexity_score: int = 0
     last_modified: str = ""
+    todos: list[str] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
@@ -111,6 +112,7 @@ class ComponentInfo:
     files: list[str] = field(default_factory=list)
     dependencies: list[str] = field(default_factory=list)
     description: str = ""
+    todos: list[str] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
@@ -327,6 +329,13 @@ class RepositoryInspector:
                 [line for line in content.splitlines() if line.strip()]
             )
 
+            # Extract TODOs from comments
+            for i, line in enumerate(content.splitlines(), 1):
+                if "#" in line:
+                    comment_part = line.split("#", 1)[1]
+                    if re.search(r"TODO", comment_part, re.IGNORECASE):
+                        file_info.todos.append(f"Line {i}: {comment_part.strip()}")
+
             # Parse AST for structure
             try:
                 tree = ast.parse(content, filename=file_info.path)
@@ -396,6 +405,13 @@ class RepositoryInspector:
             file_info.lines_of_code = len(
                 [line for line in content.splitlines() if line.strip()]
             )
+
+            # Extract TODOs from comments
+            for i, line in enumerate(content.splitlines(), 1):
+                if "#" in line:
+                    comment_part = line.split("#", 1)[1]
+                    if re.search(r"TODO", comment_part, re.IGNORECASE):
+                        file_info.todos.append(f"Line {i}: {comment_part.strip()}")
 
         except Exception as e:
             logger.debug("Error reading config file %s: %s", file_info.path, e)
@@ -480,6 +496,10 @@ class RepositoryInspector:
         """Determine the status of a file based on content analysis."""
         # Check docstring and comments for status keywords
         content_to_check = file_info.docstring.upper()
+
+        # Include todos in the status check
+        if file_info.todos:
+            content_to_check += " TODO"
 
         for status, patterns in self.STATUS_PATTERNS.items():
             for pattern in patterns:
