@@ -10,6 +10,7 @@ WARNING: This system grants full control over all safety mechanisms. Use with ca
 
 import base64
 import hashlib
+import hmac
 import json
 import logging
 import os
@@ -170,7 +171,7 @@ class CommandOverrideSystem:
                     )
                     computed_dk = base64.b64encode(dk).decode()
                     # FIX: Use constant-time comparison to prevent timing attacks
-                    return secrets.compare_digest(computed_dk, stored_dk)
+                    return hmac.compare_digest(computed_dk, stored_dk)
         except Exception:
             return False
         return False
@@ -248,7 +249,7 @@ class CommandOverrideSystem:
             legacy_hash = self.master_password_hash
             computed_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
             # FIX: Use constant-time comparison to prevent timing attacks
-            if secrets.compare_digest(computed_hash, legacy_hash):
+            if hmac.compare_digest(computed_hash, legacy_hash):
                 try:
                     new_hash = self._hash_with_bcrypt(password)
                     self.master_password_hash = new_hash
