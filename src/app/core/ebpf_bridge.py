@@ -50,6 +50,7 @@ class EBPFBridge:
         if _IS_LINUX:
             # TODO: replace with actual BPF map write, e.g.:
             #   bpf["allowed_hashes"][pid] = expected_hash.encode()
+            logger.warning("Missing eBPF map logic for pin_allowed_execution")
             logger.debug(
                 "EBPFBridge.pin_allowed_execution [stub] pid=%s domain=%s hash=%s",
                 pid,
