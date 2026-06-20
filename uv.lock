@@ -7,6 +7,7 @@ members = [
     "project-ai",
     "project-ai-arbiter",
     "project-ai-capability",
+    "project-ai-companion",
     "project-ai-execution",
     "project-ai-governance",
     "project-ai-kernel",
@@ -363,6 +364,7 @@ source = { editable = "." }
 dependencies = [
     { name = "project-ai-arbiter" },
     { name = "project-ai-capability" },
+    { name = "project-ai-companion" },
     { name = "project-ai-execution" },
     { name = "project-ai-governance" },
     { name = "project-ai-kernel" },
@@ -397,6 +399,7 @@ requires-dist = [
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
     { name = "project-ai-capability", editable = "packages/capability" },
+    { name = "project-ai-companion", editable = "packages/companion" },
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-governance", editable = "packages/governance" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
@@ -425,6 +428,21 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
+
+[[package]]
+name = "project-ai-companion"
+version = "0.0.0.dev0"
+source = { editable = "packages/companion" }
+dependencies = [
+    { name = "project-ai-execution" },
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-execution", editable = "packages/execution" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+]
 
 [[package]]
 name = "project-ai-execution"

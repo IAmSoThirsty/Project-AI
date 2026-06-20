@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "project-ai-arbiter",
     "project-ai-capability",
+    "project-ai-companion",
     "project-ai-kernel",
     "project-ai-governance",
     "project-ai-execution",
@@ -65,6 +66,7 @@ package = true
 [tool.uv.sources]
 project-ai-arbiter = { workspace = true }
 project-ai-capability = { workspace = true }
+project-ai-companion = { workspace = true }
 project-ai-kernel = { workspace = true }
 project-ai-governance = { workspace = true }
 project-ai-execution = { workspace = true }
@@ -75,6 +77,7 @@ project-ai-security = { workspace = true }
 members = [
     "packages/arbiter",
     "packages/capability",
+    "packages/companion",
     "packages/kernel",
     "packages/governance",
     "packages/execution",
