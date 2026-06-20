@@ -6,6 +6,7 @@ requires-python = "==3.12.10"
 members = [
     "project-ai",
     "project-ai-arbiter",
+    "project-ai-capability",
     "project-ai-governance",
     "project-ai-kernel",
     "project-ai-rlp",
@@ -360,6 +361,7 @@ version = "0.0.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "project-ai-arbiter" },
+    { name = "project-ai-capability" },
     { name = "project-ai-governance" },
     { name = "project-ai-kernel" },
     { name = "project-ai-rlp" },
@@ -392,6 +394,7 @@ requires-dist = [
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
+    { name = "project-ai-capability", editable = "packages/capability" },
     { name = "project-ai-governance", editable = "packages/governance" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
@@ -408,6 +411,17 @@ provides-extras = ["dev"]
 name = "project-ai-arbiter"
 version = "0.0.0.dev0"
 source = { editable = "packages/arbiter" }
+
+[[package]]
+name = "project-ai-capability"
+version = "0.0.0.dev0"
+source = { editable = "packages/capability" }
+dependencies = [
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
 
 [[package]]
 name = "project-ai-governance"
