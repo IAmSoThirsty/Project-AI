@@ -1,0 +1,1197 @@
+{
+  "legacy_head": "3fa803ab9a3751217b58c9e591cf3f515da5ab02",
+  "legacy_unchanged": true,
+  "merges": [
+    {
+      "alternate": "T:\\Project-AI-main\\SOVEREIGN-WAR-ROOM",
+      "alternate_files": 22,
+      "canonical": "T:\\Project-AI-main\\engines\\sovereign_war_room",
+      "canonical_files": 21,
+      "name": "swr",
+      "records": [
+        {
+          "action": "canonical",
+          "path": "DEPLOYMENT_SUMMARY.md",
+          "sha256": "8af233a8f16992531e758b6d06c5056490486b3b4a41ad8024be149fa8447e15",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\DEPLOYMENT_SUMMARY.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "1bb7808adc75dd677419f3847b48d8edba060704fcd87d85e6b7bd4e90fc8e81",
+          "path": "DEPLOYMENT_SUMMARY.md",
+          "sha256": "8af233a8f16992531e758b6d06c5056490486b3b4a41ad8024be149fa8447e15",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\DEPLOYMENT_SUMMARY.md"
+        },
+        {
+          "action": "alternate-unique",
+          "path": "GROUP_2_AGENT_8_REPORT.md",
+          "sha256": "75c6c05b4f67d38fb964eda0d54594fabf1c283ea10af469e0e82d9bcd90e19c",
+          "source": "T:\\Project-AI-main\\SOVEREIGN-WAR-ROOM\\GROUP_2_AGENT_8_REPORT.md"
+        },
+        {
+          "action": "canonical",
+          "path": "IMPLEMENTATION_COMPLETE.md",
+          "sha256": "6b2859f6246f8563dd1db133ceb5348e39b931aa58126cdd28f309778f147a97",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\IMPLEMENTATION_COMPLETE.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "04bce8da75ded51cc4961f86cc04804f791f998e9234b8a55f41ff011ff5d4e9",
+          "path": "IMPLEMENTATION_COMPLETE.md",
+          "sha256": "6b2859f6246f8563dd1db133ceb5348e39b931aa58126cdd28f309778f147a97",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\IMPLEMENTATION_COMPLETE.md"
+        },
+        {
+          "action": "canonical",
+          "path": "README.md",
+          "sha256": "8b2d8b4062128c97eaa95a2c8daf2182d1f4a3b06fbfd6abd7fb38612a6bd1be",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\README.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "6ca3f7d76427c223df16f4acad9a449d6184cd5f796357664ebecc7d0bfc9332",
+          "path": "README.md",
+          "sha256": "8b2d8b4062128c97eaa95a2c8daf2182d1f4a3b06fbfd6abd7fb38612a6bd1be",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\README.md"
+        },
+        {
+          "action": "canonical",
+          "path": "cli.py",
+          "sha256": "d40c141d4ff82352800dbad1afa9a3a50194897acb05b6f66ce6dcb30681a72d",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\cli.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "ffa94d6acfa46a0788d878723f173a3f5282f46b47ff3fc6737c927b6517c0de",
+          "path": "cli.py",
+          "sha256": "d40c141d4ff82352800dbad1afa9a3a50194897acb05b6f66ce6dcb30681a72d",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\cli.py"
+        },
+        {
+          "action": "canonical",
+          "path": "demo.py",
+          "sha256": "74f3e06646973abe68459a1e2c8c41c24749a1e3d5fadc26d375d2226fd0d1be",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\demo.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "8df01e7bf340a3f944a6f95472f6c83f53610da57704e5a7ee5f5cad80ed4706",
+          "path": "demo.py",
+          "sha256": "74f3e06646973abe68459a1e2c8c41c24749a1e3d5fadc26d375d2226fd0d1be",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\demo.py"
+        },
+        {
+          "action": "alternate-unique",
+          "path": "fleet_agent_5_tracking.md",
+          "sha256": "478bed4316822d9fad5661ee02a4e5b6170ba4b8f050429371c501d691fb3db0",
+          "source": "T:\\Project-AI-main\\SOVEREIGN-WAR-ROOM\\fleet_agent_5_tracking.md"
+        },
+        {
+          "action": "canonical",
+          "path": "requirements.txt",
+          "sha256": "b5281a39c3babe499c01573c2bdb4676cecb24c627f7ead7ccd52389509b62cd",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\requirements.txt"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "b82bf172af46efd0361bb1a1a1fd00dceac83040ba717e81eac00aa3c56d81fc",
+          "path": "requirements.txt",
+          "sha256": "b5281a39c3babe499c01573c2bdb4676cecb24c627f7ead7ccd52389509b62cd",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\requirements.txt"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/__init__.py",
+          "sha256": "3b9b523218f1673241ad59c0ae5f95635c1835f6bbd7bc6a0f3d4b2b32ad0fba",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "fb1da7720efcafef8443a89891c68d5039906af2ad8ee57ceea3abd6b09cecf9",
+          "path": "swr/__init__.py",
+          "sha256": "3b9b523218f1673241ad59c0ae5f95635c1835f6bbd7bc6a0f3d4b2b32ad0fba",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/api.py",
+          "sha256": "45529f117360e6ff97d1a4c6db3d19b7cc0d040913f55b0e9e9ca0be243ff3d8",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\api.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "520f30a4ca6c7fc6f820e247fce9f44ad5329bb0a3bebde04610bdebfa61eb40",
+          "path": "swr/api.py",
+          "sha256": "45529f117360e6ff97d1a4c6db3d19b7cc0d040913f55b0e9e9ca0be243ff3d8",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\api.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/bundle.py",
+          "sha256": "f17fe95e9bb6e6b6c7a5a8371a69338da3a76502463121851c98ee57fa7544fa",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\bundle.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "c5898ef7f696c754fc2f67ae69934b9924fdb85eaf134f2b8a9f8ca25a1cbce2",
+          "path": "swr/bundle.py",
+          "sha256": "f17fe95e9bb6e6b6c7a5a8371a69338da3a76502463121851c98ee57fa7544fa",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\bundle.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/core.py",
+          "sha256": "c0c36144a26088abb26c768104573c4aaf62dd673355343d0cdd2dacf53ed31e",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\core.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "aa126bdb4b60f106eb5375a59d8eeabe566c64ceaa287b9723a5f3672f96d6f4",
+          "path": "swr/core.py",
+          "sha256": "c0c36144a26088abb26c768104573c4aaf62dd673355343d0cdd2dacf53ed31e",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\core.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/crypto.py",
+          "sha256": "c3f91d523ef242a6b5715bbb58c64027aa41621c52e6aa5463e7cdfd1c1bddaa",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\crypto.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "8af0448b90eeffebe4cf1e50187d6bd8f18427b36b6c7599be3e0c196059e968",
+          "path": "swr/crypto.py",
+          "sha256": "c3f91d523ef242a6b5715bbb58c64027aa41621c52e6aa5463e7cdfd1c1bddaa",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\crypto.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/governance.py",
+          "sha256": "aae1dff3f9b29c30f30506de9775c5dddd306215a837ac4be2bf4f2a1e30d86a",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\governance.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "0dad7f44ec8e483d9cecb1b2d60708593c069f69fa0471562a1bde920896abeb",
+          "path": "swr/governance.py",
+          "sha256": "aae1dff3f9b29c30f30506de9775c5dddd306215a837ac4be2bf4f2a1e30d86a",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\governance.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/proof.py",
+          "sha256": "d0b09cf8db7eed03400d913514508105a4d37a62e808c7680428d28397ed265e",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\proof.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "d7e22169491cf5b61271fde2ba0e3a1228238abd2b7c561471523bc58d95d36b",
+          "path": "swr/proof.py",
+          "sha256": "d0b09cf8db7eed03400d913514508105a4d37a62e808c7680428d28397ed265e",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\proof.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/scenario.py",
+          "sha256": "d1455403c7315baeba42d18393d315ff6a314478778783ed93e790574dffdc2c",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\scenario.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "f5072c5d1363f0c3da4773aae6804edc78e95a925dc7202ed42c188bdf9303bc",
+          "path": "swr/scenario.py",
+          "sha256": "d1455403c7315baeba42d18393d315ff6a314478778783ed93e790574dffdc2c",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\scenario.py"
+        },
+        {
+          "action": "canonical",
+          "path": "swr/scoreboard.py",
+          "sha256": "fbc4d22c5d24a536af5c7d307e189fd5ddde6732bc2ac77b53cd0ac4fb9d0423",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\scoreboard.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "a92b8ef1c0686854979a40fc13fd914d121a69572e59869d593a167b1c575586",
+          "path": "swr/scoreboard.py",
+          "sha256": "fbc4d22c5d24a536af5c7d307e189fd5ddde6732bc2ac77b53cd0ac4fb9d0423",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\swr\\scoreboard.py"
+        },
+        {
+          "action": "canonical",
+          "path": "tests/test_core.py",
+          "sha256": "d1a0a9727109f9137e13d93ea609f434ca95030f9b7d064327f4e56f81a51a5a",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\tests\\test_core.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "5525bb2d65f7877932723ecf06ab3edc6566c6fc0801e8025e252c7d06f0fd0b",
+          "path": "tests/test_core.py",
+          "sha256": "d1a0a9727109f9137e13d93ea609f434ca95030f9b7d064327f4e56f81a51a5a",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\tests\\test_core.py"
+        },
+        {
+          "action": "canonical",
+          "path": "tests/test_governance.py",
+          "sha256": "6f32a1ce2d36c3a6c77b29431e0a0aab68effc8cf282dce377a7e78ef6d0a11f",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\tests\\test_governance.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "f76761f6a6db50b7c0b0e374ad6274e21b54e9cdb99ee3fdaae7af1ce6b01af9",
+          "path": "tests/test_governance.py",
+          "sha256": "6f32a1ce2d36c3a6c77b29431e0a0aab68effc8cf282dce377a7e78ef6d0a11f",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\tests\\test_governance.py"
+        },
+        {
+          "action": "canonical",
+          "path": "tests/test_proof.py",
+          "sha256": "aa77a4b19bf3a7a6423d98be5047c97e9b36afa0dddfdfe1909910be369e6bc3",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\tests\\test_proof.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "05bd36a5dfa1013fd92908a4a6149e712e72266f3b9ae8eba10482bcad5f9afd",
+          "path": "tests/test_proof.py",
+          "sha256": "aa77a4b19bf3a7a6423d98be5047c97e9b36afa0dddfdfe1909910be369e6bc3",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\tests\\test_proof.py"
+        },
+        {
+          "action": "canonical",
+          "path": "verify_quality.tarl",
+          "sha256": "41f3c54e481d54193ef032f68e743d16df4ad9db30b809902d17a12b9a330ae7",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\verify_quality.tarl"
+        },
+        {
+          "action": "canonical",
+          "path": "web/app.py",
+          "sha256": "9c4678bfbeb464bd5e7ca60e72b6b66a02378065d5234ec4a9a245d1c744100e",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\web\\app.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "03d914300ebb4418c5ab085f96083ce6e7302eed5b7b6433f5e77d0ae9e81814",
+          "path": "web/app.py",
+          "sha256": "9c4678bfbeb464bd5e7ca60e72b6b66a02378065d5234ec4a9a245d1c744100e",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\web\\app.py"
+        },
+        {
+          "action": "canonical",
+          "path": "web/templates/dashboard.html",
+          "sha256": "2876bc4d7919e22013c5a3a88eef6f629a203bee7e9e1d77268e026f2cd8c60a",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\web\\templates\\dashboard.html"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "41a517f2eb35979f7e559c1196383b0b76483010d2da20fdc8d284760b613214",
+          "path": "web/templates/dashboard.html",
+          "sha256": "2876bc4d7919e22013c5a3a88eef6f629a203bee7e9e1d77268e026f2cd8c60a",
+          "source": "T:\\Project-AI-main\\engines\\sovereign_war_room\\web\\templates\\dashboard.html"
+        }
+      ],
+      "staged_files": 23,
+      "staged_tree_sha256": "c53d675c756328bf3b70fb7ba7372e6654ce3148f6b9054e4d0bce3e7f0ebd93"
+    },
+    {
+      "alternate": "T:\\Project-AI-main\\atlas",
+      "alternate_files": 69,
+      "canonical": "T:\\Project-AI-main\\engines\\atlas",
+      "canonical_files": 68,
+      "name": "atlas",
+      "records": [
+        {
+          "action": "canonical",
+          "path": "COMPLETION.md",
+          "sha256": "b728c00771e40ed414f943d59138a58c9569b37a2b904bbf13772679af26812e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\COMPLETION.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "a2df13f2a96c499bbfc904e6c8951ac88cc6c86fb19c637c0b44a717cb4a708d",
+          "path": "COMPLETION.md",
+          "sha256": "b728c00771e40ed414f943d59138a58c9569b37a2b904bbf13772679af26812e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\COMPLETION.md"
+        },
+        {
+          "action": "alternate-unique",
+          "path": "IMPLEMENTATION_SUMMARY.md",
+          "sha256": "c0c3f3c66a27b0c32e3904bc0c98da73472882329089897ef4036141fc8574f4",
+          "source": "T:\\Project-AI-main\\atlas\\IMPLEMENTATION_SUMMARY.md"
+        },
+        {
+          "action": "canonical",
+          "path": "PROGRESS_REPORT.md",
+          "sha256": "d49b4e007fc5b04d5261e168bdb3c541327a9d396eccc94840eae824bd1a08f1",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\PROGRESS_REPORT.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "4418d1f4865441d651c375585b3140c616eb2af577c09137117074b939504d05",
+          "path": "PROGRESS_REPORT.md",
+          "sha256": "d49b4e007fc5b04d5261e168bdb3c541327a9d396eccc94840eae824bd1a08f1",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\PROGRESS_REPORT.md"
+        },
+        {
+          "action": "canonical",
+          "path": "README.md",
+          "sha256": "253de1e48b5176c530f8c6d2a216b2cc41733fbb73eb89dccd29a32fa4f43c17",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\README.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "f2ea1e396b79045b2d5a81bcdcf1da6ec67ca35985ea2018509a7741c52c25ed",
+          "path": "README.md",
+          "sha256": "253de1e48b5176c530f8c6d2a216b2cc41733fbb73eb89dccd29a32fa4f43c17",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\README.md"
+        },
+        {
+          "action": "canonical",
+          "path": "STATUS.md",
+          "sha256": "1ef3a2b0c2371d84093fd5a1ef8f2a0f4c83a379397f59661a390867c45f871f",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\STATUS.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "5ec3753852fde9d9f1f712736143d33e6a984f62c1a4b858c5b1f8eab3ddc90f",
+          "path": "STATUS.md",
+          "sha256": "1ef3a2b0c2371d84093fd5a1ef8f2a0f4c83a379397f59661a390867c45f871f",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\STATUS.md"
+        },
+        {
+          "action": "canonical",
+          "path": "SUBORDINATION.md",
+          "sha256": "bd2a59e5494b01dd26ad08a9d0d229bee7c1f9ea73224e37331bd984e9d45a36",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\SUBORDINATION.md"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "90b80848b6a3c846aa62b6cf493a5d6c7fc3462193fbd2a22f814b70d4528483",
+          "path": "SUBORDINATION.md",
+          "sha256": "bd2a59e5494b01dd26ad08a9d0d229bee7c1f9ea73224e37331bd984e9d45a36",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\SUBORDINATION.md"
+        },
+        {
+          "action": "canonical",
+          "path": "__init__.py",
+          "sha256": "55551a7ebdce286d6b6f613bf1b3b0652a47fc6e58dfb2a590609d32b7d49bbb",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "913296a48a7c3fddd056b6159df44fa373cfbc298a787b51bb72c13f95f1103d",
+          "path": "__init__.py",
+          "sha256": "55551a7ebdce286d6b6f613bf1b3b0652a47fc6e58dfb2a590609d32b7d49bbb",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "analysis/__init__.py",
+          "sha256": "0410f404f8409ea0577f65ab8cc91fc5d8565f1bee64de26814f8c78cfcae48d",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\analysis\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "1b7a711cabdf07401983e08ae85422637e09fc75b6a11deee232756c6322386e",
+          "path": "analysis/__init__.py",
+          "sha256": "0410f404f8409ea0577f65ab8cc91fc5d8565f1bee64de26814f8c78cfcae48d",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\analysis\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "analysis/failure_surveillance.py",
+          "sha256": "24c1b317059f5fe1c4cc979c6c605b90c32e535d1da38303f8fa728c0de5d71a",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\analysis\\failure_surveillance.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "54744862900c2c6dae5dfe84fd08b5856441ab98a3b3ecce67f6540d05c77e17",
+          "path": "analysis/failure_surveillance.py",
+          "sha256": "24c1b317059f5fe1c4cc979c6c605b90c32e535d1da38303f8fa728c0de5d71a",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\analysis\\failure_surveillance.py"
+        },
+        {
+          "action": "canonical",
+          "path": "analysis/sensitivity_analyzer.py",
+          "sha256": "ed64119282ab2f616055e817e5b23e6dfe66870f16b045cbc1b685f50a05700e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\analysis\\sensitivity_analyzer.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "8e1f6a541124dab4ba6a82b9a71a169a3c6fb5b88e47c976caacca2965ac801f",
+          "path": "analysis/sensitivity_analyzer.py",
+          "sha256": "ed64119282ab2f616055e817e5b23e6dfe66870f16b045cbc1b685f50a05700e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\analysis\\sensitivity_analyzer.py"
+        },
+        {
+          "action": "canonical",
+          "path": "audit/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\audit\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "audit/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\audit\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "audit/trail.py",
+          "sha256": "1224f81a8dce9be1092229e893f26f761b67311efb584b7c208b840f4a55573c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\audit\\trail.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "a02d85f2c27684ff46d90ab60627de576da4339da259c762083111b34d955910",
+          "path": "audit/trail.py",
+          "sha256": "1224f81a8dce9be1092229e893f26f761b67311efb584b7c208b840f4a55573c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\audit\\trail.py"
+        },
+        {
+          "action": "canonical",
+          "path": "cli/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\cli\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "cli/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\cli\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "cli/atlas_cli.py",
+          "sha256": "e355998f4be9d21280f5c90e1f326ecfde69d743f7b89a48f78884564c714407",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\cli\\atlas_cli.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "7e3d495ca15656f254889dca27932c2707fe3bc209efadbb1964f52e8b5e0079",
+          "path": "cli/atlas_cli.py",
+          "sha256": "e355998f4be9d21280f5c90e1f326ecfde69d743f7b89a48f78884564c714407",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\cli\\atlas_cli.py"
+        },
+        {
+          "action": "canonical",
+          "path": "config/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "config/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "config/drivers.yaml",
+          "sha256": "fbe029a7441d8568d45e77d02ddf03211857af898a9b8a60823d23e020442a46",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\drivers.yaml"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "2823478b3dc3dab6874df0b2268519e31e297f1e3ee28ed52cb031b2ec699cb9",
+          "path": "config/drivers.yaml",
+          "sha256": "fbe029a7441d8568d45e77d02ddf03211857af898a9b8a60823d23e020442a46",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\drivers.yaml"
+        },
+        {
+          "action": "canonical",
+          "path": "config/loader.py",
+          "sha256": "01a0fe2bf84b20cbe3cc58ab2838fb2f5a2c250f655dd28e2eeaab39b0eedfe6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\loader.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "cc31b131c7a55649e73946c756b46e61c6265b79c838a3b61dee7378c7330094",
+          "path": "config/loader.py",
+          "sha256": "01a0fe2bf84b20cbe3cc58ab2838fb2f5a2c250f655dd28e2eeaab39b0eedfe6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\loader.py"
+        },
+        {
+          "action": "canonical",
+          "path": "config/penalties.yaml",
+          "sha256": "605995065a432aa2098130e9223c6075eadfa86682765d567564df3b53e5731b",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\penalties.yaml"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "db1119cdf1e36d75ccd37d7103bfec508bf9c160e8d2273645a57a38a33778ab",
+          "path": "config/penalties.yaml",
+          "sha256": "605995065a432aa2098130e9223c6075eadfa86682765d567564df3b53e5731b",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\penalties.yaml"
+        },
+        {
+          "action": "canonical",
+          "path": "config/safety.yaml",
+          "sha256": "5db225b17a8e526860d86a604931be466ae4c2ae9f13ce625e470dfbce81842c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\safety.yaml"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "bc466e25e66547be5823dd7ed6e07fe763e4cbe8a2d5a35d76041542ca814836",
+          "path": "config/safety.yaml",
+          "sha256": "5db225b17a8e526860d86a604931be466ae4c2ae9f13ce625e470dfbce81842c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\safety.yaml"
+        },
+        {
+          "action": "canonical",
+          "path": "config/seeds.yaml",
+          "sha256": "ede23ab3e98737aabb8f8d01fdd5e7fc5feb327d96216d771899ec2bb0835b76",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\seeds.yaml"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "7479242c1e99966f0088edeba17128998f36530cf6afe18f26ab86911e632acb",
+          "path": "config/seeds.yaml",
+          "sha256": "ede23ab3e98737aabb8f8d01fdd5e7fc5feb327d96216d771899ec2bb0835b76",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\seeds.yaml"
+        },
+        {
+          "action": "canonical",
+          "path": "config/stacks.yaml",
+          "sha256": "a7b3570553b1f1801a0b5e79f0d8bc0a87fd31d00b786401e130666930bac48a",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\stacks.yaml"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "18de7ecd9665fa8feec86aaea50f7147fa0ceb7f3732907abb7c35a16745fa32",
+          "path": "config/stacks.yaml",
+          "sha256": "a7b3570553b1f1801a0b5e79f0d8bc0a87fd31d00b786401e130666930bac48a",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\stacks.yaml"
+        },
+        {
+          "action": "canonical",
+          "path": "config/thresholds.yaml",
+          "sha256": "9ab176667300295ed222ddf098e0e84b56eb571af0c788ddb28f5879850d3d7e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\thresholds.yaml"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "5b352b444bfc797ff5741cb075e3d70fcf12a66fb1d7c802467517136e9fbfe7",
+          "path": "config/thresholds.yaml",
+          "sha256": "9ab176667300295ed222ddf098e0e84b56eb571af0c788ddb28f5879850d3d7e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\config\\thresholds.yaml"
+        },
+        {
+          "action": "canonical",
+          "path": "core/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "core/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/bayesian_engine.py",
+          "sha256": "40a3226b2ae523766ded4ebaf530b6b4a275f30c46622a02622b6dbc0f6be55d",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\bayesian_engine.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "6950ee007d98a3afc0d0059e0166b8d6b0dc69cfa496fba5171a233a6ee0fc29",
+          "path": "core/bayesian_engine.py",
+          "sha256": "40a3226b2ae523766ded4ebaf530b6b4a275f30c46622a02622b6dbc0f6be55d",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\bayesian_engine.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/drivers/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\drivers\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "core/drivers/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\drivers\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/drivers/calculator.py",
+          "sha256": "e71faa9d794b726634394ebbe0f9265167c600fd907be9e76bab51e422a7c280",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\drivers\\calculator.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "9fe656fbcc581a53ed8a851252dde0f3e31ae97f6e189a6c6e2325a65735f5a2",
+          "path": "core/drivers/calculator.py",
+          "sha256": "e71faa9d794b726634394ebbe0f9265167c600fd907be9e76bab51e422a7c280",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\drivers\\calculator.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/drivers/driver_engine_10d.py",
+          "sha256": "6bd182b014b28e19acf932c5cad5fb7c378fb29432bdeb80831a755f6a73f032",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\drivers\\driver_engine_10d.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "84d35f0e1b69effed39a4f5d84577b672211becc750d3874d0d83c1e21b0b6ae",
+          "path": "core/drivers/driver_engine_10d.py",
+          "sha256": "6bd182b014b28e19acf932c5cad5fb7c378fb29432bdeb80831a755f6a73f032",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\drivers\\driver_engine_10d.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/graph/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\graph\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "core/graph/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\graph\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/graph/builder.py",
+          "sha256": "88286344684b0376e1b7b7c44c3bfd2363e2ee2cb5bd022b81dbf8d9e0862e8c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\graph\\builder.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "b0b7226c04746916de93c740ddbb143c469875326cc89c9ed0482aae69b5d49b",
+          "path": "core/graph/builder.py",
+          "sha256": "88286344684b0376e1b7b7c44c3bfd2363e2ee2cb5bd022b81dbf8d9e0862e8c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\graph\\builder.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/graph/temporal_graph.py",
+          "sha256": "9dab16d69b69172327be10a83564eb75da3a876c15d10197803f3d3b1f9d48bc",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\graph\\temporal_graph.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e2cedecc8e5a6f45ba89b1ce908a9c7e64bb081f0faa598dd57b1bb97f03d8ed",
+          "path": "core/graph/temporal_graph.py",
+          "sha256": "9dab16d69b69172327be10a83564eb75da3a876c15d10197803f3d3b1f9d48bc",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\graph\\temporal_graph.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/ingestion/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\ingestion\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "core/ingestion/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\ingestion\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/ingestion/ingester.py",
+          "sha256": "f953b6c27d01a4c443a7a918489ab5c9fd2b697edc3f0103b6ede60c98c9e699",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\ingestion\\ingester.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "520f88b575be8be4c063d432d640377ea09707c52bdbc2feb8103f2f1fb895dd",
+          "path": "core/ingestion/ingester.py",
+          "sha256": "f953b6c27d01a4c443a7a918489ab5c9fd2b697edc3f0103b6ede60c98c9e699",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\ingestion\\ingester.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/ingestion/tier_classifier.py",
+          "sha256": "42d3a97cb39b96ef15c0826bbc092500e7a097f83271582b02da82ed16310917",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\ingestion\\tier_classifier.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "9dbbd06e11670a9bf13620076baf24c52357cb58b1e713780ea3f71de4643d80",
+          "path": "core/ingestion/tier_classifier.py",
+          "sha256": "42d3a97cb39b96ef15c0826bbc092500e7a097f83271582b02da82ed16310917",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\ingestion\\tier_classifier.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/normalization/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\normalization\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "core/normalization/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\normalization\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/normalization/normalizer.py",
+          "sha256": "aabe53e7e3599f825b94f6491888bc5412474d946f51925495378858d0c98422",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\normalization\\normalizer.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "74dea0f2c5e0cca565569ad845dcc1c376b366ea7217b4445706cff99cc13cb5",
+          "path": "core/normalization/normalizer.py",
+          "sha256": "aabe53e7e3599f825b94f6491888bc5412474d946f51925495378858d0c98422",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\normalization\\normalizer.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/projections/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\projections\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "core/projections/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\projections\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/projections/simulator.py",
+          "sha256": "cf67500bc8b84deac0c79116e5296576660d693534bbd278da02b66b75f366dd",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\projections\\simulator.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "8639c71165755e0d08e08f0911f3cc013423979cea8a115f9d1e4bb16d1fa718",
+          "path": "core/projections/simulator.py",
+          "sha256": "cf67500bc8b84deac0c79116e5296576660d693534bbd278da02b66b75f366dd",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\projections\\simulator.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/scoring/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\scoring\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "core/scoring/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\scoring\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "core/scoring/scorer.py",
+          "sha256": "2a1e12fd1bfc9a15ee57de68a9eff2d1039635ccc9f2f11c1c53ed1d9e461601",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\scoring\\scorer.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "99e276cd736dbef97dbc81f426cfd9754185c88e5b82b89046fab1abc2ef6dfa",
+          "path": "core/scoring/scorer.py",
+          "sha256": "2a1e12fd1bfc9a15ee57de68a9eff2d1039635ccc9f2f11c1c53ed1d9e461601",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\core\\scoring\\scorer.py"
+        },
+        {
+          "action": "canonical",
+          "path": "council/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\council\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "council/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\council\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "data/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "data/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "data/normalized/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\normalized\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "data/normalized/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\normalized\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "data/raw/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\raw\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "data/raw/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\raw\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "data/stacks/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\stacks\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "data/stacks/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\data\\stacks\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "export/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\export\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "export/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\export\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "governance/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\governance\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "governance/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\governance\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "governance/constitutional_kernel.py",
+          "sha256": "1b43ff0b81ebe6e9ff1f8e16da46e783e0f5d7673777ac8efd218ef33a9603fc",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\governance\\constitutional_kernel.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "8322b0c224bef804ea66f8ad70a8aa33a0a4222df28dc57effa876fb8be50c38",
+          "path": "governance/constitutional_kernel.py",
+          "sha256": "1b43ff0b81ebe6e9ff1f8e16da46e783e0f5d7673777ac8efd218ef33a9603fc",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\governance\\constitutional_kernel.py"
+        },
+        {
+          "action": "canonical",
+          "path": "logs/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\logs\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "logs/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\logs\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "reports/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\reports\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "reports/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\reports\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "safeguards/__init__.py",
+          "sha256": "faa1be56bc9bbe9fb91416389e63afc4c3d2956da41683b1e27493c25d142b90",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\safeguards\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "c767d8da6a7a8f23cd82725bced9286e0b38afb090808fc43b029534717fa77a",
+          "path": "safeguards/__init__.py",
+          "sha256": "faa1be56bc9bbe9fb91416389e63afc4c3d2956da41683b1e27493c25d142b90",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\safeguards\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "safeguards/epistemic_safeguards.py",
+          "sha256": "e7ac75a8dff0c9fa5cebb8df263d6155b93a70d53a480bd60c5ae0d8b926915a",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\safeguards\\epistemic_safeguards.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "79aadc9619cbeece7311cc2f3468f0b8fc0acaf41492ff34e1e06c1c2f2a78e6",
+          "path": "safeguards/epistemic_safeguards.py",
+          "sha256": "e7ac75a8dff0c9fa5cebb8df263d6155b93a70d53a480bd60c5ae0d8b926915a",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\safeguards\\epistemic_safeguards.py"
+        },
+        {
+          "action": "canonical",
+          "path": "safety/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\safety\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "safety/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\safety\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "sandbox/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\sandbox\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "sandbox/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\sandbox\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "sandbox/sludge_sandbox.py",
+          "sha256": "75ca22f58bb7fe8b786bbd7b9f812a630771faf572cec1ff0a6a60fe503da3b0",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\sandbox\\sludge_sandbox.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "adefc4604056be7a1f120296e87ba5c5b2ab1e3bd206b5ad8179599571286e0f",
+          "path": "sandbox/sludge_sandbox.py",
+          "sha256": "75ca22f58bb7fe8b786bbd7b9f812a630771faf572cec1ff0a6a60fe503da3b0",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\sandbox\\sludge_sandbox.py"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "schemas/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/claim.schema.json",
+          "sha256": "cf4f6538a74f88c0c165e393f5b7484aee4683858b578953a4f29b6dd1c1d9c0",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\claim.schema.json"
+        },
+        {
+          "action": "identical",
+          "alternate_sha256": "cf4f6538a74f88c0c165e393f5b7484aee4683858b578953a4f29b6dd1c1d9c0",
+          "path": "schemas/claim.schema.json",
+          "sha256": "cf4f6538a74f88c0c165e393f5b7484aee4683858b578953a4f29b6dd1c1d9c0",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\claim.schema.json"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/influence_graph.schema.json",
+          "sha256": "ea7a3e094df0611dcfc3ae46cbc589d63ea8342796974ebbc68bd276871e8d8c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\influence_graph.schema.json"
+        },
+        {
+          "action": "identical",
+          "alternate_sha256": "ea7a3e094df0611dcfc3ae46cbc589d63ea8342796974ebbc68bd276871e8d8c",
+          "path": "schemas/influence_graph.schema.json",
+          "sha256": "ea7a3e094df0611dcfc3ae46cbc589d63ea8342796974ebbc68bd276871e8d8c",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\influence_graph.schema.json"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/opinion.schema.json",
+          "sha256": "9980d451edd3a1df4d66888f8d65bd8e14013951dcd9c951373c908bfc59ddd6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\opinion.schema.json"
+        },
+        {
+          "action": "identical",
+          "alternate_sha256": "9980d451edd3a1df4d66888f8d65bd8e14013951dcd9c951373c908bfc59ddd6",
+          "path": "schemas/opinion.schema.json",
+          "sha256": "9980d451edd3a1df4d66888f8d65bd8e14013951dcd9c951373c908bfc59ddd6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\opinion.schema.json"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/organization.schema.json",
+          "sha256": "c0a8e30e64b86e2db0704c37d0c03f9e9a07258d68cdeb590c67062f635a6fda",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\organization.schema.json"
+        },
+        {
+          "action": "identical",
+          "alternate_sha256": "c0a8e30e64b86e2db0704c37d0c03f9e9a07258d68cdeb590c67062f635a6fda",
+          "path": "schemas/organization.schema.json",
+          "sha256": "c0a8e30e64b86e2db0704c37d0c03f9e9a07258d68cdeb590c67062f635a6fda",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\organization.schema.json"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/projection_pack.schema.json",
+          "sha256": "0be5bc8fc8e4e2689f4b82bfc09b21cf65976226f1ecbb01de3818938212c634",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\projection_pack.schema.json"
+        },
+        {
+          "action": "identical",
+          "alternate_sha256": "0be5bc8fc8e4e2689f4b82bfc09b21cf65976226f1ecbb01de3818938212c634",
+          "path": "schemas/projection_pack.schema.json",
+          "sha256": "0be5bc8fc8e4e2689f4b82bfc09b21cf65976226f1ecbb01de3818938212c634",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\projection_pack.schema.json"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/validator.py",
+          "sha256": "a8d12b9c4da7fdcdd1a76bed847fa803e26a6a565e657482daf999cb59215675",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\validator.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "2286b0b8c44b2a852f311ac7905adc1acdd3b164c296d430c931cbc00cadea93",
+          "path": "schemas/validator.py",
+          "sha256": "a8d12b9c4da7fdcdd1a76bed847fa803e26a6a565e657482daf999cb59215675",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\validator.py"
+        },
+        {
+          "action": "canonical",
+          "path": "schemas/world_state.schema.json",
+          "sha256": "ac91f871323020eb2f6488acf2d8b56b2969938fc13be95ee324857dbc417b48",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\world_state.schema.json"
+        },
+        {
+          "action": "identical",
+          "alternate_sha256": "ac91f871323020eb2f6488acf2d8b56b2969938fc13be95ee324857dbc417b48",
+          "path": "schemas/world_state.schema.json",
+          "sha256": "ac91f871323020eb2f6488acf2d8b56b2969938fc13be95ee324857dbc417b48",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\schemas\\world_state.schema.json"
+        },
+        {
+          "action": "canonical",
+          "path": "simulation/__init__.py",
+          "sha256": "4d4bd1553130ced91e8307844a5cf776d4496d4a46b7192e208513f3f26c8da6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "3fe252ffaea67fca1841cc987969c0d4cfc1c34d8674640c332ca71afaaeb8e8",
+          "path": "simulation/__init__.py",
+          "sha256": "4d4bd1553130ced91e8307844a5cf776d4496d4a46b7192e208513f3f26c8da6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "simulation/agent_simulator.py",
+          "sha256": "43919a29852f65bb8879e1de49e40b033a66a3a1b39c8fa8ae083368e494e147",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\agent_simulator.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "92e5269e94ce7af5b20468af39acc668fbc34d04bd096d77cd5db34ef0bc0435",
+          "path": "simulation/agent_simulator.py",
+          "sha256": "43919a29852f65bb8879e1de49e40b033a66a3a1b39c8fa8ae083368e494e147",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\agent_simulator.py"
+        },
+        {
+          "action": "canonical",
+          "path": "simulation/contingency_triggers.py",
+          "sha256": "d3fa38188f83b24ddca081961d3be9a95484230bc34723ddb5fae47cc7fdd9bb",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\contingency_triggers.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "173a34df64464016da0dd79104bfbf5051fd035eac5f35f89c6805a817a46b8e",
+          "path": "simulation/contingency_triggers.py",
+          "sha256": "d3fa38188f83b24ddca081961d3be9a95484230bc34723ddb5fae47cc7fdd9bb",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\contingency_triggers.py"
+        },
+        {
+          "action": "canonical",
+          "path": "simulation/monte_carlo_engine.py",
+          "sha256": "539b8f5793c5e1420d2f552f0187e453b07bff18ca75046d822b17c40c43c6e6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\monte_carlo_engine.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "5bfbce70d2472bf58836d7e708836b455a038ddb2356ec925422e52ee7cbccf8",
+          "path": "simulation/monte_carlo_engine.py",
+          "sha256": "539b8f5793c5e1420d2f552f0187e453b07bff18ca75046d822b17c40c43c6e6",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\monte_carlo_engine.py"
+        },
+        {
+          "action": "canonical",
+          "path": "simulation/timeline_divergence.py",
+          "sha256": "d9bd9bbeca4b3e82ad4cdceb2b57952d87611e8ffd41308dce544ea4fbb9954d",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\timeline_divergence.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "f29322e36e246211288ef89184cc9fe01bd53aa0dcd3a54d03a8f0511f382bb6",
+          "path": "simulation/timeline_divergence.py",
+          "sha256": "d9bd9bbeca4b3e82ad4cdceb2b57952d87611e8ffd41308dce544ea4fbb9954d",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\simulation\\timeline_divergence.py"
+        },
+        {
+          "action": "canonical",
+          "path": "verification/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\verification\\__init__.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "path": "verification/__init__.py",
+          "sha256": "ff1f01e56ec1ae88078b6a3f0d58f154633bd633a50070068b0d0aa2f3ddf15e",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\verification\\__init__.py"
+        },
+        {
+          "action": "canonical",
+          "path": "verification/replay_system.py",
+          "sha256": "7785aba41830c77bbf389c7d78e2fa21972cfa9435e96f56d11d72d118c17029",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\verification\\replay_system.py"
+        },
+        {
+          "action": "canonical-conflict-winner",
+          "alternate_sha256": "14b3d22e1b26b84415540a550c3b0d28be952024fd18524a54efcc32961592f3",
+          "path": "verification/replay_system.py",
+          "sha256": "7785aba41830c77bbf389c7d78e2fa21972cfa9435e96f56d11d72d118c17029",
+          "source": "T:\\Project-AI-main\\engines\\atlas\\verification\\replay_system.py"
+        }
+      ],
+      "staged_files": 69,
+      "staged_tree_sha256": "d45ba9770d50227ce7beaee928131b3e2711d46f70be9459cc9155409d687443"
+    }
+  ],
+  "policy": "canonical tree wins conflicts; alternate-only files are retained under legacy_extras"
+}
