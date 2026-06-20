@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-page="architecture">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Architecture | Project-AI</title>
+  <meta name="description" content="Architecture of Project-AI: governance before execution, shadow evaluation, quorum, iron path promotion, and immutable audit." />
+  <meta name="theme-color" content="#05070b" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="site-noise" aria-hidden="true"></div>
+  <div class="site-grid" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <header class="topbar" data-header>
+    <a class="brand" href="index.html" aria-label="Project-AI home">
+      <span class="brand-mark">PAI</span>
+      <span class="brand-copy">
+        <strong>Project-AI</strong>
+        <em>Execution-Governed Substrate</em>
+      </span>
+    </a>
+    <button class="nav-toggle" data-nav-toggle aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" data-nav>
+      <a href="index.html" data-nav-link="home">Home</a>
+      <a href="architecture.html" data-nav-link="architecture">Architecture</a>
+      <a href="publications.html" data-nav-link="publications">Publications</a>
+      <a href="repository.html" data-nav-link="repository">Repository</a>
+      <a href="about.html" data-nav-link="about">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="wrap narrow reveal">
+        <div class="eyebrow">Architecture</div>
+        <h1>Execution is not granted by intent. Execution is granted by admissibility.</h1>
+        <p>
+          The architecture compresses every consequential request into a bounded route:
+          identity, capability, shadow evaluation, invariant validation, quorum synthesis,
+          promotion, commit, and replay.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="system-map reveal">
+          <div class="map-row">
+            <div class="map-cell muted">User / Agent / Tool Request</div>
+          </div>
+          <div class="map-line"></div>
+          <div class="map-row three">
+            <div class="map-cell">Ingress Boundary</div>
+            <div class="map-cell">Identity Attestation</div>
+            <div class="map-cell">Capability Scope</div>
+          </div>
+          <div class="map-line"></div>
+          <div class="map-row three">
+            <div class="map-cell violet">Shadow Evaluation</div>
+            <div class="map-cell amber">Triumvirate Quorum</div>
+            <div class="map-cell blue">Invariant Engine</div>
+          </div>
+          <div class="map-line"></div>
+          <div class="map-row">
+            <div class="map-cell strong">Iron Path Promotion</div>
+          </div>
+          <div class="map-line"></div>
+          <div class="map-row three">
+            <div class="map-cell">Commit</div>
+            <div class="map-cell">Audit Seal</div>
+            <div class="map-cell">Replay Record</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark-ridge">
+      <div class="wrap split">
+        <div class="section-head reveal">
+          <div class="eyebrow">Core model</div>
+          <h2>Governance before execution is a routing rule.</h2>
+        </div>
+        <div class="text-stack reveal">
+          <p>
+            A normal AI system often places safety after generation: classify the prompt,
+            generate a response, filter the output, log the aftermath. Project-AI inverts
+            that order. The action route itself is governed.
+          </p>
+          <p>
+            In this model, the important question is not “did the model say something
+            acceptable?” The important question is “was this action ever valid to execute?”
+          </p>
+          <p>
+            That shift matters. It means policy becomes a precondition, not a decoration.
+            It means invalid actions fail because the execution route cannot form.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head centered reveal">
+          <div class="eyebrow">Execution path</div>
+          <h2>The narrow bridge.</h2>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item reveal">
+            <span>01</span>
+            <h3>Ingress normalization</h3>
+            <p>Requests are reduced into structured action claims: actor, target, scope, tool, intended mutation, and consequence class.</p>
+          </article>
+          <article class="timeline-item reveal">
+            <span>02</span>
+            <h3>Identity and authority</h3>
+            <p>The runtime checks who or what is acting, whether the authority exists, and whether it survives current context.</p>
+          </article>
+          <article class="timeline-item reveal">
+            <span>03</span>
+            <h3>Capability boundary</h3>
+            <p>Positive authorization scope and negative capability lists bound what the action is permitted to reach.</p>
+          </article>
+          <article class="timeline-item reveal">
+            <span>04</span>
+            <h3>Shadow evaluation</h3>
+            <p>The action is simulated without committing canonical state. Divergence, hazard, and invariant violation are detected before consequence.</p>
+          </article>
+          <article class="timeline-item reveal">
+            <span>05</span>
+            <h3>Triumvirate synthesis</h3>
+            <p>Galahad, Cerberus, and Codex Deus produce a structured decision surface: ethics, threat, arbitration.</p>
+          </article>
+          <article class="timeline-item reveal">
+            <span>06</span>
+            <h3>Iron Path promotion</h3>
+            <p>Only valid, bounded, fully evaluated action records are promoted from proposal to execution.</p>
+          </article>
+          <article class="timeline-item reveal">
+            <span>07</span>
+            <h3>Commit and audit</h3>
+            <p>The action executes, emits a decision record, seals audit metadata, and preserves replay equivalence.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section proof-surface">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Governance components</div>
+            <h2>Runtime authorities.</h2>
+          </div>
+        </div>
+
+        <div class="component-grid">
+          <article class="component-card reveal">
+            <h3>Constitutional Kernel</h3>
+            <p>Defines non-negotiable invariants, hard rejection logic, and the admissibility surface for consequential action.</p>
+          </article>
+          <article class="component-card reveal">
+            <h3>Quorum Engine</h3>
+            <p>Transforms advisory evaluation into a decision record with explicit approval, denial, or escalation.</p>
+          </article>
+          <article class="component-card reveal">
+            <h3>Shadow Plane</h3>
+            <p>Allows speculative transformation without canonical mutation, protecting system state from unvalidated consequence.</p>
+          </article>
+          <article class="component-card reveal">
+            <h3>Canonical Plane</h3>
+            <p>Accepts only promoted, governed, replayable commitments.</p>
+          </article>
+          <article class="component-card reveal">
+            <h3>Audit Chain</h3>
+            <p>Records who acted, what was proposed, what was denied or allowed, and which authority path existed.</p>
+          </article>
+          <article class="component-card reveal">
+            <h3>Continuity Gate</h3>
+            <p>Requires verified state continuity before action. No continuity proof, no action.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-section">
+      <div class="wrap cta-shell reveal">
+        <div>
+          <div class="eyebrow">Architectural consequence</div>
+          <h2>The constitution is executable only if the runtime obeys it first.</h2>
+          <p>That is the difference between policy text and governed substrate.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" href="repository.html">Inspect repository surface</a>
+          <a class="button ghost" href="publications.html">Read formal record</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>Project-AI · Architecture</span>
+      <span>Invalid action must be unreachable.</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "project-ai-arbiter",
     "project-ai-rlp",
+    "project-ai-security",
 ]
 
 [project.optional-dependencies]
@@ -60,11 +61,13 @@ package = true
 [tool.uv.sources]
 project-ai-arbiter = { workspace = true }
 project-ai-rlp = { workspace = true }
+project-ai-security = { workspace = true }
 
 [tool.uv.workspace]
 members = [
     "packages/arbiter",
     "packages/rlp",
+    "packages/security",
 ]
 
 # ----------------------------------------------------------------------
@@ -78,6 +81,8 @@ extend-exclude = [
     "docs/reference",        # historical paper corpus — do not lint
     "docs/internal/frozen-history",  # frozen SHA-256 chain — do not lint
     "packages/_staging",     # byte-preserved Stage 4 migration inputs
+    "packages/security/reference",  # byte-preserved Chimera import evidence
+    "packages/rlp/governance_framework",  # allowlisted framework reference assets
     "tools/_archive",        # one-shot tool archive
 ]
 
@@ -130,6 +135,8 @@ exclude = [
     "docs/reference",
     "docs/internal/frozen-history",
     "packages/_staging",
+    "packages/security/reference",
+    "packages/rlp/governance_framework",
     "tools/_archive",
 ]
 
@@ -139,6 +146,7 @@ exclude = [
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = ["packages", "tests"]
+norecursedirs = ["_staging", "governance_framework", "reference"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]

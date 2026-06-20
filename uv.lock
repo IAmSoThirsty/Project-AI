@@ -7,6 +7,7 @@ members = [
     "project-ai",
     "project-ai-arbiter",
     "project-ai-rlp",
+    "project-ai-security",
 ]
 
 [[package]]
@@ -358,6 +359,7 @@ source = { editable = "." }
 dependencies = [
     { name = "project-ai-arbiter" },
     { name = "project-ai-rlp" },
+    { name = "project-ai-security" },
 ]
 
 [package.optional-dependencies]
@@ -387,6 +389,7 @@ requires-dist = [
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
+    { name = "project-ai-security", editable = "packages/security" },
     { name = "pypdf", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0" },
@@ -404,6 +407,11 @@ source = { editable = "packages/arbiter" }
 name = "project-ai-rlp"
 version = "0.0.0.dev0"
 source = { editable = "packages/rlp" }
+
+[[package]]
+name = "project-ai-security"
+version = "0.0.0.dev0"
+source = { editable = "packages/security" }
 
 [[package]]
 name = "pygments"

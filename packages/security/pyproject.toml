@@ -3,19 +3,17 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "project-ai-rlp"
+name = "project-ai-security"
 version = "0.0.0.dev0"
-description = "Experimental Reciprocal Legitimacy Protocol for Project-AI"
+description = "Chimera security classification and audit relay for Project-AI"
 readme = "README.md"
 requires-python = "==3.12.10"
 license = "MIT"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/rlp"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"governance_framework" = "rlp/governance_framework"
+packages = ["src/security"]

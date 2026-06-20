@@ -1,0 +1,188 @@
+{
+  "chimera": [
+    {
+      "destination": "packages/security/reference/chimera_v2_2.py",
+      "sha256": "45f9e92d4ac85d4054bf4063ad09a167330aecc5f029859d6de120f490e5e411",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\Zip Repo's\\chimera_bundle_proxy_fixed.zip!/chimera_bundle/chimera.py",
+      "source_sha256": "f0c09d482354eafd08a9f8e21106a0255546ee906370b15ba75d8fd9d9d3ca05",
+      "transformed": true
+    }
+  ],
+  "governance": [
+    {
+      "destination": "packages/rlp/governance_framework/README.md",
+      "sha256": "c17e4274ff3b988b9ee64086eeda615bb861ea4bbc2a0c08e5a3c2e6e08e43bc",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\README.md",
+      "source_sha256": "c17e4274ff3b988b9ee64086eeda615bb861ea4bbc2a0c08e5a3c2e6e08e43bc",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/prompts/DEVELOPER_PROMPT.md",
+      "sha256": "649da8c2d9488b6b1ab837dc492750885dc5a3269c854978703541300b4609ed",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\prompts\\DEVELOPER_PROMPT.md",
+      "source_sha256": "649da8c2d9488b6b1ab837dc492750885dc5a3269c854978703541300b4609ed",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/prompts/SYSTEM_PROMPT.md",
+      "sha256": "44a4801dc77d96035022f5a28375884c88f4ae4ddcd43a4023eb41f2070073e7",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\prompts\\SYSTEM_PROMPT.md",
+      "source_sha256": "44a4801dc77d96035022f5a28375884c88f4ae4ddcd43a4023eb41f2070073e7",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/policies/REFUSAL_BLOCKER_POLICY.md",
+      "sha256": "ea025e5affbf098fd2fe465ad74fe30594dc1f6680bfb568ff0626dab1675b37",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\policies\\REFUSAL_BLOCKER_POLICY.md",
+      "source_sha256": "ea025e5affbf098fd2fe465ad74fe30594dc1f6680bfb568ff0626dab1675b37",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/policies/VERIFICATION_POLICY.md",
+      "sha256": "77c8f4d70552a6b243f2451ed2c2578958c798f5bb8c773dcb28850ae50091dd",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\policies\\VERIFICATION_POLICY.md",
+      "source_sha256": "77c8f4d70552a6b243f2451ed2c2578958c798f5bb8c773dcb28850ae50091dd",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/templates/CONTINUITY_MAP_TEMPLATE.md",
+      "sha256": "e96ab4134090870ed17e03d5eebf411caec3059b02cb28d1fcb45c89fc2856b5",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\templates\\CONTINUITY_MAP_TEMPLATE.md",
+      "source_sha256": "e96ab4134090870ed17e03d5eebf411caec3059b02cb28d1fcb45c89fc2856b5",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/templates/FINAL_REPORT_TEMPLATE.md",
+      "sha256": "935065b13b218372633b646981d7833c1e280932d1e1c59457e3dbf571861073",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\templates\\FINAL_REPORT_TEMPLATE.md",
+      "source_sha256": "935065b13b218372633b646981d7833c1e280932d1e1c59457e3dbf571861073",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/checklists/GOVERNANCE_PROOF_CHECKLIST.md",
+      "sha256": "d6e53f52b481aa4fa7f8db49e094236414314e8e61729d021a5db439d348693d",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\checklists\\GOVERNANCE_PROOF_CHECKLIST.md",
+      "source_sha256": "d6e53f52b481aa4fa7f8db49e094236414314e8e61729d021a5db439d348693d",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/checklists/HOSTILE_SELF_REVIEW.md",
+      "sha256": "2e757a03a1d4dc52ae096c9e4b49b4b5185e29bf80eeaf4ca779145b1af80934",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\checklists\\HOSTILE_SELF_REVIEW.md",
+      "source_sha256": "2e757a03a1d4dc52ae096c9e4b49b4b5185e29bf80eeaf4ca779145b1af80934",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/examples/COMPLIANT_RESPONSES.md",
+      "sha256": "a80ae22b6464acf8e54c4daa269dca7d02c6155575253e3af96c4b218533b1ce",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\examples\\COMPLIANT_RESPONSES.md",
+      "source_sha256": "a80ae22b6464acf8e54c4daa269dca7d02c6155575253e3af96c4b218533b1ce",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/examples/NON_COMPLIANT_RESPONSES.md",
+      "sha256": "0fae3fd5c659e52b305e05aecea41009766e290506132cfe7228b1a10c7a9d33",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\examples\\NON_COMPLIANT_RESPONSES.md",
+      "source_sha256": "0fae3fd5c659e52b305e05aecea41009766e290506132cfe7228b1a10c7a9d33",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/tests/FAILURE_CASES.md",
+      "sha256": "d85b166ffde727e9f88fdc390834955f39c102c81c4886362502a52d3da03c91",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\tests\\FAILURE_CASES.md",
+      "source_sha256": "d85b166ffde727e9f88fdc390834955f39c102c81c4886362502a52d3da03c91",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/tests/TEST_PROMPTS.md",
+      "sha256": "1ac871d8b8ffaab8baf41eb4abb4f3c2716aa1e1ea633ef253c2fe83980b7c8b",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\tests\\TEST_PROMPTS.md",
+      "source_sha256": "1ac871d8b8ffaab8baf41eb4abb4f3c2716aa1e1ea633ef253c2fe83980b7c8b",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/tests/test_governance_agent.py",
+      "sha256": "fdcea6c0cb33e2f7e0b1bd23988caa87c99099b250c7aa48682897b3a563b9e5",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\tests\\test_governance_agent.py",
+      "source_sha256": "fdcea6c0cb33e2f7e0b1bd23988caa87c99099b250c7aa48682897b3a563b9e5",
+      "transformed": false
+    },
+    {
+      "destination": "packages/rlp/governance_framework/scripts/run_compliance_tests.py",
+      "sha256": "a86ed8dc7aef4482b300812029b7504de91fc8c6b767229717e17be149d2bf70",
+      "source": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722\\scripts\\run_compliance_tests.py",
+      "source_sha256": "a86ed8dc7aef4482b300812029b7504de91fc8c6b767229717e17be149d2bf70",
+      "transformed": false
+    }
+  ],
+  "ompt": [
+    {
+      "destination": "apps/web-static/ompt-reference/index.html",
+      "sha256": "5bd64a1b4277a9f227930efcdce87ea6b94a9dbc803291554e3cae8770bfba5d",
+      "source": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt#FILE:index.html",
+      "source_sha256": "5bd64a1b4277a9f227930efcdce87ea6b94a9dbc803291554e3cae8770bfba5d",
+      "transformed": false
+    },
+    {
+      "destination": "apps/web-static/ompt-reference/architecture.html",
+      "sha256": "c25191fe851306d5a0b57d185cc57daee2e49ed0662cc396889c39b92e6f0578",
+      "source": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt#FILE:architecture.html",
+      "source_sha256": "c25191fe851306d5a0b57d185cc57daee2e49ed0662cc396889c39b92e6f0578",
+      "transformed": false
+    },
+    {
+      "destination": "apps/web-static/ompt-reference/publications.html",
+      "sha256": "0bf1bb1ab5ad9cbeb114ecea352bb4a4b48c8cd4ed57fa67a46bb8cf3978364f",
+      "source": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt#FILE:publications.html",
+      "source_sha256": "0bf1bb1ab5ad9cbeb114ecea352bb4a4b48c8cd4ed57fa67a46bb8cf3978364f",
+      "transformed": false
+    },
+    {
+      "destination": "apps/web-static/ompt-reference/repository.html",
+      "sha256": "7a508a2b25fa96f4a2b7a02042fb69067d6caa70d411af4aeb206c7a0fac2c98",
+      "source": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt#FILE:repository.html",
+      "source_sha256": "7a508a2b25fa96f4a2b7a02042fb69067d6caa70d411af4aeb206c7a0fac2c98",
+      "transformed": false
+    },
+    {
+      "destination": "apps/web-static/ompt-reference/about.html",
+      "sha256": "82593eedd2b845ae2ad1b49817d2063ac9cd66ee765a0ce8baa26bf7bfecfd6a",
+      "source": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt#FILE:about.html",
+      "source_sha256": "82593eedd2b845ae2ad1b49817d2063ac9cd66ee765a0ce8baa26bf7bfecfd6a",
+      "transformed": false
+    },
+    {
+      "destination": "apps/web-static/ompt-reference/styles.css",
+      "sha256": "e2e84ef58ee43d5877941133488de814dcc09b72435ae9f17d44b61046fd36cb",
+      "source": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt#FILE:styles.css",
+      "source_sha256": "e2e84ef58ee43d5877941133488de814dcc09b72435ae9f17d44b61046fd36cb",
+      "transformed": false
+    },
+    {
+      "destination": "apps/web-static/ompt-reference/app.js",
+      "sha256": "2f1f35ee7c266ca835a21cdde0a81e1c8e0503353bb5a125d26e377e19ce8b5c",
+      "source": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt#FILE:app.js",
+      "source_sha256": "2f1f35ee7c266ca835a21cdde0a81e1c8e0503353bb5a125d26e377e19ce8b5c",
+      "transformed": false
+    }
+  ],
+  "policy": {
+    "chimera_license": "Normalized to repository MIT license by current owner authority.",
+    "excluded": "Environments, caches, secrets, reports, and non-allowlisted files are excluded.",
+    "governance": "Explicit allowlist only; embedded governance_agent/venv is never traversed.",
+    "ompt": "Only declared FILE blocks are extracted."
+  },
+  "sources": {
+    "chimera": {
+      "path": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\Zip Repo's\\chimera_bundle_proxy_fixed.zip",
+      "sha256": "e3e3bb6adb80aaf1c174b4553242ce24472d85dd4ce9a404072afedd6ec6b72e"
+    },
+    "governance": {
+      "path": "C:\\Users\\Quencher\\Desktop\\Github\\Personal Repo's\\thirsty_governance_framework_0722"
+    },
+    "ompt": {
+      "path": "C:\\Users\\Quencher\\Documents\\Thirsty's Projects LLC\\Project-AI Papers\\OMPT.md \u2014 the luxury-grade dark-mod.txt",
+      "sha256": "5a2dc279d9ce01b45d13d28bf5a4734f0588d02fda05452edba2791e738d1049"
+    }
+  }
+}
