@@ -1,0 +1,36 @@
+# Line ending policy for Project-AI
+# Pin text files to LF; let git handle detection for everything else.
+# Overrides Windows-default core.autocrlf=true so checkouts stay portable.
+
+*               text=auto eol=lf
+
+# Explicit LF for code/config that must be LF regardless of detection
+*.py            text eol=lf
+*.toml          text eol=lf
+*.yaml          text eol=lf
+*.yml           text eol=lf
+*.json          text eol=lf
+*.md            text eol=lf
+*.sh            text eol=lf
+*.cfg           text eol=lf
+*.ini           text eol=lf
+*.txt           text eol=lf
+
+# Explicitly binary (no normalization, no diffs)
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.pdf           binary
+*.zip           binary
+*.tar           binary
+*.gz            binary
+*.7z            binary
+*.woff          binary
+*.woff2         binary
+*.ttf           binary
+*.eot           binary
+
+# Markdown tables: keep trailing space (GFM line breaks) — git would otherwise strip
+*.md            whitespace=-trailing-space

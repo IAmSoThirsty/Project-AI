@@ -1,0 +1,13 @@
+# CODEOWNERS
+
+# Sole owner — every change requires @IAmSoThirsty review.
+/                                          @IAmSoThirsty
+/docs/                                     @IAmSoThirsty
+/packages/                                 @IAmSoThirsty
+/tools/                                    @IAmSoThirsty
+/.github/                                  @IAmSoThirsty
+/docker/                                   @IAmSoThirsty
+
+# Constitutional documents — highest scrutiny
+/docs/reference/AGI_Charter_for_Project-AI_v2_3.pdf   @IAmSoThirsty
+/docs/internal/frozen-history/                         @IAmSoThirsty

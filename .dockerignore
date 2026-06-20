@@ -1,0 +1,40 @@
+# Docker
+.git
+.gitignore
+.venv
+venv
+env
+ENV
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+.tox
+.idea
+.vscode
+.DS_Store
+Thumbs.db
+
+# Docs / assets (not needed in image)
+docs/reference/papers
+docs/reference/drafts
+docs/reference/zenodo
+docs/reference/legal
+docs/reference/attestations
+*.pdf
+*.html
+
+# Tests not needed in runtime image
+**/tests/
+**/test_*.py
+
+# Project internal
+docs/internal/STAGE_*
+README.md
+CHANGELOG.md
