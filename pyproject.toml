@@ -1,0 +1,170 @@
+[project]
+name = "project-ai"
+version = "0.0.0.dev0"
+description = "Project-AI Sovereign Constitutional AGI Ecosystem development rebuild"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+authors = [
+    { name = "Jeremy Karrick", email = "IAmSoThirsty@users.noreply.github.com" },
+]
+keywords = ["constitutional-ai", "sovereign", "governance", "execution-substrate"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "pytest-xdist>=3.6.0",
+    "ruff>=0.6.9",
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.0",
+    "detect-secrets>=1.5.0",
+    "pypdf>=6.0.0",
+    "build>=1.2.0",
+    "hatchling>=1.25.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/IAmSoThirsty/Project-AI"
+Repository = "https://github.com/IAmSoThirsty/Project-AI"
+Issues = "https://github.com/IAmSoThirsty/Project-AI/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+bypass-selection = true
+
+# ----------------------------------------------------------------------
+# uv workspace — sub-packages are added in Stages 4.5+
+# ----------------------------------------------------------------------
+[tool.uv]
+managed = true
+package = true
+
+# ----------------------------------------------------------------------
+# Ruff (linter + formatter)
+# ----------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["packages", "tests"]
+extend-exclude = [
+    "docs/reference",        # historical paper corpus — do not lint
+    "docs/internal/frozen-history",  # frozen SHA-256 chain — do not lint
+    "tools/_archive",        # one-shot tool archive
+]
+
+[tool.ruff.lint]
+# Conservative: defaults plus the rules that catch real bugs.
+# Plan §9 risk: "unusual patterns flagged not auto-rejected — review manually"
+# so we enable warn-by-default categories, not opinionated style ones.
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+]
+ignore = [
+    "E501",   # line length is handled by formatter
+    "B008",   # function-call-in-default-arg is idiomatic for FastAPI
+    "RUF012", # mutable class attributes — frequent in pydantic models
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["B011"]  # assert False is fine in tests
+"docs/**/*.py" = ["F401"]   # examples may have unused imports
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ----------------------------------------------------------------------
+# Mypy (type checker)
+# ----------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+plugins = []
+ignore_missing_imports = false
+exclude = [
+    "docs/reference",
+    "docs/internal/frozen-history",
+    "tools/_archive",
+]
+
+# ----------------------------------------------------------------------
+# Pytest
+# ----------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["packages", "tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--tb=short",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests (require external services)",
+    "security: marks tests as security/attack-vector tests",
+]
+
+# ----------------------------------------------------------------------
+# Coverage
+# ----------------------------------------------------------------------
+[tool.coverage.run]
+branch = true
+source = ["packages"]
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+fail_under = 80
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+# ----------------------------------------------------------------------
+# Pre-commit
+# ----------------------------------------------------------------------
+[tool.pre-commit]
+# Plan §8.1: main is protected. Direct commits to main are blocked once
+# pre-commit is installed (Stage 16). For the bootstrap stages (0-2)
+# the hook is deferred; we run pre-commit manually before each commit.
+# `pre-commit install` will be run as part of Stage 16.
