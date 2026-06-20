@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from legacy_source_guard import configured_guard, sha256
+from tools.legacy_source_guard import configured_guard, sha256
 
 REPO = Path(__file__).resolve().parents[1]
 FROZEN_HISTORY = REPO / "docs" / "internal" / "frozen-history" / "PROJECT-AI_FROZEN_HISTORY.md"

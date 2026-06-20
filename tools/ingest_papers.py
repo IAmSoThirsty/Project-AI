@@ -38,7 +38,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-
 PAPERS_ROOT = Path(r"C:\Users\Quencher\Documents\Thirsty's Projects LLC\Project-AI Papers")
 DEST_ROOT = Path(r"T:\Project-AI-Beginnings\docs\reference")
 
@@ -187,7 +186,7 @@ def main() -> int:
     print(f"[ingest] scanning {PAPERS_ROOT / 'Zenodo'}...")
     ingest_subdir(PAPERS_ROOT / "Zenodo", DEST_ROOT, manifest, skipped)
     # Ingest Downloads canonical reference files
-    print(f"[ingest] scanning Downloads...")
+    print("[ingest] scanning Downloads...")
     ingest_downloads(manifest, skipped)
 
     # Write manifests
@@ -213,7 +212,7 @@ def main() -> int:
     )
 
     print()
-    print(f"[ingest] DONE")
+    print("[ingest] DONE")
     print(f"[ingest] manifest: {manifest_path}")
     print(f"[ingest] skipped:  {skipped_path}")
     print(f"[ingest] copied:   {len(manifest)} entries")

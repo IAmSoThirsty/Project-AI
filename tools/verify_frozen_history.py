@@ -140,7 +140,7 @@ def verify(path: Path) -> int:
     print(f"[verify] last section hash: {last_this[:16]}..")
     print(f"[verify] ledger head claimed in footer: {ledger_head_claimed[:16] if ledger_head_claimed else 'NOT FOUND'}..")
     if ledger_head_claimed and ledger_head_claimed != last_this:
-        print(f"  [FAIL] ledger head mismatch")
+        print("  [FAIL] ledger head mismatch")
         sections_fail += 1
     print()
     if sections_fail == 0 and sections_ok > 0:
