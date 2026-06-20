@@ -34,3 +34,6 @@
 
 # Markdown tables: keep trailing space (GFM line breaks) — git would otherwise strip
 *.md            whitespace=-trailing-space
+
+# Stage 4 holds byte-preserved legacy inputs until their owning migration gate.
+packages/_staging/** whitespace=-trailing-space

@@ -3,7 +3,9 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^packages/_staging/
       - id: end-of-file-fixer
+        exclude: ^packages/_staging/
       - id: check-yaml
       - id: check-json
       - id: check-toml

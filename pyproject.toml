@@ -62,6 +62,7 @@ src = ["packages", "tests"]
 extend-exclude = [
     "docs/reference",        # historical paper corpus — do not lint
     "docs/internal/frozen-history",  # frozen SHA-256 chain — do not lint
+    "packages/_staging",     # byte-preserved Stage 4 migration inputs
     "tools/_archive",        # one-shot tool archive
 ]
 
@@ -113,6 +114,7 @@ ignore_missing_imports = false
 exclude = [
     "docs/reference",
     "docs/internal/frozen-history",
+    "packages/_staging",
     "tools/_archive",
 ]
 
