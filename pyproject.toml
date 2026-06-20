@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "project-ai-arbiter",
     "project-ai-kernel",
+    "project-ai-governance",
     "project-ai-rlp",
     "project-ai-security",
 ]
@@ -62,6 +63,7 @@ package = true
 [tool.uv.sources]
 project-ai-arbiter = { workspace = true }
 project-ai-kernel = { workspace = true }
+project-ai-governance = { workspace = true }
 project-ai-rlp = { workspace = true }
 project-ai-security = { workspace = true }
 
@@ -69,6 +71,7 @@ project-ai-security = { workspace = true }
 members = [
     "packages/arbiter",
     "packages/kernel",
+    "packages/governance",
     "packages/rlp",
     "packages/security",
 ]
