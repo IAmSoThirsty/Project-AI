@@ -1,0 +1,48 @@
+{
+  "ahead_of_origin": 2,
+  "behind_origin": 0,
+  "branch": "master",
+  "dirty": [
+    {
+      "bytes": 31,
+      "path": "Project-Ai/.obsidian/app.json",
+      "sha256": "4374eeac1712a41b47890b4ffff2a54ecce4223c02a1d83816087c03f1ba1ad8",
+      "status": " M"
+    },
+    {
+      "bytes": 696,
+      "path": "Project-Ai/.obsidian/core-plugins.json",
+      "sha256": "763cf20a921fd9955735b278006820b90b207b2fc04d9e79ca648279c7c14276",
+      "status": " M"
+    },
+    {
+      "bytes": 493,
+      "path": "Project-Ai/.obsidian/graph.json",
+      "sha256": "89b1b8c279c3229a13509a0fad866ef90a7a70a6536f78d542e9c0960aec3d77",
+      "status": " M"
+    },
+    {
+      "bytes": 4862,
+      "path": "Project-Ai/.obsidian/workspace.json",
+      "sha256": "880f65084c9a5eaeec162f5070a770176d1a291dc6c0ff3d6941c91d906f5411",
+      "status": " M"
+    },
+    {
+      "bytes": 203,
+      "path": "Project-Ai/Welcome.md",
+      "sha256": "ecd0dfb6b21143ff52cfe36f93636df57e5b21773c101491b86f10ce17556ca8",
+      "status": " M"
+    }
+  ],
+  "frozen_history": {
+    "bytes": 2372548,
+    "contains_head": true,
+    "path": "docs/internal/frozen-history/PROJECT-AI_FROZEN_HISTORY.md",
+    "sections": 2264,
+    "sha256": "d4b9f8bd583bc5bc81e253ee9ca7bce4467cd66a527ed7c2790f089e9ae51e8e"
+  },
+  "head": "3fa803ab9a3751217b58c9e591cf3f515da5ab02",
+  "origin_master": "9fc3c93e6abd02a14bd141fab4d3ef772fa090bf",
+  "policy": "read-only input; no ACL, Git configuration, attribute, or source-file mutation",
+  "root": "T:\\Project-AI-main"
+}
