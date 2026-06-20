@@ -6,6 +6,7 @@ requires-python = "==3.12.10"
 members = [
     "project-ai",
     "project-ai-arbiter",
+    "project-ai-kernel",
     "project-ai-rlp",
     "project-ai-security",
 ]
@@ -358,6 +359,7 @@ version = "0.0.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "project-ai-arbiter" },
+    { name = "project-ai-kernel" },
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
 ]
@@ -388,6 +390,7 @@ requires-dist = [
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
     { name = "pypdf", marker = "extra == 'dev'", specifier = ">=6.0.0" },
@@ -402,6 +405,11 @@ provides-extras = ["dev"]
 name = "project-ai-arbiter"
 version = "0.0.0.dev0"
 source = { editable = "packages/arbiter" }
+
+[[package]]
+name = "project-ai-kernel"
+version = "0.0.0.dev0"
+source = { editable = "packages/kernel" }
 
 [[package]]
 name = "project-ai-rlp"
