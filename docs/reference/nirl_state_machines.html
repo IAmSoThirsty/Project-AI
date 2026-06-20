@@ -1,0 +1,134 @@
+
+<style>
+.section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--color-text-tertiary); margin: 20px 0 6px; }
+.section-label:first-child { margin-top: 8px; }
+.mmd-wrap { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 16px; margin-bottom: 4px; overflow-x: auto; }
+.mmd-wrap svg { width: 100%; height: auto; }
+</style>
+<h2 class="sr-only" style="position:absolute;left:-9999px">NIRL state machine diagrams: Heart, Mini Brain, Antibody, Forge, and system flow</h2>
+
+<div class="section-label">Heart — global tick engine</div>
+<div class="mmd-wrap" id="d1"></div>
+
+<div class="section-label">Mini Brain — section controller</div>
+<div class="mmd-wrap" id="d2"></div>
+
+<div class="section-label">Antibody — single lifecycle</div>
+<div class="mmd-wrap" id="d3"></div>
+
+<div class="section-label">Forge — purification + destruction</div>
+<div class="mmd-wrap" id="d4"></div>
+
+<div class="section-label">System flow — component relationships</div>
+<div class="mmd-wrap" id="d5"></div>
+
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '13px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#3C3489' : '#EEEDFE',
+    primaryTextColor: dark ? '#CECBF6' : '#3C3489',
+    primaryBorderColor: dark ? '#534AB7' : '#534AB7',
+    secondaryColor: dark ? '#085041' : '#E1F5EE',
+    secondaryTextColor: dark ? '#9FE1CB' : '#085041',
+    tertiaryColor: dark ? '#444441' : '#F1EFE8',
+  }
+});
+
+const diagrams = [
+  ['d1', `stateDiagram-v2
+    [*] --> TICK_WAIT
+    TICK_WAIT --> GLOBAL_TICK: time trigger
+    GLOBAL_TICK --> SPAWN_SKELETON: always
+    GLOBAL_TICK --> CHECK_HEARTBEATS: parallel
+    SPAWN_SKELETON --> DISTRIBUTE: create min probes
+    DISTRIBUTE --> TICK_WAIT
+    CHECK_HEARTBEATS --> SECTION_OK: heartbeat valid
+    CHECK_HEARTBEATS --> SECTION_DEAD: heartbeat missing
+    SECTION_OK --> CHECK_STRAIN
+    CHECK_STRAIN --> INJECT: strain signal valid
+    CHECK_STRAIN --> TICK_WAIT: no strain
+    INJECT --> DISTRIBUTE
+    SECTION_DEAD --> LOST_PARENT_INJECT
+    LOST_PARENT_INJECT --> RESET_SECTION
+    RESET_SECTION --> TICK_WAIT`],
+  ['d2', `stateDiagram-v2
+    [*] --> LOCAL_TICK_WAIT
+    LOCAL_TICK_WAIT --> LOCAL_TICK: time trigger
+    LOCAL_TICK --> SPAWN_ANTIBODY: template valid
+    LOCAL_TICK --> ALERT_TEMPLATE: template invalid
+    SPAWN_ANTIBODY --> ASSIGN_PROBE
+    ASSIGN_PROBE --> MONITOR_ESCORT
+    MONITOR_ESCORT --> RECEIVE_COMPLETION: forge signal
+    RECEIVE_COMPLETION --> VERIFY_SIGNATURE
+    VERIFY_SIGNATURE --> VALID: signature ok
+    VERIFY_SIGNATURE --> INVALID: signature fail
+    VALID --> CHECK_STATUS
+    CHECK_STATUS --> RELEASE_NEXT: success
+    CHECK_STATUS --> ALERT: dead letter or error
+    RELEASE_NEXT --> LOCAL_TICK_WAIT
+    INVALID --> BLOCK_REGEN
+    BLOCK_REGEN --> LOCAL_TICK_WAIT
+    ALERT --> LOCAL_TICK_WAIT
+    ALERT_TEMPLATE --> FALLBACK_SKELETON
+    FALLBACK_SKELETON --> LOCAL_TICK_WAIT`],
+  ['d3', `stateDiagram-v2
+    [*] --> SPAWNED
+    SPAWNED --> CAPTURE: target found
+    CAPTURE --> SEALED: payload locked
+    SEALED --> ESCORT: route to forge
+    ESCORT --> FORGE_ENTRY: arrive
+    FORGE_ENTRY --> DESTROYED: forge success
+    FORGE_ENTRY --> DEAD_LETTER: forge failure
+    DESTROYED --> [*]
+    DEAD_LETTER --> [*]`],
+  ['d4', `stateDiagram-v2
+    [*] --> RECEIVE
+    RECEIVE --> VERIFY_PAYLOAD
+    VERIFY_PAYLOAD --> VALID: integrity ok
+    VERIFY_PAYLOAD --> REJECT: integrity fail
+    VALID --> CHECK_REPLAY
+    CHECK_REPLAY --> SHADOW_REPLAY: replay needed
+    CHECK_REPLAY --> DIRECT_DESTROY: no replay
+    SHADOW_REPLAY --> ANALYZE
+    ANALYZE --> DESTROY
+    DIRECT_DESTROY --> DESTROY
+    DESTROY --> ATOMIC_CHECK
+    ATOMIC_CHECK --> SUCCESS: both destroyed
+    ATOMIC_CHECK --> DEAD_LETTER: partial failure
+    SUCCESS --> SIGN_COMPLETION
+    DEAD_LETTER --> SIGN_FAILURE
+    SIGN_COMPLETION --> ROUTE_SIGNAL
+    SIGN_FAILURE --> ROUTE_SIGNAL
+    ROUTE_SIGNAL --> [*]
+    REJECT --> SIGN_FAILURE`],
+  ['d5', `flowchart LR
+    H[Heart] -->|spawn| A[Antibody]
+    MB[Mini Brain] -->|spawn assign| A
+    A -->|sealed escort| F[Forge]
+    F -->|signed completion| MB
+    F -->|if section dead| H
+    MB -->|strain signal| H
+    MB -->|heartbeat| H
+    H -->|inject skeleton| A`],
+];
+
+for (const [id, src] of diagrams) {
+  try {
+    const { svg } = await mermaid.render(id + '-svg', src);
+    document.getElementById(id).innerHTML = svg;
+  } catch(e) {
+    document.getElementById(id).textContent = 'Render error: ' + e.message;
+  }
+}
+</script>

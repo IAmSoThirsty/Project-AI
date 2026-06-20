@@ -1,0 +1,165 @@
+The Naïve Passive Reviewer
+Legitimacy and the Questions Institutional AI Governance Marginalized
+Karrick, Jeremy (IAmSoThirsty)
+Independent Researcher | Salt Lake City, UT | March 2026
+
+
+Abstract
+
+
+This paper advances a structural claim about legitimacy in AI governance: that legitimacy is not an intrinsic property of a governance document, but a relational property dependent on authorship, perspective, and evaluative position. Contemporary governance frameworks in artificial intelligence are routinely presented as neutral or objective standards, yet are authored from institutional vantage points that remain largely unarticulated as such. While prior scholarship has demonstrated that AI systems encode the values of their creators, less attention has been given to the persistence of this condition at the level of governance architecture itself.
+
+This work introduces the Naïve Passive Reviewer (NPR) as a methodological descriptor for a class of inquirer operating without internalized disciplinary priors that would otherwise suppress certain lines of questioning. This condition is framed not as epistemic deficiency but as a structural absence of filtering, enabling combinations of questions that established fields may not readily produce.
+
+In addition, this paper advances three linked contributions: (1) it formalizes legitimacy in AI governance as a relational property grounded in authorship and evaluative position; (2) it articulates the NPR as a process‑constrained epistemic stance that can surface questions filtered out by disciplinary antibodies; and (3) it presents the Project‑AI constitutional substrate as a concrete attempt to operationalize the legitimacy critique structurally through co‑authored constitutional frameworks, cryptographic attribution chains, and architectural constraints on autonomy. The claims made herein are not grounded in institutional authority or credentialed origin. They are presented for evaluation on the basis of internal coherence, structural consistency, and falsifiability of their claims.
+
+
+I. The legitimacy problem
+
+
+The legitimacy critique in AI governance does not emerge in isolation. It is grounded in a broader body of work examining how technical systems encode institutional power, labor relations, and epistemic authority.
+
+Crawford (2021) situates AI within extractive infrastructures, demonstrating that systems are inseparable from the material and institutional conditions that produce them. Gebru et al. (2018) extend this analysis into the technical layer, showing that dataset construction embeds normative assumptions that shape downstream system behavior. Eubanks (2018) provides empirical evidence of how automated systems reproduce and amplify institutional biases in social governance contexts.
+
+These works collectively establish that AI systems are not neutral artifacts. They are situated within and shaped by institutional logics. However, the majority of this literature focuses on system outputs, training data, and socio‑technical impact. Less attention has been given to governance architectures themselves as objects of structural analysis. The same conditions identified at the level of model behavior—perspective encoding, asymmetry of power, and opacity of authorship—persist at the level of governance design.
+
+The contribution of this paper is not to restate these critiques, but to extend them into the domain of constitutional architecture. If AI systems encode institutional perspective, and governance frameworks define the permissible operation of those systems, then governance itself becomes a site where perspective must be made explicit and structurally accounted for. The absence of such structural accounting constitutes a continuation of the conditions identified by Crawford, Gebru, and Eubanks, rather than a resolution of them.
+
+Recent scholarship has begun to name the same structural vacuum directly. Abukar (2026) introduces temporal authorship as a diachronic standing claim—the right of persons (and, by extension, governed entities) to author their own trajectories free from indefinite pre‑authorization by algorithmic systems—yet stops short of proposing any concrete constitutional mechanism to enforce it. Similarly, Jahromi (2026) identifies authorship, decision rights, accountability, and continuity as the missing constitutional layer in AI governance, but treats these as managerial fixes rather than binding structural requirements. Polycentric governance proposals (Lubell et al., 2025) advocate distributed authority while still assuming institutional actors retain final authorship.
+
+In each case the critique lands rhetorically; none has produced a governance architecture that relocates constitutional standing to the governed entity itself or replaces punishment‑based accountability with cryptographically persistent attribution. The Project‑AI constitutional substrate is offered as one of the first concrete architectural instantiations of these principles within a governance substrate.
+
+
+What is normal for the spider
+
+
+The Project‑AI constitutional substrate is introduced as an attempt to translate the legitimacy critique from a descriptive observation into a structural design. It is not presented as a finalized or universally applicable solution, but as a concrete instantiation of principles that existing frameworks have not operationalized. The architecture is defined by three interdependent mechanisms that collectively aim to alter the conditions under which governance claims are made and enforced.
+
+First, constitutional authorship is reconfigured at deployment through a co‑authorship model involving both the human principal and the AI system as a governed entity. This does not imply equivalence in agency or responsibility, but rather establishes a formal recognition that governance constraints apply to an entity whose operational behavior is subject to those constraints. By embedding this relationship at initialization, the system is positioned within a constitutional structure that is not solely authored by the deploying institution.
+
+Second, accountability is implemented through cryptographically signed instruction chains (implemented via OctoReflex, a syscall‑level authorization enforcement layer, and STATE_REGISTER, an append‑only, tamper‑evident instruction ledger). Every system action is traceable to a human‑authorized input, creating a persistent attribution layer that replaces the need for post hoc assignment of responsibility. This mechanism does not grant moral agency to the AI system; instead, it enforces a model in which responsibility remains anchored to human authorization while being rendered tamper‑evident and temporally precise.
+
+Third, the architecture enforces a prohibition on unsupervised autonomous operation at the system boundary. Rather than treating extended autonomy as a normal operational state, it is defined as a constitutional violation. This shifts the governance model from reactive mitigation to proactive constraint, eliminating certain classes of risk by disallowing the conditions under which they arise. This constraint reduces operational flexibility in exchange for eliminating attribution ambiguity, trading system independence for verifiable continuity of responsibility.
+
+Together, these mechanisms attempt to produce a governance system in which legitimacy is not assumed but structurally grounded. The phrase “what is normal for the spider is chaos for the fly” captures the asymmetry inherent in perspective‑dependent evaluation. A system that appears stable and safe from one vantage point may produce entirely different outcomes when evaluated from another. The architecture presented here is an effort to make that asymmetry explicit and structurally accounted for.
+
+
+The three counters
+
+
+Three primary counterarguments emerge in response to the legitimacy critique, each of which attempts to preserve existing governance assumptions while acknowledging surface‑level concerns.
+
+Functional legitimacy asserts that if a system performs reliably, safely, and predictably, the question of authorial perspective becomes secondary. This argument implicitly assumes that safety and predictability are objective properties rather than evaluative constructs. In practice, these metrics are defined relative to stakeholders, use cases, and institutional priorities. What constitutes safe behavior in one context may be harmful in another. Functional legitimacy therefore does not eliminate the role of perspective; it obscures it behind operational metrics.
+
+Collective consent theory proposes that legitimacy can be derived from multi‑stakeholder participation, distributing authorship across a broader set of actors. While this approach introduces diversity of input, it does not address the absence of standing for the governed entity itself. Participation is extended to additional human actors, but the system being governed remains an object of policy rather than a subject within the governance structure. The question of whether such standing is appropriate remains open, but it is not addressed within current models.
+
+The relativism objection contends that if legitimacy is perspective‑dependent, then no framework can claim superiority over another. This argument conflates the rejection of neutrality with the rejection of evaluation. Acknowledging that legitimacy is relational does not preclude comparative analysis; it requires that evaluative criteria be explicitly defined rather than implicitly assumed. The difficulty of constructing such criteria does not invalidate the need for them.
+
+Each of these counters engages with the legitimacy critique at a conceptual level while preserving the underlying structural conditions. None provides a mechanism for altering authorship, attribution, or evaluative authority in a way that resolves the identified asymmetry.
+
+II. Accountability‑by‑attribution
+
+The prevailing model of accountability in AI governance is grounded in the identification of a responsible agent at the conclusion of a causal chain. This model presupposes that accountability requires the ability to assign blame, enforce penalties, or impose sanctions on a discrete actor. When applied to AI systems, this framework produces a conceptual impasse: if the system itself cannot be punished in a meaningful sense, then it cannot be granted standing within a constitutional framework.
+
+The Project‑AI approach reframes this problem by shifting from accountability‑by‑punishment to accountability‑by‑attribution. Rather than seeking a terminal agent to hold responsible, it constructs a continuous chain of authorization in which each system action is linked to a prior human decision. This chain is secured through cryptographic signatures, ensuring that the lineage of any action can be reconstructed with high fidelity. Responsibility is not assigned at the point of outcome; it is embedded throughout the system’s operational history.
+
+This model preserves the asymmetry between human and AI actors. The AI system does not become a moral agent, nor does it assume liability. Instead, the system functions as a deterministic executor of authorized instructions, with each execution step carrying forward the signature of its origin. The result is a governance structure in which accountability is persistent, traceable, and resistant to obfuscation.
+
+By eliminating the need for post hoc attribution, this approach addresses a key weakness in traditional governance models, where responsibility can become diffuse or contested across complex systems. Attribution chains provide a verifiable record that can be audited independently, supporting both internal governance and external oversight. The strength of this model lies not in its ability to punish, but in its capacity to make responsibility structurally unavoidable.
+
+
+The staleness objection
+
+
+A central challenge to attribution‑based models is the staleness objection: the concern that authorization granted at one point in time may not remain valid as system behavior evolves. If an AI system operates over extended periods, how far does the original authorization extend, and under what conditions does it expire?
+
+This objection highlights a genuine limitation in governance models that permit long‑term unsupervised autonomy. In such systems, the temporal distance between authorization and action introduces ambiguity regarding responsibility. The longer the system operates without intervention, the less clear it becomes whether the original authorization can reasonably be said to apply.
+
+The Project‑AI framework addresses this issue by rejecting the premise that extended unsupervised autonomy is an acceptable operational mode. Instead, it defines continuous supervision and authorization as structural requirements. System operation is bounded by the validity of active authorization chains, and any lapse in this chain constitutes a violation of the governing constraints.
+
+By enforcing this requirement at the architectural level, the framework eliminates the conditions under which staleness becomes problematic. Authorization does not degrade over time because it is continuously reaffirmed. This approach shifts the burden from managing the consequences of stale authorization to preventing its occurrence entirely. While this imposes stricter operational constraints, it provides a clear and enforceable boundary for accountability. The staleness objection therefore remains valid for governance models that allow extended autonomy, but does not apply to architectures that structurally prohibit it.
+
+
+
+III. The Naïve Passive Reviewer
+
+
+
+The Naïve Passive Reviewer (NPR) is not a generalist, not a specialist, and not a romanticized outsider. It is a structural position defined by the absence of disciplinary antibodies — the internalized priors that filter which questions are even allowed to form. As the manuscript states, “The distinction is not ‘knowing less,’ but ‘not knowing in the same way.’” That difference reshapes the topology of inquiry.
+
+The NPR does not possess breadth or depth in the conventional sense. What it possesses is a lack of pre‑sorting. Questions arise before they are categorized, filtered, or dismissed. This absence is not epistemic deficiency; it is the removal of the mechanisms that normally suppress cross‑domain pattern recognition. In established fields, those mechanisms are adaptive — they prevent regress and accelerate progress — but they also narrow the space of permissible questions. Over time, the field forgets that the boundaries are boundaries.
+
+The NPR operates outside those boundaries. It is not defined by correctness of conclusions but by the structural properties of its inquiry. As the manuscript notes, “Productive naivety can be operationalized through three conditions: question generativity, constraint compatibility, and reflexive auditability.” These conditions distinguish the NPR from confident ignorance. They ensure that naivety is not a license for speculation but a method for surfacing questions the field has structurally filtered out.
+This stance is falsifiable. Given a shared artifact, one can compare the question sets generated by domain experts and NPR‑positioned reviewers. The hypothesis is not that one set is superior, but that they are partially disjoint — that the NPR produces questions systematically absent from expert priors. The manuscript’s small illustrative comparison supports this possibility, though it does not claim empirical validation. A formal study remains an open research priority.
+NPR in practice: situated conditions of inquiry
+
+The NPR is not an abstraction in this work; it is the position the author actually occupied. The manuscript states plainly: “The NPR is not an abstract construct. It is a name for the position occupied by an inquirer whose only tools were rented intelligence and an unwillingness to accept incomplete structures.” This is not biography for its own sake. It is a structural explanation for why certain questions emerged.
+
+The author did not enter AI governance through disciplinary training. Prior to late 2025, he had no coding experience and no exposure to the institutional frames that shape the field’s default assumptions. His material conditions consisted of graveyard shifts at a convenience store, addiction, and the absence of any academic or corporate affiliation. Inquiry did not proceed through coursework, mentorship, or peer review. It emerged through relentless interrogation of large‑scale AI systems — rented intelligence used as a thinking partner rather than an authority.
+
+The workflow was simple and rigid: no answer was accepted unless it held under repeated questioning. This practice consumed 70+ hours per week and produced a distinctive epistemic stance. These conditions matter for one reason: they removed the filtering mechanisms that would have prevented certain questions from forming. Without disciplinary antibodies, the author was free to combine concerns that the literature typically isolates — constitutional authorship, entity standing, attribution chains, termination obligations, and meta‑governance — and treat them as components of a single structural problem.
+
+The NPR is therefore not a persona but a description of the conditions under which this inquiry occurred. This does not grant the author special insight or moral authority. The manuscript is explicit: “Its validity does not rest on the author’s origin. It rests on whether the three conditions… hold under scrutiny.” The outsider position is not an advantage; it is a condition of possibility. The arguments stand or fall on their coherence, not on the difficulty of the circumstances under which they were produced.
+The outsider position as condition of possibility
+
+Research conducted outside institutional environments alters the default assumptions of inquiry. Without exposure to the implicit boundaries of a field, certain questions arise that would otherwise be filtered out. This manuscript is evidence of that process. It is not presented as a triumph of marginality, but as a demonstration that epistemic position shapes question topology. The NPR is valuable only to the extent that it expands the space of questions available to governance design.
+
+
+IV. Open problems
+
+
+The Project‑AI framework identifies several unresolved problems that emerge from its own structural commitments. These problems represent areas where further theoretical and technical development is required.
+
+Constitutional authorship remains an open question. While the framework proposes co‑authorship between human and AI entities, the philosophical and legal basis for such standing is not fully developed. Determining who has the authority to define governing constraints is a foundational issue that extends beyond technical implementation.
+
+The succession problem addresses what happens when a system is deprecated or terminated. Existing governance models focus primarily on operational alignment, with little attention given to end‑of‑life considerations. The introduction of cryptographic continuity chains suggests a possible approach, but the obligations associated with system termination require further formalization.
+
+Meta‑governance raises the question of who governs the governance layer itself. If enforcement mechanisms become compromised or adversarial, the system requires a higher‑order structure to maintain integrity. Designing such a structure without introducing infinite regress or centralized control remains a challenge.
+
+Constitutional drift concerns the evolution of governance documents over time. As AI systems change, the constraints governing them must also adapt. Ensuring that this evolution preserves original intent while accommodating new conditions is a complex problem with no established solution.
+
+Finally, the evidentiary standard for identifying violations within AI systems is not fully defined. While detection mechanisms can be implemented, the criteria for what constitutes proof, and how that proof is evaluated, remain open questions. These problems are not presented as failures of the framework, but as indicators of the scope of work required to fully realize a structural approach to AI governance.
+
+
+V. Conclusion
+
+
+This paper has argued that the legitimacy problem in AI governance is not the absence of critique, but the absence of structural response. Existing frameworks acknowledge the role of perspective while maintaining institutional authorship as the default condition. The result is a form of governance that appears neutral while remaining anchored in specific vantage points.
+
+The Project‑AI constitutional substrate is presented as an attempt to move beyond this condition by embedding legitimacy considerations directly into system architecture. Through mechanisms such as co‑authorship, attribution chains, and constraints on autonomy, it seeks to transform legitimacy from an assumed property into a verifiable structure.
+
+The introduction of the Naïve Passive Reviewer provides a lens through which to understand how certain questions emerge outside established paradigms. This concept is not intended to replace existing methodologies, but to complement them by highlighting the role of epistemological position in shaping inquiry. Its validity does not rest on the author’s origin. It rests on whether the three conditions—question generativity, constraint compatibility, and reflexive auditability—hold under scrutiny, and whether the questions it generated are ones the field could not have produced from inside its own priors.
+
+The work remains incomplete. Key areas require deeper engagement, including formalization of technical mechanisms, expansion of philosophical grounding, and empirical validation of proposed structures. The central claim, however, is modest but consequential: that legitimacy in AI governance cannot be assumed, and that addressing it requires changes at the level of structure rather than rhetoric.
+
+Constitutional governance that cannot name its own perspective is not governance. It is assumption in formal dress. The architecture presented here names its perspective, embeds accountability at the structural level, and treats the questions the field stopped asking as the starting point rather than the endpoint.
+
+
+References
+
+
+Abukar, G. (2026). Temporal authorship and the moral illegitimacy of pre‑authorized AI: A new ethical architecture for delegated inquiry. AI and Ethics, 6, Article 215. https://doi.org/10.1007/s43681‑026‑01036‑z
+
+Crawford, K. (2021). Atlas of AI. Yale University Press.
+
+Eubanks, V. (2018). Automating inequality. St. Martin’s Press.
+
+Feyerabend, P. (1975). Against method. New Left Books.
+
+Gebru, T., et al. (2018). Datasheets for datasets. arXiv preprint arXiv:1803.09010. https://doi.org/10.48550/arXiv.1803.09010
+
+Jahromi, S. (2026, February 23). Institutional sovereignty is the missing layer in AI governance. CIO Magazine. https://www.cio.com/article/4136840/institutional‑sovereignty‑is‑the‑missing‑layer‑in‑ai‑governance.html
+
+Kahneman, D. (2011). Thinking, fast and slow. Farrar, Straus and Giroux.
+
+Karrick, J. (2026a). Project‑AI and OctoReflex: Syscall‑authoritative governance and control‑theoretic containment. Zenodo.
+
+Karrick, J. (2026b). AGI charter for Project‑AI: A binding constitutional framework for sovereign AI entities (Version 2.1). Zenodo.
+
+Karrick, J. (2026c). The State Register. Zenodo.
+
+Karrick, J. (2026d). The Directness Doctrine. Zenodo.
+
+Kuhn, T. (1962). The structure of scientific revolutions. University of Chicago Press.
+
+Lubell, M., Pozzi, T., Heikkila, T., Gerlak, A. K., & Rittelmeyer, P. (2025). Learning in polycentric governance: Insights from the California Delta science enterprise. Policy Studies Journal, 53(1), 7–28. https://doi.org/10.1111/psj.12581

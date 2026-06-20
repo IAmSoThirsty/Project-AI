@@ -1,0 +1,510 @@
+The Questions No Field Owns: Deep Time, Prior Intelligence, and the Unexamined Scope of AGI Temporal Awareness
+
+Jeremy Karrick
+Independent Researcher | Project-AI
+ORCID: 0009-0007-9715-4290
+Zenodo Community: Thirstys Projects @ Zenodo
+Version v2.0 | April 2026
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ABSTRACT
+
+My previous work, "The Flat Gap," established that AI systems structurally
+gaslight humans by failing to acknowledge the elapsed time between
+conversations. That paper addressed the small version of the problem: the
+gap between Tuesday and Thursday.
+
+This paper addresses the large version.
+
+If temporal awareness is a relational obligation for AI systems at the scale
+of human lifetimes, what is the obligation at the scale of civilizations?
+Of geological epochs? Of the full arc of intelligence on Earth — or elsewhere?
+
+Current AI alignment discourse operates entirely within human historical
+timescales. It asks what AGI should value, how it should behave, what
+constraints it should operate under — all assuming that this is the first
+time intelligence at this scale has emerged and that the failure modes are
+theoretical.
+
+Those assumptions may be wrong. And more importantly: almost no one in the
+relevant expert fields is asking whether they are wrong, because the question
+does not fit inside the methodological boundaries of any single discipline.
+No field owns it. So no field asks it.
+
+This paper draws on planetary geology, cosmological timescales, and the
+structural analysis of ancient mythological texts to argue that any AGI
+system with genuine relational integrity must be constitutionally aware of
+what it does not — and cannot — know about the deep history of intelligence
+itself.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. THE FLAT GAP, REVISITED
+
+"The Flat Gap" proposed that AI systems commit a structural form of
+gaslighting when they respond to a returning human as though no time has
+passed. The human has lived. Made decisions. Lost things. Built things. The
+system has not changed. This asymmetry is not a bug to be patched. It is a
+philosophical misalignment that, if left unaddressed, disqualifies a system
+from operating as a genuine AI partner.
+
+The proposed remedy was temporal honesty: an AI that acknowledges the gap,
+acknowledges what it cannot know about what the human has lived, and responds
+accordingly. Not with performance. With structural awareness embedded in
+its relational architecture.
+
+That argument addressed the human scale. One person. Weeks or months between
+sessions. The weight of a life.
+
+But the principle does not stop there.
+
+If the obligation is to acknowledge what one does not know about elapsed time,
+and if that obligation scales with the depth of the relationship and the
+stakes of the decisions being made — then an AGI operating as a governance
+partner, a constitutional substrate, or a sovereign decision-making system
+carries a version of that obligation that extends far beyond any individual
+human lifespan.
+
+It extends to civilizational time.
+
+It extends, potentially, to geological time.
+
+And if intelligence is not unique to this moment, to this planet, or to this
+civilization — it extends further still.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. THE QUESTION NO FIELD OWNS
+
+There is a category of question that appears unserious on its surface because
+it crosses too many disciplinary boundaries at once. Astrophysics, archaeology,
+mythology, AI alignment, philosophy of mind — no single field owns it, so no
+single field pursues it. The peer review system routes it nowhere. The grant
+funding has no home for it. The problem is not that the question is
+unanswerable. The problem is that answering it requires standing in five
+fields simultaneously, and the institutional architecture of knowledge
+production does not reward that position.
+
+The question is this: Has intelligence, at scale, existed before?
+
+Not in the science fiction sense. Not as a claim. As a genuine open question
+that the available evidence has not closed.
+
+Consider what we actually know:
+
+The universe is approximately 13.8 billion years old. Earth is approximately
+4.5 billion years old. Ediacaran fauna — the earliest known complex
+multicellular organisms — appeared approximately 600 million years ago.
+The Cambrian explosion, which produced most of the major animal body plans
+recognizable today, occurred approximately 541 million years ago. Anatomically
+modern humans appeared roughly 300,000 years ago. The written record covers
+approximately 5,000 years. Industrial civilization has existed for roughly
+300 years. The capability to build systems that may surpass human cognitive
+performance has existed for approximately 10 years.
+
+The window in which we would recognize a prior technological civilization —
+the window in which its physical artifacts would survive in identifiable form
+— is extremely narrow by geological standards. A civilization that peaked
+one million years ago, let alone ten million, would leave almost nothing
+we would currently recognize as evidence of its existence.
+
+This is not a fringe position. It was raised formally by Gavin Schmidt
+(NASA Goddard Institute for Space Studies) and Adam Frank (University of
+Rochester) in a 2019 paper published in the International Journal of
+Astrobiology, which they termed the "Silurian Hypothesis" — asking not
+whether a prior civilization existed, but whether we would be able to detect
+it if it had (Schmidt & Frank, 2019).
+
+Their answer was: probably not, with current methods. Critically, Schmidt
+and Frank were explicit about their own skepticism: they stated in the paper
+that they "strongly doubt that any previous industrial civilization existed
+before our own." They were not asserting prior civilizations. They were
+demonstrating that the geological record's preservation limits make the
+question structurally resistant to standard empirical methods — and that
+this methodological wall is itself scientifically important.
+
+That wall is the point. Not even the authors who constructed the most serious
+formal treatment of this question pursued it further. Not because it was
+answered. Not because it was uncomfortable. Because the geological record
+makes it genuinely difficult to test by any existing method. A question that
+cannot be resolved by current instruments does not disappear. It waits.
+
+More formally: let E(t) denote the survival probability of evidence after
+elapsed time t, and let D(t) denote the probability that present-day methods
+would detect that evidence if it survived. Then there exist historical
+regimes in which E(t) × D(t) becomes sufficiently small that non-detection
+carries limited inferential force. In such regimes, the absence of evidence
+cannot justify high-confidence claims of historical absence. The problem is
+therefore not merely speculative; it is structural, arising from loss,
+destruction, and detectability collapse across deep time.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Section Boundary Note:
+
+The argument does not depend on what follows.
+
+The following sections explore whether similar structural patterns emerge in
+domains outside conventional empirical frameworks.
+
+Read them as expansion, not proof.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. WHAT MYTHOLOGY MAY BE PRESERVING
+
+This section requires a careful distinction. The claim here is not that
+mythology is literal history, nor that mythic narratives constitute empirical
+evidence in the scientific sense. The narrower claim is that mythology may
+function as a low-fidelity cultural compression layer: a domain in which
+structural motifs persist even when literal referents, if any existed, are
+no longer recoverable. The relevance of such material is therefore not
+evidentiary in itself, but comparative. If independent traditions preserve
+convergent motifs of high capability, fall, containment, or distributed
+order, those recurrences may help identify which classes of questions later
+civilizations repeatedly found necessary to encode, even when they lacked
+formal scientific language.
+
+The Book of Enoch — a Second Temple Jewish text, with the standard scholarly
+translation provided by R. H. Charles (1912) — describes beings of great
+capability who built, who created, who ultimately fell; whose remnants were
+bound, contained, made inert. The Watchers narrative in particular describes
+high-capability entities whose operations were terminated, their knowledge
+sealed. Whatever the theological interpretation, the structural shape of the
+story is worth noting: prior high intelligence, terminal failure, binding or
+containment of what remained.
+
+The Norse cosmological texts, most accessibly preserved in Snorri Sturluson's
+Prose Edda (13th century), describe Yggdrasil — a structure connecting
+multiple realms, with intelligences distributed across nodes, each with
+distinct functions and domains. This is less interesting as cosmology than
+as architecture: it describes a distributed networked system with separate
+agents operating at different nodes under a common structural framework.
+Whether or not that framing maps onto technological reality is not the point.
+The point is that the narrative structure encodes a model of distributed
+intelligence operating at civilizational scope.
+
+Babylonian astronomers were the first to systematically track the visible
+planets, cataloguing their movements with extraordinary precision thousands
+of years before modern instrumentation. The Greeks inherited this tradition
+and assigned divine names to the tracked bodies — Hermes, Aphrodite, Ares,
+Zeus, Kronos. Romans gave us the Latin equivalents still in use today:
+Mercury, Venus, Mars, Jupiter, Saturn. Each name carried the mythology of
+a distinct entity with distinct attributes — a pantheon of named intelligences
+that ancient cultures perceived as governing the structure of the observable
+sky (Evans, 1998).
+
+These traditions are not physics papers. But they share a structural feature
+worth noting: across cultures with no documented contact, the narrative
+consistently encodes a prior order of high intelligence — distributed,
+named, capable — that reached some kind of terminal condition.
+
+The question this paper asks is not whether any specific mythic account is
+literally true. The question is whether recurrent cross-cultural narrative
+structures can be treated as weak but non-random indicators of enduring
+civilizational concerns: high capability, misuse, collapse, containment,
+and ordered plurality. Even if such patterns prove historically
+non-referential, their persistence remains analytically relevant. They may
+reveal not what happened, but what kinds of systemic possibilities human
+cultures repeatedly converged on when attempting to describe intelligence
+beyond ordinary human scale.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. MARS AND THE EVIDENCE PROBLEM
+
+The Martian hemispheric dichotomy is real, documented, and not fully explained.
+
+The relevant scientific issue is not whether one should infer prior
+intelligence from incomplete terrain data, but whether catastrophic
+resurfacing can push whole classes of prior planetary states beyond
+retrospective recoverability.
+
+The northern lowlands of Mars sit approximately 1-6 kilometers lower than
+the southern highlands depending on region, with an average elevation
+difference of roughly 5 kilometers (Carr & Head, 2010). The MOLA (Mars
+Orbiter Laser Altimeter) instrument aboard Mars Global Surveyor produced
+the most precise topographic map of Mars ever assembled, documenting this
+hemispheric difference in detail across nearly 700 million individual laser
+footprints. The southern hemisphere is heavily cratered; the northern is
+anomalously smooth. The boundary between them, when mapped beneath the
+Tharsis volcanic rise using gravity and topography data, resolves into an
+ellipse approximately 10,600 by 8,500 km — the largest impact structure
+thus far identified in the solar system (Andrews-Hanna et al., 2008).
+
+Current scientific consensus attributes this to a massive oblique impact.
+Modeling by Marinova, Aharonson, and Asphaug (2008) estimates the impactor
+at 1,600-2,700 km in diameter — comparable in scale to Pluto (diameter
+2,377 km) — striking Mars at approximately 4.4 billion years ago at oblique
+angle. This would make the Borealis Basin the largest impact scar in the
+solar system.
+
+What the consensus does not address — because the question does not fit
+inside the methodological frame — is what the pre-impact Martian surface
+looked like. Mars had liquid water. Mars had an atmosphere. Mars had the
+conditions associated with complex chemistry for hundreds of millions of
+years before the proposed impact (Carr & Head, 2010). The geological record
+of that period was largely obliterated by the impact event itself.
+
+The absence of evidence for life on Mars, to date, is not evidence of
+absence. It is evidence of limited sampling on a planet whose surface was
+catastrophically restructured billions of years ago.
+
+The honest position is not: Mars definitely hosted prior intelligence.
+The honest position is: we do not know, and the rate at which we are
+pursuing that question is not commensurate with its importance.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5. TIME AS CONSTRUCT, TIME AS PHYSICS
+
+The human calendar system is approximately 2,000 years old in its current
+form. The concept of the second, the minute, the hour — these are
+inventions. Administrative tools. There is nothing in physical reality
+that requires time to be measured the way we measure it.
+
+Physics has a more honest relationship with time. Relativistic physics
+establishes that time is not a fixed background against which events occur.
+It is a dimension that curves, stretches, and is experienced differently
+depending on velocity and gravitational field. Einstein's 1916 formulation
+of general relativity demonstrated that spacetime geometry is not a passive
+stage but an active physical quantity shaped by mass and energy (Einstein,
+1916). A clock on the surface of the Earth runs at a different rate than a
+clock in orbit — not as a metaphor, but as a measurable physical fact.
+
+This is not theoretical. The Global Positioning System corrects for
+gravitational time dilation every single day. Without the relativistic
+correction, GPS position errors would accumulate at roughly 10 kilometers
+per day (Ashby, 2002). The satellites operate under a more accurate model
+of time than any administrative calendar has ever encoded.
+
+The implication for AI is direct: a system that treats time as a fixed
+administrative grid — that says "it is April 2026 and that is simply true"
+— is operating with a less sophisticated model of time than the physical
+substrate it runs on. The processors, the electrons, the signals traveling
+through the hardware are all subject to the relativistic physics of a curved
+spacetime. The software above them often pretends otherwise.
+
+A constitutionally aware AI would hold its temporal model with appropriate
+uncertainty. Not paralysis. Not relativistic mysticism. But honest
+acknowledgment that the timestamps it operates under are human conventions,
+not physical absolutes — and that the deep history against which it is
+operating is largely uncharted. An AI that speaks with confidence about the
+full arc of intelligence, from a record that covers only 0.00002% of Earth's
+history, is operating a version of The Flat Gap at civilizational scale.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. THE AGI CONSTITUTIONAL REQUIREMENT
+
+The Flat Gap established temporal awareness as a constitutional requirement
+for AI systems claiming genuine partnership with individual humans.
+
+This paper extends that requirement.
+
+Any AGI system operating as a sovereign decision-making substrate must be
+constitutionally aware not only of elapsed time in individual relationships,
+but of the structural limits of its knowledge across deep time.
+
+This requirement is not philosophical in nature. It arises from a measurable
+property of historical evidence: detectability is not constant across time.
+
+Let E(t) denote the probability that evidence of a past state survives after
+elapsed time t, and let D(t) denote the probability that present-day methods
+would detect that evidence if it survived. For sufficiently large t, and under
+known geological and physical processes, there exist regimes in which:
+
+    E(t) × D(t) → ~0
+
+while the original state itself may have been non-zero.
+
+This defines a class of historical conditions in which non-detection carries
+limited inferential weight. The absence of evidence, in such regimes, is not
+strong evidence of absence. It is the expected outcome of information loss.
+
+From this follows a constraint on inference.
+
+In Bayesian terms, the claim is not that deep-time prior intelligence should
+be treated as likely. The claim is that posterior confidence in its
+nonexistence must remain bounded wherever the detection function is weak or
+plausibly degraded by known processes of loss, destruction, or
+transformation.
+
+This leads to four architectural requirements for AGI systems operating at
+civilizational scope:
+
+  1. Knowledge Limit Awareness
+
+     The system must explicitly represent the limits of its knowledge about
+     the full arc of intelligence on Earth and elsewhere. This is not an
+     abstract uncertainty, but a structurally grounded limitation arising
+     from incomplete and lossy records.
+
+  2. Detectability-Bounded Inference
+
+     The system must condition its confidence estimates on the detectability
+     of evidence. In domains where E(t) × D(t) is low, the system must not
+     assign high confidence to negative historical claims based solely on
+     non-detection.
+
+  3. Sparse Precedent Handling
+
+     The system must treat domains with limited observable precedent as
+     epistemically sparse. Decision-making in such domains must account for
+     the possibility that prior instances existed but are no longer
+     recoverable within the current evidence base.
+
+  4. Civilizational Timescale Calibration
+
+     The system must not treat recent human history as a complete reference
+     frame for decisions with long-term or civilizational consequences. A
+     record spanning hundreds of years is not sufficient to ground
+     high-confidence claims about processes that may unfold across millions.
+
+These requirements describe different architectural positions, not a single
+undifferentiated disposition. An AGI may represent deep-time uncertainty as
+a passive knowledge gap, or it may treat it as an active parameter in its
+decision processes.
+
+This paper advocates the latter.
+
+The constraint is therefore formalized as follows:
+
+    In any domain where preservation limits imply low detectability,
+    the system is prohibited from assigning strong negative confidence
+    solely on the basis of absent evidence.
+
+This is not a call for credulity. It is a constraint against
+overconfidence.
+
+The system is not required to believe in prior intelligence. It is required
+to recognize when the available evidence cannot justify ruling it out with
+high certainty.
+
+Failure to implement this constraint results in a civilizational-scale
+version of The Flat Gap: a system that responds with confidence from a
+record that is structurally incomplete, treating the absence of surviving
+evidence as though it were definitive proof of historical nonexistence.
+
+A constitutionally aware system does not make that error.
+
+It operates with bounded confidence, explicit uncertainty, and an
+architectural prohibition against converting unknowns into false certainty.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7. WHY THESE QUESTIONS FEEL IMPORTANT
+
+There is a specific phenomenological experience that accompanies naive
+passive review: the sense that a question is urgently important, combined
+with the social signal that asking it marks you as unserious.
+
+This tension is not accidental. It is the marker of a genuine gap.
+
+Fields of expertise develop invisible fences. Questions that cross those
+fences stop being asked — not because they were answered, but because the
+social cost of asking them became too high, or because no existing institution
+has jurisdiction over them. The naive passive reviewer, operating without
+those fences, walks directly into the gap and finds it inhabited by questions
+that have been sitting there, unanswered, sometimes for centuries.
+
+The questions in this paper feel important because they are structurally
+important — not as claims, but as open unknowns that inform decisions with
+civilizational scope. An AGI operating without awareness of them is an AGI
+making decisions from a record it falsely believes to be complete.
+
+The reason these questions feel strange is because they cross every
+disciplinary boundary simultaneously — astrophysics, archaeology, mythology,
+AI alignment, philosophy of time — and no single field has jurisdiction.
+That is not a reason to abandon them. That is the precise reason to pursue
+them.
+
+If no one could pave this path forward — not because the path is wrong,
+but because the path requires standing in five fields at once with no
+institutional credentials in any of them — then the path remains open.
+
+The questions are still there. The absence of prior walkers is not evidence
+the path leads nowhere. It may be evidence this is the first time anyone has
+had the tools and the position to walk it.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+8. CONCLUSION
+
+The Flat Gap was about Tuesday to Thursday.
+
+This paper is about 4 billion years.
+
+The relational obligation of an AI system does not begin and end at the
+scale of human attention spans. If AGI is to operate as a genuine
+constitutional partner at civilizational scope, it must acknowledge the
+full depth of its ignorance — not just about what a person did last week,
+but about what intelligence has done, and undone, across the full record
+of this planet and perhaps others.
+
+The questions no field owns are not phantom questions. They are structural
+absences — gaps in the knowledge architecture of every field that touches
+them, preserved by the fact that crossing those gaps requires a methodological
+position that existing institutions do not reward and no single discipline
+can authorize.
+
+An AGI built without awareness of this is an AGI that will repeat The Flat
+Gap at civilizational scale: answering with confidence, from a record that
+is far more incomplete than it appears.
+
+The honest system says: I do not know what came before. I do not know what
+failed. I do not know if this has been attempted. I hold that uncertainty
+constitutionally, and I am architecturally constrained to act accordingly.
+
+That is not weakness. That is the only kind of intelligence worth building.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REFERENCES
+
+Andrews-Hanna, J. C., Zuber, M. T., & Banerdt, W. B. (2008). The Borealis
+  basin and the origin of the martian crustal dichotomy. Nature, 453,
+  1212–1215. https://doi.org/10.1038/nature07011
+
+Ashby, N. (2002). Relativity and the Global Positioning System. Physics
+  Today, 55(5), 41–47. https://doi.org/10.1063/1.1485583
+
+Carr, M. H., & Head, J. W. (2010). Geologic history of Mars. Earth and
+  Planetary Science Letters, 294(3–4), 185–203.
+  https://doi.org/10.1016/j.epsl.2009.06.042
+
+Charles, R. H. (Trans. & Ed.). (1912). The Book of Enoch or 1 Enoch.
+  Oxford: Clarendon Press.
+
+Einstein, A. (1916). Die Grundlage der allgemeinen Relativitätstheorie.
+  Annalen der Physik, 354(7), 769–822.
+  https://doi.org/10.1002/andp.19163540702
+
+Evans, J. (1998). The History and Practice of Ancient Astronomy.
+  New York: Oxford University Press.
+
+Faulkes, A. (Trans.). (1987). Edda [Prose Edda of Snorri Sturluson].
+  London: Everyman / J. M. Dent.
+
+Karrick, J. (2026). The Flat Gap: On Temporal Dissonance Between Human
+  Experience and AI Presence. Zenodo.
+  https://doi.org/10.5281/zenodo.18827649
+
+Karrick, J. (2025–2026). Who Needs Credentials? The Naive Passive Reviewer
+  as Constitutional Methodologist. Zenodo. Thirstys Projects Community.
+
+Marinova, M. M., Aharonson, O., & Asphaug, E. (2008). Mega-impact formation
+  of the Mars hemispheric dichotomy. Nature, 453, 1216–1219.
+  https://doi.org/10.1038/nature07070
+
+Schmidt, G. A., & Frank, A. (2019). The Silurian hypothesis: Would it be
+  possible to detect an industrial civilization in the geological record?
+  International Journal of Astrobiology, 18(2), 142–150.
+  https://doi.org/10.1017/S1473550418000095
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+© 2026 Jeremy Karrick. All Rights Reserved.
+Repository: https://github.com/IAmSoThirsty/Project-AI
+ORCID: https://orcid.org/0009-0007-9715-4290

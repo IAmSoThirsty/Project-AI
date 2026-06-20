@@ -1,0 +1,25 @@
+Paper D1
+S4 Quarantine Verification: A Red-Team Harness for Namespace and LSM Isolation Claims
+Abstract
+
+We introduce a red-team benchmark harness that operationalizes quarantine claims into reproducible syscall-level tests. The harness attempts outbound networking, filesystem bypass patterns, rename-over-protected vectors, hardlink aliasing, raw sendto, AF_UNIX rendezvous, and inherited file descriptor exploitation. The suite is explicitly non-malicious and does not include exploit payloads. Results are classified as PASS, FINDING, or INFO. The harness enables regression gating in CI and ensures containment claims remain measurable.
+
+Contributions
+
+Deterministic syscall surface exerciser
+
+Containment latency validation under load
+
+Burst and oscillation stability tests
+
+CI-integrated regression enforcement
+
+Evaluation Requirements
+
+10k–100k syscall burst testing
+
+Token bucket exhaustion detection
+
+Namespace escape regression tests
+
+Memory overhead under sustained load

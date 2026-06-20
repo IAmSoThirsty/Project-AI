@@ -1,0 +1,173 @@
+{
+  "isRemote": false,
+  "systemInfo": {
+    "operatingSystem": "windows",
+    "timestamp": "2026-04-03T03:28:01.729Z",
+    "userEmail": "karrick1995@gmail.com",
+    "userName": "Jeremy Karrick"
+  },
+  "extensionLogs": [
+    "2026-04-02 21:25:08.127 [info] I0402 21:25:08.126712 15420 server.go:1235] Starting language server process with pid 15420",
+    "2026-04-02 21:25:08.128 [info] I0402 21:25:08.127302 15420 server.go:288] Setting GOMAXPROCS to 4",
+    "2026-04-02 21:25:08.145 [info] I0402 21:25:08.144343 15420 server.go:440] Language server will attempt to listen on host 127.0.0.1",
+    "2026-04-02 21:25:08.148 [info] I0402 21:25:08.146342 15420 server.go:454] Language server listening on random port at 49419 for HTTPS (gRPC)",
+    "2026-04-02 21:25:08.148 [info] I0402 21:25:08.146342 15420 server.go:461] Language server listening on random port at 49420 for HTTP",
+    "2026-04-02 21:25:08.576 [info] I0402 21:25:08.506565 15420 server.go:433] Created extension server client at port 49397",
+    "2026-04-02 21:25:09.583 [info] I0402 21:25:09.583324 15420 system_mcps.go:78] Chrome DevTools MCP URL discovered at http://127.0.0.1:49416/mcp, stopping watcher",
+    "2026-04-02 21:25:10.906 [info] I0402 21:25:10.905416 15420 googleAgent_manager.go:815] Reactive state is disabled",
+    "2026-04-02 21:25:11.074 [info] (Antigravity) 2026-04-02 21:25:11.072 [INFO]: Language server started",
+    "2026-04-02 21:25:11.139 [info] I0402 21:25:11.116732 15420 server.go:1691] initialized server successfully in 2.9894301s",
+    "2026-04-02 21:25:11.208 [info] (Antigravity) 2026-04-02 21:25:11.207 [INFO]: LS lspClient started successfully",
+    "2026-04-02 21:25:13.891 [info] I0402 21:25:13.374998 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x73de8a73845e7f0",
+    "2026-04-02 21:25:13.891 [info] I0402 21:25:13.858470 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0x699861d8de93dbbe",
+    "2026-04-02 21:25:16.371 [info] 2026/04/02 21:25:16 http: TLS handshake error from 127.0.0.1:49453: read tcp 127.0.0.1:49419->127.0.0.1:49453: wsarecv: An established connection was aborted by the software in your host machine.",
+    "2026-04-02 21:25:16.380 [info] 2026/04/02 21:25:16 http: TLS handshake error from 127.0.0.1:49454: read tcp 127.0.0.1:49419->127.0.0.1:49454: wsarecv: An established connection was aborted by the software in your host machine.",
+    "2026-04-02 21:25:16.385 [info] 2026/04/02 21:25:16 http: TLS handshake error from 127.0.0.1:49455: read tcp 127.0.0.1:49419->127.0.0.1:49455: wsarecv: An established connection was aborted by the software in your host machine.",
+    "2026-04-02 21:25:16.389 [info] 2026/04/02 21:25:16 http: TLS handshake error from 127.0.0.1:49456: read tcp 127.0.0.1:49419->127.0.0.1:49456: wsarecv: An established connection was aborted by the software in your host machine.",
+    "2026-04-02 21:25:16.601 [info] E0402 21:25:16.599819 15420 interceptor.go:74] /exa.language_server_pb.LanguageServerService/RefreshMcpServers (unknown): loading already in progress",
+    "2026-04-02 21:25:33.316 [info] I0402 21:25:33.316017 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9",
+    "2026-04-02 21:25:40.010 [info] E0402 21:25:40.008985 15420 interceptor.go:74] /exa.language_server_pb.LanguageServerService/StreamAgentStateUpdates (unknown): agent state for conversation 82b41879-4be3-45b5-bc90-ee7c92d54523 not found",
+    "2026-04-02 21:25:41.506 [info] I0402 21:25:41.505743 15420 planner_generator.go:283] Requesting planner with 6 chat messages at model retry attempt 1 and API retry attempt 1",
+    "2026-04-02 21:25:44.054 [info] I0402 21:25:44.052728 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x1ac4702fea4d3023",
+    "2026-04-02 21:25:55.681 [info] E0402 21:25:55.680924 15420 log.go:398] error executing googleAgent step: CORTEX_STEP_TYPE_RUN_COMMAND: failed to set up sandbox: sandboxing is not supported on Windows",
+    "2026-04-02 21:25:55.723 [info] I0402 21:25:55.721447 15420 planner_generator.go:283] Requesting planner with 8 chat messages at model retry attempt 1 and API retry attempt 1",
+    "2026-04-02 21:25:56.678 [info] I0402 21:25:56.677676 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9",
+    "2026-04-02 21:25:56.902 [info] I0402 21:25:56.901457 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xdb6d94c4c53d80d",
+    "2026-04-02 21:25:57.545 [info] I0402 21:25:57.544982 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xa7eb699350c55c93",
+    "2026-04-02 21:25:59.739 [info] I0402 21:25:59.739075 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9",
+    "2026-04-02 21:26:08.197 [info] I0402 21:26:08.195982 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9",
+    "2026-04-02 21:26:11.120 [info] I0402 21:26:11.120021 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9",
+    "2026-04-02 21:26:35.079 [info] I0402 21:26:35.079080 15420 planner_generator.go:283] Requesting planner with 10 chat messages at model retry attempt 1 and API retry attempt 1",
+    "2026-04-02 21:26:37.522 [info] I0402 21:26:37.521588 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x3bc69e3819a59655",
+    "2026-04-02 21:27:22.071 [info] I0402 21:27:22.069968 15420 planner_generator.go:283] Requesting planner with 12 chat messages at model retry attempt 1 and API retry attempt 1",
+    "2026-04-02 21:27:23.512 [info] I0402 21:27:23.511881 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xab16beb35cc4cbe1"
+  ],
+  "rendererLogs": {
+    "ls-main": [],
+    "artifacts": [],
+    "antigravity-interactive-editor": [
+      "2026-04-02 21:24:16.668 [info] Initialized with 0 existing HTML files",
+      "2026-04-02 21:24:16.668 [info] Watching for HTML files in: file:///c%3A/Users/Quencher/.gemini/antigravity/html_artifacts"
+    ],
+    "rendererPerf": [
+      "2026-04-02 21:24:17.737 [info] Render performance baseline is 22ms",
+      "2026-04-02 21:25:09.734 [warning] Renderer reported VERY LONG TASK (243ms), starting profiling session 'c29c7b9e-eece-4442-aed7-cb715080fe51'"
+    ]
+  },
+  "mainThreadLogs": {
+    "cloudcode": [
+      "2026-04-02 21:24:11.291 [info] [CloudCode] POST v1internal:loadCodeAssist traceId: e23cc5191b371a2a",
+      "2026-04-02 21:24:11.294 [info] [CloudCode] POST v1internal:loadCodeAssist traceId: 48f2df4d76bfeaf6",
+      "2026-04-02 21:24:12.022 [info] [CloudCode] POST v1internal:fetchAvailableModels traceId: 9e006e3e25c8422a",
+      "2026-04-02 21:24:12.033 [info] [CloudCode] POST v1internal:fetchAvailableModels traceId: 5493c19d5e570b79"
+    ],
+    "auth": [
+      "2026-04-02 21:24:12.026 [info] [Auth] AntigravityAuthMainService initialized"
+    ]
+  },
+  "languageServerLogs": {
+    "$typeName": "exa.codeium_common_pb.LanguageServerDiagnostics",
+    "logs": [
+      "I0402 21:25:08.126712 15420 server.go:1235] Starting language server process with pid 15420\n",
+      "I0402 21:25:08.127302 15420 server.go:288] Setting GOMAXPROCS to 4\n",
+      "I0402 21:25:08.144343 15420 server.go:440] Language server will attempt to listen on host 127.0.0.1\n",
+      "I0402 21:25:08.146342 15420 server.go:454] Language server listening on random port at 49419 for HTTPS (gRPC)\n",
+      "I0402 21:25:08.146342 15420 server.go:461] Language server listening on random port at 49420 for HTTP\n",
+      "I0402 21:25:08.506565 15420 server.go:433] Created extension server client at port 49397\n",
+      "I0402 21:25:09.583324 15420 system_mcps.go:78] Chrome DevTools MCP URL discovered at http://127.0.0.1:49416/mcp, stopping watcher\n",
+      "I0402 21:25:10.905416 15420 googleAgent_manager.go:815] Reactive state is disabled\n",
+      "I0402 21:25:11.116732 15420 server.go:1691] initialized server successfully in 2.9894301s\n",
+      "I0402 21:25:13.374998 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x73de8a73845e7f0\n",
+      "I0402 21:25:13.858470 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0x699861d8de93dbbe\n",
+      "E0402 21:25:16.599819 15420 interceptor.go:74] /exa.language_server_pb.LanguageServerService/RefreshMcpServers (unknown): loading already in progress\n",
+      "I0402 21:25:33.316017 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9\n",
+      "E0402 21:25:40.008985 15420 interceptor.go:74] /exa.language_server_pb.LanguageServerService/StreamAgentStateUpdates (unknown): agent state for conversation 82b41879-4be3-45b5-bc90-ee7c92d54523 not found\n",
+      "I0402 21:25:41.505743 15420 planner_generator.go:283] Requesting planner with 6 chat messages at model retry attempt 1 and API retry attempt 1\n",
+      "I0402 21:25:44.052728 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x1ac4702fea4d3023\n",
+      "E0402 21:25:55.680924 15420 log.go:398] error executing googleAgent step: CORTEX_STEP_TYPE_RUN_COMMAND: failed to set up sandbox: sandboxing is not supported on Windows\n",
+      "I0402 21:25:55.721447 15420 planner_generator.go:283] Requesting planner with 8 chat messages at model retry attempt 1 and API retry attempt 1\n",
+      "I0402 21:25:56.677676 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9\n",
+      "I0402 21:25:56.901457 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xdb6d94c4c53d80d\n",
+      "I0402 21:25:57.544982 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xa7eb699350c55c93\n",
+      "I0402 21:25:59.739075 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9\n",
+      "I0402 21:26:08.195982 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9\n",
+      "I0402 21:26:11.120021 15420 client.go:56] CEL: Sending error - type=MCP_SERVER_INIT_ERROR ideName=antigravity appName=antigravity_desktop version=1.21.9\n",
+      "I0402 21:26:35.079080 15420 planner_generator.go:283] Requesting planner with 10 chat messages at model retry attempt 1 and API retry attempt 1\n",
+      "I0402 21:26:37.521588 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x3bc69e3819a59655\n",
+      "I0402 21:27:22.069968 15420 planner_generator.go:283] Requesting planner with 12 chat messages at model retry attempt 1 and API retry attempt 1\n",
+      "I0402 21:27:23.511881 15420 http_helpers.go:123] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0xab16beb35cc4cbe1\n"
+    ]
+  },
+  "recentTrajectories": [
+    {
+      "googleAgentId": "9582b431-99ed-4418-a133-5707cc76addc",
+      "trajectoryId": "da63bc21-97b1-4e6e-8290-871fc86d4696",
+      "summary": "Restoring Terminal Prompt Visibility",
+      "lastStepIndex": 15,
+      "lastModifiedTime": "2026-04-03T03:27:36.960Z"
+    },
+    {
+      "googleAgentId": "1a2d0d22-8963-41bf-acff-2a77c677c9f3",
+      "trajectoryId": "ecc8ab93-2b63-4811-85a7-8e1f286f7136",
+      "summary": "Fixing MCP Configuration Errors",
+      "lastStepIndex": 12,
+      "lastModifiedTime": "2026-04-02T18:52:42.209Z"
+    },
+    {
+      "googleAgentId": "055db70d-d69d-4b82-b1b9-f1fc90ada004",
+      "trajectoryId": "360d6296-d528-44d6-9f2c-070e6930276f",
+      "summary": "Configuring WSL Environment Path",
+      "lastStepIndex": 429,
+      "lastModifiedTime": "2026-04-02T18:48:23.181Z"
+    },
+    {
+      "googleAgentId": "46704d4a-9591-47ec-b07e-26805383cc7b",
+      "trajectoryId": "1ee91d9e-3c0d-4421-a3be-9b6e84c509bf",
+      "summary": "Updating Local Installation Path",
+      "lastStepIndex": 114,
+      "lastModifiedTime": "2026-04-02T16:22:53.951Z"
+    },
+    {
+      "googleAgentId": "017de60e-74a9-4046-8aa6-2ee0f0f02090",
+      "trajectoryId": "03082172-e4b5-4721-bc67-ca89360c4aff",
+      "summary": "Stabilizing Sovereign Governance Substrate",
+      "lastStepIndex": 13,
+      "lastModifiedTime": "2026-04-01T19:51:06.419Z"
+    },
+    {
+      "googleAgentId": "69e7686b-7877-4048-ae2d-fbb9c5777620",
+      "trajectoryId": "de488635-7df6-457e-a426-ffd424fa1ebe",
+      "summary": "Stabilizing Sovereign Governance Substrate",
+      "lastStepIndex": 15,
+      "lastModifiedTime": "2026-04-01T19:23:15.993Z"
+    },
+    {
+      "googleAgentId": "5fb28609-8a9b-4799-9c02-3090e81774d3",
+      "trajectoryId": "8cd4706e-51b1-4a56-8a73-7f26c4b23d28",
+      "summary": "Executing Sovereign Governance Restoration",
+      "lastStepIndex": 13,
+      "lastModifiedTime": "2026-04-01T18:09:58.285Z"
+    },
+    {
+      "googleAgentId": "86d01757-509d-4d36-8750-0c6cc7e255b8",
+      "trajectoryId": "b53a3492-a5b5-487a-9f81-d68513cd0513",
+      "summary": "Diagnosing Workflow Terminal Issues",
+      "lastStepIndex": 119,
+      "lastModifiedTime": "2026-04-01T16:49:14.613Z"
+    },
+    {
+      "googleAgentId": "13007922-579c-473d-9983-1bb235c64c62",
+      "trajectoryId": "aba49714-dfdb-4286-8c24-d46ea9793be4",
+      "summary": "Diagnosing Workflow Terminal Issues",
+      "lastStepIndex": 64,
+      "lastModifiedTime": "2026-04-01T15:04:18.823Z"
+    },
+    {
+      "googleAgentId": "8f400f22-0a9e-49e9-98eb-28df1e4c0921",
+      "trajectoryId": "92516ed5-99b0-40b8-94f7-9f51e175d0ab",
+      "summary": "Finalizing Sovereign Governance Integration",
+      "lastStepIndex": 513,
+      "lastModifiedTime": "2026-04-01T06:20:32.848Z"
+    }
+  ]
+}

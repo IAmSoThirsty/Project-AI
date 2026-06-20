@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project-AI — The Sovereign Substrate</title>
+  <meta name="description" content="Project-AI — reflexive, constitutionally governed AI substrate. Governance before execution. Proof before trust." />
+  <meta name="theme-color" content="#06070b" />
+  <meta property="og:title" content="Project-AI — The Sovereign Substrate" />
+  <meta property="og:description" content="A constitutionally governed AI substrate built for proof, sovereignty, and forced compliance." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root {
+      --bg: #05070c;
+      --panel: rgba(12, 16, 27, 0.78);
+      --panel-strong: rgba(15, 20, 35, 0.94);
+      --text: #eef2ff;
+      --muted: #a9b3cf;
+      --line: rgba(191, 207, 255, 0.14);
+      --accent: #7dd3fc;
+      --accent-2: #c084fc;
+      --accent-3: #f59e0b;
+      --danger: #fb7185;
+      --success: #34d399;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --radius: 24px;
+      --radius-sm: 18px;
+      --max: 1280px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(125, 211, 252, 0.17), transparent 26%),
+        radial-gradient(circle at 85% 15%, rgba(192, 132, 252, 0.18), transparent 24%),
+        radial-gradient(circle at 50% 55%, rgba(245, 158, 11, 0.09), transparent 22%),
+        linear-gradient(180deg, #03050a 0%, #05070c 25%, #060913 55%, #03050a 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at center, black 30%, transparent 92%);
+      opacity: 0.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .wrap { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(18px);
+      background: rgba(5, 7, 12, 0.6);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 78px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, rgba(125,211,252,0.35), rgba(192,132,252,0.25)),
+        rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 10px 25px rgba(0,0,0,0.35);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 10px;
+      transform: rotate(45deg);
+    }
+
+    .brand-mark::after {
+      inset: 14px;
+      border-color: rgba(125,211,252,0.35);
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--muted);
+      font-size: 0.95rem;
+      transition: color 180ms ease;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, rgba(125,211,252,0.24), rgba(192,132,252,0.22) 50%, rgba(245,158,11,0.2));
+      border-color: rgba(125,211,252,0.24);
+      box-shadow: 0 14px 38px rgba(29, 78, 216, 0.18), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .button.ghost {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .hero {
+      position: relative;
+      padding: 86px 0 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .eyebrow .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--success), var(--accent));
+      box-shadow: 0 0 18px rgba(52, 211, 153, 0.5);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
+      gap: 30px;
+      align-items: stretch;
+      margin-top: 26px;
+    }
+
+    h1 {
+      margin: 16px 0 20px;
+      font-size: clamp(2.7rem, 6vw, 6rem);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+      max-width: 12ch;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 0%, #c7d2fe 30%, #7dd3fc 60%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      color: var(--muted);
+      font-size: 1.12rem;
+      line-height: 1.75;
+      max-width: 62ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.04em;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .hero-panel,
+    .panel,
+    .pillar,
+    .proof-card,
+    .quote,
+    .path,
+    .contact-card,
+    .publication,
+    .signal {
+      background: linear-gradient(180deg, rgba(14, 19, 32, 0.92), rgba(8, 12, 22, 0.85));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .hero-panel {
+      overflow: hidden;
+      position: relative;
+      min-height: 100%;
+      padding: 24px;
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 70% 18%, rgba(125,211,252,0.17), transparent 25%),
+        radial-gradient(circle at 26% 75%, rgba(192,132,252,0.18), transparent 24%);
+      pointer-events: none;
+    }
+
+    .terminal {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      background: rgba(2, 5, 11, 0.95);
+      border: 1px solid rgba(125,211,252,0.18);
+      padding: 20px;
+      min-height: 220px;
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      color: #b7f0ff;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03), 0 24px 40px rgba(0,0,0,0.4);
+    }
+
+    .terminal::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(125,211,252,0.05), transparent 12%, transparent 88%, rgba(192,132,252,0.05));
+      pointer-events: none;
+    }
+
+    .terminal .prompt { color: #f8b4d9; }
+    .terminal .ok { color: #86efac; }
+    .terminal .warn { color: #fcd34d; }
+    .terminal .dim { color: #7c8aa8; }
+
+    section {
+      padding: 34px 0;
+      position: relative;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(2rem, 3.6vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .section-head p {
+      max-width: 62ch;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .manifesto {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+    }
+
+    .panel { padding: 28px; }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .signal {
+      padding: 18px;
+      border-radius: 20px;
+    }
+
+    .signal small {
+      color: var(--muted);
+      display: block;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .signal strong {
+      font-size: 1.2rem;
+      line-height: 1.3;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .list {
+      display: grid;
+      gap: 14px;
+      margin: 18px 0 0;
+    }
+
+    .list-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .list-item:first-child { border-top: 0; padding-top: 0; }
+
+    .icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .pillar {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      min-height: 280px;
+    }
+
+    .pillar::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -30% auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,255,255,0.09), transparent 60%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .pillar .index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    .pillar h3 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+    }
+
+    .pillar p,
+    .panel p,
+    .publication p,
+    .quote p,
+    .path p,
+    .contact-card p {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stack-layer {
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stack-layer::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+
+    .stack-layer strong { display: block; margin-bottom: 8px; }
+    .stack-layer span { color: var(--muted); line-height: 1.6; }
+
+    .quote {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote strong {
+      display: block;
+      font-size: clamp(1.6rem, 3vw, 2.7rem);
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      margin-bottom: 14px;
+    }
+
+    .proof-grid,
+    .publications,
+    .paths,
+    .contact-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .proof-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .publications { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .contact-grid { grid-template-columns: 1.1fr 0.9fr; }
+
+    .proof-card,
+    .publication,
+    .path,
+    .contact-card {
+      padding: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+
+    .proof-card h3,
+    .publication h3,
+    .path h3,
+    .contact-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+
+    .publication .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .path ul,
+    .contact-card ul {
+      margin: 16px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .cta {
+      padding: 34px 0 96px;
+    }
+
+    .cta-shell {
+      padding: 30px;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at top left, rgba(125,211,252,0.14), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(245,158,11,0.12), transparent 24%),
+        linear-gradient(180deg, rgba(14, 19, 32, 0.96), rgba(8, 12, 22, 0.92));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .foot {
+      padding: 0 0 34px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .foot-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ambient-line {
+      position: absolute;
+      inset: 40px auto auto 50%;
+      width: 1px;
+      height: 340px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(125,211,252,0.25), transparent 80%);
+      pointer-events: none;
+      filter: blur(0.2px);
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .manifesto,
+      .architecture,
+      .contact-grid,
+      .cta-grid,
+      .proof-grid,
+      .publications,
+      .paths,
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .topbar-inner { min-height: 72px; }
+      nav { display: none; }
+    }
+
+    @media (max-width: 700px) {
+      .hero { padding-top: 56px; }
+      .topbar-inner { gap: 12px; }
+      .brand span:last-child { display: none; }
+      .stat-row,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+      .button { width: 100%; }
+      .hero-actions { flex-direction: column; }
+      .panel,
+      .hero-panel,
+      .pillar,
+      .proof-card,
+      .publication,
+      .path,
+      .contact-card,
+      .quote,
+      .signal { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#top" aria-label="Project-AI home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>PROJECT-AI / IAmSoThirsty</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="#doctrine">Doctrine</a>
+        <a href="#triumvirate">Triumvirate</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#proof">Proof</a>
+        <a href="#publications">Publications</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="button ghost" href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noreferrer">View Repository</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="ambient-line" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div class="reveal in">
+          <div class="eyebrow"><span class="dot"></span> Constitution before capability. Proof before trust.</div>
+          <h1><span class="gradient-text">Governance is not an overlay.</span><br />It is the execution path.</h1>
+          <p class="hero-copy">
+            Project-AI is presented here as a sovereign-grade AI substrate: constitutionally governed, cryptographically enforced,
+            and architected so invalid action is not merely discouraged, but structurally unreachable.
+            This site is designed to feel less like a brochure and more like entering a controlled system boundary.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#proof">Enter the proof surface</a>
+            <a class="button ghost" href="#publications">Read the publication layer</a>
+          </div>
+          <div class="stat-row" aria-label="Project signals">
+            <div class="stat">
+              <strong>2,019</strong>
+              <span>Commits signaling sustained repository depth and execution cadence.</span>
+            </div>
+            <div class="stat">
+              <strong>40+</strong>
+              <span>CI and security workflows surfaced as visible engineering pressure.</span>
+            </div>
+            <div class="stat">
+              <strong>3</strong>
+              <span>Triumvirate governance pillars structuring safety, defense, and arbitration.</span>
+            </div>
+            <div class="stat">
+              <strong>7</strong>
+              <span>Iron Path promotion stages turning approval into a hard precondition.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-panel reveal" aria-label="System excerpt">
+          <div class="badge">Live posture language</div>
+          <div class="terminal" role="img" aria-label="Illustrative terminal showing governance-first execution">
+<span class="prompt">$</span> project-ai verify --path /execution/request
+<span class="dim">Ingress detected …</span>
+<span class="ok">[PASS]</span> identity attested
+<span class="ok">[PASS]</span> policy surface loaded
+<span class="ok">[PASS]</span> constitutional invariants compiled
+<span class="ok">[PASS]</span> shadow simulation converged
+<span class="warn">[HOLD]</span> non-compliant branch pruned before execution
+<span class="ok">[PASS]</span> iron path promotion approved
+<span class="ok">[PASS]</span> immutable audit block anchored
+
+<span class="dim">Result:</span> Action valid because governance preconditions were satisfied.
+          </div>
+          <div class="mini-grid" style="margin-top:18px;">
+            <div class="signal">
+              <small>Experience goal</small>
+              <strong>A site that feels dangerous to underestimate.</strong>
+              <span>Controlled, luxurious, and severe without becoming noisy.</span>
+            </div>
+            <div class="signal">
+              <small>Implementation goal</small>
+              <strong>Static-first and Namecheap-safe.</strong>
+              <span>No build dependency required for the flagship page.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="doctrine">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Doctrine</div>
+            <h2>The site should make visitors feel the constraint model.</h2>
+          </div>
+          <p>
+            The point is not to look “futuristic.” The point is to make the audience feel that they have crossed from marketing into a governed perimeter.
+            Every section should reinforce a single thesis: action becomes legitimate only after governance makes it reachable.
+          </p>
+        </div>
+        <div class="manifesto">
+          <article class="panel reveal">
+            <div class="badge">Core positioning</div>
+            <div class="list">
+              <div class="list-item">
+                <div class="icon">01</div>
+                <div>
+                  <strong>Governance before execution</strong>
+                  <p>Lead with invalid-state exclusion, not “responsible AI” platitudes. The copy should frame governance as a structural property of execution.</p>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="icon">02</div>
+                <div>
+                  <strong>Proof over promise</strong>
+                  <p>Every major claim should terminate in an inspectable proof surface: architecture, workflows, repository, publications, or audit language.</p>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="icon">03</div>
+                <div>
+                  <strong>Sovereignty with visible enforcement</strong>
+                  <p>Frame privacy, autonomy, and operator accountability as constrained system behavior, not a policy page tucked into a footer.</p>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="icon">04</div>
+                <div>
+                  <strong>No cheap sci-fi</strong>
+                  <p>Use precision, tension, and luxury. The design should feel engineered, not gamified.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <aside class="quote reveal">
+            <div class="badge">Hero line options</div>
+            <strong>“If it can run, it has already passed governance. If it has not passed governance, it cannot execute.”</strong>
+            <p>
+              That sentence is the emotional center of the entire experience. It should appear in large type, recur through proof surfaces,
+              and quietly dominate how the user interprets every other claim on the site.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="triumvirate">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Triumvirate</div>
+            <h2>Three pillars. No silent failure.</h2>
+          </div>
+          <p>
+            The governance layer deserves its own dramatic section, not a buried feature tile. Each pillar should read like a sovereign office,
+            not a product feature.
+          </p>
+        </div>
+        <div class="pillars">
+          <article class="pillar reveal">
+            <span class="index">I</span>
+            <h3>Galahad</h3>
+            <p>
+              Ethics and safety under hard constraint. Not post-hoc moderation. Not vibes. The role is to bound system behavior before decision pathways become real.
+            </p>
+            <div class="meta"><span class="badge">Ethics / Safety</span></div>
+          </article>
+          <article class="pillar reveal">
+            <span class="index">II</span>
+            <h3>Cerberus</h3>
+            <p>
+              Threat defense that assumes hostility, manipulation, and adversarial pressure. This should visually read as the perimeter hardening layer.
+            </p>
+            <div class="meta"><span class="badge">Threat Defense</span></div>
+          </article>
+          <article class="pillar reveal">
+            <span class="index">III</span>
+            <h3>Codex Deus</h3>
+            <p>
+              Arbitration, equilibrium, and authoritative policy resolution. This is where conflict becomes lawful outcome instead of undefined behavior.
+            </p>
+            <div class="meta"><span class="badge">Arbitration / Judge</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Architecture</div>
+            <h2>The structure needs to feel inevitable.</h2>
+          </div>
+          <p>
+            This section exists to shut down the assumption that the project is concept art. The visual system should show layered inevitability:
+            doctrine, simulation, verification, promotion, audit.
+          </p>
+        </div>
+        <div class="architecture">
+          <article class="panel reveal">
+            <div class="badge">Layered reveal</div>
+            <div class="stack">
+              <div class="stack-layer">
+                <strong>Constitutional boundary</strong>
+                <span>Human-legible law, obligations, and invariants defining what kinds of action are even eligible to exist.</span>
+              </div>
+              <div class="stack-layer">
+                <strong>Shadow evaluation</strong>
+                <span>Prospective branches modeled before promotion so unsafe or invalid state transitions die before becoming execution.</span>
+              </div>
+              <div class="stack-layer">
+                <strong>Iron Path promotion</strong>
+                <span>Promotion as a cryptographic and procedural ladder, not a loose runtime permission check.</span>
+              </div>
+              <div class="stack-layer">
+                <strong>Immutable audit substrate</strong>
+                <span>Verifiable logs, signatures, and anchored history turning architecture claims into evidence surfaces.</span>
+              </div>
+            </div>
+          </article>
+          <aside class="panel reveal">
+            <div class="badge">UX translation</div>
+            <p>
+              On the finished site, this should become an animated scroll narrative: a request enters, hits governance, is simulated, either dies or survives,
+              then is promoted and anchored. The animation should be restrained, severe, and expensive-looking.
+            </p>
+            <div class="mini-grid">
+              <div class="signal">
+                <small>Interaction</small>
+                <strong>Scroll-bound path animation</strong>
+                <span>Thin vector lines, pulse nodes, controlled state transitions.</span>
+              </div>
+              <div class="signal">
+                <small>Visual tone</small>
+                <strong>Luxury security console</strong>
+                <span>Black glass, subtle iridescence, steel spacing, no visual clutter.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Proof surface</div>
+            <h2>Every big claim needs a visible receipt.</h2>
+          </div>
+          <p>
+            Visitors should be able to move from thesis to evidence without losing emotional momentum. That means three parallel surfaces:
+            code, architecture, and publications.
+          </p>
+        </div>
+        <div class="proof-grid">
+          <article class="proof-card reveal">
+            <div class="badge">Code</div>
+            <h3>Repository depth</h3>
+            <p>
+              Showcase the repo as a living system surface: commit depth, workflow density, monorepo structure, and direct paths into governance, cognition, kernel, and API layers.
+            </p>
+          </article>
+          <article class="proof-card reveal">
+            <div class="badge">Mechanism</div>
+            <h3>Architecture receipts</h3>
+            <p>
+              Use diagrams and concise technical copy to show the Triumvirate, Sovereign Runtime, Iron Path, and invariant enforcement without drowning the reader in raw internals.
+            </p>
+          </article>
+          <article class="proof-card reveal">
+            <div class="badge">Publication</div>
+            <h3>DOI-backed reasoning layer</h3>
+            <p>
+              Present Zenodo as the formal paper trail: the conceptual and constitutional spine behind the codebase, linked as an archive of published receipts.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="publications">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Publication layer</div>
+            <h2>Zenodo should feel like the vault, not a sidebar.</h2>
+          </div>
+          <p>
+            This site should reserve a dedicated band for papers, notes, and constitutional work. The objective is to visually communicate that the code and the doctrine are moving together.
+          </p>
+        </div>
+        <div class="publications">
+          <article class="publication reveal">
+            <div class="badge">Flagship paper</div>
+            <h3>Constitutional frameworks</h3>
+            <p>
+              Lead with the most system-defining publication. Large typography, one devastating summary sentence, and a direct DOI-style action button.
+            </p>
+            <div class="meta"><span>Use as featured card</span><span>High-contrast callout</span></div>
+          </article>
+          <article class="publication reveal">
+            <div class="badge">Technical note</div>
+            <h3>Kernel / enforcement research</h3>
+            <p>
+              Present lower-level work as the evidence that enforcement is implemented, not imagined. This is where serious readers start to lean in.</p>
+            <div class="meta"><span>Deep technical lane</span><span>Supports credibility</span></div>
+          </article>
+          <article class="publication reveal">
+            <div class="badge">Archive lane</div>
+            <h3>Explore all records</h3>
+            <p>
+              Give the publication archive a clean, severe interface with tag filters and chronology so the site never feels thinner than the underlying body of work.</p>
+            <div class="meta"><span>Chronology</span><span>Tags</span><span>Search</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Site map</div>
+            <h2>This should ship as a multi-surface experience.</h2>
+          </div>
+          <p>
+            The flagship page does the emotional and strategic work. The supporting pages absorb depth without ruining the main page’s force.
+          </p>
+        </div>
+        <div class="paths">
+          <article class="path reveal">
+            <div class="badge">Page I</div>
+            <h3>Home / Sovereign Thesis</h3>
+            <p>The cinematic front door: doctrine, pillars, architecture strip, proof surfaces, and controlled calls to action.</p>
+            <ul>
+              <li>Hero manifesto</li>
+              <li>Triumvirate section</li>
+              <li>Architecture scroll story</li>
+              <li>Publications teaser</li>
+            </ul>
+          </article>
+          <article class="path reveal">
+            <div class="badge">Page II</div>
+            <h3>Architecture / Systems</h3>
+            <p>The deep technical page for serious readers, operators, and institutional reviewers.</p>
+            <ul>
+              <li>Layered system map</li>
+              <li>Governance path diagrams</li>
+              <li>Kernel / runtime / audit surfaces</li>
+              <li>Selected code receipts</li>
+            </ul>
+          </article>
+          <article class="path reveal">
+            <div class="badge">Page III</div>
+            <h3>Papers / Records</h3>
+            <p>The formal archive layer translating Zenodo into a compelling browsing surface.</p>
+            <ul>
+              <li>Featured publications</li>
+              <li>Filter by theme</li>
+              <li>Chronology view</li>
+              <li>DOI-driven cards</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap contact-grid">
+        <article class="contact-card reveal">
+          <div class="badge">Deployment reality</div>
+          <h3>Namecheap-safe by default</h3>
+          <p>
+            This concept is intentionally shipped as a self-contained static flagship page, which makes it deployable on standard Namecheap hosting without a Node runtime.
+            A later phase can expand into a fuller site or a Node-backed front end if needed.
+          </p>
+          <ul>
+            <li>No mandatory build pipeline for the flagship page</li>
+            <li>Can live as <code>index.html</code> on shared hosting</li>
+            <li>Easy for an AI browser agent to generate, inspect, and revise</li>
+            <li>Strong foundation for a later multi-page extension</li>
+          </ul>
+        </article>
+        <aside class="contact-card reveal">
+          <div class="badge">Operator handoff</div>
+          <h3>What the implementing agent should receive</h3>
+          <p>
+            Give the implementing agent the visual thesis, the required sections, the tone constraints, and the non-negotiable technical constraint: static-first, elegant, and severe.
+          </p>
+          <div class="hero-actions" style="margin-top: 18px;">
+            <a class="button primary" href="PERPLEXITY_COMET_PROMPT.md">Open build prompt</a>
+            <a class="button ghost" href="README_DEPLOY.md">Open deploy notes</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap cta-shell reveal">
+        <div class="cta-grid">
+          <div>
+            <div class="eyebrow">Final impression</div>
+            <h2 style="margin:14px 0 10px; font-size:clamp(2rem,4vw,3.6rem); letter-spacing:-0.05em;">The viewer should leave with one question:</h2>
+            <p style="margin:0; color:var(--muted); font-size:1.08rem; line-height:1.8; max-width:60ch;">
+              “Why does this feel more rigorous than what institutions with orders of magnitude more money are showing?”
+            </p>
+          </div>
+          <div>
+            <a class="button primary" href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noreferrer">Inspect the codebase</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>Project-AI website concept — static flagship page designed for Namecheap compatibility.</span>
+      <span>Built to extend into architecture, papers, and repository proof surfaces.</span>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) entry.target.classList.add('in');
+      }
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach((el, index) => {
+      if (!el.classList.contains('in')) {
+        el.style.transitionDelay = `${Math.min(index * 45, 220)}ms`;
+      }
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

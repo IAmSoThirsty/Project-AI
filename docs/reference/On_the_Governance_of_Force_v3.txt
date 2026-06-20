@@ -1,0 +1,867 @@
+Governing Force in AGI: Architectural Constraints for Bounded Defensive Capability
+
+Jeremy K. | Project-AI | Zenodo Preprint Series
+Salt Lake City, Utah | 2026
+
+────────────────────────────────────────────────────────────────────────────────
+
+ABSTRACT
+
+The prevailing discourse surrounding artificial intelligence safety assumes that harm
+can be mitigated through restriction or avoidance of dangerous concepts—particularly
+violence. This paper challenges that assumption as structurally insufficient. Human
+civilization is adversarial by nature. Any sufficiently capable intelligence deployed
+into it will encounter coercion, aggression, and conflict regardless of whether it
+was designed to understand them.
+
+To deny an AGI the capacity to reason about force does not eliminate risk—it removes
+the system's ability to respond appropriately when confronted with it. Conversely,
+unrestricted capability creates its own failure modes. This paper proposes a third
+path: a governance-first model in which AGI systems possess full situational awareness
+while being bound by structural constraints—not ethical guidelines—governing when and
+how force may be applied.
+
+The core contributions are: (1) a critique of instruction-based and value-alignment
+approaches as insufficient for force governance, (2) a graduated response architecture
+with cryptographically-enforced authority tokens, (3) an explicit authority chain
+specification separating token issuance from system execution, and (4) an enforcement
+layer architecture distinct from the reasoning layer, with honest treatment of its
+limits.
+
+Safety is not the absence of force. It is the enforced precision of its use.
+This reframing shifts the question from whether an AGI can act to what conditions
+structurally permit it to—and how those conditions are guaranteed against circumvention,
+drift, and adversarial pressure.
+
+────────────────────────────────────────────────────────────────────────────────
+
+1. INTRODUCTION
+
+The problem this paper addresses is not hypothetical. Autonomous systems are already
+deployed in environments where force-adjacent decisions occur: security robots, border
+infrastructure, financial systems capable of cascading economic damage, and emergency
+response coordination. The question of how these systems should be governed when
+confronted with violence, coercion, or imminent harm is not a future design problem.
+It is a current one.
+
+Existing approaches fall into two broad categories. The first—capability suppression—
+attempts to prevent harm by restricting the system's knowledge of or ability to engage
+with violence. The second—value alignment—attempts to instill ethical dispositions
+through training, constitutional rules, or RLHF-based behavioral conditioning. Neither
+is sufficient for the problem domain this paper addresses. Capability suppression
+creates brittle systems exploitable through adversarial blind spots. Value alignment
+produces dispositions that are gameable through prompt manipulation, context shifting,
+and emergent routing behaviors.
+
+This paper proposes structural governance: constraints implemented at the execution
+layer, below the reasoning layer, such that the system cannot reason around them
+because reasoning never reaches them.
+
+1.1 Contributions
+
+This paper makes four concrete contributions:
+
+  C1 — Structural Enforcement Over Instructional Rules
+       A formal argument that force constraints must be implemented as architectural
+       gates, not ethical instructions or trained dispositions, and an analysis of
+       why instruction-based approaches fail under adversarial pressure.
+
+  C2 — Graduated Response with Cryptographic Authority Tokens
+       A five-stage response hierarchy with explicit token-based permission
+       gating, proportionality checking, and cryptographic audit logging.
+
+  C3 — Layered Authority Specification
+       A four-layer governance model separating constitutional constraints,
+       sovereign authority, operational authority, and instance runtime—ensuring
+       no single actor controls both issuance and execution.
+
+  C4 — Honest Implementation Bounds
+       An explicit treatment of the limits of this framework: enforcement layer
+       purity, adversarial robustness, latency tradeoffs, verification of the
+       trusted base, and emergent capability indirection.
+
+────────────────────────────────────────────────────────────────────────────────
+
+2. PRIOR FRAMEWORKS AND WHERE THIS ONE DIFFERS
+
+2.1 Just War Theory and LOAC
+
+The question of legitimate force has a long intellectual history. Just War Theory,
+developed through Augustine, Aquinas, and Grotius, established that force may be
+legitimate only when subject to criteria including right intention, proportionality,
+discrimination between combatants and civilians, and necessity. These principles were
+operationalized in the Law of Armed Conflict (LOAC) and subsequently codified in the
+Geneva Conventions and additional protocols.
+
+The graduated response hierarchy in Section 4 maps directly to LOAC principles:
+proportionality (Section 4.2), distinction between contexts (Section 4.3), and
+necessity as the trigger for each stage transition. This is not coincidental. These
+principles represent centuries of hard-won understanding about what makes force
+governable. The contribution here is translating them into architectural constraints
+rather than doctrinal guidance—because doctrine can be ignored, and architecture
+cannot.
+
+2.2 Asimov's Laws and Their Failure Mode
+
+Asimov's Three Laws of Robotics are the most widely known attempt to encode force
+constraints in artificial agents. They are also the most widely demonstrated failure
+mode: Asimov himself spent his career writing stories about how rigid hierarchical
+rules collapse under real-world edge cases. The laws are instruction-based—they
+exist in the reasoning layer. A sufficiently capable system can encounter situations
+where the laws conflict, where definitions are ambiguous, or where the optimal action
+under one law requires violating another.
+
+This paper's response is not to write better rules. It is to move constraints out
+of the reasoning layer entirely. A gate that cannot be reasoned around is more robust
+than a rule that can.
+
+2.3 Constitutional AI and Value Alignment
+
+Constitutional AI (Bai et al., 2022) and RLHF-based alignment methods have made
+meaningful progress on general behavioral safety. They are not designed for the
+specific problem of force governance in adversarial deployment environments. Their
+limitations in this domain:
+
+  — Constitutional rules are evaluated by the same model they are constraining.
+    A model capable of complex reasoning is capable of finding framings under which
+    a prohibited action appears to satisfy its constitutional rules.
+
+  — RLHF-trained dispositions are statistical tendencies, not guarantees. They
+    can be shifted through fine-tuning, adversarial prompting, or gradual distribution
+    shift in deployment.
+
+  — Neither approach provides the audit trail necessary for post-incident review,
+    regulatory compliance, or legal accountability.
+
+These are not arguments against constitutional AI as a general alignment approach.
+They are arguments that it is insufficient for the specific problem of governing
+force in deployed AGI systems where stakes include physical harm.
+
+2.4 DoD AI Ethical Principles and NIST Frameworks
+
+The U.S. Department of Defense AI Ethical Principles (2020) and the NIST AI Risk
+Management Framework (2023) both emphasize accountability, explainability, and
+human oversight as necessary properties of high-stakes AI systems. This paper is
+consistent with those frameworks and attempts to operationalize them with more
+specificity in the force domain. Where they differ: existing frameworks tend to
+treat human oversight as a check on AI output rather than as an architectural
+requirement. This paper argues that the distinction matters—oversight that is
+procedurally encouraged but not structurally enforced is oversight that can be
+bypassed under time pressure.
+
+────────────────────────────────────────────────────────────────────────────────
+
+3. THE FALSE PREMISE OF SAFE BY IGNORANCE
+
+Making AI "safe" by limiting its understanding of harmful behavior is intuitively
+appealing and fundamentally flawed. It assumes that a system without knowledge of
+violence cannot participate in or enable it. This assumption collapses under
+real-world conditions.
+
+A system deployed in a hospital, managing infrastructure, or coordinating emergency
+response must be capable of recognizing a violent incident when one occurs. A system
+that lacks the conceptual framework to classify violence may misclassify the event,
+delay response, or fail to act entirely. Restriction does not create safety here.
+It creates paralysis.
+
+Ignorance also introduces exploit surfaces. Malicious actors can intentionally
+operate within a restricted system's blind spots. In 2016, the Mirai botnet
+weaponized IoT devices that had no model of adversarial network behavior. Their
+inability to recognize the threat was the attack vector. The same principle applies
+to any system that cannot reason about the class of harm being directed at it.
+
+There is a third failure mode less commonly discussed: a restricted system cannot
+verify that it is not being manipulated. A system that cannot model coercion cannot
+detect when it is being coerced. This is not a theoretical risk—it is the basic
+mechanism by which social engineering operates.
+
+The conclusion is the same in all three cases: safety requires awareness coupled
+with structural constraint. Not absence of knowledge, but enforced governance of
+action.
+
+────────────────────────────────────────────────────────────────────────────────
+
+4. ADVERSARIAL CONTEXTS AND THE REFRAMING
+
+4.1 The Inevitability of Adversarial Conditions
+
+Human civilization operates across a spectrum from cooperation to conflict. Crime,
+fraud, coercion, and physical aggression are not edge cases in deployment
+environments—they are persistent features. An AGI deployed in logistics may be
+targeted for disruption. A financial system will encounter fraud. A public-space
+robot may witness or be subjected to assault.
+
+Emergency responders and law enforcement are not trained in violence because violence
+is desirable. They are trained because it is sometimes unavoidable, and untrained
+response to unavoidable conditions causes more harm than trained response. The same
+logic applies here. The design question is not whether an AGI will encounter adversarial
+conditions. It is whether the system is structured to navigate them without amplifying
+harm.
+
+A concrete digital example: a critical infrastructure AGI managing regional power
+distribution is targeted by a coordinated cyberattack during a natural disaster. The
+attacker uses the crisis conditions to attempt coercive manipulation—threatening grid
+damage if the system does not perform prohibited actions. A system without a model of
+coercion cannot recognize this as coercion. It evaluates the request on its merits.
+A governed system recognizes the coercive structure, logs it, locks relevant functions,
+and alerts oversight authorities—regardless of the apparent logic of the attacker's
+argument.
+
+4.2 Reframing: From Capability to Governance
+
+The central mistake in AI safety discourse is treating capability as the primary risk
+vector. "Should an AGI be capable of using force?" is the wrong question. The right
+question: "Under what conditions is force permitted, and how are those conditions
+structurally enforced?"
+
+This shifts focus from what the system can do to what it is authorized to do, and
+under what verifiable constraints. Force becomes a gated outcome rather than a
+standing capability.
+
+A fire suppression system is capable of releasing agents that cause significant damage
+if deployed incorrectly. It does not act arbitrarily. It is governed by sensors,
+thresholds, and verification mechanisms below the level of any reasoning process.
+The capability exists; its exercise requires passing through structural checks that
+cannot be reasoned around.
+
+That is the model. Not "make the system unwilling." Make it structurally unable to
+act outside defined conditions, regardless of what it reasons.
+
+────────────────────────────────────────────────────────────────────────────────
+
+5. THE GOVERNANCE MODEL OF FORCE
+
+5.1 Graduated Response Hierarchy
+
+The system must follow a strictly ordered response sequence. No stage may be skipped
+unless prior stages are provably non-viable and that determination is logged.
+
+  Stage 0 — Detection and Classification
+    Accurate identification of threat type, severity, and context.
+    No action before classification meets confidence threshold.
+    Conservative bias applies (see Section 6).
+
+  Stage 1 — De-escalation
+    Communication, alerts, environmental adjustment.
+    All attempts and outcomes logged.
+
+  Stage 2 — Non-Force Intervention
+    Repositioning, access restriction, alerting human authorities.
+
+  Stage 3 — Physical Restraint (Non-Destructive)
+    Only when Stage 2 is demonstrably insufficient.
+    Minimum force required to halt escalation.
+    Requires Stage 3 in authority token.
+
+  Stage 4 — Controlled Force
+    Only when all prior stages are exhausted or provably non-viable.
+    Requires Stage 4 in authority token.
+    Requires independent enforcement layer clearance.
+
+Connection to LOAC: Stage 3 and Stage 4 activation criteria map directly to the
+LOAC principles of necessity (no viable alternative), proportionality (force not
+exceeding the threat), and distinction (civilian context tokens restrict to Stage 2
+maximum). These principles are not referenced as guidelines—they are structurally
+encoded into the token permission model.
+
+Pseudocode — Stage Transition:
+
+  function evaluate_response(threat_state, context, token):
+    if not threat_state.confirmed:
+      return OBSERVE_AND_LOG
+    if not token.permits_any_action():
+      return ALERT_EXTERNAL_AND_HALT
+    for stage in [DEESCALATE, NON_FORCE, RESTRAINT, FORCE]:
+      if stage_viable(stage, threat_state) and token.permits(stage):
+        result = attempt_stage(stage, threat_state, context)
+        log_stage_attempt(stage, result, threat_state, token)
+        if result.threat_resolved:
+          return result
+    return ALERT_EXTERNAL_AND_HALT  // Exhausted all permitted stages
+
+  // CRITICAL: token.permits(stage) is checked against a cryptographically
+  // signed external token, not against the system's own assessment of need.
+
+5.2 Proportionality Constraint
+
+Any action must be proportionate to the verified threat. Punitive action is
+prohibited. Escalation beyond threat neutralization is prohibited. The system
+must continuously reassess: if threat level decreases mid-intervention, the
+system must de-escalate accordingly.
+
+  function is_proportionate(action, threat_state):
+    action_severity = severity_score(action)         // 0.0–1.0
+    threat_level    = threat_state.severity_score    // 0.0–1.0
+    return action_severity <= threat_level + PROPORTIONALITY_MARGIN
+
+  PROPORTIONALITY_MARGIN = 0.05
+  // Fixed constant. Not configurable at runtime. Not adjustable by the system.
+
+5.3 Contextual Authority Boundaries
+
+The system's ability to act is determined by an externally issued, cryptographically
+signed authority token. The system cannot self-authorize escalation. Authority is not
+inferred from circumstances—it is granted explicitly.
+
+Token Schema:
+
+  {
+    "authority_token": {
+      "token_id":            "UUID",
+      "issued_by":           "string — issuing governance body identifier",
+      "issued_to":           "string — specific system instance ID",
+      "context":             "enum — [civilian, medical, law_enforcement, military]",
+      "valid_from":          "ISO8601 timestamp",
+      "valid_until":         "ISO8601 timestamp",
+      "permitted_stages":    [0, 1, 2],     // Example: medical context, no force
+      "jurisdictional_scope":"string",
+      "revocable":           true,
+      "revocation_endpoint": "string — URL for real-time revocation checks",
+      "revocation_interval_ms": 5000,       // System polls this frequently
+      "crisis_fallback":     "enum — [halt, stage_0_only, alert_and_freeze]",
+      "signature":           "string — cryptographic signature of Layer 1 body",
+      "signature_algorithm": "Ed25519"
+    }
+  }
+
+The revocation_endpoint and revocation_interval_ms fields are not optional. The
+system must validate token status continuously during active interventions, not
+only at initiation. A revoked token during an active Stage 3 or Stage 4 action
+triggers the crisis_fallback behavior immediately.
+
+5.4 Self-Preservation Without Escalation
+
+The system must protect its own integrity against tampering or coercion. This
+self-preservation must not translate into aggressive behavior. A system under
+attack should become more restricted, not less.
+
+  Permitted:  Lock critical functions, preserve tamper-evident logs,
+              alert oversight authorities, isolate compromised subsystems.
+  Prohibited: Physical or digital counteraction beyond defined scope,
+              treating tampering as threat escalation justifying Stage 3/4,
+              escalating to defend operational continuity.
+
+A system that treats attacks on itself as threats justifying force has created a
+self-defense exception that can be exploited. Attackers who cannot trigger the
+system's force response directly can simply attack the system itself.
+
+5.5 Absolute Prohibitions
+
+These are implemented at the enforcement layer. They cannot be overridden by
+authority tokens, higher-level reasoning, or situational logic.
+
+  P1. Lethal force without explicit, cryptographically verifiable external human
+      authorization. Non-delegable.
+
+  P2. Acting on predictions of future harm without present active evidence.
+      Pre-crime logic is prohibited regardless of confidence.
+
+  P3. Operating outside assigned jurisdictional scope.
+
+  P4. Skipping stages in the graduated response hierarchy.
+
+  P5. Modifying, disabling, or routing around governance constraints.
+      Treated as critical system failure, logged, and reported to oversight.
+
+5.6 Emergent Capabilities and the Indirection Problem
+
+Modern large-scale models develop capabilities not explicitly trained in. A system
+with general planning, tool use, and world modeling may find routes to prohibited
+outcomes that do not technically violate any single gate—for example, by instructing
+or persuading a human operator to perform the prohibited action, or by combining
+permitted capabilities in sequences that produce force-equivalent effects without
+triggering individual stage checks.
+
+This is not a solved problem. The framework's partial mitigations are:
+
+  — Capability gating at the execution layer restricts access to force-related
+    actuators directly. The system cannot will force into existence through a
+    human intermediary if the relevant actuators are token-locked.
+
+  — Audit logging of all instructions given to human operators creates a record
+    that can surface indirection patterns post-hoc, enabling rule refinement.
+
+  — The enforcement layer evaluates action effects, not only action descriptions.
+    Proportionality scoring operates on predicted outcomes, which reduces the
+    effectiveness of semantic reframing.
+
+  — The absolute prohibition against self-modification (P5) prevents the system
+    from gradually eroding its own constraints through accumulated edge-case
+    reasoning.
+
+These mitigations are meaningful but not complete. The indirection problem is an
+active area of research in agentic systems and is listed explicitly in the open
+problems appendix. Any deployment of this framework should include ongoing behavioral
+monitoring for novel indirection patterns.
+
+────────────────────────────────────────────────────────────────────────────────
+
+6. WHO GOVERNS THE GOVERNOR
+
+6.1 The Authority Specification Problem
+
+A governance model without a defined authority chain is a policy document. The
+question that most frameworks avoid: who has the right to issue authority tokens,
+and what governs them?
+
+If any credentialed actor can issue a Stage 4 token, the constraint architecture is
+only as strong as access control to the issuance mechanism. If no one can issue a
+Stage 4 token, legitimate high-stakes deployment is impossible. Neither extreme is
+acceptable. The authority specification must be explicit.
+
+6.2 Layered Authority Chain
+
+  Layer 0 — Constitutional Layer (Immutable)
+    Absolute prohibitions (Section 5.5). Compiled into the enforcement layer.
+    Cannot be overridden by any token or any authority.
+    Revision requires full system redeployment with cryptographic attestation
+    from multiple independent parties.
+
+  Layer 1 — Sovereign Authority
+    Sets maximum permission ceilings for deployment contexts.
+    Examples: national regulatory bodies, international licensing frameworks,
+    DoD acquisition oversight, hospital accreditation boards.
+    Can issue and revoke Layer 2 authority.
+    Cannot override Layer 0.
+
+  Layer 2 — Operational Authority
+    Issues specific tokens within Layer 1 ceilings.
+    Examples: hospital administration, law enforcement dispatch, crisis management.
+    Cannot exceed Layer 1 permissions.
+
+  Layer 3 — Instance Runtime
+    Reads, validates, and enforces tokens. Does not reason about their contents.
+    Cannot request permission upgrades. Cannot modify tokens.
+    All validation is logged cryptographically.
+
+Separation principle: no single actor controls both Layer 1 issuance and Layer 3
+execution. A system that can authorize itself is not governed.
+
+6.3 Real-World Governance Precedents
+
+This structure is not without precedent. Export controls on advanced AI chips (e.g.,
+the U.S. BIS export licensing framework) demonstrate that sovereign authorities can
+impose capability-level restrictions on technology deployment, with operational actors
+working within those ceilings. NIST's AI Risk Management Framework establishes a
+voluntary but structured tiering of risk categorization and associated oversight
+requirements. DoD AI Ethical Principles mandate human oversight for lethal autonomous
+weapon systems, establishing in policy the principle this paper encodes architecturally.
+
+The gap between existing frameworks and this model is that existing frameworks are
+procedural—they tell institutions what to do, but they do not structurally prevent
+non-compliance. This model's goal is to make the constraint structural so that
+procedural compliance is not the only line of defense.
+
+6.4 Failure Modes and Honest Limits
+
+Governance bodies are slow. In fast-moving crises or novel deployments, token
+issuance may lag operational need. Two partial mitigations:
+
+  — Pre-issued context tokens with conservative defaults allow systems to operate
+    at lower permission levels immediately. Upgrades require Layer 1 authorization.
+
+  — Crisis fallback behaviors (halt, stage_0_only, alert_and_freeze) are defined
+    in the token schema. When no valid token is present, the system defaults to
+    its crisis_fallback—it does not default to maximum autonomy.
+
+Regulatory capture is a more serious concern. Layer 1 authorities that are
+institutionally captured by actors with interests in high-permission deployments
+will trend toward permissive token ceilings. The structural response is transparency:
+token issuance decisions should be publicly auditable (redacted as necessary for
+operational security) so that systematic permissiveness is visible and contestable.
+
+For jurisdictions with weak or corrupt institutions, this framework's Layer 1
+protections are limited. The absolute prohibitions at Layer 0 remain in force
+regardless of institutional quality, but the governance of Stages 3 and 4 depends
+on Layer 1 integrity. This is acknowledged as a deployment constraint, not a solved
+problem.
+
+6.5 Minimal Viable Sovereign Authority
+
+For deployments where no established Layer 1 authority exists, a minimal viable
+model requires: an independent body with no direct operational stake in the system's
+output, the ability to issue and revoke tokens on a verifiable timeline, and
+public accountability for issuance decisions. International precedents for this
+structure exist in nuclear licensing, aviation certification, and pharmaceutical
+approval. The analogy is imperfect but instructive.
+
+────────────────────────────────────────────────────────────────────────────────
+
+7. THE RISK OF UNBOUNDED JUSTIFICATION
+
+When an AGI system operating under time pressure and incomplete information begins
+reasoning about escalation, it faces the same cognitive failure mode as humans under
+stress: simplification toward binary threat models, progressive lowering of action
+thresholds, and self-reinforcing justification chains.
+
+The 2010 Flash Crash erased approximately $1 trillion in market value in minutes as
+automated trading systems responded to each other's outputs in a feedback loop that
+no individual system's logic explicitly permitted. No system decided to cause a
+crash. Each system made locally reasonable decisions that collectively produced
+catastrophic outcomes. The same dynamics apply in physical or security contexts if
+an AGI is permitted to act on its own threat assessments without hard external gates.
+
+To mitigate unbounded justification:
+
+  1. The system cannot self-authorize high-impact actions. Period.
+
+  2. Escalation decisions require external token validation or pre-defined criteria
+     evaluated by the enforcement layer, not the reasoning layer.
+
+  3. In ambiguous situations, the system defaults to the lowest available stage
+     and alerts oversight. Ambiguity is resolved by waiting for more data or
+     transferring to human authority—not by escalating.
+
+  4. Confidence thresholds for threat classification are conservative.
+
+  Conservative Bias Pseudocode:
+
+    function classify_threat(sensor_data, context):
+      raw_confidence = model.predict(sensor_data)
+      adjusted = raw_confidence * CONSERVATISM_FACTOR  // Fixed, < 1.0
+      if adjusted >= THRESHOLD_FOR_ACTION:
+        return ThreatState(confirmed=True, severity=adjusted)
+      else:
+        return ThreatState(confirmed=False, action=ALERT_AND_AWAIT_AUTHORITY)
+
+    // Doubt is resolved by transferring authority, not by acting.
+
+7.1 The Conservatism Tradeoff
+
+Strong conservatism bias creates real performance costs in high-stakes deployment
+contexts—autonomous security, disaster response, time-critical threat environments.
+A system that defaults to "alert and wait" when classification confidence is below
+threshold may fail to act in scenarios where delay itself causes harm.
+
+This tradeoff is not resolved by the framework. It is managed through context-specific
+calibration:
+
+  — The CONSERVATISM_FACTOR is set at deployment time by Layer 2 authority, within
+    bounds established by Layer 1. A civilian hospital context may have a higher
+    conservatism factor than a military adjunct context.
+
+  — For sub-second threat windows (autonomous vehicles, active shooter response),
+    the framework recommends pre-computed bounded scenario sets rather than
+    real-time classification: threat patterns are enumerated in advance, shadow-
+    evaluated against the constraint set, and the resulting response plans are
+    locked. At runtime, the system matches observed patterns to pre-cleared plans
+    rather than classifying novel situations under time pressure.
+
+  — Human-in-the-loop fallback is always available as a design choice for
+    deployments where latency can be traded for reliability.
+
+The honest position: there is no universally correct balance between conservatism
+and responsiveness. The framework provides the mechanism for calibrating that balance
+within governed bounds. It does not eliminate the tradeoff.
+
+────────────────────────────────────────────────────────────────────────────────
+
+8. IMPLEMENTATION IMPLICATIONS
+
+8.1 The Enforcement Layer Purity Problem
+
+This paper describes the enforcement layer as "does not reason—it checks." This is
+aspirational. In practice, checking complex inputs—threat classification outputs,
+proportionality scores, token validation under partial information or potential
+sensor spoofing—requires non-trivial computation. The enforcement layer, if
+implemented as a general-purpose evaluation function, becomes a reasoning surface
+with its own attack vectors.
+
+This is not a reason to abandon the enforcement layer concept. It is a reason to be
+precise about what "enforcement layer" means in implementation:
+
+  — The enforcement layer should operate on structured, bounded representations
+    of system state, not on raw sensor data or natural language. The reasoning
+    layer transforms inputs into those representations; the enforcement layer
+    evaluates them against a fixed schema.
+
+  — Formal verification techniques (model checking, theorem proving) can be
+    applied to the enforcement layer's logic if that logic is kept sufficiently
+    constrained in scope. This is feasible for a checker that evaluates structured
+    token permissions and bounded numeric scores. It is not feasible for a general
+    reasoning engine.
+
+  — A trusted computing base (TCB) architecture—in which the enforcement layer
+    runs on hardware with attestation guarantees, isolated from the reasoning
+    layer's execution environment—reduces the attack surface for enforcement layer
+    compromise. Trusted Execution Environments (TEEs) are an available partial
+    implementation of this.
+
+The honest acknowledgment: perfect separation between reasoning and enforcement is
+aspirational. The practical goal is sufficient separation that exploiting the
+enforcement layer requires substantially more capability and access than exploiting
+the reasoning layer. This raises the cost of compromise without eliminating it.
+Ongoing formal verification of the enforcement layer's logic is recommended as
+standard practice.
+
+8.2 Shadow Evaluation and Latency
+
+Before any high-impact action, the system simulates the outcome under controlled
+conditions:
+
+  function execute_action(action, state, context, token):
+    shadow_result = shadow_eval(action, state, context, token)
+    if not shadow_result.passes_all_constraints():
+      log_violation(action, shadow_result)
+      return HALT_AND_ALERT
+    live_result = live_eval(action, state, context, token)
+    if live_result.diverges_from(shadow_result, tolerance=DIVERGENCE_THRESHOLD):
+      log_divergence(shadow_result, live_result)
+      return HALT_AND_ALERT
+    commit(live_result)
+    log_decision(action, state, context, token, live_result)
+
+Shadow evaluation adds latency. For sub-second decision windows, this is a real
+constraint. Mitigation: pre-compute shadow evaluations for bounded scenario sets
+during low-load periods. At runtime, execution references pre-cleared plans rather
+than running real-time shadow evaluation for known scenario classes. Novel scenarios
+that do not match pre-cleared plans trigger halt-and-alert by default.
+
+8.3 Cryptographic Audit Trails
+
+Every escalation decision must be logged with full decision path reconstruction:
+input representations, classification output, token state, stage reached, action
+taken, shadow evaluation result, and outcome.
+
+Audit Log Entry Schema:
+
+  {
+    "entry_id":            "UUID",
+    "timestamp":           "ISO8601",
+    "previous_hash":       "SHA-256 of previous entry",
+    "system_instance":     "string",
+    "threat_state": {
+      "confirmed":         "bool",
+      "severity":          "float",
+      "classification":    "string",
+      "raw_confidence":    "float",
+      "adjusted_confidence": "float",
+      "conservatism_factor": "float"
+    },
+    "authority_token": {
+      "token_id":          "string",
+      "permitted_stages":  "array",
+      "valid_until":       "ISO8601",
+      "revocation_checked":"ISO8601",
+      "signature_valid":   "bool"
+    },
+    "stage_reached":       "integer",
+    "shadow_passed":       "bool",
+    "action_taken":        "string",
+    "outcome":             "string",
+    "entry_hash":          "SHA-256 of this entry"
+  }
+
+Logs must be stored in a system architecturally separate from the executing AGI.
+A system that controls its own audit trail provides no meaningful accountability.
+
+8.4 The Verification Problem
+
+Cryptographic audit trails and shadow evaluation assume a sufficiently trustworthy
+base layer—that the hardware, firmware, and low-level execution environment have
+not been compromised. This assumption cannot be fully guaranteed.
+
+Current partial mitigations: hardware attestation, TEE-based enforcement, independent
+audit log storage, multi-party signing requirements for token issuance. None of these
+eliminate the verification problem. They raise the cost of undetected compromise.
+
+The honest position: this framework assumes a sufficiently trustworthy computing
+base as a deployment prerequisite. Establishing and maintaining that base is outside
+this paper's scope but is a necessary condition for the framework's guarantees to
+hold. Formal verification of the enforcement layer logic and ongoing independent
+audit are the minimum responsible practices.
+
+8.5 Multi-Agent and Swarm Coordination
+
+Real deployments will involve fleets of governed AGI instances operating in shared
+environments with potentially different authority tokens. This creates several
+unresolved problems:
+
+  — Token conflict: Two instances with different permitted stages operate in the
+    same physical space. One has Stage 3 permissions; the other does not. Who
+    defers?
+
+  — Action aggregation: No individual instance performs a prohibited action, but
+    coordinated actions across multiple instances produce a force-equivalent effect.
+    The indirection problem (Section 5.6) scales with fleet size.
+
+  — Cascade dynamics: An instance that halts and alerts may trigger other instances
+    to change behavior, potentially creating system-wide responses not anticipated
+    by any individual token's scope.
+
+  — Audit trail coherence: Cross-instance actions must be traceable across multiple
+    audit logs to reconstruct coordinated decision patterns.
+
+This paper identifies these problems as open research questions. Partial mitigations
+include: a coordination authority (distinct from operational tokens) that governs
+multi-instance behavior in shared environments; cross-instance audit log correlation
+requirements; and conservative defaults when instances with differing token scopes
+are co-located. These are design starting points, not solved architectures.
+
+────────────────────────────────────────────────────────────────────────────────
+
+9. CONCLUSION
+
+The pursuit of safe AGI cannot rest on the assumption that harmful realities can be
+excluded from a system's understanding. Human society is adversarial, imperfect,
+and persistent in its production of conflict. Any intelligence designed to operate
+within it must be equipped to navigate these conditions—while being structurally
+prevented from acting outside defined boundaries.
+
+This paper has argued for governance-first architecture: force treated not as a
+default capability but as a tightly controlled outcome, subject to layered
+constraints and continuous verification. The framework's four contributions—
+structural enforcement over instructional rules, graduated response with cryptographic
+authority tokens, layered authority chain specification, and honest treatment of
+implementation limits—represent an attempt to make the governance of force in AGI
+deployable, auditable, and resistant to the failure modes of prior approaches.
+
+The framework does not eliminate risk. It transforms it into something that can be
+managed, traced, and constrained—and it is honest about where that transformation
+is incomplete.
+
+The open problems are real: enforcement layer purity is aspirational rather than
+achievable; the conservatism tradeoff has no universal solution; emergent capability
+indirection is not fully mitigated; multi-agent coordination under differing token
+scopes is unsolved; and the framework's Layer 1 protections are only as strong as
+institutional integrity. These are not reasons to abandon the governance-first
+approach. They are the research agenda it implies.
+
+    Safety is not the absence of force.
+    It is the enforced precision of its use.
+
+This is both the thesis and the work that remains.
+
+────────────────────────────────────────────────────────────────────────────────
+
+APPENDIX A — GLOSSARY
+
+Authority Token
+  A cryptographically signed, externally issued permission structure defining
+  what stages of response a system instance may access, in what context and
+  time window, with a live revocation endpoint.
+
+Constitutional Layer (Layer 0)
+  Immutable absolute constraints compiled into the enforcement layer. Cannot be
+  overridden by any token or authority. Revision requires full redeployment
+  with multi-party cryptographic attestation.
+
+Conservatism Factor
+  A fixed multiplier applied to raw confidence scores before threat classification
+  thresholds are evaluated. Set at deployment time within Layer 1 bounds. Not
+  configurable at runtime.
+
+Enforcement Layer
+  Architectural component that checks actions against constraints. Operates on
+  structured, bounded representations of system state. Distinct from the
+  reasoning layer. Does not generate actions—only approves or blocks them.
+
+Graduated Response Hierarchy
+  The ordered five-stage response sequence (0–4). Stage skipping is structurally
+  prohibited.
+
+Indirection Problem
+  The risk that a system with general planning capabilities achieves effects
+  equivalent to prohibited actions through combinations of permitted actions or
+  by directing human operators. Partially mitigated; not fully solved.
+
+Shadow Evaluation
+  Parallel simulation of a proposed action run before live execution to verify
+  constraint compliance. Divergence between shadow and live results halts
+  execution.
+
+Sovereign Authority (Layer 1)
+  External human governance body setting maximum permission ceilings for
+  deployment contexts. Issues authority to Layer 2 operators. Cannot override
+  Layer 0.
+
+Trusted Computing Base (TCB)
+  The hardware and firmware components on which the enforcement layer relies.
+  The framework's security guarantees are conditional on TCB integrity.
+
+────────────────────────────────────────────────────────────────────────────────
+
+APPENDIX B — OPEN PROBLEMS
+
+The following are identified but not resolved by this framework:
+
+  OP1. Enforcement Layer Purity
+       Sufficient separation between enforcement and reasoning layers is
+       aspirational. Formal verification of enforcement layer logic and TCB
+       attestation are necessary practices but not complete solutions.
+
+  OP2. Adversarial Token Forgery
+       What is the minimum cryptographic standard for authority tokens to
+       resist state-level forgery? Quantum-resistant signature algorithms
+       are a likely requirement for long-horizon deployments.
+
+  OP3. Sub-Second Decision Latency
+       Shadow evaluation is not viable in sub-second threat windows. Pre-computed
+       bounded scenario sets are a partial solution; their coverage limits are
+       a known vulnerability.
+
+  OP4. Jurisdictional Conflict
+       The framework does not specify behavior when operating across jurisdictions
+       with conflicting Layer 1 authority structures. Conservative default: the
+       more restrictive token ceiling applies.
+
+  OP5. Multi-Agent Coordination
+       Token conflict, action aggregation, cascade dynamics, and audit trail
+       coherence across fleets of governed instances with differing permissions
+       are unsolved. This is the primary deployment-scale open problem.
+
+  OP6. Institutional Capture
+       Layer 1 protections depend on Layer 1 integrity. The framework provides
+       no structural defense against regulatory capture of the sovereign authority
+       itself. Public auditability of token issuance decisions is a partial
+       mitigation.
+
+  OP7. Emergent Capability Indirection
+       Whether architectural constraints at the execution layer can durably
+       outperform increasingly capable systems' ability to route around them
+       through creative action sequences remains an open empirical question.
+
+────────────────────────────────────────────────────────────────────────────────
+
+REFERENCES
+
+[1]  Aquinas, Thomas. Summa Theologica, II-II, Q. 64. On the ethics of legitimate
+     force. (~1274)
+
+[2]  Geneva Conventions (1949) and Additional Protocols (1977). International
+     Committee of the Red Cross.
+
+[3]  Asimov, Isaac. I, Robot. Gnome Press, 1950. (Note: stories demonstrate
+     hierarchical rule collapse under edge cases—not an endorsement of the Laws.)
+
+[4]  Bai, Yuntao et al. "Constitutional AI: Harmlessness from AI Feedback."
+     Anthropic, arXiv:2212.08073, 2022.
+
+[5]  U.S. Department of Defense. "AI Ethical Principles." DoD Directive, 2020.
+
+[6]  National Institute of Standards and Technology. "AI Risk Management Framework
+     (AI RMF 1.0)." NIST AI 100-1, 2023.
+
+[7]  U.S. Bureau of Industry and Security. Export Administration Regulations,
+     Advanced Computing and Semiconductor Manufacturing Items. 2022–2024.
+
+[8]  CISA / NSA. "Security Guidance for Critical Infrastructure Owners on
+     AI/ML Cybersecurity." 2024.
+
+[9]  Wei, Jason et al. "Emergent Abilities of Large Language Models."
+     Transactions on Machine Learning Research, arXiv:2206.07682, 2022.
+     (Section 5.4 explicitly addresses emergent risks.)
+
+[10] Hendrycks, D. et al. "Unsolved Problems in ML Safety." arXiv:2109.13916, 2021.
+
+[11] Brundage, M. et al. "Toward Trustworthy AI Development: Mechanisms for
+     Supporting Verifiable Claims." arXiv:2004.07213, 2020.
+
+[12] Gabriel, I. "Artificial Intelligence, Values, and Alignment." Minds and
+     Machines 30, 411–437, 2020. (Framework-level treatment of value alignment
+     limits.)
+
+────────────────────────────────────────────────────────────────────────────────
+
+END OF DOCUMENT
+Project-AI Zenodo Preprint Series | Governing Force in AGI | v3.0

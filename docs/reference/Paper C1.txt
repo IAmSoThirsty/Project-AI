@@ -1,0 +1,25 @@
+Paper C1
+Active Defensive Deception at the Kernel Boundary: m_t-Driven Port Rotation and Decoy Feedback
+Abstract
+
+We introduce a defensive deception module triggered at elevated containment states that increases attacker marginal cost without introducing offensive capability. Camouflage intensity is derived from the same control law governing containment, ensuring a single mathematical source of truth. Port rotation epoch length is a function of m_t, shortening under elevated pressure. A decoy listener emits synthetic escalation events for every connection attempt, making deception an active feedback component rather than passive telemetry. We provide invariants for deterministic port derivation, idempotent activation, and non-externalized network behavior.
+
+Contributions
+
+m_t-dependent epoch rotation
+
+Feedback-integrated decoy sink
+
+Deterministic, reproducible deception model
+
+Zero external attack surface expansion
+
+Evaluation Requirements
+
+Probe failure rate vs rotation epoch
+
+Escalation feedback amplification
+
+Decoy overhead under load
+
+Threat surface audit

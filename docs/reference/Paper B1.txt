@@ -1,0 +1,53 @@
+Paper B1
+Reflexive Containment as a Feedback Control System: Stability and Dominance for Syscall-Level Defense
+Abstract
+
+We model syscall-level containment as a discrete-time feedback system in which the defender regulates an attacker capability variable m_t via anomaly input A_t and defender utility U_t.
+
+The update rule is:
+
+m_{t+1} = clamp( m_t + lambda1 * A_t - lambda2 * (1 - U_t), 0, 1 )
+
+We analyze equilibrium and stability conditions under realistic coupling assumptions between isolation state, anomaly emission, and utility.
+
+We define an empirical dominance criterion:
+
+P( m_T < m_0 )
+
+and validate it via Monte Carlo simulation under multiple anomaly distributions, including adversarial suppression where:
+
+A_t -> 0 as m_t -> 0
+
+We specify sufficient expectation stability conditions:
+
+E[ lambda1 * A_t ] < E[ lambda2 * (1 - U_t) ]
+
+Equivalent:
+
+lambda1 * E[A_t] < lambda2 * (1 - E[U_t])
+
+We further enumerate remediation paths including detection floors, utility floors, and integral control with anti-windup constraints.
+
+Core Model
+
+State Variables:
+
+m_t in [0,1]
+A_t in [0,1]
+U_t in [0,1]
+lambda1 > 0
+lambda2 > 0
+
+Dominance Criterion:
+
+P( m_T < m_0 ) > 0.95
+
+Evaluation Requirements
+
+Monte Carlo across heavy-tail distributions
+
+Sensitivity sweep for lambda1, lambda2, k, S_max
+
+Burst-rate normalization experiments
+
+Oscillation detection

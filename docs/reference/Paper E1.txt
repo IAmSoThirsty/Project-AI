@@ -1,0 +1,15 @@
+Paper E1
+Closing the Misalignment Latency Window with a Kernel Reflex Layer in Agentic Systems
+Abstract
+
+Higher-tier governance systems inherently operate with non-zero detection-to-enforcement latency. We formalize the misalignment latency window and demonstrate how relocating enforcement below the policy engine eliminates it. Using eBPF LSM interception, containment becomes pre-syscall rather than post-detection. Architectural non-bypassability emerges from enforcement placement rather than model alignment quality.
+
+Contributions
+
+Formalization of misalignment latency window
+
+Architectural non-bypassability property
+
+Kernel-authoritative enforcement boundary
+
+Integration model with higher-tier audit systems

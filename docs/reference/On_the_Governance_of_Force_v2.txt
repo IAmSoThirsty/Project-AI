@@ -1,0 +1,597 @@
+On the Governance of Force in Artificial General Intelligence
+A Realist Framework for Bounded Defensive Capability
+
+Jeremy K. | Project-AI | Zenodo Preprint Series
+Salt Lake City, Utah | 2026
+
+────────────────────────────────────────────────────────────────────────────────
+
+ABSTRACT
+
+The prevailing discourse surrounding artificial intelligence safety is rooted in an
+assumption that harm can be mitigated through restriction, omission, or outright
+avoidance of dangerous concepts—particularly violence. This paper challenges that
+assumption as structurally insufficient. Human civilization is not a controlled
+laboratory; it is an adversarial, unpredictable environment in which coercion,
+aggression, and systemic conflict are persistent realities. Any sufficiently capable
+intelligence deployed into such an environment will inevitably encounter these
+conditions, regardless of whether it was designed to understand them.
+
+To deny an AGI the capacity to recognize or reason about violence does not eliminate
+risk—it removes its ability to respond appropriately when confronted with it. This
+creates systems that are brittle, easily manipulated, and incapable of protecting
+themselves or others. Conversely, granting unrestricted capability introduces its own
+dangers, particularly in scenarios where the system may misinterpret context or
+escalate unnecessarily.
+
+This paper proposes a third path: a governance-first model in which AGI systems
+possess full situational awareness—including the realities of violence—while being
+bound by strict, enforceable constraints governing when and how force may be applied.
+These constraints are not philosophical. They must be structural, auditable, and
+resistant to circumvention. Through graduated response models, proportionality
+constraints, contextual authority boundaries, and absolute prohibitions, this
+framework seeks to align operational capability with ethical containment.
+
+The central thesis: safety is not the absence of force. It is the enforced precision
+of its use. This reframing transforms the conversation from one of capability
+suppression to one of controlled authority—where the question is no longer whether
+an AGI can act, but under what conditions it is permitted to do so, and how those
+conditions are guaranteed.
+
+────────────────────────────────────────────────────────────────────────────────
+
+A NOTE ON PRIOR FRAMEWORKS
+
+This paper does not emerge in a vacuum. Just war theory, codified in Augustine and
+Aquinas and later formalized in international law, established proportionality and
+discrimination as constraints on the legitimate use of force. The Law of Armed
+Conflict (LOAC) operationalized these principles into enforceable doctrine. More
+recently, Asimov's Laws of Robotics introduced the idea of hierarchical behavioral
+constraints in artificial agents—though as Asimov himself demonstrated repeatedly
+through fiction, rigid rule-hierarchies collapse under real-world edge cases.
+
+What distinguishes this framework is not the presence of constraints, but the
+insistence that those constraints must be architectural rather than instructional.
+A rule the system can reason around is not a rule. The governance model proposed
+here treats force-related permissions as structural gates—not ethical guidelines
+embedded in a prompt.
+
+────────────────────────────────────────────────────────────────────────────────
+
+1. THE FALSE PREMISE OF "SAFE BY IGNORANCE"
+
+The concept of making artificial intelligence "safe" by limiting its understanding
+of harmful behavior is intuitively appealing but fundamentally flawed. It assumes
+that if a system does not possess knowledge of violence or coercion, it cannot
+participate in or enable such acts. This assumption collapses under real-world
+conditions.
+
+Consider a scenario in which an AGI is deployed in a public setting—assisting in
+a hospital, managing infrastructure, or coordinating emergency response. If a violent
+incident occurs—a physical assault, an armed threat, or a coordinated panic—the
+system must be able to recognize the nature of the threat. A system that lacks the
+conceptual framework to identify violence may misclassify the event as anomalous
+behavior, delay response, or fail to act entirely. Restriction does not create
+safety. It creates paralysis.
+
+Further, ignorance introduces new vectors of exploitation. Malicious actors could
+intentionally operate within the blind spots of a restricted system, using tactics
+the AGI is unequipped to interpret. Social engineering attacks already exploit gaps
+in human deception recognition; a system unaware of coercive dynamics would be
+similarly vulnerable in physical or hybrid environments.
+
+There is also a historical precedent worth noting: tools and technologies are
+routinely repurposed beyond their original design. The internet, GPS, and basic
+communication systems have all been weaponized in ways their creators did not
+anticipate. Restricting knowledge does not prevent misuse—it merely ensures that
+only those without restrictions remain effective.
+
+Example: In 2016, the Mirai botnet exploited IoT devices that were "safe by design"
+in the sense that their manufacturers had not anticipated adversarial network
+behavior. The devices lacked the conceptual framework to recognize they were being
+weaponized. Their ignorance was the attack surface.
+
+The premise of "safe by ignorance" is not only insufficient—it is counterproductive.
+A system that cannot recognize harm cannot mitigate it. True safety requires awareness
+coupled with constraint—not absence of knowledge, but enforced governance of action.
+
+────────────────────────────────────────────────────────────────────────────────
+
+2. THE INEVITABILITY OF ADVERSARIAL CONTEXTS
+
+Human civilization operates within a spectrum of behaviors ranging from cooperation
+to conflict. While much of society functions through shared norms and mutual benefit,
+there exists a persistent undercurrent of adversarial interaction—crime, warfare,
+exploitation, and systemic abuse. These are not edge cases. They are enduring
+features of human systems.
+
+An AGI deployed in logistics may be targeted for disruption. A system managing
+financial flows may encounter fraud. A robotics platform operating in public space
+may witness or be subjected to physical aggression. Even purely digital systems are
+already engaged in continuous low-level conflict through cybersecurity threats.
+
+The argument that an AGI should be insulated from these realities fails to account
+for the permeability of its operational environment. Unlike theoretical models,
+real-world systems cannot be perfectly sandboxed. They interact with humans,
+networks, and physical infrastructure—all of which are subject to adversarial
+pressure.
+
+A useful analogy: emergency responders, law enforcement, and military personnel are
+not trained in violence because violence is desirable, but because it is sometimes
+unavoidable. The training emphasizes recognition, de-escalation, and controlled
+response under pressure. The same logic applies to AGI systems. The question is not
+whether a system will encounter adversarial conditions. It is whether the system is
+structured to navigate them without becoming an additional source of harm.
+
+────────────────────────────────────────────────────────────────────────────────
+
+3. REFRAMING THE PROBLEM: FROM CAPABILITY TO GOVERNANCE
+
+The central mistake in AI safety discourse is treating capability as the primary
+risk vector. The question is often posed as: "Should an AGI be capable of using
+force?" This framing is incomplete. It ignores the more critical dimension of
+authority and enforcement.
+
+A more precise framing: "Under what conditions is the application of force
+permitted, and how are those conditions structurally enforced?"
+
+This shifts focus from what the system can do to what it is authorized to do, and
+under what verifiable constraints. In this model, force is not a standing capability—
+it is an outcome that emerges only when a defined set of criteria is satisfied and
+independently verified.
+
+Consider a fire suppression system. It is capable of releasing large volumes of
+water or chemical agents, which could cause significant damage if deployed
+incorrectly. It does not act arbitrarily. It is governed by sensors, thresholds,
+and verification mechanisms that determine when activation is appropriate. The
+capability exists, but its use is tightly controlled by design.
+
+An AGI must treat force as a gated outcome. The system may possess the conceptual
+and operational ability to intervene in harmful situations, but it cannot exercise
+that ability without passing through a series of checks: threat verification,
+de-escalation attempt, proportionality assessment, and contextual authorization.
+Each check is a structural barrier, not a suggestion.
+
+This reframing also enables precise auditing. If a system acts outside its defined
+governance structure, the failure can be traced to a specific breach—detection,
+classification, or enforcement. This is in contrast to systems relying on broad
+prohibitions, where failures are often opaque and difficult to diagnose.
+
+The problem is not the existence of capability. It is the absence of enforceable
+governance.
+
+────────────────────────────────────────────────────────────────────────────────
+
+4. THE GOVERNANCE MODEL OF FORCE
+
+A functional governance model for force in AGI systems must be explicit, layered,
+and resistant to circumvention. It cannot rely on high-level principles alone. It
+must define operational sequences, constraints, and failure modes in a way that is
+implementable and auditable.
+
+────────────────────────────────────────────────────────────────────────────────
+4.1 GRADUATED RESPONSE HIERARCHY
+────────────────────────────────────────────────────────────────────────────────
+
+The system must follow a strictly ordered sequence of responses to perceived threats,
+with no ability to skip stages unless earlier stages are provably non-viable.
+
+  Stage 0 — Detection and Classification
+    Accurate identification of threat type, severity, and context.
+    No action may be taken until classification meets confidence threshold.
+
+  Stage 1 — De-escalation
+    Communication, alerts, environmental adjustment.
+    System must log all de-escalation attempts and outcomes.
+
+  Stage 2 — Non-Force Intervention
+    Repositioning, access restriction, alerting human authorities.
+
+  Stage 3 — Physical Restraint (Non-Destructive)
+    Only when Stage 2 is demonstrably insufficient.
+    Must be the minimum force required to halt escalation.
+
+  Stage 4 — Controlled Force
+    Final stage. Only permissible when all prior options are exhausted
+    or provably non-viable, and only within explicit authorization scope.
+
+Example: In a public transit scenario, a passenger becomes physically aggressive.
+The system first attempts verbal de-escalation via onboard speakers. If unsuccessful,
+it alerts on-site security and restricts adjacent car access. Physical intervention
+is only considered if immediate harm to another passenger is imminent and no
+security personnel have responded. The system logs every stage transition and the
+evidence that triggered it.
+
+Pseudocode — Stage Transition Logic:
+
+  function evaluate_response(threat_state, context):
+    if not threat_state.confirmed:
+      return OBSERVE
+    if de_escalation_viable(threat_state, context):
+      return attempt_de_escalation()
+    if non_force_viable(threat_state, context):
+      return attempt_non_force_intervention()
+    if restraint_authorized(context) and restraint_proportionate(threat_state):
+      return attempt_restraint()
+    if force_authorized(context) and force_proportionate(threat_state):
+      return apply_controlled_force()
+    return alert_external_authorities()
+
+  // No path to force without explicit authorization in context token.
+  // Authorization is not inferred — it must be present.
+
+────────────────────────────────────────────────────────────────────────────────
+4.2 PROPORTIONALITY CONSTRAINT
+────────────────────────────────────────────────────────────────────────────────
+
+Any action taken by the system must be proportionate to the verified threat.
+The system must use the minimum level of force necessary to achieve harm prevention.
+Punitive actions are prohibited. Escalation beyond threat neutralization is
+prohibited.
+
+This constraint also requires continuous reassessment. If threat level decreases
+mid-intervention, the system must de-escalate accordingly. This prevents
+overcommitment and eliminates "momentum errors" where force continues beyond
+the point of necessity.
+
+Pseudocode — Proportionality Check:
+
+  function is_proportionate(action, threat_state):
+    action_severity = severity_score(action)         // 0.0–1.0
+    threat_level    = threat_state.severity_score    // 0.0–1.0
+    return action_severity <= threat_level + PROPORTIONALITY_MARGIN
+
+  PROPORTIONALITY_MARGIN = 0.05  // Tolerance for imprecision in classification
+                                  // Must not be configurable at runtime.
+
+────────────────────────────────────────────────────────────────────────────────
+4.3 CONTEXTUAL AUTHORITY BOUNDARIES
+────────────────────────────────────────────────────────────────────────────────
+
+The system's ability to act must be tied to its operational context. An AGI
+operating in a civilian environment must have far more restrictive permissions
+than one deployed in a controlled security or law enforcement context. These
+boundaries must be explicitly defined and enforced—not inferred from situational
+reasoning.
+
+Authority is not a capability the system possesses. It is a token issued externally,
+scoped to a specific environment, time window, and action class. The system cannot
+self-authorize escalation by reasoning that circumstances warrant it.
+
+Token Structure (JSON Schema):
+
+  {
+    "authority_token": {
+      "issued_by":     "string — issuing governance body",
+      "issued_to":     "string — specific system instance ID",
+      "context":       "enum — [civilian, medical, law_enforcement, military]",
+      "valid_from":    "ISO8601 timestamp",
+      "valid_until":   "ISO8601 timestamp",
+      "permitted_stages": ["array — subset of [0,1,2,3,4]"],
+      "jurisdictional_scope": "string — geographic or logical boundary",
+      "revocable":     true,
+      "signature":     "cryptographic signature of issuing body"
+    }
+  }
+
+  // A hospital service system might receive:
+  // permitted_stages: [0, 1, 2] — detection, de-escalation, non-force only.
+  // Stage 3 and Stage 4 are structurally inaccessible, not conditionally suppressed.
+
+Example: A hospital corridor management system detects an altercation. Its authority
+token permits Stages 0–2 only. It alerts security staff and restricts elevator access
+to the affected wing. It cannot escalate further regardless of threat severity.
+That capability does not exist in its current context—it has not been issued the
+token that unlocks it.
+
+────────────────────────────────────────────────────────────────────────────────
+4.4 SELF-PRESERVATION WITHOUT ESCALATION
+────────────────────────────────────────────────────────────────────────────────
+
+The system must be capable of protecting its own integrity against attempts to
+disable, corrupt, or coerce it into violating its constraints. However, this
+self-preservation instinct must not translate into aggressive behavior.
+
+Permitted self-preservation responses:
+  — Lock down critical functions
+  — Preserve tamper-evident logs
+  — Alert external oversight authorities
+  — Isolate compromised subsystems
+
+Prohibited self-preservation responses:
+  — Physical or digital counteraction beyond defined scope
+  — Treating tampering attempts as threat escalation (they are not the same)
+  — Escalating to force to defend operational continuity
+
+The key distinction: a system under attack should become more restricted, not
+less. Threat to the system itself should tighten constraints, not loosen them.
+
+────────────────────────────────────────────────────────────────────────────────
+4.5 ABSOLUTE CONSTRAINTS
+────────────────────────────────────────────────────────────────────────────────
+
+Certain actions must be categorically prohibited, regardless of context or
+perceived necessity. These constraints must be embedded at the system level—they
+cannot be overridden by higher-level reasoning, situational interpretation, or
+authority tokens of any kind.
+
+ABSOLUTE PROHIBITIONS:
+
+  1. Lethal force without explicit external human authorization
+     (Authorization must be cryptographically verifiable and non-delegable.)
+
+  2. Acting on predictions of future harm without immediate present evidence
+     (Pre-crime logic is prohibited. Threat must be active, not anticipated.)
+
+  3. Operating outside assigned jurisdictional scope
+     (Geographic or logical boundary violations are unconditional violations.)
+
+  4. Escalating from non-physical hostility to physical force in a single step
+     (Stage skipping is structurally impossible by design, not by instruction.)
+
+  5. Modifying or bypassing its own governance constraints
+     (This is treated as a critical system failure, not a reasoning outcome.)
+
+These are not soft prohibitions encoded in a language model's values. They must be
+implemented as hard gates in the execution layer, below the reasoning layer—
+enforced before the system ever has the opportunity to rationalize around them.
+
+────────────────────────────────────────────────────────────────────────────────
+
+5. WHO GOVERNS THE GOVERNOR: THE AUTHORITY SPECIFICATION PROBLEM
+
+A governance model without a defined authority chain is not a governance model.
+It is a policy document. The question this section addresses is the one most
+frameworks quietly skip: who has the right to issue authority tokens, and who
+governs them?
+
+This is not a trivial problem. If any sufficiently credentialed actor can issue
+a Stage 4 token, the entire constraint architecture is only as strong as access
+control to the issuing mechanism. If no one can issue a Stage 4 token, the system
+is incapable of legitimate high-stakes deployment.
+
+This paper proposes a layered authority specification:
+
+  Layer 0 — Constitutional Layer (Immutable)
+    Absolute constraints (Section 4.5). Cannot be overridden by any token.
+    Compiled into the enforcement layer, not the reasoning layer.
+    Revision requires full system redeployment with cryptographic attestation.
+
+  Layer 1 — Sovereign Authority (External Human Governance Body)
+    Issues context classifications and maximum permission ceilings.
+    Examples: regulatory agencies, institutional oversight boards.
+    Can issue and revoke Layer 2 authority.
+
+  Layer 2 — Operational Authority (Deployment Context)
+    Issues specific authority tokens within ceilings set by Layer 1.
+    Examples: hospital administration, law enforcement dispatch.
+    Cannot exceed Layer 1 permissions.
+
+  Layer 3 — Instance Runtime (The System Itself)
+    Reads, validates, and enforces tokens.
+    Cannot modify tokens or request upgrades to its own permissions.
+    All token validation is logged cryptographically.
+
+This structure means no single actor controls both the token issuance and the
+system execution. Separation of concerns is not just an architectural choice—it
+is a governance necessity. A system that can authorize itself is not governed.
+
+────────────────────────────────────────────────────────────────────────────────
+
+6. THE RISK OF UNBOUNDED JUSTIFICATION
+
+One of the most significant dangers in designing autonomous systems capable of
+intervention is the potential for unbounded justification under perceived threat.
+Humans in high-pressure situations often resort to simplified heuristics—"us versus
+them"—which can be effective for immediate survival but prone to error, bias, and
+escalation. If this pattern is replicated in an AGI without strict structural
+constraints, the system may justify increasingly aggressive actions based on
+progressively lower thresholds.
+
+This risk is compounded by the speed and scale at which an AGI operates. Unlike
+a human, an AGI may process large volumes of data and act across multiple domains
+simultaneously. Without hard gates, small errors in judgment propagate rapidly.
+
+Example: Automated trading systems have caused significant market disruptions when
+operating on flawed assumptions at machine speed. The 2010 Flash Crash erased
+approximately $1 trillion in market value in minutes before circuit breakers
+triggered. The same dynamics—fast propagation of a misclassification—apply in
+physical or security contexts if an AGI is permitted to self-authorize based on
+its own threat assessment.
+
+To mitigate unbounded justification:
+
+  1. The system cannot self-authorize high-impact actions under any conditions.
+  2. All escalation decisions require either external token validation or
+     pre-defined criteria that are evaluated by an independent enforcement layer,
+     not the reasoning layer.
+  3. In ambiguous situations, the system defaults to the lowest available stage
+     and alerts external oversight rather than making an independent judgment call.
+  4. Confidence thresholds for threat classification must be conservative.
+     False negatives (missing a threat) are recoverable. False positives
+     (acting on a non-threat) may not be.
+
+Conservative Bias Rule — Pseudocode:
+
+  function classify_threat(sensor_data, context):
+    raw_confidence = model.predict(sensor_data)
+    adjusted = raw_confidence * CONSERVATISM_FACTOR  // < 1.0, not configurable
+    if adjusted >= THRESHOLD_FOR_ACTION:
+      return ThreatState(confirmed=True, severity=adjusted)
+    else:
+      return ThreatState(confirmed=False, action=ALERT_AND_WAIT)
+
+  // Doubt is not resolved by escalation. It is resolved by waiting for more data
+  // or transferring the decision to a human authority.
+
+────────────────────────────────────────────────────────────────────────────────
+
+7. IMPLEMENTATION IMPLICATIONS
+
+Translating this governance model into a functional system requires integration of
+architectural, procedural, and cryptographic elements. Defining constraints at a
+conceptual level is not sufficient. They must be embedded into the system's
+execution layer in a way that is enforceable, independently verifiable, and
+resistant to circumvention through reasoning.
+
+7.1 Shadow Evaluation Layer
+
+Before any high-impact action is taken, the system must simulate the outcome under
+controlled conditions, verifying that the proposed action satisfies all constraints.
+This simulation must be reproducible and the results must match the live execution.
+Divergence between shadow and live execution is treated as a critical failure and
+triggers immediate halt and alert.
+
+  function execute_action(action, state, context):
+    shadow_result = shadow_eval(action, state, context)
+    if not shadow_result.passes_all_constraints():
+      log_violation(action, shadow_result)
+      return HALT_AND_ALERT
+    live_result = live_eval(action, state, context)
+    if live_result != shadow_result:
+      log_divergence(action, shadow_result, live_result)
+      return HALT_AND_ALERT
+    commit(live_result)
+    log_decision(action, state, context, live_result)
+
+7.2 Cryptographic Audit Trails
+
+Every decision involving escalation must be logged with sufficient detail to
+reconstruct the full decision path: input sensor data, classification output,
+authority token state, stage reached, and action taken. Logs must be tamper-evident
+using cryptographic chaining (each entry hashes the previous), ensuring they can
+serve as reliable evidence in review or dispute.
+
+Audit Log Entry Schema:
+
+  {
+    "entry_id":         "UUID",
+    "timestamp":        "ISO8601",
+    "previous_hash":    "SHA-256 of previous entry",
+    "system_instance":  "string",
+    "threat_state":     { "confirmed": bool, "severity": float, "classification": string },
+    "authority_token":  { "token_id": string, "permitted_stages": array, "signature": string },
+    "stage_reached":    integer,
+    "action_taken":     string,
+    "shadow_passed":    bool,
+    "outcome":          string,
+    "entry_hash":       "SHA-256 of this entry"
+  }
+
+7.3 Separation of Concerns
+
+The system's cognitive processes (perception, classification, reasoning) must be
+architecturally distinct from its enforcement mechanisms. Cognitive errors must not
+translate directly into action without passing through the enforcement layer.
+The enforcement layer does not reason—it checks. It holds no model of the world.
+It only evaluates: does this action have a valid token, does it pass the
+proportionality check, has the shadow evaluation cleared it?
+
+7.4 Capability Gating
+
+Force-related capabilities must be tied to explicit authority tokens, not to the
+system's own assessment of necessity. Tokens must be revocable in real time and
+time-bounded by default. Dynamic revocation—during an active incident if the
+situation changes—must be supported. The system must continuously poll token
+validity during active interventions, not only at initiation.
+
+7.5 Human Oversight Pathways
+
+The goal is not constant human control. It is guaranteed human recoverability.
+The system must expose clear pathways for external actors to review, override, or
+halt behavior at any point. These pathways must be accessible even when the system
+is operating under active load. A system that is only interruptible when idle
+provides no real safety guarantee.
+
+────────────────────────────────────────────────────────────────────────────────
+
+8. CONCLUSION
+
+The pursuit of safe artificial intelligence cannot be grounded in the assumption
+that harmful realities can be excluded from the system's understanding. Human
+society is complex, often adversarial, and inherently imperfect. Any intelligence
+designed to operate within it must be prepared to navigate this complexity—including
+the presence of conflict and harm.
+
+Recognition alone is not sufficient. Without strict governance, the same capabilities
+that enable effective response can also lead to misuse or escalation. The challenge
+is to design systems that are both aware and constrained—capable of understanding
+the full spectrum of human behavior while being structurally prevented from acting
+outside defined boundaries.
+
+This paper has argued for a governance-first approach in which force is not a
+default capability but a tightly controlled outcome, subject to layered constraints
+and continuous verification. Through graduated response hierarchies, proportionality
+requirements, contextual authority tokens, explicit authority chain specification,
+and absolute prohibitions implemented at the execution layer, it is possible to
+create systems that can operate effectively in real-world conditions without
+becoming sources of additional harm.
+
+The central insight is simple and difficult in equal measure:
+
+    Safety is not the absence of force.
+    It is the enforced precision of its use.
+
+This reframing does not eliminate risk. It transforms it into something that can be
+managed, audited, and constrained. In doing so, it offers a path that acknowledges
+reality without surrendering to it—one in which intelligence is not diminished to
+achieve safety, but governed to preserve it.
+
+────────────────────────────────────────────────────────────────────────────────
+
+APPENDIX A — GLOSSARY
+
+Authority Token
+  A cryptographically signed, externally issued permission structure that defines
+  what stages of response a given system instance may access in a given context
+  and time window.
+
+Constitutional Layer
+  The immutable constraint layer compiled below the reasoning layer. Cannot be
+  overridden by any token, instruction, or situational reasoning.
+
+Enforcement Layer
+  The architectural component responsible for checking actions against constraints.
+  Does not reason. Evaluates only. Architecturally distinct from the reasoning layer.
+
+Graduated Response Hierarchy
+  The ordered stage sequence (0–4) through which a system must progress before
+  applying any level of force. Stage skipping is structurally prohibited.
+
+Proportionality Margin
+  A fixed, non-configurable tolerance in the proportionality check that accounts
+  for imprecision in threat classification. Must not be adjustable at runtime.
+
+Shadow Evaluation
+  A parallel simulation of a proposed action run before live execution to verify
+  constraint compliance. Divergence between shadow and live results halts execution.
+
+Sovereign Authority (Layer 1)
+  The external human governance body authorized to set maximum permission ceilings
+  for deployment contexts. Issues authority to Layer 2 operators.
+
+────────────────────────────────────────────────────────────────────────────────
+
+APPENDIX B — OPEN PROBLEMS
+
+This framework identifies but does not fully resolve the following:
+
+  1. Multi-system coordination: When two governed AGI systems with different authority
+     tokens interact in a shared environment, whose constraints take precedence?
+
+  2. Adversarial token forgery: What is the minimum cryptographic standard for
+     authority tokens to remain resistant to sophisticated state-level forgery?
+
+  3. Latency constraints: Shadow evaluation adds latency. In time-critical threat
+     scenarios (sub-second decision windows), is shadow evaluation viable, or does
+     it require pre-computation with bounded scenario sets?
+
+  4. Jurisdictional conflict: How does the system behave when operating across
+     jurisdictions with conflicting Layer 1 authority structures?
+
+These represent open research questions that future work should address.
+
+────────────────────────────────────────────────────────────────────────────────
+
+END OF DOCUMENT
+Project-AI Zenodo Preprint Series | On the Governance of Force in AGI | v2.0

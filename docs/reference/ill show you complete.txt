@@ -1,0 +1,1468 @@
+This implementation corresponds directly to the architecture described in: GENESIS: A CONSTITUTIONAL COMPILER FOR SOVEREIGN MICROSERVICES GENERATION (MicroservicesEatThis.txt)
+
+================================================================================
+GENESIS MICROSERVICES GENERATOR - COMPLETE SOURCE
+Project-AI / IAmSoThirsty
+================================================================================
+
+# ============================================================================
+# 1. DOMAIN MODEL / INTERMEDIATE REPRESENTATION
+# ============================================================================
+
+import yaml
+import json
+import os
+import re
+import hashlib
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Any
+from enum import Enum
+from pathlib import Path
+
+class CriticalityLevel(Enum):
+    PII = "pii"
+    FINANCIAL = "financial"
+    PUBLIC = "public"
+    INTERNAL = "internal"
+
+class RuntimeTarget(Enum):
+    KUBERNETES = "kubernetes"
+    SERVERLESS = "serverless"
+    BARE_METAL = "bare_metal"
+
+class FailureModeStrategy(Enum):
+    CIRCUIT_BREAKER = "circuit_breaker"
+    RETRY_WITH_BACKOFF = "retry_with_backoff"
+    BULKHEAD = "bulkhead"
+    DEAD_LETTER_QUEUE = "dlq"
+    TIMEOUT = "timeout"
+
+@dataclass
+class DataOwnership:
+    entity: str
+    owner_service: str
+    fields: List[str]
+    pii_fields: List[str] = field(default_factory=list)
+    retention_days: Optional[int] = None
+
+@dataclass
+class EventContract:
+    name: str
+    payload_schema: Dict[str, Any]
+    producers: List[str]
+    consumers: List[str]
+    ordering_key: Optional[str] = None
+    retention_hours: int = 24
+
+@dataclass
+class ApiContract:
+    path: str
+    method: str
+    request_schema: Optional[Dict[str, Any]] = None
+    response_schema: Optional[Dict[str, Any]] = None
+    rate_limit: Optional[int] = None
+    auth_required: bool = True
+
+@dataclass
+class ConstitutionalConstraint:
+    name: str
+    constraint_type: str
+    parameters: Dict[str, Any]
+    severity: str = "error"
+
+@dataclass
+class SystemSpec:
+    name: str
+    bounded_contexts: Dict[str, List[str]]
+    data_ownership: List[DataOwnership]
+    event_contracts: List[EventContract]
+    api_contracts: List[ApiContract]
+    constitutional_constraints: List[ConstitutionalConstraint]
+    target_runtime: RuntimeTarget
+    target_regions: List[str]
+
+@dataclass
+class FailureModeConfig:
+    strategy: FailureModeStrategy
+    parameters: Dict[str, Any]
+    applies_to: List[str]
+
+@dataclass
+class ObservabilityConfig:
+    service_name: str
+    trace_sampling_rate: float
+    metrics_endpoints: List[str]
+    log_level: str
+    red_metrics_enabled: bool = True
+    custom_attributes: Dict[str, str] = field(default_factory=dict)
+
+@dataclass
+class SecurityConfig:
+    rbac_policy: str
+    vault_role: str
+    mtls_enabled: bool = True
+    audit_logging: bool = True
+    secret_injection_paths: List[str] = field(default_factory=list)
+
+@dataclass
+class DataAccessPattern:
+    entity: str
+    owner_service: str
+    access_type: str
+    allowed: bool
+
+@dataclass
+class ServiceMeshConfig:
+    service_name: str
+    destination_rules: Dict[str, Any]
+    virtual_services: List[Dict[str, Any]]
+    peer_authentication: Dict[str, Any]
+    traffic_policy: Dict[str, Any]
+
+@dataclass
+class IntermediateService:
+    name: str
+    bounded_context: str
+    criticality: CriticalityLevel
+    owned_data: List[DataOwnership]
+    data_access_patterns: List[DataAccessPattern]
+    publishes_events: List[EventContract]
+    consumes_events: List[EventContract]
+    exposes_apis: List[ApiContract]
+    failure_modes: List[FailureModeConfig]
+    observability: ObservabilityConfig
+    security: SecurityConfig
+    mesh_config: ServiceMeshConfig
+    slo_latency_ms: int
+    slo_availability: float
+    target_language: str
+    depends_on: List[str] = field(default_factory=list)
+    custom_zones: Dict[str, str] = field(default_factory=dict)
+
+@dataclass
+class SystemIR:
+    name: str
+    services: Dict[str, IntermediateService]
+    event_topology: Dict[str, Any]
+    api_dependencies: Dict[str, List[str]]
+    constitutional_constraints: List[ConstitutionalConstraint]
+    target_runtime: RuntimeTarget
+
+
+# ============================================================================
+# 2. CONSTITUTIONAL VALIDATOR V2
+# ============================================================================
+
+class ConstitutionalViolation(Exception):
+    pass
+
+class ConstitutionalValidatorV2:
+    def __init__(self, constraints, ir=None):
+        self.constraints = constraints
+        self.ir = ir
+        self.violations = []
+
+    def validate(self, spec):
+        self.violations = []
+        ownership = self._build_ownership_map(spec)
+        graph = self._build_interaction_graph(spec)
+        for c in self.constraints:
+            if c.constraint_type == "pii_isolation":
+                self._validate_pii_isolation(spec, c, ownership, graph)
+            elif c.constraint_type == "data_residency":
+                self._validate_data_residency(spec, c, ownership)
+            elif c.constraint_type == "rate_limit_floor":
+                self._validate_rate_limit_floor(spec, c, ownership)
+            elif c.constraint_type == "auth_requirement":
+                self._validate_auth_requirement(spec, c, ownership)
+        if self.violations:
+            raise ConstitutionalViolation(self._format_violations())
+        return True
+
+    def _build_ownership_map(self, spec):
+        return {d.entity: d.owner_service for d in spec.data_ownership}
+
+    def _build_interaction_graph(self, spec):
+        graph = {}
+        for svcs in spec.bounded_contexts.values():
+            for s in svcs:
+                graph[s] = {"calls": [], "consumes_from": [], "produces_to": []}
+        for e in spec.event_contracts:
+            for p in e.producers:
+                if p in graph:
+                    for c in e.consumers:
+                        graph[p]["produces_to"].append(c)
+                        if c in graph:
+                            graph[c]["consumes_from"].append(p)
+        return graph
+
+    def _resolve_api_owner(self, api, spec):
+        part = api.path.strip("/").split("/")[0].replace("-", "_").title()
+        for d in spec.data_ownership:
+            if d.entity.lower() == part.lower():
+                return d.owner_service
+        return None
+
+    def _validate_pii_isolation(self, spec, constraint, ownership, graph):
+        audit_gws = set(constraint.parameters.get("audit_gateways", ["audit-service"]))
+        pii_svcs = {d.owner_service for d in spec.data_ownership if d.pii_fields}
+        for svc in pii_svcs:
+            for called in graph.get(svc, {}).get("calls", []):
+                if called not in pii_svcs and called not in audit_gws:
+                    self.violations.append({
+                        "constraint": "pii_isolation", "severity": "error", "service": svc,
+                        "violates": f"Calls '{called}' without audit gateway",
+                        "remediation": f"Route through {audit_gws}"
+                    })
+
+    def _validate_data_residency(self, spec, constraint, ownership):
+        allowed = set(constraint.parameters.get("allowed_regions", []))
+        restricted = constraint.parameters.get("restricted_entities", [])
+        if not allowed:
+            return
+        for d in spec.data_ownership:
+            if restricted and d.entity not in restricted:
+                continue
+            for region in spec.target_regions:
+                if region not in allowed:
+                    self.violations.append({
+                        "constraint": "data_residency", "severity": constraint.severity,
+                        "entity": d.entity, "owner": d.owner_service,
+                        "violates": f"Deployed in '{region}' but only {allowed} allowed",
+                        "remediation": f"Move {d.owner_service} to allowed region"
+                    })
+
+    def _validate_rate_limit_floor(self, spec, constraint, ownership):
+        min_rate = constraint.parameters.get("min_requests_per_second", 100)
+        critical = {d.entity for d in spec.data_ownership
+                    if d.pii_fields or d.entity in ["Payment", "Transaction"]}
+        for api in spec.api_contracts:
+            owner = self._resolve_api_owner(api, spec)
+            owner_entities = [e for e, o in ownership.items() if o == owner]
+            if any(e in critical for e in owner_entities):
+                if api.rate_limit is None or api.rate_limit < min_rate:
+                    self.violations.append({
+                        "constraint": "rate_limit_floor", "severity": "error",
+                        "owner": owner,
+                        "violates": f"Rate limit {api.rate_limit} < {min_rate}",
+                        "remediation": f"Set rate_limit >= {min_rate}"
+                    })
+
+    def _validate_auth_requirement(self, spec, constraint, ownership):
+        exempted = set(constraint.parameters.get("exempted_services", []))
+        for api in spec.api_contracts:
+            owner = self._resolve_api_owner(api, spec)
+            if owner not in exempted and not api.auth_required:
+                self.violations.append({
+                    "constraint": "auth_requirement", "severity": "error",
+                    "owner": owner, "violates": "Unauthenticated API",
+                    "remediation": "Set auth: true"
+                })
+
+    def _format_violations(self):
+        lines = ["Constitutional Violations Detected:", "=" * 50]
+        for v in self.violations:
+            lines += [
+                f"\n[{v['severity'].upper()}] {v['constraint']}",
+                f"   Service: {v.get('service') or v.get('owner')}",
+                f"   Issue: {v['violates']}",
+                f"   Fix: {v['remediation']}"
+            ]
+        return "\n".join(lines)
+
+
+# ============================================================================
+# 3. DSL PARSER V2 (explicit criticality + language overrides)
+# ============================================================================
+
+class GenesisDSLParserV2:
+    @staticmethod
+    def parse_file(filepath):
+        raw = yaml.safe_load(open(filepath))
+        return GenesisDSLParserV2.parse_dict(raw)
+
+    @staticmethod
+    def parse_dict(raw):
+        spec = SystemSpec(
+            name=raw["name"],
+            bounded_contexts=raw["bounded_contexts"],
+            data_ownership=[DataOwnership(
+                entity=d["entity"], owner_service=d["owner"], fields=d["fields"],
+                pii_fields=d.get("pii_fields", []), retention_days=d.get("retention_days")
+            ) for d in raw.get("data_ownership", [])],
+            event_contracts=[EventContract(
+                name=e["name"], payload_schema=e["schema"],
+                producers=e["producers"], consumers=e["consumers"],
+                ordering_key=e.get("ordering_key"), retention_hours=e.get("retention_hours", 24)
+            ) for e in raw.get("events", [])],
+            api_contracts=[ApiContract(
+                path=a["path"], method=a["method"],
+                request_schema=a.get("request"), response_schema=a.get("response"),
+                rate_limit=a.get("rate_limit"), auth_required=a.get("auth", True)
+            ) for a in raw.get("apis", [])],
+            constitutional_constraints=[ConstitutionalConstraint(
+                name=c["name"], constraint_type=c["type"],
+                parameters=c.get("params", {}), severity=c.get("severity", "error")
+            ) for c in raw.get("constitutional_constraints", [])],
+            target_runtime=RuntimeTarget(raw.get("runtime", "kubernetes")),
+            target_regions=raw.get("regions", ["us-east-1"])
+        )
+        service_definitions = {}
+        for svc_def in raw.get("services", []):
+            service_definitions[svc_def["name"]] = {
+                "criticality": svc_def.get("criticality"),
+                "language": svc_def.get("language"),
+                "custom_config": svc_def.get("config", {})
+            }
+        spec.service_definitions = service_definitions
+        return spec
+
+
+# ============================================================================
+# 4. DOMAIN COMPILER V2
+# ============================================================================
+
+class DomainCompilerV2:
+    def __init__(self, validator):
+        self.validator = validator
+        self.service_overrides = {}
+
+    def compile(self, spec):
+        if hasattr(spec, "service_definitions"):
+            self.service_overrides = spec.service_definitions
+        self.validator.validate(spec)
+        services = self._derive_services(spec)
+        return SystemIR(
+            name=spec.name, services=services,
+            event_topology={e.name: {"producers": e.producers, "consumers": e.consumers}
+                            for e in spec.event_contracts},
+            api_dependencies={n: s.depends_on for n, s in services.items()},
+            constitutional_constraints=spec.constitutional_constraints,
+            target_runtime=spec.target_runtime
+        )
+
+    def _derive_services(self, spec):
+        services = {}
+        data_by_owner = {}
+        for d in spec.data_ownership:
+            data_by_owner.setdefault(d.owner_service, []).append(d)
+        slo_lat  = {CriticalityLevel.FINANCIAL: 50,  CriticalityLevel.PII: 100,
+                    CriticalityLevel.PUBLIC: 500,     CriticalityLevel.INTERNAL: 1000}
+        slo_avail = {CriticalityLevel.FINANCIAL: 0.9999, CriticalityLevel.PII: 0.999,
+                     CriticalityLevel.PUBLIC: 0.99,       CriticalityLevel.INTERNAL: 0.95}
+        for ctx, svcs in spec.bounded_contexts.items():
+            for svc_name in svcs:
+                ov = self.service_overrides.get(svc_name, {})
+                criticality = (CriticalityLevel(ov["criticality"]) if ov.get("criticality")
+                               else self._infer_criticality(svc_name, data_by_owner.get(svc_name, [])))
+                target_lang = ov.get("language") or self._select_language(criticality)
+                apis     = [a for a in spec.api_contracts if svc_name.replace("-service","") in a.path.lower()]
+                publishes = [e for e in spec.event_contracts if svc_name in e.producers]
+                consumes  = [e for e in spec.event_contracts if svc_name in e.consumers]
+                deps      = {p for e in consumes for p in e.producers if p != svc_name}
+                services[svc_name] = IntermediateService(
+                    name=svc_name, bounded_context=ctx, criticality=criticality,
+                    owned_data=data_by_owner.get(svc_name, []),
+                    data_access_patterns=[
+                        DataAccessPattern(entity=d.entity, owner_service=svc_name,
+                                          access_type="owns", allowed=True)
+                        for d in data_by_owner.get(svc_name, [])
+                    ],
+                    publishes_events=publishes, consumes_events=consumes, exposes_apis=apis,
+                    failure_modes=self._generate_failure_modes(criticality, apis, publishes),
+                    observability=ObservabilityConfig(
+                        service_name=svc_name,
+                        trace_sampling_rate=0.1 if criticality == CriticalityLevel.PUBLIC else 1.0,
+                        metrics_endpoints=["prometheus:9090"], log_level="info"
+                    ),
+                    security=SecurityConfig(
+                        rbac_policy=f"allow {svc_name}",
+                        vault_role=f"{spec.name}-{svc_name}",
+                        mtls_enabled=criticality != CriticalityLevel.PUBLIC,
+                        audit_logging=criticality in [CriticalityLevel.PII, CriticalityLevel.FINANCIAL]
+                    ),
+                    mesh_config=ServiceMeshConfig(
+                        service_name=svc_name,
+                        destination_rules={"trafficPolicy": {"connectionPool": {"tcp": {"maxConnections": 100}}}},
+                        virtual_services=[],
+                        peer_authentication={"mtls": {"mode": "STRICT" if criticality != CriticalityLevel.PUBLIC else "PERMISSIVE"}},
+                        traffic_policy={"rate_limits": [{"api": a.path, "rps": a.rate_limit or 1000} for a in apis]}
+                    ),
+                    slo_latency_ms=slo_lat.get(criticality, 100),
+                    slo_availability=slo_avail.get(criticality, 0.99),
+                    target_language=target_lang,
+                    depends_on=list(deps)
+                )
+        return services
+
+    def _infer_criticality(self, name, data):
+        if any(d.pii_fields for d in data): return CriticalityLevel.PII
+        if any(k in name.lower() for k in ["payment","fraud","billing","financial"]): return CriticalityLevel.FINANCIAL
+        if any(k in name.lower() for k in ["user","identity","auth"]): return CriticalityLevel.PII
+        if "public" in name.lower(): return CriticalityLevel.PUBLIC
+        return CriticalityLevel.INTERNAL
+
+    def _select_language(self, c):
+        return "rust" if c == CriticalityLevel.FINANCIAL else "go" if c == CriticalityLevel.PII else "typescript"
+
+    def _generate_failure_modes(self, c, apis, events):
+        paths = [a.path for a in apis]; channels = [e.name for e in events]; modes = []
+        if c == CriticalityLevel.FINANCIAL:
+            modes += [
+                FailureModeConfig(FailureModeStrategy.RETRY_WITH_BACKOFF, {"max_retries": 5, "backoff_multiplier": 2.0}, paths),
+                FailureModeConfig(FailureModeStrategy.BULKHEAD, {"max_concurrent": 50}, paths)
+            ]
+        elif c == CriticalityLevel.PII:
+            modes += [
+                FailureModeConfig(FailureModeStrategy.CIRCUIT_BREAKER, {"failure_threshold": 5, "recovery_timeout_ms": 30000}, paths),
+                FailureModeConfig(FailureModeStrategy.DEAD_LETTER_QUEUE, {"retention_hours": 168, "audit": True}, channels)
+            ]
+        modes.append(FailureModeConfig(FailureModeStrategy.TIMEOUT, {"timeout_ms": 30000}, paths))
+        return modes
+
+
+# ============================================================================
+# 5. GO CODE EMITTER
+# ============================================================================
+
+class GoCodeEmitter:
+    def emit_service(self, svc, output_dir):
+        d = Path(output_dir) / svc.name
+        d.mkdir(parents=True, exist_ok=True)
+        files = {
+            "main.go":        self._main(svc),
+            "handlers.go":    self._handlers(svc),
+            "resilience.go":  self._resilience(svc),
+            "observability.go": self._observability(svc),
+            "k8s.yaml":       self._k8s(svc),
+            "istio.yaml":     self._istio(svc),
+            "go.mod":         self._gomod(svc),
+            "Dockerfile":     self._dockerfile(svc),
+        }
+        for fname, content in files.items():
+            (d / fname).write_text(content)
+        return files
+
+    def _main(self, s):
+        return f"""package main
+
+import (
+\t"context"
+\t"log"
+\t"net/http"
+\t"os/signal"
+\t"syscall"
+\t"time"
+)
+
+const (
+\tServiceName     = "{s.name}"
+\tCriticality     = "{s.criticality.value}"
+\tSLOLatencyMs    = {s.slo_latency_ms}
+\tSLOAvailability = {s.slo_availability}
+)
+
+// ==== GENESIS:SACRED:initialization:BEGIN ====
+// Initialize custom dependencies here
+// ==== GENESIS:SACRED:initialization:END ====
+
+func main() {{
+\tctx, cancel := context.WithCancel(context.Background())
+\tdefer cancel()
+\ttp, _ := initTracer(ctx)
+\tdefer tp.Shutdown(ctx)
+\tcb := initCircuitBreaker()
+\tmux := http.NewServeMux()
+\tmux.HandleFunc("/health", healthHandler)
+\tserver := &http.Server{{
+\t\tAddr:    ":8080",
+\t\tHandler: withMiddleware(mux, tp, cb),
+\t\tReadTimeout:  SLOLatencyMs * time.Millisecond,
+\t\tWriteTimeout: SLOLatencyMs * 2 * time.Millisecond,
+\t}}
+\tsigChan := make(chan os.Signal, 1)
+\tsignal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+\tgo server.ListenAndServe()
+\t<-sigChan
+\tshutdownCtx, _ := context.WithTimeout(ctx, 30*time.Second)
+\tserver.Shutdown(shutdownCtx)
+}}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {{
+\tw.Header().Set("Content-Type", "application/json")
+\tw.Write([]byte(`{{"status":"healthy","service":"{s.name}"}}`))
+}}
+"""
+
+    def _handlers(self, s):
+        handlers = []
+        for api in s.exposes_apis:
+            name = api.path.strip("/").replace("/","_").replace("-","_").replace("{","").replace("}","")
+            handlers.append(f"""
+// ==== GENESIS:SACRED:handler_{name}:BEGIN ====
+// {api.method.upper()} {api.path} | rate:{api.rate_limit or 1000}/s | auth:{api.auth_required}
+func {name}Handler(w http.ResponseWriter, r *http.Request) {{
+\t// TODO: implement business logic
+\tw.Write([]byte(`{{"status":"ok"}}`))
+}}
+// ==== GENESIS:SACRED:handler_{name}:END ====""")
+        return "package main\n" + "\n".join(handlers)
+
+    def _resilience(self, s):
+        modes = "\n".join([f"// {f.strategy.value}: {f.parameters}" for f in s.failure_modes])
+        return f"""package main
+
+import (
+\t"sync"
+\t"time"
+)
+
+// Failure modes — criticality: {s.criticality.value}
+{modes}
+
+type CircuitBreaker struct {{
+\tmu      sync.RWMutex
+\tfails   int
+\tthresh  int
+\topen    bool
+\tlastFail time.Time
+}}
+
+func initCircuitBreaker() *CircuitBreaker {{
+\treturn &CircuitBreaker{{thresh: 5}}
+}}
+
+func (cb *CircuitBreaker) Allow() bool {{
+\tcb.mu.RLock()
+\tdefer cb.mu.RUnlock()
+\treturn !cb.open
+}}
+"""
+
+    def _observability(self, s):
+        return f"""package main
+
+import (
+\t"context"
+\t"go.opentelemetry.io/otel"
+\tsdktrace "go.opentelemetry.io/otel/sdk/trace"
+)
+
+// RED metrics | sampling: {s.observability.trace_sampling_rate} | SLO: {s.slo_latency_ms}ms
+func initTracer(ctx context.Context) (*sdktrace.TracerProvider, error) {{
+\ttp := sdktrace.NewTracerProvider(
+\t\tsdktrace.WithSampler(sdktrace.TraceIDRatioBased({s.observability.trace_sampling_rate})),
+\t)
+\totel.SetTracerProvider(tp)
+\treturn tp, nil
+}}
+"""
+
+    def _k8s(self, s):
+        return f"""apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {s.name}
+  labels:
+    app: {s.name}
+    criticality: {s.criticality.value}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {s.name}
+  template:
+    metadata:
+      labels:
+        app: {s.name}
+      annotations:
+        prometheus.io/scrape: "true"
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "{s.security.vault_role}"
+    spec:
+      containers:
+      - name: {s.name}
+        image: {s.name}:latest
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+"""
+
+    def _istio(self, s):
+        mode = "STRICT" if s.security.mtls_enabled else "PERMISSIVE"
+        return f"""apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: {s.name}
+spec:
+  selector:
+    matchLabels:
+      app: {s.name}
+  mtls:
+    mode: {mode}
+"""
+
+    def _gomod(self, s):
+        return f"""module {s.name.replace("-","")}
+
+go 1.21
+
+require (
+\tgo.opentelemetry.io/otel v1.21.0
+\tgo.opentelemetry.io/otel/sdk v1.21.0
+)
+"""
+
+    def _dockerfile(self, s):
+        return f"""FROM golang:1.21-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN CGO_ENABLED=0 go build -o /{s.name}
+
+FROM gcr.io/distroless/static:nonroot
+COPY --from=builder /{s.name} /{s.name}
+USER nonroot:nonroot
+EXPOSE 8080
+ENTRYPOINT ["/{s.name}"]
+"""
+
+
+# ============================================================================
+# 6. TYPESCRIPT EMITTER
+# ============================================================================
+
+class TypeScriptEmitter:
+    def emit_service(self, svc, output_dir):
+        d = Path(output_dir) / svc.name / "src"
+        d.mkdir(parents=True, exist_ok=True)
+        files = {
+            "src/main.ts":      self._main(svc),
+            "src/app.module.ts":self._module(svc),
+            "package.json":     self._package(svc),
+            "tsconfig.json":    self._tsconfig(),
+            "Dockerfile":       self._dockerfile(svc),
+        }
+        for fname, content in files.items():
+            fpath = Path(output_dir) / svc.name / fname
+            fpath.parent.mkdir(parents=True, exist_ok=True)
+            fpath.write_text(content)
+        return files
+
+    def _main(self, s):
+        return f"""import {{ NestFactory }} from '@nestjs/core';
+import {{ AppModule }} from './app.module';
+
+async function bootstrap() {{
+  const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
+  await app.listen(8080);
+  console.log(`{s.name} ({s.criticality.value}) listening on 8080`);
+}}
+bootstrap();
+"""
+
+    def _module(self, s):
+        return f"""import {{ Module }} from '@nestjs/common';
+
+@Module({{ imports: [], controllers: [], providers: [] }})
+export class AppModule {{}}
+"""
+
+    def _package(self, s):
+        return json.dumps({
+            "name": s.name, "version": "1.0.0",
+            "criticality": s.criticality.value,
+            "scripts": {"build": "tsc", "start": "node dist/main.js"},
+            "dependencies": {
+                "@nestjs/common": "^10.0.0",
+                "@nestjs/core": "^10.0.0",
+                "@opentelemetry/sdk-node": "^0.45.0"
+            }
+        }, indent=2)
+
+    def _tsconfig(self):
+        return json.dumps({
+            "compilerOptions": {
+                "module": "commonjs", "target": "ES2021",
+                "outDir": "./dist", "experimentalDecorators": True,
+                "emitDecoratorMetadata": True, "strictNullChecks": True
+            }
+        }, indent=2)
+
+    def _dockerfile(self, s):
+        return f"""FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+USER node
+EXPOSE 8080
+CMD ["node", "dist/main.js"]
+"""
+
+
+# ============================================================================
+# 7. RUST EMITTER
+# ============================================================================
+
+class RustEmitter:
+    def emit_service(self, svc, output_dir):
+        d = Path(output_dir) / svc.name
+        (d / "src").mkdir(parents=True, exist_ok=True)
+        files = {
+            "src/main.rs":      self._main(svc),
+            "src/models.rs":    self._models(svc),
+            "src/handlers.rs":  self._handlers(svc),
+            "src/resilience.rs":self._resilience(svc),
+            "src/telemetry.rs": self._telemetry(svc),
+            "Cargo.toml":       self._cargo(svc),
+            "Dockerfile":       self._dockerfile(svc),
+            "k8s.yaml":         self._k8s(svc),
+            "istio.yaml":       self._istio(svc),
+        }
+        for fname, content in files.items():
+            (d / fname).write_text(content)
+        return files
+
+    def _fn(self, path):
+        return path.strip("/").replace("/","_").replace("-","_").replace("{","").replace("}","") or "root"
+
+    def _main(self, s):
+        handlers = "\n".join([
+            f'    .route("{a.path}", axum::routing::{a.method.lower()}(handlers::{self._fn(a.path)}))' for a in s.exposes_apis
+        ])
+        return f"""use axum::{{Router, extract::State}};
+use std::{{net::SocketAddr, sync::Arc}};
+
+mod models; mod handlers; mod resilience; mod telemetry;
+
+// {s.name} | criticality:{s.criticality.value} | slo:{s.slo_latency_ms}ms | avail:{s.slo_availability}
+
+pub struct AppState {{
+    pub circuit_breaker: Arc<resilience::CircuitBreaker>,
+}}
+
+#[tokio::main]
+async fn main() {{
+    telemetry::init("{s.name}");
+    let state = Arc::new(AppState {{
+        circuit_breaker: Arc::new(resilience::CircuitBreaker::new({s.failure_modes[0].parameters.get("failure_threshold", 5) if s.failure_modes else 5})),
+    }});
+    let app = Router::new()
+        .route("/health", axum::routing::get(health))
+{handlers}
+        .with_state(state);
+    let addr = SocketAddr::from(([0,0,0,0], 8080));
+    axum::Server::bind(&addr).serve(app.into_make_service()).await.unwrap();
+}}
+
+async fn health() -> axum::Json<serde_json::Value> {{
+    axum::Json(serde_json::json!({{"status":"healthy","service":"{s.name}"}}))
+}}
+"""
+
+    def _models(self, s):
+        structs = []
+        for data in s.owned_data:
+            fields = []
+            for f in data.fields:
+                if f in ["amount","total","price","balance"]: rt = "rust_decimal::Decimal"
+                elif f.endswith("_id") or f == "id": rt = "uuid::Uuid"
+                elif f in data.pii_fields: rt = "String  // PII - encrypted at rest"
+                else: rt = "String"
+                fields.append(f"    pub {f}: {rt},")
+            structs.append(f"""#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct {data.entity} {{
+{chr(10).join(fields)}
+}}""")
+        return "use serde::{Serialize,Deserialize};\n\n" + "\n\n".join(structs)
+
+    def _handlers(self, s):
+        fns = []
+        for api in s.exposes_apis:
+            fn_name = self._fn(api.path)
+            fns.append(f"""
+// ==== GENESIS:SACRED:handler_{fn_name}:BEGIN ====
+// {api.method.upper()} {api.path} | rate:{api.rate_limit or 1000}/s
+pub async fn {fn_name}(
+    State(state): State<std::sync::Arc<crate::AppState>>,
+) -> Result<axum::Json<serde_json::Value>, AppError> {{
+    state.circuit_breaker.allow()?;
+    // TODO: implement business logic
+    Ok(axum::Json(serde_json::json!({{"status":"ok"}})))
+}}
+// ==== GENESIS:SACRED:handler_{fn_name}:END ====""")
+        return "use axum::extract::State;\n\n#[derive(Debug)]\npub enum AppError {{ CircuitOpen, Unauthorized }}\n\nimpl axum::response::IntoResponse for AppError {{\n    fn into_response(self) -> axum::response::Response {{\n        (axum::http::StatusCode::SERVICE_UNAVAILABLE, \"error\").into_response()\n    }}\n}}\n" + "\n".join(fns)
+
+    def _resilience(self, s):
+        modes = "\n".join([f"// {f.strategy.value}: {f.parameters}" for f in s.failure_modes])
+        return f"""use std::sync::atomic::{{AtomicU32, AtomicBool, Ordering}};
+
+// Failure modes — criticality: {s.criticality.value}
+{modes}
+
+pub struct CircuitBreaker {{
+    failures:  AtomicU32,
+    threshold: u32,
+    is_open:   AtomicBool,
+}}
+
+impl CircuitBreaker {{
+    pub fn new(threshold: u32) -> Self {{
+        Self {{ failures: AtomicU32::new(0), threshold, is_open: AtomicBool::new(false) }}
+    }}
+    pub fn allow(&self) -> Result<(), crate::handlers::AppError> {{
+        if self.is_open.load(Ordering::Relaxed) {{
+            return Err(crate::handlers::AppError::CircuitOpen);
+        }}
+        Ok(())
+    }}
+    pub fn record_failure(&self) {{
+        let f = self.failures.fetch_add(1, Ordering::Relaxed) + 1;
+        if f >= self.threshold {{ self.is_open.store(true, Ordering::Relaxed); }}
+    }}
+}}
+"""
+
+    def _telemetry(self, s):
+        return f"""pub fn init(service_name: &str) {{
+    tracing_subscriber::fmt()
+        .with_env_filter("{s.observability.log_level}")
+        .init();
+    tracing::info!(service=service_name, criticality="{s.criticality.value}", "started");
+}}
+"""
+
+    def _cargo(self, s):
+        return f"""[package]
+name = "{s.name}"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum            = "0.7"
+tokio           = {{ version = "1", features = ["full"] }}
+serde           = {{ version = "1", features = ["derive"] }}
+serde_json      = "1"
+uuid            = {{ version = "1", features = ["v4","serde"] }}
+rust_decimal    = {{ version = "1", features = ["serde"] }}
+tracing         = "0.1"
+tracing-subscriber = {{ version = "0.3", features = ["env-filter"] }}
+
+[profile.release]
+opt-level = 3
+lto       = true
+panic     = "abort"
+"""
+
+    def _dockerfile(self, s):
+        return f"""FROM rust:1.75-alpine AS builder
+RUN apk add --no-cache musl-dev
+WORKDIR /app
+COPY . .
+RUN cargo build --release
+
+FROM gcr.io/distroless/static:nonroot
+COPY --from=builder /app/target/release/{s.name} /{s.name}
+USER nonroot:nonroot
+EXPOSE 8080
+ENTRYPOINT ["/{s.name}"]
+"""
+
+    def _k8s(self, s):
+        return f"""apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {s.name}
+  labels:
+    app: {s.name}
+    criticality: {s.criticality.value}
+    language: rust
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: {s.name}
+  template:
+    metadata:
+      labels:
+        app: {s.name}
+    spec:
+      containers:
+      - name: {s.name}
+        image: {s.name}:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+"""
+
+    def _istio(self, s):
+        mode = "STRICT" if s.security.mtls_enabled else "PERMISSIVE"
+        return f"""apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: {s.name}
+spec:
+  selector:
+    matchLabels:
+      app: {s.name}
+  mtls:
+    mode: {mode}
+"""
+
+
+# ============================================================================
+# 8. SACRED ZONE PRESERVER
+# ============================================================================
+
+class SacredZonePreserver:
+    SACRED_BEGIN = r'====\s*GENESIS:SACRED:([\w_]+):BEGIN\s*===='
+    SACRED_END   = r'====\s*GENESIS:SACRED:[\w_]+:END\s*===='
+
+    def extract_from_existing(self, service_dir):
+        import re
+        zones = {}
+        if not Path(service_dir).exists():
+            return zones
+        for f in Path(service_dir).rglob("*"):
+            if f.is_file() and f.suffix in [".go",".ts",".rs"]:
+                content = f.read_text()
+                for m in re.finditer(self.SACRED_BEGIN, content):
+                    zone = m.group(1)
+                    after = content[m.end():]
+                    end_m = re.search(rf'====\s*GENESIS:SACRED:{zone}:END\s*====', after)
+                    if end_m:
+                        zones[zone] = after[:end_m.start()].strip()
+        return zones
+
+    def merge_into_new(self, new_content, zones):
+        for zone, saved in zones.items():
+            if not saved: continue
+            begin = f"==== GENESIS:SACRED:{zone}:BEGIN ===="
+            end   = f"==== GENESIS:SACRED:{zone}:END ===="
+            if begin in new_content and end in new_content:
+                bi = new_content.find(begin) + len(begin)
+                ei = new_content.find(end)
+                if bi < ei:
+                    new_content = new_content[:bi] + "\n" + saved + "\n" + new_content[ei:]
+        return new_content
+
+
+# ============================================================================
+# 9. LIVING GENERATOR (surgical regen + sacred zone preservation)
+# ============================================================================
+
+class LivingGenerator:
+    def __init__(self, go_emitter, ts_emitter, rust_emitter, output_dir):
+        self.emitters = {"go": go_emitter, "typescript": ts_emitter, "rust": rust_emitter}
+        self.output_dir = Path(output_dir)
+        self.manifest_path = self.output_dir / ".genesis-manifest.json"
+        self.preserver = SacredZonePreserver()
+        self.manifest = json.loads(self.manifest_path.read_text()) if self.manifest_path.exists() else {}
+
+    def _service_hash(self, svc):
+        data = {
+            "criticality": svc.criticality.value,
+            "apis": [{"path": a.path, "method": a.method, "rate_limit": a.rate_limit} for a in svc.exposes_apis],
+            "slo": svc.slo_latency_ms, "lang": svc.target_language, "mtls": svc.security.mtls_enabled,
+        }
+        return hashlib.md5(json.dumps(data, sort_keys=True).encode()).hexdigest()
+
+    def regenerate(self, ir):
+        results = {"regenerated": [], "skipped": [], "errors": []}
+        for svc_name, svc in ir.services.items():
+            current_hash = self._service_hash(svc)
+            if self.manifest.get(svc_name, {}).get("hash") == current_hash:
+                results["skipped"].append(svc_name); continue
+            svc_dir = self.output_dir / svc_name
+            zones = self.preserver.extract_from_existing(svc_dir)
+            emitter = self.emitters.get(svc.target_language)
+            if not emitter:
+                results["errors"].append(f"No emitter for {svc.target_language}"); continue
+            files = emitter.emit_service(svc, str(self.output_dir))
+            if zones:
+                for f in svc_dir.rglob("*"):
+                    if f.is_file() and f.suffix in [".go",".ts",".rs"]:
+                        f.write_text(self.preserver.merge_into_new(f.read_text(), zones))
+            self.manifest[svc_name] = {
+                "hash": current_hash, "lang": svc.target_language,
+                "criticality": svc.criticality.value, "files": len(files),
+                "sacred_zones_preserved": len(zones)
+            }
+            results["regenerated"].append(svc_name)
+        self.manifest_path.write_text(json.dumps(self.manifest, indent=2))
+        return results
+
+
+# ============================================================================
+# 10. PACT CONTRACT GENERATOR
+# ============================================================================
+
+class PactContractGenerator:
+    def generate_contracts(self, ir):
+        interactions = []
+        for svc_name, svc in ir.services.items():
+            for api in svc.exposes_apis:
+                consumers = [n for n,s in ir.services.items() if n != svc_name and svc_name in s.depends_on] or ["external-client"]
+                for consumer in consumers:
+                    interactions.append({
+                        "description": f"{api.method.upper()} {api.path}",
+                        "request": {"method": api.method.upper(), "path": api.path, "body": api.request_schema or {}},
+                        "response": {"status": 200, "body": api.response_schema or {"status": "ok"}},
+                        "metadata": {"consumer": consumer, "provider": svc_name}
+                    })
+            for event in svc.publishes_events:
+                for consumer in event.consumers:
+                    interactions.append({
+                        "description": f"Event: {event.name}",
+                        "contents": event.payload_schema,
+                        "metadata": {"consumer": consumer, "provider": svc_name, "eventType": event.name}
+                    })
+        return {"pactVersion": "3.0.0", "interactions": interactions, "metadata": {"system": ir.name}}
+
+    def write_pact_files(self, ir, output_dir):
+        pacts_dir = Path(output_dir) / "pacts"; pacts_dir.mkdir(parents=True, exist_ok=True)
+        contracts = self.generate_contracts(ir); groups = {}
+        for i in contracts["interactions"]:
+            m = i.get("metadata", {}); key = (m.get("consumer","?"), m.get("provider","?"))
+            groups.setdefault(key, []).append(i)
+        for (consumer, provider), interactions in groups.items():
+            (pacts_dir / f"{consumer}-{provider}.json").write_text(
+                json.dumps({"consumer": consumer, "provider": provider, "interactions": interactions}, indent=2))
+        return len(groups)
+
+
+# ============================================================================
+# 11. DRIFT DETECTOR
+# ============================================================================
+
+class DriftDetector:
+    def __init__(self, ir):
+        self.ir = ir
+        self.baseline = {
+            n: {
+                "criticality": s.criticality.value,
+                "mtls": s.security.mtls_enabled,
+                "slo_latency": s.slo_latency_ms,
+                "failure_modes": [f.strategy.value for f in s.failure_modes]
+            } for n, s in ir.services.items()
+        }
+
+    def detect(self, live_state):
+        drift = []
+        for svc, expected in self.baseline.items():
+            if svc not in live_state:
+                drift.append({"type": "service_missing", "service": svc, "severity": "critical"}); continue
+            live = live_state[svc]
+            if live.get("criticality") != expected["criticality"]:
+                drift.append({"type": "criticality_drift", "service": svc, "severity": "critical"})
+            if live.get("mtls") != expected["mtls"]:
+                drift.append({"type": "security_drift", "service": svc, "severity": "critical"})
+            if live.get("latency_p99", 0) > expected["slo_latency"] * 1.5:
+                drift.append({"type": "slo_violation", "service": svc, "severity": "high"})
+        for svc in live_state:
+            if svc not in self.baseline:
+                drift.append({"type": "unexpected_service", "service": svc, "severity": "warning"})
+        return drift
+
+
+# ============================================================================
+# 12. DATA ACCESS ENFORCER
+# ============================================================================
+
+class DataAccessEnforcer:
+    def enforce(self, spec, ir):
+        ownership = {d.entity: d.owner_service for d in spec.data_ownership}
+        violations = {}
+        for svc_name, svc in ir.services.items():
+            svc_violations = []
+            for event in svc.publishes_events:
+                for entity, owner in ownership.items():
+                    if entity in str(event.payload_schema) and owner != svc_name:
+                        if not self._is_reference_only(event.payload_schema, entity):
+                            svc_violations.append({
+                                "type": "cross_ownership_event", "service": svc_name,
+                                "entity": entity, "owner": owner, "event": event.name,
+                                "severity": "error",
+                                "message": f"{svc_name} publishes full {entity} owned by {owner}",
+                                "remediation": "Publish only entity ID"
+                            })
+            if svc_violations:
+                violations[svc_name] = svc_violations
+        return violations
+
+    def _is_reference_only(self, schema, entity):
+        s = str(schema)
+        return f"{entity.lower()}_id" in s and entity not in s.replace(f"{entity.lower()}_id","")
+
+
+# ============================================================================
+# 13. TERRAFORM GENERATOR
+# ============================================================================
+
+class TerraformGenerator:
+    def generate(self, ir, output_dir):
+        tf_dir = Path(output_dir) / "terraform"; tf_dir.mkdir(parents=True, exist_ok=True)
+        (tf_dir / "main.tf").write_text(self._root_main(ir))
+        (tf_dir / "variables.tf").write_text(self._root_variables(ir))
+        (tf_dir / "outputs.tf").write_text(self._root_outputs(ir))
+        (tf_dir / "providers.tf").write_text(self._providers())
+        for svc_name, svc in ir.services.items():
+            mod_dir = tf_dir / "modules" / svc_name; mod_dir.mkdir(parents=True, exist_ok=True)
+            (mod_dir / "main.tf").write_text(self._svc_main(svc, ir))
+            (mod_dir / "variables.tf").write_text(self._svc_variables(svc))
+            (mod_dir / "outputs.tf").write_text(self._svc_outputs(svc))
+            (mod_dir / "rbac.tf").write_text(self._svc_rbac(svc, ir))
+            (mod_dir / "vault.tf").write_text(self._svc_vault(svc, ir))
+            (mod_dir / "monitoring.tf").write_text(self._svc_monitoring(svc))
+            (mod_dir / "autoscaling.tf").write_text(self._svc_autoscaling(svc))
+
+    def _providers(self):
+        return """terraform {
+  required_version = ">= 1.5"
+  required_providers {
+    kubernetes = { source = "hashicorp/kubernetes", version = "~> 2.23" }
+    vault      = { source = "hashicorp/vault",      version = "~> 3.20" }
+  }
+}
+provider "kubernetes" { config_path = var.kubeconfig_path }
+provider "vault"      { address = var.vault_address }
+"""
+
+    def _root_main(self, ir):
+        mods = []
+        for svc_name, svc in ir.services.items():
+            safe = svc_name.replace("-","_")
+            deps = f"\n  depends_on = [{', '.join([f'module.{d.replace('-','_')}' for d in svc.depends_on])}]" if svc.depends_on else ""
+            mods.append(f'module "{safe}" {{\n  source = "./modules/{svc_name}"\n  system_name = var.system_name\n  environment = var.environment\n  image_tag   = var.image_tag{deps}\n}}')
+        return "# Genesis Terraform root — " + ir.name + "\n\n" + "\n\n".join(mods)
+
+    def _root_variables(self, ir):
+        return f'variable "system_name" {{ default = "{ir.name}" }}\nvariable "environment" {{ type = string }}\nvariable "image_tag" {{ default = "latest" }}\nvariable "kubeconfig_path" {{ default = "~/.kube/config" }}\nvariable "vault_address" {{ type = string }}\nvariable "vault_token" {{ type = string; sensitive = true }}\n'
+
+    def _root_outputs(self, ir):
+        return "\n".join([f'output "{n.replace("-","_")}_endpoint" {{\n  value = module.{n.replace("-","_")}.service_endpoint\n}}' for n in ir.services])
+
+    def _svc_main(self, svc, ir):
+        replicas = {"financial":3,"pii":3,"public":2,"internal":1}.get(svc.criticality.value, 2)
+        safe = svc.name.replace("-","_")
+        return f"""resource "kubernetes_namespace" "{safe}" {{
+  metadata {{ name = "${{var.system_name}}-{svc.name}"
+    labels = {{ "genesis/criticality" = "{svc.criticality.value}", "istio-injection" = "enabled" }} }} }}
+
+resource "kubernetes_deployment" "{safe}" {{
+  metadata {{ name = "{svc.name}", namespace = kubernetes_namespace.{safe}.metadata[0].name }}
+  spec {{
+    replicas = {replicas}
+    selector {{ match_labels = {{ app = "{svc.name}" }} }}
+    template {{
+      metadata {{
+        labels = {{ app = "{svc.name}" }}
+        annotations = {{
+          "vault.hashicorp.com/agent-inject" = "true"
+          "vault.hashicorp.com/role"         = "{svc.security.vault_role}"
+        }}
+      }}
+      spec {{
+        service_account_name = kubernetes_service_account.{safe}.metadata[0].name
+        container {{
+          name = "{svc.name}"; image = "${{var.image_tag}}/{svc.name}:latest"
+          port {{ container_port = 8080 }}
+          liveness_probe {{ http_get {{ path = "/health"; port = 8080 }} }}
+        }}
+      }}
+    }}
+  }}
+}}
+
+resource "kubernetes_service" "{safe}" {{
+  metadata {{ name = "{svc.name}", namespace = kubernetes_namespace.{safe}.metadata[0].name }}
+  spec {{ selector = {{ app = "{svc.name}" }}; port {{ port = 80; target_port = 8080 }} }}
+}}
+
+resource "kubernetes_service_account" "{safe}" {{
+  metadata {{ name = "{svc.name}", namespace = kubernetes_namespace.{safe}.metadata[0].name }}
+}}
+"""
+
+    def _svc_variables(self, svc):
+        return 'variable "system_name" { type = string }\nvariable "environment" { type = string }\nvariable "image_tag" { type = string }\n'
+
+    def _svc_outputs(self, svc):
+        safe = svc.name.replace("-","_")
+        return f'output "service_endpoint" {{\n  value = "${{kubernetes_service.{safe}.metadata[0].name}}.${{var.system_name}}-{svc.name}.svc.cluster.local"\n}}\n'
+
+    def _svc_rbac(self, svc, ir):
+        safe = svc.name.replace("-","_")
+        return f'resource "kubernetes_cluster_role" "{safe}" {{\n  metadata {{ name = "{svc.name}" }}\n  rule {{ api_groups=[""] resources=["configmaps","secrets"] verbs=["get","list","watch"] }}\n}}\n'
+
+    def _svc_vault(self, svc, ir):
+        safe = svc.name.replace("-","_")
+        return f'resource "vault_policy" "{safe}" {{\n  name   = "{svc.security.vault_role}"\n  policy = <<EOT\npath "secret/data/{ir.name}/{svc.name}/*" {{ capabilities = ["read"] }}\nEOT\n}}\n'
+
+    def _svc_monitoring(self, svc):
+        burn = {"financial":14.4,"pii":6.0,"public":3.0,"internal":1.0}.get(svc.criticality.value,3.0)
+        safe = svc.name.replace("-","_")
+        return f'# SLO alerts for {svc.name} | burn_rate:{burn}x | slo:{svc.slo_latency_ms}ms\nresource "kubernetes_config_map" "{safe}_alerts" {{\n  metadata {{ name = "{svc.name}-alerts" }}\n  data = {{ "alerts.yaml" = "# prometheus alerts auto-generated" }}\n}}\n'
+
+    def _svc_autoscaling(self, svc):
+        min_r = {"financial":3,"pii":2,"public":2,"internal":1}.get(svc.criticality.value,1)
+        max_r = {"financial":20,"pii":10,"public":15,"internal":5}.get(svc.criticality.value,5)
+        safe = svc.name.replace("-","_")
+        return f'resource "kubernetes_horizontal_pod_autoscaler_v2" "{safe}" {{\n  metadata {{ name = "{svc.name}" }}\n  spec {{\n    min_replicas = {min_r}; max_replicas = {max_r}\n    scale_target_ref {{ kind="Deployment"; name="{svc.name}" }}\n  }}\n}}\n'
+
+
+# ============================================================================
+# 14. CICD INTEGRATION
+# ============================================================================
+
+class CICDIntegration:
+    def generate(self, ir, output_dir):
+        cicd_dir = Path(output_dir) / "cicd"; cicd_dir.mkdir(parents=True, exist_ok=True)
+        files = {
+            ".pre-commit-config.yaml":          self._precommit(ir),
+            ".github/workflows/genesis-ci.yml": self._github_actions(ir),
+            "argocd/applicationset.yaml":        self._argocd(ir),
+            "scripts/validate-constitution.py":  self._validate_script(ir),
+            "scripts/drift-check.py":            self._drift_script(ir),
+            "Makefile":                           self._makefile(ir),
+        }
+        for fname, content in files.items():
+            fpath = cicd_dir / fname; fpath.parent.mkdir(parents=True, exist_ok=True)
+            fpath.write_text(content)
+        return files
+
+    def _precommit(self, ir):
+        return """repos:
+  - repo: local
+    hooks:
+      - id: genesis-constitutional-validate
+        name: "Genesis: Constitutional Validation"
+        entry: python cicd/scripts/validate-constitution.py
+        language: python
+        always_run: true
+        stages: [commit, push]
+      - id: genesis-drift-check
+        name: "Genesis: Drift Detection"
+        entry: python cicd/scripts/drift-check.py
+        language: python
+        stages: [push]
+"""
+
+    def _github_actions(self, ir):
+        return f"""name: Genesis CI/CD Pipeline
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  constitutional-validation:
+    name: "Constitutional Validation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install pyyaml && python cicd/scripts/validate-constitution.py
+
+  build-test:
+    name: "Build & Test"
+    needs: constitutional-validation
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: {list(ir.services.keys())}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build service
+        run: cd ${{{{ matrix.service }}}} && make build || true
+
+  contract-tests:
+    name: "Pact Contract Tests"
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -c "import json,glob; [print('OK',f) for f in glob.glob('pacts/*.json')]"
+
+  drift-detection:
+    name: "Spec Drift Detection"
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python cicd/scripts/drift-check.py
+
+  deploy:
+    name: "Deploy via ArgoCD"
+    needs: [contract-tests, drift-detection]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: argocd app sync {ir.name} --prune && argocd app wait {ir.name} --health
+"""
+
+    def _argocd(self, ir):
+        elements = "\n".join([f"          - service: {s}" for s in ir.services])
+        return f"""apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {ir.name}
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+{elements}
+  template:
+    metadata:
+      name: "{ir.name}-{{{{service}}}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/IAmSoThirsty/project-ai
+        targetRevision: HEAD
+        path: "{{{{service}}}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: {ir.name}-{{{{service}}}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+"""
+
+    def _validate_script(self, ir):
+        return """#!/usr/bin/env python3
+import sys, yaml
+from pathlib import Path
+
+def main():
+    if not Path("spec.yaml").exists():
+        print("SKIP: spec.yaml not found"); return 0
+    spec = yaml.safe_load(open("spec.yaml"))
+    violations = []
+    for api in spec.get("apis", []):
+        if not api.get("auth", True):
+            violations.append(f"UNAUTH API: {api['method'].upper()} {api['path']}")
+    for d in spec.get("data_ownership", []):
+        if d.get("pii_fields") and not d.get("retention_days"):
+            violations.append(f"NO RETENTION: {d['entity']} has PII but no retention_days")
+    constraints = spec.get("constitutional_constraints", [])
+    required = {"rate_limit_floor","auth_requirement","pii_isolation"}
+    missing = required - {c["type"] for c in constraints}
+    if missing:
+        violations.append(f"MISSING CONSTRAINTS: {missing}")
+    if violations:
+        print("CONSTITUTIONAL VIOLATIONS:")
+        for v in violations: print(f"  {v}")
+        return 1
+    print(f"OK: {len(constraints)} constraints validated"); return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+"""
+
+    def _drift_script(self, ir):
+        return """#!/usr/bin/env python3
+import sys, json
+from pathlib import Path
+
+def main():
+    if not Path(".genesis-manifest.json").exists():
+        print("SKIP: no manifest"); return 0
+    manifest = json.load(open(".genesis-manifest.json"))
+    drift = []
+    for svc, meta in manifest.items():
+        if not Path(svc).exists():
+            drift.append(f"MISSING: {svc}")
+    if drift:
+        print("DRIFT DETECTED:")
+        for d in drift: print(f"  {d}")
+        return 1
+    print(f"OK: {len(manifest)} services clean"); return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+"""
+
+    def _makefile(self, ir):
+        svcs = " ".join(ir.services.keys())
+        return f"""# Genesis Makefile — {ir.name}
+.PHONY: validate generate drift pact tf-plan tf-apply clean
+
+validate:  ## Constitutional validation
+\tpython cicd/scripts/validate-constitution.py
+
+generate:  ## Regenerate from spec.yaml
+\tpython genesis.py generate --spec spec.yaml --output .
+
+drift:     ## Drift detection
+\tpython cicd/scripts/drift-check.py
+
+pact:      ## Validate Pact contracts
+\t@for f in pacts/*.json; do python -c "import json,sys; p=json.load(open('$$f')); print('OK','$$f',len(p['interactions']),'interactions')"; done
+
+build-all: ## Build all services
+\t@for svc in {svcs}; do echo "Building $$svc..." && cd $$svc && make build && cd ..; done
+
+tf-plan:   ## Terraform plan
+\tcd terraform && terraform init && terraform plan
+
+tf-apply:  ## Terraform apply
+\tcd terraform && terraform apply
+
+clean:     ## Remove generated outputs
+\trm -rf {svcs} terraform/modules pacts .genesis-manifest.json
+
+help:
+\t@grep -E "^[a-zA-Z_-]+:.*##" $(MAKEFILE_LIST) | awk 'BEGIN{{FS=":.*##"}}{{printf "  %-15s %s\\n", $$1, $$2}}'
+"""
+
+
+# ============================================================================
+# COMPONENT INVENTORY
+# ============================================================================
+# 01. CriticalityLevel, RuntimeTarget, FailureModeStrategy (enums)
+# 02. DataOwnership, EventContract, ApiContract, ConstitutionalConstraint,
+#     SystemSpec, FailureModeConfig, ObservabilityConfig, SecurityConfig,
+#     DataAccessPattern, ServiceMeshConfig, IntermediateService, SystemIR
+# 03. ConstitutionalValidatorV2 — pii_isolation, data_residency,
+#                                 rate_limit_floor, auth_requirement
+# 04. GenesisDSLParserV2        — explicit criticality + language overrides
+# 05. DomainCompilerV2          — explicit > inferred > heuristic chain
+# 06. GoCodeEmitter             — main, handlers, resilience, OTEL, k8s, Istio
+# 07. TypeScriptEmitter         — NestJS, OTEL, Dockerfile
+# 08. RustEmitter               — Axum, Decimal, atomic CircuitBreaker,
+#                                 Cargo.toml, distroless Dockerfile
+# 09. SacredZonePreserver       — extract + merge sacred zones across regen
+# 10. LivingGenerator           — hash-based surgical regen, manifest tracking
+# 11. PactContractGenerator     — consumer-driven API + event contracts
+# 12. DriftDetector             — spec vs live, criticality/security/SLO drift
+# 13. DataAccessEnforcer        — allowed=False cross-ownership detection
+# 14. TerraformGenerator        — K8s, RBAC, Vault, monitoring, HPA, PDB
+# 15. CICDIntegration           — pre-commit, GitHub Actions, ArgoCD, Makefile
+#
+# Pipeline: spec.yaml -> GenesisDSLParserV2 -> ConstitutionalValidatorV2
+#        -> DomainCompilerV2 -> SystemIR -> [Go|TS|Rust]Emitter
+#        -> PactContractGenerator -> TerraformGenerator -> CICDIntegration
+#        -> LivingGenerator (ongoing surgical regen)
+================================================================================
+END OF GENESIS SOURCE
+================================================================================

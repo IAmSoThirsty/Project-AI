@@ -1,0 +1,181 @@
+════════════════════════════════════════════════════════════════════════════════
+ZENODO UPLOAD PACKAGE
+Governing Force in AGI: Architectural Constraints for Bounded Defensive Capability
+════════════════════════════════════════════════════════════════════════════════
+
+INSTRUCTIONS
+────────────
+1. Log in to zenodo.org with your IAmSoThirsty account
+2. Go to: zenodo.org/uploads/new?community=thirstysprojects-zc
+3. Upload the paper file (On_the_Governance_of_Force_v4.txt)
+4. Copy the fields below exactly into the upload form
+5. Before submitting: verify DOI field is auto-generated (do not set manually)
+6. Publish → copy the assigned DOI → update your REFERENCES section in
+   the paper if you do a v5
+
+════════════════════════════════════════════════════════════════════════════════
+METADATA FIELDS — COPY THESE EXACTLY
+════════════════════════════════════════════════════════════════════════════════
+
+RESOURCE TYPE:  Publication → Preprint
+
+TITLE:
+Governing Force in AGI: Architectural Constraints for Bounded Defensive Capability
+
+CREATORS:
+  Family name:  Karrick
+  First name:   Jeremy
+  Affiliation:  Project-AI (Independent)
+  ORCID:        0009-0007-9715-4290
+
+PUBLICATION DATE:  2026-04-11
+
+DESCRIPTION (paste into the Description field):
+────────────────────────────────────────────────
+The prevailing discourse surrounding AI safety assumes that harm can be mitigated
+through restriction or avoidance of dangerous concepts. This paper challenges that
+assumption as structurally insufficient and proposes a governance-first model in
+which AGI systems possess full situational awareness while being bound by structural
+constraints—not ethical guidelines—governing when and how force may be applied.
+
+The paper makes four contributions: (1) a critique of instruction-based and
+value-alignment approaches as insufficient for force governance; (2) a graduated
+response architecture with cryptographically-enforced authority tokens; (3) an
+explicit four-layer authority chain separating token issuance from system execution;
+and (4) an honest treatment of implementation limits including enforcement layer
+purity, adversarial robustness, latency tradeoffs, emergent capability indirection,
+and multi-agent coordination at deployment scale.
+
+The graduated response hierarchy maps directly to LOAC principles of necessity,
+proportionality, and distinction. Authority tokens are cryptographically signed,
+time-bounded, and continuously validated against a live revocation endpoint.
+The enforcement layer is architecturally distinct from the reasoning layer, with
+honest acknowledgment that perfect separation is aspirational.
+
+Six open problems are identified: enforcement layer purity, sub-second decision
+latency, multi-agent token coordination, adversarial token forgery, emergent
+capability indirection, and institutional capture of the sovereign authority layer.
+
+This paper is part of the Project-AI constitutional governance corpus (Papers 1–14,
+Zenodo Thirstys Projects Community).
+────────────────────────────────────────────────
+
+KEYWORDS (enter each separately):
+  AGI governance
+  constitutional AI
+  force governance
+  authority tokens
+  graduated response
+  AI safety
+  enforcement architecture
+  multi-agent systems
+  cryptographic audit
+  sovereign AI
+  Project-AI
+  proportionality
+  LOAC
+  trusted execution environment
+
+LICENSE:  Creative Commons Attribution 4.0 International (CC-BY 4.0)
+
+VERSION:  v4.0
+
+LANGUAGE:  English
+
+════════════════════════════════════════════════════════════════════════════════
+RELATED IDENTIFIERS — LINK TO PRIOR PAPERS IN CORPUS
+(Add each as a "Related identifier" in the upload form)
+════════════════════════════════════════════════════════════════════════════════
+
+Paste each DOI below into the Related Identifiers field.
+Relation type for all: "is part of" or "references" (use "references" for safety)
+
+Retrieve your existing DOIs from:
+  zenodo.org/communities/thirstysprojects-zc/records
+
+Add each of your 11+ existing Zenodo records as:
+  Relation type: Is part of
+  Identifier type: DOI
+  DOI: [each existing paper DOI]
+
+Also add these external references:
+  Identifier type: URL
+  URL: https://arxiv.org/abs/2212.08073
+  Relation: References
+  Description: Bai et al., Constitutional AI (2022)
+
+  Identifier type: URL
+  URL: https://arxiv.org/abs/2109.13916
+  Relation: References
+  Description: Hendrycks et al., Unsolved Problems in ML Safety (2021)
+
+  Identifier type: URL
+  URL: https://arxiv.org/abs/2206.07682
+  Relation: References
+  Description: Wei et al., Emergent Abilities of LLMs (2022)
+
+  Identifier type: URL
+  URL: https://arxiv.org/abs/2502.14143
+  Relation: References
+  Description: Hammond et al., Multi-Agent Risks from Advanced AI (2025)
+
+  Identifier type: URL
+  URL: https://arxiv.org/abs/2510.23883
+  Relation: References
+  Description: Chhabra et al., Agentic AI Security (2025)
+
+════════════════════════════════════════════════════════════════════════════════
+FUNDING / GRANTS
+════════════════════════════════════════════════════════════════════════════════
+
+Leave blank (independent research, no institutional funding).
+
+════════════════════════════════════════════════════════════════════════════════
+COMMUNITIES
+════════════════════════════════════════════════════════════════════════════════
+
+Add:  thirstysprojects-zc
+
+════════════════════════════════════════════════════════════════════════════════
+SUGGESTED CITATION (for README or self-reference in future papers)
+════════════════════════════════════════════════════════════════════════════════
+
+Karrick, J. (2026). Governing Force in AGI: Architectural Constraints for
+Bounded Defensive Capability. Zenodo. https://doi.org/10.5281/zenodo.[ASSIGNED]
+
+(Replace [ASSIGNED] with the DOI Zenodo generates on publication.)
+
+════════════════════════════════════════════════════════════════════════════════
+NOTES FOR THE RECORD
+════════════════════════════════════════════════════════════════════════════════
+
+In the "Additional Notes" field (if visible), paste:
+
+"This paper addresses five pre-publication adversarial challenges:
+(1) enforcement layer purity — addressed via TEE architecture and formal
+verification recommendations; (2) token issuance in practice — addressed via
+layered authority chain with failure modes named; (3) emergent capability
+indirection — partially mitigated, listed as open problem OP5; (4) conservatism
+bias tradeoffs — addressed via context-specific calibration and pre-computed
+bounded scenario sets; (5) verification of the trusted base — acknowledged as
+a deployment prerequisite, not a solved problem. The framework is offered as
+the most structurally honest available treatment of force governance in AGI,
+not as a complete solution."
+
+════════════════════════════════════════════════════════════════════════════════
+GITHUB CROSS-REFERENCE
+════════════════════════════════════════════════════════════════════════════════
+
+After publishing, add to your Project-AI repository:
+  File: papers/governance_of_force_v4_zenodo.md
+
+  Contents:
+    # Governing Force in AGI
+    **Zenodo DOI:** https://doi.org/10.5281/zenodo.[ASSIGNED]
+    **Version:** v4.0
+    **Published:** 2026-04-11
+    **Part of:** Project-AI Constitutional Governance Corpus
+
+════════════════════════════════════════════════════════════════════════════════
+END OF ZENODO UPLOAD PACKAGE
+════════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,25 @@
+Paper A1
+Project-AI with OCTOREFLEX: A 4-Tier Governance Stack with Syscall-Authoritative Enforcement
+Abstract
+
+We present a four-tier governance architecture for agentic systems in which enforcement authority is rooted below the policy engine. The key contribution is Tier-0 (OCTOREFLEX), an eBPF LSM–based reflex layer that intercepts and blocks misaligned behavior at syscall time, eliminating the misalignment latency window inherent in higher-tier detection and revocation loops. Tier-1 through Tier-3 retain semantic governance (policy, arbitration, planning), but cannot override Tier-0 containment without authenticated operator action. We define explicit inter-tier contracts, kernel-enforced state transitions, and buffering semantics for degraded higher-tier availability. The result is a governed reasoning system whose safety envelope is enforced at the operating substrate, not merely described by application logic.
+
+Contributions
+
+Non-bypassable Tier-0 enforcement boundary
+
+Formal definition of the misalignment latency window
+
+Inter-tier override and event contracts
+
+Measurable containment latency at syscall boundary
+
+Evaluation Requirements
+
+Syscall attempt → enforcement latency (p50, p95, p99, max)
+
+Production overhead under normal load
+
+Behavior under Tier-1 outage
+
+Recovery correctness and replay integrity
