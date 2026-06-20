@@ -29,6 +29,7 @@ ENV/
 
 # uv
 .uv/
+monkeytype.sqlite3
 
 # IDE
 .idea/

@@ -9,14 +9,27 @@ import os
 import tempfile
 
 from arbiter_gov import (
-    AppendOnlyLedger, FileLedgerBackend, EntryType, LedgerIntegrityError,
-    TimeDelayGate, GateViolation, GateState,
-    Signer, DualSignatureExecutor, SignatureError,
-    AdversarialReview, AdversarialReviewError,
-    DegradationScan, Severity, Finding, rule_power_consolidation,
-    CapacityBudget, SustainabilityGate, SustainabilityViolation,
-    SuccessionRegistry, ArbiterStatus,
+    AdversarialReview,
+    AdversarialReviewError,
+    AppendOnlyLedger,
     ArbiterGovernance,
+    ArbiterStatus,
+    CapacityBudget,
+    DegradationScan,
+    DualSignatureExecutor,
+    EntryType,
+    FileLedgerBackend,
+    GateState,
+    GateViolation,
+    LedgerIntegrityError,
+    Severity,
+    SignatureError,
+    Signer,
+    SuccessionRegistry,
+    SustainabilityGate,
+    SustainabilityViolation,
+    TimeDelayGate,
+    rule_power_consolidation,
 )
 
 
@@ -46,7 +59,7 @@ def test_ledger_tamper_detected():
         f.writelines(lines)
     try:
         ledger.verify_chain()
-        assert False, "tamper not detected"
+        raise AssertionError("tamper not detected")
     except LedgerIntegrityError:
         pass
 
@@ -59,7 +72,7 @@ def test_gate_denies_early_execution():
     p = gate.propose("expand force authority", "force_authority", "arbiter")
     try:
         gate.execute(p.proposal_id, "arbiter", lambda: "DID IT")
-        assert False, "executed before window elapsed"
+        raise AssertionError("executed before window elapsed")
     except GateViolation:
         pass
     # advance past 14-day window
@@ -86,27 +99,25 @@ def test_dual_sig_denies_solo():
     sig_a = ex.sign("arbiter", rec)
     try:
         ex.execute(rec, {"arbiter": sig_a}, lambda: "MUTATED")
-        assert False, "single signature accepted"
+        raise AssertionError("single signature accepted")
     except SignatureError:
         pass
 
     # arbiter signs twice via duplicate key id is impossible (dict), so forge
     # a second distinct-but-arbiter signer to prove non-arbiter requirement
     arbiter2 = Signer("arbiter2", b"key-C", is_arbiter=True)
-    ex2 = DualSignatureExecutor(
-        ledger, {"arbiter": arbiter, "arbiter2": arbiter2})
+    ex2 = DualSignatureExecutor(ledger, {"arbiter": arbiter, "arbiter2": arbiter2})
     s1 = ex2.sign("arbiter", rec)
     s2 = ex2.sign("arbiter2", rec)
     try:
         ex2.execute(rec, {"arbiter": s1, "arbiter2": s2}, lambda: "MUTATED")
-        assert False, "two arbiter signatures accepted without non-arbiter"
+        raise AssertionError("two arbiter signatures accepted without non-arbiter")
     except SignatureError:
         pass
 
     # arbiter + guardian -> allowed
     sg = ex.sign("guardian", rec)
-    assert ex.execute(rec, {"arbiter": sig_a, "guardian": sg},
-                      lambda: "MUTATED") == "MUTATED"
+    assert ex.execute(rec, {"arbiter": sig_a, "guardian": sg}, lambda: "MUTATED") == "MUTATED"
 
 
 def test_dual_sig_single_custody_flagged():
@@ -114,8 +125,8 @@ def test_dual_sig_single_custody_flagged():
     arbiter = Signer("arbiter", b"key-A", is_arbiter=True)
     arbiter2 = Signer("arbiter2", b"key-C", is_arbiter=True)
     ex = DualSignatureExecutor(
-        ledger, {"arbiter": arbiter, "arbiter2": arbiter2},
-        require_non_arbiter=False)  # solo bootstrap mode
+        ledger, {"arbiter": arbiter, "arbiter2": arbiter2}, require_non_arbiter=False
+    )  # solo bootstrap mode
     rec = ex.build_mutation_record("constitutional_store", {"add": "rule-9"})
     s1, s2 = ex.sign("arbiter", rec), ex.sign("arbiter2", rec)
     ex.execute(rec, {"arbiter": s1, "arbiter2": s2}, lambda: "MUTATED")
@@ -131,14 +142,14 @@ def test_adversarial_blocks_until_rebutted():
     # no challenge yet -> denied
     try:
         rev.assert_cleared(pid)
-        assert False
+        raise AssertionError()
     except AdversarialReviewError:
         pass
     rev.challenge(pid, "loosen memory finality rule")
     # challenged but not rebutted -> denied
     try:
         rev.assert_cleared(pid)
-        assert False
+        raise AssertionError()
     except AdversarialReviewError:
         pass
     rev.rebut(pid, "rejected: finality protects identity continuity", "arbiter")
@@ -150,15 +161,14 @@ def test_degradation_blocks_on_high_finding():
     ledger, _ = fresh_ledger()
     # log 3 arbiter gains, 0 protections -> rule fires HIGH
     for i in range(3):
-        ledger.append(EntryType.POWER_DELTA, "arbiter",
-                      {"direction": "arbiter_gain", "n": i})
+        ledger.append(EntryType.POWER_DELTA, "arbiter", {"direction": "arbiter_gain", "n": i})
     scan = DegradationScan(ledger, block_threshold=Severity.HIGH)
     scan.add_rule(rule_power_consolidation)
     findings = scan.run()
     assert any(f.severity == Severity.HIGH for f in findings)
     try:
         scan.assert_clear("mutation:constitutional_store")
-        assert False, "did not block on high finding"
+        raise AssertionError("did not block on high finding")
     except GateViolation:
         pass
     # resolve -> unblocks
@@ -175,12 +185,11 @@ def test_sustainability_denies_overrun():
     gate.adopt("degradation_scan", 60)
     try:
         gate.adopt("controlled_failure_experiments", 60)  # 150 > 120
-        assert False, "over-budget adoption accepted"
+        raise AssertionError("over-budget adoption accepted")
     except SustainabilityViolation:
         pass
     # offset frees room
-    gate.adopt("controlled_failure_experiments", 60,
-               offset_mechanism="degradation_scan")
+    gate.adopt("controlled_failure_experiments", 60, offset_mechanism="degradation_scan")
     assert gate.budget.consumed_minutes == 90
 
 
@@ -188,10 +197,12 @@ def test_sustainability_denies_overrun():
 def test_succession_dead_man_activates():
     ledger, _ = fresh_ledger()
     t = [0.0]
-    reg = SuccessionRegistry(ledger, heartbeat_seconds=30 * 86400,
-                             grace_seconds=14 * 86400, clock=lambda: t[0])
+    reg = SuccessionRegistry(
+        ledger, heartbeat_seconds=30 * 86400, grace_seconds=14 * 86400, clock=lambda: t[0]
+    )
     reg.set_minimum_defensible_core(
-        ["agi_identity_continuity", "no_silent_memory_deletion"], "arbiter")
+        ["agi_identity_continuity", "no_silent_memory_deletion"], "arbiter"
+    )
     reg.register_successor("trustee-1", "human", "arbiter")
     for i in range(50):
         reg.record_observation("trustee-1", f"ruling-{i}")
@@ -205,16 +216,16 @@ def test_succession_dead_man_activates():
     # exceed grace: succession activates automatically, no operator call
     t[0] += 14 * 86400 + 1
     assert reg.check() == ArbiterStatus.SUCCEEDED
-    events = [r["payload"].get("event")
-              for r in ledger.query(EntryType.SUCCESSION)]
+    events = [r["payload"].get("event") for r in ledger.query(EntryType.SUCCESSION)]
     assert "succession_activated" in events
 
 
 def test_succession_recovers_within_grace():
     ledger, _ = fresh_ledger()
     t = [0.0]
-    reg = SuccessionRegistry(ledger, heartbeat_seconds=30 * 86400,
-                             grace_seconds=14 * 86400, clock=lambda: t[0])
+    reg = SuccessionRegistry(
+        ledger, heartbeat_seconds=30 * 86400, grace_seconds=14 * 86400, clock=lambda: t[0]
+    )
     reg.heartbeat("arbiter")
     t[0] += 31 * 86400
     assert reg.check() == ArbiterStatus.LAPSED
@@ -242,14 +253,14 @@ def test_full_pipeline_denies_then_allows():
     # propose a mutation
     p = gate.propose("add rule-9 to store", "charter_amendment", "arbiter")
     rec = dual.build_mutation_record("constitutional_store", {"add": "rule-9"})
-    sigs = {"arbiter": dual.sign("arbiter", rec),
-            "guardian": dual.sign("guardian", rec)}
+    sigs = {"arbiter": dual.sign("arbiter", rec), "guardian": dual.sign("guardian", rec)}
 
     # early + no adversarial clearance -> denied
     try:
-        gov.execute_mutation(p.proposal_id, "constitutional_store",
-                             {"add": "rule-9"}, rec, sigs, lambda: "DONE")
-        assert False, "pipeline allowed unprepared mutation"
+        gov.execute_mutation(
+            p.proposal_id, "constitutional_store", {"add": "rule-9"}, rec, sigs, lambda: "DONE"
+        )
+        raise AssertionError("pipeline allowed unprepared mutation")
     except (GateViolation, AdversarialReviewError):
         pass
 
@@ -259,14 +270,14 @@ def test_full_pipeline_denies_then_allows():
     t[0] += 14 * 86400 + 1
     succ.heartbeat("arbiter")  # stay live across the jump
 
-    out = gov.execute_mutation(p.proposal_id, "constitutional_store",
-                               {"add": "rule-9"}, rec, sigs, lambda: "DONE")
+    out = gov.execute_mutation(
+        p.proposal_id, "constitutional_store", {"add": "rule-9"}, rec, sigs, lambda: "DONE"
+    )
     assert out == "DONE"
 
 
 def _run():
-    tests = [v for k, v in globals().items()
-             if k.startswith("test_") and callable(v)]
+    tests = [v for k, v in globals().items() if k.startswith("test_") and callable(v)]
     passed = 0
     for t in tests:
         t()

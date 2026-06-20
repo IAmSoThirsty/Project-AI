@@ -30,8 +30,20 @@ import argparse
 import hashlib
 import subprocess
 import sys
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import TypedDict
+
+
+class CommitRecord(TypedDict):
+    sha: str
+    parents: list[str]
+    author_name: str
+    author_email: str
+    author_date: str
+    subject: str
+    body: str
 
 GENESIS_SHA256 = hashlib.sha256(b"").hexdigest()
 
@@ -56,7 +68,7 @@ def run_git(repo: Path, *args: str, check: bool = True) -> str:
     return result.stdout.strip()
 
 
-def iter_commits_chrono(repo: Path):
+def iter_commits_chrono(repo: Path) -> Iterator[CommitRecord]:
     """
     Yield commits from oldest to newest as (sha, parents, author, date, subject, body).
     Uses --reverse so we don't have to reverse in memory.
@@ -89,7 +101,7 @@ def iter_commits_chrono(repo: Path):
         }
 
 
-def iter_branches(repo: Path):
+def iter_branches(repo: Path) -> Iterator[tuple[str, str]]:
     """Yield (branch_name, tip_sha)."""
     out = run_git(repo, "for-each-ref", "--format=%(refname:short)%00%(objectname)", "refs/heads/")
     for line in out.splitlines():
@@ -99,7 +111,7 @@ def iter_branches(repo: Path):
         yield name, sha
 
 
-def iter_tags(repo: Path):
+def iter_tags(repo: Path) -> Iterator[tuple[str, str, str]]:
     """Yield (tag_name, sha, tagger_date_iso_or_None)."""
     out = run_git(
         repo,
@@ -149,7 +161,9 @@ def commit_files_changed(repo: Path, sha: str) -> str:
 # --------------------------- chain helpers ------------------------------------
 
 
-def render_section(index: int, total: int, commit: dict, prev_section_sha256: str) -> str:
+def render_section(
+    index: int, total: int, commit: CommitRecord, prev_section_sha256: str
+) -> str:
     """
     Build the markdown BODY for ONE commit section. This is the text whose
     SHA-256 becomes this section's chain link. The chain link line itself

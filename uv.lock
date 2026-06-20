@@ -2,6 +2,13 @@ version = 1
 revision = 3
 requires-python = "==3.12.10"
 
+[manifest]
+members = [
+    "project-ai",
+    "project-ai-arbiter",
+    "project-ai-rlp",
+]
+
 [[package]]
 name = "ast-serialize"
 version = "0.5.0"
@@ -199,6 +206,25 @@ wheels = [
 ]
 
 [[package]]
+name = "libcst"
+version = "1.8.6"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/de/cd/337df968b38d94c5aabd3e1b10630f047a2b345f6e1d4456bd9fe7417537/libcst-1.8.6.tar.gz", hash = "sha256:f729c37c9317126da9475bdd06a7208eb52fcbd180a6341648b45a56b4ba708b", size = 891354, upload-time = "2025-11-03T22:33:30.621Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0c/3c/93365c17da3d42b055a8edb0e1e99f1c60c776471db6c9b7f1ddf6a44b28/libcst-1.8.6-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:0c13d5bd3d8414a129e9dccaf0e5785108a4441e9b266e1e5e9d1f82d1b943c9", size = 2206166, upload-time = "2025-11-03T22:32:16.012Z" },
+    { url = "https://files.pythonhosted.org/packages/1d/cb/7530940e6ac50c6dd6022349721074e19309eb6aa296e942ede2213c1a19/libcst-1.8.6-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:f1472eeafd67cdb22544e59cf3bfc25d23dc94058a68cf41f6654ff4fcb92e09", size = 2083726, upload-time = "2025-11-03T22:32:17.312Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/cf/7e5eaa8c8f2c54913160671575351d129170db757bb5e4b7faffed022271/libcst-1.8.6-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:089c58e75cb142ec33738a1a4ea7760a28b40c078ab2fd26b270dac7d2633a4d", size = 2235755, upload-time = "2025-11-03T22:32:18.859Z" },
+    { url = "https://files.pythonhosted.org/packages/55/54/570ec2b0e9a3de0af9922e3bb1b69a5429beefbc753a7ea770a27ad308bd/libcst-1.8.6-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:c9d7aeafb1b07d25a964b148c0dda9451efb47bbbf67756e16eeae65004b0eb5", size = 2301473, upload-time = "2025-11-03T22:32:20.499Z" },
+    { url = "https://files.pythonhosted.org/packages/11/4c/163457d1717cd12181c421a4cca493454bcabd143fc7e53313bc6a4ad82a/libcst-1.8.6-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:207481197afd328aa91d02670c15b48d0256e676ce1ad4bafb6dc2b593cc58f1", size = 2298899, upload-time = "2025-11-03T22:32:21.765Z" },
+    { url = "https://files.pythonhosted.org/packages/35/1d/317ddef3669883619ef3d3395ea583305f353ef4ad87d7a5ac1c39be38e3/libcst-1.8.6-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:375965f34cc6f09f5f809244d3ff9bd4f6cb6699f571121cebce53622e7e0b86", size = 2408239, upload-time = "2025-11-03T22:32:23.275Z" },
+    { url = "https://files.pythonhosted.org/packages/9a/a1/f47d8cccf74e212dd6044b9d6dbc223636508da99acff1d54786653196bc/libcst-1.8.6-cp312-cp312-win_amd64.whl", hash = "sha256:da95b38693b989eaa8d32e452e8261cfa77fe5babfef1d8d2ac25af8c4aa7e6d", size = 2119660, upload-time = "2025-11-03T22:32:24.822Z" },
+    { url = "https://files.pythonhosted.org/packages/19/d0/dd313bf6a7942cdf951828f07ecc1a7695263f385065edc75ef3016a3cb5/libcst-1.8.6-cp312-cp312-win_arm64.whl", hash = "sha256:bff00e1c766658adbd09a175267f8b2f7616e5ee70ce45db3d7c4ce6d9f6bec7", size = 1999824, upload-time = "2025-11-03T22:32:26.131Z" },
+]
+
+[[package]]
 name = "librt"
 version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
@@ -217,6 +243,19 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/21/7b/5aa8848a7c6a9278c79375146da1812e695754ceec5f005e6043461a7315/librt-0.11.0-cp312-cp312-win32.whl", hash = "sha256:6bf14feb84b05ae945277395451998c89c54d0def4070eb5c08de544930b245a", size = 101879, upload-time = "2026-05-10T18:16:08.103Z" },
     { url = "https://files.pythonhosted.org/packages/37/33/8a745436944947575b584231750a41417de1a38cf6a2e9251d1065651c09/librt-0.11.0-cp312-cp312-win_amd64.whl", hash = "sha256:75672f0bc524ede266287d532d7923dbce94c7514ad07627bac3d0c6d92cc4d9", size = 119831, upload-time = "2026-05-10T18:16:09.174Z" },
     { url = "https://files.pythonhosted.org/packages/59/67/a6739ac96e28b7855808bdb0370e250606104a859750d209e5a0716fe7ab/librt-0.11.0-cp312-cp312-win_arm64.whl", hash = "sha256:2f10cf143e4a9bb0f4f5af568a00df94a2d69ef41c2579584454bb0fe5cc642c", size = 103470, upload-time = "2026-05-10T18:16:10.369Z" },
+]
+
+[[package]]
+name = "monkeytype"
+version = "23.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "libcst" },
+    { name = "mypy-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/de/66/7006d51ed537648107c28086f8c390030b4b4c5524b77598a3bbb657d3ec/MonkeyType-23.3.0.tar.gz", hash = "sha256:f2595db34d57cdddbde5a990117a50a22f373dbb917a2a0fa91ffbe07dfe0313", size = 34847, upload-time = "2023-03-20T14:08:01.69Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0c/6d/de1fd4624ba300a98cc22f4db38f24bf89e660b6fc0be2740406347e5bca/MonkeyType-23.3.0-py3-none-any.whl", hash = "sha256:38ce8ad6568190f54c334b9fe835608af29b40a33ad448ecae749ae8790cdbf9", size = 40850, upload-time = "2023-03-20T14:07:58.815Z" },
 ]
 
 [[package]]
@@ -316,12 +355,18 @@ wheels = [
 name = "project-ai"
 version = "0.0.0.dev0"
 source = { editable = "." }
+dependencies = [
+    { name = "project-ai-arbiter" },
+    { name = "project-ai-rlp" },
+]
 
 [package.optional-dependencies]
 dev = [
     { name = "build" },
     { name = "detect-secrets" },
     { name = "hatchling" },
+    { name = "libcst" },
+    { name = "monkeytype" },
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "pypdf" },
@@ -336,8 +381,12 @@ requires-dist = [
     { name = "build", marker = "extra == 'dev'", specifier = ">=1.2.0" },
     { name = "detect-secrets", marker = "extra == 'dev'", specifier = ">=1.5.0" },
     { name = "hatchling", marker = "extra == 'dev'", specifier = ">=1.25.0" },
+    { name = "libcst", marker = "extra == 'dev'", specifier = ">=1.8.0" },
+    { name = "monkeytype", marker = "extra == 'dev'", specifier = ">=23.3.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
+    { name = "project-ai-arbiter", editable = "packages/arbiter" },
+    { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "pypdf", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0" },
@@ -345,6 +394,16 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.9" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "project-ai-arbiter"
+version = "0.0.0.dev0"
+source = { editable = "packages/arbiter" }
+
+[[package]]
+name = "project-ai-rlp"
+version = "0.0.0.dev0"
+source = { editable = "packages/rlp" }
 
 [[package]]
 name = "pygments"
