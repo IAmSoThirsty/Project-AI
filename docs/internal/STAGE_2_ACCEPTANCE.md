@@ -13,9 +13,9 @@
 
 ## Acceptance
 
-- [x] `uv sync --python 3.12.10` exits 0.
+- [x] `uv sync --extra dev --python 3.12.10` exits 0.
 - [x] `uv lock --check` exits 0.
-- [x] `uv sync --check` reports no changes.
+- [x] `uv sync --extra dev --check` reports no changes.
 - [x] Installed metadata reports `project-ai==0.0.0.dev0`.
 - [x] `uv build` creates a source distribution and an empty-platform wheel.
 - [x] Stage -1 tooling tests pass (3/3).
