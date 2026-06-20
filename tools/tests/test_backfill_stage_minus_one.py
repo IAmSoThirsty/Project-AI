@@ -3,7 +3,6 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
-
 MODULE_PATH = Path(__file__).parents[1] / "backfill_stage_minus_one.py"
 SPEC = importlib.util.spec_from_file_location("backfill_stage_minus_one", MODULE_PATH)
 assert SPEC and SPEC.loader

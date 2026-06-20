@@ -10,7 +10,6 @@ import subprocess
 from collections import defaultdict
 from pathlib import Path
 
-
 REPO = Path(__file__).resolve().parents[1]
 OLD_REPO = Path(os.environ.get("PROJECT_AI_LEGACY_REPO", r"T:\Project-AI-main"))
 PAPERS = Path(
@@ -174,7 +173,7 @@ def generate_orphan_status() -> None:
             "Project_AI_The_I_AM_Moment_and_the_Birth_of_Governed_Intelligence_Formal_Whitepaper (1).txt",
             "Separate paper; awaiting DOI",
         ),
-        ("Thirsty’s Standard v3.pdf", "Separate paper; awaiting DOI"),
+        ("Thirsty\u2019s Standard v3.pdf", "Separate paper; awaiting DOI"),
     ]
     lines = ["# Submitted Paper Status", "", "No listed artifact is silently discarded.", ""]
     for name, status in entries:
