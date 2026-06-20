@@ -1,6 +1,6 @@
 # Stage -1 — Paper Ingest + Downloads Copy — Acceptance
 
-**Status:** COMPLETE
+**Status:** COMPLETE (evidence backfill verified 2026-06-20)
 **Date:** 2026-06-19
 **Stage:** -1 of 26 (preceded by Stage -1.5 Frozen History)
 
@@ -33,6 +33,18 @@
 - `packages/rlp/src/rlp/rlp.py` (64 KB, RLP v4 I1-I12, imports clean)
 - Status: **EXPERIMENTAL/DRAFT** — these will be wrapped into proper packages in Stages 4.5/4.6
 
+### 5. Wiki, publication, and disposition evidence
+- `docs/index/wiki-pointer-map.md` — all 192 legacy wiki files classified
+- `docs/internal/vault-stub-index.md` — pointer-only vault files retained as evidence
+- `docs/reference/PUBLICATION_TIMELINE.md` — source-linked timeline
+- `docs/reference/DOI_REGISTRY.md` — source-linked 21-publication registry
+- `docs/audit/wiki-vs-papers-discrepancies.md` — DOI sets agree 21/21
+- `docs/reference/GENESIS.md` — owner-defined three-part Genesis composite
+- `docs/reference/ORPHAN_PAPERS.md` — submitted-paper status and hashes
+- `docs/reference/MERGE_PROVENANCE.md` — byte-hash provenance inventory
+- `docs/reference/DROPPED_FILES_MANIFEST.md` — all 5,276 tracked legacy paths classified without deletion
+- Generator: `tools/backfill_stage_minus_one.py` (repeat-run output is byte-deterministic)
+
 ## Skipped Files (with reasons)
 
 | File | Reason |
@@ -53,16 +65,19 @@
 - [x] rlp.py imports without errors
 - [x] Charter v2.3 is canonical (v2.2 and v1.0 NOT copied)
 - [x] Skipped files have documented reasons in `INGEST_SKIPPED.md`
+- [x] Legacy wiki indexed (192/192 files)
+- [x] Wiki and text-readable corpus DOI sets agree (21/21)
+- [x] Legacy tracked paths classified (5,276/5,276)
+- [x] Stage -1 evidence generator is deterministic across repeated runs
+- [x] Legacy HEAD, status, and dirty-file hashes unchanged during evidence generation
 
 ## What Was NOT Done (deferred to later stages)
 
-- Did NOT commit anything to git (per user directive — only commit when safe)
 - Did NOT yet wrap arbiter_gov/rlp as proper installable Python packages (Stage 4.5/4.6)
 - Did NOT split OMPT.md into website files (Stage 4.7)
 - Did NOT integrate governance framework 0722 (Stage 4.8)
-- Did NOT make old repo T:\Project-AI-main read-only (Stage 3)
-- Did NOT run the wiki scrape (separate sub-stage before Stage 0)
+- Did NOT alter permissions or files in T:\Project-AI-main; Stage 3 records the soft-freeze boundary
 
 ## Ready For
 
-Stage 0: Bootstrap (T:\Project-AI-Beginnings\) — initial commit + root config files.
+Stage 2: Root pyproject and uv workspace. Stage 0/1 are accepted in separate evidence records without rewriting history.
