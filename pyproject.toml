@@ -18,6 +18,7 @@ classifiers = [
 ]
 
 dependencies = [
+    "project-ai-api",
     "project-ai-arbiter",
     "project-ai-atlas",
     "project-ai-capability",
@@ -32,6 +33,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "httpx2>=2.4.0",
     "pytest>=8.3.0",
     "pytest-cov>=6.0.0",
     "pytest-xdist>=3.6.0",
@@ -66,6 +68,7 @@ managed = true
 package = true
 
 [tool.uv.sources]
+project-ai-api = { workspace = true }
 project-ai-arbiter = { workspace = true }
 project-ai-atlas = { workspace = true }
 project-ai-capability = { workspace = true }
@@ -79,6 +82,7 @@ project-ai-swr = { workspace = true }
 
 [tool.uv.workspace]
 members = [
+    "packages/api",
     "packages/arbiter",
     "packages/atlas",
     "packages/capability",

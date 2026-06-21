@@ -32,6 +32,7 @@ repos:
     hooks:
       - id: mypy
         args: ['--ignore-missing-imports']
+        additional_dependencies: ['fastapi>=0.115.0']
         files: ^packages/[^/]+/src/
         exclude: ^(packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
 
