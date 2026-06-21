@@ -84,6 +84,7 @@ project-ai-cli = { workspace = true }
 
 [tool.uv.workspace]
 members = [
+    "apps/desktop",
     "packages/api",
     "packages/arbiter",
     "packages/atlas",
@@ -104,7 +105,7 @@ members = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-src = ["packages", "tests"]
+src = ["packages", "apps", "tests"]
 extend-exclude = [
     "docs/reference",        # historical paper corpus — do not lint
     "docs/internal/frozen-history",  # frozen SHA-256 chain — do not lint
@@ -173,7 +174,7 @@ exclude = [
 # ----------------------------------------------------------------------
 [tool.pytest.ini_options]
 minversion = "8.0"
-testpaths = ["packages", "tests"]
+testpaths = ["packages", "apps/desktop/tests", "tests"]
 norecursedirs = ["_staging", "governance_framework", "reference"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
@@ -195,7 +196,7 @@ markers = [
 # ----------------------------------------------------------------------
 [tool.coverage.run]
 branch = true
-source = ["packages"]
+source = ["packages", "apps/desktop/src"]
 omit = [
     "*/tests/*",
     "*/__init__.py",
