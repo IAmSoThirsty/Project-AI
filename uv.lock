@@ -6,6 +6,7 @@ requires-python = "==3.12.10"
 members = [
     "project-ai",
     "project-ai-arbiter",
+    "project-ai-atlas",
     "project-ai-capability",
     "project-ai-companion",
     "project-ai-execution",
@@ -364,6 +365,7 @@ version = "0.0.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "project-ai-arbiter" },
+    { name = "project-ai-atlas" },
     { name = "project-ai-capability" },
     { name = "project-ai-companion" },
     { name = "project-ai-execution" },
@@ -400,6 +402,7 @@ requires-dist = [
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
+    { name = "project-ai-atlas", editable = "packages/atlas" },
     { name = "project-ai-capability", editable = "packages/capability" },
     { name = "project-ai-companion", editable = "packages/companion" },
     { name = "project-ai-execution", editable = "packages/execution" },
@@ -420,6 +423,21 @@ provides-extras = ["dev"]
 name = "project-ai-arbiter"
 version = "0.0.0.dev0"
 source = { editable = "packages/arbiter" }
+
+[[package]]
+name = "project-ai-atlas"
+version = "0.0.0.dev0"
+source = { editable = "packages/atlas" }
+dependencies = [
+    { name = "project-ai-execution" },
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-execution", editable = "packages/execution" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+]
 
 [[package]]
 name = "project-ai-capability"

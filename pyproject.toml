@@ -19,6 +19,7 @@ classifiers = [
 
 dependencies = [
     "project-ai-arbiter",
+    "project-ai-atlas",
     "project-ai-capability",
     "project-ai-companion",
     "project-ai-kernel",
@@ -66,6 +67,7 @@ package = true
 
 [tool.uv.sources]
 project-ai-arbiter = { workspace = true }
+project-ai-atlas = { workspace = true }
 project-ai-capability = { workspace = true }
 project-ai-companion = { workspace = true }
 project-ai-kernel = { workspace = true }
@@ -78,6 +80,7 @@ project-ai-swr = { workspace = true }
 [tool.uv.workspace]
 members = [
     "packages/arbiter",
+    "packages/atlas",
     "packages/capability",
     "packages/companion",
     "packages/kernel",

@@ -1,0 +1,15 @@
+[package]
+name = "project-ai-genesis-emitter"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Canonical hash-bound Genesis evidence emitter for Project-AI"
+
+[package.metadata.project-ai]
+development-version = "0.0.0.dev0"
+authority = "evidence-only"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
