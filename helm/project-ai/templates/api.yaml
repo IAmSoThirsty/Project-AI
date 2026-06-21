@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-api
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "project-ai.labels" . | nindent 8 }}
+        {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 8 }}
+    spec:
+      securityContext:
+        {{- include "project-ai.podSecurityContext" . | nindent 8 }}
+      containers:
+        - name: api
+          image: {{ .Values.api.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.api.port }}
+              protocol: TCP
+          env:
+            - name: PROJECT_AI_API_TOKEN
+              value: {{ .Values.api.env.PROJECT_AI_API_TOKEN | quote }}
+            - name: PROJECT_AI_AUDIT_PATH
+              value: {{ .Values.api.env.PROJECT_AI_AUDIT_PATH | quote }}
+            - name: PROJECT_AI_DOI_REGISTRY
+              value: {{ .Values.api.env.PROJECT_AI_DOI_REGISTRY | quote }}
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: {{ .Values.api.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/live
+              port: {{ .Values.api.port }}
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          securityContext:
+            {{- include "project-ai.securityContext" . | nindent 12 }}
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "project-ai.tmpVolumeMount" . | nindent 12 }}
+            - name: audit-data
+              mountPath: /data
+      volumes:
+        {{- include "project-ai.tmpVolume" . | nindent 8 }}
+        - name: audit-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-api
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.api.port }}
+      targetPort: {{ .Values.api.port }}
+      protocol: TCP

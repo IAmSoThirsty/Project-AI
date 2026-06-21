@@ -1,0 +1,12 @@
+apiVersion: v2
+name: project-ai
+description: Project-AI development stack — seven governed services
+type: application
+version: 0.0.0-dev0
+appVersion: "0.0.0-dev0"
+keywords:
+  - project-ai
+  - governance
+  - development
+maintainers:
+  - name: IAmSoThirsty

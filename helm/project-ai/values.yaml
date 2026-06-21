@@ -1,0 +1,94 @@
+# Development values — not for production use.
+# Images are built locally by `docker compose build`.
+
+image:
+  registry: ""
+  pullPolicy: IfNotPresent
+
+# API gateway
+api:
+  image: project-ai-development-api
+  port: 8000
+  env:
+    PROJECT_AI_API_TOKEN: ""
+    PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
+    PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+# Documentation portal
+docsPortal:
+  image: project-ai-development-docs-portal
+  port: 8080
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# Proof portal
+proofPortal:
+  image: project-ai-development-proof-portal
+  port: 8080
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# SWR read-only adapter
+swr:
+  image: project-ai-development-swr
+  port: 8000
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+# Atlas read-only adapter
+atlas:
+  image: project-ai-development-atlas
+  port: 8000
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+# Arbiter/RLP experimental adapter
+arbiterRlp:
+  image: project-ai-development-arbiter-rlp
+  port: 8000
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+# Genesis evidence emitter
+genesis:
+  image: project-ai-development-genesis
+  port: 8080
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      cpu: 100m
+      memory: 32Mi
