@@ -1,0 +1,5 @@
+{
+  "extends": "../../../tsconfig.web.json",
+  "compilerOptions": { "tsBuildInfoFile": "./node_modules/.cache/docs.tsbuildinfo" },
+  "include": ["src", "vite.config.ts"]
+}

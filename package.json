@@ -1,0 +1,30 @@
+{
+  "name": "project-ai-workspace",
+  "version": "0.0.0-dev0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.30.0",
+  "scripts": {
+    "web:lint": "eslint apps/web --max-warnings 0",
+    "web:test": "pnpm --filter @project-ai/docs-portal test && pnpm --filter @project-ai/proof-portal test",
+    "web:build": "pnpm --filter @project-ai/docs-portal build && pnpm --filter @project-ai/proof-portal build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@testing-library/jest-dom": "^6.9.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-react-refresh": "^0.5.0",
+    "globals": "^17.0.0",
+    "jsdom": "^29.0.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.50.0",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
+  }
+}
