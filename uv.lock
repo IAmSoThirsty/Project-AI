@@ -13,6 +13,7 @@ members = [
     "project-ai-kernel",
     "project-ai-rlp",
     "project-ai-security",
+    "project-ai-swr",
 ]
 
 [[package]]
@@ -370,6 +371,7 @@ dependencies = [
     { name = "project-ai-kernel" },
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
+    { name = "project-ai-swr" },
 ]
 
 [package.optional-dependencies]
@@ -405,6 +407,7 @@ requires-dist = [
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
+    { name = "project-ai-swr", editable = "packages/swr" },
     { name = "pypdf", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0" },
@@ -488,6 +491,21 @@ source = { editable = "packages/rlp" }
 name = "project-ai-security"
 version = "0.0.0.dev0"
 source = { editable = "packages/security" }
+
+[[package]]
+name = "project-ai-swr"
+version = "0.0.0.dev0"
+source = { editable = "packages/swr" }
+dependencies = [
+    { name = "project-ai-execution" },
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-execution", editable = "packages/execution" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+]
 
 [[package]]
 name = "pygments"
