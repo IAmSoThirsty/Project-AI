@@ -29,6 +29,7 @@ dependencies = [
     "project-ai-rlp",
     "project-ai-security",
     "project-ai-swr",
+    "project-ai-cli",
 ]
 
 [project.optional-dependencies]
@@ -79,6 +80,7 @@ project-ai-execution = { workspace = true }
 project-ai-rlp = { workspace = true }
 project-ai-security = { workspace = true }
 project-ai-swr = { workspace = true }
+project-ai-cli = { workspace = true }
 
 [tool.uv.workspace]
 members = [
@@ -93,6 +95,7 @@ members = [
     "packages/rlp",
     "packages/security",
     "packages/swr",
+    "packages/cli",
 ]
 
 # ----------------------------------------------------------------------
