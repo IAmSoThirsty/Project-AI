@@ -52,7 +52,7 @@ mapping without relabeling history.
 | 7 | Capability | Signed, scoped, expiring-token tests pass |
 | 8 | Execution | Every actuation requires governance and authority |
 | 9 | Companion | State restoration and governed companion tests pass |
-| 9.5 | Android and Unity | Scoped read-only client builds/tests pass |
+| 9.5 | Android | Scoped read-only DOI/replay client builds/tests pass; Unity deferred by user decision on 2026-06-21 |
 | 10 | SWR | Scenario and governed-operation tests pass |
 | 11 | Atlas and Genesis | Subordination and Rust-emitter tests pass |
 | 12 | API | Health, replay, audit, and authenticated Chimera routes pass |
@@ -74,9 +74,13 @@ Python packages follow a downward-only dependency graph:
 
 Arbiter and RLP are experimental operator-side governance packages. They may
 invoke AI-side execution only through the same execution gate and cannot grant
-themselves authority. Web, desktop, Android, and Unity are applications that
+themselves authority. Web, desktop, and Android are applications that
 consume read-only or explicitly authorized API surfaces; they do not embed
 governance authority.
+
+The previously planned Unity 3DOF client is superseded and deferred by the
+user's 2026-06-21 instruction to skip the Unity section. No Unity repository
+surface is required by this development checkpoint.
 
 The canonical verdict set for this development baseline is `ALLOW`, `DENY`,
 and `ESCALATE`. Seven-outcome proposals remain reference material only.
