@@ -85,6 +85,7 @@ project-ai-cli = { workspace = true }
 [tool.uv.workspace]
 members = [
     "apps/desktop",
+    "apps/services",
     "packages/api",
     "packages/arbiter",
     "packages/atlas",
@@ -174,7 +175,7 @@ exclude = [
 # ----------------------------------------------------------------------
 [tool.pytest.ini_options]
 minversion = "8.0"
-testpaths = ["packages", "apps/desktop/tests", "tests"]
+testpaths = ["packages", "apps/desktop/tests", "apps/services/tests", "tests"]
 norecursedirs = ["_staging", "governance_framework", "reference"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
@@ -196,7 +197,7 @@ markers = [
 # ----------------------------------------------------------------------
 [tool.coverage.run]
 branch = true
-source = ["packages", "apps/desktop/src"]
+source = ["packages", "apps/desktop/src", "apps/services/src"]
 omit = [
     "*/tests/*",
     "*/__init__.py",

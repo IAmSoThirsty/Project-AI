@@ -5,6 +5,9 @@ use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::fmt::Write;
+use std::io::{Read, Write as IoWrite};
+use std::net::{TcpListener, TcpStream};
+use std::time::Duration;
 
 pub const GENESIS_HASH: &str = "0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -78,6 +81,35 @@ pub fn verify(record: &GenesisRecord) -> bool {
         .unwrap_or(false)
 }
 
+pub const HEALTH_JSON: &str =
+    r#"{"status":"live","service":"genesis","version":"0.0.0.dev0","authority":"evidence-only"}"#;
+
+pub fn serve_health(bind: &str) -> std::io::Result<()> {
+    let listener = TcpListener::bind(bind)?;
+    for stream in listener.incoming() {
+        handle_health_request(stream?)?;
+    }
+    Ok(())
+}
+
+fn handle_health_request(mut stream: TcpStream) -> std::io::Result<()> {
+    stream.set_read_timeout(Some(Duration::from_secs(2)))?;
+    let mut request = [0_u8; 1024];
+    let size = stream.read(&mut request)?;
+    let is_health = request[..size].starts_with(b"GET /health/live HTTP/");
+    let (status, body) = if is_health {
+        ("200 OK", HEALTH_JSON)
+    } else {
+        ("404 Not Found", r#"{"detail":"Not Found"}"#)
+    };
+    let response = format!(
+        "HTTP/1.1 {status}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+        body.len()
+    );
+    stream.write_all(response.as_bytes())?;
+    stream.flush()
+}
+
 fn is_sha256(value: &str) -> bool {
     value.len() == 64
         && value
@@ -130,5 +162,13 @@ mod tests {
         let mut zero = input();
         zero.sequence = 0;
         assert!(emit(zero, GENESIS_HASH).is_err());
+    }
+
+    #[test]
+    fn health_response_is_fixed_development_evidence() {
+        let value: Value = serde_json::from_str(HEALTH_JSON).expect("health JSON");
+        assert_eq!(value["status"], "live");
+        assert_eq!(value["version"], "0.0.0.dev0");
+        assert_eq!(value["authority"], "evidence-only");
     }
 }

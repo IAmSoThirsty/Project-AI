@@ -33,7 +33,7 @@ repos:
       - id: mypy
         args: ['--ignore-missing-imports']
         additional_dependencies: ['fastapi>=0.115.0', 'typer>=0.16.0', 'PyQt6>=6.8.0']
-        files: ^(packages/[^/]+|apps/desktop)/src/
+        files: ^(packages/[^/]+|apps/(desktop|services))/src/
         exclude: ^(packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
 
   - repo: https://github.com/gitleaks/gitleaks

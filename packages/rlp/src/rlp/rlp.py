@@ -318,9 +318,7 @@ class ReviewerRegistry:
     def __init__(
         self, reviewer_ids: list[str], audit: AuditLog, clock: Callable[[], float]
     ) -> None:
-        self._r: dict[str, ReviewerRecord] = {
-            rid: ReviewerRecord(rid) for rid in reviewer_ids
-        }
+        self._r: dict[str, ReviewerRecord] = {rid: ReviewerRecord(rid) for rid in reviewer_ids}
         self._hold_votes: dict[str, dict[str, bool]] = {}
         self._anchored: set[str] = set()
         self.audit = audit

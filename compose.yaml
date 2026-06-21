@@ -1,0 +1,123 @@
+name: project-ai-development
+
+x-python-security: &python-security
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs:
+    - /tmp:size=64m,mode=1777
+  restart: unless-stopped
+
+x-python-health: &python-health
+  test:
+    - CMD
+    - python
+    - -c
+    - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2).read()"
+  interval: 5s
+  timeout: 3s
+  retries: 12
+  start_period: 5s
+
+services:
+  api:
+    <<: *python-security
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    environment:
+      PROJECT_AI_API_TOKEN: ${PROJECT_AI_API_TOKEN:-}
+      PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
+      PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
+    volumes:
+      - audit-data:/data
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck: *python-health
+
+  docs-portal:
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      args: { PORTAL: docs }
+    depends_on:
+      api: { condition: service_healthy }
+    ports:
+      - "127.0.0.1:4173:8080"
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 3s
+    restart: unless-stopped
+
+  proof-portal:
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      args: { PORTAL: proof }
+    depends_on:
+      api: { condition: service_healthy }
+    ports:
+      - "127.0.0.1:4174:8080"
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 3s
+    restart: unless-stopped
+
+  swr:
+    <<: *python-security
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+    environment: { PROJECT_AI_SERVICE: swr }
+    healthcheck: *python-health
+
+  atlas:
+    <<: *python-security
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+    environment: { PROJECT_AI_SERVICE: atlas }
+    healthcheck: *python-health
+
+  arbiter-rlp:
+    <<: *python-security
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+    environment: { PROJECT_AI_SERVICE: arbiter-rlp }
+    healthcheck: *python-health
+
+  genesis:
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    build:
+      context: .
+      dockerfile: docker/genesis.Dockerfile
+    healthcheck:
+      test: [CMD, genesis-emitter, health]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 3s
+    restart: unless-stopped
+
+volumes:
+  audit-data:
+

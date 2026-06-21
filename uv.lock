@@ -17,6 +17,7 @@ members = [
     "project-ai-kernel",
     "project-ai-rlp",
     "project-ai-security",
+    "project-ai-service-host",
     "project-ai-swr",
 ]
 
@@ -731,6 +732,29 @@ source = { editable = "packages/rlp" }
 name = "project-ai-security"
 version = "0.0.0.dev0"
 source = { editable = "packages/security" }
+
+[[package]]
+name = "project-ai-service-host"
+version = "0.0.0.dev0"
+source = { editable = "apps/services" }
+dependencies = [
+    { name = "fastapi" },
+    { name = "project-ai-arbiter" },
+    { name = "project-ai-atlas" },
+    { name = "project-ai-rlp" },
+    { name = "project-ai-swr" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.115.0" },
+    { name = "project-ai-arbiter", editable = "packages/arbiter" },
+    { name = "project-ai-atlas", editable = "packages/atlas" },
+    { name = "project-ai-rlp", editable = "packages/rlp" },
+    { name = "project-ai-swr", editable = "packages/swr" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
+]
 
 [[package]]
 name = "project-ai-swr"

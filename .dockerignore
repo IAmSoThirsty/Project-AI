@@ -2,6 +2,10 @@
 .git
 .gitignore
 .venv
+node_modules
+build
+dist
+target
 venv
 env
 ENV
@@ -28,7 +32,6 @@ docs/reference/zenodo
 docs/reference/legal
 docs/reference/attestations
 *.pdf
-*.html
 
 # Tests not needed in runtime image
 **/tests/
@@ -36,5 +39,4 @@ docs/reference/attestations
 
 # Project internal
 docs/internal/STAGE_*
-README.md
 CHANGELOG.md

@@ -101,8 +101,7 @@ def test_token_rejection_and_safe_halt_recovery() -> None:
     engine.safe_halt("test")
     assert engine.state.status == implementation.SystemStatus.SAFE_HALT
     reviewers = [
-        engine.mint_reviewer_token(reviewer, "clear_safe_halt")
-        for reviewer in ("rev_a", "rev_b")
+        engine.mint_reviewer_token(reviewer, "clear_safe_halt") for reviewer in ("rev_a", "rev_b")
     ]
     engine.clear_safe_halt(reviewers)
     assert engine.state.status == implementation.SystemStatus.NOMINAL
