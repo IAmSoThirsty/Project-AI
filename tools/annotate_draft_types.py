@@ -41,7 +41,9 @@ class DraftBoundaryTransformer(cst.CSTTransformer):
         )
         returns = updated_node.returns
         if returns is None:
-            returns = cst.Annotation(cst.Name("None") if updated_node.name.value == "__init__" else ANY)
+            returns = cst.Annotation(
+                cst.Name("None") if updated_node.name.value == "__init__" else ANY
+            )
         return updated_node.with_changes(params=annotated, returns=returns)
 
 

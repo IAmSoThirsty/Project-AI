@@ -34,7 +34,9 @@ def main() -> int:
         },
         "policy": "read-only input; no ACL, Git configuration, attribute, or source-file mutation",
     }
-    OUTPUT.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+    OUTPUT.write_text(
+        json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
+    )
     print(f"Captured unchanged legacy state at {state['head']}")
     return 0
 

@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python (lint · type · test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Lint (ruff)
+        run: uv run ruff check .
+
+      - name: Format (ruff)
+        run: uv run ruff format --check .
+
+      - name: Type-check (mypy)
+        run: |
+          uv run mypy --ignore-missing-imports \
+            packages/kernel/src \
+            packages/security/src \
+            packages/governance/src \
+            packages/capability/src \
+            packages/execution/src \
+            packages/companion/src \
+            packages/swr/src \
+            packages/atlas/src \
+            packages/arbiter/src \
+            packages/rlp/src \
+            packages/api/src \
+            packages/cli/src \
+            apps/desktop/src \
+            apps/services/src
+
+      - name: Test (pytest)
+        run: uv run pytest -q --tb=short
+
+  rust:
+    name: Rust (fmt · clippy · test)
+    runs-on: ubuntu-latest
+    env:
+      # rust-toolchain.toml pins a Windows host target; override for Linux CI
+      RUSTUP_TOOLCHAIN: stable
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Format (cargo fmt)
+        run: cargo fmt --check
+
+      - name: Lint (cargo clippy)
+        run: cargo clippy --locked -- -D warnings
+
+      - name: Test (cargo test)
+        run: cargo test --locked
+
+  node:
+    name: Node (lint · test · build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10.30.0"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (eslint)
+        run: pnpm web:lint
+
+      - name: Test (vitest)
+        run: pnpm web:test
+
+      - name: Build
+        run: pnpm web:build
+
+  compose:
+    name: Compose (config validation)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate compose config
+        run: docker compose config --quiet

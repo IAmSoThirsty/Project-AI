@@ -69,9 +69,9 @@ DOWNLOADS_REFERENCE = [
 
 # Files from Downloads to skip (handled in later stages)
 DOWNLOADS_DEFER = [
-    "arbiter_gov.py",        # Stage 4.5
-    "rlp.py",                # Stage 4.6
-    "test_arbiter_gov.py",   # Stage 4.5/4.6 (CI gate)
+    "arbiter_gov.py",  # Stage 4.5
+    "rlp.py",  # Stage 4.6
+    "test_arbiter_gov.py",  # Stage 4.5/4.6 (CI gate)
     "AGI_Charter_for_Project-AI_v2.2.pdf",  # superseded by v2.3
 ]
 
@@ -97,7 +97,10 @@ def should_skip(name: str) -> str | None:
 def classify(name: str) -> str:
     """Return destination subdir based on filename."""
     n = name.lower()
-    if any(s in n for s in ["attestation", "claude_attest", "chatgpt_attest", "gemini_attest", "grok_attest"]):
+    if any(
+        s in n
+        for s in ["attestation", "claude_attest", "chatgpt_attest", "gemini_attest", "grok_attest"]
+    ):
         return "attestations"
     if any(s in n for s in ["patent", "legal", "namecheap", "license"]):
         return "legal"
@@ -111,7 +114,9 @@ def copy_one(src: Path, dest_dir: Path, manifest: list[str]) -> None:
     # If dest already exists and contents match, skip silently
     if dest.exists():
         if sha256_of(dest) == sha256_of(src):
-            manifest.append(f"  - `{src.name}` — already at dest, contents identical (sha256={sha256_of(src)[:16]}...) — no copy needed")
+            manifest.append(
+                f"  - `{src.name}` — already at dest, contents identical (sha256={sha256_of(src)[:16]}...) — no copy needed"
+            )
             return
         # Collision: rename the incoming file
         stem = src.stem
@@ -141,10 +146,14 @@ def ingest_downloads(manifest: list[str], skipped: list[str]) -> None:
         dest = DEST_ROOT / name
         dest.parent.mkdir(parents=True, exist_ok=True)
         if dest.exists() and sha256_of(dest) == sha256_of(src):
-            manifest.append(f"  - `Downloads/{name}` -> `docs/reference/{name}` — already present, identical")
+            manifest.append(
+                f"  - `Downloads/{name}` -> `docs/reference/{name}` — already present, identical"
+            )
             continue
         shutil.copy2(src, dest)
-        manifest.append(f"  - `Downloads/{name}` -> `docs/reference/{name}` ({src.stat().st_size:,} bytes)")
+        manifest.append(
+            f"  - `Downloads/{name}` -> `docs/reference/{name}` ({src.stat().st_size:,} bytes)"
+        )
 
 
 def ingest_subdir(src_dir: Path, dest_dir: Path, manifest: list[str], skipped: list[str]) -> None:
@@ -207,7 +216,8 @@ def main() -> int:
         "# Skipped Files — Stage -1\n\n"
         f"Generated: {datetime.now().isoformat()}\n\n"
         "Files that were intentionally NOT copied into the rebuild, with reasons.\n\n"
-        + "\n".join(skipped) + "\n",
+        + "\n".join(skipped)
+        + "\n",
         encoding="utf-8",
     )
 

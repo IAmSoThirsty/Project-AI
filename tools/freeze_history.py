@@ -45,6 +45,7 @@ class CommitRecord(TypedDict):
     subject: str
     body: str
 
+
 GENESIS_SHA256 = hashlib.sha256(b"").hexdigest()
 
 
@@ -61,9 +62,7 @@ def run_git(repo: Path, *args: str, check: bool = True) -> str:
         errors="replace",
     )
     if check and result.returncode != 0:
-        sys.stderr.write(
-            f"[freeze_history] git {' '.join(args)} failed:\n{result.stderr}\n"
-        )
+        sys.stderr.write(f"[freeze_history] git {' '.join(args)} failed:\n{result.stderr}\n")
         raise SystemExit(result.returncode)
     return result.stdout.strip()
 
@@ -154,16 +153,17 @@ def commit_files_changed(repo: Path, sha: str) -> str:
         return ""
     lines = out.splitlines()
     if len(lines) > 200:
-        return "\n".join(lines[:200]) + f"\n... ({len(lines) - 200} more files truncated for frozen-history brevity)"
+        return (
+            "\n".join(lines[:200])
+            + f"\n... ({len(lines) - 200} more files truncated for frozen-history brevity)"
+        )
     return "\n".join(lines)
 
 
 # --------------------------- chain helpers ------------------------------------
 
 
-def render_section(
-    index: int, total: int, commit: CommitRecord, prev_section_sha256: str
-) -> str:
+def render_section(index: int, total: int, commit: CommitRecord, prev_section_sha256: str) -> str:
     """
     Build the markdown BODY for ONE commit section. This is the text whose
     SHA-256 becomes this section's chain link. The chain link line itself
@@ -249,9 +249,7 @@ def build_frozen_history(repo: Path, out_path: Path) -> None:
             # Step 3: prepend a fixed-format chain link line. The chain link
             # line itself is NOT included in the body that's hashed — see the
             # verifier which extracts the hash and recomputes over the body.
-            chain_link_line = (
-                f"- **Chain link:** `{prev_section_sha}` -> `{this_section_sha}`\n"
-            )
+            chain_link_line = f"- **Chain link:** `{prev_section_sha}` -> `{this_section_sha}`\n"
 
             # Step 4: write section = header (already in body) + chain link
             # + body. The chain_link_line already has a trailing newline,

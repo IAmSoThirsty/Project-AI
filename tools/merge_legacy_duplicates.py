@@ -15,7 +15,15 @@ from tools.legacy_source_guard import LegacySourceGuard, configured_guard
 REPO = Path(__file__).resolve().parents[1]
 STAGING_ROOT = REPO / "packages" / "_staging"
 REPORT = REPO / "docs" / "internal" / "STAGE_4_MERGE_REPORT.json"
-EXCLUDED_PARTS = {".git", ".gradle", ".mypy_cache", ".pytest_cache", ".venv", "__pycache__", "node_modules"}
+EXCLUDED_PARTS = {
+    ".git",
+    ".gradle",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".venv",
+    "__pycache__",
+    "node_modules",
+}
 
 
 @dataclass(frozen=True)
@@ -103,7 +111,9 @@ def merge(spec: MergeSpec, guard: LegacySourceGuard) -> dict[str, Any]:
         selected_hash = digest(selected)
         records.append(
             {
-                "action": "identical" if source_hash == selected_hash else "canonical-conflict-winner",
+                "action": "identical"
+                if source_hash == selected_hash
+                else "canonical-conflict-winner",
                 "alternate_sha256": source_hash,
                 "path": relative,
                 "sha256": selected_hash,
@@ -148,7 +158,9 @@ def main() -> int:
         "policy": "canonical tree wins conflicts; alternate-only files are retained under legacy_extras",
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+    REPORT.write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
+    )
     for result in results:
         print(
             f"{result['name']}: {result['canonical_files']} canonical, "

@@ -52,7 +52,12 @@ def find_section_bounds(text: str) -> list[tuple[int, int]]:
         else:
             # Last section ends at start of next top-level block, or EOF
             end_candidates = [
-                m.start() for m in [BRANCHES_RE.search(text, start), TAGS_RE.search(text, start), LEDGER_RE.search(text, start)]
+                m.start()
+                for m in [
+                    BRANCHES_RE.search(text, start),
+                    TAGS_RE.search(text, start),
+                    LEDGER_RE.search(text, start),
+                ]
                 if m
             ]
             end = min(end_candidates) if end_candidates else len(text)
@@ -65,7 +70,9 @@ def extract_body(section_text: str) -> str:
     Remove the chain link line from the section text. The chain link line
     is the line starting with "- **Chain link:**" — anything else stays.
     """
-    CHAIN_LINK_RE = re.compile(r"^- \*\*Chain link:\*\* `([0-9a-f]{64})` -> `([0-9a-f]{64})`$", re.MULTILINE)
+    CHAIN_LINK_RE = re.compile(
+        r"^- \*\*Chain link:\*\* `([0-9a-f]{64})` -> `([0-9a-f]{64})`$", re.MULTILINE
+    )
     m = CHAIN_LINK_RE.search(section_text)
     if not m:
         return section_text  # chain link missing; let main loop report it
@@ -89,8 +96,12 @@ def verify(path: Path) -> int:
     print(f"[verify] found {len(boundaries)} commit sections")
     print()
 
-    CHAIN_LINK_RE = re.compile(r"^- \*\*Chain link:\*\* `([0-9a-f]{64})` -> `([0-9a-f]{64})`$", re.MULTILINE)
-    LEDGER_HEAD_RE = re.compile(r"^The final section's SHA-256 \(binds the entire chain\): `([0-9a-f]{64})`$", re.MULTILINE)
+    CHAIN_LINK_RE = re.compile(
+        r"^- \*\*Chain link:\*\* `([0-9a-f]{64})` -> `([0-9a-f]{64})`$", re.MULTILINE
+    )
+    LEDGER_HEAD_RE = re.compile(
+        r"^The final section's SHA-256 \(binds the entire chain\): `([0-9a-f]{64})`$", re.MULTILINE
+    )
 
     expected_prev = GENESIS
     sections_ok = 0
@@ -116,15 +127,21 @@ def verify(path: Path) -> int:
         if ok_hash and ok_link:
             sections_ok += 1
             if sections_ok <= 3 or sections_ok % 500 == 0:
-                print(f"  [OK]   section {sections_ok}: {claimed_this[:16]}.. (prev={claimed_prev[:16]}..)")
+                print(
+                    f"  [OK]   section {sections_ok}: {claimed_this[:16]}.. (prev={claimed_prev[:16]}..)"
+                )
         else:
             sections_fail += 1
             if sections_fail <= 5:
                 print(f"  [FAIL] section {i + 1}:")
                 if not ok_hash:
-                    print(f"         hash mismatch: claimed={claimed_this[:16]}..  recomputed={recomputed[:16]}..")
+                    print(
+                        f"         hash mismatch: claimed={claimed_this[:16]}..  recomputed={recomputed[:16]}.."
+                    )
                 if not ok_link:
-                    print(f"         chain broken: prev={claimed_prev[:16]}..  expected_prev={expected_prev[:16]}..")
+                    print(
+                        f"         chain broken: prev={claimed_prev[:16]}..  expected_prev={expected_prev[:16]}.."
+                    )
 
         expected_prev = claimed_this
         last_this = claimed_this
@@ -138,7 +155,9 @@ def verify(path: Path) -> int:
     print(f"[verify] sections OK:    {sections_ok}")
     print(f"[verify] sections FAIL:  {sections_fail}")
     print(f"[verify] last section hash: {last_this[:16]}..")
-    print(f"[verify] ledger head claimed in footer: {ledger_head_claimed[:16] if ledger_head_claimed else 'NOT FOUND'}..")
+    print(
+        f"[verify] ledger head claimed in footer: {ledger_head_claimed[:16] if ledger_head_claimed else 'NOT FOUND'}.."
+    )
     if ledger_head_claimed and ledger_head_claimed != last_this:
         print("  [FAIL] ledger head mismatch")
         sections_fail += 1
@@ -152,5 +171,9 @@ def verify(path: Path) -> int:
 
 
 if __name__ == "__main__":
-    p = Path(sys.argv[1] if len(sys.argv) > 1 else r"T:\Project-AI-Beginnings\docs\internal\frozen-history\PROJECT-AI_FROZEN_HISTORY.md")
+    p = Path(
+        sys.argv[1]
+        if len(sys.argv) > 1
+        else r"T:\Project-AI-Beginnings\docs\internal\frozen-history\PROJECT-AI_FROZEN_HISTORY.md"
+    )
     sys.exit(verify(p))

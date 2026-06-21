@@ -95,7 +95,9 @@ def generate_wiki_evidence() -> None:
         f"Pointer files: {len(stubs)} of {len(rows)} total wiki files.",
         "",
     ]
-    stub_text.extend(f"- `{path}` ({lines} lines, {links} links)" for path, lines, _, links in stubs)
+    stub_text.extend(
+        f"- `{path}` ({lines} lines, {links} links)" for path, lines, _, links in stubs
+    )
     write_text(REPO / "docs" / "internal" / "vault-stub-index.md", "\n".join(stub_text))
 
 
@@ -140,7 +142,9 @@ def pdf_text(path: Path) -> str:
         from pypdf import PdfReader
     except ImportError as exc:  # pragma: no cover - environment diagnostic
         raise RuntimeError("pypdf is required to generate GENESIS.md") from exc
-    return "\n\n".join((page.extract_text() or "").strip() for page in PdfReader(path).pages).strip()
+    return "\n\n".join(
+        (page.extract_text() or "").strip() for page in PdfReader(path).pages
+    ).strip()
 
 
 def generate_genesis() -> None:
@@ -210,11 +214,16 @@ def generate_provenance() -> None:
         matches = []
         for source in candidates.get(artifact.name, []):
             try:
-                if source.stat().st_size == artifact.stat().st_size and sha256(source) == artifact_hash:
+                if (
+                    source.stat().st_size == artifact.stat().st_size
+                    and sha256(source) == artifact_hash
+                ):
                     matches.append(str(source))
             except OSError:
                 continue
-        source_text = "<br>".join(f"`{path}`" for path in matches) if matches else "unresolved/generated"
+        source_text = (
+            "<br>".join(f"`{path}`" for path in matches) if matches else "unresolved/generated"
+        )
         lines.append(
             f"| `{artifact.relative_to(REPO).as_posix()}` | `{artifact_hash}` | {source_text} |"
         )
@@ -232,9 +241,24 @@ def disposition(path: str) -> str:
     lowered = path.lower()
     if lowered.startswith(("wiki/", "project-ai/", ".obsidian/")):
         return "indexed as legacy navigation; not copied verbatim"
-    if any(part in lowered for part in ("__pycache__", "node_modules/", ".venv/", "data/runtime/", "data/logs/")):
+    if any(
+        part in lowered
+        for part in ("__pycache__", "node_modules/", ".venv/", "data/runtime/", "data/logs/")
+    ):
         return "excluded generated/runtime state"
-    if lowered.startswith(("src/", "governance/", "canonical/", "engines/", "atlas/", "sovereign-war-room/", "desktop/", "android/", "unity/")):
+    if lowered.startswith(
+        (
+            "src/",
+            "governance/",
+            "canonical/",
+            "engines/",
+            "atlas/",
+            "sovereign-war-room/",
+            "desktop/",
+            "android/",
+            "unity/",
+        )
+    ):
         return "scheduled for owning migration gate; retained in frozen history"
     if lowered.startswith("docs/"):
         return "reference candidate; retained in frozen history pending provenance selection"
