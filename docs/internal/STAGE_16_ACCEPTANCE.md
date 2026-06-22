@@ -1,85 +1,36 @@
 # Stage 16 CI Acceptance
 
-**Status:** accepted
+**Status:** accepted with Stage 18 supplement
 
-## Deliverable
+The original Stage 16 commit introduced four jobs. Stage 18 auditing found that
+Android, desktop packaging, Kubernetes, live Compose health, coverage, secret
+scanning, canonical replay, and SBOM generation were not represented. The
+workflow is now expanded without rewriting the original commit.
 
-`.github/workflows/ci.yaml` — four-job workflow covering Python, Rust, Node, and
-Compose validation. Equivalent checks pass locally from this commit.
+## Eight Jobs
 
-## Four Jobs
-
-| Job | Steps |
+| Job | Required checks |
 |---|---|
-| `python` | ruff check · ruff format --check · mypy · pytest |
-| `rust` | cargo fmt --check · cargo clippy -D warnings · cargo test |
-| `node` | pnpm install --frozen-lockfile · web:lint · web:test · web:build |
-| `compose` | docker compose config --quiet |
+| `python` | locked workspace, pre-commit/gitleaks, Ruff, strict MyPy, 80% branch coverage, 312 security cases, canonical 5/5 replay, frozen history |
+| `rust` | format, Clippy with warnings denied, workspace tests |
+| `node` | locked install, lint, tests, both portal builds |
+| `android` | declared API 34 SDK, unit tests, debug assembly |
+| `desktop` | PyQt6 offscreen source smoke, unsigned PyInstaller onedir build and smoke |
+| `compose` | config, seven-image build, seven healthy services, container hardening inspection |
+| `kubernetes` | Helm lint and Kubernetes client dry run |
+| `sbom` | reproducible validated CycloneDX Python-workspace SBOM artifact |
 
-## Local Equivalent Evidence
+## Current Local Evidence
 
-### Python
+- Ruff: all checks passed; 87 files formatted.
+- Strict MyPy: no issues in 70 source files.
+- Pytest: 447 passed with tool-test discovery enabled.
+- Combined branch coverage: 89.41%.
+- Asymmetric suite: 312/312 blocked through governance and execution.
+- Canonical replay: 5/5 invariants passed.
+- Compose: 7/7 healthy with read-only roots, all capabilities dropped, and
+  `no-new-privileges` verified.
 
-```
-$ uv run ruff check .
-All checks passed!
-
-$ uv run ruff format --check .
-81 files already formatted
-
-$ uv run mypy --ignore-missing-imports packages/*/src apps/desktop/src apps/services/src
-Success: no issues found in 50 source files
-
-$ uv run pytest -q --tb=short
-117 passed in 1.06s
-```
-
-Note: 7 files in `tools/` were reformatted by `ruff format` at the start of this stage
-(freeze_history.py, ingest_papers.py, merge_legacy_duplicates.py, verify_frozen_history.py,
-and three others) — all one-shot tools that had not previously been touched by the
-formatter. Format gate is now clean.
-
-### Rust
-
-```
-$ cargo fmt --check
-(no output — clean)
-
-$ cargo clippy --locked -- -D warnings
-Finished `dev` profile in 0.06s
-
-$ cargo test --locked
-test result: ok. 3 passed; 0 failed
-```
-
-`RUSTUP_TOOLCHAIN=stable` set as workflow env — same rationale as Stage 15
-genesis.Dockerfile fix: `rust-toolchain.toml` pins `stable-x86_64-pc-windows-gnu`
-which is rejected on Linux CI runners.
-
-### Node
-
-```
-$ pnpm web:lint
-(no output — clean)
-
-$ pnpm web:test
-Test Files  1 passed (1)
-Tests       2 passed (2)
-
-$ pnpm web:build
-✓ built in 188ms
-```
-
-### Compose
-
-```
-$ docker compose config --quiet
-(no output — clean)
-```
-
-## Workflow Validation
-
-```
-$ python -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yaml')); print('YAML valid')"
-YAML valid
-```
+The final clean-checkout PowerShell and POSIX results are recorded in
+`STAGE_18_ACCEPTANCE.md`; this file does not claim remote CI success before the
+workflow is pushed and observed.

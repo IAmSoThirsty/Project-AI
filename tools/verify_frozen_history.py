@@ -174,6 +174,10 @@ if __name__ == "__main__":
     p = Path(
         sys.argv[1]
         if len(sys.argv) > 1
-        else r"T:\Project-AI-Beginnings\docs\internal\frozen-history\PROJECT-AI_FROZEN_HISTORY.md"
+        else Path(__file__).resolve().parents[1]
+        / "docs"
+        / "internal"
+        / "frozen-history"
+        / "PROJECT-AI_FROZEN_HISTORY.md"
     )
     sys.exit(verify(p))

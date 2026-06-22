@@ -665,7 +665,7 @@ class RLP:
         return max(REVIEWER_DOMAIN_FLOOR, round(modifier, 6))
 
     def _collect_reviewers(
-        self, tokens: list[CapabilityToken], action: str, domain: None = None
+        self, tokens: list[CapabilityToken], action: str, domain: str | None = None
     ) -> dict[str, float]:
         seen = {}
         mod = self._domain_modifier(domain) if domain else 1.0
@@ -688,7 +688,7 @@ class RLP:
         tokens: list[CapabilityToken],
         action: str,
         required_weight: float = QUORUM_WEIGHT_STD,
-        domain: None = None,
+        domain: str | None = None,
     ) -> dict[str, float]:
         seen = self._collect_reviewers(tokens, action, domain=domain)
         if len(seen) < MIN_REVIEW_HEADS:

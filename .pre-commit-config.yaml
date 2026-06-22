@@ -9,6 +9,7 @@ repos:
       - id: end-of-file-fixer
         exclude: ^(apps/web-static/ompt-reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
       - id: check-yaml
+        exclude: ^helm/project-ai/templates/
       - id: check-json
       - id: check-toml
       - id: check-merge-conflict

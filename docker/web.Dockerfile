@@ -13,4 +13,3 @@ ARG PORTAL
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/apps/web/${PORTAL}-portal/dist /usr/share/nginx/html
 EXPOSE 8080
-

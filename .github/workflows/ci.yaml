@@ -12,56 +12,49 @@ concurrency:
 
 jobs:
   python:
-    name: Python (lint · type · test)
+    name: Python (policy, type, test, replay)
     runs-on: ubuntu-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
     steps:
       - uses: actions/checkout@v4
-
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-
-      - name: Install dependencies
-        run: uv sync --frozen
-
-      - name: Lint (ruff)
-        run: uv run ruff check .
-
-      - name: Format (ruff)
-        run: uv run ruff format --check .
-
-      - name: Type-check (mypy)
+      - name: Install locked workspace
+        run: uv sync --frozen --all-extras --all-packages
+      - name: Pre-commit and gitleaks
+        run: uv run pre-commit run --all-files
+      - name: Ruff
+        run: uv run ruff check . && uv run ruff format --check .
+      - name: Strict MyPy
         run: |
           uv run mypy --ignore-missing-imports \
-            packages/kernel/src \
-            packages/security/src \
-            packages/governance/src \
-            packages/capability/src \
-            packages/execution/src \
-            packages/companion/src \
-            packages/swr/src \
-            packages/atlas/src \
-            packages/arbiter/src \
-            packages/rlp/src \
-            packages/api/src \
-            packages/cli/src \
-            apps/desktop/src \
-            apps/services/src
-
-      - name: Test (pytest)
-        run: uv run pytest -q --tb=short
+            packages/kernel/src packages/security/src packages/governance/src \
+            packages/capability/src packages/execution/src packages/companion/src \
+            packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src \
+            packages/api/src packages/cli/src apps/desktop/src apps/services/src tools
+      - name: Test with branch coverage
+        run: |
+          uv run pytest -q --tb=short \
+            --cov=kernel --cov=security --cov=governance --cov=capability \
+            --cov=execution --cov=companion --cov=swr --cov=atlas \
+            --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli \
+            --cov=project_ai_desktop --cov=project_ai_services \
+            --cov-branch --cov-report=term-missing --cov-fail-under=80
+      - name: Canonical replay 5/5
+        run: uv run python tools/canonical_replay.py
+      - name: Frozen history 2264/2264
+        run: uv run python tools/verify_frozen_history.py
 
   rust:
-    name: Rust (fmt · clippy · test)
+    name: Rust (fmt, clippy, test)
     runs-on: ubuntu-latest
     env:
-      # rust-toolchain.toml pins a Windows host target; override for Linux CI
       RUSTUP_TOOLCHAIN: stable
     steps:
       - uses: actions/checkout@v4
-
-      - name: Cache Cargo registry
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry
@@ -69,48 +62,112 @@ jobs:
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
-
-      - name: Format (cargo fmt)
-        run: cargo fmt --check
-
-      - name: Lint (cargo clippy)
-        run: cargo clippy --locked -- -D warnings
-
-      - name: Test (cargo test)
-        run: cargo test --locked
+      - run: cargo fmt --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
 
   node:
-    name: Node (lint · test · build)
+    name: Node (lint, test, build)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           version: "10.30.0"
-
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm web:lint
+      - run: pnpm web:test
+      - run: pnpm web:build
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint (eslint)
-        run: pnpm web:lint
-
-      - name: Test (vitest)
-        run: pnpm web:test
-
-      - name: Build
-        run: pnpm web:build
-
-  compose:
-    name: Compose (config validation)
+  android:
+    name: Android (unit, debug assembly)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+      - name: Install declared SDK
+        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+      - name: Test and assemble
+        working-directory: apps/android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon testDebugUnitTest assembleDebug
 
-      - name: Validate compose config
-        run: docker compose config --quiet
+  desktop:
+    name: Desktop (offscreen, unsigned onedir)
+    runs-on: ubuntu-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
+      PROJECT_AI_DESKTOP_SMOKE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen --all-extras --all-packages
+      - name: Source smoke
+        run: uv run --package project-ai-desktop python -m project_ai_desktop
+      - name: Build unsigned development artifact
+        run: |
+          mkdir -p build/ci-desktop/spec
+          uv run --package project-ai-desktop pyinstaller \
+            --noconfirm --clean --onedir \
+            --name Project-AI-Desktop \
+            --distpath build/ci-desktop/dist \
+            --workpath build/ci-desktop/work \
+            --specpath build/ci-desktop/spec \
+            apps/desktop/src/project_ai_desktop/__main__.py
+          build/ci-desktop/dist/Project-AI-Desktop/Project-AI-Desktop
+
+  compose:
+    name: Compose (build, health, security)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose config --quiet
+      - run: docker compose up -d --build --wait --wait-timeout 240
+      - run: python tools/verify_compose_health.py
+      - if: always()
+        run: docker compose logs --no-color
+      - if: always()
+        run: docker compose down
+
+  kubernetes:
+    name: Kubernetes (Helm, client dry run)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - uses: azure/setup-kubectl@v4
+      - run: helm lint helm/project-ai
+      - run: helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client -f -
+
+  sbom:
+    name: SBOM (CycloneDX)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen --all-extras --all-packages
+      - name: Generate reproducible Python workspace SBOM
+        run: |
+          mkdir -p build/sbom
+          uvx --from cyclonedx-bom==7.3.0 cyclonedx-py environment \
+            "$(uv run python -c 'import sys; print(sys.executable)')" \
+            --pyproject pyproject.toml \
+            --output-reproducible \
+            --validate \
+            --output-format JSON \
+            --output-file build/sbom/project-ai-python.cdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: project-ai-python-sbom
+          path: build/sbom/project-ai-python.cdx.json
+          if-no-files-found: error
