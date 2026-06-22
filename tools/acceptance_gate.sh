@@ -93,6 +93,13 @@ case "$(uname -s)" in
         export TEMP="$TMPDIR"
         export TMP="$TMPDIR"
         mkdir -p "$TMPDIR"
+        if [[ -z "${ANDROID_HOME:-}" && -n "${LOCALAPPDATA:-}" ]]; then
+            ANDROID_HOME="$(cygpath -w "$(cygpath -u "$LOCALAPPDATA")/Android/Sdk")"
+            export ANDROID_HOME
+        fi
+        if [[ -n "${ANDROID_HOME:-}" ]]; then
+            export ANDROID_SDK_ROOT="$ANDROID_HOME"
+        fi
         ;;
     *) export RUSTUP_TOOLCHAIN=stable ;;
 esac

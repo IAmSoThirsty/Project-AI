@@ -8,6 +8,15 @@ $acceptanceTemp = "C:\tmp\project-ai-acceptance-temp"
 New-Item -ItemType Directory -Force $acceptanceTemp | Out-Null
 $env:TEMP = $acceptanceTemp
 $env:TMP = $acceptanceTemp
+if (-not $env:ANDROID_HOME) {
+    $androidSdk = Join-Path $env:LOCALAPPDATA "Android\Sdk"
+    if (Test-Path -LiteralPath $androidSdk) {
+        $env:ANDROID_HOME = $androidSdk
+    }
+}
+if ($env:ANDROID_HOME) {
+    $env:ANDROID_SDK_ROOT = $env:ANDROID_HOME
+}
 
 function Step {
     param([string]$Label, [scriptblock]$Body)
