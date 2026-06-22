@@ -84,7 +84,7 @@ generate_sbom() {
 }
 
 run_kubernetes_dry_run() {
-    helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client -f -
+    helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client --validate=false -f -
 }
 
 case "$(uname -s)" in

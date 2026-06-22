@@ -159,7 +159,7 @@ Step "Compose: build and start seven services" {
 Step "Compose: health and container security" { uv run python tools/verify_compose_health.py }
 Step "Kubernetes: Helm lint" { helm lint helm/project-ai }
 Step "Kubernetes: client dry run" {
-    helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client -f -
+    helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client --validate=false -f -
 }
 Step "Legacy source: final unchanged snapshot" { uv run python tools/verify_legacy_state.py }
 Step "Checkout: no tracked or untracked writes" { Assert-CleanCheckout }

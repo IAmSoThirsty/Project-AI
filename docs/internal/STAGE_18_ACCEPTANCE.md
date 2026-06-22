@@ -74,6 +74,12 @@ installed API 34 SDK was confirmed at `%LOCALAPPDATA%\Android\Sdk`; commit
 `c3f81ae` added deterministic discovery to both gate paths, after which both
 complete gates passed.
 
+A later evidence-only commit rerun exposed that `kubectl apply
+--dry-run=client` still fetched OpenAPI from the active kubeconfig server. The
+server was stale and returned EOF, making the nominal client-only check depend
+on external cluster state. Both gates and CI now use `--validate=false` for the
+client dry-run. `helm lint` remains the preceding chart validation step.
+
 ## Pending Checkpoint Evidence
 
 - Local `main` fast-forward.

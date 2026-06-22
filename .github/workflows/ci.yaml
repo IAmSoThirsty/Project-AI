@@ -147,7 +147,7 @@ jobs:
       - uses: azure/setup-helm@v4
       - uses: azure/setup-kubectl@v4
       - run: helm lint helm/project-ai
-      - run: helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client -f -
+      - run: helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client --validate=false -f -
 
   sbom:
     name: SBOM (CycloneDX)
