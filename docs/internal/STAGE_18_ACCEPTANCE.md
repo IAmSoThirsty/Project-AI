@@ -51,10 +51,10 @@ the same Dev Drive write-flush issue.
 
 ## Clean-Checkout Results
 
-- Detached worktree: `C:\tmp\project-ai-acceptance-c3f81ae`
-- Runtime commit: `c3f81ae`
-- PowerShell: `ALL CHECKS PASSED (2026-06-22 04:05:32Z)`
-- Git Bash: `ALL CHECKS PASSED (Mon Jun 22 04:08:52 UTC 2026)`
+- Detached worktree: `C:\tmp\project-ai-final-baa98e2`
+- Runtime commit: `baa98e2`
+- PowerShell: `ALL CHECKS PASSED (2026-06-22 04:29:41Z)`
+- Git Bash: `ALL CHECKS PASSED (Mon Jun 22 04:39:49 UTC 2026)`
 - Pytest: `447 passed`; combined branch coverage: `89.41%`.
 - Asymmetric matrix: `312 passed`.
 - Arbiter baseline: `12 passed`.
@@ -79,6 +79,7 @@ A later evidence-only commit rerun exposed that `kubectl apply
 server was stale and returned EOF, making the nominal client-only check depend
 on external cluster state. Both gates and CI now use `--validate=false` for the
 client dry-run. `helm lint` remains the preceding chart validation step.
+Both complete gates then passed from the detached `baa98e2` worktree.
 
 ## Pending Checkpoint Evidence
 
