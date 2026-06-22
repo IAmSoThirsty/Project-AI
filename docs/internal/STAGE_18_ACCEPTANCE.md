@@ -81,16 +81,21 @@ on external cluster state. Both gates and CI now use `--validate=false` for the
 client dry-run. `helm lint` remains the preceding chart validation step.
 Both complete gates then passed from the detached `baa98e2` worktree.
 
-## Pending Checkpoint Evidence
+## Development Checkpoint Evidence
 
 - Local `main` fast-forward: completed at `5d084d0`.
 - Existing GitHub remote configuration and `main` push: completed.
-- Observed remote CI result.
+- Observed remote CI result: blocked before runner allocation.
 
-The first remote CI run (`27930039261`) was rejected before runner allocation
-because the repository requires full-SHA action pins and the workflow used
-major-version tags. Every action reference is now pinned to the upstream commit
-behind its documented major version; a replacement run is required.
+The first remote CI run (`27930039261`) and the full-SHA-pinned replacement run
+(`27930112736`) both report the same check annotation: `The job was not started
+because your account is locked due to a billing issue.` No workflow step ran.
+This is an external GitHub account boundary; remote CI cannot be confirmed
+passing until the account lock is resolved and the workflow is rerun.
+
+Repository policy also requires full-SHA action pins. Commit `7903d1e` pins
+every action reference to the upstream commit behind its documented major
+version, independently of the billing blocker.
 
 No tag, release, package publication, image publication, or deployment is part
 of this checkpoint.
