@@ -83,9 +83,14 @@ Both complete gates then passed from the detached `baa98e2` worktree.
 
 ## Pending Checkpoint Evidence
 
-- Local `main` fast-forward.
-- Existing GitHub remote configuration and `main` push.
+- Local `main` fast-forward: completed at `5d084d0`.
+- Existing GitHub remote configuration and `main` push: completed.
 - Observed remote CI result.
+
+The first remote CI run (`27930039261`) was rejected before runner allocation
+because the repository requires full-SHA action pins and the workflow used
+major-version tags. Every action reference is now pinned to the upstream commit
+behind its documented major version; a replacement run is required.
 
 No tag, release, package publication, image publication, or deployment is part
 of this checkpoint.
