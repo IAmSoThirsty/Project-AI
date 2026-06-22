@@ -1,6 +1,6 @@
 # Stage 18 Acceptance Gate
 
-**Status:** in progress
+**Status:** accepted locally
 
 ## Gate Scripts
 
@@ -49,10 +49,36 @@ its `fsync`; both acceptance scripts isolate temporary test files to
 separate clean checkout on `C:` so Gradle and packaging outputs do not encounter
 the same Dev Drive write-flush issue.
 
-## Pending Evidence
+## Clean-Checkout Results
 
-- Full PowerShell gate from a clean checkout.
-- Full POSIX-compatible gate from the same clean checkout.
-- Local `main` fast-forward, remote push, and observed CI result.
+- Detached worktree: `C:\tmp\project-ai-acceptance-c3f81ae`
+- Runtime commit: `c3f81ae`
+- PowerShell: `ALL CHECKS PASSED (2026-06-22 04:05:32Z)`
+- Git Bash: `ALL CHECKS PASSED (Mon Jun 22 04:08:52 UTC 2026)`
+- Pytest: `447 passed`; combined branch coverage: `89.41%`.
+- Asymmetric matrix: `312 passed`.
+- Arbiter baseline: `12 passed`.
+- Canonical replay: `5/5 invariants passed`.
+- Frozen history: `2,264/2,264`; legacy source unchanged before and after.
+- Android: unit tests and debug assembly succeeded with `41` Gradle tasks.
+- Rust: format, Clippy, and `3` tests passed.
+- Web: both portals linted, tested (`4` tests), and built.
+- Desktop: source and unsigned PyInstaller onedir offscreen smokes passed.
+- SBOM: reproducible validated CycloneDX JSON generated.
+- Compose: seven images built; `7/7` services healthy and hardened.
+- Kubernetes: Helm lint passed; `14` resources passed client dry-run.
+- Both gates ended with no tracked or untracked checkout writes.
 
-This record becomes accepted only after both clean-checkout gates pass.
+The first PowerShell attempt identified an unset Android SDK environment. The
+installed API 34 SDK was confirmed at `%LOCALAPPDATA%\Android\Sdk`; commit
+`c3f81ae` added deterministic discovery to both gate paths, after which both
+complete gates passed.
+
+## Pending Checkpoint Evidence
+
+- Local `main` fast-forward.
+- Existing GitHub remote configuration and `main` push.
+- Observed remote CI result.
+
+No tag, release, package publication, image publication, or deployment is part
+of this checkpoint.
