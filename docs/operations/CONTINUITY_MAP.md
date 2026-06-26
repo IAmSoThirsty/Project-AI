@@ -713,3 +713,43 @@ Decorators + SDK integration deferred.
 | ruff check | All checks passed |
 | ruff format | 112 files formatted |
 
+
+## Session Update — Phase J0 (2026-06-25)
+
+### CRITICAL CORRECTION
+`packages/atlas/` was a pre-existing workspace member from Stage 11
+(commit `2717919`). My initial J0 envelope overwrote its README,
+pyproject.toml, and __init__.py. Reverted via `git checkout HEAD`.
+
+### Salvageable artifacts (committed)
+- docs/internal/PHASE_J_DISCOVERY.md (250 lines — legacy inventory,
+  sub-phase plan, risks)
+
+### Pre-existing atlas (restored, NOT touched)
+- pyproject.toml: workspace-registered, depends on project-ai-execution
+- README.md: "Subordinate deterministic analytical projections"
+- src/atlas/__init__.py: exports RECORD_OPERATION + other symbols
+- src/atlas/analysis.py: real analysis source
+- src/atlas/service.py: real service source
+- tests/test_atlas.py: 11+ tests, all pass
+
+### Phase J revised scope
+Phase J becomes an ENHANCEMENT task, not a from-scratch rebuild:
+- Pre-existing atlas is canonical (Stage 11)
+- Legacy T:\Project-AI-main\atlas\ (12,480 LOC) is a supersession
+  candidate; features may be ported as enhancements after gap audit
+- Future J phases: feature gap audit, then additive enhancements
+
+### Gate Results (post-J0-correction)
+| Gate | Result |
+|---|---|
+| pytest | **888 passed** (no regression) |
+| mypy --strict | clean on 112 source files |
+| ruff check | All checks passed |
+| ruff format | 112 files formatted |
+
+### Remaining
+- User authorization to commit J0 discovery doc only
+- User authorization for Phase J1 (feature gap audit, NOT a rebuild)
+- Phase I1 authorization still pending
+
