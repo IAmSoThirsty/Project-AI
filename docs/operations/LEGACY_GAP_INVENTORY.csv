@@ -1,0 +1,90 @@
+legacy_dir,tracked,real_on_disk,disposition,classification,rebuild_action
+.agent,1,1,not selected,ide-config,drop
+.antigravity,7,10,not selected,ide-config,drop
+.claude,1,2,not selected,ide-config,drop
+.codacy,2,6,not selected,ci-config,drop
+.devcontainer,3,3,not selected,dev-config,drop
+.githooks,1,1,not selected,ci-config,drop
+.github,149,152,not selected,ci-config,drop or cherry-pick ci.yaml
+.gradle,1,74,ignored,cache,drop
+.hypothesis,1,1556,ignored,cache,drop
+.mypy_cache,1,4,ignored,cache,drop
+.obsidian,18,32,indexed as legacy navigation,navigation,drop
+.pytest_cache,1,6,ignored,cache,drop
+.ruff_cache,1,2003,ignored,cache,drop
+.tmp,82,82,not selected (exec logs),runtime-trace,drop
+.venv,1,9036,ignored,cache,drop
+.venv_airllm,1,20014,ignored,cache,drop
+.vscode,1,4,ignored,ide-config,drop
+__pycache__,1,16,ignored,cache,drop
+adversarial_tests,313,326,not selected,runtime-test,preserve-as-reference: docs/legacy-archive/adversarial_tests/
+agent_playbook,13,22,partial carry (governance_framework into rlp),runtime-source,"rebuild-as-runtime: leftover cli.py, governance_core.py, provenance_verify.py"
+android,32,32,scheduled for owning migration gate (STAGE_9.5),app,PARTIAL - verify scope
+api,8,13,not selected,runtime-source,PARTIAL - legacy api/ not used; packages/api/ is rebuilt
+app,5,6,not selected,app,drop - superseded by android/
+archive,39,43,not selected,archive-material,preserve-as-reference or drop
+atlas,69,120,scheduled for STAGE_4+11 merge; shallow in Beginnings,runtime-source,"rebuild-as-runtime: 17 subdirs, 102 py files"
+audit_reports,1,120,ignored,log,drop
+automation-backups,92,92,not selected,archive-material,drop
+automation-reports,1,1,ignored,log,drop
+baseline,9,9,not selected,archive-material,drop
+benchmarks,1,1,not selected,test-helper,drop
+build,1,6,ignored,cache,drop
+buildSrc,4,141,not selected,ci-config,drop
+canonical,8,14,not selected (canonical replay/invariants),runtime-source,preserve-as-reference: docs/legacy-archive/canonical/
+ci-reports,1,6,ignored,log,drop
+cognition,16,41,not selected (stub dir; real in src/app/core/),runtime-source-stub,drop cognition/; root in src/app/core/
+config,40,48,not selected,config,preserve-as-reference: docs/legacy-archive/config/
+conformance,13,17,not selected,runtime-test,preserve-as-reference: docs/legacy-archive/conformance/
+data,103,160,ignored (data/),runtime-state + paper-archive,drop runtime data; preserve paper-archive: docs/legacy-archive/data/
+dataview-queries,33,33,not selected,navigation,drop
+demos,24,41,not selected,examples,preserve-as-reference: docs/legacy-archive/demos/
+desktop,31,31,scheduled for STAGE_14.5,app,PARTIAL - desktop exists
+diagrams,42,43,not selected,doc,preserve-as-reference: docs/legacy-archive/diagrams/
+docs,924,936,not selected (substantial content in docs/reference/ via MERGE_PROVENANCE),doc,PARTIAL - drop remainder
+e2e,32,62,not selected,runtime-test,preserve-as-reference: docs/legacy-archive/e2e/
+emergent-microservices,1,0,DEAD - only .ruff_cache debris; never had source,empty,drop entirely
+engines,220,379,partial merge (swr + atlas); 8 other engines NOT carried,runtime-source,rebuild-as-runtime for 8 unrepresented engines
+examples,30,56,not selected,examples,preserve-as-reference: docs/legacy-archive/examples/
+gradle,3,3,not selected,ci-config,drop
+gradle-evolution,44,87,not selected,ci-config,preserve-as-reference: docs/legacy-archive/gradle-evolution/
+gradle_evolution,1,3,not selected,ci-config,drop - superseded
+graph-views,1,1,not selected,navigation,drop
+governance,59,89,not selected (CRITICAL - 89 vs 4 in Beginnings),runtime-source,rebuild-as-runtime for ~10 critical files
+h323_sec_profile,22,25,not selected,security-config,preserve-as-reference: docs/legacy-archive/h323_sec_profile/
+hardware_schematics,22,22,not selected,hardware-doc,preserve-as-reference: docs/legacy-archive/hardware_schematics/
+helm,6,6,not selected (Beginnings has helm/),deploy-config,drop
+indexes,12,12,not selected,doc,drop
+integrations,52,87,not selected,runtime-source,preserve-as-reference: docs/legacy-archive/integrations/
+kernel,27,63,not selected (CRITICAL - 8 in Beginnings vs 27+ in legacy),runtime-source,rebuild-as-runtime for ~10 critical files
+linguist-submission,12,12,not selected,misc,drop
+monitoring,2,2,not selected,runtime-source (empty),drop
+plans,1,1,not selected,doc,drop - superseded by ~/.hermes/plans/
+policies,4,8,not selected,config,drop or merge into packages/governance/policy.py
+project_ai,30,70,not selected,runtime-source,inspect - likely legacy package source
+Project-Ai,6,6,live Obsidian state,ide-state,excluded from inventory
+Project_ai_index,1,0,DEAD - tracked but no on-disk content,empty,drop
+recovery,47,47,not selected,op-history,preserve-as-reference: docs/legacy-archive/recovery/
+relationships,195,195,not selected,data-model,preserve-as-reference: docs/legacy-archive/relationships/
+scripts,160,268,not selected,ops-scripts,preserve-as-reference: docs/legacy-archive/scripts/
+security,1,0,DEAD - tracked but no on-disk content,empty,drop
+SOVEREIGN-WAR-ROOM,22,37,scheduled STAGE_4 merge; shallow (2 in Beginnings vs 8 swr + 11 extras),runtime-source,rebuild-as-runtime for 6 swr files + extras
+source-docs,244,245,not selected (CRITICAL - 241 markdown),doc,preserve-as-reference: docs/legacy-archive/source-docs/
+src,981,2179,"not selected (CRITICAL - src/app/core/ is 3.8MB, 225 py files)",runtime-source,rebuild-as-runtime for ~150 high-value files
+templates,23,23,not selected,doc,drop or cherry-pick
+tarl,33,69,not selected (CRITICAL - no packages/tarl/),runtime-source,rebuild-as-runtime: NEW packages/tarl/
+tarl_os,39,46,not selected (CRITICAL - no packages/tarl_os/),runtime-source + config,rebuild-as-runtime: NEW packages/tarl_os/ OR merge
+temporal,8,16,not selected (CRITICAL),runtime-source,rebuild-as-runtime: NEW packages/temporal/
+test-artifacts,1,41,ignored,test-output,drop
+test-data,5,5,not selected,test-data,drop
+tests,317,1431,"not selected (CRITICAL - 309 py tests, no Beginnings integration/e2e)",runtime-test,"rebuild-as-runtime: tests/{unit,integration,e2e,chaos,security}/"
+thirsty_lang,1,0,DEAD - superseded by PyPI thirsty-lang 0.1.4,empty,drop
+unity,21,21,DEFERRED per 2026-06-21 user instruction,app,FLAG for confirmation
+usb_installer,4,4,not selected,deploy-tool,preserve-as-reference
+utils,12,24,not selected,runtime-source,preserve-as-reference: docs/legacy-archive/utils/
+validation,18,18,not selected,test-framework,preserve-as-reference: docs/legacy-archive/validation/
+web,153,29043,"not selected (28,889 of 29,043 are node_modules)",web-source,PARTIAL - preserve hub-epstein + site if wanted
+whitepaper,1,1,not selected,paper,verify against MERGE_PROVENANCE; add if missing
+wiki,191,192,not selected (16 substantial files already carried per Addendum K),navigation,PARTIAL - verified handled
+work,1,0,DEAD - tracked but empty,empty,drop
+writer-reviewer-workflow,8,10,not selected,app,preserve-as-reference: docs/legacy-archive/writer-reviewer-workflow/
