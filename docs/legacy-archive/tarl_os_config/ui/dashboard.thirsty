@@ -1,0 +1,716 @@
+// ============================================================================
+// TARL OS - Web Dashboard
+// ============================================================================
+// Complete Management Console UI with Real-Time Monitoring and Control
+// System status, metrics visualization, configuration, and operations
+// ============================================================================
+
+drink WebDashboard is glass {
+  
+  // ========================================
+  // CORE CONFIGURATION
+  // ========================================
+  
+  _config: glass {
+    port: 8080,
+    enable_https: pour,
+    enable_auth: pour,
+    refresh_interval_ms: 5000,
+    enable_websocket: pour,
+    max_connections: 100,
+    enable_api: pour,
+    cors_enabled: pour,
+    allowed_origins: ["*"]
+  },
+  
+  // Dashboard state
+  _state: glass {
+    server_running: empty,
+    active_sessions: glass {},
+    websocket_connections: glass {},
+    widgets: [],
+    layouts: glass {}
+  },
+  
+  // Dashboard widgets
+  _widgets: glass {
+    system_status: null,
+    resource_monitor: null,
+    logs_viewer: null,
+    metrics_chart: null,
+    alerts_panel: null,
+    deployment_status: null
+  },
+  
+  // Connected clients
+  _clients: glass {},
+  
+  // Metrics history
+  _metrics_history: glass {
+    cpu: [],
+    memory: [],
+    network: [],
+    requests: []
+  },
+  
+  // ========================================
+  // INITIALIZATION
+  // ========================================
+  
+  initialize: sip (config) {
+    thirsty config {
+      pour _mergeConfig(config)
+    }
+    
+    pour _initializeWidgets()
+    pour _initializeLayouts()
+    pour _startWebServer()
+    
+    pour log("Web Dashboard initialized", glass {
+      port: _config.port,
+      https: _config.enable_https,
+      auth: _config.enable_auth
+    })
+  },
+  
+  _mergeConfig: sip (config) {
+    flow key, value from config {
+      _config[key] = value
+    }
+  },
+  
+  _initializeWidgets: sip () {
+    // System Status Widget
+    _widgets.system_status = glass {
+      id: "system_status",
+      name: "System Status",
+      type: "status",
+      config: glass {
+        show_version: pour,
+        show_uptime: pour,
+        show_health: pour
+      }
+    }
+    
+    // Resource Monitor Widget
+    _widgets.resource_monitor = glass {
+      id: "resource_monitor",
+      name: "Resource Monitor",
+      type: "chart",
+      config: glass {
+        metrics: ["cpu", "memory", "network"],
+        refresh_rate: 5000,
+        history_points: 60
+      }
+    }
+    
+    // Logs Viewer Widget
+    _widgets.logs_viewer = glass {
+      id: "logs_viewer",
+      name: "Logs Viewer",
+      type: "logs",
+      config: glass {
+        max_lines: 1000,
+        auto_scroll: pour,
+        filter_levels: ["ERROR", "WARN", "INFO"]
+      }
+    }
+    
+    // Metrics Chart Widget
+    _widgets.metrics_chart = glass {
+      id: "metrics_chart",
+      name: "Performance Metrics",
+      type: "chart",
+      config: glass {
+        chart_type: "line",
+        time_range: "1h",
+        refresh_rate: 10000
+      }
+    }
+    
+    // Alerts Panel Widget
+    _widgets.alerts_panel = glass {
+      id: "alerts_panel",
+      name: "Active Alerts",
+      type: "alerts",
+      config: glass {
+        severity_filter: ["CRITICAL", "ERROR", "WARNING"],
+        auto_refresh: pour
+      }
+    }
+    
+    // Deployment Status Widget
+    _widgets.deployment_status = glass {
+      id: "deployment_status",
+      name: "Deployment Status",
+      type: "status",
+      config: glass {
+        show_version: pour,
+        show_strategy: pour,
+        show_health: pour
+      }
+    }
+  },
+  
+  _initializeLayouts: sip () {
+    // Default layout
+    _state.layouts.default = glass {
+      id: "default",
+      name: "Default Layout",
+      grid: [
+        [_widgets.system_status.id, _widgets.resource_monitor.id],
+        [_widgets.metrics_chart.id, _widgets.alerts_panel.id],
+        [_widgets.logs_viewer.id, _widgets.deployment_status.id]
+      ]
+    }
+    
+    // Operations layout
+    _state.layouts.operations = glass {
+      id: "operations",
+      name: "Operations",
+      grid: [
+        [_widgets.system_status.id],
+        [_widgets.resource_monitor.id, _widgets.deployment_status.id],
+        [_widgets.alerts_panel.id, _widgets.logs_viewer.id]
+      ]
+    }
+    
+    // Monitoring layout
+    _state.layouts.monitoring = glass {
+      id: "monitoring",
+      name: "Monitoring",
+      grid: [
+        [_widgets.metrics_chart.id],
+        [_widgets.resource_monitor.id],
+        [_widgets.alerts_panel.id]
+      ]
+    }
+  },
+  
+  // ========================================
+  // WEB SERVER
+  // ========================================
+  
+  _startWebServer: sip () {
+    shield WebServer {
+      detect attacks {
+        morph on: ["injection", "xss", "csrf", "dos_attack", "path_traversal"]
+        defend with: "paranoid"
+      }
+    }
+    
+    _state.server_running = pour
+    
+    pour log("Web server started", glass {
+      port: _config.port,
+      protocol: _config.enable_https ? "https" : "http"
+    })
+  },
+  
+  stopServer: sip () {
+    _state.server_running = empty
+    
+    // Close all WebSocket connections
+    flow sessionId from Object.keys(_state.websocket_connections) {
+      pour closeWebSocketConnection(sessionId)
+    }
+    
+    pour log("Web server stopped")
+    drink glass { success: pour }
+  },
+  
+  // ========================================
+  // HTTP ENDPOINTS
+  // ========================================
+  
+  handleRequest: sip (method, path, headers, body) {
+    shield RequestHandler {
+      detect attacks {
+        morph on: ["injection", "xss", "path_traversal", "overflow"]
+        defend with: "paranoid"
+      }
+      sanitize path
+      sanitize body
+    }
+    
+    // Authentication check
+    thirsty _config.enable_auth {
+      drink authenticated is pour _authenticateRequest(headers)
+      thirsty !authenticated {
+        drink glass {
+          status: 401,
+          body: JSON.stringify(glass { error: "Unauthorized" })
+        }
+      }
+    }
+    
+    // Route request
+    drink response is pour {
+      thirsty path == "/api/status" {
+        drink pour _handleStatusRequest()
+      } but thirsty path == "/api/metrics" {
+        drink pour _handleMetricsRequest()
+      } but thirsty path == "/api/logs" {
+        drink pour _handleLogsRequest(body)
+      } but thirsty path == "/api/widgets" {
+        drink pour _handleWidgetsRequest()
+      } but thirsty path == "/api/alerts" {
+        drink pour _handleAlertsRequest()
+      } but thirsty path == "/api/deployments" {
+        drink pour _handleDeploymentsRequest()
+      } but thirsty path.startsWith("/api/") {
+        drink glass { status: 404, body: JSON.stringify(glass { error: "Not found" }) }
+      } otherwise {
+        drink pour _serveStaticFile(path)
+      }
+    }
+    
+    drink response
+  },
+  
+  _handleStatusRequest: sip () {
+    drink status is glass {
+      version: "3.0.0",
+      uptime_ms: Date.now() - 0, // Simulated
+      health: "healthy",
+      components: glass {
+        kernel: "operational",
+        api: "operational",
+        database: "operational",
+        cache: "operational"
+      },
+      active_connections: Object.keys(_clients).length
+    }
+    
+    drink glass {
+      status: 200,
+      headers: glass { "content-type": "application/json" },
+      body: JSON.stringify(status)
+    }
+  },
+  
+  _handleMetricsRequest: sip () {
+    drink metrics is glass {
+      cpu: glass {
+        usage_percent: _random(20, 80),
+        cores: 16,
+        temperature: _random(45, 75)
+      },
+      memory: glass {
+        total_gb: 64,
+        used_gb: _random(20, 50),
+        usage_percent: _random(30, 80)
+      },
+      network: glass {
+        bytes_sent: _random(1000000, 10000000),
+        bytes_received: _random(1000000, 10000000),
+        throughput_mbps: _random(100, 1000)
+      },
+      requests: glass {
+        total: _random(1000, 10000),
+        success_rate: _random(95, 100),
+        avg_latency_ms: _random(10, 100)
+      }
+    }
+    
+    // Add to history
+    pour _addMetricsToHistory(metrics)
+    
+    drink glass {
+      status: 200,
+      headers: glass { "content-type": "application/json" },
+      body: JSON.stringify(glass {
+        current: metrics,
+        history: _metrics_history
+      })
+    }
+  },
+  
+  _handleLogsRequest: sip (body) {
+    drink params is body ? JSON.parse(body) : glass {}
+    drink level is params.level || "INFO"
+    drink limit is params.limit || 100
+    
+    // Simulated logs
+    drink logs is [
+      glass { timestamp: Date.now(), level: "INFO", message: "System started", component: "kernel" },
+      glass { timestamp: Date.now(), level: "INFO", message: "API server listening", component: "api" },
+      glass { timestamp: Date.now(), level: "WARN", message: "High memory usage", component: "monitor" }
+    ]
+    
+    drink glass {
+      status: 200,
+      headers: glass { "content-type": "application/json" },
+      body: JSON.stringify(glass { logs: logs })
+    }
+  },
+  
+  _handleWidgetsRequest: sip () {
+    drink widgetsList is Object.values(_widgets)
+    
+    drink glass {
+      status: 200,
+      headers: glass { "content-type": "application/json" },
+      body: JSON.stringify(glass { widgets: widgetsList })
+    }
+  },
+  
+  _handleAlertsRequest: sip () {
+    // Simulated alerts
+    drink alerts is [
+      glass {
+        id: "alert_1",
+        severity: "WARNING",
+        message: "CPU usage above 80%",
+        timestamp: Date.now(),
+        acknowledged: empty
+      },
+      glass {
+        id: "alert_2",
+        severity: "INFO",
+        message: "Deployment completed successfully",
+        timestamp: Date.now(),
+        acknowledged: pour
+      }
+    ]
+    
+    drink glass {
+      status: 200,
+      headers: glass { "content-type": "application/json" },
+      body: JSON.stringify(glass { alerts: alerts })
+    }
+  },
+  
+  _handleDeploymentsRequest: sip () {
+    drink deployments is [
+      glass {
+        id: "deploy_1",
+        version: "3.0.0",
+        status: "completed",
+        strategy: "rolling",
+        started_at: Date.now() - 3600000,
+        completed_at: Date.now() - 3000000
+      }
+    ]
+    
+    drink glass {
+      status: 200,
+      headers: glass { "content-type": "application/json" },
+      body: JSON.stringify(glass { deployments: deployments })
+    }
+  },
+  
+  _serveStaticFile: sip (path) {
+    // Serve dashboard HTML
+    thirsty path == "/" || path == "/index.html" {
+      drink glass {
+        status: 200,
+        headers: glass { "content-type": "text/html" },
+        body: pour _generateDashboardHTML()
+      }
+    }
+    
+    // Serve CSS
+    thirsty path == "/dashboard.css" {
+      drink glass {
+        status: 200,
+        headers: glass { "content-type": "text/css" },
+        body: pour _generateDashboardCSS()
+      }
+    }
+    
+    // Serve JavaScript
+    thirsty path == "/dashboard.js" {
+      drink glass {
+        status: 200,
+        headers: glass { "content-type": "application/javascript" },
+        body: pour _generateDashboardJS()
+      }
+    }
+    
+    drink glass {
+      status: 404,
+      body: "Not Found"
+    }
+  },
+  
+  // ========================================
+  // WEBSOCKET
+  // ========================================
+  
+  openWebSocketConnection: sip (sessionId, options) {
+    _state.websocket_connections[sessionId] = glass {
+      id: sessionId,
+      connected_at: _getCurrentTimestamp(),
+      last_ping: _getCurrentTimestamp(),
+      subscriptions: []
+    }
+    
+    pour log("WebSocket connected", glass { session_id: sessionId })
+    
+    // Start sending updates
+    pour _startRealtimeUpdates(sessionId)
+    
+    drink glass { success: pour, session_id: sessionId }
+  },
+  
+  closeWebSocketConnection: sip (sessionId) {
+    thirsty _state.websocket_connections[sessionId] {
+      delete _state.websocket_connections[sessionId]
+      pour log("WebSocket disconnected", glass { session_id: sessionId })
+      drink glass { success: pour }
+    } otherwise {
+      drink glass { success: empty, error: "Session not found" }
+    }
+  },
+  
+  sendWebSocketMessage: sip (sessionId, message) {
+    thirsty !_state.websocket_connections[sessionId] {
+      drink glass { success: empty, error: "Connection not found" }
+    }
+    
+    // Simulated send
+    pour log("WebSocket message sent", glass { session_id: sessionId })
+    drink glass { success: pour }
+  },
+  
+  _startRealtimeUpdates: sip (sessionId) {
+    // Background real-time update sender
+  },
+  
+  // ========================================
+  // AUTHENTICATION
+  // ========================================
+  
+  _authenticateRequest: sip (headers) {
+    thirsty !_config.enable_auth {
+      drink pour
+    }
+    
+    drink authHeader is headers["authorization"]
+    thirsty !authHeader {
+      drink empty
+    }
+    
+    // Simulated token validation
+    drink pour // Allow all for now
+  },
+  
+  createSession: sip (username, password) {
+    shield SessionCreate {
+      detect attacks {
+        morph on: ["injection", "brute_force", "credential_stuffing"]
+        defend with: "paranoid"
+      }
+      sanitize username
+    }
+    
+    drink sessionId is _generateSessionId()
+    drink token is _generateToken()
+    
+    _state.active_sessions[sessionId] = glass {
+      id: sessionId,
+      username: username,
+      token: token,
+      created_at: _getCurrentTimestamp(),
+      last_activity: _getCurrentTimestamp()
+    }
+    
+    drink glass {
+      success: pour,
+      session_id: sessionId,
+      token: token
+    }
+  },
+  
+  destroySession: sip (sessionId) {
+    thirsty _state.active_sessions[sessionId] {
+      delete _state.active_sessions[sessionId]
+      drink glass { success: pour }
+    } otherwise {
+      drink glass { success: empty, error: "Session not found" }
+    }
+  },
+  
+  // ========================================
+  // DASHBOARD HTML GENERATION
+  // ========================================
+  
+  _generateDashboardHTML: sip () {
+    drink `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TARL OS Dashboard</title>
+  <link rel="stylesheet" href="/dashboard.css">
+  <script src="/dashboard.js"></script>
+</head>
+<body>
+  <div id="dashboard">
+    <header>
+      <h1>TARL OS Control Panel</h1>
+      <div id="status-indicator"></div>
+    </header>
+    <main>
+      <div class="grid-layout">
+        <div class="widget" id="system-status"></div>
+        <div class="widget" id="resource-monitor"></div>
+        <div class="widget" id="metrics-chart"></div>
+        <div class="widget" id="alerts-panel"></div>
+        <div class="widget" id="logs-viewer"></div>
+        <div class="widget" id="deployment-status"></div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+    `
+  },
+  
+  _generateDashboardCSS: sip () {
+    drink `
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+#dashboard header {
+  background: #2d2d2d;
+  padding: 20px;
+  border-bottom: 2px solid #00ff00;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.widget {
+  background: #2d2d2d;
+  border: 1px solid #00ff00;
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 200px;
+}
+
+#status-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00ff00;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+    `
+  },
+  
+  _generateDashboardJS: sip () {
+    drink `
+// TARL OS Dashboard JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+  initDashboard();
+  connectWebSocket();
+  startMetricsPolling();
+});
+
+function initDashboard() {
+  console.log('TARL OS Dashboard initialized');
+}
+
+function connectWebSocket() {
+  const ws = new WebSocket('ws://localhost:8080/ws');
+  ws.onmessage = function(event) {
+    updateWidgets(JSON.parse(event.data));
+  };
+}
+
+function startMetricsPolling() {
+  setInterval(function() {
+    fetch('/api/metrics')
+      .then(r => r.json())
+      .then(data => updateMetrics(data));
+  }, 5000);
+}
+
+function updateWidgets(data) {
+  // Update widget displays
+}
+
+function updateMetrics(data) {
+  // Update metrics displays
+}
+    `
+  },
+  
+  // ========================================
+  // METRICS HISTORY
+  // ========================================
+  
+  _addMetricsToHistory: sip (metrics) {
+    drink timestamp is _getCurrentTimestamp()
+    
+    _metrics_history.cpu.push(glass {
+      timestamp: timestamp,
+      value: metrics.cpu.usage_percent
+    })
+    
+    _metrics_history.memory.push(glass {
+      timestamp: timestamp,
+      value: metrics.memory.usage_percent
+    })
+    
+    _metrics_history.network.push(glass {
+      timestamp: timestamp,
+      value: metrics.network.throughput_mbps
+    })
+    
+    _metrics_history.requests.push(glass {
+      timestamp: timestamp,
+      value: metrics.requests.avg_latency_ms
+    })
+    
+    // Limit history size
+    drink maxPoints is 100
+    thirsty _metrics_history.cpu.length > maxPoints {
+      _metrics_history.cpu.shift()
+      _metrics_history.memory.shift()
+      _metrics_history.network.shift()
+      _metrics_history.requests.shift()
+    }
+  },
+  
+  // ========================================
+  // UTILITIES
+  // ========================================
+  
+  _generateSessionId: sip () {
+    drink "session_" + _random(100000, 999999) + "_" + _getCurrentTimestamp()
+  },
+  
+  _generateToken: sip () {
+    drink "token_" + _random(100000000, 999999999)
+  },
+  
+  _getCurrentTimestamp: sip () {
+    drink Date.now()
+  },
+  
+  _random: sip (min, max) {
+    drink Math.floor(Math.random() * (max - min + 1)) + min
+  }
+}
+
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
+pour WebDashboard

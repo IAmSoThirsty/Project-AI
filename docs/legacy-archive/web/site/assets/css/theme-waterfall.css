@@ -1,0 +1,39 @@
+/* ─────────────────────────────────────────────────────────────────
+   Waterfall / TTP Theme — Blue / Teal on Deep Blue
+   7-stage sovereign pipeline, flow, cascading execution, systems
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #3b82f6;
+  --theme-accent:     #06b6d4;
+  --theme-surface:    #020b18;
+  --theme-surface-2:  #040f1e;
+  --theme-panel:      #061424;
+  --theme-panel-2:    #081a2e;
+  --theme-glow:       0 0 24px rgba(59,130,246,0.35), 0 0 60px rgba(6,182,212,0.15);
+  --theme-gradient:   linear-gradient(135deg, #020b18 0%, #041220 50%, #061830 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 70% -20%, rgba(59,130,246,.2), transparent 60%),
+                      radial-gradient(700px 400px at 5% 10%, rgba(6,182,212,.18), transparent 60%),
+                      #020b18;
+  --cyan:             #3b82f6;
+  --cyan-2:           #06b6d4;
+  --void:             #010810;
+  --void-2:           #020b18;
+  --panel:            #061424;
+  --panel-2:          #081a2e;
+  --line:             rgba(59, 130, 246, 0.12);
+  --line-strong:      rgba(59, 130, 246, 0.28);
+  --shadow-glow:      0 0 0 1px rgba(59,130,246,.2), 0 0 60px -10px rgba(59,130,246,.3);
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-accent); }
+.gradient-text {
+  background: linear-gradient(135deg, #eff6ff 0%, #3b82f6 55%, #06b6d4 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 75% -15%, rgba(59,130,246,.22), transparent 60%),
+    radial-gradient(800px 500px at 5% 5%, rgba(6,182,212,.18), transparent 60%),
+    var(--void);
+}

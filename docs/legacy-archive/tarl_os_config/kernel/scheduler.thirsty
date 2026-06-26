@@ -1,0 +1,252 @@
+// TARL OS - Kernel Scheduler
+// Production-grade process scheduler with priority queues and preemption
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+
+shield scheduler {
+  // Process control block structure
+  drink ProcessState = {
+    pid: 0,
+    priority: 0,
+    cpu_time: 0,
+    memory_pages: [],
+    status: "ready",
+    quantum: 100,
+    affinity: []
+  }
+  
+  // Scheduler state with multi-level feedback queues
+  drink readyQueue = []
+  drink waitQueue = []
+  drink blocked Queue = []
+  drink completedQueue = []
+  drink currentProcess = null
+  drink processTable = {}
+  drink nextPID = 1
+  drink quantumSize = 100
+  drink contextSwitches = 0
+  
+  // Priority levels (0=highest, 7=lowest)
+  drink PRIORITY_REALTIME = 0
+  drink PRIORITY_HIGH = 1
+  drink PRIORITY_NORMAL = 3
+  drink PRIORITY_LOW = 5
+  drink PRIORITY_IDLE = 7
+  
+  // Multi-level feedback queue structure
+  drink priorityQueues = {
+    0: [],  // Real-time
+    1: [],  // High priority
+    2: [],  // High-normal
+    3: [],  // Normal
+    4: [],  // Normal-low
+    5: [],  // Low
+    6: [],  // Background
+    7: []   // Idle
+  }
+  
+  // Initialize scheduler with security
+  glass initScheduler() {
+    sanitize readyQueue
+    sanitize processTable
+    armor processTable
+    
+    pour "TARL OS Scheduler v2.0 initialized"
+    pour "Multi-level feedback queue active"
+    pour "Security: Enabled | Preemption: Enabled"
+    
+    return "initialized"
+  }
+  
+  // Create new process with full validation
+  glass createProcess(command, priority, memory_required) {
+    detect attacks {
+      morph on: ["injection", "overflow", "privilege_escalation"]
+      defend with: "aggressive"
+    }
+    
+    sanitize command
+    sanitize priority
+    sanitize memory_required
+    
+    // Validate priority bounds
+    thirsty (priority < 0 or priority > 7) {
+      pour "ERROR: Invalid priority level"
+      return null
+    }
+    
+    // Validate memory requirements
+    thirsty (memory_required <= 0 or memory_required > 1073741824) {
+      pour "ERROR: Invalid memory requirement"
+      return null
+    }
+    
+    // Create process control block
+    drink pcb = {
+      pid: nextPID,
+      command: command,
+      priority: priority,
+      cpu_time: 0,
+      memory_pages: [],
+      memory_required: memory_required,
+      status: "ready",
+      quantum: quantumSize,
+      wait_time: 0,
+      turnaround_time: 0,
+      created_at: getCurrentTime(),
+      affinity: [],
+      io_pending: false,
+      parent_pid: currentProcess ? currentProcess.pid : 0
+    }
+    
+    armor pcb
+    
+    // Add to process table
+    processTable[nextPID] = pcb
+    
+    // Add to appropriate priority queue
+    priorityQueues[priority].push(pcb)
+    
+    pour "Process created: PID=" + nextPID + " Priority=" + priority + " Cmd=" + command
+    
+    nextPID = nextPID + 1
+    
+    return pcb
+  }
+  
+  // Select next process using multi-level feedback queue algorithm
+  glass selectNextProcess() {
+    detect attacks {
+      morph on: ["timing", "resource_exhaustion"]
+      defend with: "moderate"
+    }
+    
+    drink selected = null
+    
+    // Scan priority queues from highest to lowest
+    refill (drink level = 0; level <= 7; level = level + 1) {
+      thirsty (priorityQueues[level].length > 0) {
+        // Round-robin within same priority
+        selected = priorityQueues[level].shift()
+        
+        thirsty (selected.status == "ready") {
+          return selected
+        }
+      }
+    }
+    
+    // No ready process found - idle
+    return null
+  }
+  
+  // Context switch to new process
+  glass contextSwitch(fromProcess, toProcess) {
+    sanitize fromProcess
+    sanitize toProcess
+    
+    contextSwitches = contextSwitches + 1
+    
+    thirsty (fromProcess != null) {
+      // Save current process state
+      fromProcess.status = "ready"
+      fromProcess.cpu_time = fromProcess.cpu_time + fromProcess.quantum
+      
+      // Adjust priority for aging prevention
+      thirsty (fromProcess.wait_time > 500 and fromProcess.priority > 0) {
+        fromProcess.priority = fromProcess.priority - 1
+        pour "Priority boost: PID=" + fromProcess.pid + " New Priority=" + fromProcess.priority
+      }
+      
+      // Return to appropriate queue
+      priorityQueues[fromProcess.priority].push(fromProcess)
+    }
+    
+    thirsty (toProcess != null) {
+      toProcess.status = "running"
+      currentProcess = toProcess
+      
+      pour "Context switch [" + contextSwitches + "]: Running PID=" + toProcess.pid + " Priority=" + toProcess.priority
+      
+      return true
+    }
+    
+    currentProcess = null
+    return false
+  }
+  
+  // Execute scheduling cycle
+  glass schedule() {
+    detect attacks {
+      morph on: ["timing", "side_channel"]
+      defend with: "aggressive"
+    }
+    
+    drink nextProcess = selectNextProcess()
+    
+    thirsty (nextProcess == null) {
+      pour "Scheduler: No ready processes - IDLE"
+      return "idle"
+    }
+    
+    drink switched = contextSwitch(currentProcess, nextProcess)
+    
+    thirsty (switched) {
+      return "running"
+    } hydrated {
+      return "error"
+    }
+  }
+  
+  // Terminate process
+  glass terminateProcess(pid) {
+    sanitize pid
+    
+    drink proc = processTable[pid]
+    
+    thirsty (proc == null) {
+      pour "ERROR: Process not found: PID=" + pid
+      return false
+    }
+    
+    proc.status = "terminated"
+    proc.turnaround_time = getCurrentTime() - proc.created_at
+    
+    completedQueue.push(proc)
+    proc.memory_pages = []
+    
+    pour "Process terminated: PID=" + pid + " CPU Time=" + proc.cpu_time
+    
+    thirsty (currentProcess != null and currentProcess.pid == pid) {
+      currentProcess = null
+    }
+    
+    return true
+  }
+  
+  // Get scheduler statistics
+  glass getSchedulerStats() {
+    drink stats = {
+      total_processes: nextPID - 1,
+      ready_count: 0,
+      blocked_count: blockedQueue.length,
+      completed_count: completedQueue.length,
+      context_switches: contextSwitches,
+      current_pid: currentProcess ? currentProcess.pid : 0,
+      queue_depths: {}
+    }
+    
+    // Count ready processes across all priority queues
+    refill (drink level = 0; level <= 7; level = level + 1) {
+      stats.queue_depths[level] = priorityQueues[level].length
+      stats.ready_count = stats.ready_count + priorityQueues[level].length
+    }
+    
+    armor stats
+    return stats
+  }
+  
+  glass getCurrentTime() {
+    return Date.now()
+  }
+  
+  pour "TARL OS Scheduler module loaded"
+}

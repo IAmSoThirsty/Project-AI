@@ -73,7 +73,7 @@ source-docs,244,245,not selected (CRITICAL - 241 markdown),doc,preserve-as-refer
 src,981,2179,"not selected (CRITICAL - src/app/core/ is 3.8MB, 225 py files)",runtime-source,rebuild-as-runtime for ~150 high-value files
 templates,23,23,not selected,doc,drop or cherry-pick
 tarl,33,69,not selected (CRITICAL - no packages/tarl/),runtime-source,rebuild-as-runtime: NEW packages/tarl/
-tarl_os,39,46,not selected (CRITICAL - no packages/tarl_os/),runtime-source + config,rebuild-as-runtime: NEW packages/tarl_os/ OR merge
+tarl_os,39,46,not selected (CRITICAL - no packages/tarl_os/),runtime-source + config,RESOLVED-PARTIAL 2026-06-25 (Phase A) — *.thirsty config data archived to docs/legacy-archive/tarl_os_config/ (27 files, SHA-256 verified); *.py rebuild deferred to Phase H/I
 temporal,8,16,not selected (CRITICAL),runtime-source,rebuild-as-runtime: NEW packages/temporal/
 test-artifacts,1,41,ignored,test-output,drop
 test-data,5,5,not selected,test-data,drop
@@ -83,7 +83,7 @@ unity,21,21,DEFERRED per 2026-06-21 user instruction,app,FLAG for confirmation
 usb_installer,4,4,not selected,deploy-tool,preserve-as-reference
 utils,12,24,not selected,runtime-source,preserve-as-reference: docs/legacy-archive/utils/
 validation,18,18,not selected,test-framework,preserve-as-reference: docs/legacy-archive/validation/
-web,153,29043,"not selected (28,889 of 29,043 are node_modules)",web-source,PARTIAL - preserve hub-epstein + site if wanted
+web,153,29043,"not selected (28,889 of 29,043 are node_modules)",web-source,RESOLVED 2026-06-25 (Phase A) — hub-epstein + site archived to docs/legacy-archive/web/ (119 files, SHA-256 verified)
 whitepaper,1,1,not selected,paper,verify against MERGE_PROVENANCE; add if missing
 wiki,191,192,not selected (16 substantial files already carried per Addendum K),navigation,PARTIAL - verified handled
 work,1,0,DEAD - tracked but empty,empty,drop

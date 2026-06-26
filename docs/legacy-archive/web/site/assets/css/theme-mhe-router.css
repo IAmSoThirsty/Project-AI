@@ -1,0 +1,40 @@
+/* ─────────────────────────────────────────────────────────────────
+   MHE Router Theme — Orange / Rust on Dark Ember
+   Mental Health Escalation Router, urgency, care, energy
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #f97316;
+  --theme-accent:     #ea580c;
+  --theme-surface:    #1a0800;
+  --theme-surface-2:  #1f0a00;
+  --theme-panel:      #280e00;
+  --theme-panel-2:    #301200;
+  --theme-glow:       0 0 24px rgba(249,115,22,0.38), 0 0 60px rgba(234,88,12,0.15);
+  --theme-gradient:   linear-gradient(135deg, #1a0800 0%, #281200 50%, #361600 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 70% -20%, rgba(249,115,22,.22), transparent 60%),
+                      radial-gradient(700px 400px at 5% 10%, rgba(234,88,12,.18), transparent 60%),
+                      #1a0800;
+  --cyan:             #f97316;
+  --cyan-2:           #ea580c;
+  --amber:            #fb923c;
+  --void:             #140600;
+  --void-2:           #1a0800;
+  --panel:            #280e00;
+  --panel-2:          #301200;
+  --line:             rgba(249, 115, 22, 0.14);
+  --line-strong:      rgba(249, 115, 22, 0.30);
+  --shadow-glow:      0 0 0 1px rgba(249,115,22,.22), 0 0 60px -10px rgba(249,115,22,.3);
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-primary); }
+.gradient-text {
+  background: linear-gradient(135deg, #fff7ed 0%, #f97316 55%, #ea580c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 75% -15%, rgba(249,115,22,.22), transparent 60%),
+    radial-gradient(800px 500px at 5% 5%, rgba(234,88,12,.18), transparent 60%),
+    var(--void);
+}

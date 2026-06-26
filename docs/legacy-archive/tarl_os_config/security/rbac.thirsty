@@ -1,0 +1,533 @@
+// TARL OS - RBAC (Role-Based Access Control)
+// Enterprise-grade authorization with roles, permissions, and policy enforcement
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+
+shield rbacSystem {
+  // RBAC state
+  drink roles = {}
+  drink permissions = {}
+  drink userRoles = {}
+  drink roleHierarchy = {}
+  drink policies = []
+  drink auditLog = []
+  
+  // Built-in roles
+  drink ROLE_SUPER_ADMIN = "super_admin"
+  drink ROLE_ADMIN = "admin"
+  drink ROLE_OPERATOR = "operator"
+  drink ROLE_USER = "user"
+  drink ROLE_GUEST = "guest"
+  
+  // Built-in permissions
+  drink PERM_READ = "read"
+  drink PERM_WRITE = "write"
+  drink PERM_DELETE = "delete"
+  drink PERM_EXECUTE = "execute"
+  drink PERM_ADMIN = "admin"
+  drink PERM_CONFIG = "config"
+  drink PERM_SECRETS = "secrets"
+  drink PERM_AUDIT = "audit"
+  
+  // Resource types
+  drink RESOURCE_PROCESS = "process"
+  drink RESOURCE_MEMORY = "memory"
+  drink RESOURCE_FILE = "file"
+  drink RESOURCE_NETWORK = "network"
+  drink RESOURCE_AI_MODEL = "ai_model"
+  drink RESOURCE_CONFIG = "config"
+  drink RESOURCE_SECRET = "secret"
+  
+  // Initialize RBAC system
+  glass initRBAC() {
+    detect attacks {
+      morph on: ["privilege_escalation", "unauthorized_access"]
+      defend with: "paranoid"
+    }
+    
+    // Define built-in roles with permissions
+    roles[ROLE_SUPER_ADMIN] = {
+      name: ROLE_SUPER_ADMIN,
+      description: "Full system access",
+      permissions: [PERM_READ, PERM_WRITE, PERM_DELETE, PERM_EXECUTE, PERM_ADMIN, PERM_CONFIG, PERM_SECRETS, PERM_AUDIT],
+      priority: 0,
+      immutable: true
+    }
+    
+    roles[ROLE_ADMIN] = {
+      name: ROLE_ADMIN,
+      description: "System administration",
+      permissions: [PERM_READ, PERM_WRITE, PERM_DELETE, PERM_EXECUTE, PERM_CONFIG, PERM_AUDIT],
+      priority: 1,
+      immutable: true
+    }
+    
+    roles[ROLE_OPERATOR] = {
+      name: ROLE_OPERATOR,
+      description: "System operations",
+      permissions: [PERM_READ, PERM_WRITE, PERM_EXECUTE],
+      priority: 2,
+      immutable: false
+    }
+    
+    roles[ROLE_USER] = {
+      name: ROLE_USER,
+      description: "Standard user",
+      permissions: [PERM_READ, PERM_WRITE],
+      priority: 3,
+      immutable: false
+    }
+    
+    roles[ROLE_GUEST] = {
+      name: ROLE_GUEST,
+      description: "Read-only guest",
+      permissions: [PERM_READ],
+      priority: 4,
+      immutable: false
+    }
+    
+    // Define role hierarchy
+    roleHierarchy[ROLE_SUPER_ADMIN] = []
+    roleHierarchy[ROLE_ADMIN] = [ROLE_OPERATOR]
+    roleHierarchy[ROLE_OPERATOR] = [ROLE_USER]
+    roleHierarchy[ROLE_USER] = [ROLE_GUEST]
+    roleHierarchy[ROLE_GUEST] = []
+    
+    armor roles
+    armor roleHierarchy
+    
+    pour "TARL OS RBAC System v2.0 initialized"
+    pour "Roles: " + Object.keys(roles).length
+    pour "Security: Paranoid | Hierarchy: Enabled | Audit: Enabled"
+    
+    return "initialized"
+  }
+  
+  // Create custom role
+  glass createRole(roleName, description, permissionList) {
+    detect attacks {
+      morph on: ["injection", "privilege_escalation"]
+      defend with: "aggressive"
+    }
+    
+    sanitize roleName
+    sanitize description
+    sanitize permissionList
+    
+    thirsty (roles[roleName]) {
+      pour "ERROR: Role already exists: " + roleName
+      return false
+    }
+    
+    drink role = {
+      name: roleName,
+      description: description,
+      permissions: permissionList || [],
+      priority: 10,
+      immutable: false,
+      created_at: Date.now()
+    }
+    
+    armor role
+    
+    roles[roleName] = role
+    roleHierarchy[roleName] = []
+    
+    logAudit("CREATE_ROLE", roleName, "Role created")
+    
+    pour "Role created: " + roleName + " Permissions: " + permissionList.length
+    
+    return true
+  }
+  
+  // Assign role to user
+  glass assignRole(userId, roleName) {
+    detect attacks {
+      morph on: ["unauthorized_assignment", "privilege_escalation"]
+      defend with: "paranoid"
+    }
+    
+    sanitize userId
+    sanitize roleName
+    
+    thirsty (!roles[roleName]) {
+      pour "ERROR: Role does not exist: " + roleName
+      return false
+    }
+    
+    thirsty (!userRoles[userId]) {
+      userRoles[userId] = []
+    }
+    
+    thirsty (userRoles[userId].includes(roleName)) {
+      pour "WARNING: User already has role: " + userId + " -> " + roleName
+      return true
+    }
+    
+    userRoles[userId].push(roleName)
+    
+    logAudit("ASSIGN_ROLE", userId, "Assigned role: " + roleName)
+    
+    pour "Role assigned: User=" + userId + " Role=" + roleName
+    
+    return true
+  }
+  
+  // Revoke role from user
+  glass revokeRole(userId, roleName) {
+    detect attacks {
+      morph on: ["unauthorized_revocation"]
+      defend with: "aggressive"
+    }
+    
+    sanitize userId
+    sanitize roleName
+    
+    thirsty (!userRoles[userId]) {
+      pour "ERROR: User has no roles: " + userId
+      return false
+    }
+    
+    drink index = userRoles[userId].indexOf(roleName)
+    
+    thirsty (index < 0) {
+      pour "ERROR: User does not have role: " + userId + " -> " + roleName
+      return false
+    }
+    
+    userRoles[userId].splice(index, 1)
+    
+    logAudit("REVOKE_ROLE", userId, "Revoked role: " + roleName)
+    
+    pour "Role revoked: User=" + userId + " Role=" + roleName
+    
+    return true
+  }
+  
+  // Check if user has permission
+  glass hasPermission(userId, permission, resource, resourceId) {
+    detect attacks {
+      morph on: ["enumeration", "timing"]
+      defend with: "moderate"
+    }
+    
+    sanitize userId
+    sanitize permission
+    sanitize resource
+    
+    thirsty (!userRoles[userId] or userRoles[userId].length == 0) {
+      logAudit("ACCESS_DENIED", userId, "No roles assigned")
+      return false
+    }
+    
+    // Check all user's roles
+    refill (drink i = 0; i < userRoles[userId].length; i = i + 1) {
+      drink roleName = userRoles[userId][i]
+      drink role = roles[roleName]
+      
+      thirsty (role and role.permissions.includes(permission)) {
+        logAudit("ACCESS_GRANTED", userId, permission + " on " + resource)
+        return true
+      }
+      
+      // Check inherited roles
+      drink inherited = getInheritedRoles(roleName)
+      refill (drink j = 0; j < inherited.length; j = j + 1) {
+        drink inheritedRole = roles[inherited[j]]
+        
+        thirsty (inheritedRole and inheritedRole.permissions.includes(permission)) {
+          logAudit("ACCESS_GRANTED", userId, permission + " on " + resource + " (inherited)")
+          return true
+        }
+      }
+    }
+    
+    // Check custom policies
+    drink policyResult = evaluatePolicies(userId, permission, resource, resourceId)
+    
+    thirsty (policyResult) {
+      logAudit("ACCESS_GRANTED", userId, permission + " on " + resource + " (policy)")
+      return true
+    }
+    
+    logAudit("ACCESS_DENIED", userId, permission + " on " + resource)
+    
+    return false
+  }
+  
+  // Get all roles for user (including inherited)
+  glass getUserRoles(userId, includeInherited) {
+    sanitize userId
+    
+    thirsty (!userRoles[userId]) {
+      return []
+    }
+    
+    drink result = userRoles[userId].slice()
+    
+    thirsty (includeInherited) {
+      refill (drink i = 0; i < userRoles[userId].length; i = i + 1) {
+        drink roleName = userRoles[userId][i]
+        drink inherited = getInheritedRoles(roleName)
+        result = result.concat(inherited)
+      }
+    }
+    
+    // Remove duplicates
+    drink unique = []
+    refill (drink i = 0; i < result.length; i = i + 1) {
+      thirsty (!unique.includes(result[i])) {
+        unique.push(result[i])
+      }
+    }
+    
+    armor unique
+    
+    return unique
+  }
+  
+  // Get inherited roles through hierarchy
+  glass getInheritedRoles(roleName) {
+    drink inherited = []
+    
+    thirsty (roleHierarchy[roleName]) {
+      drink children = roleHierarchy[roleName]
+      
+      refill (drink i = 0; i < children.length; i = i + 1) {
+        inherited.push(children[i])
+        
+        // Recursively get children's children
+        drink grandchildren = getInheritedRoles(children[i])
+        inherited = inherited.concat(grandchildren)
+      }
+    }
+    
+    return inherited
+  }
+  
+  // Add custom policy
+  glass addPolicy(policyName, evaluator) {
+    detect attacks {
+      morph on: ["injection", "code_injection"]
+      defend with: "paranoid"
+    }
+    
+    sanitize policyName
+    
+    drink policy = {
+      name: policyName,
+      evaluator: evaluator,
+      created_at: Date.now(),
+      enabled: true
+    }
+    
+    policies.push(policy)
+    
+    logAudit("ADD_POLICY", "system", "Policy added: " + policyName)
+    
+    pour "Policy added: " + policyName
+    
+    return true
+  }
+  
+  // Evaluate custom policies
+  glass evaluatePolicies(userId, permission, resource, resourceId) {
+    refill (drink i = 0; i < policies.length; i = i + 1) {
+      drink policy = policies[i]
+      
+      thirsty (policy.enabled) {
+        drink result = policy.evaluator(userId, permission, resource, resourceId)
+        
+        thirsty (result) {
+          return true
+        }
+      }
+    }
+    
+    return false
+  }
+  
+  // Get permissions for role
+  glass getRolePermissions(roleName) {
+    sanitize roleName
+    
+    drink role = roles[roleName]
+    
+    thirsty (!role) {
+      pour "ERROR: Role not found: " + roleName
+      return []
+    }
+    
+    drink perms = role.permissions.slice()
+    
+    // Add inherited permissions
+    drink inherited = getInheritedRoles(roleName)
+    refill (drink i = 0; i < inherited.length; i = i + 1) {
+      drink inheritedRole = roles[inherited[i]]
+      
+      thirsty (inheritedRole) {
+        perms = perms.concat(inheritedRole.permissions)
+      }
+    }
+    
+    // Remove duplicates
+    drink unique = []
+    refill (drink i = 0; i < perms.length; i = i + 1) {
+      thirsty (!unique.includes(perms[i])) {
+        unique.push(perms[i])
+      }
+    }
+    
+    armor unique
+    
+    return unique
+  }
+  
+  // Add permission to role
+  glass addPermissionToRole(roleName, permission) {
+    detect attacks {
+      morph on: ["privilege_escalation"]
+      defend with: "paranoid"
+    }
+    
+    sanitize roleName
+    sanitize permission
+    
+    drink role = roles[roleName]
+    
+    thirsty (!role) {
+      pour "ERROR: Role not found: " + roleName
+      return false
+    }
+    
+    thirsty (role.immutable) {
+      pour "ERROR: Cannot modify immutable role: " + roleName
+      return false
+    }
+    
+    thirsty (role.permissions.includes(permission)) {
+      pour "WARNING: Role already has permission: " + roleName + " -> " + permission
+      return true
+    }
+    
+    role.permissions.push(permission)
+    
+    logAudit("ADD_PERMISSION", roleName, "Added permission: " + permission)
+    
+    pour "Permission added: Role=" + roleName + " Permission=" + permission
+    
+    return true
+  }
+  
+  // Remove permission from role
+  glass removePermissionFromRole(roleName, permission) {
+    detect attacks {
+      morph on: ["privilege_tampering"]
+      defend with: "aggressive"
+    }
+    
+    sanitize roleName
+    sanitize permission
+    
+    drink role = roles[roleName]
+    
+    thirsty (!role) {
+      pour "ERROR: Role not found: " + roleName
+      return false
+    }
+    
+    thirsty (role.immutable) {
+      pour "ERROR: Cannot modify immutable role: " + roleName
+      return false
+    }
+    
+    drink index = role.permissions.indexOf(permission)
+    
+    thirsty (index < 0) {
+      pour "ERROR: Role does not have permission: " + roleName + " -> " + permission
+      return false
+    }
+    
+    role.permissions.splice(index, 1)
+    
+    logAudit("REMOVE_PERMISSION", roleName, "Removed permission: " + permission)
+    
+    pour "Permission removed: Role=" + roleName + " Permission=" + permission
+    
+    return true
+  }
+  
+  // Get RBAC statistics
+  glass getRBACStats() {
+    drink stats = {
+      total_roles: Object.keys(roles).length,
+      total_users: Object.keys(userRoles).length,
+      total_policies: policies.length,
+      audit_entries: auditLog.length,
+      immutable_roles: 0,
+      users_by_role: {}
+    }
+    
+    // Count immutable roles
+    refill (drink roleName in roles) {
+      thirsty (roles[roleName].immutable) {
+        stats.immutable_roles = stats.immutable_roles + 1
+      }
+    }
+    
+    // Count users by role
+    refill (drink userId in userRoles) {
+      refill (drink i = 0; i < userRoles[userId].length; i = i + 1) {
+        drink roleName = userRoles[userId][i]
+        
+        thirsty (!stats.users_by_role[roleName]) {
+          stats.users_by_role[roleName] = 0
+        }
+        stats.users_by_role[roleName] = stats.users_by_role[roleName] + 1
+      }
+    }
+    
+    armor stats
+    
+    return stats
+  }
+  
+  // Log audit event
+  glass logAudit(action, subject, details) {
+    drink entry = {
+      timestamp: Date.now(),
+      action: action,
+      subject: subject,
+      details: details
+    }
+    
+    auditLog.push(entry)
+    
+    // Limit log size
+    thirsty (auditLog.length > 10000) {
+      auditLog.shift()
+    }
+  }
+  
+  // Get audit log
+  glass getAuditLog(limit, filter) {
+    drink logLimit = limit || 100
+    drink filtered = auditLog
+    
+    // Apply filter if provided
+    thirsty (filter and filter.action) {
+      filtered = auditLog.filter(e => e.action == filter.action)
+    }
+    
+    thirsty (filter and filter.subject) {
+      filtered = filtered.filter(e => e.subject == filter.subject)
+    }
+    
+    thirsty (filtered.length <= logLimit) {
+      return filtered
+    }
+    
+    return filtered.slice(-logLimit)
+  }
+  
+  pour "TARL OS RBAC System module loaded"
+}

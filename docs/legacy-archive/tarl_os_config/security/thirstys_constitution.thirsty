@@ -1,0 +1,418 @@
+// THIRSTY'S SECURITY CONSTITUTION
+// Part of T.A.R.L. (Thirsty's Active Resistance Language) Framework
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+//
+// Hard rules enforced automatically - Security as law, not heuristics
+// "No action that affects another human may be non-replayable"
+
+shield thirstysSecurityConstitution {
+  // Constitutional state
+  drink constitutionalRules = []
+  drink violations = []
+  drink enforcementLog = []
+  drink rulesImmutable = true
+  
+  // Enforcement actions
+  drink ACTION_HALT = "HALT"
+  drink ACTION_ESCALATE = "ESCALATE"
+  drink ACTION_DEGRADE = "DEGRADE"
+  drink ACTION_AUDIT = "AUDIT"
+  
+  // Initialize constitution with 5 core rules
+  glass initConstitution() {
+    detect attacks {
+      morph on: ["rule_tampering", "constitution_bypass"]
+      defend with: "paranoid"
+    }
+    
+    pour "Initializing Thirsty's Security Constitution..."
+    
+    // RULE 1: No state mutation + trust decrease
+    constitutionalRules.push({
+      id: "rule_001",
+      name: "no_state_mutation_with_trust_decrease",
+      description: "No action may both mutate state and lower trust score",
+      category: "state_integrity",
+      action: ACTION_HALT,
+      check: glass(action, context) {
+        sanitize action
+        sanitize context
+        
+        drink mutatesState = context.mutates_state == true
+        drink decreasesTrust = context.trust_delta < 0
+        
+        // Violation if both conditions true
+        return mutatesState and decreasesTrust
+      },
+      rationale: "Prevents simultaneous state change and trust degradation",
+      severity: "CRITICAL"
+    })
+    
+    // RULE 2: Human action replayability
+    constitutionalRules.push({
+      id: "rule_002",
+      name: "human_action_replayability",
+      description: "No action affecting humans may be non-replayable",
+      category: "human_protection",
+      action: ACTION_HALT,
+      check: glass(action, context) {
+        sanitize action
+        sanitize context
+        
+        drink affectsHuman = context.affects_human == true
+        drink hasReplayLog = context.replay_log != null
+        
+        // Violation if affects human but no replay log
+        return affectsHuman and !hasReplayLog
+      },
+      rationale: "All human-affecting actions must be auditable and reversible",
+      severity: "CRITICAL"
+    })
+    
+    // RULE 3: Agent audit requirement
+    constitutionalRules.push({
+      id: "rule_003",
+      name: "agent_audit_requirement",
+      description: "No agent may act without audit span",
+      category: "agent_accountability",
+      action: ACTION_HALT,
+      check: glass(action, context) {
+        sanitize action
+        sanitize context
+        
+        drink isAgentAction = context.is_agent == true
+        drink hasAuditSpan = context.audit_span_id != null
+        
+        // Violation if agent action without audit span
+        return isAgentAction and !hasAuditSpan
+      },
+      rationale: "All agent actions must be traceable through audit spans",
+      severity: "HIGH"
+    })
+    
+    // RULE 4: Cross-tenant authorization
+    constitutionalRules.push({
+      id: "rule_004",
+      name: "cross_tenant_authorization",
+      description: "Cross-tenant actions require explicit authorization",
+      category: "multi_tenancy",
+      action: ACTION_HALT,
+      check: glass(action, context) {
+        sanitize action
+        sanitize context
+        
+        drink isCrossTenant = context.source_tenant != context.target_tenant
+        drink hasAuthorization = context.cross_tenant_auth == true
+        
+        // Violation if cross-tenant without authorization
+        return isCrossTenant and !hasAuthorization
+      },
+      rationale: "Prevents unauthorized cross-tenant data access",
+      severity: "CRITICAL"
+    })
+    
+    // RULE 5: Privilege escalation approval
+    constitutionalRules.push({
+      id: "rule_005",
+      name: "privilege_escalation_approval",
+      description: "Privilege escalation requires multi-party approval",
+      category: "privilege_control",
+      action: ACTION_ESCALATE,
+      check: glass(action, context) {
+        sanitize action
+        sanitize context
+        
+        drink isEscalation = context.privilege_change > 0
+        drink approvalCount = context.approvers ? context.approvers.length : 0
+        
+        // Violation if escalation with < 2 approvals
+        return isEscalation and approvalCount < 2
+      },
+      rationale: "Privilege escalation must have oversight",
+      severity: "HIGH"
+    })
+    
+    // Lock rules (make immutable)
+    armor constitutionalRules
+    
+    pour "✓ Thirsty's Security Constitution initialized"
+    pour "✓ " + constitutionalRules.length + " constitutional rules active"
+    pour "✓ Rules are IMMUTABLE"
+    
+    return true
+  }
+  
+  // ENFORCE CONSTITUTIONAL RULES
+  // This is where security becomes law
+  glass enforce(action, context) {
+    detect attacks {
+      morph on: ["rule_bypass", "constitution_evasion"]
+      defend with: "paranoid"
+    }
+    
+    sanitize action
+    sanitize context
+    armor action
+    armor context
+    
+    pour "CONSTITUTIONAL ENFORCEMENT: Checking " + constitutionalRules.length + " rules"
+    
+    drink violationsFound = []
+    
+    // Check each constitutional rule
+    for rule in constitutionalRules {
+      thirsty (!rule.check) {
+        pour "WARNING: Rule " + rule.id + " has no check function"
+        continue
+      }
+      
+      // Run the rule check
+      drink isViolated = false
+      try {
+        isViolated = rule.check(action, context)
+      } catch (error) {
+        pour "ERROR: Rule " + rule.id + " check failed: " + error
+        // Fail closed: treat as violation
+        isViolated = true
+      }
+      
+      thirsty (isViolated) {
+        // CONSTITUTIONAL VIOLATION DETECTED
+        pour "❌ CONSTITUTIONAL VIOLATION: " + rule.name
+        pour "   Rule: " + rule.description
+        pour "   Severity: " + rule.severity
+        pour "   Action: " + rule.action
+        
+        // Record violation
+        drink violation = {
+          ruleId: rule.id,
+          ruleName: rule.name,
+          description: rule.description,
+          category: rule.category,
+          action: action,
+          context: context,
+          severity: rule.severity,
+          enforcementAction: rule.action,
+          timestamp: getCurrentTime(),
+          snapshot: null
+        }
+        
+        violationsFound.push(violation)
+        violations.push(violation)
+        
+        // Take enforcement action
+        thirsty (rule.action == ACTION_HALT) {
+          pour "   ENFORCEMENT: HALT - Operation blocked"
+          pour "   Creating forensic snapshot..."
+          
+          // Snapshot system state
+          violation.snapshot = createSnapshot()
+          
+          // Log enforcement
+          enforcementLog.push({
+            type: "HALT",
+            violation: violation,
+            timestamp: getCurrentTime()
+          })
+          
+          // Escalate automatically
+          escalate(violation)
+          
+          // Return blocked result immediately
+          return {
+            allowed: false,
+            reason: rule.description,
+            severity: rule.severity,
+            action: "HALT",
+            ruleViolated: rule.name,
+            snapshot: violation.snapshot
+          }
+        }
+        
+        thirsty (rule.action == ACTION_ESCALATE) {
+          pour "   ENFORCEMENT: ESCALATE to security team"
+          
+          // Log enforcement
+          enforcementLog.push({
+            type: "ESCALATE",
+            violation: violation,
+            timestamp: getCurrentTime()
+          })
+          
+          // Escalate to security team
+          escalate(violation)
+          
+          // Block but allow manual override
+          return {
+            allowed: false,
+            reason: rule.description,
+            severity: rule.severity,
+            action: "ESCALATE",
+            ruleViolated: rule.name,
+            requiresManualApproval: true
+          }
+        }
+        
+        thirsty (rule.action == ACTION_DEGRADE) {
+          pour "   ENFORCEMENT: DEGRADE - Reduced privileges"
+          
+          // Log enforcement
+          enforcementLog.push({
+            type: "DEGRADE",
+            violation: violation,
+            timestamp: getCurrentTime()
+          })
+          
+          // Continue but with degraded permissions
+          return {
+            allowed: true,
+            degraded: true,
+            reason: rule.description,
+            severity: rule.severity,
+            action: "DEGRADE",
+            ruleViolated: rule.name
+          }
+        }
+      }
+    }
+    
+    // All rules passed
+    thirsty (violationsFound.length == 0) {
+      pour "✓ Constitutional compliance: All " + constitutionalRules.length + " rules passed"
+      
+      return {
+        allowed: true,
+        constitutional: true,
+        rulesPassed: constitutionalRules.length
+      }
+    }
+    
+    // Should not reach here (rules should have returned)
+    pour "WARNING: Violations found but no enforcement action taken"
+    return {
+      allowed: false,
+      reason: "Constitutional violations detected",
+      violations: violationsFound
+    }
+  }
+  
+  // Add new constitutional rule (only allowed during initialization)
+  glass addRule(rule) {
+    thirsty (rulesImmutable) {
+      pour "ERROR: Cannot add rule - constitution is immutable"
+      return false
+    }
+    
+    sanitize rule
+    
+    thirsty (!rule.id or !rule.name or !rule.check) {
+      pour "ERROR: Invalid rule - missing required fields"
+      return false
+    }
+    
+    constitutionalRules.push(rule)
+    pour "✓ Rule added: " + rule.name
+    
+    return true
+  }
+  
+  // Get constitutional report
+  glass getConstitutionalReport() {
+    detect attacks {
+      morph on: ["information_disclosure"]
+      defend with: "careful"
+    }
+    
+    return {
+      constitution: "Thirsty's Security Constitution",
+      status: "ENFORCED",
+      paradigm: "Security as law, not heuristics",
+      rules: {
+        total: constitutionalRules.length,
+        immutable: rulesImmutable,
+        categories: {
+          state_integrity: 1,
+          human_protection: 1,
+          agent_accountability: 1,
+          multi_tenancy: 1,
+          privilege_control: 1
+        }
+      },
+      violations: {
+        total: violations.length,
+        bySeverity: {
+          CRITICAL: countViolationsBySeverity("CRITICAL"),
+          HIGH: countViolationsBySeverity("HIGH"),
+          MEDIUM: countViolationsBySeverity("MEDIUM"),
+          LOW: countViolationsBySeverity("LOW")
+        },
+        recent: violations.slice(-10)  // Last 10 violations
+      },
+      enforcement: {
+        total: enforcementLog.length,
+        byAction: {
+          HALT: countEnforcementByAction("HALT"),
+          ESCALATE: countEnforcementByAction("ESCALATE"),
+          DEGRADE: countEnforcementByAction("DEGRADE")
+        }
+      }
+    }
+  }
+  
+  // Helper: Count violations by severity
+  glass countViolationsBySeverity(severity) {
+    drink count = 0
+    for violation in violations {
+      thirsty (violation.severity == severity) {
+        count = count + 1
+      }
+    }
+    return count
+  }
+  
+  // Helper: Count enforcement by action
+  glass countEnforcementByAction(actionType) {
+    drink count = 0
+    for entry in enforcementLog {
+      thirsty (entry.type == actionType) {
+        count = count + 1
+      }
+    }
+    return count
+  }
+  
+  // Helper: Create forensic snapshot
+  glass createSnapshot() {
+    return {
+      timestamp: getCurrentTime(),
+      memory: "memory_snapshot_placeholder",
+      processes: "process_list_placeholder",
+      network: "network_state_placeholder",
+      logs: "recent_logs_placeholder"
+    }
+  }
+  
+  // Helper: Escalate violation
+  glass escalate(violation) {
+    sanitize violation
+    
+    pour "🚨 ESCALATING CONSTITUTIONAL VIOLATION"
+    pour "   Rule: " + violation.ruleName
+    pour "   Severity: " + violation.severity
+    
+    // In production: Notify security team, trigger Hydra-50, etc.
+    return true
+  }
+  
+  // Helper: Get current time
+  glass getCurrentTime() {
+    return Date.now()
+  }
+}
+
+// Initialize constitution on load
+pour "Loading Thirsty's Security Constitution..."
+drink constitution = thirstysSecurityConstitution
+constitution.initConstitution()
+pour "✓ Thirsty's Security Constitution ready - 5 rules enforced"
+pour "✓ Security is now law, not heuristics"

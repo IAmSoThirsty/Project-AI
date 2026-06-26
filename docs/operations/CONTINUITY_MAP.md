@@ -224,3 +224,114 @@ Commands run:
 - write_file AGENTS.md and docs/operations/CONTINUITY_MAP.md (non-destructive additions)
 Safe to continue: yes (for clarification and repo-hygiene; NOT for new staged work without user direction)
 ```
+
+---
+
+## Session Update — Phase A (2026-06-25)
+
+### Session Metadata (delta)
+
+- **Project:** (unchanged)
+- **Mode:** governance system (Phase A execution per `STAGE_19_5_PHASED_PLAN.md`)
+- **Date:** 2026-06-25
+- **Agent/Operator:** (unchanged)
+- **Previous map:** this section supersedes prior sessions for Phase A scope
+
+### Current State (delta)
+
+- **Overall status:** Stage 19 wave shipped at commits `888bf4c` + `0d3128c` (previous session). Phase A (Q2/Q3/Q8 resolution + apps inventory + archive) executed; awaiting commit.
+- **Safe to continue:** yes (for Phase B authorization); NOT for code edits without explicit "go".
+- **Last verified checkpoint:** 2026-06-25 — pytest 517 passed; Phase A artifacts byte-identical with legacy source (119/119 web + 27/27 .thirsty).
+
+### File Inventory (Phase A delta)
+
+#### Created
+| File | Status | Last Verified | Notes |
+|------|--------|---------------|-------|
+| `docs/operations/STAGE_19_5_COMPANION_REBUILD_PLAN.md` | Created (SUPERSEDED) | 2026-06-25 | Single-wave plan, replaced by phased plan below |
+| `docs/operations/STAGE_19_5_PHASED_PLAN.md` | Created | 2026-06-25 | Active 10-phase plan (A–J) covering Q1–Q8 + C1–C5 |
+| `docs/operations/APPS_INVENTORY.md` | Created | 2026-06-25 | Q8 resolution: 5 apps, 4,489 LOC, zero upward imports verified |
+| `docs/legacy-archive/web/hub-epstein/` | Created (119 files) | 2026-06-25 | Byte-identical with legacy source (SHA-256 verified) |
+| `docs/legacy-archive/web/site/` | Created (49 files) | 2026-06-25 | Byte-identical with legacy source |
+| `docs/legacy-archive/web/SHA256SUMS.txt` | Created | 2026-06-25 | 119 hashes |
+| `docs/legacy-archive/tarl_os_config/**/*.thirsty` | Created (27 files) | 2026-06-25 | Byte-identical with legacy source |
+| `docs/legacy-archive/tarl_os_config/SHA256SUMS.txt` | Created | 2026-06-25 | 27 hashes |
+
+#### Modified
+| File | Change | Status | Notes |
+|------|--------|--------|-------|
+| `docs/operations/LEGACY_GAP_INVENTORY.csv` | Q2 + Q3 rows marked RESOLVED | Verified | Q2: web archived; Q3: tarl_os `.thirsty` archived |
+| `docs/operations/LEGACY_GAP_INVENTORY.md` §8 | All 8 questions annotated with resolution status | Verified | Q2/Q3/Q8 RESOLVED Phase A; Q1/Q4 PENDING Phase B; Q5/Q6/Q7 PENDING Phases F/G/E |
+
+#### Deleted
+None.
+
+### Commands Run (Phase A delta)
+
+| Command | Result | Date | Notes |
+|---------|--------|------|-------|
+| `find web/hub-epstein web/site -type f \| wc -l` | 119 | 2026-06-25 | Q2 source count |
+| `cp -r web/hub-epstein docs/legacy-archive/web/` | 119 files | 2026-06-25 | Q2 archive |
+| `sha256sum` round-trip source vs archive | diff empty (exit 0) | 2026-06-25 | Byte-identical verified |
+| `find tarl_os -name "*.thirsty" \| wc -l` | 27 | 2026-06-25 | Q3 source count |
+| `cp *.thirsty → docs/legacy-archive/tarl_os_config/` | 27 files | 2026-06-25 | Q3 archive |
+| `sha256sum` round-trip source vs archive | diff empty (exit 0) | 2026-06-25 | Byte-identical verified |
+| `grep -rn "^(from\|import) (governance\|execution\|capability)" apps/` | 0 hits | 2026-06-25 | Q8 architectural boundary verified |
+| `uv run pytest packages/ tools/tests/` | 517 passed | 2026-06-25 | Regression check after Phase A (no source touched) |
+
+### Tests Run (Phase A delta)
+
+| Test | Result | Evidence | Notes |
+|------|--------|----------|-------|
+| pytest regression (all packages + tools/tests) | 517 passed | session output | No source modified, baseline preserved |
+
+### Build / Deployment Results (Phase A delta)
+
+None. Phase A is doc + archive only; no build artifacts.
+
+### Known Failures (Phase A delta)
+
+None new.
+
+### Blockers (Phase A delta)
+
+None. Phase A completed end-to-end.
+
+### Risks (Phase A delta)
+
+- Risk: Archive copies are 1.6 MB; if repo has size constraints, git ls-files will reflect. Action: documented; can be moved out-of-tree if size policy demands.
+- Risk: Q1/Q4 (Phase B), Q5 (Phase F), Q6 (Phase G), Q7 (Phase E) still PENDING. Action: phased plan covers; awaits authorization per phase.
+
+### Self-Report (v3 §35) — Phase A
+
+```
+Mode: governance system (Phase A execution)
+Created:
+- docs/operations/STAGE_19_5_COMPANION_REBUILD_PLAN.md (superseded)
+- docs/operations/STAGE_19_5_PHASED_PLAN.md
+- docs/operations/APPS_INVENTORY.md
+- docs/legacy-archive/web/{hub-epstein,site,SHA256SUMS.txt} (119 + 1 files)
+- docs/legacy-archive/tarl_os_config/**/*.thirsty + SHA256SUMS.txt (27 + 1 files)
+- docs/internal/STAGE_19_5A_ACCEPTANCE.md (acceptance record, this commit)
+Modified:
+- docs/operations/LEGACY_GAP_INVENTORY.csv (Q2 + Q3 resolved)
+- docs/operations/LEGACY_GAP_INVENTORY.md §8 (resolution status per question)
+- docs/operations/CONTINUITY_MAP.md (this section)
+Deleted: None.
+Verified:
+- 119/119 web files byte-identical with legacy (SHA-256 round-trip)
+- 27/27 .thirsty files byte-identical with legacy (SHA-256 round-trip)
+- 0 upward imports from apps/ into packages/{governance,execution,capability}
+- pytest regression: 517 passed
+Failed: None.
+Not verified:
+- apps/desktop tests + apps/services tests (pre-existing PyQt6 / workspace-install env gaps; not from Phase A)
+- Full content read of every archived file (sampled via SHA-256 + find; sufficient for archive verification)
+Risks: see Risks section above
+Continuity map: docs/operations/CONTINUITY_MAP.md (this section)
+Remaining:
+- User authorization to commit Phase A artifacts
+- Phase B authorization (Q1 Unity archive + Q4 emergent-microservices confirm)
+Commands run: see Commands Run table
+Safe to continue: yes (for commit + Phase B); NOT for code edits without explicit "go"
+```

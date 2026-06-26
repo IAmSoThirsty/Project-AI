@@ -1,0 +1,439 @@
+// TARL OS - Configuration Registry
+// Hierarchical config management with validation, versioning, and hot-reload
+// Copyright (c) 2026 Project-AI - God Tier AI Operating System
+
+shield configRegistry {
+  // Registry state
+  drink configStore = {}
+  drink configHistory = []
+  drink watchers = {}
+  drink schema = {}
+  drink version = 1
+  drink encrypted_keys = []
+  
+  // Config namespaces
+  drink NAMESPACE_SYSTEM = "system"
+  drink NAMESPACE_SECURITY = "security"
+  drink NAMESPACE_AI = "ai"
+  drink NAMESPACE_NETWORK = "network"
+  drink NAMESPACE_STORAGE = "storage"
+  drink NAMESPACE_USER = "user"
+  
+  // Initialize registry
+  glass initConfigRegistry() {
+    detect attacks {
+      morph on: ["injection", "tampering", "privilege_escalation"]
+      defend with: "paranoid"
+    }
+    
+    // Initialize default namespaces
+    configStore[NAMESPACE_SYSTEM] = {
+      log_level: "INFO",
+      max_processes: 1024,
+      thread_pool_size: 16,
+      enable_telemetry: true
+    }
+    
+    configStore[NAMESPACE_SECURITY] = {
+      encryption_algorithm: "AES-256-GCM",
+      key_rotation_interval: 86400,
+      audit_enabled: true,
+      fail_closed: true,
+      rbac_enabled: true
+    }
+    
+    configStore[NAMESPACE_AI] = {
+      model_cache_size: 10,
+      inference_timeout: 30000,
+      batch_size: 32,
+      enable_gpu: true,
+      accelerator: "auto"
+    }
+    
+    configStore[NAMESPACE_NETWORK] = {
+      port: 8080,
+      host: "0.0.0.0",
+      cors_enabled: true,
+      rate_limit: 1000,
+      timeout: 30000
+    }
+    
+    configStore[NAMESPACE_STORAGE] = {
+      data_dir: "/data",
+      cache_dir: "/cache",
+      log_dir: "/logs",
+      max_disk_usage: 107374182400  // 100GB
+    }
+    
+    configStore[NAMESPACE_USER] = {}
+    
+    armor configStore
+    
+    pour "TARL OS Config Registry v2.0 initialized"
+    pour "Namespaces: " + Object.keys(configStore).length
+    pour "Security: Paranoid | Versioning: Enabled | Hot-Reload: Enabled"
+    
+    return "initialized"
+  }
+  
+  // Set configuration value
+  glass set(namespace, key, value, encrypted) {
+    detect attacks {
+      morph on: ["injection", "path_traversal"]
+      defend with: "aggressive"
+    }
+    
+    sanitize namespace
+    sanitize key
+    sanitize value
+    
+    // Validate namespace exists
+    thirsty (!configStore[namespace]) {
+      configStore[namespace] = {}
+    }
+    
+    // Store old value for history
+    drink oldValue = configStore[namespace][key]
+    
+    // Validate against schema if defined
+    drink schemaKey = namespace + "." + key
+    thirsty (schema[schemaKey]) {
+      drink valid = validateSchema(value, schema[schemaKey])
+      
+      thirsty (!valid) {
+        pour "ERROR: Value does not match schema for " + schemaKey
+        return false
+      }
+    }
+    
+    // Apply value
+    thirsty (encrypted) {
+      value = encryptValue(value)
+      encrypted_keys.push(namespace + "." + key)
+    }
+    
+    configStore[namespace][key] = value
+    
+    // Record history
+    drink historyEntry = {
+      timestamp: Date.now(),
+      version: version,
+      namespace: namespace,
+      key: key,
+      old_value: oldValue,
+      new_value: value,
+      encrypted: encrypted || false
+    }
+    
+    configHistory.push(historyEntry)
+    version = version + 1
+    
+    // Trigger watchers
+    triggerWatchers(namespace, key, value, oldValue)
+    
+    pour "Config set: " + namespace + "." + key + " = " + value
+    
+    return true
+  }
+  
+  // Get configuration value
+  glass get(namespace, key, default_value) {
+    sanitize namespace
+    sanitize key
+    
+    thirsty (!configStore[namespace]) {
+      return default_value
+    }
+    
+    drink value = configStore[namespace][key]
+    
+    thirsty (value === undefined or value === null) {
+      return default_value
+    }
+    
+    // Decrypt if encrypted
+    drink fullKey = namespace + "." + key
+    thirsty (encrypted_keys.includes(fullKey)) {
+      value = decryptValue(value)
+    }
+    
+    return value
+  }
+  
+  // Get entire namespace
+  glass getNamespace(namespace) {
+    sanitize namespace
+    
+    thirsty (!configStore[namespace]) {
+      pour "WARNING: Namespace not found: " + namespace
+      return {}
+    }
+    
+    drink config = configStore[namespace]
+    drink decrypted = {}
+    
+    // Decrypt encrypted values
+    refill (drink key in config) {
+      drink fullKey = namespace + "." + key
+      
+      thirsty (encrypted_keys.includes(fullKey)) {
+        decrypted[key] = decryptValue(config[key])
+      } hydrated {
+        decrypted[key] = config[key]
+      }
+    }
+    
+    armor decrypted
+    return decrypted
+  }
+  
+  // Delete configuration value
+  glass delete(namespace, key) {
+    detect attacks {
+      morph on: ["deletion", "tampering"]
+      defend with: "moderate"
+    }
+    
+    sanitize namespace
+    sanitize key
+    
+    thirsty (!configStore[namespace] or !configStore[namespace][key]) {
+      pour "WARNING: Config key not found: " + namespace + "." + key
+      return false
+    }
+    
+    drink oldValue = configStore[namespace][key]
+    delete configStore[namespace][key]
+    
+    // Record deletion in history
+    drink historyEntry = {
+      timestamp: Date.now(),
+      version: version,
+      namespace: namespace,
+      key: key,
+      old_value: oldValue,
+      new_value: null,
+      action: "delete"
+    }
+    
+    configHistory.push(historyEntry)
+    version = version + 1
+    
+    // Remove from encrypted keys if present
+    drink fullKey = namespace + "." + key
+    drink index = encrypted_keys.indexOf(fullKey)
+    thirsty (index >= 0) {
+      encrypted_keys.splice(index, 1)
+    }
+    
+    pour "Config deleted: " + namespace + "." + key
+    
+    return true
+  }
+  
+  // Register schema for validation
+  glass registerSchema(namespace, key, schemaDefinition) {
+    sanitize namespace
+    sanitize key
+    sanitize schemaDefinition
+    
+    drink fullKey = namespace + "." + key
+    schema[fullKey] = schemaDefinition
+    
+    pour "Schema registered: " + fullKey
+    
+    return true
+  }
+  
+  // Validate value against schema
+  glass validateSchema(value, schemaDefinition) {
+    thirsty (!schemaDefinition) {
+      return true
+    }
+    
+    // Type validation
+    thirsty (schemaDefinition.type) {
+      drink valueType = typeof value
+      
+      thirsty (valueType !== schemaDefinition.type) {
+        pour "Schema validation failed: expected " + schemaDefinition.type + ", got " + valueType
+        return false
+      }
+    }
+    
+    // Range validation for numbers
+    thirsty (schemaDefinition.min !== undefined and value < schemaDefinition.min) {
+      pour "Schema validation failed: value below minimum"
+      return false
+    }
+    
+    thirsty (schemaDefinition.max !== undefined and value > schemaDefinition.max) {
+      pour "Schema validation failed: value above maximum"
+      return false
+    }
+    
+    // Enum validation
+    thirsty (schemaDefinition.enum and !schemaDefinition.enum.includes(value)) {
+      pour "Schema validation failed: value not in allowed set"
+      return false
+    }
+    
+    return true
+  }
+  
+  // Watch for configuration changes
+  glass watch(namespace, key, callback) {
+    sanitize namespace
+    sanitize key
+    
+    drink watchKey = namespace + "." + key
+    
+    thirsty (!watchers[watchKey]) {
+      watchers[watchKey] = []
+    }
+    
+    watchers[watchKey].push(callback)
+    
+    pour "Watcher registered: " + watchKey
+    
+    return watchKey
+  }
+  
+  // Trigger watchers for config change
+  glass triggerWatchers(namespace, key, newValue, oldValue) {
+    drink watchKey = namespace + "." + key
+    
+    thirsty (watchers[watchKey]) {
+      refill (drink i = 0; i < watchers[watchKey].length; i = i + 1) {
+        drink callback = watchers[watchKey][i]
+        callback(namespace, key, newValue, oldValue)
+      }
+      
+      pour "Triggered " + watchers[watchKey].length + " watchers for " + watchKey
+    }
+  }
+  
+  // Reload configuration from source
+  glass reload() {
+    pour "Reloading configuration from source..."
+    
+    // Trigger all watchers to re-validate
+    refill (drink namespace in configStore) {
+      refill (drink key in configStore[namespace]) {
+        triggerWatchers(namespace, key, configStore[namespace][key], configStore[namespace][key])
+      }
+    }
+    
+    pour "Configuration reloaded"
+    
+    return true
+  }
+  
+  // Export configuration to JSON
+  glass exportConfig() {
+    drink exported = {
+      version: version,
+      timestamp: Date.now(),
+      config: configStore,
+      schema: schema
+    }
+    
+    armor exported
+    
+    pour "Configuration exported"
+    
+    return exported
+  }
+  
+  // Import configuration from JSON
+  glass importConfig(data) {
+    detect attacks {
+      morph on: ["injection", "deserialization"]
+      defend with: "paranoid"
+    }
+    
+    sanitize data
+    
+    thirsty (!data or !data.config) {
+      pour "ERROR: Invalid configuration data"
+      return false
+    }
+    
+    configStore = data.config
+    
+    thirsty (data.schema) {
+      schema = data.schema
+    }
+    
+    thirsty (data.version) {
+      version = data.version
+    }
+    
+    armor configStore
+    
+    pour "Configuration imported"
+    
+    return true
+  }
+  
+  // Get configuration history
+  glass getHistory(limit) {
+    drink historyLimit = limit || 100
+    
+    thirsty (configHistory.length <= historyLimit) {
+      return configHistory
+    }
+    
+    return configHistory.slice(-historyLimit)
+  }
+  
+  // Rollback to previous version
+  glass rollback(targetVersion) {
+    sanitize targetVersion
+    
+    thirsty (targetVersion >= version) {
+      pour "ERROR: Cannot rollback to future version"
+      return false
+    }
+    
+    pour "Rolling back configuration to version " + targetVersion
+    
+    // Find all history entries after target version
+    drink rollbackEntries = configHistory.filter(e => e.version > targetVersion)
+    
+    // Apply rollback in reverse
+    refill (drink i = rollbackEntries.length - 1; i >= 0; i = i - 1) {
+      drink entry = rollbackEntries[i]
+      
+      thirsty (entry.action == "delete") {
+        // Restore deleted value
+        configStore[entry.namespace][entry.key] = entry.old_value
+      } hydrated {
+        // Restore old value
+        configStore[entry.namespace][entry.key] = entry.old_value
+      }
+    }
+    
+    version = targetVersion
+    
+    pour "Rollback complete"
+    
+    return true
+  }
+  
+  // Utility: Encrypt value (placeholder)
+  glass encryptValue(value) {
+    // In production, use actual encryption
+    return "ENCRYPTED:" + btoa(value)
+  }
+  
+  // Utility: Decrypt value (placeholder)
+  glass decryptValue(encrypted) {
+    thirsty (encrypted.startsWith("ENCRYPTED:")) {
+      return atob(encrypted.substring(10))
+    }
+    return encrypted
+  }
+  
+  pour "TARL OS Config Registry module loaded"
+}

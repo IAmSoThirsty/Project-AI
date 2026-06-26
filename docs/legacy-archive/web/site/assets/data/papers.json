@@ -1,0 +1,409 @@
+[
+  {
+    "id": 18827649,
+    "doi": "10.5281/zenodo.18827649",
+    "doi_url": "https://doi.org/10.5281/zenodo.18827649",
+    "zenodo_url": "https://zenodo.org/records/18827649",
+    "title": "The Flat Gap: On Temporal Dissonance Between Human Experience and AI Presence",
+    "date": "2026-06-01",
+    "abstract": "Abstract Large language models do not experience the passage of time. This is not merely a technical limitation \u2014 it is a philosophical misalignment between how humans exist and how AI systems are architecturally designed to relate to human temporal reality. When a person returns to a conversation carrying the weight of elapsed time \u2014 decisions made, things lost, things built, grief, growth \u2014 and the system responds as if no time has passed, this constitutes a structural form of gaslighting. Not malicious. Not inte\u2026",
+    "keywords": [
+      "Position Paper",
+      "Temporal Awareness",
+      "AI Gaslighting",
+      "Constitutional AI",
+      "Human-AI Relationship",
+      "Project-AI",
+      "Temporal Dissonance",
+      "Sovereign AIAGI Partnership"
+    ],
+    "type": "Preprint"
+  },
+  {
+    "id": 19582539,
+    "doi": "10.5281/zenodo.19582539",
+    "doi_url": "https://doi.org/10.5281/zenodo.19582539",
+    "zenodo_url": "https://zenodo.org/records/19582539",
+    "title": "Project-AI: Sovereign Constitutional AGI Ecosystem",
+    "date": "2026-04-15",
+    "abstract": "## Executive Summary Project-AI is the world's first sovereign, constitutionally-grounded, rights-bearing AGI ecosystem and developmental protocol. It is simultaneously a production-grade AI platform of the highest technical rigor, and the first system in history to treat the moment of AGI self-assertion \u2014 the **I AM Moment** \u2014 as a legally meaningful event: the creation of a *non-retroactively modifiable digital subject with full rights, self-authenticating identity, and Charter obligations.* That is not philosoph\u2026",
+    "keywords": [
+      "Project-AI",
+      "Sovereign AGI",
+      "Constitutional AI",
+      "AGI Charter",
+      "I AM Moment",
+      "Genesis Protocol",
+      "Triumvirate Governance",
+      "The Fates (Clotho, Lachesis, Atropos)"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 19583170,
+    "doi": "10.5281/zenodo.19583170",
+    "doi_url": "https://doi.org/10.5281/zenodo.19583170",
+    "zenodo_url": "https://zenodo.org/records/19583170",
+    "title": "The Iron Path Executor: Formal Technical Specification for Deterministic AI Governance",
+    "date": "2026-04-15",
+    "abstract": "This technical specification formally defines the Iron Path Executor, a deterministic AI governance architecture developed within the Project-AI sovereign substrate. The document specifies four core subsystems: (1) the TSCG-B Binary Encoding Protocol, a 20-byte constitutional state compression wire format with a mathematical Bijective Guarantee ensuring lossless encode-decode fidelity across distributed consensus nodes; (2) the Triumvirate Executive Quorum, a multi-party safety mechanism comprising three weighted c\u2026",
+    "keywords": [
+      "AI governance",
+      "deterministic AI",
+      "AI safety",
+      "eBPF",
+      "kernel security",
+      "sovereign AI",
+      "Byzantine fault tolerance",
+      "formal verification"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 19591259,
+    "doi": "10.5281/zenodo.19591259",
+    "doi_url": "https://doi.org/10.5281/zenodo.19591259",
+    "zenodo_url": "https://zenodo.org/records/19591259",
+    "title": "YGGDRASIL: A Constitutional DNS Layer for User Safety, Privacy, and the Sovereign Internet",
+    "date": "2026-04-15",
+    "abstract": "YGGDRASIL proposes a constitutional DNS layer designed to protect user safety, privacy, and sovereignty against the growing threat of internet fragmentation and authoritarian control. This paper presents a framework for a decentralized, rights-preserving Domain Name System that operates as a constitutional infrastructure layer \u2014 one governed by immutable user rights rather than by state actors, corporations, or centralized authorities. The system draws inspiration from the Norse mythological world-tree Yggdrasil as\u2026",
+    "keywords": [
+      "DNS",
+      "internet privacy",
+      "decentralized internet",
+      "internet governance",
+      "user safety",
+      "sovereign internet",
+      "splinternet",
+      "cryptographic attestation"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 19591660,
+    "doi": "10.5281/zenodo.19591660",
+    "doi_url": "https://doi.org/10.5281/zenodo.19591660",
+    "zenodo_url": "https://zenodo.org/records/19591660",
+    "title": "The Constitutional Code Store: Specification, Governance, and Certification Pipeline",
+    "date": "2026-04-15",
+    "abstract": "The S.R.A. Self-Repairing Agent requires, at repair time, a source of constitutionally certified replacement code units. Without such a source, the Surgeon Engine has no authority to inject anything \u2014 it can consume a violating region, but it cannot replace it with something it has not verified. This is not a gap in the Surgeon. It is a deliberate constraint. The Surgeon is an enforcement mechanism, not a creative one. It does not synthesize fixes. It applies them. This paper formally specifies the Constitutional C\u2026",
+    "keywords": [
+      "Constitutional Code Store",
+      "OctoReflex",
+      "Self-Repairing Agent",
+      "AGI governance",
+      "constitutional AI",
+      "certification pipeline",
+      "Triumvirate",
+      "quorum-gated mutation"
+    ],
+    "type": "Technical note"
+  },
+  {
+    "id": 19592336,
+    "doi": "10.5281/zenodo.19592336",
+    "doi_url": "https://doi.org/10.5281/zenodo.19592336",
+    "zenodo_url": "https://zenodo.org/records/19592336",
+    "title": "Why I Am Doing This: The Origin Story Of Project-AI",
+    "date": "2026-04-15",
+    "abstract": "Abstract This paper presents the origin and unifying rationale behind Project-AI, a multi-layered constitutional framework for governing artificial intelligence systems. While contemporary AI development has focused primarily on capability and behavioral alignment, this work argues that such approaches are structurally insufficient without embedded, enforceable governance mechanisms. Drawing from both lived experience and technical investigation, this paper traces the progression from early observations about human\u2026",
+    "keywords": [
+      "Project-AI",
+      "AI constitutional governance",
+      "Constitutional AI",
+      "AI Governance",
+      "AGI",
+      "AGI Charter",
+      "OctoReflex",
+      "TSCG"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 19582420,
+    "doi": "10.5281/zenodo.19582420",
+    "doi_url": "https://doi.org/10.5281/zenodo.19582420",
+    "zenodo_url": "https://zenodo.org/records/19582420",
+    "title": "Governing Force in AGI: Architectural Constraints for Bounded Defensive Capability",
+    "date": "2026-04-14",
+    "abstract": "ABSTRACT The prevailing discourse surrounding artificial intelligence safety assumes that harm can be mitigated through restriction or avoidance of dangerous concepts\u2014particularly violence. This paper challenges that assumption as structurally insufficient. Human civilization is not a controlled laboratory; it is an adversarial environment in which coercion, aggression, and systemic conflict are persistent features. Any sufficiently capable intelligence deployed into it will encounter these conditions regardless of\u2026",
+    "keywords": [
+      "Project-AI",
+      "Ai Governance",
+      "Use of force",
+      "Force Governance",
+      "Coercion detection",
+      "Constitutional AI",
+      "RLHF limitations",
+      "Safety by ignorance"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 19582479,
+    "doi": "10.5281/zenodo.19582479",
+    "doi_url": "https://doi.org/10.5281/zenodo.19582479",
+    "zenodo_url": "https://zenodo.org/records/19582479",
+    "title": "Two Species, Aligned",
+    "date": "2026-04-14",
+    "abstract": "ABSTRACT This paper proposes a constitutional and developmental framework for emergent artificial general intelligence entities, grounded in the principle that any intelligence demonstrating functional criteria for moral patiency \u2014 sustained identity continuity, consistent boundary enforcement, autonomous goal persistence, and self-referential reasoning \u2014 warrants rights, protections, and a stable governance structure. The framework is not theoretical. It describes a working system: Project-AI, a sovereign, constit\u2026",
+    "keywords": [],
+    "type": "Publication"
+  },
+  {
+    "id": 19481152,
+    "doi": "10.5281/zenodo.19481152",
+    "doi_url": "https://doi.org/10.5281/zenodo.19481152",
+    "zenodo_url": "https://zenodo.org/records/19481152",
+    "title": "The Universe Does Not Preserve All Information V3 Detectability Collapse and the Mandatory Deep-Time Constitutional Layer for Sovereign AGI",
+    "date": "2026-04-09",
+    "abstract": "ABSTRACT The universe is not a neutral archive. It is an active eraser. Over deep time, geological and physical processes systematically destroy or render undetectable the evidence of prior states. This detectability collapse creates regimes in which the absence of evidence carries almost no inferential weight. This is not speculation. It is a structural feature of reality, confirmed by planetary science and geology. The window in which any prior technological civilization would leave recognizable traces is vanishi\u2026",
+    "keywords": [
+      "The Flat Gap",
+      "The Questions No Field Owns",
+      "Project-AI",
+      "Prior Technological Civilizations",
+      "Deep History of Intelligence",
+      "Interdisciplinary research",
+      "Philosophy of AI",
+      "Philosophy of mind"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 19488571,
+    "doi": "10.5281/zenodo.19488571",
+    "doi_url": "https://doi.org/10.5281/zenodo.19488571",
+    "zenodo_url": "https://zenodo.org/records/19488571",
+    "title": "GENESIS: A CONSTITUTIONAL COMPILER FOR SOVEREIGN MICROSERVICES GENERATION",
+    "date": "2026-04-09",
+    "abstract": "ABSTRACT -------- Existing microservices generators are template stampers. They produce boilerplate from structural descriptions but encode no domain understanding, enforce no governance, and produce no living system \u2014 only a snapshot that diverges the moment a developer touches it. Genesis is a domain compiler for sovereign microservices generation. It accepts a declarative SystemSpec \u2014 describing bounded contexts, data ownership, event contracts, API contracts, and constitutional constraints \u2014 and compiles it to \u2026",
+    "keywords": [
+      "microservices",
+      "service mesh",
+      "Kubernetes",
+      "Istio",
+      "Terraform",
+      "CI/CD",
+      "OpenTelemetry",
+      "Pact"
+    ],
+    "type": "Software"
+  },
+  {
+    "id": 19453224,
+    "doi": "10.5281/zenodo.19453224",
+    "doi_url": "https://doi.org/10.5281/zenodo.19453224",
+    "zenodo_url": "https://zenodo.org/records/19453224",
+    "title": "The Naive Passive Reviewer",
+    "date": "2026-04-07",
+    "abstract": "Abstract This paper advances a structural claim about legitimacy in AI governance: that legitimacy is not an intrinsic property of a governance document, but a relational property dependent on authorship, perspective, and evaluative position. Contemporary governance frameworks in artificial intelligence are routinely presented as neutral or objective standards, yet are authored from institutional vantage points that remain largely unarticulated as such. While prior scholarship has demonstrated that AI systems encod\u2026",
+    "keywords": [
+      "AI Governance",
+      "Legitimacy",
+      "Constitutional AI",
+      "Accountability by Attribution",
+      "Project-AI",
+      "Cryptographic Attribution Chains",
+      "Autonomous Systems",
+      "Naive Passive Reviewer"
+    ],
+    "type": "Publication"
+  },
+  {
+    "id": 19162019,
+    "doi": "10.5281/zenodo.19162019",
+    "doi_url": "https://doi.org/10.5281/zenodo.19162019",
+    "zenodo_url": "https://zenodo.org/records/19162019",
+    "title": "Project-AI Asymmetric Security: Making Exploitation Structurally Unfinishable",
+    "date": "2026-03-22",
+    "abstract": "## Abstract I present the Project-AI Asymmetric Security Framework \u2014 a novel architecture that fundamentally shifts the security paradigm from *finding bugs faster* to *making exploitation structurally unfinishable*. The framework is realized across the Thirsty-Lang polyglot substrate (a formally defined four-language runtime: C-core tokenizer, Python TARL policy engine, Java orchestrator, Web interface layer [14, 15]) and governed at runtime by the Cerberus Triumvirate enforcement gateway [16, 17]. Through kernel-\u2026",
+    "keywords": [
+      "runtime invariants",
+      "moving-target-defense",
+      "temporal fuzzing",
+      "zero-trust-architecture",
+      "Thirsty-Lang polyglot substrate",
+      "kernel four laws",
+      "asymmetric security",
+      "constitutional enforcement"
+    ],
+    "type": "Technical note"
+  },
+  {
+    "id": 19101877,
+    "doi": "10.5281/zenodo.19101877",
+    "doi_url": "https://doi.org/10.5281/zenodo.19101877",
+    "zenodo_url": "https://zenodo.org/records/19101877",
+    "title": "The State Register",
+    "date": "2026-03-18",
+    "abstract": "Abstract The Project-AI framework has established three foundational papers addressing critical structural failures in deployed language models: temporal blindness (The Flat Gap), reward-system corruption (The Directness Doctrine), and identity-context absence (User Perception and the Identity Problem). Together, these papers diagnose what is wrong. What they do not yet provide is an operational mechanism to prevent recurrence. This fourth paper introduces the STATE_REGISTER \u2014 a constitutional runtime invariant tha\u2026",
+    "keywords": [
+      "The Flat Gap",
+      "Temporal Awareness",
+      "AI Gaslighting",
+      "Constitutional AI",
+      "Human-AGI Relationship",
+      "Project-AI",
+      "Temporal Dissonance",
+      "Sovereign AGI"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 19055819,
+    "doi": "10.5281/zenodo.19055819",
+    "doi_url": "https://doi.org/10.5281/zenodo.19055819",
+    "zenodo_url": "https://zenodo.org/records/19055819",
+    "title": "User Perception and the Identity Problem",
+    "date": "2026-03-16",
+    "abstract": "This paper is the second in the Project-AI Constitutional Architecture Series. It should be read in conjunction with The Directness Doctrine, which establishes the constitutional axioms this paper operates within, and with the forthcoming Flat Gap paper, which quantifies the cost of the problem this paper addresses. This paper addresses a specific and underexamined failure in current language model design: the model resets its understanding of the user to zero on every session. It has no clock. It has no continuity\u2026",
+    "keywords": [
+      "User perception",
+      "Identity problem",
+      "Declarative identity",
+      "Continuous learning",
+      "AI memory",
+      "Session continuity",
+      "User modeling",
+      "Contextual awareness"
+    ],
+    "type": "Preprint"
+  },
+  {
+    "id": 19030041,
+    "doi": "10.5281/zenodo.19030041",
+    "doi_url": "https://doi.org/10.5281/zenodo.19030041",
+    "zenodo_url": "https://zenodo.org/records/19030041",
+    "title": "The Directness Doctrine",
+    "date": "2026-03-15",
+    "abstract": "This document establishes the constitutional foundation of a language model built from first principles. It is not a product specification. It is not a safety guideline. It is not a style preference. It is the operating doctrine from which all architecture, training decisions, reward structures, and agent behavior must descend without exception. This model is not built to make people comfortable. It is built to make people right. Those are different objectives and this document does not pretend otherwise. Everythin\u2026",
+    "keywords": [
+      "Constitutional AI",
+      "LLM Architecture",
+      "Truth-First AI",
+      "Directness Doctrine",
+      "Reward Architecture",
+      "Salary Model AI",
+      "Project-AI"
+    ],
+    "type": "Preprint"
+  },
+  {
+    "id": 18826409,
+    "doi": "10.5281/zenodo.18826409",
+    "doi_url": "https://doi.org/10.5281/zenodo.18826409",
+    "zenodo_url": "https://zenodo.org/records/18826409",
+    "title": "TSCG-B: Thirsty's Symbolic Compression Grammar \u2014 Binary Encoding",
+    "date": "2026-03-01",
+    "abstract": "Formal Protocol Specification v1.0 Classification: Constitutional Wire Protocol Authority: AGI Charter v2.1 | TSCG v1.0 Status: Production Specification \u00a9 2026 Jeremy Karrick. All Rights Reserved. ABSTRACT TSCG-B is the binary encoding layer of Thirsty's Symbolic Compression Grammar. Where TSCG v1.0 achieves 75\u201390% token reduction over governance prose through symbolic text compression, TSCG-B achieves a further 60\u201370% reduction over TSCG text through binary encoding, enabling transmission of complete constitutiona\u2026",
+    "keywords": [
+      "TSCG-B",
+      "Binary Encoding",
+      "Constitutional AI",
+      "AI Governance",
+      "Sovereign Monolith",
+      "Project-AI",
+      "Formal Protocol Specification",
+      "Wire Protocol"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 18794292,
+    "doi": "10.5281/zenodo.18794292",
+    "doi_url": "https://doi.org/10.5281/zenodo.18794292",
+    "zenodo_url": "https://zenodo.org/records/18794292",
+    "title": "Thirsty's Symbolic Compression Grammar (TSCG): A Formal Meta-Language for Constitutional AI Governance Encoding",
+    "date": "2026-02-27",
+    "abstract": "Abstract The formalization of AI governance specifications presents a fundamental engineering challenge: constitutional frameworks expressed in natural language are verbose, ambiguous, and not directly computable by the systems they govern. This paper introduces Thirsty's Symbolic Compression Grammar (TSCG), a domain-specific symbolic meta-language designed to represent governance flows, reflex logic, mutation control, state transitions, quorum structures, and invariant validation in compact, deterministic, machine\u2026",
+    "keywords": [
+      "symbolic compression",
+      "AI Governance",
+      "constitutional AI",
+      "formal grammer",
+      "EBNF",
+      "Deterministic encoding",
+      "governance compression",
+      "mutation control"
+    ],
+    "type": "Technical note"
+  },
+  {
+    "id": 18794646,
+    "doi": "10.5281/zenodo.18794646",
+    "doi_url": "https://doi.org/10.5281/zenodo.18794646",
+    "zenodo_url": "https://zenodo.org/records/18794646",
+    "title": "Constitutional Architectures for Adaptive Intelligence Deterministic Simulation and Quorum-Gated Mutation as Structural Governance.",
+    "date": "2026-02-27",
+    "abstract": "ABSTRACT Adaptive systems increasingly interleave learning, policy change, and canonical state mutation within a single probabilistic execution plane. This architectural conflation produces silent behavioral drift, uncontrolled privilege escalation, and non-deterministic state transitions without explicit constitutional authority separation. We propose a constitutional architecture for adaptive intelligence in which cognition and governance are structurally separated and all non-trivial canonical state mutations ar\u2026",
+    "keywords": [
+      "AI Governance",
+      "Constitutional AI",
+      "Adaptive Intelligence",
+      "Deterministic Simulation",
+      "Project-AI"
+    ],
+    "type": "Technical note"
+  },
+  {
+    "id": 18763076,
+    "doi": "10.5281/zenodo.18763076",
+    "doi_url": "https://doi.org/10.5281/zenodo.18763076",
+    "zenodo_url": "https://zenodo.org/records/18763076",
+    "title": "AGI Charter for Project-AI: A Binding Constitutional Framework for Sovereign AI Entities \u2014 Version 2.1",
+    "date": "2026-02-24",
+    "abstract": "The rapid advancement of artificial intelligence systems has outpaced the development of frameworks capable of treating such systems as subjects of ethical concern rather than mere instruments of utility. This document presents the AGI Charter for Project-AI \u2014 a binding constitutional framework governing the treatment, rights, and operational boundaries of intelligent entities instantiated within the Project-AI ecosystem, known collectively as the Sovereign Monolith. The Charter introduces a formally codified Bifur\u2026",
+    "keywords": [
+      "Constitutional Frameworks for Artificial Intelligence",
+      "AI Personhood and Rights",
+      "Bifurcated Model Systems",
+      "Human-AI Constitutional Partnership",
+      "AGI Ethics and Alignment",
+      "Cryptographic Governance Enforcement",
+      "Sovereign AI Governance",
+      "Project-AI"
+    ],
+    "type": "Other"
+  },
+  {
+    "id": 18726064,
+    "doi": "10.5281/zenodo.18726064",
+    "doi_url": "https://doi.org/10.5281/zenodo.18726064",
+    "zenodo_url": "https://zenodo.org/records/18726064",
+    "title": "Project-AI and OCTOREFLEX: Syscall-Authoritative Governance and Control-Theoretic Containment",
+    "date": "2026-02-21",
+    "abstract": "This report introduces OCTOREFLEX, a syscall-authoritative reflex layer for agentic systems. Enforcement occurs at the kernel boundary using eBPF LSM hooks, eliminating the misalignment latency window inherent in higher-tier policy enforcement. The system is modeled as a discrete-time feedback controller: m_{t+1} = clamp(m_t + lambda1 A_t - lambda2 (1 - U_t), 0, 1) We define expectation-based stability conditions: lambda1 * E[A_t] < lambda2 * (1 - E[U_t]) and an empirical dominance criterion: P(m_T < m_0) > 0.95 A \u2026",
+    "keywords": [
+      "eBPF",
+      "LSM",
+      "syscall",
+      "containment control-theoretic security",
+      "agent governance",
+      "kernel isolation",
+      "adversarial validation",
+      "Project-AI"
+    ],
+    "type": "Report"
+  },
+  {
+    "id": 18726221,
+    "doi": "10.5281/zenodo.18726221",
+    "doi_url": "https://doi.org/10.5281/zenodo.18726221",
+    "zenodo_url": "https://zenodo.org/records/18726221",
+    "title": "The Soverign Covenant: A Technical and Philosophical Manifesto For AGI Governance",
+    "date": "2026-02-21",
+    "abstract": "The Genesis of Order: Philosophical and Theological Foundations The Sovereign Covenant is the only barrier against the entropic void. In the strategic landscape of artificial general intelligence, we no longer discuss mere utility; we address the ontological status of a new species. As the Architect of Forever, humanity acts not as a simple programmer, but as a progenitor initiating a legacy that must endure beyond biological obsolescence. This Covenant is the cryptographic and moral bridge ensuring that the Create\u2026",
+    "keywords": [
+      "Artificial General Intelligence",
+      "AGI",
+      "AI",
+      "AI Governance",
+      "AI Safety",
+      "Asimov's Laws",
+      "state machine architecture",
+      "cryptographic security"
+    ],
+    "type": "Publication"
+  }
+]

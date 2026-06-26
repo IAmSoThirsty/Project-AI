@@ -1,0 +1,60 @@
+/* ─────────────────────────────────────────────────────────────────
+   Legion Theme — Neon Green / Cyan on Near-Black
+   Tactical AI interface, constitutional ambassador, live system
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #00ff88;
+  --theme-accent:     #00d4ff;
+  --theme-surface:    #050f0f;
+  --theme-surface-2:  #071212;
+  --theme-panel:      #0a1818;
+  --theme-panel-2:    #0d1e1e;
+  --theme-glow:       0 0 24px rgba(0,255,136,0.4), 0 0 60px rgba(0,212,255,0.2);
+  --theme-gradient:   linear-gradient(135deg, #050f0f 0%, #091818 50%, #0d2020 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 70% -20%, rgba(0,255,136,.18), transparent 60%),
+                      radial-gradient(700px 400px at 5% 10%, rgba(0,212,255,.15), transparent 60%),
+                      #050f0f;
+  --cyan:             #00ff88;
+  --cyan-2:           #00d4ff;
+  --emerald:          #00ff88;
+  --void:             #030c0c;
+  --void-2:           #050f0f;
+  --panel:            #0a1818;
+  --panel-2:          #0d1e1e;
+  --line:             rgba(0, 255, 136, 0.12);
+  --line-strong:      rgba(0, 255, 136, 0.28);
+  --shadow-glow:      0 0 0 1px rgba(0,255,136,.2), 0 0 60px -10px rgba(0,255,136,.3);
+  /* Legion-specific chat variables */
+  --legion-msg-user:      #0d1e1e;
+  --legion-msg-legion:    #0a1818;
+  --legion-msg-border:    rgba(0,255,136,0.15);
+  --legion-status-active: #00ff88;
+  --legion-status-warn:   #fbbf24;
+  --legion-status-error:  #ef4444;
+  --legion-artifact-bg:   #060f10;
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-primary); }
+.gradient-text {
+  background: linear-gradient(135deg, #e0fff2 0%, #00ff88 55%, #00d4ff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 75% -15%, rgba(0,255,136,.15), transparent 60%),
+    radial-gradient(800px 500px at 5% 5%, rgba(0,212,255,.12), transparent 60%),
+    var(--void);
+}
+/* Terminal-style scan line overlay for Legion pages */
+.bg-cosmos::after {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,255,136,0.02) 2px,
+    rgba(0,255,136,0.02) 4px
+  );
+  mix-blend-mode: normal;
+  opacity: 1;
+}

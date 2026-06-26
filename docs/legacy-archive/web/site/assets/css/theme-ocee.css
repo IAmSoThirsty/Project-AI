@@ -1,0 +1,40 @@
+/* ─────────────────────────────────────────────────────────────────
+   OCEE Theme — Soft Violet / Indigo
+   Open Constraint Enforcement Engine, orchestration, elegance
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #a78bfa;
+  --theme-accent:     #6366f1;
+  --theme-surface:    #0d0a1e;
+  --theme-surface-2:  #110d24;
+  --theme-panel:      #171030;
+  --theme-panel-2:    #1d1438;
+  --theme-glow:       0 0 24px rgba(167,139,250,0.35), 0 0 60px rgba(99,102,241,0.15);
+  --theme-gradient:   linear-gradient(135deg, #0d0a1e 0%, #160c28 50%, #1e1034 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 70% -20%, rgba(167,139,250,.2), transparent 60%),
+                      radial-gradient(700px 400px at 5% 10%, rgba(99,102,241,.18), transparent 60%),
+                      #0d0a1e;
+  --cyan:             #a78bfa;
+  --cyan-2:           #6366f1;
+  --violet:           #c4b5fd;
+  --void:             #0a0818;
+  --void-2:           #0d0a1e;
+  --panel:            #171030;
+  --panel-2:          #1d1438;
+  --line:             rgba(167, 139, 250, 0.12);
+  --line-strong:      rgba(167, 139, 250, 0.28);
+  --shadow-glow:      0 0 0 1px rgba(167,139,250,.2), 0 0 60px -10px rgba(167,139,250,.3);
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-primary); }
+.gradient-text {
+  background: linear-gradient(135deg, #ede9fe 0%, #a78bfa 55%, #6366f1 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 75% -15%, rgba(167,139,250,.22), transparent 60%),
+    radial-gradient(800px 500px at 5% 5%, rgba(99,102,241,.18), transparent 60%),
+    var(--void);
+}

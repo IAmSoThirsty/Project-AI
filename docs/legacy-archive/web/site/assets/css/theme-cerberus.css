@@ -1,0 +1,41 @@
+/* ─────────────────────────────────────────────────────────────────
+   Cerberus Theme — Violet / Red
+   Three-headed security guardian, threat detection, containment
+   ───────────────────────────────────────────────────────────────── */
+:root {
+  --theme-primary:    #8b5cf6;
+  --theme-accent:     #ef4444;
+  --theme-surface:    #0f0a1e;
+  --theme-surface-2:  #130d24;
+  --theme-panel:      #1a0d2e;
+  --theme-panel-2:    #200f36;
+  --theme-glow:       0 0 24px rgba(139,92,246,0.4), 0 0 60px rgba(239,68,68,0.15);
+  --theme-gradient:   linear-gradient(135deg, #0f0a1e 0%, #1a0020 50%, #2a0030 100%);
+  --theme-hero-grad:  radial-gradient(900px 500px at 80% -10%, rgba(139,92,246,.25), transparent 60%),
+                      radial-gradient(700px 400px at 10% 20%, rgba(239,68,68,.15), transparent 60%),
+                      #0f0a1e;
+  --cyan:             #8b5cf6;
+  --cyan-2:           #7c3aed;
+  --violet:           #ef4444;
+  --void:             #0d0818;
+  --void-2:           #0f0a1e;
+  --panel:            #1a0d2e;
+  --panel-2:          #200f36;
+  --line:             rgba(139, 92, 246, 0.12);
+  --line-strong:      rgba(139, 92, 246, 0.28);
+  --shadow-glow:      0 0 0 1px rgba(139,92,246,.25), 0 0 60px -10px rgba(139,92,246,.35);
+}
+.eyebrow { color: var(--theme-primary); }
+.eyebrow::before { background: linear-gradient(90deg, transparent, var(--theme-primary)); }
+a:hover { color: var(--theme-primary); }
+.gradient-text {
+  background: linear-gradient(135deg, #e8edff 0%, #8b5cf6 55%, #ef4444 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.bg-cosmos {
+  background:
+    radial-gradient(1000px 600px at 80% -15%, rgba(139,92,246,.25), transparent 60%),
+    radial-gradient(800px 500px at 5% 10%, rgba(239,68,68,.15), transparent 60%),
+    radial-gradient(700px 700px at 50% 115%, rgba(100,30,200,.12), transparent 60%),
+    var(--void);
+}

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Project-AI & OCTOREFLEX — Syscall-Authoritative Governance</title>
+<meta name="description" content="Project-AI: a sovereign constitutional AGI ecosystem. OCTOREFLEX: control-theoretic, eBPF-mediated, kernel-authoritative governance for every model action." />
+<link rel="canonical" href="https://www.thirstysprojects.com/project-ai.html" />
+<meta property="og:title" content="Project-AI & OCTOREFLEX" />
+<meta property="og:description" content="Governance the kernel can't ignore." />
+<meta property="og:image" content="assets/img/og.svg" />
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/site.css" />
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body>
+<div class="bg-cosmos" aria-hidden="true"></div>
+<div id="site-nav"></div>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow reveal">Dossier · 01</span>
+    <h1 class="reveal" style="margin-top:1rem">Project-AI <span class="muted" style="font-weight:300"> & </span><span class="gradient-text">OCTOREFLEX</span></h1>
+    <p class="lead reveal">A sovereign constitutional AGI ecosystem with a control-theoretic, kernel-authoritative governance loop. Every model action lowers to a syscall. Every syscall passes through a deterministic invariant gate. Every decision is sealed, attested, and reversible.</p>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href="https://github.com/IAmSoThirsty/Project-AI" target="_blank" rel="noopener">View on GitHub →</a>
+      <a class="btn btn-ghost" href="https://doi.org/10.5281/zenodo.18726064" target="_blank" rel="noopener">Read the foundational paper →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <div class="grid grid-2">
+      <div class="card reveal" style="padding:1.8rem">
+        <span class="eyebrow">Premise</span>
+        <h3 style="margin-top:.7rem">Models cannot be trusted to police themselves.</h3>
+        <p style="margin-top:.6rem">Every other layer of the alignment stack — RLHF, constitution prompts, reflection — runs <em>inside</em> the model's privilege domain. Project-AI relocates the governance loop to a layer the model can never reach: the operating system kernel.</p>
+      </div>
+      <div class="card reveal" style="padding:1.8rem">
+        <span class="eyebrow">Mechanism</span>
+        <h3 style="margin-top:.7rem">eBPF + control theory + cryptographic seals.</h3>
+        <p style="margin-top:.6rem">eBPF programs intercept the syscall surface. A control-theoretic loop continuously samples error between observed and policy-permitted state. Decisions are sealed into the Constitutional Code Store with rolling cryptographic attestation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Architecture</span>
+      <h2 style="margin-top:.7rem">Five layers. One non-negotiable contract.</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card reveal"><div class="ix"><span>L1</span><span class="mono">kernel</span></div><h3>Syscall Substrate</h3><p>eBPF programs attached to LSM and tracepoint hooks. Zero-copy decision path; sub-millisecond verdicts.</p></div>
+      <div class="card reveal"><div class="ix"><span>L2</span><span class="mono">enforcement</span></div><h3>OCEE Invariants</h3><p>The Open Constraint Enforcement Engine compiles constitutional invariants to deterministic checks. <a class="mono" href="https://github.com/IAmSoThirsty/OPEN-CONSTRAINT-ENFORCEMENT-ENGINE" target="_blank" rel="noopener">[OCEE]</a></p></div>
+      <div class="card reveal"><div class="ix"><span>L3</span><span class="mono">control</span></div><h3>OCTOREFLEX Loop</h3><p>Closed-loop controller: observe → compare to policy → act → seal. Reflexive re-arming on violation.</p></div>
+      <div class="card reveal"><div class="ix"><span>L4</span><span class="mono">defense</span></div><h3>TARL · NIRL</h3><p>Asymmetric Resilience Layer + Native Immune Reflex Layer — make exploitation structurally unfinishable.</p></div>
+      <div class="card reveal"><div class="ix"><span>L5</span><span class="mono">governance</span></div><h3>Triumvirate</h3><p>Architect / Guardian / Operator agents in mutual check. No unilateral writes to the constitution.</p></div>
+      <div class="card reveal"><div class="ix"><span>L6</span><span class="mono">attestation</span></div><h3>Constitutional Code Store</h3><p>Append-only, cryptographically chained record of every governed decision. Audit is a primitive, not a feature.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="container">
+    <div class="codeframe reveal">
+      <div class="codeframe-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span style="margin-left:.6rem">project-ai/octoreflex/loop.py · invariant gate</span></div>
+      <div class="terminal">
+<span class="vl">@octoreflex.gate</span>(<span class="ok">"net.connect"</span>)<br/>
+<span class="pr">def</span> guard_net_connect(action, context):<br/>
+&nbsp;&nbsp;<span class="mu"># 1. Observe</span><br/>
+&nbsp;&nbsp;state = telemetry.snapshot(action)<br/>
+&nbsp;&nbsp;<span class="mu"># 2. Compare to constitutional policy</span><br/>
+&nbsp;&nbsp;<span class="pr">if not</span> ocee.holds(<span class="ok">"capability.net.egress.public"</span>, state):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">raise</span> Denied(reason=<span class="ok">"capability_unbound"</span>)<br/>
+&nbsp;&nbsp;<span class="pr">if not</span> ocee.within(<span class="ok">"rate.budget"</span>, window=<span class="vl">60</span>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nirl.reflex(<span class="ok">"rate_overrun"</span>, severity=<span class="vl">3</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="pr">raise</span> Denied(reason=<span class="ok">"rate_exhausted"</span>)<br/>
+&nbsp;&nbsp;<span class="mu"># 3. Act and seal</span><br/>
+&nbsp;&nbsp;decision = engine.execute(action, context)<br/>
+&nbsp;&nbsp;ccs.seal(decision, attest=<span class="vl">True</span>)<br/>
+&nbsp;&nbsp;<span class="pr">return</span> decision
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Foundational papers</span>
+      <h2 style="margin-top:.7rem">The thesis, in writing.</h2>
+      <p class="sub">Each of these papers underwrites a specific layer of the architecture above.</p>
+    </div>
+    <div class="grid grid-2">
+      <a class="card reveal" href="https://doi.org/10.5281/zenodo.18726064" target="_blank" rel="noopener">
+        <div class="ix"><span class="mono">10.5281/zenodo.18726064</span><span class="mono">2026-02</span></div>
+        <h3>Project-AI and OCTOREFLEX: Syscall-Authoritative Governance and Control-Theoretic Containment</h3>
+        <p>The original specification. Defines the substrate, the loop, and the invariant contract.</p>
+        <div class="card-arrow">Read on Zenodo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+      <a class="card reveal" href="https://doi.org/10.5281/zenodo.19582420" target="_blank" rel="noopener">
+        <div class="ix"><span class="mono">10.5281/zenodo.19582420</span><span class="mono">2026-04</span></div>
+        <h3>Project-AI: Sovereign Constitutional AGI Ecosystem</h3>
+        <p>Whole-system view: the relationship between Project-AI, Cerberus, Triumvirate, the Code Store, and YGGDRASIL.</p>
+        <div class="card-arrow">Read on Zenodo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+      <a class="card reveal" href="https://doi.org/10.5281/zenodo.19101877" target="_blank" rel="noopener">
+        <div class="ix"><span class="mono">10.5281/zenodo.19101877</span><span class="mono">2026-03</span></div>
+        <h3>Project-AI Asymmetric Security: Making Exploitation Structurally Unfinishable</h3>
+        <p>The TARL/NIRL layer. Why every successful exploit must complete an exponentially growing chain of conditions.</p>
+        <div class="card-arrow">Read on Zenodo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+      <a class="card reveal" href="https://doi.org/10.5281/zenodo.19582479" target="_blank" rel="noopener">
+        <div class="ix"><span class="mono">10.5281/zenodo.19582479</span><span class="mono">2026-04</span></div>
+        <h3>The Iron Path Executor</h3>
+        <p>Formal technical specification for deterministic AI governance. The hard rail beneath every governed action.</p>
+        <div class="card-arrow">Read on Zenodo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/js/site.js"></script>
+</body>
+</html>
