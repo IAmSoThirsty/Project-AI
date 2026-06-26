@@ -333,7 +333,78 @@ Remaining:
 - User authorization to commit Phase A artifacts
 - Phase B authorization (Q1 Unity archive + Q4 emergent-microservices confirm)
 Commands run: see Commands Run table
-Safe to continue: yes (for commit + Phase F); NOT for code edits without explicit "go"
+Safe to continue: yes (for commit + Phase G); NOT for code edits without explicit "go"
+```
+
+---
+
+## Session Update — Phase F (2026-06-25)
+
+### Session Metadata (delta)
+
+- **Project:** (unchanged)
+- **Branch:** (unchanged)
+- **Date:** 2026-06-25
+- **Phase:** F complete (Q5: Cerebus subsystem)
+- **Author:** Hermes Agent
+
+### New Artifacts (Phase F)
+
+**New workspace member: `packages/cerberus/`** (Q5 closure)
+- 3 source modules (~640 LOC): `agent`, `spawn_constraints`, `lockdown`
+- 3 unit test files + 1 integration test (44 tests)
+- README, pyproject.toml, py.typed marker
+- 22 public exports
+- workspace registered in root pyproject.toml
+
+### Gate Results (post-Phase-F)
+
+| Gate | Result |
+|---|---|
+| pytest `packages/ + tools/tests/ + tests/` | **659 passed** (615 + 44) |
+| mypy --strict `packages/` | **clean on 86 source files** |
+| ruff check | All checks passed |
+| ruff format --check | 86 files formatted |
+
+### Open Questions Status
+
+| Q# | Status | Resolution Phase |
+|---|---|---|
+| Q1 | RESOLVED | Phase B (Unity archive) |
+| Q2 | RESOLVED | Phase A (web archive) |
+| Q3 | RESOLVED | Phase A (tarl_os/.thirsty archive) |
+| Q4 | RESOLVED | Phase B (emergent-microservices DROP) |
+| Q5 | RESOLVED | Phase F (cerberus package) |
+| Q6 | PENDING | Phase G (hydra_50) |
+| Q7 | RESOLVED | Phase E (cognition port) |
+| Q8 | RESOLVED | Phase A (apps/ inventory) |
+
+**7 of 8 questions RESOLVED.** Only Q6 (Hydra 50) remaining.
+
+### Commands Run
+
+- uv sync --extra dev --all-packages
+- uv pip install -e packages/cerberus
+- .venv/Scripts/python.exe -m pytest packages/ tools/tests/ tests/
+- .venv/Scripts/python.exe -m mypy packages/ --strict
+- .venv/Scripts/python.exe -m ruff check --fix packages/
+- .venv/Scripts/python.exe -m ruff format packages/
+
+### Bugs Found + Fixed (self-review)
+
+1. **`LockdownController.check_or_raise` conflated activation with blocking** — split
+   into `check_or_raise()` (pure gate) and `evaluate_and_activate()` (trigger + act).
+2. **Workspace registration** — required manual install + pyproject.toml edit.
+3. **Python version pinning** — pytest subprocess was running 3.11 with 3.12 packages.
+   Switched to `uv sync --extra dev --all-packages` + direct `.venv` invocation.
+
+### Remaining Work
+
+- User authorization to commit Phase F completion (in this turn's commit)
+- Phase G authorization (hydra_50 / Q6 closure)
+- Phases H, I, J authorization (multi-sub-phase new packages)
+- Push decision (billing unblocked, 12 commits ahead pending user go)
+
 ```
 
 ---

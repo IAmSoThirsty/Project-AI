@@ -18,7 +18,6 @@ from __future__ import annotations
 
 from kernel import JsonValue, StateRegister, StateSnapshot
 
-
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -26,9 +25,7 @@ from kernel import JsonValue, StateRegister, StateSnapshot
 AGENT_STATE_KEY = "agent_state"
 
 # Allowed roles (subset of legacy cerberus roles; minimum surface).
-ALLOWED_ROLES: frozenset[str] = frozenset(
-    {"primary", "auxiliary", "observer", "executor"}
-)
+ALLOWED_ROLES: frozenset[str] = frozenset({"primary", "auxiliary", "observer", "executor"})
 
 # Allowed states for the agent's runtime state.
 ALLOWED_AGENT_STATES: frozenset[str] = frozenset(
@@ -63,9 +60,7 @@ class CerberusAgent:
         if not agent_id.strip():
             raise CerberusAgentError("agent_id must not be empty")
         if role not in ALLOWED_ROLES:
-            raise CerberusAgentError(
-                f"role must be one of {sorted(ALLOWED_ROLES)}, got {role!r}"
-            )
+            raise CerberusAgentError(f"role must be one of {sorted(ALLOWED_ROLES)}, got {role!r}")
         if initial_state not in ALLOWED_AGENT_STATES:
             raise CerberusAgentError(
                 f"initial_state must be one of {sorted(ALLOWED_AGENT_STATES)}, "
@@ -113,8 +108,7 @@ class CerberusAgent:
         """
         if target_state not in ALLOWED_AGENT_STATES:
             raise CerberusAgentError(
-                f"target_state must be one of {sorted(ALLOWED_AGENT_STATES)}, "
-                f"got {target_state!r}"
+                f"target_state must be one of {sorted(ALLOWED_AGENT_STATES)}, got {target_state!r}"
             )
         current_rev = self._state.snapshot().values["revision"]
         assert isinstance(current_rev, int)
