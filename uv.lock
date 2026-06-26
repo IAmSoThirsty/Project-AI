@@ -21,6 +21,8 @@ members = [
     "project-ai-security",
     "project-ai-service-host",
     "project-ai-swr",
+    "project-ai-tarl",
+    "project-ai-temporal",
 ]
 
 [[package]]
@@ -547,6 +549,8 @@ dependencies = [
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
     { name = "project-ai-swr" },
+    { name = "project-ai-tarl" },
+    { name = "project-ai-temporal" },
 ]
 
 [package.optional-dependencies]
@@ -590,6 +594,8 @@ requires-dist = [
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
     { name = "project-ai-swr", editable = "packages/swr" },
+    { name = "project-ai-tarl", editable = "packages/tarl" },
+    { name = "project-ai-temporal", editable = "packages/temporal" },
     { name = "pypdf", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0" },
@@ -812,6 +818,28 @@ requires-dist = [
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
 ]
+
+[[package]]
+name = "project-ai-tarl"
+version = "0.0.0.dev0"
+source = { editable = "packages/tarl" }
+dependencies = [
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
+
+[[package]]
+name = "project-ai-temporal"
+version = "0.0.0.dev0"
+source = { editable = "packages/temporal" }
+dependencies = [
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
 
 [[package]]
 name = "pydantic"

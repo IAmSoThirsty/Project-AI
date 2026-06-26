@@ -682,3 +682,34 @@ Safe to continue: yes (for commit + Phase C); NOT for code edits without explici
 - Phase I envelope (Temporal, REPLAN NEEDED)
 - Phase J envelope (Atlas, months of work)
 
+
+## Session Update — Phase I0 (2026-06-25)
+
+### Phase I0 Artifacts (envelope only — no source)
+- packages/temporal/ skeleton (pyproject, README, __init__.py, py.typed, workflows/__init__.py)
+- docs/internal/PHASE_I_DISCOVERY.md (250 lines — legacy inventory, Option C decision, sub-phase plan)
+- docs/internal/STAGE_19_5I0_ACCEPTANCE.md
+
+### Critical Finding
+Legacy `temporal/` depends on **`temporalio` SDK** (external). Three options analyzed:
+- A: Add temporalio (heavy runtime)
+- B: Abstraction layer (more code)
+- C: Port workflow SHAPE without runtime (recommended)
+
+**Decision: Option C.** Workflows as Protocols, activities as typed functions.
+Decorators + SDK integration deferred.
+
+### Sub-Phase Plan
+- I0: envelope (THIS)
+- I1: dataclasses + activities (awaiting go)
+- I2: triumvirate workflow + atomic security (awaiting go)
+- I3: enhanced security + security agent (awaiting go)
+
+### Gate Results (post-Phase-I0)
+| Gate | Result |
+|---|---|
+| pytest | **888 passed** (no regression — no source) |
+| mypy --strict | clean on 112 source files |
+| ruff check | All checks passed |
+| ruff format | 112 files formatted |
+
