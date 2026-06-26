@@ -40,6 +40,9 @@ monkeytype.sqlite3
 .DS_Store
 Thumbs.db
 
+# Obsidian (local vault config, never tracked)
+.obsidian/
+
 # Test / coverage
 .pytest_cache/
 .coverage
