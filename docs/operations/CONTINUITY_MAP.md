@@ -648,3 +648,37 @@ Safe to continue: yes (for commit + Phase C); NOT for code edits without explici
 - Phase I (Temporal)
 - Phase J (Atlas)
 
+
+## Session Update — Phase H3 (2026-06-25)
+
+### Phase H3 Artifacts
+**Sub-phase 4 of 4 — Phase H complete (TARL rebuild).**
+- 5 source modules: default_policies, stdlib, modules, ffi, system
+- 1 test file (test_tarl_system.py, 81 tests)
+- __init__.py: 75 public exports
+- docs/internal/STAGE_19_5H3_ACCEPTANCE.md
+
+### Gate Results (post-Phase-H3)
+| Gate | Result |
+|---|---|
+| pytest | **888 passed** (807 + 81) |
+| mypy --strict | clean on 110 source files |
+| ruff check | All checks passed |
+| ruff format | 110 files formatted |
+
+### Phase H complete (C3 of STAGE_19 §9)
+14 source files, 170 tests across H0/H1/H2/H3. All committed.
+
+### Bugs Found + Fixed (H3 self-review)
+1. `tarl.policies.default` import clash — renamed file to default_policies.py
+2. __init__.py mismatched patch broke syntax — rewrote cleanly
+3. stdlib.py builtin helpers mypy errors — type checks + ignore comments
+4. DiagnosticBatch not in __all__ — added
+5. Test typed ret_type wrong — corrected to int
+6. compile_and_execute doesn't auto-register policies — fixed test
+7. compile_and_execute returns object — typed test var + attr-defined ignore
+
+### Remaining
+- Phase I envelope (Temporal, REPLAN NEEDED)
+- Phase J envelope (Atlas, months of work)
+
