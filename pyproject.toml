@@ -26,6 +26,7 @@ dependencies = [
     "project-ai-companion",
     "project-ai-hydra-50",
     "project-ai-kernel",
+    "project-ai-tarl",
     "project-ai-governance",
     "project-ai-execution",
     "project-ai-rlp",
@@ -84,6 +85,7 @@ project-ai-execution = { workspace = true }
 project-ai-rlp = { workspace = true }
 project-ai-security = { workspace = true }
 project-ai-swr = { workspace = true }
+project-ai-tarl = { workspace = true }
 project-ai-cli = { workspace = true }
 
 [tool.uv.workspace]
@@ -98,6 +100,7 @@ members = [
     "packages/companion",
     "packages/hydra_50",
     "packages/kernel",
+    "packages/tarl",
     "packages/governance",
     "packages/execution",
     "packages/rlp",

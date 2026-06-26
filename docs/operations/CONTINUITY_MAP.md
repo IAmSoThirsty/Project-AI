@@ -585,3 +585,33 @@ Safe to continue: yes (for commit + Phase C); NOT for code edits without explici
 - Push decision (13 commits ahead pending user go)
 
 ```
+
+## Session Update — Phase H0 (2026-06-25)
+
+### Session Metadata
+- **Phase:** H0 envelope (discovery + skeleton, no source)
+- **Branch:** main, in sync with origin/main (pushed earlier at 527ac12)
+
+### Phase H0 Artifacts
+- `packages/tarl/` package skeleton (pyproject, README, __init__.py, py.typed)
+- `docs/internal/PHASE_H_DISCOVERY.md` — TARL legacy inventory (21 py / 3403 LOC / 14 subdirs)
+- `docs/internal/STAGE_19_5H0_ACCEPTANCE.md`
+- `pyproject.toml`: added project-ai-tarl to deps + workspace + sources
+
+### Verified (H0)
+- TARL legacy is self-contained (only stdlib + own submodules)
+- 718/718 pytest pass (no regression — no source written)
+- mypy --strict clean on 93 source files
+- ruff check + format clean
+
+### Sub-phase Plan
+- H1: spec, policy, core, diagnostics (4 source files)
+- H2: parser, validate, compiler, runtime, config (5 source files)
+- H3: system, modules, stdlib, ffi, policies/default (5 source files)
+
+### Remaining (per memory: per-phase go required)
+- Phase H1 authorization
+- Phase H2, H3 authorization
+- Phase I (Temporal) envelope
+- Phase J (Atlas) envelope
+
