@@ -43,7 +43,7 @@ desktop,31,31,scheduled for STAGE_14.5,app,PARTIAL - desktop exists
 diagrams,42,43,not selected,doc,preserve-as-reference: docs/legacy-archive/diagrams/
 docs,924,936,not selected (substantial content in docs/reference/ via MERGE_PROVENANCE),doc,PARTIAL - drop remainder
 e2e,32,62,not selected,runtime-test,preserve-as-reference: docs/legacy-archive/e2e/
-emergent-microservices,1,0,DEAD - only .ruff_cache debris; never had source,empty,drop entirely
+emergent-microservices,1,0,DEAD - only .ruff_cache debris; never had source,empty,RESOLVED 2026-06-25 (Phase B) — DROP confirmed: 42 files (all .ruff_cache), 0 .py source, 7 subdirs all empty of source; see docs/legacy-archive/EMERGENT_MICROSERVICES_DROP_CONFIRMATION.md
 engines,220,379,partial merge (swr + atlas); 8 other engines NOT carried,runtime-source,rebuild-as-runtime for 8 unrepresented engines
 examples,30,56,not selected,examples,preserve-as-reference: docs/legacy-archive/examples/
 gradle,3,3,not selected,ci-config,drop
@@ -79,7 +79,7 @@ test-artifacts,1,41,ignored,test-output,drop
 test-data,5,5,not selected,test-data,drop
 tests,317,1431,"not selected (CRITICAL - 309 py tests, no Beginnings integration/e2e)",runtime-test,"rebuild-as-runtime: tests/{unit,integration,e2e,chaos,security}/"
 thirsty_lang,1,0,DEAD - superseded by PyPI thirsty-lang 0.1.4,empty,drop
-unity,21,21,DEFERRED per 2026-06-21 user instruction,app,FLAG for confirmation
+unity,21,21,DEFERRED per 2026-06-21 user instruction,app,RESOLVED 2026-06-25 (Phase B) — archived to docs/legacy-archive/unity/ per 2026-06-21 DROP instruction (21 files, SHA-256 verified); preserved-as-reference only
 usb_installer,4,4,not selected,deploy-tool,preserve-as-reference
 utils,12,24,not selected,runtime-source,preserve-as-reference: docs/legacy-archive/utils/
 validation,18,18,not selected,test-framework,preserve-as-reference: docs/legacy-archive/validation/

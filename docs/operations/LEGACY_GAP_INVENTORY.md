@@ -679,10 +679,10 @@ These legacy sub-systems need their own Beginnings package because they have non
 
 ## 8. Open questions to resolve before rebuild
 
-1. **Unity 3DOF:** User said skip 2026-06-21. Re-include `unity/` (21 files)? → **RESOLVED 2026-06-25 (Phase B pending):** Default DROP per user's 2026-06-21 instruction. Archive-as-reference to `docs/legacy-archive/unity/` planned in Phase B.
+1. **Unity 3DOF:** User said skip 2026-06-21. Re-include `unity/` (21 files)? → **RESOLVED 2026-06-25 (Phase B):** Default DROP per user's 2026-06-21 instruction. 21 files archived to `docs/legacy-archive/unity/` (SHA-256 verified) as preserved-as-reference.
 2. **Web frontend:** Beginnings has `apps/` (separate from packages). Carry `web/hub-epstein/` and `web/site/` as `docs/legacy-archive/web/`? → **RESOLVED 2026-06-25 (Phase A):** 119 files archived to `docs/legacy-archive/web/`, SHA-256 verified. See `APPS_INVENTORY.md` for `apps/web/` distinction.
 3. **TARL_OS `.thirsty` config files:** Carry these or treat as data? → **RESOLVED-PARTIAL 2026-06-25 (Phase A):** 27 `.thirsty` data files archived to `docs/legacy-archive/tarl_os_config/`, SHA-256 verified. `*.py` rebuild deferred to Phase H/I.
-4. **`emergent-microservices/`:** Confirm DROP — appears never to have had source. → **RESOLVED 2026-06-25 (Phase B pending):** Default CONFIRM DROP. Final sweep scheduled Phase B.
+4. **`emergent-microservices/`:** Confirm DROP — appears never to have had source. → **RESOLVED 2026-06-25 (Phase B):** DROP CONFIRMED. 42 files on disk, 0 source files (all `.ruff_cache/` debris), 7 empty subdirs. See `docs/legacy-archive/EMERGENT_MICROSERVICES_DROP_CONFIRMATION.md`.
 5. **Cerebus subsystem:** 9 cerberus_*.py files (~140KB). Carry into `packages/governance/` or new `packages/cerberus/`? → **PENDING:** Default NEW `packages/cerberus/` (Phase F).
 6. **Hydra 50:** `engines/hydra_50/` + 7 `hydra_50_*.py` files in `src/app/core/`. Carry as new `packages/hydra_50/`? → **PENDING:** Default NEW `packages/hydra_50/` (Phase G).
 7. **Cognition subsystem:** `cognition_kernel.py` (54KB) + `cognition/` dir (17 stub files). Carry into `packages/companion/` or new `packages/cognition/`? → **PENDING:** Default INTO `packages/companion/` as `companion/cognition.py` (Phase E).

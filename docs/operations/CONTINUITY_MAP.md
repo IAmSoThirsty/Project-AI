@@ -335,3 +335,105 @@ Remaining:
 Commands run: see Commands Run table
 Safe to continue: yes (for commit + Phase B); NOT for code edits without explicit "go"
 ```
+
+---
+
+## Session Update — Phase B (2026-06-25)
+
+### Session Metadata (delta)
+
+- **Project:** (unchanged)
+- **Mode:** governance system (Phase B execution per `STAGE_19_5_PHASED_PLAN.md`)
+- **Date:** 2026-06-25
+- **Agent/Operator:** (unchanged)
+- **Previous map:** Phase A delta above
+
+### Current State (delta)
+
+- **Overall status:** Phase A landed at commit `d7c9778`; pre-existing mypy drift fixed at `03a0fcc`. Phase B (Q1 Unity archive + Q4 emergent-microservices confirm) executed; awaiting commit.
+- **Safe to continue:** yes (for commit + Phase C); NOT for code edits without explicit "go".
+- **Last verified checkpoint:** 2026-06-25 — pytest 517 passed; 21/21 Unity files byte-identical; emergent-microservices 0 source files confirmed.
+
+### File Inventory (Phase B delta)
+
+#### Created
+| File | Status | Last Verified | Notes |
+|------|--------|---------------|-------|
+| `docs/legacy-archive/unity/**` | Created (21 files) | 2026-06-25 | Byte-identical with legacy source (SHA-256 verified) |
+| `docs/legacy-archive/unity/SHA256SUMS.txt` | Created | 2026-06-25 | 21 hashes, standard sha256sum -c format |
+| `docs/legacy-archive/EMERGENT_MICROSERVICES_DROP_CONFIRMATION.md` | Created | 2026-06-25 | Q4 evidence: 42 files (all .ruff_cache), 0 source |
+
+#### Modified
+| File | Change | Status | Notes |
+|------|--------|--------|-------|
+| `docs/operations/LEGACY_GAP_INVENTORY.csv` | Q1 (unity) + Q4 (emergent-microservices) marked RESOLVED | Verified | Both with SHA-256 evidence or zero-source proof |
+| `docs/operations/LEGACY_GAP_INVENTORY.md` §8 | Q1/Q4 annotations moved from "Phase B pending" to "Phase B RESOLVED" | Verified | All 8 questions now have resolution status |
+
+#### Deleted
+None.
+
+### Commands Run (Phase B delta)
+
+| Command | Result | Date | Notes |
+|---------|--------|------|-------|
+| `find unity -type f \| wc -l` | 21 | 2026-06-25 | Q1 source count |
+| `cp (21 files) → docs/legacy-archive/unity/` | 21 files | 2026-06-25 | Q1 archive |
+| `sha256sum -c SHA256SUMS.txt` | 21/21 OK | 2026-06-25 | Byte-identical verified via standard checker |
+| `find emergent-microservices -name "*.py"` | 0 | 2026-06-25 | Q4 source count: 0 |
+| `find emergent-microservices -type f ! -path "*.ruff_cache*"` | 0 | 2026-06-25 | Q4 non-cache count: 0 |
+| `find emergent-microservices -type d \| wc -l` | 8 | 2026-06-25 | Q4 subdir count: root + 7 empty |
+
+### Tests Run (Phase B delta)
+
+| Test | Result | Evidence | Notes |
+|------|--------|----------|-------|
+| pytest regression (all packages + tools/tests) | 517 passed | session output | No source modified |
+| mypy --strict packages/ (full scope) | Success: no issues found in 67 source files | session output | Drift fixed in commit 03a0fcc; still clean |
+
+### Build / Deployment Results (Phase B delta)
+
+None. Phase B is archive + docs only; no build artifacts.
+
+### Known Failures (Phase B delta)
+
+None new.
+
+### Blockers (Phase B delta)
+
+None. Phase B completed end-to-end.
+
+### Risks (Phase B delta)
+
+- Risk: Archive copies now total ~3 MB on disk in repo. Acceptable per project conventions; can be moved out-of-tree if size policy demands.
+- Risk: Q5/Q6/Q7 still PENDING (Phases F, G, E). Action: phased plan covers; awaits authorization.
+
+### Self-Report (v3 §35) — Phase B
+
+```
+Mode: governance system (Phase B execution)
+Created:
+- docs/legacy-archive/unity/** (21 files, SHA-256 verified)
+- docs/legacy-archive/unity/SHA256SUMS.txt
+- docs/legacy-archive/EMERGENT_MICROSERVICES_DROP_CONFIRMATION.md
+- docs/internal/STAGE_19_5B_ACCEPTANCE.md (acceptance record, this commit)
+Modified:
+- docs/operations/LEGACY_GAP_INVENTORY.csv (Q1 + Q4 RESOLVED)
+- docs/operations/LEGACY_GAP_INVENTORY.md §8 (resolution status updated)
+- docs/operations/CONTINUITY_MAP.md (this section)
+Deleted: None.
+Verified:
+- 21/21 Unity files byte-identical with legacy (sha256sum -c OK)
+- 0 source files in emergent-microservices/ (42 files = all .ruff_cache)
+- pytest regression: 517 passed
+- mypy --strict: 67 source files clean
+Failed: None.
+Not verified:
+- apps/desktop tests + apps/services tests (pre-existing env gaps, not from Phase B)
+Risks: see Risks section above
+Continuity map: docs/operations/CONTINUITY_MAP.md (this section)
+Remaining:
+- User authorization to commit Phase B artifacts
+- Phase C authorization (first source-code wave: packages/companion/ identity + fates)
+Commands run: see Commands Run table
+Safe to continue: yes (for commit + Phase C); NOT for code edits without explicit "go"
+```
