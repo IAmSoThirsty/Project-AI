@@ -1,9 +1,9 @@
 # Stage 19.5C — Work-In-Progress Checkpoint
 
-> **Generated:** 2026-06-25 (end-of-session checkpoint)
+> **Generated:** 2026-06-25 (end-of-session checkpoint, updated post-system-verification)
 > **Author:** Hermes Agent (model `minimax-m3:cloud`), directed by Jeremy / Thirsty
 > **Purpose:** Capture exact state of the working tree at session end so the next session (after workstation relocation) can resume without context loss.
-> **Status:** Phase C partially built, NOT YET COMMITTED. Tests passing for unit tests; integration test fixture unverified.
+> **Status:** Phase C integration tests now PASS (7/7). Unit tests pass (30/30). **Phase C still NOT committable due to 46 mypy errors + 17 ruff errors + 6 unformatted files introduced by new code** (must repair before commit).
 
 ---
 
@@ -94,22 +94,34 @@ git status  # confirm 7 uncommitted changes
 uv run pytest tests/test_companion_integration_identity_fates.py -v --tb=short
 ```
 
-**Step 1: Verify the integration test fixture fix.**
-- If 7/7 PASS → proceed to Step 2.
-- If still erroring → re-examine `GovernanceEngine.__init__` signature in `packages/governance/src/governance/engine.py`. The `governors` parameter is `Sequence[Governor]`; tuple-with-trailing-comma IS valid Python. The error may be from a stale `__pycache__` — try `find . -name __pycache__ -exec rm -rf {} +` then re-run.
+**Step 1: Verify pytest gate (already green as of checkpoint update).**
+- Expected: **7/7 integration tests PASS** + **30/30 unit tests pass** + **550/550 full suite**
+- Already verified at checkpoint time; this is just a re-confirm
 
-**Step 2: Run full gates.**
+**Step 2: Repair mypy/ruff regressions in Phase C code.**
+
+mypy --strict reports 46 errors across 5 files. Categories:
+- `JsonScalar`/`JsonValue` type mismatches in `identity.py` and `fates.py` (the new code uses `dict()` coercion where `Mapping` is expected)
+- `fates.py:54` has a tuple-typing bug: `required: tuple[str, type[object], ...] = (("id", str), ...)` — Python is reading the `...` as Ellipsis literally instead of unpacking. Fix: remove the `...` or use explicit syntax.
+- `bonded.py`: `submit_action` expects `executor: Callable[[ActionRequest], JsonValue]` but the executors return `StateSnapshot` or `tuple[StateSnapshot, str]`. Need to wrap or cast the return value to a JSON-serializable shape.
+- 4 unused `# type: ignore` comments
+
+ruff: 17 errors — mostly `I001` (import sorting) and `RUF022` (`__all__` not sorted). Use `uv run ruff check --fix packages/` to auto-fix most, then `uv run ruff format packages/` for formatting.
+
+ruff format: 6 files need reformatting. `uv run ruff format packages/` fixes.
+
+**Step 3: Re-run all gates to confirm clean.**
 ```bash
 uv run pytest packages/ tools/tests/ -q --tb=short
 uv run mypy packages/ --strict
 uv run ruff check packages/
 uv run ruff format --check packages/
 ```
-Expected: 517 + ~26 new tests pass; mypy clean on ~70 source files (was 67 + new companion modules); ruff clean.
+Expected: 550+ pass; mypy clean on 72 source files; ruff clean; format clean.
 
-**Step 3: Write acceptance record.** Template at `docs/internal/STAGE_18_ACCEPTANCE.md` and `docs/operations/STAGE_19_ACCEPTANCE.md`. New file: `docs/internal/STAGE_19_5C_ACCEPTANCE.md`.
+**Step 4: Write acceptance record.** Template at `docs/internal/STAGE_18_ACCEPTANCE.md` and `docs/operations/STAGE_19_ACCEPTANCE.md`. New file: `docs/internal/STAGE_19_5C_ACCEPTANCE.md`.
 
-**Step 4: Commit Phase C.** Suggested message structure (see `d7c9778` and `801fcab` for prior commit-message conventions):
+**Step 5: Commit Phase C.** Suggested message structure (see `d7c9778` and `801fcab` for prior commit-message conventions):
 ```
 feat(stage-19.5C): packages/companion identity + fates + bonded
 
@@ -119,12 +131,12 @@ feat(stage-19.5C): packages/companion identity + fates + bonded
   validation, query, prune, duplicate rejection)
 - companion.bonded: BondedCompanion wiring identity+fates through
   ExecutionGate (7 cross-package integration tests verifying single
-  audit chain invariant)
+  audit chain invariant + real capability tokens)
 - companion.__init__: re-export new symbols
 - 5/8 open questions now RESOLVED; Q5/Q6/Q7 pending Phases F/G/E
 ```
 
-**Step 5: Proceed to Phase D** (`companion/nirl.py` — NIRL state machine Protocol, 1 source + 1 test + 1 init modify). Authorize + execute pattern same as Phase C.
+**Step 6: Proceed to Phase D** (`companion/nirl.py` — NIRL state machine Protocol, 1 source + 1 test + 1 init modify). Authorize + execute pattern same as Phase C.
 
 ---
 
