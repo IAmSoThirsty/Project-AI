@@ -1,9 +1,47 @@
-"""Project-AI tarl public interface.
+"""Project-AI tarl public interface."""
 
-H0 envelope: package skeleton only. Source modules will be added in
-sub-phases H1, H2, H3 (see docs/internal/PHASE_H_DISCOVERY.md).
-"""
+from tarl.core import TARL, TARL_VERSION, make_tarl
+from tarl.diagnostics import (
+    Diagnostic,
+    DiagnosticBatch,
+    Location,
+    Severity,
+    make_diagnostic,
+)
+from tarl.policy import (
+    PolicyProtocol,
+    PolicyRule,
+    TarlPolicy,
+    allow_policy,
+    deny_policy,
+)
+from tarl.spec import (
+    ALLOWED_VERDICTS,
+    TarlDecision,
+    TarlError,
+    TarlVerdict,
+    make_decision,
+)
 
 __version__ = "0.0.0.dev0"
 
-__all__: list[str] = []
+__all__ = [
+    "ALLOWED_VERDICTS",
+    "TARL",
+    "TARL_VERSION",
+    "Diagnostic",
+    "DiagnosticBatch",
+    "Location",
+    "PolicyProtocol",
+    "PolicyRule",
+    "Severity",
+    "TarlDecision",
+    "TarlError",
+    "TarlPolicy",
+    "TarlVerdict",
+    "allow_policy",
+    "deny_policy",
+    "make_decision",
+    "make_diagnostic",
+    "make_tarl",
+]
