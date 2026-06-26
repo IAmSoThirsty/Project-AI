@@ -1,8 +1,29 @@
-"""Project-AI temporal workflows subpackage.
+"""Project-AI temporal workflows subpackage."""
 
-I0 envelope: marker only. Source modules added in I1/I2/I3.
-"""
+from temporal.workflows.atomic_security import (
+    AtomicSecurityError,
+    create_forensic_snapshot,
+    default_atomic_security_policy,
+    evaluate_attack,
+    generate_sarif,
+    run_red_team_attack,
+    trigger_incident,
+)
+from temporal.workflows.triumvirate_workflow import (
+    TemporalWorkflowError,
+    TriumvirateWorkflow,
+    run_triumvirate_workflow,
+)
 
-__version__ = "0.0.0.dev0"
-
-__all__: list[str] = []
+__all__ = [
+    "AtomicSecurityError",
+    "TemporalWorkflowError",
+    "TriumvirateWorkflow",
+    "create_forensic_snapshot",
+    "default_atomic_security_policy",
+    "evaluate_attack",
+    "generate_sarif",
+    "run_red_team_attack",
+    "run_triumvirate_workflow",
+    "trigger_incident",
+]
