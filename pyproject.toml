@@ -75,7 +75,9 @@ project-ai-api = { workspace = true }
 project-ai-arbiter = { workspace = true }
 project-ai-atlas = { workspace = true }
 project-ai-capability = { workspace = true }
+project-ai-cerberus = { workspace = true }
 project-ai-companion = { workspace = true }
+project-ai-hydra-50 = { workspace = true }
 project-ai-kernel = { workspace = true }
 project-ai-governance = { workspace = true }
 project-ai-execution = { workspace = true }

@@ -9,11 +9,13 @@ members = [
     "project-ai-arbiter",
     "project-ai-atlas",
     "project-ai-capability",
+    "project-ai-cerberus",
     "project-ai-cli",
     "project-ai-companion",
     "project-ai-desktop",
     "project-ai-execution",
     "project-ai-governance",
+    "project-ai-hydra-50",
     "project-ai-kernel",
     "project-ai-rlp",
     "project-ai-security",
@@ -535,10 +537,12 @@ dependencies = [
     { name = "project-ai-arbiter" },
     { name = "project-ai-atlas" },
     { name = "project-ai-capability" },
+    { name = "project-ai-cerberus" },
     { name = "project-ai-cli" },
     { name = "project-ai-companion" },
     { name = "project-ai-execution" },
     { name = "project-ai-governance" },
+    { name = "project-ai-hydra-50" },
     { name = "project-ai-kernel" },
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
@@ -576,10 +580,12 @@ requires-dist = [
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
     { name = "project-ai-atlas", editable = "packages/atlas" },
     { name = "project-ai-capability", editable = "packages/capability" },
+    { name = "project-ai-cerberus", editable = "packages/cerberus" },
     { name = "project-ai-cli", editable = "packages/cli" },
     { name = "project-ai-companion", editable = "packages/companion" },
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-governance", editable = "packages/governance" },
+    { name = "project-ai-hydra-50", editable = "packages/hydra_50" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
@@ -641,6 +647,25 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
+
+[[package]]
+name = "project-ai-cerberus"
+version = "0.0.0.dev0"
+source = { editable = "packages/cerberus" }
+dependencies = [
+    { name = "project-ai-capability" },
+    { name = "project-ai-execution" },
+    { name = "project-ai-governance" },
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-capability", editable = "packages/capability" },
+    { name = "project-ai-execution", editable = "packages/execution" },
+    { name = "project-ai-governance", editable = "packages/governance" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+]
 
 [[package]]
 name = "project-ai-cli"
@@ -717,6 +742,23 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
+
+[[package]]
+name = "project-ai-hydra-50"
+version = "0.0.0.dev0"
+source = { editable = "packages/hydra_50" }
+dependencies = [
+    { name = "project-ai-execution" },
+    { name = "project-ai-governance" },
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-execution", editable = "packages/execution" },
+    { name = "project-ai-governance", editable = "packages/governance" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+]
 
 [[package]]
 name = "project-ai-kernel"
