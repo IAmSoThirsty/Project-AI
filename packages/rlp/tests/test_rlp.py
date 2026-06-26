@@ -104,6 +104,8 @@ def test_token_rejection_and_safe_halt_recovery() -> None:
         engine.mint_reviewer_token(reviewer, "clear_safe_halt") for reviewer in ("rev_a", "rev_b")
     ]
     engine.clear_safe_halt(reviewers)
-    assert engine.state.status == implementation.SystemStatus.NOMINAL
+    # mypy cannot track the side effect of clear_safe_halt() on state.status; the
+    # runtime post-condition is that status transitions SAFE_HALT -> NOMINAL.
+    assert engine.state.status == implementation.SystemStatus.NOMINAL  # type: ignore[comparison-overlap]
     with pytest.raises(RLPDenied, match="not in SAFE_HALT"):
         engine.clear_safe_halt(reviewers)

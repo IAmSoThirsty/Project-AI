@@ -5,6 +5,7 @@ import importlib
 import io
 import os
 import tomllib
+from email.message import Message
 from pathlib import Path
 from types import ModuleType
 from typing import Any, cast
@@ -182,7 +183,7 @@ def test_http_gateway_reports_structured_http_error(monkeypatch: pytest.MonkeyPa
             "https://api.example.test/audit",
             401,
             "Unauthorized",
-            hdrs=None,
+            hdrs=Message(),
             fp=io.BytesIO(b'{"detail":"Invalid bearer token"}'),
         )
 

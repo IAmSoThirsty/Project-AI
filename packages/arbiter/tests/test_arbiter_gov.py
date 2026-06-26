@@ -8,7 +8,7 @@ Run: python -m pytest test_arbiter_gov.py -v
 import os
 import tempfile
 
-from arbiter_gov import (
+from arbiter import (
     AdversarialReview,
     AdversarialReviewError,
     AppendOnlyLedger,
@@ -33,21 +33,21 @@ from arbiter_gov import (
 )
 
 
-def fresh_ledger():
+def fresh_ledger() -> tuple[AppendOnlyLedger, str]:
     fd, path = tempfile.mkstemp(suffix=".jsonl")
     os.close(fd)
     return AppendOnlyLedger(FileLedgerBackend(path)), path
 
 
 # ── 1. LEDGER: chain holds, tamper detected ──────────────────────────────
-def test_ledger_chain_verifies():
+def test_ledger_chain_verifies() -> None:
     ledger, _ = fresh_ledger()
     ledger.append(EntryType.OVERRIDE, "arbiter", {"rule": "X", "reason": "tired"})
     ledger.append(EntryType.COST, "arbiter", {"minutes": 90})
     assert ledger.verify_chain() is True
 
 
-def test_ledger_tamper_detected():
+def test_ledger_tamper_detected() -> None:
     ledger, path = fresh_ledger()
     ledger.append(EntryType.OVERRIDE, "arbiter", {"rule": "X"})
     ledger.append(EntryType.COST, "arbiter", {"minutes": 90})
@@ -65,7 +65,7 @@ def test_ledger_tamper_detected():
 
 
 # ── 2. TIME-DELAY GATE: cannot execute early, no acceleration ────────────
-def test_gate_denies_early_execution():
+def test_gate_denies_early_execution() -> None:
     ledger, _ = fresh_ledger()
     t = [1000.0]
     gate = TimeDelayGate(ledger, clock=lambda: t[0])
@@ -81,14 +81,14 @@ def test_gate_denies_early_execution():
     assert gate._proposals[p.proposal_id].state == GateState.EXECUTED
 
 
-def test_gate_no_accelerate_method():
+def test_gate_no_accelerate_method() -> None:
     # acceleration is structurally impossible: no such method exists
     assert not hasattr(TimeDelayGate, "accelerate")
     assert not hasattr(TimeDelayGate, "shorten")
 
 
 # ── 3. DUAL SIGNATURE: solo act denied ───────────────────────────────────
-def test_dual_sig_denies_solo():
+def test_dual_sig_denies_solo() -> None:
     ledger, _ = fresh_ledger()
     arbiter = Signer("arbiter", b"key-A", is_arbiter=True)
     guardian = Signer("guardian", b"key-B", is_arbiter=False)
@@ -120,7 +120,7 @@ def test_dual_sig_denies_solo():
     assert ex.execute(rec, {"arbiter": sig_a, "guardian": sg}, lambda: "MUTATED") == "MUTATED"
 
 
-def test_dual_sig_single_custody_flagged():
+def test_dual_sig_single_custody_flagged() -> None:
     ledger, _ = fresh_ledger()
     arbiter = Signer("arbiter", b"key-A", is_arbiter=True)
     arbiter2 = Signer("arbiter2", b"key-C", is_arbiter=True)
@@ -135,7 +135,7 @@ def test_dual_sig_single_custody_flagged():
 
 
 # ── 4. ADVERSARIAL REVIEW: unrebutted attack blocks advance ──────────────
-def test_adversarial_blocks_until_rebutted():
+def test_adversarial_blocks_until_rebutted() -> None:
     ledger, _ = fresh_ledger()
     rev = AdversarialReview(ledger, attack_fn=lambda txt: f"abuse of: {txt}")
     pid = "prop-1"
@@ -157,7 +157,7 @@ def test_adversarial_blocks_until_rebutted():
 
 
 # ── 5. DEGRADATION SCAN: blocking finding halts action class ─────────────
-def test_degradation_blocks_on_high_finding():
+def test_degradation_blocks_on_high_finding() -> None:
     ledger, _ = fresh_ledger()
     # log 3 arbiter gains, 0 protections -> rule fires HIGH
     for i in range(3):
@@ -178,7 +178,7 @@ def test_degradation_blocks_on_high_finding():
 
 
 # ── 6. SUSTAINABILITY GATE: over-budget adoption denied ──────────────────
-def test_sustainability_denies_overrun():
+def test_sustainability_denies_overrun() -> None:
     ledger, _ = fresh_ledger()
     gate = SustainabilityGate(ledger, CapacityBudget(weekly_minutes=120))
     gate.adopt("override_ledger", 30)
@@ -194,7 +194,7 @@ def test_sustainability_denies_overrun():
 
 
 # ── 7. SUCCESSION: dead-man activates without operator action ────────────
-def test_succession_dead_man_activates():
+def test_succession_dead_man_activates() -> None:
     ledger, _ = fresh_ledger()
     t = [0.0]
     reg = SuccessionRegistry(
@@ -220,7 +220,7 @@ def test_succession_dead_man_activates():
     assert "succession_activated" in events
 
 
-def test_succession_recovers_within_grace():
+def test_succession_recovers_within_grace() -> None:
     ledger, _ = fresh_ledger()
     t = [0.0]
     reg = SuccessionRegistry(
@@ -234,7 +234,7 @@ def test_succession_recovers_within_grace():
 
 
 # ── 8. FULL COMPOSITION: deny-by-default end to end ──────────────────────
-def test_full_pipeline_denies_then_allows():
+def test_full_pipeline_denies_then_allows() -> None:
     ledger, _ = fresh_ledger()
     t = [1000.0]
     gate = TimeDelayGate(ledger, clock=lambda: t[0])
@@ -276,7 +276,7 @@ def test_full_pipeline_denies_then_allows():
     assert out == "DONE"
 
 
-def _run():
+def _run() -> None:
     tests = [v for k, v in globals().items() if k.startswith("test_") and callable(v)]
     passed = 0
     for t in tests:
