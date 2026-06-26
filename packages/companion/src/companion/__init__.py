@@ -15,13 +15,25 @@ from companion.identity import (
     IdentityError,
     IdentityManager,
 )
+from companion.nirl import (
+    ALLOWED_STATES,
+    DEFAULT_STATE,
+    NIRL_STATE_KEY,
+    NIRLController,
+    NIRLTransition,
+    NIRLTransitionError,
+    default_nirl_transition,
+)
 from companion.service import RESTORE_OPERATION, UPDATE_OPERATION, Companion
 
 __version__ = "0.0.0.dev0"
 
 __all__ = [
     "ALLOWED_PHASES",
+    "ALLOWED_STATES",
     "BOND_IDENTITY_OPERATION",
+    "DEFAULT_STATE",
+    "NIRL_STATE_KEY",
     "PHASE_BONDED",
     "PHASE_UNBONDED",
     "PRUNE_FATES_OPERATION",
@@ -36,4 +48,8 @@ __all__ = [
     "IdentityDerivation",
     "IdentityError",
     "IdentityManager",
+    "NIRLController",
+    "NIRLTransition",
+    "NIRLTransitionError",
+    "default_nirl_transition",
 ]
