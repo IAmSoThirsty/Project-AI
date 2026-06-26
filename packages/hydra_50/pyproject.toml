@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-hydra-50"
+version = "0.0.0.dev0"
+description = "Threat scenario surface (Q6 closure): escalation ladder state machine + scenario evaluator"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = [
+    "project-ai-kernel",
+    "project-ai-governance",
+    "project-ai-execution",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.12",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hydra_50"]
