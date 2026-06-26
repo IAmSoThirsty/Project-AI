@@ -615,3 +615,36 @@ Safe to continue: yes (for commit + Phase C); NOT for code edits without explici
 - Phase I (Temporal) envelope
 - Phase J (Atlas) envelope
 
+
+## Session Update — Phase H2 (2026-06-25)
+
+### Phase H2 Artifacts
+**Sub-phase 2 of 4 for TARL rebuild.**
+- 5 source modules: parser, validate, compiler, runtime, config
+- 1 test file (test_tarl_compile.py, 48 tests)
+- __init__.py updated with 41 re-exports
+- docs/internal/STAGE_19_5H2_ACCEPTANCE.md
+
+### Gate Results (post-Phase-H2)
+| Gate | Result |
+|---|---|
+| pytest | **807 passed** (759 + 48) |
+| mypy --strict | clean on 104 source files |
+| ruff check | All checks passed |
+| ruff format | 104 files formatted |
+
+### Bugs Found + Fixed (self-review)
+1. parser.py conflated section headers with empty-value keys. Fix: distinguish
+   by section_name.lower() in ALLOWED_KEYS.
+2-3. compiler.py + config.py had PEP 695 `@dataclass :=` syntax error. Fixed
+   by importing from dataclasses directly.
+4. **REAL SEMANTIC BUG**: runtime.py cache was keyed only on context_hash.
+   Caused cache pollution when execute_chain ran allow-then-deny against same
+   context. Fix: cache_key = (compiled.record_hash, ctx_hash).
+5. Same PEP 695 bug in compiler.py (already counted above).
+
+### Remaining (per memory: per-phase go)
+- Phase H3 authorization (system, modules, stdlib, ffi, policies/default)
+- Phase I (Temporal)
+- Phase J (Atlas)
+
