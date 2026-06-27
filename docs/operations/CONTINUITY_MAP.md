@@ -1075,7 +1075,8 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
 - CI mypy failure on `packages/atlas/src/atlas/sensitivity.py` was fixed by
   removing the now-unused `type: ignore[import-untyped]`.
 - Desktop CI source smoke failed on Ubuntu because PyQt6 could not load
-  `libEGL.so.1`. CI now installs `libegl1` before the desktop smoke.
+  `libEGL.so.1`. CI now installs `libegl1` before the desktop smoke and before
+  the Python coverage job, which imports the desktop test conftest.
 - Kubernetes CI dry-run used `kubectl apply/create --dry-run=client`, which
   still attempted cluster API discovery. It is replaced with
   `tools/verify_helm_template.py`, an offline Helm-render verifier that parses
