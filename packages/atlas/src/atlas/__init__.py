@@ -19,6 +19,7 @@ from atlas.audit import (
     AuditTrailError,
     InMemoryStorage,
     JsonlStorage,
+    StorageBackend,
     compute_record_hash,
     get_audit_trail,
 )
@@ -64,6 +65,7 @@ __all__ = [
     "SensitivityReport",
     "SobolIndices",
     "StabilityMetrics",
+    "StorageBackend",
     "TippingPoint",
     "analyze",
     "compute_parameter_perturbations",
