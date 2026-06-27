@@ -872,3 +872,39 @@ All 10 phases of `STAGE_19_5_PHASED_PLAN.md` executed:
 - 1 phase (J) resulted in audit + deferral
 - 1 final review doc committed
 
+
+## Session Update — Phase J2.1 (2026-06-25)
+
+### Phase J2.1 Artifacts (sensitivity_analyzer port, Path A1)
+- packages/atlas/src/atlas/sensitivity.py (~895 LOC)
+- packages/atlas/tests/test_sensitivity.py (108 unit tests)
+- tests/test_atlas_sensitivity_integration.py (17 integration tests)
+- packages/atlas/pyproject.toml: numpy>=1.24,<2.0 + scipy>=1.11,<2.0
+- packages/atlas/src/atlas/__init__.py: 12 new exports
+- docs/internal/PHASE_J2_1_DISCOVERY.md
+- docs/internal/STAGE_19_5J2_1_ACCEPTANCE.md (THIS commit)
+
+### Gate Results (post-Phase-J2.1)
+| Gate | Result |
+|---|---|
+| pytest | **1136 passed** (1011 + 125) |
+| mypy --strict | clean on 123 source files |
+| ruff check | All checks passed |
+| ruff format | 123 files formatted |
+
+### Bugs caught + fixed (8 real bugs)
+1. mypy rejected `threshold=np.inf` → switched to `sys.maxsize`
+2. decay_rate=inf for zero matrix → clamped to 0.0
+3-5. Test expectations wrong (1 tipping point, decay_rate==inf, unused ignore)
+6. CapabilityAuthority API mismatch (mint vs issue)
+7. Projection API mismatch (drivers= kwarg)
+8. Capability scope mismatch (resource format)
+
+### Phase J final state
+| Sub-phase | Status |
+|---|---|
+| J0 | ✓ committed `9e80da9` |
+| J1 | ✓ committed `b8637a2` |
+| J2.1 | ⏳ THIS commit |
+| J2.2+ | **deferred** |
+

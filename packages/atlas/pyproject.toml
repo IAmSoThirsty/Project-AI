@@ -12,6 +12,8 @@ license = "MIT"
 dependencies = [
     "project-ai-execution",
     "project-ai-kernel",
+    "numpy>=1.24,<2.0",
+    "scipy>=1.11,<2.0",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
