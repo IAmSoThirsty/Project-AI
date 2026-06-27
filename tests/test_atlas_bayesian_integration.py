@@ -12,6 +12,10 @@ from datetime import UTC, datetime, timedelta
 import pytest
 
 from atlas import (
+    SUBORDINATION_NOTICE,
+    AuditCategory,
+    AuditLevel,
+    AuditTrail,
     BayesianAnalysis,
     BayesianClaim,
     BayesianClaimEngine,
@@ -19,13 +23,8 @@ from atlas import (
     BayesianEvidence,
     DriverDependency,
     StackPenalty,
-    SUBORDINATION_NOTICE,
-    AuditTrail,
-    AuditCategory,
-    AuditLevel,
     calculate_bayesian_posterior,
 )
-
 
 # ---------------------------------------------------------------------------
 # End-to-end formula verification
@@ -36,9 +35,9 @@ def test_full_formula_match_legacy() -> None:
     """Verify the formula produces the same result as legacy code would.
 
     Legacy formula:
-      P = clamp(EL × WDP × StackPenalty × AgencyPenalty, 0, 1)
+      P = clamp(EL x WDP x StackPenalty x AgencyPenalty, 0, 1)
     Where:
-      EL = min((weighted_sum / count) × (1.1 if ≥2 TierA else 1.0), 1.0)
+      EL = min((weighted_sum / count) x (1.1 if >=2 TierA else 1.0), 1.0)
       WDP = mean(driver alignments)
       StackPenalty = stack table
       AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
@@ -47,18 +46,14 @@ def test_full_formula_match_legacy() -> None:
         claim_id="c1",
         statement="Economic indicator X is rising",
         claim_type="FACTUAL",
-        driver_dependencies=(
-            DriverDependency(driver="economic_power", expected_range=(0.6, 0.9)),
-        ),
+        driver_dependencies=(DriverDependency(driver="economic_power", expected_range=(0.6, 0.9)),),
     )
     evidence = (
         BayesianEvidence(source="IMF Report 2026", tier="A", confidence=0.95),
         BayesianEvidence(source="Federal Reserve Data", tier="B", confidence=0.90),
     )
     engine = BayesianClaimEngine()
-    analysis = engine.calculate_posterior(
-        claim, evidence, driver_context={"economic_power": 0.75}
-    )
+    analysis = engine.calculate_posterior(claim, evidence, driver_context={"economic_power": 0.75})
     # Driver in range -> WDP = 1.0
     assert analysis.driver_posterior == 1.0
     # FACTUAL -> no agency penalty
@@ -75,9 +70,7 @@ def test_full_formula_match_legacy() -> None:
 
 def test_agency_claim_with_low_tier_evidence_penalized() -> None:
     """AGENCY claim without TierA/B evidence gets penalty."""
-    claim = BayesianClaim(
-        claim_id="c1", statement="x", claim_type="AGENCY"
-    )
+    claim = BayesianClaim(claim_id="c1", statement="x", claim_type="AGENCY")
     evidence = (
         BayesianEvidence(source="s1", tier="C", confidence=0.9),
         BayesianEvidence(source="s2", tier="D", confidence=0.8),
@@ -89,9 +82,7 @@ def test_agency_claim_with_low_tier_evidence_penalized() -> None:
 
 def test_agency_claim_with_tier_a_not_penalized() -> None:
     """AGENCY claim with TierA evidence is not penalized."""
-    claim = BayesianClaim(
-        claim_id="c1", statement="x", claim_type="AGENCY"
-    )
+    claim = BayesianClaim(claim_id="c1", statement="x", claim_type="AGENCY")
     evidence = (
         BayesianEvidence(source="s1", tier="A", confidence=0.9),
         BayesianEvidence(source="s2", tier="D", confidence=0.8),
@@ -139,15 +130,11 @@ def test_audit_event_includes_calculation_id() -> None:
     claim = BayesianClaim(claim_id="c", statement="x", claim_type="FACTUAL")
     evidence = (BayesianEvidence("s", "A", 0.9),)
     analysis = engine.calculate_posterior(claim, evidence)
-    calc_event = next(
-        e for e in trail.events if e.action == "claim_posterior_calculated"
-    )
+    calc_event = next(e for e in trail.events if e.action == "claim_posterior_calculated")
     # Calculation ID appears in evidence
     calc_id_str = str(analysis.calculation_id)
     assert any(
-        calc_id_str in str(value)
-        for key_value in calc_event.evidence
-        for value in (key_value[1],)
+        calc_id_str in str(value) for key_value in calc_event.evidence for value in (key_value[1],)
     )
 
 
@@ -158,9 +145,7 @@ def test_audit_event_agency_emits_validated_high_priority() -> None:
     claim = BayesianClaim(claim_id="c", statement="x", claim_type="AGENCY")
     evidence = (BayesianEvidence("s", "D", 0.9),)  # No A/B
     engine.calculate_posterior(claim, evidence)
-    agency_events = [
-        e for e in trail.events if e.action == "agency_penalty_applied"
-    ]
+    agency_events = [e for e in trail.events if e.action == "agency_penalty_applied"]
     assert len(agency_events) == 1
     assert agency_events[0].category == AuditCategory.VALIDATION
     assert agency_events[0].level == AuditLevel.HIGH_PRIORITY
@@ -307,8 +292,7 @@ def test_multiple_claims_produce_independent_analyses() -> None:
     """Each claim's analysis is independent."""
     engine = BayesianClaimEngine()
     claims = [
-        BayesianClaim(claim_id=f"c{i}", statement=f"s{i}", claim_type="FACTUAL")
-        for i in range(3)
+        BayesianClaim(claim_id=f"c{i}", statement=f"s{i}", claim_type="FACTUAL") for i in range(3)
     ]
     evidence = (BayesianEvidence("s", "A", 0.9),)
     analyses = [engine.calculate_posterior(c, evidence) for c in claims]
@@ -368,14 +352,13 @@ def test_process_claim_returns_tuple() -> None:
 def test_engine_thread_safe() -> None:
     """Engine can be used by multiple threads."""
     import threading
+
     engine = BayesianClaimEngine()
     errors: list[str] = []
 
     def worker(i: int) -> None:
         try:
-            claim = BayesianClaim(
-                claim_id=f"thread-{i}", statement="x", claim_type="FACTUAL"
-            )
+            claim = BayesianClaim(claim_id=f"thread-{i}", statement="x", claim_type="FACTUAL")
             evidence = (BayesianEvidence("s", "A", 0.9),)
             engine.calculate_posterior(claim, evidence)
         except Exception as exc:
@@ -423,6 +406,7 @@ def test_top_level_imports() -> None:
         StackPenalty,
         TierWeight,
     )
+
     assert BayesianAnalysis is not None
     assert BayesianClaim is not None
     assert BayesianClaimEngine is not None

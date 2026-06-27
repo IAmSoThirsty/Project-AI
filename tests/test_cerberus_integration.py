@@ -12,6 +12,7 @@ from cerberus import (
     CerberusAgent,
     LockdownController,
     LockdownError,
+    SpawnConstraintError,
     SpawnConstraints,
 )
 
@@ -79,7 +80,7 @@ def test_lockdown_threshold_breach_activates_via_check() -> None:
     lockdown = LockdownController()
     # Simulate 3 denials (failed spawns)
     for i in range(3):
-        with pytest.raises(Exception):  # SpawnConstraintError
+        with pytest.raises(SpawnConstraintError):
             spawn.request_spawn(
                 agent_id=f"bad-{i}",
                 agent_type="unknown_type",  # policy denial

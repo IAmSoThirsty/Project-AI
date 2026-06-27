@@ -8,6 +8,12 @@
 **Total commits this session:** 24 (all pushed to origin/main)
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
+> Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
+> `e439897`. The original "all gates green" statement reflected the local
+> canonical gates listed below, not the full GitHub Actions workflow. Current
+> CI had additional pre-commit, desktop-runtime, and Kubernetes client-dry-run
+> gaps that required follow-up repair before any production-readiness claim.
+
 ---
 
 ## 0. Submission package
@@ -242,7 +248,9 @@ This is the final state of a multi-day session. Every commit was:
 
 Every phase followed the **discovery → source → tests → integration → acceptance → commit** pattern. Every commit has an acceptance doc or commit-message explaining the work.
 
-**State at submission: PRODUCTION DEPLOYMENT READY per Thirstys standards.**
+**State at submission: local canonical gates green; production deployment
+readiness not proven until GitHub Actions is green and remaining J2 gaps are
+closed or explicitly deferred.**
 
 ---
 

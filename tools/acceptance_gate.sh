@@ -83,8 +83,8 @@ generate_sbom() {
     uv run python -c "import json; data=json.load(open('build/acceptance/sbom/project-ai-python.cdx.json', encoding='utf-8')); assert data['bomFormat']=='CycloneDX'; assert data['components']"
 }
 
-run_kubernetes_dry_run() {
-    helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client --validate=false -f -
+run_kubernetes_manifest_verification() {
+    helm template project-ai-dev helm/project-ai | uv run python tools/verify_helm_template.py
 }
 
 case "$(uname -s)" in
@@ -136,7 +136,7 @@ step "Compose: build and start seven services" \
     docker compose up -d --build --wait --wait-timeout 240
 step "Compose: health and container security" uv run python tools/verify_compose_health.py
 step "Kubernetes: Helm lint" helm lint helm/project-ai
-step "Kubernetes: client dry run" run_kubernetes_dry_run
+step "Kubernetes: offline manifest verification" run_kubernetes_manifest_verification
 step "Legacy source: final unchanged snapshot" uv run python tools/verify_legacy_state.py
 step "Checkout: no tracked or untracked writes" assert_clean_checkout
 

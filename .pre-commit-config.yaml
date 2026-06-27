@@ -1,13 +1,13 @@
-exclude: ^(apps/web-static/ompt-reference/|docs/internal/frozen-history/|docs/reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+exclude: ^(apps/web-static/ompt-reference/|docs/internal/frozen-history/|docs/legacy-archive/|docs/reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: ^(apps/web-static/ompt-reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(apps/web-static/ompt-reference/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
       - id: end-of-file-fixer
-        exclude: ^(apps/web-static/ompt-reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(apps/web-static/ompt-reference/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
       - id: check-yaml
         exclude: ^helm/project-ai/templates/
       - id: check-json

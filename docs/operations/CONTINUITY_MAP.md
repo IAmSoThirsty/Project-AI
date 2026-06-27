@@ -1052,3 +1052,95 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
 
 3/9 gaps closed.
 
+
+## Session Update — CI/pre-existing gap repair (2026-06-27)
+
+### Scope
+- Mode: repo patch / CI repair.
+- Branch: `main`.
+- Starting HEAD: `485b6b3`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+
+### Problems fixed now
+- GitHub Actions Python job could not pass `pre-commit run --all-files` on
+  `main` because `no-commit-to-branch` is a commit-time guard, not a CI
+  all-files validation. CI now skips only that hook with
+  `SKIP=no-commit-to-branch`; the hook remains active in `.pre-commit-config.yaml`.
+- Pre-commit whitespace/EOF hooks attempted to rewrite byte-preserved legacy
+  archive evidence. `docs/legacy-archive/` is now excluded from those global
+  hygiene hooks.
+- All-file ruff failures in integration tests were fixed:
+  import ordering/formatting, ambiguous multiplication symbols in a docstring,
+  and broad `pytest.raises(Exception)` in the Cerberus integration test.
+- CI mypy failure on `packages/atlas/src/atlas/sensitivity.py` was fixed by
+  removing the now-unused `type: ignore[import-untyped]`.
+- Desktop CI source smoke failed on Ubuntu because PyQt6 could not load
+  `libEGL.so.1`. CI now installs `libegl1` before the desktop smoke.
+- Kubernetes CI dry-run used `kubectl apply/create --dry-run=client`, which
+  still attempted cluster API discovery. It is replaced with
+  `tools/verify_helm_template.py`, an offline Helm-render verifier that parses
+  rendered YAML and checks basic Kubernetes document shape.
+- Stale state docs were corrected where they overclaimed production readiness
+  or reported old heads.
+- `packages/kernel/src/kernel/tarl_bridge.py` no longer says `packages/tarl/`
+  is deferred.
+
+### Files materially changed
+- `.github/workflows/ci.yaml`
+- `.pre-commit-config.yaml`
+- `tools/verify_helm_template.py`
+- `tools/tests/test_verify_helm_template.py`
+- `tools/acceptance_gate.ps1`
+- `tools/acceptance_gate.sh`
+- `packages/atlas/src/atlas/sensitivity.py`
+- `packages/kernel/src/kernel/tarl_bridge.py`
+- `tests/test_atlas_audit_integration.py`
+- `tests/test_atlas_bayesian_integration.py`
+- `tests/test_cerberus_integration.py`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `docs/internal/FINAL_PEER_REVIEW.md`
+
+### Mechanical hygiene changes
+- `uv run pre-commit run --all-files` fixed existing EOF/trailing-whitespace
+  issues in stage/discovery docs and package metadata files outside
+  `docs/legacy-archive/`.
+
+### Verification run
+- `uv run pytest` — 1343 passed.
+- CI coverage command — 1343 passed, 91.80% branch coverage, threshold 80%.
+- CI mypy command over packages/apps/tools — clean on 86 source files.
+- `uv run ruff check .` / `uv run ruff format --check .` — clean after
+  verifier formatting.
+- `SKIP=no-commit-to-branch,gitleaks uv run pre-commit run --all-files` —
+  passed all non-skipped hooks.
+- `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+- `helm lint helm/project-ai` — 1 chart linted, 0 failed.
+- `helm template project-ai-dev helm/project-ai | uv run python tools/verify_helm_template.py`
+  — 14 manifests verified.
+- `QT_QPA_PLATFORM=offscreen PROJECT_AI_DESKTOP_SMOKE=1 uv run --package project-ai-desktop python -m project_ai_desktop`
+  — exit 0.
+- `CI=true pnpm install --frozen-lockfile; pnpm web:lint; pnpm web:test; pnpm web:build`
+  — passed.
+- `cargo fmt --check; cargo clippy --workspace --all-targets --locked -- -D warnings; cargo test --workspace --locked`
+  — passed; Windows reported non-blocking incremental compilation cleanup
+  `Access is denied` notes.
+- `docker compose config --quiet` — exit 0.
+
+### Existing issues / not verified
+- Local gitleaks execution is blocked by Windows Application Control:
+  `[WinError 4551] An Application Control policy has blocked this file`.
+  Classification: environment/dependency issue; not blocking code repair.
+  Current CI previously executed gitleaks, and this session changed no secret
+  material, but the post-repair remote CI run is not yet verified.
+- Full `docker compose up -d --build --wait` was not rerun locally in this
+  repair session. Classification: not blocking current CI config/code repair;
+  remote CI should verify it after push.
+- Android Gradle CI was not rerun locally in this repair session because this
+  patch did not touch Android. Classification: not blocking current task.
+- Remote GitHub Actions is not verified for this repair until these local
+  changes are committed/pushed and CI completes.
+
+### Safe to continue
+Yes. Next executable path: review/stage these changes, commit, push, and rerun
+GitHub Actions on the new head.

@@ -242,7 +242,7 @@ Safe to continue: yes
 
 1. **Commit Phase J2.2 + push** (this turn)
 2. **Continue exploration**: Phase I4 (temporal SDK abstraction) or P1 (benchmarks) per deferred decisions
-3. **Future audit enhancements**: 
+3. **Future audit enhancements**:
    - Audit trail replay tool (CLI)
    - Audit trail query/search
    - Audit trail export to standard formats (CEF, LEEF)

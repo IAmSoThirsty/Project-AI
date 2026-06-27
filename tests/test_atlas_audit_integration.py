@@ -34,9 +34,9 @@ from capability import CapabilityAuthority
 from execution import ExecutionGate
 from governance import GovernanceEngine, Rule, RuleGovernor
 from kernel import EventSpine
-def _make_authority_and_gate(
-    *, allow: bool = True
-) -> tuple[CapabilityAuthority, ExecutionGate]:
+
+
+def _make_authority_and_gate(*, allow: bool = True) -> tuple[CapabilityAuthority, ExecutionGate]:
     """Create a fresh capability authority + execution gate for tests."""
     rules: tuple[object, ...] = (
         ()

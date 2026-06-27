@@ -2,9 +2,9 @@
 
 Refactored from legacy ``kernel/tarl_gate.py`` + ``kernel/tarl_codex_bridge.py``.
 The legacy code imported directly from ``tarl`` (TARL runtime) and
-``src.cognition.codex.escalation`` (CodexDeus escalation), neither of which
-exist as packages in Beginnings (Stage ``packages/tarl/`` is deferred per the
-gap inventory).
+``src.cognition.codex.escalation`` (CodexDeus escalation). Beginnings now has
+``packages/tarl/``, but this bridge intentionally accepts a verdict-shaped
+payload instead of importing that package directly.
 
 This bridge provides the **seam** the legacy code assumed: it accepts a TARL
 verdict-shaped object (a mapping containing ``verdict`` + ``reason``), and:
@@ -17,9 +17,9 @@ verdict-shaped object (a mapping containing ``verdict`` + ``reason``), and:
 
 The bridge has **no runtime dependency on TARL or CodexDeus**. It is wired
 through :class:`EventSpine` and an injectable ``escalation_handler`` so that
-future packages (``packages/tarl/`` Stage pending; ``packages/companion/``
-cognitive services) can plug in concrete implementations without changing
-this file. This is the Beginnings pattern: explicit seams, no hidden imports.
+``packages/tarl/`` and ``packages/companion/`` cognitive services can plug in
+concrete implementations without changing this file. This is the Beginnings
+pattern: explicit seams, no hidden imports.
 """
 
 from __future__ import annotations

@@ -5,6 +5,12 @@
 **Plan:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` (10-phase plan)
 **Authority:** `docs/internal/REBUILD_EXECUTION_PLAN.md`, `AGENTS.md` (v3)
 
+> Correction note (2026-06-27): this peer review is a Stage 19.5 A-J snapshot
+> ending at `b8637a2`. It is not the current repository head. Later commits
+> completed Atlas J2.1-J2.3 and added J2.4 discovery; use
+> `docs/internal/STAGE_19_5_SESSION_LEDGER.md` plus current git status for
+> current-state reporting.
+
 ---
 
 ## 0. Scope
