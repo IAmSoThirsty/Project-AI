@@ -1000,3 +1000,55 @@ print(trail.events[0].rationale)
 # "record() allowed for analyst_id='analyst': capability token valid + governance rule passed"
 ```
 
+
+## Session Update — Phase J2.3 complete (2026-06-25)
+
+### Phase J2.3 Artifacts — Bayesian inference engine
+- packages/atlas/src/atlas/bayesian.py (~660 LOC, 12 exports)
+- packages/atlas/src/atlas/__init__.py (modified — 12 new exports)
+- packages/atlas/tests/test_bayesian.py (~901 LOC, 91 unit tests)
+- tests/test_atlas_bayesian_integration.py (~450 LOC, 25 integration tests)
+- docs/internal/PHASE_J2_3_DISCOVERY.md (planning artifact)
+- docs/internal/STAGE_19_5J2_3_ACCEPTANCE.md (THIS commit)
+
+### Formula (canonical)
+P_claim = clamp(EL x WDP x StackPenalty x AgencyPenalty, 0, 1)
+P(t) = P_0 x exp(-ln(2) x age_days / half_life)
+
+EL = min((weighted_sum / count) x (1.1 if >=2 TierA else 1.0), 1.0)
+WDP = mean(driver alignments), 0.7 (neutral) if no deps
+StackPenalty = RS=1.0 / TS-2=0.95 / TS-3=0.90 / SS=0.0
+AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
+
+### Gate Results (post-J2.3 complete)
+| Gate | Result |
+|---|---|
+| pytest | **1340 passed** (1224 + 116) |
+| mypy --strict | clean on 127 source files |
+| ruff check | All checks passed |
+| ruff format | 127 files formatted |
+
+### Bugs caught + fixed (7)
+1. Evidence constructor order (3 occurrences)
+2. governors= expected tuple
+3. StrEnum equality with literal (6 occurrences)
+4. Evidence vs BayesianEvidence confusion
+5. JsonValue strict dict cast
+6. Unicode (x, ->) in docstrings replaced
+7. Missing __all__ in bayesian.py
+
+### J1 Audit Status
+| Gap | Status |
+|---|---|
+| 4. Sensitivity | DONE (J2.1) |
+| 9. Audit trail | DONE (J2.2) |
+| 1. Bayesian inference | DONE (J2.3) |
+| 2. Graph construction | OPEN |
+| 3. Constitutional kernel | OPEN |
+| 5. Failure surveillance | OPEN |
+| 6. Sandbox | OPEN |
+| 7. CLI/API surface | OPEN |
+| 8. Replay system | OPEN |
+
+3/9 gaps closed.
+
