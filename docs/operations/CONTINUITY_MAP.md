@@ -956,3 +956,47 @@ All 10 phases of `STAGE_19_5_PHASED_PLAN.md` executed:
 | J2.2.2 | pending (integration tests) |
 | J2.2.3 | pending (acceptance + commit) |
 
+
+## Session Update — Phase J2.2 complete (2026-06-25)
+
+### Phase J2.2 Artifacts — explanation chain wired end-to-end
+- packages/atlas/src/atlas/audit.py (~626 LOC, 12 exports)
+- packages/atlas/src/atlas/service.py (modified — accepts audit_trail kwarg, auto-emits events)
+- packages/atlas/tests/test_audit.py (~1149 LOC, 73 unit tests)
+- tests/test_atlas_audit_integration.py (~494 LOC, 15 integration tests)
+- docs/internal/PHASE_J2_2_DISCOVERY.md (planning artifact)
+- docs/internal/STAGE_19_5J2_2_ACCEPTANCE.md (THIS commit)
+
+### Mission fulfilled
+> "This system needs to explain, prove, replay why reality was allowed to continue."
+
+✅ **Explain**: every Atlas decision has rationale, actor, action, outcome, evidence
+✅ **Prove**: hash chain integrity via SHA-256 (prev_hash + record_hash)
+✅ **Replay**: full event reconstruction via replay() + JSONL persistence
+
+### Gate Results (post-Phase-J2.2 complete)
+| Gate | Result |
+|---|---|
+| pytest | **1224 passed** (1136 + 88) |
+| mypy --strict | clean on 125 source files |
+| ruff check | All checks passed |
+| ruff format | 125 files formatted |
+
+### Bugs caught + fixed during self-review (8)
+1. StorageBackend missing from __init__.py (J2.2.0 hermes-verify caught)
+2. Evidence constructor order (3 occurrences)
+3. governors= expected tuple, not bare governor
+4. StrEnum literal equality (use .value)
+5-6. Unused type: ignore + **dict unpacking
+7. list == () vs list == [] type mismatch
+8. Protocol import order
+
+### End-to-end demo works
+```python
+atlas = Atlas(gate, audit_trail=trail)
+result = atlas.record(projection, analyst_id='analyst', capability_token=token)
+print(len(trail))  # 1
+print(trail.events[0].rationale)
+# "record() allowed for analyst_id='analyst': capability token valid + governance rule passed"
+```
+
