@@ -1077,6 +1077,9 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
 - Desktop CI source smoke failed on Ubuntu because PyQt6 could not load
   `libEGL.so.1`. CI now installs `libegl1` before the desktop smoke and before
   the Python coverage job, which imports the desktop test conftest.
+- GitHub Actions Python coverage then exposed a Linux-only test failure in
+  `packages/atlas/tests/test_audit.py::test_trail_load_preserves_subordination`:
+  the test assumed `os.environ["TEMP"]`. It now uses pytest `tmp_path`.
 - Kubernetes CI dry-run used `kubectl apply/create --dry-run=client`, which
   still attempted cluster API discovery. It is replaced with
   `tools/verify_helm_template.py`, an offline Helm-render verifier that parses
@@ -1094,6 +1097,7 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
 - `tools/acceptance_gate.ps1`
 - `tools/acceptance_gate.sh`
 - `packages/atlas/src/atlas/sensitivity.py`
+- `packages/atlas/tests/test_audit.py`
 - `packages/kernel/src/kernel/tarl_bridge.py`
 - `tests/test_atlas_audit_integration.py`
 - `tests/test_atlas_bayesian_integration.py`
@@ -1127,6 +1131,10 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
   — passed; Windows reported non-blocking incremental compilation cleanup
   `Access is denied` notes.
 - `docker compose config --quiet` — exit 0.
+- `uv run pytest packages/atlas/tests/test_audit.py::test_trail_load_preserves_subordination -q`
+  — 1 passed after replacing `TEMP` with `tmp_path`.
+- Re-run CI coverage command after the Linux-only test fix — 1343 passed,
+  91.80% branch coverage, threshold 80%.
 
 ### Existing issues / not verified
 - Local gitleaks execution is blocked by Windows Application Control:
@@ -1139,8 +1147,11 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
   remote CI should verify it after push.
 - Android Gradle CI was not rerun locally in this repair session because this
   patch did not touch Android. Classification: not blocking current task.
-- Remote GitHub Actions is not verified for this repair until these local
-  changes are committed/pushed and CI completes.
+- Remote GitHub Actions run `28299650509` verified Android, Compose, Node,
+  Kubernetes, Desktop, SBOM, and Rust after commit `4b726dd4`, but Python
+  failed on Linux-only `TEMP` usage in
+  `test_trail_load_preserves_subordination`. Classification: fixed now locally;
+  requires follow-up commit/push and remote CI rerun.
 
 ### Safe to continue
 Yes. Next executable path: review/stage these changes, commit, push, and rerun

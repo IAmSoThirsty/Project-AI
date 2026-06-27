@@ -905,11 +905,9 @@ def test_trail_load_validates_path_type() -> None:
         AuditTrail.load("not-a-path")  # type: ignore[arg-type]
 
 
-def test_trail_load_preserves_subordination() -> None:
+def test_trail_load_preserves_subordination(tmp_path: Path) -> None:
     """Save + load should preserve subordination_notice field."""
-    import os
-
-    p = Path(os.path.join(os.environ["TEMP"], "audit_subord.jsonl"))
+    p = tmp_path / "audit_subord.jsonl"
     try:
         t = AuditTrail()
         t.append(
