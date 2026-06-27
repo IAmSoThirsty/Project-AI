@@ -9,6 +9,19 @@ from atlas.analysis import (
     Projection,
     analyze,
 )
+from atlas.audit import (
+    GENESIS_HASH,
+    AuditCategory,
+    AuditChainVerification,
+    AuditEvent,
+    AuditLevel,
+    AuditTrail,
+    AuditTrailError,
+    InMemoryStorage,
+    JsonlStorage,
+    compute_record_hash,
+    get_audit_trail,
+)
 from atlas.sensitivity import (
     ParameterPerturbation,
     SensitivityAnalysisError,
@@ -28,13 +41,22 @@ from atlas.service import RECORD_OPERATION, Atlas
 __version__ = "0.0.0.dev0"
 
 __all__ = [
+    "GENESIS_HASH",
     "RECORD_OPERATION",
     "SUBORDINATION_NOTICE",
     "Atlas",
+    "AuditCategory",
+    "AuditChainVerification",
+    "AuditEvent",
+    "AuditLevel",
+    "AuditTrail",
+    "AuditTrailError",
     "Claim",
     "ClaimType",
     "Evidence",
     "EvidenceTier",
+    "InMemoryStorage",
+    "JsonlStorage",
     "ParameterPerturbation",
     "Projection",
     "SensitivityAnalysisError",
@@ -45,8 +67,10 @@ __all__ = [
     "TippingPoint",
     "analyze",
     "compute_parameter_perturbations",
+    "compute_record_hash",
     "compute_sobol_indices",
     "compute_stability_metrics",
     "find_tipping_points",
+    "get_audit_trail",
     "get_sensitivity_analyzer",
 ]
