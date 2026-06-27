@@ -1135,24 +1135,26 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
   — 1 passed after replacing `TEMP` with `tmp_path`.
 - Re-run CI coverage command after the Linux-only test fix — 1343 passed,
   91.80% branch coverage, threshold 80%.
+- GitHub Actions CI run `28299731926` on commit `c831f192` passed all jobs:
+  Android, Node, Kubernetes, Python, Rust, Compose, Desktop, and SBOM.
 
 ### Existing issues / not verified
 - Local gitleaks execution is blocked by Windows Application Control:
   `[WinError 4551] An Application Control policy has blocked this file`.
   Classification: environment/dependency issue; not blocking code repair.
-  Current CI previously executed gitleaks, and this session changed no secret
-  material, but the post-repair remote CI run is not yet verified.
+  GitHub Actions run `28299731926` executed the CI pre-commit/gitleaks step
+  successfully after the repair commits.
 - Full `docker compose up -d --build --wait` was not rerun locally in this
-  repair session. Classification: not blocking current CI config/code repair;
-  remote CI should verify it after push.
+  repair session. Classification: fixed by remote verification; GitHub Actions
+  run `28299731926` passed the Compose build/health/security job.
 - Android Gradle CI was not rerun locally in this repair session because this
-  patch did not touch Android. Classification: not blocking current task.
-- Remote GitHub Actions run `28299650509` verified Android, Compose, Node,
+  patch did not touch Android. Classification: fixed by remote verification;
+  GitHub Actions run `28299731926` passed the Android job.
+- GitHub Actions run `28299650509` verified Android, Compose, Node,
   Kubernetes, Desktop, SBOM, and Rust after commit `4b726dd4`, but Python
   failed on Linux-only `TEMP` usage in
-  `test_trail_load_preserves_subordination`. Classification: fixed now locally;
-  requires follow-up commit/push and remote CI rerun.
+  `test_trail_load_preserves_subordination`. Classification: fixed now;
+  GitHub Actions run `28299731926` passed Python after commit `c831f192`.
 
 ### Safe to continue
-Yes. Next executable path: review/stage these changes, commit, push, and rerun
-GitHub Actions on the new head.
+Yes. Current executable path is clear; remote CI is green at commit `c831f192`.
