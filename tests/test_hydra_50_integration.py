@@ -9,12 +9,9 @@ Verifies that scenario + escalation + evaluator compose correctly:
 
 from __future__ import annotations
 
-import pytest
-
 from hydra_50 import (
-    EvaluationResult,
     EscalationLadder,
-    LEVEL_LABELS,
+    EvaluationResult,
     ScenarioEvaluator,
     make_scenario,
 )

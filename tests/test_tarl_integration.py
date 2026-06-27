@@ -9,10 +9,8 @@ Verifies that spec + policy + core + diagnostics compose correctly:
 from __future__ import annotations
 
 from tarl import (
-    Diagnostic,
     DiagnosticBatch,
     Severity,
-    TARL,
     TarlDecision,
     TarlPolicy,
     TarlVerdict,
@@ -32,13 +30,12 @@ def test_tarl_record_evaluated_by_policy() -> None:
         authority="cap-1",
         constraints=("admin-only",),
     )
+
     # A deny-policy on /etc/* should reject
     def policy_rule(ctx: dict[str, object]) -> TarlDecision:
         scope = ctx.get("scope", "")
         if isinstance(scope, str) and scope.startswith("/etc/"):
-            return make_decision(
-                verdict=TarlVerdict.DENY, reason="protected-path"
-            )
+            return make_decision(verdict=TarlVerdict.DENY, reason="protected-path")
         return make_decision(verdict=TarlVerdict.ALLOW, reason="ok")
 
     policy = TarlPolicy("path-guard", policy_rule)
@@ -78,9 +75,7 @@ def test_diagnostics_aggregate_policy_failures() -> None:
     for p in policies:
         try:
             decision = p.evaluate(ctx)
-            severity = (
-                Severity.ERROR if decision.is_terminal() else Severity.INFO
-            )
+            severity = Severity.ERROR if decision.is_terminal() else Severity.INFO
             batch.add(
                 make_diagnostic(
                     severity=severity,
@@ -105,12 +100,8 @@ def test_diagnostics_aggregate_policy_failures() -> None:
 
 def test_tarl_hash_is_stable_across_evaluation() -> None:
     """Hashing TARL records gives stable identity across evaluations."""
-    record1 = make_tarl(
-        intent="x", scope="x", authority="cap-1", constraints=("a", "b")
-    )
-    record2 = make_tarl(
-        intent="x", scope="x", authority="cap-1", constraints=("b", "a")
-    )
+    record1 = make_tarl(intent="x", scope="x", authority="cap-1", constraints=("a", "b"))
+    record2 = make_tarl(intent="x", scope="x", authority="cap-1", constraints=("b", "a"))
     # Two equivalent records (constraints in different order) hash the same
     assert record1.hash() == record2.hash()
 
@@ -129,9 +120,7 @@ def test_policy_protocol_can_be_subclassed() -> None:
 
         def evaluate(self, context: dict[str, object]) -> TarlDecision:
             if context.get("dangerous"):
-                return make_decision(
-                    verdict=TarlVerdict.ESCALATE, reason="human-required"
-                )
+                return make_decision(verdict=TarlVerdict.ESCALATE, reason="human-required")
             return make_decision(verdict=TarlVerdict.ALLOW, reason="safe")
 
     p: object = MyPolicy()
@@ -158,9 +147,7 @@ def test_end_to_end_tarl_lifecycle() -> None:
                 reason="read-only constraint honored",
                 metadata={"scope": ctx.get("scope")},
             )
-        return make_decision(
-            verdict=TarlVerdict.DENY, reason="missing read-only constraint"
-        )
+        return make_decision(verdict=TarlVerdict.DENY, reason="missing read-only constraint")
 
     policy = TarlPolicy("read-guard", read_policy)
     decision = policy.evaluate(record.canonical())

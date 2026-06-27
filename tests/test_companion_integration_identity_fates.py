@@ -16,18 +16,17 @@ from datetime import timedelta
 
 import pytest
 
+from capability import CapabilityAuthority
 from companion import (
     BOND_IDENTITY_OPERATION,
-    PRUNE_FATES_OPERATION,
-    BondedCompanion,
-    IdentityManager,
     PHASE_BONDED,
     PHASE_UNBONDED,
+    PRUNE_FATES_OPERATION,
     RECORD_FATE_OPERATION,
+    BondedCompanion,
 )
 from execution import ExecutionGate
-from governance import GovernanceEngine, Rule, RuleGovernor
-from capability import CapabilityAuthority
+from governance import GovernanceEngine, RuleGovernor
 from kernel import EventSpine
 
 
@@ -76,9 +75,7 @@ def bonded(gate: ExecutionGate) -> BondedCompanion:  # type: ignore[no-untyped-d
     return BondedCompanion(companion_id="quench-1", execution=gate)
 
 
-def _issue_capability(
-    capabilities: CapabilityAuthority, operation: str, resource: str
-) -> str:
+def _issue_capability(capabilities: CapabilityAuthority, operation: str, resource: str) -> str:
     """Issue a real capability token that ExecutionGate will accept."""
     return capabilities.issue(
         subject="quench-1",
@@ -149,17 +146,11 @@ def test_bonded_companion_prunes_fates_via_execution_gate(
         "paths_considered": [],
         "weight": 1.0,
     }
-    token_record = _issue_capability(
-        capabilities, RECORD_FATE_OPERATION, "companion:quench-1"
-    )
+    token_record = _issue_capability(capabilities, RECORD_FATE_OPERATION, "companion:quench-1")
     bonded.record_fate(record, expected_revision=0, capability_token=token_record)
     assert len(bonded.fates().query_fates()) == 1
-    token_prune = _issue_capability(
-        capabilities, PRUNE_FATES_OPERATION, "companion:quench-1"
-    )
-    bonded.prune_fates(
-        ["fate-int-prune"], expected_revision=1, capability_token=token_prune
-    )
+    token_prune = _issue_capability(capabilities, PRUNE_FATES_OPERATION, "companion:quench-1")
+    bonded.prune_fates(["fate-int-prune"], expected_revision=1, capability_token=token_prune)
     assert len(bonded.fates().query_fates()) == 0
 
 
@@ -167,18 +158,14 @@ def test_full_pipeline_bond_record_query(
     bonded: BondedCompanion, capabilities: CapabilityAuthority
 ) -> None:
     """End-to-end: bond, record three fates, query by event_type."""
-    bond_token = _issue_capability(
-        capabilities, BOND_IDENTITY_OPERATION, "companion:quench-1"
-    )
+    bond_token = _issue_capability(capabilities, BOND_IDENTITY_OPERATION, "companion:quench-1")
     bonded.bond(
         {"name": "E2E"},
         expected_revision=0,
         capability_token=bond_token,
     )
     for i, event_type in enumerate(["approval", "denial", "approval"]):
-        fate_token = _issue_capability(
-            capabilities, RECORD_FATE_OPERATION, "companion:quench-1"
-        )
+        fate_token = _issue_capability(capabilities, RECORD_FATE_OPERATION, "companion:quench-1")
         bonded.record_fate(
             {
                 "id": f"fate-{i}",

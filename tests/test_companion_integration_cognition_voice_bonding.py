@@ -42,9 +42,7 @@ def capabilities() -> CapabilityAuthority:  # type: ignore[no-untyped-def]
 @pytest.fixture
 def gate(capabilities: CapabilityAuthority) -> ExecutionGate:  # type: ignore[no-untyped-def]
     allow_governor = RuleGovernor("primary", rules=())
-    governance = GovernanceEngine(
-        policy_version="v1", governors=[allow_governor]
-    )
+    governance = GovernanceEngine(policy_version="v1", governors=[allow_governor])
     return ExecutionGate(
         governance=governance,
         capabilities=capabilities,
@@ -52,9 +50,7 @@ def gate(capabilities: CapabilityAuthority) -> ExecutionGate:  # type: ignore[no
     )
 
 
-def _issue_capability(
-    capabilities: CapabilityAuthority, operation: str, resource: str
-) -> str:
+def _issue_capability(capabilities: CapabilityAuthority, operation: str, resource: str) -> str:
     return capabilities.issue(
         subject="quench-1",
         operation=operation,
@@ -206,9 +202,7 @@ def test_voice_bonding_record_bumps_revision_exactly_once() -> None:
 
 
 def test_gate_fixture_is_wired(capabilities: CapabilityAuthority, gate: ExecutionGate) -> None:  # type: ignore[no-untyped-def]
-    token = _issue_capability(
-        capabilities, BOND_IDENTITY_OPERATION, "companion:quench-1"
-    )
+    token = _issue_capability(capabilities, BOND_IDENTITY_OPERATION, "companion:quench-1")
     assert isinstance(token, str)
     assert token != ""
     assert gate is not None
