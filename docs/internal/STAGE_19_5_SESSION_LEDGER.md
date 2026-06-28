@@ -13,7 +13,7 @@ commit pushed; implementation CI green through run `28330827940`, and J2.5
 docs evidence CI green through run `28330896816`. J2.6 failure surveillance
 implementation CI green through run `28331195681`, and J2.6 docs evidence CI
 green through run `28331262312`. J2.7 sandbox is locally implemented pending
-final repo gates.
+final repo gates. J2.7 implementation CI green through run `28333214769`.
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -57,7 +57,7 @@ This ledger accompanies the work submission. It documents:
 | J2.4 — graph construction | ✓ closed | `e439897`, `7cc5ae7e`, `54db11c3`, `876ba130`, `0e600f90` |
 | J2.5 — constitutional kernel | ✓ closed | `a87c5594`, `8b94bf5d` |
 | J2.6 — failure surveillance | ✓ closed | `441bf02b` |
-| J2.7 — sandbox | ✓ locally closed | this session |
+| J2.7 — sandbox | ✓ closed | `b35f55e8` |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -217,7 +217,7 @@ Recently closed:
   CI evidence.
 - J2.6 failure surveillance implementation is CI green through run
   `28331195681`.
-- J2.7 sandbox is locally implemented.
+- J2.7 sandbox implementation is CI green through run `28333214769`.
 
 **Awaiting next action:** J2.8 CLI / API surface, unless the user pivots.
 
