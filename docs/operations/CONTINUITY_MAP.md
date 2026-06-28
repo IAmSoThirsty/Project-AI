@@ -1194,12 +1194,15 @@ Yes. Current executable path is clear; remote CI is green at commit `c831f192`.
   `runs.using` as `node24`.
 - `uv run pre-commit run check-yaml --files .github/workflows/ci.yaml` —
   passed.
+- GitHub Actions CI run `28308689553` on commit `20b66421` passed all jobs:
+  Android, Node, Kubernetes, Python, Rust, Compose, Desktop, and SBOM.
+- The prior Node.js 20 deprecation annotations were not present in run
+  `28308689553`.
 
 ### Existing issues / not verified
-- Remote GitHub Actions is not verified for this pin update until the change is
-  committed, pushed, and CI completes. Classification: not blocking local
-  workflow validation; requires post-push CI check.
+- GitHub Actions run `28308689553` reported one non-blocking cache annotation:
+  `Failed to save: Unable to reserve cache ... another job may be creating this
+  cache.` Classification: not blocking current task; CI passed.
 
 ### Safe to continue
-Yes. Next executable path: commit, push, and watch the new CI run for both job
-success and absence of the prior Node 20 deprecation annotations.
+Yes. Current executable path is clear; remote CI is green at commit `20b66421`.
