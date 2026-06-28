@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Governance J2.5 constitutional-kernel integration: legacy constitutional
   checks ported as canonical `InvariantEngine` invariants with execution-gate
   denial tests.
+- Atlas J2.6 failure-surveillance wave: canonical anomaly detection, health
+  summaries, local abort-condition reporting, local kill-switch state,
+  audit-visible events, and tests.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`

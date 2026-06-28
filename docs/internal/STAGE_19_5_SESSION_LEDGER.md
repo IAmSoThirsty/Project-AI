@@ -9,7 +9,9 @@
 **Current continuation:** J2.4.0a, J2.4.0b, and J2.4.0c implementation
 commits pushed; J2.4.0c implementation CI green through run `28326886242`
 and docs evidence CI green through run `28326958228`. J2.5 implementation
-commit pushed; implementation CI green through run `28330827940`.
+commit pushed; implementation CI green through run `28330827940`, and J2.5
+docs evidence CI green through run `28330896816`. J2.6 failure surveillance
+is locally implemented pending final repo gates.
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -26,8 +28,8 @@ This ledger accompanies the work submission. It documents:
 - All commits made this session (24)
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
-- Known gaps remaining (4 full gaps after J2.5 local closure)
-- Next session entry point (Phase J2.6 — failure surveillance)
+- Known gaps remaining (3 full gaps after J2.6 local closure)
+- Next session entry point (Phase J2.7 — sandbox)
 
 ---
 
@@ -51,7 +53,8 @@ This ledger accompanies the work submission. It documents:
 | J2.2 — audit trail | ✓ | `8229a2b`, `df2b1da`, `dd60397` |
 | J2.3 — Bayesian inference | ✓ | `05a894f` |
 | J2.4 — graph construction | ✓ closed | `e439897`, `7cc5ae7e`, `54db11c3`, `876ba130`, `0e600f90` |
-| J2.5 — constitutional kernel | ✓ locally closed | this session |
+| J2.5 — constitutional kernel | ✓ closed | `a87c5594`, `8b94bf5d` |
+| J2.6 — failure surveillance | ✓ locally closed | this session |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -98,7 +101,8 @@ This ledger accompanies the work submission. It documents:
 | After Phase J2.4.0b | 1391 | +24 |
 | After Phase J2.4.0c | 1406 | +15 |
 | After Phase J2.5 | 1420 | +14 |
-| **CURRENT** | **1420** | **+903 from baseline** |
+| After Phase J2.6 | 1441 | +21 |
+| **CURRENT** | **1441** | **+924 from baseline** |
 
 ---
 
@@ -149,7 +153,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 | 1. Bayesian inference | ✓ CLOSED | J2.3 |
 | 2. Graph construction | ✓ CLOSED LOCALLY | J2.4 |
 | 3. Constitutional kernel | ✓ CLOSED LOCALLY | J2.5 |
-| 5. Failure surveillance | open | J2.6 |
+| 5. Failure surveillance | ✓ CLOSED LOCALLY | J2.6 |
 | 6. Sandbox | open | J2.7 |
 | 7. CLI / API surface | open | J2.8 |
 | 8. Replay system | open | J2.9 |
@@ -200,14 +204,16 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 
 ## 9. Next session entry point
 
-**Phase J2.6 — Failure surveillance**
+**Phase J2.7 — Sandbox**
 
 Recently closed:
 
 - J2.4 graph construction is closed across all 3 waves.
-- J2.5 constitutional kernel integration is locally closed.
+- J2.5 constitutional kernel integration is closed with implementation and docs
+  CI evidence.
+- J2.6 failure surveillance is locally implemented.
 
-**Awaiting next action:** J2.6 failure surveillance, unless the user pivots.
+**Awaiting next action:** J2.7 sandbox, unless the user pivots.
 
 ---
 

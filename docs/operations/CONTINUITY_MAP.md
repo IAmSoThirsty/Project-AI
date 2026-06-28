@@ -1544,6 +1544,78 @@ Yes. Current executable path is to commit/push this docs-only CI evidence update
 and watch its CI run.
 
 
+## Session Update — Phase J2.6 Atlas failure surveillance (2026-06-28)
+
+### Scope
+- Mode: module patch / Atlas feature port.
+- Branch: `main`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.6 failure surveillance.
+
+### Problems fixed now
+- The preserved legacy surveillance code existed only under
+  `packages/_staging/atlas/analysis/failure_surveillance.py`; canonical Atlas
+  had no failure-surveillance module or public exports.
+- Canonical Atlas now has `FailureSurveillanceSystem` with anomaly records,
+  health summaries, local abort-condition reporting, local kill-switch state,
+  and optional `AuditTrail` emission.
+- The J2.5 docs evidence commit was verified before this work started:
+  GitHub Actions CI run `28330896816` completed successfully for commit
+  `8b94bf5db24be072e6dacf2998c3d7f63b17feba`.
+
+### Files materially changed
+- `packages/atlas/src/atlas/failure_surveillance.py`
+- `packages/atlas/src/atlas/__init__.py`
+- `packages/atlas/tests/test_failure_surveillance.py`
+- `docs/internal/STAGE_19_5J2_6_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `packages/atlas/README.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- Red test before source implementation:
+  `uv run python -m pytest packages/atlas/tests/test_failure_surveillance.py -q`
+  — failed at collection because `Anomaly` was not exported from `atlas`.
+- Targeted failure-surveillance tests after implementation:
+  `uv run python -m pytest packages/atlas/tests/test_failure_surveillance.py -q`
+  — 21 passed.
+- Targeted strict typing:
+  `uv run mypy packages/atlas/src/atlas/failure_surveillance.py packages/atlas/tests/test_failure_surveillance.py --strict`
+  — clean on 2 source files.
+- Atlas package scope:
+  `uv run python -m pytest packages/atlas/tests/test_failure_surveillance.py packages/atlas/tests -q`
+  — 349 passed.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 183 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 91 source files.
+- Full pytest:
+  `uv run python -m pytest -q --tb=short` — 1441 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run python -m pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1441 passed, 89.57% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+
+### Existing issues / not verified
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 89.57%
+  branch coverage against an 80% threshold.
+- This local kill-switch is not wired to external actuation. Classification:
+  not blocking current task; the acceptance record labels it as local
+  surveillance state only.
+
+### Safe to continue
+Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
+
+
 ## Session Update — Phase J2.4.0b Atlas driver engine 10D (2026-06-28)
 
 ### Scope

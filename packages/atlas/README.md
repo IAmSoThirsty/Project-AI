@@ -7,6 +7,7 @@ cannot issue capabilities, make governance decisions, or actuate a recommendatio
 
 Current canonical analysis surfaces include evidence-weighted projections, sensitivity analysis,
 hash-chained audit trails, Bayesian inference, deterministic influence-graph construction,
-10-dimensional driver normalization/analysis, and temporal graph snapshot/evolution tracking. Graph,
-driver, and temporal analysis remain analytical evidence only; hashes bind the subordination notice
-and optional audit trails record construction/analysis without granting authority.
+10-dimensional driver normalization/analysis, temporal graph snapshot/evolution tracking, and
+failure-surveillance anomaly detection. Graph, driver, temporal, and surveillance analysis remain
+analytical evidence only; hashes and records bind the subordination notice, and optional audit trails
+record construction/analysis/anomaly evidence without granting authority.
