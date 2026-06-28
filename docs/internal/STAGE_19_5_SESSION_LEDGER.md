@@ -6,8 +6,8 @@
 **Branch:** main
 **Original submission HEAD:** e439897
 **Original submission commits:** 24 (all pushed to origin/main)
-**Current continuation:** J2.4.0a and J2.4.0b pushed; J2.4.0c locally
-accepted before commit/push.
+**Current continuation:** J2.4.0a, J2.4.0b, and J2.4.0c implementation
+commits pushed; implementation CI green through run `28326886242`.
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -229,8 +229,8 @@ J2.4 graph construction is locally closed across all 3 waves:
 **Repository**: `T:\Project-AI-Beginnings`
 **Branch**: `main`
 **Remote**: `https://github.com/IAmSoThirsty/Project-AI.git`
-**Status**: Original 24-commit submission pushed; current J2.4.0c work locally
-accepted before commit/push
+**Status**: Original 24-commit submission pushed; current J2.4.0c
+implementation commit pushed and CI green in run `28326886242`
 **Verification**: Current local gates green for J2.4.0c, 1406/1406 tests passing
 
 ### How to verify locally
