@@ -11,7 +11,7 @@ commits pushed; J2.4.0c implementation CI green through run `28326886242`
 and docs evidence CI green through run `28326958228`. J2.5 implementation
 commit pushed; implementation CI green through run `28330827940`, and J2.5
 docs evidence CI green through run `28330896816`. J2.6 failure surveillance
-is locally implemented pending final repo gates.
+implementation CI green through run `28331195681`.
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -54,7 +54,7 @@ This ledger accompanies the work submission. It documents:
 | J2.3 — Bayesian inference | ✓ | `05a894f` |
 | J2.4 — graph construction | ✓ closed | `e439897`, `7cc5ae7e`, `54db11c3`, `876ba130`, `0e600f90` |
 | J2.5 — constitutional kernel | ✓ closed | `a87c5594`, `8b94bf5d` |
-| J2.6 — failure surveillance | ✓ locally closed | this session |
+| J2.6 — failure surveillance | ✓ closed | `441bf02b` |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -211,7 +211,8 @@ Recently closed:
 - J2.4 graph construction is closed across all 3 waves.
 - J2.5 constitutional kernel integration is closed with implementation and docs
   CI evidence.
-- J2.6 failure surveillance is locally implemented.
+- J2.6 failure surveillance implementation is CI green through run
+  `28331195681`.
 
 **Awaiting next action:** J2.7 sandbox, unless the user pivots.
 

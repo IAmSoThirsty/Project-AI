@@ -100,6 +100,15 @@ Coverage emitted the existing warning that `arbiter_gov` was not imported.
 Classification: not blocking current task; the coverage command exited 0 and
 remained above threshold.
 
+Remote CI after commit/push:
+
+```text
+GitHub Actions CI run 28331195681
+Commit: 441bf02bf5c9f28cec34237a650423b67362b8a6
+Conclusion: success
+URL: https://github.com/IAmSoThirsty/Project-AI/actions/runs/28331195681
+```
+
 ---
 
 ## 3. Architectural invariants verified
@@ -123,7 +132,7 @@ remained above threshold.
 
 ## 4. Remaining J2 work
 
-- J2.6 failure surveillance is locally closed.
+- J2.6 failure surveillance is closed with implementation CI evidence.
 - The next open J1 audit gap after J2.6 is J2.7 sandbox, unless the user pivots.
 
 Safe to continue: yes.
