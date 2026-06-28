@@ -1207,16 +1207,18 @@ Yes. Current executable path is clear; remote CI is green at commit `c831f192`.
 - GitHub Actions CI run `28308731971` on commit `b07bf4e1` passed all jobs,
   but then surfaced remaining Node.js 20 deprecation annotations for
   `pnpm/action-setup`, `actions/setup-node`, `actions/setup-java`, and
-  `android-actions/setup-android`. These four pins are now updated locally and
-  require a follow-up push/CI run.
+  `android-actions/setup-android`.
+- GitHub Actions CI run `28308790519` on commit `d4b5c600` passed all jobs:
+  Android, Node, Kubernetes, Python, Rust, Compose, Desktop, and SBOM.
+- Run `28308790519` had no annotations section in `gh run view`, confirming the
+  Node.js 20 deprecation annotations were cleared.
 
 ### Existing issues / not verified
 - GitHub Actions run `28308689553` reported one non-blocking cache annotation:
   `Failed to save: Unable to reserve cache ... another job may be creating this
   cache.` Classification: not blocking current task; CI passed.
-- Remote GitHub Actions is not verified for the second-wave action pin updates
-  until this local change is committed, pushed, and CI completes.
+- None for the action pin update. The prior cache-reservation annotation did
+  not recur in run `28308790519`.
 
 ### Safe to continue
-Yes. Next executable path: commit, push, and watch the new CI run for job
-success and absence of Node.js 20 deprecation annotations.
+Yes. Current executable path is clear; remote CI is green at commit `d4b5c600`.
