@@ -1158,3 +1158,48 @@ AgencyPenalty = 0.5 if AGENCY without A/B evidence else 1.0
 
 ### Safe to continue
 Yes. Current executable path is clear; remote CI is green at commit `c831f192`.
+
+
+## Session Update — GitHub Actions Node 20 deprecation cleanup (2026-06-27)
+
+### Scope
+- Mode: repo patch / CI maintenance.
+- Branch: `main`.
+- Starting HEAD: `ae301361`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+
+### Problems fixed now
+- GitHub Actions run annotations reported Node.js 20 deprecation for pinned
+  actions used by CI. The workflow now pins the affected actions to current
+  Node 24 action metadata:
+  - `actions/checkout` -> `v7`
+    (`9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0`)
+  - `actions/cache` -> `v6.1.0`
+    (`55cc8345863c7cc4c66a329aec7e433d2d1c52a9`)
+  - `actions/upload-artifact` -> `v7.0.1`
+    (`043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`)
+  - `astral-sh/setup-uv` -> `v8.2.0`
+    (`fac544c07dec837d0ccb6301d7b5580bf5edae39`)
+  - `azure/setup-helm` -> `v5.0.1`
+    (`9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310`)
+
+### Files materially changed
+- `.github/workflows/ci.yaml`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- `git ls-remote --tags` was used against the affected action repositories to
+  resolve current tags and SHAs.
+- Remote `action.yml` metadata for each selected SHA was checked and reported
+  `runs.using` as `node24`.
+- `uv run pre-commit run check-yaml --files .github/workflows/ci.yaml` —
+  passed.
+
+### Existing issues / not verified
+- Remote GitHub Actions is not verified for this pin update until the change is
+  committed, pushed, and CI completes. Classification: not blocking local
+  workflow validation; requires post-push CI check.
+
+### Safe to continue
+Yes. Next executable path: commit, push, and watch the new CI run for both job
+success and absence of the prior Node 20 deprecation annotations.
