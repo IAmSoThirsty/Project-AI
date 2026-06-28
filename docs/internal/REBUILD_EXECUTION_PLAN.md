@@ -2,7 +2,8 @@
 
 **Status:** LOCAL ACCEPTANCE COMPLETE; DEVELOPMENT CHECKPOINT IN PROGRESS
 **Canonical repository:** `T:\Project-AI-Beginnings`
-**Working branch:** `codex/rebuild-continuation`
+**Working branch:** `main` (current development checkpoint; previous rebuild
+work landed from `codex/rebuild-continuation`)
 **Legacy source:** `T:\Project-AI-main` (read-only input by policy)
 **Python:** 3.12.10
 **Package manager:** uv

@@ -1222,3 +1222,59 @@ Yes. Current executable path is clear; remote CI is green at commit `c831f192`.
 
 ### Safe to continue
 Yes. Current executable path is clear; remote CI is green at commit `d4b5c600`.
+
+
+## Session Update — Release/readiness documentation truth pass (2026-06-27)
+
+### Scope
+- Mode: repo patch / documentation and evidence maintenance.
+- Branch: `main`.
+- Starting HEAD: `25c3237b`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Boundary: no version bump, version tag, GitHub Release, package publication,
+  image publication, deployment, or production-readiness claim.
+
+### Problems fixed now
+- Root `README.md` still described the early Stage -1.5 / Stage -1 bootstrap
+  state and old quick-start commands instead of the current development
+  checkpoint.
+- Root `CHANGELOG.md` only listed early bootstrap items and did not record the
+  development CI repair or Node 24 action-pin maintenance.
+- `docs/internal/REBUILD_EXECUTION_PLAN.md` still named
+  `codex/rebuild-continuation` as the working branch after work had landed on
+  `main`.
+- `docs/internal/STAGE_18_ACCEPTANCE.md` still reported the historical GitHub
+  billing lock as the current remote-CI state, even though later CI runs passed.
+
+### Files materially changed
+- `README.md`
+- `CHANGELOG.md`
+- `docs/internal/REBUILD_EXECUTION_PLAN.md`
+- `docs/internal/STAGE_18_ACCEPTANCE.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- `git status --short --branch` before edits — clean and in sync with
+  `origin/main`.
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"` — local workspace date confirmed
+  as `2026-06-27`.
+- `rg --files` and targeted `Get-Content` reads inspected root docs, manifests,
+  active execution ledger, Stage 18 evidence, and continuity state.
+- `git diff --check` — passed after edits.
+- Targeted stale-claim scan over `README.md`, `CHANGELOG.md`,
+  `docs/internal/REBUILD_EXECUTION_PLAN.md`,
+  `docs/internal/STAGE_18_ACCEPTANCE.md`, and this continuity map — no stale
+  README/bootstrap status, stale working-branch field, or current remote-CI
+  billing-lock claim remained. The historical billing-lock quote remains only
+  under `Historical remote blocker`.
+
+### Existing issues / not verified
+- This is a documentation truth pass. No runtime code, workflow YAML, package
+  manifest, release artifact, deployment artifact, or tag was modified.
+- Full acceptance gates were not rerun for this docs-only patch. Classification:
+  not blocking current task; remote CI run `28308833729` is the current full
+  workflow evidence before this patch.
+
+### Safe to continue
+Yes. Current executable path is to run docs/diff validation, commit, push, and
+watch CI for the documentation-only checkpoint.

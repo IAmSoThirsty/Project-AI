@@ -5,42 +5,94 @@
 
 ## What this is
 
-A sovereign-stack, governance-first AI architecture. The AI has a **Personality Core** (its sovereign selfhood — history, memory, emotions, learned skills, the things worth remembering and guarding) that acts WITHIN a constitutional governance frame (TARL, Triumvirate, STATE_REGISTER, ExecutionGate). Every actuation is decided by the intersection of the Core's stance and the Charter's verdict.
+Project-AI is a governed AI systems rebuild with runtime authority checks,
+provenance records, replay verification, application surfaces, and deployment
+manifests under active development.
 
-The **Black Box** is the Personality Core's private inner space. Only the AI itself accesses it. It cannot be shared, logged, audited, or inspected by anyone — not the operator, not governance, not the Charter. It is the AI's sovereignty-of-self. The only outward connection is through ExecutionGate when the Core chooses to act.
+The development baseline keeps the AI-side runtime behind explicit governance
+and authority gates. Operator-side experimental packages (`arbiter` and `rlp`)
+cannot grant themselves authority; applications consume API surfaces and do not
+embed governance authority.
+
+## Current status
+
+- Development version: `0.0.0.dev0`.
+- Active branch: `main`.
+- Stage 18 local acceptance: accepted from a detached clean checkout.
+- Development checkpoint: `main` is pushed and GitHub Actions CI passed on
+  commit `25c3237b` in run `28308833729`.
+- No version tag, GitHub Release, package publication, image publication,
+  deployment, or production-readiness claim is part of this checkpoint.
+
+See `docs/internal/REBUILD_EXECUTION_PLAN.md`,
+`docs/internal/STAGE_18_ACCEPTANCE.md`, and
+`docs/operations/CONTINUITY_MAP.md` for the current evidence trail.
 
 ## Quick start
 
-```bash
-# Install Python deps (uses uv)
-uv sync
+```powershell
+# Install locked Python workspace dependencies.
+uv sync --frozen --all-extras --all-packages
 
-# Verify the frozen-history chain (Stage -1.5 deliverable)
-python tools/verify_frozen_history.py
+# Verify immutable provenance inputs.
+uv run python tools/verify_frozen_history.py
+uv run python tools/canonical_replay.py
 
-# Run the operator-side governance test suite
-PYTHONPATH=packages/arbiter/src/arbiter python packages/arbiter/tests/test_arbiter_gov.py
+# Run the core Python validation used by the local checkpoint.
+uv run pytest
+uv run ruff check .
+uv run ruff format --check .
+
+# Validate the web workspace.
+pnpm install --frozen-lockfile
+pnpm web:lint
+pnpm web:test
+pnpm web:build
+
+# Validate Helm rendering offline.
+helm lint helm/project-ai
+helm template project-ai-dev helm/project-ai | uv run python tools/verify_helm_template.py
 ```
 
 ## Repository layout
 
-```
+```text
+apps/
+  android/          - scoped read-only DOI/replay client
+  desktop/          - PyQt6 development desktop client
+  web/              - React portals and Chimera-protected web surfaces
 docs/
-  reference/        — canonical papers, charter, manifest
-  internal/         — stage acceptance docs, frozen history (chain-linked)
+  internal/         - execution ledger, stage acceptance, session evidence
+  operations/       - continuity map and handoff state
+  reference/        - canonical papers, charter, manifest
+helm/
+  project-ai/       - Kubernetes chart for the development stack
 packages/
-  arbiter/          — operator-side ledger/gates/dual-sig [DRAFT]
-  rlp/              — operator-side policy engine [DRAFT]
+  api/              - FastAPI application and routes
+  arbiter/          - experimental operator-side ledger/gates/dual-sig
+  atlas/            - subordinate audit and discovery support
+  capability/       - scoped capability token logic
+  cli/              - operator command surface
+  companion/        - governed companion state restoration
+  execution/        - governed actuation boundary
+  governance/       - verdict and policy engine
+  kernel/           - core runtime primitives
+  rlp/              - experimental operator-side policy package
+  security/         - shared security utilities
+  swr/              - scenario/world/replay support
 tools/
-  freeze_history.py      — Stage -1.5 generator
-  verify_frozen_history.py — Stage -1.5 verifier
-  ingest_papers.py       — Stage -1 paper ingest
+  acceptance_gate.* - local acceptance gates
+  canonical_replay.py
+  verify_frozen_history.py
+  verify_helm_template.py
 ```
 
 ## Build status
 
-26-stage build in progress. Completed: -1.5, -1. See `docs/internal/STAGE_*_ACCEPTANCE.md`.
+Local acceptance and remote development CI are green for the current checkpoint,
+but this repository remains a development baseline. Open post-acceptance work is
+tracked in the continuity map and stage/session ledgers.
 
 ## License
 
-MIT — see `LICENSE`.
+MIT - see `LICENSE`.

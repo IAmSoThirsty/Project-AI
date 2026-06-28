@@ -85,17 +85,26 @@ Both complete gates then passed from the detached `baa98e2` worktree.
 
 - Local `main` fast-forward: completed at `5d084d0`.
 - Existing GitHub remote configuration and `main` push: completed.
-- Observed remote CI result: blocked before runner allocation.
+- Observed remote CI result: passed after the account-level billing lock was
+  resolved and repo CI issues were repaired.
 
+Historical remote blocker:
 The first remote CI run (`27930039261`) and the full-SHA-pinned replacement run
 (`27930112736`) both report the same check annotation: `The job was not started
 because your account is locked due to a billing issue.` No workflow step ran.
-This is an external GitHub account boundary; remote CI cannot be confirmed
-passing until the account lock is resolved and the workflow is rerun.
+This was an external GitHub account boundary at the time of the first push.
 
 Repository policy also requires full-SHA action pins. Commit `7903d1e` pins
 every action reference to the upstream commit behind its documented major
-version, independently of the billing blocker.
+version, independently of the historical billing blocker.
+
+Current remote evidence:
+- GitHub Actions CI run `28299731926` passed all jobs on commit `c831f192`
+  after CI repair work.
+- GitHub Actions CI run `28308833729` passed all jobs on commit `25c3237b`
+  after the Node 24 action-pin maintenance. `gh run view 28308833729` reported
+  no annotations section, confirming the prior Node.js 20 deprecation warnings
+  were cleared.
 
 No tag, release, package publication, image publication, or deployment is part
 of this checkpoint.
