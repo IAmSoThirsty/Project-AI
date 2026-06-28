@@ -1,6 +1,6 @@
 # Phase J2.4 Discovery — atlas graph construction (driver_engine_10d + graph builder + temporal graph)
 
-**Status:** DISCOVERY + PLAN (no source code written yet)
+**Status:** DISCOVERY + PLAN; Wave 1 graph-builder port implemented 2026-06-28
 **Authority:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` Phase J, J1 audit
 **Date:** 2026-06-25
 **Author:** Hermes (Quencher session)
@@ -197,14 +197,15 @@ Given the **1857 LOC scope**, this is larger than J2.1 (895 LOC) or J2.3 (660 LO
 
 ## 6. Honest disclosure
 
-This is **discovery only**. NO source code has been written yet. Per
-Thirstys standards + the established J2.1/J2.2/J2.3 pattern, source code
-requires explicit "go J2.4.0a" authorization before I write anything.
+This file began as discovery only. Wave 1 was implemented on 2026-06-28 after
+the user instructed the agent to start the next logical work item via
+"whats up next?". See `docs/internal/STAGE_19_5J2_4_0A_ACCEPTANCE.md` for the
+implemented graph-builder evidence.
 
 The full legacy code (1857 LOC across 3 files) has been analyzed. The
-port will be ~1800 LOC across 3 new modules (slight reduction by
-stripping legacy's `ConfigLoader`/`SchemaValidator` deps which are
-legacy-only concepts not relevant to canonical atlas).
+remaining port work is the driver engine and temporal graph modules. The port
+strips legacy's `ConfigLoader`/`SchemaValidator` deps because those are
+legacy-only concepts not relevant to canonical atlas.
 
 ---
 

@@ -22,8 +22,8 @@ This ledger accompanies the work submission. It documents:
 - All commits made this session (24)
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
-- Known gaps remaining (6 of 9 J1 audit gaps still open)
-- Next session entry point (Phase J2.4.0a — graph builder Wave 1)
+- Known gaps remaining (5 full gaps plus remaining J2.4 waves still open)
+- Next session entry point (Phase J2.4.0b — driver engine Wave 2)
 
 ---
 
@@ -46,7 +46,7 @@ This ledger accompanies the work submission. It documents:
 | J2.1 — sensitivity port | ✓ | `f00e8f7` |
 | J2.2 — audit trail | ✓ | `8229a2b`, `df2b1da`, `dd60397` |
 | J2.3 — Bayesian inference | ✓ | `05a894f` |
-| J2.4 — graph construction | discovery only | `e439897` |
+| J2.4 — graph construction | Wave 1 graph builder complete; Waves 2-3 open | `e439897`, this session |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -89,7 +89,8 @@ This ledger accompanies the work submission. It documents:
 | After Phase J2.1 | 1116 | +105 |
 | After Phase J2.2 | 1224 | +108 |
 | After Phase J2.3 | 1340 | +116 |
-| **CURRENT** | **1340** | **+823 from baseline** |
+| After Phase J2.4.0a | 1367 | +27 |
+| **CURRENT** | **1367** | **+850 from baseline** |
 
 ---
 
@@ -97,20 +98,20 @@ This ledger accompanies the work submission. It documents:
 
 ```
 === PYTEST ===
-1340 passed in 3.28s
+1367 passed in 4.11s
 
-=== MYPY --strict ===
-Success: no issues found in 127 source files
+=== MYPY --ignore-missing-imports over CI source dirs ===
+Success: no issues found in 87 source files
 
 === RUFF CHECK ===
 All checks passed!
 
 === RUFF FORMAT --check ===
-127 files already formatted
+172 files already formatted
 
 === GIT ===
-Working tree: clean
-Local/origin: in sync (0 ahead, 0 behind)
+Working tree: dirty during current J2.4.0a session before commit
+Local/origin: commit pending
 ```
 
 ---
@@ -138,7 +139,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 | 4. Sensitivity analysis | ✓ CLOSED | J2.1 |
 | 9. Audit trail | ✓ CLOSED | J2.2 |
 | 1. Bayesian inference | ✓ CLOSED | J2.3 |
-| 2. Graph construction | discovery-only | J2.4 |
+| 2. Graph construction | Wave 1 closed; driver/temporal waves open | J2.4 |
 | 3. Constitutional kernel | open | J2.5 |
 | 5. Failure surveillance | open | J2.6 |
 | 6. Sandbox | open | J2.7 |
@@ -194,14 +195,14 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 **Phase J2.4 — Graph construction (3 waves)**
 
 - **Discovery committed**: `e439897`
-- **Skill created**: `atlas-feature-port` (workflow captured for repeatable execution)
-- **Awaiting authorization**: "go J2.4.0a" to start Wave 1 (graph builder port)
+- **Wave 1 implemented**: graph builder port (this session)
+- **Awaiting next action**: J2.4.0b driver engine 10D, unless the user pivots
 
-### Wave 1 — graph builder (~700 LOC source + ~38 tests)
+### Wave 1 — graph builder
 - `packages/atlas/src/atlas/graph.py` — GraphBuilder + InfluenceGraph + metrics
-- `packages/atlas/tests/test_graph.py` — ~30 unit tests
-- `tests/test_atlas_graph_integration.py` — ~8 integration tests
-- Acceptance doc + commit `feat(stage-19.5J2.4.0a): atlas graph builder`
+- `packages/atlas/tests/test_graph.py` — unit tests
+- `tests/test_atlas_graph_integration.py` — integration tests
+- Acceptance doc: `docs/internal/STAGE_19_5J2_4_0A_ACCEPTANCE.md`
 
 ### Wave 2 — driver engine 10D (~500 LOC + ~31 tests)
 ### Wave 3 — temporal graph (~600 LOC + ~31 tests)
@@ -232,8 +233,8 @@ uv run ruff format --check packages/  # 127 files formatted
 # Read next session entry point
 cat docs/internal/STAGE_19_5J2_4_DISCOVERY.md
 
-# Authorize Wave 1
-# Tell Hermes: "go J2.4.0a"
+# Continue Wave 2
+# Tell the agent: "whats up next?" or "go J2.4.0b"
 ```
 
 ---

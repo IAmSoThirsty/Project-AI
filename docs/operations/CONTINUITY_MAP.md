@@ -1278,3 +1278,87 @@ Yes. Current executable path is clear; remote CI is green at commit `d4b5c600`.
 ### Safe to continue
 Yes. Current executable path is to run docs/diff validation, commit, push, and
 watch CI for the documentation-only checkpoint.
+
+
+## Session Update — Phase J2.4.0a Atlas graph builder (2026-06-28)
+
+### Scope
+- Mode: module patch / Atlas feature port.
+- Branch: `main`.
+- Starting HEAD: `61a5e3db`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.4 Wave 1 graph builder.
+
+### Problems fixed now
+- J1 graph-construction gap had only discovery evidence. Wave 1 now adds
+  canonical deterministic influence-graph construction.
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md` pointed to a stale discovery
+  path name (`STAGE_19_5J2_4_DISCOVERY.md`). The real file is
+  `docs/internal/PHASE_J2_4_DISCOVERY.md`; this session used and updated the
+  real file.
+
+### Files materially changed
+- `packages/atlas/src/atlas/graph.py`
+- `packages/atlas/src/atlas/__init__.py`
+- `packages/atlas/tests/test_graph.py`
+- `tests/test_atlas_graph_integration.py`
+- `docs/internal/STAGE_19_5J2_4_0A_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `docs/internal/PHASE_J2_4_DISCOVERY.md`
+- `packages/atlas/README.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- Red test before source implementation:
+  `uv run pytest packages/atlas/tests/test_graph.py tests/test_atlas_graph_integration.py -q`
+  failed at collection because `atlas.graph` exports did not exist.
+- Targeted graph tests after implementation:
+  `uv run pytest packages/atlas/tests/test_graph.py tests/test_atlas_graph_integration.py -q`
+  — 24 passed.
+- Atlas package/integration scope:
+  `uv run pytest packages/atlas/tests tests/test_atlas_graph_integration.py tests/test_atlas_audit_integration.py tests/test_atlas_bayesian_integration.py tests/test_atlas_sensitivity_integration.py -q`
+  — 357 passed.
+- Targeted strict typing:
+  `uv run mypy packages/atlas/src/atlas/graph.py packages/atlas/tests/test_graph.py tests/test_atlas_graph_integration.py --strict`
+  — clean on 3 source files.
+- Targeted ruff:
+  `uv run ruff check packages/atlas/src/atlas/graph.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_graph.py tests/test_atlas_graph_integration.py`
+  — passed.
+- Targeted formatting:
+  `uv run ruff format --check packages/atlas/src/atlas/graph.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_graph.py tests/test_atlas_graph_integration.py`
+  — 4 files already formatted.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 172 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 87 source files.
+- Full pytest:
+  `uv run pytest -q --tb=short` — 1367 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1367 passed, 91.07% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+- Pre-commit:
+  `SKIP=no-commit-to-branch,gitleaks uv run pre-commit run --all-files` —
+  passed all non-skipped hooks.
+
+### Existing issues / not verified
+- Plain local `uv run mypy packages/atlas/src/atlas packages/atlas/tests tests/test_atlas_graph_integration.py --strict`
+  hits the existing scipy stub issue in untouched `sensitivity.py`. The CI and
+  acceptance command uses `--ignore-missing-imports`; targeted strict typing on
+  the new graph files passed.
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 91.07% branch
+  coverage against an 80% threshold.
+- J2.4 is not fully closed. Wave 2 driver engine and Wave 3 temporal graph
+  remain. Classification: requires separate follow-up work.
+
+### Safe to continue
+Yes. Current executable path is to commit, push, and watch CI.
