@@ -1182,6 +1182,14 @@ Yes. Current executable path is clear; remote CI is green at commit `c831f192`.
     (`fac544c07dec837d0ccb6301d7b5580bf5edae39`)
   - `azure/setup-helm` -> `v5.0.1`
     (`9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310`)
+  - `pnpm/action-setup` -> `v6.0.9`
+    (`0ebf47130e4866e96fce0953f49152a61190b271`)
+  - `actions/setup-node` -> `v6.4.0`
+    (`48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e`)
+  - `actions/setup-java` -> `v5.4.0`
+    (`1bcf9fb12cf4aa7d266a90ae39939e61372fe520`)
+  - `android-actions/setup-android` -> `v4.0.1`
+    (`40fd30fb8d7440372e1316f5d1809ec01dcd3699`)
 
 ### Files materially changed
 - `.github/workflows/ci.yaml`
@@ -1196,13 +1204,19 @@ Yes. Current executable path is clear; remote CI is green at commit `c831f192`.
   passed.
 - GitHub Actions CI run `28308689553` on commit `20b66421` passed all jobs:
   Android, Node, Kubernetes, Python, Rust, Compose, Desktop, and SBOM.
-- The prior Node.js 20 deprecation annotations were not present in run
-  `28308689553`.
+- GitHub Actions CI run `28308731971` on commit `b07bf4e1` passed all jobs,
+  but then surfaced remaining Node.js 20 deprecation annotations for
+  `pnpm/action-setup`, `actions/setup-node`, `actions/setup-java`, and
+  `android-actions/setup-android`. These four pins are now updated locally and
+  require a follow-up push/CI run.
 
 ### Existing issues / not verified
 - GitHub Actions run `28308689553` reported one non-blocking cache annotation:
   `Failed to save: Unable to reserve cache ... another job may be creating this
   cache.` Classification: not blocking current task; CI passed.
+- Remote GitHub Actions is not verified for the second-wave action pin updates
+  until this local change is committed, pushed, and CI completes.
 
 ### Safe to continue
-Yes. Current executable path is clear; remote CI is green at commit `20b66421`.
+Yes. Next executable path: commit, push, and watch the new CI run for job
+success and absence of Node.js 20 deprecation annotations.
