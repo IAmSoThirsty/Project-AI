@@ -8,8 +8,8 @@
 **Original submission commits:** 24 (all pushed to origin/main)
 **Current continuation:** J2.4.0a, J2.4.0b, and J2.4.0c implementation
 commits pushed; J2.4.0c implementation CI green through run `28326886242`
-and docs evidence CI green through run `28326958228`. J2.5 is locally
-accepted before commit/push.
+and docs evidence CI green through run `28326958228`. J2.5 implementation
+commit pushed; implementation CI green through run `28330827940`.
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -219,7 +219,7 @@ Recently closed:
 **Branch**: `main`
 **Remote**: `https://github.com/IAmSoThirsty/Project-AI.git`
 **Status**: Original 24-commit submission pushed; J2.4.0c commits pushed and
-CI green; J2.5 locally accepted before commit/push
+CI green; J2.5 implementation commit pushed and CI green in run `28330827940`
 **Verification**: Current local gates green for J2.5, 1420/1420 tests passing
 
 ### How to verify locally

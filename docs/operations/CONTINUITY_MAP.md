@@ -1529,13 +1529,19 @@ and watch its CI run.
 - Coverage emitted the existing warning that `arbiter_gov` was not imported.
   Classification: not blocking current task; coverage exited 0 at 89.92%
   branch coverage against an 80% threshold.
-- Pre-commit has not yet been run after docs were updated. Classification:
-  not blocking current task yet; run before commit.
-- Remote CI has not yet been run for this J2.5 commit. Classification: not
-  verified until after commit and push.
+- Local pre-commit was run after docs were updated:
+  `SKIP=no-commit-to-branch,gitleaks uv run pre-commit run --all-files` —
+  passed all non-skipped hooks.
+- Implementation commit `a87c5594ce767ffb6ca49e71d6bde4d60c2dc0f8` was pushed
+  to `origin/main` and GitHub Actions CI run `28330827940` completed with
+  conclusion `success`.
+- This follow-up evidence update is docs-only. Its own CI run must still be
+  verified after the docs evidence commit is pushed. Classification: not
+  blocking source implementation; verify before final handoff.
 
 ### Safe to continue
-Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
+Yes. Current executable path is to commit/push this docs-only CI evidence update
+and watch its CI run.
 
 
 ## Session Update — Phase J2.4.0b Atlas driver engine 10D (2026-06-28)
