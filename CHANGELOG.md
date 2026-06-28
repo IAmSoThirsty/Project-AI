@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Atlas J2.4.0b driver-engine wave: 10-dimensional normalization, derived
   metrics, PCA, correlations, sensitivities, analysis hashes, audit events,
   and tests.
+- Atlas J2.4.0c temporal-graph wave: source-backed temporal nodes and edges,
+  deterministic snapshots, Merkle-style chain verification, adjacency matrices,
+  change detection, evolution tracking, audit events, and tests.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`

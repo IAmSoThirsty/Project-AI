@@ -1,6 +1,6 @@
 # Phase J2.4 Discovery — atlas graph construction (driver_engine_10d + graph builder + temporal graph)
 
-**Status:** DISCOVERY + PLAN; Waves 1-2 implemented 2026-06-28
+**Status:** LOCALLY COMPLETE; Waves 1-3 implemented 2026-06-28
 **Authority:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` Phase J, J1 audit
 **Date:** 2026-06-25
 **Author:** Hermes (Quencher session)
@@ -9,18 +9,17 @@
 
 ## 0. Context
 
-The J1 audit identified 9 feature gaps in canonical atlas. **3 of 9 closed**:
+The J1 audit identified 9 feature gaps in canonical atlas. **4 of 9 closed**:
 - J2.1: Sensitivity analysis ✅
 - J2.2: Audit trail ✅
 - J2.3: Bayesian inference ✅
 
-**6 gaps remain**:
-1. Graph construction (driver_engine_10d + graph builder + temporal graph) — **THIS PHASE**
-2. Constitutional kernel integration
-3. Failure surveillance
-4. Sandbox (sludge_sandbox)
-5. CLI / API surface
-6. Replay system
+**5 gaps remain after this phase**:
+1. Constitutional kernel integration
+2. Failure surveillance
+3. Sandbox (sludge_sandbox)
+4. CLI / API surface
+5. Replay system
 
 J2.4 = Graph construction port. Path A1 per established pattern:
 faithful port of legacy code with numpy (already a dep), no shortcuts.
@@ -205,8 +204,11 @@ implemented graph-builder evidence.
 Wave 2 was implemented on 2026-06-28 as the canonical driver-engine 10D port.
 See `docs/internal/STAGE_19_5J2_4_0B_ACCEPTANCE.md`.
 
-The full legacy code (1857 LOC across 3 files) has been analyzed. The
-remaining port work is the temporal graph module. The port strips legacy's
+Wave 3 was implemented on 2026-06-28 as the canonical temporal-graph port.
+See `docs/internal/STAGE_19_5J2_4_0C_ACCEPTANCE.md`.
+
+The full legacy code (1857 LOC across 3 files) has been analyzed and the
+canonical graph-construction phase is locally closed. The port strips legacy's
 `ConfigLoader`/`SchemaValidator` deps because those are legacy-only concepts
 not relevant to canonical atlas.
 
@@ -239,5 +241,5 @@ Or stop here and tackle something different entirely.
 
 ## 9. Recommendation
 
-Proceed with J2.4.0c (Wave 3: temporal graph) next to close the remaining
-graph-construction wave, unless the user pivots to another open J2 gap.
+Proceed with the next open J1 audit gap, J2.5 constitutional kernel
+integration, unless the user pivots to another open J2 gap.

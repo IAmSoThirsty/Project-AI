@@ -4,8 +4,10 @@
 **Date:** 2026-06-25
 **Author:** Hermes (Quencher session)
 **Branch:** main
-**HEAD:** e439897
-**Total commits this session:** 24 (all pushed to origin/main)
+**Original submission HEAD:** e439897
+**Original submission commits:** 24 (all pushed to origin/main)
+**Current continuation:** J2.4.0a and J2.4.0b pushed; J2.4.0c locally
+accepted before commit/push.
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -22,8 +24,8 @@ This ledger accompanies the work submission. It documents:
 - All commits made this session (24)
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
-- Known gaps remaining (5 full gaps plus J2.4 temporal graph wave still open)
-- Next session entry point (Phase J2.4.0c — temporal graph Wave 3)
+- Known gaps remaining (5 full gaps; J2.4 graph construction is locally closed)
+- Next session entry point (Phase J2.5 — constitutional kernel integration)
 
 ---
 
@@ -46,7 +48,7 @@ This ledger accompanies the work submission. It documents:
 | J2.1 — sensitivity port | ✓ | `f00e8f7` |
 | J2.2 — audit trail | ✓ | `8229a2b`, `df2b1da`, `dd60397` |
 | J2.3 — Bayesian inference | ✓ | `05a894f` |
-| J2.4 — graph construction | Waves 1-2 complete; Wave 3 open | `e439897`, `7cc5ae7e`, this session |
+| J2.4 — graph construction | ✓ locally closed | `e439897`, `7cc5ae7e`, `54db11c3`, this session |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -91,7 +93,8 @@ This ledger accompanies the work submission. It documents:
 | After Phase J2.3 | 1340 | +116 |
 | After Phase J2.4.0a | 1367 | +27 |
 | After Phase J2.4.0b | 1391 | +24 |
-| **CURRENT** | **1391** | **+874 from baseline** |
+| After Phase J2.4.0c | 1406 | +15 |
+| **CURRENT** | **1406** | **+889 from baseline** |
 
 ---
 
@@ -99,19 +102,19 @@ This ledger accompanies the work submission. It documents:
 
 ```
 === PYTEST ===
-1391 passed in 3.45s
+1406 passed in 4.90s
 
 === MYPY --ignore-missing-imports over CI source dirs ===
-Success: no issues found in 88 source files
+Success: no issues found in 89 source files
 
 === RUFF CHECK ===
 All checks passed!
 
 === RUFF FORMAT --check ===
-175 files already formatted
+178 files already formatted
 
 === GIT ===
-Working tree: dirty during current J2.4.0b session before commit
+Working tree: dirty during current J2.4.0c session before commit
 Local/origin: commit pending
 ```
 
@@ -140,7 +143,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 | 4. Sensitivity analysis | ✓ CLOSED | J2.1 |
 | 9. Audit trail | ✓ CLOSED | J2.2 |
 | 1. Bayesian inference | ✓ CLOSED | J2.3 |
-| 2. Graph construction | Waves 1-2 closed; temporal wave open | J2.4 |
+| 2. Graph construction | ✓ CLOSED LOCALLY | J2.4 |
 | 3. Constitutional kernel | open | J2.5 |
 | 5. Failure surveillance | open | J2.6 |
 | 6. Sandbox | open | J2.7 |
@@ -193,12 +196,9 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 
 ## 9. Next session entry point
 
-**Phase J2.4 — Graph construction (3 waves)**
+**Phase J2.5 — Constitutional kernel integration**
 
-- **Discovery committed**: `e439897`
-- **Wave 1 implemented**: graph builder port (`7cc5ae7e`)
-- **Wave 2 implemented**: driver engine 10D (this session)
-- **Awaiting next action**: J2.4.0c temporal graph, unless the user pivots
+J2.4 graph construction is locally closed across all 3 waves:
 
 ### Wave 1 — graph builder
 - `packages/atlas/src/atlas/graph.py` — GraphBuilder + InfluenceGraph + metrics
@@ -212,7 +212,13 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 - `tests/test_atlas_driver_engine_integration.py` — integration tests
 - Acceptance doc: `docs/internal/STAGE_19_5J2_4_0B_ACCEPTANCE.md`
 
-### Wave 3 — temporal graph (~600 LOC + ~31 tests)
+### Wave 3 — temporal graph
+- `packages/atlas/src/atlas/temporal_graph.py` — TemporalGraph + snapshots + change/evolution tracking
+- `packages/atlas/tests/test_temporal_graph.py` — unit tests
+- `tests/test_atlas_temporal_graph_integration.py` — integration tests
+- Acceptance doc: `docs/internal/STAGE_19_5J2_4_0C_ACCEPTANCE.md`
+
+**Awaiting next action:** J2.5 constitutional kernel integration, unless the user pivots.
 
 ---
 
@@ -223,25 +229,26 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 **Repository**: `T:\Project-AI-Beginnings`
 **Branch**: `main`
 **Remote**: `https://github.com/IAmSoThirsty/Project-AI.git`
-**Status**: All 24 commits pushed to `origin/main`, working tree clean
-**Verification**: All 4 canonical gates green, 1340/1340 tests passing
+**Status**: Original 24-commit submission pushed; current J2.4.0c work locally
+accepted before commit/push
+**Verification**: Current local gates green for J2.4.0c, 1406/1406 tests passing
 
 ### How to verify locally
 ```bash
 cd T:/Project-AI-Beginnings
-uv run pytest                      # 1340 passed
-uv run mypy packages/ --strict     # clean on 127 files
-uv run ruff check packages/        # all checks passed
-uv run ruff format --check packages/  # 127 files formatted
+uv run pytest                      # 1406 passed
+uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools
+uv run ruff check .                # all checks passed
+uv run ruff format --check .       # 178 files formatted
 ```
 
 ### How to continue
 ```bash
 # Read next session entry point
-cat docs/internal/STAGE_19_5J2_4_DISCOVERY.md
+cat docs/internal/PHASE_J2_4_DISCOVERY.md
 
-# Continue Wave 3
-# Tell the agent: "whats up next?" or "go J2.4.0c"
+# Continue next open audit gap
+# Tell the agent: "whats up next?" or "go J2.5"
 ```
 
 ---

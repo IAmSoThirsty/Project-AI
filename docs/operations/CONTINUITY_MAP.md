@@ -1364,6 +1364,95 @@ watch CI for the documentation-only checkpoint.
 Yes. Current executable path is to commit, push, and watch CI.
 
 
+## Session Update — Phase J2.4.0c Atlas temporal graph (2026-06-28)
+
+### Scope
+- Mode: module patch / Atlas feature port.
+- Branch: `main`.
+- Starting HEAD: `54db11c3`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.4 Wave 3 temporal graph.
+
+### Problems fixed now
+- J2.4 graph construction still lacked the preserved legacy temporal-graph
+  functionality. Wave 3 now adds source-backed temporal nodes and edges,
+  deterministic snapshots, Merkle-style chain verification, adjacency matrices,
+  change detection, evolution tracking, and audit-visible operations.
+- The J2.4 discovery and session-ledger docs still pointed at Wave 3 as open.
+  They now report J2.4 as locally closed and identify J2.5 constitutional
+  kernel integration as the next open audit-gap entry point.
+
+### Files materially changed
+- `packages/atlas/src/atlas/temporal_graph.py`
+- `packages/atlas/src/atlas/__init__.py`
+- `packages/atlas/tests/test_temporal_graph.py`
+- `tests/test_atlas_temporal_graph_integration.py`
+- `docs/internal/STAGE_19_5J2_4_0C_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `docs/internal/PHASE_J2_4_DISCOVERY.md`
+- `packages/atlas/README.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- Initial plain Python red command:
+  `python -m pytest packages/atlas/tests/test_temporal_graph.py tests/test_atlas_temporal_graph_integration.py`
+  — failed with `ModuleNotFoundError: No module named 'atlas'` because plain
+  Python does not load the uv workspace package set here.
+- Repo-standard red command:
+  `uv run python -m pytest packages/atlas/tests/test_temporal_graph.py tests/test_atlas_temporal_graph_integration.py`
+  — failed at collection because `GraphSnapshot` and temporal exports did not
+  exist yet.
+- Targeted temporal tests after implementation:
+  `uv run python -m pytest packages/atlas/tests/test_temporal_graph.py tests/test_atlas_temporal_graph_integration.py -q`
+  — 15 passed.
+- Atlas package/integration scope:
+  `uv run pytest packages/atlas/tests tests/test_atlas_graph_integration.py tests/test_atlas_driver_engine_integration.py tests/test_atlas_temporal_graph_integration.py tests/test_atlas_audit_integration.py tests/test_atlas_bayesian_integration.py tests/test_atlas_sensitivity_integration.py -q`
+  — 396 passed.
+- Targeted strict typing:
+  `uv run mypy packages/atlas/src/atlas/temporal_graph.py packages/atlas/tests/test_temporal_graph.py tests/test_atlas_temporal_graph_integration.py --strict`
+  — clean on 3 source files.
+- Targeted ruff:
+  `uv run ruff check packages/atlas/src/atlas/temporal_graph.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_temporal_graph.py tests/test_atlas_temporal_graph_integration.py`
+  — passed.
+- Targeted formatting:
+  `uv run ruff format --check packages/atlas/src/atlas/temporal_graph.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_temporal_graph.py tests/test_atlas_temporal_graph_integration.py`
+  — 4 files already formatted.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 178 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 89 source files.
+- Full pytest:
+  `uv run python -m pytest -q --tb=short` — 1406 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run python -m pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1406 passed, 90.15% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+
+### Existing issues / not verified
+- Plain local `uv run mypy packages/atlas/src packages/atlas/tests tests/test_atlas_temporal_graph_integration.py --strict`
+  hits the existing scipy stub issue in `sensitivity.py`. Classification:
+  environment/dependency issue and not blocking current task; the targeted
+  temporal strict mypy and CI-shaped mypy both passed.
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 90.15%
+  branch coverage against an 80% threshold.
+- Pre-commit has not yet been run after docs were updated. Classification:
+  not blocking current task yet; run before commit.
+- Remote CI has not yet been run for this commit. Classification: not verified
+  until after commit and push.
+
+### Safe to continue
+Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
+
+
 ## Session Update — Phase J2.4.0b Atlas driver engine 10D (2026-06-28)
 
 ### Scope
