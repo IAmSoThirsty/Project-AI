@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Atlas J2.6 failure-surveillance wave: canonical anomaly detection, health
   summaries, local abort-condition reporting, local kill-switch state,
   audit-visible events, and tests.
+- Atlas J2.7 Sludge sandbox wave: canonical SS-only fictional narrative
+  artifacts, source snapshot hashing, no default filesystem writes,
+  contamination checks, audit-visible events, and tests.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`

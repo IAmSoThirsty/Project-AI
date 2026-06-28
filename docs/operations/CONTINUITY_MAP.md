@@ -1624,6 +1624,86 @@ Yes. Current executable path is to commit/push this docs-only CI evidence update
 and watch its CI run.
 
 
+## Session Update — Phase J2.7 Atlas Sludge sandbox (2026-06-28)
+
+### Scope
+- Mode: module patch / Atlas feature port.
+- Branch: `main`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.7 sandbox.
+
+### Problems fixed now
+- The preserved legacy sandbox existed only under
+  `packages/_staging/atlas/sandbox/sludge_sandbox.py`; canonical Atlas had no
+  Sludge sandbox module or public exports.
+- Canonical Atlas now has `SludgeSandbox` and `SludgeNarrative` for SS-only
+  fictional narrative artifacts, source snapshot hashing, no numeric
+  probability leakage, no source text leakage, no default filesystem writes,
+  optional audit events, and contamination detection for non-SS payloads.
+- The J2.6 docs evidence commit was verified before this work started:
+  GitHub Actions CI run `28331262312` completed successfully for commit
+  `07dcc3ac831e3deba1b276ce0d8fcdf94f24da68`.
+
+### Files materially changed
+- `packages/atlas/src/atlas/sludge_sandbox.py`
+- `packages/atlas/src/atlas/__init__.py`
+- `packages/atlas/tests/test_sludge_sandbox.py`
+- `docs/internal/STAGE_19_5J2_7_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `packages/atlas/README.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- Red test before source implementation:
+  `uv run python -m pytest packages/atlas/tests/test_sludge_sandbox.py -q`
+  — failed at collection because `NarrativeArchetype` was not exported from
+  `atlas`.
+- Targeted Sludge sandbox tests after implementation:
+  `uv run python -m pytest packages/atlas/tests/test_sludge_sandbox.py -q`
+  — 10 passed.
+- Targeted strict typing:
+  `uv run mypy packages/atlas/src/atlas/sludge_sandbox.py packages/atlas/tests/test_sludge_sandbox.py --strict`
+  — clean on 2 source files.
+- Atlas package scope:
+  `uv run python -m pytest packages/atlas/tests/test_sludge_sandbox.py packages/atlas/tests -q`
+  — 359 passed.
+- Targeted ruff:
+  `uv run ruff check packages/atlas/src/atlas/sludge_sandbox.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_sludge_sandbox.py`
+  — passed.
+- Targeted formatting:
+  `uv run ruff format --check packages/atlas/src/atlas/sludge_sandbox.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_sludge_sandbox.py`
+  — 3 files already formatted.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 185 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 92 source files.
+- Full pytest:
+  `uv run python -m pytest -q --tb=short` — 1451 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run python -m pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1451 passed, 89.30% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+
+### Existing issues / not verified
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 89.30%
+  branch coverage against an 80% threshold.
+- This canonical Sludge sandbox is in-process validation/isolation, not OS,
+  VM, or container isolation. Classification: not blocking current task; the
+  acceptance record labels the boundary explicitly.
+
+### Safe to continue
+Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
+
+
 ## Session Update — Phase J2.4.0b Atlas driver engine 10D (2026-06-28)
 
 ### Scope

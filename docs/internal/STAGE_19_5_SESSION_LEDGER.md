@@ -11,7 +11,9 @@ commits pushed; J2.4.0c implementation CI green through run `28326886242`
 and docs evidence CI green through run `28326958228`. J2.5 implementation
 commit pushed; implementation CI green through run `28330827940`, and J2.5
 docs evidence CI green through run `28330896816`. J2.6 failure surveillance
-implementation CI green through run `28331195681`.
+implementation CI green through run `28331195681`, and J2.6 docs evidence CI
+green through run `28331262312`. J2.7 sandbox is locally implemented pending
+final repo gates.
 **All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -28,8 +30,8 @@ This ledger accompanies the work submission. It documents:
 - All commits made this session (24)
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
-- Known gaps remaining (3 full gaps after J2.6 local closure)
-- Next session entry point (Phase J2.7 — sandbox)
+- Known gaps remaining (2 full gaps after J2.7 local closure)
+- Next session entry point (Phase J2.8 — CLI / API surface)
 
 ---
 
@@ -55,6 +57,7 @@ This ledger accompanies the work submission. It documents:
 | J2.4 — graph construction | ✓ closed | `e439897`, `7cc5ae7e`, `54db11c3`, `876ba130`, `0e600f90` |
 | J2.5 — constitutional kernel | ✓ closed | `a87c5594`, `8b94bf5d` |
 | J2.6 — failure surveillance | ✓ closed | `441bf02b` |
+| J2.7 — sandbox | ✓ locally closed | this session |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -102,7 +105,8 @@ This ledger accompanies the work submission. It documents:
 | After Phase J2.4.0c | 1406 | +15 |
 | After Phase J2.5 | 1420 | +14 |
 | After Phase J2.6 | 1441 | +21 |
-| **CURRENT** | **1441** | **+924 from baseline** |
+| After Phase J2.7 | 1451 | +10 |
+| **CURRENT** | **1451** | **+934 from baseline** |
 
 ---
 
@@ -154,7 +158,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 | 2. Graph construction | ✓ CLOSED LOCALLY | J2.4 |
 | 3. Constitutional kernel | ✓ CLOSED LOCALLY | J2.5 |
 | 5. Failure surveillance | ✓ CLOSED LOCALLY | J2.6 |
-| 6. Sandbox | open | J2.7 |
+| 6. Sandbox | ✓ CLOSED LOCALLY | J2.7 |
 | 7. CLI / API surface | open | J2.8 |
 | 8. Replay system | open | J2.9 |
 
@@ -204,7 +208,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 
 ## 9. Next session entry point
 
-**Phase J2.7 — Sandbox**
+**Phase J2.8 — CLI / API surface**
 
 Recently closed:
 
@@ -213,8 +217,9 @@ Recently closed:
   CI evidence.
 - J2.6 failure surveillance implementation is CI green through run
   `28331195681`.
+- J2.7 sandbox is locally implemented.
 
-**Awaiting next action:** J2.7 sandbox, unless the user pivots.
+**Awaiting next action:** J2.8 CLI / API surface, unless the user pivots.
 
 ---
 

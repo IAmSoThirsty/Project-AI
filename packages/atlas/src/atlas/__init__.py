@@ -95,6 +95,19 @@ from atlas.sensitivity import (
     get_sensitivity_analyzer,
 )
 from atlas.service import RECORD_OPERATION, Atlas
+from atlas.sludge_sandbox import (
+    FICTION_BANNER,
+    FICTION_WATERMARK,
+    NarrativeArchetype,
+    SludgeNarrative,
+    SludgeSandbox,
+    SludgeSandboxError,
+    get_sludge_sandbox,
+    reset_sludge_sandbox,
+)
+from atlas.sludge_sandbox import (
+    compute_snapshot_hash as compute_sludge_snapshot_hash,
+)
 from atlas.temporal_graph import (
     GENESIS_SNAPSHOT_HASH,
     TEMPORAL_GRAPH_ALGORITHM,
@@ -118,6 +131,8 @@ from atlas.temporal_graph import (
 __version__ = "0.0.0.dev0"
 
 __all__ = [
+    "FICTION_BANNER",
+    "FICTION_WATERMARK",
     "GENESIS_HASH",
     "GENESIS_SNAPSHOT_HASH",
     "RECORD_OPERATION",
@@ -161,6 +176,7 @@ __all__ = [
     "InMemoryStorage",
     "InfluenceGraph",
     "JsonlStorage",
+    "NarrativeArchetype",
     "PCAResult",
     "ParameterPerturbation",
     "Projection",
@@ -168,6 +184,9 @@ __all__ = [
     "SensitivityAnalyzer",
     "SensitivityReport",
     "SeverityLevel",
+    "SludgeNarrative",
+    "SludgeSandbox",
+    "SludgeSandboxError",
     "SobolIndices",
     "StabilityMetrics",
     "StackPenalty",
@@ -197,6 +216,7 @@ __all__ = [
     "compute_parameter_perturbations",
     "compute_pca",
     "compute_record_hash",
+    "compute_sludge_snapshot_hash",
     "compute_snapshot_hash",
     "compute_sobol_indices",
     "compute_stability_metrics",
@@ -210,11 +230,13 @@ __all__ = [
     "get_failure_surveillance",
     "get_graph_builder",
     "get_sensitivity_analyzer",
+    "get_sludge_sandbox",
     "get_temporal_graph",
     "reset_bayesian_engine",
     "reset_driver_engine",
     "reset_failure_surveillance",
     "reset_graph_builder",
+    "reset_sludge_sandbox",
     "reset_temporal_graph",
     "track_evolution",
 ]
