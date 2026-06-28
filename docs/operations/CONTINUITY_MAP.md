@@ -1459,6 +1459,85 @@ Yes. Current executable path is to commit/push this docs-only CI evidence update
 and watch its CI run.
 
 
+## Session Update — Phase J2.5 constitutional kernel integration (2026-06-28)
+
+### Scope
+- Mode: module patch / governance feature port.
+- Branch: `main`.
+- Starting HEAD: `0e600f90`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.5 constitutional kernel integration.
+
+### Problems fixed now
+- The preserved legacy constitutional kernel existed only under
+  `packages/_staging/atlas/governance/constitutional_kernel.py`; canonical
+  governance did not expose these checks as runtime invariants.
+- The canonical integration now ports the enforceable checks into
+  `governance.ConstitutionalKernel`, a `kernel.InvariantEngine` callable that
+  runs before governor votes and before `ExecutionGate` consumes capabilities.
+- The prior J2.4.0c docs-only evidence commit was verified after the previous
+  continuity entry was written: GitHub Actions CI run `28326958228` completed
+  successfully for commit `0e600f9073a4f1ee275491af9d7984626b962f4e`.
+
+### Files materially changed
+- `packages/governance/src/governance/constitutional_kernel.py`
+- `packages/governance/src/governance/__init__.py`
+- `packages/governance/tests/test_constitutional_kernel.py`
+- `tests/test_constitutional_kernel_execution_integration.py`
+- `docs/internal/PHASE_J2_5_DISCOVERY.md`
+- `docs/internal/STAGE_19_5J2_5_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `packages/governance/README.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- Red test before source implementation:
+  `uv run python -m pytest packages/governance/tests/test_constitutional_kernel.py tests/test_constitutional_kernel_execution_integration.py`
+  — failed at collection because `ConstitutionalKernel` was not exported.
+- Targeted constitutional tests after implementation:
+  `uv run python -m pytest packages/governance/tests/test_constitutional_kernel.py tests/test_constitutional_kernel_execution_integration.py -q`
+  — 14 passed.
+- Governance/execution package scope:
+  `uv run python -m pytest packages/governance/tests packages/execution/tests tests/test_constitutional_kernel_execution_integration.py -q`
+  — 406 passed.
+- Targeted strict typing:
+  `uv run mypy packages/governance/src/governance/constitutional_kernel.py packages/governance/tests/test_constitutional_kernel.py tests/test_constitutional_kernel_execution_integration.py --strict`
+  — clean on 3 source files.
+- Governance/execution strict typing:
+  `uv run mypy packages/governance/src packages/governance/tests packages/execution/tests tests/test_constitutional_kernel_execution_integration.py --strict`
+  — clean on 18 source files.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 181 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 90 source files.
+- Full pytest:
+  `uv run python -m pytest -q --tb=short` — 1420 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run python -m pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1420 passed, 89.92% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+
+### Existing issues / not verified
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 89.92%
+  branch coverage against an 80% threshold.
+- Pre-commit has not yet been run after docs were updated. Classification:
+  not blocking current task yet; run before commit.
+- Remote CI has not yet been run for this J2.5 commit. Classification: not
+  verified until after commit and push.
+
+### Safe to continue
+Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
+
+
 ## Session Update — Phase J2.4.0b Atlas driver engine 10D (2026-06-28)
 
 ### Scope

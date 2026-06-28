@@ -9,6 +9,14 @@ from governance.asymmetric_security import (
     SecurityProof,
     build_attack_catalog,
 )
+from governance.constitutional_kernel import (
+    PARAMETER_BOUNDS,
+    ConstitutionalKernel,
+    ViolationType,
+    constitutional_state_hash,
+    get_constitutional_kernel,
+    reset_constitutional_kernel,
+)
 from governance.engine import GovernanceEngine
 from governance.iron_path import (
     DEFAULT_POLICY_VERSION,
@@ -27,10 +35,12 @@ __version__ = "0.0.0.dev0"
 __all__ = [
     "CATEGORY_COUNTS",
     "DEFAULT_POLICY_VERSION",
+    "PARAMETER_BOUNDS",
     "REQUIRED_PROOFS",
     "AsymmetricSecurityGovernor",
     "AttackCategory",
     "AttackVector",
+    "ConstitutionalKernel",
     "Executor",
     "GovernanceEngine",
     "GovernanceResult",
@@ -45,7 +55,11 @@ __all__ = [
     "SecurityProof",
     "TriumvirateError",
     "TriumvirateGovernor",
+    "ViolationType",
     "Vote",
     "build_attack_catalog",
+    "constitutional_state_hash",
+    "get_constitutional_kernel",
+    "reset_constitutional_kernel",
     "threat_decision_from_assessment",
 ]

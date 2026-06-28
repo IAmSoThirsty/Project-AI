@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Atlas J2.4.0c temporal-graph wave: source-backed temporal nodes and edges,
   deterministic snapshots, Merkle-style chain verification, adjacency matrices,
   change detection, evolution tracking, audit events, and tests.
+- Governance J2.5 constitutional-kernel integration: legacy constitutional
+  checks ported as canonical `InvariantEngine` invariants with execution-gate
+  denial tests.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`
