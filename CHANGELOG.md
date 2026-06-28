@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   legacy-coverage inventory, and session-ledger corrections.
 - Atlas J2.4.0a graph-builder wave: deterministic influence graph
   construction, metrics, communities, graph hashes, audit events, and tests.
+- Atlas J2.4.0b driver-engine wave: 10-dimensional normalization, derived
+  metrics, PCA, correlations, sensitivities, analysis hashes, audit events,
+  and tests.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`

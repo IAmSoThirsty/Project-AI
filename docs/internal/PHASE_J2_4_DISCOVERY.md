@@ -1,6 +1,6 @@
 # Phase J2.4 Discovery — atlas graph construction (driver_engine_10d + graph builder + temporal graph)
 
-**Status:** DISCOVERY + PLAN; Wave 1 graph-builder port implemented 2026-06-28
+**Status:** DISCOVERY + PLAN; Waves 1-2 implemented 2026-06-28
 **Authority:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` Phase J, J1 audit
 **Date:** 2026-06-25
 **Author:** Hermes (Quencher session)
@@ -202,10 +202,13 @@ the user instructed the agent to start the next logical work item via
 "whats up next?". See `docs/internal/STAGE_19_5J2_4_0A_ACCEPTANCE.md` for the
 implemented graph-builder evidence.
 
+Wave 2 was implemented on 2026-06-28 as the canonical driver-engine 10D port.
+See `docs/internal/STAGE_19_5J2_4_0B_ACCEPTANCE.md`.
+
 The full legacy code (1857 LOC across 3 files) has been analyzed. The
-remaining port work is the driver engine and temporal graph modules. The port
-strips legacy's `ConfigLoader`/`SchemaValidator` deps because those are
-legacy-only concepts not relevant to canonical atlas.
+remaining port work is the temporal graph module. The port strips legacy's
+`ConfigLoader`/`SchemaValidator` deps because those are legacy-only concepts
+not relevant to canonical atlas.
 
 ---
 
@@ -236,6 +239,5 @@ Or stop here and tackle something different entirely.
 
 ## 9. Recommendation
 
-Proceed with J2.4.0a (Wave 1: graph builder) first. It's the largest gap
-and the foundation for several other features. Once it's solid, we can
-decide on Wave 2/3 or pivot to a smaller gap.
+Proceed with J2.4.0c (Wave 3: temporal graph) next to close the remaining
+graph-construction wave, unless the user pivots to another open J2 gap.

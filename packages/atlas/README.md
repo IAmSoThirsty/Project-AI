@@ -6,6 +6,7 @@ persisting a projection requires the shared execution gate and an exact Atlas ca
 cannot issue capabilities, make governance decisions, or actuate a recommendation.
 
 Current canonical analysis surfaces include evidence-weighted projections, sensitivity analysis,
-hash-chained audit trails, Bayesian inference, and deterministic influence-graph construction.
-Graph construction remains analytical evidence only; graph hashes bind the subordination notice and
-optional audit trails record construction without granting authority.
+hash-chained audit trails, Bayesian inference, deterministic influence-graph construction, and
+10-dimensional driver normalization/analysis. Graph and driver analysis remain analytical evidence
+only; hashes bind the subordination notice and optional audit trails record construction/analysis
+without granting authority.

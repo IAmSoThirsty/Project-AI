@@ -1362,3 +1362,82 @@ watch CI for the documentation-only checkpoint.
 
 ### Safe to continue
 Yes. Current executable path is to commit, push, and watch CI.
+
+
+## Session Update — Phase J2.4.0b Atlas driver engine 10D (2026-06-28)
+
+### Scope
+- Mode: module patch / Atlas feature port.
+- Branch: `main`.
+- Starting HEAD: `7cc5ae7e`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.4 Wave 2 driver engine 10D.
+
+### Problems fixed now
+- J2.4 graph construction had graph-builder support, but the preserved legacy
+  `driver_engine_10d.py` functionality was not present in canonical Atlas.
+  Wave 2 now adds deterministic 10D driver normalization and analysis.
+- Legacy driver config-file creation was intentionally not ported because it
+  would create hidden baseline files during canonical engine construction.
+
+### Files materially changed
+- `packages/atlas/src/atlas/driver_engine.py`
+- `packages/atlas/src/atlas/__init__.py`
+- `packages/atlas/tests/test_driver_engine.py`
+- `tests/test_atlas_driver_engine_integration.py`
+- `docs/internal/STAGE_19_5J2_4_0B_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `docs/internal/PHASE_J2_4_DISCOVERY.md`
+- `packages/atlas/README.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- Red test before source implementation:
+  `uv run pytest packages/atlas/tests/test_driver_engine.py tests/test_atlas_driver_engine_integration.py -q`
+  failed at collection because `atlas.driver_engine` exports did not exist.
+- Targeted driver tests after implementation:
+  `uv run pytest packages/atlas/tests/test_driver_engine.py tests/test_atlas_driver_engine_integration.py -q`
+  — 24 passed.
+- Atlas package/integration scope:
+  `uv run pytest packages/atlas/tests tests/test_atlas_graph_integration.py tests/test_atlas_driver_engine_integration.py tests/test_atlas_audit_integration.py tests/test_atlas_bayesian_integration.py tests/test_atlas_sensitivity_integration.py -q`
+  — 381 passed.
+- Targeted strict typing:
+  `uv run mypy packages/atlas/src/atlas/driver_engine.py packages/atlas/tests/test_driver_engine.py tests/test_atlas_driver_engine_integration.py --strict`
+  — clean on 3 source files.
+- Targeted ruff:
+  `uv run ruff check packages/atlas/src/atlas/driver_engine.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_driver_engine.py tests/test_atlas_driver_engine_integration.py`
+  — passed.
+- Targeted formatting:
+  `uv run ruff format --check packages/atlas/src/atlas/driver_engine.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_driver_engine.py tests/test_atlas_driver_engine_integration.py`
+  — 4 files already formatted.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 175 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 88 source files.
+- Full pytest:
+  `uv run pytest -q --tb=short` — 1391 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1391 passed, 90.80% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+- Pre-commit:
+  `SKIP=no-commit-to-branch,gitleaks uv run pre-commit run --all-files` —
+  passed all non-skipped hooks.
+
+### Existing issues / not verified
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 90.80% branch
+  coverage against an 80% threshold.
+- J2.4 is not fully closed. Wave 3 temporal graph remains. Classification:
+  requires separate follow-up work.
+
+### Safe to continue
+Yes. Current executable path is to commit, push, and watch CI.

@@ -22,8 +22,8 @@ This ledger accompanies the work submission. It documents:
 - All commits made this session (24)
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
-- Known gaps remaining (5 full gaps plus remaining J2.4 waves still open)
-- Next session entry point (Phase J2.4.0b — driver engine Wave 2)
+- Known gaps remaining (5 full gaps plus J2.4 temporal graph wave still open)
+- Next session entry point (Phase J2.4.0c — temporal graph Wave 3)
 
 ---
 
@@ -46,7 +46,7 @@ This ledger accompanies the work submission. It documents:
 | J2.1 — sensitivity port | ✓ | `f00e8f7` |
 | J2.2 — audit trail | ✓ | `8229a2b`, `df2b1da`, `dd60397` |
 | J2.3 — Bayesian inference | ✓ | `05a894f` |
-| J2.4 — graph construction | Wave 1 graph builder complete; Waves 2-3 open | `e439897`, this session |
+| J2.4 — graph construction | Waves 1-2 complete; Wave 3 open | `e439897`, `7cc5ae7e`, this session |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -90,7 +90,8 @@ This ledger accompanies the work submission. It documents:
 | After Phase J2.2 | 1224 | +108 |
 | After Phase J2.3 | 1340 | +116 |
 | After Phase J2.4.0a | 1367 | +27 |
-| **CURRENT** | **1367** | **+850 from baseline** |
+| After Phase J2.4.0b | 1391 | +24 |
+| **CURRENT** | **1391** | **+874 from baseline** |
 
 ---
 
@@ -98,19 +99,19 @@ This ledger accompanies the work submission. It documents:
 
 ```
 === PYTEST ===
-1367 passed in 4.11s
+1391 passed in 3.45s
 
 === MYPY --ignore-missing-imports over CI source dirs ===
-Success: no issues found in 87 source files
+Success: no issues found in 88 source files
 
 === RUFF CHECK ===
 All checks passed!
 
 === RUFF FORMAT --check ===
-172 files already formatted
+175 files already formatted
 
 === GIT ===
-Working tree: dirty during current J2.4.0a session before commit
+Working tree: dirty during current J2.4.0b session before commit
 Local/origin: commit pending
 ```
 
@@ -139,7 +140,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 | 4. Sensitivity analysis | ✓ CLOSED | J2.1 |
 | 9. Audit trail | ✓ CLOSED | J2.2 |
 | 1. Bayesian inference | ✓ CLOSED | J2.3 |
-| 2. Graph construction | Wave 1 closed; driver/temporal waves open | J2.4 |
+| 2. Graph construction | Waves 1-2 closed; temporal wave open | J2.4 |
 | 3. Constitutional kernel | open | J2.5 |
 | 5. Failure surveillance | open | J2.6 |
 | 6. Sandbox | open | J2.7 |
@@ -195,8 +196,9 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 **Phase J2.4 — Graph construction (3 waves)**
 
 - **Discovery committed**: `e439897`
-- **Wave 1 implemented**: graph builder port (this session)
-- **Awaiting next action**: J2.4.0b driver engine 10D, unless the user pivots
+- **Wave 1 implemented**: graph builder port (`7cc5ae7e`)
+- **Wave 2 implemented**: driver engine 10D (this session)
+- **Awaiting next action**: J2.4.0c temporal graph, unless the user pivots
 
 ### Wave 1 — graph builder
 - `packages/atlas/src/atlas/graph.py` — GraphBuilder + InfluenceGraph + metrics
@@ -204,7 +206,12 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 - `tests/test_atlas_graph_integration.py` — integration tests
 - Acceptance doc: `docs/internal/STAGE_19_5J2_4_0A_ACCEPTANCE.md`
 
-### Wave 2 — driver engine 10D (~500 LOC + ~31 tests)
+### Wave 2 — driver engine 10D
+- `packages/atlas/src/atlas/driver_engine.py` — DriverEngine + DriverState + PCA/correlation/sensitivity helpers
+- `packages/atlas/tests/test_driver_engine.py` — unit tests
+- `tests/test_atlas_driver_engine_integration.py` — integration tests
+- Acceptance doc: `docs/internal/STAGE_19_5J2_4_0B_ACCEPTANCE.md`
+
 ### Wave 3 — temporal graph (~600 LOC + ~31 tests)
 
 ---
@@ -233,8 +240,8 @@ uv run ruff format --check packages/  # 127 files formatted
 # Read next session entry point
 cat docs/internal/STAGE_19_5J2_4_DISCOVERY.md
 
-# Continue Wave 2
-# Tell the agent: "whats up next?" or "go J2.4.0b"
+# Continue Wave 3
+# Tell the agent: "whats up next?" or "go J2.4.0c"
 ```
 
 ---
