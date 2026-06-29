@@ -1367,6 +1367,88 @@ watch CI for the documentation-only checkpoint.
 Yes. Current executable path is to commit, push, and watch CI.
 
 
+## Session Update — Phase J2.9 Atlas replay system (2026-06-29)
+
+### Scope
+- Mode: module patch / Atlas feature port.
+- Branch: `main`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.9 replay system.
+
+### Problems fixed now
+- The preserved legacy replay system existed only under
+  `packages/_staging/atlas/verification/replay_system.py`; canonical Atlas had
+  no replay-bundle verification module or public exports.
+- Canonical Atlas now has `ReplayBundle`, `ReplaySystem`,
+  `ReplayVerification`, and `ReplaySummary` for deterministic, hash-bound
+  replay-bundle verification.
+- Current-status docs were reconciled before implementation:
+  `STAGE_19_5_SESSION_LEDGER.md`, `FINAL_PEER_REVIEW.md`,
+  `PHASE_J_DISCOVERY.md`, and this continuity map now identify J2.9 as the
+  current locally implemented final gap instead of leaving J2.8 docs evidence
+  marked pending.
+
+### Files materially changed
+- `packages/atlas/src/atlas/replay_system.py`
+- `packages/atlas/src/atlas/__init__.py`
+- `packages/atlas/tests/test_replay_system.py`
+- `docs/internal/STAGE_19_5J2_9_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `docs/internal/FINAL_PEER_REVIEW.md`
+- `docs/internal/PHASE_J_DISCOVERY.md`
+- `packages/atlas/README.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification run
+- Red test before source implementation:
+  `uv run python -m pytest packages/atlas/tests/test_replay_system.py -q`
+  — failed at collection because `ReplayBundle` was not exported from `atlas`.
+- Targeted replay-system tests after implementation:
+  `uv run python -m pytest packages/atlas/tests/test_replay_system.py -q`
+  — 8 passed.
+- Atlas package scope:
+  `uv run python -m pytest packages/atlas/tests/test_replay_system.py packages/atlas/tests -q`
+  — 367 passed.
+- Targeted ruff:
+  `uv run ruff check packages/atlas/src/atlas/replay_system.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_replay_system.py`
+  — passed.
+- Targeted formatting:
+  `uv run ruff format --check packages/atlas/src/atlas/replay_system.py packages/atlas/src/atlas/__init__.py packages/atlas/tests/test_replay_system.py`
+  — 3 files already formatted.
+- Targeted strict typing:
+  `uv run mypy packages/atlas/src/atlas/replay_system.py packages/atlas/tests/test_replay_system.py --strict`
+  — clean on 2 source files.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 187 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 93 source files.
+- Full pytest:
+  `uv run python -m pytest -q --tb=short` — 1464 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run python -m pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1464 passed, 88.47% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+
+### Existing issues / not verified
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 88.47%
+  branch coverage against an 80% threshold.
+- J2.9 remote CI is not yet verified because the implementation commit has not
+  been created or pushed. Classification: not blocking local acceptance;
+  requires commit, push, and GitHub Actions verification.
+
+### Safe to continue
+Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
+
+
 ## Session Update — Phase J2.8 CLI / API surface (2026-06-29)
 
 ### Scope
@@ -1390,6 +1472,9 @@ Yes. Current executable path is to commit, push, and watch CI.
   `239517cc355ebde35e8c03b32e7714e8efd48942`.
 - J2.8 implementation commit `2e6644344cb2f17a1f506243600a170706dbe8c1`
   was pushed to `origin/main`; GitHub Actions CI run `28348049368`
+  completed successfully.
+- J2.8 docs evidence commit `641a8ee2846056b09a99ca83ff4bca34c6aef23d`
+  was pushed to `origin/main`; GitHub Actions CI run `28348166749`
   completed successfully.
 
 ### Files materially changed
@@ -1445,13 +1530,11 @@ Yes. Current executable path is to commit, push, and watch CI.
 - GitHub Actions run `28348049368` emitted a non-blocking cache reservation
   annotation in the SBOM job. Classification: not blocking current task; the
   workflow conclusion was success.
-- This follow-up evidence update is docs-only. Its own CI run must still be
-  verified after the docs evidence commit is pushed. Classification: not
-  blocking source implementation; verify before final handoff.
+- J2.9 replay system is still open. Classification: requires current follow-up
+  work and is the only remaining J1 audit gap after J2.8.
 
 ### Safe to continue
-Yes. Current executable path is to commit/push this docs-only CI evidence update
-and watch its CI run.
+Yes. Current executable path is to continue to J2.9 replay system.
 
 
 ## Session Update — Phase J2.4.0c Atlas temporal graph (2026-06-28)

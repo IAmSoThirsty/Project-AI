@@ -7,9 +7,12 @@
 
 > Correction note (2026-06-27): this peer review is a Stage 19.5 A-J snapshot
 > ending at `b8637a2`. It is not the current repository head. Later commits
-> completed Atlas J2.1-J2.3 and added J2.4 discovery; use
+> completed J2.1-J2.9; as of the J2.9 local acceptance pass on 2026-06-29,
+> all J1 audit gaps are closed locally and the J2.9 implementation commit/CI
+> evidence is pending. Use
 > `docs/internal/STAGE_19_5_SESSION_LEDGER.md` plus current git status for
-> current-state reporting.
+> current-state reporting. The "Remaining: None" language below is historical
+> to the A-J snapshot and is superseded by the session ledger.
 
 ---
 
@@ -368,7 +371,8 @@ Not verified:
 - Real SDK integration (deferred)
 Risks: None at session end. All work is complete and committed.
 Continuity map: docs/operations/CONTINUITY_MAP.md (final entry to be added)
-Remaining: None — full session complete.
+Remaining: None for the historical A-J snapshot; superseded for current-state
+work by `docs/internal/STAGE_19_5_SESSION_LEDGER.md`.
 Commands run:
 - uv run pytest (1011 passed)
 - uv run mypy packages/ --strict (clean on 121 files)

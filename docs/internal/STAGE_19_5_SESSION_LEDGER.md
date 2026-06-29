@@ -15,8 +15,11 @@ implementation CI green through run `28331195681`, and J2.6 docs evidence CI
 green through run `28331262312`. J2.7 sandbox implementation CI green through
 run `28333214769`, and J2.7 docs evidence CI green through run `28333284791`.
 J2.8 CLI / API surface implementation CI green through run `28348049368`;
-docs evidence commit is pending.
-**All local gates green:** pytest 1456 / CI-shaped mypy clean / ruff check clean / ruff format clean
+J2.8 docs evidence CI green through run `28348166749`.
+J2.9 replay system is locally implemented pending commit/push and remote CI
+evidence.
+**All local gates green:** pytest 1464 / CI-shaped mypy clean / ruff check clean / ruff format clean
+**Latest remote CI green:** run `28348166749` at commit `641a8ee2`.
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
 > `e439897`. The original "all gates green" statement reflected the local
@@ -32,8 +35,9 @@ This ledger accompanies the work submission. It documents:
 - All commits made this session (24)
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
-- Known gaps remaining (1 full gap after J2.8 local closure)
-- Next session entry point (Phase J2.9 — Replay system)
+- Known gaps remaining (0 full gaps after J2.9 local closure)
+- Next session entry point: commit/push J2.9, verify remote CI, then final
+  Stage 19.5/J2 acceptance review
 
 ---
 
@@ -61,8 +65,10 @@ This ledger accompanies the work submission. It documents:
 | J2.6 — failure surveillance | ✓ closed | `441bf02b` |
 | J2.7 — sandbox | ✓ closed | `b35f55e8` |
 | J2.8 — CLI / API surface | ✓ closed | `2e66443` |
+| J2.9 — replay system | ✓ closed locally | pending |
 
-**Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
+**Total:** historical session counts above are preserved as submitted; current
+continuation commits are tracked in the phase table and git history.
 
 ---
 
@@ -110,7 +116,8 @@ This ledger accompanies the work submission. It documents:
 | After Phase J2.6 | 1441 | +21 |
 | After Phase J2.7 | 1451 | +10 |
 | After Phase J2.8 | 1456 | +5 |
-| **CURRENT** | **1456** | **+939 from baseline** |
+| After Phase J2.9 | 1464 | +8 |
+| **CURRENT** | **1464** | **+947 from baseline** |
 
 ---
 
@@ -118,19 +125,19 @@ This ledger accompanies the work submission. It documents:
 
 ```
 === PYTEST ===
-1456 passed in 3.80s
+1464 passed in 4.50s
 
 === MYPY --ignore-missing-imports over CI source dirs ===
-Success: no issues found in 92 source files
+Success: no issues found in 93 source files
 
 === RUFF CHECK ===
 All checks passed!
 
 === RUFF FORMAT --check ===
-185 files already formatted
+187 files already formatted
 
 === GIT ===
-Working tree: dirty during current J2.8 session before commit
+Working tree: dirty during current J2.9 session before commit
 Local/origin: commit pending
 ```
 
@@ -152,7 +159,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 
 ---
 
-## 6. J1 audit gap closure status (5/9 closed)
+## 6. J1 audit gap closure status (9/9 closed locally)
 
 | Gap | Status | Phase |
 |---|---|---|
@@ -163,8 +170,8 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 | 3. Constitutional kernel | ✓ CLOSED LOCALLY | J2.5 |
 | 5. Failure surveillance | ✓ CLOSED LOCALLY | J2.6 |
 | 6. Sandbox | ✓ CLOSED LOCALLY | J2.7 |
-| 7. CLI / API surface | ✓ CLOSED LOCALLY | J2.8 |
-| 8. Replay system | open | J2.9 |
+| 7. CLI / API surface | ✓ CLOSED | J2.8 |
+| 8. Replay system | ✓ CLOSED LOCALLY | J2.9 |
 
 ---
 
@@ -225,9 +232,12 @@ Recently closed:
 - J2.7 docs evidence CI is green through run `28333284791`.
 - J2.8 CLI / API surface implementation is CI green through run
   `28348049368`.
+- J2.8 docs evidence CI is green through run `28348166749`.
+- J2.9 replay system is locally accepted with 1464 pytest pass, 88.47%
+  branch coverage, replay 5/5, and frozen history 2264/2264.
 
-**Awaiting next action:** commit/push this docs evidence update and verify its
-remote CI; then continue to J2.9 replay system unless the user pivots.
+**Awaiting next action:** commit/push J2.9 implementation and verify remote CI;
+then perform final Stage 19.5/J2 acceptance review unless the user pivots.
 
 ---
 
@@ -240,15 +250,15 @@ remote CI; then continue to J2.9 replay system unless the user pivots.
 **Remote**: `https://github.com/IAmSoThirsty/Project-AI.git`
 **Status**: Original 24-commit submission pushed; J2.4.0c commits pushed and
 CI green; J2.5 implementation commit pushed and CI green in run `28330827940`
-**Verification**: Current local gates green for J2.8, 1456/1456 tests passing
+**Verification**: Current local gates green for J2.9, 1464/1464 tests passing
 
 ### How to verify locally
 ```bash
 cd T:/Project-AI-Beginnings
-uv run pytest                      # 1456 passed
+uv run pytest                      # 1464 passed
 uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools
 uv run ruff check .                # all checks passed
-uv run ruff format --check .       # 181 files formatted
+uv run ruff format --check .       # 187 files formatted
 ```
 
 ### How to continue
@@ -256,8 +266,8 @@ uv run ruff format --check .       # 181 files formatted
 # Read next session entry point
 cat docs/internal/STAGE_19_5_SESSION_LEDGER.md
 
-# Continue next open audit gap
-# Tell the agent: "whats up next?" or "go J2.9"
+# Continue final acceptance cleanup
+# Tell the agent: "whats up next?" or "final acceptance review"
 ```
 
 ---
@@ -273,8 +283,8 @@ This is the final state of a multi-day session. Every commit was:
 Every phase followed the **discovery → source → tests → integration → acceptance → commit** pattern. Every commit has an acceptance doc or commit-message explaining the work.
 
 **State at submission: local canonical gates green; production deployment
-readiness not proven until GitHub Actions is green and remaining J2 gaps are
-closed or explicitly deferred.**
+readiness not proven until GitHub Actions is green for the J2.9 implementation
+commit and final acceptance is recorded.**
 
 ---
 

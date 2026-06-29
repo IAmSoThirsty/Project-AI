@@ -35,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - J2.8 CLI / API surface: public Atlas status route, protected Atlas Sludge
   gateway route, gateway-only `atlas-status` and `atlas-sludge` CLI commands,
   audit relay evidence, and tests.
+- Atlas J2.9 replay-system wave: canonical replay bundles, deterministic
+  bundle hashes, fail-closed bundle verification, reconstruction summaries,
+  explicit save/load operations, audit-visible replay events, and tests.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`
