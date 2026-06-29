@@ -20,12 +20,13 @@ embed governance authority.
 - Active branch: `main`.
 - Stage 18 local acceptance: accepted from a detached clean checkout.
 - Development checkpoint: `main` is pushed and GitHub Actions CI passed on
-  commit `25c3237b` in run `28308833729`.
+  commit `22ad10aa49f24e5045ffd4493a6e92f9cb615b7a` in run `28362260186`.
 - No version tag, GitHub Release, package publication, image publication,
   deployment, or production-readiness claim is part of this checkpoint.
 
 See `docs/internal/REBUILD_EXECUTION_PLAN.md`,
-`docs/internal/STAGE_18_ACCEPTANCE.md`, and
+`docs/internal/STAGE_18_ACCEPTANCE.md`,
+`docs/internal/STAGE_19_5_PRE_DEPLOYMENT_ACCEPTANCE.md`, and
 `docs/operations/CONTINUITY_MAP.md` for the current evidence trail.
 
 ## Quick start
@@ -37,6 +38,9 @@ uv sync --frozen --all-extras --all-packages
 # Verify immutable provenance inputs.
 uv run python tools/verify_frozen_history.py
 uv run python tools/canonical_replay.py
+
+# Verify pre-deployment evidence and operator docs.
+uv run python tools/verify_pre_deployment.py
 
 # Run the core Python validation used by the local checkpoint.
 uv run pytest
@@ -62,9 +66,11 @@ apps/
   desktop/          - PyQt6 development desktop client
   web/              - React portals and Chimera-protected web surfaces
 docs/
+  deployment/       - pre-deployment checklist and non-production gates
   internal/         - execution ledger, stage acceptance, session evidence
   operations/       - continuity map and handoff state
   reference/        - canonical papers, charter, manifest
+  runbooks/         - local development stack operation guides
 helm/
   project-ai/       - Kubernetes chart for the development stack
 packages/

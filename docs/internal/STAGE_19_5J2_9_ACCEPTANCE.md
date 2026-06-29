@@ -112,6 +112,15 @@ Conclusion: success
 URL: https://github.com/IAmSoThirsty/Project-AI/actions/runs/28362042896
 ```
 
+Docs/evidence CI after the follow-up evidence commit:
+
+```text
+GitHub Actions CI run 28362260186
+Commit: 22ad10aa49f24e5045ffd4493a6e92f9cb615b7a
+Conclusion: success
+URL: https://github.com/IAmSoThirsty/Project-AI/actions/runs/28362260186
+```
+
 ---
 
 ## 3. Architectural invariants verified
@@ -133,6 +142,7 @@ URL: https://github.com/IAmSoThirsty/Project-AI/actions/runs/28362042896
 
 - J2.9 replay system is closed with implementation CI evidence.
 - All J1 audit gaps are now closed with implementation CI evidence.
-- Next recommended action is final Stage 19.5/J2 acceptance review.
+- Next recommended action is pre-deployment output and final Stage 19.5/J2
+  acceptance review.
 
 Safe to continue: yes.

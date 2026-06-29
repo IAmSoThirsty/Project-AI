@@ -17,9 +17,12 @@ run `28333214769`, and J2.7 docs evidence CI green through run `28333284791`.
 J2.8 CLI / API surface implementation CI green through run `28348049368`;
 J2.8 docs evidence CI green through run `28348166749`.
 J2.9 replay system implementation CI green through run `28362042896`.
-**All local gates green:** pytest 1464 / CI-shaped mypy clean / ruff check clean / ruff format clean
+J2.9 docs/evidence CI green through run `28362260186`.
+**All local gates green:** pytest 1467 / CI-shaped mypy clean / ruff check clean / ruff format clean
 **Latest recorded implementation CI green:** run `28362042896` at commit
 `176990f0`.
+**Latest recorded docs/evidence CI green:** run `28362260186` at commit
+`22ad10aa`.
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
 > `e439897`. The original "all gates green" statement reflected the local
@@ -36,7 +39,7 @@ This ledger accompanies the work submission. It documents:
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
 - Known gaps remaining (0 full gaps after J2.9 local closure)
-- Next session entry point: commit/push J2.9, verify remote CI, then final
+- Next session entry point: pre-deployment hardening output, then final
   Stage 19.5/J2 acceptance review
 
 ---
@@ -117,7 +120,8 @@ continuation commits are tracked in the phase table and git history.
 | After Phase J2.7 | 1451 | +10 |
 | After Phase J2.8 | 1456 | +5 |
 | After Phase J2.9 | 1464 | +8 |
-| **CURRENT** | **1464** | **+947 from baseline** |
+| After pre-deployment output | 1467 | +3 |
+| **CURRENT** | **1467** | **+950 from baseline** |
 
 ---
 
@@ -125,16 +129,16 @@ continuation commits are tracked in the phase table and git history.
 
 ```
 === PYTEST ===
-1464 passed in 4.50s
+1467 passed in 4.06s
 
 === MYPY --ignore-missing-imports over CI source dirs ===
-Success: no issues found in 93 source files
+Success: no issues found in 95 source files
 
 === RUFF CHECK ===
 All checks passed!
 
 === RUFF FORMAT --check ===
-187 files already formatted
+189 files already formatted
 
 === GIT ===
 J2.9 implementation commit: `176990f0`, pushed.
@@ -235,9 +239,10 @@ Recently closed:
   `28348049368`.
 - J2.8 docs evidence CI is green through run `28348166749`.
 - J2.9 replay system implementation is CI green through run `28362042896`.
+- J2.9 docs/evidence is CI green through run `28362260186`.
 
-**Awaiting next action:** perform final Stage 19.5/J2 acceptance review unless
-the user pivots.
+**Awaiting next action:** pre-deployment hardening output, then final Stage
+19.5/J2 acceptance review unless the user pivots.
 
 ---
 
@@ -250,15 +255,16 @@ the user pivots.
 **Remote**: `https://github.com/IAmSoThirsty/Project-AI.git`
 **Status**: Original 24-commit submission pushed; J2.4.0c commits pushed and
 CI green; J2.5 implementation commit pushed and CI green in run `28330827940`
-**Verification**: Current local gates green for J2.9, 1464/1464 tests passing
+**Verification**: Current local gates green for pre-deployment output,
+1467/1467 tests passing
 
 ### How to verify locally
 ```bash
 cd T:/Project-AI-Beginnings
-uv run pytest                      # 1464 passed
+uv run pytest                      # 1467 passed
 uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools
 uv run ruff check .                # all checks passed
-uv run ruff format --check .       # 187 files formatted
+uv run ruff format --check .       # 189 files formatted
 ```
 
 ### How to continue

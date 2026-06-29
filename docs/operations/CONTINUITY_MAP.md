@@ -5,17 +5,28 @@
 
 ## Session Metadata
 
-- **Project:** Project-AI Beginnings — re-integration of legacy `T:\Project-AI-main` content not covered by Stages -1 through 18
-- **Mode:** governance system (repo-wide scope expansion across 13 packages; this session is **planning** — see Remaining)
-- **Date:** 2026-06-24 (session start)
-- **Agent/Operator:** Hermes Agent (model `MiniMax-M3`), directed by Jeremy / Thirsty
-- **Previous map (if any):** This file, in-place. Earlier session added v3 rule (`AGENTS.md`) and this map; this session extends scope to re-integration.
+- **Project:** Project-AI Beginnings — governed development checkpoint and
+  pre-deployment hardening output.
+- **Mode:** governance system / repo-wide pre-deployment preparation.
+- **Date:** 2026-06-29 current-state refresh; original map started
+  2026-06-24.
+- **Agent/Operator:** Codex, directed by Jeremy / Thirsty.
+- **Previous map (if any):** This file, in-place. Historical sections remain
+  below as append-only evidence; this top block reflects current state.
 
 ## Current State
 
-- **Overall status:** Stage 18 (acceptance gate) **locally complete and accepted** at commit `ca3477a` (2026-06-21). This session executed the legacy-coverage **gap discovery** per plan `C:\Users\Quencher\.hermes\plans\2026-06-24_080000-project-ai-gap-discovery.md` AND **Wave 1 + Wave 2 rebuilds** per `STAGE_19_ACCEPTANCE.md`. Three inventory files + stage acceptance doc produced. **452/452 tests passing, mypy --strict clean, ruff clean.** Unity 3DOF client is **deferred by user instruction 2026-06-21** (flagged in inventory §8 Q1).
-- **Safe to continue:** yes (for user review of stage 19 + authorization to commit and proceed to next wave); NOT for any code edits in any package without explicit user direction.
-- **Last verified checkpoint:** 2026-06-24 — `git rev-parse HEAD == ca3477a`; `git rev-parse origin/main == ca3477a`; `git status --short` clean except `?? .obsidian/` (legacy soft-freeze policy) plus the new untracked files listed below.
+- **Overall status:** Stage 19.5/J2 implementation is complete through J2.9.
+  All known J1 audit gaps are closed with implementation CI evidence. Latest
+  verified docs/evidence checkpoint before this pre-deployment pass:
+  commit `22ad10aa49f24e5045ffd4493a6e92f9cb615b7a`, GitHub Actions CI run
+  `28362260186`, conclusion `success`.
+- **Safe to continue:** yes for pre-deployment hardening, final Stage 19.5/J2
+  acceptance review, and additional local validation. No production deployment,
+  tag, release, package publication, or image publication is authorized by this
+  state.
+- **Last verified checkpoint:** 2026-06-29 — local `main` in sync with
+  `origin/main`; working tree was clean before this pre-deployment pass.
 
 ## File Inventory
 
@@ -1365,6 +1376,91 @@ watch CI for the documentation-only checkpoint.
 
 ### Safe to continue
 Yes. Current executable path is to commit, push, and watch CI.
+
+
+## Session Update — Pre-Deployment Output (2026-06-29)
+
+### Scope
+- Mode: governance system / repo-wide pre-deployment preparation.
+- Branch: `main`.
+- Starting state: local `main` in sync with `origin/main`, working tree clean.
+- User instruction: "proceed with maximum implementation, across every domain
+  and aspect. pre deployment output"
+
+### Problems fixed now
+- Active docs referenced older CI evidence (`25c3237b` / `28308833729`) as the
+  current checkpoint even though J2.9 implementation and evidence CI had moved
+  the repo forward.
+- No active `docs/deployment/` or `docs/runbooks/` pre-deployment operator
+  output existed, despite Compose, Helm, CI, health, and environment surfaces
+  being present.
+- No executable pre-deployment verifier existed to bind docs, environment
+  examples, Compose services, Helm values, and CI job shape together.
+
+### Files materially changed
+- `.env.example`
+- `tools/verify_pre_deployment.py`
+- `tools/tests/test_verify_pre_deployment.py`
+- `docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`
+- `docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md`
+- `README.md`
+- `CHANGELOG.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `docs/internal/STAGE_19_5J2_9_ACCEPTANCE.md`
+- `docs/internal/FINAL_PEER_REVIEW.md`
+- `docs/operations/CONTINUITY_MAP.md`
+
+### Verification planned
+Completed local verification:
+
+- `uv run python tools/verify_pre_deployment.py` — passed.
+- `uv run python -m pytest tools/tests/test_verify_pre_deployment.py -q` —
+  3 passed.
+- `uv run ruff check .` — passed.
+- `uv run ruff format --check .` — 189 files already formatted.
+- CI-shaped MyPy over source dirs and tools — clean on 95 source files.
+- `uv run python -m pytest -q --tb=short` — 1467 passed.
+- Coverage gate — 1467 passed, 88.47% branch coverage, threshold 80%.
+- `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- `uv run python tools/verify_frozen_history.py` — 2264/2264 sections
+  verified.
+- `pnpm web:lint`, `pnpm web:test`, and `pnpm web:build` — passed.
+- `cargo fmt --check`, `cargo clippy --workspace --all-targets --locked -- -D
+  warnings`, and `cargo test --workspace --locked` — passed.
+- `helm lint helm/project-ai` — 1 chart linted, 0 failed.
+- `helm template project-ai-dev helm/project-ai | uv run python
+  tools/verify_helm_template.py` — 14 manifests verified.
+- `docker compose config --quiet` — passed.
+- `python tools/verify_compose_health.py` — 7/7 healthy and security settings
+  verified.
+- Android `testDebugUnitTest assembleDebug` — `BUILD SUCCESSFUL` after setting
+  `ANDROID_HOME=C:\Users\Quencher\AppData\Local\Android\Sdk`.
+- `$env:SKIP='no-commit-to-branch,gitleaks'; uv run pre-commit run --all-files`
+  — passed all non-skipped hooks.
+
+### Existing issues / not verified
+- Production deployment is not performed and not claimed.
+- Runtime production secrets, TLS, ingress, monitoring, alerting, persistence
+  retention, backup, and production rollback remain undefined by design for
+  this development checkpoint.
+- Initial Android validation failed because `ANDROID_HOME` / `ANDROID_SDK_ROOT`
+  were unset. Classification: environment issue, fixed now for the validation
+  command by pointing to the existing local SDK.
+- Initial Compose runtime validation failed because Docker Desktop was not
+  running. Classification: environment issue, fixed now by starting local
+  Docker Desktop and rerunning health/security verification.
+- Compose build/wait hit the tool timeout after the stack became healthy.
+  Classification: not blocking current task; direct health/security
+  verification passed and `docker compose down` stopped the stack.
+- Coverage warning: `arbiter_gov` was not imported. Classification: not
+  blocking current task; coverage exited 0 and exceeded threshold.
+- pnpm bin-link warnings and Rust incremental-cache finalize warnings appeared
+  on Windows. Classification: not blocking current task; domain commands exited
+  0.
+
+### Safe to continue
+Yes. Current executable path is final pre-commit, commit, push, and CI
+verification.
 
 
 ## Session Update — Phase J2.9 Atlas replay system (2026-06-29)

@@ -38,6 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Atlas J2.9 replay-system wave: canonical replay bundles, deterministic
   bundle hashes, fail-closed bundle verification, reconstruction summaries,
   explicit save/load operations, audit-visible replay events, and tests.
+- Pre-deployment output: executable `tools/verify_pre_deployment.py`, non-secret
+  `.env.example`, development stack runbook, and deployment-readiness checklist
+  tied to the real Compose, Helm, CI, environment, replay, and continuity
+  surfaces.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`
@@ -53,7 +57,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions Node.js 20 deprecation annotations were cleared.
 
 ### Verified
-- GitHub Actions CI passed on commit `25c3237b` in run `28308833729`.
+- GitHub Actions CI passed on J2.9 implementation commit
+  `176990f08b6c403befccee43b350d6874e733507` in run `28362042896`.
+- GitHub Actions CI passed on the latest J2.9 docs/evidence commit
+  `22ad10aa49f24e5045ffd4493a6e92f9cb615b7a` in run `28362260186`.
+- Local pre-deployment gates passed across Python, web, Rust, Helm, Compose
+  health/security, and Android debug build surfaces.
 - No version tag, GitHub Release, package publication, image publication, or
   deployment was created for this checkpoint.
 
