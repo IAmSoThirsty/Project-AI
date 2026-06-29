@@ -18,11 +18,14 @@ J2.8 CLI / API surface implementation CI green through run `28348049368`;
 J2.8 docs evidence CI green through run `28348166749`.
 J2.9 replay system implementation CI green through run `28362042896`.
 J2.9 docs/evidence CI green through run `28362260186`.
+Pre-deployment output CI green through run `28367849567`.
 **All local gates green:** pytest 1467 / CI-shaped mypy clean / ruff check clean / ruff format clean
 **Latest recorded implementation CI green:** run `28362042896` at commit
 `176990f0`.
 **Latest recorded docs/evidence CI green:** run `28362260186` at commit
 `22ad10aa`.
+**Latest recorded pre-deployment output CI green:** run `28367849567` at commit
+`6fdb658f`.
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
 > `e439897`. The original "all gates green" statement reflected the local
@@ -240,6 +243,7 @@ Recently closed:
 - J2.8 docs evidence CI is green through run `28348166749`.
 - J2.9 replay system implementation is CI green through run `28362042896`.
 - J2.9 docs/evidence is CI green through run `28362260186`.
+- Pre-deployment output is CI green through run `28367849567`.
 
 **Awaiting next action:** pre-deployment hardening output, then final Stage
 19.5/J2 acceptance review unless the user pivots.

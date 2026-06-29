@@ -19,8 +19,9 @@ embed governance authority.
 - Development version: `0.0.0.dev0`.
 - Active branch: `main`.
 - Stage 18 local acceptance: accepted from a detached clean checkout.
-- Development checkpoint: `main` is pushed and GitHub Actions CI passed on
-  commit `22ad10aa49f24e5045ffd4493a6e92f9cb615b7a` in run `28362260186`.
+- Development checkpoint: `main` is pushed and GitHub Actions CI is green
+  through the pre-deployment output commit
+  `6fdb658f76008b393e7a6c2b42814bb9f995e5e7` in run `28367849567`.
 - No version tag, GitHub Release, package publication, image publication,
   deployment, or production-readiness claim is part of this checkpoint.
 
