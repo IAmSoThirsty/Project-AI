@@ -16,10 +16,10 @@ green through run `28331262312`. J2.7 sandbox implementation CI green through
 run `28333214769`, and J2.7 docs evidence CI green through run `28333284791`.
 J2.8 CLI / API surface implementation CI green through run `28348049368`;
 J2.8 docs evidence CI green through run `28348166749`.
-J2.9 replay system is locally implemented pending commit/push and remote CI
-evidence.
+J2.9 replay system implementation CI green through run `28362042896`.
 **All local gates green:** pytest 1464 / CI-shaped mypy clean / ruff check clean / ruff format clean
-**Latest remote CI green:** run `28348166749` at commit `641a8ee2`.
+**Latest recorded implementation CI green:** run `28362042896` at commit
+`176990f0`.
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
 > `e439897`. The original "all gates green" statement reflected the local
@@ -65,7 +65,7 @@ This ledger accompanies the work submission. It documents:
 | J2.6 — failure surveillance | ✓ closed | `441bf02b` |
 | J2.7 — sandbox | ✓ closed | `b35f55e8` |
 | J2.8 — CLI / API surface | ✓ closed | `2e66443` |
-| J2.9 — replay system | ✓ closed locally | pending |
+| J2.9 — replay system | ✓ closed | `176990f0` |
 
 **Total:** historical session counts above are preserved as submitted; current
 continuation commits are tracked in the phase table and git history.
@@ -137,8 +137,9 @@ All checks passed!
 187 files already formatted
 
 === GIT ===
-Working tree: dirty during current J2.9 session before commit
-Local/origin: commit pending
+J2.9 implementation commit: `176990f0`, pushed.
+J2.9 implementation CI: run `28362042896`, success.
+Live working-tree state must be checked with `git status` before further edits.
 ```
 
 ---
@@ -233,11 +234,10 @@ Recently closed:
 - J2.8 CLI / API surface implementation is CI green through run
   `28348049368`.
 - J2.8 docs evidence CI is green through run `28348166749`.
-- J2.9 replay system is locally accepted with 1464 pytest pass, 88.47%
-  branch coverage, replay 5/5, and frozen history 2264/2264.
+- J2.9 replay system implementation is CI green through run `28362042896`.
 
-**Awaiting next action:** commit/push J2.9 implementation and verify remote CI;
-then perform final Stage 19.5/J2 acceptance review unless the user pivots.
+**Awaiting next action:** perform final Stage 19.5/J2 acceptance review unless
+the user pivots.
 
 ---
 
@@ -282,9 +282,9 @@ This is the final state of a multi-day session. Every commit was:
 
 Every phase followed the **discovery → source → tests → integration → acceptance → commit** pattern. Every commit has an acceptance doc or commit-message explaining the work.
 
-**State at submission: local canonical gates green; production deployment
-readiness not proven until GitHub Actions is green for the J2.9 implementation
-commit and final acceptance is recorded.**
+**State at submission: local canonical gates green and J2.9 implementation CI
+green; production deployment readiness is not claimed until final acceptance is
+recorded.**
 
 ---
 

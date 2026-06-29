@@ -9,7 +9,8 @@
 
 > Current-state note (2026-06-29): this discovery plan is historical. The
 > J2.1-J2.9 continuation waves have now been locally implemented, and all J1
-> audit gaps are closed locally pending J2.9 commit/push and remote CI evidence.
+> audit gaps are closed with implementation CI evidence through run
+> `28362042896`.
 > Use `docs/internal/STAGE_19_5_SESSION_LEDGER.md` for current status.
 
 ---

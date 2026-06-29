@@ -7,9 +7,8 @@
 
 > Correction note (2026-06-27): this peer review is a Stage 19.5 A-J snapshot
 > ending at `b8637a2`. It is not the current repository head. Later commits
-> completed J2.1-J2.9; as of the J2.9 local acceptance pass on 2026-06-29,
-> all J1 audit gaps are closed locally and the J2.9 implementation commit/CI
-> evidence is pending. Use
+> completed J2.1-J2.9; as of GitHub Actions CI run `28362042896` on
+> 2026-06-29, all J1 audit gaps are closed with implementation CI evidence. Use
 > `docs/internal/STAGE_19_5_SESSION_LEDGER.md` plus current git status for
 > current-state reporting. The "Remaining: None" language below is historical
 > to the A-J snapshot and is superseded by the session ledger.
