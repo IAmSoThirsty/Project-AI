@@ -14,8 +14,8 @@ docs evidence CI green through run `28330896816`. J2.6 failure surveillance
 implementation CI green through run `28331195681`, and J2.6 docs evidence CI
 green through run `28331262312`. J2.7 sandbox implementation CI green through
 run `28333214769`, and J2.7 docs evidence CI green through run `28333284791`.
-J2.8 CLI / API surface is locally implemented pending commit/push and remote
-CI evidence.
+J2.8 CLI / API surface implementation CI green through run `28348049368`;
+docs evidence commit is pending.
 **All local gates green:** pytest 1456 / CI-shaped mypy clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
@@ -60,7 +60,7 @@ This ledger accompanies the work submission. It documents:
 | J2.5 — constitutional kernel | ✓ closed | `a87c5594`, `8b94bf5d` |
 | J2.6 — failure surveillance | ✓ closed | `441bf02b` |
 | J2.7 — sandbox | ✓ closed | `b35f55e8` |
-| J2.8 — CLI / API surface | ✓ closed locally | pending |
+| J2.8 — CLI / API surface | ✓ closed | `2e66443` |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -223,11 +223,11 @@ Recently closed:
   `28331195681`.
 - J2.7 sandbox implementation is CI green through run `28333214769`.
 - J2.7 docs evidence CI is green through run `28333284791`.
-- J2.8 CLI / API surface is locally accepted with 1456 pytest pass, 89.35%
-  branch coverage, replay 5/5, and frozen history 2264/2264.
+- J2.8 CLI / API surface implementation is CI green through run
+  `28348049368`.
 
-**Awaiting next action:** commit/push J2.8 implementation and verify remote CI;
-then continue to J2.9 replay system unless the user pivots.
+**Awaiting next action:** commit/push this docs evidence update and verify its
+remote CI; then continue to J2.9 replay system unless the user pivots.
 
 ---
 

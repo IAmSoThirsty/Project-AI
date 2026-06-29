@@ -1388,6 +1388,9 @@ Yes. Current executable path is to commit, push, and watch CI.
 - The J2.7 docs evidence commit was verified before this work started:
   GitHub Actions CI run `28333284791` completed successfully for commit
   `239517cc355ebde35e8c03b32e7714e8efd48942`.
+- J2.8 implementation commit `2e6644344cb2f17a1f506243600a170706dbe8c1`
+  was pushed to `origin/main`; GitHub Actions CI run `28348049368`
+  completed successfully.
 
 ### Files materially changed
 - `packages/api/src/project_ai_api/app.py`
@@ -1439,12 +1442,16 @@ Yes. Current executable path is to commit, push, and watch CI.
 - Coverage emitted the existing warning that `arbiter_gov` was not imported.
   Classification: not blocking current task; coverage exited 0 at 89.35%
   branch coverage against an 80% threshold.
-- J2.8 remote CI is not yet verified because the implementation commit has not
-  been created or pushed. Classification: not blocking local acceptance;
-  requires commit, push, and GitHub Actions verification.
+- GitHub Actions run `28348049368` emitted a non-blocking cache reservation
+  annotation in the SBOM job. Classification: not blocking current task; the
+  workflow conclusion was success.
+- This follow-up evidence update is docs-only. Its own CI run must still be
+  verified after the docs evidence commit is pushed. Classification: not
+  blocking source implementation; verify before final handoff.
 
 ### Safe to continue
-Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
+Yes. Current executable path is to commit/push this docs-only CI evidence update
+and watch its CI run.
 
 
 ## Session Update — Phase J2.4.0c Atlas temporal graph (2026-06-28)

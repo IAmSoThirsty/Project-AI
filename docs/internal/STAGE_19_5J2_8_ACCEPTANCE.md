@@ -107,8 +107,14 @@ remained above threshold.
 Remote CI after commit/push:
 
 ```text
-Pending until the J2.8 implementation commit is pushed.
+GitHub Actions CI run 28348049368
+Commit: 2e6644344cb2f17a1f506243600a170706dbe8c1
+Conclusion: success
+URL: https://github.com/IAmSoThirsty/Project-AI/actions/runs/28348049368
 ```
+
+The run emitted a non-blocking cache reservation annotation in the SBOM job.
+Classification: not blocking current task; the workflow conclusion was success.
 
 ---
 
@@ -133,7 +139,7 @@ Pending until the J2.8 implementation commit is pushed.
 
 ## 4. Remaining J2 work
 
-- J2.8 CLI / API surface is closed locally.
+- J2.8 CLI / API surface is closed with implementation CI evidence.
 - The next open J1 audit gap after J2.8 is J2.9 replay system, unless the user
   pivots.
 
