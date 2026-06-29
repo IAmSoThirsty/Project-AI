@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Atlas J2.7 Sludge sandbox wave: canonical SS-only fictional narrative
   artifacts, source snapshot hashing, no default filesystem writes,
   contamination checks, audit-visible events, and tests.
+- J2.8 CLI / API surface: public Atlas status route, protected Atlas Sludge
+  gateway route, gateway-only `atlas-status` and `atlas-sludge` CLI commands,
+  audit relay evidence, and tests.
 
 ### Changed
 - Root project documentation now describes the current `0.0.0.dev0`

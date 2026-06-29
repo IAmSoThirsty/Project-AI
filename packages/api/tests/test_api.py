@@ -41,6 +41,12 @@ def test_public_health_doi_and_replay_routes(tmp_path: Path) -> None:
     }
     assert client.get("/dois").json()["dois"][0]["doi"] == "10.1/example"
     assert client.get("/replay/status").json()["invariants_passed"] == 5
+    atlas = client.get("/atlas/status").json()
+    assert atlas["status"] == "available"
+    assert atlas["stack"] == "Atlas"
+    assert atlas["authority"] == "analysis_only"
+    assert atlas["protected_operations"] == ["sludge_narrative"]
+    assert "not a decision, authority grant, or actuation" in atlas["subordination_notice"]
 
 
 def test_registry_reads_only_complete_catalog() -> None:
@@ -56,6 +62,7 @@ def test_protected_routes_fail_closed_without_configuration() -> None:
     response = client.get("/audit")
     assert response.status_code == 503
     assert response.json()["detail"] == "Protected API surfaces are not configured"
+    assert client.post("/atlas/sludge", json={"rs_snapshot": {"stack": "RS"}}).status_code == 503
 
 
 def test_protected_routes_reject_missing_or_invalid_bearer(tmp_path: Path) -> None:
@@ -95,6 +102,51 @@ def test_canary_route_never_persists_raw_canary(tmp_path: Path) -> None:
     audit_text = (tmp_path / "audit.jsonl").read_text(encoding="utf-8")
     assert raw_canary not in audit_text
     assert hashlib.sha256(raw_canary.encode()).hexdigest() in audit_text
+
+
+def test_atlas_sludge_route_generates_isolated_fictional_artifact(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    response = client.post(
+        "/atlas/sludge",
+        headers=AUTH,
+        json={
+            "rs_snapshot": {
+                "stack": "RS",
+                "claim": "source claim must not appear",
+                "probability": 0.82,
+            },
+            "archetypes": ["hidden_elites", "false_flags"],
+        },
+    )
+    assert response.status_code == 202
+    narrative = response.json()["narrative"]
+    assert narrative["stack"] == "SS"
+    assert narrative["is_sludge"] is True
+    assert narrative["contains_numeric_probabilities"] is False
+    assert narrative["archetypes"] == ["hidden_elites", "false_flags"]
+    assert narrative["narrative_id"].startswith("SLUDGE-")
+    assert narrative["source_snapshot_sha256"]
+    assert "source claim must not appear" not in " ".join(narrative["branches"])
+    assert "NOT FOR DECISION MAKING" in narrative["watermark"]
+
+
+def test_atlas_sludge_route_rejects_bad_archetype_and_non_rs_snapshot(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    assert (
+        client.post(
+            "/atlas/sludge",
+            headers=AUTH,
+            json={"rs_snapshot": {"stack": "RS"}, "archetypes": ["unknown"]},
+        ).status_code
+        == 422
+    )
+    response = client.post(
+        "/atlas/sludge",
+        headers=AUTH,
+        json={"rs_snapshot": {"stack": "SS"}, "archetypes": ["hidden_elites"]},
+    )
+    assert response.status_code == 422
+    assert response.json()["detail"] == "rs_snapshot must declare stack RS"
 
 
 def test_invalid_verdict_and_audit_limit_are_rejected(tmp_path: Path) -> None:

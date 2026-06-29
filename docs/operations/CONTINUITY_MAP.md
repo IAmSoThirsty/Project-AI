@@ -1348,6 +1348,9 @@ watch CI for the documentation-only checkpoint.
 - Pre-commit:
   `SKIP=no-commit-to-branch,gitleaks uv run pre-commit run --all-files` —
   passed all non-skipped hooks.
+- Pre-commit:
+  `SKIP=no-commit-to-branch,gitleaks uv run pre-commit run --all-files` —
+  passed all non-skipped hooks.
 
 ### Existing issues / not verified
 - Plain local `uv run mypy packages/atlas/src/atlas packages/atlas/tests tests/test_atlas_graph_integration.py --strict`
@@ -1362,6 +1365,86 @@ watch CI for the documentation-only checkpoint.
 
 ### Safe to continue
 Yes. Current executable path is to commit, push, and watch CI.
+
+
+## Session Update — Phase J2.8 CLI / API surface (2026-06-29)
+
+### Scope
+- Mode: module patch / API + CLI gateway surface.
+- Branch: `main`.
+- Starting state: working tree clean, local `main` in sync with `origin/main`.
+- Next logical item selected from `docs/internal/STAGE_19_5_SESSION_LEDGER.md`:
+  Phase J2.8 CLI / API surface.
+
+### Problems fixed now
+- The preserved legacy Atlas CLI existed only under
+  `packages/_staging/atlas/cli/atlas_cli.py`; canonical API/CLI did not expose
+  Atlas status or Sludge sandbox generation through the gateway.
+- Canonical API now exposes public `GET /atlas/status` and protected
+  `POST /atlas/sludge`.
+- Canonical CLI now exposes `project-ai atlas-status` and protected
+  `project-ai atlas-sludge --snapshot-file <path>` while preserving the
+  gateway-only boundary.
+- The J2.7 docs evidence commit was verified before this work started:
+  GitHub Actions CI run `28333284791` completed successfully for commit
+  `239517cc355ebde35e8c03b32e7714e8efd48942`.
+
+### Files materially changed
+- `packages/api/src/project_ai_api/app.py`
+- `packages/api/src/project_ai_api/models.py`
+- `packages/api/pyproject.toml`
+- `packages/api/tests/test_api.py`
+- `packages/api/README.md`
+- `packages/cli/src/project_ai_cli/app.py`
+- `packages/cli/tests/test_cli.py`
+- `packages/cli/README.md`
+- `docs/internal/STAGE_19_5J2_8_ACCEPTANCE.md`
+- `docs/internal/STAGE_19_5_SESSION_LEDGER.md`
+- `CHANGELOG.md`
+- `docs/operations/CONTINUITY_MAP.md`
+- `uv.lock`
+
+### Verification run
+- Red test before source implementation:
+  `uv run python -m pytest packages/api/tests/test_api.py packages/cli/tests/test_cli.py -q`
+  — 7 failed, 24 passed due to missing `/atlas/status`, missing
+  `/atlas/sludge`, and missing `atlas-status` / `atlas-sludge` CLI commands.
+- Focused API/CLI tests after implementation:
+  `uv run python -m pytest packages/api/tests/test_api.py packages/cli/tests/test_cli.py -q`
+  — 31 passed.
+- Targeted ruff:
+  `uv run ruff check packages/api/src/project_ai_api packages/api/tests packages/cli/src/project_ai_cli packages/cli/tests`
+  — passed.
+- Targeted strict typing:
+  `uv run mypy packages/api/src packages/api/tests packages/cli/src packages/cli/tests`
+  — clean on 9 source files.
+- Repo ruff:
+  `uv run ruff check .` — passed.
+- Repo formatting:
+  `uv run ruff format --check .` — 185 files already formatted.
+- CI-shaped mypy:
+  `uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools`
+  — clean on 92 source files.
+- Full pytest:
+  `uv run python -m pytest -q --tb=short` — 1456 passed.
+- Coverage gate:
+  `QT_QPA_PLATFORM=offscreen uv run python -m pytest -q --tb=short --cov=kernel --cov=security --cov=governance --cov=capability --cov=execution --cov=companion --cov=swr --cov=atlas --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli --cov=project_ai_desktop --cov=project_ai_services --cov-branch --cov-report=term-missing --cov-fail-under=80`
+  — 1456 passed, 89.35% branch coverage, threshold 80%.
+- Canonical replay:
+  `uv run python tools/canonical_replay.py` — 5/5 invariants passed.
+- Frozen history:
+  `uv run python tools/verify_frozen_history.py` — 2264/2264 sections verified.
+
+### Existing issues / not verified
+- Coverage emitted the existing warning that `arbiter_gov` was not imported.
+  Classification: not blocking current task; coverage exited 0 at 89.35%
+  branch coverage against an 80% threshold.
+- J2.8 remote CI is not yet verified because the implementation commit has not
+  been created or pushed. Classification: not blocking local acceptance;
+  requires commit, push, and GitHub Actions verification.
+
+### Safe to continue
+Yes. Current executable path is to run pre-commit, commit, push, and watch CI.
 
 
 ## Session Update — Phase J2.4.0c Atlas temporal graph (2026-06-28)

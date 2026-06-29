@@ -626,6 +626,7 @@ version = "0.0.0.dev0"
 source = { editable = "packages/api" }
 dependencies = [
     { name = "fastapi" },
+    { name = "project-ai-atlas" },
     { name = "project-ai-kernel" },
     { name = "project-ai-security" },
     { name = "uvicorn", extra = ["standard"] },
@@ -634,6 +635,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115.0" },
+    { name = "project-ai-atlas", editable = "packages/atlas" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-security", editable = "packages/security" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },

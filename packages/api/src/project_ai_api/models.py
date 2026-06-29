@@ -34,6 +34,15 @@ class ReplayStatus(FrozenModel):
     updated_at: str = ""
 
 
+class AtlasStatus(FrozenModel):
+    status: Literal["available"] = "available"
+    version: Literal["0.0.0.dev0"] = "0.0.0.dev0"
+    stack: Literal["Atlas"] = "Atlas"
+    authority: Literal["analysis_only"] = "analysis_only"
+    protected_operations: tuple[Literal["sludge_narrative"], ...] = ("sludge_narrative",)
+    subordination_notice: str
+
+
 class VerdictRequest(FrozenModel):
     action_id: str = Field(min_length=1, max_length=256)
     verdict: Literal["ALLOW", "DENY", "ESCALATE"]
@@ -52,6 +61,51 @@ class AuditWriteResponse(FrozenModel):
 
 
 type JsonScalar = str | int | float | bool | None
+type JsonValue = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
+
+
+class AtlasSludgeRequest(FrozenModel):
+    rs_snapshot: dict[str, JsonValue] = Field(min_length=1)
+    archetypes: (
+        tuple[
+            Literal[
+                "hidden_elites",
+                "suppressed_tech",
+                "false_flags",
+                "prophetic_inevitability",
+            ],
+            ...,
+        ]
+        | None
+    ) = None
+
+
+class AtlasSludgeNarrative(FrozenModel):
+    archetypes: tuple[
+        Literal[
+            "hidden_elites",
+            "suppressed_tech",
+            "false_flags",
+            "prophetic_inevitability",
+        ],
+        ...,
+    ]
+    branches: tuple[str, ...]
+    contains_numeric_probabilities: Literal[False] = False
+    fiction_banner: str
+    is_sludge: Literal[True] = True
+    narrative_id: str
+    source_snapshot_sha256: str
+    stack: Literal["SS"] = "SS"
+    subordination_notice: str
+    watermark: str
+
+
+class AtlasSludgeResponse(FrozenModel):
+    accepted: Literal[True] = True
+    event: Literal["atlas.sludge_narrative"] = "atlas.sludge_narrative"
+    hash: str
+    narrative: AtlasSludgeNarrative
 
 
 class AuditResponse(FrozenModel):

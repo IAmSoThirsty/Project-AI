@@ -12,9 +12,11 @@ and docs evidence CI green through run `28326958228`. J2.5 implementation
 commit pushed; implementation CI green through run `28330827940`, and J2.5
 docs evidence CI green through run `28330896816`. J2.6 failure surveillance
 implementation CI green through run `28331195681`, and J2.6 docs evidence CI
-green through run `28331262312`. J2.7 sandbox is locally implemented pending
-final repo gates. J2.7 implementation CI green through run `28333214769`.
-**All gates green:** pytest 1340 / mypy --strict clean / ruff check clean / ruff format clean
+green through run `28331262312`. J2.7 sandbox implementation CI green through
+run `28333214769`, and J2.7 docs evidence CI green through run `28333284791`.
+J2.8 CLI / API surface is locally implemented pending commit/push and remote
+CI evidence.
+**All local gates green:** pytest 1456 / CI-shaped mypy clean / ruff check clean / ruff format clean
 
 > Correction note (2026-06-27): this ledger was submitted at `485b6b3`, not
 > `e439897`. The original "all gates green" statement reflected the local
@@ -30,8 +32,8 @@ This ledger accompanies the work submission. It documents:
 - All commits made this session (24)
 - All artifacts created (packages + tests + docs)
 - Verification status (canonical gates + ad-hoc)
-- Known gaps remaining (2 full gaps after J2.7 local closure)
-- Next session entry point (Phase J2.8 — CLI / API surface)
+- Known gaps remaining (1 full gap after J2.8 local closure)
+- Next session entry point (Phase J2.9 — Replay system)
 
 ---
 
@@ -58,6 +60,7 @@ This ledger accompanies the work submission. It documents:
 | J2.5 — constitutional kernel | ✓ closed | `a87c5594`, `8b94bf5d` |
 | J2.6 — failure surveillance | ✓ closed | `441bf02b` |
 | J2.7 — sandbox | ✓ closed | `b35f55e8` |
+| J2.8 — CLI / API surface | ✓ closed locally | pending |
 
 **Total: 23 phase commits + 1 docs commit + ruff cleanup = 24 total**
 
@@ -106,7 +109,8 @@ This ledger accompanies the work submission. It documents:
 | After Phase J2.5 | 1420 | +14 |
 | After Phase J2.6 | 1441 | +21 |
 | After Phase J2.7 | 1451 | +10 |
-| **CURRENT** | **1451** | **+934 from baseline** |
+| After Phase J2.8 | 1456 | +5 |
+| **CURRENT** | **1456** | **+939 from baseline** |
 
 ---
 
@@ -114,19 +118,19 @@ This ledger accompanies the work submission. It documents:
 
 ```
 === PYTEST ===
-1420 passed in 6.19s
+1456 passed in 3.80s
 
 === MYPY --ignore-missing-imports over CI source dirs ===
-Success: no issues found in 90 source files
+Success: no issues found in 92 source files
 
 === RUFF CHECK ===
 All checks passed!
 
 === RUFF FORMAT --check ===
-181 files already formatted
+185 files already formatted
 
 === GIT ===
-Working tree: dirty during current J2.5 session before commit
+Working tree: dirty during current J2.8 session before commit
 Local/origin: commit pending
 ```
 
@@ -159,7 +163,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 | 3. Constitutional kernel | ✓ CLOSED LOCALLY | J2.5 |
 | 5. Failure surveillance | ✓ CLOSED LOCALLY | J2.6 |
 | 6. Sandbox | ✓ CLOSED LOCALLY | J2.7 |
-| 7. CLI / API surface | open | J2.8 |
+| 7. CLI / API surface | ✓ CLOSED LOCALLY | J2.8 |
 | 8. Replay system | open | J2.9 |
 
 ---
@@ -208,7 +212,7 @@ The system can now answer "why was reality allowed to continue?" by replaying th
 
 ## 9. Next session entry point
 
-**Phase J2.8 — CLI / API surface**
+**Phase J2.9 — Replay system**
 
 Recently closed:
 
@@ -218,8 +222,12 @@ Recently closed:
 - J2.6 failure surveillance implementation is CI green through run
   `28331195681`.
 - J2.7 sandbox implementation is CI green through run `28333214769`.
+- J2.7 docs evidence CI is green through run `28333284791`.
+- J2.8 CLI / API surface is locally accepted with 1456 pytest pass, 89.35%
+  branch coverage, replay 5/5, and frozen history 2264/2264.
 
-**Awaiting next action:** J2.8 CLI / API surface, unless the user pivots.
+**Awaiting next action:** commit/push J2.8 implementation and verify remote CI;
+then continue to J2.9 replay system unless the user pivots.
 
 ---
 
@@ -232,12 +240,12 @@ Recently closed:
 **Remote**: `https://github.com/IAmSoThirsty/Project-AI.git`
 **Status**: Original 24-commit submission pushed; J2.4.0c commits pushed and
 CI green; J2.5 implementation commit pushed and CI green in run `28330827940`
-**Verification**: Current local gates green for J2.5, 1420/1420 tests passing
+**Verification**: Current local gates green for J2.8, 1456/1456 tests passing
 
 ### How to verify locally
 ```bash
 cd T:/Project-AI-Beginnings
-uv run pytest                      # 1420 passed
+uv run pytest                      # 1456 passed
 uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools
 uv run ruff check .                # all checks passed
 uv run ruff format --check .       # 181 files formatted
@@ -246,10 +254,10 @@ uv run ruff format --check .       # 181 files formatted
 ### How to continue
 ```bash
 # Read next session entry point
-cat docs/internal/PHASE_J2_5_DISCOVERY.md
+cat docs/internal/STAGE_19_5_SESSION_LEDGER.md
 
 # Continue next open audit gap
-# Tell the agent: "whats up next?" or "go J2.6"
+# Tell the agent: "whats up next?" or "go J2.9"
 ```
 
 ---

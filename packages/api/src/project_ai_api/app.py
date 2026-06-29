@@ -11,7 +11,12 @@ from typing import Annotated, cast
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
 
+from atlas import SUBORDINATION_NOTICE, NarrativeArchetype, SludgeSandboxError, get_sludge_sandbox
 from project_ai_api.models import (
+    AtlasSludgeNarrative,
+    AtlasSludgeRequest,
+    AtlasSludgeResponse,
+    AtlasStatus,
     AuditResponse,
     AuditWriteResponse,
     CanaryRequest,
@@ -125,6 +130,10 @@ def create_app(
     def replay_state() -> ReplayStatus:
         return replay
 
+    @application.get("/atlas/status", response_model=AtlasStatus)
+    def atlas_status() -> AtlasStatus:
+        return AtlasStatus(subordination_notice=SUBORDINATION_NOTICE)
+
     @application.get(
         "/audit",
         response_model=AuditResponse,
@@ -159,6 +168,39 @@ def create_app(
             active_relay(), canary_value=request.canary_value, context=request.context
         )
         return AuditWriteResponse(event=str(record["event"]), hash=str(record["hash"]))
+
+    @application.post(
+        "/atlas/sludge",
+        response_model=AtlasSludgeResponse,
+        status_code=status.HTTP_202_ACCEPTED,
+        dependencies=protected,
+    )
+    def atlas_sludge(request: AtlasSludgeRequest) -> AtlasSludgeResponse:
+        try:
+            archetypes = (
+                None
+                if request.archetypes is None
+                else tuple(NarrativeArchetype(value) for value in request.archetypes)
+            )
+            narrative = get_sludge_sandbox().generate_narrative(
+                request.rs_snapshot,
+                archetypes=archetypes,
+            )
+        except SludgeSandboxError as error:
+            raise HTTPException(status_code=422, detail=str(error)) from error
+        record = active_relay().append(
+            "atlas.sludge_narrative",
+            {
+                "archetypes": ",".join(archetype.value for archetype in narrative.archetypes),
+                "narrative_id": narrative.narrative_id,
+                "source_snapshot_sha256": narrative.source_snapshot_sha256,
+                "stack": narrative.stack,
+            },
+        )
+        return AtlasSludgeResponse(
+            hash=str(record["hash"]),
+            narrative=AtlasSludgeNarrative.model_validate(narrative.to_canonical_dict()),
+        )
 
     return application
 

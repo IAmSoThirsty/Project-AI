@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import importlib
 import io
+import json
 import os
 import tomllib
 from email.message import Message
@@ -53,7 +54,12 @@ def gateway(monkeypatch: pytest.MonkeyPatch) -> FakeGateway:
 
 @pytest.mark.parametrize(
     ("command", "path"),
-    [("health", "/health/live"), ("dois", "/dois"), ("replay", "/replay/status")],
+    [
+        ("health", "/health/live"),
+        ("dois", "/dois"),
+        ("replay", "/replay/status"),
+        ("atlas-status", "/atlas/status"),
+    ],
 )
 def test_public_commands_use_get_gateway_routes(
     runner: CliRunner, gateway: FakeGateway, command: str, path: str
@@ -101,6 +107,49 @@ def test_canary_reads_secret_from_file_not_arguments(
         {"canary_value": raw_canary, "context": "cli-test"},
         True,
     )
+
+
+def test_atlas_sludge_reads_snapshot_file_and_uses_protected_gateway(
+    tmp_path: Path, runner: CliRunner, gateway: FakeGateway
+) -> None:
+    snapshot = {"stack": "RS", "claim": "local claim", "probability": 0.61}
+    snapshot_file = tmp_path / "snapshot.json"
+    snapshot_file.write_text(json.dumps(snapshot), encoding="utf-8")
+    result = runner.invoke(
+        app,
+        [
+            "atlas-sludge",
+            "--snapshot-file",
+            str(snapshot_file),
+            "--archetype",
+            "hidden_elites",
+            "--archetype",
+            "false_flags",
+        ],
+    )
+    assert result.exit_code == 0
+    assert gateway.requests == [
+        (
+            "POST",
+            "/atlas/sludge",
+            {
+                "rs_snapshot": snapshot,
+                "archetypes": ["hidden_elites", "false_flags"],
+            },
+            True,
+        )
+    ]
+
+
+def test_atlas_sludge_rejects_non_object_snapshot_before_gateway(
+    tmp_path: Path, runner: CliRunner, gateway: FakeGateway
+) -> None:
+    snapshot_file = tmp_path / "snapshot.json"
+    snapshot_file.write_text("[]", encoding="utf-8")
+    result = runner.invoke(app, ["atlas-sludge", "--snapshot-file", str(snapshot_file)])
+    assert result.exit_code == 1
+    assert "snapshot file must contain a JSON object" in result.stderr
+    assert gateway.requests == []
 
 
 def test_empty_canary_file_fails_before_gateway(
