@@ -12,6 +12,7 @@ members = [
     "project-ai-cerberus",
     "project-ai-cli",
     "project-ai-companion",
+    "project-ai-convergence",
     "project-ai-desktop",
     "project-ai-execution",
     "project-ai-governance",
@@ -787,6 +788,27 @@ dependencies = [
 requires-dist = [
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
+]
+
+[[package]]
+name = "project-ai-convergence"
+version = "0.0.0.dev0"
+source = { editable = "packages/convergence" }
+dependencies = [
+    { name = "project-ai-atlas" },
+    { name = "project-ai-governance" },
+    { name = "project-ai-security" },
+    { name = "project-ai-swr" },
+    { name = "thirsty-lang" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-atlas", editable = "packages/atlas" },
+    { name = "project-ai-governance", editable = "packages/governance" },
+    { name = "project-ai-security", editable = "packages/security" },
+    { name = "project-ai-swr", editable = "packages/swr" },
+    { name = "thirsty-lang", specifier = "==0.8.1" },
 ]
 
 [[package]]

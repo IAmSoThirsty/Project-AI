@@ -102,6 +102,7 @@ members = [
     "packages/capability",
     "packages/cerberus",
     "packages/companion",
+    "packages/convergence",
     "packages/hydra_50",
     "packages/kernel",
     "packages/tarl",
