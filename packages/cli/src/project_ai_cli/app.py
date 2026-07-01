@@ -12,6 +12,7 @@ from typing import Annotated, cast
 import typer
 
 from project_ai_cli.client import Gateway, GatewayError, HttpGateway, JsonObject
+from project_ai_cli.thirsty import app as thirsty_app
 
 VERSION = "0.0.0.dev0"
 
@@ -232,6 +233,14 @@ def atlas_sludge(
 
 def run() -> None:
     app()
+
+
+# Wire the Thirsty-Lang tier sub-app onto the parent. The 6 tier
+# CLIs are exposed as subcommands of `project-ai` (e.g. `project-ai
+# tarl eval ...`). The sub-app is imported above and registered here
+# after the parent app is fully defined (Typer requires the parent
+# to exist before add_typer is called).
+app.add_typer(thirsty_app, name="lang")
 
 
 if __name__ == "__main__":

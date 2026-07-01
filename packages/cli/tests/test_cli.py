@@ -278,7 +278,14 @@ def test_cli_has_no_direct_execution_dependency_or_command(runner: CliRunner) ->
     package_root = Path(__file__).resolve().parents[1]
     metadata = tomllib.loads((package_root / "pyproject.toml").read_text(encoding="utf-8"))
     dependencies = cast(list[str], metadata["project"]["dependencies"])
-    assert dependencies == ["typer>=0.16.0"]
+    # The CLI's *execution* dependencies are still only typer. The
+    # additional `thirsty-lang` dep (Phase T4) is a LANGUAGE TOOL
+    # exposed via the `lang` sub-app, not a kernel-adjacent
+    # execution/governance package. It does NOT give the CLI the
+    # ability to actuate; the bridge is a passthrough that forwards
+    # argv to the language's argparse-based CLI.
+    execution_dependencies = [d for d in dependencies if not d.startswith("thirsty-lang")]
+    assert execution_dependencies == ["typer>=0.16.0"]
 
     forbidden = {"arbiter", "capability", "execution", "governance", "rlp"}
     imported: set[str] = set()

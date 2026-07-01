@@ -762,11 +762,15 @@ name = "project-ai-cli"
 version = "0.0.0.dev0"
 source = { editable = "packages/cli" }
 dependencies = [
+    { name = "thirsty-lang" },
     { name = "typer" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "typer", specifier = ">=0.16.0" }]
+requires-dist = [
+    { name = "thirsty-lang", specifier = "==0.8.1" },
+    { name = "typer", specifier = ">=0.16.0" },
+]
 
 [[package]]
 name = "project-ai-companion"
