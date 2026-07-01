@@ -1,0 +1,31 @@
+// Project-AI canonical governance policy
+// Loaded by packages/governance via utf.tarl.runtime (TarlRuntime).
+//
+// The policy is ADVISORY: the existing Python GovernanceEngine remains
+// authoritative. The TARL evaluation is consulted as an additional
+// governor (subordinate, never peer) — it cannot grant authority, only
+// describe intent. Fail-closed: a missing/invalid policy produces DENY
+// at the bridge layer, which the engine translates to a DENY vote.
+//
+// Subordination: atlas/compliance/policy.evaluates. The Python engine
+// is the source of truth for verdicts; TARL is the auditable policy
+// description.
+//
+// Default-deny: a request that matches no rule receives DENY.
+
+// Constitutional gates: an action with no authority must be denied.
+policy project_ai_constitutional
+when authority_present == false => DENY
+when evidence_tier < 1 => DENY
+when action == "execute" and capability_token_valid == false => DENY
+when action == "execute" and governor_consensus == false => ESCALATE
+
+// Quorum path: ESCALATE for ambiguous cases
+when governance_verdict == "ESCALATE" => ESCALATE
+
+// Audit-required actions: must be authorized AND logged
+when action == "audit_emit" and audit_chain_intact == false => DENY
+when action == "audit_emit" => ALLOW
+
+// Default deny
+when true => DENY

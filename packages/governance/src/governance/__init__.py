@@ -30,6 +30,23 @@ from governance.policy import Governor, Rule, RuleGovernor, RulePredicate
 from governance.triumvirate import Quorum, TriumvirateError, TriumvirateGovernor
 from governance.types import GovernanceResult, Vote
 
+# TarlBridge is imported lazily so a missing thirsty-lang dep does not
+# crash the rest of the governance package at import time. The bridge
+# is fail-closed on its own; this is an additional layer of defense
+# for callers that never use the TARL advisory path.
+try:
+    from governance.tarl_bridge import (
+        TarlAdvisoryGovernor,
+        TarlBridgeDecision,
+    )
+    from governance.tarl_bridge import (
+        evaluate_policy as evaluate_tarl_policy,
+    )
+except ImportError:  # pragma: no cover - fail-closed
+    TarlAdvisoryGovernor = None  # type: ignore[assignment,misc]
+    TarlBridgeDecision = None  # type: ignore[assignment,misc]
+    evaluate_tarl_policy = None  # type: ignore[assignment]
+
 __version__ = "0.0.0.dev0"
 
 __all__ = [

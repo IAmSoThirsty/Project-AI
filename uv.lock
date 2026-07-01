@@ -828,10 +828,14 @@ version = "0.0.0.dev0"
 source = { editable = "packages/governance" }
 dependencies = [
     { name = "project-ai-kernel" },
+    { name = "thirsty-lang" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
+requires-dist = [
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+    { name = "thirsty-lang", specifier = "==0.8.1" },
+]
 
 [[package]]
 name = "project-ai-hydra-50"
