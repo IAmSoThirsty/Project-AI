@@ -1,0 +1,56 @@
+// audit_proof.thirst
+//
+// Project-AI canonical proof obligations for the security audit chain.
+//
+// This file is consumed by `security.proof_obligations.extract_obligations()`,
+// which runs the Thirsty-Lang static proof-obligation extractor over the
+// AST and reports the capabilities that must be held by the calling
+// authority for any audit-chain operation to be allowed.
+//
+// Subordination contract:
+//   - The .thirst file is the *declarative description* of what the
+//     audit chain needs. The Python `AppendOnlyAuditRelay` is the
+//     authoritative runtime; this file is the policy/proof surface.
+//   - Fail-closed: if extraction fails (parse error, missing policy,
+//     incomplete context schema), every audit operation fails closed.
+//   - The required capabilities are extracted from the sensitive
+//     stdlib calls declared in the governed functions below. Adding
+//     a new sensitive call to this file immediately surfaces its
+//     obligation at extract time.
+
+module project_ai_audit: governed
+
+import "thirst::fs" as fs
+import "thirst::hash" as hash
+
+// Capability 1: append a new event to the hash chain.
+// Maps to AppendOnlyAuditRelay.append. The audit chain commits a
+// JSONL record to disk; this requires the "write" capability on
+// the file system. We also compute the SHA-256 of the new record
+// body, which requires the "compute" capability on the hash module.
+glass append_event(event_id) requires event_id != "" ensures result == "ok" {
+    fs.write_file("audit.jsonl", event_id)
+    let body = fs.read_file("audit.jsonl")
+    let digest = hash.sha256(body)
+    return "ok"
+}
+
+// Capability 2: verify the integrity of the entire chain.
+// Maps to AppendOnlyAuditRelay.verify. Traversal of the chain
+// requires the "read" capability on the file system; the
+// verification re-hashes every record, requiring the "compute"
+// capability on the hash module.
+glass verify_chain() requires true ensures result == true or result == false {
+    let body = fs.read_file("audit.jsonl")
+    let digest = hash.sha256(body)
+    return true
+}
+
+// Capability 3: read the latest event in the chain.
+// Maps to AppendOnlyAuditRelay._last_hash. Read-only.
+glass read_tail() requires true ensures result != "" {
+    let body = fs.read_file("audit.jsonl")
+    return body
+}
+
+drink audit_program = append_event("init")

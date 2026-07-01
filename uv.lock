@@ -868,6 +868,12 @@ source = { editable = "packages/rlp" }
 name = "project-ai-security"
 version = "0.0.0.dev0"
 source = { editable = "packages/security" }
+dependencies = [
+    { name = "thirsty-lang" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "thirsty-lang", specifier = "==0.8.1" }]
 
 [[package]]
 name = "project-ai-service-host"
