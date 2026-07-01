@@ -138,6 +138,25 @@ from atlas.temporal_graph import (
     track_evolution,
 )
 
+# Phase T5: the Atlas package is specified in TSCG (3rd tier).
+# Lazy import so a missing thirsty-lang dep does not crash the
+# rest of the package; the spec is opt-in.
+try:
+    from atlas.tscg_spec import (
+        EXPECTED_CANONICAL,
+        TSCGAtlasSpec,
+        TSCGAtlasSpecError,
+        load_spec,
+    )
+
+    _TSCG_IMPORT_ERROR: str | None = None
+except ImportError as _import_error:  # pragma: no cover - fail-closed
+    _TSCG_IMPORT_ERROR = str(_import_error)
+    EXPECTED_CANONICAL = None  # type: ignore[assignment,misc]
+    TSCGAtlasSpec = None  # type: ignore[assignment,misc]
+    TSCGAtlasSpecError = None  # type: ignore[assignment,misc]
+    load_spec = None  # type: ignore[assignment]
+
 __version__ = "0.0.0.dev0"
 
 __all__ = [

@@ -717,6 +717,7 @@ dependencies = [
     { name = "project-ai-execution" },
     { name = "project-ai-kernel" },
     { name = "scipy" },
+    { name = "thirsty-lang" },
 ]
 
 [package.metadata]
@@ -725,6 +726,7 @@ requires-dist = [
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "scipy", specifier = ">=1.11,<2.0" },
+    { name = "thirsty-lang", specifier = "==0.8.1" },
 ]
 
 [[package]]

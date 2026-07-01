@@ -1,0 +1,46 @@
+// atlas_spec.tscg
+//
+// Thirsty Symbolic Constitutional Grammar specification for the
+// Atlas package. This file is the canonical spec for the Atlas
+// analysis surface (12 modules, 8 archetypes, 1 sludge sandbox).
+//
+// Per PHASE_T_DISCOVERY.md Phase T5: Atlas is specified in TSCG
+// (3rd tier - Thirsty Symbolic Constitutional Grammar).
+//
+// Parsed by `atlas.tscg_spec.load_spec()` and validated at
+// module import time. The canonical form and SHA-256 checksum
+// are exposed for audit traceability.
+//
+// SYMBOLS USED
+// ------------
+// $COG   Cognition (thought/reflection). The Atlas analysis
+//        engine reads a reality stack and produces structural
+//        understanding of it.
+// $DNT   Prohibition. Atlas analysis is read-only: no
+//        actuation, no mutation of the source reality stack.
+// $CAP   Capacity/boundary. Atlas analyses are bounded by
+//        sensitivity.py and sludge_sandbox.py - the limits
+//        of Atlas's reach.
+// $QRM   Consensus/majority. The analysis reaches a stable
+//        verdict only when at least N independent evidence
+//        signals agree.
+// $ANC   Anchor. Atlas is anchored on the canonical DOI
+//        catalog and the audit chain (Chimera v2.2).
+// $LED   Ledger. Every analysis emits to the Chimera v2.2
+//        audit relay.
+// $SEL   Selection. The sludge_sandbox picks ONE archetype
+//        from the 8 to generate a protected narrative.
+//
+// CANONICAL EXPRESSION
+// --------------------
+// Atlas's cognitive contract: cognition bounded by capacity
+// with prohibitions. The TSCG operators are:
+//   $X -> $Y    pipeline: X flows to Y
+//   $X ^ $Y     conjunction: both X and Y apply
+//   $X || $Y    disjunction: either X or Y
+//   ($X)        grouping
+//
+// The actual spec expression (the only non-comment, non-blank
+// line) is below. The parser sees only this line.
+
+$COG -> $CAP -> $DNT
