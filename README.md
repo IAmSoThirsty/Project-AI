@@ -59,6 +59,35 @@ helm lint helm/project-ai
 helm template project-ai-dev helm/project-ai | uv run python tools/verify_helm_template.py
 ```
 
+## Operator documentation
+
+These docs are the operator-facing references for working with the
+deployed stack. Read them in this order on first contact:
+
+1. **`docs/operator.md`** — prerequisites, install commands, all env vars,
+   service endpoints, CLI install, K8s validation, frozen-history
+   verification, CI command mapping.
+2. **`docs/architecture.md`** — package dependency graph (downward-only),
+   12-package overview, 7-service Compose stack, governance pipeline
+   (kernel → governance → capability → execution), container hardening.
+3. **`docs/security.md`** — fail-closed execution gate, capability token
+   semantics, container security table, secret scanning, audit trail
+   format.
+4. **`docs/api/API_REFERENCE.md`** — every FastAPI route (8 routes) with
+   auth model, request/response shape, curl examples, error responses.
+5. **`docs/cli/CLI_REFERENCE.md`** — every `project-ai` subcommand with
+   examples, env vars, exit codes.
+6. **`docs/runbooks/INCIDENT_RESPONSE.md`** — 8 most-likely incidents
+   (service unhealthy, audit chain break, token rejected, compose won't
+   start, atlas replay fails, pytest regression, CI red on main) with
+   diagnostics and recovery.
+7. **`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`** — the pre-deploy
+   gate (the 4 canonical gates + the evidence they must produce).
+8. **`docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md`** — start/verify/inspect/
+   stop the 7-service Compose stack.
+9. **`docs/provenance.md`** — frozen-history SHA-256 chain verification,
+   paper corpus provenance, merge provenance.
+
 ## Repository layout
 
 ```text
