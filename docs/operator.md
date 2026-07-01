@@ -132,3 +132,19 @@ python tools/verify_frozen_history.py
 GitHub Actions workflow at `.github/workflows/ci.yaml` runs four jobs:
 `python`, `rust`, `node`, `compose`. Run the equivalent locally with the
 commands above before pushing.
+
+## See also
+
+- **`docs/architecture.md`** — package dep graph, every package's role, governance model, container stack
+- **`docs/security.md`** — fail-closed execution gate, capability tokens, container hardening, secret scanning
+- **`docs/provenance.md`** — frozen-history SHA-256 chain, paper corpus, merge provenance
+- **`docs/api/API_REFERENCE.md`** — every FastAPI route with auth, body, response, curl examples
+- **`docs/cli/CLI_REFERENCE.md`** — every `project-ai` subcommand with examples
+- **`docs/runbooks/INCIDENT_RESPONSE.md`** — 8 most-likely incidents with diagnostics
+- **`docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md`** — start/verify/inspect/stop the Compose stack
+- **`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`** — the pre-deploy gate
+- **`docs/deployment/PRODUCTION_DEPLOY.md`** — end-to-end deploy procedure
+- **`docs/deployment/HELM_DEPLOY.md`** — Kubernetes install via the helm chart
+- **`docs/deployment/ENVIRONMENT_VARIABLES.md`** — every env var with type/default/required-flag
+- **`docs/operations/PERFORMANCE_SLOS.md`** — performance and SLO targets
+- **`docs/operations/CONTINUITY_MAP.md`** — current-state handoff map

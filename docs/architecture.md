@@ -29,6 +29,47 @@ security ────┤
 Arbiter and RLP are **operator-side experimental packages** that sit outside this
 graph. They cannot grant themselves authority or invoke execution directly.
 
+### Rendered dependency graph (Mermaid)
+
+The same graph, rendered for GitHub/GitLab:
+
+```mermaid
+graph TD
+    kernel[kernel]
+    security[security]
+    governance[governance]
+    capability[capability]
+    execution[execution]
+    companion[companion]
+    swr[swr]
+    atlas[atlas]
+    api[api]
+    cli[cli]
+    genesis[genesis<br/>Rust]
+
+    kernel --> governance
+    security --> governance
+    governance --> execution
+    capability --> execution
+    execution --> companion
+    execution --> swr
+    execution --> atlas
+    atlas --> genesis
+    execution --> api
+    execution --> cli
+
+    style api fill:#e1f5ff
+    style cli fill:#e1f5ff
+    style genesis fill:#fff4e1
+    style arbiter fill:#ffe1e1,stroke-dasharray: 5 5
+    style rlp fill:#ffe1e1,stroke-dasharray: 5 5
+```
+
+Arbiter and RLP are intentionally **not** in this graph (dashed red).
+They are operator-side experimental packages that sit outside the
+downward-only contract; their outputs must flow through the AI-side
+governance + execution gate to actuate anything.
+
 ## Python Packages
 
 | Package | Description | Key Invariant |
