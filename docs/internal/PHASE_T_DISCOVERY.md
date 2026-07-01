@@ -76,7 +76,7 @@ Integration is greenfield.
 
 ---
 
-## 3. Mapping: Thirsty-Lang tiers → Beginnings packages
+## 3. Mapping: Thirsty-Lang tiers -> Beginnings packages
 
 The natural fit (per Thirsty-Lang's design — policy + proof + audit
 sit on top of the kernel):
