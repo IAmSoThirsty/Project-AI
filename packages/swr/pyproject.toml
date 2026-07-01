@@ -12,6 +12,7 @@ license = "MIT"
 dependencies = [
     "project-ai-execution",
     "project-ai-kernel",
+    "thirsty-lang==0.8.1",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
