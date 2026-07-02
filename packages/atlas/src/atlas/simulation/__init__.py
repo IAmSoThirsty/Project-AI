@@ -18,10 +18,23 @@ extends (doesn't subsume).
 Public surface:
 - MonteCarloEngine: Layer 6 coupled Monte Carlo dynamics
   (world-state evolution: W_{t+1} = F(W_t, eps_t))
+- AgentSimulator: Layer 5 agent-based institutional simulator
+  (vector-only responses, bounded utility, resource
+  constraints, driver pressure, claim-weighted perception,
+  historical inertia)
 """
 
 from __future__ import annotations
 
+from atlas.simulation.agent_simulator import (
+    AgentSimulator,
+    AgentState,
+    AgentType,
+    ResourceConstraints,
+    ResourceType,
+    UtilityFunction,
+    get_agent_simulator,
+)
 from atlas.simulation.monte_carlo_engine import (
     CouplingCoefficients,
     Domain,
@@ -32,10 +45,17 @@ from atlas.simulation.monte_carlo_engine import (
 )
 
 __all__ = [
+    "AgentSimulator",
+    "AgentState",
+    "AgentType",
     "CouplingCoefficients",
     "Domain",
     "MonteCarloEngine",
     "NoiseVector",
+    "ResourceConstraints",
+    "ResourceType",
+    "UtilityFunction",
     "WorldState",
+    "get_agent_simulator",
     "get_monte_carlo_engine",
 ]
