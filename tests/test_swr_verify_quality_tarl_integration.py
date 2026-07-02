@@ -31,7 +31,7 @@ from pathlib import Path
 
 import pytest
 
-REPO = Path(r"T:\Project-AI-Beginnings")
+REPO = Path(__file__).resolve().parents[1]
 TARL = REPO / "packages" / "swr" / "tarl" / "verify_quality.tarl"
 DOC_FLEET = REPO / "docs" / "reference" / "fleet_agent_5_tracking.md"
 DOC_GROUP2 = REPO / "docs" / "reference" / "GROUP_2_AGENT_8_REPORT.md"
