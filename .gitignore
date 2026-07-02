@@ -86,3 +86,7 @@ desktop.ini
 **/Microsoft.Services.Store.winmd
 **/Unity_lic.alf
 **/namecheap-order-*.pdf
+
+
+# Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
