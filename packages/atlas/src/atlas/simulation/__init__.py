@@ -26,6 +26,10 @@ Public surface:
   system (RS-only enforcement, versioned and hashed
   playbooks, narrative trigger blocking, duration-based
   condition evaluation)
+- TimelineDivergenceEngine: Layer 7 multi-seed timeline
+  divergence (16 standard seeds, 5 standard horizons, tensor
+  storage Projection[seed][horizon][year][metric],
+  stochastic volatility + structural divergence tracking)
 """
 
 from __future__ import annotations
@@ -57,8 +61,20 @@ from atlas.simulation.monte_carlo_engine import (
     WorldState,
     get_monte_carlo_engine,
 )
+from atlas.simulation.timeline_divergence import (
+    STANDARD_HORIZONS,
+    STANDARD_SEEDS,
+    ProjectionPoint,
+    ProjectionTensor,
+    TimelineDivergence,
+    TimelineDivergenceEngine,
+    UncertaintyAxis,
+    get_timeline_divergence_engine,
+)
 
 __all__ = [
+    "STANDARD_HORIZONS",
+    "STANDARD_SEEDS",
     "AgentSimulator",
     "AgentState",
     "AgentType",
@@ -69,15 +85,21 @@ __all__ = [
     "NoiseVector",
     "Playbook",
     "PlaybookAction",
+    "ProjectionPoint",
+    "ProjectionTensor",
     "ResourceConstraints",
     "ResourceType",
     "StackType",
+    "TimelineDivergence",
+    "TimelineDivergenceEngine",
     "TriggerActivation",
     "TriggerCondition",
     "TriggerType",
+    "UncertaintyAxis",
     "UtilityFunction",
     "WorldState",
     "get_agent_simulator",
     "get_contingency_trigger_framework",
     "get_monte_carlo_engine",
+    "get_timeline_divergence_engine",
 ]
