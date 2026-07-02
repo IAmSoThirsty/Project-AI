@@ -736,7 +736,7 @@ def test_export_results_csv() -> None:
         results = [{"id": "s1", "score": 100}, {"id": "s2", "score": 90}]
         path = bm.export_results(results, "test_results", format="csv")
         assert path.endswith(".csv")
-        text = Path(path).read_text()
+        text = Path(path).read_text(encoding="utf-8")
         assert "id,score" in text
         assert "s1,100" in text
         assert "s2,90" in text

@@ -60,14 +60,14 @@ def test_group2_doc_exists() -> None:
 
 def test_tarl_has_project_declaration() -> None:
     """verify_quality.tarl has the project + version lines."""
-    text = TARL.read_text()
+    text = TARL.read_text(encoding="utf-8")
     assert 'drink project = "Sovereign-War-Room"' in text
     assert 'drink version = "1.1.0"' in text
 
 
 def test_tarl_has_audit_block() -> None:
     """verify_quality.tarl has the audit() glass block."""
-    text = TARL.read_text()
+    text = TARL.read_text(encoding="utf-8")
     assert "glass audit()" in text
     assert "run ruff check ." in text
     assert "run black --check ." in text
@@ -75,7 +75,7 @@ def test_tarl_has_audit_block() -> None:
 
 def test_tarl_has_test_block() -> None:
     """verify_quality.tarl has the test() glass block."""
-    text = TARL.read_text()
+    text = TARL.read_text(encoding="utf-8")
     assert "glass test()" in text
     assert "run python ./tests/test_proof.py" in text
     assert "run python ./tests/test_core.py" in text
@@ -84,14 +84,14 @@ def test_tarl_has_test_block() -> None:
 
 def test_tarl_has_verify_block() -> None:
     """verify_quality.tarl has the verify() glass block."""
-    text = TARL.read_text()
+    text = TARL.read_text(encoding="utf-8")
     assert "glass verify()" in text
     assert "Checking implementation completeness" in text
 
 
 def test_tarl_has_harden_block() -> None:
     """verify_quality.tarl has the harden() glass block."""
-    text = TARL.read_text()
+    text = TARL.read_text(encoding="utf-8")
     assert "glass harden()" in text
     assert "depends on audit, test, verify" in text
     assert "Core engine hardened" in text
@@ -99,7 +99,7 @@ def test_tarl_has_harden_block() -> None:
 
 def test_tarl_uses_pour_for_output() -> None:
     """verify_quality.tarl uses pour for user-facing output."""
-    text = TARL.read_text()
+    text = TARL.read_text(encoding="utf-8")
     pour_count = len(re.findall(r"^\s*pour ", text, re.MULTILINE))
     assert pour_count >= 4, f"Expected >= 4 pour statements, got {pour_count}"
 
@@ -137,28 +137,28 @@ def test_tarl_parses_via_canonical_bridge() -> None:
 
 def test_fleet_doc_has_mission_header() -> None:
     """fleet_agent_5_tracking.md has the GROUP 3 mission header."""
-    text = DOC_FLEET.read_text()
+    text = DOC_FLEET.read_text(encoding="utf-8")
     assert "GROUP 3 - FLEET AGENT TRACKING" in text
     assert "Mission:" in text
 
 
 def test_fleet_doc_has_substantial_content() -> None:
     """fleet_agent_5_tracking.md has the expected line count."""
-    text = DOC_FLEET.read_text()
+    text = DOC_FLEET.read_text(encoding="utf-8")
     lines = text.splitlines()
     assert len(lines) > 100, f"Expected > 100 lines, got {len(lines)}"
 
 
 def test_group2_doc_has_mission_header() -> None:
     """GROUP_2_AGENT_8_REPORT.md has the mission header."""
-    text = DOC_GROUP2.read_text()
+    text = DOC_GROUP2.read_text(encoding="utf-8")
     assert "GROUP 2 AGENT 8" in text
     assert "MISSION COMPLETE" in text
 
 
 def test_group2_doc_has_substantial_content() -> None:
     """GROUP_2_AGENT_8_REPORT.md has the expected line count."""
-    text = DOC_GROUP2.read_text()
+    text = DOC_GROUP2.read_text(encoding="utf-8")
     lines = text.splitlines()
     assert len(lines) > 100, f"Expected > 100 lines, got {len(lines)}"
 
@@ -216,6 +216,6 @@ def test_j3_discovery_doc_references_seven_waves() -> None:
     discovery = REPO / "docs" / "internal" / "J3_DISCOVERY.md"
     if not discovery.exists():
         pytest.skip("J3_DISCOVERY.md not present")
-    text = discovery.read_text()
+    text = discovery.read_text(encoding="utf-8")
     for wave in ["J3.0", "J3.1", "J3.2", "J3.3", "J3.4", "J3.5", "J3.6", "J3.7"]:
         assert wave in text, f"J3 discovery doc missing reference to {wave}"

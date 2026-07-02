@@ -501,7 +501,7 @@ def test_dashboard_html_exists() -> None:
         / "dashboard.html"
     )
     assert template.exists()
-    text = template.read_text()
+    text = template.read_text(encoding="utf-8")
     assert "SOVEREIGN WAR ROOM" in text
     assert "loadLeaderboard" in text  # JavaScript function
     assert "/api/leaderboard" in text  # API endpoint

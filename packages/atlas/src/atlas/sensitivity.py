@@ -36,7 +36,7 @@ from typing import Any
 
 import numpy as np
 import numpy.typing as npt
-import scipy.linalg
+import scipy.linalg  # type: ignore[import-untyped, unused-ignore]
 
 from atlas.analysis import SUBORDINATION_NOTICE, Claim, Evidence
 
