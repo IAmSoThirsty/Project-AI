@@ -22,6 +22,10 @@ Public surface:
   (vector-only responses, bounded utility, resource
   constraints, driver pressure, claim-weighted perception,
   historical inertia)
+- ContingencyTriggerFramework: Layer 8 deterministic trigger
+  system (RS-only enforcement, versioned and hashed
+  playbooks, narrative trigger blocking, duration-based
+  condition evaluation)
 """
 
 from __future__ import annotations
@@ -34,6 +38,16 @@ from atlas.simulation.agent_simulator import (
     ResourceType,
     UtilityFunction,
     get_agent_simulator,
+)
+from atlas.simulation.contingency_triggers import (
+    ContingencyTriggerFramework,
+    Playbook,
+    PlaybookAction,
+    StackType,
+    TriggerActivation,
+    TriggerCondition,
+    TriggerType,
+    get_contingency_trigger_framework,
 )
 from atlas.simulation.monte_carlo_engine import (
     CouplingCoefficients,
@@ -48,14 +62,22 @@ __all__ = [
     "AgentSimulator",
     "AgentState",
     "AgentType",
+    "ContingencyTriggerFramework",
     "CouplingCoefficients",
     "Domain",
     "MonteCarloEngine",
     "NoiseVector",
+    "Playbook",
+    "PlaybookAction",
     "ResourceConstraints",
     "ResourceType",
+    "StackType",
+    "TriggerActivation",
+    "TriggerCondition",
+    "TriggerType",
     "UtilityFunction",
     "WorldState",
     "get_agent_simulator",
+    "get_contingency_trigger_framework",
     "get_monte_carlo_engine",
 ]
