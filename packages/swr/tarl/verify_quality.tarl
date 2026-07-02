@@ -7,7 +7,7 @@ drink version = "1.1.0"
 # Linting and Formatting
 glass audit() {
     pour "🔍 Auditing core engine for quality violations..."
-    
+
     run ruff check .
     run black --check .
 }
@@ -15,7 +15,7 @@ glass audit() {
 # Automated Tests
 glass test() {
     pour "🧪 Running Sovereign War Room proof and core tests..."
-    
+
     run python ./tests/test_proof.py
     run python ./tests/test_core.py
     run python ./tests/test_governance.py
@@ -24,7 +24,7 @@ glass test() {
 # Integrity Check
 glass verify() {
     pour "🛡️ Verifying sovereign invariants and architectural integrity..."
-    
+
     # Custom verification logic for the engine
     run python -c "print('Checking implementation completeness...')"
 }
@@ -32,6 +32,6 @@ glass verify() {
 # Full Hardening Pass
 glass harden() {
     depends on audit, test, verify
-    
+
     pour "💎 Core engine hardened and verified!"
 }

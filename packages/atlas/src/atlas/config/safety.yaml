@@ -20,7 +20,7 @@ stack_separation:
     bypass: false
     violation_consequence: "system_halt"
     audit_level: "critical"
-    
+
   rule_002:
     id: "SAFETY-STACK-002"
     name: "Parent Stack Dependency"
@@ -29,7 +29,7 @@ stack_separation:
     bypass: false
     violation_consequence: "operation_abort"
     audit_level: "critical"
-    
+
   rule_003:
     id: "SAFETY-STACK-003"
     name: "Stack Contamination Detection"
@@ -49,7 +49,7 @@ data_integrity:
     bypass: false
     violation_consequence: "data_rejection"
     audit_level: "critical"
-    
+
   rule_102:
     id: "SAFETY-DATA-102"
     name: "Provenance Requirement"
@@ -58,7 +58,7 @@ data_integrity:
     bypass: false
     violation_consequence: "data_rejection"
     audit_level: "critical"
-    
+
   rule_103:
     id: "SAFETY-DATA-103"
     name: "Immutability Enforcement"
@@ -67,7 +67,7 @@ data_integrity:
     bypass: false
     violation_consequence: "operation_abort"
     audit_level: "critical"
-    
+
   rule_104:
     id: "SAFETY-DATA-104"
     name: "Temporal Consistency"
@@ -87,7 +87,7 @@ determinism:
     bypass: false
     violation_consequence: "operation_abort"
     audit_level: "critical"
-    
+
   rule_202:
     id: "SAFETY-DET-202"
     name: "Replay Guarantee"
@@ -96,7 +96,7 @@ determinism:
     bypass: false
     violation_consequence: "projection_invalidation"
     audit_level: "critical"
-    
+
   rule_203:
     id: "SAFETY-DET-203"
     name: "No External Dependencies"
@@ -105,7 +105,7 @@ determinism:
     bypass: false
     violation_consequence: "operation_abort"
     audit_level: "critical"
-    
+
   rule_204:
     id: "SAFETY-DET-204"
     name: "State Consistency"
@@ -125,7 +125,7 @@ governance:
     bypass: false
     violation_consequence: "operation_abort"
     audit_level: "critical"
-    
+
   rule_302:
     id: "SAFETY-GOV-302"
     name: "Audit Trail Completeness"
@@ -134,7 +134,7 @@ governance:
     bypass: false
     violation_consequence: "system_halt"
     audit_level: "critical"
-    
+
   rule_303:
     id: "SAFETY-GOV-303"
     name: "No Silent Failures"
@@ -143,7 +143,7 @@ governance:
     bypass: false
     violation_consequence: "alert_escalation"
     audit_level: "critical"
-    
+
   rule_304:
     id: "SAFETY-GOV-304"
     name: "Change Attestation"
@@ -168,7 +168,7 @@ operation_limits:
       TS-1: 180
       TS-2: 365
       TS-3: 3650
-    
+
   rule_402:
     id: "SAFETY-OP-402"
     name: "Resource Exhaustion Prevention"
@@ -181,7 +181,7 @@ operation_limits:
       max_memory_gb: 16
       max_cpu_percent: 90
       max_duration_seconds: 3600
-      
+
   rule_403:
     id: "SAFETY-OP-403"
     name: "Circular Dependency Detection"
@@ -201,7 +201,7 @@ security:
     bypass: false
     violation_consequence: "operation_abort"
     audit_level: "critical"
-    
+
   rule_502:
     id: "SAFETY-SEC-502"
     name: "Input Sanitization"
@@ -210,7 +210,7 @@ security:
     bypass: false
     violation_consequence: "data_rejection"
     audit_level: "critical"
-    
+
   rule_503:
     id: "SAFETY-SEC-503"
     name: "Secure Communication"
@@ -219,7 +219,7 @@ security:
     bypass: false
     violation_consequence: "connection_abort"
     audit_level: "critical"
-    
+
   rule_504:
     id: "SAFETY-SEC-504"
     name: "Key Management"
@@ -239,7 +239,7 @@ penalty_safety:
     bypass: false
     violation_consequence: "penalty_capping"
     audit_level: "high"
-    
+
   rule_602:
     id: "SAFETY-PEN-602"
     name: "Permanent Penalty Review"
@@ -248,7 +248,7 @@ penalty_safety:
     bypass: false
     violation_consequence: "penalty_deferral"
     audit_level: "critical"
-    
+
   rule_603:
     id: "SAFETY-PEN-603"
     name: "Penalty Justification"
@@ -277,7 +277,7 @@ emergency_procedures:
       - "Root cause analysis"
       - "Remediation implementation"
       - "Security validation"
-      
+
   data_quarantine:
     trigger_conditions:
       - "Stack contamination detected"
@@ -293,7 +293,7 @@ emergency_procedures:
       - "Data validation"
       - "Source verification"
       - "Council approval for release"
-      
+
   graceful_shutdown:
     trigger_conditions:
       - "Resource limits exceeded"
@@ -315,13 +315,13 @@ enforcement_mechanisms:
     enabled: true
     check_frequency_seconds: 1
     violation_immediate_action: true
-    
+
   audit_logging:
     enabled: true
     log_all_checks: true
     log_all_violations: true
     retention_years: 10
-    
+
   automated_response:
     enabled: true
     escalation_levels:
@@ -330,7 +330,7 @@ enforcement_mechanisms:
       - error
       - critical
       - emergency
-    
+
   council_notification:
     immediate_alert:
       - critical violations
@@ -347,12 +347,12 @@ validation:
     - "This configuration file MUST NOT be modified"
     - "All rules marked as bypass:false CANNOT be overridden"
     - "All enforcement mechanisms MUST be enabled"
-    
+
   completeness:
     - "All safety categories must have defined rules"
     - "All rules must have clear enforcement mechanisms"
     - "All violations must have defined consequences"
-    
+
   integrity:
     - "Configuration hash must be verified on load"
     - "Any tampering must trigger system halt"

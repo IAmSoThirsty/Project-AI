@@ -31,7 +31,7 @@ stacks:
       - official_statements
       - court_documents
       - academic_publications
-      
+
   TS-0:
     name: "Timeline Stack - Base Projection"
     description: "Near-term projection (0-30 days) from RS"
@@ -47,7 +47,7 @@ stacks:
       - "Must use seed from seeds.yaml"
       - "Cannot introduce events without driver triggers"
       - "Inherits all RS data constraints"
-      
+
   TS-1:
     name: "Timeline Stack - Short-term Projection"
     description: "Short-term projection (30-180 days) from TS-0"
@@ -63,7 +63,7 @@ stacks:
     constraints:
       - "Can branch into multiple scenarios"
       - "Must maintain consistency with parent timeline"
-      
+
   TS-2:
     name: "Timeline Stack - Medium-term Projection"
     description: "Medium-term projection (180-365 days) from TS-1"
@@ -80,7 +80,7 @@ stacks:
     constraints:
       - "Increased uncertainty bounds"
       - "Must account for feedback loops"
-      
+
   TS-3:
     name: "Timeline Stack - Long-term Projection"
     description: "Long-term projection (1-10 years) from TS-2"
@@ -97,7 +97,7 @@ stacks:
     constraints:
       - "High uncertainty, scenario-based"
       - "Must include sensitivity analysis"
-      
+
   SS:
     name: "Simulation Stack"
     description: "Experimental simulations and what-if scenarios"
@@ -120,25 +120,25 @@ transitions:
     allowed: true
     automatic: true
     validation: "council_approval"
-    
+
   - from: "TS-0"
     to: "TS-1"
     allowed: true
     automatic: true
     validation: "stability_check"
-    
+
   - from: "TS-1"
     to: "TS-2"
     allowed: true
     automatic: true
     validation: "consistency_check"
-    
+
   - from: "TS-2"
     to: "TS-3"
     allowed: true
     automatic: true
     validation: "range_analysis"
-    
+
   - from: "SS"
     to: any
     allowed: false
@@ -150,17 +150,17 @@ hard_stops:
     rule: "No SS data shall ever transition to any non-SS stack"
     enforcement: "cryptographic"
     bypass: false
-    
+
   - id: "HS-002"
     rule: "RS data must have minimum 2 independent source confirmations"
     enforcement: "validation"
     bypass: false
-    
+
   - id: "HS-003"
     rule: "All TS stacks must be deterministically replayable"
     enforcement: "audit_trail"
     bypass: false
-    
+
   - id: "HS-004"
     rule: "Parent stack must be complete before child can execute"
     enforcement: "dependency_check"
@@ -172,12 +172,12 @@ audit:
     enabled: true
     cryptographic: true
     log_all_transitions: true
-    
+
   provenance:
     hash_algorithm: "SHA-256"
     chain_verification: true
     timestamp_source: "NTP"
-    
+
   immutability:
     RS_locked: true
     TS_versioned: true
