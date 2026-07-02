@@ -104,6 +104,11 @@ from atlas.safeguards.epistemic_safeguards import (
     ResponsibilityClause,
     get_epistemic_safeguards,
 )
+from atlas.schemas.validator import (
+    SchemaValidator,
+    get_schema_validator,
+    reset_schema_validator,
+)
 from atlas.sensitivity import (
     ParameterPerturbation,
     SensitivityAnalysisError,
@@ -239,6 +244,7 @@ __all__ = [
     "ReplayVerification",
     "ResponsibilityBoundaryEnforcement",
     "ResponsibilityClause",
+    "SchemaValidator",
     "SensitivityAnalysisError",
     "SensitivityAnalyzer",
     "SensitivityReport",
@@ -291,6 +297,7 @@ __all__ = [
     "get_failure_surveillance",
     "get_graph_builder",
     "get_replay_system",
+    "get_schema_validator",
     "get_sensitivity_analyzer",
     "get_sludge_sandbox",
     "get_temporal_graph",
@@ -299,6 +306,7 @@ __all__ = [
     "reset_failure_surveillance",
     "reset_graph_builder",
     "reset_replay_system",
+    "reset_schema_validator",
     "reset_sludge_sandbox",
     "reset_temporal_graph",
     "track_evolution",
