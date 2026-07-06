@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "project-ai-api",
     "project-ai-ai-takeover",
+    "project-ai-alien-invaders",
     "project-ai-arbiter",
     "project-ai-atlas",
     "project-ai-capability",
@@ -80,6 +81,7 @@ managed = true
 package = true
 
 [tool.uv.sources]
+project-ai-alien-invaders = { workspace = true }
 project-ai-api = { workspace = true }
 project-ai-ai-takeover = { workspace = true }
 project-ai-arbiter = { workspace = true }
@@ -108,6 +110,7 @@ members = [
     "apps/services",
     "apps/swr-dashboard",
     "packages/ai-takeover",
+    "packages/alien-invaders",
     "packages/api",
     "packages/arbiter",
     "packages/atlas",
@@ -202,6 +205,8 @@ exclude = [
     "packages/emp-defense/tests",
     "packages/ai-takeover/src",
     "packages/ai-takeover/tests",
+    "packages/alien-invaders/src",
+    "packages/alien-invaders/tests",
     "tools/_archive",
 ]
 

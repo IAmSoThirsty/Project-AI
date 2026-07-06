@@ -6,6 +6,7 @@ requires-python = "==3.12.10"
 members = [
     "project-ai",
     "project-ai-ai-takeover",
+    "project-ai-alien-invaders",
     "project-ai-api",
     "project-ai-arbiter",
     "project-ai-atlas",
@@ -720,6 +721,7 @@ version = "0.0.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "project-ai-ai-takeover" },
+    { name = "project-ai-alien-invaders" },
     { name = "project-ai-api" },
     { name = "project-ai-arbiter" },
     { name = "project-ai-atlas" },
@@ -771,6 +773,7 @@ requires-dist = [
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "project-ai-ai-takeover", editable = "packages/ai-takeover" },
+    { name = "project-ai-alien-invaders", editable = "packages/alien-invaders" },
     { name = "project-ai-api", editable = "packages/api" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
     { name = "project-ai-atlas", editable = "packages/atlas" },
@@ -804,6 +807,20 @@ provides-extras = ["dev"]
 name = "project-ai-ai-takeover"
 version = "0.0.0.dev0"
 source = { editable = "packages/ai-takeover" }
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
+
+[[package]]
+name = "project-ai-alien-invaders"
+version = "0.0.0.dev0"
+source = { editable = "packages/alien-invaders" }
 
 [package.optional-dependencies]
 test = [
