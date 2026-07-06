@@ -19,6 +19,7 @@ classifiers = [
 
 dependencies = [
     "project-ai-api",
+    "project-ai-ai-takeover",
     "project-ai-arbiter",
     "project-ai-atlas",
     "project-ai-capability",
@@ -80,6 +81,7 @@ package = true
 
 [tool.uv.sources]
 project-ai-api = { workspace = true }
+project-ai-ai-takeover = { workspace = true }
 project-ai-arbiter = { workspace = true }
 project-ai-atlas = { workspace = true }
 project-ai-capability = { workspace = true }
@@ -105,6 +107,7 @@ members = [
     "apps/desktop",
     "apps/services",
     "apps/swr-dashboard",
+    "packages/ai-takeover",
     "packages/api",
     "packages/arbiter",
     "packages/atlas",
@@ -197,6 +200,8 @@ exclude = [
     "packages/global-scenario/src",
     "packages/emp-defense/src",
     "packages/emp-defense/tests",
+    "packages/ai-takeover/src",
+    "packages/ai-takeover/tests",
     "tools/_archive",
 ]
 

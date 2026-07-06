@@ -5,6 +5,7 @@ requires-python = "==3.12.10"
 [manifest]
 members = [
     "project-ai",
+    "project-ai-ai-takeover",
     "project-ai-api",
     "project-ai-arbiter",
     "project-ai-atlas",
@@ -718,6 +719,7 @@ name = "project-ai"
 version = "0.0.0.dev0"
 source = { editable = "." }
 dependencies = [
+    { name = "project-ai-ai-takeover" },
     { name = "project-ai-api" },
     { name = "project-ai-arbiter" },
     { name = "project-ai-atlas" },
@@ -768,6 +770,7 @@ requires-dist = [
     { name = "monkeytype", marker = "extra == 'dev'", specifier = ">=23.3.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.0" },
+    { name = "project-ai-ai-takeover", editable = "packages/ai-takeover" },
     { name = "project-ai-api", editable = "packages/api" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
     { name = "project-ai-atlas", editable = "packages/atlas" },
@@ -796,6 +799,20 @@ requires-dist = [
     { name = "thirsty-lang", specifier = "==0.8.1" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "project-ai-ai-takeover"
+version = "0.0.0.dev0"
+source = { editable = "packages/ai-takeover" }
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-api"
