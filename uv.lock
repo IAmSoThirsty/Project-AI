@@ -17,6 +17,7 @@ members = [
     "project-ai-companion",
     "project-ai-convergence",
     "project-ai-desktop",
+    "project-ai-django-state",
     "project-ai-emp-defense",
     "project-ai-execution",
     "project-ai-global-scenario",
@@ -730,6 +731,7 @@ dependencies = [
     { name = "project-ai-cli" },
     { name = "project-ai-cognitive-warfare" },
     { name = "project-ai-companion" },
+    { name = "project-ai-django-state" },
     { name = "project-ai-emp-defense" },
     { name = "project-ai-execution" },
     { name = "project-ai-global-scenario" },
@@ -782,6 +784,7 @@ requires-dist = [
     { name = "project-ai-cli", editable = "packages/cli" },
     { name = "project-ai-cognitive-warfare", editable = "packages/cognitive-warfare" },
     { name = "project-ai-companion", editable = "packages/companion" },
+    { name = "project-ai-django-state", editable = "packages/django-state" },
     { name = "project-ai-emp-defense", editable = "packages/emp-defense" },
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-global-scenario", editable = "packages/global-scenario" },
@@ -1002,6 +1005,20 @@ requires-dist = [
     { name = "pyqt6", specifier = ">=6.8.0" },
 ]
 provides-extras = ["build"]
+
+[[package]]
+name = "project-ai-django-state"
+version = "0.0.0.dev0"
+source = { editable = "packages/django-state" }
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-emp-defense"

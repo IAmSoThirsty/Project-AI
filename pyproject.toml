@@ -21,6 +21,7 @@ dependencies = [
     "project-ai-api",
     "project-ai-ai-takeover",
     "project-ai-alien-invaders",
+    "project-ai-django-state",
     "project-ai-arbiter",
     "project-ai-atlas",
     "project-ai-capability",
@@ -83,6 +84,7 @@ package = true
 [tool.uv.sources]
 project-ai-alien-invaders = { workspace = true }
 project-ai-api = { workspace = true }
+project-ai-django-state = { workspace = true }
 project-ai-ai-takeover = { workspace = true }
 project-ai-arbiter = { workspace = true }
 project-ai-atlas = { workspace = true }
@@ -112,6 +114,7 @@ members = [
     "packages/ai-takeover",
     "packages/alien-invaders",
     "packages/api",
+    "packages/django-state",
     "packages/arbiter",
     "packages/atlas",
     "packages/capability",
@@ -172,6 +175,8 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["B011"]  # assert False is fine in tests
 "docs/**/*.py" = ["F401"]   # examples may have unused imports
+"packages/django-state/src/**/*.py" = ["SIM102"]  # nested ifs are intentional in validators.py
+"packages/django-state/tests/**/*.py" = ["SIM102"]
 
 [tool.ruff.format]
 quote-style = "double"
@@ -207,6 +212,8 @@ exclude = [
     "packages/ai-takeover/tests",
     "packages/alien-invaders/src",
     "packages/alien-invaders/tests",
+    "packages/django-state/src",
+    "packages/django-state/tests",
     "tools/_archive",
 ]
 
