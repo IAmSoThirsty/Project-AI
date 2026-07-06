@@ -68,11 +68,11 @@ None.
 |---------|--------|------|-------|
 | `git -C /t/00-Active/Project-AI-Beginnings rev-parse HEAD origin/main` | Exit 0; identical (`ca3477a`) | 2026-06-24 | Pre-discovery state check |
 | `git -C /t/00-Active/Project-AI-Beginnings status` | Exit 0; clean except untracked `.obsidian/` | 2026-06-24 | Per v3 §34 |
-| `find T:\Project-AI-main -type f \| wc -l` | 72,373 (top-level only) / 71,066 (excluding `.git`) | 2026-06-24 | Phase B discovery |
-| `git -C T:\Project-AI-main ls-files \| wc -l` | 5,276 | 2026-06-24 | Tracked baseline |
-| `git -C T:\Project-AI-main ls-files --others \| wc -l` | 65,894 | 2026-06-24 | Untracked-by-git |
-| `git -C T:\Project-AI-Beginnings ls-files \| wc -l` | 516 | 2026-06-24 | Beginnings tracked |
-| `find T:\Project-AI-Beginnings -type f \| wc -l` | 28,436 | 2026-06-24 | Beginnings total |
+| `find T:\00-Active\Project-AI-main -type f \| wc -l` | 72,373 (top-level only) / 71,066 (excluding `.git`) | 2026-06-24 | Phase B discovery |
+| `git -C T:\00-Active\Project-AI-main ls-files \| wc -l` | 5,276 | 2026-06-24 | Tracked baseline |
+| `git -C T:\00-Active\Project-AI-main ls-files --others \| wc -l` | 65,894 | 2026-06-24 | Untracked-by-git |
+| `git -C T:\00-Active\Project-AI-Beginnings ls-files \| wc -l` | 516 | 2026-06-24 | Beginnings tracked |
+| `find T:\00-Active\Project-AI-Beginnings -type f \| wc -l` | 28,436 | 2026-06-24 | Beginnings total |
 | `read_file DROPPED_FILES_MANIFEST.md` | 5,284 lines, 5,276 dispositions | 2026-06-24 | Phase A manifest ingest |
 | `read_file MERGE_PROVENANCE.md` | 150 artifact rows | 2026-06-24 | Phase A |
 | `read_file INGEST_MANIFEST.md`, `INGEST_SKIPPED.md`, `ORPHAN_PAPERS.md` | 10 ingested + 6 skipped + 4 orphan | 2026-06-24 | Phase A |
@@ -117,7 +117,7 @@ None.
 | Risk | Impact | Action Taken/Recommended |
 |------|--------|------------------------|
 | `LEGACY_SOURCE_STATE.json` reports `ahead_of_origin: 2`, but `git rev-parse` shows local `main` == `origin/main` | Possible drift in the legacy-state snapshot JSON, or the snapshot was captured against an older remote ref. Low impact; the legacy state is informational. | Recommend: re-run `tools/capture_legacy_state.py` after the next remote push to refresh the snapshot. Not blocking. |
-| `?? .obsidian/` shows as untracked at repo root | This is the legacy Obsidian workspace config; not part of `T:\Project-AI-Beginnings\`. Likely created by the active session tooling or by an editor open against `T:\`. | Confirm origin in next session; if it persists, add `/.obsidian/` to `.gitignore`. Not blocking. |
+| `?? .obsidian/` shows as untracked at repo root | This is the legacy Obsidian workspace config; not part of `T:\00-Active\Project-AI-Beginnings\`. Likely created by the active session tooling or by an editor open against `T:\`. | Confirm origin in next session; if it persists, add `/.obsidian/` to `.gitignore`. Not blocking. |
 | No `AGENTS.md` existed before this session | Future sessions would re-derive rules from chat memory | Fixed in this session — `AGENTS.md` created with v3 verbatim. |
 | No `docs/operations/` existed before this session | Future sessions lacked a durable handoff layer | Fixed in this session — `docs/operations/CONTINUITY_MAP.md` created. |
 
@@ -197,8 +197,8 @@ None tracked in this session.
 ```
 Mode: governance system
 Created:
-- T:\Project-AI-Beginnings\AGENTS.md
-- T:\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md
+- T:\00-Active\Project-AI-Beginnings\AGENTS.md
+- T:\00-Active\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md
 Modified: None.
 Deleted: None.
 Verified:
@@ -736,7 +736,7 @@ pyproject.toml, and __init__.py. Reverted via `git checkout HEAD`.
 ### Phase J revised scope
 Phase J becomes an ENHANCEMENT task, not a from-scratch rebuild:
 - Pre-existing atlas is canonical (Stage 11)
-- Legacy T:\Project-AI-main\atlas\ (12,480 LOC) is a supersession
+- Legacy T:\00-Active\Project-AI-main\atlas\ (12,480 LOC) is a supersession
   candidate; features may be ported as enhancements after gap audit
 - Future J phases: feature gap audit, then additive enhancements
 

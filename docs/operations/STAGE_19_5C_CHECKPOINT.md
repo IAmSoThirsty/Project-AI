@@ -16,7 +16,7 @@
 | Uncommitted working-tree changes | **7** (see §2) |
 | Last green baseline | 517 pytest pass; mypy --strict clean on 67 source files; ruff clean (full scope, post `03a0fcc`) |
 | Push status | NOT pushed. Remote CI billing unblocked per user 2026-06-25; push decision held pending Phase C commit + verification |
-| Working dir | `T:\Project-AI-Beginnings` |
+| Working dir | `T:\00-Active\Project-AI-Beginnings` |
 
 ---
 
@@ -183,15 +183,15 @@ feat(stage-19.5C): packages/companion identity + fates + bonded
 ```
 Mode: governance system (Phase C execution, work-in-progress checkpoint)
 Created:
-- T:\Project-AI-Beginnings\packages\companion\src\companion\identity.py
-- T:\Project-AI-Beginnings\packages\companion\src\companion\fates.py
-- T:\Project-AI-Beginnings\packages\companion\src\companion\bonded.py
-- T:\Project-AI-Beginnings\packages\companion\tests\test_identity.py
-- T:\Project-AI-Beginnings\packages\companion\tests\test_fates.py
-- T:\Project-AI-Beginnings\tests\test_companion_integration_identity_fates.py
-- T:\Project-AI-Beginnings\docs\operations\STAGE_19_5C_CHECKPOINT.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\identity.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\fates.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\bonded.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\tests\test_identity.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\tests\test_fates.py
+- T:\00-Active\Project-AI-Beginnings\tests\test_companion_integration_identity_fates.py
+- T:\00-Active\Project-AI-Beginnings\docs\operations\STAGE_19_5C_CHECKPOINT.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\packages\companion\src\companion\__init__.py (re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\__init__.py (re-exports)
 Deleted: None.
 Verified:
 - 12/12 identity unit tests pass
