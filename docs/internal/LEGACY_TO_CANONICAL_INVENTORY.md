@@ -280,9 +280,9 @@ J2.1–J2.9 ports consumed 9 of 17 J1-audit features. Remaining 8:
 
 | Legacy sub-package | Canonical | Disposition |
 |---|---|---|
-| `integrations/openclaw/` (with `skills/`) | n/a | **PORT** — OpenClaw integration; new `packages/openclaw/` (or `integrations/openclaw/` in canonical tree) |
-| `integrations/thirstys_trading_hub/` (core + tests) | n/a | **PORT** — trading hub integration |
-| `integrations/thirsty_lang_complete/` (bridge) | n/a | **PORT** — Thirsty-Lang bridge (note: Thirsty-Lang runtime is from PyPI; bridge code is what ties canonical to PyPI) |
+| `integrations/openclaw/` (with `skills/`) | n/a | **DROP** — 17-file "God-Tier" Legion agent; user directive 2026-07-06 ("oh no fuck open claw") |
+| `integrations/thirstys_trading_hub/` (core + tests) | n/a | **DEFERRED** — user directive 2026-07-06 ("skip it for now, maybe future work"); 7-file trading system with paper/live mode; not blocking |
+| `integrations/thirsty_lang_complete/` (bridge) | PyPI dep `thirsty-lang==0.8.2` | **SUPERSEDED** — v1.0 deployment-script bridge is obsolete; the canonical Thirsty-Lang/UTF family lives at `C:\Users\Quencher\Desktop\Github\Personal Repo's\thirsty_lang_exploration_0754` (user directive 2026-07-06) and is consumed via PyPI. The Beginnings `convergence` package already calls into `thirsty-lang` for the T1–T7 tier specs. Bridge docs ported to `docs/reference/integrations/thirsty-lang-v1-deployment-kit/` if needed (not blocking). |
 
 ---
 
