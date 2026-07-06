@@ -11,6 +11,7 @@ members = [
     "project-ai-capability",
     "project-ai-cerberus",
     "project-ai-cli",
+    "project-ai-cognitive-warfare",
     "project-ai-companion",
     "project-ai-convergence",
     "project-ai-desktop",
@@ -721,6 +722,7 @@ dependencies = [
     { name = "project-ai-capability" },
     { name = "project-ai-cerberus" },
     { name = "project-ai-cli" },
+    { name = "project-ai-cognitive-warfare" },
     { name = "project-ai-companion" },
     { name = "project-ai-execution" },
     { name = "project-ai-governance" },
@@ -768,6 +770,7 @@ requires-dist = [
     { name = "project-ai-capability", editable = "packages/capability" },
     { name = "project-ai-cerberus", editable = "packages/cerberus" },
     { name = "project-ai-cli", editable = "packages/cli" },
+    { name = "project-ai-cognitive-warfare", editable = "packages/cognitive-warfare" },
     { name = "project-ai-companion", editable = "packages/companion" },
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-governance", editable = "packages/governance" },
@@ -881,6 +884,28 @@ requires-dist = [
     { name = "thirsty-lang", specifier = "==0.8.1" },
     { name = "typer", specifier = ">=0.16.0" },
 ]
+
+[[package]]
+name = "project-ai-cognitive-warfare"
+version = "0.0.0.dev0"
+source = { editable = "packages/cognitive-warfare" }
+dependencies = [
+    { name = "project-ai-governance" },
+    { name = "project-ai-kernel" },
+]
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-governance", editable = "packages/governance" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
+]
+provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-companion"

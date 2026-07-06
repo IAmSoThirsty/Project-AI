@@ -23,6 +23,7 @@ dependencies = [
     "project-ai-atlas",
     "project-ai-capability",
     "project-ai-cerberus",
+    "project-ai-cognitive-warfare",
     "project-ai-companion",
     "project-ai-hydra-50",
     "project-ai-kernel",
@@ -81,6 +82,7 @@ project-ai-arbiter = { workspace = true }
 project-ai-atlas = { workspace = true }
 project-ai-capability = { workspace = true }
 project-ai-cerberus = { workspace = true }
+project-ai-cognitive-warfare = { workspace = true }
 project-ai-companion = { workspace = true }
 project-ai-hydra-50 = { workspace = true }
 project-ai-kernel = { workspace = true }
@@ -104,6 +106,7 @@ members = [
     "packages/atlas",
     "packages/capability",
     "packages/cerberus",
+    "packages/cognitive-warfare",
     "packages/companion",
     "packages/convergence",
     "packages/hydra_50",
