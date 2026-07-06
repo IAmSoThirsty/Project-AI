@@ -249,6 +249,11 @@ class SimulationState:
     human_agency_remaining: float = 1.0  # 1.0 to 0.0
     timestamp: datetime = field(default_factory=datetime.now)
 
+    # Terminal transition snapshot captures pre-mutation state when T1/T2 activates.
+    # Enables post-hoc forensics: which specific values triggered terminal convergence.
+    # Schema: {corruption, dependency, agency, trigger_scenario, activated_at}
+    terminal_transition_snapshot: dict[str, Any] | None = None
+
     def can_reach_terminal_state(self) -> bool:
         """
         Check if simulation state allows terminal scenarios.

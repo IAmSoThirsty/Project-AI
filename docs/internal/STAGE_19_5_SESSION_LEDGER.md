@@ -254,7 +254,7 @@ Recently closed:
 
 ### For: Project Owner / Reviewer
 
-**Repository**: `T:\Project-AI-Beginnings`
+**Repository**: `T:\00-Active\Project-AI-Beginnings`
 **Branch**: `main`
 **Remote**: `https://github.com/IAmSoThirsty/Project-AI.git`
 **Status**: Original 24-commit submission pushed; J2.4.0c commits pushed and

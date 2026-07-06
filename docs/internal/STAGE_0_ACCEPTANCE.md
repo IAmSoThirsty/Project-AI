@@ -2,7 +2,7 @@
 
 **Status:** COMPLETE
 **Verified:** 2026-06-20
-**Repository:** `T:\Project-AI-Beginnings`
+**Repository:** `T:\00-Active\Project-AI-Beginnings`
 
 ## Evidence
 

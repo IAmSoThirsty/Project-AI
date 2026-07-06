@@ -4,7 +4,7 @@
 **Authority:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` Phase J
 **Prior:** `docs/internal/PHASE_J_DISCOVERY.md`, `docs/internal/STAGE_19_5J1_ACCEPTANCE.md`
 **Date:** 2026-06-25
-**Source-of-truth:** `T:\Project-AI-main\atlas\analysis\sensitivity_analyzer.py`
+**Source-of-truth:** `T:\00-Active\Project-AI-main\atlas\analysis\sensitivity_analyzer.py`
 **Target:** Extend canonical `packages/atlas/` with sensitivity module
 
 ---
@@ -24,7 +24,7 @@ discovery doc captures the architectural consequences of that choice.
 
 ## 1. Legacy surface inventory
 
-`T:\Project-AI-main\atlas\analysis\sensitivity_analyzer.py` (489 LOC)
+`T:\00-Active\Project-AI-main\atlas\analysis\sensitivity_analyzer.py` (489 LOC)
 exports:
 
 | Class | Purpose |

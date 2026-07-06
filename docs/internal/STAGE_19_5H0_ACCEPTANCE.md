@@ -98,14 +98,14 @@ gates green + acceptance record + commit.
 ```
 Mode: governance system (planning — Phase H0 envelope)
 Created:
-- T:\Project-AI-Beginnings\docs\internal\PHASE_H_DISCOVERY.md
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5H0_ACCEPTANCE.md (this file)
-- T:\Project-AI-Beginnings\packages\tarl\pyproject.toml
-- T:\Project-AI-Beginnings\packages\tarl\README.md
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\__init__.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\py.typed
+- T:\00-Active\Project-AI-Beginnings\docs\internal\PHASE_H_DISCOVERY.md
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5H0_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\pyproject.toml
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\README.md
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\__init__.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\py.typed
 Modified:
-- T:\Project-AI-Beginnings\pyproject.toml (added project-ai-tarl to deps + workspace + sources)
+- T:\00-Active\Project-AI-Beginnings\pyproject.toml (added project-ai-tarl to deps + workspace + sources)
 Deleted: None.
 Verified:
 - 718/718 pytest pass (no regression)

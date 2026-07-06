@@ -2,7 +2,7 @@
 
 Generated: 2026-06-19T18:18:47.244775
 Source:    `C:\Users\Quencher\Documents\Thirsty's Projects LLC\Project-AI Papers` (root + Drafts + Final Papers + Zenodo) + `Downloads` (canonical ref files only)
-Dest:      `T:\Project-AI-Beginnings\docs\reference`
+Dest:      `T:\00-Active\Project-AI-Beginnings\docs\reference`
 
 ## Files copied
 

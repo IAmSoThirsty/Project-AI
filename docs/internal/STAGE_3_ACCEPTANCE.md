@@ -5,7 +5,7 @@
 
 ## Policy
 
-`T:\Project-AI-main` is a read-only input to rebuild tooling. The boundary is
+`T:\00-Active\Project-AI-main` is a read-only input to rebuild tooling. The boundary is
 enforced in code and evidence; filesystem ACLs, Git configuration, repository
 attributes, commits, and user files remain unchanged.
 

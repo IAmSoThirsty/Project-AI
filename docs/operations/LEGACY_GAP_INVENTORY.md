@@ -1,8 +1,8 @@
 # Legacy Coverage Gap Inventory — Project-AI Beginnings
 
 > **Generated:** 2026-06-24
-> **Source-of-truth:** `T:\Project-AI-main` (soft-frozen, read-only input)
-> **Target:** `T:\Project-AI-Beginnings` (rebuild at `ca3477a`, 18 stages accepted)
+> **Source-of-truth:** `T:\00-Active\Project-AI-main` (soft-frozen, read-only input)
+> **Target:** `T:\00-Active\Project-AI-Beginnings` (rebuild at `ca3477a`, 18 stages accepted)
 > **Standard:** Thirsty's Standard v3 (binding via `AGENTS.md`)
 > **Method:** Read-only disk walk + manifest cross-reference + SHA-256 spot-check
 > **Companion files:** `LEGACY_GAP_INVENTORY.csv` (machine-readable), `LEGACY_GAP_INVENTORY_VERIFICATION.md` (hostile self-review log)
@@ -14,7 +14,7 @@
 
 | Metric | Value | Evidence |
 |---|---|---|
-| Legacy repo tracked files | **5,276** | `git -C T:\Project-AI-main ls-files \| wc -l` |
+| Legacy repo tracked files | **5,276** | `git -C T:\00-Active\Project-AI-main ls-files \| wc -l` |
 | Legacy repo total files on disk | **71,066** (top-level dirs; excludes `.git`) | `find` walk; see Phase B below |
 | Legacy tracked files dispositioned | **5,276 / 5,276 (100%)** | `docs/reference/DROPPED_FILES_MANIFEST.md` line 4 |
 | Legacy tracked files dropped from Beginnings runtime | **5,138** (97.4%) | DROPPED manifest, "not selected" rows |
@@ -30,7 +30,7 @@
 
 ## 1. Top-level coverage matrix (legacy dir → classification)
 
-Every top-level directory in `T:\Project-AI-main` (excluding `.git`). `trk` = git-tracked, `real` = on-disk after removing `.venv`, `node_modules`, `__pycache__`, `.ruff_cache`. Classification uses both `DROPPED_FILES_MANIFEST.md` disposition and direct content inspection.
+Every top-level directory in `T:\00-Active\Project-AI-main` (excluding `.git`). `trk` = git-tracked, `real` = on-disk after removing `.venv`, `node_modules`, `__pycache__`, `.ruff_cache`. Classification uses both `DROPPED_FILES_MANIFEST.md` disposition and direct content inspection.
 
 | Legacy dir | trk | real | Disposition / classification |
 |---|---|---|---|
@@ -692,20 +692,20 @@ These legacy sub-systems need their own Beginnings package because they have non
 
 ## 9. Sources cited (v3 §11 Evidence Before Claims)
 
-- `git -C T:\Project-AI-main ls-files | wc -l` = 5,276
-- `find T:\Project-AI-main -type f | wc -l` = 71,066
-- `git -C T:\Project-AI-Beginnings ls-files | wc -l` = 516
-- `find T:\Project-AI-Beginnings -type f | wc -l` = 28,436
-- `T:\Project-AI-Beginnings\docs\reference\DROPPED_FILES_MANIFEST.md` (5,284 lines, all 5,276 tracked paths dispositioned)
-- `T:\Project-AI-Beginnings\docs\reference\MERGE_PROVENANCE.md` (150 artifact rows)
-- `T:\Project-AI-Beginnings\docs\reference\INGEST_MANIFEST.md`
-- `T:\Project-AI-Beginnings\docs\reference\INGEST_SKIPPED.md` (6 explicit skips, all credentials)
-- `T:\Project-AI-Beginnings\docs\reference\ORPHAN_PAPERS.md` (4 entries, 2 are Genesis continuations)
-- `T:\Project-AI-Beginnings\docs\internal\REBUILD_EXECUTION_PLAN.md` (active authority)
-- `T:\Project-AI-Beginnings\docs\internal\STAGE_18_ACCEPTANCE.md` (Stage 18 local acceptance, remote CI billing blocker)
-- `T:\Project-AI-Beginnings\docs\internal\STAGE_4_MERGE_REPORT.json` (SWR + atlas merge)
-- `T:\Project-AI-Beginnings\docs\internal\STAGE_4_7_4_8_IMPORT_REPORT.json` (chimera + governance_framework)
-- `T:\Project-AI-Beginnings\docs\internal\LEGACY_SOURCE_STATE.json`
+- `git -C T:\00-Active\Project-AI-main ls-files | wc -l` = 5,276
+- `find T:\00-Active\Project-AI-main -type f | wc -l` = 71,066
+- `git -C T:\00-Active\Project-AI-Beginnings ls-files | wc -l` = 516
+- `find T:\00-Active\Project-AI-Beginnings -type f | wc -l` = 28,436
+- `T:\00-Active\Project-AI-Beginnings\docs\reference\DROPPED_FILES_MANIFEST.md` (5,284 lines, all 5,276 tracked paths dispositioned)
+- `T:\00-Active\Project-AI-Beginnings\docs\reference\MERGE_PROVENANCE.md` (150 artifact rows)
+- `T:\00-Active\Project-AI-Beginnings\docs\reference\INGEST_MANIFEST.md`
+- `T:\00-Active\Project-AI-Beginnings\docs\reference\INGEST_SKIPPED.md` (6 explicit skips, all credentials)
+- `T:\00-Active\Project-AI-Beginnings\docs\reference\ORPHAN_PAPERS.md` (4 entries, 2 are Genesis continuations)
+- `T:\00-Active\Project-AI-Beginnings\docs\internal\REBUILD_EXECUTION_PLAN.md` (active authority)
+- `T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_18_ACCEPTANCE.md` (Stage 18 local acceptance, remote CI billing blocker)
+- `T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_4_MERGE_REPORT.json` (SWR + atlas merge)
+- `T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_4_7_4_8_IMPORT_REPORT.json` (chimera + governance_framework)
+- `T:\00-Active\Project-AI-Beginnings\docs\internal\LEGACY_SOURCE_STATE.json`
 - All Beginnings `packages/*/src/` enumerations (read directly)
 - All legacy `*/` directory enumerations (read directly via os.walk)
 
@@ -716,10 +716,10 @@ These legacy sub-systems need their own Beginnings package because they have non
 ```
 Mode: governance system (discovery)
 Created:
-  - T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (this file)
-  - T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (machine-readable)
-  - T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY_VERIFICATION.md (hostile review)
-Modified: T:\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (updated)
+  - T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (this file)
+  - T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (machine-readable)
+  - T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY_VERIFICATION.md (hostile review)
+Modified: T:\00-Active\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (updated)
 Deleted: None.
 Verified:
   - Legacy 71,066 files on disk, 5,276 tracked, 100% dispositioned in DROPPED_FILES_MANIFEST

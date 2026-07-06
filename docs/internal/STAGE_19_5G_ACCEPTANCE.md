@@ -118,25 +118,25 @@ the typed scenario primitive, escalation ladder, and pluggable evaluator.
 ```
 Mode: governance system (Phase G execution)
 Created:
-- T:\Project-AI-Beginnings\packages\hydra_50\pyproject.toml
-- T:\Project-AI-Beginnings\packages\hydra_50\README.md
-- T:\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\__init__.py
-- T:\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\py.typed
-- T:\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\scenario.py
-- T:\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\escalation.py
-- T:\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\evaluator.py
-- T:\Project-AI-Beginnings\packages\hydra_50\tests\test_hydra_50_scenario.py
-- T:\Project-AI-Beginnings\packages\hydra_50\tests\test_hydra_50_escalation.py
-- T:\Project-AI-Beginnings\packages\hydra_50\tests\test_hydra_50_evaluator.py
-- T:\Project-AI-Beginnings\tests\test_hydra_50_integration.py
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5G_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\pyproject.toml
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\README.md
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\__init__.py
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\py.typed
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\scenario.py
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\escalation.py
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\src\hydra_50\evaluator.py
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\tests\test_hydra_50_scenario.py
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\tests\test_hydra_50_escalation.py
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\tests\test_hydra_50_evaluator.py
+- T:\00-Active\Project-AI-Beginnings\tests\test_hydra_50_integration.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5G_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\pyproject.toml (added project-ai-hydra-50)
-- T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (Q6 RESOLVED)
-- T:\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase G delta)
+- T:\00-Active\Project-AI-Beginnings\pyproject.toml (added project-ai-hydra-50)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (Q6 RESOLVED)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase G delta)
 Deleted:
-- T:\Project-AI-Beginnings\packages\cerberus\tests\__init__.py (mypy collision)
-- T:\Project-AI-Beginnings\packages\hydra_50\tests\__init__.py (mypy collision)
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\tests\__init__.py (mypy collision)
+- T:\00-Active\Project-AI-Beginnings\packages\hydra_50\tests\__init__.py (mypy collision)
 Verified:
 - 701/701 pytest pass (659 baseline + 42 new)
 - mypy --strict clean on 92 source files

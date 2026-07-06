@@ -61,7 +61,7 @@ protected routes.
 
 ### Frozen history chain (Stage -1.5)
 
-A SHA-256 chain-linked snapshot of `T:\Project-AI-main` at the rebuild start is
+A SHA-256 chain-linked snapshot of `T:\00-Active\Project-AI-main` at the rebuild start is
 stored in `docs/internal/frozen-history/`. Each record links to the previous
 hash, forming a tamper-evident chain.
 

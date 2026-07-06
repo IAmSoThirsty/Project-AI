@@ -181,7 +181,7 @@ These notes do not relax v3. They name the specific files in this repo that sati
 
 - **Ledger of record:** `docs/internal/REBUILD_EXECUTION_PLAN.md` (updated 2026-06-21). It explicitly supersedes the external `~/.hermes/plans/2026-06-19_150000-project-ai-rebuild-structured.md` where they conflict (path, stage-count, package-count, lockfile, release, unanswered-question text).
 - **Stage acceptance evidence:** `docs/internal/STAGE_*_ACCEPTANCE.md` (one file per stage; -1, 0–18, plus 4.5/4.6/4.7/4.8/9.5/14.5/16.5).
-- **Legacy source state (read-only input):** `docs/internal/LEGACY_SOURCE_STATE.json`. The legacy repo at `T:\Project-AI-main` MUST NOT be written to.
+- **Legacy source state (read-only input):** `docs/internal/LEGACY_SOURCE_STATE.json`. The legacy repo at `T:\00-Active\Project-AI-main` MUST NOT be written to.
 - **Frozen history:** `docs/internal/frozen-history/PROJECT-AI_FROZEN_HISTORY.md` — 2,264/2,264 chain sections, SHA-256 `d4b9f8bd583bc5bc81e253ee9ca7bce4467cd66a527ed7c2790f089e9ae51e8e`.
 
 ### 2.2 Repo Topology (13 packages per K.6 of the plan, less Unity per the 2026-06-21 user instruction)

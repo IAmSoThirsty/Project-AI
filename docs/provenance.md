@@ -11,7 +11,7 @@ This document describes how to verify that:
 ## Frozen history chain (Stage -1.5)
 
 The rebuild began with a complete SHA-256 chain-linked snapshot of the legacy
-repository (`T:\Project-AI-main`) stored in `docs/internal/frozen-history/`.
+repository (`T:\00-Active\Project-AI-main`) stored in `docs/internal/frozen-history/`.
 
 Each record contains:
 - File path and SHA-256 hash

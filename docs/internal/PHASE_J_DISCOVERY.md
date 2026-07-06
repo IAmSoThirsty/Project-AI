@@ -4,7 +4,7 @@
 **Authority:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` Phase J
   ("REPLAN AT START OF PHASE" + "months of work" + 102 files)
 **Date:** 2026-06-25
-**Source-of-truth:** `T:\Project-AI-main\atlas\` (read-only)
+**Source-of-truth:** `T:\00-Active\Project-AI-main\atlas\` (read-only)
 **Target:** New `packages/atlas/` workspace member
 
 > Current-state note (2026-06-29): this discovery plan is historical. The

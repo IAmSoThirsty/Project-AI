@@ -126,23 +126,23 @@ this phase captures the typed surface and fail-closed primitives only.
 ```
 Mode: governance system (Phase F execution)
 Created:
-- T:\Project-AI-Beginnings\packages\cerberus\pyproject.toml
-- T:\Project-AI-Beginnings\packages\cerberus\README.md
-- T:\Project-AI-Beginnings\packages\cerberus\src\cerberus\__init__.py
-- T:\Project-AI-Beginnings\packages\cerberus\src\cerberus\py.typed
-- T:\Project-AI-Beginnings\packages\cerberus\src\cerberus\agent.py
-- T:\Project-AI-Beginnings\packages\cerberus\src\cerberus\spawn_constraints.py
-- T:\Project-AI-Beginnings\packages\cerberus\src\cerberus\lockdown.py
-- T:\Project-AI-Beginnings\packages\cerberus\tests\__init__.py
-- T:\Project-AI-Beginnings\packages\cerberus\tests\test_cerberus_agent.py
-- T:\Project-AI-Beginnings\packages\cerberus\tests\test_cerberus_spawn_constraints.py
-- T:\Project-AI-Beginnings\packages\cerberus\tests\test_cerberus_lockdown.py
-- T:\Project-AI-Beginnings\tests\test_cerberus_integration.py
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5F_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\pyproject.toml
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\README.md
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\src\cerberus\__init__.py
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\src\cerberus\py.typed
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\src\cerberus\agent.py
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\src\cerberus\spawn_constraints.py
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\src\cerberus\lockdown.py
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\tests\__init__.py
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\tests\test_cerberus_agent.py
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\tests\test_cerberus_spawn_constraints.py
+- T:\00-Active\Project-AI-Beginnings\packages\cerberus\tests\test_cerberus_lockdown.py
+- T:\00-Active\Project-AI-Beginnings\tests\test_cerberus_integration.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5F_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\pyproject.toml (added project-ai-cerberus to deps + workspace)
-- T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (Q5 RESOLVED)
-- T:\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase F delta)
+- T:\00-Active\Project-AI-Beginnings\pyproject.toml (added project-ai-cerberus to deps + workspace)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (Q5 RESOLVED)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase F delta)
 Deleted: None.
 Verified:
 - 659/659 pytest pass (615 baseline + 44 new)

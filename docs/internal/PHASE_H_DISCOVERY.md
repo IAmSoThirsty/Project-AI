@@ -3,7 +3,7 @@
 **Status:** DISCOVERY + PLAN (no code written yet)
 **Authority:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` Phase H ("REPLAN AT START OF PHASE")
 **Date:** 2026-06-25
-**Source-of-truth:** `T:\Project-AI-main\tarl\` (read-only)
+**Source-of-truth:** `T:\00-Active\Project-AI-main\tarl\` (read-only)
 **Target:** New `packages/tarl/` workspace member
 
 ---

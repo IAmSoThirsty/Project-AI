@@ -15,14 +15,14 @@
 
 This audit compares:
 
-1. **Canonical atlas** (current): `T:\Project-AI-Beginnings\packages\atlas\`
+1. **Canonical atlas** (current): `T:\00-Active\Project-AI-Beginnings\packages\atlas\`
    - 2 source files (`analysis.py`, `service.py`)
    - 1 test file (`test_atlas.py`)
    - 166 LOC of source code
    - Stage 11 commit: `2717919`
    - Imports: kernel, execution, capability, governance
 
-2. **Legacy atlas** (reference): `T:\Project-AI-main\atlas\`
+2. **Legacy atlas** (reference): `T:\00-Active\Project-AI-main\atlas\`
    - 51 Python files, 12,480 LOC, 15+ subpackages
    - Many features NOT in canonical atlas
 
@@ -240,7 +240,7 @@ per-feature go.
 ```
 Mode: governance system (audit-only — Phase J1)
 Created:
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5J1_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5J1_ACCEPTANCE.md (this file)
 Modified: None (audit-only).
 Verified:
 - Canonical atlas surface inventoried (10 exports, 2 source files, 166 LOC)

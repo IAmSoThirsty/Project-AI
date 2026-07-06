@@ -7,7 +7,7 @@
 > "This system needs to explain, prove, replay why reality was allowed to continue."
 
 **Date:** 2026-06-25
-**Source-of-truth:** `T:\Project-AI-main\atlas\audit\trail.py`
+**Source-of-truth:** `T:\00-Active\Project-AI-main\atlas\audit\trail.py`
 **Target:** Extend canonical `packages/atlas/` with audit trail module
 
 ---
@@ -55,7 +55,7 @@ Given the chain, must be able to:
 
 ## 2. Legacy surface inventory
 
-`T:\Project-AI-main\atlas\audit\trail.py` (450 LOC) exports:
+`T:\00-Active\Project-AI-main\atlas\audit\trail.py` (450 LOC) exports:
 
 | Class/Enum | Purpose |
 |---|---|

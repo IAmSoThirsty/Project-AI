@@ -5,7 +5,7 @@
 > **Authority:** `docs/internal/REBUILD_EXECUTION_PLAN.md` (active), `docs/operations/STAGE_19_ACCEPTANCE.md` (last accepted).
 > **Standard:** Thirsty's Standard v3 via `AGENTS.md`.
 > **Date:** 2026-06-25.
-> **Source-of-truth:** `T:\Project-AI-main` (soft-frozen, read-only).
+> **Source-of-truth:** `T:\00-Active\Project-AI-main` (soft-frozen, read-only).
 
 ---
 
@@ -94,7 +94,7 @@ New tests (parallel files, all in same wave):
 - Adding new packages
 - Modifying `pyproject.toml` workspace members
 - Any deletion
-- Any write to `T:\Project-AI-main`
+- Any write to `T:\00-Active\Project-AI-main`
 
 ## 5. Open questions deferred (do not block this wave)
 

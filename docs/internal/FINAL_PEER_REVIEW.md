@@ -357,7 +357,7 @@ All checks passed!
 ```
 Mode: governance system (final self peer review)
 Created:
-- T:\Project-AI-Beginnings\docs\internal\FINAL_PEER_REVIEW.md (this file)
+- T:\00-Active\Project-AI-Beginnings\docs\internal\FINAL_PEER_REVIEW.md (this file)
 Modified: None.
 Verified:
 - All 17 session commits documented

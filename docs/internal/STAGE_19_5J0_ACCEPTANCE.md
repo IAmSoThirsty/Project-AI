@@ -59,7 +59,7 @@ already provides:
 - Workspace integration with `project-ai-execution`
 
 **Phase J becomes an ENHANCEMENT/SUB-PHASE EXTENSION task**, not a
-from-scratch rebuild. The legacy `T:\Project-AI-main\atlas\` (12,480 LOC)
+from-scratch rebuild. The legacy `T:\00-Active\Project-AI-main\atlas\` (12,480 LOC)
 was a *superseded* version; the current `packages/atlas/` is the
 *canonical* version.
 
@@ -90,7 +90,7 @@ All checks passed!
 
 1. **Pre-existing atlas is the canonical source.** No overwrite of its
    pyproject.toml, README, __init__.py.
-2. **Legacy T:\Project-AI-main\atlas\ (12,480 LOC) is a supersession
+2. **Legacy T:\00-Active\Project-AI-main\atlas\ (12,480 LOC) is a supersession
    candidate** — features not in the pre-existing atlas may be ported as
    enhancements, but only after gap audit.
 3. **Discovery doc preserved** as a planning artifact for future J phases.
@@ -100,12 +100,12 @@ All checks passed!
 ```
 Mode: governance system (planning — Phase J0 corrected)
 Created:
-- T:\Project-AI-Beginnings\docs\internal\PHASE_J_DISCOVERY.md
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5J0_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\docs\internal\PHASE_J_DISCOVERY.md
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5J0_ACCEPTANCE.md (this file)
 Restored (reverted destructive edits):
-- T:\Project-AI-Beginnings\packages\atlas\README.md
-- T:\Project-AI-Beginnings\packages\atlas\pyproject.toml
-- T:\Project-AI-Beginnings\packages\atlas\src\atlas\__init__.py
+- T:\00-Active\Project-AI-Beginnings\packages\atlas\README.md
+- T:\00-Active\Project-AI-Beginnings\packages\atlas\pyproject.toml
+- T:\00-Active\Project-AI-Beginnings\packages\atlas\src\atlas\__init__.py
 Verified:
 - 888/888 pytest pass (no regression — pre-existing atlas restored)
 - mypy --strict clean on 112 source files

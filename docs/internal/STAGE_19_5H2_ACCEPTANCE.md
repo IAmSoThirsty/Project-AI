@@ -102,15 +102,15 @@ All checks passed!
 ```
 Mode: governance system (Phase H2 execution)
 Created:
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\parser.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\validate.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\compiler.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\runtime.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\config.py
-- T:\Project-AI-Beginnings\packages\tarl\tests\test_tarl_compile.py
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5H2_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\parser.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\validate.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\compiler.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\runtime.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\config.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\tests\test_tarl_compile.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5H2_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\__init__.py (41 re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\__init__.py (41 re-exports)
 Deleted: None.
 Verified:
 - 807/807 pytest pass (759 + 48 new)

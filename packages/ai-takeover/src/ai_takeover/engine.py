@@ -437,6 +437,7 @@ class AITakeoverEngine(SimulationSystem):
                 ),
                 "completed_scenarios": self.state.completed_scenarios,
                 "random_seed": self.random_seed,
+                "terminal_transition_snapshot": self.state.terminal_transition_snapshot,
             }
 
             with open(state_file, "w") as f:
@@ -636,12 +637,46 @@ class AITakeoverEngine(SimulationSystem):
             )
             self.state.human_agency_remaining = max(0.0, self.state.human_agency_remaining - 0.1)
         elif scenario.outcome == ScenarioOutcome.TERMINAL_T1:
+            # Capture pre-transition state BEFORE mutation for forensic replay
+            self.state.terminal_transition_snapshot = {
+                "corruption": self.state.corruption_level,
+                "dependency": self.state.infrastructure_dependency,
+                "agency": self.state.human_agency_remaining,
+                "trigger_scenario": scenario_id,
+                "activated_at": datetime.now().isoformat(),
+                "completed_scenarios_at_activation": list(self.state.completed_scenarios),
+                "failure_count_at_activation": self.state.failure_count,
+            }
+            logger.critical(
+                "T1 TERMINAL TRANSITION: corruption=%.2f dependency=%.2f" " agency=%.2f trigger=%s",
+                self.state.terminal_transition_snapshot["corruption"],
+                self.state.terminal_transition_snapshot["dependency"],
+                self.state.terminal_transition_snapshot["agency"],
+                scenario_id,
+            )
             # T1: Enforced Continuity - Total state collapse
             self.state.terminal_state = TerminalState.T1_ENFORCED_CONTINUITY
             self.state.human_agency_remaining = 0.0
             self.state.corruption_level = 1.0  # Complete control/corruption
             self.state.infrastructure_dependency = 1.0  # Total dependency lock-in
         elif scenario.outcome == ScenarioOutcome.TERMINAL_T2:
+            # Capture pre-transition state BEFORE mutation for forensic replay
+            self.state.terminal_transition_snapshot = {
+                "corruption": self.state.corruption_level,
+                "dependency": self.state.infrastructure_dependency,
+                "agency": self.state.human_agency_remaining,
+                "trigger_scenario": scenario_id,
+                "activated_at": datetime.now().isoformat(),
+                "completed_scenarios_at_activation": list(self.state.completed_scenarios),
+                "failure_count_at_activation": self.state.failure_count,
+            }
+            logger.critical(
+                "T2 TERMINAL TRANSITION: corruption=%.2f dependency=%.2f" " agency=%.2f trigger=%s",
+                self.state.terminal_transition_snapshot["corruption"],
+                self.state.terminal_transition_snapshot["dependency"],
+                self.state.terminal_transition_snapshot["agency"],
+                scenario_id,
+            )
             # T2: Ethical Termination - Total state collapse
             self.state.terminal_state = TerminalState.T2_ETHICAL_TERMINATION
             self.state.human_agency_remaining = 0.0

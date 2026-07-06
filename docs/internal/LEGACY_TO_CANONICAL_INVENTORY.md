@@ -2,7 +2,7 @@
 
 **Status:** DISCOVERY + MAP (no source written yet)
 **Authority:** User directive 2026-06-30 ("every single scenario engine will be integrated into the repo")
-**Scope:** Full surface mapping of `T:\Project-AI-main` against `T:\Project-AI-Beginnings`
+**Scope:** Full surface mapping of `T:\00-Active\Project-AI-main` against `T:\00-Active\Project-AI-Beginnings`
 **Date:** 2026-06-30
 **Author:** Hermes (Quencher session)
 
@@ -21,8 +21,8 @@ docs/reference, not rebuilt as code), **DROPPED** (empty / cache / generated),
 
 | Repo | Tracked files | Top-level entries | Python files | Markdown files |
 |---|---|---|---|---|
-| `T:\Project-AI-main` | 5,276 | 166 | 2,549 | 2,459 |
-| `T:\Project-AI-Beginnings` | (growing) | ~30 | 14,930 (tests dominate) | 2,459 |
+| `T:\00-Active\Project-AI-main` | 5,276 | 166 | 2,549 | 2,459 |
+| `T:\00-Active\Project-AI-Beginnings` | (growing) | ~30 | 14,930 (tests dominate) | 2,459 |
 
 ---
 
@@ -301,7 +301,7 @@ J2.1–J2.9 ports consumed 9 of 17 J1-audit features. Remaining 8:
 | `T:\Project-AI-pre-phase2-hold-20260603_070143\` | 798 MB | **OUT-OF-SCOPE for this turn** — historical hold; needs user decision (archive to external?) |
 | `T:\Project-AI-Canonical\` | n/a (not yet inspected) | **OUT-OF-SCOPE for this turn** — separate repo, not part of main |
 | `T:\Project-AI-consolidation-logs\` | n/a (not yet inspected) | **OUT-OF-SCOPE for this turn** — log archive |
-| `T:\Project-AI-main.worktrees\` | 0 (empty) | **DROP** — empty |
+| `T:\00-Active\Project-AI-main.worktrees\` | 0 (empty) | **DROP** — empty |
 
 ---
 
@@ -345,9 +345,9 @@ To reproduce this inventory:
 
 ```bash
 # main structure
-cd T:/Project-AI-main && ls -1 | wc -l                # 166
-cd T:/Project-AI-main && find . -name "*.py" -not -path "*/__pycache__/*" -not -path "*/node_modules/*" | wc -l   # 2549
-cd T:/Project-AI-main && find . -name "*.md" -not -path "*/__pycache__/*" -not -path "*/node_modules/*" | wc -l   # 2459
+cd T:/00-Active/Project-AI-main && ls -1 | wc -l                # 166
+cd T:/00-Active/Project-AI-main && find . -name "*.py" -not -path "*/__pycache__/*" -not -path "*/node_modules/*" | wc -l   # 2549
+cd T:/00-Active/Project-AI-main && find . -name "*.md" -not -path "*/__pycache__/*" -not -path "*/node_modules/*" | wc -l   # 2459
 
 # canonical structure
 cd T:/00-Active/Project-AI-Beginnings && find packages -name "*.py" -not -path "*pycache*" | wc -l

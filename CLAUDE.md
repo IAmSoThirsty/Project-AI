@@ -75,7 +75,7 @@ Never create files via bash heredocs (AGENTS.md rule) — use file-writing tools
 
 - Byte-preserved dirs: `packages/_staging`, `packages/security/reference`,
   `packages/rlp/governance_framework`, `docs/reference`, `docs/internal/frozen-history`.
-- The legacy repo `T:\Project-AI-main` is READ-ONLY source material for ports — never write there.
+- The legacy repo `T:\00-Active\Project-AI-main` is READ-ONLY source material for ports — never write there.
 
 ## Current work state (as of 2026-07-02)
 

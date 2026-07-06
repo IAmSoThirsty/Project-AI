@@ -1,6 +1,6 @@
 # Legacy File Disposition Manifest
 
-> Source: `T:\Project-AI-main`
+> Source: `T:\00-Active\Project-AI-main`
 > Tracked paths classified: 5276
 > This records disposition without deleting or modifying the source repository.
 

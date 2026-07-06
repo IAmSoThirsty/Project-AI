@@ -76,7 +76,7 @@
 - Did NOT yet wrap arbiter_gov/rlp as proper installable Python packages (Stage 4.5/4.6)
 - Did NOT split OMPT.md into website files (Stage 4.7)
 - Did NOT integrate governance framework 0722 (Stage 4.8)
-- Did NOT alter permissions or files in T:\Project-AI-main; Stage 3 records the soft-freeze boundary
+- Did NOT alter permissions or files in T:\00-Active\Project-AI-main; Stage 3 records the soft-freeze boundary
 
 ## Ready For
 

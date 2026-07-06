@@ -16,6 +16,9 @@ from alien_invaders.modules.causal_clock import (
     CausalEvent,
     EventQueue,
 )
+from alien_invaders.modules.determinism_utils import (
+    sorted_dict_values,
+)
 from alien_invaders.modules.invariants import (
     CompositeInvariantValidator,
 )
@@ -612,7 +615,7 @@ class AlienInvadersEngine:
         extraction_per_tick = (
             self.config.alien.resource_extraction_rate / 365.0 * self.config.world.time_step_days
         )
-        for resource in self.state.remaining_resources:
+        for resource in sorted(self.state.remaining_resources.keys()):
             self.state.remaining_resources[resource] *= 1.0 - extraction_per_tick
             self.state.remaining_resources[resource] = max(
                 0.0, self.state.remaining_resources[resource]
@@ -623,7 +626,7 @@ class AlienInvadersEngine:
         if self.state is None:
             return
 
-        for country in self.state.countries.values():
+        for country in sorted_dict_values(self.state.countries):
             # Alien presence reduces stability
             stability_loss = country.alien_influence * 0.05
             country.government_stability -= stability_loss
@@ -639,7 +642,7 @@ class AlienInvadersEngine:
         if self.state is None:
             return
 
-        for country in self.state.countries.values():
+        for country in sorted_dict_values(self.state.countries):
             # War reduces GDP
             if self.state.alien_ground_forces > 0:
                 gdp_loss_rate = 0.01 * country.alien_influence
@@ -662,7 +665,7 @@ class AlienInvadersEngine:
 
         # Calculate casualties from alien combat
         if self.state.alien_ground_forces > 0:
-            for country in self.state.countries.values():
+            for country in sorted_dict_values(self.state.countries):
                 if country.alien_influence > 0.1:
                     # Combat casualties
                     casualty_rate = (
@@ -678,7 +681,7 @@ class AlienInvadersEngine:
         if self.state is None:
             return
 
-        for country in self.state.countries.values():
+        for country in sorted_dict_values(self.state.countries):
             # Morale affected by casualties and alien presence
             if country.casualties > 0:
                 morale_loss = min(0.1, country.casualties / country.population)
@@ -694,7 +697,7 @@ class AlienInvadersEngine:
         if self.state is None:
             return
 
-        for country in self.state.countries.values():
+        for country in sorted_dict_values(self.state.countries):
             # Infrastructure damage from alien attacks
             if country.alien_influence > 0.2:
                 damage_rate = 0.01 * country.alien_influence
@@ -715,7 +718,7 @@ class AlienInvadersEngine:
         if self.state is None or not self.config.world.enable_religious_tensions:
             return
 
-        for country in self.state.countries.values():
+        for country in sorted_dict_values(self.state.countries):
             # Crisis can increase or decrease religious tension
             if country.alien_influence > 0.3:
                 # High stress can polarize
@@ -731,7 +734,7 @@ class AlienInvadersEngine:
         if self.state is None:
             return
 
-        for country in self.state.countries.values():
+        for country in sorted_dict_values(self.state.countries):
             # Economic collapse weakens military
             if country.gdp_usd < 1e10:  # Below threshold
                 country.military_strength *= 0.95

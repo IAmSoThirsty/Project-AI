@@ -81,13 +81,13 @@ All checks passed!
 ```
 Mode: governance system (Phase I3 execution — Phase I COMPLETE)
 Created:
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\enhanced_security.py
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\security_agent.py
-- T:\Project-AI-Beginnings\packages\temporal\tests\test_temporal_i3.py
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5I3_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\enhanced_security.py
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\security_agent.py
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\tests\test_temporal_i3.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5I3_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\__init__.py (24 re-exports)
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\__init__.py (36 re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\__init__.py (24 re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\__init__.py (36 re-exports)
 Verified:
 - 1011/1011 pytest pass (965 + 46)
 - mypy --strict clean on 121 source files

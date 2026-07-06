@@ -98,15 +98,15 @@ Total: ~6 source files, ~20 file changes. Each sub-phase wave-bounded.
 ```
 Mode: governance system (planning — Phase I0 envelope)
 Created:
-- T:\Project-AI-Beginnings\docs\internal\PHASE_I_DISCOVERY.md
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5I0_ACCEPTANCE.md (this file)
-- T:\Project-AI-Beginnings\packages\temporal\pyproject.toml
-- T:\Project-AI-Beginnings\packages\temporal\README.md
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\__init__.py
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\py.typed
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\__init__.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\PHASE_I_DISCOVERY.md
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5I0_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\pyproject.toml
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\README.md
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\__init__.py
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\py.typed
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\__init__.py
 Modified:
-- T:\Project-AI-Beginnings\pyproject.toml (added project-ai-temporal)
+- T:\00-Active\Project-AI-Beginnings\pyproject.toml (added project-ai-temporal)
 Verified:
 - 888/888 pytest pass (no regression)
 - mypy --strict clean on 112 source files

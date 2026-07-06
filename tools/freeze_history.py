@@ -319,12 +319,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
         "--repo",
-        default=r"T:\Project-AI-main",
+        default=r"T:\00-Active\Project-AI-main",
         help="Path to the frozen reference repo (default: T:\\Project-AI-main)",
     )
     ap.add_argument(
         "--out",
-        default=r"T:\Project-AI-Beginnings\docs\internal\frozen-history\PROJECT-AI_FROZEN_HISTORY.md",
+        default=r"T:\00-Active\Project-AI-Beginnings\docs\internal\frozen-history\PROJECT-AI_FROZEN_HISTORY.md",
         help="Output markdown file path",
     )
     args = ap.parse_args()

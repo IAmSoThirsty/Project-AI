@@ -5,7 +5,7 @@
 > **Authority:** `docs/internal/REBUILD_EXECUTION_PLAN.md` (active), `docs/operations/STAGE_19_ACCEPTANCE.md` (last accepted).
 > **Standard:** Thirsty's Standard v3 via `AGENTS.md`.
 > **Date:** 2026-06-25.
-> **Source-of-truth:** `T:\Project-AI-main` (soft-frozen, read-only).
+> **Source-of-truth:** `T:\00-Active\Project-AI-main` (soft-frozen, read-only).
 
 ---
 
@@ -49,9 +49,9 @@ Each phase:
 **File changes:** ≤5 (all in `docs/`)
 
 Tasks:
-1. **Q8 inspection:** enumerate `T:\Project-AI-Beginnings\apps\` (read-only). Produce `docs/operations/APPS_INVENTORY.md` classifying each `apps/*` subdir against the legacy source's intended function.
-2. **Q2 archive:** copy `T:\Project-AI-main\web\hub-epstein\` + `web\site\` to `T:\Project-AI-Beginnings\docs\legacy-archive\web\` (read-then-write; legacy is read-only input, archive copy is fresh path on T:).
-3. **Q3 archive:** copy `T:\Project-AI-main\tarl_os\*.thirsty` to `T:\Project-AI-Beginnings\docs\legacy-archive\tarl_os_config\`.
+1. **Q8 inspection:** enumerate `T:\00-Active\Project-AI-Beginnings\apps\` (read-only). Produce `docs/operations/APPS_INVENTORY.md` classifying each `apps/*` subdir against the legacy source's intended function.
+2. **Q2 archive:** copy `T:\00-Active\Project-AI-main\web\hub-epstein\` + `web\site\` to `T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\web\` (read-then-write; legacy is read-only input, archive copy is fresh path on T:).
+3. **Q3 archive:** copy `T:\00-Active\Project-AI-main\tarl_os\*.thirsty` to `T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\tarl_os_config\`.
 4. Update `LEGACY_GAP_INVENTORY.csv` to mark Q2/Q3/Q8 as resolved.
 5. Update `docs/operations/CONTINUITY_MAP.md` per template.
 
@@ -71,8 +71,8 @@ Acceptance record: `docs/internal/STAGE_19_5A_ACCEPTANCE.md`
 **File changes:** ≤5
 
 Tasks:
-1. **Q1 (Unity) archive-as-reference:** copy `T:\Project-AI-main\unity\` → `T:\Project-AI-Beginnings\docs\legacy-archive\unity\`. Update `docs/reference/MERGE_PROVENANCE.md` with the 21 file rows.
-2. **Q4 final sweep:** verify `T:\Project-AI-main\emergent-microservices\` contains 0 source files (re-walk); record SHA-256 of directory state for `LEGACY_SOURCE_STATE.json`.
+1. **Q1 (Unity) archive-as-reference:** copy `T:\00-Active\Project-AI-main\unity\` → `T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\unity\`. Update `docs/reference/MERGE_PROVENANCE.md` with the 21 file rows.
+2. **Q4 final sweep:** verify `T:\00-Active\Project-AI-main\emergent-microservices\` contains 0 source files (re-walk); record SHA-256 of directory state for `LEGACY_SOURCE_STATE.json`.
 3. Update inventory CSV.
 4. Update continuity map.
 

@@ -1,7 +1,7 @@
 # emergent-microservices/ — DROP Confirmation (Q4 resolution)
 
 > **Generated:** 2026-06-25
-> **Source:** `T:\Project-AI-main\emergent-microservices\`
+> **Source:** `T:\00-Active\Project-AI-main\emergent-microservices\`
 > **Verdict:** DROP — zero source content
 
 ## Findings

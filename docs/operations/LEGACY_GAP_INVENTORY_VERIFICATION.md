@@ -11,7 +11,7 @@ This document records the hostile self-review of the gap inventory. Each item be
 ## Risk Domain 1 — Path Integrity
 
 **Q: Are all paths in this inventory real?**
-- **Method:** All paths cited from `find T:\Project-AI-main -type f` walk, validated with `os.path.exists()`. Top-level dir list cross-checked against `git ls-files` of legacy.
+- **Method:** All paths cited from `find T:\00-Active\Project-AI-main -type f` walk, validated with `os.path.exists()`. Top-level dir list cross-checked against `git ls-files` of legacy.
 - **Result:** PASS. Every legacy dir listed in §1 was confirmed to exist via `Path.exists()`. Every file path in §2-§3 was generated from `os.walk()` over the actual legacy tree. Beginnings package paths in §2 cross-checked with `packages/*/src/**/*.py` walk.
 - **Edge case:** `emergent-microservices` listed as "0 real files" — confirmed by walking each of the 7 subdirs with `.ruff_cache` filter. No real source content exists.
 - **Edge case:** `Project_ai_index` listed as "0 on-disk" — confirmed. Tracked as a single file but no actual content.
@@ -21,9 +21,9 @@ This document records the hostile self-review of the gap inventory. Each item be
 **Q: What will fail on first run silently?**
 - **Inventory does not execute code** — only produces static files. No execution surface for silent failure.
 - **Caveat:** Per-file SHA-256 spot-check against MERGE_PROVENANCE.md was NOT done exhaustively (would consume too much context). I sampled representative cases:
-  - `docs/reference/COMPREHENSIVE_STRATEGY_GUIDE_PROJECT_AI.md` SHA `0359332e...` matches BOTH `T:\Project-AI-main\docs\governance\COMPREHENSIVE_STRATEGY_GUIDE_PROJECT_AI.md` and `C:\Users\Quencher\Documents\Thirsty's Projects LLC\Project-AI Papers\` per MERGE_PROVENANCE ✓
-  - `docs/reference/NIRL_Spec_v1.1.docx` SHA `be1056a...` matches BOTH `T:\Project-AI-main\docs\nirl\NIRL_Spec_v1.1.docx` and Papers ✓
-  - `docs/reference/Legion_Commission.docx` SHA `21a24ede...` matches BOTH `T:\Project-AI-main\docs\governance\Legion_Commission.docx` and Papers ✓
+  - `docs/reference/COMPREHENSIVE_STRATEGY_GUIDE_PROJECT_AI.md` SHA `0359332e...` matches BOTH `T:\00-Active\Project-AI-main\docs\governance\COMPREHENSIVE_STRATEGY_GUIDE_PROJECT_AI.md` and `C:\Users\Quencher\Documents\Thirsty's Projects LLC\Project-AI Papers\` per MERGE_PROVENANCE ✓
+  - `docs/reference/NIRL_Spec_v1.1.docx` SHA `be1056a...` matches BOTH `T:\00-Active\Project-AI-main\docs\nirl\NIRL_Spec_v1.1.docx` and Papers ✓
+  - `docs/reference/Legion_Commission.docx` SHA `21a24ede...` matches BOTH `T:\00-Active\Project-AI-main\docs\governance\Legion_Commission.docx` and Papers ✓
 - **Result:** PASS for sampled cases. Non-exhaustive; flag as `Not verified` in self-report.
 
 ## Risk Domain 3 — Documentation Truth
@@ -160,7 +160,7 @@ This document records the hostile self-review of the gap inventory. Each item be
 - **The legacy repo was not modified.**
 - **No commits were made.**
 - **No remote state was touched.**
-- **Rollback:** `rm -rf T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY*`. The 18-stage commit chain at `ca3477a` is unaffected.
+- **Rollback:** `rm -rf T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY*`. The 18-stage commit chain at `ca3477a` is unaffected.
 - **Result:** PASS.
 
 ### EP-8: Incomplete Deployment
@@ -256,10 +256,10 @@ This document records the hostile self-review of the gap inventory. Each item be
 ```
 Mode: governance system (discovery + verification)
 Created:
-  - T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (46KB)
-  - T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (7KB, 90 rows)
-  - T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY_VERIFICATION.md (this file)
-Modified: T:\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (updated)
+  - T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md (46KB)
+  - T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (7KB, 90 rows)
+  - T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY_VERIFICATION.md (this file)
+Modified: T:\00-Active\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (updated)
 Deleted: None.
 Verified:
   - 10 risk domains from v3 §27 — all PASS with limitations flagged

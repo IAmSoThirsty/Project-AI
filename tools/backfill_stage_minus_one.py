@@ -11,7 +11,7 @@ from collections import defaultdict
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-OLD_REPO = Path(os.environ.get("PROJECT_AI_LEGACY_REPO", r"T:\Project-AI-main"))
+OLD_REPO = Path(os.environ.get("PROJECT_AI_LEGACY_REPO", r"T:\00-Active\Project-AI-main"))
 PAPERS = Path(
     os.environ.get(
         "PROJECT_AI_PAPERS_ROOT",

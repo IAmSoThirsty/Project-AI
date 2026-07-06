@@ -1,6 +1,6 @@
 # Legacy Wiki Pointer Map
 
-> Source: `T:\Project-AI-main\wiki` (read-only)
+> Source: `T:\00-Active\Project-AI-main\wiki` (read-only)
 > Files indexed: 192
 
 | Legacy path | Lines | Classification | Wiki links |

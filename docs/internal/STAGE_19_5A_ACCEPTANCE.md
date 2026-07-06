@@ -12,7 +12,7 @@
 
 Phase A resolves three of the eight open questions from `LEGACY_GAP_INVENTORY.md` §8:
 
-- **Q2 (Web frontend)** — copy `T:\Project-AI-main\web\hub-epstein\` + `web\site\` to `docs/legacy-archive\web\`
+- **Q2 (Web frontend)** — copy `T:\00-Active\Project-AI-main\web\hub-epstein\` + `web\site\` to `docs/legacy-archive\web\`
 - **Q3 (TARL_OS `.thirsty` config)** — copy 27 `.thirsty` data files to `docs/legacy-archive\tarl_os_config\`
 - **Q8 (apps/ inventory)** — produce `APPS_INVENTORY.md` classifying `apps/` vs `packages/`
 
@@ -182,19 +182,19 @@ $ grep -rnE "from ['\"](@project-ai/)?(governance|execution|capability)" apps/ \
 ```
 Mode: governance system (Phase A execution)
 Created:
-- T:\Project-AI-Beginnings\docs\operations\STAGE_19_5_COMPANION_REBUILD_PLAN.md (superseded)
-- T:\Project-AI-Beginnings\docs\operations\STAGE_19_5_PHASED_PLAN.md
-- T:\Project-AI-Beginnings\docs\operations\APPS_INVENTORY.md
-- T:\Project-AI-Beginnings\docs\legacy-archive\web\hub-epstein\ (70 files, SHA-256 verified)
-- T:\Project-AI-Beginnings\docs\legacy-archive\web\site\ (49 files, SHA-256 verified)
-- T:\Project-AI-Beginnings\docs\legacy-archive\web\SHA256SUMS.txt
-- T:\Project-AI-Beginnings\docs\legacy-archive\tarl_os_config\**\*.thirsty (27 files, SHA-256 verified)
-- T:\Project-AI-Beginnings\docs\legacy-archive\tarl_os_config\SHA256SUMS.txt
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5A_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\STAGE_19_5_COMPANION_REBUILD_PLAN.md (superseded)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\STAGE_19_5_PHASED_PLAN.md
+- T:\00-Active\Project-AI-Beginnings\docs\operations\APPS_INVENTORY.md
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\web\hub-epstein\ (70 files, SHA-256 verified)
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\web\site\ (49 files, SHA-256 verified)
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\web\SHA256SUMS.txt
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\tarl_os_config\**\*.thirsty (27 files, SHA-256 verified)
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\tarl_os_config\SHA256SUMS.txt
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5A_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (Q2 + Q3 RESOLVED)
-- T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md §8 (resolution status)
-- T:\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase A session delta)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (Q2 + Q3 RESOLVED)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md §8 (resolution status)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase A session delta)
 Deleted: None.
 Verified:
 - 517/517 pytest pass (canonical scope: packages/ + tools/tests/)

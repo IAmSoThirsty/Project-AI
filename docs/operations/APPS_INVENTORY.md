@@ -4,7 +4,7 @@
 > **Project:** Project-AI Beginnings
 > **Mode:** discovery (read-only)
 > **Resolves:** Legacy Gap Inventory §8 Q8 ("Beginnings `apps/` vs `packages/`")
-> **Source-of-truth:** `T:\Project-AI-Beginnings\apps\` (working tree)
+> **Source-of-truth:** `T:\00-Active\Project-AI-Beginnings\apps\` (working tree)
 > **Authority:** `docs/internal/REBUILD_EXECUTION_PLAN.md`
 
 ---

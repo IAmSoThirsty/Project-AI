@@ -109,17 +109,17 @@ All checks passed!
 ```
 Mode: governance system (Phase H3 execution)
 Created:
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\default_policies.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\stdlib.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\modules.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\ffi.py
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\system.py
-- T:\Project-AI-Beginnings\packages\tarl\tests\test_tarl_system.py
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5H3_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\default_policies.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\stdlib.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\modules.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\ffi.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\system.py
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\tests\test_tarl_system.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5H3_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\__init__.py (75 re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\__init__.py (75 re-exports)
 Deleted:
-- T:\Project-AI-Beginnings\packages\tarl\src\tarl\policies\__init__.py (renamed to default_policies.py)
+- T:\00-Active\Project-AI-Beginnings\packages\tarl\src\tarl\policies\__init__.py (renamed to default_policies.py)
 Verified:
 - 888/888 pytest pass (807 + 81 new)
 - mypy --strict clean on 110 source files

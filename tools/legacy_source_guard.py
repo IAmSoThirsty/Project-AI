@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-DEFAULT_LEGACY_ROOT = Path(r"T:\Project-AI-main")
+DEFAULT_LEGACY_ROOT = Path(r"T:\00-Active\Project-AI-main")
 
 
 def sha256(path: Path) -> str:

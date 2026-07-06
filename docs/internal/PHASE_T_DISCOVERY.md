@@ -3,7 +3,7 @@
 **Status:** DISCOVERY + PLAN (no source code written yet)
 **Authority:** User directive 2026-06-30 — "make it the domain sovereign language"
 **Source:** `C:\Users\Quencher\Desktop\Github\Personal Repo's\thirsty_lang_exploration_0754` (read-only)
-**Target:** `T:\Project-AI-Beginnings`
+**Target:** `T:\00-Active\Project-AI-Beginnings`
 **Date:** 2026-06-30
 
 ---
@@ -249,7 +249,7 @@ requiring explicit "go T<sub-phase-name>" before source is written.**
 ## 8. Honest disclosure
 
 **This is discovery + plan only. NO source code has been written or
-modified.** The `T:\Project-AI-Beginnings` working tree is clean at
+modified.** The `T:\00-Active\Project-AI-Beginnings` working tree is clean at
 HEAD `8c3f802d` (last commit was the Wave 3b docs closure). The
 Thirsty-Lang source at `C:\Users\Quencher\Desktop\Github\Personal
 Repo's\thirsty_lang_exploration_0754` was not touched.

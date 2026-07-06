@@ -16,4 +16,5 @@ RUN uv sync --frozen --no-dev --package project-ai-api \
     && chown -R 10001:10001 /app /data
 USER 10001:10001
 EXPOSE 8000
-CMD ["uvicorn", "project_ai_api.app:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+# Development: pass UVICORN_RELOAD=1 to enable --reload
+CMD sh -c 'uvicorn project_ai_api.app:app --host 0.0.0.0 --port 8000 --no-access-log ${UVICORN_RELOAD:+--reload}'

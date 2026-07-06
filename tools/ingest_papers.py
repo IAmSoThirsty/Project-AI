@@ -39,7 +39,7 @@ from datetime import datetime
 from pathlib import Path
 
 PAPERS_ROOT = Path(r"C:\Users\Quencher\Documents\Thirsty's Projects LLC\Project-AI Papers")
-DEST_ROOT = Path(r"T:\Project-AI-Beginnings\docs\reference")
+DEST_ROOT = Path(r"T:\00-Active\Project-AI-Beginnings\docs\reference")
 
 # Per-subdir destination mapping
 DEST_MAP = {

@@ -12,7 +12,7 @@
 
 Phase B resolves two of the eight open questions from `LEGACY_GAP_INVENTORY.md` §8:
 
-- **Q1 (Unity 3DOF)** — archive `T:\Project-AI-main\unity\` (21 files) to `docs/legacy-archive\unity\` per user's 2026-06-21 DROP instruction.
+- **Q1 (Unity 3DOF)** — archive `T:\00-Active\Project-AI-main\unity\` (21 files) to `docs/legacy-archive\unity\` per user's 2026-06-21 DROP instruction.
 - **Q4 (`emergent-microservices/`)** — final-sweep confirm DROP (no source ever committed; only `.ruff_cache` debris).
 
 Plus: update `LEGACY_GAP_INVENTORY.csv`, `LEGACY_GAP_INVENTORY.md` §8, and `CONTINUITY_MAP.md`.
@@ -156,14 +156,14 @@ emergent-microservices/autonomous-compliance
 ```
 Mode: governance system (Phase B execution)
 Created:
-- T:\Project-AI-Beginnings\docs\legacy-archive\unity\** (21 files, SHA-256 verified)
-- T:\Project-AI-Beginnings\docs\legacy-archive\unity\SHA256SUMS.txt
-- T:\Project-AI-Beginnings\docs\legacy-archive\EMERGENT_MICROSERVICES_DROP_CONFIRMATION.md
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5B_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\unity\** (21 files, SHA-256 verified)
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\unity\SHA256SUMS.txt
+- T:\00-Active\Project-AI-Beginnings\docs\legacy-archive\EMERGENT_MICROSERVICES_DROP_CONFIRMATION.md
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5B_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (Q1 + Q4 RESOLVED)
-- T:\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md §8 (resolution status)
-- T:\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase B session delta)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.csv (Q1 + Q4 RESOLVED)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\LEGACY_GAP_INVENTORY.md §8 (resolution status)
+- T:\00-Active\Project-AI-Beginnings\docs\operations\CONTINUITY_MAP.md (Phase B session delta)
 Deleted: None.
 Verified:
 - 517/517 pytest pass (full scope)

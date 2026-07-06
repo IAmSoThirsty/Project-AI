@@ -1,6 +1,6 @@
 # DOI Registry
 
-> Source: `T:\Project-AI-main\wiki\07_Research\Publications\DOI-Registry.md`  
+> Source: `T:\00-Active\Project-AI-main\wiki\07_Research\Publications\DOI-Registry.md`  
 > SHA-256: `6c8518bcd8fd4ea2bc2915f53810c150b3e37140b4c33555232637be73968791`  
 > Imported as Stage -1 evidence; the source remains unchanged.
 

@@ -64,6 +64,13 @@ class CausalClock:
         self._logical_time += 1
         return self._logical_time
 
+
+    def batch_logical_time(self, count: int) -> list[int]:
+        if count == 0:
+            return []
+        batch_time = self.next()
+        return [batch_time] * count
+
     def record_event(self, event_id: str):
         """
         Record event in causal history.

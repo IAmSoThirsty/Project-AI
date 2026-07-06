@@ -1,6 +1,6 @@
 # Publication Timeline
 
-> Source: `T:\Project-AI-main\wiki\00_Index\Sovereign-Journey.md`  
+> Source: `T:\00-Active\Project-AI-main\wiki\00_Index\Sovereign-Journey.md`  
 > SHA-256: `5efc5e2c79454936c25d8038606bd26d201122ebcd014d6a29cafa9f51dbb726`  
 > Imported as Stage -1 evidence; the source remains unchanged.
 

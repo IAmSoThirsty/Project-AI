@@ -1,0 +1,122 @@
+name: project-ai-development
+
+# Development override: hot-reload enabled for Python packages
+# Run with: docker compose -f compose.yaml -f compose.dev.yaml up
+
+x-python-security: &python-security
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs:
+    - /tmp:size=64m,mode=1777
+  restart: unless-stopped
+
+x-python-health: &python-health
+  test:
+    - CMD
+    - python
+    - -c
+    - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2).read()"
+  interval: 5s
+  timeout: 3s
+  retries: 12
+  start_period: 5s
+
+services:
+  # --- MECHANISM 1: Bind mounts for immediate reload ---
+  api:
+    <<: *python-security
+    read_only: false  # Writeable /app for venv updates
+    volumes:
+      - audit-data:/data
+      # Simulation engines — source live reload
+      - ./packages/alien-invaders/src:/app/packages/alien-invaders/src
+      - ./packages/ai-takeover/src:/app/packages/ai-takeover/src
+      - ./packages/global-scenario/src:/app/packages/global-scenario/src
+      - ./packages/emp-defense/src:/app/packages/emp-defense/src
+      # Core governance + API — source live reload
+      - ./packages/kernel/src:/app/packages/kernel/src
+      - ./packages/governance/src:/app/packages/governance/src
+      - ./packages/execution/src:/app/packages/execution/src
+      - ./packages/api/src:/app/packages/api/src
+    # Uvicorn auto-reload on source changes
+    environment:
+      PYTHONUNBUFFERED: 1
+    healthcheck: *python-health
+
+  # --- MECHANISM 2: develop.watch for fine-grained file watching ---
+  # Uncomment to use instead of (or alongside) bind mounts.
+  # This triggers container rebuild only when Dockerfile or lock changes,
+  # leaving source code mounts as direct overwrites.
+  #
+  # api:
+  #   <<: *python-security
+  #   read_only: false
+  #   volumes:
+  #     - audit-data:/data
+  #     - ./packages/alien-invaders/src:/app/packages/alien-invaders/src
+  #     - ./packages/ai-takeover/src:/app/packages/ai-takeover/src
+  #     - ./packages/global-scenario/src:/app/packages/global-scenario/src
+  #     - ./packages/emp-defense/src:/app/packages/emp-defense/src
+  #     - ./packages/kernel/src:/app/packages/kernel/src
+  #     - ./packages/governance/src:/app/packages/governance/src
+  #     - ./packages/execution/src:/app/packages/execution/src
+  #     - ./packages/api/src:/app/packages/api/src
+  #   develop:
+  #     watch:
+  #       - action: rebuild
+  #         path: docker/api.Dockerfile
+  #       - action: rebuild
+  #         path: uv.lock
+  #       - action: sync
+  #         path: packages/*/src
+  #         target: /app/packages
+
+  swr:
+    <<: *python-security
+    read_only: false
+    volumes:
+      - ./packages/swr/src:/app/packages/swr/src
+      - ./packages/atlas/src:/app/packages/atlas/src
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  atlas:
+    <<: *python-security
+    read_only: false
+    volumes:
+      - ./packages/atlas/src:/app/packages/atlas/src
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  arbiter-rlp:
+    <<: *python-security
+    read_only: false
+    volumes:
+      - ./packages/arbiter/src:/app/packages/arbiter/src
+      - ./packages/rlp/src:/app/packages/rlp/src
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  # Docs and proof portals — web assets hot-reload
+  docs-portal:
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    read_only: false
+    volumes:
+      - ./apps/web/src:/app/apps/web/src
+    restart: unless-stopped
+
+  proof-portal:
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    read_only: false
+    volumes:
+      - ./apps/web/src:/app/apps/web/src
+    restart: unless-stopped
+
+volumes:
+  audit-data:

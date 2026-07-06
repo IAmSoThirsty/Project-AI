@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Stage -1.5: Frozen history (SHA-256 chain-linked snapshot of T:\Project-AI-main)
+- Stage -1.5: Frozen history (SHA-256 chain-linked snapshot of T:\00-Active\Project-AI-main)
 - Stage -1: Paper ingest + Downloads copy (137 files, all SHA-256 verified)
 - Operator-side governance drafts: arbiter_gov (12/12 tests pass) + rlp.py
 - AGI Charter v2.3 (canonical) in `docs/reference/`
@@ -76,4 +76,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2025-11-08
 
 ### Added
-- Initial commit of T:\Project-AI-main (pre-rebuild, frozen reference)
+- Initial commit of T:\00-Active\Project-AI-main (pre-rebuild, frozen reference)

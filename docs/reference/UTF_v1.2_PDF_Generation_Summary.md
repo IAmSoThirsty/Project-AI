@@ -83,7 +83,7 @@ Start T:\Thirsty-Lang_UTF_Reference_v1.2.pdf
 
 Regenerate if needed:
 ```powershell
-cd T:\Project-AI-main
+cd T:\00-Active\Project-AI-main
 py -3.12 generate_utf_comprehensive_pdf.py
 ```
 

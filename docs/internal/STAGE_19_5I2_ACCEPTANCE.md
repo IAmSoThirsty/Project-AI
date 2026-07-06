@@ -88,13 +88,13 @@ All checks passed!
 ```
 Mode: governance system (Phase I2 execution)
 Created:
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\triumvirate_workflow.py
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\atomic_security.py
-- T:\Project-AI-Beginnings\packages\temporal\tests\test_temporal_i2.py
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5I2_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\triumvirate_workflow.py
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\atomic_security.py
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\tests\test_temporal_i2.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5I2_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\__init__.py (10 re-exports)
-- T:\Project-AI-Beginnings\packages\temporal\src\temporal\__init__.py (22 re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\workflows\__init__.py (10 re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\temporal\src\temporal\__init__.py (22 re-exports)
 Verified:
 - 965/965 pytest pass (931 + 34)
 - mypy --strict clean on 118 source files

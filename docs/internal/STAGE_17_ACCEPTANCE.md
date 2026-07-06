@@ -65,6 +65,6 @@ docs/internal/STAGE_4_MERGE_REPORT.json — present (Stage 4)
 All verified present via `ls`. ✓
 
 Note: `governance/sovereign_data/` (compliance bundles, sovereign keypair) lives in
-`T:\Project-AI-main` (the legacy source) and is not part of the rebuild repo. It is
+`T:\00-Active\Project-AI-main` (the legacy source) and is not part of the rebuild repo. It is
 referenced in `docs/reference/PROJECT_AI_SOVEREIGN_VERIFICATION_RUNBOOK.md` for
 operators who need to verify legacy governance artifacts.

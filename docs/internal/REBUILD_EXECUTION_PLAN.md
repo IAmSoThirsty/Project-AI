@@ -1,10 +1,10 @@
 # Project-AI Rebuild Execution Ledger
 
 **Status:** LOCAL ACCEPTANCE COMPLETE; DEVELOPMENT CHECKPOINT IN PROGRESS
-**Canonical repository:** `T:\Project-AI-Beginnings`
+**Canonical repository:** `T:\00-Active\Project-AI-Beginnings`
 **Working branch:** `main` (current development checkpoint; previous rebuild
 work landed from `codex/rebuild-continuation`)
-**Legacy source:** `T:\Project-AI-main` (read-only input by policy)
+**Legacy source:** `T:\00-Active\Project-AI-main` (read-only input by policy)
 **Python:** 3.12.10
 **Package manager:** uv
 **Development version:** `0.0.0.dev0`
@@ -24,7 +24,7 @@ mapping without relabeling history.
 ## Safety Boundaries
 
 - Preserve all user files, local changes, ignored files, branches, and tags.
-- Never write to `T:\Project-AI-main` during rebuild execution.
+- Never write to `T:\00-Active\Project-AI-main` during rebuild execution.
 - Soft-freeze the legacy repository by recording state and hashes, not by
   changing ACLs, Git configuration, attributes, or files.
 - Keep all work local until the complete acceptance gate passes.

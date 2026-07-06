@@ -120,15 +120,15 @@ These are real defects found during self-review (hostile-review pattern from `LE
 ```
 Mode: governance system (Phase C execution)
 Created:
-- T:\Project-AI-Beginnings\packages\companion\src\companion\identity.py
-- T:\Project-AI-Beginnings\packages\companion\src\companion\fates.py
-- T:\Project-AI-Beginnings\packages\companion\src\companion\bonded.py
-- T:\Project-AI-Beginnings\packages\companion\tests\test_identity.py
-- T:\Project-AI-Beginnings\packages\companion\tests\test_fates.py
-- T:\Project-AI-Beginnings\tests\test_companion_integration_identity_fates.py
-- T:\Project-AI-Beginnings\docs\internal\STAGE_19_5C_ACCEPTANCE.md (this file)
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\identity.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\fates.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\bonded.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\tests\test_identity.py
+- T:\00-Active\Project-AI-Beginnings\packages\companion\tests\test_fates.py
+- T:\00-Active\Project-AI-Beginnings\tests\test_companion_integration_identity_fates.py
+- T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_19_5C_ACCEPTANCE.md (this file)
 Modified:
-- T:\Project-AI-Beginnings\packages\companion\src\companion\__init__.py (re-exports)
+- T:\00-Active\Project-AI-Beginnings\packages\companion\src\companion\__init__.py (re-exports)
 Deleted: None.
 Verified:
 - 550/550 pytest pass (517 baseline + 33 new = 550)

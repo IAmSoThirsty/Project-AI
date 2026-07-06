@@ -7,7 +7,7 @@
 > **Author:** Hermes Agent (assisted)
 > **Date:** 2026-06-24
 > **Plan executed:** `C:\Users\Quencher\.hermes\plans\2026-06-24_080000-project-ai-gap-discovery.md` (Phases A-G)
-> **Source-of-truth:** `T:\Project-AI-Beginnings\docs\internal\REBUILD_EXECUTION_PLAN.md`
+> **Source-of-truth:** `T:\00-Active\Project-AI-Beginnings\docs\internal\REBUILD_EXECUTION_PLAN.md`
 
 ---
 
@@ -216,24 +216,24 @@ EXIT: 0
 ```
 Mode: governance system (rebuild)
 Created:
-  - T:\Project-AI-Beginnings\packages\kernel\src\kernel\threat_detection.py
-  - T:\Project-AI-Beginnings\packages\kernel\src\kernel\tarl_bridge.py
-  - T:\Project-AI-Beginnings\packages\kernel\tests\test_threat_detection.py
-  - T:\Project-AI-Beginnings\packages\kernel\tests\test_tarl_bridge.py
-  - T:\Project-AI-Beginnings\packages\governance\src\governance\triumvirate.py
-  - T:\Project-AI-Beginnings\packages\governance\src\governance\iron_path.py
-  - T:\Project-AI-Beginnings\packages\governance\tests\test_triumvirate.py
-  - T:\Project-AI-Beginnings\packages\governance\tests\test_iron_path.py
-  - T:\Project-AI-Beginnings\packages\governance\tests\test_iron_path_integration.py
-  - T:\Project-AI-Beginnings\packages\governance\tests\test_iron_path_risk.py (Wave 3)
-  - T:\Project-AI-Beginnings\packages\execution\src\execution\risk.py (Wave 3)
-  - T:\Project-AI-Beginnings\packages\execution\tests\test_risk.py (Wave 3)
-  - T:\Project-AI-Beginnings\docs\operations\STAGE_19_ACCEPTANCE.md (this file)
+  - T:\00-Active\Project-AI-Beginnings\packages\kernel\src\kernel\threat_detection.py
+  - T:\00-Active\Project-AI-Beginnings\packages\kernel\src\kernel\tarl_bridge.py
+  - T:\00-Active\Project-AI-Beginnings\packages\kernel\tests\test_threat_detection.py
+  - T:\00-Active\Project-AI-Beginnings\packages\kernel\tests\test_tarl_bridge.py
+  - T:\00-Active\Project-AI-Beginnings\packages\governance\src\governance\triumvirate.py
+  - T:\00-Active\Project-AI-Beginnings\packages\governance\src\governance\iron_path.py
+  - T:\00-Active\Project-AI-Beginnings\packages\governance\tests\test_triumvirate.py
+  - T:\00-Active\Project-AI-Beginnings\packages\governance\tests\test_iron_path.py
+  - T:\00-Active\Project-AI-Beginnings\packages\governance\tests\test_iron_path_integration.py
+  - T:\00-Active\Project-AI-Beginnings\packages\governance\tests\test_iron_path_risk.py (Wave 3)
+  - T:\00-Active\Project-AI-Beginnings\packages\execution\src\execution\risk.py (Wave 3)
+  - T:\00-Active\Project-AI-Beginnings\packages\execution\tests\test_risk.py (Wave 3)
+  - T:\00-Active\Project-AI-Beginnings\docs\operations\STAGE_19_ACCEPTANCE.md (this file)
 Modified:
-  - T:\Project-AI-Beginnings\packages\kernel\src\kernel\__init__.py (re-export new symbols)
-  - T:\Project-AI-Beginnings\packages\governance\src\governance\__init__.py (re-export new symbols + RiskCalibrator Protocol)
-  - T:\Project-AI-Beginnings\packages\execution\src\execution\__init__.py (re-export risk module symbols)
-  - T:\Project-AI-Beginnings\packages\kernel\tests\test_tarl_bridge.py (mypy fixes)
+  - T:\00-Active\Project-AI-Beginnings\packages\kernel\src\kernel\__init__.py (re-export new symbols)
+  - T:\00-Active\Project-AI-Beginnings\packages\governance\src\governance\__init__.py (re-export new symbols + RiskCalibrator Protocol)
+  - T:\00-Active\Project-AI-Beginnings\packages\execution\src\execution\__init__.py (re-export risk module symbols)
+  - T:\00-Active\Project-AI-Beginnings\packages\kernel\tests\test_tarl_bridge.py (mypy fixes)
 Deleted: None.
 Verified:
   - 479/479 project tests pass across 10 packages
