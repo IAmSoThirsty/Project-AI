@@ -16,7 +16,7 @@ chain.
 
 ```bash
 # 1. Repo is clean and on the expected commit
-cd T:/Project-AI-Beginnings
+cd T:/00-Active/Project-AI-Beginnings
 git status --short            # must be empty
 git rev-parse HEAD            # record this SHA
 git log --oneline -1          # confirm commit message
@@ -69,7 +69,7 @@ creation; the file must be in `.gitignore`.
 ## 2. Build the images
 
 ```bash
-cd T:/Project-AI-Beginnings
+cd T:/00-Active/Project-AI-Beginnings
 
 # Validate the Compose file
 docker compose config --quiet
@@ -180,7 +180,7 @@ If the deployment needs to be rolled back:
 docker compose down
 
 # 2. Check out the previous good commit
-cd T:/Project-AI-Beginnings
+cd T:/00-Active/Project-AI-Beginnings
 git log --oneline -10   # find the previous good SHA
 git checkout <previous-good-sha>
 

@@ -273,7 +273,7 @@ Same J1/J2 pattern.
 
 ```bash
 # 1. Beginnings is clean
-cd T:/Project-AI-Beginnings
+cd T:/00-Active/Project-AI-Beginnings
 git status --short                                # must be empty
 git log --oneline -1                              # 8c3f802d (or later)
 
@@ -283,8 +283,8 @@ git status --short                                # (don't care; read-only)
 grep "^version" pyproject.toml                    # 0.8.1
 
 # 3. Beginnings has no Thirsty-Lang dep yet (this envelope doesn't add one)
-grep "thirsty" T:/Project-AI-Beginnings/pyproject.toml || echo "no thirsty dep yet - expected"
-grep "thirsty" T:/Project-AI-Beginnings/uv.lock 2>/dev/null | head -5 || echo "no thirsty in lock - expected"
+grep "thirsty" T:/00-Active/Project-AI-Beginnings/pyproject.toml || echo "no thirsty dep yet - expected"
+grep "thirsty" T:/00-Active/Project-AI-Beginnings/uv.lock 2>/dev/null | head -5 || echo "no thirsty in lock - expected"
 ```
 
 If the verification reproduces the expected outputs, the discovery

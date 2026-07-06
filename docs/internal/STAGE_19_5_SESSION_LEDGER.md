@@ -264,7 +264,7 @@ CI green; J2.5 implementation commit pushed and CI green in run `28330827940`
 
 ### How to verify locally
 ```bash
-cd T:/Project-AI-Beginnings
+cd T:/00-Active/Project-AI-Beginnings
 uv run pytest                      # 1467 passed
 uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src apps/desktop/src apps/services/src tools
 uv run ruff check .                # all checks passed

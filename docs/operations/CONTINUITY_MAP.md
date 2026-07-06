@@ -66,8 +66,8 @@ None.
 
 | Command | Result | Date | Notes |
 |---------|--------|------|-------|
-| `git -C /t/Project-AI-Beginnings rev-parse HEAD origin/main` | Exit 0; identical (`ca3477a`) | 2026-06-24 | Pre-discovery state check |
-| `git -C /t/Project-AI-Beginnings status` | Exit 0; clean except untracked `.obsidian/` | 2026-06-24 | Per v3 §34 |
+| `git -C /t/00-Active/Project-AI-Beginnings rev-parse HEAD origin/main` | Exit 0; identical (`ca3477a`) | 2026-06-24 | Pre-discovery state check |
+| `git -C /t/00-Active/Project-AI-Beginnings status` | Exit 0; clean except untracked `.obsidian/` | 2026-06-24 | Per v3 §34 |
 | `find T:\Project-AI-main -type f \| wc -l` | 72,373 (top-level only) / 71,066 (excluding `.git`) | 2026-06-24 | Phase B discovery |
 | `git -C T:\Project-AI-main ls-files \| wc -l` | 5,276 | 2026-06-24 | Tracked baseline |
 | `git -C T:\Project-AI-main ls-files --others \| wc -l` | 65,894 | 2026-06-24 | Untracked-by-git |

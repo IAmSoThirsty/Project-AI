@@ -350,10 +350,10 @@ cd T:/Project-AI-main && find . -name "*.py" -not -path "*/__pycache__/*" -not -
 cd T:/Project-AI-main && find . -name "*.md" -not -path "*/__pycache__/*" -not -path "*/node_modules/*" | wc -l   # 2459
 
 # canonical structure
-cd T:/Project-AI-Beginnings && find packages -name "*.py" -not -path "*pycache*" | wc -l
-cd T:/Project-AI-Beginnings && git log --oneline -1    # c752fd31 docs(pre-deployment): record CI evidence
+cd T:/00-Active/Project-AI-Beginnings && find packages -name "*.py" -not -path "*pycache*" | wc -l
+cd T:/00-Active/Project-AI-Beginnings && git log --oneline -1    # c752fd31 docs(pre-deployment): record CI evidence
 
 # staging residue
-ls T:/Project-AI-Beginnings/packages/_staging/atlas/    # mirrors legacy atlas
-ls T:/Project-AI-Beginnings/packages/_staging/swr/      # mirrors legacy SWR
+ls T:/00-Active/Project-AI-Beginnings/packages/_staging/atlas/    # mirrors legacy atlas
+ls T:/00-Active/Project-AI-Beginnings/packages/_staging/swr/      # mirrors legacy SWR
 ```

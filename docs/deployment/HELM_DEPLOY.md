@@ -30,7 +30,7 @@ helm version          # >= 4
 kubectl version       # matches the target cluster
 
 # Repo is on the expected commit
-cd T:/Project-AI-Beginnings
+cd T:/00-Active/Project-AI-Beginnings
 git status --short
 git rev-parse HEAD
 ```

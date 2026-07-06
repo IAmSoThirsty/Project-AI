@@ -89,7 +89,7 @@ These were real defects caught during the hostile self-review pass. Listed so th
 ## 5. Pickup instructions (next session, first commands)
 
 ```bash
-cd /t/Project-AI-Beginnings
+cd /t/00-Active/Project-AI-Beginnings
 git status  # confirm 7 uncommitted changes
 uv run pytest tests/test_companion_integration_identity_fates.py -v --tb=short
 ```
