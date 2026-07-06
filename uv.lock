@@ -16,6 +16,7 @@ members = [
     "project-ai-convergence",
     "project-ai-desktop",
     "project-ai-execution",
+    "project-ai-global-scenario",
     "project-ai-governance",
     "project-ai-hydra-50",
     "project-ai-kernel",
@@ -725,6 +726,7 @@ dependencies = [
     { name = "project-ai-cognitive-warfare" },
     { name = "project-ai-companion" },
     { name = "project-ai-execution" },
+    { name = "project-ai-global-scenario" },
     { name = "project-ai-governance" },
     { name = "project-ai-hydra-50" },
     { name = "project-ai-kernel" },
@@ -773,6 +775,7 @@ requires-dist = [
     { name = "project-ai-cognitive-warfare", editable = "packages/cognitive-warfare" },
     { name = "project-ai-companion", editable = "packages/companion" },
     { name = "project-ai-execution", editable = "packages/execution" },
+    { name = "project-ai-global-scenario", editable = "packages/global-scenario" },
     { name = "project-ai-governance", editable = "packages/governance" },
     { name = "project-ai-hydra-50", editable = "packages/hydra_50" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
@@ -981,6 +984,28 @@ requires-dist = [
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-security", editable = "packages/security" },
 ]
+
+[[package]]
+name = "project-ai-global-scenario"
+version = "0.0.0.dev0"
+source = { editable = "packages/global-scenario" }
+dependencies = [
+    { name = "numpy" },
+    { name = "requests" },
+]
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "numpy", specifier = ">=1.26.0" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
+    { name = "requests", specifier = ">=2.31.0" },
+]
+provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-governance"

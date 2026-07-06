@@ -25,16 +25,17 @@ dependencies = [
     "project-ai-cerberus",
     "project-ai-cognitive-warfare",
     "project-ai-companion",
+    "project-ai-execution",
+    "project-ai-global-scenario",
+    "project-ai-governance",
     "project-ai-hydra-50",
     "project-ai-kernel",
-    "project-ai-swr-dashboard",
-    "project-ai-tarl",
-    "project-ai-temporal",
-    "project-ai-governance",
-    "project-ai-execution",
     "project-ai-rlp",
     "project-ai-security",
     "project-ai-swr",
+    "project-ai-swr-dashboard",
+    "project-ai-tarl",
+    "project-ai-temporal",
     "project-ai-cli",
     # Thirsty-Lang (PyPI dep, six-tier governance language family)
     "thirsty-lang==0.8.1",
@@ -88,6 +89,7 @@ project-ai-hydra-50 = { workspace = true }
 project-ai-kernel = { workspace = true }
 project-ai-governance = { workspace = true }
 project-ai-execution = { workspace = true }
+project-ai-global-scenario = { workspace = true }
 project-ai-rlp = { workspace = true }
 project-ai-security = { workspace = true }
 project-ai-swr = { workspace = true }
@@ -115,6 +117,7 @@ members = [
     "packages/temporal",
     "packages/governance",
     "packages/execution",
+    "packages/global-scenario",
     "packages/rlp",
     "packages/security",
     "packages/swr",
@@ -188,6 +191,7 @@ exclude = [
     "packages/_staging",
     "packages/security/reference",
     "packages/rlp/governance_framework",
+    "packages/global-scenario/src",
     "tools/_archive",
 ]
 
