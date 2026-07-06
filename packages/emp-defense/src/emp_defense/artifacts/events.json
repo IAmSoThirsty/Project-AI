@@ -1,0 +1,11 @@
+[
+  {
+    "id": "evt_0001",
+    "type": "emp_strike",
+    "parameters": {
+      "grid_failure_pct": 0.9,
+      "population_affected_pct": 0.35
+    },
+    "day": 0
+  }
+]

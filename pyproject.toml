@@ -25,6 +25,7 @@ dependencies = [
     "project-ai-cerberus",
     "project-ai-cognitive-warfare",
     "project-ai-companion",
+    "project-ai-emp-defense",
     "project-ai-execution",
     "project-ai-global-scenario",
     "project-ai-governance",
@@ -88,6 +89,7 @@ project-ai-companion = { workspace = true }
 project-ai-hydra-50 = { workspace = true }
 project-ai-kernel = { workspace = true }
 project-ai-governance = { workspace = true }
+project-ai-emp-defense = { workspace = true }
 project-ai-execution = { workspace = true }
 project-ai-global-scenario = { workspace = true }
 project-ai-rlp = { workspace = true }
@@ -116,6 +118,7 @@ members = [
     "packages/tarl",
     "packages/temporal",
     "packages/governance",
+    "packages/emp-defense",
     "packages/execution",
     "packages/global-scenario",
     "packages/rlp",
@@ -192,6 +195,8 @@ exclude = [
     "packages/security/reference",
     "packages/rlp/governance_framework",
     "packages/global-scenario/src",
+    "packages/emp-defense/src",
+    "packages/emp-defense/tests",
     "tools/_archive",
 ]
 
