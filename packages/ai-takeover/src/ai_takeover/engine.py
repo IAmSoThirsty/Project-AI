@@ -648,7 +648,7 @@ class AITakeoverEngine(SimulationSystem):
                 "failure_count_at_activation": self.state.failure_count,
             }
             logger.critical(
-                "T1 TERMINAL TRANSITION: corruption=%.2f dependency=%.2f" " agency=%.2f trigger=%s",
+                "T1 TERMINAL TRANSITION: corruption=%.2f dependency=%.2f agency=%.2f trigger=%s",
                 self.state.terminal_transition_snapshot["corruption"],
                 self.state.terminal_transition_snapshot["dependency"],
                 self.state.terminal_transition_snapshot["agency"],
@@ -671,7 +671,7 @@ class AITakeoverEngine(SimulationSystem):
                 "failure_count_at_activation": self.state.failure_count,
             }
             logger.critical(
-                "T2 TERMINAL TRANSITION: corruption=%.2f dependency=%.2f" " agency=%.2f trigger=%s",
+                "T2 TERMINAL TRANSITION: corruption=%.2f dependency=%.2f agency=%.2f trigger=%s",
                 self.state.terminal_transition_snapshot["corruption"],
                 self.state.terminal_transition_snapshot["dependency"],
                 self.state.terminal_transition_snapshot["agency"],

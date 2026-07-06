@@ -1,8 +1,8 @@
 # Operational Continuity Map - Updated
 ## Simulation Engines Improvement Initiative
 
-**Started:** 2025  
-**Scope:** Determinism, Governance, Cross-Engine Linkage, Production Hardening  
+**Started:** 2025
+**Scope:** Determinism, Governance, Cross-Engine Linkage, Production Hardening
 **Mode:** Repo-wide enhancement (existing production system)
 
 ---
@@ -220,13 +220,13 @@ These must be reviewed before implementing cross-engine dispatcher.
 - ✅ All Phase 2A changes are non-breaking and backward-compatible
 - ✅ Replay test suite ready for CI
 
-**Mode:** Repo-wide enhancement  
-**Safety Level:** GREEN - All changes verified, tests ready  
+**Mode:** Repo-wide enhancement
+**Safety Level:** GREEN - All changes verified, tests ready
 **Continuity:** PRESERVED - Full state in CONTINUITY_MAP.md
 
 ---
 
-**Session End:** Phase 2A Complete  
+**Session End:** Phase 2A Complete
 **Next Session Action:** Execute pytest suite, then proceed to Phase 2B/2C
 
 ---

@@ -81,12 +81,12 @@ class TestDeterministicReplay:
             assert state1["pop"] == state2["pop"], f"Population divergence at tick {tick}"
             assert state1["gdp"] == state2["gdp"], f"GDP divergence at tick {tick}"
             assert state1["aliens"] == state2["aliens"], f"Alien count divergence at tick {tick}"
-            assert (
-                state1["casualties"] == state2["casualties"]
-            ), f"Casualties divergence at tick {tick}"
-            assert (
-                state1["events_count"] == state2["events_count"]
-            ), f"Event count divergence at tick {tick}"
+            assert state1["casualties"] == state2["casualties"], (
+                f"Casualties divergence at tick {tick}"
+            )
+            assert state1["events_count"] == state2["events_count"], (
+                f"Event count divergence at tick {tick}"
+            )
 
     def test_replay_identical_seed_identical_events(self, config_with_seed):
         """
@@ -177,9 +177,9 @@ class TestDeterministicReplay:
 
         # Verify identical
         for key in final_state1:
-            assert (
-                final_state1[key] == final_state2[key]
-            ), f"Long-run divergence in {key}: {final_state1[key]} vs {final_state2[key]}"
+            assert final_state1[key] == final_state2[key], (
+                f"Long-run divergence in {key}: {final_state1[key]} vs {final_state2[key]}"
+            )
 
     def test_causal_clock_event_order(self, config_with_seed):
         """

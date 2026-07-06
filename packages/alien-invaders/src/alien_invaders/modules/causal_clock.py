@@ -64,7 +64,6 @@ class CausalClock:
         self._logical_time += 1
         return self._logical_time
 
-
     def batch_logical_time(self, count: int) -> list[int]:
         if count == 0:
             return []

@@ -242,18 +242,20 @@ class CrossEngineDispatcher:
                     alien_control >= ALIEN_INFLUENCE_CASCADE_THRESHOLD
                     and human_agency <= HUMAN_AGENCY_CASCADE_THRESHOLD
                 ):
-                    cascades.append(CascadeEvent(
-                        cascade_id=f"cascade_alien_ai_{tick_number}_{int(time.time())}",
-                        source_engine="alien",
-                        target_engine="ai",
-                        action_type="scenario_activation",
-                        parameters={
-                            "scenario_hint": "cognitive_capture",
-                            "source_alien_control": alien_control,
-                            "source_human_agency": human_agency,
-                            "tick": tick_number,
-                        },
-                    ))
+                    cascades.append(
+                        CascadeEvent(
+                            cascade_id=f"cascade_alien_ai_{tick_number}_{int(time.time())}",
+                            source_engine="alien",
+                            target_engine="ai",
+                            action_type="scenario_activation",
+                            parameters={
+                                "scenario_hint": "cognitive_capture",
+                                "source_alien_control": alien_control,
+                                "source_human_agency": human_agency,
+                                "tick": tick_number,
+                            },
+                        )
+                    )
                     logger.warning(
                         "CASCADE DETECTED: alien control %.1f%% + human agency %.1f%% "
                         "-> AI cognitive capture trigger",
@@ -266,18 +268,20 @@ class CrossEngineDispatcher:
             ai_state = self._safe_ai_state()
 
             if ai_state and ai_state.get("terminal_state") is not None:
-                cascades.append(CascadeEvent(
-                    cascade_id=f"cascade_ai_global_{tick_number}_{int(time.time())}",
-                    source_engine="ai",
-                    target_engine="global",
-                    action_type="inject_crisis",
-                    parameters={
-                        "crisis_type": "ai_terminal_compound",
-                        "terminal_state": ai_state.get("terminal_state"),
-                        "snapshot": ai_state.get("terminal_transition_snapshot"),
-                        "tick": tick_number,
-                    },
-                ))
+                cascades.append(
+                    CascadeEvent(
+                        cascade_id=f"cascade_ai_global_{tick_number}_{int(time.time())}",
+                        source_engine="ai",
+                        target_engine="global",
+                        action_type="inject_crisis",
+                        parameters={
+                            "crisis_type": "ai_terminal_compound",
+                            "terminal_state": ai_state.get("terminal_state"),
+                            "snapshot": ai_state.get("terminal_transition_snapshot"),
+                            "tick": tick_number,
+                        },
+                    )
+                )
                 logger.warning(
                     "CASCADE DETECTED: AI terminal state %s -> global compound crisis",
                     ai_state.get("terminal_state"),
@@ -290,24 +294,26 @@ class CrossEngineDispatcher:
             if ai_state:
                 corruption = ai_state.get("corruption_level", 0.0)
                 if corruption >= AI_CORRUPTION_CASCADE_THRESHOLD:
-                    cascades.append(CascadeEvent(
-                        cascade_id=f"cascade_corruption_alien_{tick_number}_{int(time.time())}",
-                        source_engine="ai",
-                        target_engine="alien",
-                        action_type="inject_event",
-                        parameters={
-                            "event_type": "ai_systems_compromised",
-                            "severity": "critical",
-                            "description": (
-                                f"AI governance systems compromised "
-                                f"(corruption={corruption:.1%}). "
-                                "Defense coordination degraded."
-                            ),
-                            "morale_penalty": min(0.3, corruption * 0.3),
-                            "affected_countries": [],
-                            "tick": tick_number,
-                        },
-                    ))
+                    cascades.append(
+                        CascadeEvent(
+                            cascade_id=f"cascade_corruption_alien_{tick_number}_{int(time.time())}",
+                            source_engine="ai",
+                            target_engine="alien",
+                            action_type="inject_event",
+                            parameters={
+                                "event_type": "ai_systems_compromised",
+                                "severity": "critical",
+                                "description": (
+                                    f"AI governance systems compromised "
+                                    f"(corruption={corruption:.1%}). "
+                                    "Defense coordination degraded."
+                                ),
+                                "morale_penalty": min(0.3, corruption * 0.3),
+                                "affected_countries": [],
+                                "tick": tick_number,
+                            },
+                        )
+                    )
 
         return cascades
 
@@ -441,9 +447,7 @@ class CrossEngineDispatcher:
                     "corruption_level": s.corruption_level,
                     "infrastructure_dependency": s.infrastructure_dependency,
                     "human_agency_remaining": s.human_agency_remaining,
-                    "terminal_state": (
-                        s.terminal_state.value if s.terminal_state else None
-                    ),
+                    "terminal_state": (s.terminal_state.value if s.terminal_state else None),
                     "terminal_transition_snapshot": s.terminal_transition_snapshot,
                     "failure_count": s.failure_count,
                 }
