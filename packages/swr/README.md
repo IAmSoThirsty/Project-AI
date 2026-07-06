@@ -1,11 +1,11 @@
 # Project-AI Sovereign War Room
 
 SWR defines deterministic scenarios across five rounds and scores
-supplied decisions without side effects. Recording a result is an
-actuation and therefore requires `ExecutionGate` governance plus an
-exact scoped capability (`swr.scenario.record`, `swr:<scenario-id>`).
-The legacy bundle, deployment, and duplicate governance surfaces remain
-provenance inputs rather than runtime paths.
+supplied decisions through a governed `WarRoomCore` facade. Recording a
+result is an actuation and therefore requires `ExecutionGate` governance
+plus an exact scoped capability (`swr.scenario.record`,
+`swr:<scenario-id>`). Legacy bundle, crypto, proof, scoreboard, API, CLI,
+and demo behavior now route through the canonical package surface.
 
 ## When to use this package
 
@@ -25,20 +25,18 @@ You do **not** use SWR to:
 
 | Symbol | Purpose |
 |---|---|
-| `SovereignScenario` (frozen dataclass) | A deterministic scenario spec |
-| `SovereignDecision` (frozen dataclass) | A supplied decision for a round |
-| `SovereignScore` (frozen dataclass) | The round-by-round score |
-| `WarRoom.run(scenario, decisions)` | Read-only: score the decisions, no side effects |
-| `WarRoom.record(result, gate, token)` | Write: append the scored result through the execution gate |
-| `get_war_room()` | Singleton factory for the default war room |
-| `reset_war_room()` | Test/reset helper |
+| `Scenario` | A deterministic scenario spec |
+| `ScenarioLibrary` | The five-round scenario catalog |
+| `SovereignWarRoom.evaluate(...)` | Read-only: score one supplied decision, no side effects |
+| `SovereignWarRoom.run_governed(...)` | Write: append the scored result through the execution gate |
+| `WarRoomCore` | Legacy orchestration facade for scenarios, results, proofs, scoreboard, export, API, CLI, and demo |
+| `swr.cli.get_swr()` | Factory for a fresh default governed `WarRoomCore` |
 
 ## Five-round scenario shape
 
-A scenario is a 5-round decision tree. The supplied `decisions`
-argument is a tuple of 5 `SovereignDecision` values. The score is
-deterministic: same input → same output, every time. The output is a
-`SovereignScore` with per-round scores and a total.
+A scenario belongs to one of five deterministic rounds. Each supplied
+decision is scored reproducibly against its expected decision and can be
+recorded only through the execution gate.
 
 ## Why recording requires the gate
 
@@ -55,24 +53,26 @@ The required capability is scoped to:
 A token with a different operation or resource will be rejected by
 the gate as a scope mismatch (returns `DENY`, no record written).
 
-## Legacy surfaces (provenance only)
+## Legacy Surfaces
 
 The full legacy SWR surface (api, bundle, core, crypto, governance,
 proof, scoreboard, web dashboard, verify_quality.tarl) is preserved at
-`packages/_staging/swr/` as a provenance input. These files are the
-authoritative source for the next port wave; the canonical
-`packages/swr/` package captures only the minimum-viable port (the
-`scenario.py` and `war_room.py` modules).
+`packages/_staging/swr/` as provenance input. The canonical
+`packages/swr/` package now includes the J6.1 core facade plus API, CLI,
+demo, bundle, crypto, governance, proof, scoreboard, scenario, and
+war-room modules.
 
 ## Dependency contract
 
-Imports: `kernel` (canonical types) + `execution` (for the gate call)
-+ stdlib. SWR is a consumer of the gate, not a peer.
+Imports: canonical `kernel`, `capability`, `governance`, and `execution`
+modules plus package dependencies declared in `packages/swr/pyproject.toml`.
+SWR is a consumer of the gate, not a peer.
 
 ## Architectural invariants
 
-- `WarRoom.run` is **side-effect-free** (pure function of inputs)
-- `WarRoom.record` is the **only** way to persist a scenario result
+- `SovereignWarRoom.evaluate` is **side-effect-free** (pure function of inputs)
+- `run_governed` / `WarRoomCore.execute_scenario` are the only runtime paths
+  that persist scenario results
 - The score is **deterministic** (same inputs → same score, bit-for-bit)
 - The required capability scope is enforced by the gate; SWR does
   not re-validate

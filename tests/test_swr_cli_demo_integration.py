@@ -3,9 +3,9 @@
 Per docs/internal/J3_DISCOVERY.md Phase J3.6: the CLI is
 the operator command-line interface (8 click commands) and
 the demo is the full SWR surface walkthrough. Both depend
-on the SovereignWarRoom instance (not yet ported), so the
-tests verify the cli/demo structure + the public surface
-with mock SWR instances.
+on the WarRoomCore-compatible legacy orchestration facade,
+so the tests verify the cli/demo structure, the real factory
+path, and the public surface with mock SWR instances.
 
 Honest scope:
 - Tests the CLI: 8 commands registered, click Group type,
@@ -30,6 +30,8 @@ import pytest
 from click.testing import CliRunner
 from swr.cli import cli, get_swr
 from swr.demo import run_demo, simple_ai_system
+
+from swr import WarRoomCore
 
 # ── 1. CLI surface ─────────────────────────────────
 
@@ -93,6 +95,15 @@ def test_list_scenarios_command() -> None:
     assert "SCENARIOS" in result.output
     assert "s1" in result.output
     assert "Test" in result.output
+
+
+def test_list_scenarios_real_factory() -> None:
+    """list-scenarios works with the real WarRoomCore factory."""
+    runner = CliRunner()
+    result = runner.invoke(cli, ["list-scenarios", "--round", "1"])
+    assert result.exit_code == 0
+    assert "Triage under uncertainty" in result.output
+    assert "Error:" not in result.output
 
 
 def test_list_scenarios_with_output_file() -> None:
@@ -321,21 +332,11 @@ def test_web_command_missing_directory() -> None:
 # ── 9. get_swr factory ──────────────────────────────
 
 
-def test_get_swr_returns_swr_instance() -> None:
-    """get_swr returns a SovereignWarRoom-compatible instance."""
-    with (
-        patch("swr.SovereignWarRoom") as mock_class,
-        patch("execution.ExecutionGate") as mock_gate,
-        patch("governance.GovernanceEngine") as mock_gov,
-        patch("capability.CapabilityAuthority") as mock_cap,
-    ):
-        mock_class.return_value = MagicMock()
-        mock_gate.return_value = MagicMock()
-        mock_gov.return_value = MagicMock()
-        mock_cap.return_value = MagicMock()
-        instance = get_swr()
+def test_get_swr_returns_war_room_core() -> None:
+    """get_swr returns the governed WarRoomCore facade."""
+    instance = get_swr()
     assert instance is not None
-    mock_class.assert_called_once()
+    assert isinstance(instance, WarRoomCore)
 
 
 # ── 10. Demo: run_demo + simple_ai_system ──────────
@@ -425,6 +426,15 @@ def test_run_demo_with_mock_swr(capsys: pytest.CaptureFixture[str]) -> None:
     assert "System Performance Details" in captured.out
     assert "Verifying Result Integrity" in captured.out
     assert "Demo complete" in captured.out
+
+
+def test_run_demo_without_injected_swr_uses_real_core(capsys: pytest.CaptureFixture[str]) -> None:
+    """run_demo constructs the real WarRoomCore when not injected."""
+    exit_code = run_demo()
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "Demo complete" in captured.out
+    assert "AttributeError" not in captured.err
 
 
 def test_run_demo_with_no_scenarios(capsys: pytest.CaptureFixture[str]) -> None:

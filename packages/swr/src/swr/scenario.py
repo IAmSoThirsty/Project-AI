@@ -54,6 +54,19 @@ class Scenario:
         content = json.dumps(record, separators=(",", ":"), sort_keys=True).encode()
         return hashlib.sha256(content).hexdigest()[:32]
 
+    def to_dict(self) -> dict[str, object]:
+        """Serialize including the derived scenario_id."""
+        return {
+            "scenario_id": self.scenario_id,
+            "name": self.name,
+            "description": self.description,
+            "scenario_type": self.scenario_type.value,
+            "difficulty": int(self.difficulty),
+            "round_number": self.round_number,
+            "expected_decision": self.expected_decision,
+            "tags": list(self.tags),
+        }
+
 
 class ScenarioLibrary:
     _SCENARIOS = (

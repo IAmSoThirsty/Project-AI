@@ -1,5 +1,6 @@
 """Project-AI Sovereign War Room public interface."""
 
+from swr.core import DEFAULT_TOKEN_TTL, WarRoomCore, scenario_to_dict
 from swr.scenario import Difficulty, Scenario, ScenarioLibrary, ScenarioType
 from swr.war_room import RECORD_OPERATION, ScenarioResult, SovereignWarRoom, keyword_score
 
@@ -27,6 +28,7 @@ except ImportError as _import_error:  # pragma: no cover - fail-closed
 __version__ = "0.0.0.dev0"
 
 __all__ = [
+    "DEFAULT_TOKEN_TTL",
     "EXPECTED_SHA256_HEX",
     "EXPECTED_TEXT",
     "RECORD_OPERATION",
@@ -38,6 +40,8 @@ __all__ = [
     "SovereignWarRoom",
     "TSCGBSWRSpec",
     "TSCGBSWRSpecError",
+    "WarRoomCore",
     "keyword_score",
     "load_spec",
+    "scenario_to_dict",
 ]

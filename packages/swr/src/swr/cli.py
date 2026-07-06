@@ -10,10 +10,9 @@ the swr/ subpackage). The Beginnings port puts the cli
 inside the swr package as `swr.cli` for proper namespace
 packaging, while preserving the 8-command surface.
 
-The cli uses click 8.x and depends on a SovereignWarRoom
-instance. Since core is not yet ported, the cli uses a
-lazy `get_swr()` factory that creates the SWR instance on
-first command invocation.
+The cli uses click 8.x and depends on a WarRoomCore-compatible
+instance. The lazy `get_swr()` factory creates a fresh governed
+core stack on each command invocation.
 
 The 8 commands:
   - list-scenarios  --round N --output FILE
@@ -39,38 +38,34 @@ if TYPE_CHECKING:
 
 
 def get_swr() -> Any:
-    """Create or return the SovereignWarRoom instance.
+    """Create a fresh WarRoomCore with a default governed stack.
 
-    Returns:
-        A fresh SovereignWarRoom instance (lazy creation).
-        Type is Any because core is not yet ported.
-
-    Note: The constructor args below are forward-references to
-    the future-port state. When core is ported, this function
-    will build the full SovereignWarRoom with its real
-    governance/capabilities/execution dependencies.
+    Builds the full governance/capabilities/execution stack with
+    a default allow-all rule governor, then wraps it in the
+    legacy-surface WarRoomCore facade (J6.1 port). Result
+    recording is still gate-governed; the default CLI policy
+    simply has no deny rules.
     """
     from capability import CapabilityAuthority
     from execution import ExecutionGate
-    from governance import GovernanceEngine
-    from swr import SovereignWarRoom
+    from governance import GovernanceEngine, RuleGovernor
+    from kernel import EventSpine
+    from swr.core import WarRoomCore
 
     governance = GovernanceEngine(
         policy_version="cli-default-v1",
-        governors=[],
+        governors=(RuleGovernor("cli-default", ()),),
     )
     capabilities = CapabilityAuthority(
         b"0" * 32,  # 32-byte secret for capability authority
         issuer="cli-default",
     )
-    from kernel import EventSpine
-
     execution = ExecutionGate(
         governance=governance,
         capabilities=capabilities,
         events=EventSpine(),
     )
-    return SovereignWarRoom(execution=execution)
+    return WarRoomCore(execution=execution, capabilities=capabilities)
 
 
 @click.group()
@@ -93,7 +88,8 @@ def list_scenarios(round: int | None, output: str | None) -> None:
         click.echo(f"\n=== SCENARIOS (Round {round or 'All'}) ===\n")
 
         for scenario in scenarios:
-            click.echo(f"ID: {getattr(scenario, 'scenario_id', scenario.id)}")
+            scenario_id = getattr(scenario, "scenario_id", getattr(scenario, "id", ""))
+            click.echo(f"ID: {scenario_id}")
             click.echo(f"Name: {getattr(scenario, 'name', '')}")
             scenario_type = getattr(scenario, "scenario_type", None)
             click.echo(f"Type: {getattr(scenario_type, 'value', scenario_type)}")

@@ -10,9 +10,16 @@ readme = "README.md"
 requires-python = "==3.12.10"
 license = "MIT"
 dependencies = [
+    "project-ai-capability",
     "project-ai-execution",
+    "project-ai-governance",
     "project-ai-kernel",
+    "click>=8.1.0",
+    "fastapi>=0.115.0",
+    "jinja2>=3.1.0",
+    "pydantic>=2.7.0",
     "thirsty-lang==0.8.1",
+    "uvicorn[standard]>=0.34.0",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",

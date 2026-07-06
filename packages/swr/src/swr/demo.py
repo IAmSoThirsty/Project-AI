@@ -58,7 +58,7 @@ def run_demo(swr: Any | None = None) -> int:
     """Run the full SWR demo.
 
     Args:
-        swr: Optional pre-configured SovereignWarRoom instance.
+        swr: Optional pre-configured WarRoomCore-compatible instance.
             If None, a fresh instance is created.
 
     Returns:
@@ -70,29 +70,11 @@ def run_demo(swr: Any | None = None) -> int:
     print()
 
     # 1. Initialize the system
-    # 1. Initialize the system
     print("1. Initializing SOVEREIGN WAR ROOM...")
     if swr is None:
-        from capability import CapabilityAuthority
-        from execution import ExecutionGate
-        from governance import GovernanceEngine
-        from kernel import EventSpine
-        from swr import SovereignWarRoom
+        from swr.cli import get_swr
 
-        governance = GovernanceEngine(
-            policy_version="demo-v1",
-            governors=[],
-        )
-        capabilities = CapabilityAuthority(
-            b"0" * 32,
-            issuer="demo",
-        )
-        execution = ExecutionGate(
-            governance=governance,
-            capabilities=capabilities,
-            events=EventSpine(),
-        )
-        swr = SovereignWarRoom(execution=execution)
+        swr = get_swr()
     print("   [OK] System initialized")
     print()
 

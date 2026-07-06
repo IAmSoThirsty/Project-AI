@@ -9,8 +9,7 @@ The legacy implementation imports `SovereignWarRoom` from
 `.core` at module load time. The Beginnings port defers the
 core dependency using a factory pattern: `app` and `swr` are
 module-level placeholders, and `set_swr(swr_instance)` sets
-the actual implementation. This allows the api module to be
-imported even when core is not yet ported.
+the actual WarRoomCore-compatible implementation.
 
 The api exposes 13 endpoints:
   - GET  /                       (root)
