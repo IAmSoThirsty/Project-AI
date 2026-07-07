@@ -114,13 +114,19 @@ def test_main_window_exposes_six_read_only_operator_pages(qt_app: QApplication) 
     window = MainWindow(factory)
     assert window.windowTitle().endswith("0.0.0.dev0")
     assert window.pages.count() == 6
-    assert [window.navigation.item(i).text() for i in range(6)] == list(MainWindow.PAGE_NAMES)
+    nav_labels = [
+        item.text() for i in range(6)
+        if (item := window.navigation.item(i)) is not None
+    ]
+    assert nav_labels == list(MainWindow.PAGE_NAMES)
 
     window.refresh_status()
     assert "Gateway live" in window.status_summary.text()
     window.run_replay()
     assert window.replay_table.rowCount() == 5
-    assert window.replay_table.item(0, 1).text() == "PASS"
+    replay_cell = window.replay_table.item(0, 1)
+    assert replay_cell is not None
+    assert replay_cell.text() == "PASS"
 
     window.api_token_input.setText("operator-token")
     window.apply_settings()
@@ -190,7 +196,7 @@ def test_gateway_classifies_http_transport_and_json_errors(
             "https://api.example.test/audit",
             401,
             "Unauthorized",
-            hdrs=None,
+            hdrs=None,  # type: ignore[arg-type]
             fp=io.BytesIO(b'{"detail":"Invalid bearer token"}'),
         )
 
