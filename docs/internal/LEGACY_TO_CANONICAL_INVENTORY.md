@@ -196,7 +196,7 @@ nothing) and the per-file port plan.
 
 | Legacy | Canonical | Disposition |
 |---|---|---|
-| `monitoring/grafana/` | `crates/genesis-emitter/` + observability hooks in `packages/*/src/*/` | **PORT** — Grafana dashboards and alerts; canonical needs a `monitoring/` sub-tree (move to canonical `monitoring/`?) |
+| `monitoring/grafana/` | `crates/genesis-emitter/` + observability hooks in `packages/*/src/*/` | **REFERENCE** — only contains `datasources/prometheus.yml` (9 lines, no dashboards, no alerts); canonical has `crates/genesis-emitter/` for telemetry. No port needed. |
 | `helm/` (legacy K8s manifests) | `helm/project-ai/` | **ALREADY-INTEGRATED** |
 | `docker-compose.yml`, `docker-compose.override.yml`, `Dockerfile` (root) | `compose.yaml`, `docker/*.Dockerfile` | **ALREADY-INTEGRATED** |
 | `Cargo.toml` (none in main — main is Python + Kotlin) | `Cargo.toml` + `Cargo.lock` + `crates/genesis-emitter/` | **ALREADY-INTEGRATED** — Rust crate for genesis event emitter |
@@ -286,9 +286,13 @@ J2.1–J2.9 ports consumed 9 of 17 J1-audit features. Remaining 8:
 
 ---
 
-## 8. `monitoring/` — partial port needed
+## 8. `monitoring/` — partial port needed (RESOLVED)
 
-`monitoring/grafana/` has dashboards. Canonical has `crates/genesis-emitter/` for telemetry. Audit: do the Grafana dashboards have content canonical needs? If yes, port; if they're config-only, document and reference.
+`monitoring/grafana/` is a single 9-line file
+(`datasources/prometheus.yml`); there are no dashboards and
+no alerts. Canonical has `crates/genesis-emitter/` for
+telemetry. Disposition: **REFERENCE** (no port needed).
+The §4 entry has been updated to match.
 
 ---
 
