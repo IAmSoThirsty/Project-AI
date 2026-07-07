@@ -43,6 +43,9 @@ Thumbs.db
 # Obsidian (local vault config, never tracked)
 .obsidian/
 
+# Hermes agent (local agent state, never tracked)
+.hermes/
+
 # Test / coverage
 .pytest_cache/
 .coverage
