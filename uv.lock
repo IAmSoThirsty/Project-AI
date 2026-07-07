@@ -11,6 +11,7 @@ members = [
     "project-ai-arbiter",
     "project-ai-atlas",
     "project-ai-audit",
+    "project-ai-canonical",
     "project-ai-capability",
     "project-ai-cerberus",
     "project-ai-cli",
@@ -901,6 +902,28 @@ test = [
 
 [package.metadata]
 requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
+
+[[package]]
+name = "project-ai-canonical"
+version = "0.0.0.dev0"
+source = { editable = "packages/canonical" }
+dependencies = [
+    { name = "project-ai-audit" },
+    { name = "project-ai-identity" },
+]
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-audit", editable = "packages/audit" },
+    { name = "project-ai-identity", editable = "packages/identity" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
+]
 provides-extras = ["test"]
 
 [[package]]

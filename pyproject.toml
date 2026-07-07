@@ -93,6 +93,7 @@ project-ai-identity = { workspace = true }
 project-ai-arbiter = { workspace = true }
 project-ai-atlas = { workspace = true }
 project-ai-capability = { workspace = true }
+project-ai-canonical = { workspace = true }
 project-ai-cerberus = { workspace = true }
 project-ai-cognitive-warfare = { workspace = true }
 project-ai-companion = { workspace = true }
@@ -123,6 +124,7 @@ members = [
     "packages/atlas",
     "packages/audit",
     "packages/capability",
+    "packages/canonical",
     "packages/cerberus",
     "packages/cognitive-warfare",
     "packages/companion",
@@ -218,6 +220,8 @@ exclude = [
     "packages/ai-takeover/tests",
     "packages/audit/src",
     "packages/audit/tests",
+    "packages/canonical/src",
+    "packages/canonical/tests",
     "packages/identity/src",
     "packages/identity/tests",
     "packages/alien-invaders/src",
