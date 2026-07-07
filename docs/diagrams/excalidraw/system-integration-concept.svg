@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+viewBox="50 0 1200 870" 
+width="1200" height="870">
+<style>
+  text { font-family: Arial, sans-serif; }
+  .header { font-size: 32px; font-weight: bold; }
+  .title { font-size: 20px; font-weight: bold; }
+  .body { font-size: 14px; }
+</style>
+<rect x="100" y="50" width="1100" height="80" fill="#a5d8ff" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="300" y="102" class="header" fill="#1e1e1e" font-size="32">System Integration Architecture</text>
+<rect x="100" y="180" width="200" height="120" fill="#d0ebff" stroke="#1971c2" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="210" class="title" fill="#1971c2" font-size="20">🖥️ Desktop App</text>
+<text x="120" y="238" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="120" dy="0">PyQt6 UI</tspan>
+  <tspan x="120" dy="15.6">Leather Book theme</tspan>
+  <tspan x="120" dy="15.6">Local execution</tspan>
+  <tspan x="120" dy="15.6">Direct core access</tspan>
+  <tspan x="120" dy="15.6">No network required</tspan>
+</text>
+<rect x="350" y="180" width="200" height="120" fill="#e0ffe0" stroke="#2f9e44" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="370" y="210" class="title" fill="#2f9e44" font-size="20">🌐 Web UI</text>
+<text x="370" y="238" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="370" dy="0">React + Vite</tspan>
+  <tspan x="370" dy="15.6">Zustand state</tspan>
+  <tspan x="370" dy="15.6">Flask backend</tspan>
+  <tspan x="370" dy="15.6">REST API</tspan>
+  <tspan x="370" dy="15.6">CORS enabled</tspan>
+</text>
+<rect x="600" y="180" width="200" height="120" fill="#fff3e0" stroke="#f08c00" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="620" y="210" class="title" fill="#f08c00" font-size="20">⌨️ CLI</text>
+<text x="620" y="238" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="620" dy="0">project_ai_cli.py</tspan>
+  <tspan x="620" dy="15.6">Argparse commands</tspan>
+  <tspan x="620" dy="15.6">Direct imports</tspan>
+  <tspan x="620" dy="15.6">Scripting support</tspan>
+  <tspan x="620" dy="15.6">Automation ready</tspan>
+</text>
+<rect x="850" y="180" width="200" height="120" fill="#e7d5ff" stroke="#5f3dc4" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="870" y="210" class="title" fill="#5f3dc4" font-size="20">⚙️ MCP Server</text>
+<text x="870" y="238" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="870" dy="0">JSON-RPC protocol</tspan>
+  <tspan x="870" dy="15.6">Tool exposure</tspan>
+  <tspan x="870" dy="15.6">External integration</tspan>
+  <tspan x="870" dy="15.6">GitHub Copilot</tspan>
+  <tspan x="870" dy="15.6">Third-party access</tspan>
+</text>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="200" y1="310" x2="200" y2="370" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="450" y1="310" x2="450" y2="370" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="700" y1="310" x2="700" y2="370" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="950" y1="310" x2="950" y2="370" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<rect x="100" y="380" width="950" height="140" fill="#ffe0e0" stroke="#c92a2a" stroke-width="3" opacity="1.0" rx="10"/>
+<text x="120" y="414" class="title" fill="#c92a2a" font-size="24">🔥 Core Systems Layer</text>
+<text x="120" y="444" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="120" dy="0">Shared by ALL interfaces (no duplication):</tspan>
+  <tspan x="120" dy="16.8">• ai_systems.py (FourLaws, Persona, Memory, Learning, Override, Plugins)</tspan>
+  <tspan x="120" dy="16.8">• governance/pipeline.py (Universal validation enforcer)</tspan>
+  <tspan x="120" dy="16.8">• agents/ (Oversight, Planner, Validator, Explainability)</tspan>
+  <tspan x="120" dy="16.8">• user_manager.py, intelligence_engine.py, image_generator.py, data_analysis.py</tspan>
+</text>
+<rect x="100" y="560" width="950" height="100" fill="#e0ffe0" stroke="#2f9e44" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="594" class="title" fill="#2f9e44" font-size="24">💾 Data Persistence Layer</text>
+<text x="120" y="624" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="120" dy="0">Shared JSON files in data/ directory:</tspan>
+  <tspan x="120" dy="16.8">users.json, ai_persona/state.json, memory/knowledge.json, learning_requests/requests.json, audit logs</tspan>
+</text>
+<rect x="100" y="700" width="950" height="120" fill="#f8f9fa" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="730" class="title" fill="#1e1e1e" font-size="20">Integration Principles</text>
+<text x="120" y="759" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="120" dy="0">1. Single Source of Truth: Core systems in src/app/core/ (never duplicated)</tspan>
+  <tspan x="120" dy="16.8">2. Universal Governance: ALL paths route through governance/pipeline.py</tspan>
+  <tspan x="120" dy="16.8">3. Shared State: JSON persistence accessible by all interfaces</tspan>
+  <tspan x="120" dy="16.8">4. Consistent APIs: Core systems expose same methods regardless of caller</tspan>
+  <tspan x="120" dy="16.8">5. Decoupled Interfaces: UI layers don't depend on each other, only on core</tspan>
+</text>
+</svg>

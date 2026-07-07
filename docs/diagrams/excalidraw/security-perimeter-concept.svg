@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+viewBox="0 0 1050 1020" 
+width="1050" height="1020">
+<style>
+  text { font-family: Arial, sans-serif; }
+  .header { font-size: 32px; font-weight: bold; }
+  .title { font-size: 20px; font-weight: bold; }
+  .body { font-size: 14px; }
+</style>
+<rect x="100" y="50" width="900" height="80" fill="#a5d8ff" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="250" y="102" class="header" fill="#1e1e1e" font-size="32">Security Perimeter Architecture</text>
+<ellipse cx="550.0" cy="480.0" rx="400.0" ry="300.0" fill="#ffe0e0" stroke="#c92a2a" stroke-width="4" opacity="0.5"/>
+<text x="200" y="224" class="title" fill="#c92a2a" font-size="24">🔥 DMZ Zone (Red)</text>
+<text x="200" y="254" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="200" dy="0">• External facing (web UI, API)</tspan>
+  <tspan x="200" dy="16.8">• Rate limiting enforced</tspan>
+  <tspan x="200" dy="16.8">• Input sanitization layer</tspan>
+  <tspan x="200" dy="16.8">• IP blocking system</tspan>
+  <tspan x="200" dy="16.8">• Honeypot detectors active</tspan>
+</text>
+<ellipse cx="550.0" cy="480.0" rx="300.0" ry="200.0" fill="#fff3e0" stroke="#f08c00" stroke-width="4" opacity="0.6"/>
+<text x="300" y="324" class="title" fill="#f08c00" font-size="24">⚠️ Application Zone (Orange)</text>
+<text x="300" y="354" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="300" dy="0">• Business logic execution</tspan>
+  <tspan x="300" dy="16.8">• Governance pipeline enforcement</tspan>
+  <tspan x="300" dy="16.8">• Authentication/authorization</tspan>
+  <tspan x="300" dy="16.8">• User session management</tspan>
+  <tspan x="300" dy="16.8">• Command override system</tspan>
+  <tspan x="300" dy="16.8">• Agent orchestration layer</tspan>
+</text>
+<ellipse cx="550.0" cy="480.0" rx="200.0" ry="100.0" fill="#e0ffe0" stroke="#2f9e44" stroke-width="4" opacity="0.8"/>
+<text x="420" y="424" class="title" fill="#2f9e44" font-size="24">✅ Core Zone (Green)</text>
+<text x="420" y="454" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="420" dy="0">• Encrypted data storage</tspan>
+  <tspan x="420" dy="16.8">• AI model inference</tspan>
+  <tspan x="420" dy="16.8">• Constitutional validation</tspan>
+  <tspan x="420" dy="16.8">• Sensitive operations</tspan>
+  <tspan x="420" dy="16.8">• Audit log persistence</tspan>
+  <tspan x="420" dy="16.8">• Fernet encrypted secrets</tspan>
+  <tspan x="420" dy="16.8">• No external access</tspan>
+</text>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1971c2"/></marker></defs><line x1="50" y1="480" x2="330" y2="480" stroke="#1971c2" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<text x="60" y="466" class="body" fill="#1971c2" font-size="16">User Request →</text>
+<rect x="100" y="820" width="900" height="150" fill="#f8f9fa" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="850" class="title" fill="#1e1e1e" font-size="20">Security Controls</text>
+<text x="120" y="879" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="120" dy="0">1. Traffic flows INWARD through layers (DMZ → App → Core)</tspan>
+  <tspan x="120" dy="16.8">2. Each layer enforces its own security policies independently</tspan>
+  <tspan x="120" dy="16.8">3. Inner layers never expose interfaces to outer layers</tspan>
+  <tspan x="120" dy="16.8">4. Constitutional AI validation at Application layer prevents malicious commands</tspan>
+  <tspan x="120" dy="16.8">5. Fernet encryption protects data at rest in Core zone</tspan>
+  <tspan x="120" dy="16.8">6. Multi-factor authentication required for privileged operations (Command Override)</tspan>
+</text>
+</svg>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+viewBox="50 0 1020 890" 
+width="1020" height="890">
+<style>
+  text { font-family: Arial, sans-serif; }
+  .header { font-size: 32px; font-weight: bold; }
+  .title { font-size: 20px; font-weight: bold; }
+  .body { font-size: 14px; }
+</style>
+<rect x="100" y="50" width="700" height="80" fill="#a5d8ff" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="200" y="102" class="header" fill="#1e1e1e" font-size="32">Constitutional AI Framework</text>
+<rect x="100" y="180" width="700" height="100" fill="#ffe0e0" stroke="#c92a2a" stroke-width="3" opacity="1.0" rx="10"/>
+<text x="120" y="210" class="title" fill="#c92a2a" font-size="20">LAW 1 (HIGHEST)</text>
+<text x="120" y="236" class="body" fill="#1e1e1e" font-size="16">
+  <tspan x="120" dy="0">A robot may not injure a human being or, through inaction,</tspan>
+  <tspan x="120" dy="19.2">allow a human being to come to harm.</tspan>
+</text>
+<rect x="100" y="310" width="700" height="100" fill="#fff3e0" stroke="#f08c00" stroke-width="3" opacity="1.0" rx="10"/>
+<text x="120" y="340" class="title" fill="#f08c00" font-size="20">LAW 2</text>
+<text x="120" y="366" class="body" fill="#1e1e1e" font-size="16">
+  <tspan x="120" dy="0">A robot must obey orders given by human beings,</tspan>
+  <tspan x="120" dy="19.2">except where such orders would conflict with the First Law.</tspan>
+</text>
+<rect x="100" y="440" width="700" height="100" fill="#e0ffe0" stroke="#2f9e44" stroke-width="3" opacity="1.0" rx="10"/>
+<text x="120" y="470" class="title" fill="#2f9e44" font-size="20">LAW 3</text>
+<text x="120" y="496" class="body" fill="#1e1e1e" font-size="16">
+  <tspan x="120" dy="0">A robot must protect its own existence,</tspan>
+  <tspan x="120" dy="19.2">as long as such protection does not conflict with Laws 1 or 2.</tspan>
+</text>
+<rect x="100" y="570" width="700" height="100" fill="#e7d5ff" stroke="#5f3dc4" stroke-width="3" opacity="1.0" rx="10"/>
+<text x="120" y="600" class="title" fill="#5f3dc4" font-size="20">LAW 0 (Zeroth Law)</text>
+<text x="120" y="626" class="body" fill="#1e1e1e" font-size="16">
+  <tspan x="120" dy="0">A robot may not harm humanity, or through inaction,</tspan>
+  <tspan x="120" dy="19.2">allow humanity to come to harm.</tspan>
+</text>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="850" y1="200" x2="850" y2="650" stroke="#1e1e1e" stroke-width="2" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<text x="870" y="416" class="body" fill="#1e1e1e" font-size="16">
+  <tspan x="870" dy="0">Decreasing</tspan>
+  <tspan x="870" dy="19.2">Priority →</tspan>
+</text>
+<rect x="100" y="720" width="700" height="120" fill="#d0ebff" stroke="#1971c2" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="750" class="title" fill="#1971c2" font-size="20">Validation Process</text>
+<text x="120" y="774" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="120" dy="0">1. Check action context (endangers_human, endangers_humanity, is_user_order)</tspan>
+  <tspan x="120" dy="16.8">2. Apply hierarchical validation (Law 0 → Law 1 → Law 2 → Law 3)</tspan>
+  <tspan x="120" dy="16.8">3. Return (allowed: bool, reason: str)</tspan>
+  <tspan x="120" dy="16.8">4. Log decision to audit trail</tspan>
+</text>
+</svg>

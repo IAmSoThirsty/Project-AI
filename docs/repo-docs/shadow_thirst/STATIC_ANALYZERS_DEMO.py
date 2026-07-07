@@ -57,8 +57,7 @@ def print_analysis_report(report):
         for finding in report.findings:
             icon = (
                 "❌"
-                if finding.severity
-                in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL)
+                if finding.severity in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL)
                 else "⚠️"
             )
             print(f"   {icon} {finding}")
@@ -195,9 +194,7 @@ def demo_4_resource_estimation():
 
         # Look for resource estimation info
         resource_findings = [
-            f
-            for f in result.analysis_report.findings
-            if "ResourceEstimator" in f.analyzer
+            f for f in result.analysis_report.findings if "ResourceEstimator" in f.analyzer
         ]
 
         if resource_findings:
@@ -210,9 +207,7 @@ def demo_4_resource_estimation():
                     print(
                         f"   Estimated CPU (ms): {finding.metadata.get('estimated_cpu_ms', 'N/A')}"
                     )
-                    print(
-                        f"   CPU Quota (ms): {finding.metadata.get('cpu_quota_ms', 'N/A')}"
-                    )
+                    print(f"   CPU Quota (ms): {finding.metadata.get('cpu_quota_ms', 'N/A')}")
 
         print("\n✅ SUCCESS: Resource estimator provided analysis!")
 
@@ -254,9 +249,7 @@ def demo_5_divergence_risk():
 
         # Look for divergence risk findings
         divergence_findings = [
-            f
-            for f in result.analysis_report.findings
-            if "DivergenceRiskEstimator" in f.analyzer
+            f for f in result.analysis_report.findings if "DivergenceRiskEstimator" in f.analyzer
         ]
 
         if divergence_findings:
@@ -269,9 +262,7 @@ def demo_5_divergence_risk():
                     print(
                         f"   Shadow Instructions: {finding.metadata.get('shadow_instructions', 'N/A')}"
                     )
-                    print(
-                        f"   Difference Ratio: {finding.metadata.get('difference_ratio', 'N/A')}"
-                    )
+                    print(f"   Difference Ratio: {finding.metadata.get('difference_ratio', 'N/A')}")
 
         print("\n✅ SUCCESS: Divergence risk estimator provided analysis!")
 
@@ -309,9 +300,7 @@ def demo_6_invariant_purity():
 
         # Pure invariants should pass
         purity_errors = [
-            f
-            for f in result.analysis_report.get_errors()
-            if "InvariantPurityChecker" in f.analyzer
+            f for f in result.analysis_report.get_errors() if "InvariantPurityChecker" in f.analyzer
         ]
 
         if not purity_errors:

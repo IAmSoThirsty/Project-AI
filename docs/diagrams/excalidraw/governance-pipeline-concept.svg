@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+viewBox="50 0 1200 670" 
+width="1200" height="670">
+<style>
+  text { font-family: Arial, sans-serif; }
+  .header { font-size: 32px; font-weight: bold; }
+  .title { font-size: 20px; font-weight: bold; }
+  .body { font-size: 14px; }
+</style>
+<rect x="100" y="50" width="1100" height="80" fill="#a5d8ff" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="300" y="102" class="header" fill="#1e1e1e" font-size="32">Governance Pipeline (Multi-Stage Validation)</text>
+<rect x="100" y="180" width="200" height="120" fill="#d0ebff" stroke="#1971c2" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="210" class="title" fill="#1971c2" font-size="20">1️⃣ VALIDATE</text>
+<text x="115" y="238" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="115" dy="0">• Input sanitization</tspan>
+  <tspan x="115" dy="15.6">• Type checking</tspan>
+  <tspan x="115" dy="15.6">• Schema validation</tspan>
+  <tspan x="115" dy="15.6">• Action whitelist</tspan>
+  <tspan x="115" dy="15.6">• Format verification</tspan>
+</text>
+<rect x="350" y="180" width="200" height="120" fill="#e7d5ff" stroke="#5f3dc4" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="370" y="210" class="title" fill="#5f3dc4" font-size="20">2️⃣ SIMULATE</text>
+<text x="365" y="238" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="365" dy="0">• Shadow execution</tspan>
+  <tspan x="365" dy="15.6">• Impact analysis</tspan>
+  <tspan x="365" dy="15.6">• Resource estimation</tspan>
+  <tspan x="365" dy="15.6">• Risk calculation</tspan>
+  <tspan x="365" dy="15.6">• Rollback planning</tspan>
+</text>
+<rect x="600" y="180" width="200" height="120" fill="#ffe0e0" stroke="#c92a2a" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="620" y="210" class="title" fill="#c92a2a" font-size="20">3️⃣ GATE</text>
+<text x="615" y="238" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="615" dy="0">• Four Laws check</tspan>
+  <tspan x="615" dy="15.6">• Auth/authz verify</tspan>
+  <tspan x="615" dy="15.6">• Rate limit check</tspan>
+  <tspan x="615" dy="15.6">• Permissions eval</tspan>
+  <tspan x="615" dy="15.6">• Override allowed?</tspan>
+</text>
+<rect x="100" y="350" width="200" height="120" fill="#e0ffe0" stroke="#2f9e44" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="120" y="380" class="title" fill="#2f9e44" font-size="20">4️⃣ EXECUTE</text>
+<text x="115" y="408" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="115" dy="0">• Actual operation</tspan>
+  <tspan x="115" dy="15.6">• State mutations</tspan>
+  <tspan x="115" dy="15.6">• External API calls</tspan>
+  <tspan x="115" dy="15.6">• DB transactions</tspan>
+  <tspan x="115" dy="15.6">• File operations</tspan>
+</text>
+<rect x="350" y="350" width="200" height="120" fill="#fff3e0" stroke="#f08c00" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="370" y="380" class="title" fill="#f08c00" font-size="20">5️⃣ COMMIT</text>
+<text x="365" y="408" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="365" dy="0">• State persistence</tspan>
+  <tspan x="365" dy="15.6">• Checkpoint creation</tspan>
+  <tspan x="365" dy="15.6">• Rollback support</tspan>
+  <tspan x="365" dy="15.6">• Version tracking</tspan>
+  <tspan x="365" dy="15.6">• Backup triggers</tspan>
+</text>
+<rect x="600" y="350" width="200" height="120" fill="#dee2e6" stroke="#495057" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="620" y="380" class="title" fill="#495057" font-size="20">6️⃣ LOG</text>
+<text x="615" y="408" class="body" fill="#1e1e1e" font-size="13">
+  <tspan x="615" dy="0">• Audit trail</tspan>
+  <tspan x="615" dy="15.6">• Metrics collection</tspan>
+  <tspan x="615" dy="15.6">• Telemetry events</tspan>
+  <tspan x="615" dy="15.6">• Error reporting</tspan>
+  <tspan x="615" dy="15.6">• Compliance logs</tspan>
+</text>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="310" y1="240" x2="340" y2="240" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="560" y1="240" x2="590" y2="240" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="700" y1="310" x2="700" y2="340" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="590" y1="410" x2="360" y2="410" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="310" y1="410" x2="340" y2="410" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto"><polygon points="0 0, 10 3, 0 6" fill="#1e1e1e"/></marker></defs><line x1="560" y1="410" x2="590" y2="410" stroke="#1e1e1e" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrowhead)"/>
+<rect x="850" y="180" width="350" height="290" fill="#f8f9fa" stroke="#1e1e1e" stroke-width="2" opacity="1.0" rx="10"/>
+<text x="870" y="210" class="title" fill="#1e1e1e" font-size="20">Universal Entry Points</text>
+<text x="870" y="239" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="870" dy="0">ALL requests flow through pipeline:</tspan>
+  <tspan x="870" dy="16.8"></tspan>
+  <tspan x="870" dy="16.8">🌐 Web UI (React frontend)</tspan>
+  <tspan x="870" dy="16.8">🖥️ Desktop App (PyQt6)</tspan>
+  <tspan x="870" dy="16.8">⌨️ CLI (project_ai_cli.py)</tspan>
+  <tspan x="870" dy="16.8">🤖 Agents (oversight, planner)</tspan>
+  <tspan x="870" dy="16.8">🔧 API (Flask REST endpoints)</tspan>
+  <tspan x="870" dy="16.8">⚙️ MCP Server (mcp_server.py)</tspan>
+  <tspan x="870" dy="16.8">🌊 Temporal Workflows</tspan>
+  <tspan x="870" dy="16.8"></tspan>
+  <tspan x="870" dy="16.8">EVERY path enforces the same</tspan>
+  <tspan x="870" dy="16.8">governance rules - no exceptions!</tspan>
+  <tspan x="870" dy="16.8"></tspan>
+  <tspan x="870" dy="16.8">Failure at ANY stage = REJECT</tspan>
+</text>
+<rect x="100" y="520" width="700" height="100" fill="#ffe0e0" stroke="#c92a2a" stroke-width="3" opacity="1.0" rx="10"/>
+<text x="120" y="550" class="title" fill="#c92a2a" font-size="20">⚠️ Error Handling</text>
+<text x="120" y="579" class="body" fill="#1e1e1e" font-size="14">
+  <tspan x="120" dy="0">• Validation errors → ValueError with sanitized message</tspan>
+  <tspan x="120" dy="16.8">• Authorization failures → PermissionError with reason (logged)</tspan>
+  <tspan x="120" dy="16.8">• Execution failures → RuntimeError with rollback capability</tspan>
+</text>
+</svg>

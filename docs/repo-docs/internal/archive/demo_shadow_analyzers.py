@@ -117,9 +117,7 @@ fn calculate(x: Integer) -> Integer {
         print(f"   Total Findings: {result.analysis_report.summary['total_findings']}")
         print(f"   Errors: {result.analysis_report.summary['errors']}")
         print(f"   Warnings: {result.analysis_report.summary['warnings']}")
-        print(
-            f"   Status: {'✅ PASSED' if result.analysis_report.passed else '❌ FAILED'}"
-        )
+        print(f"   Status: {'✅ PASSED' if result.analysis_report.passed else '❌ FAILED'}")
         print(f"   Analyzers Run: {result.analysis_report.summary['analyzers_run']}")
 
         if result.analysis_report.findings:
@@ -212,9 +210,7 @@ fn unsafe_shadow() -> Integer {
 
     result = compile_source(violation_code, enable_static_analysis=True)
 
-    print(
-        f"\nCompilation Result: {'✅ SUCCESS' if result.success else '❌ FAILED (Expected)'}"
-    )
+    print(f"\nCompilation Result: {'✅ SUCCESS' if result.success else '❌ FAILED (Expected)'}")
 
     if result.analysis_report:
         print("\n📊 Static Analysis Report:")
@@ -233,9 +229,7 @@ fn unsafe_shadow() -> Integer {
             print("\n🚨 PLANE ISOLATION GATE FIRED - Critical Violations:")
             for error in critical_errors:
                 print(f"   ❌ {error}")
-            print(
-                "\n✅ SUCCESS: PlaneIsolationAnalyzer BLOCKED shadow → canonical mutation!"
-            )
+            print("\n✅ SUCCESS: PlaneIsolationAnalyzer BLOCKED shadow → canonical mutation!")
             print("   This is the MOST CRITICAL safety property:")
             print("   Shadow plane CANNOT mutate canonical state!")
         else:
@@ -275,9 +269,7 @@ fn heavy_computation() -> Integer {
 
     if result.analysis_report:
         resource_findings = [
-            f
-            for f in result.analysis_report.findings
-            if "ResourceEstimator" in f.analyzer
+            f for f in result.analysis_report.findings if "ResourceEstimator" in f.analyzer
         ]
         if resource_findings:
             print("\n📊 Resource Analysis:")
@@ -286,12 +278,8 @@ fn heavy_computation() -> Integer {
                     print(
                         f"   Shadow Instructions: {finding.metadata.get('shadow_instructions', 'N/A')}"
                     )
-                    print(
-                        f"   Estimated CPU: {finding.metadata.get('estimated_cpu_ms', 'N/A')}ms"
-                    )
-                    print(
-                        f"   CPU Quota: {finding.metadata.get('cpu_quota_ms', 'N/A')}ms"
-                    )
+                    print(f"   Estimated CPU: {finding.metadata.get('estimated_cpu_ms', 'N/A')}ms")
+                    print(f"   CPU Quota: {finding.metadata.get('cpu_quota_ms', 'N/A')}ms")
 
     # Test 5: Divergence Risk Estimation
     print("\n" + "-" * 80)
@@ -326,9 +314,7 @@ fn risky_divergence(x: Integer) -> Integer {
 
     if result.analysis_report:
         divergence_findings = [
-            f
-            for f in result.analysis_report.findings
-            if "DivergenceRiskEstimator" in f.analyzer
+            f for f in result.analysis_report.findings if "DivergenceRiskEstimator" in f.analyzer
         ]
         if divergence_findings:
             print("\n📊 Divergence Risk Analysis:")
