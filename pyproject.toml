@@ -42,6 +42,7 @@ dependencies = [
     "project-ai-swr-dashboard",
     "project-ai-simulation-contract",
     "project-ai-tarl",
+    "project-ai-thirstys-trading-hub",
     "project-ai-temporal",
     "project-ai-cli",
     # Thirsty-Lang (PyPI dep, six-tier governance language family)
@@ -110,6 +111,7 @@ project-ai-swr = { workspace = true }
 project-ai-swr-dashboard = { workspace = true }
 project-ai-simulation-contract = { workspace = true }
 project-ai-tarl = { workspace = true }
+project-ai-thirstys-trading-hub = { workspace = true }
 project-ai-temporal = { workspace = true }
 project-ai-cli = { workspace = true }
 
@@ -136,6 +138,7 @@ members = [
     "packages/kernel",
     "packages/simulation-contract",
     "packages/tarl",
+    "packages/thirstys-trading-hub",
     "packages/temporal",
     "packages/governance",
     "packages/emp-defense",
@@ -231,6 +234,8 @@ exclude = [
     "packages/alien-invaders/tests",
     "packages/django-state/src",
     "packages/django-state/tests",
+    "packages/thirstys-trading-hub/src",
+    "packages/thirstys-trading-hub/tests",
     "tools/_archive",
 ]
 

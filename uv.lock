@@ -35,6 +35,7 @@ members = [
     "project-ai-swr-dashboard",
     "project-ai-tarl",
     "project-ai-temporal",
+    "project-ai-thirstys-trading-hub",
 ]
 
 [[package]]
@@ -751,6 +752,7 @@ dependencies = [
     { name = "project-ai-swr-dashboard" },
     { name = "project-ai-tarl" },
     { name = "project-ai-temporal" },
+    { name = "project-ai-thirstys-trading-hub" },
     { name = "thirsty-lang" },
 ]
 
@@ -807,6 +809,7 @@ requires-dist = [
     { name = "project-ai-swr-dashboard", editable = "apps/swr-dashboard" },
     { name = "project-ai-tarl", editable = "packages/tarl" },
     { name = "project-ai-temporal", editable = "packages/temporal" },
+    { name = "project-ai-thirstys-trading-hub", editable = "packages/thirstys-trading-hub" },
     { name = "pypdf", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.0" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0" },
@@ -1319,6 +1322,20 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
+
+[[package]]
+name = "project-ai-thirstys-trading-hub"
+version = "0.0.0.dev0"
+source = { editable = "packages/thirstys-trading-hub" }
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
 
 [[package]]
 name = "pycparser"
