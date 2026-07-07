@@ -301,7 +301,7 @@ The §4 entry has been updated to match.
 | Path | Size | Disposition |
 |---|---|---|
 | `T:\00-Active\Project-AI-vault\` | 346 MB | **RECOVERED** (commit a5407c93) — 1,200+ files ported to `docs/{architecture,templates,source-docs,repo-docs,vault-recovery}/`; `Project-AI/` subdir (Obsidian-vault artifacts, 270 MB) intentionally DROP'd |
-| `T:\Project-AI-Pentest-Mainframe\` | 0 (empty) | **DROP** — empty directory |
+| `T:\08-Archive\Project-AI-Pentest-Mainframe\` | 0 (8 empty subdirs) | **DROP** — 0 files in any of the 8 subdirs (`.github/workflows`, `configs`, `pentest_station`, `policy`, `reports`, `scripts`, `tests`, `third_party`); nothing to port |
 | `T:\08-Archive\Project-AI-pre-phase2-hold\` | 798 MB | **RECOVERED** (commit d08a5a5d) — 19 files ported to `docs/pre-phase2-hold/`; 798 MB terraform provider binaries excluded (reproducible via `terraform init`) |
 | `T:\08-Archive\Project-AI-Canonical\` | 287 KB | **RECOVERED** (commits bf06f8eb, a6370fd1, 45b184bd) — 3 missing workspace members ported to `packages/{audit,identity,canonical}/` |
 | `T:\08-Archive\Project-AI-consolidation-logs\` | 3.7 MB | **RECOVERED** (commit b467de9b) — 27 files ported to `docs/consolidation-logs/` (the work product of the June 2026 root-cleanup investigation that produced this inventory) |
