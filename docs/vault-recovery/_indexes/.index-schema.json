@@ -1,0 +1,484 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://project-ai.vault/schemas/index-schema-v1.0.json",
+  "title": "Project-AI Vault Index Schema",
+  "description": "JSON Schema for validating Obsidian vault index files with YAML frontmatter and markdown content structure",
+  "version": "1.0",
+  "type": "object",
+  "required": ["metadata", "structure"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "YAML frontmatter metadata block",
+      "required": [
+        "index_type",
+        "index_scope",
+        "last_updated",
+        "maintainer",
+        "total_documents",
+        "metadata_schema_version"
+      ],
+      "properties": {
+        "index_type": {
+          "type": "string",
+          "description": "Type of index organization",
+          "enum": [
+            "by-area",
+            "by-type",
+            "by-priority",
+            "by-status",
+            "cross-reference"
+          ]
+        },
+        "index_scope": {
+          "type": "string",
+          "description": "Domain or category this index covers",
+          "minLength": 3,
+          "maxLength": 100,
+          "pattern": "^[a-z0-9-]+$",
+          "examples": [
+            "security",
+            "architecture",
+            "api",
+            "infrastructure",
+            "testing"
+          ]
+        },
+        "last_updated": {
+          "type": "string",
+          "description": "ISO 8601 date of last update",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "maintainer": {
+          "type": "string",
+          "description": "Agent ID, team name, or individual responsible",
+          "minLength": 3,
+          "maxLength": 100,
+          "pattern": "^[A-Z0-9-]+.*$",
+          "examples": [
+            "AGENT-002",
+            "AGENT-016",
+            "Security Team",
+            "Architecture Guild"
+          ]
+        },
+        "total_documents": {
+          "type": "integer",
+          "description": "Total number of documents indexed",
+          "minimum": 0
+        },
+        "metadata_schema_version": {
+          "type": "string",
+          "description": "Schema version for validation",
+          "pattern": "^\\d+\\.\\d+$",
+          "examples": ["1.0", "1.1", "2.0"]
+        },
+        "priority_distribution": {
+          "type": "object",
+          "description": "Distribution of document priorities",
+          "properties": {
+            "p0": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Critical priority documents"
+            },
+            "p1": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "High priority documents"
+            },
+            "p2": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Medium priority documents"
+            },
+            "p3": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Low priority documents"
+            }
+          },
+          "additionalProperties": false
+        },
+        "status_distribution": {
+          "type": "object",
+          "description": "Distribution of document statuses",
+          "properties": {
+            "active": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "planned": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "in_progress": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "review": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "archived": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "deprecated": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "superseded": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "tags": {
+          "type": "array",
+          "description": "Obsidian tags for discoverability",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9-/]+$"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "contains": {
+            "const": "index"
+          }
+        },
+        "related_indexes": {
+          "type": "array",
+          "description": "Links to related index files",
+          "items": {
+            "type": "string",
+            "pattern": "^\\[\\[.+-index\\]\\]$"
+          },
+          "uniqueItems": true
+        },
+        "coverage_percentage": {
+          "type": "integer",
+          "description": "Estimated percentage of domain coverage",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "additionalProperties": true
+    },
+    "structure": {
+      "type": "object",
+      "description": "Expected markdown structure sections",
+      "required": [
+        "title",
+        "overview",
+        "contents",
+        "statistics"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "H1 heading matching pattern: '[Name] Index'",
+          "pattern": "^.+ Index$"
+        },
+        "overview": {
+          "type": "object",
+          "description": "Overview section with description and use cases",
+          "required": ["description", "use_cases"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 50,
+              "description": "2-4 sentence overview"
+            },
+            "use_cases": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "string",
+                "minLength": 10
+              },
+              "description": "List of when to use this index"
+            },
+            "related_indexes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^\\[\\[.+\\]\\]"
+              }
+            }
+          }
+        },
+        "contents": {
+          "type": "object",
+          "description": "Main content sections with document listings",
+          "required": ["sections"],
+          "properties": {
+            "sections": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["name", "documents"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "description": "Section heading"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional section description"
+                  },
+                  "documents": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["link", "description"],
+                      "properties": {
+                        "link": {
+                          "type": "string",
+                          "pattern": "^\\[\\[.+\\]\\]$",
+                          "description": "Obsidian wikilink"
+                        },
+                        "description": {
+                          "type": "string",
+                          "maxLength": 200,
+                          "description": "Brief document description"
+                        },
+                        "priority": {
+                          "type": "string",
+                          "enum": ["P0", "P1", "P2", "P3"],
+                          "description": "Document priority"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "Active",
+                            "Planned",
+                            "In-Progress",
+                            "Review",
+                            "Archived",
+                            "Deprecated",
+                            "Superseded"
+                          ],
+                          "description": "Document lifecycle status"
+                        },
+                        "key_topics": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "maxItems": 5,
+                          "description": "Key topics covered"
+                        },
+                        "dependencies": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "pattern": "^\\[\\[.+\\]\\]$"
+                          },
+                          "description": "Prerequisite documents"
+                        },
+                        "last_reviewed": {
+                          "type": "string",
+                          "format": "date",
+                          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                          "description": "Date of last review"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "statistics": {
+          "type": "object",
+          "description": "Document count statistics",
+          "required": ["total", "by_status", "by_priority"],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total document count"
+            },
+            "by_status": {
+              "type": "object",
+              "properties": {
+                "active": {"type": "integer", "minimum": 0},
+                "archived": {"type": "integer", "minimum": 0},
+                "deprecated": {"type": "integer", "minimum": 0},
+                "in_progress": {"type": "integer", "minimum": 0}
+              },
+              "additionalProperties": {"type": "integer", "minimum": 0}
+            },
+            "by_priority": {
+              "type": "object",
+              "properties": {
+                "p0": {"type": "integer", "minimum": 0},
+                "p1": {"type": "integer", "minimum": 0},
+                "p2": {"type": "integer", "minimum": 0},
+                "p3": {"type": "integer", "minimum": 0}
+              },
+              "additionalProperties": false
+            },
+            "last_major_update": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "coverage_percentage": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "maintenance_notes": {
+          "type": "object",
+          "description": "Optional maintenance and troubleshooting information",
+          "properties": {
+            "update_triggers": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Conditions that require index update"
+            },
+            "validation_checklist": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Quality checks before committing"
+            },
+            "quality_standards": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Formatting and content standards"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "document_entry": {
+      "type": "object",
+      "description": "Standard structure for a document entry",
+      "required": ["link", "description", "priority", "status"],
+      "properties": {
+        "link": {
+          "type": "string",
+          "pattern": "^\\[\\[.+\\]\\]$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["P0", "P1", "P2", "P3"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Active", "Planned", "In-Progress", "Review", "Archived", "Deprecated", "Superseded"]
+        }
+      }
+    },
+    "priority_levels": {
+      "enum": ["P0", "P1", "P2", "P3"],
+      "description": "P0=Critical, P1=High, P2=Medium, P3=Low"
+    },
+    "status_values": {
+      "enum": ["Active", "Planned", "In-Progress", "Review", "Archived", "Deprecated", "Superseded"],
+      "description": "Lifecycle status values"
+    }
+  },
+  "examples": [
+    {
+      "metadata": {
+        "index_type": "by-area",
+        "index_scope": "security",
+        "last_updated": "2024-01-15",
+        "maintainer": "AGENT-002",
+        "total_documents": 42,
+        "metadata_schema_version": "1.0",
+        "priority_distribution": {
+          "p0": 5,
+          "p1": 12,
+          "p2": 18,
+          "p3": 7
+        },
+        "status_distribution": {
+          "active": 30,
+          "archived": 10,
+          "deprecated": 2
+        },
+        "tags": ["index", "security", "navigation"],
+        "related_indexes": [
+          "[[architecture-domain-index]]",
+          "[[compliance-domain-index]]"
+        ],
+        "coverage_percentage": 85
+      },
+      "structure": {
+        "title": "Security Domain Index",
+        "overview": {
+          "description": "Comprehensive index of all security-related documentation including threat models, security audits, policies, and standards.",
+          "use_cases": [
+            "Security review and assessment",
+            "Incident response planning",
+            "Compliance auditing"
+          ],
+          "related_indexes": [
+            "[[compliance-domain-index]]",
+            "[[architecture-domain-index]]"
+          ]
+        },
+        "contents": {
+          "sections": [
+            {
+              "name": "Threat Models",
+              "description": "Security threat analysis and mitigation strategies",
+              "documents": [
+                {
+                  "link": "[[threat-model-authentication]]",
+                  "description": "Authentication system threat analysis",
+                  "priority": "P0",
+                  "status": "Active",
+                  "key_topics": ["authentication", "authorization", "session-management"],
+                  "last_reviewed": "2024-01-10"
+                }
+              ]
+            }
+          ]
+        },
+        "statistics": {
+          "total": 42,
+          "by_status": {
+            "active": 30,
+            "archived": 10,
+            "deprecated": 2
+          },
+          "by_priority": {
+            "p0": 5,
+            "p1": 12,
+            "p2": 18,
+            "p3": 7
+          },
+          "last_major_update": "2024-01-15",
+          "coverage_percentage": 85
+        }
+      }
+    }
+  ],
+  "validationRules": {
+    "metadata_consistency": "total_documents must equal sum of all status_distribution values",
+    "priority_consistency": "Sum of priority_distribution must equal total_documents",
+    "link_format": "All document links must use [[wikilink]] format, not markdown [text](url)",
+    "date_format": "All dates must be ISO 8601: YYYY-MM-DD",
+    "naming_convention": "Index files must match pattern: {scope}-{type}-index.md",
+    "tag_requirement": "All indexes must include 'index' tag in metadata.tags array"
+  }
+}

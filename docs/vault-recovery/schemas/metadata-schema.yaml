@@ -1,0 +1,832 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# Project-AI Documentation Metadata Schema - YAML Version
+# Version: 2.0.0
+# This schema provides IDE autocomplete and validation for YAML frontmatter
+
+title: Project-AI Documentation Metadata Schema
+description: Comprehensive YAML frontmatter schema for Project-AI documentation vault
+version: 2.0.0
+
+type: object
+required:
+  - title
+  - id
+  - type
+  - version
+  - created_date
+  - updated_date
+  - status
+  - author
+
+properties:
+  # ============================================================================
+  # UNIVERSAL FIELDS (Required for all documents)
+  # ============================================================================
+  
+  title:
+    type: string
+    description: Human-readable document title
+    minLength: 1
+    maxLength: 200
+    examples:
+      - "Project-AI Authentication Security Audit Report"
+  
+  id:
+    type: string
+    description: Unique document identifier (kebab-case)
+    pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+    minLength: 3
+    maxLength: 100
+    examples:
+      - "auth-security-audit-2026-04"
+  
+  type:
+    type: string
+    description: Primary document classification
+    enum:
+      - architecture
+      - design
+      - api_reference
+      - specification
+      - guide
+      - tutorial
+      - runbook
+      - playbook
+      - policy
+      - standard
+      - decision_record
+      - rfc
+      - report
+      - audit
+      - assessment
+      - postmortem
+      - glossary
+      - faq
+      - index
+      - changelog
+      - meeting_notes
+      - whitepaper
+  
+  version:
+    type: string
+    description: Document version (Semantic Versioning 2.0.0)
+    pattern: "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.-]+)?(\\+[a-zA-Z0-9.-]+)?$"
+    examples:
+      - "1.0.0"
+      - "2.1.3-beta.1"
+      - "1.0.0+20260420"
+  
+  created_date:
+    type: string
+    description: Original creation timestamp (ISO 8601)
+    format: date-time
+    examples:
+      - "2026-04-20"
+      - "2026-04-20T14:30:00Z"
+  
+  updated_date:
+    type: string
+    description: Last modification timestamp (ISO 8601)
+    format: date-time
+    examples:
+      - "2026-04-20T16:45:00Z"
+  
+  status:
+    type: string
+    description: Current lifecycle status
+    enum:
+      - draft
+      - review
+      - active
+      - deprecated
+      - archived
+    default: draft
+  
+  author:
+    description: Primary document author
+    oneOf:
+      - type: string
+        pattern: "^.+ <[^>]+>$"
+        examples:
+          - "Jane Doe <jane@project-ai.org>"
+      - type: object
+        required:
+          - name
+        properties:
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          email:
+            type: string
+            format: email
+          github:
+            type: string
+            pattern: "^[a-zA-Z0-9-]+$"
+          role:
+            type: string
+
+  # ============================================================================
+  # DOMAIN-SPECIFIC FIELDS
+  # ============================================================================
+  
+  category:
+    type: string
+    description: Primary domain classification
+    enum:
+      - security
+      - architecture
+      - infrastructure
+      - frontend
+      - backend
+      - database
+      - devops
+      - testing
+      - documentation
+      - governance
+  
+  tags:
+    type: array
+    description: Multi-dimensional classification labels
+    items:
+      type: string
+      pattern: "^[a-z0-9-]+$"
+    minItems: 1
+    maxItems: 20
+    uniqueItems: true
+    examples:
+      - - authentication
+        - password-hashing
+        - bcrypt
+        - audit
+  
+  technologies:
+    type: array
+    description: Technologies/frameworks covered
+    items:
+      type: string
+      minLength: 1
+    uniqueItems: true
+    examples:
+      - - Python
+        - PyQt6
+        - bcrypt
+        - OpenAI-API
+  
+  scope:
+    type: string
+    description: Scope of analysis or coverage
+    maxLength: 500
+    examples:
+      - "Core authentication/authorization modules in src/app/core/"
+  
+  classification:
+    type: string
+    description: Security classification level
+    enum:
+      - public
+      - internal
+      - confidential
+      - secret
+    default: internal
+  
+  difficulty:
+    type: string
+    description: Target audience skill level (for guides/tutorials)
+    enum:
+      - beginner
+      - intermediate
+      - advanced
+      - expert
+  
+  estimated_time:
+    description: Expected completion time (for guides/tutorials)
+    oneOf:
+      - type: string
+        pattern: "^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?:\\d+H)?(?:\\d+M)?(?:\\d+S)?)?$"
+        examples:
+          - "PT45M"
+          - "PT1H30M"
+          - "P1D"
+      - type: integer
+        minimum: 1
+        description: Time in minutes
+  
+  prerequisites:
+    type: array
+    description: Required knowledge or completed documents
+    items:
+      type: string
+      minLength: 1
+    examples:
+      - - "Python basics"
+        - "Understanding of OAuth 2.0"
+
+  # ============================================================================
+  # RELATIONSHIP FIELDS
+  # ============================================================================
+  
+  related_docs:
+    type: array
+    description: Related documents (see-also references)
+    items:
+      type: string
+      pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+    uniqueItems: true
+    examples:
+      - - "auth-implementation"
+        - "password-policy-2026"
+  
+  supersedes:
+    description: Documents made obsolete by this document
+    oneOf:
+      - type: string
+        pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+      - type: array
+        items:
+          type: string
+          pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+        uniqueItems: true
+  
+  superseded_by:
+    type: string
+    description: Newer document that replaces this one (required if status=deprecated)
+    pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+  
+  dependencies:
+    type: array
+    description: External dependencies
+    items:
+      type: object
+      required:
+        - type
+        - name
+      properties:
+        type:
+          type: string
+          enum:
+            - document
+            - library
+            - service
+            - api
+        name:
+          type: string
+          minLength: 1
+        version:
+          type: string
+        id:
+          type: string
+          pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+          description: Required if type=document
+        url:
+          type: string
+          format: uri
+
+  # ============================================================================
+  # QUALITY METADATA
+  # ============================================================================
+  
+  review_status:
+    type: object
+    description: Review metadata
+    required:
+      - reviewed
+    properties:
+      reviewed:
+        type: boolean
+      reviewers:
+        type: array
+        items:
+          type: string
+      review_date:
+        type: string
+        format: date
+      approved:
+        type: boolean
+      comments:
+        type: string
+  
+  test_coverage:
+    type: object
+    description: Test coverage metadata
+    properties:
+      has_tests:
+        type: boolean
+      coverage_percent:
+        type: number
+        minimum: 0
+        maximum: 100
+      test_files:
+        type: array
+        items:
+          type: string
+  
+  accuracy_rating:
+    type: integer
+    description: Self-assessed accuracy (1-10, where 10 is verified accurate)
+    minimum: 1
+    maximum: 10
+
+  # ============================================================================
+  # DISCOVERY & SEO FIELDS
+  # ============================================================================
+  
+  keywords:
+    type: array
+    description: Search optimization terms
+    items:
+      type: string
+      minLength: 1
+    examples:
+      - - "password security"
+        - "threat model"
+        - "OWASP"
+  
+  summary:
+    type: string
+    description: One-paragraph abstract
+    maxLength: 500
+  
+  audience:
+    type: array
+    description: Target reader personas
+    items:
+      type: string
+      enum:
+        - developer
+        - architect
+        - devops
+        - security_engineer
+        - product_manager
+        - executive
+        - contributor
+        - end_user
+    uniqueItems: true
+
+  # ============================================================================
+  # EXTENDED METADATA
+  # ============================================================================
+  
+  contributors:
+    type: array
+    description: Additional contributors beyond primary author
+    items:
+      oneOf:
+        - type: string
+        - type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+            role:
+              type: string
+            email:
+              type: string
+              format: email
+            github:
+              type: string
+  
+  changelog:
+    type: array
+    description: Version history
+    items:
+      type: object
+      required:
+        - version
+        - date
+        - changes
+      properties:
+        version:
+          type: string
+          pattern: "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.-]+)?(\\+[a-zA-Z0-9.-]+)?$"
+        date:
+          type: string
+          format: date
+        changes:
+          type: string
+        author:
+          type: string
+  
+  compliance:
+    type: array
+    description: Compliance frameworks addressed
+    items:
+      type: string
+    examples:
+      - - "GDPR"
+        - "SOC2"
+        - "OWASP-Top-10"
+  
+  metrics:
+    type: object
+    description: Document-specific metrics
+    properties:
+      word_count:
+        type: integer
+        minimum: 0
+      code_blocks:
+        type: integer
+        minimum: 0
+      diagrams:
+        type: integer
+        minimum: 0
+      external_links:
+        type: integer
+        minimum: 0
+    additionalProperties: true
+  
+  custom_fields:
+    type: object
+    description: Project-specific metadata (all fields must be prefixed with x-)
+    patternProperties:
+      "^x-[a-z0-9-]+$": {}
+    additionalProperties: false
+
+  # ============================================================================
+  # AUDIT-SPECIFIC FIELDS
+  # ============================================================================
+  
+  auditor:
+    type: string
+    description: Auditor name (required for audit documents)
+  
+  audit_date:
+    type: string
+    format: date
+    description: Audit date (required for audit documents)
+  
+  findings:
+    description: Audit findings (required for audit documents)
+    oneOf:
+      - type: object
+        properties:
+          critical:
+            type: integer
+            minimum: 0
+          high:
+            type: integer
+            minimum: 0
+          medium:
+            type: integer
+            minimum: 0
+          low:
+            type: integer
+            minimum: 0
+      - type: string
+  
+  risk_level:
+    type: string
+    enum:
+      - low
+      - medium
+      - high
+      - critical
+    description: Risk level (required for audit documents)
+
+  # ============================================================================
+  # DECISION RECORD FIELDS
+  # ============================================================================
+  
+  decision_date:
+    type: string
+    format: date
+    description: Decision date (required for decision_record documents)
+  
+  decision_maker:
+    type: string
+    description: Decision maker (required for decision_record documents)
+  
+  options_considered:
+    type: array
+    description: Options considered (required for decision_record documents)
+    items:
+      oneOf:
+        - type: string
+        - type: object
+          properties:
+            name:
+              type: string
+            pros:
+              type: array
+              items:
+                type: string
+            cons:
+              type: array
+              items:
+                type: string
+  
+  consequences:
+    type: object
+    description: Decision consequences
+    properties:
+      positive:
+        type: array
+        items:
+          type: string
+      negative:
+        type: array
+        items:
+          type: string
+      neutral:
+        type: array
+        items:
+          type: string
+
+  # ============================================================================
+  # POSTMORTEM FIELDS
+  # ============================================================================
+  
+  incident_date:
+    type: string
+    format: date-time
+    description: Incident date (required for postmortem documents)
+  
+  severity:
+    type: string
+    enum:
+      - minor
+      - moderate
+      - major
+      - critical
+    description: Incident severity (required for postmortem documents)
+  
+  root_cause:
+    type: string
+    description: Root cause (required for postmortem documents)
+  
+  timeline:
+    type: array
+    description: Event timeline (required for postmortem documents)
+    items:
+      type: object
+      required:
+        - time
+        - event
+      properties:
+        time:
+          type: string
+          format: date-time
+        event:
+          type: string
+        actor:
+          type: string
+  
+  action_items:
+    type: array
+    description: Action items (required for postmortem, optional for meetings)
+    items:
+      type: object
+      required:
+        - id
+        - title
+        - owner
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        owner:
+          type: string
+        priority:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+            - critical
+        due_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+            - not_started
+            - in_progress
+            - blocked
+            - completed
+  
+  lessons_learned:
+    type: object
+    description: Lessons learned (for postmortem documents)
+    properties:
+      what_went_well:
+        type: array
+        items:
+          type: string
+      what_went_wrong:
+        type: array
+        items:
+          type: string
+      where_we_got_lucky:
+        type: array
+        items:
+          type: string
+
+  # ============================================================================
+  # RFC FIELDS
+  # ============================================================================
+  
+  proposal_date:
+    type: string
+    format: date
+    description: Proposal date (required for RFC documents)
+  
+  champion:
+    type: string
+    description: RFC champion (required for RFC documents)
+  
+  discussion_link:
+    type: string
+    format: uri
+    description: Discussion link (for RFC documents)
+
+  # ============================================================================
+  # POLICY/STANDARD FIELDS
+  # ============================================================================
+  
+  enforcement_level:
+    type: string
+    enum:
+      - mandatory
+      - recommended
+      - optional
+    description: Enforcement level (required for policy/standard documents)
+  
+  review_cycle:
+    type: string
+    description: Review cycle (for policy/standard documents)
+  
+  next_review_date:
+    type: string
+    format: date
+    description: Next review date (for policy/standard documents)
+  
+  approval_authority:
+    type: string
+    description: Approval authority (for policy documents)
+  
+  approval_date:
+    type: string
+    format: date
+    description: Approval date (for policy documents)
+
+  # ============================================================================
+  # RUNBOOK FIELDS
+  # ============================================================================
+  
+  triggers:
+    type: array
+    items:
+      type: string
+    description: Triggers (required for runbook documents)
+  
+  escalation_path:
+    type: array
+    description: Escalation path (for runbook documents)
+    items:
+      type: object
+      properties:
+        level:
+          type: integer
+        role:
+          type: string
+        response_time:
+          type: string
+  
+  last_tested:
+    type: string
+    format: date
+    description: Last tested date (for runbook documents)
+  
+  success_criteria:
+    type: array
+    items:
+      type: string
+    description: Success criteria (for runbook/playbook documents)
+  
+  rollback_procedure:
+    type: object
+    description: Rollback procedure (for runbook documents)
+    properties:
+      enabled:
+        type: boolean
+      steps:
+        type: array
+        items:
+          type: string
+
+  # ============================================================================
+  # FAQ/GLOSSARY/INDEX FIELDS
+  # ============================================================================
+  
+  questions_count:
+    type: integer
+    minimum: 0
+    description: Number of questions (required for FAQ documents)
+  
+  terms_count:
+    type: integer
+    minimum: 0
+    description: Number of terms (required for glossary documents)
+  
+  indexed_docs:
+    type: array
+    items:
+      type: string
+    description: Indexed documents (required for index documents)
+  
+  auto_generated:
+    type: boolean
+    description: Auto-generated flag (for index documents)
+  
+  last_indexed_date:
+    type: string
+    format: date
+    description: Last indexed date (for index documents)
+
+  # ============================================================================
+  # CHANGELOG FIELDS
+  # ============================================================================
+  
+  version_range:
+    type: string
+    description: Version range (required for changelog documents)
+  
+  format:
+    type: string
+    description: Changelog format (e.g., "Keep a Changelog")
+
+  # ============================================================================
+  # MEETING FIELDS
+  # ============================================================================
+  
+  meeting_date:
+    type: string
+    format: date-time
+    description: Meeting date (required for meeting_notes documents)
+  
+  meeting_duration:
+    type: string
+    pattern: "^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?:\\d+H)?(?:\\d+M)?(?:\\d+S)?)?$"
+    description: Meeting duration ISO 8601 (for meeting_notes documents)
+  
+  attendees:
+    type: array
+    items:
+      type: string
+    description: Attendees (required for meeting_notes documents)
+  
+  agenda:
+    type: array
+    items:
+      type: string
+    description: Meeting agenda (required for meeting_notes documents)
+  
+  decisions:
+    type: array
+    description: Meeting decisions
+    items:
+      oneOf:
+        - type: string
+        - type: object
+          properties:
+            decision:
+              type: string
+            decision_maker:
+              type: string
+            rationale:
+              type: string
+  
+  next_meeting:
+    type: string
+    format: date-time
+    description: Next meeting date (for meeting_notes documents)
+
+  # ============================================================================
+  # WHITEPAPER FIELDS
+  # ============================================================================
+  
+  peer_reviewed:
+    type: boolean
+    description: Peer reviewed flag (for whitepaper documents)
+  
+  citation:
+    type: string
+    description: Citation (for whitepaper documents)
+  
+  doi:
+    type: string
+    description: DOI (for whitepaper documents)
+
+  # ============================================================================
+  # TUTORIAL/GUIDE FIELDS
+  # ============================================================================
+  
+  learning_objectives:
+    type: array
+    items:
+      type: string
+    description: Learning objectives (for tutorial/guide documents)
+
+additionalProperties: true
