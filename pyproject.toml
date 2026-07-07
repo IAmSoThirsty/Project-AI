@@ -40,6 +40,7 @@ dependencies = [
     "project-ai-security",
     "project-ai-swr",
     "project-ai-swr-dashboard",
+    "project-ai-simulation-contract",
     "project-ai-tarl",
     "project-ai-temporal",
     "project-ai-cli",
@@ -107,6 +108,7 @@ project-ai-rlp = { workspace = true }
 project-ai-security = { workspace = true }
 project-ai-swr = { workspace = true }
 project-ai-swr-dashboard = { workspace = true }
+project-ai-simulation-contract = { workspace = true }
 project-ai-tarl = { workspace = true }
 project-ai-temporal = { workspace = true }
 project-ai-cli = { workspace = true }
@@ -132,6 +134,7 @@ members = [
     "packages/hydra_50",
     "packages/identity",
     "packages/kernel",
+    "packages/simulation-contract",
     "packages/tarl",
     "packages/temporal",
     "packages/governance",

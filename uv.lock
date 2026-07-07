@@ -30,6 +30,7 @@ members = [
     "project-ai-rlp",
     "project-ai-security",
     "project-ai-service-host",
+    "project-ai-simulation-contract",
     "project-ai-swr",
     "project-ai-swr-dashboard",
     "project-ai-tarl",
@@ -745,6 +746,7 @@ dependencies = [
     { name = "project-ai-kernel" },
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
+    { name = "project-ai-simulation-contract" },
     { name = "project-ai-swr" },
     { name = "project-ai-swr-dashboard" },
     { name = "project-ai-tarl" },
@@ -800,6 +802,7 @@ requires-dist = [
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
+    { name = "project-ai-simulation-contract", editable = "packages/simulation-contract" },
     { name = "project-ai-swr", editable = "packages/swr" },
     { name = "project-ai-swr-dashboard", editable = "apps/swr-dashboard" },
     { name = "project-ai-tarl", editable = "packages/tarl" },
@@ -817,6 +820,9 @@ provides-extras = ["dev"]
 name = "project-ai-ai-takeover"
 version = "0.0.0.dev0"
 source = { editable = "packages/ai-takeover" }
+dependencies = [
+    { name = "project-ai-simulation-contract" },
+]
 
 [package.optional-dependencies]
 test = [
@@ -824,13 +830,19 @@ test = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+requires-dist = [
+    { name = "project-ai-simulation-contract", editable = "packages/simulation-contract" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
+]
 provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-alien-invaders"
 version = "0.0.0.dev0"
 source = { editable = "packages/alien-invaders" }
+dependencies = [
+    { name = "project-ai-simulation-contract" },
+]
 
 [package.optional-dependencies]
 test = [
@@ -838,7 +850,10 @@ test = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+requires-dist = [
+    { name = "project-ai-simulation-contract", editable = "packages/simulation-contract" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
+]
 provides-extras = ["test"]
 
 [[package]]
@@ -1102,6 +1117,7 @@ version = "0.0.0.dev0"
 source = { editable = "packages/global-scenario" }
 dependencies = [
     { name = "numpy" },
+    { name = "project-ai-simulation-contract" },
     { name = "requests" },
 ]
 
@@ -1113,6 +1129,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "numpy", specifier = ">=1.26.0" },
+    { name = "project-ai-simulation-contract", editable = "packages/simulation-contract" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
     { name = "requests", specifier = ">=2.31.0" },
 ]
@@ -1207,6 +1224,20 @@ requires-dist = [
     { name = "project-ai-swr", editable = "packages/swr" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
 ]
+
+[[package]]
+name = "project-ai-simulation-contract"
+version = "0.0.0.dev0"
+source = { editable = "packages/simulation-contract" }
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-swr"

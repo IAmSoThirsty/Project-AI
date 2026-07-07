@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-simulation-contract"
+version = "0.0.0.dev0"
+description = "Shared simulation contract (SimulationRegistry, SimulationSystem, etc.) for Project-AI scenario engines"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = []
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Win32 (MS Windows)",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/simulation_contract"]
