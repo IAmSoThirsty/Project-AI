@@ -300,12 +300,13 @@ The §4 entry has been updated to match.
 
 | Path | Size | Disposition |
 |---|---|---|
-| `T:\Project-AI-vault\` | 327 MB | **OUT-OF-SCOPE for this turn** — separate repo; user decision needed (Decision 4 in strategy doc: A integrate, B keep separate, C archive) |
+| `T:\00-Active\Project-AI-vault\` | 346 MB | **RECOVERED** (commit a5407c93) — 1,200+ files ported to `docs/{architecture,templates,source-docs,repo-docs,vault-recovery}/`; `Project-AI/` subdir (Obsidian-vault artifacts, 270 MB) intentionally DROP'd |
 | `T:\Project-AI-Pentest-Mainframe\` | 0 (empty) | **DROP** — empty directory |
-| `T:\Project-AI-pre-phase2-hold-20260603_070143\` | 798 MB | **OUT-OF-SCOPE for this turn** — historical hold; needs user decision (archive to external?) |
-| `T:\Project-AI-Canonical\` | n/a (not yet inspected) | **OUT-OF-SCOPE for this turn** — separate repo, not part of main |
+| `T:\08-Archive\Project-AI-pre-phase2-hold\` | 798 MB | **RECOVERED** (commit d08a5a5d) — 19 files ported to `docs/pre-phase2-hold/`; 798 MB terraform provider binaries excluded (reproducible via `terraform init`) |
+| `T:\08-Archive\Project-AI-Canonical\` | 287 KB | **RECOVERED** (commits bf06f8eb, a6370fd1, 45b184bd) — 3 missing workspace members ported to `packages/{audit,identity,canonical}/` |
 | `T:\Project-AI-consolidation-logs\` | n/a (not yet inspected) | **OUT-OF-SCOPE for this turn** — log archive |
 | `T:\00-Active\Project-AI-main.worktrees\` | 0 (empty) | **DROP** — empty |
+| `T:\_scratch\temp\` | 2.9 GB | **RESOLVED — NO PORT** — 8,188 files of Windows OS / PowerShell / npm system temp; no project data |
 
 ---
 
