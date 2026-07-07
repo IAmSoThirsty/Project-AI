@@ -344,6 +344,89 @@ inventory supersedes it for the immediate next-slice planning.
 
 ---
 
+## 11.5 vault/Project-AI/ Re-evaluation (2026-07-07)
+
+**Context:** The §9 row for `vault/Project-AI/` originally said
+"DROP — Obsidian-vault artifacts (270 MB, 3,916 files)". Per the
+user's directive, the directory was re-evaluated. The inventory
+classification was **wrong**: this is not an Obsidian vault, it is
+a **pre-J2-port snapshot of Project-AI-Beginnings itself** (a git
+submodule checkout, identified via `.gitmodules` referencing
+`https://github.com/IAmSoThirsty/Project-AI.git` and
+`external/Cerberus`).
+
+### 11.5.1 What was found (3,916 files, 270 MB)
+
+| Group | Description | Files | Disposition |
+|-------|-------------|-------|-------------|
+| A | Pre-J2-port source code (`src/app/`, 532 files, 6.9 MB) | 532 | **DROP — DUPLICATE of `Project-AI-main/src/app/`** (already used for J2 ports) |
+| B | Obsidian-vault specific (7 subdirs: `indexes/`, `relationships/`, `dataview-queries/`, `graph-views/`, `metadata-examples/`, `policies/`, `plans/`) | ~265 | **DROP per user "drop the Obsidianspecific"** |
+| C-1 | `tarl_os/` historical spec | 41 | **RECOVERED (4 files)** in `packages/tarl/src/tarl/tarl_os/` (commit `88e76c74`). 27 outdated `.thirsty` + 5 Obsidian `.md` + 5 broken Python dropped. |
+| C-2 | `engines/` extras | 115 | **NO PORT** — canonical J2 ports (`packages/{ai-takeover,alien-invaders,django-state,emp-defense}/`) are the better/up-to-date version. 25 vault-only `.md` are all Obsidian-tagged. |
+| C-3 | 253 root `.md` agent reports | 253 | **RECOVERED (133 files)** in `docs/vault-recovery/agent-reports-phase-2/` (commit `314bc1be`). 118 Obsidian dropped. |
+| C-4 | `diagrams/` (architecture + flow + sequence + Excalidraw) | 42 | **RECOVERED (42 files)** in `docs/diagrams/` (commit `e5c9f1c8`). |
+| C-5 | `gradle-evolution/` + `.gradle/` + `gradle/` + `gradle_evolution/` (Gradle-based) | 44 .py + 7 .md + 215 KB cache + 3 wrapper files + 1 compat shim | **DROP** — Project-AI-Beginnings uses `uv`/`pyproject.toml`, not Gradle. Outdated build system. |
+| C-6 | `atlas/` (69 files, 563 KB) | 69 | **DROP** — canonical `packages/atlas/` (94 files) is the J2-ported better/up-to-date version with more content (tscg_spec, temporal_graph, sludge_sandbox, safeguards, replay_system, more config files, full test suite). |
+| C-7 | `integrations/` extras (openclaw/, thirsty_lang_complete/) | 26 (excl. thirstys_trading_hub) | **DROP** — `openclaw/` was already DROP per inventory; `thirsty_lang_complete/` is SUPERSEDED by canonical Thirsty-Lang at `C:\Users\Quencher\Desktop\Github\Personal Repo's\thirsty_lang_exploration_0754`. `thirstys_trading_hub/` (already ported) was the only survivor. |
+| C-8 | `kernel/`, `governance/`, `cognition/`, `e2e/`, `demos/`, `examples/`, `benchmarks/`, `app/` (Android), `api/`, `android/`, `desktop/`, `archive/`, `linguist-submission/` | ~280 | **DROP** — all are pre-J2-port legacy. Canonical versions (`packages/{kernel, governance, cognitive-warfare, api, ...}`) are the J2-ported better/up-to-date versions. Vault's `kernel/` is the legacy "Thirsty Super Kernel" monolith; canonical has been restructured into proper submodules. `app/` is Android (not part of Python-based system). `linguist-submission/` is an old Thirsty-Lang syntax-highlighting grammar submission (grammar is outdated; canonical Thirsty-Lang is at the personal repo). |
+| C-9 | `src/thirsty_lang/` (82 files: 4 .py + 25 .js + 7 .thirsty) | 82 | **DROP** — JavaScript implementation of Thirsty-Lang, an older/alternative implementation track. Per user directive: "DO NOT IMPLEMENT LEGACY OR OUTDATED REPLACING THE NEW THIRSTY-LANG UTF ... BUILT AROUND WHAT IT IS TODAY, NOT WHAT IT WAS BACK THEN". Canonical Thirsty-Lang lives at the personal repo (Python, version 0.8.2, 4,198 files). |
+| A (src/) | `src/app/` (425 files), `src/cognition/` (13), `src/features/` (2), `src/integrations/` (8), `src/plugins/` (2) | 450 | **DROP** — `src/app/` is the pre-J2-port app code, DUPLICATE of `Project-AI-main/src/app/`. The 4 small `src/{cognition,features,integrations,plugins}/` are legacy subdirs superseded by canonical packages. |
+
+### 11.5.2 Summary of recovery + drops
+
+**Recovered (179 files, ~6.5 MB):**
+- C-1: 4 files in `packages/tarl/src/tarl/tarl_os/` (commit `88e76c74`)
+- C-3: 133 files in `docs/vault-recovery/agent-reports-phase-2/` (commit `314bc1be`)
+- C-4: 42 files in `docs/diagrams/` (commit `e5c9f1c8`)
+
+**Dropped (3,737 files, ~263.5 MB):**
+- All of Group A (`src/app/`, 532 files) — DUPLICATE, used for J2 ports
+- All of Group B (Obsidian-vault specific, 7 subdirs) — per user directive
+- C-2 (`engines/` extras, 115 files) — canonical is newer
+- C-5 (Gradle-based, 44 + 3 + 1 = 48 source files + 215 KB cache) — Project-AI uses uv
+- C-6 (`atlas/`, 69 files) — canonical is newer
+- C-7 extras (openclaw/ + thirsty_lang_complete/, 26 files) — already DROP / SUPERSEDED
+- C-8 (~280 files) — canonical is newer for all overlapping subsystems
+- C-9 (`src/thirsty_lang/`, 82 files) — outdated JS implementation
+- 118 Obsidian agent reports from C-3 (subset of 253)
+- 27 outdated `.thirsty` files from C-1 (subset of 41)
+- 5 Obsidian `.md` files from C-1 (subset of 41)
+
+### 11.5.3 Decision per user's directive
+
+Per the user's standing instruction "integrate/rebuild specifically
+for project-ai and drop outdated source files" and Thirstys V3
+#1 (smallest correct change) + #10 (don't port without clear
+reason):
+
+- **The canonical IS the better/up-to-date version** of every
+  overlapping subsystem (atlas, audit, kernel, governance, cognition,
+  cognitive-warfare, security, integration adapters, etc.). The
+  vault's `engines/`, `atlas/`, `kernel/`, `governance/`,
+  `cognition/`, `gradle-evolution/`, `app/`, etc. are all
+  pre-J2-port snapshots.
+- **Project-AI-Beginnings does NOT use Gradle** (uses `uv` /
+  `pyproject.toml`). All Gradle-based content (`gradle-evolution/`,
+  `.gradle/`, `gradle/`, `gradle_evolution/`) is outdated.
+- **The canonical Thirsty-Lang is at the personal repo** (version
+  0.8.2, Python implementation, 4,198 files). The vault's JS
+  Thirsty-Lang is an outdated alternative implementation track.
+
+**Result: `vault/Project-AI/` is fully accounted for.** Of the
+3,916 files, 179 were ported (4.6%), 3,737 were dropped
+(95.4%) with documented reasoning. The legacy directory is
+ready to be deleted in #6 once Google Drive backup is confirmed.
+
+### 11.5.4 Recovery commits (this session)
+
+| Commit | Group | Files ported | Files dropped | Notes |
+|--------|-------|--------------|---------------|-------|
+| `88e76c74` | C-1 | 4 | 32 | tarl_os/ (27 outdated .thirsty + 5 Obsidian .md) |
+| `e5c9f1c8` | C-4 | 42 | 0 | diagrams/ (architecture + flow + sequence + Excalidraw) |
+| `314bc1be` | C-3 | 133 | 0 | 253 root .md agent reports (118 Obsidian dropped) |
+
+---
+
 ## 12. Verification
 
 To reproduce this inventory:
