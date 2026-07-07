@@ -10,6 +10,7 @@ members = [
     "project-ai-api",
     "project-ai-arbiter",
     "project-ai-atlas",
+    "project-ai-audit",
     "project-ai-capability",
     "project-ai-cerberus",
     "project-ai-cli",
@@ -726,6 +727,7 @@ dependencies = [
     { name = "project-ai-api" },
     { name = "project-ai-arbiter" },
     { name = "project-ai-atlas" },
+    { name = "project-ai-audit" },
     { name = "project-ai-capability" },
     { name = "project-ai-cerberus" },
     { name = "project-ai-cli" },
@@ -779,6 +781,7 @@ requires-dist = [
     { name = "project-ai-api", editable = "packages/api" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
     { name = "project-ai-atlas", editable = "packages/atlas" },
+    { name = "project-ai-audit", editable = "packages/audit" },
     { name = "project-ai-capability", editable = "packages/capability" },
     { name = "project-ai-cerberus", editable = "packages/cerberus" },
     { name = "project-ai-cli", editable = "packages/cli" },
@@ -882,6 +885,20 @@ requires-dist = [
     { name = "scipy", specifier = ">=1.11,<2.0" },
     { name = "thirsty-lang", specifier = "==0.8.1" },
 ]
+
+[[package]]
+name = "project-ai-audit"
+version = "0.0.0.dev0"
+source = { editable = "packages/audit" }
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-capability"

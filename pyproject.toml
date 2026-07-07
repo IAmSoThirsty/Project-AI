@@ -24,6 +24,7 @@ dependencies = [
     "project-ai-django-state",
     "project-ai-arbiter",
     "project-ai-atlas",
+    "project-ai-audit",
     "project-ai-capability",
     "project-ai-cerberus",
     "project-ai-cognitive-warfare",
@@ -86,6 +87,7 @@ project-ai-alien-invaders = { workspace = true }
 project-ai-api = { workspace = true }
 project-ai-django-state = { workspace = true }
 project-ai-ai-takeover = { workspace = true }
+project-ai-audit = { workspace = true }
 project-ai-arbiter = { workspace = true }
 project-ai-atlas = { workspace = true }
 project-ai-capability = { workspace = true }
@@ -117,6 +119,7 @@ members = [
     "packages/django-state",
     "packages/arbiter",
     "packages/atlas",
+    "packages/audit",
     "packages/capability",
     "packages/cerberus",
     "packages/cognitive-warfare",
@@ -210,6 +213,8 @@ exclude = [
     "packages/emp-defense/tests",
     "packages/ai-takeover/src",
     "packages/ai-takeover/tests",
+    "packages/audit/src",
+    "packages/audit/tests",
     "packages/alien-invaders/src",
     "packages/alien-invaders/tests",
     "packages/django-state/src",
