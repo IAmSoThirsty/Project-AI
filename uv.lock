@@ -24,6 +24,7 @@ members = [
     "project-ai-global-scenario",
     "project-ai-governance",
     "project-ai-hydra-50",
+    "project-ai-identity",
     "project-ai-kernel",
     "project-ai-rlp",
     "project-ai-security",
@@ -739,6 +740,7 @@ dependencies = [
     { name = "project-ai-global-scenario" },
     { name = "project-ai-governance" },
     { name = "project-ai-hydra-50" },
+    { name = "project-ai-identity" },
     { name = "project-ai-kernel" },
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
@@ -793,6 +795,7 @@ requires-dist = [
     { name = "project-ai-global-scenario", editable = "packages/global-scenario" },
     { name = "project-ai-governance", editable = "packages/governance" },
     { name = "project-ai-hydra-50", editable = "packages/hydra_50" },
+    { name = "project-ai-identity", editable = "packages/identity" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
@@ -1123,6 +1126,20 @@ requires-dist = [
     { name = "project-ai-governance", editable = "packages/governance" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
 ]
+
+[[package]]
+name = "project-ai-identity"
+version = "0.0.0.dev0"
+source = { editable = "packages/identity" }
+
+[package.optional-dependencies]
+test = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
+provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-kernel"
