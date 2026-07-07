@@ -12,10 +12,6 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 @pytest.fixture(scope="session")
 def qt_app() -> Generator[QApplication]:
     instance = QApplication.instance()
-    application: QApplication
-    if isinstance(instance, QApplication):
-        application = instance
-    else:
-        application = QApplication([])
+    application = instance if isinstance(instance, QApplication) else QApplication([])
     yield application
     application.quit()

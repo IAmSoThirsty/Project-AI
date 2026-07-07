@@ -114,10 +114,7 @@ def test_main_window_exposes_six_read_only_operator_pages(qt_app: QApplication) 
     window = MainWindow(factory)
     assert window.windowTitle().endswith("0.0.0.dev0")
     assert window.pages.count() == 6
-    nav_labels = [
-        item.text() for i in range(6)
-        if (item := window.navigation.item(i)) is not None
-    ]
+    nav_labels = [item.text() for i in range(6) if (item := window.navigation.item(i)) is not None]
     assert nav_labels == list(MainWindow.PAGE_NAMES)
 
     window.refresh_status()
