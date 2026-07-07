@@ -236,6 +236,7 @@ exclude = [
     "packages/django-state/tests",
     "packages/thirstys-trading-hub/src",
     "packages/thirstys-trading-hub/tests",
+    "packages/tarl/src/tarl/tarl_os",
     "tools/_archive",
 ]
 
