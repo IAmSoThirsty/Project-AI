@@ -1,0 +1,393 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Project-AI Template Categorization Schema",
+  "description": "Categorization system for Obsidian templates supporting document creation workflows",
+  "version": "1.0.0",
+  "lastUpdated": "2025-04-20",
+  
+  "categories": {
+    "module-doc": {
+      "name": "Module Documentation",
+      "description": "Templates for documenting Python modules, classes, and core systems within the Project-AI codebase",
+      "icon": "📦",
+      "colorTag": "#4A90E2",
+      "purpose": "Ensure consistent documentation of code components with comprehensive API references, implementation details, and usage examples",
+      "targetAudience": ["developers", "architects", "maintainers"],
+      "requiredSections": [
+        "Module Overview",
+        "API Reference",
+        "Implementation Details",
+        "Dependencies",
+        "Usage Examples",
+        "Testing Guidance"
+      ],
+      "templates": {
+        "module-core-system": {
+          "filename": "module-doc-core-system.md",
+          "description": "Documentation for core business logic modules in src/app/core/",
+          "useCase": "Document AI systems, user management, security, and business logic modules",
+          "complexity": "high",
+          "estimatedTime": "45-60 minutes",
+          "requiredFields": [
+            "module_name",
+            "module_path",
+            "primary_class",
+            "dependencies",
+            "persistence_mechanism"
+          ]
+        },
+        "module-gui-component": {
+          "filename": "module-doc-gui-component.md",
+          "description": "Documentation for PyQt6 GUI components in src/app/gui/",
+          "useCase": "Document UI panels, widgets, and interface components",
+          "complexity": "medium",
+          "estimatedTime": "30-45 minutes",
+          "requiredFields": [
+            "component_name",
+            "component_type",
+            "parent_class",
+            "signals",
+            "slots"
+          ]
+        },
+        "module-agent": {
+          "filename": "module-doc-agent.md",
+          "description": "Documentation for AI agent modules in src/app/agents/",
+          "useCase": "Document specialized AI agents (oversight, planner, validator, explainability)",
+          "complexity": "high",
+          "estimatedTime": "60-90 minutes",
+          "requiredFields": [
+            "agent_name",
+            "agent_purpose",
+            "input_schema",
+            "output_schema",
+            "decision_logic"
+          ]
+        }
+      },
+      "tags": ["module", "code", "api", "implementation"],
+      "defaultStatus": "draft",
+      "reviewRequired": true
+    },
+    
+    "agent-doc": {
+      "name": "Agent Documentation",
+      "description": "Templates for AI agent task reports, execution logs, and findings from autonomous agents",
+      "icon": "🤖",
+      "colorTag": "#E24A90",
+      "purpose": "Capture outcomes, decisions, and insights from AI agent executions with full traceability and audit trails",
+      "targetAudience": ["operators", "architects", "auditors"],
+      "requiredSections": [
+        "Agent Identification",
+        "Task Charter",
+        "Execution Summary",
+        "Findings and Deliverables",
+        "Quality Gates",
+        "Next Steps"
+      ],
+      "templates": {
+        "agent-task-report": {
+          "filename": "agent-doc-task-report.md",
+          "description": "Standard task completion report for individual agent executions",
+          "useCase": "Document any agent task completion with deliverables and quality verification",
+          "complexity": "low",
+          "estimatedTime": "15-20 minutes",
+          "requiredFields": [
+            "agent_id",
+            "task_description",
+            "deliverables",
+            "quality_gates_status",
+            "completion_timestamp"
+          ]
+        },
+        "agent-security-audit": {
+          "filename": "agent-doc-security-audit.md",
+          "description": "Security audit findings and vulnerability assessments from security-focused agents",
+          "useCase": "Document security scans, vulnerability assessments, and penetration test results",
+          "complexity": "high",
+          "estimatedTime": "45-90 minutes",
+          "requiredFields": [
+            "agent_id",
+            "scan_scope",
+            "vulnerabilities_found",
+            "risk_assessment",
+            "remediation_plan"
+          ]
+        },
+        "agent-convergence-summary": {
+          "filename": "agent-doc-convergence-summary.md",
+          "description": "Multi-agent coordination outcomes and convergence verification",
+          "useCase": "Document multi-agent fleet deployments and convergence verification results",
+          "complexity": "medium",
+          "estimatedTime": "30-45 minutes",
+          "requiredFields": [
+            "convergence_id",
+            "participating_agents",
+            "convergence_criteria",
+            "verification_results",
+            "integration_status"
+          ]
+        }
+      },
+      "tags": ["agent", "task", "execution", "audit"],
+      "defaultStatus": "completed",
+      "reviewRequired": false
+    },
+    
+    "architecture-doc": {
+      "name": "Architecture Documentation",
+      "description": "Templates for system design, architectural decision records (ADRs), and integration specifications",
+      "icon": "🏗️",
+      "colorTag": "#90E24A",
+      "purpose": "Maintain comprehensive architectural knowledge with decision rationale, design patterns, and integration contracts",
+      "targetAudience": ["architects", "senior-developers", "technical-leads"],
+      "requiredSections": [
+        "Context and Scope",
+        "Decision or Design",
+        "Rationale",
+        "Consequences",
+        "Alternatives Considered",
+        "Related Decisions"
+      ],
+      "templates": {
+        "architecture-adr": {
+          "filename": "architecture-doc-adr.md",
+          "description": "Architectural Decision Record following ADR best practices",
+          "useCase": "Document significant architectural decisions with full context and consequences",
+          "complexity": "high",
+          "estimatedTime": "60-120 minutes",
+          "requiredFields": [
+            "decision_number",
+            "title",
+            "status",
+            "context",
+            "decision",
+            "consequences"
+          ]
+        },
+        "architecture-integration": {
+          "filename": "architecture-doc-integration-api.md",
+          "description": "External service integration specifications and API contracts",
+          "useCase": "Document integrations with OpenAI, Hugging Face, GitHub API, or other external services",
+          "complexity": "medium",
+          "estimatedTime": "45-60 minutes",
+          "requiredFields": [
+            "service_name",
+            "api_version",
+            "authentication_method",
+            "endpoints",
+            "error_handling"
+          ]
+        },
+        "architecture-design-pattern": {
+          "filename": "architecture-doc-design-pattern.md",
+          "description": "Reusable design patterns and architectural patterns used in Project-AI",
+          "useCase": "Document state persistence patterns, signal-slot patterns, plugin architecture, etc.",
+          "complexity": "high",
+          "estimatedTime": "90-120 minutes",
+          "requiredFields": [
+            "pattern_name",
+            "problem",
+            "solution",
+            "implementation_example",
+            "trade_offs"
+          ]
+        }
+      },
+      "tags": ["architecture", "design", "adr", "integration"],
+      "defaultStatus": "proposed",
+      "reviewRequired": true
+    },
+    
+    "guide": {
+      "name": "Guides and References",
+      "description": "Templates for user guides, developer references, operational runbooks, and troubleshooting documentation",
+      "icon": "📖",
+      "colorTag": "#E2904A",
+      "purpose": "Provide actionable, step-by-step guidance for users, developers, and operators with clear examples and troubleshooting paths",
+      "targetAudience": ["users", "developers", "operators", "support"],
+      "requiredSections": [
+        "Overview and Purpose",
+        "Prerequisites",
+        "Step-by-Step Instructions",
+        "Examples",
+        "Troubleshooting",
+        "Related Resources"
+      ],
+      "templates": {
+        "guide-quickstart-feature": {
+          "filename": "guide-quickstart-feature.md",
+          "description": "Quickstart guide for new features or capabilities",
+          "useCase": "Onboard users to new features with minimal friction",
+          "complexity": "low",
+          "estimatedTime": "20-30 minutes",
+          "requiredFields": [
+            "feature_name",
+            "prerequisites",
+            "installation_steps",
+            "basic_usage",
+            "next_steps"
+          ]
+        },
+        "guide-troubleshooting-production": {
+          "filename": "guide-troubleshooting-production.md",
+          "description": "Production troubleshooting runbook for common issues",
+          "useCase": "Enable rapid resolution of production incidents with diagnostic trees",
+          "complexity": "medium",
+          "estimatedTime": "45-60 minutes",
+          "requiredFields": [
+            "problem_category",
+            "symptoms",
+            "diagnostic_steps",
+            "resolution_steps",
+            "escalation_path"
+          ]
+        },
+        "guide-developer-reference": {
+          "filename": "guide-developer-reference.md",
+          "description": "Developer API reference and component usage guide",
+          "useCase": "Provide comprehensive API documentation for internal components",
+          "complexity": "high",
+          "estimatedTime": "60-90 minutes",
+          "requiredFields": [
+            "component_name",
+            "api_overview",
+            "method_reference",
+            "code_examples",
+            "best_practices"
+          ]
+        }
+      },
+      "tags": ["guide", "tutorial", "reference", "troubleshooting"],
+      "defaultStatus": "published",
+      "reviewRequired": true
+    }
+  },
+  
+  "metadata": {
+    "statusWorkflow": {
+      "draft": {
+        "description": "Initial document creation, content incomplete",
+        "color": "#CCCCCC",
+        "allowedTransitions": ["in-review", "abandoned"]
+      },
+      "in-review": {
+        "description": "Document complete, awaiting peer review",
+        "color": "#FFD700",
+        "allowedTransitions": ["draft", "published", "revision-needed"]
+      },
+      "revision-needed": {
+        "description": "Review completed, changes requested",
+        "color": "#FFA500",
+        "allowedTransitions": ["draft", "in-review"]
+      },
+      "published": {
+        "description": "Approved and live documentation",
+        "color": "#00AA00",
+        "allowedTransitions": ["deprecated", "in-review"]
+      },
+      "deprecated": {
+        "description": "Outdated, replaced by newer documentation",
+        "color": "#AA0000",
+        "allowedTransitions": ["archived"]
+      },
+      "archived": {
+        "description": "Historical record, no longer actively maintained",
+        "color": "#666666",
+        "allowedTransitions": []
+      },
+      "abandoned": {
+        "description": "Incomplete work, no longer pursued",
+        "color": "#990000",
+        "allowedTransitions": ["archived"]
+      }
+    },
+    
+    "commonTags": {
+      "priority": ["critical", "high", "medium", "low"],
+      "scope": ["system", "module", "component", "feature"],
+      "audience": ["user", "developer", "operator", "architect"],
+      "lifecycle": ["planning", "active", "stable", "deprecated"]
+    },
+    
+    "templateVariables": {
+      "user": {
+        "name": "Author name from Templater user configuration",
+        "email": "Author email if configured"
+      },
+      "file": {
+        "creation_date": "Automatic file creation timestamp",
+        "last_modified_date": "Automatic last modified timestamp",
+        "folder": "Parent folder path for auto-linking",
+        "path": "Full file path relative to vault root"
+      },
+      "system": {
+        "version": "Templater plugin version",
+        "obsidian_version": "Obsidian app version"
+      }
+    },
+    
+    "qualityStandards": {
+      "minWordCount": {
+        "module-doc": 1000,
+        "agent-doc": 500,
+        "architecture-doc": 1500,
+        "guide": 800
+      },
+      "requiredElements": {
+        "all": ["frontmatter", "title", "overview", "tags"],
+        "code-examples": ["module-doc", "guide"],
+        "diagrams": ["architecture-doc"],
+        "decision-rationale": ["architecture-doc"]
+      },
+      "reviewCriteria": [
+        "Technical accuracy",
+        "Completeness of required sections",
+        "Code examples tested and working",
+        "Links to related documentation valid",
+        "Frontmatter properly formatted",
+        "Appropriate tagging applied"
+      ]
+    }
+  },
+  
+  "integrations": {
+    "templater": {
+      "version": ">=1.16.0",
+      "requiredSettings": {
+        "templateFolder": "templates/",
+        "triggerOnFileCreation": true,
+        "automaticJumpToCursor": true,
+        "enableSystemCommands": true
+      },
+      "customCommands": [
+        "tp.user.name",
+        "tp.file.creation_date",
+        "tp.file.last_modified_date",
+        "tp.file.folder",
+        "tp.system.prompt"
+      ]
+    },
+    "dataview": {
+      "version": ">=0.5.0",
+      "queries": {
+        "templatesByCategory": "LIST FROM \"templates\" WHERE type = '<category>'",
+        "recentTemplates": "TABLE file.mtime as Modified FROM \"templates\" SORT file.mtime DESC LIMIT 10"
+      }
+    },
+    "obsidianGit": {
+      "autoCommit": true,
+      "commitMessage": "docs: update template {{template_name}}",
+      "autoBackup": true
+    }
+  },
+  
+  "governance": {
+    "ownership": "Principal Architect & Documentation Team",
+    "changePolicy": "All template modifications require pull request review",
+    "versioningScheme": "Semantic versioning (major.minor.patch)",
+    "deprecationNotice": "30-day notice required before template deprecation",
+    "maintenanceSchedule": "Quarterly review cycle",
+    "feedbackChannel": "GitHub issues with 'template-system' label"
+  }
+}
