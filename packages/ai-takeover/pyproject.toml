@@ -9,7 +9,9 @@ description = "AI takeover hard stress simulation engine (J2 scenario engine por
 readme = "README.md"
 requires-python = "==3.12.10"
 license = "MIT"
-dependencies = []
+dependencies = [
+    "project-ai-simulation-contract",
+]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Environment :: Win32 (MS Windows)",

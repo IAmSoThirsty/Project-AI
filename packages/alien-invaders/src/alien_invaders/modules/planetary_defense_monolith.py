@@ -17,6 +17,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
+from simulation_contract import RegistryAccessRequest
+
 from alien_invaders.modules.causal_clock import CausalClock
 from alien_invaders.modules.invariants import (
     CompositeInvariantValidator,
@@ -48,14 +50,10 @@ class ActionVerdict:
     accountability_record: dict[str, Any] = field(default_factory=dict)
 
 
-@dataclass
-class RegistryAccessRequest:
-    """Request for registry access (read-only or mutable)."""
-
-    requestor: str
-    access_type: str  # "read" or "write"
-    target: str  # What is being accessed
-    context: dict[str, Any] = field(default_factory=dict)
+# ``RegistryAccessRequest`` now lives in
+# ``simulation_contract`` (the shared contract that was
+# promoted from the vendored copies in commit 420ae96f+).
+# It is imported above from there.
 
 
 class PlanetaryDefenseMonolith:
