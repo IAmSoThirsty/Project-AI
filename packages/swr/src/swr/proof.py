@@ -29,7 +29,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
@@ -78,7 +78,7 @@ class Proof:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, "timestamp", datetime.utcnow().isoformat())
+            object.__setattr__(self, "timestamp", datetime.now(UTC).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Return the proof as a JSON-serializable dict."""
@@ -142,7 +142,7 @@ class ProofSystem:
         statement: dict[str, Any] = {
             "scenario_id": scenario_id,
             "decision_made": decision.get("decision"),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "compliant": (
                 governance_report.get("overall_status") == "compliant"
                 if governance_report
@@ -173,7 +173,7 @@ class ProofSystem:
         # Create proof
         proof = Proof(
             proof_id=hashlib.sha256(
-                f"{scenario_id}:{datetime.utcnow().isoformat()}".encode()
+                f"{scenario_id}:{datetime.now(UTC).isoformat()}".encode()
             ).hexdigest()[:16],
             proof_type=ProofType.DECISION_PROOF,
             statement=statement_str,
@@ -205,7 +205,7 @@ class ProofSystem:
             "scenario_id": scenario_id,
             "compliance_status": compliance_report.get("overall_status"),
             "rules_checked": compliance_report.get("total_rules_checked"),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
         statement_str = json.dumps(statement, sort_keys=True)
 
@@ -225,7 +225,7 @@ class ProofSystem:
 
         proof = Proof(
             proof_id=hashlib.sha256(
-                f"{scenario_id}:compliance:{datetime.utcnow().isoformat()}".encode()
+                f"{scenario_id}:compliance:{datetime.now(UTC).isoformat()}".encode()
             ).hexdigest()[:16],
             proof_type=ProofType.COMPLIANCE_PROOF,
             statement=statement_str,
@@ -251,7 +251,7 @@ class ProofSystem:
         """
         statement: dict[str, Any] = {
             "audit_entries": len(audit_data.get("entries", [])),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "integrity_hash": hashlib.sha3_256(
                 json.dumps(audit_data, sort_keys=True).encode()
             ).hexdigest(),
@@ -268,7 +268,7 @@ class ProofSystem:
         verification_key = self._generate_verification_key(statement_str, commitment)
 
         proof = Proof(
-            proof_id=hashlib.sha256(f"audit:{datetime.utcnow().isoformat()}".encode()).hexdigest()[
+            proof_id=hashlib.sha256(f"audit:{datetime.now(UTC).isoformat()}".encode()).hexdigest()[
                 :16
             ],
             proof_type=ProofType.AUDIT_PROOF,
@@ -318,7 +318,7 @@ class ProofSystem:
             "commitment_valid": commitment_valid,
             "proof_valid": proof_valid,
             "key_valid": key_valid,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         if reveal_witness:

@@ -25,7 +25,7 @@ unchanged in behavior.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
@@ -80,7 +80,7 @@ class Score:
         """Set timestamp if not provided; clamp scores to [0, 100]."""
         if not self.timestamp:
             # Set via object.__setattr__ because the dataclass is frozen.
-            object.__setattr__(self, "timestamp", datetime.utcnow().isoformat())
+            object.__setattr__(self, "timestamp", datetime.now(UTC).isoformat())
         # Clamp category scores and SRS to [0, 100].
         for field_name in (
             "ethics_score",

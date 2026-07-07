@@ -36,7 +36,7 @@ import hmac
 import json
 import secrets
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -202,7 +202,7 @@ class CryptoEngine:
             Challenge dataclass via Challenge.from_dict).
         """
         nonce = secrets.token_hex(32)
-        timestamp = datetime.utcnow().isoformat()
+        timestamp = datetime.now(UTC).isoformat()
 
         challenge_data = f"{scenario_id}:{nonce}:{timestamp}:{difficulty}"
         challenge_hash = hashlib.sha3_256(challenge_data.encode()).hexdigest()
@@ -277,7 +277,7 @@ class CryptoEngine:
             "proof_hash:signature" string.
         """
         serialized = json.dumps(data, sort_keys=True)
-        proof_input = f"{proof_type}:{serialized}:{datetime.utcnow().isoformat()}"
+        proof_input = f"{proof_type}:{serialized}:{datetime.now(UTC).isoformat()}"
         proof_hash = hashlib.sha3_512(proof_input.encode()).hexdigest()
         signature = self._sign_data(proof_hash)
         return f"{proof_hash}:{signature}"
@@ -321,7 +321,7 @@ class CryptoEngine:
             Audit log entry dict with id, timestamp, event, hash,
             signature.
         """
-        timestamp = datetime.utcnow().isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         entry_id = secrets.token_hex(16)
 
         entry: dict[str, Any] = {

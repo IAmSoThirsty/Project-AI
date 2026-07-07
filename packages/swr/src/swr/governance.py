@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 from typing import Any
 
@@ -94,7 +94,7 @@ class ComplianceReport:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, "timestamp", datetime.utcnow().isoformat())
+            object.__setattr__(self, "timestamp", datetime.now(UTC).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Return the report as a JSON-serializable dict."""
@@ -289,7 +289,7 @@ class GovernanceEngine:
                     "severity": rule.severity.value,
                     "message": message,
                     "category": rule.category,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 }
 
                 if rule.severity in [
@@ -468,7 +468,7 @@ class GovernanceEngine:
             report: Compliance report.
         """
         audit_entry: dict[str, Any] = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "decision_id": decision.get("id", "unknown"),
             "overall_status": report.overall_status.value,
             "violations_count": len(report.violations),

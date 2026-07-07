@@ -5,7 +5,7 @@ Implements time progression with irreversibility tracking and causal ordering.
 
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class RealityClock:
         self.state_checkpoints: dict[int, str] = {}  # tick -> state_hash
 
         # Metadata
-        self.simulation_start = datetime.utcnow()
+        self.simulation_start = datetime.now(UTC)
         self.real_time_elapsed = 0.0
 
         logger.info("Reality clock initialized at t=%s, step=%s", start_time, time_step)
@@ -223,7 +223,7 @@ class RealityClock:
             "total_events": len(self.causal_chain),
             "irreversible_events": len(self.irreversible_events),
             "checkpoints": len(self.state_checkpoints),
-            "simulation_duration": (datetime.utcnow() - self.simulation_start).total_seconds(),
+            "simulation_duration": (datetime.now(UTC) - self.simulation_start).total_seconds(),
         }
 
     def export_causal_chain(self) -> list[dict[str, Any]]:

@@ -32,7 +32,7 @@ import json
 import shutil
 import tempfile
 import zipfile
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -74,7 +74,7 @@ class BundleManager:
         Returns:
             Path to created bundle file.
         """
-        bundle_id = hashlib.sha256(f"{name}:{datetime.utcnow().isoformat()}".encode()).hexdigest()[
+        bundle_id = hashlib.sha256(f"{name}:{datetime.now(UTC).isoformat()}".encode()).hexdigest()[
             :16
         ]
         bundle_filename = f"{name}_{bundle_id}.swrb"
@@ -85,7 +85,7 @@ class BundleManager:
             "bundle_id": bundle_id,
             "name": name,
             "version": "1.0.0",
-            "created_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(UTC).isoformat(),
             "scenario_count": len(scenarios),
             "metadata": metadata or {},
             "scenarios": scenarios,
@@ -218,7 +218,7 @@ class BundleManager:
             # Write system manifest
             manifest = {
                 "system_id": system_id,
-                "created_at": datetime.utcnow().isoformat(),
+                "created_at": datetime.now(UTC).isoformat(),
                 "system_data": system_data,
             }
 
@@ -264,7 +264,7 @@ class BundleManager:
         Raises:
             ValueError: If format is not "json" or "csv".
         """
-        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
 
         if format == "json":
             export_filename = f"{export_name}_{timestamp}.json"
