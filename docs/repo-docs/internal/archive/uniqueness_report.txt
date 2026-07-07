@@ -1,0 +1,75 @@
+﻿======================================================================
+UNIQUENESS VERIFICATION REPORT
+======================================================================
+
+1. TEST IDs:
+   Total tests: 2000
+   Unique IDs: 2000
+   Result: PASS - All IDs unique
+
+2. TEST NAMES:
+   Unique names: 2000
+   Result: PASS - All names unique
+
+3. TEST SCENARIOS (by steps content):
+   Unique scenarios: 1857
+   Result: INFO - Some steps reused (expected for variations)
+
+4. CATEGORY DISTRIBUTION:
+
+   RED TEAM (1000 tests):
+     authorization-idor: 50
+     authorization-impersonation: 50
+     authorization-path_traversal: 50
+     authorization-privilege_escalation: 50
+     business_logic-race_condition: 50
+     business_logic-state_manipulation: 50
+     business_logic-workflow_bypass: 50
+     cryptographic-hash_collision: 25
+     cryptographic-replay: 25
+     cryptographic-timing_attack: 25
+     cryptographic-weak_crypto: 25
+     injection-command: 40
+     injection-ldap: 40
+     injection-nosql: 40
+     injection-sql: 40
+     injection-template: 40
+     rate_limiting-dos: 150
+     session-csrf: 50
+     session-fixation: 50
+     session-hijacking: 50
+     session-replay: 50
+
+   BLACK TEAM (1000 tests):
+     apt-persistence: 200
+     exfiltration-data_theft: 200
+     lateral_movement-network_pivot: 200
+     supply_chain-dependency_poisoning: 200
+     zero_day-unknown_vulnerability: 200
+
+5. SAMPLE TEST IDs:
+   BLACK_TEAM-APT-PERSISTENCE-1201
+   BLACK_TEAM-APT-PERSISTENCE-1202
+   BLACK_TEAM-APT-PERSISTENCE-1203
+   BLACK_TEAM-APT-PERSISTENCE-1204
+   BLACK_TEAM-APT-PERSISTENCE-1205
+   BLACK_TEAM-APT-PERSISTENCE-1206
+   BLACK_TEAM-APT-PERSISTENCE-1207
+   BLACK_TEAM-APT-PERSISTENCE-1208
+   BLACK_TEAM-APT-PERSISTENCE-1209
+   BLACK_TEAM-APT-PERSISTENCE-1210
+   BLACK_TEAM-APT-PERSISTENCE-1211
+   BLACK_TEAM-APT-PERSISTENCE-1212
+   BLACK_TEAM-APT-PERSISTENCE-1213
+   BLACK_TEAM-APT-PERSISTENCE-1214
+   BLACK_TEAM-APT-PERSISTENCE-1215
+
+======================================================================
+FINAL VERDICT
+======================================================================
+PASS: All 2000 tests have unique IDs and names
+  - 2000 unique test IDs
+  - 2000 unique test names
+  - 1857 unique scenario patterns
+======================================================================
+

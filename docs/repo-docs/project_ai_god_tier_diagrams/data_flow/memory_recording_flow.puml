@@ -1,0 +1,174 @@
+@startuml memory_recording_flow
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title Project-AI Five-Channel Memory Recording System
+
+participant "ExecutionService" as Exec
+participant "MemoryEngine" as Memory
+database "PostgreSQL" as DB
+participant "ObjectStore" as S3
+
+== Operation Completion ==
+
+Exec -> Memory: Record complete operation
+activate Memory
+
+note right of Memory
+  **FIVE-CHANNEL SYSTEM**
+  1. Attempt - Initial request
+  2. Decision - Governance
+  3. Result - Execution output
+  4. Reflection - Analysis
+  5. Error - Failures
+end note
+
+== Parallel Channel Recording ==
+
+par Channel 1: Attempt
+    Memory -> DB: INSERT INTO memory_attempt
+    activate DB
+    note right
+      • User request content
+      • Intent + entities
+      • Context + history
+      • Timestamp + metadata
+    end note
+    DB --> Memory: Attempt recorded
+    deactivate DB
+    
+else Channel 2: Decision
+    Memory -> DB: INSERT INTO memory_decision
+    activate DB
+    note right
+      • Galahad decision
+      • Cerberus decision
+      • Codex decision
+      • Approval hash
+    end note
+    DB --> Memory: Decision recorded
+    deactivate DB
+    
+else Channel 3: Result
+    Memory -> DB: INSERT INTO memory_result
+    activate DB
+    note right
+      • Execution output
+      • Agent type + version
+      • Performance metrics
+      • Side effects
+    end note
+    DB --> Memory: Result recorded
+    deactivate DB
+    
+else Channel 4: Reflection
+    Memory -> Memory: Generate reflection\n(AI analysis)
+    Memory -> DB: INSERT INTO memory_reflection
+    activate DB
+    note right
+      • Quality assessment
+      • Learning insights
+      • Improvement suggestions
+      • Future optimizations
+    end note
+    DB --> Memory: Reflection recorded
+    deactivate DB
+    
+else Channel 5: Error (if errors)
+    alt Errors Occurred
+        Memory -> DB: INSERT INTO memory_error
+        activate DB
+        note right
+          • Error type + message
+          • Stack trace
+          • Recovery actions
+          • Root cause analysis
+        end note
+        DB --> Memory: Error recorded
+        deactivate DB
+    end
+end
+
+Memory --> Exec: All channels recorded
+deactivate Memory
+
+== Query Patterns ==
+
+Exec -> Memory: Get complete operation
+activate Memory
+
+par Retrieve All Channels
+    Memory -> DB: SELECT FROM memory_attempt
+    activate DB
+    DB --> Memory: Attempt data
+    deactivate DB
+    
+    Memory -> DB: SELECT FROM memory_decision
+    activate DB
+    DB --> Memory: Decision data
+    deactivate DB
+    
+    Memory -> DB: SELECT FROM memory_result
+    activate DB
+    DB --> Memory: Result data
+    deactivate DB
+    
+    Memory -> DB: SELECT FROM memory_reflection
+    activate DB
+    DB --> Memory: Reflection data
+    deactivate DB
+    
+    Memory -> DB: SELECT FROM memory_error
+    activate DB
+    DB --> Memory: Error data (if exists)
+    deactivate DB
+end
+
+Memory --> Exec: Complete operation history
+deactivate Memory
+
+== Data Archival (> 90 days) ==
+
+note over Memory, S3
+  **RETENTION POLICY**
+  Hot (PostgreSQL): 0-90 days
+  Warm (S3/MinIO): 90 days - 7 years
+  Cold (Glacier): > 7 years (compliance)
+end note
+
+Memory -> DB: Query old operations\n(> 90 days)
+activate DB
+DB --> Memory: Old operation data
+deactivate DB
+
+Memory -> Memory: Convert to JSON\nwith compression
+
+Memory -> S3: Upload to archive bucket
+activate S3
+note right
+  Bucket: memory-archive
+  Key: memories/{id[:2]}/{id}.json
+  Encryption: AES-256-GCM
+  Storage Class: STANDARD_IA
+end note
+S3 --> Memory: Archive complete
+deactivate S3
+
+Memory -> DB: Delete from hot storage
+activate DB
+DB --> Memory: Data purged
+deactivate DB
+
+note over Memory, S3
+  **PERFORMANCE METRICS (P95)**
+  Single channel write: < 10ms
+  All five channels: < 50ms
+  Query operation: < 20ms
+  Archive operation: < 500ms
+  
+  **THROUGHPUT**
+  Writes/sec: 1,000+
+  Queries/sec: 5,000+
+end note
+
+@enduml

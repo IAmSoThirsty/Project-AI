@@ -1,0 +1,38 @@
+@startuml
+' ML pipeline diagram for training and prediction
+
+package "Data Ingestion" {
+  [User Conversations] as Conv
+  [External Datasets] as ExtData
+}
+
+package "Preprocessing" {
+  [Tokenizer] as Tok
+  [Feature Extraction] as Feat
+  [Labeling Tools] as Label
+}
+
+package "Modeling" {
+  [Training Job] as Train
+  [Model Registry] as Registry
+  [Predictor Service] as Predictor
+}
+
+package "Evaluation" {
+  [Metrics] as Metrics
+  [Explainability] as Expl
+}
+
+Conv --> Tok
+ExtData --> Tok
+Tok --> Feat
+Feat --> Train
+Label --> Train
+Train --> Registry
+Registry --> Predictor
+Predictor --> Expl
+Predictor --> Metrics
+
+note left: Optional PyTorch ThreatDetector and scikit-learn models
+
+@enduml

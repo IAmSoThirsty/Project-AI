@@ -1,0 +1,319 @@
+@startuml user_request_flow
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+
+title Project-AI User Request Flow\nDetailed Architecture
+
+actor User
+participant "GUI/API" as UI
+participant "API Gateway" as Gateway
+participant "CognitionKernel" as Cognition
+participant "Galahad\n(Ethics)" as Galahad
+participant "Cerberus\n(Security)" as Cerberus
+participant "Codex Deus Maximus\n(Policy)" as Codex
+participant "ExecutionService" as Execution
+participant "Agent Pool" as Agents
+participant "MemoryEngine" as Memory
+participant "AuditTrail" as Audit
+database "PostgreSQL" as DB
+
+== Step 1: User Request Submission ==
+
+User -> UI: Submit request\n(natural language)
+activate UI
+
+UI -> UI: Validate input\n(length, format)
+
+UI -> Gateway: POST /api/v1/request\n{request_json}
+activate Gateway
+
+== Step 2: API Gateway Processing ==
+
+Gateway -> Gateway: 1. TLS termination
+Gateway -> Gateway: 2. JWT authentication
+Gateway -> Gateway: 3. Rate limit check
+Gateway -> Gateway: 4. JSON schema validation
+
+alt Authentication Failed
+    Gateway --> UI: 401 Unauthorized
+    UI --> User: Authentication error
+else Rate Limit Exceeded
+    Gateway --> UI: 429 Too Many Requests
+    UI --> User: Rate limit error
+else Validation Failed
+    Gateway --> UI: 400 Bad Request
+    UI --> User: Validation error
+end
+
+== Step 3: CognitionKernel Processing ==
+
+Gateway -> Cognition: Validated request
+activate Cognition
+
+Cognition -> Cognition: Detect intent\n(ML classifier)
+note right
+  30+ intent categories
+  scikit-learn model
+  < 50ms target
+end note
+
+Cognition -> DB: Fetch user context
+activate DB
+DB --> Cognition: User profile,\nhistory, preferences
+deactivate DB
+
+Cognition -> Memory: Get relevant memories
+activate Memory
+Memory --> Cognition: Recent conversations,\nknowledge base
+deactivate Memory
+
+Cognition -> Cognition: Enrich request\n(context, entities)
+
+== Step 4a: Galahad (Ethics) Validation ==
+
+Cognition -> Galahad: Enriched request
+activate Galahad
+
+Galahad -> Galahad: Check Asimov's Laws
+note right
+  Law 0: No harm to humanity
+  Law 1: No harm to humans
+  Law 2: Obey humans
+  Law 3: Self-preservation
+end note
+
+Galahad -> Galahad: Detect harmful intent
+Galahad -> Galahad: Validate user authority
+
+alt Ethics Violation Detected
+    Galahad --> Cognition: REJECTED\n(Law violation)
+    Cognition --> Gateway: 403 Forbidden
+    Gateway --> UI: Ethics rejection
+    UI --> User: Request rejected\n(ethics)
+    
+    Cognition -> Memory: Record rejection
+    activate Memory
+    Memory -> DB: Write to decision channel
+    deactivate Memory
+    
+    Cognition -> Audit: Log rejection
+    activate Audit
+    Audit -> DB: Append to audit trail
+    deactivate Audit
+    
+    deactivate Galahad
+    deactivate Cognition
+    deactivate Gateway
+    deactivate UI
+else Ethics Approved
+    Galahad --> Cognition: APPROVED
+    deactivate Galahad
+end
+
+== Step 4b: Cerberus (Security) Validation ==
+
+Cognition -> Cerberus: Request + Galahad result
+activate Cerberus
+
+Cerberus -> Cerberus: SQL injection check
+Cerberus -> Cerberus: Command injection check
+Cerberus -> Cerberus: PII exposure check
+Cerberus -> Cerberus: Secrets detection
+Cerberus -> Cerberus: Abuse pattern check
+
+alt Security Violation Detected
+    Cerberus --> Cognition: REJECTED\n(Security threat)
+    
+    Cerberus -> Audit: Log security incident
+    activate Audit
+    Audit -> DB: Write incident log
+    deactivate Audit
+    
+    Cognition --> Gateway: 403 Forbidden
+    Gateway --> UI: Security rejection
+    UI --> User: Request rejected\n(security)
+    
+    Cognition -> Memory: Record rejection
+    activate Memory
+    Memory -> DB: Write to decision channel
+    deactivate Memory
+    
+    deactivate Cerberus
+    deactivate Cognition
+    deactivate Gateway
+    deactivate UI
+else Security Approved
+    Cerberus --> Cognition: APPROVED
+    deactivate Cerberus
+end
+
+== Step 4c: Codex Deus Maximus (Policy) Validation ==
+
+Cognition -> Codex: Request + All results
+activate Codex
+
+Codex -> Codex: Check org policies
+Codex -> Codex: Validate compliance\n(GDPR, HIPAA, SOC2)
+Codex -> Codex: Apply business rules
+Codex -> Codex: Check resource limits
+
+alt Policy Violation Detected
+    Codex --> Cognition: REJECTED\n(Policy violation)
+    Cognition --> Gateway: 403 Forbidden
+    Gateway --> UI: Policy rejection
+    UI --> User: Request rejected\n(policy)
+    
+    Cognition -> Memory: Record rejection
+    activate Memory
+    Memory -> DB: Write to decision channel
+    deactivate Memory
+    
+    Cognition -> Audit: Log policy violation
+    activate Audit
+    Audit -> DB: Append to audit trail
+    deactivate Audit
+    
+    deactivate Codex
+    deactivate Cognition
+    deactivate Gateway
+    deactivate UI
+else Policy Approved
+    Codex -> Codex: Generate approval hash
+    Codex --> Cognition: APPROVED\n(with hash)
+    deactivate Codex
+end
+
+== Step 5: Record Governance Decision ==
+
+Cognition -> Memory: Record decision\n(APPROVED)
+activate Memory
+
+par Parallel Memory Recording
+    Memory -> DB: Write to attempt channel
+    Memory -> DB: Write to decision channel
+end
+
+Memory --> Cognition: Decision recorded
+deactivate Memory
+
+== Step 6: Agent Execution ==
+
+Cognition -> Execution: Execute request\n(governance approved)
+activate Execution
+
+Execution -> Execution: Select agent\n(based on intent)
+note right
+  Intent → Agent mapping:
+  - query.info → IntelligenceAgent
+  - command.exec → ExecutionAgent
+  - analysis.data → DataAnalysisAgent
+  - generation.image → ImageAgent
+  - etc.
+end note
+
+Execution -> Agents: Dispatch to agent
+activate Agents
+
+Agents -> Agents: Execute operation\n(timeout: 60s)
+
+alt Execution Timeout
+    Agents --> Execution: TimeoutError
+    Execution -> Memory: Record error
+    activate Memory
+    Memory -> DB: Write to error channel
+    deactivate Memory
+    
+    Execution --> Cognition: Execution failed
+    Cognition --> Gateway: 500 Internal Server Error
+    Gateway --> UI: Timeout error
+    UI --> User: Operation timeout
+    
+    deactivate Agents
+    deactivate Execution
+    deactivate Cognition
+    deactivate Gateway
+    deactivate UI
+else Execution Success
+    Agents --> Execution: Result
+    deactivate Agents
+end
+
+== Step 7: Memory Recording (Five Channels) ==
+
+Execution -> Memory: Record complete operation
+activate Memory
+
+par Five-Channel Recording
+    Memory -> DB: Write to result channel
+    Memory -> DB: Write to reflection channel
+    Memory -> DB: Update attempt channel
+    Memory -> DB: Update decision channel
+    Memory -> DB: Write to error channel\n(if errors)
+end
+
+Memory --> Execution: All channels recorded
+deactivate Memory
+
+== Step 8: Audit Trail Recording ==
+
+Execution -> Audit: Append to audit trail
+activate Audit
+
+Audit -> DB: Fetch previous hash
+activate DB
+DB --> Audit: Previous hash
+deactivate DB
+
+Audit -> Audit: Generate current hash\n(SHA-256)
+note right
+  audit_entry = {
+    operation_id,
+    user_id,
+    timestamp,
+    action,
+    result,
+    previous_hash
+  }
+  current_hash = SHA256(audit_entry)
+end note
+
+Audit -> DB: Append audit entry\n(immutable log)
+activate DB
+DB --> Audit: Entry saved
+deactivate DB
+
+Audit -> Audit: Update latest hash cache
+
+Audit --> Execution: Audit recorded
+deactivate Audit
+
+== Step 9: Response Delivery ==
+
+Execution --> Cognition: Execution complete
+deactivate Execution
+
+Cognition --> Gateway: Success response
+deactivate Cognition
+
+Gateway --> UI: 200 OK\n{result_json}
+deactivate Gateway
+
+UI --> User: Display result
+deactivate UI
+
+note over User, DB
+  **Total Latency (P95):**
+  - Simple operation: ~1.4s
+  - Complex operation: ~30s
+  
+  **Key Metrics:**
+  - Governance: < 100ms
+  - Agent execution: 1-30s
+  - Memory recording: < 50ms
+  - Audit trail: < 20ms
+end note
+
+@enduml

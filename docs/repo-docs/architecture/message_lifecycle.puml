@@ -1,0 +1,34 @@
+@startuml
+' Message lifecycle sequence diagram
+
+actor User
+participant "Desktop UI\n(PyQt6)" as UI
+participant "Core\nai_systems.py" as Core
+participant "Command Override" as Override
+participant "Plugin Manager" as Plugins
+participant "ML ThreatDetector" as ML
+participant "Memory System" as Memory
+participant "Learning Request Manager" as LR
+participant "Web Backend\n(Flask)" as Backend
+
+User -> UI : type message
+UI -> Core : process_message(message, metadata)
+Core -> Override : validate_against_overrides(message, context)
+alt blocked by override
+    Override --> Core : block(reason)
+    Core -> UI : show_block_notice(reason)
+else allowed
+    Core -> Plugins : trigger(message_received, context)
+    Plugins --> Core : augmented_context
+    Core -> ML : evaluate_threats(message)
+    ML --> Core : threat_scores
+    Core -> Memory : log_conversation(user_msg, placeholder_response, context)
+    Core -> LR : maybe_create_learning_request(message, analysis)
+    Core -> Backend : (optional) request_external_api(predict/generate)
+    Backend --> Core : external_response
+    Core -> Core : generate_response(context + external_response)
+    Core -> UI : deliver_response(response)
+end
+UI -> User : display response
+
+@enduml
