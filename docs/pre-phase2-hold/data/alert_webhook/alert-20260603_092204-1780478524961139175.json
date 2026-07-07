@@ -1,0 +1,51 @@
+{
+  "alerts": [
+    {
+      "annotations": {
+        "dashboard": "http://grafana:3000/d/project-ai",
+        "description": "Project-AI API has been down for more than 2 minutes",
+        "summary": "Project-AI API is down"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "affad314ebdd921b",
+      "generatorURL": "http://7ffa8f900c01:9090/graph?g0.expr=up%7Bjob%3D%22project-ai-api%22%7D+%3D%3D+0&g0.tab=1",
+      "labels": {
+        "alertname": "APIDown",
+        "environment": "production",
+        "instance": "api:8001",
+        "job": "project-ai-api",
+        "monitor": "project-ai-monitor",
+        "scheme": "http",
+        "service": "api",
+        "severity": "critical"
+      },
+      "startsAt": "2026-06-03T09:21:53.356Z",
+      "status": "firing"
+    }
+  ],
+  "commonAnnotations": {
+    "dashboard": "http://grafana:3000/d/project-ai",
+    "description": "Project-AI API has been down for more than 2 minutes",
+    "summary": "Project-AI API is down"
+  },
+  "commonLabels": {
+    "alertname": "APIDown",
+    "environment": "production",
+    "instance": "api:8001",
+    "job": "project-ai-api",
+    "monitor": "project-ai-monitor",
+    "scheme": "http",
+    "service": "api",
+    "severity": "critical"
+  },
+  "externalURL": "http://975be3899c4b:9093",
+  "groupKey": "{}/{severity=\"critical\"}:{alertname=\"APIDown\", service=\"api\"}",
+  "groupLabels": {
+    "alertname": "APIDown",
+    "service": "api"
+  },
+  "receiver": "webhook-notifications",
+  "status": "firing",
+  "truncatedAlerts": 0,
+  "version": "4"
+}

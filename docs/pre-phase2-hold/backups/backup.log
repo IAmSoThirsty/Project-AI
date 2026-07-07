@@ -1,0 +1,98 @@
+[2026-06-03T08:38:56Z] Project-AI backup agent started
+[2026-06-03T08:38:56Z] Backup directory: /backups
+[2026-06-03T08:38:56Z] Data directory: /data
+[2026-06-03T08:38:56Z] Retention: 30 days
+[2026-06-03T08:38:56Z] WARNING: backing up empty data directory: /data
+[2026-06-03T08:38:56Z] Starting backup: /backups/spine-data-20260603_083856.tar.gz
+[2026-06-03T08:38:56Z] Backup complete: file=/backups/spine-data-20260603_083856.tar.gz size=87 sha256=3c6bc380e8b185eed42b9bb2ccd46df99a3cbd7bdecac0083f9c0da28feab309 entries=0
+[2026-06-03T08:38:56Z] Cleaning backups older than 30 days
+[2026-06-03T08:38:56Z] Cleanup complete
+[2026-06-03T08:38:56Z] Next backup in 86400 seconds
+[2026-06-03T08:39:37Z] Starting backup: /backups/spine-data-20260603_083937.tar.gz
+[2026-06-03T08:39:37Z] Backup complete: file=/backups/spine-data-20260603_083937.tar.gz size=204 sha256=03e9f73c186edc4c2890b7d1929dbbb88ad65ed86549cdadc40d6aa710c38cf4 entries=2
+[2026-06-03T08:39:37Z] Restoring backup: /backups/spine-data-20260603_083937.tar.gz
+[2026-06-03T08:39:37Z] Restore complete: /backups/spine-data-20260603_083937.tar.gz
+[2026-06-03T08:39:37Z] Backup restore drill passed
+[2026-06-03T08:39:37Z] Cleaning backups older than 30 days
+[2026-06-03T08:39:37Z] Cleanup complete
+[2026-06-03T08:39:58Z] Project-AI backup agent started
+[2026-06-03T08:39:58Z] Backup directory: /backups
+[2026-06-03T08:39:58Z] Data directory: /data
+[2026-06-03T08:39:58Z] Retention: 30 days
+[2026-06-03T08:39:58Z] WARNING: backing up empty data directory: /data
+[2026-06-03T08:39:58Z] Starting backup: /backups/spine-data-20260603_083958.tar.gz
+[2026-06-03T08:39:58Z] Backup complete: file=/backups/spine-data-20260603_083958.tar.gz size=87 sha256=f4976de2e5013ee592f1a084efdf479864ead5a5711d1923917d48ad43ed741e entries=0
+[2026-06-03T08:39:58Z] Cleaning backups older than 30 days
+[2026-06-03T08:39:58Z] Cleanup complete
+[2026-06-03T08:39:58Z] Next backup in 86400 seconds
+[2026-06-03T08:43:47Z] Starting backup: /backups/spine-data-20260603_084347.tar.gz
+[2026-06-03T08:43:47Z] Backup complete: file=/backups/spine-data-20260603_084347.tar.gz size=203 sha256=3970143e22c7f2df049d8b22577f76837e3c7e47a63ece241f79574e317a8c63 entries=2
+[2026-06-03T08:43:47Z] Restoring backup: /backups/spine-data-20260603_084347.tar.gz
+[2026-06-03T08:43:47Z] Restore complete: /backups/spine-data-20260603_084347.tar.gz
+[2026-06-03T08:43:47Z] Backup restore drill passed
+[2026-06-03T08:43:47Z] Cleaning backups older than 30 days
+[2026-06-03T08:43:47Z] Cleanup complete
+[2026-06-03T08:48:24Z] Project-AI backup agent started
+[2026-06-03T08:48:24Z] Backup directory: /backups
+[2026-06-03T08:48:24Z] Data directory: /data
+[2026-06-03T08:48:24Z] Retention: 30 days
+[2026-06-03T08:48:24Z] WARNING: backing up empty data directory: /data
+[2026-06-03T08:48:24Z] Starting backup: /backups/spine-data-20260603_084824.tar.gz
+[2026-06-03T08:48:25Z] Backup complete: file=/backups/spine-data-20260603_084824.tar.gz size=87 sha256=bc3f92deebead9d5236260745d02dce2303210b9e364d3eb8149131736a242ec entries=0
+[2026-06-03T08:48:25Z] Cleaning backups older than 30 days
+[2026-06-03T08:48:25Z] Cleanup complete
+[2026-06-03T08:48:25Z] Next backup in 86400 seconds
+[2026-06-03T08:48:54Z] Project-AI backup agent started
+[2026-06-03T08:48:54Z] Backup directory: /backups
+[2026-06-03T08:48:54Z] Data directory: /data
+[2026-06-03T08:48:54Z] Retention: 30 days
+[2026-06-03T08:48:54Z] WARNING: backing up empty data directory: /data
+[2026-06-03T08:48:54Z] Starting backup: /backups/spine-data-20260603_084854.tar.gz
+[2026-06-03T08:48:55Z] Backup complete: file=/backups/spine-data-20260603_084854.tar.gz size=87 sha256=0a6749071633d45ad131d1749bfc7516c66626105f1f664b8593063a2681f838 entries=0
+[2026-06-03T08:48:55Z] Cleaning backups older than 30 days
+[2026-06-03T08:48:55Z] Cleanup complete
+[2026-06-03T08:48:55Z] Next backup in 86400 seconds
+[2026-06-03T08:54:04Z] Starting backup: /backups/spine-data-20260603_085404.tar.gz
+[2026-06-03T08:54:05Z] Backup complete: file=/backups/spine-data-20260603_085404.tar.gz size=203 sha256=1e292188a01c72b6b0f8fe8489c538d577542b2b4af7e0b1d4191e8c27a01e7e entries=2
+[2026-06-03T08:54:05Z] Restoring backup: /backups/spine-data-20260603_085404.tar.gz
+[2026-06-03T08:54:05Z] Restore complete: /backups/spine-data-20260603_085404.tar.gz
+[2026-06-03T08:54:06Z] Backup restore drill passed
+[2026-06-03T08:54:06Z] Cleaning backups older than 30 days
+[2026-06-03T08:54:06Z] Cleanup complete
+[2026-06-03T09:07:45Z] Project-AI backup agent started
+[2026-06-03T09:07:46Z] Backup directory: /backups
+[2026-06-03T09:07:45Z] Data directory: /data
+[2026-06-03T09:07:46Z] Retention: 30 days
+[2026-06-03T09:07:47Z] WARNING: backing up empty data directory: /data
+[2026-06-03T09:07:48Z] Starting backup: /backups/spine-data-20260603_090748.tar.gz
+[2026-06-03T09:07:57Z] Backup complete: file=/backups/spine-data-20260603_090748.tar.gz size=86 sha256=de5d9ffa79b9b6a3dc83cee763e418dfa397ac5e4244d93bb6d52ebf60b8ecd7 entries=0
+[2026-06-03T09:07:57Z] Cleaning backups older than 30 days
+[2026-06-03T09:07:59Z] Cleanup complete
+[2026-06-03T09:07:59Z] Next backup in 86400 seconds
+[2026-06-03T09:11:40Z] Project-AI backup agent started
+[2026-06-03T09:11:40Z] Backup directory: /backups
+[2026-06-03T09:11:40Z] Data directory: /data
+[2026-06-03T09:11:40Z] Retention: 30 days
+[2026-06-03T09:11:42Z] WARNING: backing up empty data directory: /data
+[2026-06-03T09:11:42Z] Starting backup: /backups/spine-data-20260603_091142.tar.gz
+[2026-06-03T09:11:42Z] Backup complete: file=/backups/spine-data-20260603_091142.tar.gz size=86 sha256=1c47780a7d13a08566e149758915fbc75a31a6614ef4097af1c0483fbeff999a entries=0
+[2026-06-03T09:11:44Z] Cleaning backups older than 30 days
+[2026-06-03T09:11:44Z] Cleanup complete
+[2026-06-03T09:11:46Z] Next backup in 86400 seconds
+[2026-06-03T09:17:33Z] Project-AI backup agent started
+[2026-06-03T09:17:33Z] Backup directory: /backups
+[2026-06-03T09:17:33Z] Data directory: /data
+[2026-06-03T09:17:33Z] Retention: 30 days
+[2026-06-03T09:17:33Z] WARNING: backing up empty data directory: /data
+[2026-06-03T09:17:33Z] Starting backup: /backups/spine-data-20260603_091733.tar.gz
+[2026-06-03T09:17:34Z] Backup complete: file=/backups/spine-data-20260603_091733.tar.gz size=87 sha256=e6297be06328b41e74831b7aceaaeeaaf8ab1353177526733324237d12a5a72a entries=0
+[2026-06-03T09:17:34Z] Cleaning backups older than 30 days
+[2026-06-03T09:17:34Z] Cleanup complete
+[2026-06-03T09:17:34Z] Next backup in 86400 seconds
+[2026-06-03T09:22:18Z] Starting backup: /backups/spine-data-20260603_092218.tar.gz
+[2026-06-03T09:22:18Z] Backup complete: file=/backups/spine-data-20260603_092218.tar.gz size=203 sha256=98a166d7e802d243a5e3b5b809bd3a24ba27e45dd586a7bcb3a5d37b57b6c493 entries=2
+[2026-06-03T09:22:18Z] Restoring backup: /backups/spine-data-20260603_092218.tar.gz
+[2026-06-03T09:22:18Z] Restore complete: /backups/spine-data-20260603_092218.tar.gz
+[2026-06-03T09:22:18Z] Backup restore drill passed
+[2026-06-03T09:22:18Z] Cleaning backups older than 30 days
+[2026-06-03T09:22:18Z] Cleanup complete

@@ -1,0 +1,362 @@
+[
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:38:48.967250+00:00",
+    "genesis_id_expected": "GENESIS-1334AF1B",
+    "genesis_id_actual": "GENESIS-02397741",
+    "key_dir": "T:/Temp/tmpm3414tvb/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:38:48.975371+00:00",
+    "genesis_id_expected": "GENESIS-BF81D172",
+    "genesis_id_actual": "GENESIS-5C32C417",
+    "key_dir": "T:/Temp/tmp3shbr5rg/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:38:48.978929+00:00",
+    "genesis_id_expected": "GENESIS-BF81D172",
+    "genesis_id_actual": "GENESIS-5C32C417",
+    "key_dir": "T:/Temp/tmp3shbr5rg/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:38:49.011446+00:00",
+    "genesis_id_expected": "GENESIS-7790DF15",
+    "genesis_id_actual": "GENESIS-B534580A",
+    "key_dir": "T:/Temp/tmp68uedzcq/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:38:49.037101+00:00",
+    "genesis_id_expected": "GENESIS-D792494B",
+    "genesis_id_actual": "GENESIS-357703B3",
+    "key_dir": "T:/Temp/tmpo3fy64ba/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:42:19.477784+00:00",
+    "genesis_id_expected": "GENESIS-D74407C2",
+    "genesis_id_actual": "GENESIS-9DE4F724",
+    "key_dir": "T:/Temp/tmpy92xzgk2/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:42:19.486574+00:00",
+    "genesis_id_expected": "GENESIS-EBBBE945",
+    "genesis_id_actual": "GENESIS-AE42B211",
+    "key_dir": "T:/Temp/tmpsiublll7/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:42:19.488577+00:00",
+    "genesis_id_expected": "GENESIS-EBBBE945",
+    "genesis_id_actual": "GENESIS-AE42B211",
+    "key_dir": "T:/Temp/tmpsiublll7/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:42:19.519394+00:00",
+    "genesis_id_expected": "GENESIS-C5D3B363",
+    "genesis_id_actual": "GENESIS-53F08DEF",
+    "key_dir": "T:/Temp/tmpp7_9txmp/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:42:19.535925+00:00",
+    "genesis_id_expected": "GENESIS-5EDB8F59",
+    "genesis_id_actual": "GENESIS-8698E41B",
+    "key_dir": "T:/Temp/tmpbr901od1/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:43:27.238245+00:00",
+    "genesis_id_expected": "GENESIS-1244B936",
+    "genesis_id_actual": "GENESIS-4B8E095B",
+    "key_dir": "T:/Temp/tmpn9yq7z19/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:43:27.250424+00:00",
+    "genesis_id_expected": "GENESIS-07FB5307",
+    "genesis_id_actual": "GENESIS-2D81C6C9",
+    "key_dir": "T:/Temp/tmpu35ryppe/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:43:27.252523+00:00",
+    "genesis_id_expected": "GENESIS-07FB5307",
+    "genesis_id_actual": "GENESIS-2D81C6C9",
+    "key_dir": "T:/Temp/tmpu35ryppe/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:43:27.287321+00:00",
+    "genesis_id_expected": "GENESIS-85CFEEC9",
+    "genesis_id_actual": "GENESIS-D5543A90",
+    "key_dir": "T:/Temp/tmp8zaxgxfy/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:43:27.304103+00:00",
+    "genesis_id_expected": "GENESIS-4F983C52",
+    "genesis_id_actual": "GENESIS-84D561CF",
+    "key_dir": "T:/Temp/tmp628flo9o/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:48:29.279223+00:00",
+    "genesis_id_expected": "GENESIS-B5505F02",
+    "genesis_id_actual": "GENESIS-F09FF105",
+    "key_dir": "T:/Temp/tmp9jkdz1vh/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:50:01.872449+00:00",
+    "genesis_id_expected": "GENESIS-47A9327D",
+    "genesis_id_actual": "GENESIS-DD406929",
+    "key_dir": "T:/Temp/tmph3kus62k/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:50:01.901445+00:00",
+    "genesis_id_expected": "GENESIS-B4DFED39",
+    "genesis_id_actual": "GENESIS-8968F8CB",
+    "key_dir": "T:/Temp/tmpv7qwfoxm/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:41.116933+00:00",
+    "genesis_id_expected": "GENESIS-B69F01C9",
+    "genesis_id_actual": "GENESIS-6E3F813E",
+    "key_dir": "T:/Temp/tmp9bx9ocn3/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:41.125441+00:00",
+    "genesis_id_expected": "GENESIS-4AADA6F4",
+    "genesis_id_actual": "GENESIS-DB59D1A1",
+    "key_dir": "T:/Temp/tmpm4ehlb0n/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:41.127073+00:00",
+    "genesis_id_expected": "GENESIS-4AADA6F4",
+    "genesis_id_actual": "GENESIS-DB59D1A1",
+    "key_dir": "T:/Temp/tmpm4ehlb0n/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:41.159442+00:00",
+    "genesis_id_expected": "GENESIS-6487B51F",
+    "genesis_id_actual": "GENESIS-147E83C5",
+    "key_dir": "T:/Temp/tmpzehnq3j3/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:41.176065+00:00",
+    "genesis_id_expected": "GENESIS-D74158B2",
+    "genesis_id_actual": "GENESIS-3C93ECE6",
+    "key_dir": "T:/Temp/tmpe69acbed/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:45.480087+00:00",
+    "genesis_id_expected": "GENESIS-3C632FA7",
+    "genesis_id_actual": "GENESIS-8303065C",
+    "key_dir": "T:/Temp/tmpcdp95uxm/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:47.441449+00:00",
+    "genesis_id_expected": "GENESIS-983F7231",
+    "genesis_id_actual": "GENESIS-F46F0E78",
+    "key_dir": "T:/Temp/tmpn0xe8ui5/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T13:54:47.468662+00:00",
+    "genesis_id_expected": "GENESIS-65B4934D",
+    "genesis_id_actual": "GENESIS-44740B91",
+    "key_dir": "T:/Temp/tmpfy8eom95/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:29.994416+00:00",
+    "genesis_id_expected": "GENESIS-F590D93A",
+    "genesis_id_actual": "GENESIS-33772D49",
+    "key_dir": "T:/Temp/tmp02fbsquk/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:30.004927+00:00",
+    "genesis_id_expected": "GENESIS-4BCFCF53",
+    "genesis_id_actual": "GENESIS-CB762DEB",
+    "key_dir": "T:/Temp/tmp1jna7ggf/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:30.007928+00:00",
+    "genesis_id_expected": "GENESIS-4BCFCF53",
+    "genesis_id_actual": "GENESIS-CB762DEB",
+    "key_dir": "T:/Temp/tmp1jna7ggf/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:30.046296+00:00",
+    "genesis_id_expected": "GENESIS-80A30EF9",
+    "genesis_id_actual": "GENESIS-2EA7CB1B",
+    "key_dir": "T:/Temp/tmphnfmssjw/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:30.066283+00:00",
+    "genesis_id_expected": "GENESIS-B2EAADC4",
+    "genesis_id_actual": "GENESIS-FE7A3BAF",
+    "key_dir": "T:/Temp/tmpg3g4_hj1/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:34.580207+00:00",
+    "genesis_id_expected": "GENESIS-5E1847F7",
+    "genesis_id_actual": "GENESIS-61B51A9E",
+    "key_dir": "T:/Temp/tmpf96pz889/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:36.626506+00:00",
+    "genesis_id_expected": "GENESIS-3CA1D772",
+    "genesis_id_actual": "GENESIS-BBA9CA5D",
+    "key_dir": "T:/Temp/tmpeoa_3tco/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-23T14:01:36.651148+00:00",
+    "genesis_id_expected": "GENESIS-5E4036C1",
+    "genesis_id_actual": "GENESIS-DD6C1769",
+    "key_dir": "T:/Temp/tmpdtjrvuvv/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-24T00:30:02.920828+00:00",
+    "genesis_id_expected": "GENESIS-F049FE52",
+    "genesis_id_actual": "GENESIS-C9EDFB65",
+    "key_dir": "T:/Temp/tmp6xfxa4og/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-24T00:30:02.931892+00:00",
+    "genesis_id_expected": "GENESIS-F8EF119F",
+    "genesis_id_actual": "GENESIS-20992B96",
+    "key_dir": "T:/Temp/tmpi0dhed42/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-24T00:30:02.935892+00:00",
+    "genesis_id_expected": "GENESIS-F8EF119F",
+    "genesis_id_actual": "GENESIS-20992B96",
+    "key_dir": "T:/Temp/tmpi0dhed42/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-24T00:30:02.969288+00:00",
+    "genesis_id_expected": "GENESIS-27AE2D63",
+    "genesis_id_actual": "GENESIS-BF01A6C6",
+    "key_dir": "T:/Temp/tmp7odqft_9/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-24T00:30:02.987045+00:00",
+    "genesis_id_expected": "GENESIS-56EB2B67",
+    "genesis_id_actual": "GENESIS-B6D581E9",
+    "key_dir": "T:/Temp/tmpfyj22cpj/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-05-24T00:30:54.224363+00:00",
+    "genesis_id_expected": "GENESIS-41267B77",
+    "genesis_id_actual": "GENESIS-FC5BA0BD",
+    "key_dir": "T:/Temp/tmpatdtm9no/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-06-03T13:02:35.129689+00:00",
+    "genesis_id_expected": "GENESIS-3479D88C",
+    "genesis_id_actual": "GENESIS-1B02595F",
+    "key_dir": "T:/Temp/tmpw_pfukvw/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-06-03T13:02:35.141871+00:00",
+    "genesis_id_expected": "GENESIS-351196F5",
+    "genesis_id_actual": "GENESIS-22303BB2",
+    "key_dir": "T:/Temp/tmpnc1iyogd/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-06-03T13:02:35.149677+00:00",
+    "genesis_id_expected": "GENESIS-351196F5",
+    "genesis_id_actual": "GENESIS-22303BB2",
+    "key_dir": "T:/Temp/tmpnc1iyogd/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-06-03T13:02:35.192687+00:00",
+    "genesis_id_expected": "GENESIS-60FA2D0E",
+    "genesis_id_actual": "GENESIS-D5BD0502",
+    "key_dir": "T:/Temp/tmp7x5_a6v2/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  },
+  {
+    "violation_type": "GENESIS_DISCONTINUITY",
+    "detected_at": "2026-06-03T13:02:35.213210+00:00",
+    "genesis_id_expected": "GENESIS-7EB2587B",
+    "genesis_id_actual": "GENESIS-EE6FB9EE",
+    "key_dir": "T:/Temp/tmpwfyab7lq/genesis_keys",
+    "attack_vector": "VECTOR 1"
+  }
+]
