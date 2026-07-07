@@ -245,7 +245,7 @@ exclude = [
 # ----------------------------------------------------------------------
 [tool.pytest.ini_options]
 minversion = "8.0"
-testpaths = ["packages", "apps/desktop/tests", "apps/services/tests", "tools/tests", "tests"]
+testpaths = ["packages", "apps/desktop/tests", "apps/services/tests", "tools/tests", "tests", "docs/tests"]
 pythonpath = ["."]
 norecursedirs = ["_staging", "governance_framework", "reference"]
 python_files = ["test_*.py", "*_test.py"]
