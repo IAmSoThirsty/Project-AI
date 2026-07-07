@@ -1,0 +1,94 @@
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Monday, June 8, 2026 5:03:29 AM
+   Source : T:\Storm Desk\
+     Dest : T:\Project-AI-main\StormDesk\
+
+    Files : *.*
+	    
+Exc Files : .env
+	    .env.local
+	    
+ Exc Dirs : node_modules
+	    dist
+	    build
+	    out
+	    .next
+	    .turbo
+	    .cache
+	    coverage
+	    
+  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+------------------------------------------------------------------------------
+
+	                   5	T:\Storm Desk\
+	    New File  		     820	.env.example
+	    New File  		     290	.gitignore
+	    New File  		   11938	package-lock.json
+	    New File  		     784	package.json
+	  New Dir          0	T:\Storm Desk\.github\
+	  New Dir          1	T:\Storm Desk\.github\instructions\
+	    New File  		    4239	codacy.instructions.md
+	  New Dir          0	T:\Storm Desk\apps\
+	  New Dir          5	T:\Storm Desk\apps\desktop-ui\
+	    New File  		     452	index.html
+	    New File  		   36457	package-lock.json
+	    New File  		     339	package.json
+	    New File  		     444	tsconfig.json
+	    New File  		     502	vite.config.ts
+	  New Dir          5	T:\Storm Desk\apps\desktop-ui\src\
+	    New File  		    4319	app.ts
+	    New File  		    9692	channels.ts
+	    New File  		     624	main.ts
+	    New File  		   14569	styles.css
+	    New File  		    2186	types.ts
+	  New Dir          4	T:\Storm Desk\apps\desktop-ui\src\ui\
+	    New File  		    4999	alerts.ts
+	    New File  		    9153	layout.ts
+	    New File  		    5398	settings.ts
+	    New File  		    6686	viewers.ts
+	  New Dir          3	T:\Storm Desk\apps\event-worker\
+	    New File  		   53222	package-lock.json
+	    New File  		     506	package.json
+	    New File  		     469	tsconfig.json
+	  New Dir          2	T:\Storm Desk\apps\event-worker\src\
+	    New File  		    2301	config.ts
+	    New File  		    6279	index.ts
+	  New Dir          5	T:\Storm Desk\apps\event-worker\src\pipeline\
+	    New File  		    2218	dedupe.ts
+	    New File  		    2443	normalize.ts
+	    New File  		    4475	score.ts
+	    New File  		    3209	store.ts
+	    New File  		    2935	verify.ts
+	  New Dir          3	T:\Storm Desk\apps\event-worker\src\sources\
+	    New File  		    1757	mediastack.ts
+	    New File  		    1784	newsdata.ts
+	    New File  		    4235	rss.ts
+	  New Dir          0	T:\Storm Desk\shared\
+	  New Dir          1	T:\Storm Desk\shared\schema\
+	    New File  		    3308	incident.schema.json
+	  New Dir          0	T:\Storm Desk\tauri\
+	  New Dir          3	T:\Storm Desk\tauri\src-tauri\
+	    New File  		      43	build.rs
+	    New File  		     433	Cargo.toml
+	    New File  		    1082	tauri.conf.json
+	  New Dir          1	T:\Storm Desk\tauri\src-tauri\src\
+	    New File  		    1778	main.rs
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :        19        15         4         0         0         0
+   Files :        38        37         1         0         0         0
+   Bytes :   202.3 k   201.5 k       820         0         0         0
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+
+
+   Speed :           5,291,487 Bytes/sec.
+   Speed :             302.781 MegaBytes/min.
+   Ended : Monday, June 8, 2026 5:03:29 AM
+

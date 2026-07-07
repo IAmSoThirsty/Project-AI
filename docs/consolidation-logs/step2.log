@@ -1,0 +1,54 @@
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Monday, June 8, 2026 5:00:20 AM
+   Source : T:\VMs\Scripts\
+     Dest : T:\Project-AI-main\IT\pentest\labs\DC01\Scripts\
+
+    Files : *.*
+	    
+  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+------------------------------------------------------------------------------
+
+2026/06/08 05:00:20 ERROR 2 (0x00000002) Accessing Source Directory T:\VMs\Scripts\
+The system cannot find the file specified.
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Monday, June 8, 2026 5:00:31 AM
+   Source : T:\VMs\HyperV\Scripts\
+     Dest : T:\Project-AI-main\IT\pentest\labs\DC01\Scripts\
+
+    Files : *.*
+	    
+  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+------------------------------------------------------------------------------
+
+	                   7	T:\VMs\HyperV\Scripts\
+	    New File  		    6210	Check-DC01-CurrentHealth.ps1
+	    New File  		    8616	Configure-DC01-ADStructure.ps1
+	    New File  		    7228	Configure-DC01-Base.ps1
+	    New File  		    3137	Install-DC01-ADDSForest.ps1
+	    New File  		    7364	Invoke-TP-Phase0-1-DC01.ps1
+	    New File  		    6673	Repair-DC01-DeployFromWim.ps1
+	    New File  		    5675	Validate-DC01-PostForest.ps1
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :         1         0         1         0         0         0
+   Files :         7         7         0         0         0         0
+   Bytes :    43.8 k    43.8 k         0         0         0         0
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+
+
+   Speed :           5,612,875 Bytes/sec.
+   Speed :             321.171 MegaBytes/min.
+   Ended : Monday, June 8, 2026 5:00:31 AM
+

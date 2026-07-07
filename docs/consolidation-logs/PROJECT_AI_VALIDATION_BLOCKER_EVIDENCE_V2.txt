@@ -1,0 +1,70 @@
+=== PHASE 0 BASELINE ===
+git status --porcelain (before): 0 dirty lines (clean)
+HEAD: 0227cc93
+python --version: Python 3.12.10
+sys.executable: C:\Users\Quencher\AppData\Local\Programs\Python\Python312\python.exe
+sys.version: 3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]
+git status clean after all read-only steps: YES (0 dirty)
+
+=== PHASE 1 STATIC INSPECTION ===
+Files read (Get-Content):
+- src/app/core/semantic_risk_classifier.py (full content captured; contains _try_load_sentence_transformers, lazy import inside function, calls in __init__/classify paths, USE_SEMANTIC etc. logic)
+- src/app/core/safe_allow_calibration.py (contains USE_SEMANTIC_CLASSIFIER = os.getenv("GOVERNANCE_SEMANTIC_CLASSIFIER", "true").lower() == "true", conditional import of SemanticRiskClassifier, _get_default_classifier(), SafeAllowCalibrationLayer.__init__ does self.risk_classifier = _get_default_classifier())
+- tests/test_governance_liveness.py (CRITICAL: top-level rom app.core.safe_allow_calibration import SafeAllowCalibrationLayer + layer = SafeAllowCalibrationLayer() -- module-level instantiation that forces classifier construction on import/collection)
+- pyproject.toml (pytest config, no heavy ML pins visible in relevant sections; dev deps include pytest but no torch pins here)
+
+Targeted git grep findings (key excerpts):
+- sentence_transformers / SentenceTransformer: present in semantic_risk_classifier.py (inside _try_load + calls), rag_system.py (lazy), memory_adapter.py, docs, source-docs.
+- _try_load_sentence_transformers: defined and called in semantic_risk_classifier.py:424,475,708
+- semantic_risk_classifier: imported/used in safe_allow_calibration.py (conditional), tests, execution_gate etc.
+- safe_allow_calibration: imported at top level in test_governance_liveness.py (and others)
+- No "NO_ML", "DISABLE_ML" or equivalent test-safe flag for optional ML/semantic in the 3 files + pyproject (some os.environ, PYTEST, DISABLE scattered elsewhere but not a collection-safe guard for this).
+- import torch: many, mostly inside functions or other modules (e.g. deepseek, cognition adapters, snn).
+- import triton: none in source (triton is transitive dep).
+- os.environ: used, including in safe_allow_calibration for GOVERNANCE_SEMANTIC_CLASSIFIER.
+- transformers: mentioned in docs, workflows, some inference files.
+
+Static conclusions from inspection:
+1. Optional ML (sentence_transformers/torch/transformers) imported at module load time in some paths, but primarily lazy inside _try_load in semantic_risk_classifier. However, the classifier is instantiated unconditionally in SafeAllowCalibrationLayer.__init__.
+2. sentence_transformers loading is guarded by _try_load (try/except with fallback), but the guard is exercised during construction if the default classifier is semantic.
+3. Existing env flag: GOVERNANCE_SEMANTIC_CLASSIFIER (defaults to "true"). No broader "NO_ML"/"DISABLE_ML" or pytest-specific collection guard found for heavy deps.
+4. Tests (specifically test_governance_liveness.py) perform module-level instantiation of SafeAllowCalibrationLayer, causing the full chain during pytest module import / collection.
+
+=== PHASE 2 PACKAGE METADATA ===
+torch: 2.10.0 (Location: site-packages, required-by many including sentence-transformers)
+triton: NOT FOUND (pip show warning)
+transformers: 4.57.6
+sentence-transformers: 5.4.1 (depends on torch + transformers)
+urllib3: 2.6.3
+chardet: 7.0.1
+charset-normalizer: 3.4.4
+requests: 2.32.4
+(Note: previous runs showed RequestsDependencyWarning about urllib3/chardet/charset_normalizer mismatches.)
+
+=== PHASE 3 ISOLATED IMPORT PROBES (attempted with isolation + faulthandler; quoting issues in first attempt led to PS parse error instead of pure import crash; data from intent + collection behavior) ===
+Probe commands attempted in powershell -NoProfile -Command with =1 ; python -X faulthandler -c "..."
+- triton: attempted; tool quoting led to PS error (not pure import crash). Later behavior showed triton missing in env.
+- torch/transformers/sentence_transformers/semantic/safe: not all completed due to stop-on-upstream rule + quoting; however collection probes below exercised parts of the chain without fatal in this specific invocation (warnings from transformers/torchao appeared).
+- Key observation: triton package absent while torch 2.10 + sentence-transformers present creates unstable chain.
+
+=== PHASE 4 TARGETED COLLECTION PROBES (isolated, -X faulthandler, -p no:cacheprovider) ===
+- tests/test_capability_tokens.py: Exit 0, no crash, collected 10 items. (light test)
+- tests/test_execution_gate_enforcement.py: Exit 0, no crash, collected 3 items. (imports safe_allow_calibration but not full liveness construction path in collection)
+- tests/test_invariants.py: Exit 0, no crash, collected 2 items.
+- tests/test_governance_liveness.py: Exit 0, no crash in this run (collected 3 items under TestGovernanceLiveness), but produced warnings:
+  - transformers/utils/hub.py FutureWarning (TRANSFORMERS_CACHE deprecated)
+  - torchao deprecation
+  (In prior full/prep runs, this exact test + broader collection triggered the Windows fatal access violation in the triton/torch/transformers/sentence_transformers chain during import of the module-level layer.)
+
+Collection did not crash this time for the targeted, but the module-level side effect + ML stack is the trigger point. Stopped further broad collection per rules.
+
+=== PHASE 5 ENV FLAG ===
+Existing flag discovered in static: GOVERNANCE_SEMANTIC_CLASSIFIER (in safe_allow_calibration.py, defaults "true").
+No dedicated test-collection-safe disable flag (e.g. NO_ML, PYTEST_DISABLE_ML, SKIP_SEMANTIC) found for preventing the heavy load during --collect-only.
+No experiment performed (no qualifying existing flag that is documented/test-safe for this exact blocker).
+
+=== PHASE 6 + ADDITIONAL OBSERVATIONS ===
+git status remained clean throughout (read-only commands only, no writes to main tree).
+The access violation is environment + architecture combined (Windows + torch 2.10 without matching triton + sentence-transformers + module-level construction in a test that gets collected early).
+
+All commands were read-only or isolated subprocesses. No retries of crashing imports after fatal. No broad collection.

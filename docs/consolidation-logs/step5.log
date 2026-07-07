@@ -1,0 +1,33 @@
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Monday, June 8, 2026 5:03:23 AM
+   Source : T:\Project-AI-pre-phase2-hold-20260603_070143\data\alert_webhook\
+     Dest : T:\Project-AI-main\archive\pre-phase2\data\alert_webhook\
+
+    Files : *.json
+	    
+  Options : /TEE /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+------------------------------------------------------------------------------
+
+	                   3	T:\Project-AI-pre-phase2-hold-20260603_070143\data\alert_webhook\
+	    New File  		    1554	alert-20260603_092204-1780478524961139175.json
+	    New File  		    1379	alert-20260603_092304-1780478584566320357.json
+	    New File  		    1562	alert-20260603_092311-1780478591728335867.json
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :         1         0         1         0         0         0
+   Files :         3         3         0         0         0         0
+   Bytes :     4.3 k     4.3 k         0         0         0         0
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+
+
+   Speed :           1,498,333 Bytes/sec.
+   Speed :              85.735 MegaBytes/min.
+   Ended : Monday, June 8, 2026 5:03:23 AM
+
