@@ -1,0 +1,40 @@
+# Dependencies
+node_modules
+.codacy/
+
+# Build outputs
+css/main.css
+
+# Test coverage
+coverage/
+*.coverage
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Package manager
+yarn.lock
+
+# Temporary files
+/tmp/
+*.log
+*.tmp
+
+# Environment variables
+.env
+.env.local
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# Local assistant/tooling instruction artifacts
+.github/instructions/codacy.instructions.md

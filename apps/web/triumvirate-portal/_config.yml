@@ -1,0 +1,65 @@
+# GitHub Pages Configuration
+# This file contains configuration specific to GitHub Pages deployment
+
+# Custom 404 page
+permalink: 404.html
+
+# Build settings
+exclude:
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - tailwind.config.js
+  - .github/
+  - .gitignore
+  - CONTRIBUTING.md
+  - CODE_OF_CONDUCT.md
+  - tests/
+  - src/core/
+  - "*.md"
+  - "!README.md"
+
+# Include specific files
+include:
+  - .htaccess
+  - _headers
+  - robots.txt
+  - sitemap.xml
+  - public/manifest.json
+
+# Plugins (GitHub Pages compatible)
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# SEO settings
+title: "The Triumvirate - AI × Humanity × Technology"
+description: "Exploring the Trinity of AI, Humanity & Technology through ethical AI development, robust security, and transparent knowledge systems."
+url: "https://iamsothirsty.github.io"
+baseurl: "/the_triumvirate"
+author: "Jeremy Karrick (Thirsty)"
+twitter:
+  username: ThirstysProjects
+  card: summary_large_image
+logo: /the_triumvirate/assets/images/icon-512x512.png
+
+# Social
+social:
+  name: ThirstysProjects.com
+  links:
+    - https://twitter.com/ThirstysProjects
+    - https://github.com/IAmSoThirsty
+
+# Collections
+collections:
+  pages:
+    output: true
+    permalink: /pages/:name
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      image: /the_triumvirate/assets/images/og-image.png

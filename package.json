@@ -6,8 +6,8 @@
   "packageManager": "pnpm@10.30.0",
   "scripts": {
     "web:lint": "eslint apps/web --max-warnings 0",
-    "web:test": "pnpm --filter @project-ai/docs-portal test && pnpm --filter @project-ai/proof-portal test",
-    "web:build": "pnpm --filter @project-ai/docs-portal build && pnpm --filter @project-ai/proof-portal build"
+    "web:test": "pnpm --filter @project-ai/docs-portal test && pnpm --filter @project-ai/proof-portal test && pnpm --filter @project-ai/triumvirate-portal test",
+    "web:build": "pnpm --filter @project-ai/docs-portal build && pnpm --filter @project-ai/proof-portal build && pnpm --filter @project-ai/triumvirate-portal build"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

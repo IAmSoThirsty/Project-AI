@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/the_triumvirate/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>404 - Page Not Found | The Triumvirate</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0F172A, #1E293B, #1E3A8A);
+            color: #F8FAFC;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-code {
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #0891B2, #22D3EE, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            line-height: 1;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(8, 145, 178, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(8, 145, 178, 0.8));
+            }
+        }
+
+        .error-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin: 1rem 0;
+            color: #DBEAFE;
+        }
+
+        .error-description {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #94A3B8;
+            margin: 1.5rem auto;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .trinity-symbol {
+            width: 120px;
+            height: 120px;
+            margin: 2rem auto;
+            position: relative;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .trinity-symbol::before {
+            content: '🔱';
+            font-size: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.7;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0891B2, #22D3EE);
+            color: #ffffff;
+            box-shadow: 0 4px 14px 0 rgba(8, 145, 178, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(8, 145, 178, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #DBEAFE;
+            border-color: rgba(8, 145, 178, 0.3);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(8, 145, 178, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .suggestions {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            border: 1px solid rgba(8, 145, 178, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .suggestions h3 {
+            color: #22D3EE;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .suggestions ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .suggestions li {
+            text-align: left;
+        }
+
+        .suggestions a {
+            color: #93C5FD;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .suggestions a:hover {
+            background: rgba(8, 145, 178, 0.1);
+            color: #22D3EE;
+            transform: translateX(4px);
+        }
+
+        .suggestions a::before {
+            content: '→';
+            color: #0891B2;
+            font-weight: bold;
+        }
+
+        @media (max-width: 640px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="trinity-symbol"></div>
+        
+        <h1 class="error-code">404</h1>
+        
+        <h2 class="error-title">Path Not Found in the Trinity</h2>
+        
+        <p class="error-description">
+            The page you're seeking has drifted beyond the boundaries of The Triumvirate. 
+            Perhaps it was absorbed by the quantum void, or maybe it never existed in this timeline.
+        </p>
+
+        <div class="action-buttons">
+            <a href="index.html" class="btn btn-primary">
+                <span>Return to Home</span>
+                <span>🏠</span>
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                <span>Go Back</span>
+                <span>←</span>
+            </a>
+        </div>
+
+        <div class="suggestions">
+            <h3>Explore The Trinity</h3>
+            <ul>
+                <li><a href="pages/manifesto_gateway.html">The Manifesto Gateway</a></li>
+                <li><a href="pages/trinity_deep_dive.html">Trinity Deep Dive</a></li>
+                <li><a href="pages/project_ai_cognitive_engine.html">Project AI - Cognitive Engine</a></li>
+                <li><a href="pages/cerberus_security_fortress.html">Cerberus - Security Fortress</a></li>
+                <li><a href="pages/codex_deus_maximus_repository.html">Codex Deus Maximus - Knowledge Repository</a></li>
+                <li><a href="pages/research_center.html">Research Center</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Log 404 error for analytics (if implemented)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'exception', {
+                'description': '404: ' + window.location.pathname,
+                'fatal': false
+            });
+        }
+        
+        // Auto-suggest based on URL
+        window.addEventListener('DOMContentLoaded', () => {
+            const path = window.location.pathname;
+            console.log('404 Error - Requested path:', path);
+        });
+    </script>
+<script id="dhws-dataInjector" src="public/dhws-data-injector.js"></script>
+</body>
+</html>

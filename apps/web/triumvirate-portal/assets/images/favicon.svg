@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E3A8A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891B2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded Square Background -->
+  <rect width="32" height="32" rx="6" fill="url(#faviconGradient)"/>
+  
+  <!-- Simple Trinity Symbol -->
+  <g transform="translate(16, 16)">
+    <!-- Triangle -->
+    <polygon points="0,-8 7,4 -7,4" fill="none" stroke="#F8FAFC" stroke-width="2"/>
+    <!-- Center -->
+    <circle cx="0" cy="0" r="2" fill="#F8FAFC"/>
+  </g>
+</svg>

@@ -1,0 +1,35 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E3A8A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0891B2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22D3EE;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded Square Background -->
+  <rect width="512" height="512" rx="100" fill="url(#iconGradient)"/>
+  
+  <!-- Trinity Symbol -->
+  <g transform="translate(256, 256)">
+    <!-- Center Circle -->
+    <circle cx="0" cy="0" r="40" fill="#F8FAFC" opacity="0.9"/>
+    
+    <!-- Triangle Points -->
+    <circle cx="0" cy="-120" r="35" fill="#F8FAFC"/>
+    <circle cx="104" cy="60" r="35" fill="#F8FAFC"/>
+    <circle cx="-104" cy="60" r="35" fill="#F8FAFC"/>
+    
+    <!-- Connecting Lines -->
+    <line x1="0" y1="-120" x2="104" y2="60" stroke="#F8FAFC" stroke-width="8" opacity="0.7"/>
+    <line x1="104" y1="60" x2="-104" y2="60" stroke="#F8FAFC" stroke-width="8" opacity="0.7"/>
+    <line x1="-104" y1="60" x2="0" y2="-120" stroke="#F8FAFC" stroke-width="8" opacity="0.7"/>
+    
+    <!-- Inner Triangle -->
+    <polygon points="0,-60 52,30 -52,30" fill="none" stroke="#0F172A" stroke-width="6"/>
+    
+    <!-- Text -->
+    <text x="0" y="15" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#0F172A" text-anchor="middle">T</text>
+  </g>
+</svg>

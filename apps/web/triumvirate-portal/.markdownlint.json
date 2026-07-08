@@ -1,0 +1,21 @@
+{
+  "default": true,
+  "MD022": false,
+  "MD029": {
+    "style": "ordered"
+  },
+  "MD031": false,
+  "MD032": false,
+  "MD033": {
+    "allowed_elements": [
+      "div",
+      "img",
+      "span",
+      "br"
+    ]
+  },
+  "MD036": false,
+  "MD040": false,
+  "MD041": false,
+  "MD060": false
+}
