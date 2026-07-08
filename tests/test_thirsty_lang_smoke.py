@@ -68,13 +68,25 @@ def test_cli_entrypoint_on_path(entrypoint: str) -> None:
 
 
 def test_cli_entrypoints_invokable() -> None:
-    """Each tier's CLI must respond to --help without erroring out."""
+    """Each tier's CLI must respond to --help without erroring out.
+
+    The CLI is resolved from the running venv's Scripts directory, not
+    from PATH. This avoids picking up a stale install in a different
+    venv (e.g. the Hermes agent venv) that may have the script but not
+    the package's dependencies.
+    """
+    import sys
+    from pathlib import Path
+
+    venv_scripts = Path(sys.executable).parent
     for entrypoint in ("thirsty", "tarl"):
-        exe = shutil.which(entrypoint)
-        if exe is None:
-            pytest.skip(f"{entrypoint} not on PATH")
+        exe = venv_scripts / (entrypoint + ".exe" if sys.platform == "win32" else entrypoint)
+        if not exe.exists():
+            exe = shutil.which(entrypoint)
+            if exe is None:
+                pytest.skip(f"{entrypoint} not on PATH and not in venv")
         result = subprocess.run(
-            [exe, "--help"],
+            [str(exe), "--help"],
             capture_output=True,
             text=True,
             timeout=15,
