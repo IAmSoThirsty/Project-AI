@@ -1,0 +1,7 @@
+# robots.txt for The Triumvirate
+# GitHub Pages deployment: https://iamsothirsty.github.io/the_triumvirate/
+User-agent: *
+Allow: /
+Disallow: /404.html
+
+Sitemap: https://iamsothirsty.github.io/the_triumvirate/sitemap.xml

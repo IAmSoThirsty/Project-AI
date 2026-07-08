@@ -11,6 +11,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:integration": "jest tests/integration.test.js",
+    "test:lighthouse": "npx @lhci/cli autorun --config=lighthouserc.js",
     "test:watch": "jest --watch",
     "meta:generate": "node js/meta-generator.js",
     "meta:list": "node js/meta-generator.js --list",

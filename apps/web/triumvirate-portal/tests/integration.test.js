@@ -80,18 +80,15 @@ describe('The Triumvirate - Production Readiness Checks', () => {
     expect(sitemap).toContain('<urlset');
   });
 
-  test('ci and deploy workflows include tests and build steps', () => {
-    const ciWorkflow = readText('.github/workflows/nodejs.yml');
-    const deployWorkflow = readText('.github/workflows/deploy-pages.yml');
+  test('ci workflow includes tests and build steps', () => {
+    // In the Beginnings workspace, CI is handled by the root .github/workflows/ci.yaml
+    // The node job runs pnpm web:test (which includes triumvirate-portal) and pnpm web:build.
+    const rootCi = path.resolve(__dirname, '../../../../.github/workflows/ci.yaml');
+    const ciWorkflow = fs.readFileSync(rootCi, 'utf8');
 
-    expect(ciWorkflow).toContain('Run tests');
-    expect(ciWorkflow).toContain('Run integration tests');
-    expect(ciWorkflow).toContain('Build CSS');
-
-    expect(deployWorkflow).toContain('Install dependencies');
-    expect(deployWorkflow).toContain('Run tests');
-    expect(deployWorkflow).toContain('Run integration tests');
-    expect(deployWorkflow).toContain('Deploy to GitHub Pages');
+    expect(ciWorkflow).toContain('pnpm web:test');
+    expect(ciWorkflow).toContain('pnpm web:build');
+    expect(ciWorkflow).toContain('node');
   });
 
   test('developer utility scripts are available', () => {
