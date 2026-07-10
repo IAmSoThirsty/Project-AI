@@ -36,6 +36,7 @@ dependencies = [
     "project-ai-hydra-50",
     "project-ai-identity",
     "project-ai-kernel",
+    "project-ai-knowledge",
     "project-ai-rlp",
     "project-ai-security",
     "project-ai-swr",
@@ -50,6 +51,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Isolated so semantic ingestion never destabilizes the core install.
+# Torch-free by design (model2vec static embeddings; see packages/knowledge).
+knowledge = [
+    "pypdf>=6.0.0",
+    "model2vec>=0.3.0",
+]
 dev = [
     "httpx2>=2.4.0",
     "pytest>=8.3.0",
@@ -101,6 +108,7 @@ project-ai-cognitive-warfare = { workspace = true }
 project-ai-companion = { workspace = true }
 project-ai-hydra-50 = { workspace = true }
 project-ai-kernel = { workspace = true }
+project-ai-knowledge = { workspace = true }
 project-ai-governance = { workspace = true }
 project-ai-emp-defense = { workspace = true }
 project-ai-execution = { workspace = true }
@@ -136,6 +144,7 @@ members = [
     "packages/hydra_50",
     "packages/identity",
     "packages/kernel",
+    "packages/knowledge",
     "packages/simulation-contract",
     "packages/tarl",
     "packages/thirstys-trading-hub",

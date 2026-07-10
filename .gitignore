@@ -59,6 +59,14 @@ node_modules/
 .dmypy.json
 dmypy.json
 
+# Generated simulation outputs; tracked regression fixtures live under packages/*/tests/fixtures.
+engines/alien_invaders/artifacts/
+
+# Knowledge layer: derived vector index + raw corpus. Never committed
+# (copyright + size); rebuild from source with `python -m knowledge.ingest`.
+# Provenance is committed as packages/knowledge/KNOWLEDGE_MANIFEST.md.
+data/knowledge/
+
 # Secrets (NEVER commit)
 .env
 .env.local

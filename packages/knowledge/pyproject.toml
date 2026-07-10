@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-knowledge"
+version = "0.0.0.dev0"
+description = "Knowledge-aware reference-corpus retrieval for Project-AI governance"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = [
+    "project-ai-kernel",
+    "project-ai-governance",
+    "numpy>=1.24,<2.0",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.12",
+]
+
+# Ingestion/embedding deps are isolated in an optional extra so they cannot
+# destabilize the core install. The retrieval interface and the deterministic
+# hashing embedder work with the core deps alone; semantic ingestion pulls the
+# extra. Heavy ML (torch/transformers) is intentionally avoided — model2vec runs
+# as pure-numpy static-embedding inference.
+[project.optional-dependencies]
+ingest = [
+    "pypdf>=6.0.0",
+    "model2vec>=0.3.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/knowledge"]

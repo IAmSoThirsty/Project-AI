@@ -26,6 +26,7 @@ from governance.iron_path import (
     RiskCalibrator,
     threat_decision_from_assessment,
 )
+from governance.knowledge_governor import KnowledgeAwareGovernor
 from governance.policy import Governor, Rule, RuleGovernor, RulePredicate
 from governance.triumvirate import Quorum, TriumvirateError, TriumvirateGovernor
 from governance.types import GovernanceResult, Vote
@@ -64,6 +65,7 @@ __all__ = [
     "Governor",
     "IronPath",
     "IronPathResult",
+    "KnowledgeAwareGovernor",
     "Quorum",
     "RiskCalibrator",
     "Rule",

@@ -1,0 +1,64 @@
+ollama_models:
+  companion:
+    name: project-ai-companion
+    base: qwen3:8b
+    role: governed_orchestrator
+    default_for:
+      - doctrine
+      - planning
+      - architecture
+      - general reasoning
+      - user-facing synthesis
+
+  builder:
+    name: project-ai-builder
+    base: qwen2.5-coder:7b
+    role: implementation_engineer
+    default_for:
+      - code
+      - tests
+      - schemas
+      - patches
+      - CLIs
+      - APIs
+      - repo changes
+
+  auditor:
+    name: project-ai-auditor
+    base: deepseek-r1:8b
+    role: constitutional_critic
+    default_for:
+      - governance review
+      - proof gaps
+      - architecture validation
+      - risk review
+      - admissibility checks
+
+  summarizer:
+    name: project-ai-summarizer
+    base: gemma3:4b
+    role: memory_extractor
+    default_for:
+      - summaries
+      - tags
+      - memory records
+      - document extraction
+      - classification
+
+  router:
+    name: project-ai-router
+    base: gemma3:4b
+    role: intent_router
+    default_for:
+      - routing
+      - task classification
+      - risk precheck
+
+  embeddings:
+    name: project-ai-embed
+    base: mxbai-embed-large
+    role: retrieval_embedding
+    default_for:
+      - vector search
+      - memory indexing
+      - RAG

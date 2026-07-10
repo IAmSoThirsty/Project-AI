@@ -5,6 +5,7 @@ from kernel.event_spine import Event, EventSpine
 from kernel.evidence_bundle import EvidenceBundle, build_evidence_bundle
 from kernel.invariant_engine import Invariant, InvariantEngine, InvariantViolation
 from kernel.invariant_severity import InvariantSeverity
+from kernel.knowledge import KnowledgePassage, KnowledgeSource
 from kernel.state_register import RevisionConflictError, StateRegister, StateSnapshot
 from kernel.tarl_bridge import (
     EscalationHandler,
@@ -45,6 +46,8 @@ __all__ = [
     "InvariantViolation",
     "JsonScalar",
     "JsonValue",
+    "KnowledgePassage",
+    "KnowledgeSource",
     "Outcome",
     "RecommendedAction",
     "ReplayResult",
