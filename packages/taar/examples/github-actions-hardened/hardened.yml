@@ -1,0 +1,29 @@
+# Hardened counterpart: least privilege, SHA pins, env indirection, gated deploy.
+name: hardened-example
+on:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: 'echo "Testing PR: $PR_TITLE"'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: test-results
+          path: reports/junit.xml
+          retention-days: 7
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "deploy happens only behind the production environment gate"

@@ -355,3 +355,92 @@ produce the repo health report.
 Yes. Next executable path is to decide whether the docs/reference-only and
 absent inventory items should be implemented, explicitly marked as reference, or
 removed/renamed in the master inventory.
+
+---
+
+## Session Update - TAAR-Agent-Taskforce port + in-flight work committed (2026-07-09)
+
+### Scope
+- Mode: module (new workspace package) plus repo housekeeping.
+- Branch observed: `chore/warning-cleanup-utc-artifacts`.
+- Workspace path: `T:\00-Active\Project-AI-Beginnings`.
+- External input: `T:\01-Projects\TAAR-Agent-Taskforce\TAAR-Agent-Taskforce`
+  (nested git root, SHA `7b51966317f64c7b1fe277e0db0935c5e460704c`,
+  read-only, verified clean before and after the copy).
+- Per user directive 2026-07-09: first commit the unrelated in-flight
+  work (~82 uncommitted files), then port TAAR as a first-class
+  package, moving the root-level deployment reports under
+  `docs/operations/deployment-reports/`.
+
+### Phase A - in-flight work committed
+- `db5c0d9a feat(knowledge)`: packages/knowledge + governance/kernel
+  bindings, workspace registration, models/ollama, knowledge docs.
+- `fc32ff4e feat(helm)`: 8 new hardening templates + values.prod,
+  publish workflow, validation tools, 43 reports relocated from repo
+  root to docs/operations/deployment-reports/.
+- `60a1caf9 chore(continuity)`: traceability matrix + external repo
+  scan docs, emp-defense artifacts, shadow-analyzer demo lint,
+  test_thirsty_lang_smoke.py reformat.
+- Deleted stray temp file `tests/test_swr_core_integration.py.tmp.*`.
+- Note: `pre-commit run --all-files` rewrites ~1,117 tracked files
+  (whitespace/EOF baseline non-compliance predating this session) and
+  fails on pre-existing `docs/repo-docs/plan/awesome-copilot-import/plan.yaml`
+  (invalid YAML at line 435). Hook-induced churn on unrelated files was
+  reverted; hooks were run scoped to each commit's files instead.
+
+### Phase B - TAAR port (files created)
+- `packages/taar/` - src layout (`src/taar` + `checks/` + `writers/`
+  as real subpackages), `registry/` + `taar.toml` fixtures, docs,
+  examples, `reference/` (inert action.yml, self-test workflow,
+  scheduler scripts), hatchling pyproject (`project-ai-taar`,
+  script `taar = taar.cli:main`), `py.typed`, package `.gitignore`.
+- `tests/test_taar_integration.py` - 7 packaging-integration tests
+  incl. dependency-direction guard (taar imports nothing from
+  kernel/governance/capability/execution).
+- `docs/internal/TAAR_DISCOVERY.md` - provenance, waves, adaptations.
+
+### Files modified
+- Root `pyproject.toml` (dependencies + uv sources + workspace
+  members: `project-ai-taar` / `packages/taar`), `uv.lock`
+  (regenerated), `.gitignore` (`.project-ai/` TAAR runtime state).
+- Per user direction, the follow-ups were done in-session rather than
+  deferred:
+  - `docs/operations/PROJECT_AI_MASTER_CONTINUITY_TRACEABILITY_MATRIX.md`
+    TAAR row: Docs/reference only -> Implemented, evidence
+    `packages/taar/**` + integration test.
+  - `AGENTS.md` section 2.2: `taar` added to the operator-side
+    experimental package list (user-approved edit to the binding doc).
+  - `.pre-commit-config.yaml`: `taar` added to the mypy hook files
+    regex; `rich>=13.9.0` added to the hook's additional_dependencies.
+    Hook verified Passed over all packages/taar/src files.
+
+### Verification run
+- `uv lock` + `uv sync --frozen --all-extras --all-packages` - OK.
+- `uv run python -m pytest --cov -q` - 2509 passed, 1 xfailed;
+  coverage 84.12% (gate 80).
+- `uv run ruff check .` - All checks passed.
+- `uv run ruff format --check .` - 425 files already formatted.
+- `uv run python -m mypy packages/taar/src/taar` - Success, 35 files
+  (strict; taar NOT added to the mypy exclude list).
+- T7 convergence via scratch script - converged=True, hash
+  `3eda3256049339cb069354cc81ee7c51d88e3e41e81ea707e5bf3d3e14ba478c`
+  (unchanged).
+- CLI smoke in scratch dir - `taar --help` / `init` / `status`
+  (44 agents, 0 validation errors) / `run heartbeat-reader`
+  (SUCCEEDED, classification OPEN).
+- Source repo untouched: `git -C <source> status --porcelain` empty
+  before and after.
+
+### Existing issues / classifications
+- `packages/emp-defense/src/emp_defense/artifacts/*.json` regenerate
+  on every full pytest run (tracked artifacts under src).
+  Classification: pre-existing churn, excluded from the TAAR commit.
+- `uv run pytest` / `uv run mypy` .exe trampolines fail on this drive
+  ("uv trampoline failed to canonicalize script path"); `uv run
+  python -m pytest|mypy` works. Classification: environment quirk.
+
+### Safe to continue
+Yes. Next executable path: none pending for TAAR; optional future work
+is porting nothing further from the source repo (complete) and
+addressing the repo-wide pre-commit whitespace baseline in a dedicated
+chore if desired.

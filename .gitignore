@@ -67,6 +67,9 @@ engines/alien_invaders/artifacts/
 # Provenance is committed as packages/knowledge/KNOWLEDGE_MANIFEST.md.
 data/knowledge/
 
+# TAAR runtime state (audit spine, evidence, locks, reports) - never committed.
+.project-ai/
+
 # Secrets (NEVER commit)
 .env
 .env.local

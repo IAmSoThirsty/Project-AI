@@ -1,0 +1,353 @@
+capabilities:
+- id: execute-heartbeat-check
+  description: Run the heartbeat check command(s).
+  capability_type: command
+  allowed_agents:
+  - heartbeat-reader
+  allowed_commands:
+  - builtin:heartbeat_check
+  allowed_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-lock-check
+  description: Run the lock check command(s).
+  capability_type: command
+  allowed_agents:
+  - lock-reader
+  allowed_commands:
+  - builtin:lock_check
+  allowed_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-runaway-check
+  description: Run the runaway check command(s).
+  capability_type: command
+  allowed_agents:
+  - runaway-reader
+  allowed_commands:
+  - builtin:runaway_check
+  allowed_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-phantom-check
+  description: Run the phantom check command(s).
+  capability_type: command
+  allowed_agents:
+  - phantom-reader
+  allowed_commands:
+  - builtin:phantom_check
+  allowed_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-path-drift-check
+  description: Run the path-drift check command(s).
+  capability_type: command
+  allowed_agents:
+  - path-drift-reader
+  allowed_commands:
+  - builtin:path_drift_check
+  allowed_paths:
+  - '**'
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-secret-check
+  description: Run the secret check command(s).
+  capability_type: command
+  allowed_agents:
+  - secret-reader
+  allowed_commands:
+  - builtin:secret_check
+  allowed_paths:
+  - '**'
+  classification_ceiling: SECRET
+  requires_human_approval: false
+- id: execute-governance-check
+  description: Run the governance check command(s).
+  capability_type: command
+  allowed_agents:
+  - governance-reader
+  allowed_commands:
+  - builtin:governance_check
+  allowed_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-overnight-check
+  description: Run the overnight check command(s).
+  capability_type: command
+  allowed_agents:
+  - overnight-reader
+  allowed_commands:
+  - builtin:overnight_check
+  allowed_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-git-status-check
+  description: Run the git-status check command(s).
+  capability_type: git_status
+  allowed_agents:
+  - git-status-reader
+  allowed_commands:
+  - git status --porcelain=v1
+  - git branch --show-current
+  - git rev-parse HEAD
+  allowed_paths:
+  - .git/**
+  - '**'
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-ruff-check
+  description: Run the ruff check command(s).
+  capability_type: command
+  allowed_agents:
+  - ruff-reader
+  allowed_commands:
+  - uv run ruff check . --output-format=json
+  allowed_paths:
+  - '**'
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-mypy-check
+  description: Run the mypy check command(s).
+  capability_type: command
+  allowed_agents:
+  - mypy-reader
+  allowed_commands:
+  - uv run mypy . --show-error-codes --no-error-summary
+  allowed_paths:
+  - '**'
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-pytest-collect-check
+  description: Run the pytest-collect check command(s).
+  capability_type: command
+  allowed_agents:
+  - pytest-collect-reader
+  allowed_commands:
+  - uv run pytest --collect-only -q
+  allowed_paths:
+  - '**'
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-check
+  description: Run the workflow check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-reader
+  allowed_commands:
+  - builtin:workflow_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-permission-check
+  description: Run the workflow-permission check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-permission-reader
+  allowed_commands:
+  - builtin:workflow_permission_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-secret-check
+  description: Run the workflow-secret check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-secret-reader
+  allowed_commands:
+  - builtin:workflow_secret_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-action-pin-check
+  description: Run the workflow-action-pin check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-action-pin-reader
+  allowed_commands:
+  - builtin:workflow_action_pin_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-injection-check
+  description: Run the workflow-injection check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-injection-reader
+  allowed_commands:
+  - builtin:workflow_injection_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-runner-check
+  description: Run the workflow-runner check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-runner-reader
+  allowed_commands:
+  - builtin:workflow_runner_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-artifact-check
+  description: Run the workflow-artifact check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-artifact-reader
+  allowed_commands:
+  - builtin:workflow_artifact_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-deploy-check
+  description: Run the workflow-deploy check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-deploy-reader
+  allowed_commands:
+  - builtin:workflow_deploy_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-schedule-check
+  description: Run the workflow-schedule check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-schedule-reader
+  allowed_commands:
+  - builtin:workflow_schedule_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: execute-workflow-dag-check
+  description: Run the workflow-dag check command(s).
+  capability_type: command
+  allowed_agents:
+  - workflow-dag-reader
+  allowed_commands:
+  - builtin:workflow_dag_check
+  allowed_paths:
+  - .github/workflows/**
+  classification_ceiling: OPEN
+  requires_human_approval: false
+- id: write-evidence
+  description: Runner-managed evidence bundle and run-record writes.
+  capability_type: evidence_write
+  allowed_agents:
+  - git-status-reader
+  - git-status-writer
+  - governance-digest-writer
+  - governance-reader
+  - heartbeat-reader
+  - heartbeat-report-writer
+  - lock-reader
+  - lock-report-writer
+  - morning-brief-writer
+  - mypy-reader
+  - mypy-report-writer
+  - overnight-reader
+  - path-drift-reader
+  - path-drift-report-writer
+  - phantom-reader
+  - phantom-report-writer
+  - pytest-collect-reader
+  - pytest-collect-writer
+  - ruff-reader
+  - ruff-report-writer
+  - runaway-reader
+  - runaway-report-writer
+  - secret-reader
+  - secret-report-writer
+  - workflow-action-pin-reader
+  - workflow-action-pin-report-writer
+  - workflow-artifact-reader
+  - workflow-artifact-report-writer
+  - workflow-dag-reader
+  - workflow-dag-report-writer
+  - workflow-deploy-reader
+  - workflow-deploy-report-writer
+  - workflow-injection-reader
+  - workflow-injection-report-writer
+  - workflow-permission-reader
+  - workflow-permission-report-writer
+  - workflow-reader
+  - workflow-report-writer
+  - workflow-runner-reader
+  - workflow-runner-report-writer
+  - workflow-schedule-reader
+  - workflow-schedule-report-writer
+  - workflow-secret-reader
+  - workflow-secret-report-writer
+  allowed_commands: []
+  allowed_paths:
+  - .project-ai/automation/evidence/**
+  classification_ceiling: SECRET
+  requires_human_approval: false
+- id: write-report
+  description: Report writers write Markdown reports.
+  capability_type: report_write
+  allowed_agents:
+  - git-status-writer
+  - heartbeat-report-writer
+  - lock-report-writer
+  - mypy-report-writer
+  - path-drift-report-writer
+  - phantom-report-writer
+  - pytest-collect-writer
+  - ruff-report-writer
+  - runaway-report-writer
+  - secret-report-writer
+  - workflow-action-pin-report-writer
+  - workflow-artifact-report-writer
+  - workflow-dag-report-writer
+  - workflow-deploy-report-writer
+  - workflow-injection-report-writer
+  - workflow-permission-report-writer
+  - workflow-report-writer
+  - workflow-runner-report-writer
+  - workflow-schedule-report-writer
+  - workflow-secret-report-writer
+  allowed_commands:
+  - builtin:report_writer
+  allowed_paths:
+  - .project-ai/automation/reports/**
+  classification_ceiling: SECRET
+  requires_human_approval: false
+- id: write-digest
+  description: Digest writers write facility digests.
+  capability_type: digest_write
+  allowed_agents:
+  - governance-digest-writer
+  - morning-brief-writer
+  allowed_commands:
+  - builtin:digest_writer
+  allowed_paths:
+  - .project-ai/automation/digests/**
+  classification_ceiling: RESTRICTED
+  requires_human_approval: false

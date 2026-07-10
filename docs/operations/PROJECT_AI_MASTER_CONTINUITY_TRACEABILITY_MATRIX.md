@@ -72,7 +72,7 @@ Classification: not blocking this traceability task; unsafe to clean or revert w
 | TSCG-B | Implemented | `packages/swr/src/swr/tscg_b_spec.py`, `packages/swr/src/swr/swr_spec.tscg-b`, `tests/test_swr_tscg_b_spec_integration.py` | Loader validates packed frame and canonical contract. |
 | TK8S | Docs/reference only | `docs/**`, helm chart under `helm/project-ai/**` | Kubernetes/Helm assets exist; exact TK8S governed layer not verified as runtime. |
 | GENESIS | Implemented | `crates/genesis-emitter/src/lib.rs`, `crates/genesis-emitter/src/main.rs`, `Cargo.toml`, `compose.yaml` | Rust emitter and tests in source exist. |
-| TAAR | Docs/reference only | `docs/reference/COMPREHENSIVE_STRATEGY_GUIDE_PROJECT_AI.md` | No current executable TAAR orchestrator found. |
+| TAAR | Implemented | `packages/taar/src/taar/**`, `packages/taar/tests/**`, `tests/test_taar_integration.py` | Ported 2026-07-09 from TAAR-Agent-Taskforce @ `7b51966` as operator-side, report-only package; CLI `taar` (status/agents/run/evidence/quarantine/graph/init/workflows). Holds no Project-AI governance authority. |
 | NIRL | Implemented | `packages/companion/src/companion/nirl.py`, `packages/companion/tests/test_nirl.py` | State machine has transition validation, safe halt, and tests. |
 | mono_seal.py | Absent | No exact hit found | Inventory item not present by exact filename. |
 | Governance-IDE / Cognitive IDE | Docs/reference only | `docs/reference/Project-AI-101.md`, static/reference docs | No current IDE product surface verified under that name. |

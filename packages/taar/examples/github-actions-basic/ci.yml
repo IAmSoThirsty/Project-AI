@@ -1,0 +1,19 @@
+# Baseline CI using TAAR Workflow Guardian as a gate.
+name: CI with TAAR gate
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: TAAR Workflow Guardian
+        uses: IAmSoThirsty/TAAR@v0.1.0
+        with:
+          category: all
+          fail-on-critical: "true"

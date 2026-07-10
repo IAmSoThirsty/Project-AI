@@ -1,0 +1,1147 @@
+tasks:
+- id: heartbeat-check
+  enabled: true
+  description: 'heartbeat reader: gather evidence via builtin:heartbeat_check.'
+  agent_id: heartbeat-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-heartbeat-check
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  output_paths:
+  - .project-ai/automation/evidence/heartbeat-reader/
+  commands:
+  - builtin:heartbeat_check
+  schedule_id: every-5-minutes
+  priority: 10
+  timeout_seconds: 60
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: heartbeat-report
+  enabled: true
+  description: Write the heartbeat report from heartbeat-reader evidence.
+  agent_id: heartbeat-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/heartbeat-reader/**
+  output_paths:
+  - .project-ai/automation/reports/facility/heartbeat-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-heartbeat-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - heartbeat-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: lock-check
+  enabled: true
+  description: 'lock reader: gather evidence via builtin:lock_check.'
+  agent_id: lock-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-lock-check
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  output_paths:
+  - .project-ai/automation/evidence/lock-reader/
+  commands:
+  - builtin:lock_check
+  schedule_id: every-5-minutes
+  priority: 10
+  timeout_seconds: 60
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: lock-report
+  enabled: true
+  description: Write the lock report from lock-reader evidence.
+  agent_id: lock-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/lock-reader/**
+  output_paths:
+  - .project-ai/automation/reports/facility/locks-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-lock-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - lock-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: runaway-check
+  enabled: true
+  description: 'runaway reader: gather evidence via builtin:runaway_check.'
+  agent_id: runaway-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-runaway-check
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  output_paths:
+  - .project-ai/automation/evidence/runaway-reader/
+  commands:
+  - builtin:runaway_check
+  schedule_id: every-5-minutes
+  priority: 10
+  timeout_seconds: 60
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: runaway-report
+  enabled: true
+  description: Write the runaway report from runaway-reader evidence.
+  agent_id: runaway-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/runaway-reader/**
+  output_paths:
+  - .project-ai/automation/reports/facility/runaway-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-runaway-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - runaway-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: phantom-check
+  enabled: true
+  description: 'phantom reader: gather evidence via builtin:phantom_check.'
+  agent_id: phantom-reader
+  task_type: watch
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-phantom-check
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  output_paths:
+  - .project-ai/automation/evidence/phantom-reader/
+  commands:
+  - builtin:phantom_check
+  schedule_id: every-5-minutes
+  priority: 10
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: phantom-report
+  enabled: true
+  description: Write the phantom report from phantom-reader evidence.
+  agent_id: phantom-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/phantom-reader/**
+  output_paths:
+  - .project-ai/automation/reports/facility/phantom-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-phantom-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - phantom-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+  black_evidence_allowed: true
+- id: path-drift-check
+  enabled: true
+  description: 'path-drift reader: gather evidence via builtin:path_drift_check.'
+  agent_id: path-drift-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-path-drift-check
+  - write-evidence
+  input_paths:
+  - '**'
+  output_paths:
+  - .project-ai/automation/evidence/path-drift-reader/
+  commands:
+  - builtin:path_drift_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: path-drift-report
+  enabled: true
+  description: Write the path-drift report from path-drift-reader evidence.
+  agent_id: path-drift-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/path-drift-reader/**
+  output_paths:
+  - .project-ai/automation/reports/path-drift/latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-path-drift-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - path-drift-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: secret-check
+  enabled: true
+  description: 'secret reader: gather evidence via builtin:secret_check.'
+  agent_id: secret-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-secret-check
+  - write-evidence
+  input_paths:
+  - '**'
+  output_paths:
+  - .project-ai/automation/evidence/secret-reader/
+  commands:
+  - builtin:secret_check
+  schedule_id: nightly
+  priority: 10
+  timeout_seconds: 1800
+  classification_default: SECRET
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: secret-report
+  enabled: true
+  description: Write the secret report from secret-reader evidence.
+  agent_id: secret-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/secret-reader/**
+  output_paths:
+  - .project-ai/automation/reports/security/secrets-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-secret-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: SECRET
+  human_approval_required: false
+  consumes_evidence_from:
+  - secret-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: governance-check
+  enabled: true
+  description: 'governance reader: gather evidence via builtin:governance_check.'
+  agent_id: governance-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-governance-check
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  output_paths:
+  - .project-ai/automation/evidence/governance-reader/
+  commands:
+  - builtin:governance_check
+  schedule_id: every-6-hours
+  priority: 10
+  timeout_seconds: 600
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: governance-digest
+  enabled: true
+  description: Write the governance digest from governance-reader evidence.
+  agent_id: governance-digest-writer
+  task_type: digest
+  expected_artifact_type: digest
+  required_capabilities:
+  - write-digest
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/governance-reader/**
+  output_paths:
+  - .project-ai/automation/digests/governance-latest.md
+  commands:
+  - builtin:digest_writer
+  schedule_id: after-governance-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - governance-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: overnight-check
+  enabled: true
+  description: 'overnight reader: gather evidence via builtin:overnight_check.'
+  agent_id: overnight-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-overnight-check
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  output_paths:
+  - .project-ai/automation/evidence/overnight-reader/
+  commands:
+  - builtin:overnight_check
+  schedule_id: daily-0600
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: overnight-digest
+  enabled: true
+  description: Write the overnight digest from overnight-reader evidence.
+  agent_id: morning-brief-writer
+  task_type: digest
+  expected_artifact_type: digest
+  required_capabilities:
+  - write-digest
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/overnight-reader/**
+  output_paths:
+  - .project-ai/automation/digests/morning-latest.md
+  commands:
+  - builtin:digest_writer
+  schedule_id: after-overnight-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - overnight-reader
+  - governance-reader
+  - git-status-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: git-status-check
+  enabled: true
+  description: 'git-status reader: gather evidence via git status --porcelain=v1,
+    git branch --show-current, git rev-parse HEAD.'
+  agent_id: git-status-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-git-status-check
+  - write-evidence
+  input_paths:
+  - .git/**
+  - '**'
+  output_paths:
+  - .project-ai/automation/evidence/git-status-reader/
+  commands:
+  - git status --porcelain=v1
+  - git branch --show-current
+  - git rev-parse HEAD
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: git-status-report
+  enabled: true
+  description: Write the git-status report from git-status-reader evidence.
+  agent_id: git-status-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/git-status-reader/**
+  output_paths:
+  - .project-ai/automation/reports/git/status-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-git-status-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - git-status-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: ruff-check
+  enabled: true
+  description: 'ruff reader: gather evidence via uv run ruff check . --output-format=json.'
+  agent_id: ruff-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-ruff-check
+  - write-evidence
+  input_paths:
+  - '**'
+  output_paths:
+  - .project-ai/automation/evidence/ruff-reader/
+  commands:
+  - uv run ruff check . --output-format=json
+  schedule_id: every-3-hours
+  priority: 10
+  timeout_seconds: 1200
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: ruff-report
+  enabled: true
+  description: Write the ruff report from ruff-reader evidence.
+  agent_id: ruff-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/ruff-reader/**
+  output_paths:
+  - .project-ai/automation/reports/ruff/latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-ruff-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - ruff-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: mypy-check
+  enabled: true
+  description: 'mypy reader: gather evidence via uv run mypy . --show-error-codes
+    --no-error-summary.'
+  agent_id: mypy-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-mypy-check
+  - write-evidence
+  input_paths:
+  - '**'
+  output_paths:
+  - .project-ai/automation/evidence/mypy-reader/
+  commands:
+  - uv run mypy . --show-error-codes --no-error-summary
+  schedule_id: every-4-hours
+  priority: 10
+  timeout_seconds: 1200
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: mypy-report
+  enabled: true
+  description: Write the mypy report from mypy-reader evidence.
+  agent_id: mypy-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/mypy-reader/**
+  output_paths:
+  - .project-ai/automation/reports/mypy/latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-mypy-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - mypy-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: pytest-collect-check
+  enabled: true
+  description: 'pytest-collect reader: gather evidence via uv run pytest --collect-only
+    -q.'
+  agent_id: pytest-collect-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-pytest-collect-check
+  - write-evidence
+  input_paths:
+  - '**'
+  output_paths:
+  - .project-ai/automation/evidence/pytest-collect-reader/
+  commands:
+  - uv run pytest --collect-only -q
+  schedule_id: every-3-hours
+  priority: 10
+  timeout_seconds: 1200
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: pytest-collect-report
+  enabled: true
+  description: Write the pytest-collect report from pytest-collect-reader evidence.
+  agent_id: pytest-collect-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/pytest-collect-reader/**
+  output_paths:
+  - .project-ai/automation/reports/tests/collect-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-pytest-collect-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - pytest-collect-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-check
+  enabled: true
+  description: 'workflow reader: gather evidence via builtin:workflow_check.'
+  agent_id: workflow-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-reader/
+  commands:
+  - builtin:workflow_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-report
+  enabled: true
+  description: Write the workflow report from workflow-reader evidence.
+  agent_id: workflow-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/scan-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-permission-check
+  enabled: true
+  description: 'workflow-permission reader: gather evidence via builtin:workflow_permission_check.'
+  agent_id: workflow-permission-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-permission-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-permission-reader/
+  commands:
+  - builtin:workflow_permission_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-permission-report
+  enabled: true
+  description: Write the workflow-permission report from workflow-permission-reader
+    evidence.
+  agent_id: workflow-permission-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-permission-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/permissions-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-permission-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-permission-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-secret-check
+  enabled: true
+  description: 'workflow-secret reader: gather evidence via builtin:workflow_secret_check.'
+  agent_id: workflow-secret-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-secret-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-secret-reader/
+  commands:
+  - builtin:workflow_secret_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-secret-report
+  enabled: true
+  description: Write the workflow-secret report from workflow-secret-reader evidence.
+  agent_id: workflow-secret-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-secret-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/secrets-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-secret-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-secret-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-action-pin-check
+  enabled: true
+  description: 'workflow-action-pin reader: gather evidence via builtin:workflow_action_pin_check.'
+  agent_id: workflow-action-pin-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-action-pin-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-action-pin-reader/
+  commands:
+  - builtin:workflow_action_pin_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-action-pin-report
+  enabled: true
+  description: Write the workflow-action-pin report from workflow-action-pin-reader
+    evidence.
+  agent_id: workflow-action-pin-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-action-pin-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/action-pins-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-action-pin-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-action-pin-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-injection-check
+  enabled: true
+  description: 'workflow-injection reader: gather evidence via builtin:workflow_injection_check.'
+  agent_id: workflow-injection-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-injection-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-injection-reader/
+  commands:
+  - builtin:workflow_injection_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-injection-report
+  enabled: true
+  description: Write the workflow-injection report from workflow-injection-reader
+    evidence.
+  agent_id: workflow-injection-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-injection-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/injection-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-injection-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-injection-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-runner-check
+  enabled: true
+  description: 'workflow-runner reader: gather evidence via builtin:workflow_runner_check.'
+  agent_id: workflow-runner-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-runner-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-runner-reader/
+  commands:
+  - builtin:workflow_runner_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-runner-report
+  enabled: true
+  description: Write the workflow-runner report from workflow-runner-reader evidence.
+  agent_id: workflow-runner-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-runner-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/runners-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-runner-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-runner-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-artifact-check
+  enabled: true
+  description: 'workflow-artifact reader: gather evidence via builtin:workflow_artifact_check.'
+  agent_id: workflow-artifact-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-artifact-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-artifact-reader/
+  commands:
+  - builtin:workflow_artifact_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-artifact-report
+  enabled: true
+  description: Write the workflow-artifact report from workflow-artifact-reader evidence.
+  agent_id: workflow-artifact-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-artifact-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/artifacts-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-artifact-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-artifact-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-deploy-check
+  enabled: true
+  description: 'workflow-deploy reader: gather evidence via builtin:workflow_deploy_check.'
+  agent_id: workflow-deploy-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-deploy-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-deploy-reader/
+  commands:
+  - builtin:workflow_deploy_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-deploy-report
+  enabled: true
+  description: Write the workflow-deploy report from workflow-deploy-reader evidence.
+  agent_id: workflow-deploy-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-deploy-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/deploy-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-deploy-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-deploy-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-schedule-check
+  enabled: true
+  description: 'workflow-schedule reader: gather evidence via builtin:workflow_schedule_check.'
+  agent_id: workflow-schedule-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-schedule-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-schedule-reader/
+  commands:
+  - builtin:workflow_schedule_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-schedule-report
+  enabled: true
+  description: Write the workflow-schedule report from workflow-schedule-reader evidence.
+  agent_id: workflow-schedule-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-schedule-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/schedule-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-schedule-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-schedule-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path
+- id: workflow-dag-check
+  enabled: true
+  description: 'workflow-dag reader: gather evidence via builtin:workflow_dag_check.'
+  agent_id: workflow-dag-reader
+  task_type: check
+  expected_artifact_type: evidence_bundle
+  required_capabilities:
+  - execute-workflow-dag-check
+  - write-evidence
+  input_paths:
+  - .github/workflows/**
+  output_paths:
+  - .project-ai/automation/evidence/workflow-dag-reader/
+  commands:
+  - builtin:workflow_dag_check
+  schedule_id: hourly
+  priority: 10
+  timeout_seconds: 300
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from: []
+  fail_closed_on:
+  - missing_registry
+  - unauthorized_path
+  - unauthorized_command
+- id: workflow-dag-report
+  enabled: true
+  description: Write the workflow-dag report from workflow-dag-reader evidence.
+  agent_id: workflow-dag-report-writer
+  task_type: report
+  expected_artifact_type: report
+  required_capabilities:
+  - write-report
+  - write-evidence
+  input_paths:
+  - .project-ai/automation/evidence/workflow-dag-reader/**
+  output_paths:
+  - .project-ai/automation/reports/workflows/dag-latest.md
+  commands:
+  - builtin:report_writer
+  schedule_id: after-workflow-dag-reader
+  priority: 11
+  timeout_seconds: 120
+  classification_default: OPEN
+  human_approval_required: false
+  consumes_evidence_from:
+  - workflow-dag-reader
+  fail_closed_on:
+  - missing_evidence
+  - invalid_evidence_hash
+  - unauthorized_path

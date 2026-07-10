@@ -1,0 +1,14 @@
+artifact_type: report
+classification: OPEN
+created_at: '2026-07-09T02:17:28.874845+00:00'
+decision: wrote
+human_action_required: false
+output_id: b9f7a21a180247eba4d90128a1a265a4
+output_paths:
+- .project-ai/automation/reports/facility/heartbeat-latest.md
+run_id: 20260709T021728862978Z-3975e276
+source_evidence_hash: e93427fc8f7238e73573864ddd905d76d02399e1eac9c12b484c4ea8dc6cc674
+source_reader_agent_id: heartbeat-reader
+summary: report written from heartbeat-reader run 20260709T021728704287Z-aabcd674
+task_id: heartbeat-report
+writer_agent_id: heartbeat-report-writer

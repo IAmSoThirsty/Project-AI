@@ -34,6 +34,7 @@ members = [
     "project-ai-simulation-contract",
     "project-ai-swr",
     "project-ai-swr-dashboard",
+    "project-ai-taar",
     "project-ai-tarl",
     "project-ai-temporal",
     "project-ai-thirstys-trading-hub",
@@ -851,6 +852,7 @@ dependencies = [
     { name = "project-ai-simulation-contract" },
     { name = "project-ai-swr" },
     { name = "project-ai-swr-dashboard" },
+    { name = "project-ai-taar" },
     { name = "project-ai-tarl" },
     { name = "project-ai-temporal" },
     { name = "project-ai-thirstys-trading-hub" },
@@ -914,6 +916,7 @@ requires-dist = [
     { name = "project-ai-simulation-contract", editable = "packages/simulation-contract" },
     { name = "project-ai-swr", editable = "packages/swr" },
     { name = "project-ai-swr-dashboard", editable = "apps/swr-dashboard" },
+    { name = "project-ai-taar", editable = "packages/taar" },
     { name = "project-ai-tarl", editable = "packages/tarl" },
     { name = "project-ai-temporal", editable = "packages/temporal" },
     { name = "project-ai-thirstys-trading-hub", editable = "packages/thirstys-trading-hub" },
@@ -1430,6 +1433,23 @@ requires-dist = [
     { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.23.0" },
 ]
 provides-extras = ["test"]
+
+[[package]]
+name = "project-ai-taar"
+version = "0.0.0.dev0"
+source = { editable = "packages/taar" }
+dependencies = [
+    { name = "pyyaml" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pyyaml", specifier = ">=6.0.2" },
+    { name = "rich", specifier = ">=13.9.0" },
+    { name = "typer", specifier = ">=0.12.5" },
+]
 
 [[package]]
 name = "project-ai-tarl"

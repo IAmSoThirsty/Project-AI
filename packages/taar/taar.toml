@@ -1,0 +1,26 @@
+# TAAR facility configuration. Missing file = safe defaults.
+
+[facility]
+mode = "GREEN"
+
+[paths]
+automation_root = ".project-ai/automation"
+
+[limits]
+max_total_processes = 6
+max_active_workers = 3
+max_active_readers = 2
+max_active_writers = 1
+max_heavy_agents = 1
+max_git_mutators = 0
+max_patch_writers = 0
+max_branch_writers = 0
+
+[path_drift]
+stale_patterns = [
+  "T:\\Project-AI-Beginnings",
+  "T:/Project-AI-Beginnings",
+  "T:\\Project-AI-main",
+  "T:/Project-AI-main",
+  "Project-AI-main",
+]

@@ -1,0 +1,21 @@
+# INTENTIONALLY UNSAFE example. Every line below is a pattern TAAR flags.
+# Do NOT copy this into a real repository.
+name: dangerous-example
+on:
+  pull_request_target:
+permissions: write-all
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - uses: someone/random-action@main          # floating branch ref
+      - run: echo "${{ github.event.pull_request.title }}"   # shell injection
+      - run: echo deploying with ${{ secrets.DEPLOY_TOKEN }} # secret echoed
+      - uses: actions/upload-artifact@v4
+        with:
+          path: .                                  # entire workspace uploaded
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./deploy.sh production                # no environment gate

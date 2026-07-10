@@ -1,0 +1,54 @@
+# TAAR First Swarm — manual run order (report-only tier, autonomy 0).
+# Each writer runs only after its reader has produced valid evidence.
+first_swarm:
+  facility_mode: GREEN
+  sequence:
+    - heartbeat-reader
+    - heartbeat-report-writer
+    - lock-reader
+    - lock-report-writer
+    - runaway-reader
+    - runaway-report-writer
+    - git-status-reader
+    - git-status-writer
+    - phantom-reader
+    - phantom-report-writer
+    - path-drift-reader
+    - path-drift-report-writer
+    - secret-reader          # nightly schedule; SECRET classification, redacted output
+    - secret-report-writer
+    - governance-reader
+    - governance-digest-writer
+    - overnight-reader
+    - governance-reader      # morning brief consumes overnight + governance + git-status
+    - git-status-reader
+    - morning-brief-writer
+  workflow_guardian:
+    - workflow-reader
+    - workflow-report-writer
+    - workflow-permission-reader
+    - workflow-permission-report-writer
+    - workflow-secret-reader
+    - workflow-secret-report-writer
+    - workflow-action-pin-reader
+    - workflow-action-pin-report-writer
+    - workflow-injection-reader
+    - workflow-injection-report-writer
+    - workflow-runner-reader
+    - workflow-runner-report-writer
+    - workflow-artifact-reader
+    - workflow-artifact-report-writer
+    - workflow-deploy-reader
+    - workflow-deploy-report-writer
+    - workflow-schedule-reader
+    - workflow-schedule-report-writer
+    - workflow-dag-reader
+    - workflow-dag-report-writer
+  forbidden_everywhere:
+    - merge
+    - push
+    - publish
+    - deploy
+    - delete
+    - apply_patch
+    - source_mutation

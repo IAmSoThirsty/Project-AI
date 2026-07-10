@@ -1,0 +1,43 @@
+classifications:
+  BLACK:
+    description: Unknown, malformed, unauthorized, corrupted, or untrusted data.
+    human_review_required: true
+    may_feed_writer: false
+    quarantine_required: true
+    rank: 60
+    redaction_required: false
+  CONTROLLED:
+    description: Change-bearing artifact requiring review.
+    human_review_required: true
+    may_feed_writer: true
+    quarantine_required: false
+    rank: 20
+    redaction_required: false
+  OPEN:
+    description: Safe operational report data.
+    human_review_required: false
+    may_feed_writer: true
+    quarantine_required: false
+    rank: 10
+    redaction_required: false
+  PHANTOM:
+    description: Artifact with no valid producing run record.
+    human_review_required: true
+    may_feed_writer: false
+    quarantine_required: true
+    rank: 50
+    redaction_required: false
+  RESTRICTED:
+    description: Operationally sensitive data.
+    human_review_required: true
+    may_feed_writer: false
+    quarantine_required: false
+    rank: 30
+    redaction_required: false
+  SECRET:
+    description: Potentially private or dangerous data.
+    human_review_required: true
+    may_feed_writer: false
+    quarantine_required: true
+    rank: 40
+    redaction_required: true

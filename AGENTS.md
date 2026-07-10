@@ -192,6 +192,7 @@ Downward-only dependency graph:
 Operator-side experimental packages (may invoke AI-side execution only through the same execution gate):
 - `arbiter` — ledger, gates, dual-sig (EXPERIMENTAL/DRAFT for v1.0.0)
 - `rlp` — policy engine + `governance_framework/` (EXPERIMENTAL/DRAFT for v1.0.0)
+- `taar` — report-only agent runner with hash-sealed evidence + append-only audit (ported 2026-07-09 from TAAR-Agent-Taskforce @ `7b51966`; holds no governance authority and never mutates inspected repos)
 
 Applications (consume API surfaces, do not embed governance authority):
 - `web` (vite + react portals; chimera protection wired)

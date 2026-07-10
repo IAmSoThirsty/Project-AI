@@ -42,6 +42,7 @@ dependencies = [
     "project-ai-swr",
     "project-ai-swr-dashboard",
     "project-ai-simulation-contract",
+    "project-ai-taar",
     "project-ai-tarl",
     "project-ai-thirstys-trading-hub",
     "project-ai-temporal",
@@ -118,6 +119,7 @@ project-ai-security = { workspace = true }
 project-ai-swr = { workspace = true }
 project-ai-swr-dashboard = { workspace = true }
 project-ai-simulation-contract = { workspace = true }
+project-ai-taar = { workspace = true }
 project-ai-tarl = { workspace = true }
 project-ai-thirstys-trading-hub = { workspace = true }
 project-ai-temporal = { workspace = true }
@@ -146,6 +148,7 @@ members = [
     "packages/kernel",
     "packages/knowledge",
     "packages/simulation-contract",
+    "packages/taar",
     "packages/tarl",
     "packages/thirstys-trading-hub",
     "packages/temporal",

@@ -1,0 +1,49 @@
+name: "TAAR Workflow Guardian"
+description: "Classify, audit, and harden GitHub Actions workflows before they run. Report-only: TAAR never mutates your repo."
+author: "Jeremy 'Thirsty' Karrick (IAmSoThirsty)"
+branding:
+  icon: "shield"
+  color: "gray-dark"
+inputs:
+  category:
+    description: "Scan category: all, permissions, secrets, pins, injection, runners, artifacts, deploy, schedule, dag"
+    required: false
+    default: "all"
+  fail-on-critical:
+    description: "Fail the job if any critical finding is present (true/false)"
+    required: false
+    default: "true"
+runs:
+  using: "composite"
+  steps:
+    - name: Check Python version
+      shell: bash
+      run: |
+        if ! python -c "import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)"; then
+          echo "::error::TAAR requires Python >= 3.12. Add a setup step before this action:"
+          echo "::error::  - uses: actions/setup-python@v5"
+          echo "::error::    with:"
+          echo "::error::      python-version: \"3.12\""
+          exit 1
+        fi
+    - name: Install TAAR
+      shell: bash
+      run: python -m pip install --quiet "${{ github.action_path }}"
+    - name: Explain workflows
+      shell: bash
+      run: python -m taar.cli workflows explain
+    - name: Classify workflow surface
+      shell: bash
+      run: python -m taar.cli workflows classify || true
+    - name: Scan workflows
+      shell: bash
+      run: |
+        if [ "${{ inputs.fail-on-critical }}" = "true" ]; then
+          python -m taar.cli workflows scan --category "${{ inputs.category }}"
+        else
+          python -m taar.cli workflows scan --category "${{ inputs.category }}" || true
+        fi
+    - name: Hardening suggestions (draft only, nothing applied)
+      shell: bash
+      if: always()
+      run: python -m taar.cli workflows harden
