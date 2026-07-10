@@ -1,0 +1,28 @@
+agent_class: reader
+agent_id: pytest-collect-reader
+branch: main
+classification: OPEN
+commands:
+- command: uv run pytest --collect-only -q
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 109
+  exit_code: 1
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\pytest-collect-reader\20260710T160523275778Z-854ab570\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\pytest-collect-reader\20260710T160523275778Z-854ab570\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 219
+end_time: '2026-07-10T16:05:23.496650+00:00'
+evidence_hash: a0f9d88c8ca0600ac64c2b0d0daaa644cee3ac041d7a212e0170c579dc06a95e
+findings:
+- finding_id: 71cce99179e6
+  line: null
+  message: '''uv run pytest --collect-only -q'' exited 1 (see stdout/stderr evidence)'
+  path: null
+  severity: medium
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160523275778Z-854ab570
+start_time: '2026-07-10T16:05:23.276778+00:00'
+task_id: pytest-collect-check
+uncertainty: []

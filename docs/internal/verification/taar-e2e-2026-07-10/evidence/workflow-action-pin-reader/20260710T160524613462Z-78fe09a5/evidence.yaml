@@ -1,0 +1,29 @@
+agent_class: reader
+agent_id: workflow-action-pin-reader
+branch: main
+classification: CONTROLLED
+commands:
+- command: builtin:workflow_action_pin_check
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 0
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-action-pin-reader\20260710T160524613462Z-78fe09a5\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-action-pin-reader\20260710T160524613462Z-78fe09a5\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 164
+end_time: '2026-07-10T16:05:24.777579+00:00'
+evidence_hash: 55657c599d133952170dc201cf20844f9c64b9d5cc6590c83257664f8d7bfd33
+findings:
+- finding_id: d395b38a3f52
+  line: null
+  message: 'Action pinned to floating branch ref: someone/random-action@main (job
+    build)'
+  path: dangerous.yml
+  severity: high
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160524613462Z-78fe09a5
+start_time: '2026-07-10T16:05:24.613462+00:00'
+task_id: workflow-action-pin-check
+uncertainty: []

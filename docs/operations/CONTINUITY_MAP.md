@@ -444,3 +444,55 @@ Yes. Next executable path: none pending for TAAR; optional future work
 is porting nothing further from the source repo (complete) and
 addressing the repo-wide pre-commit whitespace baseline in a dedicated
 chore if desired.
+
+---
+
+## Session Update - TAAR E2E reproducible verification bundle (2026-07-10)
+
+### Scope
+- Mode: module (evidence artifact + tooling excludes).
+- Branch: `chore/warning-cleanup-utc-artifacts`.
+- Converts the 2026-07-10 TAAR end-to-end run into portable,
+  third-party-verifiable proof at
+  `docs/internal/verification/taar-e2e-2026-07-10/`.
+
+### Files created
+- `docs/internal/verification/taar-e2e-2026-07-10/` (74 sealed files +
+  SEAL.json): registry snapshot, facility manifest, 22 evidence
+  bundles, 20 writer outputs, 18 reports + 2 digests, audit JSONL,
+  `bundle.json` (master manifest: hashes, audit chain head, denials,
+  redaction assertions, invocation metadata, cleanliness receipts),
+  `SEAL.json`, and `harness/` (taar_e2e.py run harness, verify_bundle.py
+  standalone verifier, build_bundle.py + seal_bundle.py construction
+  scripts).
+
+### Files modified
+- `.gitignore`: `!docs/internal/verification/**` negation - the
+  `secret*`/`SECRET*` classification patterns were silently dropping
+  the redaction-proof artifacts (secret-reader evidence,
+  secret-report-writer output, secrets-latest.md) on case-insensitive
+  Windows; without the negation the bundle SEAL fails on a fresh clone.
+- `pyproject.toml` + `.pre-commit-config.yaml`: `docs/internal/verification/`
+  added to ruff / ruff-format / mypy / whitespace / EOF excludes -
+  byte-preserved sealed evidence (same treatment as `packages/_staging`).
+
+### Verification run
+- `verify_bundle.py` on the sealed bundle: all 5 sections PASS
+  (seal 74 files, evidence 22 recomputed, outputs 20 linked, audit 95
+  records sealed + chain head, redaction).
+- Negative control: flipping one byte in an evidence file makes the
+  verifier FAIL on both the SEAL manifest and the evidence's own hash
+  (proves verification is non-vacuous).
+- Definitive portability proof: `git checkout-index` extraction of the
+  staged tree (git eol filters applied) re-verifies PASS - committed
+  bytes == sealed bytes on any platform. Line endings normalized to LF
+  and SEAL recomputed so no CRLF/LF drift breaks the seal.
+
+### Honest notes
+- The audit chain head is a bundle-level construction over TAAR's
+  per-record seals (documented in bundle.json + README); TAAR seals
+  records individually and does not chain them.
+- The 3 audit denials are fail-closed policy behavior, not failures.
+
+### Safe to continue
+Yes. Bundle is self-verifying and committed with the TAAR port lineage.

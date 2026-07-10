@@ -1,0 +1,28 @@
+agent_class: reader
+agent_id: workflow-runner-reader
+branch: main
+classification: CONTROLLED
+commands:
+- command: builtin:workflow_runner_check
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 0
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-runner-reader\20260710T160526022720Z-99a9d897\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-runner-reader\20260710T160526022720Z-99a9d897\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 244
+end_time: '2026-07-10T16:05:26.266989+00:00'
+evidence_hash: fa81302985faf8e3228b2e6ab99dd88140813578dc95c7eb1745c7f0f4cdf294
+findings:
+- finding_id: a5a8f0d7868c
+  line: null
+  message: 'Self-hosted runner in job build: verify isolation and trigger surface'
+  path: dangerous.yml
+  severity: high
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160526022720Z-99a9d897
+start_time: '2026-07-10T16:05:26.022720+00:00'
+task_id: workflow-runner-check
+uncertainty: []

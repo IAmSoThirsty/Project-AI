@@ -1,0 +1,38 @@
+agent_class: reader
+agent_id: workflow-artifact-reader
+branch: main
+classification: CONTROLLED
+commands:
+- command: builtin:workflow_artifact_check
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 0
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-artifact-reader\20260710T160524787636Z-76d54d0c\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-artifact-reader\20260710T160524787636Z-76d54d0c\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 309
+end_time: '2026-07-10T16:05:25.097220+00:00'
+evidence_hash: 4773e9c77c74666340561ae3aee492c7e0aee651542b9dbf550a8e804852ba38
+findings:
+- finding_id: 2b71b7e945d8
+  line: null
+  message: Artifact upload without retention-days in job sbom
+  path: ci.yaml
+  severity: low
+- finding_id: 64c3edee8b89
+  line: null
+  message: Artifact upload of entire workspace in job build
+  path: dangerous.yml
+  severity: high
+- finding_id: 31fac4711546
+  line: null
+  message: Artifact upload without retention-days in job build
+  path: dangerous.yml
+  severity: low
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160524787636Z-76d54d0c
+start_time: '2026-07-10T16:05:24.787636+00:00'
+task_id: workflow-artifact-check
+uncertainty: []

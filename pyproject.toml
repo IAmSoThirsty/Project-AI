@@ -172,6 +172,7 @@ src = ["packages", "apps", "tests"]
 extend-exclude = [
     "docs/reference",        # historical paper corpus — do not lint
     "docs/internal/frozen-history",  # frozen SHA-256 chain — do not lint
+    "docs/internal/verification",  # byte-preserved sealed E2E evidence bundles
     "packages/_staging",     # byte-preserved Stage 4 migration inputs
     "packages/security/reference",  # byte-preserved Chimera import evidence
     "packages/rlp/governance_framework",  # allowlisted framework reference assets
@@ -228,6 +229,7 @@ ignore_missing_imports = false
 exclude = [
     "docs/reference",
     "docs/internal/frozen-history",
+    "docs/internal/verification",
     "packages/_staging",
     "packages/security/reference",
     "packages/rlp/governance_framework",

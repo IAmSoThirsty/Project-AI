@@ -82,6 +82,13 @@ pull-secret*
 secret*
 SECRET*
 
+# Byte-preserved sealed verification bundles are tracked in full. Their agent
+# names (secret-reader, secret-report-writer) and reports (secrets-latest.md)
+# collide with the secret*/SECRET* patterns above (case-insensitive on Windows);
+# without this negation the redaction-proof artifacts would be silently dropped
+# and the bundle SEAL would fail on a fresh clone.
+!docs/internal/verification/**
+
 # OS
 .DS_Store
 Thumbs.db

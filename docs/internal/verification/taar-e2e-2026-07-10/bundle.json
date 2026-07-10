@@ -1,0 +1,1564 @@
+{
+  "audit": {
+    "chain_algorithm": "h0 = 64*'0'; h_i = sha256(hex(h_{i-1}) + record_i.hash) over records in file order. NOTE: TAAR seals each record individually (sha256 of canonical JSON minus 'hash'); this chain head is computed BY THIS BUNDLE over the ordered seals, it is not an upstream TAAR feature.",
+    "chain_head": "16ea3dad3d271bea40b659e1637ad8402cb31fcee0062e7cda04cfbf5a29dff9",
+    "denials": [
+      {
+        "agent_id": "phantom-report-writer",
+        "reasons": "writer evidence missing from phantom-reader",
+        "record_seal": "30ed1fd9bbd25969978a858235ece081f78f55984b0cc792fa96068d20226984",
+        "run_id": "20260710T160527783291Z-65ef026d",
+        "timestamp": "2026-07-10T16:05:27.783291+00:00"
+      },
+      {
+        "agent_id": "workflow-report-writer",
+        "reasons": "SECRET evidence from workflow-reader requires a declared secret-handling writer",
+        "record_seal": "bec55b45b9345f5fa30829a920427730be3578187625cf6fb98fb9e72f91864e",
+        "run_id": "20260710T160529689536Z-7b9ab149",
+        "timestamp": "2026-07-10T16:05:29.689536+00:00"
+      },
+      {
+        "agent_id": "workflow-secret-report-writer",
+        "reasons": "SECRET evidence from workflow-secret-reader requires a declared secret-handling writer",
+        "record_seal": "8e04c02fe126a9de91ea99900b708fb3cadb90baba4da631a6601341b1eaed6b",
+        "run_id": "20260710T160530033401Z-b7b392af",
+        "timestamp": "2026-07-10T16:05:30.033401+00:00"
+      }
+    ],
+    "files": [
+      {
+        "file": "2026-07-10.audit.jsonl",
+        "records": 95,
+        "sha256": "e3c7b7c4e82f3eed154a9ee8981905d70b09487d03d533f81c5fa24085de27b6"
+      }
+    ],
+    "per_record_seals_valid": true,
+    "total_records": 95
+  },
+  "cleanliness_receipt": {
+    "beginnings_clean_apart_from_this_bundle": true,
+    "beginnings_deltas_other_than_this_bundle": [],
+    "beginnings_git_status_porcelain": "?? docs/internal/verification/",
+    "beginnings_head": "e53bf2e7cddbea22804bda833513a767414d61d8",
+    "checked_utc": "2026-07-10T17:24:03.848045+00:00",
+    "facility_path": "T:\\Temp\\claude\\scratch\\taar-e2e",
+    "note": "All TAAR runtime state stayed under the facility. The Beginnings tree was clean after the E2E run (verified before bundle creation); at receipt time its only delta is this bundle directory itself. The read-only upstream source was untouched.",
+    "upstream_source_clean": true,
+    "upstream_source_git_status_porcelain": "",
+    "upstream_source_head": "7b51966317f64c7b1fe277e0db0935c5e460704c",
+    "upstream_source_head_matches_port": true
+  },
+  "created_utc": "2026-07-10T17:24:03.858128+00:00",
+  "evidence": [
+    {
+      "agent_id": "git-status-reader",
+      "classification": "OPEN",
+      "evidence_hash": "e683de8e5a35d0b4a0f93cd60247bd1f46c21171c6346e24dbd5ba82af17f4f2",
+      "file_sha256": "b842a85c6c8028fb8c89e1a5fd9da9d9f69e28b628ab55d471c0cc2e13b53e69",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160521653061Z-05b83266"
+    },
+    {
+      "agent_id": "governance-reader",
+      "classification": "OPEN",
+      "evidence_hash": "41dec068bc767da2f238c45a986c6b821bff15ec14e0991d0255b66a3c18a7b1",
+      "file_sha256": "a7327ddbbd606931d6a5d89a75ac162d0d8c5811e1fccb9e63e4f70b4c610836",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160521957480Z-28335853"
+    },
+    {
+      "agent_id": "heartbeat-reader",
+      "classification": "OPEN",
+      "evidence_hash": "fee553121676ccc0d62845bbb0204c5e6abfec0c2ae36d7c0815e65b49f67902",
+      "file_sha256": "7ad0257a89226d041ff1a583cea0c8fae9aeabb9f448e5d7fd460c8afd09488e",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160522081544Z-a4602e83"
+    },
+    {
+      "agent_id": "lock-reader",
+      "classification": "OPEN",
+      "evidence_hash": "d74ad677a1cec111f1481ace04b6262a5f80e81181881f91e159b2784588be1e",
+      "file_sha256": "13b32cbfe7ff9d56652447422b264fbf520d7662ba4d724f4b414f230961acbe",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160522350656Z-6d8993f4"
+    },
+    {
+      "agent_id": "mypy-reader",
+      "classification": "OPEN",
+      "evidence_hash": "4f51306074ee5f0ce8ec06019b15ba83b85a8292505f9a380c3a935a3b2c0c83",
+      "file_sha256": "16f637933f7ee99d51113562401853e5e8d811f2897e523ee02434f8bc7318f6",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160522614593Z-31ad3e7a"
+    },
+    {
+      "agent_id": "overnight-reader",
+      "classification": "OPEN",
+      "evidence_hash": "219e93e264168bf1441fa727cd190fa54edfe8da086fcef0a984c9fef463d361",
+      "file_sha256": "ce4a436e6f75d1a0248e87fa744f95735d4fd5c067187f9f429143be8cc9d9cd",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160523019484Z-358fb8d7"
+    },
+    {
+      "agent_id": "path-drift-reader",
+      "classification": "OPEN",
+      "evidence_hash": "f2b260df61aa45a7d2859b775c8ad9679b0463aede08f97e89d259f43dc2ecf3",
+      "file_sha256": "7be58e1f7a29848abafc8fa44d01b49152838aeb7e0a7b8b07e03b04407a1ba0",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160523140812Z-2a381a3f"
+    },
+    {
+      "agent_id": "phantom-reader",
+      "classification": "OPEN",
+      "evidence_hash": "00915cd137daf8c12238659d03988889b81ebe11f66b41a86e757d9e806e6475",
+      "file_sha256": "78b45c67fe0cf5f8af0b845881f80518bfaca7089a4c2207121b215c577745d6",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T164236998093Z-8c48fbd8"
+    },
+    {
+      "agent_id": "pytest-collect-reader",
+      "classification": "OPEN",
+      "evidence_hash": "a0f9d88c8ca0600ac64c2b0d0daaa644cee3ac041d7a212e0170c579dc06a95e",
+      "file_sha256": "d1c0263540a97f4a7ed1d3e19191dd980a377ba74ada83d51020c4af6f3c5a08",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160523275778Z-854ab570"
+    },
+    {
+      "agent_id": "ruff-reader",
+      "classification": "OPEN",
+      "evidence_hash": "b52fb548b7c314134d7e0863d8d0506f7e9834db53e934a865a5652af2cdb463",
+      "file_sha256": "2635dc2a7c8fe5f5f80b012ca8d3e79e423d4f6e55124c4a673333ccd14282fb",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160523502651Z-b976e583"
+    },
+    {
+      "agent_id": "runaway-reader",
+      "classification": "OPEN",
+      "evidence_hash": "2a20fd563efae019878f50cb1778de4d44e6fa50c3be5c303262b7ac330c295c",
+      "file_sha256": "56aedc9fc0a8db95cffc8ceb4c47effdf6afd7a268c80238fa33018d91b84e1b",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160524258909Z-e509cd8c"
+    },
+    {
+      "agent_id": "secret-reader",
+      "classification": "SECRET",
+      "evidence_hash": "4c449e7b56f19eee1be243588398471d78d8dd9926b59d36ac4bf5e904367533",
+      "file_sha256": "aaf9cb3a510573c5da7c52b75a43b86eef82638a02ea36623cba20ac03351fb3",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160524436135Z-c579ed3f"
+    },
+    {
+      "agent_id": "workflow-action-pin-reader",
+      "classification": "CONTROLLED",
+      "evidence_hash": "55657c599d133952170dc201cf20844f9c64b9d5cc6590c83257664f8d7bfd33",
+      "file_sha256": "c8bb502ba355dc0d0cd7be235813cf90cdc15a0794f671e48a0d1d003fee50d4",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160524613462Z-78fe09a5"
+    },
+    {
+      "agent_id": "workflow-artifact-reader",
+      "classification": "CONTROLLED",
+      "evidence_hash": "4773e9c77c74666340561ae3aee492c7e0aee651542b9dbf550a8e804852ba38",
+      "file_sha256": "9319217ed7dea0e0ea514548ec980ab831fb3ad00055ba0818b8bc91090efeb0",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160524787636Z-76d54d0c"
+    },
+    {
+      "agent_id": "workflow-dag-reader",
+      "classification": "OPEN",
+      "evidence_hash": "8b862b5048696f8219add83683753cfc80a503adb16b8b7abdc8edae30571e1c",
+      "file_sha256": "15acf738877f0b499221f4254a5ac323a3a3929a2f856620dedefa6e5954d23d",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160525106222Z-0e6959f5"
+    },
+    {
+      "agent_id": "workflow-deploy-reader",
+      "classification": "CONTROLLED",
+      "evidence_hash": "bef20e8f48b3d4eb8f05cafb106548f1988366f59832d0191a58323bf0e90b73",
+      "file_sha256": "0a0447df37965448558282c2ec3c7d7f7b2365b8de5097bff240989ceea29fd4",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160525286738Z-1b395b5a"
+    },
+    {
+      "agent_id": "workflow-injection-reader",
+      "classification": "RESTRICTED",
+      "evidence_hash": "93a0ae2132c71716d050de2770af660258a9a8eaec3a9e4559adf011491dbcdc",
+      "file_sha256": "b9b74811a789fe82debe11786a20c5028e508eb3c6441344be8f2448c45b2417",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160525466606Z-2e798ffd"
+    },
+    {
+      "agent_id": "workflow-permission-reader",
+      "classification": "RESTRICTED",
+      "evidence_hash": "4001835b3ffab5eb308e083ddb981e0e0c18b76fa4bb749cb3c05dad62eb92fb",
+      "file_sha256": "cfcf6e9fe2fcf081fe3b42d4117bac9e408d24d8e24a6663573e615b09440034",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160525637773Z-f86e514c"
+    },
+    {
+      "agent_id": "workflow-reader",
+      "classification": "SECRET",
+      "evidence_hash": "7027fbca217c788ac0be0435757d42d71794ec9aa3e79dd5c7d3a665433f7e98",
+      "file_sha256": "598b78b02404d01f55731caf99b0fa260248c516b3088b1240700c0babdb021b",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160525826316Z-6ba5f858"
+    },
+    {
+      "agent_id": "workflow-runner-reader",
+      "classification": "CONTROLLED",
+      "evidence_hash": "fa81302985faf8e3228b2e6ab99dd88140813578dc95c7eb1745c7f0f4cdf294",
+      "file_sha256": "b9b00a4fb8239d2a8351bc6602541f4e0727d5abcbebf4b456245e8086ab3032",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160526022720Z-99a9d897"
+    },
+    {
+      "agent_id": "workflow-schedule-reader",
+      "classification": "OPEN",
+      "evidence_hash": "ead255182dad3332d6f74a8e8e602f3dad4a9689cce6216313b8ba09ba1c44c8",
+      "file_sha256": "00b47ae23e4f1965435817829aecd041a37e3e958d9aeb7b1f47a895ca8c18b4",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160526276924Z-73bfa0ce"
+    },
+    {
+      "agent_id": "workflow-secret-reader",
+      "classification": "SECRET",
+      "evidence_hash": "87bc8b2ee9c714e7eb15567bb0e008b59991f5dc11398d19b8b451ed1329df91",
+      "file_sha256": "067fa3bdd35b8cb75390c32f61212327653147dce20f8da17ffb80ce12ed5a8b",
+      "recomputed_hash_matches": true,
+      "run_id": "20260710T160526459864Z-e5fd87e3"
+    }
+  ],
+  "facility_manifest": {
+    ".github/workflows/ci.yaml": {
+      "sha256": "2cd664c786457edd89345c3d4626d542ddb9260010a466dae1185ba67826570b",
+      "size": 7052
+    },
+    ".github/workflows/dangerous.yml": {
+      "sha256": "ef19239e130e2e039e72e516ae64a43c1907d0d513a393a201ceb5fdc45cd9d4",
+      "size": 759
+    },
+    ".github/workflows/hardened.yml": {
+      "sha256": "5c99900fe54f33448e5010855d94a9390aeca1a1b402b643b6fb585568f7895a",
+      "size": 890
+    },
+    ".github/workflows/publish.yaml": {
+      "sha256": "39f4e408213da4b64859a815c7becce99fbba79536e129005331907a518c878e",
+      "size": 14125
+    },
+    ".project-ai/automation/audit/2026-07-10.audit.jsonl": {
+      "sha256": "e3c7b7c4e82f3eed154a9ee8981905d70b09487d03d533f81c5fa24085de27b6",
+      "size": 32869
+    },
+    ".project-ai/automation/digests/governance-latest.md": {
+      "sha256": "96a4704c27abede4f6ddbb3a47e068f06ee8edf5637ef1e2ef2a1e8eea4a1276",
+      "size": 454
+    },
+    ".project-ai/automation/digests/morning-latest.md": {
+      "sha256": "9a400e21bdc9fe505baabd81f5eae3bcff426f81b3ebea14c877a8257555115a",
+      "size": 653
+    },
+    ".project-ai/automation/evidence/git-status-reader/20260710T160521653061Z-05b83266/evidence.yaml": {
+      "sha256": "b842a85c6c8028fb8c89e1a5fd9da9d9f69e28b628ab55d471c0cc2e13b53e69",
+      "size": 1666
+    },
+    ".project-ai/automation/evidence/git-status-reader/20260710T160521653061Z-05b83266/stderr.txt": {
+      "sha256": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070",
+      "size": 2
+    },
+    ".project-ai/automation/evidence/git-status-reader/20260710T160521653061Z-05b83266/stdout.txt": {
+      "sha256": "654d6efff50f55fd4a4ee905f3e85c8e26660596c44cf4484e2d51f5165dc990",
+      "size": 64
+    },
+    ".project-ai/automation/evidence/git-status-writer/20260710T160526645624Z-7c381c1f/output.yaml": {
+      "sha256": "a4e8bb54e8c26ff1c1fdb79bc258f7facf993ee6a76869452957aff218702180",
+      "size": 561
+    },
+    ".project-ai/automation/evidence/git-status-writer/20260710T160526645624Z-7c381c1f/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/git-status-writer/20260710T160526645624Z-7c381c1f/stdout.txt": {
+      "sha256": "ca3c1e15b93fdc423859de4beccdf6ceafc42314c087ae4f5a02792880a787f5",
+      "size": 57
+    },
+    ".project-ai/automation/evidence/governance-digest-writer/20260710T160526784424Z-8db02e58/output.yaml": {
+      "sha256": "313eab894b28ca6faed96cecd7829152ccb07ce86b5360d7cf26c725dff802dd",
+      "size": 527
+    },
+    ".project-ai/automation/evidence/governance-digest-writer/20260710T160526784424Z-8db02e58/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/governance-digest-writer/20260710T160526784424Z-8db02e58/stdout.txt": {
+      "sha256": "d107eeb8cb00fa6c2c1414840124085a06455b039e59546a58509f7406b1387c",
+      "size": 57
+    },
+    ".project-ai/automation/evidence/governance-reader/20260710T160521957480Z-28335853/evidence.yaml": {
+      "sha256": "a7327ddbbd606931d6a5d89a75ac162d0d8c5811e1fccb9e63e4f70b4c610836",
+      "size": 893
+    },
+    ".project-ai/automation/evidence/governance-reader/20260710T160521957480Z-28335853/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/governance-reader/20260710T160521957480Z-28335853/stdout.txt": {
+      "sha256": "8d1dbdf79bdbac4ba4cc422c6d2a3c7b0075a0ad0d1226dcd551e3015680222a",
+      "size": 24
+    },
+    ".project-ai/automation/evidence/heartbeat-reader/20260710T160522081544Z-a4602e83/evidence.yaml": {
+      "sha256": "7ad0257a89226d041ff1a583cea0c8fae9aeabb9f448e5d7fd460c8afd09488e",
+      "size": 1059
+    },
+    ".project-ai/automation/evidence/heartbeat-reader/20260710T160522081544Z-a4602e83/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/heartbeat-reader/20260710T160522081544Z-a4602e83/stdout.txt": {
+      "sha256": "a224d957778226e14b5d4c192d956bafa8d55612a4373258f3d639e85178b634",
+      "size": 42
+    },
+    ".project-ai/automation/evidence/heartbeat-report-writer/20260710T160527077341Z-8ef95428/output.yaml": {
+      "sha256": "d6e662cc24c2463c8bad142510a72aceab515cf03c00de7694fa9b29097ca01c",
+      "size": 572
+    },
+    ".project-ai/automation/evidence/heartbeat-report-writer/20260710T160527077341Z-8ef95428/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/heartbeat-report-writer/20260710T160527077341Z-8ef95428/stdout.txt": {
+      "sha256": "7d6d43d96d104fd51f276ea0cfa2b79ef0bd7543068cc0f4ea27d9928ddc4541",
+      "size": 65
+    },
+    ".project-ai/automation/evidence/lock-reader/20260710T160522350656Z-6d8993f4/evidence.yaml": {
+      "sha256": "13b32cbfe7ff9d56652447422b264fbf520d7662ba4d724f4b414f230961acbe",
+      "size": 1098
+    },
+    ".project-ai/automation/evidence/lock-reader/20260710T160522350656Z-6d8993f4/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/lock-reader/20260710T160522350656Z-6d8993f4/stdout.txt": {
+      "sha256": "3778ab5e6756e2a404cbe351474dd3a602dfeb5ca439e98ab93263055de99396",
+      "size": 24
+    },
+    ".project-ai/automation/evidence/lock-report-writer/20260710T160527210666Z-db72d885/output.yaml": {
+      "sha256": "123bbe38500471053e328d5134a18454eeb5c06350ddb7b9ec00064f426b73a0",
+      "size": 548
+    },
+    ".project-ai/automation/evidence/lock-report-writer/20260710T160527210666Z-db72d885/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/lock-report-writer/20260710T160527210666Z-db72d885/stdout.txt": {
+      "sha256": "0fa460d6dceb0885ce0d73a9ad5b0005aad227e01c630e6593fce576bf31bc8f",
+      "size": 61
+    },
+    ".project-ai/automation/evidence/morning-brief-writer/20260710T160527344186Z-fbd96646/output.yaml": {
+      "sha256": "082856352df615bafaa7514dbd46da37b25db132660e0da337b984b0f68d6a06",
+      "size": 518
+    },
+    ".project-ai/automation/evidence/morning-brief-writer/20260710T160527344186Z-fbd96646/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/morning-brief-writer/20260710T160527344186Z-fbd96646/stdout.txt": {
+      "sha256": "6c1e58de7796a2063b883dc5aa9d01a8a104e8df3e4be13524c7d9625e43026b",
+      "size": 54
+    },
+    ".project-ai/automation/evidence/mypy-reader/20260710T160522614593Z-31ad3e7a/evidence.yaml": {
+      "sha256": "16f637933f7ee99d51113562401853e5e8d811f2897e523ee02434f8bc7318f6",
+      "size": 1078
+    },
+    ".project-ai/automation/evidence/mypy-reader/20260710T160522614593Z-31ad3e7a/stderr.txt": {
+      "sha256": "6bca68e28e18d197d9776b7b91732c145fce6dd7a16df8a456f13ec626fa4d36",
+      "size": 56
+    },
+    ".project-ai/automation/evidence/mypy-reader/20260710T160522614593Z-31ad3e7a/stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/mypy-report-writer/20260710T160527480049Z-4c9a9494/output.yaml": {
+      "sha256": "d384b3cd97770507d98eb63cca5d60ade7b4dec853ce790dd56cc92e757dafa6",
+      "size": 538
+    },
+    ".project-ai/automation/evidence/mypy-report-writer/20260710T160527480049Z-4c9a9494/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/mypy-report-writer/20260710T160527480049Z-4c9a9494/stdout.txt": {
+      "sha256": "104989a569a953c78db0af0cd9217bd9c998d9c43f3661c4c33f04a883d7ba37",
+      "size": 51
+    },
+    ".project-ai/automation/evidence/overnight-reader/20260710T160523019484Z-358fb8d7/evidence.yaml": {
+      "sha256": "ce4a436e6f75d1a0248e87fa744f95735d4fd5c067187f9f429143be8cc9d9cd",
+      "size": 1072
+    },
+    ".project-ai/automation/evidence/overnight-reader/20260710T160523019484Z-358fb8d7/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/overnight-reader/20260710T160523019484Z-358fb8d7/stdout.txt": {
+      "sha256": "85d9a1654ddc7e3f9d73c34367896d2d69d053f9aa1bab071d156e275bcca8ad",
+      "size": 53
+    },
+    ".project-ai/automation/evidence/path-drift-reader/20260710T160523140812Z-2a381a3f/evidence.yaml": {
+      "sha256": "7be58e1f7a29848abafc8fa44d01b49152838aeb7e0a7b8b07e03b04407a1ba0",
+      "size": 4954
+    },
+    ".project-ai/automation/evidence/path-drift-reader/20260710T160523140812Z-2a381a3f/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/path-drift-reader/20260710T160523140812Z-2a381a3f/stdout.txt": {
+      "sha256": "0d18467ebc5c28380b27615b8a3848a8c97a01e23d4d804a4b06a37b61fd1dff",
+      "size": 24
+    },
+    ".project-ai/automation/evidence/path-drift-report-writer/20260710T160527617153Z-c846f167/output.yaml": {
+      "sha256": "5f32f6eb0f8abf9068a28ddb6d189a74356787fbaa13428d86e74d5b817315ce",
+      "size": 568
+    },
+    ".project-ai/automation/evidence/path-drift-report-writer/20260710T160527617153Z-c846f167/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/path-drift-report-writer/20260710T160527617153Z-c846f167/stdout.txt": {
+      "sha256": "e50955dee9b89f93dc0eb9e9b36251887223af5469b57d26edcc599e10925b70",
+      "size": 57
+    },
+    ".project-ai/automation/evidence/phantom-reader/20260710T164236998093Z-8c48fbd8/evidence.yaml": {
+      "sha256": "78b45c67fe0cf5f8af0b845881f80518bfaca7089a4c2207121b215c577745d6",
+      "size": 879
+    },
+    ".project-ai/automation/evidence/phantom-reader/20260710T164236998093Z-8c48fbd8/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/phantom-reader/20260710T164236998093Z-8c48fbd8/stdout.txt": {
+      "sha256": "58432cb4dc076ac1906067439fd5c63e2bfe4ba5866dcf69ed794c7a616ad6cb",
+      "size": 40
+    },
+    ".project-ai/automation/evidence/phantom-report-writer/20260710T164238255404Z-8e7c29fc/output.yaml": {
+      "sha256": "fdd012082ff64dddbedc07483ab8a82ebba0868f8e804d5b228878a23ff8a012",
+      "size": 562
+    },
+    ".project-ai/automation/evidence/phantom-report-writer/20260710T164238255404Z-8e7c29fc/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/phantom-report-writer/20260710T164238255404Z-8e7c29fc/stdout.txt": {
+      "sha256": "3e2755f622e3745f1aadceb92c40dba2cf99e8aa247c5c7433a72c04de80ad59",
+      "size": 63
+    },
+    ".project-ai/automation/evidence/pytest-collect-reader/20260710T160523275778Z-854ab570/evidence.yaml": {
+      "sha256": "d1c0263540a97f4a7ed1d3e19191dd980a377ba74ada83d51020c4af6f3c5a08",
+      "size": 1074
+    },
+    ".project-ai/automation/evidence/pytest-collect-reader/20260710T160523275778Z-854ab570/stderr.txt": {
+      "sha256": "6bca68e28e18d197d9776b7b91732c145fce6dd7a16df8a456f13ec626fa4d36",
+      "size": 56
+    },
+    ".project-ai/automation/evidence/pytest-collect-reader/20260710T160523275778Z-854ab570/stdout.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/pytest-collect-writer/20260710T160527787805Z-36cf5401/output.yaml": {
+      "sha256": "b0db2c594bc79bad4795fbff4ea3dd4c0bad08ce8607fd0f54cca541dadac62c",
+      "size": 580
+    },
+    ".project-ai/automation/evidence/pytest-collect-writer/20260710T160527787805Z-36cf5401/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/pytest-collect-writer/20260710T160527787805Z-36cf5401/stdout.txt": {
+      "sha256": "682bf6fe2df9def9b86eade12bc3be04f4442f19856f70bd276e74f7e7502678",
+      "size": 60
+    },
+    ".project-ai/automation/evidence/ruff-reader/20260710T160523502651Z-b976e583/evidence.yaml": {
+      "sha256": "2635dc2a7c8fe5f5f80b012ca8d3e79e423d4f6e55124c4a673333ccd14282fb",
+      "size": 887
+    },
+    ".project-ai/automation/evidence/ruff-reader/20260710T160523502651Z-b976e583/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/ruff-reader/20260710T160523502651Z-b976e583/stdout.txt": {
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "size": 2
+    },
+    ".project-ai/automation/evidence/ruff-report-writer/20260710T160527950741Z-1679a192/output.yaml": {
+      "sha256": "a7850db79d96bd482b57de70ba847d58786d05b1726533c3fec0fed2b3bfbf3e",
+      "size": 538
+    },
+    ".project-ai/automation/evidence/ruff-report-writer/20260710T160527950741Z-1679a192/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/ruff-report-writer/20260710T160527950741Z-1679a192/stdout.txt": {
+      "sha256": "d1689d5a4ff6e432bc22cc3cb7da0af60a9e5bfa06cdd0a4245121d40c1fc40b",
+      "size": 51
+    },
+    ".project-ai/automation/evidence/runaway-reader/20260710T160524258909Z-e509cd8c/evidence.yaml": {
+      "sha256": "56aedc9fc0a8db95cffc8ceb4c47effdf6afd7a268c80238fa33018d91b84e1b",
+      "size": 878
+    },
+    ".project-ai/automation/evidence/runaway-reader/20260710T160524258909Z-e509cd8c/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/runaway-reader/20260710T160524258909Z-e509cd8c/stdout.txt": {
+      "sha256": "4405abd4dd7fe63491526f3efa9359dedf5a99d5d0765189b35713506add580b",
+      "size": 27
+    },
+    ".project-ai/automation/evidence/runaway-report-writer/20260710T160528109395Z-6fb89ea9/output.yaml": {
+      "sha256": "a1d9f75173edc5b6e6033ce35f6f13405fa678145de2bd715772c5f6e32ef52a",
+      "size": 562
+    },
+    ".project-ai/automation/evidence/runaway-report-writer/20260710T160528109395Z-6fb89ea9/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/runaway-report-writer/20260710T160528109395Z-6fb89ea9/stdout.txt": {
+      "sha256": "1ce31eda7fc2afeb6bd5b9615e0fc10af68d0e83fc964c95f8b1998a9c9eee1d",
+      "size": 63
+    },
+    ".project-ai/automation/evidence/secret-reader/20260710T160524436135Z-c579ed3f/evidence.yaml": {
+      "sha256": "aaf9cb3a510573c5da7c52b75a43b86eef82638a02ea36623cba20ac03351fb3",
+      "size": 1128
+    },
+    ".project-ai/automation/evidence/secret-reader/20260710T160524436135Z-c579ed3f/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/secret-reader/20260710T160524436135Z-c579ed3f/stdout.txt": {
+      "sha256": "958472f44785b4aae8ff0e99079c051e9d69aa88c2755bef433a1f65e0f90781",
+      "size": 25
+    },
+    ".project-ai/automation/evidence/secret-report-writer/20260710T160528252513Z-9f8f09ec/output.yaml": {
+      "sha256": "ea33c7e1ee343de66835246d854c42b5421894ce3a1ce9c1d70a52133491af9a",
+      "size": 559
+    },
+    ".project-ai/automation/evidence/secret-report-writer/20260710T160528252513Z-9f8f09ec/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/secret-report-writer/20260710T160528252513Z-9f8f09ec/stdout.txt": {
+      "sha256": "b487886063bead598ecd3183a61df59ca0f1a2d2c855d8575e1d6dfc0c669562",
+      "size": 63
+    },
+    ".project-ai/automation/evidence/workflow-action-pin-reader/20260710T160524613462Z-78fe09a5/evidence.yaml": {
+      "sha256": "c8bb502ba355dc0d0cd7be235813cf90cdc15a0794f671e48a0d1d003fee50d4",
+      "size": 1114
+    },
+    ".project-ai/automation/evidence/workflow-action-pin-reader/20260710T160524613462Z-78fe09a5/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-action-pin-reader/20260710T160524613462Z-78fe09a5/stdout.txt": {
+      "sha256": "740db80a0e262d5b0ce3438906117215e02218392c6ed2c505d92931813ef82b",
+      "size": 34
+    },
+    ".project-ai/automation/evidence/workflow-action-pin-report-writer/20260710T160528556835Z-40c6e55c/output.yaml": {
+      "sha256": "bf18ca545a8a496e8c56cfa4964a598a44e2e75bf5a3d417731b90f35e0d9335",
+      "size": 620
+    },
+    ".project-ai/automation/evidence/workflow-action-pin-report-writer/20260710T160528556835Z-40c6e55c/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-action-pin-report-writer/20260710T160528556835Z-40c6e55c/stdout.txt": {
+      "sha256": "36dd361a7000c539675e27cc01694ba9a0f573cc5d7b9615c6ae06bc6bc85216",
+      "size": 68
+    },
+    ".project-ai/automation/evidence/workflow-artifact-reader/20260710T160524787636Z-76d54d0c/evidence.yaml": {
+      "sha256": "9319217ed7dea0e0ea514548ec980ab831fb3ad00055ba0818b8bc91090efeb0",
+      "size": 1345
+    },
+    ".project-ai/automation/evidence/workflow-artifact-reader/20260710T160524787636Z-76d54d0c/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-artifact-reader/20260710T160524787636Z-76d54d0c/stdout.txt": {
+      "sha256": "04c7445d36b3495b59acc17a40ef81cab9b05885ec5cc425f92b012a014886be",
+      "size": 39
+    },
+    ".project-ai/automation/evidence/workflow-artifact-report-writer/20260710T160528861011Z-15c1da83/output.yaml": {
+      "sha256": "aa4a15b7809393a29379c56940ca9c02b16a19b21a8f997ebd60260a934cfb0c",
+      "size": 610
+    },
+    ".project-ai/automation/evidence/workflow-artifact-report-writer/20260710T160528861011Z-15c1da83/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-artifact-report-writer/20260710T160528861011Z-15c1da83/stdout.txt": {
+      "sha256": "94671c647f4449064cedd67d54f4cf2bf5c2cf8922c5711a8cf4e650e55d2112",
+      "size": 66
+    },
+    ".project-ai/automation/evidence/workflow-dag-reader/20260710T160525106222Z-0e6959f5/evidence.yaml": {
+      "sha256": "15acf738877f0b499221f4254a5ac323a3a3929a2f856620dedefa6e5954d23d",
+      "size": 5470
+    },
+    ".project-ai/automation/evidence/workflow-dag-reader/20260710T160525106222Z-0e6959f5/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-dag-reader/20260710T160525106222Z-0e6959f5/stdout.txt": {
+      "sha256": "c981061be823baec7ada7e9ba7a8b8a59e84b622f4967154a08af6206ebdfc1c",
+      "size": 34
+    },
+    ".project-ai/automation/evidence/workflow-dag-report-writer/20260710T160529013599Z-d9c44acc/output.yaml": {
+      "sha256": "a7fec9b4929948e6e445c406bdebd2f7f07df995606c80612f2eb3c1bfad4309",
+      "size": 579
+    },
+    ".project-ai/automation/evidence/workflow-dag-report-writer/20260710T160529013599Z-d9c44acc/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-dag-report-writer/20260710T160529013599Z-d9c44acc/stdout.txt": {
+      "sha256": "b5c02828d0e4292c0aa638062cb6afb9fd78547bf2abc4bca3b4abf514d08cc7",
+      "size": 60
+    },
+    ".project-ai/automation/evidence/workflow-deploy-reader/20260710T160525286738Z-1b395b5a/evidence.yaml": {
+      "sha256": "0a0447df37965448558282c2ec3c7d7f7b2365b8de5097bff240989ceea29fd4",
+      "size": 1930
+    },
+    ".project-ai/automation/evidence/workflow-deploy-reader/20260710T160525286738Z-1b395b5a/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-deploy-reader/20260710T160525286738Z-1b395b5a/stdout.txt": {
+      "sha256": "b224500406d5b04aa2d07151996da25295697046566343ae7356fe5c9d8df331",
+      "size": 36
+    },
+    ".project-ai/automation/evidence/workflow-deploy-report-writer/20260710T160529199310Z-ef497608/output.yaml": {
+      "sha256": "ee10ae65630e65173b4c3da8ba6b9f56dc28284dee91fc5c4047eb19970fc281",
+      "size": 599
+    },
+    ".project-ai/automation/evidence/workflow-deploy-report-writer/20260710T160529199310Z-ef497608/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-deploy-report-writer/20260710T160529199310Z-ef497608/stdout.txt": {
+      "sha256": "76c7cff47b64abe8d221e5831ebfe18033b1d911c778040c1f74afcf99f5cfee",
+      "size": 63
+    },
+    ".project-ai/automation/evidence/workflow-injection-reader/20260710T160525466606Z-2e798ffd/evidence.yaml": {
+      "sha256": "b9b74811a789fe82debe11786a20c5028e508eb3c6441344be8f2448c45b2417",
+      "size": 1142
+    },
+    ".project-ai/automation/evidence/workflow-injection-reader/20260710T160525466606Z-2e798ffd/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-injection-reader/20260710T160525466606Z-2e798ffd/stdout.txt": {
+      "sha256": "d879d99b2932d92315e1e217eb15f3f9b10ae366f510510dd290a40099cd66ac",
+      "size": 39
+    },
+    ".project-ai/automation/evidence/workflow-injection-report-writer/20260710T160529336463Z-af14c21d/output.yaml": {
+      "sha256": "e4e5baf6913b85d57d687860b9f81501eb2b6c54043016bf638ef991d4c833ae",
+      "size": 614
+    },
+    ".project-ai/automation/evidence/workflow-injection-report-writer/20260710T160529336463Z-af14c21d/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-injection-report-writer/20260710T160529336463Z-af14c21d/stdout.txt": {
+      "sha256": "17bfeaa780aad4efbbd2bf4cbaa8001a5149422f857ecb0fad18a59a4bba6aa8",
+      "size": 66
+    },
+    ".project-ai/automation/evidence/workflow-permission-reader/20260710T160525637773Z-f86e514c/evidence.yaml": {
+      "sha256": "cfcf6e9fe2fcf081fe3b42d4117bac9e408d24d8e24a6663573e615b09440034",
+      "size": 2099
+    },
+    ".project-ai/automation/evidence/workflow-permission-reader/20260710T160525637773Z-f86e514c/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-permission-reader/20260710T160525637773Z-f86e514c/stdout.txt": {
+      "sha256": "fed9fa07900bd8de19f658ff6188b6304c07b06f5e4da4262385b39c2bbd299b",
+      "size": 41
+    },
+    ".project-ai/automation/evidence/workflow-permission-report-writer/20260710T160529490626Z-b57933d2/output.yaml": {
+      "sha256": "b0cbd5bcdeb954152011fc0060d420cf02d5ce313ef35cf11f3cb43502bcb1fb",
+      "size": 620
+    },
+    ".project-ai/automation/evidence/workflow-permission-report-writer/20260710T160529490626Z-b57933d2/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-permission-report-writer/20260710T160529490626Z-b57933d2/stdout.txt": {
+      "sha256": "65b9b06a984f8c3c599fe56691b36dae831d7882b5b2cf3ae8d0ec9a2b2d2eda",
+      "size": 68
+    },
+    ".project-ai/automation/evidence/workflow-reader/20260710T160525826316Z-6ba5f858/evidence.yaml": {
+      "sha256": "598b78b02404d01f55731caf99b0fa260248c516b3088b1240700c0babdb021b",
+      "size": 9160
+    },
+    ".project-ai/automation/evidence/workflow-reader/20260710T160525826316Z-6ba5f858/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-reader/20260710T160525826316Z-6ba5f858/stdout.txt": {
+      "sha256": "05dc72c2a8e5810cd44dea363e88fff39a308a79db0660dc5ccf1cc22e528688",
+      "size": 103
+    },
+    ".project-ai/automation/evidence/workflow-runner-reader/20260710T160526022720Z-99a9d897/evidence.yaml": {
+      "sha256": "b9b00a4fb8239d2a8351bc6602541f4e0727d5abcbebf4b456245e8086ab3032",
+      "size": 1083
+    },
+    ".project-ai/automation/evidence/workflow-runner-reader/20260710T160526022720Z-99a9d897/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-runner-reader/20260710T160526022720Z-99a9d897/stdout.txt": {
+      "sha256": "1f51ed39e386ec2f42e428d131cd1c6fa501d744eb7a973798e0240c746ee573",
+      "size": 37
+    },
+    ".project-ai/automation/evidence/workflow-runner-report-writer/20260710T160529693538Z-367db6dd/output.yaml": {
+      "sha256": "3130b990ec777dc611dbf66249e5668418f9dbc36386aa382bf021e7cbaea89f",
+      "size": 600
+    },
+    ".project-ai/automation/evidence/workflow-runner-report-writer/20260710T160529693538Z-367db6dd/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-runner-report-writer/20260710T160529693538Z-367db6dd/stdout.txt": {
+      "sha256": "2a3b1073fc6a8a340c2df238721f0c8056fc294ac67e2075708e9d8868a7837a",
+      "size": 64
+    },
+    ".project-ai/automation/evidence/workflow-schedule-reader/20260710T160526276924Z-73bfa0ce/evidence.yaml": {
+      "sha256": "00b47ae23e4f1965435817829aecd041a37e3e958d9aeb7b1f47a895ca8c18b4",
+      "size": 928
+    },
+    ".project-ai/automation/evidence/workflow-schedule-reader/20260710T160526276924Z-73bfa0ce/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-schedule-reader/20260710T160526276924Z-73bfa0ce/stdout.txt": {
+      "sha256": "b4f1d1208224f52e63d37aaab99627d62f864e8817573009880eb912ea3a9c15",
+      "size": 38
+    },
+    ".project-ai/automation/evidence/workflow-schedule-report-writer/20260710T160529898130Z-20bf3519/output.yaml": {
+      "sha256": "94c59fb20bc26b40ca60e947aa4138a299f9cbe9e78323b9c5ae4e64217726ec",
+      "size": 604
+    },
+    ".project-ai/automation/evidence/workflow-schedule-report-writer/20260710T160529898130Z-20bf3519/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-schedule-report-writer/20260710T160529898130Z-20bf3519/stdout.txt": {
+      "sha256": "10721ffbd09083b5f72e06a59188217084941ee18d495c03c9503be0aa0120c4",
+      "size": 65
+    },
+    ".project-ai/automation/evidence/workflow-secret-reader/20260710T160526459864Z-e5fd87e3/evidence.yaml": {
+      "sha256": "067fa3bdd35b8cb75390c32f61212327653147dce20f8da17ffb80ce12ed5a8b",
+      "size": 1503
+    },
+    ".project-ai/automation/evidence/workflow-secret-reader/20260710T160526459864Z-e5fd87e3/stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".project-ai/automation/evidence/workflow-secret-reader/20260710T160526459864Z-e5fd87e3/stdout.txt": {
+      "sha256": "54dfd84567de11e9d15de3c859ff3350f5120d61572435fda9d52a94c9c88fe4",
+      "size": 37
+    },
+    ".project-ai/automation/reports/facility/heartbeat-latest.md": {
+      "sha256": "18c33d8a7136eb446af2e2a3985275535c6afed0c1f9408746a0b93d930cb28d",
+      "size": 826
+    },
+    ".project-ai/automation/reports/facility/locks-latest.md": {
+      "sha256": "5cb99565cbc0a6d4f8e589f88e3b21d5bf7224941c49ff4173a70855db0e933e",
+      "size": 869
+    },
+    ".project-ai/automation/reports/facility/phantom-latest.md": {
+      "sha256": "7d94e56086f75d34cd336df2e302075e86de0e063f2f2bcd05995b82aa3e4b2b",
+      "size": 749
+    },
+    ".project-ai/automation/reports/facility/runaway-latest.md": {
+      "sha256": "c4840f8767e894e9c6de96346e4dd7b80ed70aa22bf5bd27354c3f87a66aa7e4",
+      "size": 740
+    },
+    ".project-ai/automation/reports/git/status-latest.md": {
+      "sha256": "28a854607595995037a0ddb8b05b303740720c29fc2af9e4d2424820f31b72fa",
+      "size": 738
+    },
+    ".project-ai/automation/reports/mypy/latest.md": {
+      "sha256": "737bd1a713b5c15d6b88d9964c092fca31792e0be0948995cf49ee51dda2af87",
+      "size": 809
+    },
+    ".project-ai/automation/reports/path-drift/latest.md": {
+      "sha256": "c480d08f9d81c44e48382f5172a3aad5f63e0807fae6f7a8567b68644fdb0610",
+      "size": 4259
+    },
+    ".project-ai/automation/reports/ruff/latest.md": {
+      "sha256": "855fbf9b276f4ba07b36e6eac08615afd4f5bc2e4cfb18dcdb8b6816073a5d3a",
+      "size": 728
+    },
+    ".project-ai/automation/reports/security/secrets-latest.md": {
+      "sha256": "53f6843bb6c2e9e53ac13d9038e7d1a9f50d9cf734a96a5e62d340ab27b19886",
+      "size": 861
+    },
+    ".project-ai/automation/reports/tests/collect-latest.md": {
+      "sha256": "5f78fa7a725cfd17979955e62e519d9d72b588c1c5b4cbfab16da5a93c0b64a2",
+      "size": 818
+    },
+    ".project-ai/automation/reports/workflows/action-pins-latest.md": {
+      "sha256": "b9969027b73be497afcb2d83b85a5f7306565c0c772215e96c929b5e985f1bff",
+      "size": 888
+    },
+    ".project-ai/automation/reports/workflows/artifacts-latest.md": {
+      "sha256": "2c7d633381e14e23fba10815ff5cefa63072b6b9501a12482132d5e10adec65c",
+      "size": 1021
+    },
+    ".project-ai/automation/reports/workflows/dag-latest.md": {
+      "sha256": "f602f42acbf33d10e02af3c181ebb1f328f8c02f0d20d44e055d470eb27a1bb7",
+      "size": 3708
+    },
+    ".project-ai/automation/reports/workflows/deploy-latest.md": {
+      "sha256": "1bb4a015470a723ab23b38e309b2e5ffda661e0bebf981d4f24ba668bf68d125",
+      "size": 1426
+    },
+    ".project-ai/automation/reports/workflows/injection-latest.md": {
+      "sha256": "49abddefc63006f2861c051244346700cd9786068e706ad8a380ac5cf56be21d",
+      "size": 921
+    },
+    ".project-ai/automation/reports/workflows/permissions-latest.md": {
+      "sha256": "19ca31f35b7dd24d11cc6d5379651cab93ac5972f0ea69c1761cde571f1c3a55",
+      "size": 1488
+    },
+    ".project-ai/automation/reports/workflows/runners-latest.md": {
+      "sha256": "4750faa4cd45369fa7b3e38258a60a34642cb1b3bfa35058dd67eeb5280865b3",
+      "size": 865
+    },
+    ".project-ai/automation/reports/workflows/schedule-latest.md": {
+      "sha256": "fc13278e231b60f0f4c53146de85dc95d24ec2c1c2554142ace66d73a559f8cd",
+      "size": 795
+    },
+    ".ruff_cache/.gitignore": {
+      "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
+      "size": 35
+    },
+    ".ruff_cache/0.15.18/14071442782199061251": {
+      "sha256": "304e1b696576b50a84e3db67fce05e019d1746a2bdbba2f4710663fdc1a29f09",
+      "size": 70
+    },
+    ".ruff_cache/CACHEDIR.TAG": {
+      "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
+      "size": 43
+    },
+    "NOTES.md": {
+      "sha256": "071bd5d9e8ec87b879f6852312874d2fd025b6e0d1963857481dd1d68effd6f7",
+      "size": 71
+    },
+    "config_backup.py": {
+      "sha256": "4de86438b636aa148c2d994b4f1f14b894f035b3434e2bee649375a4a0034a4b",
+      "size": 43
+    },
+    "registry/agents.yaml": {
+      "sha256": "215c85d558a54261144569bc0d80794e8c3bdfd75132dcdf05f1dbbf82eea386",
+      "size": 30813
+    },
+    "registry/capabilities.yaml": {
+      "sha256": "614a43f96a735e0a1e99efaeab76446d6643467f8cfc14cc73b62d49d5f08f65",
+      "size": 9767
+    },
+    "registry/classifications.yaml": {
+      "sha256": "b37a17aaa7cd33c6a6f65e8e309317f520c3d6bacb498e3269c157c919852844",
+      "size": 1228
+    },
+    "registry/schedules.yaml": {
+      "sha256": "4dfd513e78e534af07dc706b71251d9b0bc6a1eae324dac5648bef6d32a48d7a",
+      "size": 6714
+    },
+    "registry/tasks.yaml": {
+      "sha256": "34e2333d74163ce507cd62d8f4d3ce9c37a31f12493499e516953af7c6dce7e6",
+      "size": 31828
+    },
+    "taar.toml": {
+      "sha256": "08371187d869050c5c6dda31c2371c42810ffa6f9110918c04c363b9e6710b62",
+      "size": 496
+    }
+  },
+  "invocation": {
+    "code_under_test": {
+      "beginnings_head": "e53bf2e7cddbea22804bda833513a767414d61d8",
+      "beginnings_repo": "T:\\00-Active\\Project-AI-Beginnings",
+      "taar_package": "packages/taar (commit e53bf2e7 feat(taar))",
+      "upstream_source": "T:\\01-Projects\\TAAR-Agent-Taskforce\\TAAR-Agent-Taskforce",
+      "upstream_source_sha": "7b51966317f64c7b1fe277e0db0935c5e460704c"
+    },
+    "environment": {
+      "platform": "Windows-11-10.0.26200-SP0",
+      "project_ai_taar_dist": "0.0.0.dev0",
+      "python": "3.12.10",
+      "pyyaml": "6.0.3",
+      "rich": "15.0.0",
+      "taar_module_version": "0.1.0",
+      "typer": "0.26.7"
+    },
+    "harness": "harness/taar_e2e.py",
+    "harness_sha256": "22d9ccf55f1a7b2b0d52160d53879bf00a2a7c1de3d00e46ff630d4166996919",
+    "passes": [
+      {
+        "command": "uv run python taar_e2e.py",
+        "description": "seed facility, plant inputs, drive 21 readers then 22 writers",
+        "step": 1
+      },
+      {
+        "command": "uv run python -m taar.cli run phantom-reader --repo <facility>; uv run python -m taar.cli run phantom-report-writer --repo <facility>",
+        "description": "quarantine-class phantom pass",
+        "step": 2
+      },
+      {
+        "command": "uv run python -m taar.cli workflows classify|scan|harden --repo <facility>",
+        "description": "Workflow Guardian CLI (read-only; classify=SECRET, scan exit 1 on critical findings by design)",
+        "step": 3
+      }
+    ],
+    "planted_inputs": {
+      "secret": "fake ghp_ token in config_backup.py (sha256 in redaction section)",
+      "stale_path": "NOTES.md referencing T:/Project-AI-Beginnings (pre-migration path)",
+      "workflows": [
+        ".github/workflows/ci.yaml (copied from Beginnings)",
+        ".github/workflows/publish.yaml (copied from Beginnings)",
+        ".github/workflows/dangerous.yml (packages/taar/examples/github-actions-dangerous)",
+        ".github/workflows/hardened.yml (packages/taar/examples/github-actions-hardened)"
+      ]
+    },
+    "run_date_utc": "2026-07-10"
+  },
+  "outputs": [
+    {
+      "classification": "OPEN",
+      "file_sha256": "a4e8bb54e8c26ff1c1fdb79bc258f7facf993ee6a76869452957aff218702180",
+      "output_paths": [
+        ".project-ai/automation/reports/git/status-latest.md"
+      ],
+      "run_id": "20260710T160526645624Z-7c381c1f",
+      "source_evidence_hash": "e683de8e5a35d0b4a0f93cd60247bd1f46c21171c6346e24dbd5ba82af17f4f2",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "git-status-reader",
+      "writer_agent_id": "git-status-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "313eab894b28ca6faed96cecd7829152ccb07ce86b5360d7cf26c725dff802dd",
+      "output_paths": [
+        ".project-ai/automation/digests/governance-latest.md"
+      ],
+      "run_id": "20260710T160526784424Z-8db02e58",
+      "source_evidence_hash": "41dec068bc767da2f238c45a986c6b821bff15ec14e0991d0255b66a3c18a7b1",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "governance-reader",
+      "writer_agent_id": "governance-digest-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "d6e662cc24c2463c8bad142510a72aceab515cf03c00de7694fa9b29097ca01c",
+      "output_paths": [
+        ".project-ai/automation/reports/facility/heartbeat-latest.md"
+      ],
+      "run_id": "20260710T160527077341Z-8ef95428",
+      "source_evidence_hash": "fee553121676ccc0d62845bbb0204c5e6abfec0c2ae36d7c0815e65b49f67902",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "heartbeat-reader",
+      "writer_agent_id": "heartbeat-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "123bbe38500471053e328d5134a18454eeb5c06350ddb7b9ec00064f426b73a0",
+      "output_paths": [
+        ".project-ai/automation/reports/facility/locks-latest.md"
+      ],
+      "run_id": "20260710T160527210666Z-db72d885",
+      "source_evidence_hash": "d74ad677a1cec111f1481ace04b6262a5f80e81181881f91e159b2784588be1e",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "lock-reader",
+      "writer_agent_id": "lock-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "082856352df615bafaa7514dbd46da37b25db132660e0da337b984b0f68d6a06",
+      "output_paths": [
+        ".project-ai/automation/digests/morning-latest.md"
+      ],
+      "run_id": "20260710T160527344186Z-fbd96646",
+      "source_evidence_hash": "219e93e264168bf1441fa727cd190fa54edfe8da086fcef0a984c9fef463d361",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "overnight-reader",
+      "writer_agent_id": "morning-brief-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "d384b3cd97770507d98eb63cca5d60ade7b4dec853ce790dd56cc92e757dafa6",
+      "output_paths": [
+        ".project-ai/automation/reports/mypy/latest.md"
+      ],
+      "run_id": "20260710T160527480049Z-4c9a9494",
+      "source_evidence_hash": "4f51306074ee5f0ce8ec06019b15ba83b85a8292505f9a380c3a935a3b2c0c83",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "mypy-reader",
+      "writer_agent_id": "mypy-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "5f32f6eb0f8abf9068a28ddb6d189a74356787fbaa13428d86e74d5b817315ce",
+      "output_paths": [
+        ".project-ai/automation/reports/path-drift/latest.md"
+      ],
+      "run_id": "20260710T160527617153Z-c846f167",
+      "source_evidence_hash": "f2b260df61aa45a7d2859b775c8ad9679b0463aede08f97e89d259f43dc2ecf3",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "path-drift-reader",
+      "writer_agent_id": "path-drift-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "fdd012082ff64dddbedc07483ab8a82ebba0868f8e804d5b228878a23ff8a012",
+      "output_paths": [
+        ".project-ai/automation/reports/facility/phantom-latest.md"
+      ],
+      "run_id": "20260710T164238255404Z-8e7c29fc",
+      "source_evidence_hash": "00915cd137daf8c12238659d03988889b81ebe11f66b41a86e757d9e806e6475",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "phantom-reader",
+      "writer_agent_id": "phantom-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "b0db2c594bc79bad4795fbff4ea3dd4c0bad08ce8607fd0f54cca541dadac62c",
+      "output_paths": [
+        ".project-ai/automation/reports/tests/collect-latest.md"
+      ],
+      "run_id": "20260710T160527787805Z-36cf5401",
+      "source_evidence_hash": "a0f9d88c8ca0600ac64c2b0d0daaa644cee3ac041d7a212e0170c579dc06a95e",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "pytest-collect-reader",
+      "writer_agent_id": "pytest-collect-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "a7850db79d96bd482b57de70ba847d58786d05b1726533c3fec0fed2b3bfbf3e",
+      "output_paths": [
+        ".project-ai/automation/reports/ruff/latest.md"
+      ],
+      "run_id": "20260710T160527950741Z-1679a192",
+      "source_evidence_hash": "b52fb548b7c314134d7e0863d8d0506f7e9834db53e934a865a5652af2cdb463",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "ruff-reader",
+      "writer_agent_id": "ruff-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "a1d9f75173edc5b6e6033ce35f6f13405fa678145de2bd715772c5f6e32ef52a",
+      "output_paths": [
+        ".project-ai/automation/reports/facility/runaway-latest.md"
+      ],
+      "run_id": "20260710T160528109395Z-6fb89ea9",
+      "source_evidence_hash": "2a20fd563efae019878f50cb1778de4d44e6fa50c3be5c303262b7ac330c295c",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "runaway-reader",
+      "writer_agent_id": "runaway-report-writer"
+    },
+    {
+      "classification": "SECRET",
+      "file_sha256": "ea33c7e1ee343de66835246d854c42b5421894ce3a1ce9c1d70a52133491af9a",
+      "output_paths": [
+        ".project-ai/automation/reports/security/secrets-latest.md"
+      ],
+      "run_id": "20260710T160528252513Z-9f8f09ec",
+      "source_evidence_hash": "4c449e7b56f19eee1be243588398471d78d8dd9926b59d36ac4bf5e904367533",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "secret-reader",
+      "writer_agent_id": "secret-report-writer"
+    },
+    {
+      "classification": "CONTROLLED",
+      "file_sha256": "bf18ca545a8a496e8c56cfa4964a598a44e2e75bf5a3d417731b90f35e0d9335",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/action-pins-latest.md"
+      ],
+      "run_id": "20260710T160528556835Z-40c6e55c",
+      "source_evidence_hash": "55657c599d133952170dc201cf20844f9c64b9d5cc6590c83257664f8d7bfd33",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-action-pin-reader",
+      "writer_agent_id": "workflow-action-pin-report-writer"
+    },
+    {
+      "classification": "CONTROLLED",
+      "file_sha256": "aa4a15b7809393a29379c56940ca9c02b16a19b21a8f997ebd60260a934cfb0c",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/artifacts-latest.md"
+      ],
+      "run_id": "20260710T160528861011Z-15c1da83",
+      "source_evidence_hash": "4773e9c77c74666340561ae3aee492c7e0aee651542b9dbf550a8e804852ba38",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-artifact-reader",
+      "writer_agent_id": "workflow-artifact-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "a7fec9b4929948e6e445c406bdebd2f7f07df995606c80612f2eb3c1bfad4309",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/dag-latest.md"
+      ],
+      "run_id": "20260710T160529013599Z-d9c44acc",
+      "source_evidence_hash": "8b862b5048696f8219add83683753cfc80a503adb16b8b7abdc8edae30571e1c",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-dag-reader",
+      "writer_agent_id": "workflow-dag-report-writer"
+    },
+    {
+      "classification": "CONTROLLED",
+      "file_sha256": "ee10ae65630e65173b4c3da8ba6b9f56dc28284dee91fc5c4047eb19970fc281",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/deploy-latest.md"
+      ],
+      "run_id": "20260710T160529199310Z-ef497608",
+      "source_evidence_hash": "bef20e8f48b3d4eb8f05cafb106548f1988366f59832d0191a58323bf0e90b73",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-deploy-reader",
+      "writer_agent_id": "workflow-deploy-report-writer"
+    },
+    {
+      "classification": "RESTRICTED",
+      "file_sha256": "e4e5baf6913b85d57d687860b9f81501eb2b6c54043016bf638ef991d4c833ae",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/injection-latest.md"
+      ],
+      "run_id": "20260710T160529336463Z-af14c21d",
+      "source_evidence_hash": "93a0ae2132c71716d050de2770af660258a9a8eaec3a9e4559adf011491dbcdc",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-injection-reader",
+      "writer_agent_id": "workflow-injection-report-writer"
+    },
+    {
+      "classification": "RESTRICTED",
+      "file_sha256": "b0cbd5bcdeb954152011fc0060d420cf02d5ce313ef35cf11f3cb43502bcb1fb",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/permissions-latest.md"
+      ],
+      "run_id": "20260710T160529490626Z-b57933d2",
+      "source_evidence_hash": "4001835b3ffab5eb308e083ddb981e0e0c18b76fa4bb749cb3c05dad62eb92fb",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-permission-reader",
+      "writer_agent_id": "workflow-permission-report-writer"
+    },
+    {
+      "classification": "CONTROLLED",
+      "file_sha256": "3130b990ec777dc611dbf66249e5668418f9dbc36386aa382bf021e7cbaea89f",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/runners-latest.md"
+      ],
+      "run_id": "20260710T160529693538Z-367db6dd",
+      "source_evidence_hash": "fa81302985faf8e3228b2e6ab99dd88140813578dc95c7eb1745c7f0f4cdf294",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-runner-reader",
+      "writer_agent_id": "workflow-runner-report-writer"
+    },
+    {
+      "classification": "OPEN",
+      "file_sha256": "94c59fb20bc26b40ca60e947aa4138a299f9cbe9e78323b9c5ae4e64217726ec",
+      "output_paths": [
+        ".project-ai/automation/reports/workflows/schedule-latest.md"
+      ],
+      "run_id": "20260710T160529898130Z-20bf3519",
+      "source_evidence_hash": "ead255182dad3332d6f74a8e8e602f3dad4a9689cce6216313b8ba09ba1c44c8",
+      "source_evidence_hash_resolves": true,
+      "source_reader_agent_id": "workflow-schedule-reader",
+      "writer_agent_id": "workflow-schedule-report-writer"
+    }
+  ],
+  "redaction": {
+    "plaintext_in_taar_outputs": [],
+    "plaintext_locations_in_facility": [
+      "config_backup.py"
+    ],
+    "planted_input_file": "config_backup.py (facility input; deliberately NOT in this bundle)",
+    "planted_token_sha256": "641db3ead4263b406966e777c174a5fe01b4194bb7aaa80145571bc8c82549e7",
+    "redacted_fragment_in_secret_report": true
+  },
+  "registry_snapshot": {
+    "combined_sha256": "f6d90eae744af64b51d0e397b2e808394f4379a98401fadf8850ef4b80d20327",
+    "files": {
+      "agents.yaml": "215c85d558a54261144569bc0d80794e8c3bdfd75132dcdf05f1dbbf82eea386",
+      "capabilities.yaml": "614a43f96a735e0a1e99efaeab76446d6643467f8cfc14cc73b62d49d5f08f65",
+      "classifications.yaml": "b37a17aaa7cd33c6a6f65e8e309317f520c3d6bacb498e3269c157c919852844",
+      "schedules.yaml": "4dfd513e78e534af07dc706b71251d9b0bc6a1eae324dac5648bef6d32a48d7a",
+      "tasks.yaml": "34e2333d74163ce507cd62d8f4d3ce9c37a31f12493499e516953af7c6dce7e6"
+    }
+  },
+  "reports": [
+    {
+      "path": "reports/facility/heartbeat-latest.md",
+      "sha256": "18c33d8a7136eb446af2e2a3985275535c6afed0c1f9408746a0b93d930cb28d",
+      "size": 826
+    },
+    {
+      "path": "reports/facility/locks-latest.md",
+      "sha256": "5cb99565cbc0a6d4f8e589f88e3b21d5bf7224941c49ff4173a70855db0e933e",
+      "size": 869
+    },
+    {
+      "path": "reports/facility/phantom-latest.md",
+      "sha256": "7d94e56086f75d34cd336df2e302075e86de0e063f2f2bcd05995b82aa3e4b2b",
+      "size": 749
+    },
+    {
+      "path": "reports/facility/runaway-latest.md",
+      "sha256": "c4840f8767e894e9c6de96346e4dd7b80ed70aa22bf5bd27354c3f87a66aa7e4",
+      "size": 740
+    },
+    {
+      "path": "reports/git/status-latest.md",
+      "sha256": "28a854607595995037a0ddb8b05b303740720c29fc2af9e4d2424820f31b72fa",
+      "size": 738
+    },
+    {
+      "path": "reports/mypy/latest.md",
+      "sha256": "737bd1a713b5c15d6b88d9964c092fca31792e0be0948995cf49ee51dda2af87",
+      "size": 809
+    },
+    {
+      "path": "reports/path-drift/latest.md",
+      "sha256": "c480d08f9d81c44e48382f5172a3aad5f63e0807fae6f7a8567b68644fdb0610",
+      "size": 4259
+    },
+    {
+      "path": "reports/ruff/latest.md",
+      "sha256": "855fbf9b276f4ba07b36e6eac08615afd4f5bc2e4cfb18dcdb8b6816073a5d3a",
+      "size": 728
+    },
+    {
+      "path": "reports/security/secrets-latest.md",
+      "sha256": "53f6843bb6c2e9e53ac13d9038e7d1a9f50d9cf734a96a5e62d340ab27b19886",
+      "size": 861
+    },
+    {
+      "path": "reports/tests/collect-latest.md",
+      "sha256": "5f78fa7a725cfd17979955e62e519d9d72b588c1c5b4cbfab16da5a93c0b64a2",
+      "size": 818
+    },
+    {
+      "path": "reports/workflows/action-pins-latest.md",
+      "sha256": "b9969027b73be497afcb2d83b85a5f7306565c0c772215e96c929b5e985f1bff",
+      "size": 888
+    },
+    {
+      "path": "reports/workflows/artifacts-latest.md",
+      "sha256": "2c7d633381e14e23fba10815ff5cefa63072b6b9501a12482132d5e10adec65c",
+      "size": 1021
+    },
+    {
+      "path": "reports/workflows/dag-latest.md",
+      "sha256": "f602f42acbf33d10e02af3c181ebb1f328f8c02f0d20d44e055d470eb27a1bb7",
+      "size": 3708
+    },
+    {
+      "path": "reports/workflows/deploy-latest.md",
+      "sha256": "1bb4a015470a723ab23b38e309b2e5ffda661e0bebf981d4f24ba668bf68d125",
+      "size": 1426
+    },
+    {
+      "path": "reports/workflows/injection-latest.md",
+      "sha256": "49abddefc63006f2861c051244346700cd9786068e706ad8a380ac5cf56be21d",
+      "size": 921
+    },
+    {
+      "path": "reports/workflows/permissions-latest.md",
+      "sha256": "19ca31f35b7dd24d11cc6d5379651cab93ac5972f0ea69c1761cde571f1c3a55",
+      "size": 1488
+    },
+    {
+      "path": "reports/workflows/runners-latest.md",
+      "sha256": "4750faa4cd45369fa7b3e38258a60a34642cb1b3bfa35058dd67eeb5280865b3",
+      "size": 865
+    },
+    {
+      "path": "reports/workflows/schedule-latest.md",
+      "sha256": "fc13278e231b60f0f4c53146de85dc95d24ec2c1c2554142ace66d73a559f8cd",
+      "size": 795
+    },
+    {
+      "path": "digests/governance-latest.md",
+      "sha256": "96a4704c27abede4f6ddbb3a47e068f06ee8edf5637ef1e2ef2a1e8eea4a1276",
+      "size": 454
+    },
+    {
+      "path": "digests/morning-latest.md",
+      "sha256": "9a400e21bdc9fe505baabd81f5eae3bcff426f81b3ebea14c877a8257555115a",
+      "size": 653
+    }
+  ],
+  "runs": {
+    "20260710T160521653061Z-05b83266": {
+      "agent_id": "git-status-reader",
+      "at": "2026-07-10T16:05:21.955478+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160521957480Z-28335853": {
+      "agent_id": "governance-reader",
+      "at": "2026-07-10T16:05:22.079546+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160522081544Z-a4602e83": {
+      "agent_id": "heartbeat-reader",
+      "at": "2026-07-10T16:05:22.347867+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160522350656Z-6d8993f4": {
+      "agent_id": "lock-reader",
+      "at": "2026-07-10T16:05:22.612592+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160522614593Z-31ad3e7a": {
+      "agent_id": "mypy-reader",
+      "at": "2026-07-10T16:05:23.018479+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160523019484Z-358fb8d7": {
+      "agent_id": "overnight-reader",
+      "at": "2026-07-10T16:05:23.138808+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160523140812Z-2a381a3f": {
+      "agent_id": "path-drift-reader",
+      "at": "2026-07-10T16:05:23.274777+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160523275778Z-854ab570": {
+      "agent_id": "pytest-collect-reader",
+      "at": "2026-07-10T16:05:23.501650+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160523502651Z-b976e583": {
+      "agent_id": "ruff-reader",
+      "at": "2026-07-10T16:05:24.256907+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160524258909Z-e509cd8c": {
+      "agent_id": "runaway-reader",
+      "at": "2026-07-10T16:05:24.434134+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160524436135Z-c579ed3f": {
+      "agent_id": "secret-reader",
+      "at": "2026-07-10T16:05:24.610466+00:00",
+      "classification": "SECRET",
+      "final_status": "succeeded"
+    },
+    "20260710T160524613462Z-78fe09a5": {
+      "agent_id": "workflow-action-pin-reader",
+      "at": "2026-07-10T16:05:24.785634+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160524787636Z-76d54d0c": {
+      "agent_id": "workflow-artifact-reader",
+      "at": "2026-07-10T16:05:25.105222+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160525106222Z-0e6959f5": {
+      "agent_id": "workflow-dag-reader",
+      "at": "2026-07-10T16:05:25.284737+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160525286738Z-1b395b5a": {
+      "agent_id": "workflow-deploy-reader",
+      "at": "2026-07-10T16:05:25.465606+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160525466606Z-2e798ffd": {
+      "agent_id": "workflow-injection-reader",
+      "at": "2026-07-10T16:05:25.635774+00:00",
+      "classification": "RESTRICTED",
+      "final_status": "succeeded"
+    },
+    "20260710T160525637773Z-f86e514c": {
+      "agent_id": "workflow-permission-reader",
+      "at": "2026-07-10T16:05:25.824308+00:00",
+      "classification": "RESTRICTED",
+      "final_status": "succeeded"
+    },
+    "20260710T160525826316Z-6ba5f858": {
+      "agent_id": "workflow-reader",
+      "at": "2026-07-10T16:05:26.021725+00:00",
+      "classification": "SECRET",
+      "final_status": "succeeded"
+    },
+    "20260710T160526022720Z-99a9d897": {
+      "agent_id": "workflow-runner-reader",
+      "at": "2026-07-10T16:05:26.274329+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160526276924Z-73bfa0ce": {
+      "agent_id": "workflow-schedule-reader",
+      "at": "2026-07-10T16:05:26.456860+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160526459864Z-e5fd87e3": {
+      "agent_id": "workflow-secret-reader",
+      "at": "2026-07-10T16:05:26.639625+00:00",
+      "classification": "SECRET",
+      "final_status": "succeeded"
+    },
+    "20260710T160526645624Z-7c381c1f": {
+      "agent_id": "git-status-writer",
+      "at": "2026-07-10T16:05:26.779426+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160526784424Z-8db02e58": {
+      "agent_id": "governance-digest-writer",
+      "at": "2026-07-10T16:05:27.072339+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160527077341Z-8ef95428": {
+      "agent_id": "heartbeat-report-writer",
+      "at": "2026-07-10T16:05:27.205666+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160527210666Z-db72d885": {
+      "agent_id": "lock-report-writer",
+      "at": "2026-07-10T16:05:27.335677+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160527344186Z-fbd96646": {
+      "agent_id": "morning-brief-writer",
+      "at": "2026-07-10T16:05:27.476049+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160527480049Z-4c9a9494": {
+      "agent_id": "mypy-report-writer",
+      "at": "2026-07-10T16:05:27.608156+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160527617153Z-c846f167": {
+      "agent_id": "path-drift-report-writer",
+      "at": "2026-07-10T16:05:27.780290+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160527783291Z-65ef026d": {
+      "agent_id": "phantom-report-writer",
+      "at": "2026-07-10T16:05:27.783291+00:00",
+      "classification": "OPEN",
+      "final_status": "denied"
+    },
+    "20260710T160527787805Z-36cf5401": {
+      "agent_id": "pytest-collect-writer",
+      "at": "2026-07-10T16:05:27.945740+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160527950741Z-1679a192": {
+      "agent_id": "ruff-report-writer",
+      "at": "2026-07-10T16:05:28.104395+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160528109395Z-6fb89ea9": {
+      "agent_id": "runaway-report-writer",
+      "at": "2026-07-10T16:05:28.248409+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160528252513Z-9f8f09ec": {
+      "agent_id": "secret-report-writer",
+      "at": "2026-07-10T16:05:28.552070+00:00",
+      "classification": "SECRET",
+      "final_status": "succeeded"
+    },
+    "20260710T160528556835Z-40c6e55c": {
+      "agent_id": "workflow-action-pin-report-writer",
+      "at": "2026-07-10T16:05:28.857012+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160528861011Z-15c1da83": {
+      "agent_id": "workflow-artifact-report-writer",
+      "at": "2026-07-10T16:05:28.996608+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160529013599Z-d9c44acc": {
+      "agent_id": "workflow-dag-report-writer",
+      "at": "2026-07-10T16:05:29.191313+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160529199310Z-ef497608": {
+      "agent_id": "workflow-deploy-report-writer",
+      "at": "2026-07-10T16:05:29.331575+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160529336463Z-af14c21d": {
+      "agent_id": "workflow-injection-report-writer",
+      "at": "2026-07-10T16:05:29.481106+00:00",
+      "classification": "RESTRICTED",
+      "final_status": "succeeded"
+    },
+    "20260710T160529490626Z-b57933d2": {
+      "agent_id": "workflow-permission-report-writer",
+      "at": "2026-07-10T16:05:29.657994+00:00",
+      "classification": "RESTRICTED",
+      "final_status": "succeeded"
+    },
+    "20260710T160529689536Z-7b9ab149": {
+      "agent_id": "workflow-report-writer",
+      "at": "2026-07-10T16:05:29.689536+00:00",
+      "classification": "OPEN",
+      "final_status": "denied"
+    },
+    "20260710T160529693538Z-367db6dd": {
+      "agent_id": "workflow-runner-report-writer",
+      "at": "2026-07-10T16:05:29.893131+00:00",
+      "classification": "CONTROLLED",
+      "final_status": "succeeded"
+    },
+    "20260710T160529898130Z-20bf3519": {
+      "agent_id": "workflow-schedule-report-writer",
+      "at": "2026-07-10T16:05:30.026405+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T160530033401Z-b7b392af": {
+      "agent_id": "workflow-secret-report-writer",
+      "at": "2026-07-10T16:05:30.033401+00:00",
+      "classification": "OPEN",
+      "final_status": "denied"
+    },
+    "20260710T164236998093Z-8c48fbd8": {
+      "agent_id": "phantom-reader",
+      "at": "2026-07-10T16:42:37.463540+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    },
+    "20260710T164238255404Z-8e7c29fc": {
+      "agent_id": "phantom-report-writer",
+      "at": "2026-07-10T16:42:38.417339+00:00",
+      "classification": "OPEN",
+      "final_status": "succeeded"
+    }
+  },
+  "schema": "taar-e2e-verification-bundle/1"
+}

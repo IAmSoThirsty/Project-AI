@@ -1,0 +1,14 @@
+artifact_type: report
+classification: OPEN
+created_at: '2026-07-10T16:05:29.185801+00:00'
+decision: wrote
+human_action_required: false
+output_id: d7a48803422c41438b280de705e15fda
+output_paths:
+- .project-ai/automation/reports/workflows/dag-latest.md
+run_id: 20260710T160529013599Z-d9c44acc
+source_evidence_hash: 8b862b5048696f8219add83683753cfc80a503adb16b8b7abdc8edae30571e1c
+source_reader_agent_id: workflow-dag-reader
+summary: report written from workflow-dag-reader run 20260710T160525106222Z-0e6959f5
+task_id: workflow-dag-report
+writer_agent_id: workflow-dag-report-writer

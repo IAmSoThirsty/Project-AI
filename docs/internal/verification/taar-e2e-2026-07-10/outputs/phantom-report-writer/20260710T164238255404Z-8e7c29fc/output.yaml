@@ -1,0 +1,14 @@
+artifact_type: report
+classification: OPEN
+created_at: '2026-07-10T16:42:38.413220+00:00'
+decision: wrote
+human_action_required: false
+output_id: 761f7d37392a477c87dd02396aec16d8
+output_paths:
+- .project-ai/automation/reports/facility/phantom-latest.md
+run_id: 20260710T164238255404Z-8e7c29fc
+source_evidence_hash: 00915cd137daf8c12238659d03988889b81ebe11f66b41a86e757d9e806e6475
+source_reader_agent_id: phantom-reader
+summary: report written from phantom-reader run 20260710T164236998093Z-8c48fbd8
+task_id: phantom-report
+writer_agent_id: phantom-report-writer

@@ -1,13 +1,13 @@
-exclude: ^(apps/web-static/ompt-reference/|docs/internal/frozen-history/|docs/legacy-archive/|docs/reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+exclude: ^(apps/web-static/ompt-reference/|docs/internal/frozen-history/|docs/internal/verification/|docs/legacy-archive/|docs/reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: ^(apps/web-static/ompt-reference/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(apps/web-static/ompt-reference/|docs/internal/verification/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
       - id: end-of-file-fixer
-        exclude: ^(apps/web-static/ompt-reference/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(apps/web-static/ompt-reference/|docs/internal/verification/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
       - id: check-yaml
         exclude: ^helm/project-ai/templates/
       - id: check-json
@@ -24,9 +24,9 @@ repos:
     hooks:
       - id: ruff
         args: ['--fix', '--exit-non-zero-on-fix']
-        exclude: ^(packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(docs/internal/verification/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
       - id: ruff-format
-        exclude: ^(packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(docs/internal/verification/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v2.1.0
@@ -35,7 +35,7 @@ repos:
         args: ['--ignore-missing-imports']
         additional_dependencies: ['fastapi>=0.115.0', 'typer>=0.16.0', 'PyQt6>=6.8.0', 'click>=8.1.0', 'thirsty-lang==0.8.1', 'libcst>=1.8.0', 'monkeytype>=23.3.0', 'rich>=13.9.0']
         files: ^(packages/(kernel|security|governance|capability|execution|companion|swr|atlas|arbiter|rlp|taar|api|cli)/src/|apps/(desktop|services)/src/|tools/)
-        exclude: ^(packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(docs/internal/verification/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.21.2

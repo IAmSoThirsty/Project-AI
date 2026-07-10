@@ -1,0 +1,14 @@
+artifact_type: report
+classification: OPEN
+created_at: '2026-07-10T16:05:27.603151+00:00'
+decision: wrote
+human_action_required: false
+output_id: e52b93c9f29144119da3fd965faba8e9
+output_paths:
+- .project-ai/automation/reports/mypy/latest.md
+run_id: 20260710T160527480049Z-4c9a9494
+source_evidence_hash: 4f51306074ee5f0ce8ec06019b15ba83b85a8292505f9a380c3a935a3b2c0c83
+source_reader_agent_id: mypy-reader
+summary: report written from mypy-reader run 20260710T160522614593Z-31ad3e7a
+task_id: mypy-report
+writer_agent_id: mypy-report-writer

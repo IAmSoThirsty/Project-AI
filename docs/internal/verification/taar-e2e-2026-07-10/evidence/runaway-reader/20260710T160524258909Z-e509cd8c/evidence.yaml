@@ -1,0 +1,23 @@
+agent_class: reader
+agent_id: runaway-reader
+branch: main
+classification: OPEN
+commands:
+- command: builtin:runaway_check
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 0
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\runaway-reader\20260710T160524258909Z-e509cd8c\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\runaway-reader\20260710T160524258909Z-e509cd8c\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 168
+end_time: '2026-07-10T16:05:24.427138+00:00'
+evidence_hash: 2a20fd563efae019878f50cb1778de4d44e6fa50c3be5c303262b7ac330c295c
+findings: []
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160524258909Z-e509cd8c
+start_time: '2026-07-10T16:05:24.258909+00:00'
+task_id: runaway-check
+uncertainty: []

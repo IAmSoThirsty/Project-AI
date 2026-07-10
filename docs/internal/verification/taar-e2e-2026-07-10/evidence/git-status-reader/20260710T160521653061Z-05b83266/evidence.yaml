@@ -1,0 +1,35 @@
+agent_class: reader
+agent_id: git-status-reader
+branch: main
+classification: OPEN
+commands:
+- command: git status --porcelain=v1
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 47
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\git-status-reader\20260710T160521653061Z-05b83266\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\git-status-reader\20260710T160521653061Z-05b83266\stdout.txt
+- command: git branch --show-current
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 46
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\git-status-reader\20260710T160521653061Z-05b83266\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\git-status-reader\20260710T160521653061Z-05b83266\stdout.txt
+- command: git rev-parse HEAD
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 47
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\git-status-reader\20260710T160521653061Z-05b83266\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\git-status-reader\20260710T160521653061Z-05b83266\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 295
+end_time: '2026-07-10T16:05:21.948430+00:00'
+evidence_hash: e683de8e5a35d0b4a0f93cd60247bd1f46c21171c6346e24dbd5ba82af17f4f2
+findings: []
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160521653061Z-05b83266
+start_time: '2026-07-10T16:05:21.653061+00:00'
+task_id: git-status-check
+uncertainty: []

@@ -1,0 +1,291 @@
+agent_class: reader
+agent_id: workflow-reader
+branch: main
+classification: SECRET
+commands:
+- command: builtin:workflow_check
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 0
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-reader\20260710T160525826316Z-6ba5f858\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-reader\20260710T160525826316Z-6ba5f858\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 171
+end_time: '2026-07-10T16:05:25.997466+00:00'
+evidence_hash: 7027fbca217c788ac0be0435757d42d71794ec9aa3e79dd5c7d3a665433f7e98
+findings:
+- finding_id: 8de9a659907d
+  line: null
+  message: 'No permissions block declared: GITHUB_TOKEN falls back to repository default'
+  path: ci.yaml
+  severity: medium
+- finding_id: d9eecf3f2557
+  line: null
+  message: Artifact upload without retention-days in job sbom
+  path: ci.yaml
+  severity: low
+- finding_id: 955e9f36c3e8
+  line: null
+  message: 'triggers: pull_request, push'
+  path: ci.yaml
+  severity: info
+- finding_id: c691433e0c97
+  line: null
+  message: 'job python: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=10'
+  path: ci.yaml
+  severity: info
+- finding_id: 8a8d71d90e69
+  line: null
+  message: 'job rust: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=5'
+  path: ci.yaml
+  severity: info
+- finding_id: 0aa8411d5aaf
+  line: null
+  message: 'job node: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=7'
+  path: ci.yaml
+  severity: info
+- finding_id: 0b2df403333e
+  line: null
+  message: 'job android: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=5'
+  path: ci.yaml
+  severity: info
+- finding_id: a2bc9ee15bb1
+  line: null
+  message: 'job desktop: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=6'
+  path: ci.yaml
+  severity: info
+- finding_id: ee88288d6467
+  line: null
+  message: 'job compose: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=6'
+  path: ci.yaml
+  severity: info
+- finding_id: 0574910ee19e
+  line: null
+  message: 'job kubernetes: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=6'
+  path: ci.yaml
+  severity: info
+- finding_id: 97f43b62ac30
+  line: null
+  message: 'job sbom: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=5'
+  path: ci.yaml
+  severity: info
+- finding_id: db621ef6381a
+  line: null
+  message: 'workflow: permissions set to write-all'
+  path: dangerous.yml
+  severity: critical
+- finding_id: 9a910acaa9a1
+  line: null
+  message: "pull_request_target trigger present with secrets in scope: DEPLOY_TOKEN\
+    \ \u2014 fork PR code can run with elevated context"
+  path: dangerous.yml
+  severity: critical
+- finding_id: cfcd88b923d1
+  line: 14
+  message: Secret echoed to logs
+  path: dangerous.yml
+  severity: critical
+- finding_id: fb4103640c1c
+  line: null
+  message: 'Secret referenced: DEPLOY_TOKEN'
+  path: dangerous.yml
+  severity: info
+- finding_id: 15d1c9b4f538
+  line: null
+  message: 'Action pinned to floating branch ref: someone/random-action@main (job
+    build)'
+  path: dangerous.yml
+  severity: high
+- finding_id: d7cd0b9c9266
+  line: null
+  message: 'Attacker-controllable context interpolated into shell: ${{ github.event.pull_request.title
+    }} (job build)'
+  path: dangerous.yml
+  severity: critical
+- finding_id: 5c45a6b4cf9f
+  line: null
+  message: 'Self-hosted runner in job build: verify isolation and trigger surface'
+  path: dangerous.yml
+  severity: high
+- finding_id: 8b3f627dee34
+  line: null
+  message: Artifact upload of entire workspace in job build
+  path: dangerous.yml
+  severity: high
+- finding_id: b0b627605096
+  line: null
+  message: Artifact upload without retention-days in job build
+  path: dangerous.yml
+  severity: low
+- finding_id: 107edb6a4ff8
+  line: null
+  message: Deployment-shaped job build has no environment gate (no approval boundary)
+  path: dangerous.yml
+  severity: high
+- finding_id: cc20bbb2a0ea
+  line: null
+  message: Deployment-shaped job deploy has no environment gate (no approval boundary)
+  path: dangerous.yml
+  severity: high
+- finding_id: 9e926216c964
+  line: null
+  message: 'triggers: pull_request_target'
+  path: dangerous.yml
+  severity: info
+- finding_id: 82a61db68348
+  line: null
+  message: 'job build: needs=[''-''] runs-on=self-hosted permissions=inherited secrets=[''DEPLOY_TOKEN'']
+    steps=5'
+  path: dangerous.yml
+  severity: info
+- finding_id: b8258e3a4a22
+  line: null
+  message: 'job deploy: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=1'
+  path: dangerous.yml
+  severity: info
+- finding_id: 8212e8a6338d
+  line: null
+  message: Deployment job deploy gated by environment production
+  path: hardened.yml
+  severity: info
+- finding_id: 80589ef262d3
+  line: null
+  message: 'triggers: pull_request'
+  path: hardened.yml
+  severity: info
+- finding_id: 81eb3f5e0e64
+  line: null
+  message: 'job test: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=3'
+  path: hardened.yml
+  severity: info
+- finding_id: 9153569e303c
+  line: null
+  message: 'job deploy: needs=[''test''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=1'
+  path: hardened.yml
+  severity: info
+- finding_id: 7da55d63bad3
+  line: null
+  message: 'job build-api: broad permission packages: write'
+  path: publish.yaml
+  severity: high
+- finding_id: 4e83b8e8ec26
+  line: null
+  message: 'job build-web: broad permission packages: write'
+  path: publish.yaml
+  severity: high
+- finding_id: dad316508a33
+  line: null
+  message: 'job build-adapters: broad permission packages: write'
+  path: publish.yaml
+  severity: high
+- finding_id: 2658d83bc0bb
+  line: null
+  message: 'job build-genesis: broad permission packages: write'
+  path: publish.yaml
+  severity: high
+- finding_id: 9da49b7aa4e7
+  line: null
+  message: 'job publish-sbom: broad permission packages: write'
+  path: publish.yaml
+  severity: high
+- finding_id: 4527941aec6a
+  line: null
+  message: 'job publish-release-notes: broad permission contents: write'
+  path: publish.yaml
+  severity: high
+- finding_id: 72d966b75aec
+  line: null
+  message: 'Secret referenced: GITHUB_TOKEN'
+  path: publish.yaml
+  severity: info
+- finding_id: ce61c49b428d
+  line: null
+  message: Deployment-shaped job publish-sbom has no environment gate (no approval
+    boundary)
+  path: publish.yaml
+  severity: high
+- finding_id: 50d987c65395
+  line: null
+  message: Deployment-shaped job verify-images has no environment gate (no approval
+    boundary)
+  path: publish.yaml
+  severity: high
+- finding_id: 5953b96c0ab0
+  line: null
+  message: Deployment-shaped job publish-release-notes has no environment gate (no
+    approval boundary)
+  path: publish.yaml
+  severity: high
+- finding_id: c64bbd7b3e14
+  line: null
+  message: 'triggers: push, workflow_dispatch'
+  path: publish.yaml
+  severity: info
+- finding_id: 7f16d33652fe
+  line: null
+  message: 'job image-metadata: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=3'
+  path: publish.yaml
+  severity: info
+- finding_id: 2196459afc77
+  line: null
+  message: 'job build-api: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: 457d105ac0b7
+  line: null
+  message: 'job build-web: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: 75d666927369
+  line: null
+  message: 'job build-adapters: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: ac272cd2adf1
+  line: null
+  message: 'job build-genesis: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: 711b87f9ea29
+  line: null
+  message: 'job publish-sbom: needs=[''build-api'', ''build-web'', ''build-adapters'',
+    ''build-genesis''] runs-on=ubuntu-latest permissions=declared secrets=[''-'']
+    steps=2'
+  path: publish.yaml
+  severity: info
+- finding_id: a0c489e6012c
+  line: null
+  message: 'job verify-images: needs=[''image-metadata'', ''build-api'', ''build-web'',
+    ''build-adapters'', ''build-genesis''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=5'
+  path: publish.yaml
+  severity: info
+- finding_id: 004878271703
+  line: null
+  message: 'job publish-release-notes: needs=[''image-metadata'', ''verify-images'']
+    runs-on=ubuntu-latest permissions=declared secrets=[''-''] steps=3'
+  path: publish.yaml
+  severity: info
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160525826316Z-6ba5f858
+start_time: '2026-07-10T16:05:25.826316+00:00'
+task_id: workflow-check
+uncertainty: []

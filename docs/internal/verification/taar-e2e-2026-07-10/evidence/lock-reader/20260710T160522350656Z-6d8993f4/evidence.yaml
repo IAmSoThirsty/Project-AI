@@ -1,0 +1,28 @@
+agent_class: reader
+agent_id: lock-reader
+branch: main
+classification: OPEN
+commands:
+- command: builtin:lock_check
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 0
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\lock-reader\20260710T160522350656Z-6d8993f4\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\lock-reader\20260710T160522350656Z-6d8993f4\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 256
+end_time: '2026-07-10T16:05:22.607596+00:00'
+evidence_hash: d74ad677a1cec111f1481ace04b6262a5f80e81181881f91e159b2784588be1e
+findings:
+- finding_id: f2d33962b516
+  line: null
+  message: 'Active lock: agent=lock-reader run=20260710T160522350656Z-6d8993f4 pid=32452'
+  path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\locks\lock-reader.lock.json
+  severity: info
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160522350656Z-6d8993f4
+start_time: '2026-07-10T16:05:22.350656+00:00'
+task_id: lock-check
+uncertainty: []

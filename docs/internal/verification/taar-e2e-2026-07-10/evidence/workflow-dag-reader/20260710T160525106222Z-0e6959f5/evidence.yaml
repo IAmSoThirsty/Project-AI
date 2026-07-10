@@ -1,0 +1,165 @@
+agent_class: reader
+agent_id: workflow-dag-reader
+branch: main
+classification: OPEN
+commands:
+- command: builtin:workflow_dag_check
+  cwd: T:\Temp\claude\scratch\taar-e2e
+  duration_ms: 0
+  exit_code: 0
+  stderr_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-dag-reader\20260710T160525106222Z-0e6959f5\stderr.txt
+  stdout_path: T:\Temp\claude\scratch\taar-e2e\.project-ai\automation\evidence\workflow-dag-reader\20260710T160525106222Z-0e6959f5\stdout.txt
+commit: 77b7007f852162bd1d15c4ffe154d7ae69283954
+dirty_state_before: dirty
+duration_ms: 165
+end_time: '2026-07-10T16:05:25.271738+00:00'
+evidence_hash: 8b862b5048696f8219add83683753cfc80a503adb16b8b7abdc8edae30571e1c
+findings:
+- finding_id: c4af6d439135
+  line: null
+  message: 'triggers: pull_request, push'
+  path: ci.yaml
+  severity: info
+- finding_id: f2aa072e019a
+  line: null
+  message: 'job python: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=10'
+  path: ci.yaml
+  severity: info
+- finding_id: 938e5c3d9528
+  line: null
+  message: 'job rust: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=5'
+  path: ci.yaml
+  severity: info
+- finding_id: b44c46f9b9fe
+  line: null
+  message: 'job node: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=7'
+  path: ci.yaml
+  severity: info
+- finding_id: a89e63911e52
+  line: null
+  message: 'job android: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=5'
+  path: ci.yaml
+  severity: info
+- finding_id: f78b4cf07fc6
+  line: null
+  message: 'job desktop: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=6'
+  path: ci.yaml
+  severity: info
+- finding_id: 1d61ad3709ae
+  line: null
+  message: 'job compose: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=6'
+  path: ci.yaml
+  severity: info
+- finding_id: eb6116ebc0ca
+  line: null
+  message: 'job kubernetes: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=6'
+  path: ci.yaml
+  severity: info
+- finding_id: 51ba449e4ea9
+  line: null
+  message: 'job sbom: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=5'
+  path: ci.yaml
+  severity: info
+- finding_id: b533b2feeae1
+  line: null
+  message: 'triggers: pull_request_target'
+  path: dangerous.yml
+  severity: info
+- finding_id: 76b10fe2d552
+  line: null
+  message: 'job build: needs=[''-''] runs-on=self-hosted permissions=inherited secrets=[''DEPLOY_TOKEN'']
+    steps=5'
+  path: dangerous.yml
+  severity: info
+- finding_id: b0f304c9e647
+  line: null
+  message: 'job deploy: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=1'
+  path: dangerous.yml
+  severity: info
+- finding_id: e36e58c249a3
+  line: null
+  message: 'triggers: pull_request'
+  path: hardened.yml
+  severity: info
+- finding_id: dddeb9b5c806
+  line: null
+  message: 'job test: needs=[''-''] runs-on=ubuntu-latest permissions=inherited secrets=[''-'']
+    steps=3'
+  path: hardened.yml
+  severity: info
+- finding_id: 978bc3d499b7
+  line: null
+  message: 'job deploy: needs=[''test''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=1'
+  path: hardened.yml
+  severity: info
+- finding_id: 1f9f6f26ba8e
+  line: null
+  message: 'triggers: push, workflow_dispatch'
+  path: publish.yaml
+  severity: info
+- finding_id: 00e26d34bb0c
+  line: null
+  message: 'job image-metadata: needs=[''-''] runs-on=ubuntu-latest permissions=inherited
+    secrets=[''-''] steps=3'
+  path: publish.yaml
+  severity: info
+- finding_id: d98e79533659
+  line: null
+  message: 'job build-api: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: 75be3cb7429d
+  line: null
+  message: 'job build-web: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: b72ff5379349
+  line: null
+  message: 'job build-adapters: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: 3643d84982c6
+  line: null
+  message: 'job build-genesis: needs=[''image-metadata''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=4'
+  path: publish.yaml
+  severity: info
+- finding_id: d265b362a6b0
+  line: null
+  message: 'job publish-sbom: needs=[''build-api'', ''build-web'', ''build-adapters'',
+    ''build-genesis''] runs-on=ubuntu-latest permissions=declared secrets=[''-'']
+    steps=2'
+  path: publish.yaml
+  severity: info
+- finding_id: bd8666213a2d
+  line: null
+  message: 'job verify-images: needs=[''image-metadata'', ''build-api'', ''build-web'',
+    ''build-adapters'', ''build-genesis''] runs-on=ubuntu-latest permissions=declared
+    secrets=[''GITHUB_TOKEN''] steps=5'
+  path: publish.yaml
+  severity: info
+- finding_id: e8e8b1672fac
+  line: null
+  message: 'job publish-release-notes: needs=[''image-metadata'', ''verify-images'']
+    runs-on=ubuntu-latest permissions=declared secrets=[''-''] steps=3'
+  path: publish.yaml
+  severity: info
+ignored: []
+repo_root: T:\Temp\claude\scratch\taar-e2e
+run_id: 20260710T160525106222Z-0e6959f5
+start_time: '2026-07-10T16:05:25.106222+00:00'
+task_id: workflow-dag-check
+uncertainty: []
