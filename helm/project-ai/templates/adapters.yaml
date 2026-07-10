@@ -16,7 +16,7 @@ metadata:
     {{- include "project-ai.labels" $root | nindent 4 }}
     {{- include "project-ai.selectorLabels" (dict "root" $root "component" $component) | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ $svc.replicas | default 1 }}
   selector:
     matchLabels:
       {{- include "project-ai.selectorLabels" (dict "root" $root "component" $component) | nindent 6 }}
@@ -26,11 +26,14 @@ spec:
         {{- include "project-ai.labels" $root | nindent 8 }}
         {{- include "project-ai.selectorLabels" (dict "root" $root "component" $component) | nindent 8 }}
     spec:
+      {{- if $root.Values.rbac.create }}
+      serviceAccountName: {{ $root.Release.Name }}-adapters
+      {{- end }}
       securityContext:
         {{- include "project-ai.podSecurityContext" $root | nindent 8 }}
       containers:
         - name: {{ $component }}
-          image: {{ $svc.image }}
+          image: {{ include "project-ai.image" (dict "root" $root "name" $component) }}
           imagePullPolicy: {{ $root.Values.image.pullPolicy }}
           env:
             - name: PROJECT_AI_SERVICE

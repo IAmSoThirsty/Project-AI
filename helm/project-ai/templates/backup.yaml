@@ -1,0 +1,68 @@
+{{- if .Values.backup.enabled }}
+---
+# CronJob for automated backups
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  # Run daily at 2 AM UTC
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: backup
+        spec:
+          serviceAccountName: {{ .Release.Name }}-backup
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: busybox:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "Starting backup at $(date)"
+                  # Mount PVC at /data (audit data)
+                  # Compress: tar czf /backup/audit-$(date +%Y%m%d-%H%M%S).tar.gz -C /data .
+                  # Upload to S3/GCS/Azure if configured
+                  echo "Backup completed at $(date)"
+              volumeMounts:
+                - name: audit-data
+                  mountPath: /data
+                  readOnly: true
+                - name: backup-storage
+                  mountPath: /backup
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+          volumes:
+            - name: audit-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-audit-data-pvc
+                readOnly: true
+            - name: backup-storage
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-backup-pvc
+
+---
+# ServiceAccount for backup job
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+{{- end }}

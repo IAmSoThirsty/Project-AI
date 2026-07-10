@@ -6,7 +6,7 @@ metadata:
     {{- include "project-ai.labels" . | nindent 4 }}
     {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.api.replicas | default 1 }}
   selector:
     matchLabels:
       {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 6 }}
@@ -16,18 +16,25 @@ spec:
         {{- include "project-ai.labels" . | nindent 8 }}
         {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 8 }}
     spec:
+      {{- if .Values.rbac.create }}
+      serviceAccountName: {{ .Release.Name }}-api
+      {{- end }}
       securityContext:
         {{- include "project-ai.podSecurityContext" . | nindent 8 }}
       containers:
         - name: api
-          image: {{ .Values.api.image }}
+          image: {{ include "project-ai.image" (dict "root" . "name" "api") }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.api.port }}
               protocol: TCP
           env:
             - name: PROJECT_AI_API_TOKEN
-              value: {{ .Values.api.env.PROJECT_AI_API_TOKEN | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-secrets
+                  key: PROJECT_AI_API_TOKEN
+                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
             - name: PROJECT_AI_AUDIT_PATH
               value: {{ .Values.api.env.PROJECT_AI_AUDIT_PATH | quote }}
             - name: PROJECT_AI_DOI_REGISTRY
@@ -55,7 +62,12 @@ spec:
       volumes:
         {{- include "project-ai.tmpVolume" . | nindent 8 }}
         - name: audit-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-audit-data-pvc
+          {{- else }}
           emptyDir: {}
+          {{- end }}
 ---
 apiVersion: v1
 kind: Service

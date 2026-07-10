@@ -1,0 +1,65 @@
+{{- if .Values.podDisruptionBudgets.enabled }}
+---
+# PodDisruptionBudget for API service (maintain 1 pod during disruptions)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.api.pdb.minAvailable | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 6 }}
+
+---
+# PodDisruptionBudget for portals (maintain 1 pod during disruptions)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-portals
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: portals
+spec:
+  minAvailable: {{ .Values.docsPortal.pdb.minAvailable | default 1 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: portals
+
+---
+# PodDisruptionBudget for adapters (allow disruptions, single replica)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-adapters
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: adapters
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: adapters
+
+---
+# PodDisruptionBudget for genesis (allow disruptions, single replica)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-genesis
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 4 }}
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 6 }}
+{{- end }}

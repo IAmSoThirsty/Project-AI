@@ -1,0 +1,27 @@
+{{- if .Values.monitoring.enabled }}
+---
+# ServiceMonitor for Prometheus (requires prometheus-operator)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    release: prometheus  # Prometheus operator selector
+spec:
+  selector:
+    matchLabels:
+      {{- include "project-ai.labels" . | nindent 6 }}
+  endpoints:
+    # API metrics (Prometheus-compatible /metrics endpoint)
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          targetLabel: node
+{{- end }}

@@ -1,9 +1,58 @@
 # Development values — not for production use.
 # Images are built locally by `docker compose build`.
+# For production, use: helm/values.prod.yaml
 
 image:
   registry: ""
+  owner: ""
+  tag: ""
   pullPolicy: IfNotPresent
+
+# Kubernetes Secrets for development (optional)
+secrets:
+  create: false  # Development uses local environment variables
+  api:
+    token: ""  # Not used in development
+
+# Storage - disabled in development (uses emptyDir)
+persistence:
+  enabled: false
+  storageClass: "standard"
+  size: 1Gi
+  audit:
+    enabled: false
+    size: 1Gi
+    path: /data
+
+# RBAC - disabled in development (optional, uses default SA)
+rbac:
+  create: false  # Development uses default ServiceAccount
+  api:
+    watchPods: false  # API does not need pod discovery
+
+# Network Policies - disabled in development
+networkPolicy:
+  enabled: false  # Development allows all traffic
+
+# Pod Disruption Budgets - disabled in development
+podDisruptionBudgets:
+  enabled: false
+
+# Monitoring - disabled in development
+monitoring:
+  enabled: false
+
+# Alerting - disabled in development
+alerting:
+  enabled: false
+
+# Backup - disabled in development
+backup:
+  enabled: false
+
+# Ingress - disabled in development
+ingress:
+  enabled: false
 
 # API gateway
 api:

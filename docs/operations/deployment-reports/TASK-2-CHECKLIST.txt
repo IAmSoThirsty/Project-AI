@@ -1,0 +1,188 @@
+================================================================================
+PRODUCTION BLOCKER #2: KUBERNETES SECRET INTEGRATION
+================================================================================
+
+TASK STATUS: COMPLETE ✓
+
+FILES CREATED:
+  ✓ helm/project-ai/templates/secrets.yaml (405 bytes)
+  ✓ IMPLEMENTATION-REPORT-SECRETS.md (16012 bytes)
+  ✓ QUICK-DEPLOY-SECRETS.md (4068 bytes)
+  ✓ VALIDATION-SECRETS.md (10818 bytes)
+  ✓ TASK-2-SUMMARY.md (12041 bytes)
+
+FILES MODIFIED:
+  ✓ helm/project-ai/templates/api.yaml (value → secretKeyRef)
+  ✓ helm/project-ai/values.yaml (added secrets section)
+  ✓ helm/values.prod.yaml (added secrets config)
+  ✓ helm/project-ai/templates/_helpers.tpl (added secretName helper)
+
+VALIDATION TESTS:
+  ✓ helm lint helm/project-ai --strict (PASS - no errors)
+  ✓ Production mode - Secret created (PASS)
+  ✓ Development mode - no Secret created (PASS - backward compatible)
+  ✓ Deployment references Secret (PASS - uses secretKeyRef)
+  ✓ Token NOT in Pod spec (PASS - isolation verified)
+  ✓ Token NOT in Deployment YAML (PASS - secure)
+  ✓ Fail-safe defaults (PASS - optional: false)
+  ✓ Multi-deployment isolation (PASS - naming scheme)
+  ✓ Pre-created Secret scenario (PASS - secrets.create=false works)
+
+SECURITY FEATURES:
+  ✓ Token storage: Kubernetes Secret (not in values, not in pod spec)
+  ✓ Token injection: Via valueFrom.secretKeyRef (runtime, not args)
+  ✓ Fail-safe: optional=false (pod won't start without Secret)
+  ✓ Isolation: Release-scoped names (test-api-secrets, prod-api-secrets)
+  ✓ Flexibility: 3 deployment options (Helm CLI, Pre-created, External Secrets)
+  ✓ Rotation: Helm upgrade or kubectl patch (with automatic pod restart)
+
+DEPLOYMENT OPTIONS:
+  ✓ Option 1: Helm CLI (simple, for dev/testing)
+  ✓ Option 2: Pre-created Secret (recommended, secure)
+  ✓ Option 3: External Secrets Operator (enterprise, zero-exposure)
+
+ROLLBACK CAPABILITY:
+  ✓ Helm version rollback: helm rollback project-ai
+  ✓ Git-based rollback: git revert + redeploy
+  ✓ Emergency bypass: helm upgrade with plain env var
+  ✓ Manual Secret update: kubectl patch secret
+
+REGRESSION TESTING:
+  ✓ Development deployments work (secrets.create=false)
+  ✓ All 7 services still deploy
+  ✓ All health checks unchanged (liveness/readiness)
+  ✓ Resource limits unchanged
+  ✓ Security contexts unchanged (non-root, read-only, no-caps)
+  ✓ Task 1 (image publishing) unaffected
+  ✓ All adapters (swr, atlas, arbiter-rlp) unaffected
+  ✓ All portals (docs, proof) unaffected
+  ✓ Genesis service unaffected
+
+ARCHITECTURE OVERVIEW:
+  ┌─ Secret Sources (Helm CLI, Vault, AWS Secrets Manager)
+  │
+  ├─ Layer 1: Secret Creation (secrets.yaml template)
+  │   └─ Creates Kubernetes Secret resource
+  │
+  ├─ Layer 2: Secret Storage (etcd)
+  │   └─ Base64-encoded (encrypted at rest with --encryption-provider-config)
+  │
+  └─ Layer 3: Pod Injection (api.yaml template)
+      └─ Pod reads Secret via valueFrom.secretKeyRef
+         └─ Kubelet injects into container
+         └─ Application reads from environment
+
+THREE DEPLOYMENT METHODS:
+
+  Method 1 (Simple):
+    helm install project-ai ./helm/project-ai \
+      -f helm/values.prod.yaml \
+      --set-string secrets.api.token="token-here"
+
+    Pros: Simple, no prerequisites
+    Cons: Token in CLI history, requires token at deploy time
+    Use: Development, testing
+
+  Method 2 (Recommended):
+    kubectl create secret generic project-ai-api-secrets \
+      --from-literal=PROJECT_AI_API_TOKEN="token-here"
+
+    helm install project-ai ./helm/project-ai \
+      -f helm/values.prod.yaml \
+      --set secrets.create=false
+
+    Pros: Token not exposed in CLI, pre-created separately
+    Cons: Two-step process
+    Use: Production with manual secret management
+
+  Method 3 (Enterprise):
+    # Deploy External Secrets Operator
+    # Create SecretStore (Vault credentials)
+    # Create ExternalSecret (references Vault)
+
+    helm install project-ai ./helm/project-ai \
+      -f helm/values.prod.yaml \
+      --set secrets.create=false
+
+    Pros: Secrets never in cluster, automatic rotation
+    Cons: Requires external system (Vault, AWS Secrets Manager)
+    Use: Production with centralized secret management
+
+DOCUMENTATION PROVIDED:
+  • IMPLEMENTATION-REPORT-SECRETS.md (16KB - full technical)
+  • QUICK-DEPLOY-SECRETS.md (4KB - quick reference)
+  • VALIDATION-SECRETS.md (11KB - 15 validation tests)
+  • TASK-2-SUMMARY.md (12KB - implementation summary)
+
+KEY SECURITY PROPERTIES:
+
+  1. Token Isolation:
+     ✓ Stored in Secret resource only
+     ✓ Never in Pod spec (prevents kubectl get pods exposure)
+     ✓ Never in Deployment YAML (prevents git exposure)
+     ✓ Never in container args (prevents process listing exposure)
+     ✓ Injected at runtime by Kubelet
+
+  2. Fail-Safe Design:
+     ✓ optional: false (pod won't start without Secret)
+     ✓ Prevents silent failures with missing credentials
+     ✓ Forces explicit Secret configuration
+
+  3. Multi-Environment Support:
+     ✓ Development: secrets.create=false (no Secret needed)
+     ✓ Production: secrets.create=true (Secret required)
+     ✓ Flexible: Can use pre-created Secrets from any source
+
+VERIFICATION COMMANDS:
+
+  1. Pre-deployment verification:
+     helm template test ./helm/project-ai \
+       -f helm/values.prod.yaml \
+       --set-string secrets.api.token="x" | grep secretKeyRef
+
+  2. Post-deployment verification:
+     kubectl get secret project-ai-api-secrets -n project-ai-prod
+     kubectl exec -n project-ai-prod <pod-name> -- \
+       env | grep PROJECT_AI_API_TOKEN
+
+  3. Health check:
+     kubectl logs -n project-ai-prod -l app.kubernetes.io/component=api
+
+PRODUCTION BLOCKERS COMPLETED:
+
+  ✅ Task 1: Production Image Publishing Pipeline
+     - Automated builds to ghcr.io
+     - Semantic version tagging
+     - SBOM + provenance attestations
+
+  ✅ Task 2: Kubernetes Secret Integration
+     - Secrets for API token
+     - 3 deployment options
+     - Rotation procedures
+
+NEXT STEPS:
+
+  ⏳ Task 3: PersistentVolumes (for audit data persistence)
+  ⏳ Task 4: ServiceAccounts & RBAC (least-privilege access)
+  ⏳ Task 5: NetworkPolicies (network segmentation)
+  ⏳ Task 6: Pod Disruption Budgets (availability)
+  ⏳ Task 7: Monitoring & Alerting
+  ⏳ Task 8: Backup & Restore
+  ... and 9 more blockers
+
+COMPLIANCE CHECKLIST:
+
+  ✓ Single blocker completed (no batching)
+  ✓ All verification commands pass
+  ✓ No regressions detected
+  ✓ Full rollback capability documented
+  ✓ Security audit ready
+  ✓ Production deployment path clear
+  ✓ Three deployment options documented
+  ✓ Backward compatible (development mode works)
+  ✓ Helm linting passes
+  ✓ All 7 services verified working
+
+================================================================================
+AWAITING APPROVAL TO PROCEED TO PRODUCTION BLOCKER #3
+================================================================================

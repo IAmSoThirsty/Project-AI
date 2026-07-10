@@ -1,0 +1,156 @@
+# Production values for Project-AI Helm chart
+# Use with: helm install project-ai ./helm/project-ai -f helm/values.prod.yaml
+
+image:
+  registry: ghcr.io
+  owner: project-ai
+  pullPolicy: IfNotPresent
+  tag: "main"
+
+secrets:
+  create: true
+  api:
+    token: ""
+
+api:
+  image: project-ai-api
+  port: 8000
+  env:
+    PROJECT_AI_API_TOKEN: ""
+    PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
+    PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
+  replicas: 2
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+  pdb:
+    enabled: true
+    minAvailable: 1
+
+docsPortal:
+  image: project-ai-docs-portal
+  port: 8080
+  replicas: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  pdb:
+    enabled: true
+    minAvailable: 1
+
+proofPortal:
+  image: project-ai-proof-portal
+  port: 8080
+  replicas: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  pdb:
+    enabled: true
+    minAvailable: 1
+
+swr:
+  image: project-ai-swr
+  port: 8000
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+atlas:
+  image: project-ai-atlas
+  port: 8000
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+arbiterRlp:
+  image: project-ai-arbiter-rlp
+  port: 8000
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+genesis:
+  image: project-ai-genesis
+  port: 8080
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      cpu: 500m
+      memory: 128Mi
+
+persistence:
+  enabled: true
+  storageClass: "standard"
+  size: 10Gi
+  audit:
+    enabled: true
+    size: 5Gi
+    path: /data
+
+rbac:
+  create: true
+  api:
+    watchPods: false
+
+networkPolicy:
+  enabled: true
+
+podDisruptionBudgets:
+  enabled: true
+
+monitoring:
+  enabled: true
+
+alerting:
+  enabled: true
+
+backup:
+  enabled: true
+  schedule: "0 2 * * *"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: project-ai.example.com
+      paths:
+        - path: /docs
+        - path: /proof
+        - path: /api
+  tls:
+    - secretName: project-ai-tls
+      hosts:
+        - project-ai.example.com

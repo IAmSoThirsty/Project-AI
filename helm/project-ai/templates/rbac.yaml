@@ -1,0 +1,185 @@
+{{- if .Values.rbac.create }}
+---
+# ServiceAccount for API service
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+
+---
+# ServiceAccount for portal services (docs, proof)
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-portals
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: portals
+
+---
+# ServiceAccount for adapter services (swr, atlas, arbiter-rlp)
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-adapters
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: adapters
+
+---
+# ServiceAccount for genesis service
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-genesis
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 4 }}
+
+---
+# Role for API service: read/write audit data
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+rules:
+  # Read PVC for audit data
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    resourceNames: ["{{ .Release.Name }}-audit-data-pvc", "{{ .Release.Name }}-backup-pvc"]
+    verbs: ["get"]
+  # Read ConfigMaps for API configuration (if used)
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["{{ .Release.Name }}-config"]
+    verbs: ["get"]
+    {{- if .Values.rbac.api.watchPods }}
+  # Watch pods for service discovery (optional)
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+    {{- end }}
+
+---
+# RoleBinding for API service
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}-api
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-api
+    namespace: {{ .Release.Namespace }}
+
+---
+# Role for portal services: read-only (no API access needed)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-portals
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: portals
+rules: []
+
+---
+# RoleBinding for portal services
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-portals
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: portals
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}-portals
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-portals
+    namespace: {{ .Release.Namespace }}
+
+---
+# Role for adapter services: read-only access
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-adapters
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: adapters
+rules: []
+
+---
+# RoleBinding for adapter services
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-adapters
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: adapters
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}-adapters
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-adapters
+    namespace: {{ .Release.Namespace }}
+
+---
+# Role for genesis service: event read-only
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-genesis
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 4 }}
+rules: []
+
+---
+# RoleBinding for genesis service
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-genesis
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}-genesis
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Release.Name }}-genesis
+    namespace: {{ .Release.Namespace }}
+{{- end }}

@@ -1,0 +1,182 @@
+{{- if .Values.networkPolicy.enabled }}
+---
+# NetworkPolicy for API service: accepts traffic from portals/adapters, exposes audit port
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from portals (read-only access)
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: portals
+      ports:
+        - protocol: TCP
+          port: {{ .Values.api.port }}
+    # Allow from adapters (read-only access)
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: adapters
+      ports:
+        - protocol: TCP
+          port: {{ .Values.api.port }}
+    # Allow DNS queries
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+  egress:
+    # Allow to any pod (for outbound service calls)
+    - to:
+        - podSelector: {}
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+
+---
+# NetworkPolicy for portals: accept inbound from ingress/lb, no inter-pod access
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-portals
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: portals
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: portals
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from API (which portals call via Service)
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 14 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.api.port }}
+    # Allow from ingress/load balancer (any source external to cluster)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: {{ .Values.docsPortal.port }}
+  egress:
+    # Allow to API service
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 14 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.api.port }}
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+
+---
+# NetworkPolicy for adapters: accept from API only, no ingress from outside
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-adapters
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: adapters
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: adapters
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from API only
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 14 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.swr.port }}
+    # Allow DNS
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+  egress:
+    # Allow outbound to external services
+    - to:
+        - namespaceSelector: {}
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+
+---
+# NetworkPolicy for genesis: allow API access only (read-only event stream)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-genesis
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from API only (read event stream)
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 14 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.genesis.port }}
+  egress:
+    # Allow outbound to external services (emit events to blockchain/external system)
+    - to:
+        - namespaceSelector: {}
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+{{- end }}

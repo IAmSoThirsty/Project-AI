@@ -25,6 +25,30 @@ app.kubernetes.io/component: {{ .component }}
 {{- end }}
 
 {{/*
+Build full image reference (registry/owner/name:tag)
+Usage: include "project-ai.image" (dict "root" . "name" "api")
+*/}}
+{{- define "project-ai.image" -}}
+{{- if .root.Values.image.registry }}
+{{- if .root.Values.image.owner }}
+{{- printf "%s/%s/project-ai-%s:%s" .root.Values.image.registry .root.Values.image.owner .name (default "latest" .root.Values.image.tag) }}
+{{- else }}
+{{- printf "%s/project-ai-%s:%s" .root.Values.image.registry .name (default "latest" .root.Values.image.tag) }}
+{{- end }}
+{{- else }}
+{{- printf "project-ai-development-%s" .name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Secret name for a component.
+Usage: include "project-ai.secretName" (dict "root" . "component" "api")
+*/}}
+{{- define "project-ai.secretName" -}}
+{{ .root.Release.Name }}-{{ .component }}-secrets
+{{- end }}
+
+{{/*
 Hardened security context shared by all containers.
 */}}
 {{- define "project-ai.securityContext" -}}

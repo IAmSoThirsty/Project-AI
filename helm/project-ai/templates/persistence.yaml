@@ -1,0 +1,42 @@
+{{- if .Values.persistence.enabled }}
+---
+# PersistentVolumeClaim for audit data (API service)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-audit-data-pvc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+    app.kubernetes.io/purpose: "audit"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.persistence.storageClass | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+
+{{- if .Values.persistence.audit.enabled }}
+---
+# PersistentVolumeClaim for backup volume (for future backup/restore operations)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-backup-pvc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
+    app.kubernetes.io/purpose: "backup"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.persistence.storageClass | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.audit.size | quote }}
+{{- end }}
+
+{{- end }}

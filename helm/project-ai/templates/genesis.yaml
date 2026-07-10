@@ -6,7 +6,7 @@ metadata:
     {{- include "project-ai.labels" . | nindent 4 }}
     {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.genesis.replicas | default 1 }}
   selector:
     matchLabels:
       {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 6 }}
@@ -16,11 +16,14 @@ spec:
         {{- include "project-ai.labels" . | nindent 8 }}
         {{- include "project-ai.selectorLabels" (dict "root" . "component" "genesis") | nindent 8 }}
     spec:
+      {{- if .Values.rbac.create }}
+      serviceAccountName: {{ .Release.Name }}-genesis
+      {{- end }}
       securityContext:
         {{- include "project-ai.podSecurityContext" . | nindent 8 }}
       containers:
         - name: genesis
-          image: {{ .Values.genesis.image }}
+          image: {{ include "project-ai.image" (dict "root" . "name" "genesis") }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["genesis-emitter", "serve", "0.0.0.0:{{ .Values.genesis.port }}"]
           ports:
