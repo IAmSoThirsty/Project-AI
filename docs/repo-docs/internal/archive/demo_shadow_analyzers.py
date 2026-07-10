@@ -123,7 +123,7 @@ fn calculate(x: Integer) -> Integer {
         if result.analysis_report.findings:
             print("\n📋 Findings:")
             for finding in result.analysis_report.findings:
-                icon = "ℹ️" if finding.severity == AnalysisSeverity.INFO else "⚠️"
+                icon = "INFO" if finding.severity == AnalysisSeverity.INFO else "⚠️"
                 print(f"   {icon} {finding.severity.value.upper()}: {finding.message}")
 
     # ============================================================================

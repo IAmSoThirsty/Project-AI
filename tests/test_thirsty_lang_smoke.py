@@ -80,7 +80,9 @@ def test_cli_entrypoints_invokable() -> None:
 
     venv_scripts = Path(sys.executable).parent
     for entrypoint in ("thirsty", "tarl"):
-        exe: Path | str | None = venv_scripts / (entrypoint + ".exe" if sys.platform == "win32" else entrypoint)
+        exe: Path | str | None = venv_scripts / (
+            entrypoint + ".exe" if sys.platform == "win32" else entrypoint
+        )
         if not Path(str(exe)).exists():
             exe = shutil.which(entrypoint)
             if exe is None:
