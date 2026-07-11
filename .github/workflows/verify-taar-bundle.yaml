@@ -1,0 +1,61 @@
+name: Verify TAAR bundle
+
+# Clean-clone verification of the sealed TAAR E2E verification bundle.
+# Runs the standalone verifier (Python + PyYAML only) against a fresh checkout,
+# then the release-signature check. Hardened to the same standard TAAR's own
+# Workflow Guardian enforces: least-privilege token, pinned action, no
+# persisted credentials.
+
+on:
+  push:
+    paths:
+      - "docs/internal/verification/**"
+      - ".github/workflows/verify-taar-bundle.yaml"
+  pull_request:
+    paths:
+      - "docs/internal/verification/**"
+      - ".github/workflows/verify-taar-bundle.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # NOTE: TAAR's own Workflow Guardian flags this job "high — Deployment-shaped
+  # job has no environment gate". That is a reviewed false positive: the
+  # Guardian substring-matches "release"/"publish" in the verification step text
+  # (this job drives verify_release.sh), but the job only reads and verifies —
+  # it has `contents: read`, no secrets, and deploys nothing, so an environment
+  # gate is not applicable. No critical findings; scan exits 0.
+  verify:
+    name: Clean-clone bundle verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+
+      - name: Prepare a minimal, isolated Python env (PyYAML only)
+        run: |
+          python3 -m venv .verify-venv
+          ./.verify-venv/bin/python -m pip install --quiet --upgrade pip
+          ./.verify-venv/bin/python -m pip install --quiet pyyaml
+
+      - name: Verify bundle seal + internal consistency
+        run: |
+          ./.verify-venv/bin/python \
+            docs/internal/verification/taar-e2e-2026-07-10/harness/verify_bundle.py \
+            docs/internal/verification/taar-e2e-2026-07-10
+
+      - name: Verify release signature (informational until a key is anchored)
+        env:
+          # Flip to 1 once signatures/…SEAL.json.sig + allowed_signers are committed
+          # to make a missing/invalid provenance signature fail the build.
+          TAAR_REQUIRE_SIGNATURE: "0"
+        run: |
+          PATH="$PWD/.verify-venv/bin:$PATH" \
+            bash docs/internal/verification/verify_release.sh

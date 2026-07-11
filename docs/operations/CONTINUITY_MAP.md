@@ -496,3 +496,55 @@ chore if desired.
 
 ### Safe to continue
 Yes. Bundle is self-verifying and committed with the TAAR port lineage.
+
+---
+
+## Session Update - TAAR bundle external trust-anchoring kit (2026-07-10)
+
+### Scope
+- Mode: module (provenance tooling + CI), no change to the sealed bundle.
+- Branch: `chore/warning-cleanup-utc-artifacts`.
+- Adds the machinery to anchor the 2026-07-10 TAAR verification bundle
+  (commit 20bdb39c, SEAL head 68491f96...) to an external identity.
+
+### Files created (docs/internal/verification/)
+- `SIGNING.md` - trust chain, signer-identity table, and step-by-step
+  procedures for all five anchoring tiers + an honest done-vs-requires-key
+  status table.
+- `sign_release.sh` / `verify_release.sh` - SSHSIG sign + clean-clone
+  verify (bundle seal + release signature over SEAL.json).
+- `build_release_archive.sh` - deterministic `git archive` of the bundle
+  + verifier + kit from a tag (reproducible SHA-256).
+- `anchor_timestamp.sh` - RFC 3161: offline request builder + opt-in
+  (TAAR_SUBMIT_TS=1) TSA submission.
+- `allowed_signers.EXAMPLE`, `signatures/README.md` - trust-root template
+  and the out-of-sealed-dir home for authoritative sigs.
+- `.github/workflows/verify-taar-bundle.yaml` - clean-clone CI:
+  standalone verifier (isolated venv, PyYAML only) + signature check;
+  `contents: read`, `persist-credentials: false`, checkout SHA-pinned to
+  the repo's own v7 pin.
+
+### Verification run (all with a throwaway DEMO key; no key/sig committed)
+- SSHSIG sign/verify proven: valid signature -> "Good signature" exit 0;
+  message tamper -> exit 255; in-armor sig corruption -> exit 255.
+- verify_release.sh: mode 1 (no sig) PASS exit 0; mode 2
+  (TAAR_REQUIRE_SIGNATURE=1, no sig) FAIL exit 1; mode 3 (valid demo sig)
+  PASS exit 0. Sealed dir unchanged throughout; demo material deleted.
+- Guardian dogfood on the new CI workflow: classification CONTROLLED,
+  0 critical. One "high" (deploy-shape) is a reviewed false positive -
+  the heuristic substring-matches "release"/"publish" in the verifier
+  step text; the job only reads (contents: read, no secrets, no deploy),
+  so no environment gate applies. Documented in the workflow.
+
+### Honest boundary
+- No release key or authoritative signature is generated in-repo or in
+  CI by design: a key an agent/repo could hold is not "separately
+  controlled." Committed + passing: everything checkable without a
+  secret. Left to the key holder: real signing, publishing the pubkey,
+  pushing the tag, `gh release`, and external timestamp/transparency
+  submission (all outward-facing / identity-asserting).
+
+### Safe to continue
+Yes. Next optional step is the maintainer running sign_release.sh with a
+real key and, if desired, the tag/release + external anchoring commands
+in SIGNING.md.

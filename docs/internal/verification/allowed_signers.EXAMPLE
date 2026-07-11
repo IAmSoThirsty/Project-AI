@@ -1,0 +1,20 @@
+# allowed_signers — OpenSSH SSHSIG trust roots for the TAAR verification bundle.
+#
+# Copy this file to `allowed_signers` (no extension) and replace the placeholder
+# with the REAL public key of the separately controlled release key. Then commit
+# `allowed_signers` alongside the signature under signatures/.
+#
+# Format (one signer per line):
+#   <principal/identity>  <keytype>  <base64-public-key>
+#
+# The principal is the identity passed to `ssh-keygen -Y verify -I <principal>`.
+# Publish the same public key out-of-band so verifiers can cross-check it, e.g.:
+#   - https://github.com/<user>.keys
+#   - a keybase / personal-domain /.well-known location
+#   - the key fingerprint in a signed release note or this repo's SIGNING.md
+#
+# Generate the key on a machine you control (never in this repo, never in CI):
+#   ssh-keygen -t ed25519 -f taar-release-key -C "release@your-identity"
+#   cut -d' ' -f1-2 taar-release-key.pub   # -> keytype + key for the line below
+
+release@REPLACE-WITH-YOUR-IDENTITY ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA_REPLACE_WITH_REAL_PUBLIC_KEY
