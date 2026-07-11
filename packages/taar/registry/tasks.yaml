@@ -530,7 +530,7 @@ tasks:
   - unauthorized_path
 - id: mypy-check
   enabled: true
-  description: 'mypy reader: gather evidence via uv run mypy . --show-error-codes
+  description: 'mypy reader: gather evidence via uv run python -m mypy . --show-error-codes
     --no-error-summary.'
   agent_id: mypy-reader
   task_type: check
@@ -543,7 +543,7 @@ tasks:
   output_paths:
   - .project-ai/automation/evidence/mypy-reader/
   commands:
-  - uv run mypy . --show-error-codes --no-error-summary
+  - uv run python -m mypy . --show-error-codes --no-error-summary
   schedule_id: every-4-hours
   priority: 10
   timeout_seconds: 1200
@@ -582,8 +582,8 @@ tasks:
   - unauthorized_path
 - id: pytest-collect-check
   enabled: true
-  description: 'pytest-collect reader: gather evidence via uv run pytest --collect-only
-    -q.'
+  description: 'pytest-collect reader: gather evidence via uv run python -m pytest
+    --collect-only -q.'
   agent_id: pytest-collect-reader
   task_type: check
   expected_artifact_type: evidence_bundle
@@ -595,7 +595,7 @@ tasks:
   output_paths:
   - .project-ai/automation/evidence/pytest-collect-reader/
   commands:
-  - uv run pytest --collect-only -q
+  - uv run python -m pytest --collect-only -q
   schedule_id: every-3-hours
   priority: 10
   timeout_seconds: 1200

@@ -54,6 +54,11 @@ before each commit (PowerShell):
 $env:SKIP='no-commit-to-branch,gitleaks'; uv run pre-commit run --all-files
 ```
 
+If any `uv run <tool>` fails with "uv trampoline failed to canonicalize script path", the
+`.venv\Scripts\*.exe` launchers are broken: run `uv run python tools/verify_venv_trampolines.py`
+to confirm, then regenerate with `uv sync --frozen --all-extras --all-packages --reinstall`
+(`uv run python -m <tool>` always works in the meantime).
+
 Never run inline `python -c` one-liners; write a scratch script file and `uv run python <file>`.
 Never create files via bash heredocs (AGENTS.md rule) — use file-writing tools.
 

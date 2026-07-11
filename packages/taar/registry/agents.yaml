@@ -588,7 +588,7 @@ agents:
   - '**'
   allowed_write_paths: []
   allowed_commands:
-  - uv run mypy . --show-error-codes --no-error-summary
+  - uv run python -m mypy . --show-error-codes --no-error-summary
   timeout_seconds: 1200
   output:
     type: evidence_bundle
@@ -644,7 +644,7 @@ agents:
   - '**'
   allowed_write_paths: []
   allowed_commands:
-  - uv run pytest --collect-only -q
+  - uv run python -m pytest --collect-only -q
   timeout_seconds: 1200
   output:
     type: evidence_bundle

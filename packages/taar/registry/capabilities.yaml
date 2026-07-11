@@ -130,7 +130,7 @@ capabilities:
   allowed_agents:
   - mypy-reader
   allowed_commands:
-  - uv run mypy . --show-error-codes --no-error-summary
+  - uv run python -m mypy . --show-error-codes --no-error-summary
   allowed_paths:
   - '**'
   classification_ceiling: OPEN
@@ -141,7 +141,7 @@ capabilities:
   allowed_agents:
   - pytest-collect-reader
   allowed_commands:
-  - uv run pytest --collect-only -q
+  - uv run python -m pytest --collect-only -q
   allowed_paths:
   - '**'
   classification_ceiling: OPEN

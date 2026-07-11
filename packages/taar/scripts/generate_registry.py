@@ -138,7 +138,9 @@ EXTERNAL_READERS = [
     ),
     (
         "mypy",
-        ["uv run mypy . --show-error-codes --no-error-summary"],
+        # python -m form: independent of the .venv Scripts launcher exes,
+        # which have broken on Windows (see tools/verify_venv_trampolines.py).
+        ["uv run python -m mypy . --show-error-codes --no-error-summary"],
         "reports/mypy/latest.md",
         "every-4-hours",
         1200,
@@ -146,7 +148,7 @@ EXTERNAL_READERS = [
     ),
     (
         "pytest-collect",
-        ["uv run pytest --collect-only -q"],
+        ["uv run python -m pytest --collect-only -q"],
         "reports/tests/collect-latest.md",
         "every-3-hours",
         1200,

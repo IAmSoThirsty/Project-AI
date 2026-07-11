@@ -72,7 +72,7 @@ function Run-DesktopSmoke {
 function Build-And-Smoke-Desktop {
     $root = "build/acceptance/desktop"
     New-Item -ItemType Directory -Force "$root/spec" | Out-Null
-    uv run --package project-ai-desktop pyinstaller `
+    uv run --package project-ai-desktop python -m PyInstaller `
         --noconfirm --clean --onedir `
         --name Project-AI-Desktop `
         --distpath "$root/dist" `
@@ -112,11 +112,12 @@ Step "Python: exact 3.12.10 runtime" {
 }
 Step "Legacy source: baseline snapshot" { uv run python tools/verify_legacy_state.py }
 Step "Python: install locked workspace" { uv sync --frozen --all-extras --all-packages }
-Step "Repository: pre-commit and gitleaks" { uv run pre-commit run --all-files }
+Step "Windows: venv launcher health" { uv run python tools/verify_venv_trampolines.py }
+Step "Repository: pre-commit and gitleaks" { uv run python -m pre_commit run --all-files }
 Step "Python: Ruff lint" { uv run ruff check . }
 Step "Python: Ruff format" { uv run ruff format --check . }
 Step "Python: strict MyPy" {
-    uv run mypy --ignore-missing-imports `
+    uv run python -m mypy --ignore-missing-imports `
         packages/kernel/src packages/security/src packages/governance/src `
         packages/capability/src packages/execution/src packages/companion/src `
         packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src `
@@ -124,7 +125,7 @@ Step "Python: strict MyPy" {
 }
 Step "Python: tests and 80 percent branch coverage" {
     $env:QT_QPA_PLATFORM = "offscreen"
-    uv run pytest -q --tb=short `
+    uv run python -m pytest -q --tb=short `
         --cov=kernel --cov=security --cov=governance --cov=capability `
         --cov=execution --cov=companion --cov=swr --cov=atlas `
         --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli `
@@ -132,12 +133,12 @@ Step "Python: tests and 80 percent branch coverage" {
         --cov-branch --cov-report=term-missing --cov-fail-under=80
 }
 Step "Security: 312 asymmetric cases" {
-    uv run pytest `
+    uv run python -m pytest `
         "packages/governance/tests/test_asymmetric_security.py::test_all_published_attack_vectors_are_blocked" `
         -q --tb=short
 }
 Step "Arbiter: 12-test baseline" {
-    uv run pytest packages/arbiter/tests/test_arbiter_gov.py -q --tb=short
+    uv run python -m pytest packages/arbiter/tests/test_arbiter_gov.py -q --tb=short
 }
 Step "Canonical replay: 5 of 5 invariants" { uv run python tools/canonical_replay.py }
 Step "Provenance: frozen 2264-commit chain" { uv run python tools/verify_frozen_history.py }

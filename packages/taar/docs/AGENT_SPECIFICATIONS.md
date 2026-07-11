@@ -27,8 +27,8 @@ git-status evidence.
 |---|---|---|
 | git-status-reader | git status --porcelain=v1; git branch --show-current; git rev-parse HEAD | hourly |
 | ruff-reader | uv run ruff check . --output-format=json | every 3 h |
-| mypy-reader | uv run mypy . --show-error-codes --no-error-summary | every 4 h |
-| pytest-collect-reader | uv run pytest --collect-only -q | every 3 h |
+| mypy-reader | uv run python -m mypy . --show-error-codes --no-error-summary | every 4 h |
+| pytest-collect-reader | uv run python -m pytest --collect-only -q | every 3 h |
 
 git-status-reader is the only agent with `git_allowed` (read-only git).
 A missing tool (uv absent) is a FAILED run, not a crash; a nonzero lint
