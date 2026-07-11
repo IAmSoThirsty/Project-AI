@@ -1,0 +1,2 @@
+python test functions (regex 'def test*('): 2166
+js/ts test cases (regex 'it(|test('): 37

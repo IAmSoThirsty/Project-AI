@@ -1,0 +1,62 @@
+# exclusions.txt — every exclusion rule applied during this audit and why.
+
+Audit date: 2026-07-10   HEAD: 656a26dbb245d5d2dbd2626389e9204737698882
+Read-only: the audit wrote ONLY inside project-ai-receipts-2026-07-10/.
+
+## 1. Standard exclusion set (item 3) — directories removed from the "kept" count
+
+Rule: a non-.git file is excluded if any path segment is one of the names below.
+Reason: these are generated caches, build outputs, downloaded dependencies, or
+tool state — not authored repository content.
+
+  segment                     files        bytes        reason
+  node_modules                99,927   1,250,485,596   downloaded JS dependencies (pnpm)
+  .venv                       14,919     572,553,092   Python virtualenv (uv-managed deps)
+  .mypy_cache                  2,215     114,979,783   mypy incremental cache
+  target                       1,484     377,599,394   Rust/Gradle build output
+  build                          476     109,980,593   Python/other build output
+  __pycache__                    485       9,104,647   Python bytecode cache
+  .gradle                         25         478,302   Gradle cache
+  dist                            13      26,929,289   packaged build artifacts
+  .pytest_cache                    5         267,891   pytest state
+  .ruff_cache                    626         151,773   ruff cache
+  project-ai-receipts-*            1          18,662   THIS audit's output (self-exclude)
+  (also in the rule set, 0 hits here: venv, coverage, htmlcov, out, .idea, .tox,
+   .cache, .next, .turbo, site-packages)
+
+  Total excluded (non-.git): 120,176 files.
+
+## 2. The .git directory (item 2 vs 3)
+
+.git is counted in "physical files (all)" = 123,193 but excluded everywhere else.
+Physical .git files = 140 (loose refs/config/hooks + 5 pack files; 46,014 objects
+live *inside* the packs, so they are not separate files). Pack size 199.59 MiB.
+
+## 3. Repo-declared byte-preserved / reference / evidence trees — KEPT, reported separately
+
+These are tracked and intentionally preserved; they are NOT excluded from the kept
+count, but are broken out because they are not freshly-authored engineering source:
+  packages/_staging/                 byte-preserved Stage-4 migration inputs
+  packages/security/reference/       byte-preserved Chimera import evidence
+  packages/rlp/governance_framework/ allowlisted framework reference assets
+  docs/reference/                    historical paper/PDF corpus (55 PDFs)
+  docs/internal/frozen-history/      frozen SHA-256 chain document
+  docs/internal/verification/        the sealed TAAR E2E evidence bundle (82 files)
+Heuristic category "vendored/reference" = 258 files; "evidence" = 82; "reports" = 43.
+
+## 4. Generated data NOT caught by the standard set — flagged, not silently kept
+
+data/knowledge/ is gitignored generated ML data (chunks.jsonl 260 MB + vectors.npy
+202 MB = ~462 MB, ~84% of the 553 MB "kept" byte total). It is only 3 files, so it
+barely affects the kept FILE count (2,877) but dominates the kept BYTE total. It is
+generated (rebuildable from source per .gitignore), so byte-size figures are reported
+with this caveat rather than treated as authored content.
+
+## 5. Tools/measurements deliberately not run
+
+  semgrep    installed (1.169.0) but --config auto requires telemetry; declined for a
+             private-repo audit. Offline SAST covered by bandit.
+  tokei      cargo build failed on Windows (windows-sys compile error). scc + cloc used.
+  black      not a repo-configured tool; the only available copy runs under Python 3.11
+             and cannot parse this 3.12 codebase — result discarded as invalid.
+  PyPI/registry resolvability (item 31): not verified — no outbound network call made.

@@ -1,0 +1,4 @@
+Additions/deletions by author (HEAD history, git numstat; binary files omitted).
+    +lines     -lines    files  author
+   1245979       5939     2928  Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>
+     94774        179      484  Quencher <Quencher@local>

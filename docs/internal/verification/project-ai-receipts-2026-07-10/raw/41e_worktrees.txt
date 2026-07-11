@@ -1,0 +1,5 @@
+T:/00-Active/Project-AI-Beginnings   656a26db [chore/warning-cleanup-utc-artifacts]
+C:/tmp/project-ai-acceptance-83c8e5b 83c8e5b1 (detached HEAD) prunable
+C:/tmp/project-ai-acceptance-c3f81ae c3f81aeb (detached HEAD) prunable
+C:/tmp/project-ai-final-baa98e2      baa98e26 (detached HEAD) prunable
+C:/tmp/project-ai-final-f175072      f175072f (detached HEAD) prunable

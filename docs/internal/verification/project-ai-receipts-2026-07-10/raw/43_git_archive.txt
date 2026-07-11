@@ -1,0 +1,2 @@
+archive: T:\00-Active\Project-AI-Beginnings\project-ai-receipts-2026-07-10\archive\project-ai-HEAD.tar.gz
+head: 656a26dbb245d5d2dbd2626389e9204737698882

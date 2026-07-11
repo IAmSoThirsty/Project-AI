@@ -1,0 +1,5 @@
+HEAD commits=192 allrefs=2528 authors=11 first=2026-06-19 elapsed=21
+    1344  Owner (Jeremy Karrick / IAmSoThirsty / Thirsty / Quencher)
+    1174  GitHub automation / bot
+       7  Dependabot
+       3  AI agent (Claude)

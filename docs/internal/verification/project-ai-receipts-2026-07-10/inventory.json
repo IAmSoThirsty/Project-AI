@@ -1,0 +1,266 @@
+{
+  "tracked_files": 2852,
+  "packages_pyproject": [
+    {
+      "name": "project-ai",
+      "version": "0.0.0.dev0",
+      "path": "pyproject.toml"
+    },
+    {
+      "name": "project-ai-ai-takeover",
+      "version": "0.0.0.dev0",
+      "path": "packages/ai-takeover/pyproject.toml"
+    },
+    {
+      "name": "project-ai-alien-invaders",
+      "version": "0.0.0.dev0",
+      "path": "packages/alien-invaders/pyproject.toml"
+    },
+    {
+      "name": "project-ai-api",
+      "version": "0.0.0.dev0",
+      "path": "packages/api/pyproject.toml"
+    },
+    {
+      "name": "project-ai-arbiter",
+      "version": "0.0.0.dev0",
+      "path": "packages/arbiter/pyproject.toml"
+    },
+    {
+      "name": "project-ai-atlas",
+      "version": "0.0.0.dev0",
+      "path": "packages/atlas/pyproject.toml"
+    },
+    {
+      "name": "project-ai-audit",
+      "version": "0.0.0.dev0",
+      "path": "packages/audit/pyproject.toml"
+    },
+    {
+      "name": "project-ai-canonical",
+      "version": "0.0.0.dev0",
+      "path": "packages/canonical/pyproject.toml"
+    },
+    {
+      "name": "project-ai-capability",
+      "version": "0.0.0.dev0",
+      "path": "packages/capability/pyproject.toml"
+    },
+    {
+      "name": "project-ai-cerberus",
+      "version": "0.0.0.dev0",
+      "path": "packages/cerberus/pyproject.toml"
+    },
+    {
+      "name": "project-ai-cli",
+      "version": "0.0.0.dev0",
+      "path": "packages/cli/pyproject.toml"
+    },
+    {
+      "name": "project-ai-cognitive-warfare",
+      "version": "0.0.0.dev0",
+      "path": "packages/cognitive-warfare/pyproject.toml"
+    },
+    {
+      "name": "project-ai-companion",
+      "version": "0.0.0.dev0",
+      "path": "packages/companion/pyproject.toml"
+    },
+    {
+      "name": "project-ai-convergence",
+      "version": "0.0.0.dev0",
+      "path": "packages/convergence/pyproject.toml"
+    },
+    {
+      "name": "project-ai-desktop",
+      "version": "0.0.0.dev0",
+      "path": "apps/desktop/pyproject.toml"
+    },
+    {
+      "name": "project-ai-django-state",
+      "version": "0.0.0.dev0",
+      "path": "packages/django-state/pyproject.toml"
+    },
+    {
+      "name": "project-ai-emp-defense",
+      "version": "0.0.0.dev0",
+      "path": "packages/emp-defense/pyproject.toml"
+    },
+    {
+      "name": "project-ai-execution",
+      "version": "0.0.0.dev0",
+      "path": "packages/execution/pyproject.toml"
+    },
+    {
+      "name": "project-ai-global-scenario",
+      "version": "0.0.0.dev0",
+      "path": "packages/global-scenario/pyproject.toml"
+    },
+    {
+      "name": "project-ai-governance",
+      "version": "0.0.0.dev0",
+      "path": "packages/governance/pyproject.toml"
+    },
+    {
+      "name": "project-ai-hydra-50",
+      "version": "0.0.0.dev0",
+      "path": "packages/hydra_50/pyproject.toml"
+    },
+    {
+      "name": "project-ai-identity",
+      "version": "0.0.0.dev0",
+      "path": "packages/identity/pyproject.toml"
+    },
+    {
+      "name": "project-ai-kernel",
+      "version": "0.0.0.dev0",
+      "path": "packages/kernel/pyproject.toml"
+    },
+    {
+      "name": "project-ai-knowledge",
+      "version": "0.0.0.dev0",
+      "path": "packages/knowledge/pyproject.toml"
+    },
+    {
+      "name": "project-ai-rlp",
+      "version": "0.0.0.dev0",
+      "path": "packages/rlp/pyproject.toml"
+    },
+    {
+      "name": "project-ai-security",
+      "version": "0.0.0.dev0",
+      "path": "packages/security/pyproject.toml"
+    },
+    {
+      "name": "project-ai-service-host",
+      "version": "0.0.0.dev0",
+      "path": "apps/services/pyproject.toml"
+    },
+    {
+      "name": "project-ai-simulation-contract",
+      "version": "0.0.0.dev0",
+      "path": "packages/simulation-contract/pyproject.toml"
+    },
+    {
+      "name": "project-ai-swr",
+      "version": "0.0.0.dev0",
+      "path": "packages/swr/pyproject.toml"
+    },
+    {
+      "name": "project-ai-swr-dashboard",
+      "version": "0.0.0.dev0",
+      "path": "apps/swr-dashboard/pyproject.toml"
+    },
+    {
+      "name": "project-ai-taar",
+      "version": "0.0.0.dev0",
+      "path": "packages/taar/pyproject.toml"
+    },
+    {
+      "name": "project-ai-tarl",
+      "version": "0.0.0.dev0",
+      "path": "packages/tarl/pyproject.toml"
+    },
+    {
+      "name": "project-ai-temporal",
+      "version": "0.0.0.dev0",
+      "path": "packages/temporal/pyproject.toml"
+    },
+    {
+      "name": "project-ai-thirstys-trading-hub",
+      "version": "0.0.0.dev0",
+      "path": "packages/thirstys-trading-hub/pyproject.toml"
+    }
+  ],
+  "packages_dirs": [
+    "_staging",
+    "ai-takeover",
+    "alien-invaders",
+    "api",
+    "arbiter",
+    "atlas",
+    "audit",
+    "canonical",
+    "capability",
+    "cerberus",
+    "cli",
+    "cognitive-warfare",
+    "companion",
+    "convergence",
+    "django-state",
+    "emp-defense",
+    "execution",
+    "global-scenario",
+    "governance",
+    "hydra_50",
+    "identity",
+    "kernel",
+    "knowledge",
+    "rlp",
+    "security",
+    "simulation-contract",
+    "swr",
+    "taar",
+    "tarl",
+    "temporal",
+    "thirstys-trading-hub"
+  ],
+  "apps_dirs": [
+    "android",
+    "desktop",
+    "services",
+    "swr-dashboard",
+    "web",
+    "web-static"
+  ],
+  "crates_dirs": [
+    "genesis-emitter"
+  ],
+  "console_scripts": {
+    "project-ai-desktop": "project_ai_desktop.app:entrypoint  (apps/desktop/pyproject.toml)",
+    "project-ai-swr-dashboard": "project_ai_swr_dashboard.app:entrypoint  (apps/swr-dashboard/pyproject.toml)",
+    "project-ai": "project_ai_cli.app:run  (packages/cli/pyproject.toml)",
+    "taar": "taar.cli:main  (packages/taar/pyproject.toml)"
+  },
+  "workflows": [
+    ".github/workflows/ci.yaml",
+    ".github/workflows/publish.yaml",
+    ".github/workflows/verify-taar-bundle.yaml"
+  ],
+  "actions": [
+    "packages/taar/reference/action.yml"
+  ],
+  "helm_charts": [
+    "helm/project-ai/Chart.yaml"
+  ],
+  "helm_templates": 12,
+  "k8s_kinds": {
+    "Role": 8,
+    "ServiceAccount": 5,
+    "Deployment": 4,
+    "Service": 4,
+    "NetworkPolicy": 4,
+    "PodDisruptionBudget": 4,
+    "RoleBinding": 4,
+    "PersistentVolumeClaim": 2,
+    "CronJob": 1,
+    "Ingress": 1,
+    "PrometheusRule": 1,
+    "ServiceMonitor": 1
+  },
+  "dockerfiles": [],
+  "terraform_files": [],
+  "compose_files": [
+    "compose.dev.yaml",
+    "compose.yaml"
+  ],
+  "pdf_count": 55,
+  "license_files": [
+    "LICENSE",
+    "apps/web/triumvirate-portal/LICENSE",
+    "docs/repo-docs/legal/LICENSE_MANIFEST.md",
+    "docs/repo-docs/legal/LICENSE_README.md"
+  ],
+  "has_submodules": false,
+  "spdx_headers": 0
+}

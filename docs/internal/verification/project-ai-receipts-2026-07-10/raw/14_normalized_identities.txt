@@ -1,0 +1,26 @@
+Rule-based identity grouping (all refs). Every identity's category is
+listed so the grouping is auditable. Grouping uses name/email evidence only.
+
+== Owner (Jeremy Karrick / IAmSoThirsty / Thirsty / Quencher): 1344 commits ==
+    IAmSoThirsty <Karrick1995@gmail.com>
+    IAmSoThirsty <karrick1995@gmail.com>
+    Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>
+    Jeremy Karrick <karrick1995@gmail.com>
+    Quencher <Quencher@local>
+
+== AI agent (GitHub Copilot): 1007 commits ==
+    copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
+
+== AI agent (Claude/Anthropic): 85 commits ==
+    Claude <noreply@anthropic.com>
+    anthropic-code-agent[bot] <242468646+Claude@users.noreply.github.com>
+
+== AI agent (Google Jules): 49 commits ==
+    google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+
+== GitHub automation: 36 commits ==
+    github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+
+== Dependabot: 7 commits ==
+    dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+

@@ -1,0 +1,5 @@
+sha=656a26dbb245d5d2dbd2626389e9204737698882
+author=Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>
+author_date=2026-07-10T18:25:18-06:00
+committer_date=2026-07-10T18:25:18-06:00
+subject=feat(taar): external trust-anchoring kit for the E2E verification bundle

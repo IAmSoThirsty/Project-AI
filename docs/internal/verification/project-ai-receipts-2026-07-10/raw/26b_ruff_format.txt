@@ -1,0 +1,4 @@
+Would reformat: project-ai-receipts-2026-07-10\aggregate.py
+Would reformat: project-ai-receipts-2026-07-10\analyze.py
+Would reformat: project-ai-receipts-2026-07-10\inventory.py
+3 files would be reformatted, 425 files already formatted

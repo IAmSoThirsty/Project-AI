@@ -1,0 +1,4 @@
+ M packages/emp-defense/src/emp_defense/artifacts/events.json
+ M packages/emp-defense/src/emp_defense/artifacts/final_state.json
+ M packages/emp-defense/src/emp_defense/artifacts/summary.json
+?? project-ai-receipts-2026-07-10/

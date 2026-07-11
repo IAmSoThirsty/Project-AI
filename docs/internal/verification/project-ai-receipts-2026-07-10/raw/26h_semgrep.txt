@@ -1,0 +1,8 @@
+semgrep 1.169.0 is installed and callable.
+NOT RUN against rules: semgrep's `--config auto` requires metrics/telemetry
+enabled (it errors "Cannot create auto config when metrics are off"), and all
+registry configs (auto, p/python, r/*) fetch rules over the network. For a
+read-only audit of a private repository, enabling telemetry / outbound rule
+fetch was declined. Offline SAST is covered by Bandit (see 26e_bandit.txt),
+which is installed and ran locally with no network.
+Status: available-but-not-executed (by policy), documented in caveats.

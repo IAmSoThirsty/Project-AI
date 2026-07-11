@@ -1,0 +1,13 @@
+Heuristic category split of kept (post-exclusion) files.
+category                  files          bytes
+documentation              1769       27146670
+source                      316        2203010
+vendored/reference          258       33795550
+test                        148       21945166
+configuration               101         296657
+other                        95      464869412
+evidence                     82         317115
+reports                      43         288810
+infrastructure               31          83513
+asset                        31        2050672
+dependency                    3         359696

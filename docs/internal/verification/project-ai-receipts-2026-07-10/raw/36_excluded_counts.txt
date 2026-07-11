@@ -1,0 +1,12 @@
+segment                                     files          bytes
+node_modules                                99927     1250485596
+.venv                                       14919      572553092
+.mypy_cache                                  2215      114979783
+target                                       1484      377599394
+.ruff_cache                                   626         151773
+__pycache__                                   485        9104647
+build                                         476      109980593
+.gradle                                        25         478302
+dist                                           13       26929289
+.pytest_cache                                   5         267891
+project-ai-receipts-2026-07-10                  1          18662

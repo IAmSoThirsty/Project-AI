@@ -1,0 +1,4 @@
+Text-based assertion counts. LIMITATION: regex over source; counts commented/string-literal 'assert' occurrences and cannot see runtime assertion density.
+python 'assert' in test files: 4085
+python 'assert' across all .py (kept): 4257
+assert-like calls (pytest.raises/self.assert*/expect() in kept .py): 635

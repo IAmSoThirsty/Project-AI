@@ -1,0 +1,18 @@
+Generated / cached / dependency dirs found among non-.git files (matched against exclusion set):
+  node_modules: 99927 files, 1250485596 bytes
+  .venv: 14919 files, 572553092 bytes
+  .mypy_cache: 2215 files, 114979783 bytes
+  target: 1484 files, 377599394 bytes
+  .ruff_cache: 626 files, 151773 bytes
+  __pycache__: 485 files, 9104647 bytes
+  build: 476 files, 109980593 bytes
+  .gradle: 25 files, 478302 bytes
+  dist: 13 files, 26929289 bytes
+  .pytest_cache: 5 files, 267891 bytes
+  project-ai-receipts-2026-07-10: 1 files, 18662 bytes
+
+Repo-specific vendored/reference/evidence (kept, reported separately):
+  vendored/reference: 258 files
+  evidence: 82 files
+  reports: 43 files
+  dependency lockfiles: 3 files

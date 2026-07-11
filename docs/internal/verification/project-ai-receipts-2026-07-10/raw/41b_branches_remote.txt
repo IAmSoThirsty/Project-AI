@@ -1,0 +1,21 @@
+  origin/HEAD -> origin/master
+  origin/chore/warning-cleanup-utc-artifacts
+  origin/claude/nifty-bardeen-9df1w0
+  origin/code-health-todo-description-15102408199162383048
+  origin/fix-ebpf-bridge-logging-10227203381010109528
+  origin/fix-eval-vulnerability-enrich-architecture-metadata-17776522341937334345
+  origin/fix-repair-crew-todo-regex-12648956665019360878
+  origin/fix-timing-attack-compare-digest-1418337958589437634
+  origin/jules-11027766635914161980-ddde0564
+  origin/jules-1179618471567726569-5d653079
+  origin/jules-13670695064524193079-0f210eab
+  origin/jules-13852117362558492296-b8db1f71
+  origin/jules-18357500554029778087-7abf3f25
+  origin/jules-2126357224489576996-3b58759f
+  origin/jules-3832888573559997325-5ad501ff
+  origin/jules-4237226155340259850-47422c07
+  origin/jules-5735723451618388120-bfaa9b36
+  origin/jules-5902511296127908619-912fa4a3
+  origin/main
+  origin/master
+  origin/substrate-consolidation

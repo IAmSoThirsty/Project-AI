@@ -1,0 +1,58 @@
+{
+  "head_commit_count": 192,
+  "allrefs_commit_count": 2528,
+  "distinct_authors_allrefs": 11,
+  "first_commit_date": "2026-06-19",
+  "latest_commit_date": "2026-07-10",
+  "elapsed_days": 21,
+  "commits_by_category": {
+    "Owner (Jeremy Karrick / IAmSoThirsty / Thirsty / Quencher)": 1344,
+    "AI agent (GitHub Copilot)": 1007,
+    "AI agent (Claude/Anthropic)": 85,
+    "AI agent (Google Jules)": 49,
+    "GitHub automation": 36,
+    "Dependabot": 7
+  },
+  "identities_by_category": {
+    "Owner (Jeremy Karrick / IAmSoThirsty / Thirsty / Quencher)": [
+      "IAmSoThirsty <Karrick1995@gmail.com>",
+      "IAmSoThirsty <karrick1995@gmail.com>",
+      "Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>",
+      "Jeremy Karrick <karrick1995@gmail.com>",
+      "Quencher <Quencher@local>"
+    ],
+    "AI agent (Claude/Anthropic)": [
+      "Claude <noreply@anthropic.com>",
+      "anthropic-code-agent[bot] <242468646+Claude@users.noreply.github.com>"
+    ],
+    "AI agent (Google Jules)": [
+      "google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>"
+    ],
+    "AI agent (GitHub Copilot)": [
+      "copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>"
+    ],
+    "GitHub automation": [
+      "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+    ],
+    "Dependabot": [
+      "dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>"
+    ]
+  },
+  "commits_by_month": {
+    "2026-06": 109,
+    "2026-07": 83
+  },
+  "distinct_active_days": 16,
+  "numstat_by_author": {
+    "Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>": {
+      "added": 1245979,
+      "deleted": 5939,
+      "files": 2928
+    },
+    "Quencher <Quencher@local>": {
+      "added": 94774,
+      "deleted": 179,
+      "files": 484
+    }
+  }
+}

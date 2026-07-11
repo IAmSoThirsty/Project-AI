@@ -1,0 +1,44 @@
+Package metadata from pyproject.toml [project]. Version 0.0.0.dev0 = pre-alpha / not published. PyPI resolvability NOT verified (no network call made during this read-only audit).
+
+name                               version        source
+project-ai                         0.0.0.dev0     pyproject.toml
+project-ai-ai-takeover             0.0.0.dev0     packages/ai-takeover/pyproject.toml
+project-ai-alien-invaders          0.0.0.dev0     packages/alien-invaders/pyproject.toml
+project-ai-api                     0.0.0.dev0     packages/api/pyproject.toml
+project-ai-arbiter                 0.0.0.dev0     packages/arbiter/pyproject.toml
+project-ai-atlas                   0.0.0.dev0     packages/atlas/pyproject.toml
+project-ai-audit                   0.0.0.dev0     packages/audit/pyproject.toml
+project-ai-canonical               0.0.0.dev0     packages/canonical/pyproject.toml
+project-ai-capability              0.0.0.dev0     packages/capability/pyproject.toml
+project-ai-cerberus                0.0.0.dev0     packages/cerberus/pyproject.toml
+project-ai-cli                     0.0.0.dev0     packages/cli/pyproject.toml
+project-ai-cognitive-warfare       0.0.0.dev0     packages/cognitive-warfare/pyproject.toml
+project-ai-companion               0.0.0.dev0     packages/companion/pyproject.toml
+project-ai-convergence             0.0.0.dev0     packages/convergence/pyproject.toml
+project-ai-desktop                 0.0.0.dev0     apps/desktop/pyproject.toml
+project-ai-django-state            0.0.0.dev0     packages/django-state/pyproject.toml
+project-ai-emp-defense             0.0.0.dev0     packages/emp-defense/pyproject.toml
+project-ai-execution               0.0.0.dev0     packages/execution/pyproject.toml
+project-ai-global-scenario         0.0.0.dev0     packages/global-scenario/pyproject.toml
+project-ai-governance              0.0.0.dev0     packages/governance/pyproject.toml
+project-ai-hydra-50                0.0.0.dev0     packages/hydra_50/pyproject.toml
+project-ai-identity                0.0.0.dev0     packages/identity/pyproject.toml
+project-ai-kernel                  0.0.0.dev0     packages/kernel/pyproject.toml
+project-ai-knowledge               0.0.0.dev0     packages/knowledge/pyproject.toml
+project-ai-rlp                     0.0.0.dev0     packages/rlp/pyproject.toml
+project-ai-security                0.0.0.dev0     packages/security/pyproject.toml
+project-ai-service-host            0.0.0.dev0     apps/services/pyproject.toml
+project-ai-simulation-contract     0.0.0.dev0     packages/simulation-contract/pyproject.toml
+project-ai-swr                     0.0.0.dev0     packages/swr/pyproject.toml
+project-ai-swr-dashboard           0.0.0.dev0     apps/swr-dashboard/pyproject.toml
+project-ai-taar                    0.0.0.dev0     packages/taar/pyproject.toml
+project-ai-tarl                    0.0.0.dev0     packages/tarl/pyproject.toml
+project-ai-temporal                0.0.0.dev0     packages/temporal/pyproject.toml
+project-ai-thirstys-trading-hub    0.0.0.dev0     packages/thirstys-trading-hub/pyproject.toml
+
+node packages (package.json name/version):
+    @project-ai/docs-portal  0.0.0-dev0  apps/web/docs-portal/package.json
+    @project-ai/proof-portal  0.0.0-dev0  apps/web/proof-portal/package.json
+    @project-ai/web-shared  0.0.0-dev0  apps/web/shared/package.json
+    @project-ai/triumvirate-portal  0.0.0-dev0  apps/web/triumvirate-portal/package.json
+    project-ai-workspace  0.0.0-dev0  package.json

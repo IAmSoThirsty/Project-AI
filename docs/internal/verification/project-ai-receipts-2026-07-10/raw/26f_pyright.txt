@@ -1,0 +1,12 @@
+t:\00-Active\Project-AI-Beginnings\packages\kernel\src\kernel\threat_detection.py
+  t:\00-Active\Project-AI-Beginnings\packages\kernel\src\kernel\threat_detection.py:412:31 - error: Argument of type "tuple[str, ...]" cannot be assigned to parameter "threat_categories" of type "tuple[ThreatCategory, ...]" in function "__init__"
+    "tuple[str, ...]" is not assignable to "tuple[ThreatCategory, ...]"
+      Tuple entry 1 is incorrect type
+        Type "str" is not assignable to type "ThreatCategory"
+          "str" is not assignable to type "Literal['privilege_escalation']"
+          "str" is not assignable to type "Literal['data_exfiltration']"
+          "str" is not assignable to type "Literal['lateral_movement']"
+          "str" is not assignable to type "Literal['reconnaissance']"
+          "str" is not assignable to type "Literal['persistence']"
+    ... (reportArgumentType)
+1 error, 0 warnings, 0 informations

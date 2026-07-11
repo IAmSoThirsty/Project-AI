@@ -1,0 +1,7 @@
+GitHub Actions workflows (3):
+    .github/workflows/ci.yaml
+    .github/workflows/publish.yaml
+    .github/workflows/verify-taar-bundle.yaml
+
+Composite/other actions (1):
+    packages/taar/reference/action.yml

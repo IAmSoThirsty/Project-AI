@@ -1,0 +1,19 @@
+warning: garbage found: .git/objects/16/tmp_obj_3qTh1q
+warning: garbage found: .git/objects/16/tmp_obj_kPFHmf
+warning: garbage found: .git/objects/16/tmp_obj_nmqGp7
+warning: garbage found: .git/objects/16/tmp_obj_qJbwKK
+warning: garbage found: .git/objects/47/tmp_obj_ssamgm
+warning: garbage found: .git/objects/76/tmp_obj_cCKa2M
+warning: garbage found: .git/objects/77/tmp_obj_M2x2Gj
+warning: garbage found: .git/objects/a7/tmp_obj_Dk75Mo
+warning: garbage found: .git/objects/a7/tmp_obj_PspTjs
+warning: garbage found: .git/objects/be/tmp_obj_f7pOYO
+warning: garbage found: .git/objects/d3/tmp_obj_iVCbO6
+count: 19
+size: 26.21 KiB
+in-pack: 46014
+packs: 5
+size-pack: 199.59 MiB
+prune-packable: 0
+garbage: 11
+size-garbage: 5.45 KiB

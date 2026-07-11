@@ -1,0 +1,69 @@
+PDF documents (papers/standards/specs): 55
+(pypdf available for page counts: True)
+
+    docs/reference/AADA_Public_Summary.pdf  (2348 bytes)  pages=1
+    docs/reference/AADA_Public_Summary_v2.pdf  (3869 bytes)  pages=2
+    docs/reference/AADA_v5_Final.pdf  (137781 bytes)  pages=40
+    docs/reference/AADA_v5_Legislative_Package.pdf  (154699 bytes)  pages=29
+    docs/reference/AGI Charter.pdf  (217810 bytes)  pages=22
+    docs/reference/AGI_Charter_for_Project-AI_v2_3.pdf  (589086 bytes)  pages=38
+    docs/reference/ChainMark_Proposal (1).pdf  (26060 bytes)  pages=10
+    docs/reference/ChainMark_Proposal (2).pdf  (16174 bytes)  pages=6
+    docs/reference/ChainMark_Proposal.pdf  (21916 bytes)  pages=9
+    docs/reference/Constitutional_Code_Store_v1.0_Karrick.pdf  (171379 bytes)  pages=15
+    docs/reference/DSM-S-26-00589 (1).pdf  (813883 bytes)  pages=16
+    docs/reference/DSM-S-26-00589.pdf  (813883 bytes)  pages=16
+    docs/reference/Execution-Governed 101 Project-AI.pdf  (888149 bytes)  pages=39
+    docs/reference/Execution-Governed_101_MASTER.pdf  (92336 bytes)  pages=30
+    docs/reference/Execution-Governed_101_REBUILT.pdf  (83982 bytes)  pages=30
+    docs/reference/Field_Manual_Universal_Governance_Spec_v1.pdf  (136821 bytes)  pages=70
+    docs/reference/Field_Manual_Universal_Governance_Spec_v1_1.pdf  (170146 bytes)  pages=86
+    docs/reference/Heilmeier_Governed_Execution_Substrates.pdf  (5257 bytes)  pages=2
+    docs/reference/Naive Passive Reviewer V5.pdf  (213727 bytes)  pages=8
+    docs/reference/Operational_Destruction_Review_v1.0.0.pdf  (53527 bytes)  pages=8
+    docs/reference/Project AI In-Drive Technical Specification v1.0.pdf  (107430 bytes)  pages=3
+    docs/reference/Project-AI_The_Vision_Karrick.pdf  (87891 bytes)  pages=35
+    docs/reference/Project-AI_Unofficial_Opus48_Peer_Review.pdf  (37047 bytes)  pages=12
+    docs/reference/Project_AEGIS.pdf  (274530 bytes)  pages=137
+    docs/reference/Project_AI.pdf  (64172 bytes)  pages=19
+    docs/reference/Reverse_BAA_Governed_Execution_Substrates (1).pdf  (8639 bytes)  pages=2
+    docs/reference/Reverse_BAA_Governed_Execution_Substrates.pdf  (5973 bytes)  pages=2
+    docs/reference/Reverse_BAA_Governed_Execution_Substrates_v2.pdf  (10939 bytes)  pages=4
+    docs/reference/Reverse_BAA_Governed_Execution_Substrates_v3.pdf  (6373 bytes)  pages=2
+    docs/reference/Sovereign Monolith Temporal Dissonance & Onboarding Guide.pdf  (128787 bytes)  pages=4
+    docs/reference/The Iron Path Executor_ Formal Technical Specification for Deterministic AI Governance.pdf  (133727 bytes)  pages=4
+    docs/reference/The Zeroth Command_ The Immutable Prime Directive of the Sovereign Monolith.pdf  (108549 bytes)  pages=3
+    docs/reference/The_Blindfolded_Species.pdf  (62516 bytes)  pages=27
+    docs/reference/The_Label_And_The_Lock.pdf  (20683 bytes)  pages=9
+    docs/reference/Thirsty-Lang_UTF_Reference_v1.2.pdf  (185284 bytes)  pages=76
+    docs/reference/Thirsty-Lang_UTF_Reference_v1.pdf  (267411 bytes)  pages=79
+    docs/reference/Thirstysystems Technical Showcase Website Research Report.pdf  (17731673 bytes)  pages=32
+    docs/reference/UPEO-1_Specification.pdf  (117824 bytes)  pages=15
+    docs/reference/What_Project-AI_Is_Karrick.pdf  (39367 bytes)  pages=16
+    docs/reference/Yggdrasil_Integrated_Final.pdf  (5950 bytes)  pages=4
+    docs/reference/Yggdrasil_Karrick_2026.pdf  (19158 bytes)  pages=8
+    docs/reference/Yggdrasil_Truth_Aligned.pdf  (4164 bytes)  pages=3
+    docs/reference/Zombie_Defense_Plan.pdf  (252971 bytes)  pages=131
+    docs/reference/dual_governance_kernel_disclosure.pdf  (166736 bytes)  pages=4
+    docs/reference/governanceassubstrate.pdf  (98710 bytes)  pages=46
+    docs/reference/legal/project_ai_patent_portfolio_map.pdf  (20003 bytes)  pages=9
+    docs/reference/meta_governance_segment_1_3.pdf  (128111 bytes)  pages=2
+    docs/reference/ra_welcome.pdf  (886308 bytes)  pages=1
+    docs/reference/thirstys-projects-llc-sovereign-word-for-word-formatted.pdf  (242494 bytes)  pages=18
+    docs/reference/thirstys-projects-llc_project-ai-canonical-findings-report_2026-05-25.pdf  (590675 bytes)  pages=14
+    docs/reference/who_needs_credentials_v5 - Copy.pdf  (28131 bytes)  pages=12
+    docs/reference/who_needs_credentials_v5.pdf  (28131 bytes)  pages=12
+    docs/reference/yggdrasil_final.pdf  (19542 bytes)  pages=9
+    docs/reference/zenodo/Why_I_Am_Doing_This_ProjectAI.pdf  (112837 bytes)  pages=29
+    docs/reference/zenodo/Why_I_Am_Doing_This_Updated.pdf  (157141 bytes)  pages=29
+
+Charter/spec references: 9
+    docs/reference/AGI Charter.pdf
+    docs/reference/AGI_Charter_for_Project-AI_v2_3.pdf
+    docs/repo-docs/governance/AGI_CHARTER.md
+    docs/repo-docs/governance/AGI_CHARTER_v1_original.md
+    docs/repo-docs/internal/archive/WEB_CHARTER_DOWNLOADS_COMPLETE.md
+    docs/repo-docs/reports/PHASE_4-6_AGENT_CHARTERS.md
+    docs/templates/operations/project-charter.md
+    docs/templates/project-charter.md
+    docs/vault-recovery/agent-reports-phase-2/PHASE_4-6_AGENT_CHARTERS.md

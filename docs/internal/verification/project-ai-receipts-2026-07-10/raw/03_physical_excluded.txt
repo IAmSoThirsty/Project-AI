@@ -1,0 +1,5 @@
+non-.git files: 123053
+excluded (cache/dep/build/generated + receipt dir): 120176
+files after standard exclusions: 2877
+
+excluded breakdown by top-level segment matched:

@@ -1,0 +1,380 @@
+{
+  "root": "T:\\00-Active\\Project-AI-Beginnings",
+  "physical_all_files": 123193,
+  "physical_all_bytes": 3227611048,
+  "git_dir_files": 140,
+  "git_dir_bytes": 211705755,
+  "nongit_files": 123053,
+  "excluded_files": 120176,
+  "kept_files": 2877,
+  "kept_bytes": 553356271,
+  "nongit_bytes": 3015905293,
+  "by_category_files": {
+    "documentation": 1769,
+    "source": 316,
+    "vendored/reference": 258,
+    "test": 148,
+    "configuration": 101,
+    "other": 95,
+    "evidence": 82,
+    "reports": 43,
+    "infrastructure": 31,
+    "asset": 31,
+    "dependency": 3
+  },
+  "by_category_bytes": {
+    "other": 464869412,
+    "configuration": 296657,
+    "documentation": 27146670,
+    "dependency": 359696,
+    "infrastructure": 83513,
+    "source": 2203010,
+    "test": 21945166,
+    "asset": 2050672,
+    "vendored/reference": 33795550,
+    "evidence": 317115,
+    "reports": 288810
+  },
+  "ext_buckets": {
+    "YAML": 111,
+    "Markdown": 1609,
+    "JavaScript": 38,
+    "JSON": 63,
+    "Python": 503,
+    "TypeScript": 6,
+    "TSX": 7,
+    "Rust": 2,
+    "PowerShell": 8,
+    "Shell": 7,
+    "thirsty": 29,
+    "C#": 16,
+    "TARL": 3,
+    "no_extension": 20,
+    "dockerfiles": 0,
+    "helm_files": 17,
+    "k8s_like_yaml": 16
+  },
+  "lines_by_language_total": {
+    "Markdown": 785629,
+    "Python": 115922,
+    "Text": 46278,
+    "HTML": 34289,
+    "YAML": 32786,
+    "Thirsty": 15533,
+    "JavaScript": 10648,
+    "JSON": 9225,
+    "CSS": 4265,
+    "C#": 3215,
+    "PowerShell": 1321,
+    "TOML": 1203,
+    "CSV": 925,
+    "Shell": 851,
+    "SVG": 656,
+    "TSX": 483,
+    "Batch": 445,
+    "XML": 327,
+    "Kotlin": 234,
+    "Rust": 199,
+    "TARL": 105,
+    "JSONL": 95,
+    "HCL": 85,
+    "TypeScript": 71,
+    "TSCG-spec": 46
+  },
+  "lines_by_language_nonblank": {
+    "YAML": 30542,
+    "Markdown": 607878,
+    "TOML": 1088,
+    "JavaScript": 9234,
+    "JSON": 9215,
+    "Kotlin": 203,
+    "Batch": 358,
+    "XML": 317,
+    "Python": 95035,
+    "HTML": 31555,
+    "TypeScript": 63,
+    "TSX": 450,
+    "CSS": 3769,
+    "Text": 40205,
+    "SVG": 629,
+    "Rust": 181,
+    "PowerShell": 1130,
+    "CSV": 925,
+    "Shell": 740,
+    "JSONL": 95,
+    "Thirsty": 12717,
+    "C#": 2755,
+    "HCL": 81,
+    "TARL": 83,
+    "TSCG-spec": 45
+  },
+  "lines_total": 1064836,
+  "lines_nonblank_total": 849293,
+  "test_files": 148,
+  "py_test_files": 136,
+  "py_test_functions": 2166,
+  "js_test_files": 6,
+  "js_test_cases": 37,
+  "assert_in_tests": 4085,
+  "assert_all_py": 4257,
+  "prometheus_files": 168,
+  "top_dirs_by_count": [
+    [
+      "docs/repo-docs/reports",
+      262
+    ],
+    [
+      "docs/reference",
+      137
+    ],
+    [
+      "docs/vault-recovery/agent-reports-phase-2",
+      134
+    ],
+    [
+      "docs/repo-docs/internal/archive",
+      97
+    ],
+    [
+      "docs/internal",
+      91
+    ],
+    [
+      "docs/repo-docs",
+      85
+    ],
+    [
+      "docs/vault-recovery/agent-reports",
+      66
+    ],
+    [
+      "docs/repo-docs/developer",
+      62
+    ],
+    [
+      "docs/repo-docs/architecture",
+      57
+    ],
+    [
+      "docs/repo-docs/security_compliance",
+      50
+    ],
+    [
+      "docs/operations/deployment-reports",
+      43
+    ],
+    [
+      "docs/repo-docs/internal",
+      40
+    ],
+    [
+      "tests",
+      38
+    ],
+    [
+      "docs/vault-recovery/_indexes",
+      29
+    ],
+    [
+      "docs/consolidation-logs",
+      28
+    ],
+    [
+      "(root)",
+      27
+    ],
+    [
+      "docs/repo-docs/governance",
+      26
+    ],
+    [
+      "docs/templates",
+      26
+    ],
+    [
+      "docs/repo-docs/internal/archive/session-notes",
+      24
+    ],
+    [
+      "apps/web/triumvirate-portal",
+      23
+    ]
+  ],
+  "top_dirs_by_bytes": [
+    [
+      "data/knowledge",
+      462416898
+    ],
+    [
+      "docs/reference",
+      29949617
+    ],
+    [
+      "packages/tarl/src/tarl/tarl_os/tests/results",
+      20778878
+    ],
+    [
+      "docs/repo-docs/reports",
+      4409805
+    ],
+    [
+      "docs/consolidation-logs",
+      3799070
+    ],
+    [
+      "docs/internal/frozen-history",
+      2372548
+    ],
+    [
+      "docs/vault-recovery/agent-reports-phase-2",
+      2033944
+    ],
+    [
+      "(root)",
+      1653563
+    ],
+    [
+      "apps/web/triumvirate-portal/assets/images",
+      1523152
+    ],
+    [
+      "docs/vault-recovery/agent-reports",
+      1361283
+    ],
+    [
+      "docs/repo-docs/internal/archive",
+      1323954
+    ],
+    [
+      "docs/repo-docs",
+      1120138
+    ],
+    [
+      "apps/web/triumvirate-portal/pages",
+      917184
+    ],
+    [
+      "docs/repo-docs/architecture",
+      860437
+    ],
+    [
+      "docs/repo-docs/developer",
+      780406
+    ],
+    [
+      "docs/repo-docs/security_compliance",
+      756756
+    ],
+    [
+      "docs/repo-docs/governance",
+      547384
+    ],
+    [
+      "docs/internal",
+      502261
+    ],
+    [
+      "docs/repo-docs/assets",
+      492826
+    ],
+    [
+      "docs/repo-docs/internal",
+      460981
+    ]
+  ],
+  "largest_files": [
+    [
+      "data/knowledge/chunks.jsonl",
+      260150004
+    ],
+    [
+      "data/knowledge/vectors.npy",
+      202266752
+    ],
+    [
+      "packages/tarl/src/tarl/tarl_os/tests/results/stress_test_results_1769808374.json",
+      20778878
+    ],
+    [
+      "docs/reference/Thirstysystems Technical Showcase Website Research Report.pdf",
+      17731673
+    ],
+    [
+      "docs/internal/frozen-history/PROJECT-AI_FROZEN_HISTORY.md",
+      2372548
+    ],
+    [
+      "docs/consolidation-logs/PROJECT_AI_CACHE_CLEANUP_APPROVAL_PACKET.md",
+      2223693
+    ],
+    [
+      "apps/web/triumvirate-portal/assets/images/tmponrptw4m-1766462626908.jpg",
+      1442052
+    ],
+    [
+      ".coverage",
+      1232896
+    ],
+    [
+      "docs/reference/Execution-Governed 101 Project-AI.pdf",
+      888149
+    ],
+    [
+      "docs/reference/ra_welcome.pdf",
+      886308
+    ],
+    [
+      "docs/reference/DSM-S-26-00589 (1).pdf",
+      813883
+    ],
+    [
+      "docs/reference/DSM-S-26-00589.pdf",
+      813883
+    ],
+    [
+      "docs/reference/DROPPED_FILES_MANIFEST.md",
+      620022
+    ],
+    [
+      "docs/reference/thirstys-projects-llc_project-ai-canonical-findings-report_2026-05-25.pdf",
+      590675
+    ],
+    [
+      "docs/reference/AGI_Charter_for_Project-AI_v2_3.pdf",
+      589086
+    ],
+    [
+      "docs/consolidation-logs/PROJECT_AI_ROOT_CLASSIFICATION_MANIFEST_V2_CORRECTED.csv",
+      377154
+    ],
+    [
+      "docs/reference/Project_AEGIS.pdf",
+      274530
+    ],
+    [
+      "docs/reference/Thirsty-Lang_UTF_Reference_v1.pdf",
+      267411
+    ],
+    [
+      "docs/consolidation-logs/PROJECT_AI_ROOT_CLASSIFICATION_MANIFEST_V2.csv",
+      257985
+    ],
+    [
+      "docs/reference/mermaid-diagram (3).png",
+      253165
+    ]
+  ],
+  "excluded_by_segment": {
+    "node_modules": 99927,
+    ".venv": 14919,
+    ".mypy_cache": 2215,
+    "target": 1484,
+    ".ruff_cache": 626,
+    "__pycache__": 485,
+    "build": 476,
+    ".gradle": 25,
+    "dist": 13,
+    ".pytest_cache": 5,
+    "project-ai-receipts-2026-07-10": 1
+  }
+}

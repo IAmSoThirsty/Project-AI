@@ -1,0 +1,27 @@
+Helm charts (Chart.yaml): 1
+    helm/project-ai/Chart.yaml
+
+Helm template files: 12
+values files: 2
+    helm/project-ai/values.yaml
+    helm/values.prod.yaml
+
+Kubernetes resource kinds declared in helm templates (39 declarations):
+    Role: 8
+    ServiceAccount: 5
+    Deployment: 4
+    Service: 4
+    NetworkPolicy: 4
+    PodDisruptionBudget: 4
+    RoleBinding: 4
+    PersistentVolumeClaim: 2
+    CronJob: 1
+    Ingress: 1
+    PrometheusRule: 1
+    ServiceMonitor: 1
+
+Docker Compose files: 2
+    compose.dev.yaml
+    compose.yaml
+Dockerfiles: 0
+Terraform files: 0

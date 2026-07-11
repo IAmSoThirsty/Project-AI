@@ -1,0 +1,13 @@
+Commit count by author (name <email>), across all reachable refs.
+ commits  author
+    1007  copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
+     655  Jeremy Karrick <karrick1995@gmail.com>
+     279  IAmSoThirsty <Karrick1995@gmail.com>
+     215  IAmSoThirsty <karrick1995@gmail.com>
+     127  Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>
+      82  anthropic-code-agent[bot] <242468646+Claude@users.noreply.github.com>
+      68  Quencher <Quencher@local>
+      49  google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+      36  github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+       7  dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+       3  Claude <noreply@anthropic.com>

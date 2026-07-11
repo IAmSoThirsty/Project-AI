@@ -1,0 +1,100 @@
+     260150004  data/knowledge/chunks.jsonl
+     202266752  data/knowledge/vectors.npy
+      20778878  packages/tarl/src/tarl/tarl_os/tests/results/stress_test_results_1769808374.json
+      17731673  docs/reference/Thirstysystems Technical Showcase Website Research Report.pdf
+       2372548  docs/internal/frozen-history/PROJECT-AI_FROZEN_HISTORY.md
+       2223693  docs/consolidation-logs/PROJECT_AI_CACHE_CLEANUP_APPROVAL_PACKET.md
+       1442052  apps/web/triumvirate-portal/assets/images/tmponrptw4m-1766462626908.jpg
+       1232896  .coverage
+        888149  docs/reference/Execution-Governed 101 Project-AI.pdf
+        886308  docs/reference/ra_welcome.pdf
+        813883  docs/reference/DSM-S-26-00589 (1).pdf
+        813883  docs/reference/DSM-S-26-00589.pdf
+        620022  docs/reference/DROPPED_FILES_MANIFEST.md
+        590675  docs/reference/thirstys-projects-llc_project-ai-canonical-findings-report_2026-05-25.pdf
+        589086  docs/reference/AGI_Charter_for_Project-AI_v2_3.pdf
+        377154  docs/consolidation-logs/PROJECT_AI_ROOT_CLASSIFICATION_MANIFEST_V2_CORRECTED.csv
+        274530  docs/reference/Project_AEGIS.pdf
+        267411  docs/reference/Thirsty-Lang_UTF_Reference_v1.pdf
+        257985  docs/consolidation-logs/PROJECT_AI_ROOT_CLASSIFICATION_MANIFEST_V2.csv
+        253165  docs/reference/mermaid-diagram (3).png
+        252971  docs/reference/Zombie_Defense_Plan.pdf
+        242494  docs/reference/thirstys-projects-llc-sovereign-word-for-word-formatted.pdf
+        230797  docs/consolidation-logs/PROJECT_AI_CURRENT_LSFILES.txt
+        230797  docs/consolidation-logs/PROJECT_AI_LSFILES.txt
+        230797  docs/consolidation-logs/PROJECT_AI_LSFILES_V2.txt
+        228281  docs/reference/Zombie Defense Plan.txt
+        227376  docs/repo-docs/executive/whitepapers/PROJECT_AI_COMPREHENSIVE_WHITEPAPER.md
+        217810  docs/reference/AGI Charter.pdf
+        213727  docs/reference/Naive Passive Reviewer V5.pdf
+        200622  docs/reference/mermaid-diagram (4).png
+        189867  uv.lock
+        185284  docs/reference/Thirsty-Lang_UTF_Reference_v1.2.pdf
+        177476  docs/reference/mermaid-diagram (1).png
+        171379  docs/reference/Constitutional_Code_Store_v1.0_Karrick.pdf
+        170146  docs/reference/Field_Manual_Universal_Governance_Spec_v1_1.pdf
+        166919  apps/web/triumvirate-portal/pages/manifesto_gateway.html
+        166736  docs/reference/dual_governance_kernel_disclosure.pdf
+        164919  pnpm-lock.yaml
+        160352  docs/repo-docs/archive/README_ORIGINAL.md
+        157141  docs/reference/zenodo/Why_I_Am_Doing_This_Updated.pdf
+        154699  docs/reference/AADA_v5_Legislative_Package.pdf
+        152181  docs/repo-docs/internal/archive/README.md.backup
+        145417  docs/reference/GENESIS.md
+        137781  docs/reference/AADA_v5_Final.pdf
+        136821  docs/reference/Field_Manual_Universal_Governance_Spec_v1.pdf
+        133727  docs/reference/The Iron Path Executor_ Formal Technical Specification for Deterministic AI Governance.pdf
+        132208  docs/reference/mermaid-diagram.png
+        128787  docs/reference/Sovereign Monolith Temporal Dissonance & Onboarding Guide.pdf
+        128111  docs/reference/meta_governance_segment_1_3.pdf
+        120519  docs/reference/The Governing Code Caretaker.final.yaml
+        117824  docs/reference/UPEO-1_Specification.pdf
+        112837  docs/reference/zenodo/Why_I_Am_Doing_This_ProjectAI.pdf
+        108549  docs/reference/The Zeroth Command_ The Immutable Prime Directive of the Sovereign Monolith.pdf
+        107729  apps/web/triumvirate-portal/pages/trinity_deep_dive.html
+        107430  docs/reference/Project AI In-Drive Technical Specification v1.0.pdf
+        104813  docs/repo-docs/developer/checks.md
+        101819  docs/repo-docs/reports/AGENT-082-PATTERN-USAGE-CATALOG.md
+         99665  docs/repo-docs/governance/Local_Coding_CareTaker_Agent_API_enhanced.yaml
+         98710  docs/reference/governanceassubstrate.pdf
+         97418  docs/source-docs/core/ai_systems.md
+         92336  docs/reference/Execution-Governed_101_MASTER.pdf
+         92008  apps/web/triumvirate-portal/pages/project_ai_cognitive_engine.html
+         91157  docs/consolidation-logs/PROJECT_AI_ROOT_CLASSIFICATION_MANIFEST.csv
+         89387  docs/reference/mermaid-diagram (2).png
+         89283  apps/web/triumvirate-portal/pages/trust_transparency_center.html
+         88928  apps/web/triumvirate-portal/pages/jeremy_karrick_founder_profile.html
+         87891  docs/reference/Project-AI_The_Vision_Karrick.pdf
+         86923  apps/web/triumvirate-portal/pages/codex_deus_maximus_repository.html
+         83988  apps/web/triumvirate-portal/pages/scenario_demonstrations.html
+         83982  docs/reference/Execution-Governed_101_REBUILT.pdf
+         80421  docs/architecture/visual-maps/architecture/ai-systems.md
+         79438  apps/web/triumvirate-portal/pages/cerberus_security_fortress.html
+         76131  docs/repo-docs/AGENT-080-CONCEPT-CODE-MAP.md
+         73645  docs/repo-docs/executive/whitepapers/TECHNICAL_WHITE_PAPER.md
+         72463  docs/reference/# Local Coding CareTaker Agent API.txt
+         72260  docs/repo-docs/INTERNAL_NAME_GLOSSARY.md
+         72119  docs/repo-docs/research/paper.tex
+         70874  docs/reference/OMPT.md — the luxury-grade dark-mod.txt
+         70874  docs/repo-docs/design/OMPT_luxury_dark_mode_site.md
+         70866  packages/rlp/src/rlp/rlp.py
+         70180  packages/security/reference/chimera_v2_2.py
+         69919  docs/internal/verification/taar-e2e-2026-07-10/bundle.json
+         69445  docs/vault-recovery/agent-reports/RELATIONSHIP_INDEX.md
+         68968  docs/vault-recovery/agent-reports/METADATA_SCHEMA.md
+         66743  apps/web/triumvirate-portal/pages/future_architectures.html
+         64777  docs/architecture/visual-maps/architecture/desktop-app.md
+         64172  docs/reference/Project_AI.pdf
+         62516  docs/reference/The_Blindfolded_Species.pdf
+         59643  docs/internal/STAGE_4_MERGE_REPORT.json
+         59422  apps/web/triumvirate-portal/css/main.css
+         59176  docs/vault-recovery/agent-reports/DATAVIEW_QUERY_LIBRARY.md
+         59128  docs/source-docs/gui/leather_book_panels.md
+         58856  docs/reference/zenodo/Why I Am  Doing This.txt
+         58580  docs/repo-docs/reports/AGENT-087-THREAT-DEFENSE-MATRIX.md
+         58580  docs/vault-recovery/agent-reports-phase-2/AGENT-087-THREAT-DEFENSE-MATRIX.md
+         57644  docs/repo-docs/SESSION_MANAGEMENT_ENHANCEMENTS.md
+         56913  docs/reference/ill show you complete.txt
+         56042  docs/source-docs/core/user_manager.md
+         55563  apps/web/triumvirate-portal/assets/images/feff32e3-b148-4ff7-9f61-ca16450d376e-1_all_261-1766563232413.jpg
+         55303  docs/repo-docs/architecture/HYDRA_50_ARCHITECTURE.md

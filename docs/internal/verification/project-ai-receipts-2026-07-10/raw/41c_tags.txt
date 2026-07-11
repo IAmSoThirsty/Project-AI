@@ -1,0 +1,8 @@
+V2.0
+checkpoint-2026-04-15-stable
+checkpoint-hard-reset-20260419-112755
+checkpoint-main-pre-trunk-2026-04-15
+checkpoint-master-pre-legacy-2026-04-15
+checkpoint-pre-diagram-branch-normalization-2026-04-15
+post-recovery-clean-baseline-20260519
+taar-verify-2026-07-10

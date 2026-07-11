@@ -1,0 +1,49 @@
+packages/ members (31):
+    packages/_staging
+    packages/ai-takeover
+    packages/alien-invaders
+    packages/api
+    packages/arbiter
+    packages/atlas
+    packages/audit
+    packages/canonical
+    packages/capability
+    packages/cerberus
+    packages/cli
+    packages/cognitive-warfare
+    packages/companion
+    packages/convergence
+    packages/django-state
+    packages/emp-defense
+    packages/execution
+    packages/global-scenario
+    packages/governance
+    packages/hydra_50
+    packages/identity
+    packages/kernel
+    packages/knowledge
+    packages/rlp
+    packages/security
+    packages/simulation-contract
+    packages/swr
+    packages/taar
+    packages/tarl
+    packages/temporal
+    packages/thirstys-trading-hub
+
+apps/ (6):
+    apps/android
+    apps/desktop
+    apps/services
+    apps/swr-dashboard
+    apps/web
+    apps/web-static
+
+crates/ (1):
+    crates/genesis-emitter
+
+console-script entry points (4):
+    project-ai = project_ai_cli.app:run  (packages/cli/pyproject.toml)
+    project-ai-desktop = project_ai_desktop.app:entrypoint  (apps/desktop/pyproject.toml)
+    project-ai-swr-dashboard = project_ai_swr_dashboard.app:entrypoint  (apps/swr-dashboard/pyproject.toml)
+    taar = taar.cli:main  (packages/taar/pyproject.toml)

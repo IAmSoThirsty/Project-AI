@@ -1,0 +1,155 @@
+key,value
+audit.date,2026-07-10
+audit.repo,Project-AI-Beginnings
+audit.head_sha,656a26dbb245d5d2dbd2626389e9204737698882
+audit.branch,chore/warning-cleanup-utc-artifacts
+audit.archive_sha256,be4b128d37e96013e9e94c1c096e7c9f592457f354085bb18605baaa2a63a343
+audit.archive_bytes,37215466
+audit.read_only,True
+files.physical_all_incl_git,123193
+files.git_dir_files,140
+files.nongit_files,123053
+files.git_tracked_files,2852
+files.excluded_files,120176
+files.kept_after_standard_exclusions,2877
+files.kept_bytes,553356271
+files.kept_bytes_note,"84% of kept bytes is untracked generated ML data under data/knowledge/ (chunks.jsonl 260MB + vectors.npy 202MB, gitignored)"
+excluded_by_segment_files.node_modules,99927
+excluded_by_segment_files..venv,14919
+excluded_by_segment_files..mypy_cache,2215
+excluded_by_segment_files.target,1484
+excluded_by_segment_files..ruff_cache,626
+excluded_by_segment_files.__pycache__,485
+excluded_by_segment_files.build,476
+excluded_by_segment_files..gradle,25
+excluded_by_segment_files.dist,13
+excluded_by_segment_files..pytest_cache,5
+excluded_by_segment_files.project-ai-receipts-2026-07-10,1
+concentration.kept_files_under_docs,2000
+concentration.kept_files_total,2877
+concentration.docs_share_pct,69.5
+concentration.note,Repository is documentation-dominated; source (Python) is a minority of files.
+category_split_kept_files.documentation,1769
+category_split_kept_files.source,316
+category_split_kept_files.vendored/reference,258
+category_split_kept_files.test,148
+category_split_kept_files.configuration,101
+category_split_kept_files.other,95
+category_split_kept_files.evidence,82
+category_split_kept_files.reports,43
+category_split_kept_files.infrastructure,31
+category_split_kept_files.asset,31
+category_split_kept_files.dependency,3
+extension_buckets.YAML,111
+extension_buckets.Markdown,1609
+extension_buckets.JavaScript,38
+extension_buckets.JSON,63
+extension_buckets.Python,503
+extension_buckets.TypeScript,6
+extension_buckets.TSX,7
+extension_buckets.Rust,2
+extension_buckets.PowerShell,8
+extension_buckets.Shell,7
+extension_buckets.thirsty,29
+extension_buckets.C#,16
+extension_buckets.TARL,3
+extension_buckets.no_extension,20
+extension_buckets.dockerfiles,0
+extension_buckets.helm_files,17
+extension_buckets.k8s_like_yaml,16
+lines.scc_total_files,2628
+lines.scc_code_lines,1155111
+lines.scc_total_lines,1379960
+lines.cloc_total_files,2449
+lines.cloc_code_lines,1078633
+lines.cloc_comment_lines,24305
+lines.self_counter_total_lines,1064836
+lines.by_language_scc_code.Markdown,606667
+lines.by_language_scc_code.JSON(data),344938
+lines.by_language_scc_code.Python,84753
+lines.by_language_scc_code.HTML,31019
+lines.by_language_scc_code.YAML,26221
+lines.by_language_scc_code.JavaScript,8277
+lines.by_language_scc_code.C#,2180
+lines.by_language_scc_code.TypeScript,511
+lines.by_language_scc_code.PowerShell,1102
+lines.by_language_scc_code.Shell,686
+lines.by_language_scc_code.Rust,180
+lines.note,Line totals are dominated by Markdown docs (~607K) and JSON data (~345K); Python source code is ~75K-85K lines depending on tool.
+tests.test_files,148
+tests.py_test_functions,2166
+tests.js_test_cases,37
+tests.pytest_passed,2509
+tests.pytest_failed,0
+tests.pytest_errors,0
+tests.pytest_xfailed,1
+tests.pytest_skipped,0
+tests.pytest_exit_code,0
+tests.pytest_runtime_sec,72.68
+tests.assert_in_test_files,4085
+tests.assert_all_python,4257
+static_analysis.ruff_check,"PASS (repo, receipt dir excluded)"
+static_analysis.ruff_format,PASS (425 files already formatted)
+static_analysis.mypy_precommit_hook,PASS (configured strict gate)
+static_analysis.black,N/A - not a repo-configured tool; only-available copy ran under Python 3.11 and could not parse 3.12 syntax (invalid run)
+static_analysis.bandit_optional_py312.issues,2923
+static_analysis.bandit_optional_py312.high,5
+static_analysis.bandit_optional_py312.medium,30
+static_analysis.bandit_optional_py312.low,2888
+static_analysis.bandit_optional_py312.loc,77054
+static_analysis.bandit_optional_py312.note,optional/unconfigured; low findings (assert/subprocess) dominate
+static_analysis.pyright_optional_scoped,1 error in sampled packages/kernel/src/kernel (unconfigured)
+static_analysis.eslint_web_configured,230 problems (largely eslint v10 flat-config migration errors)
+static_analysis.semgrep,available (1.169.0) but not executed - auto config requires telemetry; declined for a private-repo audit (bandit used for offline SAST)
+authorship.first_commit_sha,4acf92a9fe69b5e30577fb6b926196e9575013bb
+authorship.first_commit_date,2026-06-19
+authorship.first_commit_author,Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>
+authorship.head_commit_date,2026-07-10
+authorship.elapsed_calendar_days,21
+authorship.commits_current_branch_head,192
+authorship.commits_all_refs,2528
+authorship.distinct_identities,11
+authorship.current_branch_owner_share,192/192 (100%) owner-attributed by git
+authorship.all_refs_by_category.Owner (Jeremy Karrick / IAmSoThirsty / Thirsty / Quencher),1344
+authorship.all_refs_by_category.AI agent (GitHub Copilot),1007
+authorship.all_refs_by_category.AI agent (Claude/Anthropic),85
+authorship.all_refs_by_category.AI agent (Google Jules),49
+authorship.all_refs_by_category.GitHub automation,36
+authorship.all_refs_by_category.Dependabot,7
+inventory.python_packages,34
+inventory.apps,android; desktop; services; swr-dashboard; web; web-static
+inventory.crates,genesis-emitter
+inventory.console_scripts,project-ai-desktop; project-ai-swr-dashboard; project-ai; taar
+inventory.github_workflows,ci.yaml; publish.yaml; verify-taar-bundle.yaml
+inventory.helm_charts,1
+inventory.helm_templates,12
+inventory.k8s_kinds.Role,8
+inventory.k8s_kinds.ServiceAccount,5
+inventory.k8s_kinds.Deployment,4
+inventory.k8s_kinds.Service,4
+inventory.k8s_kinds.NetworkPolicy,4
+inventory.k8s_kinds.PodDisruptionBudget,4
+inventory.k8s_kinds.RoleBinding,4
+inventory.k8s_kinds.PersistentVolumeClaim,2
+inventory.k8s_kinds.CronJob,1
+inventory.k8s_kinds.Ingress,1
+inventory.k8s_kinds.PrometheusRule,1
+inventory.k8s_kinds.ServiceMonitor,1
+inventory.compose_files,compose.dev.yaml; compose.yaml
+inventory.terraform_files,0
+inventory.pdf_documents,55
+inventory.license_files,4
+inventory.submodules,False
+inventory.spdx_headers,0
+prometheus.files_matched,168
+prometheus.note,"Almost all are documentation MENTIONS of 'prometheus' in Markdown. Real integration = 2 helm templates (PrometheusRule + ServiceMonitor CRs). No vendored Prometheus, no dashboards, no scrape config."
+integrity.git_fsck,"no non-dangling errors (dangling objects only, which is normal)"
+integrity.git_status,clean working tree at audit start (receipt dir untracked)
+integrity.count_objects_packs,5
+integrity.count_objects_pack_size,199.59 MiB
+integrity.count_objects_garbage,11
+integrity.garbage_note,"11 stray .git/objects/**/tmp_obj_* files (5.45 KiB) - leftover temp objects, not corruption; not written by this audit"
+integrity.branches_local,5
+integrity.tags,0
+integrity.submodules,0
+integrity.worktrees,1

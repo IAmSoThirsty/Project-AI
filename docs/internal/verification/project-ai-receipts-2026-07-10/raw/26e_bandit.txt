@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "C:\Users\Quencher\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\bandit\core\manager.py", line 186, in output_results
+    report_func(
+  File "C:\Users\Quencher\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\bandit\formatters\text.py", line 197, in report
+    wrapped_file.write(result)
+  File "C:\Users\Quencher\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2265' in position 113188: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Quencher\AppData\Local\hermes\hermes-agent\venv\Scripts\bandit.exe\__main__.py", line 7, in <module>
+  File "C:\Users\Quencher\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\bandit\cli\main.py", line 682, in main
+    b_mgr.output_results(
+  File "C:\Users\Quencher\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\bandit\core\manager.py", line 195, in output_results
+    raise RuntimeError(
+RuntimeError: Unable to output report using 'txt' formatter: 'charmap' codec can't encode character '\u2265' in position 113188: character maps to <undefined>

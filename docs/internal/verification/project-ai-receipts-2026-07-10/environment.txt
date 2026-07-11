@@ -1,0 +1,37 @@
+# environment.txt - tool + platform versions (no secrets)
+generated: 2026-07-11T00:48:49Z
+repo_head: 656a26dbb245d5d2dbd2626389e9204737698882
+repo_branch: chore/warning-cleanup-utc-artifacts
+cwd: /t/00-Active/Project-AI-Beginnings
+
+== platform ==
+os: MINGW64_NT-10.0-26200 3.6.7-fb42d713.x86_64 x86_64; Windows 11 Pro 10.0.26200
+shell_bash: GNU bash, version 5.3.9(1)-release (x86_64-pc-cygwin)
+shell_pwsh: 7.6.1
+
+== version control ==
+git: git version 2.54.0.windows.1
+
+== languages / runtimes ==
+python(uv): Python 3.12.10
+python_pin: requires-python = "==3.12.10"
+node: v25.9.0
+npm: 11.13.0
+pnpm: 10.30.0
+uv: uv 0.11.27 (19fc8b03b 2026-07-06 x86_64-pc-windows-msvc)
+cargo: cargo 1.96.1 (356927216 2026-06-26)
+go: go version go1.26.2 windows/amd64
+java: openjdk version "17.0.18" 2026-01-20
+
+== analysis tools ==
+ruff: ruff 0.15.18
+mypy: mypy 2.1.0 (compiled: yes)
+black: black, 26.5.1 (compiled: yes)
+bandit: bandit 1.9.4
+scc: scc version 3.7.0
+cloc: 2.06
+pyright: pyright 1.1.411
+eslint: v10.7.0
+semgrep: 1.169.0
+tokei: UNAVAILABLE (cargo build failed: windows-sys compile error; scc+cloc used instead)
+cosign/rekor: not installed (documented in SIGNING.md)

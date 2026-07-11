@@ -1,0 +1,8 @@
+Contribution categories (all refs), by commit count.
+ commits  category
+    1344  Owner (Jeremy Karrick / IAmSoThirsty / Thirsty / Quencher)
+    1007  AI agent (GitHub Copilot)
+      85  AI agent (Claude/Anthropic)
+      49  AI agent (Google Jules)
+      36  GitHub automation
+       7  Dependabot

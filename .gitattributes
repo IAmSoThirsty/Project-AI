@@ -37,3 +37,8 @@
 
 # Stage 4 holds byte-preserved legacy inputs until their owning migration gate.
 packages/_staging/** whitespace=-trailing-space
+
+# 2026-07-10 audit receipt bundle: byte-preserved (CRLF as generated). EOL
+# normalization would change the bytes and break the bundle's SHA256SUMS.txt
+# on fresh checkouts.
+docs/internal/verification/project-ai-receipts-2026-07-10/** -text

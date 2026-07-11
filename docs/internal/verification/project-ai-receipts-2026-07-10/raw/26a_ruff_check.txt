@@ -1,0 +1,9 @@
+project-ai-receipts-2026-07-10\analyze.py:160:5: B007 Loop control variable `rp` not used within loop body
+project-ai-receipts-2026-07-10\analyze.py:175:5: B007 Loop control variable `rp` not used within loop body
+project-ai-receipts-2026-07-10\analyze.py:175:9: B007 Loop control variable `sz` not used within loop body
+project-ai-receipts-2026-07-10\analyze.py:345:34: E702 Multiple statements on one line (semicolon)
+project-ai-receipts-2026-07-10\analyze.py:345:61: E702 Multiple statements on one line (semicolon)
+project-ai-receipts-2026-07-10\inventory.py:101:28: RUF010 [*] Use explicit conversion flag
+project-ai-receipts-2026-07-10\inventory.py:173:32: RUF100 [*] Unused `noqa` directive (non-enabled: `BLE001`)
+Found 7 errors.
+[*] 2 fixable with the `--fix` option.

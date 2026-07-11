@@ -1,0 +1,20 @@
+License/notice/copying files (4):
+    LICENSE
+    apps/web/triumvirate-portal/LICENSE
+    docs/repo-docs/legal/LICENSE_MANIFEST.md
+    docs/repo-docs/legal/LICENSE_README.md
+
+.gitmodules present (submodules): False
+SPDX-License-Identifier headers in source: 0
+
+Byte-preserved / reference / vendored trees (repo-declared, tracked):
+    packages/_staging/: 92 tracked files
+    packages/security/reference/: 1 tracked files
+    packages/rlp/governance_framework/: 15 tracked files
+    docs/reference/: 148 tracked files
+    docs/internal/frozen-history/: 1 tracked files
+
+Dependency lockfiles (3):
+    Cargo.lock  (4910 bytes)
+    pnpm-lock.yaml  (164919 bytes)
+    uv.lock  (189867 bytes)

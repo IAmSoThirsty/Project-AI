@@ -1,0 +1,265 @@
+
+> project-ai-workspace@0.0.0-dev0 web:lint T:\00-Active\Project-AI-Beginnings
+> eslint apps/web --max-warnings 0
+
+(node:10248) ESLintEnvWarning: /* eslint-env */ comments are no longer recognized when linting with flat config and will be reported as errors as of v10.0.0. Replace them with /* global */ comments or define globals in your config file. See https://eslint.org/docs/latest/use/configure/migration-guide#eslint-env-configuration-comments for details. Found in T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\jest.config.js at line 5.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10248) ESLintEnvWarning: /* eslint-env */ comments are no longer recognized when linting with flat config and will be reported as errors as of v10.0.0. Replace them with /* global */ comments or define globals in your config file. See https://eslint.org/docs/latest/use/configure/migration-guide#eslint-env-configuration-comments for details. Found in T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tests\integration.test.js at line 1.
+(node:10248) ESLintEnvWarning: /* eslint-env */ comments are no longer recognized when linting with flat config and will be reported as errors as of v10.0.0. Replace them with /* global */ comments or define globals in your config file. See https://eslint.org/docs/latest/use/configure/migration-guide#eslint-env-configuration-comments for details. Found in T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tests\meta-generator.test.js at line 1.
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\js\analytics.js
+   30:5   error  'console' is not defined              no-undef
+   35:18  error  'document' is not defined             no-undef
+   38:3   error  'document' is not defined             no-undef
+   41:3   error  'window' is not defined               no-undef
+   41:22  error  'window' is not defined               no-undef
+   42:19  error  'dataLayer' is not defined            no-undef
+   43:3   error  'window' is not defined               no-undef
+   51:3   error  'console' is not defined              no-undef
+   57:5   error  'gtag' is not defined                 no-undef
+   61:7   error  'window' is not defined               no-undef
+   61:51  error  'window' is not defined               no-undef
+   62:5   error  'console' is not defined              no-undef
+   69:5   error  'gtag' is not defined                 no-undef
+   81:32  error  'window' is not defined               no-undef
+   84:31  error  'PerformanceObserver' is not defined  no-undef
+   95:14  error  'e' is defined but never used         @typescript-eslint/no-unused-vars
+   96:7   error  'console' is not defined              no-undef
+  101:31  error  'PerformanceObserver' is not defined  no-undef
+  113:14  error  'e' is defined but never used         @typescript-eslint/no-unused-vars
+  114:7   error  'console' is not defined              no-undef
+  120:31  error  'PerformanceObserver' is not defined  no-undef
+  131:7   error  'window' is not defined               no-undef
+  132:13  error  'document' is not defined             no-undef
+  140:14  error  'e' is defined but never used         @typescript-eslint/no-unused-vars
+  141:7   error  'console' is not defined              no-undef
+  146:3   error  'window' is not defined               no-undef
+  147:5   error  'setTimeout' is not defined           no-undef
+  148:24  error  'window' is not defined               no-undef
+  159:7   error  'console' is not defined              no-undef
+  173:3   error  'window' is not defined               no-undef
+  182:5   error  'console' is not defined              no-undef
+  186:3   error  'window' is not defined               no-undef
+  195:5   error  'console' is not defined              no-undef
+  202:3   error  'document' is not defined             no-undef
+  204:35  error  'window' is not defined               no-undef
+  213:3   error  'document' is not defined             no-undef
+  228:3   error  'window' is not defined               no-undef
+  229:26  error  'document' is not defined             no-undef
+  229:66  error  'window' is not defined               no-undef
+  230:28  error  'window' is not defined               no-undef
+  249:3   error  'console' is not defined              no-undef
+  256:3   error  'console' is not defined              no-undef
+  260:5   error  'document' is not defined             no-undef
+  261:3   error  'document' is not defined             no-undef
+  267:1   error  'window' is not defined               no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\js\meta-generator.js
+   96:5   error  'console' is not defined  no-undef
+  167:24  error  'process' is not defined  no-undef
+  171:5   error  'console' is not defined  no-undef
+  172:37  error  'console' is not defined  no-undef
+  177:5   error  'console' is not defined  no-undef
+  178:5   error  'console' is not defined  no-undef
+  184:5   error  'console' is not defined  no-undef
+  188:3   error  'console' is not defined  no-undef
+  206:38  error  'module' is not defined   no-undef
+  207:3   error  'module' is not defined   no-undef
+  210:5   error  'require' is not defined  no-undef
+  210:22  error  'module' is not defined   no-undef
+  211:3   error  'process' is not defined  no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\js\sw-register.js
+    6:24  error  'navigator' is not defined    no-undef
+    7:3   error  'window' is not defined       no-undef
+    8:5   error  'navigator' is not defined    no-undef
+   12:7   error  'console' is not defined      no-undef
+   15:7   error  'setInterval' is not defined  no-undef
+   24:50  error  'navigator' is not defined    no-undef
+   26:13  error  'console' is not defined      no-undef
+   29:17  error  'confirm' is not defined      no-undef
+   31:15  error  'window' is not defined       no-undef
+   38:7   error  'console' is not defined      no-undef
+   42:3   error  'navigator' is not defined    no-undef
+   43:5   error  'window' is not defined       no-undef
+   51:1   error  'window' is not defined       no-undef
+   58:3   error  'console' is not defined      no-undef
+   64:1   error  'window' is not defined       no-undef
+   65:3   error  'console' is not defined      no-undef
+   71:25  error  'document' is not defined     no-undef
+  113:17  error  'document' is not defined     no-undef
+  126:3   error  'document' is not defined     no-undef
+  128:3   error  'document' is not defined     no-undef
+  131:3   error  'document' is not defined     no-undef
+  136:5   error  'console' is not defined      no-undef
+  143:3   error  'document' is not defined     no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\lighthouserc.js
+  6:1  error  'module' is not defined  no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\public\dhws-data-injector.js
+   85:9   error  'classIndexMap' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  128:29  error  'Node' is not defined                               no-undef
+  168:30  error  'Node' is not defined                               no-undef
+  205:62  error  'window' is not defined                             no-undef
+  207:62  error  'window' is not defined                             no-undef
+  233:22  error  'document' is not defined                           no-undef
+  234:9   error  'taggedCount' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  250:9   error  'document' is not defined                           no-undef
+  251:7   error  'document' is not defined                           no-undef
+  257:26  error  'MutationObserver' is not defined                   no-undef
+  262:35  error  'Node' is not defined                               no-undef
+  280:22  error  'document' is not defined                           no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\sw.js
+   34:1   error  'self' is not defined     no-undef
+   35:3   error  'console' is not defined  no-undef
+   37:5   error  'caches' is not defined   no-undef
+   39:9   error  'console' is not defined  no-undef
+   42:19  error  'self' is not defined     no-undef
+   47:1   error  'self' is not defined     no-undef
+   48:3   error  'console' is not defined  no-undef
+   50:5   error  'caches' is not defined   no-undef
+   56:15  error  'console' is not defined  no-undef
+   57:22  error  'caches' is not defined   no-undef
+   61:19  error  'self' is not defined     no-undef
+   66:1   error  'self' is not defined     no-undef
+   71:37  error  'self' is not defined     no-undef
+   74:5   error  'caches' is not defined   no-undef
+   79:13  error  'fetch' is not defined    no-undef
+   83:19  error  'caches' is not defined   no-undef
+   95:16  error  'fetch' is not defined    no-undef
+  104:13  error  'caches' is not defined   no-undef
+  110:13  error  'console' is not defined  no-undef
+  114:22  error  'caches' is not defined   no-undef
+  115:55  error  'caches' is not defined   no-undef
+  125:1   error  'self' is not defined     no-undef
+  127:5   error  'self' is not defined     no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tailwind.config.js
+  1:1  error  'module' is not defined  no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tests\integration.test.js
+    4:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    5:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  103:50  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tests\meta-generator.test.js
+    4:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   12:5   error  'jest' is not defined                    no-undef
+   13:21  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   17:5   error  'jest' is not defined                    no-undef
+   50:22  error  'jest' is not defined                    no-undef
+   50:33  error  'console' is not defined                 no-undef
+   59:20  error  'jest' is not defined                    no-undef
+   59:31  error  'console' is not defined                 no-undef
+   72:20  error  'jest' is not defined                    no-undef
+   72:31  error  'console' is not defined                 no-undef
+   81:22  error  'jest' is not defined                    no-undef
+   81:33  error  'console' is not defined                 no-undef
+   92:20  error  'jest' is not defined                    no-undef
+   92:31  error  'console' is not defined                 no-undef
+  103:22  error  'jest' is not defined                    no-undef
+  103:33  error  'console' is not defined                 no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tests\sample.test.js
+   6:1  error  'describe' is not defined  no-undef
+   7:3  error  'describe' is not defined  no-undef
+   8:5  error  'test' is not defined      no-undef
+   9:7  error  'expect' is not defined    no-undef
+  10:7  error  'expect' is not defined    no-undef
+  13:5  error  'test' is not defined      no-undef
+  14:7  error  'expect' is not defined    no-undef
+  15:7  error  'expect' is not defined    no-undef
+  19:3  error  'describe' is not defined  no-undef
+  20:5  error  'test' is not defined      no-undef
+  23:7  error  'expect' is not defined    no-undef
+  26:5  error  'test' is not defined      no-undef
+  28:7  error  'expect' is not defined    no-undef
+  29:7  error  'expect' is not defined    no-undef
+  30:7  error  'expect' is not defined    no-undef
+  31:7  error  'expect' is not defined    no-undef
+  35:3  error  'describe' is not defined  no-undef
+  36:5  error  'test' is not defined      no-undef
+  38:7  error  'expect' is not defined    no-undef
+  39:7  error  'expect' is not defined    no-undef
+  40:7  error  'expect' is not defined    no-undef
+  41:7  error  'expect' is not defined    no-undef
+  44:5  error  'test' is not defined      no-undef
+  47:7  error  'expect' is not defined    no-undef
+  51:3  error  'describe' is not defined  no-undef
+  52:5  error  'test' is not defined      no-undef
+  59:7  error  'expect' is not defined    no-undef
+  60:7  error  'expect' is not defined    no-undef
+  61:7  error  'expect' is not defined    no-undef
+  64:5  error  'test' is not defined      no-undef
+  77:7  error  'expect' is not defined    no-undef
+
+T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tests\sw-register.test.js
+    4:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    9:35  error  'setImmediate' is not defined            no-undef
+   15:23  error  'jest' is not defined                    no-undef
+   16:18  error  'jest' is not defined                    no-undef
+   17:13  error  'jest' is not defined                    no-undef
+   49:23  error  'jest' is not defined                    no-undef
+   55:23  error  'jest' is not defined                    no-undef
+   62:20  error  'jest' is not defined                    no-undef
+   65:20  error  'jest' is not defined                    no-undef
+   67:20  error  'jest' is not defined                    no-undef
+   68:21  error  'jest' is not defined                    no-undef
+   76:23  error  'jest' is not defined                    no-undef
+   81:15  error  'jest' is not defined                    no-undef
+   86:3   error  'global' is not defined                  no-undef
+   87:3   error  'global' is not defined                  no-undef
+   88:3   error  'global' is not defined                  no-undef
+   88:24  error  'jest' is not defined                    no-undef
+   89:3   error  'global' is not defined                  no-undef
+   89:20  error  'jest' is not defined                    no-undef
+   98:20  error  'jest' is not defined                    no-undef
+   99:25  error  'jest' is not defined                    no-undef
+  106:15  error  'jest' is not defined                    no-undef
+  108:25  error  'jest' is not defined                    no-undef
+  114:17  error  'jest' is not defined                    no-undef
+  120:25  error  'jest' is not defined                    no-undef
+  125:5   error  'global' is not defined                  no-undef
+  127:5   error  'global' is not defined                  no-undef
+  147:5   error  'jest' is not defined                    no-undef
+  151:12  error  'global' is not defined                  no-undef
+  152:12  error  'global' is not defined                  no-undef
+  153:12  error  'global' is not defined                  no-undef
+  154:12  error  'global' is not defined                  no-undef
+  155:5   error  'jest' is not defined                    no-undef
+  165:5   error  'jest' is not defined                    no-undef
+  165:16  error  'console' is not defined                 no-undef
+  166:5   error  'jest' is not defined                    no-undef
+  166:16  error  'console' is not defined                 no-undef
+  168:5   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  179:12  error  'global' is not defined                  no-undef
+  187:12  error  'global' is not defined                  no-undef
+  203:5   error  'jest' is not defined                    no-undef
+  203:16  error  'console' is not defined                 no-undef
+  204:5   error  'jest' is not defined                    no-undef
+  204:16  error  'console' is not defined                 no-undef
+  206:5   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  215:12  error  'global' is not defined                  no-undef
+  226:22  error  'jest' is not defined                    no-undef
+  226:33  error  'console' is not defined                 no-undef
+  228:5   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  243:5   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  252:5   error  'jest' is not defined                    no-undef
+  252:16  error  'console' is not defined                 no-undef
+  254:5   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  257:23  error  'jest' is not defined                    no-undef
+  258:15  error  'jest' is not defined                    no-undef
+  275:23  error  'jest' is not defined                    no-undef
+  276:15  error  'jest' is not defined                    no-undef
+  291:5   error  'jest' is not defined                    no-undef
+  291:16  error  'console' is not defined                 no-undef
+  293:5   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  296:23  error  'jest' is not defined                    no-undef
+  297:15  error  'jest' is not defined                    no-undef
+
+✖ 230 problems (230 errors, 0 warnings)
+
+(node:10248) ESLintEnvWarning: /* eslint-env */ comments are no longer recognized when linting with flat config and will be reported as errors as of v10.0.0. Replace them with /* global */ comments or define globals in your config file. See https://eslint.org/docs/latest/use/configure/migration-guide#eslint-env-configuration-comments for details. Found in T:\00-Active\Project-AI-Beginnings\apps\web\triumvirate-portal\tests\sw-register.test.js at line 1.
+ ELIFECYCLE  Command failed with exit code 1.

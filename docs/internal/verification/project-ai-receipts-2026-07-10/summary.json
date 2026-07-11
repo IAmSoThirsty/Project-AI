@@ -1,0 +1,211 @@
+{
+  "audit": {
+    "date": "2026-07-10",
+    "repo": "Project-AI-Beginnings",
+    "head_sha": "656a26dbb245d5d2dbd2626389e9204737698882",
+    "branch": "chore/warning-cleanup-utc-artifacts",
+    "archive_sha256": "be4b128d37e96013e9e94c1c096e7c9f592457f354085bb18605baaa2a63a343",
+    "archive_bytes": 37215466,
+    "read_only": true
+  },
+  "files": {
+    "physical_all_incl_git": 123193,
+    "git_dir_files": 140,
+    "nongit_files": 123053,
+    "git_tracked_files": 2852,
+    "excluded_files": 120176,
+    "kept_after_standard_exclusions": 2877,
+    "kept_bytes": 553356271,
+    "kept_bytes_note": "84% of kept bytes is untracked generated ML data under data/knowledge/ (chunks.jsonl 260MB + vectors.npy 202MB, gitignored)"
+  },
+  "excluded_by_segment_files": {
+    "node_modules": 99927,
+    ".venv": 14919,
+    ".mypy_cache": 2215,
+    "target": 1484,
+    ".ruff_cache": 626,
+    "__pycache__": 485,
+    "build": 476,
+    ".gradle": 25,
+    "dist": 13,
+    ".pytest_cache": 5,
+    "project-ai-receipts-2026-07-10": 1
+  },
+  "concentration": {
+    "kept_files_under_docs": 2000,
+    "kept_files_total": 2877,
+    "docs_share_pct": 69.5,
+    "note": "Repository is documentation-dominated; source (Python) is a minority of files."
+  },
+  "category_split_kept_files": {
+    "documentation": 1769,
+    "source": 316,
+    "vendored/reference": 258,
+    "test": 148,
+    "configuration": 101,
+    "other": 95,
+    "evidence": 82,
+    "reports": 43,
+    "infrastructure": 31,
+    "asset": 31,
+    "dependency": 3
+  },
+  "extension_buckets": {
+    "YAML": 111,
+    "Markdown": 1609,
+    "JavaScript": 38,
+    "JSON": 63,
+    "Python": 503,
+    "TypeScript": 6,
+    "TSX": 7,
+    "Rust": 2,
+    "PowerShell": 8,
+    "Shell": 7,
+    "thirsty": 29,
+    "C#": 16,
+    "TARL": 3,
+    "no_extension": 20,
+    "dockerfiles": 0,
+    "helm_files": 17,
+    "k8s_like_yaml": 16
+  },
+  "lines": {
+    "scc_total_files": 2628,
+    "scc_code_lines": 1155111,
+    "scc_total_lines": 1379960,
+    "cloc_total_files": 2449,
+    "cloc_code_lines": 1078633,
+    "cloc_comment_lines": 24305,
+    "self_counter_total_lines": 1064836,
+    "by_language_scc_code": {
+      "Markdown": 606667,
+      "JSON(data)": 344938,
+      "Python": 84753,
+      "HTML": 31019,
+      "YAML": 26221,
+      "JavaScript": 8277,
+      "C#": 2180,
+      "TypeScript": 511,
+      "PowerShell": 1102,
+      "Shell": 686,
+      "Rust": 180
+    },
+    "note": "Line totals are dominated by Markdown docs (~607K) and JSON data (~345K); Python source code is ~75K-85K lines depending on tool."
+  },
+  "tests": {
+    "test_files": 148,
+    "py_test_functions": 2166,
+    "js_test_cases": 37,
+    "pytest_passed": 2509,
+    "pytest_failed": 0,
+    "pytest_errors": 0,
+    "pytest_xfailed": 1,
+    "pytest_skipped": 0,
+    "pytest_exit_code": 0,
+    "pytest_runtime_sec": 72.68,
+    "assert_in_test_files": 4085,
+    "assert_all_python": 4257
+  },
+  "static_analysis": {
+    "ruff_check": "PASS (repo, receipt dir excluded)",
+    "ruff_format": "PASS (425 files already formatted)",
+    "mypy_precommit_hook": "PASS (configured strict gate)",
+    "black": "N/A - not a repo-configured tool; only-available copy ran under Python 3.11 and could not parse 3.12 syntax (invalid run)",
+    "bandit_optional_py312": {
+      "issues": 2923,
+      "high": 5,
+      "medium": 30,
+      "low": 2888,
+      "loc": 77054,
+      "note": "optional/unconfigured; low findings (assert/subprocess) dominate"
+    },
+    "pyright_optional_scoped": "1 error in sampled packages/kernel/src/kernel (unconfigured)",
+    "eslint_web_configured": "230 problems (largely eslint v10 flat-config migration errors)",
+    "semgrep": "available (1.169.0) but not executed - auto config requires telemetry; declined for a private-repo audit (bandit used for offline SAST)"
+  },
+  "authorship": {
+    "first_commit_sha": "4acf92a9fe69b5e30577fb6b926196e9575013bb",
+    "first_commit_date": "2026-06-19",
+    "first_commit_author": "Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>",
+    "head_commit_date": "2026-07-10",
+    "elapsed_calendar_days": 21,
+    "commits_current_branch_head": 192,
+    "commits_all_refs": 2528,
+    "distinct_identities": 11,
+    "current_branch_owner_share": "192/192 (100%) owner-attributed by git",
+    "all_refs_by_category": {
+      "Owner (Jeremy Karrick / IAmSoThirsty / Thirsty / Quencher)": 1344,
+      "AI agent (GitHub Copilot)": 1007,
+      "AI agent (Claude/Anthropic)": 85,
+      "AI agent (Google Jules)": 49,
+      "GitHub automation": 36,
+      "Dependabot": 7
+    }
+  },
+  "inventory": {
+    "python_packages": 34,
+    "apps": [
+      "android",
+      "desktop",
+      "services",
+      "swr-dashboard",
+      "web",
+      "web-static"
+    ],
+    "crates": [
+      "genesis-emitter"
+    ],
+    "console_scripts": [
+      "project-ai-desktop",
+      "project-ai-swr-dashboard",
+      "project-ai",
+      "taar"
+    ],
+    "github_workflows": [
+      "ci.yaml",
+      "publish.yaml",
+      "verify-taar-bundle.yaml"
+    ],
+    "helm_charts": 1,
+    "helm_templates": 12,
+    "k8s_kinds": {
+      "Role": 8,
+      "ServiceAccount": 5,
+      "Deployment": 4,
+      "Service": 4,
+      "NetworkPolicy": 4,
+      "PodDisruptionBudget": 4,
+      "RoleBinding": 4,
+      "PersistentVolumeClaim": 2,
+      "CronJob": 1,
+      "Ingress": 1,
+      "PrometheusRule": 1,
+      "ServiceMonitor": 1
+    },
+    "compose_files": [
+      "compose.dev.yaml",
+      "compose.yaml"
+    ],
+    "terraform_files": 0,
+    "pdf_documents": 55,
+    "license_files": 4,
+    "submodules": false,
+    "spdx_headers": 0
+  },
+  "prometheus": {
+    "files_matched": 168,
+    "note": "Almost all are documentation MENTIONS of 'prometheus' in Markdown. Real integration = 2 helm templates (PrometheusRule + ServiceMonitor CRs). No vendored Prometheus, no dashboards, no scrape config."
+  },
+  "integrity": {
+    "git_fsck": "no non-dangling errors (dangling objects only, which is normal)",
+    "git_status": "clean working tree at audit start (receipt dir untracked)",
+    "count_objects_packs": 5,
+    "count_objects_pack_size": "199.59 MiB",
+    "count_objects_garbage": 11,
+    "garbage_note": "11 stray .git/objects/**/tmp_obj_* files (5.45 KiB) - leftover temp objects, not corruption; not written by this audit",
+    "branches_local": 5,
+    "tags": 0,
+    "submodules": 0,
+    "worktrees": 1
+  }
+}

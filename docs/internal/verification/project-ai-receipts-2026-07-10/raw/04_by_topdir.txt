@@ -1,0 +1,17 @@
+top-level                           files          bytes
+docs                                 2000       60758243
+packages                              607       25013455
+apps                                  126        2918108
+tests                                  38         371549
+(root file)                            27        1653563
+tools                                  27         103824
+helm                                   17          39449
+models                                  7          12277
+.github                                 6          30750
+docker                                  5           3120
+.obsidian                               4            700
+crates                                  4           7169
+engines                                 4           5394
+data                                    3      462416898
+.claude                                 1           1902
+.hermes                                 1          19870

@@ -1,0 +1,4 @@
+physical files (all, including .git): 123193
+physical bytes (all, including .git): 3227611048
+.git files: 140
+.git bytes: 211705755

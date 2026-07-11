@@ -1,0 +1,4 @@
+sha=4acf92a9fe69b5e30577fb6b926196e9575013bb
+author=Jeremy Karrick <IAmSoThirsty@users.noreply.github.com>
+date=2026-06-19T19:05:42-06:00
+subject=[Stage 0] Bootstrap: root config + line-ending policy
