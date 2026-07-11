@@ -126,7 +126,7 @@ The Project-AI PyQt6 GUI demonstrates **solid architectural foundations** with p
      class ImageGenerationWorker(QThread):
          finished = pyqtSignal(dict)
          progress = pyqtSignal(str)
-         
+
          def run(self):
              try:
                  result = self.generator.generate(self.prompt, self.style)
@@ -227,18 +227,18 @@ def closeEvent(self, event):
         self.animation_timer.stop()
     if hasattr(self, 'stats_timer'):
         self.stats_timer.stop()
-    
+
     # Disconnect signals
     try:
         self.user_logged_in.disconnect()
         self.page_changed.disconnect()
     except TypeError:  # Signal not connected
         pass
-    
+
     # Clean up workers
     if hasattr(self, 'async_manager'):
         self.async_manager.cancel_all_tasks()
-    
+
     super().closeEvent(event)
 ```
 
@@ -542,7 +542,7 @@ except Exception as e:
        old_widget = self.page_container.widget(2)
        if old_widget:
            old_widget.deleteLater()
-       
+
        news_panel = NewsIntelligencePanel()
        news_panel.back_requested.connect(self.switch_to_dashboard)
        self._set_stack_page(news_panel, 2)
@@ -554,7 +554,7 @@ except Exception as e:
    def _on_generation_complete(self, result):
        self.left_panel.set_generating(False)
        # ... handle result ...
-       
+
        # Clean up worker
        if self.worker:
            self.worker.deleteLater()
@@ -579,10 +579,10 @@ except Exception as e:
    def __init__(self, ...):
        super().__init__()
        self._cancelled = False
-   
+
    def cancel(self):
        self._cancelled = True
-   
+
    def run(self):
        if self._cancelled:
            return
@@ -595,12 +595,12 @@ except Exception as e:
    ```python
    class BasePanel(QFrame):
        back_requested = pyqtSignal()
-       
+
        def __init__(self, title: str, parent=None):
            super().__init__(parent)
            self.setStyleSheet(PANEL_STYLESHEET)
            self.title_label = self._create_title(title)
-       
+
        def _create_title(self, text: str) -> QLabel:
            label = QLabel(text)
            label.setFont(TITLE_FONT)
@@ -670,7 +670,7 @@ def test_user_login_signal(qtbot):
     """Test user login signal emission."""
     interface = LeatherBookInterface()
     qtbot.addWidget(interface)
-    
+
     with qtbot.waitSignal(interface.user_logged_in, timeout=1000):
         interface.switch_to_main_dashboard("testuser")
 
@@ -678,11 +678,11 @@ def test_widget_cleanup(qtbot):
     """Test widget cleanup on navigation."""
     interface = LeatherBookInterface()
     qtbot.addWidget(interface)
-    
+
     # Navigate to image generation
     interface.switch_to_image_generation()
     assert interface.page_container.count() >= 3
-    
+
     # Navigate back - old widget should be cleaned
     interface.switch_to_dashboard()
     # Verify old widget is deleted (use QTest.qWait for deleteLater)

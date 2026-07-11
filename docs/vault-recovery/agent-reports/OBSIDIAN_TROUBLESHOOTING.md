@@ -1,7 +1,7 @@
 # Obsidian Configuration Troubleshooting Guide
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
 **Maintained By:** AGENT-008
 
 ---
@@ -103,10 +103,10 @@ Get-Acl ".obsidian\app.json" | Select-Object -ExpandProperty Access
    ```powershell
    # Close Obsidian
    Stop-Process -Name obsidian -Force
-   
+
    # Edit config
    notepad ".obsidian\app.json"
-   
+
    # Restart Obsidian
    Start-Process "C:\Program Files\Obsidian\Obsidian.exe"
    ```
@@ -142,7 +142,7 @@ Get-Acl ".obsidian\app.json" | Select-Object -ExpandProperty Access
 **Diagnosis:**
 ```powershell
 # Check vault size
-Get-ChildItem -Recurse | Measure-Object -Property Length -Sum | 
+Get-ChildItem -Recurse | Measure-Object -Property Length -Sum |
   Select-Object @{Name="TotalMB";Expression={[math]::Round($_.Sum / 1MB, 2)}}
 
 # Count notes
@@ -198,7 +198,7 @@ Get-ChildItem -Recurse | Measure-Object -Property Length -Sum |
    ```powershell
    # Move notes older than 1 year to archive
    $cutoffDate = (Get-Date).AddYears(-1)
-   Get-ChildItem -Recurse -Filter "*.md" | 
+   Get-ChildItem -Recurse -Filter "*.md" |
      Where-Object {$_.LastWriteTime -lt $cutoffDate} |
      Move-Item -Destination "archive\"
    ```
@@ -255,7 +255,7 @@ $config.performance | Select-Object searchDelay, maxSearchResults, enableSearchC
    ```powershell
    # Delete search cache
    Remove-Item ".obsidian\cache\search" -Recurse -Force -ErrorAction SilentlyContinue
-   
+
    # Restart Obsidian (rebuilds index)
    ```
 
@@ -325,11 +325,11 @@ $config.graph | Select-Object animate, showOrphans, showAttachments
 **Diagnosis:**
 ```powershell
 # Check Obsidian memory usage
-Get-Process obsidian | Select-Object ProcessName, 
+Get-Process obsidian | Select-Object ProcessName,
   @{Name="MemoryMB";Expression={[math]::Round($_.WorkingSet / 1MB, 2)}}
 
 # Check cache size
-$cacheSize = (Get-ChildItem ".obsidian\cache" -Recurse | 
+$cacheSize = (Get-ChildItem ".obsidian\cache" -Recurse |
   Measure-Object -Property Length -Sum).Sum / 1MB
 Write-Host "Cache size: $([math]::Round($cacheSize, 2)) MB"
 ```
@@ -401,7 +401,7 @@ catch {
    ```json
    ❌ "field1": "value1"
       "field2": "value2"
-   
+
    ✅ "field1": "value1",
       "field2": "value2"
    ```
@@ -411,7 +411,7 @@ catch {
    ❌ "field1": "value1",
       "field2": "value2",
    }
-   
+
    ✅ "field1": "value1",
       "field2": "value2"
    }
@@ -420,14 +420,14 @@ catch {
 3. **Unquoted strings:**
    ```json
    ❌ "field": value
-   
+
    ✅ "field": "value"
    ```
 
 4. **Single quotes:**
    ```json
    ❌ 'field': 'value'
-   
+
    ✅ "field": "value"
    ```
 
@@ -437,7 +437,7 @@ catch {
       // This is a comment
       "field": "value"
    }
-   
+
    ✅ {
       "field": "value"
    }
@@ -611,7 +611,7 @@ $config = Get-Content ".obsidian\app.json" | ConvertFrom-Json
 $config.sync
 
 # Check file permissions
-Get-Acl "." | Select-Object -ExpandProperty Access | 
+Get-Acl "." | Select-Object -ExpandProperty Access |
   Where-Object {$_.FileSystemRights -notlike "*FullControl*"}
 ```
 
@@ -803,7 +803,7 @@ Get-ChildItem -Recurse | Where-Object {$_.IsReadOnly}
 
 3. **Remove read-only:**
    ```powershell
-   Get-ChildItem -Recurse | Where-Object {$_.IsReadOnly} | 
+   Get-ChildItem -Recurse | Where-Object {$_.IsReadOnly} |
      ForEach-Object {$_.IsReadOnly = $false}
    ```
 
@@ -923,7 +923,7 @@ Get-Process obsidian | Select-Object -ExpandProperty FileVersion
 # Vault statistics
 $stats = @{
     NoteCount = (Get-ChildItem -Recurse -Filter "*.md").Count
-    TotalSize = [math]::Round((Get-ChildItem -Recurse | 
+    TotalSize = [math]::Round((Get-ChildItem -Recurse |
       Measure-Object -Property Length -Sum).Sum / 1MB, 2)
     AttachmentCount = (Get-ChildItem -Recurse -Exclude "*.md").Count
     FolderCount = (Get-ChildItem -Recurse -Directory).Count
@@ -965,7 +965,7 @@ else {
 
 # 3. Vault size
 Write-Host "`n3. Vault Size:" -ForegroundColor Yellow
-$sizeMB = [math]::Round((Get-ChildItem -Recurse | 
+$sizeMB = [math]::Round((Get-ChildItem -Recurse |
   Measure-Object -Property Length -Sum).Sum / 1MB, 2)
 Write-Host "   📊 $sizeMB MB" -ForegroundColor Cyan
 if ($sizeMB -lt 100) {
@@ -1031,11 +1031,10 @@ Write-Host "`n=== Health Check Complete ===" -ForegroundColor Cyan
 
 ---
 
-**Troubleshooting Guide Version:** 1.0.0  
-**Total Issues Documented:** 50+  
-**Last Updated:** 2026-04-20  
+**Troubleshooting Guide Version:** 1.0.0
+**Total Issues Documented:** 50+
+**Last Updated:** 2026-04-20
 **Maintained By:** AGENT-008
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

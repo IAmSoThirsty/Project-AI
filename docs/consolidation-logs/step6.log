@@ -1,6 +1,6 @@
 
 -------------------------------------------------------------------------------
-   ROBOCOPY     ::     Robust File Copy for Windows                              
+   ROBOCOPY     ::     Robust File Copy for Windows
 -------------------------------------------------------------------------------
 
   Started : Monday, June 8, 2026 5:03:29 AM
@@ -8,10 +8,10 @@
      Dest : T:\Project-AI-main\StormDesk\
 
     Files : *.*
-	    
+
 Exc Files : .env
 	    .env.local
-	    
+
  Exc Dirs : node_modules
 	    dist
 	    build
@@ -20,8 +20,8 @@ Exc Files : .env
 	    .turbo
 	    .cache
 	    coverage
-	    
-  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30
 
 ------------------------------------------------------------------------------
 
@@ -91,4 +91,3 @@ Exc Files : .env
    Speed :           5,291,487 Bytes/sec.
    Speed :             302.781 MegaBytes/min.
    Ended : Monday, June 8, 2026 5:03:29 AM
-

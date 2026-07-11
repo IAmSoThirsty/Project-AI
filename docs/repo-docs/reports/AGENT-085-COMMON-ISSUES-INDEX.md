@@ -24,8 +24,8 @@ stakeholders:
 
 This index provides instant access to troubleshooting guides and system documentation for common issues. All entries link to specific sections of troubleshooting guides and related system documentation.
 
-**Last Updated**: 2026-04-20  
-**Coverage**: 160 tests conducted across 3 major guides  
+**Last Updated**: 2026-04-20
+**Coverage**: 160 tests conducted across 3 major guides
 **Link Density**: ~50 wiki links per troubleshooting guide
 
 ---
@@ -453,7 +453,7 @@ When adding new troubleshooting content:
 
 ---
 
-**Document Version**: 1.0.0  
-**Last Updated**: 2026-04-20  
-**Next Review**: 2026-07-20  
+**Document Version**: 1.0.0
+**Last Updated**: 2026-04-20
+**Next Review**: 2026-07-20
 **Maintained by**: AGENT-085 - Troubleshooting to System Links Specialist

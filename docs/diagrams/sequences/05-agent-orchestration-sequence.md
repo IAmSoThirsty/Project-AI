@@ -18,13 +18,13 @@ sequenceDiagram
     participant Gov as Triumvirate
     participant Memory as Memory Engine
     participant Exec as Execution Layer
-    
+
     Note over User,Exec: Multi-Agent Task Orchestration Flow
-    
+
     %% Task Initiation
     User->>Orch: Submit complex task<br/>("Analyze data and generate report")
     activate Orch
-    
+
     Orch->>Kernel: Register task request
     activate Kernel
     Kernel->>Memory: Log task initiation
@@ -33,20 +33,20 @@ sequenceDiagram
     deactivate Memory
     Kernel-->>Orch: Task registered
     deactivate Kernel
-    
+
     %% Oversight Agent: Initial Safety Check
     Orch->>Oversight: Pre-execution safety check
     activate Oversight
-    
+
     Oversight->>Kernel: Route through governance
     activate Kernel
     Kernel->>Gov: Validate task safety
     activate Gov
-    
+
     Gov->>Gov: Galahad: Check user welfare impact
     Gov->>Gov: Cerberus: Assess security risks
     Gov->>Gov: Codex: Verify logical coherence
-    
+
     alt Task Violates Safety Constraints
         Gov-->>Kernel: BLOCKED (reason)
         Kernel-->>Oversight: Task rejected
@@ -58,65 +58,65 @@ sequenceDiagram
         deactivate Gov
         Kernel-->>Oversight: Governance approved
         deactivate Kernel
-        
+
         Oversight->>Oversight: Log safety check result
         Oversight-->>Orch: Safety check passed
         deactivate Oversight
-        
+
         %% Planner Agent: Task Decomposition
         Orch->>Planner: Decompose task into subtasks
         activate Planner
-        
+
         Planner->>Kernel: Route planning operation
         activate Kernel
         Kernel-->>Planner: Planning authorized
         deactivate Kernel
-        
+
         Planner->>Planner: Analyze task complexity
         Planner->>Planner: Identify required capabilities:<br/>- Data loading<br/>- Data analysis<br/>- Report generation
-        
+
         Planner->>Planner: Decompose into subtasks:<br/>1. Load CSV data<br/>2. Perform statistical analysis<br/>3. Generate visualizations<br/>4. Create PDF report
-        
+
         Planner->>Planner: Determine dependencies:<br/>1 → 2 → 3 → 4 (sequential)
-        
+
         Planner->>Planner: Estimate resources:<br/>- Time: 5-10 minutes<br/>- Memory: ~500MB<br/>- APIs: None
-        
+
         Planner-->>Orch: Task plan (4 subtasks, dependencies, resources)
         deactivate Planner
-        
+
         %% Validator Agent: Input Validation
         Orch->>Validator: Validate inputs for each subtask
         activate Validator
-        
+
         loop For each subtask
             Validator->>Kernel: Route validation operation
             activate Kernel
             Kernel-->>Validator: Validation authorized
             deactivate Kernel
-            
+
             Validator->>Validator: Validate input schema
             Validator->>Validator: Check data types, ranges
             Validator->>Validator: Verify file paths (path traversal check)
             Validator->>Validator: Validate permissions
-            
+
             alt Validation Failed
                 Validator-->>Orch: Validation error (subtask ID, reason)
                 Orch-->>User: "Input validation failed: [reason]"
                 Note over Orch: Task aborted
             end
         end
-        
+
         Validator-->>Orch: All inputs validated ✓
         deactivate Validator
-        
+
         %% Execution Loop
         loop For each subtask (in dependency order)
             Note over Orch,Exec: Execute Subtask
-            
+
             %% Pre-Execution Oversight
             Orch->>Oversight: Pre-execution check (subtask)
             activate Oversight
-            
+
             Oversight->>Kernel: Route through governance
             activate Kernel
             Kernel->>Gov: Validate subtask action
@@ -125,7 +125,7 @@ sequenceDiagram
             deactivate Gov
             Kernel-->>Oversight: Governance decision
             deactivate Kernel
-            
+
             alt Subtask Blocked
                 Oversight-->>Orch: Subtask blocked
                 Orch->>Explain: Generate explanation
@@ -137,11 +137,11 @@ sequenceDiagram
             else Subtask Approved
                 Oversight-->>Orch: Subtask approved
                 deactivate Oversight
-                
+
                 %% Execute Subtask
                 Orch->>Exec: Execute subtask
                 activate Exec
-                
+
                 Exec->>Kernel: Log execution start
                 activate Kernel
                 Kernel->>Memory: Log subtask execution
@@ -150,9 +150,9 @@ sequenceDiagram
                 deactivate Memory
                 Kernel-->>Exec: Continue
                 deactivate Kernel
-                
+
                 Exec->>Exec: Perform subtask operation
-                
+
                 alt Execution Error
                     Exec-->>Orch: Error (exception details)
                     Orch->>Explain: Explain error
@@ -167,15 +167,15 @@ sequenceDiagram
                 else Execution Success
                     Exec-->>Orch: Subtask result + metadata
                     deactivate Exec
-                    
+
                     %% Post-Execution Validation
                     Orch->>Validator: Validate output
                     activate Validator
-                    
+
                     Validator->>Validator: Validate output schema
                     Validator->>Validator: Check data integrity
                     Validator->>Validator: Verify expected properties
-                    
+
                     alt Output Invalid
                         Validator-->>Orch: Validation failed
                         Orch->>Explain: Explain validation failure
@@ -187,7 +187,7 @@ sequenceDiagram
                     else Output Valid
                         Validator-->>Orch: Output validated ✓
                         deactivate Validator
-                        
+
                         %% Post-Execution Oversight
                         Orch->>Oversight: Post-execution check
                         activate Oversight
@@ -195,7 +195,7 @@ sequenceDiagram
                         Oversight->>Oversight: Check compliance
                         Oversight-->>Orch: Compliance maintained
                         deactivate Oversight
-                        
+
                         %% Log Success
                         Orch->>Kernel: Log subtask completion
                         activate Kernel
@@ -205,33 +205,33 @@ sequenceDiagram
                         deactivate Memory
                         Kernel-->>Orch: Logged
                         deactivate Kernel
-                        
+
                         Note over Orch: Proceed to next subtask
                     end
                 end
             end
         end
-        
+
         %% All Subtasks Complete
         Note over Orch,Exec: All Subtasks Executed Successfully
-        
+
         %% Final Explanation
         Orch->>Explain: Generate task summary
         activate Explain
-        
+
         Explain->>Memory: Retrieve task execution trace
         activate Memory
         Memory-->>Explain: Execution history, results
         deactivate Memory
-        
+
         Explain->>Explain: Generate user-friendly summary
         Explain->>Explain: Highlight key results
         Explain->>Explain: Explain any warnings or notes
         Explain->>Explain: Provide next steps (if applicable)
-        
+
         Explain-->>Orch: Task summary + explanation
         deactivate Explain
-        
+
         %% Final Oversight
         Orch->>Oversight: Final safety check
         activate Oversight
@@ -239,7 +239,7 @@ sequenceDiagram
         Oversight->>Oversight: Verify all constraints maintained
         Oversight-->>Orch: Task execution compliant ✓
         deactivate Oversight
-        
+
         %% Deliver Result
         Orch->>Kernel: Mark task complete
         activate Kernel
@@ -249,10 +249,10 @@ sequenceDiagram
         deactivate Memory
         Kernel-->>Orch: Task finalized
         deactivate Kernel
-        
+
         Orch-->>User: Task complete!<br/>[Summary]<br/>[Results]<br/>[Next steps]
         deactivate Orch
-        
+
         Note over User,Exec: Task orchestration complete
     end
 ```

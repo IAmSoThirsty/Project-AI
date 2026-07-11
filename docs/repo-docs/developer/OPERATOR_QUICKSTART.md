@@ -13,9 +13,9 @@ review_cycle: quarterly
 ---
 # Operator Quickstart: Guardian Mindset for AGI Stewardship
 
-**Document Version:** 1.0  
-**Effective Date:** 2026-02-05  
-**Status:** Operational Guide  
+**Document Version:** 1.0
+**Effective Date:** 2026-02-05
+**Status:** Operational Guide
 **Target Audience:** Operators, System Administrators, AGI Stewards
 
 ---
@@ -431,5 +431,5 @@ tail -f /var/log/project-ai/audit.log
 **Document Maintenance:**
 This document is reviewed quarterly and updated based on operational lessons learned. Suggestions for improvement are welcome via the operator feedback channel.
 
-**Last Updated:** 2026-02-05  
+**Last Updated:** 2026-02-05
 **Next Review:** 2026-05-05

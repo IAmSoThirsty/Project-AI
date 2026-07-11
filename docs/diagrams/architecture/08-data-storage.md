@@ -20,31 +20,31 @@ graph TB
         subgraph "User Data"
             USERS_JSON[users.json<br/>bcrypt hashes]
         end
-        
+
         subgraph "AI State"
             PERSONA_JSON[ai_persona/state.json<br/>Traits + Mood]
             MOOD_HISTORY[ai_persona/mood_history.json<br/>Timestamped Moods]
         end
-        
+
         subgraph "Knowledge Base"
             KB_JSON[memory/knowledge.json<br/>6 Categories]
             CONV_JSON[memory/conversations.json<br/>Chat History]
         end
-        
+
         subgraph "Learning System"
             LEARNING_JSON[learning_requests/<br/>requests.json]
             BLACK_VAULT[learning_requests/<br/>black_vault.json]
         end
-        
+
         subgraph "Security & Audit"
             AUDIT_JSON[audit_logs/<br/>audit.json]
             OVERRIDE_JSON[command_override_config.json<br/>Master Password]
         end
-        
+
         subgraph "Location Data"
             LOCATION_JSON[location_history.json<br/>Fernet Encrypted]
         end
-        
+
         subgraph "Configuration"
             CONFIG_JSON[config.json<br/>App Settings]
             POLICIES_YAML[policies/<br/>*.yaml]
@@ -56,22 +56,22 @@ graph TB
             USERS_TABLE[users<br/>id, username, password_hash, created_at]
             SESSIONS_TABLE[sessions<br/>id, user_id, token, expires_at]
         end
-        
+
         subgraph "AI State Schema"
             PERSONA_TABLE[ai_persona<br/>user_id, traits JSON, mood, updated_at]
             MOOD_TABLE[mood_history<br/>id, user_id, mood, timestamp]
         end
-        
+
         subgraph "Knowledge Schema"
             KB_TABLE[knowledge_base<br/>id, category, content, metadata JSON, created_at]
             CONV_TABLE[conversations<br/>id, user_id, messages JSON, timestamp]
         end
-        
+
         subgraph "Learning Schema"
             LEARNING_TABLE[learning_requests<br/>id, user_id, topic, status, created_at]
             BV_TABLE[black_vault<br/>fingerprint, reason, timestamp]
         end
-        
+
         subgraph "Audit Schema"
             AUDIT_TABLE[audit_logs<br/>id, event_type, user_id, details JSON, timestamp]
         end
@@ -499,36 +499,36 @@ class UserManager:
         self.data_dir = Path(data_dir)
         self.users_file = self.data_dir / "users.json"
         self.users = self._load_users()
-    
+
     def _load_users(self) -> dict:
         """Load users from JSON file"""
         if not self.users_file.exists():
             return {"users": []}
-        
+
         with open(self.users_file) as f:
             return json.load(f)
-    
+
     def save_users(self):
         """Save users to JSON file (atomic write)"""
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Atomic write pattern (write to temp, then rename)
         temp_file = self.users_file.with_suffix('.tmp')
         with open(temp_file, 'w') as f:
             json.dump(self.users, f, indent=2)
-        
+
         temp_file.replace(self.users_file)
-    
+
     def create_user(self, username: str, password: str) -> bool:
         """Create new user with bcrypt password hash"""
         if self.get_user(username):
             return False
-        
+
         password_hash = bcrypt.hashpw(
             password.encode(),
             bcrypt.gensalt(rounds=12)
         ).decode()
-        
+
         self.users["users"].append({
             "username": username,
             "password_hash": password_hash,
@@ -537,7 +537,7 @@ class UserManager:
             "locked_until": None,
             "last_login": None
         })
-        
+
         self.save_users()
         return True
 ```
@@ -551,33 +551,33 @@ class AIPersona:
         self.data_dir = Path(data_dir)
         self.state_file = self.data_dir / "state.json"
         self.state = self._load_state()
-    
+
     def _load_state(self) -> dict:
         """Load persona state from JSON"""
         if not self.state_file.exists():
             return self._default_state()
-        
+
         with open(self.state_file) as f:
             return json.load(f)
-    
+
     def _save_state(self):
         """Persist state to JSON (atomic write)"""
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
+
         temp_file = self.state_file.with_suffix('.tmp')
         with open(temp_file, 'w') as f:
             json.dump(self.state, f, indent=2)
-        
+
         temp_file.replace(self.state_file)
-    
+
     def update_trait(self, trait: str, value: int):
         """Update personality trait (0-100)"""
         if trait not in self.state["traits"]:
             raise ValueError(f"Unknown trait: {trait}")
-        
+
         self.state["traits"][trait] = max(0, min(100, value))
         self._save_state()
-    
+
     def set_mood(self, mood: str):
         """Update current mood and log to history"""
         self.state["current_mood"] = mood
@@ -585,11 +585,11 @@ class AIPersona:
             "mood": mood,
             "timestamp": datetime.now().isoformat()
         })
-        
+
         # Keep last 100 mood changes
         if len(self.state["mood_history"]) > 100:
             self.state["mood_history"] = self.state["mood_history"][-100:]
-        
+
         self._save_state()
 ```
 
@@ -606,7 +606,7 @@ class RAGSystem:
         self.embeddings = OpenAIEmbeddings(
             model="text-embedding-3-small"
         )
-        
+
         # Load existing vector store or create new
         if (self.data_dir / "index.faiss").exists():
             self.vector_store = FAISS.load_local(
@@ -618,19 +618,19 @@ class RAGSystem:
                 ["Initial document"],
                 self.embeddings
             )
-    
+
     def add_knowledge(self, content: str, metadata: dict):
         """Add document to vector store"""
         self.vector_store.add_texts([content], metadatas=[metadata])
         self.vector_store.save_local(str(self.data_dir))
-    
+
     def search(self, query: str, top_k: int = 5) -> list[dict]:
         """Retrieve relevant documents"""
         results = self.vector_store.similarity_search_with_score(
             query,
             k=top_k
         )
-        
+
         return [
             {
                 "content": doc.page_content,
@@ -656,7 +656,7 @@ def migrate_users():
     # Load JSON data
     with open("data/users.json") as f:
         data = json.load(f)
-    
+
     # Connect to PostgreSQL
     conn = psycopg2.connect(
         host="localhost",
@@ -664,9 +664,9 @@ def migrate_users():
         user="postgres",
         password="postgres"
     )
-    
+
     cursor = conn.cursor()
-    
+
     # Insert users
     for user in data["users"]:
         cursor.execute("""
@@ -678,7 +678,7 @@ def migrate_users():
             user["password_hash"],
             user["created_at"]
         ))
-    
+
     conn.commit()
     cursor.close()
     conn.close()
@@ -687,16 +687,16 @@ def migrate_knowledge():
     """Migrate knowledge base with embeddings"""
     with open("data/memory/knowledge.json") as f:
         data = json.load(f)
-    
+
     conn = psycopg2.connect(...)
     cursor = conn.cursor()
-    
+
     embeddings = OpenAIEmbeddings()
-    
+
     for item in data["knowledge"]:
         # Generate embedding
         embedding = embeddings.embed_query(item["content"])
-        
+
         cursor.execute("""
             INSERT INTO knowledge_base (id, category, content, metadata, embedding)
             VALUES (%s, %s, %s, %s, %s)
@@ -707,7 +707,7 @@ def migrate_knowledge():
             json.dumps(item["metadata"]),
             embedding
         ))
-    
+
     conn.commit()
 ```
 
@@ -731,7 +731,7 @@ def upgrade():
         sa.Column('last_login', sa.TIMESTAMP),
         sa.Column('is_active', sa.Boolean, default=True)
     )
-    
+
     op.create_index('idx_users_username', 'users', ['username'])
     op.create_index('idx_users_locked_until', 'users', ['locked_until'])
 
@@ -755,51 +755,51 @@ import shutil
 class BackupSystem:
     def __init__(self, fernet_key: bytes):
         self.fernet = Fernet(fernet_key)
-    
+
     def create_backup(self) -> Path:
         """Create encrypted backup of all data"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_dir = Path(f"backups/backup_{timestamp}")
         backup_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Copy all JSON files
         shutil.copytree("data", backup_dir / "data")
-        
+
         # Create tar archive
         archive_path = Path(f"backups/backup_{timestamp}.tar.gz")
         with tarfile.open(archive_path, "w:gz") as tar:
             tar.add(backup_dir, arcname=backup_dir.name)
-        
+
         # Encrypt archive
         with open(archive_path, "rb") as f:
             encrypted_data = self.fernet.encrypt(f.read())
-        
+
         encrypted_path = archive_path.with_suffix('.tar.gz.enc')
         with open(encrypted_path, "wb") as f:
             f.write(encrypted_data)
-        
+
         # Clean up unencrypted files
         archive_path.unlink()
         shutil.rmtree(backup_dir)
-        
+
         return encrypted_path
-    
+
     def restore_backup(self, encrypted_path: Path):
         """Decrypt and restore backup"""
         with open(encrypted_path, "rb") as f:
             encrypted_data = f.read()
-        
+
         decrypted_data = self.fernet.decrypt(encrypted_data)
-        
+
         # Write decrypted archive
         archive_path = encrypted_path.with_suffix('')
         with open(archive_path, "wb") as f:
             f.write(decrypted_data)
-        
+
         # Extract archive
         with tarfile.open(archive_path, "r:gz") as tar:
             tar.extractall("data_restored")
-        
+
         archive_path.unlink()
 ```
 
@@ -816,11 +816,11 @@ def get_knowledge_by_id(knowledge_id: str) -> dict:
     """Cached knowledge retrieval"""
     with open("data/memory/knowledge.json") as f:
         data = json.load(f)
-    
+
     for item in data["knowledge"]:
         if item["id"] == knowledge_id:
             return item
-    
+
     return None
 
 # Redis cache for sessions

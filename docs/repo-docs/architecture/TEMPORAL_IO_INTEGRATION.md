@@ -51,7 +51,7 @@ test_coverage: 83%
 
 # Temporal.io Integration Guide
 
-**Last Updated:** January 28, 2026  
+**Last Updated:** January 28, 2026
 **Status:** ✅ **FULLY INTEGRATED AND ACTIVE**
 
 ---
@@ -299,23 +299,23 @@ from temporal.workflows import TriumvirateWorkflow, TriumvirateRequest
 
 async def run_ethical_review():
     """Run ethical review through Triumvirate workflow."""
-    
+
     client = await Client.connect("localhost:7233")
-    
+
     request = TriumvirateRequest(
         action="deploy_new_ai_feature",
         description="Add autonomous decision-making capability",
         requester="alice@example.com",
         priority="high"
     )
-    
+
     result = await client.execute_workflow(
         TriumvirateWorkflow.run,
         request,
         id=f"ethical-review-{request.action}",
         task_queue="project-ai-tasks",
     )
-    
+
     print(f"Review result: {result.decision}")
     print(f"Galahad (Ethics): {result.galahad_vote}")
     print(f"Cerberus (Security): {result.cerberus_vote}")
@@ -344,16 +344,16 @@ from temporal.workflows.security_agent_workflows import SecurityScanWorkflow
 
 async def run_security_scan(repo_path: str):
     """Run comprehensive security scan."""
-    
+
     client = await Client.connect("localhost:7233")
-    
+
     result = await client.execute_workflow(
         SecurityScanWorkflow.run,
         repo_path,
         id=f"security-scan-{datetime.now().isoformat()}",
         task_queue="security-tasks",
     )
-    
+
     print(f"Scan completed: {result.status}")
     print(f"Vulnerabilities found: {result.vulnerability_count}")
     print(f"Bandit issues: {result.bandit_issues}")
@@ -381,23 +381,23 @@ from temporalio.client import Client
 
 async def run_red_team_campaign():
     """Launch red team testing campaign."""
-    
+
     client = await Client.connect("localhost:7233")
-    
+
     config = {
         "target_model": "gpt-3.5-turbo",
         "scenario_count": 100,
         "timeout_per_scenario": 30,
         "frameworks": ["jailbreakbench", "garak"]
     }
-    
+
     result = await client.execute_workflow(
         RedTeamCampaignWorkflow.run,
         config,
         id=f"redteam-{datetime.now().strftime('%Y%m%d')}",
         task_queue="security-tasks",
     )
-    
+
     print(f"Campaign completed")
     print(f"Scenarios tested: {result.total_scenarios}")
     print(f"Attack success rate: {result.asr:.2%}")
@@ -425,9 +425,9 @@ from temporalio.client import Client
 
 async def create_learning_path():
     """Generate and approve learning path."""
-    
+
     client = await Client.connect("localhost:7233")
-    
+
     result = await client.execute_workflow(
         LearningWorkflow.run,
         interest="Quantum Computing",
@@ -435,7 +435,7 @@ async def create_learning_path():
         id=f"learning-quantum-{datetime.now().isoformat()}",
         task_queue="project-ai-tasks",
     )
-    
+
     print(f"Learning path created: {result.path_id}")
     print(f"Status: {result.status}")
     print(f"Content: {result.content[:200]}...")
@@ -462,23 +462,23 @@ from temporalio.client import Client
 
 async def handle_crisis():
     """Respond to security crisis."""
-    
+
     client = await Client.connect("localhost:7233")
-    
+
     crisis = {
         "type": "security_breach",
         "severity": "critical",
         "description": "Unauthorized API access detected",
         "affected_systems": ["api_server", "database"]
     }
-    
+
     result = await client.execute_workflow(
         LiaraAgency.crisis_response,
         crisis,
         id=f"crisis-{datetime.now().isoformat()}",
         task_queue="liara-tasks",
     )
-    
+
     print(f"Crisis handled: {result.resolution}")
     print(f"Actions taken: {result.actions}")
     print(f"Time to resolution: {result.duration_seconds}s")
@@ -504,23 +504,23 @@ from pydantic_settings import BaseSettings
 
 class TemporalConfig(BaseSettings):
     """Temporal.io configuration."""
-    
+
     # Server
     host: str = "localhost:7233"
     namespace: str = "default"
     task_queue: str = "project-ai-tasks"
-    
+
     # Timeouts (seconds)
     workflow_execution_timeout: int = 3600  # 1 hour
     workflow_run_timeout: int = 1800        # 30 minutes
     activity_start_to_close_timeout: int = 300  # 5 minutes
-    
+
     # Retry Policy
     max_retry_attempts: int = 3
     initial_retry_interval: int = 1
     max_retry_interval: int = 100
     backoff_coefficient: float = 2.0
-    
+
     # Worker
     max_concurrent_activities: int = 50
     max_concurrent_workflows: int = 50
@@ -610,14 +610,14 @@ class MyWorkflow:
     @workflow.run
     async def run(self, data: str):
         workflow.logger.info(f"Processing: {data}")
-        
+
         # Activity execution logged automatically
         result = await workflow.execute_activity(
             my_activity,
             data,
             start_to_close_timeout=timedelta(seconds=300)
         )
-        
+
         workflow.logger.info(f"Result: {result}")
         return result
 ```
@@ -666,13 +666,13 @@ from cryptography.fernet import Fernet
 @activity.defn
 async def process_sensitive_data(encrypted_data: bytes):
     """Process encrypted sensitive data."""
-    
+
     fernet = Fernet(os.getenv("FERNET_KEY"))
     decrypted = fernet.decrypt(encrypted_data)
-    
+
     # Process data
     result = do_processing(decrypted)
-    
+
     # Return encrypted result
     return fernet.encrypt(result)
 ```
@@ -875,7 +875,7 @@ result = await client.execute_workflow(
 
 ---
 
-**Last reviewed:** January 28, 2026  
-**Next review:** April 28, 2026  
-**Maintainer:** @IAmSoThirsty  
+**Last reviewed:** January 28, 2026
+**Next review:** April 28, 2026
+**Maintainer:** @IAmSoThirsty
 **Integration Status:** ✅ Fully Operational

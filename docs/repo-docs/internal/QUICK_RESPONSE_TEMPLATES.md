@@ -346,7 +346,7 @@ cursor.execute(query, (user_id,))
 **Date**: _________________________
 **Time**: _________________________
 **Duration**: 60 minutes
-**Attendees**: 
+**Attendees**:
 - Security Team
 - On-call Engineer
 - GALAHAD Representative
@@ -461,6 +461,6 @@ python scripts/complete_rollout.py --deployment-id ${DEPLOYMENT_ID}
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2026-01-21  
+**Document Version**: 1.0
+**Last Updated**: 2026-01-21
 **Maintained By**: Security Team

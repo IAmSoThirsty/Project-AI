@@ -18,7 +18,7 @@ version: 1.0.0
 
 # CONTRIBUTOR LICENSE AGREEMENT (CLA)
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Effective Date:** February 8, 2026
 
 ---
@@ -339,6 +339,6 @@ By submitting a Contribution, You acknowledge:
 
 *Thank you for contributing to Project-AI!*
 
-**Questions:** cla@project-ai.dev  
-**Corporate CLA:** corporate-cla@project-ai.dev  
+**Questions:** cla@project-ai.dev
+**Corporate CLA:** corporate-cla@project-ai.dev
 **Legal:** legal@project-ai.dev

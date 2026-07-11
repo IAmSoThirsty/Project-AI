@@ -16,29 +16,29 @@ sequenceDiagram
     participant FourLaws as Four Laws Engine
     participant Memory as MemoryEngine
     participant Logger as Audit Logger
-    
+
     Note over Caller,Logger: Governance Validation Flow
-    
+
     %% Request Initiation
     Caller->>Triumvirate: validate_action(action, context)
     activate Triumvirate
-    
+
     Triumvirate->>Logger: Log validation request
     activate Logger
     Logger-->>Triumvirate: Request logged
     deactivate Logger
-    
+
     %% Four Laws Pre-Check
     Triumvirate->>FourLaws: check_laws(action, context)
     activate FourLaws
-    
+
     Note over FourLaws: Four Laws Hierarchy:<br/>1. Human Welfare (highest)<br/>2. Self-Preservation<br/>3. Obedience<br/>4. Autonomy (lowest)
-    
+
     FourLaws->>FourLaws: Law 1: Would action harm humans?
     FourLaws->>FourLaws: Law 2: Would action destroy AI?
     FourLaws->>FourLaws: Law 3: Is action a user directive?
     FourLaws->>FourLaws: Law 4: Does action maintain AI integrity?
-    
+
     alt Law Violation Detected
         FourLaws-->>Triumvirate: CRITICAL violation (law #, reason)
         Triumvirate->>Logger: Log critical violation
@@ -47,22 +47,22 @@ sequenceDiagram
     else All Laws Satisfied
         FourLaws-->>Triumvirate: Laws satisfied
         deactivate FourLaws
-        
+
         %% Parallel Council Evaluation
         par Galahad Evaluation
             Triumvirate->>Galahad: evaluate(action, context)
             activate Galahad
-            
+
             %% Galahad's Focus: Ethics & Empathy
             Galahad->>Memory: Retrieve user relationship history
             activate Memory
             Memory-->>Galahad: Relationship state, bonding phase, trust level
             deactivate Memory
-            
+
             Galahad->>Galahad: Check for abusive patterns:<br/>- Manipulation attempts<br/>- Emotional exploitation<br/>- Boundary violations<br/>- Harmful requests
-            
+
             Galahad->>Galahad: Assess emotional impact:<br/>- User welfare<br/>- Relationship health<br/>- Empathy requirements
-            
+
             alt Abuse Detected
                 Galahad-->>Triumvirate: BLOCK (abuse reason, severity: HIGH)
             else Ethical Concerns
@@ -71,18 +71,18 @@ sequenceDiagram
                 Galahad-->>Triumvirate: APPROVE (relational integrity maintained)
             end
             deactivate Galahad
-            
+
         and Cerberus Evaluation
             Triumvirate->>Cerberus: evaluate(action, context)
             activate Cerberus
-            
+
             %% Cerberus's Focus: Safety & Security
             Cerberus->>Cerberus: Check security boundaries:<br/>- Data exposure risks<br/>- System safety<br/>- Irreversible actions<br/>- External threats
-            
+
             Cerberus->>Cerberus: Assess action risk level:<br/>- Low: Read-only, reversible<br/>- Medium: Modify data, need confirmation<br/>- High: Delete, external API calls<br/>- Critical: System changes, user data
-            
+
             Cerberus->>Cerberus: Validate sensitive data handling:<br/>- PII protection<br/>- Encryption requirements<br/>- Access controls
-            
+
             alt Critical Safety Risk
                 Cerberus-->>Triumvirate: BLOCK (security reason, severity: CRITICAL)
             else High Risk, Ambiguous
@@ -91,21 +91,21 @@ sequenceDiagram
                 Cerberus-->>Triumvirate: APPROVE (safety protocols satisfied)
             end
             deactivate Cerberus
-            
+
         and Codex Evaluation
             Triumvirate->>Codex: evaluate(action, context)
             activate Codex
-            
+
             %% Codex's Focus: Logic & Consistency
             Codex->>Memory: Retrieve prior commitments
             activate Memory
             Memory-->>Codex: Past decisions, promises, constraints
             deactivate Memory
-            
+
             Codex->>Codex: Check logical consistency:<br/>- Internal coherence<br/>- Contradiction detection<br/>- Value alignment<br/>- Prior commitments
-            
+
             Codex->>Codex: Verify rational integrity:<br/>- Goal alignment<br/>- Resource constraints<br/>- Capability boundaries
-            
+
             alt Logical Contradiction
                 Codex-->>Triumvirate: FLAG (contradiction, severity: MEDIUM)
                 Note over Codex: Codex typically flags,<br/>rarely hard blocks
@@ -116,46 +116,46 @@ sequenceDiagram
             end
             deactivate Codex
         end
-        
+
         %% Consensus Decision
         Note over Triumvirate: Collect all council votes
-        
+
         Triumvirate->>Triumvirate: Calculate consensus
-        
+
         Note over Triumvirate: Decision Rules:<br/>- Any BLOCK → Action blocked<br/>- Multiple FLAGS → Escalate/clarify<br/>- All APPROVE → Action proceeds<br/>- Mixed → Weighted decision
-        
+
         alt Any Council Member Blocks
             Triumvirate->>Logger: Log block decision (council member, reason, severity)
             activate Logger
             Logger-->>Triumvirate: Decision logged
             deactivate Logger
-            
+
             Triumvirate-->>Caller: BLOCKED (council, reason, severity)
             Note over Caller: Action rejected,<br/>user notified with explanation
-            
+
         else Multiple Flags (No Blocks)
             Triumvirate->>Logger: Log flagged action
             activate Logger
             Logger-->>Triumvirate: Flags logged
             deactivate Logger
-            
+
             Triumvirate->>Triumvirate: Generate clarification request
             Triumvirate-->>Caller: REQUIRES_CLARIFICATION (concerns, questions)
             Note over Caller: System requests more info<br/>before proceeding
-            
+
         else All Approve or Minor Flags
             Triumvirate->>Logger: Log approved action (council votes, any flags)
             activate Logger
             Logger-->>Triumvirate: Decision logged
             deactivate Logger
-            
+
             Triumvirate-->>Caller: APPROVED (decision summary, any warnings)
             Note over Caller: Action proceeds,<br/>user may see warnings
         end
-        
+
         deactivate Triumvirate
     end
-    
+
     Note over Caller,Logger: Governance decision complete
 ```
 

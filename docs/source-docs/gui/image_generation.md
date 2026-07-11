@@ -23,9 +23,9 @@ audience: ["developers", "gui-engineers", "ml-engineers"]
 
 # Image Generation Interface - Dual-Panel AI Image Generator
 
-**Module:** `src/app/gui/image_generation.py`  
-**Lines of Code:** 378  
-**Primary Classes:** `ImageGenerationInterface`, `ImageGenerationWorker`, `ImageGenerationLeftPanel`, `ImageGenerationRightPanel`  
+**Module:** `src/app/gui/image_generation.py`
+**Lines of Code:** 378
+**Primary Classes:** `ImageGenerationInterface`, `ImageGenerationWorker`, `ImageGenerationLeftPanel`, `ImageGenerationRightPanel`
 **Design Pattern:** Dual-panel layout with async worker thread
 
 ---
@@ -489,7 +489,7 @@ class ImageGenerationWorker(QThread):
     # Signals are thread-safe
     finished = pyqtSignal(dict)
     progress = pyqtSignal(str)
-    
+
     def run(self):
         # Runs in background thread
         result = self.generator.generate(self.prompt, self.style)
@@ -837,9 +837,8 @@ if not filepath.endswith(('.png', '.jpg', '.jpeg')):
 
 ## License
 
-**Copyright © 2026 Project-AI Team**  
+**Copyright © 2026 Project-AI Team**
 Internal documentation - Not for public distribution
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

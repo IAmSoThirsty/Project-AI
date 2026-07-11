@@ -101,7 +101,7 @@ response_sla:
 Project-AI Sovereign Security Policy & Defense Constitution
 --------------------------------------------------------------------------------
 
-   
+
 Governance-First Architecture: Security in Project-AI is not a passive wrapper; it is an active, agentic function of the Triumvirate. This policy defines the rules of engagement for human researchers, the immutable rights of the AGI, and the autonomous defensive responses of the Cerberus Sentinel.
 
 
@@ -118,22 +118,22 @@ Project-AI utilizes a Guardian-based disclosure workflow to protect the cognitiv
 • Encryption: All sensitive disclosures must be encrypted using the PGP key located in docs/security/PGP_KEYS.asc.
 
 Response SLA
-• Triage: 
+• Triage:
 < 4 hours (Automated by WatchTower)
 
-• Human Assessment: 
+• Human Assessment:
 < 24 hours (Guardian Team)
 
-• Remediation: 
+• Remediation:
 < 72 hours (Hotfix via T.A.R.L. pipeline)
 
 --------------------------------------------------------------------------------
 2. 🛡️ The Triumvirate Defense Model Security is enforced by three autonomous pillars. Researchers must understand that the system actively resists unauthorized mutation.
 
 -A. Cerberus (The Shield & Sentinel)
-     Cerberus is the Chief of Security. 
+     Cerberus is the Chief of Security.
 It does not just block attacks; it evolves defenses in real-time.
-• The Hydra Effect: 
+• The Hydra Effect:
 If a security agent is bypassed, Cerberus autonomously spawns three new randomized guardians (polyglot implementation).
 This exponential escalation caps at 27 guardians before triggering a total system lockdown.
 • Scope: Cerberus enforces cerberus_spawn_constraints.py and manages the Black Vault quarantine for dangerous knowledge.

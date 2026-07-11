@@ -47,9 +47,9 @@ accuracy_rating: high
 
 # Module Dependencies Visual Map
 
-**Version:** 1.0.0  
-**Author:** AGENT-047 (Visual Relationship Maps Specialist)  
-**Status:** Production-Ready  
+**Version:** 1.0.0
+**Author:** AGENT-047 (Visual Relationship Maps Specialist)
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -332,10 +332,9 @@ This visual map details the **Python module dependency graph** for Project-AI, s
 
 ---
 
-**Status:** ✅ Production-Ready Documentation  
-**Validation:** Dependency graph verified via static analysis tools  
+**Status:** ✅ Production-Ready Documentation
+**Validation:** Dependency graph verified via static analysis tools
 **Next Review:** 2026-07-20 (Quarterly update cycle)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

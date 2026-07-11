@@ -36,15 +36,15 @@ The CodeAdversaryAgent serves as **automated security engineer**:
 
 ### Key Features
 
-✅ **12 Vulnerability Categories**: SQL injection, XSS, path traversal, command injection, unsafe deserialization, hardcoded secrets, weak crypto, insecure randomness, auth bypass, authz flaws, sensitive data exposure, unsafe reflection  
-✅ **SARIF Report Generation**: Industry-standard format for security tooling integration  
-✅ **Automated Patch Proposals**: Generates secure code replacements with rationale  
-✅ **Severity Classification**: Critical/High/Medium/Low/Info with CWE mapping  
-✅ **Scope Targeting**: Scans security-critical directories (`src/app/core`, `src/app/agents`, `src/app/security`)  
-✅ **Kernel-Routed Governance**: All scans and patches require kernel approval (risk_level="high")  
-✅ **Statistics Tracking**: Metrics on scans performed, vulnerabilities found, patches generated  
-✅ **CI/CD Integration**: Works with pytest, GitHub Actions, pre-commit hooks  
-✅ **CWE Mapping**: Each vulnerability linked to Common Weakness Enumeration ID  
+✅ **12 Vulnerability Categories**: SQL injection, XSS, path traversal, command injection, unsafe deserialization, hardcoded secrets, weak crypto, insecure randomness, auth bypass, authz flaws, sensitive data exposure, unsafe reflection
+✅ **SARIF Report Generation**: Industry-standard format for security tooling integration
+✅ **Automated Patch Proposals**: Generates secure code replacements with rationale
+✅ **Severity Classification**: Critical/High/Medium/Low/Info with CWE mapping
+✅ **Scope Targeting**: Scans security-critical directories (`src/app/core`, `src/app/agents`, `src/app/security`)
+✅ **Kernel-Routed Governance**: All scans and patches require kernel approval (risk_level="high")
+✅ **Statistics Tracking**: Metrics on scans performed, vulnerabilities found, patches generated
+✅ **CI/CD Integration**: Works with pytest, GitHub Actions, pre-commit hooks
+✅ **CWE Mapping**: Each vulnerability linked to Common Weakness Enumeration ID
 
 ### Critical Context
 
@@ -286,7 +286,7 @@ if patch_result["success"]:
         logger.info(f"  Original: {patch['original_code']}")
         logger.info(f"  Patched:  {patch['patched_code']}")
         logger.info(f"  Rationale: {patch['rationale']}")
-        
+
         # ALWAYS require human approval before applying
         if input("Apply this patch? (yes/no): ").lower() == "yes":
             apply_patch(patch)
@@ -342,7 +342,7 @@ Generate SARIF 2.1.0 format report for GitHub Security, Azure DevOps, or other S
 # Scan and generate SARIF
 findings = adversary.find_vulnerabilities()["findings"]
 sarif_result = adversary.generate_sarif_report(
-    findings, 
+    findings,
     output_path="scan_results.sarif.json"
 )
 
@@ -423,18 +423,18 @@ def security_scan_gate():
         scope_dirs=["src/app/core", "src/app/agents", "src/app/security"],
         kernel=kernel
     )
-    
+
     # Scan codebase
     result = adversary.find_vulnerabilities()
-    
+
     if not result["success"]:
         print(f"ERROR: Security scan failed: {result.get('error')}")
         sys.exit(1)
-    
+
     # Check severity thresholds
     critical = result["by_severity"]["critical"]
     high = result["by_severity"]["high"]
-    
+
     # Fail on critical vulnerabilities
     if critical > 0:
         print(f"❌ BLOCKING COMMIT: {critical} critical vulnerabilities found")
@@ -442,7 +442,7 @@ def security_scan_gate():
             if finding["severity"] == "critical":
                 print(f"  - {finding['file_path']}:{finding['line_number']} - {finding['title']}")
         sys.exit(1)
-    
+
     # Warn on high vulnerabilities
     if high > 0:
         print(f"⚠️  WARNING: {high} high severity vulnerabilities found")
@@ -450,15 +450,15 @@ def security_scan_gate():
             if finding["severity"] == "high":
                 print(f"  - {finding['file_path']}:{finding['line_number']} - {finding['title']}")
         # Allow commit but warn
-    
+
     print(f"✅ Security scan passed: {result['total_findings']} total findings")
-    
+
     # Generate SARIF report for GitHub Security
     adversary.generate_sarif_report(
-        result["findings"], 
+        result["findings"],
         output_path="security-scan.sarif.json"
     )
-    
+
     return 0
 
 if __name__ == "__main__":
@@ -511,25 +511,25 @@ def apply_patch_with_backup(patch: dict) -> bool:
     Apply patch to file with automatic backup.
     """
     file_path = patch["file_path"]
-    
+
     # Read original file
     with open(file_path, 'r') as f:
         content = f.read()
         lines = content.split('\n')
-    
+
     # Backup original
     with open(f"{file_path}.backup", 'w') as f:
         f.write(content)
-    
+
     # Apply patch
     line_num = patch["line_number"] - 1  # 0-indexed
     if lines[line_num].strip() == patch["original_code"].strip():
         lines[line_num] = patch["patched_code"]
-        
+
         # Write patched file
         with open(file_path, 'w') as f:
             f.write('\n'.join(lines))
-        
+
         logger.info(f"✅ Applied patch to {file_path}:{patch['line_number']}")
         return True
     else:
@@ -630,16 +630,16 @@ class RedTeamAgent:
         scan to find similar patterns across codebase.
         """
         adversary = CodeAdversaryAgent()
-        
+
         # Scan entire codebase for similar vulnerabilities
         result = adversary.find_vulnerabilities()
-        
+
         # Filter to same vulnerability type
         similar = [
-            f for f in result["findings"] 
+            f for f in result["findings"]
             if f["type"] == vuln_type
         ]
-        
+
         logger.warning(
             f"Red team found {vuln_type} in {file_path}. "
             f"CodeAdversaryAgent found {len(similar)} similar issues."
@@ -688,7 +688,7 @@ class RedTeamAgent:
 1. **Parallel Scanning** (for large codebases):
    ```python
    from concurrent.futures import ThreadPoolExecutor
-   
+
    def parallel_scan(files: list[str]) -> list[Finding]:
        with ThreadPoolExecutor(max_workers=4) as executor:
            results = executor.map(adversary._scan_file, files)
@@ -698,14 +698,14 @@ class RedTeamAgent:
 2. **Incremental CI Scans** (only scan changed files):
    ```python
    import subprocess
-   
+
    # Get changed files from git
    result = subprocess.run(
        ["git", "diff", "--name-only", "HEAD^", "HEAD"],
        capture_output=True, text=True
    )
    changed_files = [f for f in result.stdout.split('\n') if f.endswith('.py')]
-   
+
    # Scan only changed files
    scan_result = adversary.find_vulnerabilities(scope_files=changed_files)
    ```
@@ -902,4 +902,3 @@ finding = {
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -340,19 +340,19 @@ cerberus.detect_bypass(bypass_type="buffer_overflow")
 # In your security tests
 def test_cerberus_response():
     cerberus = CerberusHydraDefense(data_dir="test_data")
-    
+
     # Spawn and bypass multiple times
     cerberus.spawn_initial_agents(1)
     assert len(cerberus.agents) == 1
-    
+
     # First bypass - 3x spawn
     cerberus.detect_bypass(bypass_type="test1")
     assert len(cerberus.agents) == 4  # 1 + 3
-    
+
     # Second bypass - another 3x spawn
     cerberus.detect_bypass(bypass_type="test2")
     assert len(cerberus.agents) == 7  # 4 + 3
-    
+
     # Check lockdown escalation
     assert cerberus.lockdown_level == 2
 ```
@@ -377,7 +377,7 @@ report = cerberus.generate_audit_report()
 
 ## Defense Statistics
 - **Total Agents Spawned**: 14
-- **Currently Active**: 14  
+- **Currently Active**: 14
 - **Security Bypasses**: 3
 - **Lockdown Level**: 3/10
 - **Sections Locked**: 14/25

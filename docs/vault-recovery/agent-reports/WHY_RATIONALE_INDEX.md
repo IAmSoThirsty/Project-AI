@@ -56,9 +56,9 @@ test_coverage: null
 
 # Why Rationale Index - Business, Technical, and Compliance Drivers
 
-**Version:** 1.0.0  
-**Author:** AGENT-036 (Relationship Mapping Specialist)  
-**Status:** Production-Ready  
+**Version:** 1.0.0
+**Author:** AGENT-036 (Relationship Mapping Specialist)
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -279,12 +279,12 @@ Solution Analysis:
    - Simplified state management (immutable messages, no mutex complexity)
    - Actor model alignment (Erlang/Akka battle-tested at massive scale)
    - Testability (deterministic message replay for debugging)
-   
+
    Cons:
    - Message serialization overhead (~2-5ms per message)
    - Network latency for distributed agents
    - Learning curve for developers unfamiliar with actor model
-   
+
    Performance:
    - Throughput: 10,000 messages/sec per agent
    - Latency: P99 < 100ms for message delivery
@@ -294,13 +294,13 @@ Solution Analysis:
    Pros:
    - Low latency for local communication
    - Familiar programming model
-   
+
    Cons:
    - Lock contention kills performance at >10 concurrent agents
    - Deadlock risk with complex agent interactions
    - Difficult to debug race conditions
    - No horizontal scaling (limited to single machine)
-   
+
    Performance:
    - Throughput: Degrades exponentially beyond 10 agents
    - Latency: Unpredictable (lock contention spikes)
@@ -309,12 +309,12 @@ Solution Analysis:
    Pros:
    - Simple to implement
    - Good for I/O-bound tasks
-   
+
    Cons:
    - Python GIL bottleneck for CPU-bound agent logic
    - Context switching overhead
    - Poor scalability beyond ~20 threads
-   
+
    Performance:
    - Limited by GIL to single-core performance
    - Thrashing at high thread counts
@@ -348,12 +348,12 @@ Solution Analysis:
    - API: Flask provides RESTful endpoints for integrations
    - Code Reuse: Shared core/ modules for business logic
    - Team Fit: Existing Python/Qt expertise, fast onboarding
-   
+
    Cons:
    - Two deployment targets (desktop + API server)
    - Platform-specific packaging (Windows, macOS, Linux)
    - API-desktop feature parity maintenance
-   
+
    Performance:
    - Desktop: <50ms UI response time (native Qt rendering)
    - API: ~150ms avg response time (Flask overhead acceptable)
@@ -362,14 +362,14 @@ Solution Analysis:
    Pros:
    - Single web codebase for desktop + web
    - Cross-platform via Chromium
-   
+
    Cons:
    - 200MB+ distribution size (vs. 30MB PyQt6)
    - ~500MB RAM baseline (vs. 80MB PyQt6)
    - Slower startup (3-5s vs. <1s)
    - Chromium security surface area
    - No offline capability without complex service worker setup
-   
+
    Performance:
    - Startup: 3-5 seconds (unacceptable for desktop app)
    - Memory: 500MB baseline (prohibitive for multi-instance users)
@@ -378,13 +378,13 @@ Solution Analysis:
    Pros:
    - Web-native, modern stack
    - Easier deployment (containerized)
-   
+
    Cons:
    - Online-only (no offline mode)
    - Browser differences/bugs
    - Latency for local operations (network round-trip)
    - Inferior UX for desktop power users
-   
+
    Performance:
    - Network latency: 20-100ms overhead per operation
    - Offline: Not possible
@@ -414,12 +414,12 @@ Solution Analysis:
    - Battle-tested (20+ years, no known breaks)
    - Resistant to GPU acceleration
    - Python library: bcrypt (maintained, well-documented)
-   
+
    Performance:
    - Hash time: ~200ms at cost factor 12 (intentionally slow)
    - Verification: ~200ms (acceptable for authentication)
    - Scalability: Adequate for <1000 auth/sec (well above needs)
-   
+
    Security:
    - Brute force: ~10^15 attempts to crack 12-char random password
    - Rainbow tables: Defeated by per-password salt
@@ -429,13 +429,13 @@ Solution Analysis:
    - Newer algorithm (2015, PHC winner)
    - Memory-hard (resist custom hardware)
    - Three variants (Argon2d, Argon2i, Argon2id)
-   
+
    Cons:
    - Less mature ecosystem (fewer vetted implementations)
    - Python library less maintained than bcrypt
    - Team unfamiliarity (onboarding cost)
    - Migration cost from existing bcrypt hashes
-   
+
    Decision: Bcrypt provides adequate security; Argon2 migration not justified.
    Alternative: Re-evaluate if bcrypt vulnerabilities discovered or team grows.
 
@@ -443,13 +443,13 @@ Solution Analysis:
    Pros:
    - Fast hashing
    - Simple implementation
-   
+
    Cons:
    - Too fast = vulnerable to brute force
    - GPU/ASIC acceleration trivial
    - Not adaptive (cannot increase cost over time)
    - Industry consensus: Insufficient for password hashing
-   
+
    Performance:
    - Hash time: <1ms (WAY TOO FAST for passwords)
    - Brute force: Billions of attempts per second on modern GPU
@@ -690,16 +690,16 @@ Implementation Decisions:
 
 - Cryptographically Signed Requests: HMAC validation prevents tampering
   Mitigates: MITM attacks, request replay, privilege escalation
-  
+
 - Time-Limited Tokens: JWT with 15-minute expiry
   Mitigates: Stolen token persistence, session hijacking
-  
+
 - Context-Aware Access: IP geolocation, device fingerprinting
   Mitigates: Credential theft, unauthorized access from anomalous locations
-  
+
 - Agent Capability Model: Explicit permissions per agent (no implicit trust)
   Mitigates: Compromised agent escalation, lateral movement
-  
+
 - Network Segmentation: Agents communicate via authenticated message bus only
   Mitigates: Direct agent-to-agent attacks, network sniffing
 
@@ -888,46 +888,46 @@ quality_attributes:
 
 scalability_rationale: |
   PACE Engine designed for linear horizontal scaling to support:
-  
+
   Growth Projections:
   - Current: 10-15 concurrent agents (baseline deployment)
   - Year 1: 50 concurrent agents (enterprise tier target)
   - Year 2: 100-200 agents (projected enterprise growth)
   - Year 3: 500+ agents (multi-tenant SaaS expansion)
-  
+
   Scalability Requirements:
   - Linear Performance: Response time must remain <3s regardless of agent count
   - Resource Efficiency: Cost per query must decrease with scale (economies of scale)
   - Zero Downtime Scaling: Add/remove agents without service interruption
   - Auto-Scaling: Respond to load spikes automatically
-  
+
   Design Decisions Driven by Scalability:
-  
+
   1. Message-Passing Concurrency
      - Enables adding agents without shared resource contention
      - Horizontal scaling: Deploy agents across multiple servers
      - No centralized bottleneck (distributed message routing)
-  
+
   2. Stateless Agent Design
      - Agents store no local state (all state in messages)
      - Enables kill/restart agents without data loss
      - Simplifies auto-scaling (any agent can handle any message)
-  
+
   3. Partitioned Message Queues
      - Sharded queues prevent single queue bottleneck
      - Load balanced across queue partitions
      - Tested to 10,000 messages/sec per partition
-  
+
   4. Distributed Coordination
      - No single coordinator (decentralized routing)
      - Agent registry distributed across coordination nodes
      - Fault tolerance: Coordinator failure doesn't stop system
-  
+
   Performance Validation:
   - Linear scaling verified to 50 agents (10,000 msg/sec total throughput)
   - Projected linear scaling to 200 agents (based on architecture analysis)
   - Load testing: 99.99% success rate at 5x peak load
-  
+
   Cost Efficiency:
   - 10 agents: $0.10 per query
   - 50 agents: $0.03 per query (70% reduction)
@@ -947,41 +947,41 @@ quality_attributes:
 
 performance_rationale: |
   Real-time performance monitoring required to:
-  
+
   SLA Enforcement:
   - Enterprise SLA: 99.9% of queries <3s response time
   - P99 latency: <3s (99th percentile)
   - P95 latency: <2s (95th percentile)
   - P50 latency: <1s (median)
-  
+
   Performance Requirements:
   - Sub-Millisecond Instrumentation: <1ms overhead per measurement
   - Real-Time Dashboards: <500ms data freshness
   - Automatic Alerting: <30s detection of SLA violations
   - Historical Analysis: 90-day retention for trend analysis
-  
+
   Design Decisions Driven by Performance:
-  
+
   1. In-Memory Metrics Storage
      - Redis time-series for hot metrics (last 24 hours)
      - Sub-millisecond read/write latency
      - Avoid disk I/O for real-time metrics
-  
+
   2. Sampling Strategy
      - 100% sampling for P99/P95 accuracy
      - Aggregated stats (mean, median) computed in real-time
      - No post-processing delay
-  
+
   3. Async Metric Submission
      - Non-blocking metric collection
      - Fire-and-forget UDP for low-priority metrics
      - TCP for critical metrics (with timeout)
-  
+
   4. Distributed Tracing
      - OpenTelemetry for cross-agent traces
      - Trace sampling: 1% for cost efficiency
      - Full traces for SLA violations (dynamic sampling)
-  
+
   Performance Validation:
   - Monitoring overhead: <1ms per operation (0.03% of 3s budget)
   - Dashboard refresh: 250ms avg (real-time)
@@ -1099,7 +1099,7 @@ rationale_evolution:
     new_rationale: "MFA + passwordless required due to increased credential stuffing attacks"
     trigger: "Security audit findings + industry trend analysis"
     decision_makers: ["CSO", "Security Team"]
-  
+
   - date: "2026-01-23"
     component: "Agent Model"
     old_rationale: "Synchronous agent coordination acceptable for <10 agents"
@@ -1121,12 +1121,12 @@ alternatives_considered:
     evaluated_date: "2026-01-15"
     rejected_reason: "Lock contention kills performance at >10 agents (benchmarked)"
     re_evaluation_trigger: "If Python removes GIL (PEP 703 accepted)"
-    
+
   - approach: "Thread pool"
     evaluated_date: "2026-01-15"
     rejected_reason: "Python GIL limits scalability to single-core"
     re_evaluation_trigger: "Never (GIL is fundamental Python limitation)"
-    
+
   - approach: "Microservices per agent"
     evaluated_date: "2026-01-16"
     rejected_reason: "10x deployment complexity, network latency overhead"
@@ -1168,18 +1168,18 @@ technical_rationale: "Message-passing is the best approach."
 ```
 technical_rationale: |
   Message-passing chosen over alternatives:
-  
+
   Pros:
   - Scalability: Linear to 50+ agents (vs. 10 for shared-memory)
   - Maintainability: Simpler than locks (no deadlocks)
-  
+
   Cons:
   - Latency: 2-5ms serialization overhead per message
-  
+
   Alternatives Rejected:
   - Shared-memory: Lock contention at >10 agents
   - Thread pool: Python GIL bottleneck
-  
+
   Decision: Scalability requirements outweigh latency cost.
 ```
 
@@ -1198,11 +1198,11 @@ security_rationale: |
   Mitigates threats identified in THREAT-MODEL-2026-01:
   - THREAT-07 (Agent Impersonation): Cryptographic signatures
   - THREAT-12 (Message Tampering): HMAC validation
-  
+
   STRIDE Analysis:
   - Spoofing: Agent identity tied to cryptographic key
   - Tampering: Immutable message logs, tamper-evident storage
-  
+
   Reference: security_compliance/threat-model-2026-01.md
   Benchmark: tests/security/signature-validation-benchmark.py
 ```
@@ -1220,12 +1220,12 @@ technical_rationale: "We chose PyQt6 for the desktop app."
 ```
 technical_rationale: |
   PyQt6 chosen for desktop over Electron/React Native.
-  
+
   Re-Evaluate If:
   - User base exceeds 100K (web deployment becomes viable)
   - React Native Desktop matures (simpler cross-platform)
   - Team loses Qt expertise (onboarding cost too high)
-  
+
   Current Validity: Strong (as of 2026-01-23)
   Next Review: 2027-01-23 (annual architecture review)
 ```
@@ -1236,11 +1236,11 @@ technical_rationale: |
 
 This comprehensive rationale index preserves the **WHY** behind every major decision in Project-AI, ensuring decisions are transparent, defensible, and prevent costly re-litigation.
 
-✅ **187 Rationale Entries:** Complete decision context documented  
-✅ **4 Rationale Dimensions:** Business, Technical, Compliance, Security  
-✅ **124 Quality Attributes:** Clear non-functional drivers  
-✅ **Trade-Off Analysis:** Alternatives considered and rejected  
-✅ **Re-Evaluation Triggers:** Clear conditions for revisiting decisions  
+✅ **187 Rationale Entries:** Complete decision context documented
+✅ **4 Rationale Dimensions:** Business, Technical, Compliance, Security
+✅ **124 Quality Attributes:** Clear non-functional drivers
+✅ **Trade-Off Analysis:** Alternatives considered and rejected
+✅ **Re-Evaluation Triggers:** Clear conditions for revisiting decisions
 
 **Benefits:**
 - **Knowledge Preservation:** Institutional knowledge survives team changes
@@ -1275,4 +1275,3 @@ This comprehensive rationale index preserves the **WHY** behind every major deci
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

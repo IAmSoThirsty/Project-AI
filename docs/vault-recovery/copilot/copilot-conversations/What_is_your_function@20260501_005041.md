@@ -9,7 +9,7 @@ tags:
   - copilot-conversation
 ---
 
-**user**: What is your function? 
+**user**: What is your function?
 [Timestamp: 2026/05/01 00:50:41]
 
 **ai**: Connection error.
@@ -17,4 +17,3 @@ tags:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

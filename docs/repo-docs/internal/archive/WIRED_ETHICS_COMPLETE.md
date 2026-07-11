@@ -46,7 +46,7 @@ The user correctly identified:
 > "When this grows, the only thing you'll eventually want is:
 > - Ethics approvals to emit events
 > - Approvals themselves to be auditable decisions
-> 
+>
 > You already designed for that. You just haven't wired it yet — and that's exactly the right timing."
 
 ## Solution Implemented
@@ -66,10 +66,10 @@ Every ethics approval now emits a `GOVERNANCE_DECISION` event through the event 
 def _request_ethics_approval(subsystem_id, metadata) -> bool:
     # Check governance
     must_consult = governance_graph.must_consult_domains(subsystem_id)
-    
+
     # Make decision
     approved = determine_approval(priority)
-    
+
     # Emit event
     event_spine.publish(
         category=EventCategory.GOVERNANCE_DECISION,
@@ -82,7 +82,7 @@ def _request_ethics_approval(subsystem_id, metadata) -> bool:
         },
         metadata={"event_id": unique_id}
     )
-    
+
     # Create audit entry
     self._audit_event(...)
 ```
@@ -275,7 +275,7 @@ event_spine.subscribe(
 ```python
 # All approval events available for visualization
 events = event_spine.get_event_history()
-approvals = [e for e in events 
+approvals = [e for e in events
              if e.category == EventCategory.GOVERNANCE_DECISION]
 # Display in UI
 ```
@@ -329,8 +329,8 @@ No new architecture was needed - we simply connected what was already designed. 
 
 ---
 
-**Status:** ✅ COMPLETE  
-**Date:** 2026-01-30  
-**Version:** 1.0  
-**Tests:** 8/8 passing  
-**Demo:** 4/4 successful  
+**Status:** ✅ COMPLETE
+**Date:** 2026-01-30
+**Version:** 1.0
+**Tests:** 8/8 passing
+**Demo:** 4/4 successful

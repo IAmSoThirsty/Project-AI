@@ -9,4 +9,3 @@ Create a glossary of important terms, concepts, and phrases from {}. Format each
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

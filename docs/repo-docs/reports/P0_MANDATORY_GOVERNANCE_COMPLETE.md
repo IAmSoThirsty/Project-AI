@@ -36,7 +36,7 @@ critical_changes:
 
 # Priority 0 Complete: Mandatory Governance Enforced
 
-**Date**: 2026-04-13T21:45:00Z  
+**Date**: 2026-04-13T21:45:00Z
 **Status**: ✅ COMPLETE
 
 ---
@@ -59,8 +59,8 @@ elif response.get("status") == "fallback":
 # Check adapter BEFORE routing
 if not self.desktop_adapter:
     QMessageBox.critical(
-        self, 
-        "Governance Error", 
+        self,
+        "Governance Error",
         "Desktop governance adapter not initialized."
     )
     return
@@ -164,16 +164,16 @@ grep -r "if not self.desktop_adapter" src/app/gui/dashboard_main.py
 - System must be properly initialized or nothing runs
 
 ### Production Impact
-**Risk**: If adapter initialization fails, GUI becomes unusable  
-**Mitigation**: Adapter initialization in `main.py` line 875-890 (already verified working)  
+**Risk**: If adapter initialization fails, GUI becomes unusable
+**Mitigation**: Adapter initialization in `main.py` line 875-890 (already verified working)
 **Safety**: Fail-fast is better than silent bypass
 
 ---
 
 ## Next Steps
 
-**PRIORITY 1**: Unify dual governance (Router + Kernel)  
-**PRIORITY 2**: Complete desktop convergence (19 remaining GUI files)  
+**PRIORITY 1**: Unify dual governance (Router + Kernel)
+**PRIORITY 2**: Complete desktop convergence (19 remaining GUI files)
 **PRIORITY 3**: Kill remaining AI bypasses
 
 ---

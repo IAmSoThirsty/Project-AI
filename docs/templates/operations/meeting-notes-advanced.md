@@ -37,7 +37,7 @@ aliases: []
 
 ### Absent
 
-- 
+-
 
 ### Meeting Type
 
@@ -65,16 +65,16 @@ aliases: []
 **Objective:** <% tp.system.prompt(`Agenda item ${i} objective`, "") %>
 
 **Discussion Points:**
-- 
-- 
-- 
+-
+-
+-
 
 <%* } %>
 <%* } else { %>
-1. 
-2. 
-3. 
-4. 
+1.
+2.
+3.
+4.
 <%* } %>
 
 ---
@@ -83,30 +83,30 @@ aliases: []
 
 ### Key Discussion Topics
 
-#### Topic 1: 
+#### Topic 1:
 
 **Context:**
 
 
 **Points Raised:**
-- 
-- 
-- 
+-
+-
+-
 
 **Outcome:**
 
 
 ---
 
-#### Topic 2: 
+#### Topic 2:
 
 **Context:**
 
 
 **Points Raised:**
-- 
-- 
-- 
+-
+-
+-
 
 **Outcome:**
 
@@ -130,7 +130,7 @@ aliases: []
 
 ### Decision <%* tR += i %>: <% tp.system.prompt(`Decision ${i} title`, "") %>
 
-**Decision:** 
+**Decision:**
 
 **Rationale:**
 
@@ -139,13 +139,13 @@ aliases: []
 
 
 **Stakeholders Affected:**
-- 
+-
 
-**Implementation Timeline:** 
+**Implementation Timeline:**
 
 **Owner:** <% tp.system.prompt(`Decision ${i} owner`, "") %>
 
-**Status:** 
+**Status:**
 - [ ] Approved
 - [ ] Requires Follow-up
 - [ ] Needs Confirmation
@@ -171,10 +171,10 @@ aliases: []
 **Description:**
 
 
-**Owner:** 
+**Owner:**
 **Priority:** High | Medium | Low
-**Due Date:** 
-**Dependencies:** 
+**Due Date:**
+**Dependencies:**
 **Success Criteria:**
 
 
@@ -189,54 +189,54 @@ aliases: []
 ## Next Steps
 
 ### Immediate (This Week)
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ### Short-term (This Month)
-1. 
-2. 
+1.
+2.
 
 ### Long-term (This Quarter)
-1. 
+1.
 
 ---
 
 ## Meeting Effectiveness
 
 ### What Went Well
-- 
-- 
-- 
+-
+-
+-
 
 ### What Could Be Improved
-- 
-- 
+-
+-
 
 ### Action Items for Future Meetings
-- 
-- 
+-
+-
 
 ---
 
 ## Related Resources
 
 ### Related Documents
-- 
+-
 
 ### Previous Meetings
-- 
+-
 
 ### Follow-up Meetings
-- **Next Meeting:** 
-- **Frequency:** 
+- **Next Meeting:**
+- **Frequency:**
 
 ---
 
 ## Appendix
 
 ### Supporting Materials
-- 
+-
 
 ### Additional Notes
 
@@ -245,7 +245,7 @@ aliases: []
 
 ## Meeting Summary
 
-<%* 
+<%*
 // Generate AI-powered summary if available
 const projectAIUtils = tp.user["project-ai-utils"];
 if (projectAIUtils) {
@@ -265,4 +265,3 @@ if (projectAIUtils) {
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -142,7 +142,7 @@ When rate limit is exceeded, `PermissionError` is raised:
 try:
     check_rate_limit(context)
 except PermissionError as e:
-    # e.g., "Rate limit exceeded for ai.chat: 30 requests per 60s 
+    # e.g., "Rate limit exceeded for ai.chat: 30 requests per 60s
     #       (retry after 15s, resets at 2026-04-22T13:15:00)"
     print(e)
 ```
@@ -337,7 +337,7 @@ limiter = GlobalRateLimiter(backend=InMemoryRateLimiter())
 
 ---
 
-**Status**: ✅ Production Ready  
-**Tests**: ✅ 18 passed, 8 skipped (Redis tests require running server)  
-**Coverage**: ✅ Full coverage of core functionality  
+**Status**: ✅ Production Ready
+**Tests**: ✅ 18 passed, 8 skipped (Redis tests require running server)
+**Coverage**: ✅ Full coverage of core functionality
 **Documentation**: ✅ Complete

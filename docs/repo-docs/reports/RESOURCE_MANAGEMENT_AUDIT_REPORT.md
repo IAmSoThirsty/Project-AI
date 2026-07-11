@@ -297,7 +297,7 @@ def __del__(self):
 class ImageGenerationWorker(QThread):
     finished = pyqtSignal(dict)
     progress = pyqtSignal(str)
-    
+
     def run(self):
         try:
             result = self.generator.generate(...)
@@ -318,16 +318,16 @@ self.worker.start()
 class UpdateWorker(QThread):
     data_updated = pyqtSignal(dict)
     error_occurred = pyqtSignal(str)
-    
+
     def __init__(self, update_fn):
         super().__init__()
         self.running = True
-    
+
     def run(self):
         while self.running:
             # ... work ...
             self.msleep(2000)
-    
+
     def stop(self):
         self.running = False  # ✅ Has stop method
         # ❌ BUT: No quit() or wait() calls
@@ -545,14 +545,14 @@ class LearningRequestManager:
     def __init__(self, ...):
         self._notify_executor = ThreadPoolExecutor(max_workers=4)
         self._shutdown = False
-    
+
     def shutdown(self):
         """Cleanup resources."""
         if not self._shutdown:
             self._shutdown = True
             self._notify_executor.shutdown(wait=True)
             logger.info("LearningRequestManager shutdown complete")
-    
+
     def __del__(self):
         """Fallback cleanup on garbage collection."""
         if hasattr(self, '_notify_executor') and not self._shutdown:
@@ -624,15 +624,15 @@ class ImageGenerationInterface(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.worker = None
-    
+
     def _start_generation(self, prompt, style):
         # Clean up previous worker first
         self._cleanup_worker()
-        
+
         self.worker = ImageGenerationWorker(...)
         self.worker.finished.connect(self._on_generation_complete)
         self.worker.start()
-    
+
     def _cleanup_worker(self):
         """Cleanup worker thread."""
         if self.worker:
@@ -642,7 +642,7 @@ class ImageGenerationInterface(QWidget):
                 self.worker.wait(5000)  # Wait max 5 seconds
             self.worker.deleteLater()
             self.worker = None
-    
+
     def closeEvent(self, event):
         """Handle widget close."""
         self._cleanup_worker()
@@ -663,12 +663,12 @@ class RisingWaveClient:
     def __enter__(self):
         """Context manager entry."""
         return self
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit with guaranteed cleanup."""
         self.close()
         return False
-    
+
     def close(self):
         """Close connection."""
         if self.conn and not self.conn.closed:
@@ -694,11 +694,11 @@ class LeatherBookInterface(QMainWindow):
         # Disconnect all signals
         self.user_logged_in.disconnect()
         self.page_changed.disconnect()
-        
+
         # Clean up child widgets
         if hasattr(self, 'dashboard'):
             self.dashboard.cleanup()
-        
+
         super().closeEvent(event)
 ```
 
@@ -710,15 +710,15 @@ class LeatherBookInterface(QMainWindow):
 # src/app/core/resource_manager.py
 class ResourceManager:
     """Central resource cleanup orchestrator."""
-    
+
     _instance = None
     _resources = []
-    
+
     @classmethod
     def register(cls, resource, cleanup_fn):
         """Register resource for cleanup."""
         cls._resources.append((resource, cleanup_fn))
-    
+
     @classmethod
     def shutdown_all(cls):
         """Shutdown all registered resources."""
@@ -743,12 +743,12 @@ ResourceManager.shutdown_all()
 ```python
 class ResourceMonitor:
     """Monitor resource usage and detect leaks."""
-    
+
     def __init__(self):
         self.connections = weakref.WeakSet()
         self.executors = weakref.WeakSet()
         self.threads = weakref.WeakSet()
-    
+
     def check_leaks(self):
         """Check for resource leaks."""
         return {
@@ -792,7 +792,7 @@ def _get_connection(self):
 class ParallelProcessor:
     def __init__(self, ...):
         self.executor = ThreadPoolExecutor(...)
-    
+
     def shutdown(self, wait=True):
         self.executor.shutdown(wait=wait)  # ✅ Explicit cleanup
 
@@ -818,22 +818,22 @@ def test_executor_cleanup():
     """Test ThreadPoolExecutor is properly cleaned up."""
     manager = LearningRequestManager()
     weak_ref = weakref.ref(manager._notify_executor)
-    
+
     manager.shutdown()
     del manager
     gc.collect()
-    
+
     assert weak_ref() is None, "Executor still alive after cleanup"
 
 def test_qthread_cleanup():
     """Test QThread cleanup."""
     interface = ImageGenerationInterface()
     interface._start_generation("test", "photorealistic")
-    
+
     worker_ref = weakref.ref(interface.worker)
     interface._cleanup_worker()
     gc.collect()
-    
+
     assert worker_ref() is None, "Worker still alive after cleanup"
 
 def test_database_connection_leak():
@@ -843,16 +843,16 @@ def test_database_connection_leak():
         obj for obj in gc.get_objects()
         if isinstance(obj, sqlite3.Connection)
     ])
-    
+
     manager = LearningRequestManager()
     manager._load_requests()
     gc.collect()
-    
+
     final_connections = len([
         obj for obj in gc.get_objects()
         if isinstance(obj, sqlite3.Connection)
     ])
-    
+
     assert final_connections == initial_connections, \
         f"Connection leak: {final_connections - initial_connections} connections"
 ```

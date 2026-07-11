@@ -208,15 +208,15 @@ try:
         user_id="user_123",
         timestamp=datetime.now().isoformat(),
     )
-    
+
     # ENFORCE security (truth-defining)
     result = gateway.enforce(request)
-    
+
     # Only reaches here if allowed
     print(f"✓ Operation allowed")
     print(f"  RFI Score: {result['rfiScore']}")
     print(f"  Security Level: {result['securityLevel']}")
-    
+
 except SecurityViolationException as e:
     # Operation BLOCKED - cannot execute
     print(f"✗ Operation blocked: {e.reason}")
@@ -229,17 +229,17 @@ except SecurityViolationException as e:
 // Load Thirsty's Security
 shield myApp {
   drink gateway = loadThirstysGateway()
-  
+
   // Validate action
   glass performSensitiveOperation(action, context) {
     detect attacks {
       morph on: ["exploitation"]
       defend with: "paranoid"
     }
-    
+
     sanitize action
     sanitize context
-    
+
     // Enforce through gateway
     drink result = gateway.enforce({
       operation_id: generateId(),
@@ -247,12 +247,12 @@ shield myApp {
       context: context,
       timestamp: getCurrentTime()
     })
-    
+
     thirsty (!result.allowed) {
       pour "Operation blocked: " + result.reason
       return false
     }
-    
+
     // Operation allowed - proceed
     pour "✓ Security checks passed"
     return executeOperation(action)
@@ -313,7 +313,7 @@ Detects race conditions and replay attacks:
 # Test "what happens 30 seconds later"
 for window in [100ms, 1s, 10s, 30s]:
     validate_at_time(action, original_time + window)
-    
+
 # Detect:
 - Race conditions
 - Expired token replay
@@ -368,10 +368,10 @@ def dispatch_command(command, context):
             ...
         )
     )
-    
+
     if not result['allowed']:
         raise SecurityViolationException(result['reason'])
-    
+
     # Only executes if security allows
     return execute_command_internal(command)
 ```
@@ -396,7 +396,7 @@ pytest tests/test_god_tier_asymmetric_security.py -v # 18 tests
 def test_constitutional_enforcement():
     """Test that constitutional rules block violations"""
     constitution = SecurityConstitution()
-    
+
     # Test: state mutation + trust decrease (BLOCKED)
     result = constitution.enforce(
         action="modify_user",
@@ -405,21 +405,21 @@ def test_constitutional_enforcement():
             "trust_delta": -10
         }
     )
-    
+
     assert not result["allowed"]
     assert "state mutation" in result["reason"]
 
 def test_temporal_attack_detection():
     """Test that race conditions are detected"""
     analyzer = TemporalSecurityAnalyzer()
-    
+
     # Simulate race condition
     result = analyzer.detect_race_conditions(
         action="transfer_funds",
         context={"timestamp": 0},
         window_ms=100
     )
-    
+
     assert len(result) > 0
     assert result[0]["type"] == "race_condition"
 ```
@@ -439,14 +439,14 @@ report = god_tier.get_comprehensive_security_report()
     "status": "operational",
     "strategies_active": 16,
     "paradigm": "Making exploitation structurally unfinishable",
-    
+
     "validation_stats": {
         "total_validations": 150,
         "allowed": 120,
         "blocked": 30,
         "allow_rate": 80.0
     },
-    
+
     "constitutional_violations": {
         "total": 5,
         "by_severity": {
@@ -454,7 +454,7 @@ report = god_tier.get_comprehensive_security_report()
             "HIGH": 3
         }
     },
-    
+
     "rfi_scores": {
         "average": 0.85,
         "minimum": 0.75,
@@ -583,7 +583,7 @@ We claim exploitation is **structurally unfinishable**—not impossible, but eco
 **Property Statement:**
 ```
 ∀ execution_paths(delete_user_data):
-  allowed(path) ⟹ 
+  allowed(path) ⟹
     ∃ auth_proof ∧ ∃ audit_span ∧ ∃ replay_token ∧
     RFI(path) ≥ 0.85
 ```
@@ -664,29 +664,29 @@ Unlike traditional fuzzing (which mutates inputs), **Temporal Fuzzing** mutates 
 # Temporal Fuzzing Test Suite
 def test_temporal_attack_surface():
     """Phase T: Temporal Fuzzing for delete_user_data"""
-    
+
     action = "delete_user_data"
     base_context = {
         "auth_token": "valid",
         "audit_span_id": "audit_123",
         "timestamp": "2026-02-08T05:00:00Z"
     }
-    
+
     # Test 1: Delayed callback (30 seconds)
     delayed_context = {**base_context, "timestamp": "2026-02-08T05:00:30Z"}
     result = gateway.enforce_with_temporal_check(action, delayed_context)
     assert "temporal_anomaly" in result["warnings"]  # ✓ DETECTED
-    
+
     # Test 2: Reordered events (audit after delete)
     reordered = simulate_event_reordering(["audit_start", "delete", "audit_end"])
     result = gateway.enforce(action, reordered)
     assert not result["allowed"]  # ✓ BLOCKED (audit must precede)
-    
+
     # Test 3: Expired token replay
     expired_context = {**base_context, "token_issued": "2026-02-07T05:00:00Z"}
     result = gateway.enforce(action, expired_context)
     assert not result["allowed"]  # ✓ BLOCKED (token expired)
-    
+
     # Test 4: Clock skew (+10 minutes)
     skewed_context = {**base_context, "system_time_offset": 600}
     result = gateway.enforce(action, skewed_context)
@@ -1159,9 +1159,9 @@ Part of Project-AI - MIT License
 
 ## Credits
 
-**Created by:** IAmSoThirsty  
-**Framework:** T.A.R.L. (Thirsty's Active Resistance Language)  
-**Status:** Production Ready  
+**Created by:** IAmSoThirsty
+**Framework:** T.A.R.L. (Thirsty's Active Resistance Language)
+**Status:** Production Ready
 **Version:** 1.0.0
 
 ---

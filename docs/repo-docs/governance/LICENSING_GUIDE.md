@@ -46,7 +46,7 @@ scope: "MIT license obligations, dependency licensing matrix (PyQt6/GPL, scikit-
 
 # Licensing Guide for Project-AI
 
-**Status**: ✅ MIT License Implemented  
+**Status**: ✅ MIT License Implemented
 **Date**: December 4, 2025
 
 ---
@@ -371,5 +371,5 @@ The MIT license is one of the most permissive and widely adopted in open-source 
 
 ---
 
-**Generated**: December 4, 2025  
+**Generated**: December 4, 2025
 **Status**: ✅ Licensing Complete

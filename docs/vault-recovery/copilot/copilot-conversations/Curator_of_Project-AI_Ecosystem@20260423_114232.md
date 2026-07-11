@@ -15,4 +15,3 @@ lastAccessedAt: 1776966927027
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

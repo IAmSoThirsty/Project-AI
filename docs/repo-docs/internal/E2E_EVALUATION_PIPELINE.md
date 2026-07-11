@@ -343,31 +343,31 @@ on:
 jobs:
   e2e:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           pip install pytest pytest-cov pytest-xdist
-      
+
       - name: Run E2E tests
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python -m e2e.cli --parallel --workers 4
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
           files: ./e2e/coverage/coverage.xml
-      
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v3
@@ -406,7 +406,7 @@ from e2e.utils.assertions import assert_within_timeout
 @pytest.mark.custom
 class TestCustomScenario:
     """Custom E2E test scenario."""
-    
+
     def test_my_workflow(self, e2e_config):
         """Test custom workflow."""
         # Your test logic
@@ -590,6 +590,6 @@ MIT License - See LICENSE file for details
 
 ---
 
-**Project-AI E2E Evaluation Pipeline**  
-*God Tier Architectural • Monolithic Density • Production-Ready*  
+**Project-AI E2E Evaluation Pipeline**
+*God Tier Architectural • Monolithic Density • Production-Ready*
 Version 1.0.0 | 2026

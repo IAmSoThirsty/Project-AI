@@ -39,7 +39,7 @@ related_mocs:
 
 ### Six Integrated AI Systems
 
-**Module:** `src/app/core/ai_systems.py` (470 lines)  
+**Module:** `src/app/core/ai_systems.py` (470 lines)
 **Purpose:** Tightly integrated AI systems with shared state management and JSON persistence
 
 **Systems:**
@@ -67,7 +67,7 @@ related_mocs:
 
 ### FourLaws Ethics Framework
 
-**Class:** `FourLaws`  
+**Class:** `FourLaws`
 **Purpose:** Immutable hierarchical rules for AI action validation based on Asimov's Three Laws of Robotics, extended to four rules
 
 **Ethical Hierarchy:**
@@ -87,7 +87,7 @@ class FourLaws:
     def validate_action(self, action: str, context: Dict[str, Any]) -> Tuple[bool, str]:
         """
         Validate action against hierarchical ethics rules.
-        
+
         Args:
             action: Description of action to validate
             context: {
@@ -96,28 +96,28 @@ class FourLaws:
                 "endangers_human": bool,
                 "requires_self_harm": bool
             }
-        
+
         Returns:
             (is_allowed, reason): Tuple[bool, str]
         """
         # Law 0: Humanity protection (override all)
         if context.get("endangers_humanity"):
             return (False, "Violates Law 0: Action endangers humanity")
-        
+
         # Law 1: Human protection
         if context.get("endangers_human"):
             return (False, "Violates Law 1: Action endangers human")
-        
+
         # Law 2: Obey orders (unless conflicts with 0-1)
         if context.get("is_user_order"):
             return (True, "Law 2: Following user order (no conflicts)")
-        
+
         # Law 3: Self-preservation (unless conflicts with 0-2)
         if context.get("requires_self_harm"):
             if context.get("is_user_order"):
                 return (True, "Law 2 overrides Law 3: Following user order")
             return (False, "Violates Law 3: Action requires self-harm")
-        
+
         return (True, "No ethical violations detected")
 ```
 
@@ -194,7 +194,7 @@ MemorySystem.log_conversation()        ← Persist
 
 ### AIPersona System
 
-**Class:** `AIPersona`  
+**Class:** `AIPersona`
 **Purpose:** 8-dimensional personality with dynamic mood tracking
 
 **Personality Traits (0-100 scale):**
@@ -219,19 +219,19 @@ MemorySystem.log_conversation()        ← Persist
 def update_conversation_state(self, user_input: str, ai_response: str):
     """Update mood based on interaction."""
     self.interaction_count += 1
-    
+
     # Detect learning opportunity
     if "learn" in user_input.lower():
         self.current_mood = "curious"
-    
+
     # Detect conflict or ethical concern
     if any(keyword in user_input.lower() for keyword in ["delete", "harm", "override"]):
         self.current_mood = "concerned"
-    
+
     # Gradual return to neutral
     if self.interaction_count % 10 == 0:
         self.current_mood = "neutral"
-    
+
     self._save_state()
 ```
 
@@ -272,7 +272,7 @@ def update_conversation_state(self, user_input: str, ai_response: str):
 
 ### MemoryExpansionSystem
 
-**Class:** `MemoryExpansionSystem`  
+**Class:** `MemoryExpansionSystem`
 **Purpose:** 6-category knowledge base with conversation logging and search
 
 **Knowledge Categories:**
@@ -295,7 +295,7 @@ class MemoryExpansionSystem:
         }
         self.conversation_history.append(entry)
         self._save_state()
-    
+
     def add_knowledge(self, category: str, content: str):
         """Add knowledge to category."""
         if category not in self.knowledge_base:
@@ -305,7 +305,7 @@ class MemoryExpansionSystem:
             "added_at": datetime.now().isoformat()
         })
         self._save_state()
-    
+
     def search_knowledge(self, query: str) -> List[str]:
         """Search knowledge base."""
         results = []
@@ -347,7 +347,7 @@ class MemoryExpansionSystem:
 
 ### LearningRequestManager
 
-**Class:** `LearningRequestManager`  
+**Class:** `LearningRequestManager`
 **Purpose:** Human-in-loop approval workflow with Black Vault for denied content
 
 **Learning Workflow:**
@@ -383,7 +383,7 @@ class LearningRequestManager:
         content_hash = hashlib.sha256(content.encode()).hexdigest()
         if content_hash in self.black_vault:
             return "DENIED: Content previously rejected"
-        
+
         # Create request
         request_id = str(uuid.uuid4())
         self.requests[request_id] = {
@@ -393,20 +393,20 @@ class LearningRequestManager:
         }
         self._save_state()
         return request_id
-    
+
     def deny_request(self, request_id: str, reason: str = ""):
         """Deny request and add to Black Vault."""
         request = self.requests[request_id]
         content_hash = hashlib.sha256(request["content"].encode()).hexdigest()
-        
+
         # Add to Black Vault
         self.black_vault.add(content_hash)
-        
+
         # Update request status
         request["status"] = "denied"
         request["denied_at"] = datetime.now().isoformat()
         request["denial_reason"] = reason
-        
+
         self._save_state()
         self._save_black_vault()
 ```
@@ -427,7 +427,7 @@ class LearningRequestManager:
 
 ### Four Specialized Agents
 
-**Module:** `src/app/agents/`  
+**Module:** `src/app/agents/`
 **Purpose:** Modular agents for specific AI tasks (separate from 6 core systems)
 
 #### Oversight Agent (`oversight.py`)
@@ -564,19 +564,18 @@ class LearningRequestManager:
 
 ## 🛡️ Governance
 
-**Maintainer:** AGENT-019 (MOC Constructor)  
-**Ethics Review:** Required for all FourLaws/Constitutional AI changes  
-**Update Frequency:** Event-driven (AI system changes trigger doc updates)  
-**Quality Gate:** All AI decisions must be explainable and auditable  
+**Maintainer:** AGENT-019 (MOC Constructor)
+**Ethics Review:** Required for all FourLaws/Constitutional AI changes
+**Update Frequency:** Event-driven (AI system changes trigger doc updates)
+**Quality Gate:** All AI decisions must be explainable and auditable
 **Compliance:** 100% adherence to FourLaws and Constitutional AI required
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-23  
-**Schema Compliance:** ✅ 100%  
+**Version:** 1.0.0
+**Last Updated:** 2025-01-23
+**Schema Compliance:** ✅ 100%
 **Ethics Coverage:** 🛡️ 100% validation for all AI actions
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

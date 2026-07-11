@@ -68,7 +68,7 @@ metrics:
 
 # Understanding Your AI Partner: A Clear Guide
 
-**For Users of Project-AI**  
+**For Users of Project-AI**
 **Version 1.0 — February 2026**
 
 ---

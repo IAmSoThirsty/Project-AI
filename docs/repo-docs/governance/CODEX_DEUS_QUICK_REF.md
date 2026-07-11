@@ -49,9 +49,9 @@ estimated_time: "5-10 minutes (quick lookup)"
 
 ## At a Glance
 
-**File:** `.github/workflows/codex-deus-ultimate.yml`  
-**Lines:** 2,507  
-**Jobs:** 55  
+**File:** `.github/workflows/codex-deus-ultimate.yml`
+**Lines:** 2,507
+**Jobs:** 55
 **Phases:** 15
 
 ---
@@ -396,7 +396,6 @@ job-name:
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2024  
+**Version:** 1.0.0
+**Last Updated:** 2024
 **Status:** Production Ready ✅
-

@@ -29,9 +29,9 @@ This directory contains comprehensive technical documentation for the **4 core A
 ## Agent Modules Documented
 
 ### 1. OversightAgent
-**File**: [oversight.md](./oversight.md)  
-**Purpose**: System monitoring and compliance enforcement  
-**Charter**: Autonomous compliance guardian with sovereign authority to block, audit, and escalate non-compliant operations  
+**File**: [oversight.md](./oversight.md)
+**Purpose**: System monitoring and compliance enforcement
+**Charter**: Autonomous compliance guardian with sovereign authority to block, audit, and escalate non-compliant operations
 **Key Features**:
 - Real-time system health monitoring
 - Four Laws policy enforcement
@@ -46,9 +46,9 @@ This directory contains comprehensive technical documentation for the **4 core A
 ---
 
 ### 2. PlannerAgent
-**File**: [planner.md](./planner.md)  
-**Purpose**: Task decomposition and workflow orchestration  
-**Charter**: Minimal task queue and scheduling interface for multi-step workflows (legacy stub)  
+**File**: [planner.md](./planner.md)
+**Purpose**: Task decomposition and workflow orchestration
+**Charter**: Minimal task queue and scheduling interface for multi-step workflows (legacy stub)
 **Key Features**:
 - Task decomposition into subtasks
 - Dependency management
@@ -62,9 +62,9 @@ This directory contains comprehensive technical documentation for the **4 core A
 ---
 
 ### 3. ValidatorAgent
-**File**: [validator.md](./validator.md)  
-**Purpose**: Input validation and data integrity enforcement  
-**Charter**: First line of defense for data security and integrity  
+**File**: [validator.md](./validator.md)
+**Purpose**: Input validation and data integrity enforcement
+**Charter**: First line of defense for data security and integrity
 **Key Features**:
 - Input sanitization (regex, range, schema validation)
 - Type safety enforcement
@@ -79,9 +79,9 @@ This directory contains comprehensive technical documentation for the **4 core A
 ---
 
 ### 4. ExplainabilityAgent
-**File**: [explainability.md](./explainability.md)  
-**Purpose**: Decision transparency and reasoning trace generation  
-**Charter**: Transparency engine for AI decisions, building user trust through interpretability  
+**File**: [explainability.md](./explainability.md)
+**Purpose**: Decision transparency and reasoning trace generation
+**Charter**: Transparency engine for AI decisions, building user trust through interpretability
 **Key Features**:
 - Natural language decision explanations
 - Step-by-step reasoning traces
@@ -289,14 +289,14 @@ if not is_allowed:
 
 All agent documentation meets the following quality gates:
 
-✅ **Completeness**: 1,200+ words per document  
-✅ **YAML Frontmatter**: Complete metadata per `METADATA_SCHEMA.md`  
-✅ **API Reference**: All methods (current + planned) documented  
-✅ **Usage Examples**: 3+ real-world scenarios per agent  
-✅ **Performance Metrics**: Complexity analysis, benchmarks, scalability limits  
-✅ **Troubleshooting**: Common issues with solutions  
-✅ **Four Laws Integration**: Explicit governance explanations  
-✅ **Related Docs**: Cross-references to kernel, laws, other agents  
+✅ **Completeness**: 1,200+ words per document
+✅ **YAML Frontmatter**: Complete metadata per `METADATA_SCHEMA.md`
+✅ **API Reference**: All methods (current + planned) documented
+✅ **Usage Examples**: 3+ real-world scenarios per agent
+✅ **Performance Metrics**: Complexity analysis, benchmarks, scalability limits
+✅ **Troubleshooting**: Common issues with solutions
+✅ **Four Laws Integration**: Explicit governance explanations
+✅ **Related Docs**: Cross-references to kernel, laws, other agents
 
 ---
 
@@ -358,10 +358,10 @@ When documenting new agents:
 
 ## Maintainers
 
-**Primary**: AGENT-033 (Source Code Documentation Specialist)  
-**Reviewers**: Architecture Team, Governance Team, AI Ethics Team  
-**Review Cycle**: Quarterly  
-**Next Review**: 2026-07-20  
+**Primary**: AGENT-033 (Source Code Documentation Specialist)
+**Reviewers**: Architecture Team, Governance Team, AI Ethics Team
+**Review Cycle**: Quarterly
+**Next Review**: 2026-07-20
 
 ---
 
@@ -369,4 +369,3 @@ When documenting new agents:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -478,15 +478,15 @@ class MyRobotHardware(HardwareAbstractionLayer):
         # Connect to your robot
         self.robot = MyRobotDriver()
         return self.robot.connect()
-    
+
     def read_joint_states(self) -> List[JointState]:
         # Read from your robot
         return self.robot.get_joint_states()
-    
+
     def write_joint_commands(self, commands: List[Dict]) -> bool:
         # Send to your robot
         return self.robot.send_commands(commands)
-    
+
     # Implement other methods...
 
 # Use your hardware
@@ -800,14 +800,14 @@ class RoboticMainframeSystem:
     def __init__(self, config: Optional[RobotConfiguration] = None)
     def initialize(self) -> bool
     def shutdown(self) -> None
-    def execute_motion(self, joint_targets: List[float], 
+    def execute_motion(self, joint_targets: List[float],
                       duration: float = 1.0,
                       context: Optional[Dict[str, Any]] = None) -> bool
     def emergency_stop(self) -> bool
     def reset_emergency_stop(self) -> bool
     def get_status(self) -> RoboticSystemStatus
     def get_robot_state(self) -> Dict[str, Any]
-    def register_event_handler(self, event_type: str, 
+    def register_event_handler(self, event_type: str,
                                handler: Callable) -> None
 ```
 
@@ -817,7 +817,7 @@ class RoboticMainframeSystem:
 class RoboticIntegrationAPI:
     def __init__(self, system: Optional[RoboticMainframeSystem] = None)
     def initialize(self) -> bool
-    def move_joints(self, positions: List[float], 
+    def move_joints(self, positions: List[float],
                    duration: float = 1.0,
                    safe_mode: bool = True) -> bool
     def emergency_stop(self) -> bool
@@ -847,15 +847,15 @@ class MyCustomHardware(HardwareAbstractionLayer):
     def initialize(self) -> bool:
         # Your hardware initialization
         pass
-    
+
     def read_joint_states(self) -> List[JointState]:
         # Read from your hardware
         pass
-    
+
     def write_joint_commands(self, commands: List[Dict]) -> bool:
         # Write to your hardware
         pass
-    
+
     # Implement other abstract methods...
 
 # Use your hardware
@@ -873,7 +873,7 @@ from app.core.robotic_hardware_layer import SensorReading, SensorType
 def read_custom_sensor(self) -> SensorReading:
     # Read your sensor
     value = self.my_sensor.read()
-    
+
     return SensorReading(
         sensor_id="my_sensor_001",
         sensor_type=SensorType.TEMPERATURE,  # Or custom type
@@ -892,14 +892,14 @@ class MyCustomValidator(TriumvirateRobotValidator):
     def _cerberus_validate(self, command, joint_states):
         # Add custom validation logic
         is_valid, reason = super()._cerberus_validate(command, joint_states)
-        
+
         if not is_valid:
             return is_valid, reason
-        
+
         # Your custom checks
         if command.context.get("my_custom_check"):
             return False, "My custom rejection reason"
-        
+
         return True, "Validation passed"
 ```
 
@@ -922,6 +922,6 @@ class MyCustomValidator(TriumvirateRobotValidator):
 
 ---
 
-**Built with ❤️ for Project-AI**  
-**Robotic Mainframe Integration System v1.0.0**  
+**Built with ❤️ for Project-AI**
+**Robotic Mainframe Integration System v1.0.0**
 **Last Updated:** 2026-01-30

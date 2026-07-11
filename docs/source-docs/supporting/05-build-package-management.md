@@ -1,13 +1,13 @@
 # Build & Package Management
 
-**Document Type:** Technical Reference  
-**Component:** Build System & Dependency Management  
-**Status:** Production  
-**Version:** 2.0.0  
-**Last Updated:** 2025-01-26  
-**Author:** AGENT-046  
-**Audience:** Developers, Build Engineers, Package Maintainers  
-**Scope:** pyproject.toml, package.json, requirements management, build workflows  
+**Document Type:** Technical Reference
+**Component:** Build System & Dependency Management
+**Status:** Production
+**Version:** 2.0.0
+**Last Updated:** 2025-01-26
+**Author:** AGENT-046
+**Audience:** Developers, Build Engineers, Package Maintainers
+**Scope:** pyproject.toml, package.json, requirements management, build workflows
 **Related Docs:**
 - `02-docker-deployment-guide.md`
 - `03-ci-cd-pipelines.md`
@@ -777,13 +777,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install build dependencies
         run: pip install build twine
-      
+
       - name: Build package
         run: python -m build
-      
+
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
@@ -948,4 +948,3 @@ echo "3.11" > .python-version
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

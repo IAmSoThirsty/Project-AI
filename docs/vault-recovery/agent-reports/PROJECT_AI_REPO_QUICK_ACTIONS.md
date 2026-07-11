@@ -36,4 +36,3 @@ Use these prompts directly in your local Obsidian Copilot chat.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

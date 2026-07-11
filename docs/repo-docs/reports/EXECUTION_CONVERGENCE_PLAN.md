@@ -62,7 +62,7 @@ Button Click → Signal → Handler Method → _route_through_governance()
 
 **Handler Methods** (the spine):
 - Line 91: `approve_selected()` - Calls `self.lrm.approve_request()` directly
-- Line 92: `deny_selected()` - Calls `self.lrm.deny_request()` directly  
+- Line 92: `deny_selected()` - Calls `self.lrm.deny_request()` directly
 - Line 220: `run_codex_fix()` - Calls `self.codex_adapter.codex.fix_repo()` directly
 - Line 337: `activate_selected()` - Calls `self.codex_adapter.codex.activate_staged()` directly
 
@@ -93,25 +93,25 @@ def approve_selected(self):
     if not sel:
         return
     sel_id = sel.text().split(":")[0]
-    
+
     # ROUTE THROUGH GOVERNANCE
     result = self._route_through_governance("learning.approve", {
         "request_id": sel_id,
         "response": "Approved via Dashboard"
     })
-    
+
     if result.get("status") == "fallback":
         # Fallback to direct call if adapter unavailable
         ok = self.lrm.approve_request(sel_id, response="Approved via Dashboard")
     else:
         ok = result.get("success", False)
-    
+
     if ok:
         QMessageBox.information(self, "Approved", f"Request {sel_id} approved")
 ```
 
-**Change**: 3 lines added, 1 line modified per handler  
-**Safety**: Graceful fallback if adapter missing  
+**Change**: 3 lines added, 1 line modified per handler
+**Safety**: Graceful fallback if adapter missing
 **Coverage**: Each modified handler = 1-20 GUI methods governed
 
 ---
@@ -149,7 +149,7 @@ def approve_selected(self):
 - `persona_panel.py`: `test_action()`, `reset_personality()` → persona actions
 - `user_management.py`: CRUD operations → user actions
 
-**Total Convergence Points**: ~30-35 handler methods  
+**Total Convergence Points**: ~30-35 handler methods
 **Not**: 345 individual methods
 
 ---
@@ -185,7 +185,7 @@ enforce_pipeline()
 Core systems
 ```
 
-**Pros**: 
+**Pros**:
 - Infrastructure already exists
 - Consistent with Web/CLI
 - Agent integration done as separate layer
@@ -203,7 +203,7 @@ route_request() → enforce_pipeline() → {
 }
 ```
 
-**Pros**: True unification  
+**Pros**: True unification
 **Cons**: Large refactor, not needed for Level 2
 
 **Decision**: Use Option 1 for Level 2, Option 2 as future enhancement
@@ -296,7 +296,7 @@ window.approve_selected()  # Should call adapter.execute()
 
 **The problem wasn't**:
 - Missing infrastructure ✅ (exists)
-- Missing adapter ✅ (exists)  
+- Missing adapter ✅ (exists)
 - Missing routing method ✅ (exists)
 
 **The problem was**:
@@ -315,7 +315,7 @@ window.approve_selected()  # Should call adapter.execute()
 ## 🎯 Next Action
 
 Start with `dashboard_main.py` - wire the 8 critical handlers:
-1. `approve_selected()` 
+1. `approve_selected()`
 2. `deny_selected()`
 3. `run_codex_fix()`
 4. `activate_selected()`

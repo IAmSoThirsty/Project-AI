@@ -109,7 +109,7 @@ assessments = {
 }
 ```
 
-**Status**: 
+**Status**:
 - ✅ `ai_systems.py`: FourLaws delegates to PLANETARY_CORE
 - ✅ `api/main.py`: API Triumvirate wraps Constitutional agents
 - ✅ Agents are advisory, cannot override Laws
@@ -123,7 +123,7 @@ if violations:
     raise LawViolationError(...)
 ```
 
-**Status**: 
+**Status**:
 - ✅ Laws evaluated BEFORE execution
 - ✅ Violations block action immediately
 - ✅ Even violations logged in ledger

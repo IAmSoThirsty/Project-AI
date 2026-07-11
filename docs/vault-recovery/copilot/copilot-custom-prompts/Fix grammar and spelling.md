@@ -9,4 +9,3 @@ Fix the grammar and spelling of {}. Preserve all formatting, line breaks, and sp
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

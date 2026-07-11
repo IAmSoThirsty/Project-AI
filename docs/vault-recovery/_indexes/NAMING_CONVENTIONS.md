@@ -330,41 +330,41 @@ import re
 def validate_index_filename(filename: str) -> tuple[bool, list[str]]:
     """
     Validate index filename against naming conventions.
-    
+
     Returns:
         (is_valid, list_of_errors)
     """
     errors = []
-    
+
     # Rule 1: Must end with -index.md
     if not filename.endswith('-index.md'):
         errors.append("Must end with '-index.md'")
-    
+
     # Rule 2: Must be lowercase
     if filename != filename.lower():
         errors.append("Must be lowercase only")
-    
+
     # Rule 3: Only a-z, 0-9, hyphen, and .md
     if not re.match(r'^[a-z0-9-]+-index\.md$', filename):
         errors.append("Only a-z, 0-9, and hyphen allowed")
-    
+
     # Rule 4: Must not have consecutive hyphens
     if '--' in filename:
         errors.append("No consecutive hyphens allowed")
-    
+
     # Rule 5: Must not start or end with hyphen (before -index.md)
     name_part = filename.replace('-index.md', '')
     if name_part.startswith('-') or name_part.endswith('-'):
         errors.append("Cannot start or end with hyphen")
-    
+
     # Rule 6: Maximum length (50 chars before .md)
     if len(filename) > 53:  # 50 + .md = 53
         errors.append("Maximum 50 characters (excluding .md)")
-    
+
     # Rule 7: Minimum length (3 chars before -index.md)
     if len(name_part) < 3:
         errors.append("Minimum 3 characters required")
-    
+
     return (len(errors) == 0, errors)
 ```
 
@@ -580,7 +580,7 @@ python scripts/validate-index-names.py --check-only
    - Must be lowercase only
    - Must end with '-index.md'
    - Only a-z, 0-9, and hyphen allowed
-   
+
 Suggested fix: security-index.md or security-domain-index.md
 ```
 
@@ -608,10 +608,10 @@ Suggested fix: security-index.md or security-domain-index.md
 
 ---
 
-**Version:** 1.0  
-**Last Updated:** 2024-01-15  
-**Maintainer:** AGENT-002 (Indexes Subdirectory Specialist)  
-**Enforcement:** Automated validation in CI/CD pipeline  
+**Version:** 1.0
+**Last Updated:** 2024-01-15
+**Maintainer:** AGENT-002 (Indexes Subdirectory Specialist)
+**Enforcement:** Automated validation in CI/CD pipeline
 **Related Documents:**
 - [[_indexes/README.md]] - Index system overview
 - [[_indexes/.index-schema.json]] - JSON schema for validation
@@ -619,4 +619,3 @@ Suggested fix: security-index.md or security-domain-index.md
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

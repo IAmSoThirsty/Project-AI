@@ -58,9 +58,8 @@ If work item starts with **“organize/track/explain/navigate/coordinate”** �
 
 ## Agent Instruction Snippet (copy/paste)
 
-> Use `t:\Project-AI-main` for all code modifications, tests, and PR-facing changes.  
+> Use `t:\Project-AI-main` for all code modifications, tests, and PR-facing changes.
 > Use `t:\Project-AI-vault` for notes, planning, dashboards, and coordination artifacts only.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

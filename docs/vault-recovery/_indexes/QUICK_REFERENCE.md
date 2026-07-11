@@ -156,4 +156,3 @@ total_documents: 42             # Count
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

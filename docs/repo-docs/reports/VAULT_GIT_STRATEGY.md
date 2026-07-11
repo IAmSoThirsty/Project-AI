@@ -25,9 +25,9 @@ review_cycle: as-needed
 
 # Obsidian Vault Git Strategy
 
-**Version:** 1.0  
-**Status:** Production  
-**Author:** AGENT-010 (GitIgnore Configuration Specialist)  
+**Version:** 1.0
+**Status:** Production
+**Author:** AGENT-010 (GitIgnore Configuration Specialist)
 **Date:** 2025-01-20
 
 ---
@@ -375,7 +375,7 @@ git commit -m "chore: untrack .obsidian/"
 
 **Cause:** Plugin data files are excluded (team vault)
 
-**Expected:** Plugin-specific user data should remain local  
+**Expected:** Plugin-specific user data should remain local
 **Verify:** Check `.obsidian/plugins/*/data.json` in `.gitignore`
 
 ### Merge Conflicts in workspace.json

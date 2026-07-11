@@ -11,71 +11,71 @@ flowchart TD
     RateLimitCheck --> RateLimitExceeded{Rate Limit<br/>Exceeded?}
     RateLimitExceeded -->|Yes| RateLimitBlock[❌ Rate Limit Block<br/>429 Too Many Requests]
     RateLimitExceeded -->|No| IPValidation[IP Address Validation<br/>Check blocklist and reputation]
-    
+
     IPValidation --> IPBlocked{IP<br/>Blocked?}
     IPBlocked -->|Yes| IPBlock[❌ IP Blocked<br/>403 Forbidden]
     IPBlocked -->|No| HoneypotCheck[Honeypot Trap Detection<br/>Hidden form fields]
-    
+
     HoneypotCheck --> HoneypotTriggered{Honeypot<br/>Field Filled?}
     HoneypotTriggered -->|Yes| BotDetected[❌ Bot Detected<br/>Log and block IP]
     HoneypotTriggered -->|No| InputSanitization[Input Sanitization<br/>Strip dangerous characters]
-    
+
     InputSanitization --> ContentFilter[Content Filter<br/>15 blocked keywords]
     ContentFilter --> CheckOverride{Command<br/>Override Active?}
-    
+
     CheckOverride -->|Yes| BypassFilter[⚠️ Override Active<br/>Skip content filter]
     CheckOverride -->|No| ScanContent{Scan for<br/>Blocked Keywords}
-    
+
     ScanContent --> KeywordFound{Keyword<br/>Found?}
     KeywordFound -->|Yes| ContentBlocked[❌ Content Blocked<br/>Return filtered message]
     KeywordFound -->|No| BlackVaultCheck[Black Vault Fingerprint<br/>SHA-256 hash check]
-    
+
     BypassFilter --> AsymmetricEngine
     BlackVaultCheck --> FingerprintHash[Generate Content Hash<br/>hashlib.sha256hex]
     FingerprintHash --> VaultLookup{Hash in<br/>Black Vault?}
-    
+
     VaultLookup -->|Yes| ForbiddenContent[❌ Forbidden Content<br/>Previously denied material]
     VaultLookup -->|No| AsymmetricEngine[Asymmetric Security Engine<br/>Advanced threat detection]
-    
+
     AsymmetricEngine --> BehavioralAnalysis[Behavioral Analysis<br/>Pattern recognition]
     BehavioralAnalysis --> AnomalyScore[Calculate Anomaly Score<br/>Deviation from baseline]
     AnomalyScore --> ThreatLevel{Threat<br/>Level?}
-    
+
     ThreatLevel -->|CRITICAL| CriticalThreat[🚨 CRITICAL THREAT<br/>Immediate lockdown]
     ThreatLevel -->|HIGH| HighThreat[⚠️ HIGH THREAT<br/>Enhanced monitoring]
     ThreatLevel -->|MEDIUM| MediumThreat[⚠️ MEDIUM THREAT<br/>Flag and log]
     ThreatLevel -->|LOW| LowThreat[✅ LOW THREAT<br/>Normal operation]
-    
+
     CriticalThreat --> EmergencyProtocol[Activate Emergency Protocol<br/>Cerberus Lockdown]
     EmergencyProtocol --> NotifyAdmin[Notify Admin<br/>Email alert]
     NotifyAdmin --> LogIncident[Log Security Incident<br/>data/security/incidents.json]
-    
+
     HighThreat --> EnhancedMonitor[Activate Enhanced Monitoring<br/>Record all actions]
     EnhancedMonitor --> LogIncident
-    
+
     MediumThreat --> FlagSession[Flag User Session<br/>Increase scrutiny]
     FlagSession --> LogIncident
-    
+
     LowThreat --> InjectionDetection[SQL/Command Injection Detection<br/>Pattern matching]
     InjectionDetection --> InjectionFound{Injection<br/>Detected?}
     InjectionFound -->|Yes| InjectionBlock[❌ Injection Attempt Blocked<br/>Log and alert]
     InjectionFound -->|No| XSSDetection[XSS Detection<br/>Script tag scanning]
-    
+
     XSSDetection --> XSSFound{XSS<br/>Detected?}
     XSSFound -->|Yes| XSSBlock[❌ XSS Attempt Blocked<br/>Sanitize output]
     XSSFound -->|No| PathTraversal[Path Traversal Detection<br/>validate_filename]
-    
+
     PathTraversal --> TraversalFound{Path<br/>Traversal?}
     TraversalFound -->|Yes| TraversalBlock[❌ Path Traversal Blocked<br/>Reject file operation]
     TraversalFound -->|No| PrivilegeEscalation[Privilege Escalation Check<br/>Role-based access control]
-    
+
     PrivilegeEscalation --> EscalationDetected{Unauthorized<br/>Access?}
     EscalationDetected -->|Yes| EscalationBlock[❌ Privilege Escalation Blocked<br/>403 Forbidden]
     EscalationDetected -->|No| ThreatPassed[✅ Security Checks Passed<br/>Proceed to processing]
-    
+
     ThreatPassed --> UpdateReputation[Update IP Reputation<br/>Trust score adjustment]
     UpdateReputation --> Success([✅ Security Validated])
-    
+
     RateLimitBlock --> End([❌ Security Blocked])
     IPBlock --> End
     BotDetected --> End
@@ -86,7 +86,7 @@ flowchart TD
     XSSBlock --> End
     TraversalBlock --> End
     EscalationBlock --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style CriticalThreat fill:#ff0000,stroke:#ff00ff,stroke-width:3px,color:#fff

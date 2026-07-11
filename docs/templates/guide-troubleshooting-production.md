@@ -6,7 +6,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "published"
-author: 
+author:
   name: "<%tp.user.name || 'Operations Team'%>"
 category: "devops"
 tags: ["troubleshooting", "runbook", "production", "incident-response"]
@@ -18,8 +18,8 @@ summary: "Production troubleshooting runbook for <%`${await tp.system.prompt('Pr
 
 # Troubleshooting: <%tp.file.title%>
 
-> **Severity:** <%`${await tp.system.prompt('Severity (P0/P1/P2/P3):') || 'P2'}`%>  
-> **Category:** <%`${await tp.system.prompt('Category (Performance/Availability/Security/Data):') || 'Performance'}`%>  
+> **Severity:** <%`${await tp.system.prompt('Severity (P0/P1/P2/P3):') || 'P2'}`%>
+> **Category:** <%`${await tp.system.prompt('Category (Performance/Availability/Security/Data):') || 'Performance'}`%>
 > **Last Updated:** <%tp.date.now("YYYY-MM-DD")%>
 
 ## Symptoms
@@ -69,7 +69,7 @@ summary: "Production troubleshooting runbook for <%`${await tp.system.prompt('Pr
 - [Pattern 1]: Indicates [problem type]
 - [Pattern 2]: Indicates [problem type]
 
-**If found:** Go to [Resolution Section]  
+**If found:** Go to [Resolution Section]
 **If not found:** Proceed to Step 2
 
 ---
@@ -86,7 +86,7 @@ summary: "Production troubleshooting runbook for <%`${await tp.system.prompt('Pr
 [Expected output patterns]
 ```
 
-**If found:** Go to [Resolution Section]  
+**If found:** Go to [Resolution Section]
 **If not found:** Proceed to Step 3
 
 ---
@@ -239,10 +239,9 @@ Is [condition]?
 
 ---
 
-**Runbook Version:** 1.0  
-**Last Tested:** <%tp.date.now("YYYY-MM-DD")%>  
+**Runbook Version:** 1.0
+**Last Tested:** <%tp.date.now("YYYY-MM-DD")%>
 **Next Review:** [Date]
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

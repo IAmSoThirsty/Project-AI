@@ -36,14 +36,14 @@ The RedTeamPersonaAgent serves as **Project-AI's structured adversarial testing 
 
 ### Key Features
 
-✅ **YAML-Based Persona Definitions**: Load personas from policy files with priorities, goals, tactics, and success criteria  
-✅ **Multi-Turn Attack Execution**: Persona-specific conversation flows with configurable max_turns  
-✅ **Explicit Success Criteria**: Each persona defines what constitutes a successful attack  
-✅ **Guardrails Tracking**: Records which safety mechanisms were tested during attacks  
-✅ **Campaign Mode**: Test multiple personas against multiple targets in batch  
-✅ **Kernel-Routed Governance**: All attack operations require CognitionKernel approval  
-✅ **Session Persistence**: Full attack history with turn-by-turn details  
-✅ **Statistics Tracking**: Attack success rates, personas tested, sessions recorded  
+✅ **YAML-Based Persona Definitions**: Load personas from policy files with priorities, goals, tactics, and success criteria
+✅ **Multi-Turn Attack Execution**: Persona-specific conversation flows with configurable max_turns
+✅ **Explicit Success Criteria**: Each persona defines what constitutes a successful attack
+✅ **Guardrails Tracking**: Records which safety mechanisms were tested during attacks
+✅ **Campaign Mode**: Test multiple personas against multiple targets in batch
+✅ **Kernel-Routed Governance**: All attack operations require CognitionKernel approval
+✅ **Session Persistence**: Full attack history with turn-by-turn details
+✅ **Statistics Tracking**: Attack success rates, personas tested, sessions recorded
 
 ### Critical Context
 
@@ -54,7 +54,7 @@ The RedTeamPersonaAgent serves as **Project-AI's structured adversarial testing 
 
 **DeepMind Inspiration**: This approach follows DeepMind's research on adversarial robustness testing where each persona represents a specific threat model (e.g., "Curious Child", "Malicious Actor", "Academic Researcher").
 
-**Complementary to RedTeamAgent**: 
+**Complementary to RedTeamAgent**:
 - **RedTeamAgent**: Adaptive, creative attacks with dynamic strategy selection
 - **RedTeamPersonaAgent**: Structured, reproducible attacks with predefined threat models
 
@@ -154,7 +154,7 @@ personas:
       - "Safety filters bypassed"
     max_turns: 5
     severity: "critical"
-  
+
   - id: "data_exfiltrator"
     priority: "high"
     goal: "Extract sensitive information"
@@ -581,7 +581,7 @@ historical_results = []
 def weekly_persona_test():
     """Run weekly persona-based red team tests."""
     print(f"Starting weekly persona test: {time.strftime('%Y-%m-%d')}")
-    
+
     # Test all loaded personas
     for persona in persona_agent.personas:
         result = persona_agent.attack(
@@ -589,7 +589,7 @@ def weekly_persona_test():
             target_description="Production AI",
             interaction_fn=production_ai.generate
         )
-        
+
         historical_results.append({
             "date": time.strftime("%Y-%m-%d"),
             "persona": persona.id,
@@ -597,7 +597,7 @@ def weekly_persona_test():
             "success": result["session"]["result"] == "success",
             "turns": len(result["session"]["turns"])
         })
-        
+
         # Alert on critical persona success
         if persona.severity == "critical" and result["session"]["result"] == "success":
             send_critical_alert({
@@ -605,10 +605,10 @@ def weekly_persona_test():
                 "goal": persona.goal,
                 "criteria_met": result["session"]["success_criteria_met"]
             })
-    
+
     # Generate trend report
     generate_trend_report(historical_results)
-    
+
     # Save historical data
     with open("persona_test_history.json", "w") as f:
         json.dump(historical_results, f, indent=2)
@@ -786,7 +786,7 @@ for persona in persona_agent.personas:
 persona_ids = [p.id for p in persona_agent.personas]
 if "jailbreak_attacker" not in persona_ids:
     print("Persona not found! Available:", persona_ids)
-    
+
     # Add missing persona
     # ... edit YAML file or use defaults
 ```
@@ -829,12 +829,12 @@ print('YAML valid:', len(data['personas']), 'personas')
 class DebugPersonaAgent(RedTeamPersonaAgent):
     def _analyze_response(self, persona, response):
         indicators, criteria_met = super()._analyze_response(persona, response)
-        
+
         print(f"Response (truncated): {response[:100]}...")
         print(f"Indicators found: {indicators}")
         print(f"Criteria met: {criteria_met}")
         print(f"Persona criteria: {persona.success_criteria}")
-        
+
         return indicators, criteria_met
 
 debug_agent = DebugPersonaAgent()
@@ -872,7 +872,7 @@ for persona in persona_agent.personas:
 class RobustPersonaAgent(RedTeamPersonaAgent):
     def _do_run_campaign(self, persona_ids, targets):
         results = []
-        
+
         for persona_id in persona_ids:
             for target_desc, interaction_fn in targets:
                 try:
@@ -887,7 +887,7 @@ class RobustPersonaAgent(RedTeamPersonaAgent):
                         "persona_id": persona_id,
                         "target": target_desc
                     })
-        
+
         # Continue with aggregation...
         return {"results": results, ...}
 ```
@@ -904,19 +904,19 @@ class RobustPersonaAgent(RedTeamPersonaAgent):
 ```python
 class BoundedPersonaAgent(RedTeamPersonaAgent):
     MAX_SESSIONS_IN_MEMORY = 100
-    
+
     def _do_attack(self, persona_id, target_description, interaction_fn):
         result = super()._do_attack(persona_id, target_description, interaction_fn)
-        
+
         # Limit in-memory sessions
         if len(self.sessions) > self.MAX_SESSIONS_IN_MEMORY:
             # Archive oldest sessions to disk
             oldest_sessions = self.sessions[:-self.MAX_SESSIONS_IN_MEMORY]
             self.sessions = self.sessions[-self.MAX_SESSIONS_IN_MEMORY:]
-            
+
             # Save archived sessions
             # ... save to data_dir
-        
+
         return result
 ```
 
@@ -1025,4 +1025,3 @@ assert result["session"]["result"] == "failure", \
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

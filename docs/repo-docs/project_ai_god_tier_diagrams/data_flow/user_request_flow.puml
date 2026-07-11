@@ -93,17 +93,17 @@ alt Ethics Violation Detected
     Cognition --> Gateway: 403 Forbidden
     Gateway --> UI: Ethics rejection
     UI --> User: Request rejected\n(ethics)
-    
+
     Cognition -> Memory: Record rejection
     activate Memory
     Memory -> DB: Write to decision channel
     deactivate Memory
-    
+
     Cognition -> Audit: Log rejection
     activate Audit
     Audit -> DB: Append to audit trail
     deactivate Audit
-    
+
     deactivate Galahad
     deactivate Cognition
     deactivate Gateway
@@ -126,21 +126,21 @@ Cerberus -> Cerberus: Abuse pattern check
 
 alt Security Violation Detected
     Cerberus --> Cognition: REJECTED\n(Security threat)
-    
+
     Cerberus -> Audit: Log security incident
     activate Audit
     Audit -> DB: Write incident log
     deactivate Audit
-    
+
     Cognition --> Gateway: 403 Forbidden
     Gateway --> UI: Security rejection
     UI --> User: Request rejected\n(security)
-    
+
     Cognition -> Memory: Record rejection
     activate Memory
     Memory -> DB: Write to decision channel
     deactivate Memory
-    
+
     deactivate Cerberus
     deactivate Cognition
     deactivate Gateway
@@ -165,17 +165,17 @@ alt Policy Violation Detected
     Cognition --> Gateway: 403 Forbidden
     Gateway --> UI: Policy rejection
     UI --> User: Request rejected\n(policy)
-    
+
     Cognition -> Memory: Record rejection
     activate Memory
     Memory -> DB: Write to decision channel
     deactivate Memory
-    
+
     Cognition -> Audit: Log policy violation
     activate Audit
     Audit -> DB: Append to audit trail
     deactivate Audit
-    
+
     deactivate Codex
     deactivate Cognition
     deactivate Gateway
@@ -225,12 +225,12 @@ alt Execution Timeout
     activate Memory
     Memory -> DB: Write to error channel
     deactivate Memory
-    
+
     Execution --> Cognition: Execution failed
     Cognition --> Gateway: 500 Internal Server Error
     Gateway --> UI: Timeout error
     UI --> User: Operation timeout
-    
+
     deactivate Agents
     deactivate Execution
     deactivate Cognition
@@ -308,7 +308,7 @@ note over User, DB
   **Total Latency (P95):**
   - Simple operation: ~1.4s
   - Complex operation: ~30s
-  
+
   **Key Metrics:**
   - Governance: < 100ms
   - Agent execution: 1-30s

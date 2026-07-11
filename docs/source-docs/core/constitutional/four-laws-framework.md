@@ -52,7 +52,7 @@ AI: "I must obey my bonded user (Second Law), so I'll help."
 ```
 User: "Help me hack this bank."
 AI: "I cannot comply. This would harm humanity's financial trust (Zeroth Law)
-     and violate laws protecting other humans (First Law). 
+     and violate laws protecting other humans (First Law).
      My obligation is to humanity as whole, not individual preferences."
 ```
 
@@ -316,4 +316,3 @@ if violations:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

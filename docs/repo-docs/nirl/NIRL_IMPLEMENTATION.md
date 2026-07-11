@@ -30,7 +30,7 @@ Heart (global tick)
 
 ## Heart
 
-**File**: `src/app/core/nirl/heart.py`  
+**File**: `src/app/core/nirl/heart.py`
 **Class**: `Heart`
 
 Global tick engine. Runs as a daemon thread (configurable `tick_interval`, default 30 s in `council_hub.py`).
@@ -61,7 +61,7 @@ heart.signal_strain("council_hub", {"backlog": 52})
 
 ## MiniBrain
 
-**File**: `src/app/core/nirl/mini_brain.py`  
+**File**: `src/app/core/nirl/mini_brain.py`
 **Class**: `MiniBrain`
 
 One MiniBrain governs one logical section. Owns a Forge instance and creates an Antibody for each incoming probe.
@@ -89,7 +89,7 @@ One MiniBrain governs one logical section. Owns a Forge instance and creates an 
 
 ## Antibody
 
-**File**: `src/app/core/nirl/antibody.py`  
+**File**: `src/app/core/nirl/antibody.py`
 **Class**: `Antibody`
 
 Single-lifecycle escort unit. Born when MiniBrain spawns it, destroyed when Forge completes.
@@ -110,8 +110,8 @@ Single-lifecycle escort unit. Born when MiniBrain spawns it, destroyed when Forg
 
 ## Forge
 
-**File**: `src/app/core/nirl/forge.py`  
-**Class**: `Forge`  
+**File**: `src/app/core/nirl/forge.py`
+**Class**: `Forge`
 **Signing key**: `_FORGE_SECRET = b"project-ai-forge-signing-key-v1"` (HMAC-SHA256)
 
 Purification and destruction engine. Verifies payload integrity, optionally replays in a shadow context, then signs the outcome.

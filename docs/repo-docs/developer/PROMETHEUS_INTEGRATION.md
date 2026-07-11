@@ -677,7 +677,7 @@ groups:
     rules:
       - record: project_ai:persona_mood_avg
         expr: avg(project_ai_persona_mood_energy)
-      
+
       - record: project_ai:api_request_rate_5m
         expr: rate(project_ai_api_requests_total[5m])
 ```

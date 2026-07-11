@@ -69,7 +69,7 @@ The desktop PyQt6 application now features modern 3D/neumorphic visual design:
 ```qss
 /* Example: Card-like panels */
 .card {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                 stop:0 #fcfbf8, stop:1 #f2ece0);
     border-radius: 12px;
     border: 1px solid rgba(110,80,50,0.12);
@@ -83,7 +83,7 @@ The desktop PyQt6 application now features modern 3D/neumorphic visual design:
 - Configurable blur radius, offset, and color
 - Creates real depth perception beyond CSS-only approaches
 
-**Files**: 
+**Files**:
 
 - `src/app/gui/styles.qss`
 - `src/app/gui/styles_dark.qss`
@@ -338,7 +338,7 @@ pytest --cov=src --cov-report=html
 **Latest Results**: 46/46 tests passing (1.98s runtime) for UI/Frontend features
 
 - Core systems: 14 tests
-- Command override extended: 10 tests  
+- Command override extended: 10 tests
 - Image generator: 22 tests
 
 ## Known Issues
@@ -354,7 +354,7 @@ No linting issues detected. All files pass ruff checks.
 This batch merge documentation supersedes the following PRs (if they existed):
 
 - #122 - 3D GUI prototype (features already integrated)
-- #124 - Web SPA scaffolding (foundation already integrated)  
+- #124 - Web SPA scaffolding (foundation already integrated)
 - #107 - UI modernization (features already integrated)
 
 ## Migration Guide
@@ -382,7 +382,7 @@ override.set_master_password("your-secure-password")
 if override.authenticate("your-secure-password"):
     # Override specific protocol
     override.override_protocol("content_filter", enabled=False)
-    
+
     # Check status
     status = override.get_status()
     print(f"Master override active: {status['master_override_active']}")
@@ -482,6 +482,6 @@ integrated into the main codebase. The application now features:
 
 ---
 
-**Last Updated**: 2026-01-09  
-**Feature Branches**: `feature/gui-3d-prototype`, `feature/web-spa-and-backend-integration`  
+**Last Updated**: 2026-01-09
+**Feature Branches**: `feature/gui-3d-prototype`, `feature/web-spa-and-backend-integration`
 **Status**: All features verified and documented

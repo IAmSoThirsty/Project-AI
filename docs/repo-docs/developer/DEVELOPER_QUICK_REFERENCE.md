@@ -134,11 +134,11 @@ Border styling:
 ### Connect AI Backend
 
     dashboard = LeatherBookDashboard(username)
-    
+
     def process_ai_message(user_message: str):
         response = ai_model.generate_response(user_message)
         dashboard.add_ai_response(response)
-    
+
     dashboard.send_message.connect(process_ai_message)
 
 ### Connect Database
@@ -154,7 +154,7 @@ Save messages by overriding AIResponsePanel.add_ai_response():
 Replace simulated values in StatsPanel._update_stats():
 
     import psutil
-    
+
     memory_percent = psutil.virtual_memory().percent
     cpu_percent = psutil.cpu_percent(interval=0.1)
 
@@ -225,5 +225,5 @@ Fix: Check setStyleSheet() calls and inheritance chain
 
 ---
 
-**Version**: 1.0  
+**Version**: 1.0
 **Status**: Production Ready ✅

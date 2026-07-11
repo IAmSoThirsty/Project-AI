@@ -2,10 +2,10 @@
 
 **Step-by-Step Guide to Navigating the Project-AI Vault** 🧭
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Time:** 20 minutes  
-**Skill Level:** Beginner  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Time:** 20 minutes
+**Skill Level:** Beginner
 **Audience:** New vault users
 
 ---
@@ -232,7 +232,7 @@ Tags Panel:
 Graph View:
   • = Document (node)
   ─ = Link between documents
-  
+
 Clusters = Related topics
 Dense areas = Highly connected
 Isolated nodes = Orphans (need links!)
@@ -385,7 +385,7 @@ Isolated nodes = Orphans (need links!)
 
 **Goal:** Find how two documents are connected
 
-**Start:** `README.md`  
+**Start:** `README.md`
 **End:** `AI_PERSONA_IMPLEMENTATION.md`
 
 **Method:**
@@ -433,13 +433,13 @@ Search: tag:#agent status:active
 
 **You Now Know:**
 
-✅ **File Explorer** - Browse folder structure  
-✅ **Quick Switcher** (`Ctrl+O`) - Find files by name  
-✅ **Global Search** (`Ctrl+Shift+F`) - Search all content  
-✅ **Wiki Links** - Follow connections between docs  
-✅ **Backlinks** - See who references this doc  
-✅ **Tags** - Browse by category  
-✅ **Graph View** (`Ctrl+G`) - Visualize connections  
+✅ **File Explorer** - Browse folder structure
+✅ **Quick Switcher** (`Ctrl+O`) - Find files by name
+✅ **Global Search** (`Ctrl+Shift+F`) - Search all content
+✅ **Wiki Links** - Follow connections between docs
+✅ **Backlinks** - See who references this doc
+✅ **Tags** - Browse by category
+✅ **Graph View** (`Ctrl+G`) - Visualize connections
 ✅ **MOCs** - Navigate curated indexes
 
 **Navigation Decision Tree:**
@@ -511,4 +511,3 @@ word_count: 1850
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

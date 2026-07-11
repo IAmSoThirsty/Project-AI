@@ -22,4 +22,3 @@ If confidence is low, say what is uncertain and how to verify it.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

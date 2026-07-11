@@ -14,7 +14,7 @@ Added two versions of the startup flow:
 
 **Compact One-Liner** (easy copy-paste):
 ```
-env → tier_registry_init → kernel(T1) → council_hub(T3) → global_watch_tower(T2) → 
+env → tier_registry_init → kernel(T1) → council_hub(T3) → global_watch_tower(T2) →
 memory_engine(T2) → enhanced_defenses → tier_health_report → gui(T3) → launch
 ```
 

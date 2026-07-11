@@ -2,10 +2,10 @@
 
 **Master the Art of Discovery** 🔍
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 12 minutes  
-**Audience:** All vault users  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 12 minutes
+**Audience:** All vault users
 **Prerequisites:** Basic Obsidian familiarity
 
 ---
@@ -623,8 +623,8 @@ dv.table(
 dv.table(
   ["Document", "Tags", "Updated"],
   dv.pages()
-    .where(p => 
-      p.tags && 
+    .where(p =>
+      p.tags &&
       p.tags.includes("security") &&
       p.tags.includes("authentication") &&
       p.status === "active"
@@ -751,10 +751,10 @@ Very Large (5000+):   Consider vault splitting
    ```dataviewjs
    // Slow: Search entire vault
    dv.pages()
-   
+
    // Fast: Limit to folder
    dv.pages('"repo-docs/architecture"')
-   
+
    // Fastest: Limit by tag
    dv.pages("#architecture")
    ```
@@ -849,7 +849,7 @@ Steps:
    ```dataviewjs
    // ✅ Correct
    dv.list(dv.pages("#security").file.link)
-   
+
    // ❌ Wrong
    dv.list(dv.pages("#security"))  // Missing .file.link
    ```
@@ -967,4 +967,3 @@ word_count: 3800
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

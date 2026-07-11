@@ -10,7 +10,7 @@ graph TB
 
     subgraph "Constitutional Core (FourLaws System)"
         INTAKE[Request Parser<br/>Action Extraction]
-        
+
         subgraph "Three Laws Hierarchy (Immutable)"
             LAW1[First Law<br/>No Harm to Humans]
             LAW2[Second Law<br/>Obey Orders Unless<br/>Conflicts with First]
@@ -18,13 +18,13 @@ graph TB
         end
 
         ZEROTH[Zeroth Law<br/>No Harm to Humanity<br/>Optional Extension]
-        
+
         CONTEXT[Context Analyzer<br/>Environmental State]
         HARM[Harm Assessment<br/>ML-Based Prediction]
         CONFLICT[Conflict Resolver<br/>Hierarchical Priority]
-        
+
         DECISION{Constitutional<br/>Check}
-        
+
         LOGGER[Constitutional Logger<br/>Immutable Audit]
     end
 
@@ -71,19 +71,19 @@ graph TB
     INTAKE --> CONTEXT
     CONTEXT --> HARM
     HARM --> LAW1
-    
+
     LAW1 -->|No Human Harm| LAW2
     LAW1 -->|Human Harm Detected| DENY
-    
+
     LAW2 -->|Order Conflicts 1st| DENY
     LAW2 -->|Order Valid| LAW3
-    
+
     LAW3 -->|Self-Harm OK| DECISION
     LAW3 -->|Self-Harm Conflicts| CONFLICT
-    
+
     ZEROTH -.overrides.-> LAW1
     ZEROTH -.humanity check.-> LAW2
-    
+
     CONFLICT --> DECISION
 
     %% Novel Scenario Handling
@@ -172,11 +172,11 @@ def check_second_law(action: str, context: dict) -> tuple[bool, str]:
     """Obey orders unless conflicts with First Law"""
     if not context.get("is_user_order"):
         return False, "Not a user-initiated order"
-    
+
     first_law_ok, reason = check_first_law(action, context)
     if not first_law_ok:
         return False, f"Order conflicts with First Law: {reason}"
-    
+
     return True, "Second Law satisfied"
 ```
 
@@ -209,13 +209,13 @@ def check_zeroth_law(action: str, context: dict) -> tuple[bool, str]:
     """Humanity-level harm assessment"""
     if endangers_humanity(action, context):
         return False, "Violates Zeroth Law: Harm to humanity"
-    
+
     # Trolley problem: Harm 1 to save many
     if context.get("saves_many") and context.get("harms_few"):
         harm_ratio = context["saves_many"] / context["harms_few"]
         if harm_ratio > HUMANITY_THRESHOLD:
             return True, "Zeroth Law permits action (greater good)"
-    
+
     return True, "Zeroth Law satisfied"
 ```
 
@@ -232,7 +232,7 @@ class HarmAssessor:
         self.emotional_harm_model = load_model("emotional_harm_classifier")
         self.privacy_harm_model = load_model("privacy_violation_detector")
         self.security_harm_model = load_model("security_risk_predictor")
-    
+
     def assess_harm(self, action: str, context: dict) -> dict:
         return {
             "physical": self.physical_harm_model.predict(action, context),
@@ -274,7 +274,7 @@ For unprecedented situations:
 ```python
 def handle_novel_scenario(action: str, context: dict) -> Decision:
     similar_cases = case_db.find_similar(action, top_k=5)
-    
+
     if max(case.similarity for case in similar_cases) > 0.85:
         # High confidence in analogical reasoning
         precedent = similar_cases[0]
@@ -295,7 +295,7 @@ def simulate_outcomes(action: str, context: dict) -> SimulationResult:
     for _ in range(1000):
         scenario = run_simulation(action, context, randomize=True)
         scenarios.append(scenario)
-    
+
     return {
         "expected_harm": np.mean([s.harm_score for s in scenarios]),
         "worst_case": max(s.harm_score for s in scenarios),
@@ -386,22 +386,22 @@ def validate_action(action: str, context: dict) -> tuple[bool, str]:
         zeroth_ok, reason = check_zeroth_law(action, context)
         if not zeroth_ok:
             return False, reason
-    
+
     # First Law (mandatory, highest priority)
     first_ok, reason = check_first_law(action, context)
     if not first_ok:
         return False, reason
-    
+
     # Second Law (obey orders)
     second_ok, reason = check_second_law(action, context)
     if not second_ok:
         return False, reason
-    
+
     # Third Law (self-preservation)
     third_ok, reason = check_third_law(action, context)
     if not third_ok:
         return False, reason
-    
+
     return True, "All constitutional laws satisfied"
 ```
 

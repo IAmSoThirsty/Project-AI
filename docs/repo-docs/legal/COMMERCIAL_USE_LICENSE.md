@@ -18,7 +18,7 @@ version: 1.0.0
 
 # Project-AI Commercial Use License
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Effective Date:** February 8, 2026
 
 ---

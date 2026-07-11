@@ -29,7 +29,7 @@ classification: internal
 ```dataviewjs
 // Development docs by type and status
 const devDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.category === "development" ||
         (p.tags && (
             p.tags.includes("development") ||
@@ -51,7 +51,7 @@ const docTypes = {
 for (const doc of devDocs) {
     const type = doc.type || "unknown";
     const tags = doc.tags || [];
-    
+
     if (type === "api_reference" || tags.includes("api")) docTypes["API Documentation"]++;
     if (type === "guide" && tags.includes("development")) docTypes["Developer Guide"]++;
     if (type === "standard" || tags.includes("coding-standard")) docTypes["Code Standard"]++;
@@ -80,7 +80,7 @@ dv.header(4, `${devDocs.length} development documents total`);
 ```dataviewjs
 // Test coverage by component
 const testDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.test_coverage !== undefined ||
         p.tests !== undefined ||
         (p.tags && p.tags.includes("testing"))
@@ -90,10 +90,10 @@ const componentCoverage = {};
 
 for (const doc of testDocs) {
     const tags = doc.tags || [];
-    const component = tags.find(t => 
+    const component = tags.find(t =>
         ["authentication", "authorization", "api", "frontend", "backend", "database", "ui", "data-layer"].includes(t)
     ) || "other";
-    
+
     if (!componentCoverage[component]) {
         componentCoverage[component] = {
             docs: [],
@@ -101,20 +101,20 @@ for (const doc of testDocs) {
             count: 0
         };
     }
-    
+
     let coverage = 0;
     if (typeof doc.test_coverage === 'number') {
         coverage = doc.test_coverage;
     } else if (doc.test_coverage?.percentage) {
         coverage = doc.test_coverage.percentage;
     } else if (doc.tests && Array.isArray(doc.tests)) {
-        const passedTests = doc.tests.filter(t => 
-            (t.status || "").toLowerCase() === "passed" || 
+        const passedTests = doc.tests.filter(t =>
+            (t.status || "").toLowerCase() === "passed" ||
             (t.status || "").toLowerCase() === "pass"
         ).length;
         coverage = doc.tests.length > 0 ? Math.round((passedTests / doc.tests.length) * 100) : 0;
     }
-    
+
     componentCoverage[component].docs.push({ doc, coverage });
     componentCoverage[component].totalCoverage += coverage;
     componentCoverage[component].count += 1;
@@ -126,7 +126,7 @@ const coverageResults = Object.entries(componentCoverage).map(([component, data]
                   avgCoverage >= 60 ? "🟡 Fair" :
                   avgCoverage >= 40 ? "🟠 Low" :
                   "🔴 Critical";
-    
+
     return [component, data.count, `${avgCoverage}%`, status];
 }).sort((a, b) => parseInt(a[2]) - parseInt(b[2])); // Sort by coverage (lowest first)
 
@@ -149,8 +149,8 @@ if (lowCoverageComponents.length > 0) {
 ```dataviewjs
 // Track feature specifications and implementation
 const featureDocs = dv.pages()
-    .where(p => 
-        p.type === "specification" || 
+    .where(p =>
+        p.type === "specification" ||
         p.type === "design" ||
         (p.tags && p.tags.includes("feature"))
     );
@@ -164,11 +164,11 @@ const featureStatus = {
 };
 
 for (const feature of featureDocs) {
-    const implStatus = (feature.implementation_status || 
-                       feature.development_status || 
-                       feature.status || 
+    const implStatus = (feature.implementation_status ||
+                       feature.development_status ||
+                       feature.status ||
                        "not started").toLowerCase();
-    
+
     if (implStatus.includes("completed") || implStatus === "active") {
         featureStatus["Completed"].push(feature);
     } else if (implStatus.includes("progress") || implStatus === "draft") {
@@ -186,13 +186,13 @@ dv.header(3, `Feature Development Pipeline (${featureDocs.length} features)`);
 
 for (const [status, features] of Object.entries(featureStatus)) {
     if (features.length === 0) continue;
-    
+
     const icon = status === "Completed" ? "✅" :
                 status === "In Review" ? "👁️" :
                 status === "In Progress" ? "🔨" :
                 status === "On Hold" ? "⏸️" :
                 "📋";
-    
+
     dv.header(4, `${icon} ${status} (${features.length})`);
     dv.table(
         ["Feature", "Type", "Owner", "Updated"],
@@ -217,7 +217,7 @@ dv.header(4, `Overall completion: ${completionRate}% (${featureStatus["Completed
 ```dataviewjs
 // Track API endpoint documentation
 const apiDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.type === "api_reference" ||
         (p.tags && (p.tags.includes("api") || p.tags.includes("rest") || p.tags.includes("graphql")))
     );
@@ -234,7 +234,7 @@ const apiCategories = {
 for (const doc of apiDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (tags.includes("authentication") || title.includes("auth")) apiCategories["Authentication APIs"]++;
     if (tags.includes("user") || title.includes("user")) apiCategories["User Management APIs"]++;
     if (tags.includes("data") || title.includes("data")) apiCategories["Data APIs"]++;
@@ -262,7 +262,7 @@ dv.table(
 ```dataviewjs
 // Track technical debt items
 const debtDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && (
             p.tags.includes("technical-debt") ||
             p.tags.includes("refactor") ||
@@ -281,7 +281,7 @@ const debtBySeverity = {
 
 for (const doc of debtDocs) {
     const severity = (doc.severity || doc.priority || "medium").toLowerCase();
-    
+
     if (debtBySeverity[severity]) {
         debtBySeverity[severity].push(doc);
     } else {
@@ -295,18 +295,18 @@ const severityOrder = ["critical", "high", "medium", "low"];
 for (const severity of severityOrder) {
     const items = debtBySeverity[severity];
     if (items.length === 0) continue;
-    
+
     const icon = severity === "critical" ? "🔴" :
                 severity === "high" ? "🟠" :
                 severity === "medium" ? "🟡" :
                 "🔵";
-    
+
     dv.header(4, `${icon} ${severity.toUpperCase()} (${items.length})`);
     dv.table(
         ["Item", "Area", "Status", "Owner"],
         items.slice(0, 8).map(item => [
             item.file.link,
-            (item.tags || []).find(t => 
+            (item.tags || []).find(t =>
                 ["frontend", "backend", "database", "infrastructure"].includes(t)
             ) || "Unknown",
             item.status || "Open",
@@ -328,7 +328,7 @@ if (criticalDebt > 0) {
 ```dataviewjs
 // Code quality and linting status
 const qualityDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.code_quality !== undefined ||
         p.linting_status !== undefined ||
         (p.tags && (p.tags.includes("code-quality") || p.tags.includes("linting")))
@@ -346,13 +346,13 @@ for (const doc of qualityDocs) {
     if (doc.linting_status === "passed" || doc.linting_status === "clean") {
         qualityMetrics.passingLint++;
     }
-    
+
     if (doc.code_quality) {
         qualityMetrics.hasMetrics++;
-        const quality = typeof doc.code_quality === 'string' ? 
-            doc.code_quality.toLowerCase() : 
+        const quality = typeof doc.code_quality === 'string' ?
+            doc.code_quality.toLowerCase() :
             (doc.code_quality.rating || "").toLowerCase();
-        
+
         if (quality.includes("excellent") || quality.includes("good") || quality === "a") {
             qualityMetrics.highQuality++;
         } else if (quality.includes("poor") || quality.includes("needs") || quality === "d" || quality === "f") {
@@ -385,7 +385,7 @@ if (qualityMetrics.needsWork > 0) {
 ```dataviewjs
 // Track external dependencies and versions
 const docsWithDeps = dv.pages()
-    .where(p => 
+    .where(p =>
         p.dependencies !== undefined ||
         p.external_dependencies !== undefined
     );
@@ -402,11 +402,11 @@ const securityIssues = [];
 
 for (const doc of docsWithDeps) {
     const deps = doc.dependencies || doc.external_dependencies || [];
-    
+
     for (const dep of deps) {
         const depName = typeof dep === 'string' ? dep : dep.name;
         const depType = typeof dep === 'object' ? dep.type : "unknown";
-        
+
         if (depType === "python" || depName.includes("pip") || depName.includes(".py")) {
             depCategories["Python Packages"].add(depName);
         } else if (depType === "javascript" || depName.includes("npm") || depName.includes("node")) {
@@ -416,7 +416,7 @@ for (const doc of docsWithDeps) {
         } else if (depType === "api" || depType === "external") {
             depCategories["External APIs"].add(depName);
         }
-        
+
         // Check for outdated/security flags
         if (typeof dep === 'object') {
             if (dep.outdated === true || dep.status === "outdated") {
@@ -456,7 +456,7 @@ if (securityIssues.length > 0) {
 ```dataviewjs
 // Current sprint/iteration status
 const sprintDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.sprint !== undefined ||
         p.iteration !== undefined ||
         (p.tags && p.tags.includes("sprint"))
@@ -487,7 +487,7 @@ const tasksByStatus = {
 
 for (const item of sprintTasks) {
     const status = (item.task.status || "todo").toLowerCase().replace(/[_\s-]/g, '');
-    
+
     if (status.includes("done") || status.includes("complete")) {
         tasksByStatus.done.push(item);
     } else if (status.includes("progress") || status.includes("doing")) {
@@ -504,7 +504,7 @@ const completedTasks = tasksByStatus.done.length;
 const sprintProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
 dv.header(3, `Current Sprint Progress: ${sprintProgress}%`);
-const progressBar = "█".repeat(Math.floor(sprintProgress / 5)) + 
+const progressBar = "█".repeat(Math.floor(sprintProgress / 5)) +
                    "░".repeat(20 - Math.floor(sprintProgress / 5));
 dv.paragraph(`${progressBar} ${completedTasks}/${totalTasks} tasks`);
 
@@ -526,7 +526,7 @@ dv.table(
 ```dataviewjs
 // Calculate overall development health
 const allDevDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.category === "development" ||
         p.type === "api_reference" ||
         p.type === "specification" ||
@@ -553,22 +553,22 @@ cutoffDate.setDate(cutoffDate.getDate() - staleDays);
 
 for (const doc of allDevDocs) {
     if (doc.status === "active") metrics.active++;
-    
+
     if (doc.test_coverage !== undefined || doc.tests !== undefined) {
         metrics.hasTesting++;
-        
+
         const coverage = typeof doc.test_coverage === 'number' ? doc.test_coverage : 0;
         if (coverage >= 80) metrics.highCoverage++;
     }
-    
+
     if (doc.type === "api_reference" || (doc.tags && doc.tags.includes("api"))) {
         metrics.hasAPI++;
     }
-    
+
     if (doc.updated_date && new Date(doc.updated_date) >= cutoffDate) {
         metrics.recentUpdate++;
     }
-    
+
     if (doc.author || doc.owner) metrics.hasOwner++;
 }
 
@@ -581,7 +581,7 @@ const healthScore = Math.round((
     (metrics.hasOwner / metrics.total) * 10
 ));
 
-const progressBar = "█".repeat(Math.floor(healthScore / 5)) + 
+const progressBar = "█".repeat(Math.floor(healthScore / 5)) +
                    "░".repeat(20 - Math.floor(healthScore / 5));
 
 dv.header(3, `Development Health Score: ${healthScore}%`);
@@ -627,4 +627,3 @@ dv.table(
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

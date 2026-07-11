@@ -62,7 +62,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class DomainEvent(ABC):
     """Base class for all domain events."""
-    
+
     # Metadata fields
     event_id: UUID = field(default_factory=uuid4)
     event_type: str = field(init=False)
@@ -73,14 +73,14 @@ class DomainEvent(ABC):
     correlation_id: Optional[UUID] = None  # For tracing related events
     causation_id: Optional[UUID] = None    # Event that caused this event
     user_id: Optional[UUID] = None         # User who triggered event
-    
+
     # Event payload (override in subclasses)
     payload: Dict[str, Any] = field(default_factory=dict)
-    
+
     def __post_init__(self):
         self.event_type = self.__class__.__name__
         logger.debug(f"Created event {self.event_type} with ID {self.event_id}")
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Serialize event to dictionary."""
         return {
@@ -95,11 +95,11 @@ class DomainEvent(ABC):
             "user_id": str(self.user_id) if self.user_id else None,
             "payload": self.payload
         }
-    
+
     def to_json(self) -> str:
         """Serialize event to JSON."""
         return json.dumps(self.to_dict(), indent=2)
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'DomainEvent':
         """Deserialize event from dictionary."""
@@ -132,7 +132,7 @@ class ActionEvaluatedEvent(DomainEvent):
     violated_law: str = ""
     rationale: str = ""
     context: Dict = field(default_factory=dict)
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -150,7 +150,7 @@ class OverrideActivatedEvent(DomainEvent):
     justification: str = ""
     activated_by: str = ""
     expires_at: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -166,7 +166,7 @@ class BlackVaultEntryAddedEvent(DomainEvent):
     content_hash: str = ""
     reason: str = ""
     added_by: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -189,7 +189,7 @@ class ConversationStartedEvent(DomainEvent):
     """Event: New conversation initiated."""
     user_id: str = ""
     initial_message: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -203,7 +203,7 @@ class MemoryEntryCreatedEvent(DomainEvent):
     entry_id: str = ""
     user_message: str = ""
     ai_response: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -220,7 +220,7 @@ class KnowledgeConsolidatedEvent(DomainEvent):
     content: str = ""
     confidence: float = 0.0
     source_entries: List[str] = field(default_factory=list)
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -236,7 +236,7 @@ class MemoryPurgedEvent(DomainEvent):
     """Event: Old memories purged per retention policy."""
     purged_count: int = 0
     before_date: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -258,7 +258,7 @@ class UserRegisteredEvent(DomainEvent):
     username: str = ""
     email: str = ""
     role: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -273,7 +273,7 @@ class UserLoggedInEvent(DomainEvent):
     username: str = ""
     session_id: str = ""
     ip_address: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -287,7 +287,7 @@ class PasswordChangedEvent(DomainEvent):
     """Event: User password changed."""
     username: str = ""
     changed_by: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -302,7 +302,7 @@ class PermissionGrantedEvent(DomainEvent):
     resource: str = ""
     action: str = ""
     granted_by: str = ""
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -327,7 +327,7 @@ class AgentCreatedEvent(DomainEvent):
     agent_name: str = ""
     agent_type: str = ""
     capabilities: list = field(default_factory=list)
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -343,7 +343,7 @@ class TaskAssignedEvent(DomainEvent):
     task_id: str = ""
     task_description: str = ""
     priority: str = "normal"
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -360,7 +360,7 @@ class TaskCompletedEvent(DomainEvent):
     task_id: str = ""
     result: Dict = field(default_factory=dict)
     execution_time_ms: int = 0
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -376,7 +376,7 @@ class WorkflowStartedEvent(DomainEvent):
     workflow_id: str = ""
     workflow_type: str = ""
     input_params: Dict = field(default_factory=dict)
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -392,7 +392,7 @@ class CouncilDecisionMadeEvent(DomainEvent):
     decision: str = ""
     votes: Dict[str, str] = field(default_factory=dict)
     consensus_reached: bool = False
-    
+
     def __post_init__(self):
         super().__post_init__()
         self.payload = {
@@ -418,31 +418,31 @@ logger = logging.getLogger(__name__)
 
 class InMemoryEventBus:
     """Simple in-memory event bus for event distribution."""
-    
+
     def __init__(self):
         self._handlers: Dict[str, List[Callable]] = {}
         self._async_handlers: Dict[str, List[Callable]] = {}
         logger.info("Initialized in-memory event bus")
-    
+
     def subscribe(self, event_type: str, handler: Callable[[DomainEvent], None]) -> None:
         """Subscribe synchronous handler to event type."""
         if event_type not in self._handlers:
             self._handlers[event_type] = []
         self._handlers[event_type].append(handler)
         logger.info(f"Subscribed handler to {event_type}")
-    
+
     def subscribe_async(self, event_type: str, handler: Callable[[DomainEvent], None]) -> None:
         """Subscribe asynchronous handler to event type."""
         if event_type not in self._async_handlers:
             self._async_handlers[event_type] = []
         self._async_handlers[event_type].append(handler)
         logger.info(f"Subscribed async handler to {event_type}")
-    
+
     def publish(self, event: DomainEvent) -> None:
         """Publish event to all subscribers (sync)."""
         try:
             logger.info(f"Publishing event {event.event_type} (ID: {event.event_id})")
-            
+
             # Execute synchronous handlers
             handlers = self._handlers.get(event.event_type, [])
             for handler in handlers:
@@ -451,16 +451,16 @@ class InMemoryEventBus:
                     logger.debug(f"Handler {handler.__name__} processed {event.event_type}")
                 except Exception as e:
                     logger.error(f"Handler {handler.__name__} failed: {e}")
-            
+
             # Execute async handlers
             async_handlers = self._async_handlers.get(event.event_type, [])
             if async_handlers:
                 asyncio.create_task(self._run_async_handlers(event, async_handlers))
-        
+
         except Exception as e:
             logger.error(f"Failed to publish event {event.event_type}: {e}")
             raise
-    
+
     async def _run_async_handlers(self, event: DomainEvent, handlers: List[Callable]) -> None:
         """Execute async handlers."""
         for handler in handlers:
@@ -469,7 +469,7 @@ class InMemoryEventBus:
                 logger.debug(f"Async handler {handler.__name__} processed {event.event_type}")
             except Exception as e:
                 logger.error(f"Async handler {handler.__name__} failed: {e}")
-    
+
     def unsubscribe(self, event_type: str, handler: Callable) -> None:
         """Unsubscribe handler from event type."""
         if event_type in self._handlers:
@@ -493,12 +493,12 @@ logger = logging.getLogger(__name__)
 
 class GovernanceEventHandlers:
     """Handlers for governance domain events."""
-    
+
     @staticmethod
     def handle_action_evaluated(event: ActionEvaluatedEvent) -> None:
         """Handle action evaluation event."""
         logger.info(f"Action '{event.action}' evaluated: {event.decision}")
-        
+
         # Audit logging
         if event.decision == "DENY":
             logger.warning(
@@ -506,7 +506,7 @@ class GovernanceEventHandlers:
                 f"Reason: {event.rationale}"
             )
             # Could trigger alert, notification, etc.
-    
+
     @staticmethod
     def handle_override_activated(event: OverrideActivatedEvent) -> None:
         """Handle override activation event."""
@@ -515,7 +515,7 @@ class GovernanceEventHandlers:
             f"By: {event.activated_by}, "
             f"Justification: {event.justification}"
         )
-        
+
         # Send alert to administrators
         # Log to security audit system
         # Schedule automatic deactivation at expiry
@@ -524,7 +524,7 @@ class GovernanceEventHandlers:
 # application/event_handlers/memory_handlers.py
 class MemoryEventHandlers:
     """Handlers for memory domain events."""
-    
+
     @staticmethod
     def handle_knowledge_consolidated(event: DomainEvent) -> None:
         """Handle knowledge consolidation event."""
@@ -532,16 +532,16 @@ class MemoryEventHandlers:
             f"Knowledge consolidated - Category: {event.payload['category']}, "
             f"Confidence: {event.payload['confidence']}"
         )
-        
+
         # Update search index
         # Trigger ML model retraining
         # Update knowledge graph
-    
+
     @staticmethod
     async def handle_conversation_started(event: DomainEvent) -> None:
         """Handle conversation start event (async)."""
         logger.info(f"Conversation started for user {event.payload['user_id']}")
-        
+
         # Load user context
         # Prepare relevant memories
         # Initialize conversation state
@@ -550,7 +550,7 @@ class MemoryEventHandlers:
 # application/event_handlers/user_handlers.py
 class UserEventHandlers:
     """Handlers for user domain events."""
-    
+
     @staticmethod
     def handle_user_logged_in(event: DomainEvent) -> None:
         """Handle user login event."""
@@ -558,11 +558,11 @@ class UserEventHandlers:
             f"User {event.payload['username']} logged in from "
             f"{event.payload['ip_address']}"
         )
-        
+
         # Update last login timestamp
         # Check for suspicious login patterns
         # Initialize user session context
-    
+
     @staticmethod
     def handle_permission_granted(event: DomainEvent) -> None:
         """Handle permission grant event."""
@@ -571,7 +571,7 @@ class UserEventHandlers:
             f"Resource: {event.payload['resource']}, "
             f"Action: {event.payload['action']}"
         )
-        
+
         # Invalidate authorization cache
         # Audit log security change
 ```
@@ -592,7 +592,7 @@ logger = logging.getLogger(__name__)
 
 def setup_event_handlers(event_bus: InMemoryEventBus) -> None:
     """Register all event handlers with event bus."""
-    
+
     # Governance events
     event_bus.subscribe(
         "ActionEvaluatedEvent",
@@ -602,7 +602,7 @@ def setup_event_handlers(event_bus: InMemoryEventBus) -> None:
         "OverrideActivatedEvent",
         GovernanceEventHandlers.handle_override_activated
     )
-    
+
     # Memory events
     event_bus.subscribe(
         "KnowledgeConsolidatedEvent",
@@ -612,7 +612,7 @@ def setup_event_handlers(event_bus: InMemoryEventBus) -> None:
         "ConversationStartedEvent",
         MemoryEventHandlers.handle_conversation_started
     )
-    
+
     # User events
     event_bus.subscribe(
         "UserLoggedInEvent",
@@ -622,7 +622,7 @@ def setup_event_handlers(event_bus: InMemoryEventBus) -> None:
         "PermissionGrantedEvent",
         UserEventHandlers.handle_permission_granted
     )
-    
+
     logger.info("Registered all event handlers")
 ```
 
@@ -642,45 +642,45 @@ logger = logging.getLogger(__name__)
 
 class EventSourcedAggregate(AggregateRoot):
     """Aggregate that rebuilds state from events."""
-    
+
     def __init__(self, aggregate_id: UUID):
         super().__init__(aggregate_id)
         self._uncommitted_events: List[DomainEvent] = []
-    
+
     def load_from_history(self, events: List[DomainEvent]) -> None:
         """Reconstruct aggregate from event stream."""
         logger.info(f"Loading aggregate {self.id} from {len(events)} events")
-        
+
         for event in events:
             self._apply_event(event)
             self.increment_version()
-        
+
         logger.info(f"Loaded aggregate {self.id} at version {self.version}")
-    
+
     def _apply_event(self, event: DomainEvent) -> None:
         """Apply event to aggregate state."""
         handler_name = f"_apply_{event.event_type}"
         handler = getattr(self, handler_name, None)
-        
+
         if handler:
             handler(event)
         else:
             logger.warning(f"No handler for {event.event_type} on {self.__class__.__name__}")
-    
+
     def raise_event(self, event: DomainEvent) -> None:
         """Raise new domain event and apply to state."""
         event.aggregate_id = self.id
         event.aggregate_type = self.__class__.__name__
-        
+
         # Apply to current state
         self._apply_event(event)
-        
+
         # Track for persistence
         self._uncommitted_events.append(event)
         self.increment_version()
-        
+
         logger.debug(f"Raised event {event.event_type} on aggregate {self.id}")
-    
+
     def get_uncommitted_events(self) -> List[DomainEvent]:
         """Get events not yet persisted."""
         events = self._uncommitted_events.copy()
@@ -702,7 +702,7 @@ from infrastructure.event_bus.in_memory_event_bus import InMemoryEventBus
 
 class TestDomainEvents:
     """Test domain event functionality."""
-    
+
     def test_event_creation(self):
         """Verify event creation and metadata."""
         event = ActionEvaluatedEvent(
@@ -710,12 +710,12 @@ class TestDomainEvents:
             decision="ALLOW",
             rationale="All laws satisfied"
         )
-        
+
         assert event.event_id is not None
         assert event.event_type == "ActionEvaluatedEvent"
         assert event.occurred_at is not None
         assert event.action == "test_action"
-    
+
     def test_event_serialization(self):
         """Verify event serialization."""
         event = KnowledgeConsolidatedEvent(
@@ -724,33 +724,33 @@ class TestDomainEvents:
             content="The sky is blue",
             confidence=0.95
         )
-        
+
         event_dict = event.to_dict()
         assert event_dict["event_type"] == "KnowledgeConsolidatedEvent"
         assert event_dict["payload"]["category"] == "facts"
-        
+
         json_str = event.to_json()
         assert "KnowledgeConsolidatedEvent" in json_str
-    
+
     def test_event_bus_publish_subscribe(self):
         """Verify event bus functionality."""
         bus = InMemoryEventBus()
         handled_events = []
-        
+
         def handler(event):
             handled_events.append(event)
-        
+
         bus.subscribe("ActionEvaluatedEvent", handler)
-        
+
         event = ActionEvaluatedEvent(
             action="test",
             decision="DENY",
             violated_law="FIRST_LAW",
             rationale="Endangers user"
         )
-        
+
         bus.publish(event)
-        
+
         assert len(handled_events) == 1
         assert handled_events[0].action == "test"
 ```

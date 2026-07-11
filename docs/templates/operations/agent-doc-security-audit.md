@@ -14,7 +14,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "completed"
-author: 
+author:
   name: "<%`AGENT-${await tp.system.prompt('Agent number (e.g., 042):') || 'XXX'}: Security Audit Agent`%>"
   email: ""
   github: ""
@@ -62,9 +62,9 @@ supersedes: null
 
 # <%tp.file.title%>
 
-> **Audit Type:** <%`${await tp.system.prompt('Audit type (automated/manual/hybrid):') || 'automated'}`%>  
-> **Scan Date:** <%tp.date.now("YYYY-MM-DD")%>  
-> **Overall Risk:** <%`${await tp.system.prompt('Risk level (CRITICAL/HIGH/MEDIUM/LOW):') || 'MEDIUM'}`%>  
+> **Audit Type:** <%`${await tp.system.prompt('Audit type (automated/manual/hybrid):') || 'automated'}`%>
+> **Scan Date:** <%tp.date.now("YYYY-MM-DD")%>
+> **Overall Risk:** <%`${await tp.system.prompt('Risk level (CRITICAL/HIGH/MEDIUM/LOW):') || 'MEDIUM'}`%>
 > **Vulnerabilities Found:** <%`${await tp.system.prompt('Number of vulnerabilities:') || '0'}`%>
 
 ---
@@ -218,9 +218,9 @@ pip-audit --format json
 
 ### CRITICAL-001: [Vulnerability Title]
 
-**Severity:** 🔴 CRITICAL  
-**CWE ID:** CWE-[XXX]  
-**CVSS Score:** [Score] ([Vector String])  
+**Severity:** 🔴 CRITICAL
+**CWE ID:** CWE-[XXX]
+**CVSS Score:** [Score] ([Vector String])
 **Status:** ❌ OPEN / ✅ FIXED / ⏳ IN PROGRESS
 
 **Description:**
@@ -281,9 +281,9 @@ Function: [Function name]
 
 ### HIGH-001: [Vulnerability Title]
 
-**Severity:** 🟠 HIGH  
-**CWE ID:** CWE-[XXX]  
-**CVSS Score:** [Score]  
+**Severity:** 🟠 HIGH
+**CWE ID:** CWE-[XXX]
+**CVSS Score:** [Score]
 **Status:** ❌ OPEN / ✅ FIXED
 
 **Description:**
@@ -316,8 +316,8 @@ Line: [Number]
 
 ### MEDIUM-001: [Vulnerability Title]
 
-**Severity:** 🟡 MEDIUM  
-**CWE ID:** CWE-[XXX]  
+**Severity:** 🟡 MEDIUM
+**CWE ID:** CWE-[XXX]
 **Status:** [Status]
 
 **Description:**
@@ -536,10 +536,9 @@ Line: [Number]
 
 ---
 
-**Report Generated:** <%tp.date.now("YYYY-MM-DD HH:mm:ss")%> UTC  
-**Classification:** CONFIDENTIAL  
+**Report Generated:** <%tp.date.now("YYYY-MM-DD HH:mm:ss")%> UTC
+**Classification:** CONFIDENTIAL
 **Distribution:** Security Team, Architecture Team, Development Team
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

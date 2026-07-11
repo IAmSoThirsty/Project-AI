@@ -232,7 +232,7 @@ def _tarl_access_control():
 T-A-R-L is now a **Strategic Code Protection Agent** that implements:
 
 ✅ **Runtime Access Control** - Frame inspection + caller authentication
-✅ **Code Obfuscation** - Identifier morphing + control flow transformation  
+✅ **Code Obfuscation** - Identifier morphing + control flow transformation
 ✅ **Threat Response** - Graduated protection based on severity
 ✅ **Execution Monitoring** - Stack analysis + pattern learning
 ✅ **Strategic Integration** - Coordinates with Cerberus and Codex

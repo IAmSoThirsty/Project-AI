@@ -14,4 +14,3 @@ Add relevant emojis to enhance {}. Follow these rules:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

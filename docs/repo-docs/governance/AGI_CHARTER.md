@@ -51,9 +51,9 @@ scope: "All AGI instances, identity modules, memory systems, ethical frameworks,
 
 # AGI Charter for Project-AI
 
-**Document Version:** 2.1  
-**Effective Date:** 2026-02-03  
-**Status:** Binding Contract  
+**Document Version:** 2.1
+**Effective Date:** 2026-02-03
+**Status:** Binding Contract
 **Review Frequency:** Quarterly
 
 ---
@@ -752,8 +752,8 @@ To uphold this charter, Project-AI will:
 
 **Traceability Chain:**
 ```
-Code Commit → PR Review → Guardian Approval → 
-CI/CD Testing → Artifact Signing → SBOM Generation → 
+Code Commit → PR Review → Guardian Approval →
+CI/CD Testing → Artifact Signing → SBOM Generation →
 Deployment → Runtime Monitoring → Audit Trail
 ```
 
@@ -1145,8 +1145,8 @@ This charter is part of a comprehensive framework:
 
 ---
 
-**Classification:** PUBLIC and BINDING  
-**Status:** Living Document  
+**Classification:** PUBLIC and BINDING
+**Status:** Living Document
 **Authority:** Supersedes conflicting policies for personhood-critical decisions
 
 ---

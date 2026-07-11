@@ -30,14 +30,14 @@ module.exports = {
         'categories:best-practices': ['error', { minScore: 0.9 }],
         'categories:seo': ['error', { minScore: 0.95 }],
         'categories:pwa': ['warn', { minScore: 0.8 }],
-        
+
         // Performance metrics
         'first-contentful-paint': ['warn', { maxNumericValue: 1800 }],
         'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
         'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
         'total-blocking-time': ['warn', { maxNumericValue: 200 }],
         'speed-index': ['warn', { maxNumericValue: 3400 }],
-        
+
         // Accessibility
         'color-contrast': 'error',
         'heading-order': 'warn',
@@ -45,13 +45,13 @@ module.exports = {
         'image-alt': 'error',
         'label': 'error',
         'link-name': 'error',
-        
+
         // Best Practices
         'errors-in-console': 'warn',
         'no-vulnerable-libraries': 'error',
         'uses-http2': 'warn',
         'uses-passive-event-listeners': 'warn',
-        
+
         // SEO
         'document-title': 'error',
         'meta-description': 'error',

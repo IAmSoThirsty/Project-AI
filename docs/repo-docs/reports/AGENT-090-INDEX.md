@@ -163,9 +163,9 @@
 
 ### Questions About...
 
-**RBAC Policies**: See [RBAC Matrix#policy-inventory](./AGENT-090-RBAC-MATRIX.md#policy-inventory)  
-**Implementations**: See [09-access-control-model.md#implementation-details](./source-docs/data-models/09-access-control-model.md#implementation-details)  
-**Security Gaps**: See [RBAC Matrix#gap-analysis](./AGENT-090-RBAC-MATRIX.md#gap-analysis)  
+**RBAC Policies**: See [RBAC Matrix#policy-inventory](./AGENT-090-RBAC-MATRIX.md#policy-inventory)
+**Implementations**: See [09-access-control-model.md#implementation-details](./source-docs/data-models/09-access-control-model.md#implementation-details)
+**Security Gaps**: See [RBAC Matrix#gap-analysis](./AGENT-090-RBAC-MATRIX.md#gap-analysis)
 **Mission Results**: See [Completion Report](./AGENT-090-COMPLETION-REPORT.md)
 
 ### Next Steps
@@ -177,6 +177,6 @@
 
 ---
 
-**Index Maintained By**: AGENT-090 (RBAC to Access Control Links Specialist)  
-**Last Updated**: 2025-01-20  
+**Index Maintained By**: AGENT-090 (RBAC to Access Control Links Specialist)
+**Last Updated**: 2025-01-20
 **Status**: Complete and ready for use

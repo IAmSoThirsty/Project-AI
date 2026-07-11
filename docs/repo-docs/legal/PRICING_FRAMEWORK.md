@@ -18,8 +18,8 @@ version: 1.0.0
 
 # Project-AI Pricing Framework
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
+**Version:** 1.0.0
+**Effective Date:** February 8, 2026
 **Subject to:** Master Services Agreement
 
 ---
@@ -334,19 +334,19 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 
 **Billing Cycle:** Monthly or annual (prepaid)
 
-**Payment Methods:** 
+**Payment Methods:**
 - Credit card (all tiers)
 - ACH/wire transfer (Enterprise and Government)
 - Purchase order (Enterprise and Government, pre-approved only)
 
 **Currency:** USD (other currencies available for Enterprise/Government)
 
-**Refund Policy:** 
+**Refund Policy:**
 - Solo Tier: N/A (free)
 - Team/Enterprise: 30-day money-back guarantee (first purchase only)
 - Government: Custom terms negotiated in contract
 
-**Price Changes:** 
+**Price Changes:**
 - 90-day notice for existing customers
 - Existing contracts honored through term
 - Annual plans locked for contract term
@@ -423,7 +423,7 @@ For those who prefer ongoing support, automatic updates, and don't want to think
 
 **Volume Discounts:**
 - 50-99 seats: 10% discount
-- 100-249 seats: 15% discount  
+- 100-249 seats: 15% discount
 - 250-499 seats: 20% discount
 - 500-999 seats: 25% discount
 - 1,000+ seats: 30% discount + custom terms

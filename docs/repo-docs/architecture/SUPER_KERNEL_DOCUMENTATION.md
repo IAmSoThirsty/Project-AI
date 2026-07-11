@@ -124,11 +124,11 @@ class MyKernel(KernelInterface):
     def process(self, input_data, **kwargs):
         # Process input and return result
         return {"result": "processed"}
-    
+
     def route(self, task, *, source="agent", **kwargs):
         # Optional: handle agent-initiated tasks
         return self.process(task, source=source, **kwargs)
-    
+
     def get_statistics(self):
         # Optional: return kernel statistics
         return {"operations": 100}

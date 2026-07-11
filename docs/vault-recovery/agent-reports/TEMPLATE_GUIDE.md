@@ -2,10 +2,10 @@
 
 **Master Document Templates and Automation** 📝
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 12 minutes  
-**Audience:** Documentation contributors, developers  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 12 minutes
+**Audience:** Documentation contributors, developers
 **Prerequisites:** Basic Obsidian and markdown knowledge
 
 ---
@@ -30,11 +30,11 @@
 
 ### Why Use Templates?
 
-✅ **Consistency** - All documents of the same type have identical structure  
-✅ **Speed** - Create new docs in seconds instead of minutes  
-✅ **Completeness** - Never forget required sections or metadata  
-✅ **Quality** - Enforce best practices automatically  
-✅ **Metadata** - Auto-generate correct frontmatter every time  
+✅ **Consistency** - All documents of the same type have identical structure
+✅ **Speed** - Create new docs in seconds instead of minutes
+✅ **Completeness** - Never forget required sections or metadata
+✅ **Quality** - Enforce best practices automatically
+✅ **Metadata** - Auto-generate correct frontmatter every time
 ✅ **Standards** - Comply with tag taxonomy and schema validation
 
 ### Without vs With Templates
@@ -382,9 +382,9 @@ This document contains security-sensitive information. Handle with care.
 
 Create a new template when:
 
-✅ You create 3+ documents with similar structure  
-✅ A new document type emerges  
-✅ Existing templates don't fit your use case  
+✅ You create 3+ documents with similar structure
+✅ A new document type emerges
+✅ Existing templates don't fit your use case
 ✅ You want to enforce specific standards
 
 ### Template Creation Process
@@ -698,7 +698,7 @@ MMM DD, YYYY     → Apr 20, 2026
 **JavaScript Execution:**
 
 ```javascript
-<%* 
+<%*
 // Multi-line JavaScript
 const author = await tp.system.prompt("Author");
 const date = tp.date.now("YYYY-MM-DD");
@@ -720,7 +720,7 @@ This document contains security-sensitive information.
 **Loops:**
 
 ```javascript
-<%* 
+<%*
 const tags = await tp.system.prompt("Tags (comma-separated)");
 const tagArray = tags.split(",").map(t => t.trim());
 
@@ -733,7 +733,7 @@ for (let tag of tagArray) {
 **File Creation:**
 
 ```javascript
-<%* 
+<%*
 await tp.file.create_new(
   tp.file.find_tfile("template-name"),
   "New File Name",
@@ -782,8 +782,8 @@ week_end: <% tp.date.now("YYYY-MM-DD") %>
 ## Documents Created This Week
 
 - Document 1: <% tp.file.cursor(2) %>
-- Document 2: 
-- Document 3: 
+- Document 2:
+- Document 3:
 
 ## Documents Updated This Week
 
@@ -821,8 +821,8 @@ attendees: [<% tp.file.cursor(1) %>]
 
 # Meeting Notes: <% tp.file.title %>
 
-**Date:** <% tp.date.now("YYYY-MM-DD HH:mm") %>  
-**Duration:** <% tp.system.prompt("Duration (e.g., 60 min)") %>  
+**Date:** <% tp.date.now("YYYY-MM-DD HH:mm") %>
+**Duration:** <% tp.system.prompt("Duration (e.g., 60 min)") %>
 **Location:** <% tp.system.prompt("Location (e.g., Zoom, Room 301)") %>
 
 ---
@@ -834,8 +834,8 @@ attendees: [<% tp.file.cursor(1) %>]
 ## Agenda
 
 1. <% tp.file.cursor(3) %>
-2. 
-3. 
+2.
+3.
 
 ## Discussion Notes
 
@@ -848,12 +848,12 @@ Notes here...
 ## Action Items
 
 - [ ] <% tp.file.cursor(5) %> (Owner: , Due: )
-- [ ] 
+- [ ]
 
 ## Next Meeting
 
-**Date:** <% tp.date.now("YYYY-MM-DD", 7) %>  
-**Topics:** 
+**Date:** <% tp.date.now("YYYY-MM-DD", 7) %>
+**Topics:**
 ```
 
 ### Use Case 3: Bug Report Template
@@ -878,8 +878,8 @@ bug_id: <% tp.system.prompt("Bug ID (if applicable)") %>
 
 # Bug Report: <% tp.file.title %>
 
-**Severity:** <% tp.system.suggester(["Critical", "High", "Medium", "Low"], ["critical", "high", "medium", "low"]) %>  
-**Reported By:** <% tp.system.prompt("Reporter") %>  
+**Severity:** <% tp.system.suggester(["Critical", "High", "Medium", "Low"], ["critical", "high", "medium", "low"]) %>
+**Reported By:** <% tp.system.prompt("Reporter") %>
 **Reported Date:** <% tp.date.now("YYYY-MM-DD") %>
 
 ---
@@ -891,8 +891,8 @@ bug_id: <% tp.system.prompt("Bug ID (if applicable)") %>
 ## Steps to Reproduce
 
 1. <% tp.file.cursor(3) %>
-2. 
-3. 
+2.
+3.
 
 ## Expected Behavior
 
@@ -1082,4 +1082,3 @@ dependencies:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

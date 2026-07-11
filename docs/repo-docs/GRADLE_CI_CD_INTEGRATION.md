@@ -17,28 +17,28 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
-      
+
       - name: Run checks
         run: ./gradlew check
-      
+
       - name: Build all modules
         run: ./gradlew buildAll
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -57,24 +57,24 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        
+
     runs-on: ${{ matrix.os }}
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      
+
       - name: Build and test
         run: ./gradlew check buildAll
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -105,7 +105,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - name: Run linters
         run: ./gradlew lintAll
-  
+
   # Job 2: Security scanning
   security:
     runs-on: ubuntu-latest
@@ -125,7 +125,7 @@ jobs:
         with:
           name: sbom
           path: build/artifacts/sbom/
-  
+
   # Job 3: Unit tests
   test:
     runs-on: ubuntu-latest
@@ -158,7 +158,7 @@ jobs:
         with:
           name: test-results-${{ matrix.module }}
           path: build/reports/
-  
+
   # Job 4: Build all modules
   build:
     needs: [lint, test]
@@ -177,7 +177,7 @@ jobs:
         with:
           name: build-artifacts
           path: build/artifacts/
-  
+
   # Job 5: Documentation
   docs:
     runs-on: ubuntu-latest
@@ -212,30 +212,30 @@ jobs:
     permissions:
       contents: write
       packages: write
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      
+
       - name: Extract version from tag
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-      
+
       - name: Run full release pipeline
         run: ./gradlew release -PprojectVersion=${{ steps.version.outputs.VERSION }}
         env:
           CI: true
-      
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -243,7 +243,7 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build and push Docker image
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -496,6 +496,6 @@ Enable Gradle Build Scan:
 
 ---
 
-**Last Updated**: 2024-01-08  
-**Gradle Version**: 8.5  
+**Last Updated**: 2024-01-08
+**Gradle Version**: 8.5
 **Build System Version**: 1.0.0

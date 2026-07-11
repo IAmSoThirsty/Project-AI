@@ -18,9 +18,9 @@ deployment_patterns: [minimal, secured, research-sandbox]
 ---
 # Example Deployments: Production-Ready Security Patterns
 
-**Document Version:** 1.0  
-**Effective Date:** 2026-02-05  
-**Status:** Deployment Reference Guide  
+**Document Version:** 1.0
+**Effective Date:** 2026-02-05
+**Status:** Deployment Reference Guide
 **Target Audience:** DevOps Engineers, System Architects, Security Engineers
 
 ---
@@ -244,7 +244,7 @@ pip install -r requirements.txt
 python -m src.app.main
 ```
 
-**RTO:** 15 minutes  
+**RTO:** 15 minutes
 **RPO:** 24 hours (daily backups)
 
 ---
@@ -630,7 +630,7 @@ kubectl exec -it postgres-0 -n project-ai-prod -- psql -U project_ai -d project_
 kubectl scale deployment/project-ai-api --replicas=3 -n project-ai-prod
 ```
 
-**RTO:** 5 minutes  
+**RTO:** 5 minutes
 **RPO:** 24 hours (daily backups)
 
 ---
@@ -866,7 +866,7 @@ grep -r "sandbox" /var/log/project-ai/
 docker-compose -f docker-compose.sandbox.yml up -d
 ```
 
-**RTO:** Immediate (destroy compromised sandbox)  
+**RTO:** Immediate (destroy compromised sandbox)
 **RPO:** N/A (no data to recover)
 
 ---
@@ -927,5 +927,5 @@ There is no "one size fits all" deployment. Choose the configuration that matche
 **Document Maintenance:**
 This document is reviewed quarterly and updated based on operational experience and new deployment patterns.
 
-**Last Updated:** 2026-02-05  
+**Last Updated:** 2026-02-05
 **Next Review:** 2026-05-05

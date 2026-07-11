@@ -13,8 +13,8 @@ review_cycle: quarterly
 ---
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
 
-**Document Version:** 2.0  
-**Effective Date:** 2026-02-05  
+**Document Version:** 2.0
+**Effective Date:** 2026-02-05
 **Status:** Contributor Governance Framework
 
 ---
@@ -152,11 +152,11 @@ In AGI systems, bugs aren't just annoying—they can be dangerous. Strict code q
 # Good: Single responsibility, clear interface
 class MemoryExpansionSystem:
     """Manages AGI knowledge accumulation with categorization."""
-    
+
     def add_knowledge(self, category: str, content: str) -> None:
         """Add knowledge to specified category."""
         ...
-    
+
     def query_knowledge(self, category: str, query: str) -> List[str]:
         """Query knowledge in specified category."""
         ...
@@ -167,7 +167,7 @@ class MemoryExpansionSystem:
 # Bad: Multiple responsibilities, unclear interface
 class EverythingManager:
     """Does everything related to AGI."""
-    
+
     def do_stuff(self, thing: Any) -> Any:
         """Does stuff with thing."""
         ...
@@ -181,20 +181,20 @@ class EverythingManager:
 ```python
 def validate_action(self, action: str, context: Dict) -> Tuple[bool, str]:
     """Validate action against Four Laws framework.
-    
+
     The Four Laws are hierarchical: First Law (existence) overrides Second Law (harm),
     which overrides Third Law (self-preservation), which overrides Fourth Law (obedience).
     This hierarchy ensures safety is always prioritized.
-    
+
     Args:
         action: The action to validate (e.g., "delete user data")
         context: Context including user_order, potential_harm, etc.
-    
+
     Returns:
         Tuple of (is_allowed, reason)
         - is_allowed: True if action passes Four Laws validation
         - reason: Human-readable explanation of decision
-    
+
     Example:
         >>> four_laws.validate_action("delete logs", {"is_user_order": True, "potential_harm": True})
         (False, "Violates Second Law: Action could cause harm")
@@ -375,7 +375,7 @@ def create(
     admin: bool = typer.Option(False, "--admin", help="Create as admin user."),
 ):
     """Create a new user account.
-    
+
     This command creates a new user with the specified username and email.
     Optionally, the user can be created with admin privileges.
     """
@@ -584,5 +584,5 @@ Thank you for being part of this journey.
 **Document Maintenance:**
 This document is reviewed quarterly and updated based on community feedback and evolving best practices.
 
-**Last Updated:** 2026-02-05  
+**Last Updated:** 2026-02-05
 **Next Review:** 2026-05-05

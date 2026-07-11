@@ -111,4 +111,3 @@ As the vault curator, I can help you create and manage this organization structu
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

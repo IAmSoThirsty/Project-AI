@@ -50,10 +50,10 @@ ValidatorAgent inherits from `KernelRoutedAgent`, ensuring **all validation oper
 ```python
 class ValidatorAgent(KernelRoutedAgent):
     """Validates inputs and ensures data integrity.
-    
+
     All validation operations route through CognitionKernel.
     """
-    
+
     def __init__(self, kernel: CognitionKernel | None = None) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
@@ -61,7 +61,7 @@ class ValidatorAgent(KernelRoutedAgent):
             execution_type=ExecutionType.AGENT_ACTION,
             default_risk_level="low",  # Validation is typically low risk
         )
-        
+
         self.enabled: bool = False  # Currently disabled in v2.1.0
         self.validators: dict = {}  # Placeholder for validator registry
 ```
@@ -152,14 +152,14 @@ While the current implementation only contains initialization logic, the archite
 def validate(self, data: Any, validator_id: str) -> tuple[bool, str]:
     """
     Validate data against a registered validator.
-    
+
     Args:
         data: The data to validate (any type)
         validator_id: ID of validator in self.validators
-    
+
     Returns:
         (is_valid: bool, error_message: str)
-    
+
     Raises:
         KeyError: If validator_id not registered
         PermissionError: If blocked by governance
@@ -187,14 +187,14 @@ assert "Invalid" in error
 def register(self, validator_id: str, config: dict) -> None:
     """
     Register a new validation rule.
-    
+
     Args:
         validator_id: Unique identifier for this validator
         config: Validation configuration with keys:
             - type: "regex", "range", "schema", "custom"
             - pattern/min/max/schema/callable: Type-specific config
             - error_message: User-facing error description
-    
+
     Raises:
         ValueError: If config is invalid
     """
@@ -206,11 +206,11 @@ def register(self, validator_id: str, config: dict) -> None:
 def validate_schema(self, data: dict, schema: dict) -> tuple[bool, list[str]]:
     """
     Validate data against JSON Schema.
-    
+
     Args:
         data: The data to validate (must be dict)
         schema: JSON Schema (Draft 7 or 2020-12)
-    
+
     Returns:
         (is_valid: bool, errors: list[str])
     """
@@ -247,11 +247,11 @@ assert len(errors) == 2  # name too short, age negative
 def sanitize(self, data: str, allow_list: str = "alphanumeric") -> str:
     """
     Sanitize string input by removing disallowed characters.
-    
+
     Args:
         data: The string to sanitize
         allow_list: One of ["alphanumeric", "email", "url", "sql-safe"]
-    
+
     Returns:
         Sanitized string with disallowed chars removed
     """
@@ -438,13 +438,13 @@ ValidatorAgent should check if validation errors reveal Black Vault content:
 ```python
 def validate(self, data, validator_id):
     is_valid, error = self._do_validate(data, validator_id)
-    
+
     # Check if error message contains forbidden knowledge
     content_hash = hashlib.sha256(error.encode()).hexdigest()
     if content_hash in learning_manager.black_vault:
         # Redact error message to prevent leaking forbidden content
         return False, "Validation failed (details redacted)"
-    
+
     return is_valid, error
 ```
 
@@ -586,12 +586,12 @@ frontmatter_schema = {
 with open("document.md", "r") as f:
     content = f.read()
     frontmatter_match = re.match(r"^---\n(.*?)\n---", content, re.DOTALL)
-    
+
     if frontmatter_match:
         frontmatter = yaml.safe_load(frontmatter_match.group(1))
-        
+
         is_valid, errors = validator.validate_schema(frontmatter, frontmatter_schema)
-        
+
         if not is_valid:
             print("Frontmatter validation failed:")
             for error in errors:
@@ -663,17 +663,17 @@ class ValidatorAgent(KernelRoutedAgent):
         self.enabled = False
         self.validators = {}
         self._compiled_patterns = {}  # Cache compiled regex
-    
+
     def register(self, validator_id, config):
         self.validators[validator_id] = config
-        
+
         # Pre-compile regex patterns
         if config["type"] == "regex":
             self._compiled_patterns[validator_id] = re.compile(config["pattern"])
-    
+
     def validate(self, data, validator_id):
         config = self.validators[validator_id]
-        
+
         if config["type"] == "regex":
             # Use pre-compiled pattern (faster than re.match() each time)
             pattern = self._compiled_patterns[validator_id]
@@ -745,14 +745,14 @@ class ValidatorAgent(KernelRoutedAgent):
         self.enabled = False
         self.validators = {}
         self._compiled_schemas = {}  # Cache compiled validators
-    
+
     def register_schema(self, schema_id, schema):
         # Compile schema once (10-100x faster validation)
         self._compiled_schemas[schema_id] = fastjsonschema.compile(schema)
-    
+
     def validate_schema(self, data, schema_id):
         validator_func = self._compiled_schemas[schema_id]
-        
+
         try:
             validator_func(data)  # Raises exception if invalid
             return True, []
@@ -818,11 +818,11 @@ def sanitize_for_html(data: str) -> str:
 
 ## Metadata
 
-**Document Maintainer**: Security Team  
-**Review Cycle**: Quarterly  
-**Next Review**: 2026-07-20  
-**Compliance**: OWASP Top 10, CWE-20 (Input Validation)  
-**Classification**: Internal Technical Documentation  
+**Document Maintainer**: Security Team
+**Review Cycle**: Quarterly
+**Next Review**: 2026-07-20
+**Compliance**: OWASP Top 10, CWE-20 (Input Validation)
+**Classification**: Internal Technical Documentation
 
 ---
 
@@ -830,4 +830,3 @@ def sanitize_for_html(data: str) -> str:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

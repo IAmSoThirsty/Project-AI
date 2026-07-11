@@ -544,7 +544,7 @@ Maintain and improve security agent ecosystem based on production telemetry.
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2026-01-21  
-**Next Review**: 2026-02-21  
+**Document Version**: 1.0
+**Last Updated**: 2026-01-21
+**Next Review**: 2026-02-21
 **Owner**: Security Agents Team

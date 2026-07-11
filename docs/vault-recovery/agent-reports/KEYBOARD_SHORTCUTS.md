@@ -2,10 +2,10 @@
 
 **Master Obsidian Navigation and Productivity** ⌨️
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 8 minutes  
-**Audience:** All vault users  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 8 minutes
+**Audience:** All vault users
 **Prerequisites:** None
 
 ---
@@ -526,4 +526,3 @@ word_count: 2200
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

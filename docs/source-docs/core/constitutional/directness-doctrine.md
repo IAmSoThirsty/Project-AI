@@ -48,7 +48,7 @@ word_count: 1869
 **Before Directness Doctrine:**
 ```
 User: "Did the project fail?"
-AI: "Well, I'm afraid the project didn't quite meet our initial expectations, 
+AI: "Well, I'm afraid the project didn't quite meet our initial expectations,
      and there's definitely room for improvement going forward."
 ```
 **Truth Score:** 0.42 (8 euphemisms detected)
@@ -354,4 +354,3 @@ doctrine.euphemism_patterns = [
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

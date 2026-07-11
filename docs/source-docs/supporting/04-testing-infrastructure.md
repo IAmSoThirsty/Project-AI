@@ -1,13 +1,13 @@
 # Testing Infrastructure Guide
 
-**Document Type:** Technical Reference  
-**Component:** Testing Framework  
-**Status:** Production  
-**Version:** 2.0.0  
-**Last Updated:** 2025-01-26  
-**Author:** AGENT-046  
-**Audience:** QA Engineers, Developers, Test Automation Engineers  
-**Scope:** Pytest configuration, test fixtures, mock patterns, coverage strategy  
+**Document Type:** Technical Reference
+**Component:** Testing Framework
+**Status:** Production
+**Version:** 2.0.0
+**Last Updated:** 2025-01-26
+**Author:** AGENT-046
+**Audience:** QA Engineers, Developers, Test Automation Engineers
+**Scope:** Pytest configuration, test fixtures, mock patterns, coverage strategy
 **Related Docs:**
 - `03-ci-cd-pipelines.md`
 - `05-build-package-management.md`
@@ -185,10 +185,10 @@ tests/
 ```python
 def test_user_manager_creates_user_successfully():
     """Unit test: UserManager creates user"""
-    
+
 def test_ai_chat_routes_through_governance():
     """Integration test: AI chat goes through governance pipeline"""
-    
+
 def test_full_login_to_ai_response_flow():
     """E2E test: Complete user flow"""
 ```
@@ -377,7 +377,7 @@ def mock_openai(monkeypatch):
                         "total_tokens": 42
                     }
                 }
-    
+
     monkeypatch.setattr("openai.ChatCompletion", MockOpenAI.ChatCompletion)
     yield MockOpenAI
 
@@ -386,13 +386,13 @@ def mock_requests(monkeypatch):
     """Mock HTTP requests."""
     class MockResponse:
         status_code = 200
-        
+
         def json(self):
             return {"status": "ok"}
-    
+
     def mock_post(*args, **kwargs):
         return MockResponse()
-    
+
     monkeypatch.setattr("requests.post", mock_post)
     yield
 ```
@@ -404,18 +404,18 @@ def mock_requests(monkeypatch):
 def client_fixture():
     """Provide Flask test client."""
     import importlib
-    
+
     # Import backend module
     backend_module = importlib.import_module("web.backend.app")
-    
+
     # Clear tokens (if using in-memory token storage)
     backend_module._TOKENS.clear()
-    
+
     # Create test client
     test_client = backend_module.app.test_client()
-    
+
     yield test_client
-    
+
     # Cleanup
     backend_module._TOKENS.clear()
 ```
@@ -465,12 +465,12 @@ def test_openai_integration(monkeypatch):
             "choices": [{"message": {"content": "Test response"}}],
             "usage": {"total_tokens": 10}
         }
-    
+
     monkeypatch.setattr(
         "openai.ChatCompletion.create",
         mock_chat_completion_create
     )
-    
+
     # Now any code calling openai.ChatCompletion.create() gets mock
     from app.core.intelligence_engine import IntelligenceEngine
     engine = IntelligenceEngine()
@@ -496,12 +496,12 @@ def test_openai_integration_with_patch(mock_create):
         "choices": [{"message": {"content": "Test response"}}],
         "usage": {"total_tokens": 10}
     }
-    
+
     # Test code
     from app.core.intelligence_engine import IntelligenceEngine
     engine = IntelligenceEngine()
     response = engine.chat("Hello")
-    
+
     # Assertions
     assert response["content"] == "Test response"
     mock_create.assert_called_once()
@@ -514,14 +514,14 @@ def test_openai_integration_with_patch(mock_create):
 ```python
 class MockUserManager:
     """Mock UserManager for testing."""
-    
+
     def __init__(self):
         self.users = {}
-    
+
     def create_user(self, username, password):
         self.users[username] = password
         return {"success": True, "username": username}
-    
+
     def authenticate(self, username, password):
         if self.users.get(username) == password:
             return {"success": True, "token": "mock-token"}
@@ -529,7 +529,7 @@ class MockUserManager:
 
 def test_with_mock_user_manager(monkeypatch):
     monkeypatch.setattr("app.core.user_manager.UserManager", MockUserManager)
-    
+
     # Test code that uses UserManager
     from app.api.routes import login
     result = login("admin", "password123")
@@ -544,16 +544,16 @@ from unittest.mock import MagicMock
 def test_function_calls_dependency():
     # Create mock
     mock_dependency = MagicMock()
-    
+
     # Inject into code under test
     from app.core.service import Service
     service = Service(dependency=mock_dependency)
     service.process()
-    
+
     # Verify mock was called
     mock_dependency.do_something.assert_called_once()
     mock_dependency.do_something.assert_called_with("expected_arg")
-    
+
     # Check call count
     assert mock_dependency.do_something.call_count == 1
 ```
@@ -599,7 +599,7 @@ def test_persona_update_trait(persona):
 def test_ai_chat_routes_through_governance(temp_dir):
     """Test AI chat request flows through governance pipeline."""
     from app.core.runtime.router import route_request
-    
+
     # Route AI chat request
     response = route_request(
         source="web",
@@ -609,7 +609,7 @@ def test_ai_chat_routes_through_governance(temp_dir):
             "model": "gpt-4"
         }
     )
-    
+
     # Verify governance was applied
     assert response["status"] == "success"
     assert "governance_checks" in response["metadata"]
@@ -635,7 +635,7 @@ def test_full_login_to_ai_chat_flow(client):
     )
     assert login_response.status_code == 200
     token = login_response.get_json()["token"]
-    
+
     # Step 2: AI chat with token
     chat_response = client.post(
         "/api/ai/chat",
@@ -644,7 +644,7 @@ def test_full_login_to_ai_chat_flow(client):
     )
     assert chat_response.status_code == 200
     assert "result" in chat_response.get_json()
-    
+
     # Step 3: Logout (future endpoint)
     # ...
 ```
@@ -741,10 +741,10 @@ def db_session():
     # Create in-memory database
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
-    
+
     session = Session(bind=engine)
     yield session
-    
+
     # Rollback and close
     session.rollback()
     session.close()
@@ -752,11 +752,11 @@ def db_session():
 def test_user_creation_in_database(db_session):
     """Test creating user in database."""
     from app.models import User
-    
+
     user = User(username="testuser", email="test@example.com")
     db_session.add(user)
     db_session.commit()
-    
+
     # Query user
     retrieved = db_session.query(User).filter_by(username="testuser").first()
     assert retrieved is not None
@@ -769,15 +769,15 @@ def test_user_creation_in_database(db_session):
 def test_web_backend_api_integration():
     """Test web backend API responds correctly."""
     import requests
-    
+
     # Start server in background (or use test client)
     base_url = "http://localhost:5000"
-    
+
     # Health check
     response = requests.get(f"{base_url}/api/status")
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
-    
+
     # Login
     login_response = requests.post(
         f"{base_url}/api/auth/login",
@@ -785,7 +785,7 @@ def test_web_backend_api_integration():
     )
     assert login_response.status_code == 200
     token = login_response.json()["token"]
-    
+
     # Authenticated request
     chat_response = requests.post(
         f"{base_url}/api/ai/chat",
@@ -815,12 +815,12 @@ def test_web_app_login_flow(page: Page):
     """E2E: User logs in and sees dashboard."""
     # Navigate to app
     page.goto("http://localhost:3000")
-    
+
     # Fill login form
     page.fill("input[name='username']", "admin")
     page.fill("input[name='password']", "open-sesame")
     page.click("button[type='submit']")
-    
+
     # Verify redirect to dashboard
     expect(page).to_have_url("http://localhost:3000/dashboard")
     expect(page.locator("h1")).to_contain_text("Dashboard")
@@ -844,16 +844,16 @@ def qapp():
 def test_desktop_login_ui(qapp, temp_dir):
     """Test desktop login UI."""
     interface = LeatherBookInterface(data_dir=str(temp_dir))
-    
+
     # Verify initial state
     assert interface.current_page == 0  # Login page
     assert interface.login_panel is not None
-    
+
     # Simulate login
     interface.login_panel.username_input.setText("admin")
     interface.login_panel.password_input.setText("open-sesame")
     interface.login_panel.login_button.click()
-    
+
     # Verify transition to dashboard
     assert interface.current_page == 1  # Dashboard page
 ```
@@ -900,7 +900,7 @@ from app.models import User
 class UserFactory(factory.Factory):
     class Meta:
         model = User
-    
+
     username = factory.Sequence(lambda n: f"user{n}")
     email = factory.LazyAttribute(lambda obj: f"{obj.username}@example.com")
     role = "user"
@@ -909,7 +909,7 @@ def test_with_factory():
     """Test using factory pattern."""
     user1 = UserFactory()
     user2 = UserFactory()
-    
+
     assert user1.username == "user0"
     assert user2.username == "user1"
     assert user1.username != user2.username
@@ -928,13 +928,13 @@ import time
 def test_ai_chat_performance():
     """Benchmark AI chat response time."""
     from app.core.intelligence_engine import IntelligenceEngine
-    
+
     engine = IntelligenceEngine()
-    
+
     start = time.time()
     response = engine.chat("Hello")
     duration = time.time() - start
-    
+
     # Assert response time <1 second
     assert duration < 1.0, f"AI chat took {duration:.2f}s (expected <1s)"
 
@@ -942,13 +942,13 @@ def test_ai_chat_performance():
 def test_image_generation_performance():
     """Benchmark image generation (slow test)."""
     from app.core.image_generator import ImageGenerator
-    
+
     generator = ImageGenerator()
-    
+
     start = time.time()
     image = generator.generate("A test image")
     duration = time.time() - start
-    
+
     # Image generation expected to take 5-20 seconds
     assert 5.0 <= duration <= 20.0
 ```
@@ -962,18 +962,18 @@ from concurrent.futures import ThreadPoolExecutor
 def test_concurrent_api_requests():
     """Test API handles concurrent requests."""
     import requests
-    
+
     base_url = "http://localhost:5000"
-    
+
     def make_request():
         response = requests.get(f"{base_url}/api/status")
         return response.status_code
-    
+
     # Execute 100 concurrent requests
     with ThreadPoolExecutor(max_workers=10) as executor:
         futures = [executor.submit(make_request) for _ in range(100)]
         results = [f.result() for f in futures]
-    
+
     # All requests should succeed
     assert all(status == 200 for status in results)
     assert len(results) == 100
@@ -989,7 +989,7 @@ def test_concurrent_api_requests():
 def test_four_laws_prevent_harm():
     """Test Four Laws block harmful actions."""
     from app.core.ai_systems import FourLaws
-    
+
     # Law 1: Cannot harm humanity
     is_allowed, reason = FourLaws.validate_action(
         "Delete all user data",
@@ -1002,7 +1002,7 @@ def test_four_laws_property_based():
     """Property-based test: Law 1 always takes precedence."""
     from app.core.ai_systems import FourLaws
     from hypothesis import given, strategies as st
-    
+
     @given(st.text(), st.booleans())
     def test_law1_precedence(action, is_user_order):
         result, _ = FourLaws.validate_action(
@@ -1014,7 +1014,7 @@ def test_four_laws_property_based():
         )
         # Law 1 always blocks, regardless of user order
         assert not result
-    
+
     test_law1_precedence()
 ```
 
@@ -1024,12 +1024,12 @@ def test_four_laws_property_based():
 def test_path_traversal_prevention():
     """Test path traversal attacks are blocked."""
     from app.security.path_validator import validate_path
-    
+
     # Malicious paths should be rejected
     assert not validate_path("../../../etc/passwd")
     assert not validate_path("..\\..\\..\\windows\\system32")
     assert not validate_path("/etc/passwd")
-    
+
     # Safe paths should be allowed
     assert validate_path("data/users.json")
     assert validate_path("uploads/image.png")
@@ -1037,10 +1037,10 @@ def test_path_traversal_prevention():
 def test_sql_injection_prevention():
     """Test SQL injection attacks are blocked."""
     from app.security.input_validator import sanitize_sql
-    
+
     malicious = "admin' OR '1'='1"
     sanitized = sanitize_sql(malicious)
-    
+
     # Should escape single quotes
     assert "'" not in sanitized or "\\'" in sanitized
 ```
@@ -1112,10 +1112,10 @@ def test_persona_update_trait():
     # Arrange: Setup test data
     persona = AIPersona()
     old_humor = persona.traits["humor"]
-    
+
     # Act: Perform action
     persona.update_trait("humor", 0.9)
-    
+
     # Assert: Verify results
     assert persona.traits["humor"] == 0.9
     assert persona.traits["humor"] != old_humor
@@ -1263,4 +1263,3 @@ pytest -m "not slow"
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

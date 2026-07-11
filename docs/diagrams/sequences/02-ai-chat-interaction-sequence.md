@@ -19,15 +19,15 @@ sequenceDiagram
     participant Fallback as Fallback Providers
     participant Learning as LearningSystem
     participant Persona as AIPersona
-    
+
     Note over User,Persona: AI Chat Interaction Flow
-    
+
     %% User Input
     User->>GUI: Type message
     GUI->>GUI: Validate input (length, content)
     GUI->>Router: route_query(message, context)
     activate Router
-    
+
     %% Intent Detection
     Router->>Intent: classify_intent(message)
     activate Intent
@@ -36,7 +36,7 @@ sequenceDiagram
     Intent-->>Router: Intent classification result
     deactivate Intent
     Note over Intent: Categories: question, command, greeting, data_analysis, learning
-    
+
     %% Memory Retrieval
     Router->>Memory: retrieve_context(message, user_id)
     activate Memory
@@ -45,14 +45,14 @@ sequenceDiagram
     Memory->>Memory: Calculate relevance scores
     Memory-->>Router: Relevant context (top 5 entries)
     deactivate Memory
-    
+
     %% Governance Pre-Check
     Router->>Gov: validate_chat_action(message, context)
     activate Gov
     Gov->>Gov: Galahad: Check for abuse/manipulation
     Gov->>Gov: Cerberus: Check for sensitive data exposure
     Gov->>Gov: Codex: Check for contradictions
-    
+
     alt Action Blocked
         Gov-->>Router: BLOCKED (reason)
         Router-->>GUI: Governance rejection
@@ -61,30 +61,30 @@ sequenceDiagram
     else Action Approved
         Gov-->>Router: APPROVED
         deactivate Gov
-        
+
         %% AI Orchestration
         Router->>Orch: generate_response(message, context, intent)
         activate Orch
-        
+
         %% Persona Integration
         Orch->>Persona: get_current_state()
         activate Persona
         Persona-->>Orch: Personality traits, mood, context
         deactivate Persona
-        
+
         %% Build Prompt
         Orch->>Orch: Build system prompt with:<br/>- Persona traits<br/>- Memory context<br/>- Intent-specific guidelines<br/>- Four Laws constraints
-        
+
         %% Primary Provider (OpenAI)
         Orch->>OpenAI: chat.completions.create(messages, model="gpt-4")
         activate OpenAI
-        
+
         alt OpenAI Success
             OpenAI-->>Orch: Response (content, usage)
             Note over Orch: Log token usage, cost tracking
         else OpenAI Failure (Rate Limit, Error)
             OpenAI-->>Orch: Error response
-            
+
             %% Fallback Chain
             Orch->>Fallback: Try fallback providers
             activate Fallback
@@ -93,12 +93,12 @@ sequenceDiagram
             deactivate Fallback
         end
         deactivate OpenAI
-        
+
         %% Post-Processing
         Orch->>Orch: Content filtering<br/>Formatting<br/>Metadata extraction
         Orch-->>Router: AI response + metadata
         deactivate Orch
-        
+
         %% Memory Storage
         Router->>Memory: store_interaction(message, response, metadata)
         activate Memory
@@ -108,7 +108,7 @@ sequenceDiagram
         Memory->>Memory: Update knowledge base
         Memory-->>Router: Storage confirmation
         deactivate Memory
-        
+
         %% Learning Integration
         Router->>Learning: analyze_interaction(message, response, intent)
         activate Learning
@@ -117,7 +117,7 @@ sequenceDiagram
         Learning->>Learning: Generate improvement suggestions
         Learning-->>Router: Learning insights
         deactivate Learning
-        
+
         %% Persona Update
         Router->>Persona: update_from_interaction(message, response)
         activate Persona
@@ -127,14 +127,14 @@ sequenceDiagram
         Persona->>Persona: Save state to JSON
         Persona-->>Router: Update confirmation
         deactivate Persona
-        
+
         %% Response Delivery
         Router-->>GUI: Response + metadata
         deactivate Router
         GUI->>GUI: Format response (Markdown, code blocks)
         GUI->>GUI: Update chat history
         GUI-->>User: Display AI response
-        
+
         Note over User,Persona: Interaction complete, all systems updated
     end
 ```

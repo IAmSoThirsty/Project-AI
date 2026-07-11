@@ -421,13 +421,13 @@ print(msg)  # Output: Invalid credentials (doesn't reveal user doesn't exist)
 def authenticate(username, password):
     # ALWAYS load user data (real or dummy)
     user = users.get(username, DUMMY_USER_WITH_VALID_HASH)
-    
+
     # ALWAYS verify password (prevents timing-based username enumeration)
     is_valid = verify_password(password, user.password_hash)
-    
+
     # ALWAYS add random delay (0.01-0.03s)
     time.sleep(random.uniform(0.01, 0.03))
-    
+
     # Only proceed if BOTH user exists AND password valid
     if username_exists AND is_valid:
         return True, "Success"
@@ -632,7 +632,7 @@ manager.create_user("alice", "OldPass123!")
 success = manager.set_password("alice", "NewPass456!")
 if success:
     print("Password updated")
-    
+
 # Verify new password works
 auth_success, msg = manager.authenticate("alice", "NewPass456!")
 print(auth_success)  # True
@@ -1086,7 +1086,7 @@ is_valid = pwd_context.verify("SecurePass123!", password_hash)
 def authenticate_vulnerable(username, password):
     if username not in users:
         return False  # Fast response (username doesn't exist)
-    
+
     # Slow bcrypt verification only if user exists
     if verify(password, users[username].hash):
         return True
@@ -1104,13 +1104,13 @@ def authenticate_secure(username, password):
     # ALWAYS load user data (real or dummy)
     DUMMY_HASH = "$2b$12$KIXvvKxwv7VZ..."  # Valid bcrypt hash
     user = users.get(username, {"password_hash": DUMMY_HASH})
-    
+
     # ALWAYS verify (even for non-existent users)
     is_valid = pwd_context.verify(password, user["password_hash"])
-    
+
     # ALWAYS add random delay
     time.sleep(random.uniform(0.01, 0.03))
-    
+
     # Only succeed if BOTH user exists AND password valid
     if username in users and is_valid:
         return True
@@ -1376,34 +1376,34 @@ class TestUserManager:
         """Test account lockout after 5 failures and manual unlock."""
         with tempfile.TemporaryDirectory() as tmpdir:
             manager = UserManager(data_dir=tmpdir)
-            
+
             # Create test user
             manager.create_user("testuser", "SecurePass123!")
-            
+
             # Trigger lockout (5 failed attempts)
             for _ in range(5):
                 success, msg = manager.authenticate("testuser", "wrongpass")
                 assert not success
-            
+
             # Verify lockout
             is_locked, remaining = manager.is_account_locked("testuser")
             assert is_locked
             assert remaining > 0
-            
+
             # Correct password should fail during lockout
             success, msg = manager.authenticate("testuser", "SecurePass123!")
             assert not success
             assert "locked" in msg.lower()
-            
+
             # Admin unlocks account
             unlocked = manager.unlock_account("testuser")
             assert unlocked
-            
+
             # Verify unlock
             is_locked, remaining = manager.is_account_locked("testuser")
             assert not is_locked
             assert remaining is None
-            
+
             # Correct password should now work
             success, msg = manager.authenticate("testuser", "SecurePass123!")
             assert success
@@ -1658,11 +1658,10 @@ pbkdf2$100000$YWJjZGVmZ2hpamtsbW5vcA==$dGVzdGhhc2g=
 
 **Document End**
 
-**Last Updated:** 2026-04-20  
-**Next Review:** 2026-05-20  
-**Maintained By:** Security Team  
+**Last Updated:** 2026-04-20
+**Next Review:** 2026-05-20
+**Maintained By:** Security Team
 **Questions?** Contact: security@project-ai.dev
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

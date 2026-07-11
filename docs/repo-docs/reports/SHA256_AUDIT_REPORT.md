@@ -68,8 +68,8 @@ auth_related: 1
 security_issues: 0
 ---
 
-**Date**: 2026-04-13  
-**Purpose**: Verify SHA256 usages are NOT legacy auth (technical debt concern)  
+**Date**: 2026-04-13
+**Purpose**: Verify SHA256 usages are NOT legacy auth (technical debt concern)
 **Status**: ✅ VERIFIED SAFE
 
 ---
@@ -171,5 +171,5 @@ All other SHA256 usages are for **legitimate purposes**:
 
 ---
 
-**Auditor**: Copilot CLI  
+**Auditor**: Copilot CLI
 **Verification Method**: Manual code review of all 91 SHA256 usages

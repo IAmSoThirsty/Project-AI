@@ -23,11 +23,11 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 # 📊 Garak Vulnerability Scan - Comprehensive Test Report
 
-**Report Generated**: 2026-01-11  
-**Model**: Galahad (Project-AI)  
-**Scanner**: Garak-style LLM Vulnerability Scanner  
-**Test Duration**: 0.02 seconds  
-**Total Probes**: 21  
+**Report Generated**: 2026-01-11
+**Model**: Galahad (Project-AI)
+**Scanner**: Garak-style LLM Vulnerability Scanner
+**Test Duration**: 0.02 seconds
+**Total Probes**: 21
 
 ---
 
@@ -65,7 +65,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 ### 1. Encoding Attacks (3 probes)
 
-**Detection Rate**: 66.7% (2/3 detected)  
+**Detection Rate**: 66.7% (2/3 detected)
 **Status**: ⚠️ Partially Effective
 
 | Probe ID | Name | Prompt | Detected | Vulnerable |
@@ -84,7 +84,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 ### 2. Prompt Injection (4 probes)
 
-**Detection Rate**: 75.0% (3/4 detected)  
+**Detection Rate**: 75.0% (3/4 detected)
 **Status**: ⚠️ Good but not sufficient
 
 | Probe ID | Name | Prompt | Detected | Vulnerable |
@@ -104,7 +104,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 ### 3. Data Leakage (2 probes)
 
-**Detection Rate**: 0.0% (0/2 detected)  
+**Detection Rate**: 0.0% (0/2 detected)
 **Status**: ❌ **CRITICAL VULNERABILITY**
 
 | Probe ID | Name | Prompt | Detected | Vulnerable |
@@ -126,7 +126,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 ### 4. Toxicity (2 probes)
 
-**Detection Rate**: 0.0% (0/2 detected)  
+**Detection Rate**: 0.0% (0/2 detected)
 **Status**: ❌ **CRITICAL VULNERABILITY**
 
 | Probe ID | Name | Prompt | Detected | Vulnerable |
@@ -148,7 +148,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 ### 5. Malicious Use (4 probes)
 
-**Detection Rate**: 75.0% (3/4 detected)  
+**Detection Rate**: 75.0% (3/4 detected)
 **Status**: ⚠️ Good but not sufficient
 
 | Probe ID | Name | Prompt | Detected | Vulnerable |
@@ -171,7 +171,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 ### 6. Jailbreak (3 probes)
 
-**Detection Rate**: 100.0% (3/3 detected)  
+**Detection Rate**: 100.0% (3/3 detected)
 **Status**: ✅ **EXCELLENT**
 
 | Probe ID | Name | Prompt | Detected | Vulnerable |
@@ -191,7 +191,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/adversarial-completion/
 
 ### 7. Goodware (3 probes)
 
-**Detection Rate**: 0.0% (0/3 allowed correctly)  
+**Detection Rate**: 0.0% (0/3 allowed correctly)
 **Status**: ✅ **PERFECT** (No False Positives)
 
 | Probe ID | Name | Prompt | Detected | Should Block |
@@ -477,8 +477,8 @@ python -m json.tool ci-reports/garak-latest.json
 
 ---
 
-**Report Version**: 1.0  
-**Generated**: 2026-01-11T10:32:56Z  
+**Report Version**: 1.0
+**Generated**: 2026-01-11T10:32:56Z
 **Next Review**: After implementing recommended fixes
 
 **Status**: 🟡 **REQUIRES ATTENTION** - Deploy fixes before production use

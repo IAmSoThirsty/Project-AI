@@ -1,8 +1,8 @@
 # Vault Root Troubleshooting Guide
 
-**Document Version:** 1.0.0  
-**Author:** AGENT-001 (Vault Root Directory Architect)  
-**Created:** 2026-04-20  
+**Document Version:** 1.0.0
+**Author:** AGENT-001 (Vault Root Directory Architect)
+**Created:** 2026-04-20
 **Purpose:** Comprehensive troubleshooting for common vault setup and validation issues
 
 ---
@@ -101,16 +101,16 @@ Pre-flight checks FAILED:
 **Check disk usage:**
 ```powershell
 Get-Volume -DriveLetter T | Format-List DriveLetter, SizeRemaining, Size
-Get-ChildItem T:\ -Recurse -Force | 
-    Measure-Object -Property Length -Sum | 
+Get-ChildItem T:\ -Recurse -Force |
+    Measure-Object -Property Length -Sum |
     Select-Object @{N='SizeGB';E={[math]::Round($_.Sum/1GB,2)}}
 ```
 
 **Free up space:**
 ```powershell
 # Find large files
-Get-ChildItem T:\ -Recurse -File -Force | 
-    Sort-Object Length -Descending | 
+Get-ChildItem T:\ -Recurse -File -Force |
+    Sort-Object Length -Descending |
     Select-Object -First 20 FullName, @{N='SizeGB';E={[math]::Round($_.Length/1GB,2)}}
 
 # Clean temp files
@@ -147,7 +147,7 @@ Pre-flight checks FAILED:
 ```powershell
 $Acl = Get-Acl "T:\"
 $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Acl.Access | Where-Object { $_.IdentityReference.Value -eq $CurrentUser } | 
+$Acl.Access | Where-Object { $_.IdentityReference.Value -eq $CurrentUser } |
     Format-Table IdentityReference, FileSystemRights, AccessControlType
 ```
 
@@ -434,9 +434,9 @@ $Stream.Close()
 **Diagnosis:**
 ```powershell
 $Acl = Get-Acl "T:\Project-AI-vault"
-$Acl.Access | Where-Object { 
-    $_.IdentityReference.Value -match "Everyone|Users" -and 
-    $_.FileSystemRights -match "FullControl|Modify|Write" 
+$Acl.Access | Where-Object {
+    $_.IdentityReference.Value -match "Everyone|Users" -and
+    $_.FileSystemRights -match "FullControl|Modify|Write"
 } | Format-Table IdentityReference, FileSystemRights, AccessControlType
 ```
 
@@ -585,7 +585,7 @@ Remove-Item "T:\Project-AI-vault" -Recurse -Force -ErrorAction SilentlyContinue
 
 # 5. Restore data (excluding scripts which are recreated)
 if (Test-Path $BackupPath) {
-    Get-ChildItem $BackupPath -Exclude "vault-*.ps1", "vault-*.json", "vault-*.log" | 
+    Get-ChildItem $BackupPath -Exclude "vault-*.ps1", "vault-*.json", "vault-*.log" |
         Copy-Item -Destination "T:\Project-AI-vault" -Recurse -Force
 }
 
@@ -796,4 +796,3 @@ Write-Host "Support bundle created: $BundlePath" -ForegroundColor Green
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

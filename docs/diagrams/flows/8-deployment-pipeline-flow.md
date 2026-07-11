@@ -11,114 +11,114 @@ flowchart TD
     TriggerCI -->|Push to main| MainBuild[Main Branch Build<br/>Full pipeline]
     TriggerCI -->|Pull Request| PRBuild[PR Build<br/>Validation pipeline]
     TriggerCI -->|Tag v*| ReleaseBuild[Release Build<br/>Production deployment]
-    
+
     MainBuild --> CheckoutCode
     PRBuild --> CheckoutCode
     ReleaseBuild --> CheckoutCode[Checkout Code<br/>git clone --depth=1]
-    
+
     CheckoutCode --> SetupPython[Setup Python Environment<br/>Python 3.11 and 3.12]
     SetupPython --> InstallDeps[Install Dependencies<br/>pip install -r requirements.txt]
     InstallDeps --> InstallDevDeps[Install Dev Dependencies<br/>pytest, ruff, mypy, pip-audit]
-    
+
     InstallDevDeps --> LintingPhase[Linting Phase<br/>Code quality checks]
     LintingPhase --> RuffLint[Ruff Linting<br/>ruff check .]
     RuffLint --> RuffFix{Linting<br/>Passed?}
     RuffFix -->|No| LintFailed[❌ Linting Failed<br/>Comment on PR with errors]
     RuffFix -->|Yes| RuffFormat[Ruff Format Check<br/>ruff format --check .]
-    
+
     RuffFormat --> FormatCheck{Format<br/>Correct?}
     FormatCheck -->|No| FormatFailed[❌ Format Failed<br/>Suggest ruff format .]
     FormatCheck -->|Yes| TypeCheck[Type Checking<br/>mypy src/]
-    
+
     TypeCheck --> TypeResult{Type Check<br/>Passed?}
     TypeResult -->|No| TypeFailed[❌ Type Errors<br/>Show mypy output]
     TypeResult -->|Yes| SecurityPhase[Security Scanning Phase]
-    
+
     SecurityPhase --> PipAudit[Dependency Audit<br/>pip-audit --desc]
     PipAudit --> VulnCheck{Vulnerabilities<br/>Found?}
     VulnCheck -->|Yes| VulnReport[⚠️ Vulnerabilities Detected<br/>Create security issue]
     VulnCheck -->|No| BanditScan[Bandit Security Scan<br/>bandit -r src/]
-    
+
     VulnReport --> BanditScan
     BanditScan --> BanditResult{Security<br/>Issues?}
     BanditResult -->|Yes| SecurityFailed[❌ Security Issues Found<br/>Upload SARIF to GitHub]
     BanditResult -->|No| CodeQLScan[CodeQL Analysis<br/>Advanced security scanning]
-    
+
     SecurityFailed --> CodeQLScan
     CodeQLScan --> CodeQLBuild[Build CodeQL Database<br/>Analyze Python code]
     CodeQLBuild --> CodeQLAnalyze[Perform CodeQL Analysis<br/>Security queries]
     CodeQLAnalyze --> CodeQLUpload[Upload Results to GitHub<br/>Security tab integration]
-    
+
     CodeQLUpload --> TestPhase[Testing Phase<br/>Unit and integration tests]
     TestPhase --> PyTest[Run PyTest<br/>pytest -v --cov=src]
     PyTest --> TestResult{Tests<br/>Passed?}
     TestResult -->|No| TestFailed[❌ Tests Failed<br/>Show failed test output]
     TestResult -->|Yes| CoverageCheck[Coverage Analysis<br/>pytest-cov report]
-    
+
     CoverageCheck --> CoverageThreshold{Coverage<br/>>= 80%?}
     CoverageThreshold -->|No| CoverageWarning[⚠️ Low Coverage Warning<br/>Continue anyway]
     CoverageThreshold -->|Yes| CoveragePass[✅ Coverage Adequate]
-    
+
     CoverageWarning --> DockerPhase
     CoveragePass --> DockerPhase[Docker Build Phase<br/>Container creation]
-    
+
     DockerPhase --> DockerBuild[Build Docker Image<br/>Multi-stage build]
     DockerBuild --> BuilderStage[Builder Stage<br/>Install dependencies]
     BuilderStage --> RuntimeStage[Runtime Stage<br/>Copy app files]
     RuntimeStage --> HealthCheck[Add Health Check<br/>Container monitoring]
-    
+
     HealthCheck --> DockerTag[Tag Docker Image<br/>latest, version tag]
     DockerTag --> DockerTest[Test Docker Image<br/>Smoke tests]
     DockerTest --> SmokeTest{Smoke Test<br/>Passed?}
-    
+
     SmokeTest -->|No| DockerFailed[❌ Docker Build Failed<br/>Show container logs]
     SmokeTest -->|Yes| CheckDeployment{Deployment<br/>Required?}
-    
+
     CheckDeployment -->|PR| SkipDeploy[Skip Deployment<br/>Validation only]
     CheckDeployment -->|Main| StagingDeploy[Deploy to Staging<br/>staging.projectai.com]
     CheckDeployment -->|Release| ProductionDeploy[Deploy to Production<br/>projectai.com]
-    
+
     StagingDeploy --> PushRegistry[Push to Container Registry<br/>Docker Hub / GHCR]
     ProductionDeploy --> PushRegistry
-    
+
     PushRegistry --> RegistryAuth[Authenticate Registry<br/>Docker login]
     RegistryAuth --> PushImage[Push Image<br/>docker push]
     PushImage --> VerifyPush{Push<br/>Successful?}
-    
+
     VerifyPush -->|No| PushFailed[❌ Registry Push Failed<br/>Check credentials]
     VerifyPush -->|Yes| DeploymentPhase[Deployment Phase<br/>Environment update]
-    
+
     DeploymentPhase --> UpdateCompose[Update docker-compose.yml<br/>New image tag]
     UpdateCompose --> PullImage[Pull New Image<br/>docker-compose pull]
     PullImage --> StopContainers[Stop Old Containers<br/>docker-compose down]
     StopContainers --> StartContainers[Start New Containers<br/>docker-compose up -d]
-    
+
     StartContainers --> WaitHealth[Wait for Health Check<br/>30s timeout]
     WaitHealth --> HealthStatus{Health Check<br/>Passed?}
     HealthStatus -->|No| RollbackDeploy[🔄 Rollback Deployment<br/>Restore previous version]
     HealthStatus -->|Yes| VerifyEndpoints[Verify Endpoints<br/>HTTP health checks]
-    
+
     RollbackDeploy --> RollbackImage[Pull Previous Image Tag<br/>Restore last known good]
     RollbackImage --> RollbackStart[Start Previous Containers<br/>Ensure stability]
     RollbackStart --> NotifyFailure[Notify Team<br/>Deployment failed alert]
-    
+
     VerifyEndpoints --> EndpointTest{Endpoints<br/>Responsive?}
     EndpointTest -->|No| RollbackDeploy
     EndpointTest -->|Yes| PostDeploy[Post-Deployment Tasks]
-    
+
     PostDeploy --> ClearCache[Clear Application Cache<br/>Redis FLUSHALL]
     ClearCache --> WarmCache[Warm Cache<br/>Pre-load critical data]
     WarmCache --> RunMigrations[Run Database Migrations<br/>If applicable]
     RunMigrations --> NotifySuccess[Notify Team<br/>✅ Deployment successful]
-    
+
     NotifySuccess --> UpdateSlack[Post to Slack<br/>Deployment notification]
     UpdateSlack --> CreateRelease[Create GitHub Release<br/>Tag release notes]
     CreateRelease --> GenerateSBOM[Generate SBOM<br/>Software Bill of Materials]
     GenerateSBOM --> Success([✅ Deployment Complete])
-    
+
     SkipDeploy --> MarkSuccess[✅ Validation Complete<br/>PR ready for merge]
     MarkSuccess --> Success
-    
+
     LintFailed --> End([❌ Pipeline Failed])
     FormatFailed --> End
     TypeFailed --> End
@@ -126,7 +126,7 @@ flowchart TD
     DockerFailed --> End
     PushFailed --> End
     NotifyFailure --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style LintFailed fill:#ff0000,stroke:#ff00ff,stroke-width:2px,color:#fff
@@ -158,34 +158,34 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.11', '3.12']
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
-      
+
       - name: Ruff linting
         run: ruff check . --output-format=github
-      
+
       - name: Ruff format check
         run: ruff format --check .
-      
+
       - name: Type checking
         run: mypy src/ --show-error-codes
-      
+
       - name: Run tests
         run: pytest -v --cov=src --cov-report=xml
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
@@ -196,13 +196,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Dependency audit
         run: pip-audit --desc --format=json > audit-report.json
-      
+
       - name: Bandit security scan
         run: bandit -r src/ -f sarif -o bandit-results.sarif
-      
+
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v3
         with:
@@ -215,12 +215,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: python
-      
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 
@@ -230,13 +230,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Build Docker image
         run: docker build -t project-ai:test .
-      
+
       - name: Run smoke tests
         run: |
           docker run -d --name test-container project-ai:test
@@ -505,7 +505,7 @@ def health_check():
         "disk_space": check_disk_space() > 1024 * 1024 * 1024,  # > 1GB
         "memory": check_memory_usage() < 0.9  # < 90%
     }
-    
+
     if all(checks.values()):
         return jsonify({"status": "healthy", "checks": checks}), 200
     else:
@@ -555,15 +555,15 @@ def performance_test():
         "/api/v1/chat",
         "/api/v1/image/generate",
     ]
-    
+
     for endpoint in endpoints:
         start = time.time()
         response = requests.get(f"https://projectai.com{endpoint}")
         latency = time.time() - start
-        
+
         assert response.status_code == 200
         assert latency < 2.0, f"Endpoint {endpoint} too slow: {latency}s"
-    
+
     print("Performance baseline met")
 ```
 
@@ -599,9 +599,9 @@ import requests
 def notify_deployment(version: str, status: str):
     """Send deployment notification to Slack."""
     webhook_url = os.getenv("SLACK_WEBHOOK_URL")
-    
+
     color = "good" if status == "success" else "danger"
-    
+
     payload = {
         "attachments": [{
             "color": color,
@@ -614,7 +614,7 @@ def notify_deployment(version: str, status: str):
             ]
         }]
     }
-    
+
     requests.post(webhook_url, json=payload)
 ```
 

@@ -64,11 +64,11 @@ if issues:
     print("Security issues detected:")
     for issue in issues:
         print(f"  - {issue}")
-    
+
     # Apply fixes
     hardening.harden_sys_path()
     hardening.secure_directory_structure()
-    
+
     print("\nFixes applied. Re-running validation...")
     is_valid, issues = hardening.validate_environment()
 
@@ -167,21 +167,21 @@ from app.security import (
 
 def test_full_security_stack():
     """Test complete security stack integration."""
-    
+
     # 1. Environment
     hardening = EnvironmentHardening()
     assert hardening.validate_environment()[0]
-    
+
     # 2. Data parsing
     parser = SecureDataParser()
     result = parser.parse_json('{"test": "data"}')
     assert result.validated
-    
+
     # 3. Database
     db = SecureDatabaseManager(":memory:")
     user_id = db.insert_user("testuser", "hash")
     assert user_id > 0
-    
+
     # 4. Monitoring
     monitor = SecurityMonitor()
     monitor.log_security_event("test", "low", "test", "Test event")
@@ -855,14 +855,14 @@ for anomaly in anomalies:
             e for e in monitor.event_log
             if e.event_type == 'authentication_failure'
         ]
-        
+
         attacker_ips = set()
         for event in recent_events[-20:]:  # Last 20 failures
             if 'ip' in event.metadata:
                 attacker_ips.add(event.metadata['ip'])
-        
+
         print(f"Attacker IPs: {attacker_ips}")
-        
+
         # Block at firewall (manual or automated)
         for ip in attacker_ips:
             print(f"Block IP: {ip}")
@@ -920,5 +920,5 @@ For questions or issues, consult:
 - `/tests/test_security_*.py` - Security test examples
 - Internal security team or <security@example.com>
 
-**Document Version**: 1.0  
+**Document Version**: 1.0
 **Last Updated**: 2025-12-31

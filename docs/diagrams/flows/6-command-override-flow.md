@@ -10,40 +10,40 @@ flowchart TD
     Start([Override Request]) --> CheckAuthenticated{Already<br/>Authenticated?}
     CheckAuthenticated -->|Yes| CheckExpired{Session<br/>Expired?}
     CheckAuthenticated -->|No| RequestPassword[Request Master Password<br/>GUI password dialog]
-    
+
     CheckExpired -->|No| BypassAuth[Skip Authentication<br/>Use existing session]
     CheckExpired -->|Yes| SessionExpired[❌ Session Expired<br/>Re-authentication required]
-    
+
     SessionExpired --> RequestPassword
     RequestPassword --> CheckLockout{Account<br/>Locked?}
-    
+
     CheckLockout -->|Yes| CalculateRemaining[Calculate Remaining Time<br/>locked_until - current_time]
     CalculateRemaining --> ShowLockout[❌ Account Locked<br/>Show remaining time]
     CheckLockout -->|No| HashPassword[Hash Password<br/>SHA-256 hex digest]
-    
+
     HashPassword --> CompareHash{Hash<br/>Matches?}
     CompareHash -->|No| IncrementFailures[Increment Failed Attempts<br/>failed_auth_attempts++]
     IncrementFailures --> CheckThreshold{Attempts<br/>>= 5?}
-    
+
     CheckThreshold -->|Yes| LockAccount[Lock Account<br/>30 min lockout]
     LockAccount --> LogLockout[Log Lockout Event<br/>audit.log]
     LogLockout --> SaveConfig[Save Config<br/>Persist locked_until]
     SaveConfig --> AuthFailed[❌ Authentication Failed<br/>Account locked]
-    
+
     CheckThreshold -->|No| LogFailure[Log Failed Attempt<br/>audit.log]
     LogFailure --> AuthFailed2[❌ Authentication Failed<br/>Invalid password]
-    
+
     CompareHash -->|Yes| ResetFailures[Reset Failed Attempts<br/>failed_auth_attempts = 0]
     ResetFailures --> SetTimestamp[Set Auth Timestamp<br/>Current UTC time]
     SetTimestamp --> SetAuthenticated[Set authenticated = True<br/>Session established]
     SetAuthenticated --> LogSuccess[Log Successful Auth<br/>audit.log with user ID]
-    
+
     LogSuccess --> BypassAuth
     BypassAuth --> SelectProtocol{Select<br/>Protocol to Override}
-    
+
     SelectProtocol --> ShowProtocols[Display Safety Protocols<br/>10 available protocols]
     ShowProtocols --> ProtocolChoice{User<br/>Choice}
-    
+
     ProtocolChoice -->|Content Filter| ContentProtocol[Override: content_filter<br/>Disable keyword blocking]
     ProtocolChoice -->|Prompt Safety| PromptProtocol[Override: prompt_safety<br/>Disable injection detection]
     ProtocolChoice -->|Data Validation| DataProtocol[Override: data_validation<br/>Allow unvalidated input]
@@ -55,7 +55,7 @@ flowchart TD
     ProtocolChoice -->|Cloud Encryption| CloudProtocol[Override: cloud_encryption<br/>Allow unencrypted uploads]
     ProtocolChoice -->|Emergency Only| EmergencyProtocol[Override: emergency_only<br/>Disable emergency mode lock]
     ProtocolChoice -->|Master Override| MasterOverride[Master Override<br/>Disable ALL protocols]
-    
+
     ContentProtocol --> ConfirmOverride
     PromptProtocol --> ConfirmOverride
     DataProtocol --> ConfirmOverride
@@ -67,41 +67,41 @@ flowchart TD
     CloudProtocol --> ConfirmOverride
     EmergencyProtocol --> ConfirmOverride
     MasterOverride --> ConfirmMaster{Master Override<br/>Confirmation}
-    
+
     ConfirmMaster -->|Cancel| Cancelled[⚠️ Override Cancelled<br/>Return to normal mode]
     ConfirmMaster -->|Confirm| SetMasterFlag[Set master_override_active = True<br/>All safety protocols off]
-    
+
     ConfirmOverride{Confirm<br/>Override?}
     ConfirmOverride -->|Cancel| Cancelled
     ConfirmOverride -->|Confirm| ToggleProtocol[Toggle Protocol State<br/>safety_protocols key = False]
-    
+
     SetMasterFlag --> LogMaster
     ToggleProtocol --> LogOverride[Log Override Action<br/>audit.log with protocol name]
-    
+
     LogOverride --> SaveState[Save Override Config<br/>Persist to JSON]
     SaveState --> NotifyUser[Notify User<br/>🚨 Safety Protocol Disabled]
-    
+
     LogMaster[Log Master Override<br/>audit.log with WARNING]
     LogMaster --> SaveState
-    
+
     NotifyUser --> IncrementCount[Increment Override Counter<br/>Track usage frequency]
     IncrementCount --> CheckUsage{Override Count<br/>>= 5?}
-    
+
     CheckUsage -->|Yes| ForceReauth[Force Re-Authentication<br/>Require password again]
     ForceReauth --> ClearSession[Clear authenticated flag<br/>Reset session]
     ClearSession --> ReauthPrompt[⚠️ Re-Auth Required<br/>Prompt for password]
-    
+
     CheckUsage -->|No| SetExpiration[Set Session Expiration<br/>1 hour from now]
     SetExpiration --> StartTimer[Start Expiration Timer<br/>QTimer background check]
     StartTimer --> Success([✅ Override Active<br/>Safety protocol bypassed])
-    
+
     ReauthPrompt --> RequestPassword
-    
+
     ShowLockout --> End([❌ Override Denied])
     AuthFailed --> End
     AuthFailed2 --> End
     Cancelled --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#ff8800,stroke:#ffff00,stroke-width:3px,color:#000
     style MasterOverride fill:#ff0000,stroke:#ff00ff,stroke-width:3px,color:#fff
@@ -288,14 +288,14 @@ def show_protocol_selector(parent, protocols: dict):
     """Show checkboxes for each protocol."""
     dialog = QDialog(parent)
     layout = QVBoxLayout()
-    
+
     checkboxes = {}
     for name, enabled in protocols.items():
         cb = QCheckBox(name.replace('_', ' ').title())
         cb.setChecked(not enabled)  # Checked = disabled
         checkboxes[name] = cb
         layout.addWidget(cb)
-    
+
     # OK/Cancel buttons
     buttons = QDialogButtonBox(
         QDialogButtonBox.Ok | QDialogButtonBox.Cancel
@@ -303,7 +303,7 @@ def show_protocol_selector(parent, protocols: dict):
     buttons.accepted.connect(dialog.accept)
     buttons.rejected.connect(dialog.reject)
     layout.addWidget(buttons)
-    
+
     dialog.setLayout(layout)
     if dialog.exec() == QDialog.Accepted:
         return {name: not cb.isChecked() for name, cb in checkboxes.items()}

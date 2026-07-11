@@ -2,9 +2,9 @@
 <!--                                        Productivity: Active -->
 # Signal Processing Kernel - Test Strategy & Coverage Plan
 
-**Module**: `src/app/pipeline/signal_flows.py` (763 lines)  
-**Current Tests**: `tests/test_signal_flows_comprehensive.py` (39 tests, ~65% estimated coverage)  
-**Target**: 95%+ branch coverage (100% line coverage)  
+**Module**: `src/app/pipeline/signal_flows.py` (763 lines)
+**Current Tests**: `tests/test_signal_flows_comprehensive.py` (39 tests, ~65% estimated coverage)
+**Target**: 95%+ branch coverage (100% line coverage)
 **Risk Level**: CRITICAL (PII, vault, audit, retry, circuit breakers)
 
 ---
@@ -151,9 +151,9 @@ pytest --cov=src.app.pipeline.signal_flows --cov-report=html --cov-branch
 Branch Coverage = (Branches Executed / Total Branches) × 100%
 ```
 
-**Current Estimate**: 65% branch coverage (39 tests)  
-**Target After Tier 1**: 85% branch coverage (+24 tests)  
-**Target After Tier 2**: 90% branch coverage (+7 tests)  
+**Current Estimate**: 65% branch coverage (39 tests)
+**Target After Tier 1**: 85% branch coverage (+24 tests)
+**Target After Tier 2**: 90% branch coverage (+7 tests)
 **Target After Tier 3**: 95%+ branch coverage (data-driven)
 
 ---
@@ -273,5 +273,5 @@ pytest tests/test_signal_flows_comprehensive.py -n auto
 - Coverage Report: `htmlcov/signal_flows.py.html` (after running with `--cov-report=html`)
 - Architecture: `docs/architecture/ENTERPRISE_MONOLITHIC_E2E_ARCHITECTURE.md`
 
-**Last Updated**: 2026-02-23  
+**Last Updated**: 2026-02-23
 **Status**: Tier 1 & 2 tests in progress, coverage-driven approach adopted

@@ -61,7 +61,7 @@ The issue report was **misleading** - it showed "0 vulnerability(ies)" for all p
 "cryptography>=3.4.0",
 "requests>=2.28.0",
 
-# After  
+# After
 "cryptography>=43.0.1",
 "requests>=2.32.4",
 ```
@@ -149,6 +149,6 @@ pip install -r requirements.txt
 
 ---
 
-**Status**: ✅ RESOLVED  
-**Last Updated**: 2026-01-07  
+**Status**: ✅ RESOLVED
+**Last Updated**: 2026-01-07
 **Verified By**: pip-audit 2.10.0 (clean environment test)

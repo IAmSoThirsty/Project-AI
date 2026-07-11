@@ -77,8 +77,8 @@ review_cycle: "quarterly"
 # Security Roadmap
 
 **Document Version:** 1.0
-**Last Updated:** 2026-01-19  
-**Owner:** Security Team (@org/security-guardians)  
+**Last Updated:** 2026-01-19
+**Owner:** Security Team (@org/security-guardians)
 **Review Cycle:** Quarterly
 
 ---
@@ -140,7 +140,7 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 
 #### Short-term (Q2 2026) - SLSA Level 2
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** DevOps Lead + Security Guardian
 
 **Initiatives:**
@@ -164,7 +164,7 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 
 #### Medium-term (Q3-Q4 2026) - SLSA Level 3
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** Security Team
 
 **Initiatives:**
@@ -185,7 +185,7 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 
 #### Long-term (2027+) - SLSA Level 4
 
-**Status:** 🔴 Research  
+**Status:** 🔴 Research
 **Owner:** TBD
 
 **Initiatives:**
@@ -237,7 +237,7 @@ Attacker introduces malicious dependencies through:
 
 #### Short-term (Q2 2026) - Enhanced Monitoring
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** Security Guardian
 
 **Initiatives:**
@@ -266,7 +266,7 @@ Attacker introduces malicious dependencies through:
 
 #### Medium-term (Q3-Q4 2026) - Dependency Hardening
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** DevOps + Security
 
 **Initiatives:**
@@ -294,7 +294,7 @@ Attacker introduces malicious dependencies through:
 
 #### Long-term (2027+) - Full Provenance
 
-**Status:** 🔴 Research  
+**Status:** 🔴 Research
 **Owner:** TBD
 
 **Initiatives:**
@@ -342,7 +342,7 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 
 #### Short-term (Q2 2026) - Enhanced Monitoring
 
-**Status:** 🟡 In Progress  
+**Status:** 🟡 In Progress
 **Owner:** ML Lead + Security Guardian
 
 **Initiatives:**
@@ -373,7 +373,7 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 
 #### Medium-term (Q3-Q4 2026) - Behavioral Analysis
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** ML Lead
 
 **Initiatives:**
@@ -402,7 +402,7 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 
 #### Long-term (2027+) - Advanced Verification
 
-**Status:** 🔴 Research  
+**Status:** 🔴 Research
 **Owner:** TBD
 
 **Initiatives:**
@@ -456,7 +456,7 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 
 #### Short-term (Q2 2026) - Input Hardening
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** ML Lead + Security Guardian
 
 **Initiatives:**
@@ -487,7 +487,7 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 
 #### Medium-term (Q3-Q4 2026) - Adversarial Training
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** ML Lead
 
 **Initiatives:**
@@ -516,7 +516,7 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 
 #### Long-term (2027+) - Advanced Defenses
 
-**Status:** 🔴 Research  
+**Status:** 🔴 Research
 **Owner:** TBD
 
 **Initiatives:**
@@ -567,7 +567,7 @@ Vulnerabilities in the running application that are not detectable through stati
 
 #### Short-term (Q2 2026) - DAST Implementation
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** Security Guardian + DevOps
 
 **Initiatives:**
@@ -597,7 +597,7 @@ Vulnerabilities in the running application that are not detectable through stati
 
 #### Medium-term (Q3-Q4 2026) - RASP Integration
 
-**Status:** 🟠 Planned  
+**Status:** 🟠 Planned
 **Owner:** Security Team
 
 **Initiatives:**
@@ -628,7 +628,7 @@ Vulnerabilities in the running application that are not detectable through stati
 
 #### Long-term (2027+) - Continuous Security
 
-**Status:** 🔴 Research  
+**Status:** 🔴 Research
 **Owner:** TBD
 
 **Initiatives:**

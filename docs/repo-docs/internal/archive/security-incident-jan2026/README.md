@@ -21,7 +21,7 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/security-incident-jan20
 
 # Security Incident - January 9, 2026 (ARCHIVED)
 
-**Status**: RESOLVED  
+**Status**: RESOLVED
 **Current Documentation**: See `SECURITY_INCIDENT_REPORT.md` in the repository root for comprehensive information.
 
 ## Contents of This Archive

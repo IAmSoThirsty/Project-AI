@@ -65,10 +65,10 @@ Unlike `OversightAgent` and `ValidatorAgent`, `PlannerAgent` does **NOT** inheri
 ```python
 class PlannerAgent:
     """Plans and orchestrates multi-step task execution.
-    
+
     GOVERNANCE BYPASS: Legacy stub agent with no AI operations.
     """
-    
+
     def __init__(self) -> None:
         # No kernel integration - operates as pure data structure
         self.enabled: bool = False  # Currently disabled
@@ -138,19 +138,19 @@ While the current implementation only contains initialization logic, the archite
 
 ```python
 def add_task(
-    self, 
-    task_id: str, 
-    description: str, 
+    self,
+    task_id: str,
+    description: str,
     dependencies: list[str] = None
 ) -> None:
     """
     Add a task to the execution queue.
-    
+
     Args:
         task_id: Unique identifier for the task
         description: Human-readable task description
         dependencies: List of task IDs that must complete first
-    
+
     Raises:
         ValueError: If task_id already exists
     """
@@ -169,7 +169,7 @@ planner.add_task("task_003", "Train model", dependencies=["task_002"])
 def get_ready_tasks(self) -> list[str]:
     """
     Get tasks that are ready to execute (all dependencies satisfied).
-    
+
     Returns:
         List of task IDs with status="pending" and all dependencies completed
     """
@@ -191,10 +191,10 @@ ready = planner.get_ready_tasks()  # ["task_002"]
 def complete_task(self, task_id: str) -> None:
     """
     Mark a task as completed.
-    
+
     Args:
         task_id: ID of task to mark complete
-    
+
     Raises:
         KeyError: If task_id not found
     """
@@ -206,7 +206,7 @@ def complete_task(self, task_id: str) -> None:
 def fail_task(self, task_id: str, reason: str) -> None:
     """
     Mark a task as failed.
-    
+
     Args:
         task_id: ID of task to mark failed
         reason: Failure reason for debugging
@@ -283,14 +283,14 @@ def _has_cycle(self, task_id: str, visited: set, stack: set) -> bool:
     """Detect cycles in dependency graph."""
     visited.add(task_id)
     stack.add(task_id)
-    
+
     for dep_id in self.tasks[task_id]["dependencies"]:
         if dep_id not in visited:
             if self._has_cycle(dep_id, visited, stack):
                 return True
         elif dep_id in stack:
             return True  # Cycle detected
-    
+
     stack.remove(task_id)
     return False
 ```
@@ -319,7 +319,7 @@ from app.core.cognition_kernel import CognitionKernel
 kernel = CognitionKernel()
 for task_id in planner.get_ready_tasks():
     task = planner.tasks[task_id]
-    
+
     # Execution requires governance check
     result = kernel.process(
         action=lambda: execute_task(task),
@@ -327,7 +327,7 @@ for task_id in planner.get_ready_tasks():
         execution_type=ExecutionType.SYSTEM_OPERATION,
         metadata={"task_id": task_id}
     )
-    
+
     if result.success:
         planner.complete_task(task_id)
     else:
@@ -356,14 +356,14 @@ while True:
     ready = planner.get_ready_tasks()
     if not ready:
         break  # All tasks completed
-    
+
     for task_id in ready:
         task = planner.tasks[task_id]
         print(f"Executing: {task['description']}")
-        
+
         # Execute task (actual logic goes here)
         execute_task(task)
-        
+
         # Mark complete
         planner.complete_task(task_id)
 
@@ -507,7 +507,7 @@ def add_task(self, task_id, description, dependencies=None):
         "dependencies": dependencies,
         "created_at": datetime.utcnow().isoformat()
     }
-    
+
     # Update cache
     if not dependencies:
         self._ready_cache.add(task_id)
@@ -519,7 +519,7 @@ def get_ready_tasks(self):
 def complete_task(self, task_id):
     self.tasks[task_id]["status"] = "completed"
     self._ready_cache.discard(task_id)
-    
+
     # Check if any pending tasks now ready
     for tid, task in self.tasks.items():
         if task["status"] == "pending":
@@ -561,7 +561,7 @@ planner = GovernedPlanner(kernel=kernel)
 def debug_dependencies(planner):
     for tid, task in planner.tasks.items():
         print(f"{tid}: {task['status']} (deps: {task['dependencies']})")
-        
+
         # Check if dependencies exist
         for dep_id in task["dependencies"]:
             if dep_id not in planner.tasks:
@@ -581,14 +581,14 @@ debug_dependencies(planner)
 def cleanup_completed_tasks(planner, max_age_hours=24):
     """Remove old completed/failed tasks."""
     cutoff = datetime.utcnow() - timedelta(hours=max_age_hours)
-    
+
     to_remove = []
     for tid, task in planner.tasks.items():
         if task["status"] in ["completed", "failed"]:
             completed_at = datetime.fromisoformat(task.get("completed_at", ""))
             if completed_at < cutoff:
                 to_remove.append(tid)
-    
+
     for tid in to_remove:
         del planner.tasks[tid]
 
@@ -678,11 +678,11 @@ planner.add_task("task1", "Do something", dependencies=[])
 
 ## Metadata
 
-**Document Maintainer**: Agent Development Team  
-**Review Cycle**: Quarterly  
-**Next Review**: 2026-07-20  
-**Deprecation Date**: 2027-01-01 (planned)  
-**Classification**: Internal Technical Documentation  
+**Document Maintainer**: Agent Development Team
+**Review Cycle**: Quarterly
+**Next Review**: 2026-07-20
+**Deprecation Date**: 2027-01-01 (planned)
+**Classification**: Internal Technical Documentation
 
 ---
 
@@ -690,4 +690,3 @@ planner.add_task("task1", "Do something", dependencies=[])
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

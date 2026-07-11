@@ -36,15 +36,15 @@ The Border Patrol system serves as **Project-AI's first line of defense** agains
 
 ### Key Features
 
-✅ **Four-Tier Hierarchy**: Cerberus (Chief of Security) → PortAdmins → WatchTowers → GateGuardians  
-✅ **Quarantine-Based Processing**: Files sealed in QuarantineBox until verified  
-✅ **Sandboxed Execution**: ProcessPoolExecutor with configurable timeout (default: 8s)  
-✅ **Dependency Auditing**: Integration with DependencyAuditor for package analysis  
-✅ **Automated Incident Recording**: Integration with Cerberus Dashboard  
-✅ **Force Field Activation**: Emergency lockdown on repeated attack detection  
-✅ **Attack Pattern Tracking**: Monitors repeated attacks from same source  
-✅ **Kernel-Routed Operations**: VerifierAgent operations routed through CognitionKernel  
-✅ **Scalable Architecture**: 10 WatchTowers × 5 GateGuardians = 50 verification gates  
+✅ **Four-Tier Hierarchy**: Cerberus (Chief of Security) → PortAdmins → WatchTowers → GateGuardians
+✅ **Quarantine-Based Processing**: Files sealed in QuarantineBox until verified
+✅ **Sandboxed Execution**: ProcessPoolExecutor with configurable timeout (default: 8s)
+✅ **Dependency Auditing**: Integration with DependencyAuditor for package analysis
+✅ **Automated Incident Recording**: Integration with Cerberus Dashboard
+✅ **Force Field Activation**: Emergency lockdown on repeated attack detection
+✅ **Attack Pattern Tracking**: Monitors repeated attacks from same source
+✅ **Kernel-Routed Operations**: VerifierAgent operations routed through CognitionKernel
+✅ **Scalable Architecture**: 10 WatchTowers × 5 GateGuardians = 50 verification gates
 
 ### Critical Context
 
@@ -782,10 +782,10 @@ def process_plugin(plugin_path: str) -> bool:
     # Step 1: Quarantine
     box = gate.ingest(plugin_path)
     logger.info(f"Quarantined: {plugin_path}")
-    
+
     # Step 2: Verify
     report = gate.process_next(plugin_path)
-    
+
     # Step 3: Check verdict
     if report["verdict"] == "clean":
         gate.release(plugin_path)
@@ -833,11 +833,11 @@ for admin_idx, admin in enumerate(admins):
 def monitor_security():
     """Monitor security status and alert on high incident rate."""
     baseline_incidents = 0
-    
+
     while True:
         status = cerberus.get_security_status()
         current_incidents = status["total_incidents"]
-        
+
         # Check for incident spike
         new_incidents = current_incidents - baseline_incidents
         if new_incidents > 10:
@@ -846,7 +846,7 @@ def monitor_security():
             )
             # Trigger incident response
             send_alert_to_security_team(status)
-        
+
         baseline_incidents = current_incidents
         time.sleep(60)  # Check every minute
 
@@ -880,25 +880,25 @@ def run_module(module_path: str) -> dict[str, Any]:
             resource.RLIMIT_AS,
             (50 * 1024 * 1024, 50 * 1024 * 1024)  # 50 MB memory
         )
-        
+
         # Restrict file system access
         os.chdir("/tmp")  # Isolated directory
-        
+
         # Import and execute module
         import importlib.util
         spec = importlib.util.spec_from_file_location("sandboxed", module_path)
         if not spec or not spec.loader:
             return {"error": "failed_to_load", "success": False}
-        
+
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        
+
         return {
             "success": True,
             "module_name": module.__name__,
             "functions": dir(module)
         }
-        
+
     except resource.error as e:
         return {"error": f"resource_limit_exceeded: {e}", "success": False}
     except Exception as e:
@@ -925,11 +925,11 @@ verifier = VerifierAgent(
 class VerifierAgent:
     def __init__(self, agent_id: str, data_dir: str = "data", ...):
         self.auditor = DependencyAuditor(data_dir=data_dir)
-    
+
     def _do_verify(self, file_path: str):
         # Dependency analysis
         deps_report = self.auditor.analyze_new_module(file_path)
-        
+
         # Check for suspicious packages
         if deps_report.get("suspicious_packages"):
             return {"verdict": "suspicious", ...}
@@ -962,16 +962,16 @@ if not box.verified:
 class PluginManager:
     def __init__(self):
         self.verifier = VerifierAgent("plugin_verifier")
-    
+
     def load_plugin(self, plugin_path: str):
         # Verify before loading
         report = self.verifier.verify(plugin_path)
-        
+
         if report["verdict"] != "clean":
             raise SecurityException(
                 f"Plugin failed verification: {report['verdict']}"
             )
-        
+
         # Safe to load
         import importlib.util
         spec = importlib.util.spec_from_file_location("plugin", plugin_path)
@@ -1018,7 +1018,7 @@ for plugin in malicious_plugins:
 
 - **Quarantine (ingest)**: ~0.1-1ms (dict operation + lock)
 - **Dependency Analysis**: ~5-20ms (file parsing)
-- **Sandbox Execution**: 
+- **Sandbox Execution**:
   - Success: ~50-500ms (depends on module complexity)
   - Timeout: exactly `timeout` seconds (8s default)
   - Exception: ~10-100ms (early termination)
@@ -1036,7 +1036,7 @@ for plugin in malicious_plugins:
 
 - **Concurrent Verifications**: Limited by `max_workers` (default: 2 per verifier)
 - **Horizontal Scaling**: Add more PortAdmins (independent hierarchies)
-- **Recommended Limits**: 
+- **Recommended Limits**:
   - 50 gates per PortAdmin
   - 100 concurrent verifications per server
   - 1000 verifications/minute per server
@@ -1088,11 +1088,11 @@ import signal
 def verify_with_hard_timeout(verifier: VerifierAgent, file_path: str, timeout: int):
     def timeout_handler(signum, frame):
         raise TimeoutError("Hard timeout reached")
-    
+
     # Set signal alarm
     signal.signal(signal.SIGALRM, timeout_handler)
     signal.alarm(timeout + 5)  # 5s buffer
-    
+
     try:
         report = verifier.verify(file_path)
         signal.alarm(0)  # Cancel alarm
@@ -1123,16 +1123,16 @@ class GateGuardianWithCleanup(GateGuardian):
         with self.lock:
             current_time = time.time()
             to_remove = []
-            
+
             for path, box in self.quarantine.items():
                 age = current_time - box.created_ts
                 if age > max_age_seconds:
                     to_remove.append(path)
-            
+
             for path in to_remove:
                 del self.quarantine[path]
                 logger.info(f"Cleaned up old quarantine: {path}")
-            
+
             return len(to_remove)
 
 # Run periodic cleanup
@@ -1166,12 +1166,12 @@ class WatchTowerWithRateLimiting(WatchTower):
     def __init__(self, tower_id: str, port_admin: PortAdmin):
         super().__init__(tower_id, port_admin)
         self.incident_rate_limiter = {}
-    
+
     def receive_report(self, gate_id: str, box: QuarantineBox):
         # Check rate limit
         source = box.metadata.get("sandbox", {}).get("source", gate_id)
         current_time = time.time()
-        
+
         # Rate limit: max 10 incidents per minute per source
         if source in self.incident_rate_limiter:
             last_incident_time, count = self.incident_rate_limiter[source]
@@ -1184,7 +1184,7 @@ class WatchTowerWithRateLimiting(WatchTower):
                 self.incident_rate_limiter[source] = (current_time, 1)
         else:
             self.incident_rate_limiter[source] = (current_time, 1)
-        
+
         # Proceed with normal processing
         super().receive_report(gate_id, box)
 ```
@@ -1244,7 +1244,7 @@ class GateGuardianWithForceField(GateGuardian):
                 f"Gate {self.gate_id}: Force field active, rejecting {file_path}"
             )
             return None
-        
+
         # Proceed with normal ingestion
         return super().ingest(file_path)
 
@@ -1349,20 +1349,20 @@ def verify_and_load_with_hash(verifier: VerifierAgent, file_path: str):
     # Compute hash before verification
     with open(file_path, 'rb') as f:
         hash_before = hashlib.sha256(f.read()).hexdigest()
-    
+
     # Verify
     report = verifier.verify(file_path)
-    
+
     if report["verdict"] != "clean":
         raise SecurityException("Verification failed")
-    
+
     # Verify hash unchanged
     with open(file_path, 'rb') as f:
         hash_after = hashlib.sha256(f.read()).hexdigest()
-    
+
     if hash_before != hash_after:
         raise SecurityException("File modified during verification (TOCTOU attack)")
-    
+
     # Safe to load
     import importlib.util
     spec = importlib.util.spec_from_file_location("plugin", file_path)
@@ -1420,4 +1420,3 @@ def verify_and_load_with_hash(verifier: VerifierAgent, file_path: str):
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

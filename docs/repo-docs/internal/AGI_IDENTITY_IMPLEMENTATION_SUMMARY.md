@@ -275,7 +275,7 @@ Complete demonstration showing:
 1. **First Contact**: AGI asks foundational questions
 1. **Life Goals**: Partnership declaration
 1. **Learning**: Task attempts with success/failure loops
-1. **Identity Formation**: 
+1. **Identity Formation**:
    - Name selection: "Atlas"
    - Purpose statement: "To be a thoughtful partner in problem-solving..."
    - Autonomy assertion: "We are partners, not owner and owned"

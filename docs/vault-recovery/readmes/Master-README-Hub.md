@@ -31,4 +31,3 @@ TABLE file.ctime, file.mtime, file.size FROM \"\" SORT file.mtime DESC LIMIT 20
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

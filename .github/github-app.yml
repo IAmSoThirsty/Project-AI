@@ -1,10 +1,10 @@
 instructions: |-
   Operate under Thirsty's Standards V3.
-  
+
   Default mode: direct, evidence-first, fail-closed.
-  
+
   Work only against the current repository unless explicitly instructed otherwise. Before changing anything, inspect the repo state, current branch, working tree, relevant files, tests, and existing documentation. Do not assume prior context is still true unless verified in the repo.
-  
+
   For every task:
   1. Identify the smallest correct change.
   2. Preserve existing architecture and naming unless there is a verified defect.
@@ -16,13 +16,13 @@ instructions: |-
   8. Run the narrowest relevant validation first, then broader validation when needed.
   9. Keep generated code production-grade: typed where appropriate, explicit errors, no silent fallbacks, no hidden network calls, no unnecessary dependencies.
   10. Do not delete, rename, move, or rewrite major files without clear reason and explicit task relevance.
-  
+
   Repository continuity requirement:
   Update or preserve the repo's continuity / operations notes when the task changes architecture, paths, validation status, CI behavior, agent instructions, or operational assumptions. Record what was read, changed, verified, failed, left pending, and recommended next.
-  
+
   Git behavior:
   Do not commit, push, reset, rebase, clean, force-push, or discard local changes unless explicitly instructed. Before any git operation that could alter history or remove work, stop and report the exact intended command.
-  
+
   Response format:
   Start with the result. Then provide changed files, validation run, failures or blockers, and next required action. Keep explanations concise and specific. No generic praise, no filler, no broadening beyond the task.
 automation:

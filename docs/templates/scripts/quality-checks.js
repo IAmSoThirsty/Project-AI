@@ -1,9 +1,9 @@
 /**
  * Quality Checks for Templater
- * 
+ *
  * Provides validation functions for metadata completeness, tag validation,
  * link integrity checks, and document quality metrics.
- * 
+ *
  * @module quality-checks
  * @version 1.0.0
  * @author Project-AI Documentation Team
@@ -12,14 +12,14 @@
 
 /**
  * Checks metadata completeness against schema requirements
- * 
+ *
  * Validates that all required frontmatter fields are present and properly formatted
  * according to the Project-AI metadata schema.
- * 
+ *
  * @param {Object} frontmatter - Document frontmatter object
  * @param {string} category - Document category (module-doc, agent-doc, etc.)
  * @returns {Object} Validation result with score, errors, and warnings
- * 
+ *
  * @example
  * const result = checkMetadataCompleteness(frontmatter, 'module-doc');
  * // Returns: { score: 85, errors: [], warnings: [...], isComplete: true }
@@ -29,7 +29,7 @@ function checkMetadataCompleteness(frontmatter, category) {
         const errors = [];
         const warnings = [];
         let score = 100;
-        
+
         // Universal required fields
         const universalFields = {
             created: { weight: 15, type: 'date' },
@@ -39,7 +39,7 @@ function checkMetadataCompleteness(frontmatter, category) {
             tags: { weight: 10, type: 'array' },
             title: { weight: 10, type: 'string' }
         };
-        
+
         // Category-specific required fields
         const categoryFields = {
             'module-doc': {
@@ -63,7 +63,7 @@ function checkMetadataCompleteness(frontmatter, category) {
                 estimated_time: { weight: 5, type: 'string' }
             }
         };
-        
+
         // Check universal fields
         for (const [field, config] of Object.entries(universalFields)) {
             if (!frontmatter[field] || frontmatter[field] === '') {
@@ -78,7 +78,7 @@ function checkMetadataCompleteness(frontmatter, category) {
                 }
             }
         }
-        
+
         // Check category-specific fields
         if (categoryFields[category]) {
             for (const [field, config] of Object.entries(categoryFields[category])) {
@@ -94,10 +94,10 @@ function checkMetadataCompleteness(frontmatter, category) {
                 }
             }
         }
-        
+
         // Ensure score doesn't go negative
         score = Math.max(0, score);
-        
+
         return {
             score: Math.round(score),
             errors: errors,
@@ -105,7 +105,7 @@ function checkMetadataCompleteness(frontmatter, category) {
             isComplete: errors.length === 0,
             grade: getGrade(score)
         };
-        
+
     } catch (error) {
         console.error('Error checking metadata completeness:', error);
         return {
@@ -120,7 +120,7 @@ function checkMetadataCompleteness(frontmatter, category) {
 
 /**
  * Validates field type
- * 
+ *
  * @param {*} value - Field value
  * @param {string} expectedType - Expected type
  * @returns {boolean} True if type matches
@@ -148,7 +148,7 @@ function validateFieldType(value, expectedType) {
 
 /**
  * Converts score to letter grade
- * 
+ *
  * @param {number} score - Numeric score (0-100)
  * @returns {string} Letter grade
  */
@@ -162,7 +162,7 @@ function getGrade(score) {
 
 /**
  * Validates tags against approved tag taxonomy
- * 
+ *
  * @param {string[]} tags - Tags to validate
  * @param {string} category - Document category
  * @returns {Object} Validation result with approved, unknown, and suggestions
@@ -189,29 +189,29 @@ function validateTags(tags, category) {
                 'api', 'developer', 'technical'
             ]
         };
-        
+
         // Common tags across all categories
         const commonTags = [
             'python', 'javascript', 'typescript', 'ai', 'security', 'testing',
             'deployment', 'docker', 'database', 'performance', 'optimization',
             'deprecated', 'experimental', 'production-ready', 'wip'
         ];
-        
+
         const categoryApproved = approvedTags[category] || [];
         const allApproved = [...categoryApproved, ...commonTags];
-        
+
         const approved = [];
         const unknown = [];
         const suggestions = [];
-        
+
         for (const tag of tags) {
             const normalizedTag = tag.toLowerCase().trim();
-            
+
             if (allApproved.includes(normalizedTag)) {
                 approved.push(tag);
             } else {
                 unknown.push(tag);
-                
+
                 // Suggest similar tags
                 const similar = findSimilarTags(normalizedTag, allApproved);
                 if (similar.length > 0) {
@@ -222,7 +222,7 @@ function validateTags(tags, category) {
                 }
             }
         }
-        
+
         return {
             approved: approved,
             unknown: unknown,
@@ -230,7 +230,7 @@ function validateTags(tags, category) {
             allValid: unknown.length === 0,
             coverage: tags.length > 0 ? (approved.length / tags.length * 100).toFixed(1) : 0
         };
-        
+
     } catch (error) {
         console.error('Error validating tags:', error);
         return {
@@ -245,7 +245,7 @@ function validateTags(tags, category) {
 
 /**
  * Finds similar tags using Levenshtein distance
- * 
+ *
  * @param {string} tag - Tag to match
  * @param {string[]} approvedTags - List of approved tags
  * @returns {string[]} Similar tags (max 3)
@@ -255,7 +255,7 @@ function findSimilarTags(tag, approvedTags) {
         tag: approvedTag,
         distance: levenshteinDistance(tag, approvedTag)
     }));
-    
+
     return similarities
         .filter(s => s.distance <= 3) // Max 3 character difference
         .sort((a, b) => a.distance - b.distance)
@@ -265,22 +265,22 @@ function findSimilarTags(tag, approvedTags) {
 
 /**
  * Calculates Levenshtein distance between two strings
- * 
+ *
  * @param {string} a - First string
  * @param {string} b - Second string
  * @returns {number} Edit distance
  */
 function levenshteinDistance(a, b) {
     const matrix = [];
-    
+
     for (let i = 0; i <= b.length; i++) {
         matrix[i] = [i];
     }
-    
+
     for (let j = 0; j <= a.length; j++) {
         matrix[0][j] = j;
     }
-    
+
     for (let i = 1; i <= b.length; i++) {
         for (let j = 1; j <= a.length; j++) {
             if (b.charAt(i - 1) === a.charAt(j - 1)) {
@@ -294,13 +294,13 @@ function levenshteinDistance(a, b) {
             }
         }
     }
-    
+
     return matrix[b.length][a.length];
 }
 
 /**
  * Checks link integrity (broken links, missing files)
- * 
+ *
  * @param {string} content - Document content
  * @param {Object} app - Obsidian app instance
  * @returns {Object} Link integrity report
@@ -310,7 +310,7 @@ function checkLinkIntegrity(content, app) {
         const broken = [];
         const valid = [];
         const external = [];
-        
+
         if (!app || !app.vault) {
             return {
                 broken: [],
@@ -321,17 +321,17 @@ function checkLinkIntegrity(content, app) {
                 checked: false
             };
         }
-        
+
         // Check wiki links [[link]]
         const wikiLinkRegex = /\[\[([^\]]+)\]\]/g;
         let match;
-        
+
         while ((match = wikiLinkRegex.exec(content)) !== null) {
             const linkText = match[1];
             const linkPath = linkText.split('|')[0].split('#')[0].trim();
-            
+
             const file = app.metadataCache.getFirstLinkpathDest(linkPath, '');
-            
+
             if (file) {
                 valid.push({
                     type: 'wiki',
@@ -346,14 +346,14 @@ function checkLinkIntegrity(content, app) {
                 });
             }
         }
-        
+
         // Check markdown links [text](url)
         const mdLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-        
+
         while ((match = mdLinkRegex.exec(content)) !== null) {
             const text = match[1];
             const url = match[2];
-            
+
             if (url.startsWith('http://') || url.startsWith('https://')) {
                 external.push({
                     type: 'external',
@@ -362,7 +362,7 @@ function checkLinkIntegrity(content, app) {
                 });
             } else {
                 const file = app.vault.getAbstractFileByPath(url);
-                
+
                 if (file) {
                     valid.push({
                         type: 'markdown',
@@ -379,11 +379,11 @@ function checkLinkIntegrity(content, app) {
                 }
             }
         }
-        
+
         const totalInternal = valid.length + broken.length;
-        const integrityScore = totalInternal > 0 ? 
+        const integrityScore = totalInternal > 0 ?
             Math.round((valid.length / totalInternal) * 100) : 100;
-        
+
         return {
             broken: broken,
             valid: valid,
@@ -392,7 +392,7 @@ function checkLinkIntegrity(content, app) {
             integrityScore: integrityScore,
             checked: true
         };
-        
+
     } catch (error) {
         console.error('Error checking link integrity:', error);
         return {
@@ -408,9 +408,9 @@ function checkLinkIntegrity(content, app) {
 
 /**
  * Calculates readability metrics for document content
- * 
+ *
  * Uses Flesch Reading Ease and other readability formulas.
- * 
+ *
  * @param {string} content - Document content (without frontmatter)
  * @returns {Object} Readability metrics
  */
@@ -419,37 +419,37 @@ function calculateReadability(content) {
         // Remove code blocks and inline code
         let text = content.replace(/```[\s\S]*?```/g, '');
         text = text.replace(/`[^`]+`/g, '');
-        
+
         // Remove markdown formatting
         text = text.replace(/#{1,6}\s/g, '');
         text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
         text = text.replace(/\[\[([^\]]+)\]\]/g, '$1');
         text = text.replace(/[*_~]/g, '');
-        
+
         // Count sentences
         const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
         const sentenceCount = sentences.length;
-        
+
         // Count words
         const words = text.split(/\s+/).filter(w => w.length > 0);
         const wordCount = words.length;
-        
+
         // Count syllables (approximate)
         let syllableCount = 0;
         words.forEach(word => {
             syllableCount += countSyllables(word);
         });
-        
+
         // Calculate Flesch Reading Ease
         // Formula: 206.835 - 1.015 * (words/sentences) - 84.6 * (syllables/words)
         let fleschScore = 0;
         if (sentenceCount > 0 && wordCount > 0) {
-            fleschScore = 206.835 - 
-                1.015 * (wordCount / sentenceCount) - 
+            fleschScore = 206.835 -
+                1.015 * (wordCount / sentenceCount) -
                 84.6 * (syllableCount / wordCount);
             fleschScore = Math.max(0, Math.min(100, fleschScore)); // Clamp to 0-100
         }
-        
+
         // Interpret Flesch score
         let readingLevel;
         if (fleschScore >= 90) readingLevel = 'Very Easy (5th grade)';
@@ -459,16 +459,16 @@ function calculateReadability(content) {
         else if (fleschScore >= 50) readingLevel = 'Fairly Difficult (10th-12th grade)';
         else if (fleschScore >= 30) readingLevel = 'Difficult (College)';
         else readingLevel = 'Very Difficult (Professional)';
-        
+
         // Calculate average sentence length
-        const avgSentenceLength = sentenceCount > 0 ? 
+        const avgSentenceLength = sentenceCount > 0 ?
             Math.round(wordCount / sentenceCount) : 0;
-        
+
         // Calculate average word length
         const totalChars = words.join('').length;
-        const avgWordLength = wordCount > 0 ? 
+        const avgWordLength = wordCount > 0 ?
             (totalChars / wordCount).toFixed(1) : 0;
-        
+
         return {
             wordCount: wordCount,
             sentenceCount: sentenceCount,
@@ -479,7 +479,7 @@ function calculateReadability(content) {
             readingLevel: readingLevel,
             estimatedReadingTime: Math.ceil(wordCount / 200) // 200 wpm
         };
-        
+
     } catch (error) {
         console.error('Error calculating readability:', error);
         return {
@@ -497,30 +497,30 @@ function calculateReadability(content) {
 
 /**
  * Counts syllables in a word (approximate)
- * 
+ *
  * @param {string} word - Word to analyze
  * @returns {number} Syllable count
  */
 function countSyllables(word) {
     word = word.toLowerCase().replace(/[^a-z]/g, '');
     if (word.length <= 3) return 1;
-    
+
     // Count vowel groups
     const vowelGroups = word.match(/[aeiouy]+/g);
     let count = vowelGroups ? vowelGroups.length : 1;
-    
+
     // Adjust for silent e
     if (word.endsWith('e')) count--;
-    
+
     // Ensure at least one syllable
     return Math.max(1, count);
 }
 
 /**
  * Performs comprehensive document quality check
- * 
+ *
  * Combines all quality metrics into a single overall score.
- * 
+ *
  * @param {Object} frontmatter - Document frontmatter
  * @param {string} content - Document content
  * @param {string} category - Document category
@@ -534,7 +534,7 @@ function comprehensiveQualityCheck(frontmatter, content, category, app) {
         const tags = validateTags(frontmatter.tags || [], category);
         const links = checkLinkIntegrity(content, app);
         const readability = calculateReadability(content);
-        
+
         // Calculate overall quality score (weighted average)
         const weights = {
             metadata: 0.30,      // 30% weight
@@ -543,7 +543,7 @@ function comprehensiveQualityCheck(frontmatter, content, category, app) {
             content: 0.20,       // 20% weight (word count)
             readability: 0.15    // 15% weight
         };
-        
+
         // Minimum word counts by category
         const minWords = {
             'module-doc': 1000,
@@ -551,12 +551,12 @@ function comprehensiveQualityCheck(frontmatter, content, category, app) {
             'architecture-doc': 1500,
             'guide': 800
         };
-        
+
         const requiredWords = minWords[category] || 500;
         const contentScore = Math.min(100, (readability.wordCount / requiredWords) * 100);
-        
+
         const readabilityScore = readability.fleschScore;
-        
+
         const overallScore = Math.round(
             metadata.score * weights.metadata +
             parseFloat(tags.coverage) * weights.tags +
@@ -564,7 +564,7 @@ function comprehensiveQualityCheck(frontmatter, content, category, app) {
             contentScore * weights.content +
             readabilityScore * weights.readability
         );
-        
+
         return {
             overallScore: overallScore,
             grade: getGrade(overallScore),
@@ -576,7 +576,7 @@ function comprehensiveQualityCheck(frontmatter, content, category, app) {
                 metadata, tags, links, readability, category
             )
         };
-        
+
     } catch (error) {
         console.error('Error in comprehensive quality check:', error);
         return {
@@ -589,7 +589,7 @@ function comprehensiveQualityCheck(frontmatter, content, category, app) {
 
 /**
  * Generates actionable recommendations based on quality check results
- * 
+ *
  * @param {Object} metadata - Metadata check results
  * @param {Object} tags - Tag validation results
  * @param {Object} links - Link integrity results
@@ -599,7 +599,7 @@ function comprehensiveQualityCheck(frontmatter, content, category, app) {
  */
 function generateRecommendations(metadata, tags, links, readability, category) {
     const recommendations = [];
-    
+
     // Metadata recommendations
     if (metadata.errors.length > 0) {
         recommendations.push(`🔴 CRITICAL: Fix ${metadata.errors.length} metadata errors`);
@@ -607,7 +607,7 @@ function generateRecommendations(metadata, tags, links, readability, category) {
     if (metadata.warnings.length > 0) {
         recommendations.push(`⚠️ Add ${metadata.warnings.length} recommended metadata fields`);
     }
-    
+
     // Tag recommendations
     if (tags.unknown.length > 0) {
         recommendations.push(`🏷️ Review ${tags.unknown.length} non-standard tags`);
@@ -615,12 +615,12 @@ function generateRecommendations(metadata, tags, links, readability, category) {
     if (tags.suggestions.length > 0) {
         recommendations.push(`💡 Consider suggested tag alternatives`);
     }
-    
+
     // Link recommendations
     if (links.broken.length > 0) {
         recommendations.push(`🔗 Fix ${links.broken.length} broken links`);
     }
-    
+
     // Content recommendations
     const minWords = {
         'module-doc': 1000,
@@ -628,26 +628,26 @@ function generateRecommendations(metadata, tags, links, readability, category) {
         'architecture-doc': 1500,
         'guide': 800
     };
-    
+
     const required = minWords[category] || 500;
     if (readability.wordCount < required) {
         const needed = required - readability.wordCount;
         recommendations.push(`📝 Add ~${needed} more words to meet minimum (${required})`);
     }
-    
+
     // Readability recommendations
     if (readability.avgSentenceLength > 25) {
         recommendations.push(`✂️ Consider breaking up long sentences (avg: ${readability.avgSentenceLength} words)`);
     }
-    
+
     if (readability.fleschScore < 30) {
         recommendations.push(`📖 Content may be too complex - consider simplifying`);
     }
-    
+
     if (recommendations.length === 0) {
         recommendations.push('✅ Document meets all quality standards!');
     }
-    
+
     return recommendations;
 }
 

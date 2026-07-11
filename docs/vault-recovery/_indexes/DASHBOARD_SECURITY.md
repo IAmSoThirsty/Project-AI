@@ -30,7 +30,7 @@ classification: internal
 ```dataviewjs
 // Show critical security findings from audit documents
 const securityAudits = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.type === "audit" || p.type === "assessment") &&
         (p.tags && p.tags.some(t => t.includes("security"))) &&
         (p.status === "active" || p.status === "review")
@@ -44,7 +44,7 @@ for (const audit of securityAudits) {
         for (const finding of audit.findings) {
             const severity = (finding.severity || finding.risk_level || "unknown").toLowerCase();
             const status = (finding.status || "open").toLowerCase();
-            
+
             if (status !== "resolved" && status !== "closed") {
                 const item = {
                     title: finding.title || finding.description || "Unnamed",
@@ -53,7 +53,7 @@ for (const audit of securityAudits) {
                     source: audit.file.link,
                     date: finding.date || audit.created_date
                 };
-                
+
                 if (severity === "critical") {
                     criticalFindings.push(item);
                 } else if (severity === "high") {
@@ -93,7 +93,7 @@ if (highFindings.length > 0) {
 ```dataviewjs
 // Track security documentation coverage
 const securityDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.category === "security" || p.tags && p.tags.some(t => t.includes("security")))
     );
 
@@ -111,7 +111,7 @@ const docTypes = {
 for (const doc of securityDocs) {
     const type = doc.type || "unknown";
     const tags = doc.tags || [];
-    
+
     if (type === "policy" || tags.includes("policy")) docTypes["Security Policy"]++;
     if (type === "audit" || tags.includes("audit")) docTypes["Audit Report"]++;
     if (tags.includes("threat-model") || tags.includes("threat")) docTypes["Threat Model"]++;
@@ -162,7 +162,7 @@ for (const doc of complianceDocs) {
         const framework = comp.framework || comp;
         if (coverage[framework]) {
             coverage[framework].total++;
-            
+
             const status = (comp.status || "unknown").toLowerCase();
             if (status === "compliant" || status === "passed") {
                 coverage[framework].compliant++;
@@ -179,9 +179,9 @@ dv.table(
     ["Framework", "Total Docs", "✅ Compliant", "🟡 Partial", "❌ Non-Compliant", "Coverage"],
     frameworks.map(fw => {
         const data = coverage[fw];
-        const coveragePercent = data.total > 0 ? 
+        const coveragePercent = data.total > 0 ?
             Math.round(((data.compliant + data.partial * 0.5) / data.total) * 100) : 0;
-        
+
         return [
             fw,
             data.total,
@@ -201,9 +201,9 @@ dv.table(
 ```dataviewjs
 // Security control coverage for auth systems
 const authDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.tags && (
-            p.tags.includes("authentication") || 
+            p.tags.includes("authentication") ||
             p.tags.includes("authorization") ||
             p.tags.includes("access-control")
         )
@@ -224,7 +224,7 @@ const authControls = {
 for (const doc of authDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (tags.includes("password") || title.includes("password")) authControls["Password Policy"] = true;
     if (tags.includes("mfa") || tags.includes("2fa") || title.includes("multi-factor")) authControls["MFA/2FA"] = true;
     if (tags.includes("session") || title.includes("session")) authControls["Session Management"] = true;
@@ -256,7 +256,7 @@ dv.header(4, `Auth control coverage: ${implementedCount}/${Object.keys(authContr
 ```dataviewjs
 // Recent security audits and assessments
 const auditDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.type === "audit" || p.type === "assessment") &&
         (p.tags && p.tags.some(t => t.includes("security")))
     )
@@ -268,7 +268,7 @@ dv.table(
     auditDocs.map(p => {
         const findingCount = (p.findings && Array.isArray(p.findings)) ? p.findings.length : 0;
         const riskLevel = p.risk_level || p.overall_risk || "Unknown";
-        
+
         return [
             p.file.link,
             p.type || "Unknown",
@@ -296,9 +296,9 @@ dv.header(4, `${recentAudits} security audits conducted in last 90 days`);
 ```dataviewjs
 // Track security incidents and response
 const incidents = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && (
-            p.tags.includes("incident") || 
+            p.tags.includes("incident") ||
             p.tags.includes("breach") ||
             p.tags.includes("security-event")
         )) ||
@@ -333,10 +333,10 @@ const statusIcons = {
 
 for (const [status, docs] of Object.entries(byStatus)) {
     if (docs.length === 0) continue;
-    
+
     const icon = statusIcons[status] || "⚪";
     dv.header(4, `${icon} ${status.toUpperCase()} (${docs.length})`);
-    
+
     if (docs.length > 0 && (status === "open" || status === "investigating")) {
         dv.table(
             ["Incident", "Severity", "Date", "Owner"],
@@ -365,7 +365,7 @@ if (openIncidents > 0) {
 ```dataviewjs
 // Cryptography implementation tracking
 const cryptoDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.tags && (
             p.tags.includes("cryptography") ||
             p.tags.includes("encryption") ||
@@ -385,7 +385,7 @@ const cryptoAreas = {
 for (const doc of cryptoDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (tags.includes("at-rest") || title.includes("at rest") || title.includes("disk encryption")) {
         cryptoAreas["Data at Rest Encryption"] = true;
     }
@@ -424,7 +424,7 @@ dv.table(
 ```dataviewjs
 // Calculate security health score
 const allSecDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.category === "security" ||
         (p.tags && p.tags.some(t => t.includes("security")))
     );
@@ -448,7 +448,7 @@ for (const doc of allSecDocs) {
     if (doc.type === "audit" || doc.type === "assessment") metrics.auditsConducted++;
     if (doc.type === "policy" && doc.status === "active") metrics.policiesActive++;
     if (doc.updated_date && new Date(doc.updated_date) >= cutoffDate) metrics.recentUpdates++;
-    
+
     if (doc.findings && Array.isArray(doc.findings)) {
         for (const finding of doc.findings) {
             const status = (finding.status || "open").toLowerCase();
@@ -472,7 +472,7 @@ const healthScore = Math.round((
     (metrics.recentUpdates / metrics.totalDocs) * 15
 ));
 
-const progressBar = "█".repeat(Math.floor(healthScore / 5)) + 
+const progressBar = "█".repeat(Math.floor(healthScore / 5)) +
                    "░".repeat(20 - Math.floor(healthScore / 5));
 
 dv.header(3, `Security Health Score: ${healthScore}%`);
@@ -516,4 +516,3 @@ dv.table(
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

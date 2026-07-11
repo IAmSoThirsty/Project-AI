@@ -64,4 +64,3 @@ To clone a local repository, I'll use the `obsidian` command-line tool. Please p
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

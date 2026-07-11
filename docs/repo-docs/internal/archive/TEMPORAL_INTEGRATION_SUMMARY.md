@@ -235,7 +235,7 @@ from app.temporal.workflows import AILearningWorkflow, LearningRequest
 async def run_learning():
     manager = TemporalClientManager()
     await manager.connect()
-    
+
     handle = await manager.client.start_workflow(
         AILearningWorkflow.run,
         LearningRequest(
@@ -246,7 +246,7 @@ async def run_learning():
         id=f"learning-{timestamp}",
         task_queue="project-ai-tasks",
     )
-    
+
     result = await handle.result()
     print(f"Success: {result.success}, ID: {result.knowledge_id}")
 ```
@@ -365,8 +365,8 @@ This integration was originally developed in the **"Expert space waddle"** works
 
 ---
 
-**Integration Status**: ✅ Complete  
-**Commits**: e6d1c74, 497911d  
-**Lines Added**: ~2,650  
-**Test Coverage**: 30 tests  
+**Integration Status**: ✅ Complete
+**Commits**: e6d1c74, 497911d
+**Lines Added**: ~2,650
+**Test Coverage**: 30 tests
 **Ready for Production**: Yes

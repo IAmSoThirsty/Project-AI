@@ -256,7 +256,7 @@ results = []
 for inp in inputs:
     result = triumvirate.process(inp)
     results.append(result)
-    
+
 # Check failures
 failures = [r for r in results if not r['success']]
 print(f"Failed: {len(failures)}/{len(inputs)}")

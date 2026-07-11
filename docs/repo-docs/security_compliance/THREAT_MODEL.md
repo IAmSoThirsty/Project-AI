@@ -92,9 +92,9 @@ audience:
 
 # Project-AI Threat Model
 
-**Version**: 1.0.0  
-**Last Updated**: 2026-02-08  
-**Status**: Active  
+**Version**: 1.0.0
+**Last Updated**: 2026-02-08
+**Status**: Active
 **Scope**: Monolithic Architecture, TARL Policy Runtime, Governance Surfaces
 
 ---
@@ -359,38 +359,38 @@ See complete defense mappings in [[AGENT-087-THREAT-DEFENSE-MATRIX.md#tarl-runti
 ## Threat Scenarios
 
 ### Scenario 1: Malicious Plugin Installation
-**Attacker Goal**: Execute arbitrary code via plugin  
-**Attack Path**: User installs compromised plugin  
-**Impact**: File access within user permissions, data exfiltration  
-**Likelihood**: MEDIUM (requires social engineering)  
+**Attacker Goal**: Execute arbitrary code via plugin
+**Attack Path**: User installs compromised plugin
+**Impact**: File access within user permissions, data exfiltration
+**Likelihood**: MEDIUM (requires social engineering)
 **Mitigation**: Plugin sandboxing, permission prompts, code signing
 
 ### Scenario 2: Master Password Compromise
-**Attacker Goal**: Bypass all governance controls  
-**Attack Path**: Phishing, keylogging, weak password  
-**Impact**: COMPLETE control override, audit log tampering  
-**Likelihood**: LOW (requires targeted attack)  
+**Attacker Goal**: Bypass all governance controls
+**Attack Path**: Phishing, keylogging, weak password
+**Impact**: COMPLETE control override, audit log tampering
+**Likelihood**: LOW (requires targeted attack)
 **Mitigation**: Strong password policy, 2FA (planned), audit monitoring
 
 ### Scenario 3: TARL Bytecode Exploit
-**Attacker Goal**: Bypass constitutional constraints  
-**Attack Path**: Crafted bytecode exploiting VM bug  
-**Impact**: Policy bypass, unauthorized operations  
-**Likelihood**: VERY LOW (constitutional kernel defense-in-depth)  
+**Attacker Goal**: Bypass constitutional constraints
+**Attack Path**: Crafted bytecode exploiting VM bug
+**Impact**: Policy bypass, unauthorized operations
+**Likelihood**: VERY LOW (constitutional kernel defense-in-depth)
 **Mitigation**: Bytecode validation, constitutional kernel, formal verification (planned)
 
 ### Scenario 4: State File Corruption
-**Attacker Goal**: Corrupt application state  
-**Attack Path**: Direct file modification, malformed JSON  
-**Impact**: Application crash, data loss  
-**Likelihood**: MEDIUM (local access required)  
+**Attacker Goal**: Corrupt application state
+**Attack Path**: Direct file modification, malformed JSON
+**Impact**: Application crash, data loss
+**Likelihood**: MEDIUM (local access required)
 **Mitigation**: JSON validation, integrity checks, backups
 
 ### Scenario 5: Web API Exploitation (Deployment)
-**Attacker Goal**: Remote code execution  
-**Attack Path**: API injection, authentication bypass  
-**Impact**: Server compromise, data breach  
-**Likelihood**: HIGH (if poorly deployed)  
+**Attacker Goal**: Remote code execution
+**Attack Path**: API injection, authentication bypass
+**Impact**: Server compromise, data breach
+**Likelihood**: HIGH (if poorly deployed)
 **Mitigation**: Security hardening guide, TLS, WAF, rate limiting
 
 ---
@@ -443,9 +443,9 @@ See complete defense mappings in [[AGENT-087-THREAT-DEFENSE-MATRIX.md#tarl-runti
 
 ### Severity Levels
 
-**Critical (P0)**: Master password compromise, TARL VM exploit  
-**High (P1)**: Plugin sandbox escape, authentication bypass  
-**Medium (P2)**: State corruption, resource exhaustion  
+**Critical (P0)**: Master password compromise, TARL VM exploit
+**High (P1)**: Plugin sandbox escape, authentication bypass
+**Medium (P2)**: State corruption, resource exhaustion
 **Low (P3)**: Minor validation gaps, logging issues
 
 ### Response Procedures
@@ -478,9 +478,9 @@ See complete defense mappings in [[AGENT-087-THREAT-DEFENSE-MATRIX.md#tarl-runti
 
 ## Review & Updates
 
-**Review Frequency**: Quarterly  
-**Next Review**: 2026-05-08  
-**Owner**: @IAmSoThirsty  
+**Review Frequency**: Quarterly
+**Next Review**: 2026-05-08
+**Owner**: @IAmSoThirsty
 **Approvers**: Security Team, Architecture Team
 
 ### Change Log
@@ -503,6 +503,6 @@ For adversarial review or security research:
 
 ---
 
-**Maintained by**: Security & Architecture Teams  
-**Classification**: Public  
+**Maintained by**: Security & Architecture Teams
+**Classification**: Public
 **Distribution**: Unlimited

@@ -147,7 +147,7 @@ from temporalio.client import Client, Schedule, ScheduleActionStartWorkflow, Sch
 
 async def setup_schedules():
     client = await Client.connect("localhost:7233")
-    
+
     # Daily at 2 AM
     await client.create_schedule(
         "red-team-daily",

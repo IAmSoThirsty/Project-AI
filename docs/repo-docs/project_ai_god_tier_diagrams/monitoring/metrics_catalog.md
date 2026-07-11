@@ -32,8 +32,8 @@ This document catalogs all metrics exposed by Project-AI components. Each metric
 ### Request Metrics
 
 #### project_ai_requests_total
-**Type**: Counter  
-**Description**: Total number of HTTP requests  
+**Type**: Counter
+**Description**: Total number of HTTP requests
 **Labels**:
 - `method`: HTTP method (GET, POST, PUT, DELETE)
 - `endpoint`: API endpoint path
@@ -45,7 +45,7 @@ This document catalogs all metrics exposed by Project-AI components. Each metric
 rate(project_ai_requests_total[5m])
 
 # Error rate percentage
-sum(rate(project_ai_requests_total{status=~"5.."}[5m])) 
+sum(rate(project_ai_requests_total{status=~"5.."}[5m]))
 / sum(rate(project_ai_requests_total[5m])) * 100
 
 # Requests by endpoint
@@ -53,8 +53,8 @@ sum(increase(project_ai_requests_total[1h])) by (endpoint)
 ```
 
 #### project_ai_request_duration_seconds
-**Type**: Histogram  
-**Description**: HTTP request duration in seconds  
+**Type**: Histogram
+**Description**: HTTP request duration in seconds
 **Labels**:
 - `method`: HTTP method
 - `endpoint`: API endpoint path
@@ -64,12 +64,12 @@ sum(increase(project_ai_requests_total[1h])) by (endpoint)
 **Example Query**:
 ```promql
 # p95 response time
-histogram_quantile(0.95, 
+histogram_quantile(0.95,
   sum(rate(project_ai_request_duration_seconds_bucket[5m])) by (le, endpoint)
 )
 
 # Average response time
-rate(project_ai_request_duration_seconds_sum[5m]) 
+rate(project_ai_request_duration_seconds_sum[5m])
 / rate(project_ai_request_duration_seconds_count[5m])
 
 # Slow requests (>5s)
@@ -79,8 +79,8 @@ sum(rate(project_ai_request_duration_seconds_bucket{le="5"}[5m])) by (endpoint)
 ### AI Model Metrics
 
 #### project_ai_ai_inference_total
-**Type**: Counter  
-**Description**: Total number of AI inferences  
+**Type**: Counter
+**Description**: Total number of AI inferences
 **Labels**:
 - `model`: Model name (gpt-4, gpt-3.5-turbo, etc.)
 - `backend`: Backend provider (openai, huggingface)
@@ -100,8 +100,8 @@ sum(increase(project_ai_ai_inference_total{status="error"}[1h])) by (model)
 ```
 
 #### project_ai_ai_inference_duration_seconds
-**Type**: Histogram  
-**Description**: AI model inference duration in seconds  
+**Type**: Histogram
+**Description**: AI model inference duration in seconds
 **Labels**:
 - `model`: Model name
 - `backend`: Backend provider
@@ -111,18 +111,18 @@ sum(increase(project_ai_ai_inference_total{status="error"}[1h])) by (model)
 **Example Query**:
 ```promql
 # p95 inference time by model
-histogram_quantile(0.95, 
+histogram_quantile(0.95,
   sum(rate(project_ai_ai_inference_duration_seconds_bucket[5m])) by (le, model)
 )
 
 # Average inference time
-rate(project_ai_ai_inference_duration_seconds_sum[5m]) 
+rate(project_ai_ai_inference_duration_seconds_sum[5m])
 / rate(project_ai_ai_inference_duration_seconds_count[5m])
 ```
 
 #### project_ai_ai_tokens_total
-**Type**: Counter  
-**Description**: Total number of tokens used for AI inference  
+**Type**: Counter
+**Description**: Total number of tokens used for AI inference
 **Labels**:
 - `model`: Model name
 - `type`: Token type (prompt, completion)
@@ -142,8 +142,8 @@ sum(increase(project_ai_ai_tokens_total[1d])) / 1000 * 0.01
 ### Image Generation Metrics
 
 #### project_ai_image_generation_total
-**Type**: Counter  
-**Description**: Total number of images generated  
+**Type**: Counter
+**Description**: Total number of images generated
 **Labels**:
 - `backend`: Backend provider (huggingface, openai)
 - `style`: Image style (photorealistic, anime, etc.)
@@ -163,8 +163,8 @@ topk(5, sum(increase(project_ai_image_generation_total[1d])) by (style))
 ```
 
 #### project_ai_image_generation_duration_seconds
-**Type**: Histogram  
-**Description**: Image generation duration in seconds  
+**Type**: Histogram
+**Description**: Image generation duration in seconds
 **Labels**:
 - `backend`: Backend provider
 - `style`: Image style
@@ -174,7 +174,7 @@ topk(5, sum(increase(project_ai_image_generation_total[1d])) by (style))
 **Example Query**:
 ```promql
 # p95 generation time
-histogram_quantile(0.95, 
+histogram_quantile(0.95,
   sum(rate(project_ai_image_generation_duration_seconds_bucket[5m])) by (le, backend)
 )
 ```
@@ -182,8 +182,8 @@ histogram_quantile(0.95,
 ### User Activity Metrics
 
 #### project_ai_active_users
-**Type**: Gauge  
-**Description**: Number of currently active users  
+**Type**: Gauge
+**Description**: Number of currently active users
 **Labels**:
 - `instance`: Application instance
 
@@ -200,8 +200,8 @@ max_over_time(project_ai_active_users[1d])
 ```
 
 #### project_ai_user_sessions_total
-**Type**: Counter  
-**Description**: Total number of user sessions created  
+**Type**: Counter
+**Description**: Total number of user sessions created
 **Labels**:
 - `instance`: Application instance
 
@@ -215,8 +215,8 @@ sum(increase(project_ai_user_sessions_total[1d]))
 ```
 
 #### project_ai_chat_messages_total
-**Type**: Counter  
-**Description**: Total number of chat messages  
+**Type**: Counter
+**Description**: Total number of chat messages
 **Labels**:
 - `persona`: AI persona name
 - `direction`: Message direction (user, ai)
@@ -234,8 +234,8 @@ sum(rate(project_ai_chat_messages_total{direction="user"}[5m]))
 ### Feature Usage Metrics
 
 #### project_ai_feature_usage_total
-**Type**: Counter  
-**Description**: Total feature usage count  
+**Type**: Counter
+**Description**: Total feature usage count
 **Labels**:
 - `feature`: Feature name (image_generation, learning_path, command_override, etc.)
 - `status`: Usage status (success, error)
@@ -250,8 +250,8 @@ sum(rate(project_ai_feature_usage_total[1w])) by (feature)
 ```
 
 #### project_ai_learning_paths_total
-**Type**: Counter  
-**Description**: Total learning paths generated  
+**Type**: Counter
+**Description**: Total learning paths generated
 **Labels**:
 - `category`: Learning category (security, ml, web_dev, etc.)
 - `status`: Generation status
@@ -266,8 +266,8 @@ sum(increase(project_ai_learning_paths_total[1w])) by (category)
 ```
 
 #### project_ai_command_overrides_total
-**Type**: Counter  
-**Description**: Total command override attempts  
+**Type**: Counter
+**Description**: Total command override attempts
 **Labels**:
 - `status`: Override status (success, denied, invalid_password)
 
@@ -286,8 +286,8 @@ sum(rate(project_ai_command_overrides_total{status="success"}[5m]))
 ### CPU Metrics
 
 #### node_cpu_seconds_total
-**Type**: Counter  
-**Description**: CPU time spent in different modes  
+**Type**: Counter
+**Description**: CPU time spent in different modes
 **Labels**:
 - `cpu`: CPU core number
 - `mode`: CPU mode (user, system, idle, iowait, etc.)
@@ -307,15 +307,15 @@ rate(node_cpu_seconds_total[5m])
 ### Memory Metrics
 
 #### node_memory_MemTotal_bytes
-**Type**: Gauge  
+**Type**: Gauge
 **Description**: Total system memory in bytes
 
 #### node_memory_MemAvailable_bytes
-**Type**: Gauge  
+**Type**: Gauge
 **Description**: Available system memory in bytes
 
 #### node_memory_MemFree_bytes
-**Type**: Gauge  
+**Type**: Gauge
 **Description**: Free system memory in bytes
 
 **Example Query**:
@@ -327,21 +327,21 @@ rate(node_cpu_seconds_total[5m])
 node_memory_MemAvailable_bytes / 1024 / 1024 / 1024
 
 # Memory pressure (high usage)
-(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) 
+(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)
 / node_memory_MemTotal_bytes > 0.8
 ```
 
 ### Disk Metrics
 
 #### node_filesystem_size_bytes
-**Type**: Gauge  
-**Description**: Filesystem size in bytes  
+**Type**: Gauge
+**Description**: Filesystem size in bytes
 **Labels**:
 - `device`: Device name
 - `mountpoint`: Mount point path
 
 #### node_filesystem_avail_bytes
-**Type**: Gauge  
+**Type**: Gauge
 **Description**: Available filesystem space in bytes
 
 **Example Query**:
@@ -357,8 +357,8 @@ node_filesystem_avail_bytes / 1024 / 1024 / 1024
 ```
 
 #### node_disk_io_time_seconds_total
-**Type**: Counter  
-**Description**: Total time spent doing I/Os  
+**Type**: Counter
+**Description**: Total time spent doing I/Os
 **Labels**:
 - `device`: Disk device name
 
@@ -374,11 +374,11 @@ rate(node_disk_io_time_seconds_total[5m]) * 100
 ### Network Metrics
 
 #### node_network_receive_bytes_total
-**Type**: Counter  
+**Type**: Counter
 **Description**: Network device receive bytes
 
 #### node_network_transmit_bytes_total
-**Type**: Counter  
+**Type**: Counter
 **Description**: Network device transmit bytes
 
 **Example Query**:
@@ -398,17 +398,17 @@ sum(rate(node_network_receive_bytes_total[5m]) + rate(node_network_transmit_byte
 ### PostgreSQL Metrics
 
 #### pg_stat_database_numbackends
-**Type**: Gauge  
-**Description**: Number of backends currently connected to this database  
+**Type**: Gauge
+**Description**: Number of backends currently connected to this database
 **Labels**:
 - `datname`: Database name
 
 #### pg_stat_database_xact_commit
-**Type**: Counter  
+**Type**: Counter
 **Description**: Number of transactions committed in this database
 
 #### pg_stat_database_xact_rollback
-**Type**: Counter  
+**Type**: Counter
 **Description**: Number of transactions rolled back in this database
 
 **Example Query**:
@@ -420,13 +420,13 @@ sum(pg_stat_database_numbackends) by (datname)
 rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m])
 
 # Rollback rate
-rate(pg_stat_database_xact_rollback[5m]) 
+rate(pg_stat_database_xact_rollback[5m])
 / (rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m]))
 ```
 
 #### pg_stat_statements_total_time
-**Type**: Counter  
-**Description**: Total time spent in query execution  
+**Type**: Counter
+**Description**: Total time spent in query execution
 **Labels**:
 - `datname`: Database name
 - `queryid`: Query identifier
@@ -437,7 +437,7 @@ rate(pg_stat_database_xact_rollback[5m])
 topk(10, rate(pg_stat_statements_total_time[5m]))
 
 # Average query duration
-rate(pg_stat_statements_total_time[5m]) 
+rate(pg_stat_statements_total_time[5m])
 / rate(pg_stat_statements_calls[5m])
 ```
 
@@ -446,30 +446,30 @@ rate(pg_stat_statements_total_time[5m])
 ### Redis Metrics
 
 #### redis_keyspace_hits_total
-**Type**: Counter  
+**Type**: Counter
 **Description**: Number of successful key lookups
 
 #### redis_keyspace_misses_total
-**Type**: Counter  
+**Type**: Counter
 **Description**: Number of failed key lookups
 
 **Example Query**:
 ```promql
 # Cache hit rate
-rate(redis_keyspace_hits_total[5m]) 
+rate(redis_keyspace_hits_total[5m])
 / (rate(redis_keyspace_hits_total[5m]) + rate(redis_keyspace_misses_total[5m])) * 100
 
 # Cache miss rate
-rate(redis_keyspace_misses_total[5m]) 
+rate(redis_keyspace_misses_total[5m])
 / (rate(redis_keyspace_hits_total[5m]) + rate(redis_keyspace_misses_total[5m])) * 100
 ```
 
 #### redis_memory_used_bytes
-**Type**: Gauge  
+**Type**: Gauge
 **Description**: Total number of bytes allocated by Redis
 
 #### redis_memory_max_bytes
-**Type**: Gauge  
+**Type**: Gauge
 **Description**: Maximum memory limit for Redis
 
 **Example Query**:
@@ -482,7 +482,7 @@ redis_memory_max_bytes - redis_memory_used_bytes
 ```
 
 #### redis_evicted_keys_total
-**Type**: Counter  
+**Type**: Counter
 **Description**: Number of evicted keys due to maxmemory limit
 
 **Example Query**:
@@ -499,8 +499,8 @@ sum(increase(redis_evicted_keys_total[1d]))
 ### Workflow Execution Metrics
 
 #### temporal_workflow_execution_count
-**Type**: Counter  
-**Description**: Total number of workflow executions  
+**Type**: Counter
+**Description**: Total number of workflow executions
 **Labels**:
 - `workflow_type`: Workflow type name
 - `status`: Execution status (completed, failed, timeout)
@@ -516,8 +516,8 @@ sum(rate(temporal_workflow_execution_count{status="completed"}[5m])) by (workflo
 ```
 
 #### temporal_workflow_duration_seconds
-**Type**: Histogram  
-**Description**: Workflow execution duration  
+**Type**: Histogram
+**Description**: Workflow execution duration
 **Labels**:
 - `workflow_type`: Workflow type name
 
@@ -526,14 +526,14 @@ sum(rate(temporal_workflow_execution_count{status="completed"}[5m])) by (workflo
 **Example Query**:
 ```promql
 # p95 workflow duration
-histogram_quantile(0.95, 
+histogram_quantile(0.95,
   sum(rate(temporal_workflow_duration_seconds_bucket[5m])) by (le, workflow_type)
 )
 ```
 
 #### temporal_task_queue_depth
-**Type**: Gauge  
-**Description**: Number of tasks in queue  
+**Type**: Gauge
+**Description**: Number of tasks in queue
 **Labels**:
 - `queue_name`: Task queue name
 
@@ -549,14 +549,14 @@ avg_over_time(temporal_task_queue_depth[1h])
 ## Business Metrics
 
 #### project_ai_revenue_total
-**Type**: Counter  
-**Description**: Total revenue (if monetized)  
+**Type**: Counter
+**Description**: Total revenue (if monetized)
 **Labels**:
 - `plan`: Subscription plan (free, pro, enterprise)
 
 #### project_ai_conversion_total
-**Type**: Counter  
-**Description**: Total conversion events  
+**Type**: Counter
+**Description**: Total conversion events
 **Labels**:
 - `event_type`: Conversion event (signup, upgrade, churn)
 
@@ -626,7 +626,7 @@ print(f"Estimated storage: {storage_gb:.2f} GB")
 
 ❌ **Avoid**:
 - User IDs
-- Request IDs  
+- Request IDs
 - Trace IDs
 - IP addresses
 - Timestamps

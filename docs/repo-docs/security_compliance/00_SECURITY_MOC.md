@@ -1,8 +1,8 @@
 # Security & Compliance MOC - Project-AI Security Framework
 
-> **📍 Location**: `docs/security_compliance/00_SECURITY_MOC.md`  
-> **🎯 Purpose**: Comprehensive security and compliance navigation hub  
-> **👥 Audience**: Security engineers, auditors, compliance officers, DevOps  
+> **📍 Location**: `docs/security_compliance/00_SECURITY_MOC.md`
+> **🎯 Purpose**: Comprehensive security and compliance navigation hub
+> **👥 Audience**: Security engineers, auditors, compliance officers, DevOps
 > **🔄 Status**: Production-Ready ✓
 
 ---
@@ -397,7 +397,7 @@ security_controls:
 
 ---
 
-**MOC Version**: 1.0.0  
-**Last Updated**: 2025-01-20  
-**Maintained By**: Security Team  
+**MOC Version**: 1.0.0
+**Last Updated**: 2025-01-20
+**Maintained By**: Security Team
 **Status**: Production-Ready ✓

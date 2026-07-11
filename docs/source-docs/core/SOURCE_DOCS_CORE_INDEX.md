@@ -1,9 +1,9 @@
 # Core Module Documentation Index
 
-**Directory:** `T:\Project-AI-vault\source-docs\core\`  
-**Purpose:** Comprehensive API reference and technical documentation for all 11 core Python modules in `src/app/core/`  
-**Status:** Production (1/11 modules complete, 10 in progress)  
-**Last Updated:** 2026-04-20  
+**Directory:** `T:\Project-AI-vault\source-docs\core\`
+**Purpose:** Comprehensive API reference and technical documentation for all 11 core Python modules in `src/app/core/`
+**Status:** Production (1/11 modules complete, 10 in progress)
+**Last Updated:** 2026-04-20
 **Maintained By:** AGENT-032 (Source Code Documentation Specialist)
 
 ---
@@ -129,8 +129,8 @@ Each module documentation follows this comprehensive template:
 - 9 FAQ entries
 - 4 appendices with reference tables
 
-**Word Count:** ~9,100 words  
-**API Coverage:** 100%  
+**Word Count:** ~9,100 words
+**API Coverage:** 100%
 **Example Count:** 40+ runnable code examples
 
 ---
@@ -619,19 +619,18 @@ Get-ChildItem -Path "T:\Project-AI-vault\source-docs\core\" -Filter "*.md" | Sel
 
 ## Contact
 
-**Documentation Maintainer:** AGENT-032 (Source Code Documentation Specialist)  
-**Architecture Team:** architecture@project-ai.dev  
-**Questions/Feedback:** Create issue in T:\Project-AI-vault\issues\  
-**Last Review:** 2026-04-20  
+**Documentation Maintainer:** AGENT-032 (Source Code Documentation Specialist)
+**Architecture Team:** architecture@project-ai.dev
+**Questions/Feedback:** Create issue in T:\Project-AI-vault\issues\
+**Last Review:** 2026-04-20
 **Next Review:** 2026-04-27 (Weekly)
 
 ---
 
-**Document ID:** SOURCE-DOCS-INDEX  
-**Version:** 1.0.0  
-**Status:** Living Document (Updated Continuously)  
+**Document ID:** SOURCE-DOCS-INDEX
+**Version:** 1.0.0
+**Status:** Living Document (Updated Continuously)
 **License:** Internal Use Only (Project-AI Development Team)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

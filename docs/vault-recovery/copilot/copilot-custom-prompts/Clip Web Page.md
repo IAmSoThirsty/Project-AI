@@ -56,4 +56,3 @@ Return only the markdown content without any explanations or comments.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

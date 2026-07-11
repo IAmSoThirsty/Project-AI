@@ -1,6 +1,6 @@
 # Repo-Docs Troubleshooting Guide
 
-**AGENT-005: Repo Docs Linking Specialist**  
+**AGENT-005: Repo Docs Linking Specialist**
 **Production-Grade Documentation**
 
 ---
@@ -85,7 +85,7 @@ Remove-Item "T:\Project-AI-vault\repo-docs" -Recurse -Force
 
 **Symptom**: Junction created but file enumeration fails.
 
-**Cause**: 
+**Cause**:
 - Different drives (Junctions work best on same volume)
 - NTFS permissions issues
 - Antivirus blocking access
@@ -128,9 +128,9 @@ Remove-Item "T:\Project-AI-vault\repo-docs" -Recurse -Force
 2. **Review Robocopy log**:
    ```powershell
    # Find latest log
-   Get-ChildItem "T:\Project-AI-vault\robocopy-*.log" | 
-       Sort-Object LastWriteTime -Descending | 
-       Select-Object -First 1 | 
+   Get-ChildItem "T:\Project-AI-vault\robocopy-*.log" |
+       Sort-Object LastWriteTime -Descending |
+       Select-Object -First 1 |
        Get-Content -Tail 50
    ```
 
@@ -194,9 +194,9 @@ Remove-Item "T:\Project-AI-vault\repo-docs" -Recurse -Force
 2. **Free up space**:
    ```powershell
    # Find large files to remove
-   Get-ChildItem "T:\Project-AI-vault" -Recurse -File | 
-       Sort-Object Length -Descending | 
-       Select-Object -First 10 | 
+   Get-ChildItem "T:\Project-AI-vault" -Recurse -File |
+       Sort-Object Length -Descending |
+       Select-Object -First 10 |
        Format-Table Name, @{L='Size(MB)';E={[math]::Round($_.Length/1MB,2)}}
    ```
 
@@ -266,7 +266,7 @@ if ($?) {
     Write-Host "✗ Symlinks require admin or Dev Mode" -ForegroundColor Red
 }
 
-# Test junction capability  
+# Test junction capability
 $testJunction = "T:\Project-AI-vault\_test_junction"
 New-Item -ItemType Junction -Path $testJunction -Target "T:\Project-AI-main\docs"
 if ($?) {
@@ -374,15 +374,15 @@ If issues persist after trying all solutions:
    # Create support package
    $supportDir = "T:\Project-AI-vault\support-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
    New-Item -ItemType Directory -Path $supportDir
-   
+
    # Copy logs
    Copy-Item "T:\Project-AI-vault\*.log" $supportDir
    Copy-Item "T:\Project-AI-vault\*-report.json" $supportDir
-   
+
    # System info
    Get-ComputerInfo | Out-File "$supportDir\system-info.txt"
    Get-PSDrive | Out-File "$supportDir\drives.txt"
-   
+
    Write-Host "Support package: $supportDir"
    ```
 
@@ -430,10 +430,9 @@ If issues persist after trying all solutions:
 
 ---
 
-**Last Updated**: 2025-01-13  
-**Agent**: AGENT-005  
+**Last Updated**: 2025-01-13
+**Agent**: AGENT-005
 **Version**: 1.0.0
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

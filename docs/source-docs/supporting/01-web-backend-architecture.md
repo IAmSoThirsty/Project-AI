@@ -1,13 +1,13 @@
 # Web Backend Architecture
 
-**Document Type:** Technical Reference  
-**Component:** Web Backend (Flask)  
-**Status:** Production  
-**Version:** 2.0.0  
-**Last Updated:** 2025-01-26  
-**Author:** AGENT-046  
-**Audience:** Backend Developers, DevOps, Integration Engineers  
-**Scope:** Flask web application, API endpoints, middleware, governance integration  
+**Document Type:** Technical Reference
+**Component:** Web Backend (Flask)
+**Status:** Production
+**Version:** 2.0.0
+**Last Updated:** 2025-01-26
+**Author:** AGENT-046
+**Audience:** Backend Developers, DevOps, Integration Engineers
+**Scope:** Flask web application, API endpoints, middleware, governance integration
 **Related Docs:**
 - `02-api-endpoint-reference.md`
 - `03-middleware-security.md`
@@ -117,7 +117,7 @@ def login():
     New: Routes through governance → secure auth (argon2/JWT)
     """
     payload = request.get_json(silent=True)
-    
+
     # NO business logic here - delegate to router
     response = route_request(
         source="web",
@@ -127,7 +127,7 @@ def login():
             "password": payload.get("password"),
         },
     )
-    
+
     # Translate internal response to HTTP
     if response["status"] == "success":
         return jsonify(token=response["result"]["token"]), 200
@@ -216,7 +216,7 @@ def route_request(
 ) -> dict[str, Any]:
     """
     Route requests from any execution path through governance pipeline.
-    
+
     Returns:
         {
             "status": "success" | "error" | "blocked",
@@ -255,7 +255,7 @@ context = {
 def configure_cors(app: Any, allowed_origins: list[str] | None = None) -> None:
     """
     Configure CORS with strict origin control.
-    
+
     Default allowed origins:
         - http://localhost:3000 (React dev server)
         - http://localhost:5173 (Vite dev server)
@@ -289,7 +289,7 @@ def configure_cors(app: Any, allowed_origins: list[str] | None = None) -> None:
 def configure_rate_limiting(app: Any) -> None:
     """
     Configure rate limiting for Flask app.
-    
+
     Limits:
         - Authentication: 5/minute
         - API calls: 100/minute
@@ -351,8 +351,8 @@ class RequestSanitizer:
 
 ### Health Check
 
-**Endpoint:** `GET /api/status`  
-**Authentication:** None  
+**Endpoint:** `GET /api/status`
+**Authentication:** None
 **Rate Limit:** 100/minute
 
 **Purpose:** Health check for monitoring and load balancers.
@@ -384,8 +384,8 @@ curl http://localhost:5000/api/status
 
 #### Login
 
-**Endpoint:** `POST /api/auth/login`  
-**Authentication:** None  
+**Endpoint:** `POST /api/auth/login`
+**Authentication:** None
 **Rate Limit:** 5/minute
 
 **Purpose:** Authenticate user and receive JWT token.
@@ -450,8 +450,8 @@ curl -X POST http://localhost:5000/api/auth/login \
 
 #### Chat
 
-**Endpoint:** `POST /api/ai/chat`  
-**Authentication:** Bearer Token  
+**Endpoint:** `POST /api/ai/chat`
+**Authentication:** Bearer Token
 **Rate Limit:** 100/minute
 
 **Purpose:** Send chat messages to AI and receive responses.
@@ -519,8 +519,8 @@ curl -X POST http://localhost:5000/api/ai/chat \
 
 #### Image Generation
 
-**Endpoint:** `POST /api/ai/image`  
-**Authentication:** Bearer Token  
+**Endpoint:** `POST /api/ai/image`
+**Authentication:** Bearer Token
 **Rate Limit:** 10/hour
 
 **Purpose:** Generate images from text prompts.
@@ -572,8 +572,8 @@ curl -X POST http://localhost:5000/api/ai/image \
 
 ### Persona Management
 
-**Endpoint:** `POST /api/persona/update`  
-**Authentication:** Bearer Token  
+**Endpoint:** `POST /api/persona/update`
+**Authentication:** Bearer Token
 **Rate Limit:** 100/minute
 
 **Purpose:** Update AI persona traits.
@@ -625,7 +625,7 @@ curl -X POST http://localhost:5000/api/persona/update \
 @app.route("/api/ai/chat", methods=["POST"])
 def ai_chat():
     payload = request.get_json(silent=True)
-    
+
     # Step 1: Route to governance pipeline
     response = route_request(
         source="web",
@@ -638,7 +638,7 @@ def ai_chat():
             "token": extract_token(request),
         },
     )
-    
+
     # Step 2: Translate response to HTTP
     if response["status"] == "success":
         return jsonify(result=response["result"]), 200
@@ -657,10 +657,10 @@ def route_request(source, payload):
         "user": payload.get("user"),
         "timestamp": _get_timestamp(),
     }
-    
+
     # Import governance pipeline (lazy to avoid circular imports)
     from app.core.governance.pipeline import enforce_pipeline
-    
+
     # Execute governance checks:
     # 1. TARL policy validation
     # 2. Four Laws compliance
@@ -668,7 +668,7 @@ def route_request(source, payload):
     # 4. Resource quotas
     # 5. Content filtering
     result = enforce_pipeline(context)
-    
+
     return {
         "status": "success",
         "result": result,
@@ -782,10 +782,10 @@ uwsgi \
 server {
     listen 443 ssl http2;
     server_name api.example.com;
-    
+
     ssl_certificate /etc/letsencrypt/live/api.example.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/api.example.com/privkey.pem;
-    
+
     location / {
         proxy_pass http://localhost:5000;
         proxy_set_header Host $host;
@@ -859,12 +859,12 @@ services:
       - ./data:/app/data
     depends_on:
       - redis
-  
+
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
-  
+
   web-frontend:
     build:
       context: ./web/frontend
@@ -1087,7 +1087,7 @@ def readiness():
         "redis": check_redis(),
         "openai": check_openai_api(),
     }
-    
+
     if all(checks.values()):
         return jsonify(status="ready", checks=checks), 200
     else:
@@ -1262,4 +1262,3 @@ The Project-AI Web Backend is a **production-grade Flask adapter** that:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

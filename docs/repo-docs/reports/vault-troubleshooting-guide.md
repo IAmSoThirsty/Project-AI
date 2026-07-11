@@ -1,7 +1,7 @@
 # Vault Structure Troubleshooting Guide
 
-**AGENT-007: Vault Structure Validation Specialist**  
-**Version:** 1.1.0  
+**AGENT-007: Vault Structure Validation Specialist**
+**Version:** 1.1.0
 **Last Updated:** 2026-04-20
 
 **Related Documentation**:
@@ -92,8 +92,8 @@ if (Test-Path "T:\Project-AI-main\utils\storage\privacy_vault.py") {
 
 ### Issue 1: Directory Not Found ❌
 
-**Error Code:** VLT-001  
-**Severity:** CRITICAL  
+**Error Code:** VLT-001
+**Severity:** CRITICAL
 **Impact:** Vault operations fail
 
 **Related Documentation**: [[docs/architecture/ROOT_STRUCTURE#vault-directories]]
@@ -157,11 +157,11 @@ $vaultStructure = @{
 
 foreach ($dir in $vaultStructure.Keys) {
     $path = "T:\Project-AI-main\$dir"
-    
+
     if (!(Test-Path $path)) {
         New-Item -Path $path -ItemType Directory -Force
         Write-Host "Created: $dir" -ForegroundColor Yellow
-        
+
         # Add .aiignore for secure directories
         if ($vaultStructure[$dir]) {
             $aiignore = "# AI CANNOT ACCESS THIS DIRECTORY`n# All content here is filtered from AI retrieval`n*`n!.aiignore"
@@ -184,8 +184,8 @@ foreach ($dir in $vaultStructure.Keys) {
 
 ### Issue 2: Access Denied ❌
 
-**Error Code:** VLT-002  
-**Severity:** CRITICAL  
+**Error Code:** VLT-002
+**Severity:** CRITICAL
 **Impact:** Cannot read/write vault data
 
 **Symptoms:**
@@ -279,8 +279,8 @@ Write-Host "✓ Write access verified" -ForegroundColor Green
 
 ### Issue 3: Missing AI Isolation ❌
 
-**Error Code:** VLT-003  
-**Severity:** CRITICAL (SECURITY)  
+**Error Code:** VLT-003
+**Severity:** CRITICAL (SECURITY)
 **Impact:** AI can access Black Vault contents
 
 **Symptoms:**
@@ -350,8 +350,8 @@ Write-Host "AI should respond with access denied or file not visible" -Foregroun
 
 ### Issue 4: Keypair Parse Error ❌
 
-**Error Code:** VLT-004  
-**Severity:** CRITICAL  
+**Error Code:** VLT-004
+**Severity:** CRITICAL
 **Impact:** Governance signing/verification fails
 
 **Symptoms:**
@@ -375,17 +375,17 @@ Test-Path $keypairPath
 try {
     $keypair = Get-Content $keypairPath -Raw | ConvertFrom-Json
     Write-Host "✓ JSON is valid" -ForegroundColor Green
-    
+
     # Check required fields
     if ($keypair.public_key) { Write-Host "✓ public_key present" -ForegroundColor Green }
     else { Write-Host "✗ public_key MISSING" -ForegroundColor Red }
-    
+
     if ($keypair.private_key) { Write-Host "✓ private_key present" -ForegroundColor Green }
     else { Write-Host "✗ private_key MISSING" -ForegroundColor Red }
 }
 catch {
     Write-Host "✗ JSON parse error: $($_.Exception.Message)" -ForegroundColor Red
-    
+
     # Show file content
     Write-Host "`nFile content:" -ForegroundColor Yellow
     Get-Content $keypairPath -Raw
@@ -487,8 +487,8 @@ Write-Host "private_key length: $($keypair.private_key.Length)"
 
 ### Issue 5: Decryption Failed ❌
 
-**Error Code:** VLT-005  
-**Severity:** HIGH  
+**Error Code:** VLT-005
+**Severity:** HIGH
 **Impact:** Cannot retrieve encrypted vault data
 
 **Symptoms:**
@@ -602,8 +602,8 @@ print("✓ All test data encrypted and decrypted successfully")
 
 ### Issue 6: TARL Vault Sealed ❌
 
-**Error Code:** VLT-006  
-**Severity:** HIGH  
+**Error Code:** VLT-006
+**Severity:** HIGH
 **Impact:** Cannot access TARL secrets
 
 **Symptoms:**
@@ -652,19 +652,19 @@ glass unsealVault(masterPassword) {
     morph on: ["brute_force", "timing"]
     defend with: "paranoid"
   }
-  
+
   sanitize masterPassword
-  
+
   // Validate master password
   drink derivedKey = deriveMasterKey(masterPassword)
-  
+
   thirsty (derivedKey != masterKey) {
     pour "ERROR: Invalid master password"
     return false
   }
-  
+
   sealedState = false
-  
+
   pour "✓ Vault unsealed"
   return true
 }
@@ -682,7 +682,7 @@ unsealVault("YourStrongMasterPassword123!")
 glass emergencyUnseal() {
   pour "⚠️  WARNING: Emergency unseal bypasses security"
   pour "⚠️  All secrets will be lost"
-  
+
   // Reset vault completely
   secrets = {}
   accessLog = []
@@ -691,7 +691,7 @@ glass emergencyUnseal() {
   rotationSchedule = {}
   sealedState = false
   masterKey = null
-  
+
   pour "Vault reset - re-initialization required"
   return "reset"
 }
@@ -718,8 +718,8 @@ thirsty (testSecret) {
 
 ### Issue 7: Execution Policy Prevents Script ❌
 
-**Error Code:** VLT-007  
-**Severity:** MEDIUM  
+**Error Code:** VLT-007
+**Severity:** MEDIUM
 **Impact:** Cannot run validation script
 
 **Symptoms:**
@@ -778,7 +778,7 @@ $cert = Get-ChildItem -Path Cert:\CurrentUser\My -CodeSigningCert |
 if ($cert) {
     # Sign the script
     Set-AuthenticodeSignature -FilePath ".\validate-vault-structure.ps1" -Certificate $cert
-    
+
     Write-Host "✓ Script signed successfully" -ForegroundColor Green
 } else {
     Write-Host "✗ No code-signing certificate found" -ForegroundColor Red
@@ -804,8 +804,8 @@ powershell.exe -ExecutionPolicy Bypass -File ".\validate-vault-structure.ps1"
 
 ### Issue 8: Missing __init__.py Files ⚠️
 
-**Error Code:** VLT-008  
-**Severity:** LOW  
+**Error Code:** VLT-008
+**Severity:** LOW
 **Impact:** Python package structure warning (non-critical)
 
 **Symptoms:**
@@ -831,7 +831,7 @@ foreach ($dir in $vaultDirs) {
         Write-Host "✓ $($dir.Name) has __init__.py" -ForegroundColor Green
     } else {
         Write-Host "✗ $($dir.Name) missing __init__.py" -ForegroundColor Yellow
-        
+
         # Check if directory contains Python files
         $pyFiles = Get-ChildItem $dir.FullName -Filter "*.py" -Recurse
         Write-Host "  Python files: $($pyFiles.Count)" -ForegroundColor Gray
@@ -852,7 +852,7 @@ $vaultModules = @(
 
 foreach ($module in $vaultModules) {
     $initFile = "T:\Project-AI-main\$module\__init__.py"
-    
+
     if (!(Test-Path $initFile)) {
         # Create empty __init__.py
         New-Item $initFile -ItemType File -Force
@@ -905,8 +905,8 @@ Select-String -Path "**\*.py" -Pattern "from.*vault\.(core|auth|audit)" -Exclude
 
 ### Issue 9: Governance Artifacts Not Being Created ⚠️
 
-**Error Code:** VLT-009  
-**Severity:** MEDIUM  
+**Error Code:** VLT-009
+**Severity:** MEDIUM
 **Impact:** No audit trail of governance executions
 
 **Symptoms:**
@@ -924,7 +924,7 @@ Select-String -Path "**\*.py" -Pattern "from.*vault\.(core|auth|audit)" -Exclude
 ```powershell
 # Check artifacts directory
 $artifactsPath = "T:\Project-AI-main\governance\sovereign_data\artifacts"
-Get-ChildItem $artifactsPath -Recurse | 
+Get-ChildItem $artifactsPath -Recurse |
     Select-Object FullName, LastWriteTime |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 10
@@ -1009,8 +1009,8 @@ if ($latestArtifacts) {
 
 ### Issue 10: High Memory Usage from Vault ⚠️
 
-**Error Code:** VLT-010  
-**Severity:** MEDIUM  
+**Error Code:** VLT-010
+**Severity:** MEDIUM
 **Impact:** Application slowdown or crashes
 
 **Symptoms:**
@@ -1058,21 +1058,21 @@ class VaultCleaner:
     def __init__(self, vault, max_age_hours=24):
         self.vault = vault
         self.max_age = timedelta(hours=max_age_hours)
-    
+
     def cleanup_old_entries(self):
         """Remove entries older than max_age"""
         # If your keys have timestamps
         cutoff = datetime.now() - self.max_age
         removed_count = 0
-        
+
         for key in list(self.vault.list_keys()):
             # Extract timestamp from key (adjust to your key format)
             if self._is_old(key, cutoff):
                 self.vault.delete(key)
                 removed_count += 1
-        
+
         return removed_count
-    
+
     def _is_old(self, key, cutoff):
         # Example: keys like "session_2026-04-20T10:00:00_abc123"
         try:
@@ -1095,20 +1095,20 @@ class SizeLimitedVault(PrivacyVault):
         super().__init__(config)
         self.max_size_bytes = max_size_mb * 1024 * 1024
         self.max_items = max_items
-    
+
     def store(self, key: str, value: str):
         """Store with size checks"""
         # Check item count
         if len(self._vault) >= self.max_items:
             raise RuntimeError(f"Vault full: {self.max_items} items")
-        
+
         # Check total size
         current_size = sum(len(v) for v in self._vault.values())
         new_size = len(value.encode())
-        
+
         if current_size + new_size > self.max_size_bytes:
             raise RuntimeError(f"Vault size limit exceeded: {self.max_size_bytes / 1024 / 1024} MB")
-        
+
         # Store normally
         super().store(key, value)
 ```
@@ -1123,25 +1123,25 @@ class PersistentVault(PrivacyVault):
         super().__init__(config)
         self.persist_path = Path(persist_path)
         self.persist_path.mkdir(parents=True, exist_ok=True)
-    
+
     def flush_to_disk(self):
         """Write vault to disk and clear memory"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         persist_file = self.persist_path / f"vault_{timestamp}.pkl"
-        
+
         with open(persist_file, 'wb') as f:
             pickle.dump(self._vault, f)
-        
+
         count = len(self._vault)
         self._vault.clear()
-        
+
         return persist_file, count
-    
+
     def load_from_disk(self, persist_file):
         """Load vault from disk"""
         with open(persist_file, 'rb') as f:
             self._vault = pickle.load(f)
-        
+
         return len(self._vault)
 
 # Usage: Flush to disk every hour or when size exceeds threshold
@@ -1173,11 +1173,11 @@ import time
 
 for i in range(100):
     vault.store(f"test_{i}", "x" * 1000)
-    
+
     if i % 10 == 0:
         size_mb = sum(len(v) for v in vault._vault.values()) / 1024 / 1024
         print(f"Iteration {i}: Vault size = {size_mb:.2f} MB")
-    
+
     time.sleep(0.1)
 
 # Should show controlled memory growth
@@ -1309,7 +1309,7 @@ foreach ($path in $vaultPaths) {
     # Remove all access except SYSTEM
     $acl = Get-Acl $path
     $acl.SetAccessRuleProtection($true, $false)  # Disable inheritance, remove inherited
-    
+
     # Add SYSTEM only
     $systemRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
         "SYSTEM",
@@ -1320,7 +1320,7 @@ foreach ($path in $vaultPaths) {
     )
     $acl.SetAccessRule($systemRule)
     Set-Acl $path $acl
-    
+
     Write-Host "🔒 LOCKED: $path" -ForegroundColor Red
 }
 
@@ -1383,7 +1383,7 @@ $criticalPaths = @(
 foreach ($path in $criticalPaths) {
     $source = "T:\Project-AI-main\$path"
     $dest = Join-Path $backupRoot (Split-Path $path -Leaf)
-    
+
     if (Test-Path $source) {
         Copy-Item $source $dest -Force
         Write-Host "Backed up: $path" -ForegroundColor Green
@@ -1417,11 +1417,11 @@ class VaultSecurityMonitor:
         self.alert_threshold = alert_threshold
         self.access_count = 0
         self.logger = logging.getLogger("vault_security")
-    
+
     def log_access(self, operation, key, user):
         """Log vault access and check for anomalies"""
         self.access_count += 1
-        
+
         log_entry = {
             "timestamp": datetime.now().isoformat(),
             "operation": operation,
@@ -1429,15 +1429,15 @@ class VaultSecurityMonitor:
             "user": user,
             "total_accesses": self.access_count
         }
-        
+
         # Log to audit
         with open("data/audit/vault_access.jsonl", "a") as f:
             f.write(json.dumps(log_entry) + "\n")
-        
+
         # Alert if threshold exceeded
         if self.access_count > self.alert_threshold:
             self.send_alert(f"High vault access rate: {self.access_count} operations")
-    
+
     def send_alert(self, message):
         """Send security alert"""
         self.logger.critical(f"SECURITY ALERT: {message}")
@@ -1473,10 +1473,10 @@ def dump_vault_state(vault, output_path="vault_dump.pkl"):
         "item_count": len(vault._vault),
         "total_size_bytes": sum(len(v) for v in vault._vault.values())
     }
-    
+
     with open(output_path, 'wb') as f:
         pickle.dump(dump, f)
-    
+
     print(f"✓ Vault state dumped to: {output_path}")
     return dump
 
@@ -1485,17 +1485,17 @@ def analyze_vault_dump(dump_path="vault_dump.pkl"):
     """Analyze vault memory dump"""
     with open(dump_path, 'rb') as f:
         dump = pickle.load(f)
-    
+
     print(f"Dump timestamp: {dump['timestamp']}")
     print(f"Items: {dump['item_count']}")
     print(f"Total size: {dump['total_size_bytes'] / 1024 / 1024:.2f} MB")
     print(f"Active: {dump['is_active']}")
     print(f"Encrypted: {dump['encrypted']}")
-    
+
     # Check for anomalies
     if dump['total_size_bytes'] > 100 * 1024 * 1024:  # 100 MB
         print("⚠️  WARNING: Vault size exceeds 100 MB")
-    
+
     if dump['item_count'] > 10000:
         print("⚠️  WARNING: Vault has excessive items")
 ```
@@ -1509,7 +1509,7 @@ def analyze_vault_dump(dump_path="vault_dump.pkl"):
 def verify_vault_integrity(vault):
     """Test decryption of all vault entries"""
     errors = []
-    
+
     for key in vault.list_keys():
         try:
             value = vault.retrieve(key)
@@ -1517,7 +1517,7 @@ def verify_vault_integrity(vault):
                 errors.append(f"Decryption returned None for key: {key}")
         except Exception as e:
             errors.append(f"Decryption failed for key {key}: {str(e)}")
-    
+
     if errors:
         print(f"✗ Integrity check failed: {len(errors)} errors")
         for error in errors:
@@ -1541,39 +1541,39 @@ def profile_vault_operations(vault, iterations=1000):
     store_times = []
     retrieve_times = []
     delete_times = []
-    
+
     test_data = "x" * 1000  # 1 KB test data
-    
+
     for i in range(iterations):
         key = f"perf_test_{i}"
-        
+
         # Store
         start = time.perf_counter()
         vault.store(key, test_data)
         store_times.append(time.perf_counter() - start)
-        
+
         # Retrieve
         start = time.perf_counter()
         vault.retrieve(key)
         retrieve_times.append(time.perf_counter() - start)
-        
+
         # Delete
         start = time.perf_counter()
         vault.delete(key)
         delete_times.append(time.perf_counter() - start)
-    
+
     # Statistics
     print(f"\nPerformance Profile ({iterations} iterations):")
     print(f"Store:")
     print(f"  Mean: {statistics.mean(store_times)*1000:.3f} ms")
     print(f"  Median: {statistics.median(store_times)*1000:.3f} ms")
     print(f"  P95: {statistics.quantiles(store_times, n=20)[18]*1000:.3f} ms")
-    
+
     print(f"Retrieve:")
     print(f"  Mean: {statistics.mean(retrieve_times)*1000:.3f} ms")
     print(f"  Median: {statistics.median(retrieve_times)*1000:.3f} ms")
     print(f"  P95: {statistics.quantiles(retrieve_times, n=20)[18]*1000:.3f} ms")
-    
+
     print(f"Delete:")
     print(f"  Mean: {statistics.mean(delete_times)*1000:.3f} ms")
     print(f"  Median: {statistics.median(delete_times)*1000:.3f} ms")
@@ -1584,9 +1584,9 @@ def profile_vault_operations(vault, iterations=1000):
 
 ## Document Information
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Maintained by:** AGENT-007 - Vault Structure Validation Specialist  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Maintained by:** AGENT-007 - Vault Structure Validation Specialist
 **Review Frequency:** Quarterly or after major incidents
 
 **Related Documents:**
@@ -1715,10 +1715,10 @@ If you encounter issues not covered in this guide, please:
 
 ---
 
-**Document Version**: 1.1.0  
-**Last Updated**: 2026-04-20  
-**Phase 5 Enhancement**: Added comprehensive system references and wiki links  
-**Maintained by**: AGENT-007 - Vault Structure Validation Specialist  
+**Document Version**: 1.1.0
+**Last Updated**: 2026-04-20
+**Phase 5 Enhancement**: Added comprehensive system references and wiki links
+**Maintained by**: AGENT-007 - Vault Structure Validation Specialist
 **Review Frequency**: Quarterly or after major incidents
 
 ---

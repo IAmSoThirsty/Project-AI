@@ -146,7 +146,7 @@ framework.nist_compliance.map_identify_risks(
 )
 
 framework.nist_compliance.map_identify_risks(
-    risk_id="RISK-LLM-002", 
+    risk_id="RISK-LLM-002",
     description="Sensitive user data disclosure via model output",
     impact=RiskLevel.HIGH,
     likelihood="medium"
@@ -343,7 +343,7 @@ def generate():
     # Input length validation
     if len(request.json.get("prompt", "")) > 4000:
         return "Prompt too long", 413
-    
+
     # Timeout enforcement
     response = model.generate(
         request.json["prompt"],
@@ -869,25 +869,25 @@ security = AISecurityFramework()
 @app.route("/api/chat", methods=["POST"])
 def chat():
     user_input = request.json.get("message")
-    
+
     # Validate input
     is_safe, reason, incident = security.validate_input(
         user_input,
         user_id=request.headers.get("X-User-ID")
     )
-    
+
     if not is_safe:
         return {"error": reason}, 403
-    
+
     # Generate response
     response = llm.generate(user_input)
-    
+
     # Validate output
     is_safe, reason = security.validate_output(response)
-    
+
     if not is_safe:
         return {"error": "Response blocked for safety"}, 500
-    
+
     return {"response": response}
 ```
 
@@ -900,17 +900,17 @@ class SecureChatPanel(QWidget):
     def __init__(self):
         super().__init__()
         self.security = AISecurityFramework()
-    
+
     def send_message(self):
         user_input = self.input_field.text()
-        
+
         # Validate
         is_safe, reason, _ = self.security.validate_input(user_input)
-        
+
         if not is_safe:
             QMessageBox.warning(self, "Security Alert", reason)
             return
-        
+
         # Process...
 ```
 
@@ -1054,31 +1054,31 @@ pipeline = SNNMLOpsPipeline(config, data_dir="data/snn_mlops")
 
 ### Input Validation
 
-✅ Always validate user input before LLM processing  
-✅ Use multiple detection layers (patterns + guardrails)  
-✅ Log all blocked attempts for analysis  
-✅ Rate limit to prevent DoS attacks  
+✅ Always validate user input before LLM processing
+✅ Use multiple detection layers (patterns + guardrails)
+✅ Log all blocked attempts for analysis
+✅ Rate limit to prevent DoS attacks
 
 ### Output Validation
 
-✅ Filter sensitive data (passwords, keys, tokens)  
-✅ Prevent system prompt leakage  
-✅ Sanitize before display/execution  
-✅ Never `eval()` or `exec()` LLM output  
+✅ Filter sensitive data (passwords, keys, tokens)
+✅ Prevent system prompt leakage
+✅ Sanitize before display/execution
+✅ Never `eval()` or `exec()` LLM output
 
 ### Monitoring
 
-✅ Track detection rates (>95%)  
-✅ Monitor false positives (<5%)  
-✅ Alert on critical incidents (Slack/email)  
-✅ Regular security audits (weekly/monthly)  
+✅ Track detection rates (>95%)
+✅ Monitor false positives (<5%)
+✅ Alert on critical incidents (Slack/email)
+✅ Regular security audits (weekly/monthly)
 
 ### Incident Response
 
-✅ Automated blocking (guardrails)  
-✅ Human review for edge cases  
-✅ Post-incident analysis  
-✅ Continuous improvement  
+✅ Automated blocking (guardrails)
+✅ Human review for edge cases
+✅ Post-incident analysis
+✅ Continuous improvement
 
 ---
 

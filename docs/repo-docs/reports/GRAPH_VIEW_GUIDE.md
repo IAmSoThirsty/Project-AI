@@ -372,10 +372,10 @@ class GraphAnalysisPanel(QWidget):
         self.plugin = GraphAnalysisPlugin()
         self.plugin.initialize()
         self._setup_ui()
-    
+
     def _setup_ui(self):
         layout = QVBoxLayout()
-        
+
         # Preset selector
         preset_combo = QComboBox()
         preset_combo.addItems([
@@ -383,10 +383,10 @@ class GraphAnalysisPanel(QWidget):
             "ai_core", "data_flow", "full"
         ])
         preset_combo.currentTextChanged.connect(self.load_preset)
-        
+
         layout.addWidget(preset_combo)
         self.setLayout(layout)
-    
+
     def load_preset(self, preset_name: str):
         graph_data = self.plugin.get_graph(preset=preset_name)
         # Render graph using visualization library
@@ -436,7 +436,7 @@ For issues, enhancements, or questions:
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2024  
-**Maintainer:** Project-AI Core Team  
+**Version:** 1.0.0
+**Last Updated:** 2024
+**Maintainer:** Project-AI Core Team
 **License:** See PROJECT LICENSE

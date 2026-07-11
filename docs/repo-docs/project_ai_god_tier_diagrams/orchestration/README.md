@@ -275,7 +275,7 @@ import os
 
 class TemporalClientFactory:
     """Factory for creating Temporal clients"""
-    
+
     @staticmethod
     async def create_client(
         host: str = None,
@@ -284,7 +284,7 @@ class TemporalClientFactory:
     ) -> Client:
         """Create a Temporal client"""
         host = host or os.getenv("TEMPORAL_HOST", "localhost:7233")
-        
+
         # TLS configuration for production
         tls_config = None
         if use_tls:
@@ -293,15 +293,15 @@ class TemporalClientFactory:
                 client_private_key=open(os.getenv("TEMPORAL_CLIENT_KEY")).read(),
                 server_root_ca_cert=open(os.getenv("TEMPORAL_SERVER_CA")).read()
             )
-        
+
         client = await Client.connect(
             host,
             namespace=namespace,
             tls=tls_config
         )
-        
+
         return client
-    
+
     @staticmethod
     async def create_worker(
         client: Client,
@@ -328,7 +328,7 @@ async def initialize_temporal():
         host="temporal:7233",
         namespace="project-ai"
     )
-    
+
     return client
 ```
 
@@ -341,20 +341,20 @@ from typing import Dict, List, Type
 
 class WorkflowRegistry:
     """Central registry for all workflows"""
-    
+
     _workflows: Dict[str, Type] = {}
-    
+
     @classmethod
     def register(cls, workflow_class: Type):
         """Register a workflow class"""
         cls._workflows[workflow_class.__name__] = workflow_class
         return workflow_class
-    
+
     @classmethod
     def get_all_workflows(cls) -> List[Type]:
         """Get all registered workflows"""
         return list(cls._workflows.values())
-    
+
     @classmethod
     def get_workflow(cls, name: str) -> Type:
         """Get workflow by name"""
@@ -385,7 +385,7 @@ class TaskQueueConfig:
 
 class TaskQueues:
     """Central task queue definitions"""
-    
+
     # High-priority workflows (image generation, AI inference)
     HIGH_PRIORITY = TaskQueueConfig(
         name="project-ai-high-priority",
@@ -394,7 +394,7 @@ class TaskQueues:
         max_workers=5,
         rate_limit=100
     )
-    
+
     # Standard workflows (learning paths, data analysis)
     STANDARD = TaskQueueConfig(
         name="project-ai-standard",
@@ -403,7 +403,7 @@ class TaskQueues:
         max_workers=3,
         rate_limit=50
     )
-    
+
     # Background tasks (cleanup, maintenance)
     BACKGROUND = TaskQueueConfig(
         name="project-ai-background",
@@ -412,7 +412,7 @@ class TaskQueues:
         max_workers=1,
         rate_limit=10
     )
-    
+
     # Scheduled tasks (cron-like)
     SCHEDULED = TaskQueueConfig(
         name="project-ai-scheduled",
@@ -421,7 +421,7 @@ class TaskQueues:
         max_workers=1,
         rate_limit=None
     )
-    
+
     @classmethod
     def get_all_queues(cls) -> List[TaskQueueConfig]:
         """Get all task queue configurations"""
@@ -495,10 +495,10 @@ def track_workflow_metrics(f):
     async def wrapper(self, *args, **kwargs):
         workflow_type = self.__class__.__name__
         start_time = time.time()
-        
+
         ACTIVE_WORKFLOWS.labels(workflow_type=workflow_type).inc()
         status = "success"
-        
+
         try:
             result = await f(self, *args, **kwargs)
             return result
@@ -510,7 +510,7 @@ def track_workflow_metrics(f):
             WORKFLOW_DURATION.labels(workflow_type=workflow_type).observe(duration)
             WORKFLOW_EXECUTIONS.labels(workflow_type=workflow_type, status=status).inc()
             ACTIVE_WORKFLOWS.labels(workflow_type=workflow_type).dec()
-    
+
     return wrapper
 
 def track_activity_metrics(f):
@@ -520,7 +520,7 @@ def track_activity_metrics(f):
         activity_name = f.__name__
         start_time = time.time()
         status = "success"
-        
+
         try:
             result = await f(*args, **kwargs)
             return result
@@ -531,7 +531,7 @@ def track_activity_metrics(f):
             duration = time.time() - start_time
             ACTIVITY_DURATION.labels(activity_name=activity_name).observe(duration)
             ACTIVITY_EXECUTIONS.labels(activity_name=activity_name, status=status).inc()
-    
+
     return wrapper
 ```
 
@@ -545,31 +545,31 @@ import asyncio
 
 class TemporalConnectionPool:
     """Connection pool for Temporal clients"""
-    
+
     def __init__(self, max_connections: int = 10):
         self.max_connections = max_connections
         self._pool: List[Client] = []
         self._available: asyncio.Queue = asyncio.Queue()
         self._lock = asyncio.Lock()
-    
+
     async def get_client(self) -> Client:
         """Get a client from the pool"""
         if not self._available.empty():
             return await self._available.get()
-        
+
         async with self._lock:
             if len(self._pool) < self.max_connections:
                 client = await TemporalClientFactory.create_client()
                 self._pool.append(client)
                 return client
-        
+
         # Wait for an available client
         return await self._available.get()
-    
+
     async def release_client(self, client: Client):
         """Release a client back to the pool"""
         await self._available.put(client)
-    
+
     async def close_all(self):
         """Close all connections in the pool"""
         for client in self._pool:
@@ -603,10 +603,10 @@ import asyncio
 
 class TemporalHealthCheck:
     """Health check for Temporal connection"""
-    
+
     def __init__(self, client: Client):
         self.client = client
-    
+
     async def check_health(self) -> Dict:
         """Check Temporal server health"""
         try:

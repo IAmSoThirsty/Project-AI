@@ -51,4 +51,3 @@ This is your fast-launch hub for working on `Project-AI` inside the vault.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

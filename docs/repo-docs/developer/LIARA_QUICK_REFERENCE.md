@@ -131,13 +131,13 @@ async def main():
                 "priority": 1,
             }
         ]
-        
+
         workflow_id = await agency.trigger_crisis_response(
             target_member="target-alpha",
             missions=missions,
             initiated_by="user-123",
         )
-        
+
         result = await agency.wait_for_crisis_completion(workflow_id)
         print(f"Success: {result['success']}")
 

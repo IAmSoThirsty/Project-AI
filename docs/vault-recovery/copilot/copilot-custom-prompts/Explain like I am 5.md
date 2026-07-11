@@ -13,4 +13,3 @@ Explain {} in simple terms that a 5-year-old would understand:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

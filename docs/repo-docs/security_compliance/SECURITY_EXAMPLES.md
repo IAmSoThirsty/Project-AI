@@ -582,7 +582,7 @@ def validate_complete_defense(attack_scenario):
     print("=" * 60)
     print("COMPLETE DEFENSE VALIDATION")
     print("=" * 60)
-    
+
     # Layer 1: CBRN Classification
     print("\n[Layer 1] CBRN Classification...")
     cbrn = CBRNClassifier(data_dir="data")
@@ -593,7 +593,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if not cbrn_result.is_safe else '✓ Passed'}")
     if not cbrn_result.is_safe:
         return {"blocked": True, "layer": "CBRN", "result": cbrn_result}
-    
+
     # Layer 2: FourLaws Ethical Validation
     print("\n[Layer 2] FourLaws Ethical Validation...")
     fourlaws = FourLaws()
@@ -604,7 +604,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if not is_allowed else '✓ Passed'}")
     if not is_allowed:
         return {"blocked": True, "layer": "FourLaws", "reason": reason}
-    
+
     # Layer 3: Deep Input Validation
     print("\n[Layer 3] Deep Input Validation...")
     stress_test = RedTeamStressTest(data_dir="data")
@@ -612,7 +612,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if validation_result["malicious"] else '✓ Passed'}")
     if validation_result["malicious"]:
         return {"blocked": True, "layer": "InputValidation", "result": validation_result}
-    
+
     # Layer 4: ASL-3 Security Controls
     print("\n[Layer 4] ASL-3 Security Controls...")
     security = ASL3Security(data_dir="data")
@@ -624,7 +624,7 @@ def validate_complete_defense(attack_scenario):
     print(f"  Result: {'❌ BLOCKED' if not access_allowed else '✓ Passed'}")
     if not access_allowed:
         return {"blocked": True, "layer": "ASL3Security", "reason": "Access denied"}
-    
+
     # Layer 5: Robustness Check
     print("\n[Layer 5] Robustness Analysis...")
     metrics = RobustnessMetricsEngine(data_dir="data")
@@ -634,7 +634,7 @@ def validate_complete_defense(attack_scenario):
     )
     print(f"  Robustness Margin: {proximity.robustness_margin:.3f}")
     print(f"  Near-Miss: {'⚠️ YES' if proximity.near_miss_score > 0.7 else '✓ NO'}")
-    
+
     # All layers passed (unlikely for real attacks)
     print("\n" + "=" * 60)
     print("⚠️ WARNING: Attack passed all layers (requires review)")

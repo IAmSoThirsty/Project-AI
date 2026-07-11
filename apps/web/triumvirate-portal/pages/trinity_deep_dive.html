@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="css/main.css">
   <style>
     /* ===== RADIAL MENU SYSTEM ===== */
-    
+
     /* Centered Menu Header */
     .menu-centered {
         position: relative;
@@ -317,12 +317,12 @@
         .radial-submenu { min-width: 240px; max-width: 90vw; }
     }
   </style>
-  
+
   <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fthetriumv8982back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
   <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
   </head>
 <body class="bg-background text-text-primary">
-    
+
     <!-- Navigation Header -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-surface-light" role="navigation" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -566,8 +566,8 @@
         <!-- Background Pattern -->
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-background/95 to-secondary/90 z-10"></div>
-            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1534f1e36-1764671525611.png" 
-                 alt="Abstract visualization of interconnected AI systems representing the Trinity architecture" 
+            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1534f1e36-1764671525611.png"
+                 alt="Abstract visualization of interconnected AI systems representing the Trinity architecture"
                  class="w-full h-full object-cover opacity-20"
                  onerror="this.src='https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2940&auto=format&fit=crop'; this.onerror=null;">
         </div>
@@ -788,22 +788,22 @@
                         <line x1="400" y1="100" x2="400" y2="300" stroke="#0891B2" stroke-width="2" opacity="0.3" stroke-dasharray="5,5">
                             <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
                         </line>
-                        
+
                         <!-- Project AI Node -->
                         <circle cx="200" cy="200" r="60" fill="#1E3A8A" opacity="0.8" stroke="#3B82F6" stroke-width="2"/>
                         <text x="200" y="195" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="14" font-weight="bold">Project AI</text>
                         <text x="200" y="215" text-anchor="middle" fill="#94A3B8" font-family="Inter" font-size="11">Cognitive Core</text>
-                        
+
                         <!-- Cerberus Node -->
                         <circle cx="600" cy="200" r="60" fill="#0891B2" opacity="0.8" stroke="#22D3EE" stroke-width="2"/>
                         <text x="600" y="195" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="14" font-weight="bold">Cerberus</text>
                         <text x="600" y="215" text-anchor="middle" fill="#94A3B8" font-family="Inter" font-size="11">Security Fortress</text>
-                        
+
                         <!-- Codex Node -->
                         <circle cx="400" cy="300" r="60" fill="#06B6D4" opacity="0.8" stroke="#22D3EE" stroke-width="2"/>
                         <text x="400" y="295" text-anchor="middle" fill="#0F172A" font-family="JetBrains Mono" font-size="14" font-weight="bold">Codex Deus</text>
                         <text x="400" y="315" text-anchor="middle" fill="#334155" font-family="Inter" font-size="11">Knowledge Repository</text>
-                        
+
                         <!-- Central Convergence -->
                         <circle cx="400" cy="200" r="30" fill="#06B6D4" opacity="0.3">
                             <animate attributeName="r" from="30" to="35" dur="2s" repeatCount="indefinite" direction="alternate"/>
@@ -1364,7 +1364,7 @@
                 <rect width="100%" height="100%" fill="url(#cta-pattern)"/>
             </svg>
         </div>
-        
+
         <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
                 Ready to Implement The Trinity?
@@ -1480,7 +1480,7 @@
         // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-        
+
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
@@ -1493,11 +1493,11 @@
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const filter = button.getAttribute('data-filter');
-                
+
                 // Update active state
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                
+
                 // Filter components
                 componentCards.forEach(card => {
                     const category = card.getAttribute('data-category');
@@ -1518,11 +1518,11 @@
 
         // Architecture layer expansion
         const architectureLayers = document.querySelectorAll('.architecture-layer');
-        
+
         architectureLayers.forEach(layer => {
             const header = layer.querySelector('.cursor-pointer');
             const details = layer.querySelector('.layer-details');
-            
+
             header.addEventListener('click', () => {
                 details.classList.toggle('hidden');
             });
@@ -1530,7 +1530,7 @@
 
         // Trinity card interactions
         const trinityCards = document.querySelectorAll('#project-ai-card, #cerberus-card, #codex-card');
-        
+
         trinityCards.forEach(card => {
             card.addEventListener('click', () => {
                 // Smooth scroll to relevant section
@@ -1592,13 +1592,13 @@
                 transition: all 0.3s ease;
                 cursor: pointer;
             }
-            
+
             .filter-btn:hover {
                 background-color: var(--color-surface-light);
                 color: var(--color-accent);
                 border-color: var(--color-accent);
             }
-            
+
             .filter-btn.active {
                 background-color: var(--color-accent);
                 color: var(--color-background);

@@ -4,7 +4,7 @@
   "description": "Categorization system for Obsidian templates supporting document creation workflows",
   "version": "1.0.0",
   "lastUpdated": "2025-04-20",
-  
+
   "categories": {
     "module-doc": {
       "name": "Module Documentation",
@@ -69,7 +69,7 @@
       "defaultStatus": "draft",
       "reviewRequired": true
     },
-    
+
     "agent-doc": {
       "name": "Agent Documentation",
       "description": "Templates for AI agent task reports, execution logs, and findings from autonomous agents",
@@ -133,7 +133,7 @@
       "defaultStatus": "completed",
       "reviewRequired": false
     },
-    
+
     "architecture-doc": {
       "name": "Architecture Documentation",
       "description": "Templates for system design, architectural decision records (ADRs), and integration specifications",
@@ -198,7 +198,7 @@
       "defaultStatus": "proposed",
       "reviewRequired": true
     },
-    
+
     "guide": {
       "name": "Guides and References",
       "description": "Templates for user guides, developer references, operational runbooks, and troubleshooting documentation",
@@ -263,7 +263,7 @@
       "reviewRequired": true
     }
   },
-  
+
   "metadata": {
     "statusWorkflow": {
       "draft": {
@@ -302,14 +302,14 @@
         "allowedTransitions": ["archived"]
       }
     },
-    
+
     "commonTags": {
       "priority": ["critical", "high", "medium", "low"],
       "scope": ["system", "module", "component", "feature"],
       "audience": ["user", "developer", "operator", "architect"],
       "lifecycle": ["planning", "active", "stable", "deprecated"]
     },
-    
+
     "templateVariables": {
       "user": {
         "name": "Author name from Templater user configuration",
@@ -326,7 +326,7 @@
         "obsidian_version": "Obsidian app version"
       }
     },
-    
+
     "qualityStandards": {
       "minWordCount": {
         "module-doc": 1000,
@@ -350,7 +350,7 @@
       ]
     }
   },
-  
+
   "integrations": {
     "templater": {
       "version": ">=1.16.0",
@@ -381,7 +381,7 @@
       "autoBackup": true
     }
   },
-  
+
   "governance": {
     "ownership": "Principal Architect & Documentation Team",
     "changePolicy": "All template modifications require pull request review",

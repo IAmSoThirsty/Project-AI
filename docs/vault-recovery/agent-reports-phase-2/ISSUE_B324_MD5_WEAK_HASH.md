@@ -1,6 +1,6 @@
 # GitHub Issue: [HIGH] Weak MD5 Hash Usage Without Security Flag (B324) - 4 instances
 
-**Repository:** IAmSoThirsty/Project-AI  
+**Repository:** IAmSoThirsty/Project-AI
 **Labels:** security, high-severity, cryptography
 
 ---
@@ -14,8 +14,8 @@ Four instances of MD5 hash usage detected without the `usedforsecurity=False` pa
 
 ### Vulnerability Details
 
-**Bandit Rule:** B324 - `hashlib.md5()` called without `usedforsecurity` parameter  
-**Risk:** Potential security misuse of weak cryptographic hash function  
+**Bandit Rule:** B324 - `hashlib.md5()` called without `usedforsecurity` parameter
+**Risk:** Potential security misuse of weak cryptographic hash function
 **Python Version Impact:** Python 3.9+ enforces explicit security context declaration
 
 #### Why MD5 is Weak for Security Contexts
@@ -146,7 +146,7 @@ After applying fixes:
    ```bash
    bandit -r src/app/core/god_tier_intelligence_system.py src/app/core/hydra_50_performance.py src/app/core/local_fbo.py src/app/domains/situational_awareness.py -f json
    ```
-   
+
 2. **Verify no B324 issues remain:**
    ```bash
    grep -r "B324" bandit-report.json

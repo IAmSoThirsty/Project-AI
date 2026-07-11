@@ -12,17 +12,16 @@ tags:
 **user**: what is your role here?
 [Timestamp: 2026/04/23 11:30:09]
 
-**ai**: 
+**ai**:
 <errorChunk>Model request failed: API key is not provided for the model: google/gemini-2.5-flash|openrouterai.</errorChunk>
 [Timestamp: 2026/04/23 11:30:09]
 
 **user**: what is your role here?
 [Timestamp: 2026/04/23 11:30:42]
 
-**ai**: 
+**ai**:
 <errorChunk>Model request failed: API key is not provided for the model: google/gemini-2.5-flash|openrouterai.</errorChunk>
 [Timestamp: 2026/04/23 11:30:42]
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -102,12 +102,12 @@ manager.heartbeat("wf_001", "executor_1")  # Extend lease
 class MyActivity(Activity):
     async def execute(self, **kwargs):
         return perform_side_effect()
-    
+
     async def compensate(self, **kwargs):
         undo_side_effect()
 
 result = await executor.execute_activity(
-    activity, 
+    activity,
     idempotency_token="unique_token",
     max_retries=3
 )
@@ -571,6 +571,6 @@ Total additions: **1,914 lines of production code, 1,180 lines of tests, 113 new
 
 ---
 
-**Implementation Date:** 2026-01-24  
-**Version:** 2.0.0  
+**Implementation Date:** 2026-01-24
+**Version:** 2.0.0
 **Status:** ✅ COMPLETE AND PRODUCTION-READY

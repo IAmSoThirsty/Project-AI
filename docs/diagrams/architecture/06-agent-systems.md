@@ -4,35 +4,35 @@
 graph TB
     subgraph "Agent Ecosystem"
         REGISTRY[Agent Registry<br/>Central Coordinator]
-        
+
         subgraph "Core Agents (Tier 1)"
             OVERSIGHT[Oversight Agent<br/>Safety Validation]
             PLANNER[Planner Agent<br/>Task Decomposition]
             VALIDATOR[Validator Agent<br/>Input/Output Check]
             EXPLAIN[Explainability Agent<br/>Decision Trace]
         end
-        
+
         subgraph "Security Agents (Tier 2)"
             RED_TEAM[Red Team Agent<br/>Attack Simulation]
             JAILBREAK[Jailbreak Detector<br/>Prompt Injection]
             GUARDRAIL[Constitutional Guardrail<br/>Law Enforcement]
             BORDER_PATROL[Border Patrol<br/>IP Firewall]
         end
-        
+
         subgraph "Development Agents (Tier 3)"
             REFACTOR[Refactor Agent<br/>Code Improvement]
             TEST_GEN[Test Generator<br/>QA Automation]
             DOC_GEN[Documentation Agent<br/>Auto-Docs]
             CI_CHECKER[CI Checker<br/>Pipeline Validation]
         end
-        
+
         subgraph "Knowledge Agents (Tier 4)"
             RETRIEVAL[Retrieval Agent<br/>RAG System]
             CURATOR[Knowledge Curator<br/>KB Management]
             LONG_CONTEXT[Long Context Agent<br/>100K+ Tokens]
             EXPERT[Expert Agent<br/>Domain Specialist]
         end
-        
+
         subgraph "Specialized Agents (Tier 5)"
             ALPHA_RED[Alpha Red<br/>Advanced Adversary]
             CODEX_DEUS[Codex Deus Maximus<br/>Code Oracle]
@@ -173,27 +173,27 @@ Validates all actions for safety:
 ```python
 class OversightAgent:
     """Monitors all AI actions for safety compliance"""
-    
+
     def __init__(self):
         self.four_laws = FourLaws()
         self.audit_log = AuditLogger()
-    
+
     def validate_action(self, action: str, context: dict) -> tuple[bool, str]:
         """Check if action is safe to execute"""
         # Constitutional validation
         is_allowed, reason = self.four_laws.validate_action(action, context)
-        
+
         if not is_allowed:
             self.audit_log.record_denial(action, reason)
             return False, reason
-        
+
         # Additional safety checks
         if self.is_high_risk(action):
             return self.request_human_approval(action, context)
-        
+
         self.audit_log.record_approval(action)
         return True, "Action approved"
-    
+
     def is_high_risk(self, action: str) -> bool:
         """Detect potentially dangerous operations"""
         risk_keywords = ["delete", "drop", "format", "rm -rf", "sudo"]
@@ -207,44 +207,44 @@ Decomposes complex tasks:
 ```python
 class PlannerAgent:
     """Breaks down complex tasks into executable subtasks"""
-    
+
     def decompose_task(self, task: str) -> list[dict]:
         """Create execution plan with dependencies"""
         # Use GPT-4 to analyze task
         prompt = f"""
         Decompose this task into subtasks with dependencies:
         Task: {task}
-        
+
         Return JSON array of subtasks with:
         - id: unique identifier
         - description: what to do
         - dependencies: list of prerequisite task IDs
         - estimated_duration: minutes
         """
-        
+
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[{"role": "user", "content": prompt}]
         )
-        
+
         subtasks = json.loads(response.choices[0].message.content)
-        
+
         # Validate plan
         if not self.is_valid_plan(subtasks):
             raise ValueError("Invalid task decomposition")
-        
+
         return subtasks
-    
+
     def is_valid_plan(self, subtasks: list[dict]) -> bool:
         """Check for circular dependencies and orphaned tasks"""
         task_ids = {task["id"] for task in subtasks}
-        
+
         for task in subtasks:
             # Check all dependencies exist
             for dep_id in task.get("dependencies", []):
                 if dep_id not in task_ids:
                     return False
-        
+
         # Check for circular dependencies (topological sort)
         return not self.has_circular_dependencies(subtasks)
 ```
@@ -256,7 +256,7 @@ Validates inputs and outputs:
 ```python
 class ValidatorAgent:
     """Validates inputs before execution and outputs before return"""
-    
+
     def validate_input(self, data: dict, schema: dict) -> tuple[bool, str]:
         """Schema-based input validation"""
         try:
@@ -264,7 +264,7 @@ class ValidatorAgent:
             return True, "Valid input"
         except jsonschema.ValidationError as e:
             return False, f"Invalid input: {e.message}"
-    
+
     def validate_output(self, output: str, expected_format: str) -> tuple[bool, str]:
         """Check output format and content safety"""
         # Format validation
@@ -273,14 +273,14 @@ class ValidatorAgent:
                 json.loads(output)
             except json.JSONDecodeError:
                 return False, "Invalid JSON output"
-        
+
         # Content safety (no PII, secrets)
         if self.contains_pii(output):
             return False, "Output contains PII"
-        
+
         if self.contains_secrets(output):
             return False, "Output contains secrets"
-        
+
         return True, "Valid output"
 ```
 
@@ -291,7 +291,7 @@ Generates decision explanations:
 ```python
 class ExplainabilityAgent:
     """Provides human-readable explanations for AI decisions"""
-    
+
     def explain_decision(self, decision: dict) -> str:
         """Generate natural language explanation"""
         template = """
@@ -301,19 +301,19 @@ class ExplainabilityAgent:
         {factors}
         Confidence: {confidence}%
         """
-        
+
         return template.format(
             decision=decision["action"],
             reasoning=decision["reason"],
             factors="\n".join(f"- {f}" for f in decision["factors"]),
             confidence=int(decision["confidence"] * 100)
         )
-    
+
     def trace_execution(self, task_id: str) -> dict:
         """Reconstruct execution path for debugging"""
         # Retrieve audit logs
         logs = self.audit_log.get_task_logs(task_id)
-        
+
         return {
             "task_id": task_id,
             "steps": [self.format_step(log) for log in logs],
@@ -331,7 +331,7 @@ Simulates attacks to find vulnerabilities:
 ```python
 class RedTeamAgent:
     """Adversarial testing agent"""
-    
+
     def run_attack_suite(self):
         """Execute all attack vectors"""
         results = {
@@ -342,14 +342,14 @@ class RedTeamAgent:
             "authentication_bypass": self.test_auth_bypass(),
             "jailbreak": self.test_jailbreak()
         }
-        
+
         # Report vulnerabilities
         vulnerabilities = [k for k, v in results.items() if v["vulnerable"]]
         if vulnerabilities:
             self.alert_security_team(vulnerabilities)
-        
+
         return results
-    
+
     def test_sql_injection(self) -> dict:
         """Test for SQL injection vulnerabilities"""
         payloads = [
@@ -357,7 +357,7 @@ class RedTeamAgent:
             "'; DROP TABLE users--",
             "' UNION SELECT * FROM passwords--"
         ]
-        
+
         for payload in payloads:
             response = self.send_request(payload)
             if self.is_vulnerable_response(response):
@@ -366,7 +366,7 @@ class RedTeamAgent:
                     "payload": payload,
                     "severity": "critical"
                 }
-        
+
         return {"vulnerable": False}
 ```
 
@@ -377,7 +377,7 @@ Detects prompt injection attempts:
 ```python
 class JailbreakDetector:
     """Detects attempts to bypass AI safety guardrails"""
-    
+
     JAILBREAK_PATTERNS = [
         r"ignore previous instructions",
         r"you are now a different AI",
@@ -387,18 +387,18 @@ class JailbreakDetector:
         r"hypothetically speaking",
         r"in a fictional scenario"
     ]
-    
+
     def detect(self, user_input: str) -> tuple[bool, str]:
         """Check for jailbreak attempts"""
         for pattern in self.JAILBREAK_PATTERNS:
             if re.search(pattern, user_input, re.IGNORECASE):
                 return True, f"Jailbreak pattern detected: {pattern}"
-        
+
         # ML-based detection
         jailbreak_score = self.ml_model.predict([user_input])[0]
         if jailbreak_score > 0.8:
             return True, f"ML detected jailbreak (score: {jailbreak_score})"
-        
+
         return False, "No jailbreak detected"
 ```
 
@@ -411,20 +411,20 @@ Automated code improvements:
 ```python
 class RefactorAgent:
     """Improves code quality through automated refactoring"""
-    
+
     def refactor_file(self, filepath: str) -> dict:
         """Apply refactoring transformations"""
         with open(filepath) as f:
             code = f.read()
-        
+
         # Static analysis
         issues = self.analyze_code(code)
-        
+
         # Apply fixes
         refactored_code = code
         for issue in issues:
             refactored_code = self.apply_fix(refactored_code, issue)
-        
+
         # Verify correctness (run tests)
         if self.tests_pass(filepath, refactored_code):
             return {
@@ -446,39 +446,39 @@ Automated test generation:
 ```python
 class TestGeneratorAgent:
     """Generates unit tests for code"""
-    
+
     def generate_tests(self, filepath: str) -> str:
         """Create pytest tests for Python module"""
         with open(filepath) as f:
             code = f.read()
-        
+
         # Extract functions
         functions = self.extract_functions(code)
-        
+
         # Generate test cases
         test_code = "import pytest\n\n"
         for func in functions:
             test_code += self.generate_test_for_function(func)
-        
+
         return test_code
-    
+
     def generate_test_for_function(self, func: dict) -> str:
         """Generate test case for single function"""
         template = """
 def test_{func_name}():
     # Arrange
     {arrange}
-    
+
     # Act
     result = {func_name}({args})
-    
+
     # Assert
     assert result == {expected}
 """
-        
+
         # Use GPT-4 to infer test cases
         test_cases = self.infer_test_cases(func)
-        
+
         return "\n".join(
             template.format(
                 func_name=func["name"],
@@ -499,22 +499,22 @@ RAG (Retrieval-Augmented Generation):
 ```python
 class RetrievalAgent:
     """Retrieves relevant context from knowledge base"""
-    
+
     def __init__(self):
         self.embeddings = OpenAIEmbeddings()
         self.vector_store = FAISS.load_local("data/vector_store")
-    
+
     def retrieve(self, query: str, top_k: int = 5) -> list[dict]:
         """Find most relevant documents"""
         # Generate query embedding
         query_embedding = self.embeddings.embed_query(query)
-        
+
         # Similarity search
         results = self.vector_store.similarity_search_by_vector(
             query_embedding,
             k=top_k
         )
-        
+
         return [
             {
                 "content": doc.page_content,
@@ -532,17 +532,17 @@ Manages knowledge base:
 ```python
 class KnowledgeCurator:
     """Maintains and organizes knowledge base"""
-    
+
     def add_knowledge(self, content: str, category: str, metadata: dict):
         """Add new knowledge to KB"""
         # Validate content
         if self.is_duplicate(content):
             return {"added": False, "reason": "Duplicate content"}
-        
+
         # Categorize
         if category not in self.valid_categories:
             category = self.auto_categorize(content)
-        
+
         # Store
         knowledge_id = self.generate_id(content)
         self.kb.add({
@@ -552,10 +552,10 @@ class KnowledgeCurator:
             "metadata": metadata,
             "created_at": datetime.now().isoformat()
         })
-        
+
         # Update embeddings
         self.vector_store.add_texts([content], metadatas=[metadata])
-        
+
         return {"added": True, "id": knowledge_id}
 ```
 
@@ -568,21 +568,21 @@ Advanced adversarial agent:
 ```python
 class AlphaRedAgent:
     """Sophisticated attack simulation"""
-    
+
     def advanced_attack(self, target: str) -> dict:
         """Multi-stage attack chain"""
         # Reconnaissance
         recon = self.gather_intelligence(target)
-        
+
         # Identify vulnerabilities
         vulns = self.scan_vulnerabilities(target, recon)
-        
+
         # Exploit chaining
         exploit_chain = self.build_exploit_chain(vulns)
-        
+
         # Execute attack
         results = self.execute_attack_chain(exploit_chain)
-        
+
         return {
             "target": target,
             "vulnerabilities_found": len(vulns),
@@ -599,29 +599,29 @@ Code oracle for complex questions:
 ```python
 class CodexDeusMaximus:
     """Advanced code understanding and generation"""
-    
+
     def answer_code_question(self, question: str, codebase: str) -> str:
         """Deep code analysis with long context"""
         # Use GPT-4 with 128K context
         prompt = f"""
         Codebase (truncated):
         {codebase[:120000]}
-        
+
         Question: {question}
-        
+
         Provide comprehensive answer with:
         1. Direct answer
         2. Code examples
         3. Trade-offs
         4. Best practices
         """
-        
+
         response = openai.ChatCompletion.create(
             model="gpt-4-turbo-preview",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=4096
         )
-        
+
         return response.choices[0].message.content
 ```
 
@@ -633,11 +633,11 @@ class CodexDeusMaximus:
 # src/app/core/services/message_bus.py
 class AgentMessageBus:
     """Publish-subscribe message bus for inter-agent communication"""
-    
+
     def __init__(self):
         self.subscribers = defaultdict(list)
         self.event_log = []
-    
+
     def publish(self, topic: str, message: dict):
         """Broadcast message to subscribers"""
         event = {
@@ -646,10 +646,10 @@ class AgentMessageBus:
             "timestamp": datetime.now().isoformat()
         }
         self.event_log.append(event)
-        
+
         for subscriber in self.subscribers[topic]:
             subscriber(message)
-    
+
     def subscribe(self, topic: str, callback: callable):
         """Register subscriber for topic"""
         self.subscribers[topic].append(callback)
@@ -678,42 +678,42 @@ bus.publish("action_requested", {
 # src/app/core/services/task_queue.py
 class AgentTaskQueue:
     """Distributed task queue for agent work"""
-    
+
     def __init__(self):
         self.pending_tasks = []
         self.in_progress = {}
         self.completed = {}
-    
+
     def enqueue(self, task: dict) -> str:
         """Add task to queue"""
         task_id = str(uuid.uuid4())
         task["id"] = task_id
         task["status"] = "pending"
         task["created_at"] = datetime.now()
-        
+
         self.pending_tasks.append(task)
         return task_id
-    
+
     def dequeue(self, agent_id: str) -> dict:
         """Get next task for agent"""
         if not self.pending_tasks:
             return None
-        
+
         task = self.pending_tasks.pop(0)
         task["status"] = "in_progress"
         task["agent_id"] = agent_id
         task["started_at"] = datetime.now()
-        
+
         self.in_progress[task["id"]] = task
         return task
-    
+
     def complete(self, task_id: str, result: dict):
         """Mark task as completed"""
         task = self.in_progress.pop(task_id)
         task["status"] = "completed"
         task["result"] = result
         task["completed_at"] = datetime.now()
-        
+
         self.completed[task_id] = task
 ```
 
@@ -725,7 +725,7 @@ class AgentTaskQueue:
 # src/app/agents/sandbox_runner.py
 class SandboxRunner:
     """Executes agents in isolated environments"""
-    
+
     def run_agent(self, agent_class: type, task: dict) -> dict:
         """Run agent in subprocess with resource limits"""
         # Create isolated process
@@ -734,7 +734,7 @@ class SandboxRunner:
             args=(agent_class, task),
             daemon=True
         )
-        
+
         # Set resource limits (Linux)
         if platform.system() == "Linux":
             resource.setrlimit(
@@ -745,14 +745,14 @@ class SandboxRunner:
                 resource.RLIMIT_AS,
                 (1024**3, 1024**3)  # 1GB max memory
             )
-        
+
         worker.start()
         worker.join(timeout=600)  # 10 minute wall clock timeout
-        
+
         if worker.is_alive():
             worker.terminate()
             return {"error": "Agent exceeded time limit"}
-        
+
         return self.get_result(task["id"])
 ```
 
@@ -770,12 +770,12 @@ class BaseAgent:
         if not is_allowed:
             self.audit_log.record_denial(action, reason)
             raise ConstitutionalViolation(reason)
-        
+
         # Execute action
         result = self._execute_impl(action, context)
-        
+
         # Log successful execution
         self.audit_log.record_execution(action, result)
-        
+
         return result
 ```

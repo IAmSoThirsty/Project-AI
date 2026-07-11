@@ -82,7 +82,7 @@ This audit examined Project-AI's integration with external AI services (OpenAI G
 def chat_completion(self, messages, model="gpt-3.5-turbo", temperature=0.7, **kwargs):
     if not self._client:
         raise RuntimeError("OpenAI not available. Check API key and installation.")
-    
+
     try:
         response = self._client.chat.completions.create(
             model=model,
@@ -127,7 +127,7 @@ except openai.AuthenticationError as e:
    - Honors `Retry-After` header (lines 48-78)
 2. **Configurable Retries**: Environment variables `IMAGE_API_MAX_RETRIES` (default: 3), `IMAGE_API_BACKOFF_FACTOR` (default: 0.8)
 3. **Model Versioning**: Uses specific model `stabilityai/stable-diffusion-2-1` (line 237)
-4. **Comprehensive Parameters**: 
+4. **Comprehensive Parameters**:
    - `num_inference_steps: 50` (quality vs speed)
    - `guidance_scale: 7.5` (prompt adherence)
    - Supports custom width/height
@@ -158,7 +158,7 @@ class CircuitBreaker:
         self.failure_threshold = failure_threshold
         self.last_failure_time = None
         self.timeout = timeout
-        
+
     def call(self, func, *args, **kwargs):
         if self.is_open():
             raise CircuitBreakerError("Circuit breaker is OPEN")
@@ -259,14 +259,14 @@ class APIQuotaManager:
             "openai_dalle": {"limit": 50, "used": 0, "reset_time": None},
             "huggingface": {"limit": 30, "used": 0, "reset_time": None}
         }
-    
+
     def check_quota(self, api_name: str) -> bool:
         quota = self.quotas[api_name]
         if quota["used"] >= quota["limit"]:
             if time.time() < quota["reset_time"]:
                 return False
         return True
-    
+
     def record_usage(self, api_name: str, amount: int = 1):
         self.quotas[api_name]["used"] += amount
 ```
@@ -300,7 +300,7 @@ class CostTracker:
     def __init__(self):
         self.monthly_spend = self.load_spend_from_db()
         self.daily_images = self.load_daily_count()
-    
+
     def check_budget(self, operation: str, estimated_cost: float) -> bool:
         if operation == "dalle" and self.daily_images >= DALLE_DAILY_IMAGE_LIMIT:
             logger.warning("Daily DALL-E limit reached")
@@ -336,13 +336,13 @@ def generate(self, prompt, style, width, height):
     # ✅ GOOD: Validates prompt
     if not prompt or not prompt.strip():
         return {"success": False, "error": "Empty prompt"}
-    
+
     # ✅ GOOD: Content filter check
     is_safe, filter_msg = self.check_content_filter(prompt)
     if not is_safe:
         logger.warning("Content filter blocked: %s", prompt)
         return {"success": False, "error": filter_msg, "filtered": True}
-    
+
     # ⚠️ ISSUE: No try-except around backend routing
     if self.backend == ImageGenerationBackend.HUGGINGFACE:
         return self.generate_with_huggingface(...)
@@ -367,7 +367,7 @@ def generate_path(self, interest, skill_level="beginner", model=None):
     # ✅ GOOD: Checks availability before API call
     if not self.provider.is_available():
         return f"Error: {self.provider_name} provider is not available. Please check API key."
-    
+
     try:
         # ... API call ...
         response = self.provider.chat_completion(messages=messages, model=model)
@@ -435,7 +435,7 @@ def chat_completion(self, ...):
 class ImageGenerationWorker(QThread):
     finished = pyqtSignal(dict)
     progress = pyqtSignal(str)
-    
+
     def run(self):
         try:
             self.progress.emit("Initializing generation...")
@@ -475,12 +475,12 @@ BLOCKED_KEYWORDS = [
 def check_content_filter(self, prompt: str) -> tuple[bool, str]:
     if not self.content_filter_enabled:
         return True, "Content filter disabled"
-    
+
     prompt_lower = prompt.lower()
     for keyword in self.BLOCKED_KEYWORDS:
         if keyword in prompt_lower:  # Simple substring match
             return False, f"Blocked keyword detected: {keyword}"
-    
+
     return True, "Content filter passed"
 ```
 
@@ -541,7 +541,7 @@ def disable_content_filter(self, override_password: str) -> bool:
 ```python
 def disable_content_filter(self, override_password: str, duration_seconds: int = 3600) -> bool:
     from app.core.command_override import CommandOverrideSystem
-    
+
     override_system = CommandOverrideSystem()
     if override_system.validate_override(override_password, "disable_content_filter"):
         self.content_filter_enabled = False
@@ -575,7 +575,7 @@ def test_content_filter_blocks_forbidden_keywords(self, generator):
         "hate speech content",
         "illegal drug use",
     ]
-    
+
     for prompt in forbidden_prompts:
         is_safe, reason = generator.check_content_filter(prompt)
         assert not is_safe, f"Expected '{prompt}' to be blocked"
@@ -631,7 +631,7 @@ def check_external_safety(prompt: str) -> tuple[bool, str]:
     import openai
     response = openai.moderations.create(input=prompt)
     result = response.results[0]
-    
+
     if result.flagged:
         categories = [cat for cat, flagged in result.categories.items() if flagged]
         return False, f"Flagged by OpenAI: {', '.join(categories)}"
@@ -679,7 +679,7 @@ def generate_with_fallback(self, prompt, style, width, height):
         (ImageGenerationBackend.OPENAI, self.generate_with_openai),
         (ImageGenerationBackend.HUGGINGFACE, self.generate_with_huggingface),
     ]
-    
+
     errors = []
     for backend, generate_func in backends:
         try:
@@ -693,7 +693,7 @@ def generate_with_fallback(self, prompt, style, width, height):
             logger.warning("Backend %s failed: %s", backend.value, e)
             errors.append(f"{backend.value}: {str(e)}")
             continue
-    
+
     # All backends failed
     return {
         "success": False,
@@ -712,7 +712,7 @@ class ImageGeneratorWithCache(ImageGenerator):
         super().__init__(*args, **kwargs)
         self.cache_dir = os.path.join(self.data_dir, "image_cache")
         os.makedirs(self.cache_dir, exist_ok=True)
-    
+
     def generate(self, prompt, style, width, height):
         # Generate cache key
         cache_key = hashlib.sha256(
@@ -722,22 +722,22 @@ class ImageGeneratorWithCache(ImageGenerator):
                 "size": f"{width}x{height}"
             }, sort_keys=True).encode()
         ).hexdigest()
-        
+
         # Check cache
         cache_file = os.path.join(self.cache_dir, f"{cache_key}.json")
         if os.path.exists(cache_file):
             logger.info("Returning cached result for prompt")
             with open(cache_file) as f:
                 return json.load(f)
-        
+
         # Generate new
         result = super().generate(prompt, style, width, height)
-        
+
         # Cache successful results
         if result.get("success"):
             with open(cache_file, "w") as f:
                 json.dump(result, f)
-        
+
         return result
 ```
 
@@ -749,10 +749,10 @@ class APIHealthChecker:
             "openai": {"available": True, "last_check": None, "failure_count": 0},
             "huggingface": {"available": True, "last_check": None, "failure_count": 0},
         }
-    
+
     def check_health(self, api_name: str) -> bool:
         status = self.health_status[api_name]
-        
+
         # If too many failures, mark as unavailable
         if status["failure_count"] >= 3:
             # Check if cooldown period passed
@@ -760,14 +760,14 @@ class APIHealthChecker:
                 status["failure_count"] = 0  # Reset
             else:
                 return False
-        
+
         return status["available"]
-    
+
     def record_failure(self, api_name: str):
         status = self.health_status[api_name]
         status["failure_count"] += 1
         status["last_check"] = time.time()
-        
+
         if status["failure_count"] >= 3:
             status["available"] = False
             logger.error("API %s marked as UNAVAILABLE after 3 failures", api_name)
@@ -780,7 +780,7 @@ def generate_with_degradation(self, prompt, style, width, height):
     result = self.generate_with_fallback(prompt, style, width, height)
     if result["success"]:
         return result
-    
+
     # Fallback 1: Try smaller size to reduce cost/time
     if width > 512 or height > 512:
         logger.info("Trying degraded mode: smaller image size")
@@ -789,7 +789,7 @@ def generate_with_degradation(self, prompt, style, width, height):
             result["degraded"] = True
             result["degradation_reason"] = "Reduced size due to API issues"
             return result
-    
+
     # Fallback 2: Return placeholder/error image
     logger.warning("All generation attempts failed, returning placeholder")
     return {
@@ -842,7 +842,7 @@ def build_enhanced_prompt(self, prompt: str, style: ImageStyle = ImageStyle.PHOT
 def build_enhanced_prompt(self, prompt: str, style: ImageStyle) -> dict:
     # Base quality keywords
     quality_keywords = "masterpiece, best quality, highly detailed, 8k uhd"
-    
+
     # Style-specific enhancements
     style_enhancements = {
         ImageStyle.PHOTOREALISTIC: {
@@ -857,11 +857,11 @@ def build_enhanced_prompt(self, prompt: str, style: ImageStyle) -> dict:
         },
         # ... other styles
     }
-    
+
     enhancement = style_enhancements[style]
     enhanced_prompt = f"{enhancement['prefix']} {prompt}, {enhancement['suffix']}, {quality_keywords}"
     negative_prompt = f"{self.SAFETY_NEGATIVE}, {enhancement['negative']}"
-    
+
     return {
         "positive": enhanced_prompt,
         "negative": negative_prompt
@@ -911,7 +911,7 @@ def generate_path(self, interest, skill_level, model=None):
     - Recommend evidence-based resources
     - Provide realistic timelines based on 5-10 hours/week study
     - Include practice projects that build real-world skills
-    
+
     Format all responses as structured JSON with the following schema:
     {
         "overview": "Brief description of the learning journey",
@@ -928,13 +928,13 @@ def generate_path(self, interest, skill_level, model=None):
         "total_duration_weeks": 12,
         "next_steps": "What to do after completing this path"
     }"""
-    
+
     user_prompt = f"""Create a {skill_level}-level learning path for: {interest}
-    
+
     Target audience: {skill_level} learner with basic computer literacy
     Time commitment: 5-10 hours per week
     Learning style: Mix of theory and hands-on practice
-    
+
     Example similar topic (for reference style):
     {{
         "overview": "Master Python fundamentals in 12 weeks",
@@ -951,15 +951,15 @@ def generate_path(self, interest, skill_level, model=None):
             }}
         ]
     }}
-    
+
     Now create the learning path for: {interest}
     """
-    
+
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt}
     ]
-    
+
     # Request JSON response
     response = self.provider.chat_completion(
         messages=messages,
@@ -967,7 +967,7 @@ def generate_path(self, interest, skill_level, model=None):
         temperature=0.7,
         response_format={"type": "json_object"}  # GPT-4+ feature
     )
-    
+
     try:
         return json.loads(response)
     except json.JSONDecodeError:
@@ -1032,14 +1032,14 @@ models:
       fallback: "gpt-3.5-turbo-1106"
       experimental: "gpt-4-turbo-preview"
       deprecated: ["gpt-3.5-turbo-0301", "gpt-3.5-turbo-0613"]
-    
+
     image:
       production: "dall-e-3"
       fallback: "dall-e-2"
       parameters:
         quality: "standard"  # vs "hd"
         style: "vivid"       # vs "natural"
-  
+
   huggingface:
     image:
       production: "stabilityai/stable-diffusion-2-1"
@@ -1059,7 +1059,7 @@ class ModelManager:
     def __init__(self, registry_path="config/model_registry.yaml"):
         with open(registry_path) as f:
             self.registry = yaml.safe_load(f)
-    
+
     def get_model(
         self,
         provider: str,
@@ -1075,7 +1075,7 @@ class ModelManager:
                 provider, category, tier
             )
             return self.registry["models"][provider][category]["fallback"]
-    
+
     def check_deprecation(self, model: str) -> dict:
         """Check if model is deprecated."""
         for notice in self.registry.get("deprecation_notices", []):
@@ -1086,7 +1086,7 @@ class ModelManager:
                     "replacement": notice["replacement"]
                 }
         return {"deprecated": False}
-    
+
     def get_parameters(self, provider: str, category: str) -> dict:
         """Get default parameters for model."""
         return self.registry["models"][provider][category].get("parameters", {})
@@ -1105,7 +1105,7 @@ if deprecation := model_mgr.check_deprecation(model):
 class ModelMetrics:
     def __init__(self):
         self.metrics_db = {}  # Replace with actual DB
-    
+
     def record_usage(
         self,
         model: str,
@@ -1123,7 +1123,7 @@ class ModelMetrics:
                 "total_tokens": 0,
                 "total_cost": 0
             }
-        
+
         metrics = self.metrics_db[key]
         metrics["calls"] += 1
         if success:
@@ -1131,12 +1131,12 @@ class ModelMetrics:
         metrics["total_latency"] += latency_ms
         metrics["total_tokens"] += tokens_used
         metrics["total_cost"] += cost_usd
-    
+
     def get_daily_report(self, date: str = None) -> dict:
         """Generate daily model usage report."""
         if date is None:
             date = datetime.now().strftime("%Y-%m-%d")
-        
+
         report = {}
         for key, metrics in self.metrics_db.items():
             if date in key:
@@ -1164,7 +1164,7 @@ def chat_completion_with_metrics(self, messages, model, **kwargs):
         latency_ms = (time.time() - start_time) * 1000
         tokens_used = response.usage.total_tokens
         cost_usd = self._calculate_cost(model, response.usage)
-        
+
         metrics.record_usage(model, latency_ms, tokens_used, cost_usd, success=True)
         return response.choices[0].message.content
     except Exception as e:
@@ -1228,12 +1228,12 @@ def validate_env_keys():
         "OPENAI_API_KEY": "OpenAI integration",
         "HUGGINGFACE_API_KEY": "Image generation (Stable Diffusion)",
     }
-    
+
     missing_keys = []
     for key, description in required_keys.items():
         if not os.getenv(key):
             missing_keys.append(f"  - {key}: {description}")
-    
+
     if missing_keys:
         logger.error("Missing required API keys:\n%s", "\n".join(missing_keys))
         logger.info("See .env.example for configuration instructions")
@@ -1249,11 +1249,11 @@ class APIKeyManager:
     def __init__(self):
         self.keys = self._load_keys()
         self.rotation_schedule = self._load_rotation_schedule()
-    
+
     def get_active_key(self, provider: str) -> str:
         """Get currently active key for provider."""
         provider_keys = self.keys.get(provider, [])
-        
+
         # Find non-expired key
         for key_info in provider_keys:
             if key_info.get("status") == "active":
@@ -1262,14 +1262,14 @@ class APIKeyManager:
                 else:
                     logger.warning("Key %s expired, rotating", key_info["id"])
                     self._rotate_key(provider, key_info["id"])
-        
+
         raise ValueError(f"No active key for {provider}")
-    
+
     def _is_expired(self, key_info: dict) -> bool:
         if "expires_at" not in key_info:
             return False
         return datetime.now() > datetime.fromisoformat(key_info["expires_at"])
-    
+
     def _rotate_key(self, provider: str, old_key_id: str):
         """Mark old key as rotated, activate new key."""
         # Implementation depends on key storage system
@@ -1292,22 +1292,22 @@ class SecureKeyStore:
             with open(master_key_path, "wb") as f:
                 f.write(master_key)
             os.chmod(master_key_path, 0o600)  # Read-only by owner
-        
+
         with open(master_key_path, "rb") as f:
             self.cipher = Fernet(f.read())
-    
+
     def store_key(self, provider: str, api_key: str):
         """Encrypt and store API key."""
         encrypted = self.cipher.encrypt(api_key.encode())
-        
+
         with open(f".keys/{provider}.enc", "wb") as f:
             f.write(encrypted)
-    
+
     def retrieve_key(self, provider: str) -> str:
         """Decrypt and retrieve API key."""
         with open(f".keys/{provider}.enc", "rb") as f:
             encrypted = f.read()
-        
+
         return self.cipher.decrypt(encrypted).decode()
 
 # Migration from .env:
@@ -1495,13 +1495,13 @@ DALLE_DAILY_IMAGE_LIMIT=50
 def test_quota_enforcement():
     manager = APIQuotaManager()
     manager.set_quota("openai_dalle", limit=2)
-    
+
     # First 2 requests should succeed
     assert manager.check_quota("openai_dalle") == True
     manager.record_usage("openai_dalle")
     assert manager.check_quota("openai_dalle") == True
     manager.record_usage("openai_dalle")
-    
+
     # Third should fail
     assert manager.check_quota("openai_dalle") == False
 ```
@@ -1513,10 +1513,10 @@ def test_quota_enforcement():
 def test_fallback_on_primary_failure(mock_hf, mock_openai):
     mock_openai.side_effect = Exception("OpenAI down")
     mock_hf.return_value = {"success": True, "filepath": "test.png"}
-    
+
     generator = ImageGenerator()
     result = generator.generate_with_fallback("test prompt", ...)
-    
+
     assert result["success"] == True
     assert mock_hf.called
 ```
@@ -1525,7 +1525,7 @@ def test_fallback_on_primary_failure(mock_hf, mock_openai):
 ```python
 def test_content_filter_fuzzy_match():
     generator = ImageGenerator()
-    
+
     # Should block variations
     assert not generator.check_content_filter("v!olence")[0]
     assert not generator.check_content_filter("v i o l e n c e")[0]
@@ -1536,7 +1536,7 @@ def test_content_filter_fuzzy_match():
 ```python
 def test_model_deprecation_warning():
     model_mgr = ModelManager()
-    
+
     with pytest.warns(DeprecationWarning):
         model = model_mgr.get_model("openai", "chat", "gpt-3.5-turbo-0301")
 ```

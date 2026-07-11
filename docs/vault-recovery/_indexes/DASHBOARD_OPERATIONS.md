@@ -30,7 +30,7 @@ classification: internal
 ```dataviewjs
 // Track deployment and infrastructure docs
 const opsDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.category === "operations" ||
         (p.tags && (
             p.tags.includes("operations") ||
@@ -54,7 +54,7 @@ for (const doc of opsDocs) {
     const type = doc.type || "unknown";
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (type === "guide" && (tags.includes("deployment") || title.includes("deploy"))) {
         docTypes["Deployment Guide"]++;
     }
@@ -111,10 +111,10 @@ const components = [
 const componentDocs = {};
 for (const comp of components) {
     componentDocs[comp] = dv.pages()
-        .where(p => 
+        .where(p =>
             (p.tags && p.tags.includes(comp)) &&
-            (p.category === "operations" || 
-             p.type === "runbook" || 
+            (p.category === "operations" ||
+             p.type === "runbook" ||
              (p.tags && p.tags.includes("operations")))
         );
 }
@@ -126,11 +126,11 @@ dv.table(
         const docs = componentDocs[comp];
         const runbooks = docs.where(d => d.type === "runbook" || d.type === "playbook").length;
         const guides = docs.where(d => d.type === "guide").length;
-        
+
         const status = (runbooks + guides) >= 2 ? "✅ Good" :
                       (runbooks + guides) === 1 ? "🟡 Minimal" :
                       "⚠️ Missing";
-        
+
         return [comp, runbooks, guides, status];
     })
 );
@@ -143,7 +143,7 @@ dv.table(
 ```dataviewjs
 // Track incidents and operational issues
 const incidents = dv.pages()
-    .where(p => 
+    .where(p =>
         p.type === "incident_report" ||
         (p.tags && (
             p.tags.includes("incident") ||
@@ -170,13 +170,13 @@ const bySeverity = {
 for (const incident of incidents) {
     const status = (incident.incident_status || incident.status || "open").toLowerCase();
     const severity = (incident.severity || "medium").toLowerCase();
-    
+
     if (byStatus[status]) {
         byStatus[status].push(incident);
     } else {
         byStatus["open"].push(incident);
     }
-    
+
     if (bySeverity[severity] !== undefined) {
         bySeverity[severity]++;
     }
@@ -189,10 +189,10 @@ const activeStatuses = ["open", "investigating"];
 for (const status of activeStatuses) {
     const items = byStatus[status];
     if (items.length === 0) continue;
-    
+
     const icon = status === "open" ? "🔴" : "🟡";
     dv.header(4, `${icon} ${status.toUpperCase()} (${items.length})`);
-    
+
     dv.table(
         ["Incident", "Severity", "Date", "Owner", "Impact"],
         items.slice(0, 5).map(i => [
@@ -228,7 +228,7 @@ dv.table(
 ```dataviewjs
 // Track deployment activity
 const deploymentDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && p.tags.includes("deployment")) ||
         p.type === "deployment_log" ||
         (p.deployment && p.deployment.status !== undefined)
@@ -250,7 +250,7 @@ cutoffDate.setDate(cutoffDate.getDate() - 30);
 
 for (const deploy of deploymentDocs) {
     const status = (deploy.deployment?.status || deploy.status || "unknown").toLowerCase();
-    
+
     if (status.includes("success") || status.includes("complete")) {
         deployStats.successful++;
     } else if (status.includes("fail") || status.includes("error")) {
@@ -260,7 +260,7 @@ for (const deploy of deploymentDocs) {
     } else if (status.includes("progress") || status.includes("running")) {
         deployStats.inProgress++;
     }
-    
+
     if (deploy.created_date && new Date(deploy.created_date) >= cutoffDate) {
         last30Days.push(deploy);
     }
@@ -298,7 +298,7 @@ dv.header(4, `Success rate: ${successRate}% - ${status} (Target: ${targetSuccess
 ```dataviewjs
 // Monitoring coverage
 const monitoringDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && (
             p.tags.includes("monitoring") ||
             p.tags.includes("observability") ||
@@ -321,7 +321,7 @@ const monitoringAreas = {
 for (const doc of monitoringDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (tags.includes("application-metrics") || title.includes("application metric")) {
         monitoringAreas["Application Metrics"] = true;
     }
@@ -370,7 +370,7 @@ dv.header(4, `Monitoring coverage: ${coverageCount}/${Object.keys(monitoringArea
 ```dataviewjs
 // Backup and disaster recovery documentation
 const backupDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && (
             p.tags.includes("backup") ||
             p.tags.includes("disaster-recovery") ||
@@ -393,7 +393,7 @@ const recoveryAreas = {
 for (const doc of backupDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (tags.includes("database") || title.includes("database backup")) {
         recoveryAreas["Database Backup"] = true;
     }
@@ -444,7 +444,7 @@ dv.header(4, `Disaster recovery readiness: ${readinessPercent}% - ${readinessSta
 ```dataviewjs
 // Performance and capacity planning documentation
 const perfDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && (
             p.tags.includes("performance") ||
             p.tags.includes("capacity") ||
@@ -465,7 +465,7 @@ const perfAreas = {
 for (const doc of perfDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (tags.includes("load-testing") || title.includes("load test")) perfAreas["Load Testing"]++;
     if (tags.includes("benchmark") || title.includes("benchmark")) perfAreas["Performance Benchmarks"]++;
     if (tags.includes("capacity") || title.includes("capacity")) perfAreas["Capacity Planning"]++;
@@ -491,7 +491,7 @@ dv.table(
 ```dataviewjs
 // Change requests and implementation tracking
 const changeRequests = dv.pages()
-    .where(p => 
+    .where(p =>
         p.type === "change_request" ||
         (p.tags && (
             p.tags.includes("change-request") ||
@@ -510,7 +510,7 @@ const byStatus = {
 
 for (const change of changeRequests) {
     const status = (change.change_status || change.status || "pending").toLowerCase().replace(/[_\s-]/g, '');
-    
+
     if (status.includes("complete") || status === "done") {
         byStatus.completed.push(change);
     } else if (status.includes("progress") || status.includes("implementing")) {
@@ -538,10 +538,10 @@ const statusIcons = {
 for (const status of statusOrder) {
     const items = byStatus[status];
     if (items.length === 0) continue;
-    
+
     const icon = statusIcons[status] || "⚪";
     dv.header(4, `${icon} ${status.toUpperCase().replace(/([A-Z])/g, ' $1').trim()} (${items.length})`);
-    
+
     if (items.length <= 5) {
         dv.list(items.map(i => `${i.file.link} - ${i.title || i.file.name}`));
     } else {
@@ -558,7 +558,7 @@ for (const status of statusOrder) {
 ```dataviewjs
 // Calculate overall operational health
 const allOpsDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.category === "operations" ||
         p.type === "runbook" ||
         p.type === "playbook" ||
@@ -591,19 +591,19 @@ const incidentDocs = dv.pages().where(p => p.type === "incident_report" || (p.ta
 
 for (const doc of allOpsDocs) {
     if (doc.status === "active") metrics.active++;
-    
+
     if (doc.type === "runbook" || doc.type === "playbook") metrics.hasRunbook++;
-    
+
     if (doc.tags && doc.tags.includes("monitoring")) metrics.hasMonitoring++;
-    
+
     if (doc.tags && (doc.tags.includes("backup") || doc.tags.includes("disaster-recovery"))) {
         metrics.hasBackup++;
     }
-    
+
     if (doc.updated_date && new Date(doc.updated_date) >= cutoffDate) {
         metrics.recentUpdate++;
     }
-    
+
     if (doc.author || doc.owner) metrics.hasOwner++;
 }
 
@@ -618,7 +618,7 @@ const healthScore = Math.round((
     (metrics.hasOwner / metrics.total) * 10
 ));
 
-const progressBar = "█".repeat(Math.floor(healthScore / 5)) + 
+const progressBar = "█".repeat(Math.floor(healthScore / 5)) +
                    "░".repeat(20 - Math.floor(healthScore / 5));
 
 dv.header(3, `Operational Health Score: ${healthScore}%`);
@@ -660,7 +660,7 @@ const allDocs = dv.pages();
 for (const doc of allDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (title.includes("sli") || title.includes("slo") || tags.includes("sli") || tags.includes("slo")) {
         sreAreas["SLI/SLO Definition"] = true;
     }
@@ -734,4 +734,3 @@ dv.header(4, `SRE Maturity: ${srePercent}% - ${maturity}`);
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

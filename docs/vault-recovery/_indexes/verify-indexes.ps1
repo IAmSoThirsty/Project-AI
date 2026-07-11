@@ -24,42 +24,42 @@ $allowedSpecial = @(
 foreach ($file in $mdFiles) {
     $filename = $file.Name
     $relativePath = $file.FullName.Replace($indexPath, '').TrimStart('\')
-    
+
     # Check if special file (allowed to not follow -index.md pattern)
     if ($allowedSpecial -contains $filename) {
         Write-Host "✅ $relativePath - PASS (special file)" -ForegroundColor Green
         $passed++
         continue
     }
-    
+
     # Check naming convention
     $errors = @()
-    
+
     # Must end with -index.md
     if (-not $filename.EndsWith('-index.md')) {
         $errors += "Must end with '-index.md'"
     }
-    
+
     # Must be lowercase
     if ($filename -cne $filename.ToLower()) {
         $errors += "Must be lowercase only"
     }
-    
+
     # Only a-z, 0-9, hyphen allowed
     if ($filename -notmatch '^[a-z0-9-]+-index\.md$') {
         $errors += "Only a-z, 0-9, and hyphen allowed"
     }
-    
+
     # No consecutive hyphens
     if ($filename -match '--') {
         $errors += "No consecutive hyphens allowed"
     }
-    
+
     # Max length check (50 chars + .md)
     if ($filename.Length -gt 53) {
         $errors += "Exceeds maximum length of 50 characters"
     }
-    
+
     if ($errors.Count -eq 0) {
         Write-Host "✅ $relativePath - PASS" -ForegroundColor Green
         $passed++

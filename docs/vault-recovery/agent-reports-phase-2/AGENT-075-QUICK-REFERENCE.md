@@ -251,7 +251,7 @@ Wiki links in code blocks are excluded from validation (intentional).
 
 ---
 
-**Created by**: AGENT-075 - Infrastructure Code-to-Doc Links Specialist  
-**Last Updated**: 2026-04-21  
-**Total Links**: 1,334 wiki links across 104 files  
+**Created by**: AGENT-075 - Infrastructure Code-to-Doc Links Specialist
+**Last Updated**: 2026-04-21
+**Total Links**: 1,334 wiki links across 104 files
 **Status**: ✅ Production-Ready

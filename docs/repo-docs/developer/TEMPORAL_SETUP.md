@@ -176,7 +176,7 @@ async def run_learning_workflow():
     # Connect to Temporal
     manager = TemporalClientManager()
     await manager.connect()
-    
+
     # Start workflow
     handle = await manager.client.start_workflow(
         AILearningWorkflow.run,
@@ -189,15 +189,15 @@ async def run_learning_workflow():
         id=f"learning-workflow-{timestamp}",
         task_queue="project-ai-tasks",
     )
-    
+
     # Wait for result
     result: LearningResult = await handle.result()
-    
+
     if result.success:
         print(f"Learning completed: {result.knowledge_id}")
     else:
         print(f"Learning failed: {result.error}")
-    
+
     await manager.disconnect()
 
 asyncio.run(run_learning_workflow())
@@ -326,7 +326,7 @@ The Leather Book interface can trigger workflows:
 async def on_generate_image(self, prompt: str):
     manager = TemporalClientManager()
     await manager.connect()
-    
+
     handle = await manager.client.start_workflow(
         ImageGenerationWorkflow.run,
         ImageGenerationRequest(
@@ -337,7 +337,7 @@ async def on_generate_image(self, prompt: str):
         id=f"image-gen-{datetime.now().timestamp()}",
         task_queue="project-ai-tasks",
     )
-    
+
     result = await handle.result()
     if result.success:
         self.display_image(result.image_path)

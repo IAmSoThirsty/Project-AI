@@ -229,4 +229,3 @@ An agent is ready when it has:
 - Audit and metrics hooks.
 - Tests for success, failure, and routing.
 - A wiki note linking it to the systems it touches.
-

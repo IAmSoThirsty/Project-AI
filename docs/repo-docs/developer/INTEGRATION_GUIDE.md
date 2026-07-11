@@ -123,16 +123,16 @@ Validate user input:
 ```python
 def save_settings(self):
     username = self.username_field.text()
-    
+
     # Validate username (3-50 chars, alphanumeric+dash/underscore)
     valid, msg = DashboardValidationManager.validate_username(username)
     if not valid:
         DashboardErrorHandler.handle_warning(msg, "Username Validation")
         return False
-    
+
     # Sanitize input
     username = DashboardValidationManager.sanitize_string(username)
-    
+
     # Save safely
     self.save_user_settings(username)
 ```
@@ -149,13 +149,13 @@ logger = DashboardLogger("Dashboard")
 def expensive_calculation(self):
     import time
     start = time.time()
-    
+
     result = self.calculate_something()
-    
+
     duration_ms = (time.time() - start) * 1000
     logger.log_performance("Expensive Calculation", duration_ms)
     # Alerts if duration > 1000ms
-    
+
     return result
 
 # Log user actions
@@ -271,7 +271,7 @@ def load_persona_settings(self):
         # Load from user preferences
         preferences = self.user_manager.get_user_preferences()
         traits = preferences.get('persona_traits', {})
-        
+
         # Set in UI
         for trait, value in traits.items():
             if trait in self.persona_panel.trait_sliders:
@@ -289,7 +289,7 @@ def load_persona_settings(self):
 def start_proactive_messaging(self):
     settings = self.persona_panel.get_settings()
     proactive = settings.get('proactive', {})
-    
+
     if proactive.get('enabled'):
         # Start timer for proactive checks
         self.proactive_timer = QTimer()
@@ -310,7 +310,7 @@ def validate_all_inputs(self) -> bool:
         (self.email_field.text(), "email", DashboardValidationManager.validate_email),
         (self.password_field.text(), "password", DashboardValidationManager.validate_password),
     ]
-    
+
     for value, name, validator in validators:
         valid, msg = validator(value)
         if not valid:
@@ -320,7 +320,7 @@ def validate_all_inputs(self) -> bool:
                 parent=self
             )
             return False
-    
+
     return True
 ```
 

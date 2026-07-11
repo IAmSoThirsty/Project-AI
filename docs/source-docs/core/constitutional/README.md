@@ -2,8 +2,8 @@
 
 **Purpose:** Complete documentation of all constitutional AI systems in Project-AI
 
-**Version:** 2.1.0  
-**Last Updated:** 2026-04-20  
+**Version:** 2.1.0
+**Last Updated:** 2026-04-20
 **Maintainer:** Constitutional AI Systems Team
 
 ---
@@ -404,10 +404,9 @@ print(f"TSCG state: {response.tscg_encoded_state}")
 
 ---
 
-**Maintained by:** AGENT-042 (Constitutional AI Systems Documentation Specialist)  
-**Last Audit:** 2026-04-20  
+**Maintained by:** AGENT-042 (Constitutional AI Systems Documentation Specialist)
+**Last Audit:** 2026-04-20
 **Next Review:** 2026-05-20
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

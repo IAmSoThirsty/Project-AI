@@ -108,13 +108,13 @@ self.addEventListener('fetch', (event) => {
           })
           .catch((error) => {
             console.error('[ServiceWorker] Fetch failed:', error);
-            
+
             // Return offline page for navigation requests
             if (event.request.mode === 'navigate') {
               return caches.match('/the_triumvirate/404.html')
                 .then((offlinePage) => offlinePage || caches.match('/the_triumvirate/index.html'));
             }
-            
+
             throw error;
           });
       })

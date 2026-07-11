@@ -9,7 +9,7 @@
 
 - **Vault (docs/ + indexes/ + relationships/ + .obsidian/)**: 719 files
   - docs/: 490 files
-  - indexes/: 11 files  
+  - indexes/: 11 files
   - relationships/: 195 files
   - .obsidian/: 23 files
 

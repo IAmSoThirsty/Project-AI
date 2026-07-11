@@ -613,18 +613,18 @@ graph TB
         UserQuery["User Query"]
         UserCommand["User Command"]
     end
-    
+
     subgraph FourLaws["System 1: FourLaws"]
         ValidateAction["validate_action()<br/>Check Laws 0-3"]
         Allowed["Allowed"]
         Rejected["Rejected"]
     end
-    
+
     subgraph Override["System 5: Command Override"]
         MasterPW["Master Password<br/>Verification"]
         AuditLog["Audit Log<br/>Record"]
     end
-    
+
     subgraph Learning["System 4: Learning Request"]
         CheckBlackVault["is_forbidden()?<br/>SHA-256 Check"]
         CreateRequest["create_request()<br/>Status: Pending"]
@@ -632,66 +632,66 @@ graph TB
         Approve["approve_request()"]
         Deny["deny_request()"]
     end
-    
+
     subgraph Memory["System 3: Memory Expansion"]
         LogConversation["log_conversation()"]
         QueryKnowledge["query_knowledge()<br/>6 Categories"]
         AddKnowledge["add_knowledge()"]
     end
-    
+
     subgraph Persona["System 2: AIPersona"]
         GetTraits["get_personality_summary()<br/>8 Traits"]
         UpdateMood["update_mood()"]
         RecordInteraction["record_interaction()"]
     end
-    
+
     subgraph Plugin["System 6: Plugin Manager"]
         EnablePlugin["enable_plugin()"]
         ExecutePlugin["execute_plugin()"]
     end
-    
+
     subgraph Output["Response Layer"]
         AIResponse["AI Response"]
         ErrorMsg["Error Message"]
     end
-    
+
     %% Flow connections
     UserQuery --> LogConversation
     UserCommand --> ValidateAction
-    
+
     ValidateAction --> Allowed
     ValidateAction --> Rejected
-    
+
     Rejected --> MasterPW
     MasterPW -->|Valid| AuditLog
     MasterPW -->|Invalid| ErrorMsg
     AuditLog --> Allowed
-    
+
     Allowed --> CheckBlackVault
     CheckBlackVault -->|Forbidden| ErrorMsg
     CheckBlackVault -->|Unknown| CreateRequest
     CheckBlackVault -->|Known| QueryKnowledge
-    
+
     CreateRequest --> HumanReview
     HumanReview --> Approve
     HumanReview --> Deny
     Approve --> AddKnowledge
     Deny -->|Add hash| CheckBlackVault
-    
+
     QueryKnowledge --> GetTraits
     GetTraits --> AIResponse
-    
+
     AIResponse --> RecordInteraction
     RecordInteraction --> UpdateMood
-    
+
     UserQuery -.->|Optional| ExecutePlugin
     ExecutePlugin --> AIResponse
-    
+
     %% Styling
     classDef systemClass fill:#4a90e2,stroke:#2e5c8a,stroke-width:2px,color:#fff
     classDef dangerClass fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px,color:#fff
     classDef safeClass fill:#51cf66,stroke:#2f9e44,stroke-width:2px,color:#fff
-    
+
     class ValidateAction,GetTraits,QueryKnowledge systemClass
     class Rejected,MasterPW,CheckBlackVault dangerClass
     class Allowed,Approve safeClass
@@ -710,13 +710,13 @@ class System:
         os.makedirs(data_dir, exist_ok=True)
         self.state = {}
         self._load_state()
-    
+
     def _save_state(self):
         """Save state to JSON (called after every mutation)."""
         state_file = os.path.join(self.data_dir, "state.json")
         with open(state_file, 'w') as f:
             json.dump(self.state, f, indent=2)
-    
+
     def _load_state(self):
         """Load state from JSON (called in __init__)."""
         state_file = os.path.join(self.data_dir, "state.json")
@@ -797,38 +797,38 @@ class IntelligenceEngine:
         self.persona = AIPersona()
         self.memory = MemoryExpansion()
         self.learning = LearningRequestManager()
-    
+
     def process_query(self, query):
         # 1. Validate with FourLaws
         is_allowed, reason = self.four_laws.validate_action(
             query,
             context={"is_user_order": True}
         )
-        
+
         if not is_allowed:
             return f"Rejected: {reason}"
-        
+
         # 2. Check Black Vault
         if self.learning.is_forbidden(query):
             return "Query contains forbidden content"
-        
+
         # 3. Query knowledge base
         context = self.memory.query_knowledge("all", query)
-        
+
         # 4. Get personality traits
         personality = self.persona.get_personality_summary()
-        
+
         # 5. Generate response (OpenAI API call)
         response = self._generate_with_personality(
             query, context, personality
         )
-        
+
         # 6. Log conversation
         self.memory.log_conversation(query, response)
-        
+
         # 7. Record interaction
         self.persona.record_interaction(positive=True)
-        
+
         return response
 ```
 
@@ -852,7 +852,7 @@ def test_ai_persona_trait_update():
     """Trait updates persist to JSON."""
     persona = AIPersona(data_dir="/tmp/test_persona")
     persona.set_trait("curiosity", 90)
-    
+
     # Reload from disk
     persona2 = AIPersona(data_dir="/tmp/test_persona")
     assert persona2.get_trait("curiosity") == 90
@@ -860,10 +860,10 @@ def test_ai_persona_trait_update():
 def test_learning_black_vault():
     """Denied requests added to Black Vault."""
     manager = LearningRequestManager(data_dir="/tmp/test_learning")
-    
+
     request_id = manager.create_request("Bad content", "Test", "low")
     manager.deny_request(request_id, "Inappropriate")
-    
+
     assert manager.is_forbidden("Bad content")
 ```
 
@@ -903,4 +903,3 @@ The six core AI systems form the **intelligent, ethical, and persistent foundati
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

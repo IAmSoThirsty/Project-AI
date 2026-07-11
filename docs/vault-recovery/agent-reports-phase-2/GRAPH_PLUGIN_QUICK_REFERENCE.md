@@ -41,9 +41,9 @@ stats = plugin.get_statistics()
 
 ## Filter Types
 
-**By Tag:** `tags=["four_laws", "security", "validation"]`  
-**By Folder:** `folders=["src/app/core", "src/app/agents"]`  
-**By Node Type:** `node_types=["agent", "ai_system"]`  
+**By Tag:** `tags=["four_laws", "security", "validation"]`
+**By Folder:** `folders=["src/app/core", "src/app/agents"]`
+**By Node Type:** `node_types=["agent", "ai_system"]`
 **By Link Type:** `link_types=["validates", "enforces"]`
 
 ## Node Types (7)
@@ -135,7 +135,7 @@ fetch('data/graph_analysis/constitutional_view.json')
 
 ---
 
-**Version:** 1.0.0  
-**Status:** Production Ready  
-**Agent:** AGENT-014  
+**Version:** 1.0.0
+**Status:** Production Ready
+**Agent:** AGENT-014
 **Date:** 2024

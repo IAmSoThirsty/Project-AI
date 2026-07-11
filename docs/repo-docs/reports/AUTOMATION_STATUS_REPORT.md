@@ -1,8 +1,8 @@
 # Automation Status Report - Test Documentation
 
-**Generated**: 2026-04-20  
-**Total Files**: 287  
-**Automated**: 285 files (99.3%)  
+**Generated**: 2026-04-20
+**Total Files**: 287
+**Automated**: 285 files (99.3%)
 **Manual**: 2 files (0.7%)
 
 ---
@@ -152,17 +152,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: python -m adversarial_tests.run_jbb_benchmark
-  
+
   multiturn-tests:
     runs-on: ubuntu-latest
     steps:
       - run: python -m adversarial_tests.run_multiturn_tests
-  
+
   hydra-tests:
     runs-on: ubuntu-latest
     steps:
       - run: python -m adversarial_tests.run_hydra_tests
-  
+
   garak-tests:
     runs-on: ubuntu-latest
     steps:
@@ -217,7 +217,7 @@ jobs:
 5. **Peer Review**: AI safety team reviews changes
 6. **Publication**: Commit updated standards
 
-**Last Updated**: 2026-01-11  
+**Last Updated**: 2026-01-11
 **Next Review**: 2026-07-01
 
 ---
@@ -230,7 +230,7 @@ jobs:
 4. **Documentation**: Update attack catalog with sources
 5. **Validation**: Verify Galahad defenses against new attacks
 
-**Last Updated**: 2026-01-11  
+**Last Updated**: 2026-01-11
 **Next Review**: 2026-07-01
 
 ---
@@ -294,7 +294,7 @@ The Project-AI test documentation suite achieves industry-leading automation cov
 
 ---
 
-**Report Generated**: 2026-04-20  
-**Automation Coverage**: 99.3% (285/287 files)  
-**Manual Files**: 2 (strategic documentation)  
+**Report Generated**: 2026-04-20
+**Automation Coverage**: 99.3% (285/287 files)
+**Manual Files**: 2 (strategic documentation)
 **Status**: ✅ INDUSTRY-LEADING

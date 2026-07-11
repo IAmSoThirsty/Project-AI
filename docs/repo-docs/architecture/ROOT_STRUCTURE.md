@@ -105,7 +105,7 @@ After running `scripts/cleanup_root.ps1`, the root directory is organized as fol
 Historical implementation documentation, summaries, and completed feature docs:
 
 - All `*_COMPLETE.md` files
-- All `*_SUMMARY.md` files  
+- All `*_SUMMARY.md` files
 - All `*_IMPLEMENTATION*.md` files
 - All `*_STATUS.md`, `*_ANALYSIS.md`, `*_FINDINGS.md` files
 - Legacy documentation snapshots

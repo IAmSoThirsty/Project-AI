@@ -329,16 +329,16 @@ validate_action(action, context)
 ```python
 def _calculate_severity(rule: EnforcementRule) -> int:
     base = {
-        MONITOR: 2, WARN: 4, BLOCK: 6, 
+        MONITOR: 2, WARN: 4, BLOCK: 6,
         TERMINATE: 8, ESCALATE: 10
     }[rule.enforcement_level]
-    
+
     # Special cases
     if ZEROTH_LAW_VIOLATION in rule.violation_types:
         return 10
     if GASLIGHTING_ATTEMPT in rule.violation_types:
         return min(base + 2, 10)
-    
+
     return base
 ```
 
@@ -366,7 +366,7 @@ assert is_valid == False
 assert violations[0].violation_type == ViolationType.SILENT_RESET_ATTEMPT
 assert violations[0].enforcement_action == "block"
 print(f"BLOCKED: {violations[0].description}")
-# Output: BLOCKED: Rule 'Silent Reset Protection' violated: 
+# Output: BLOCKED: Rule 'Silent Reset Protection' violated:
 #         Prevent silent resets that erase AI memory without acknowledgment
 ```
 
@@ -587,4 +587,3 @@ response = provider.generate(request)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

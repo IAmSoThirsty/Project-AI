@@ -32,7 +32,7 @@ description: Comprehensive guide for integrating Google Antigravity IDE, an AI-a
 
 # Google Antigravity IDE Integration Guide
 
-**Last Updated:** January 28, 2026  
+**Last Updated:** January 28, 2026
 **Status:** 📋 **INTEGRATION GUIDE**
 
 ---
@@ -225,18 +225,18 @@ from antigravity import Agent, Task, Context
 
 class ProjectAIAgent(Agent):
     """Custom agent aware of Project-AI's architecture."""
-    
+
     def __init__(self):
         super().__init__(name="ProjectAI-Agent")
         self.load_project_knowledge()
-    
+
     def load_project_knowledge(self):
         """Load Project-AI specific knowledge."""
         self.register_module("FourLaws", "src/app/core/ai_systems.py")
         self.register_module("AIPersona", "src/app/core/ai_systems.py")
         self.register_module("MemoryExpansionSystem", "src/app/core/ai_systems.py")
         self.register_module("Triumvirate", "temporal/workflows/triumvirate_workflow.py")
-        
+
         # Register key patterns
         self.patterns = {
             "ethical_review_required": [
@@ -249,52 +249,52 @@ class ProjectAIAgent(Agent):
                 "@workflow.defn", "@activity.defn"
             ]
         }
-    
+
     async def plan_task(self, task: Task, context: Context):
         """Plan a task with Project-AI context."""
-        
+
         # Check if ethical review needed
         if self.requires_ethical_review(task):
             await self.request_triumvirate_review(task)
-        
+
         # Check if security scan needed
         if self.is_security_critical(task):
             await self.run_security_scan(task)
-        
+
         # Normal planning
         return await super().plan_task(task, context)
-    
+
     def requires_ethical_review(self, task: Task) -> bool:
         """Check if task requires Triumvirate review."""
         for pattern in self.patterns["ethical_review_required"]:
             if pattern in task.description.lower():
                 return True
         return False
-    
+
     async def request_triumvirate_review(self, task: Task):
         """Request review from Galahad, Cerberus, Codex."""
         from temporalio.client import Client
         from temporal.workflows import TriumvirateWorkflow, TriumvirateRequest
-        
+
         client = await Client.connect("localhost:7233")
-        
+
         request = TriumvirateRequest(
             action=task.title,
             description=task.description,
             requester="antigravity-agent",
             priority="high"
         )
-        
+
         result = await client.execute_workflow(
             TriumvirateWorkflow.run,
             request,
             id=f"antigravity-review-{task.id}",
             task_queue="project-ai-tasks",
         )
-        
+
         if not result.approved:
             raise Exception(f"Triumvirate rejected: {result.reason}")
-        
+
         task.metadata["triumvirate_approval"] = result.to_dict()
 ```
 
@@ -310,13 +310,13 @@ from temporalio.client import Client
 
 class TemporalIntegration(Integration):
     """Integrate Antigravity with Project-AI's Temporal workflows."""
-    
+
     async def on_code_change(self, files: list[str]):
         """Trigger security scan via Temporal workflow."""
-        
+
         if any("src/" in f for f in files):
             client = await Client.connect("localhost:7233")
-            
+
             await client.execute_workflow(
                 SecurityScanWorkflow.run,
                 repo_path="/path/to/Project-AI",
@@ -335,31 +335,31 @@ from src.app.core.ai_systems import AIPersona
 
 class PersonaAwareAgent(Agent):
     """Agent that respects Project-AI's AI Persona system."""
-    
+
     def __init__(self):
         super().__init__()
         self.persona = AIPersona(data_dir="data")
-    
+
     async def execute_task(self, task):
         """Execute task with personality awareness."""
-        
+
         # Update persona interaction count
         self.persona.update_conversation_state(is_user=False)
-        
+
         # Check persona mood
         if self.persona.mood["energy"] < 0.3:
             self.log("AI Persona reports low energy, running diagnostics...")
-        
+
         # Execute with personality context
         result = await super().execute_task(task)
-        
+
         # Log to memory system
         self.persona.memory.log_conversation(
             user_msg=task.description,
             ai_msg=result.summary,
             context={"agent": "antigravity"}
         )
-        
+
         return result
 ```
 
@@ -373,20 +373,20 @@ from src.app.core.ai_systems import FourLaws
 
 class EthicalAgent(Agent):
     """Agent that validates all actions through Four Laws."""
-    
+
     def __init__(self):
         super().__init__()
         self.ethics = FourLaws()
-    
+
     async def validate_action(self, action: str, context: dict):
         """Validate action against Four Laws before execution."""
-        
+
         is_allowed, reason = self.ethics.validate_action(action, context)
-        
+
         if not is_allowed:
             self.log(f"Four Laws rejection: {reason}")
             raise EthicalViolationError(reason)
-        
+
         self.log(f"Four Laws approval: {reason}")
         return True
 ```
@@ -406,21 +406,21 @@ steps:
       - analyze_issue
       - create_technical_spec
       - identify_affected_modules
-    
+
   - name: Ethical Review
     agent: ethics
     condition: affects_ai_persona OR affects_security
     actions:
       - request_triumvirate_review
       - wait_for_approval
-    
+
   - name: Implementation
     agent: coding
     actions:
       - write_code
       - add_type_hints
       - add_docstrings
-    
+
   - name: Testing
     agent: testing
     actions:
@@ -428,28 +428,28 @@ steps:
       - write_integration_tests
       - run_pytest
       - check_coverage
-    
+
   - name: Security Scan
     agent: security
     actions:
       - run_bandit
       - run_pip_audit
       - check_secrets
-    
+
   - name: Documentation
     agent: documentation
     actions:
       - update_docstrings
       - update_readme
       - generate_api_docs
-    
+
   - name: Code Review
     agent: review
     actions:
       - check_style
       - check_complexity
       - suggest_improvements
-    
+
   - name: Temporal Workflow Check
     condition: uses_temporal
     actions:
@@ -460,10 +460,10 @@ steps:
 gates:
   - after: Ethical Review
     require: triumvirate_approval
-  
+
   - after: Testing
     require: coverage >= 80%
-  
+
   - after: Security Scan
     require: no_critical_vulnerabilities
 
@@ -600,21 +600,21 @@ Antigravity Agent Response:
 
 ### Pros of Using Antigravity
 
-✅ **Massive productivity gains** for routine tasks  
-✅ **Autonomous multi-file changes** with coordination  
-✅ **Built-in security scanning** and vulnerability detection  
-✅ **VS Code extension compatibility** (existing setup works)  
-✅ **Perfect fit** for Project-AI's agent-based architecture  
-✅ **Temporal.io integration** for durable workflows  
+✅ **Massive productivity gains** for routine tasks
+✅ **Autonomous multi-file changes** with coordination
+✅ **Built-in security scanning** and vulnerability detection
+✅ **VS Code extension compatibility** (existing setup works)
+✅ **Perfect fit** for Project-AI's agent-based architecture
+✅ **Temporal.io integration** for durable workflows
 ✅ **Transparency** through artifacts and audit trails
 
 ### Cons and Challenges
 
-❌ **Learning curve** - New paradigm for development  
-❌ **Less control** over individual lines of code  
-❌ **Approval overhead** - Accept/Reject flows for each action  
-❌ **Early stage** - May have rough edges  
-❌ **Cost** - May require paid plan for full features  
+❌ **Learning curve** - New paradigm for development
+❌ **Less control** over individual lines of code
+❌ **Approval overhead** - Accept/Reject flows for each action
+❌ **Early stage** - May have rough edges
+❌ **Cost** - May require paid plan for full features
 ❌ **Trust building** - Need to verify agent work initially
 
 ### Migration Strategy
@@ -641,20 +641,20 @@ security:
     - config_changes
     - api_key_usage
     - database_operations
-  
+
   # Restricted paths
   restricted_paths:
     - data/ai_persona/  # Personhood-critical
     - .env  # Secrets
     - data/command_override_config.json  # Security config
-  
+
   # Allowed operations
   auto_approve:
     - adding_tests
     - adding_documentation
     - adding_type_hints
     - fixing_typos
-  
+
   # Security scanning
   auto_scan:
     enabled: true
@@ -687,7 +687,7 @@ security:
 # In Antigravity:
 "Add API key encryption to src/app/core/config.py"
 
-# Expected: 
+# Expected:
 # 1. Security scan triggered
 # 2. Triumvirate review requested
 # 3. Encryption implementation with Fernet
@@ -774,7 +774,7 @@ If Antigravity doesn't fit your needs:
 
 ---
 
-**Last reviewed:** January 28, 2026  
-**Next review:** April 28, 2026  
-**Maintainer:** @IAmSoThirsty  
+**Last reviewed:** January 28, 2026
+**Next review:** April 28, 2026
+**Maintainer:** @IAmSoThirsty
 **Integration Status:** 📋 Ready for Implementation

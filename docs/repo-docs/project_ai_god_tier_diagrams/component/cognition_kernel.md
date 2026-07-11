@@ -72,53 +72,53 @@ The CognitionKernel is the central intelligence component of Project-AI, respons
 class IntentDetector:
     """
     ML-based intent classification system.
-    
+
     Uses:
     - TF-IDF vectorization
     - Logistic Regression classifier
     - 30+ intent categories
     - Confidence scoring
     """
-    
+
     def __init__(self):
         # Load pre-trained models
         self.vectorizer = joblib.load('models/tfidf_vectorizer.pkl')
         self.classifier = joblib.load('models/intent_classifier.pkl')
         self.intent_mapping = self._load_intent_mapping()
-        
+
         logger.info(f"IntentDetector initialized with {len(self.intent_mapping)} intents")
-    
+
     def detect_intent(self, text: str) -> IntentResult:
         """
         Detect user intent from natural language text.
-        
+
         Args:
             text: User's natural language input
-        
+
         Returns:
             IntentResult with primary intent, confidence, and alternatives
         """
         # Preprocess text
         preprocessed = self._preprocess_text(text)
-        
+
         # Vectorize
         features = self.vectorizer.transform([preprocessed])
-        
+
         # Predict
         intent_label = self.classifier.predict(features)[0]
         probabilities = self.classifier.predict_proba(features)[0]
         confidence = probabilities.max()
-        
+
         # Get alternative intents (top 3)
         top_indices = np.argsort(probabilities)[-3:][::-1]
         alternatives = [
             (self.classifier.classes_[idx], probabilities[idx])
             for idx in top_indices[1:]  # Exclude primary intent
         ]
-        
+
         # Extract entities
         entities = self.extract_entities(text)
-        
+
         return IntentResult(
             intent=intent_label,
             confidence=confidence,
@@ -126,11 +126,11 @@ class IntentDetector:
             entities=entities,
             preprocessed_text=preprocessed
         )
-    
+
     def _preprocess_text(self, text: str) -> str:
         """
         Preprocess text for intent detection.
-        
+
         Steps:
         1. Lowercase
         2. Remove special characters (keep alphanumeric and spaces)
@@ -139,19 +139,19 @@ class IntentDetector:
         """
         # Lowercase
         text = text.lower()
-        
+
         # Remove special characters
         text = re.sub(r'[^a-z0-9\s]', '', text)
-        
+
         # Remove extra whitespace
         text = ' '.join(text.split())
-        
+
         return text
-    
+
     def extract_entities(self, text: str) -> List[Entity]:
         """
         Extract named entities from text.
-        
+
         Uses spaCy for NER:
         - PERSON: people names
         - ORG: organizations
@@ -161,10 +161,10 @@ class IntentDetector:
         - etc.
         """
         import spacy
-        
+
         nlp = spacy.load("en_core_web_sm")
         doc = nlp(text)
-        
+
         entities = []
         for ent in doc.ents:
             entities.append(Entity(
@@ -172,7 +172,7 @@ class IntentDetector:
                 value=ent.text,
                 span=(ent.start_char, ent.end_char)
             ))
-        
+
         return entities
 ```
 
@@ -186,41 +186,41 @@ INTENT_CATEGORIES = {
     'query.explanation': 'Explain how something works',
     'query.comparison': 'Compare two or more things',
     'query.status': 'Check status of something',
-    
+
     # Command intents
     'command.execute': 'Execute a system command',
     'command.override': 'Override with master password',
     'command.cancel': 'Cancel an operation',
     'command.retry': 'Retry a failed operation',
-    
+
     # Analysis intents
     'analysis.data': 'Analyze dataset',
     'analysis.pattern': 'Find patterns in data',
     'analysis.clustering': 'Cluster similar items',
     'analysis.statistics': 'Calculate statistics',
     'analysis.forecast': 'Forecast future values',
-    
+
     # Generation intents
     'generation.image': 'Generate an image',
     'generation.report': 'Generate a report',
     'generation.code': 'Generate code',
     'generation.text': 'Generate text content',
-    
+
     # Learning intents
     'learning.request': 'Learn new information',
     'learning.update': 'Update existing knowledge',
     'learning.forget': 'Forget specific information',
-    
+
     # Memory intents
     'memory.search': 'Search past memories',
     'memory.recall': 'Recall specific memory',
     'memory.delete': 'Delete memories',
-    
+
     # Security intents
     'security.scan': 'Search security resources',
     'security.audit': 'Perform security audit',
     'security.report': 'Report security issue',
-    
+
     # Utility intents
     'location.track': 'Track location',
     'location.query': 'Query location info',
@@ -228,12 +228,12 @@ INTENT_CATEGORIES = {
     'file.manage': 'Manage files',
     'file.upload': 'Upload file',
     'file.download': 'Download file',
-    
+
     # Persona intents
     'persona.modify': 'Modify AI persona',
     'persona.query': 'Query persona state',
     'persona.reset': 'Reset persona to default',
-    
+
     # System intents
     'system.configure': 'Configure system settings',
     'system.status': 'Check system status',
@@ -280,7 +280,7 @@ training_data = [
 async def get_user_context(user_id: str) -> UserContext:
     """
     Retrieve comprehensive user context.
-    
+
     Returns:
         UserContext with profile, preferences, and permissions
     """
@@ -293,7 +293,7 @@ async def get_user_context(user_id: str) -> UserContext:
         """,
         user_id
     )
-    
+
     # Get user's active roles
     roles = await db.fetch(
         """
@@ -304,10 +304,10 @@ async def get_user_context(user_id: str) -> UserContext:
         """,
         user_id
     )
-    
+
     # Get user's persona state
     persona_state = await AIPersona.load_state(user_id)
-    
+
     return UserContext(
         user_id=user.id,
         name=user.name,
@@ -317,7 +317,7 @@ async def get_user_context(user_id: str) -> UserContext:
         security_clearance=user.security_clearance,
         roles=[r['name'] for r in roles],
         permissions=list(set(
-            perm for role in roles 
+            perm for role in roles
             for perm in role['permissions']
         )),
         persona_state=persona_state
@@ -330,17 +330,17 @@ async def get_user_context(user_id: str) -> UserContext:
 async def get_session_history(session_id: str, limit: int = 10) -> List[Operation]:
     """
     Get recent operations from current session.
-    
+
     Args:
         session_id: Current session ID
         limit: Maximum number of operations to retrieve
-    
+
     Returns:
         List of recent operations in reverse chronological order
     """
     operations = await db.fetch(
         """
-        SELECT 
+        SELECT
             operation_id,
             intent,
             content,
@@ -354,7 +354,7 @@ async def get_session_history(session_id: str, limit: int = 10) -> List[Operatio
         """,
         session_id, limit
     )
-    
+
     return [
         Operation(
             id=op['operation_id'],
@@ -370,27 +370,27 @@ async def get_session_history(session_id: str, limit: int = 10) -> List[Operatio
 ### Memory Context
 
 ```python
-async def get_relevant_memories(user_id: str, query: str, 
+async def get_relevant_memories(user_id: str, query: str,
                                 limit: int = 5) -> List[MemoryRecord]:
     """
     Retrieve relevant memories for context.
-    
+
     Uses semantic similarity search on past operations.
-    
+
     Args:
         user_id: User ID
         query: Current query text
         limit: Maximum memories to return
-    
+
     Returns:
         List of relevant memory records
     """
     # Calculate query embedding (if using vector similarity)
     # For now, use simple text search
-    
+
     memories = await db.fetch(
         """
-        SELECT 
+        SELECT
             a.operation_id,
             a.content,
             a.intent,
@@ -409,7 +409,7 @@ async def get_relevant_memories(user_id: str, query: str,
         """,
         user_id, query, limit
     )
-    
+
     return [
         MemoryRecord(
             operation_id=m['operation_id'],
@@ -429,18 +429,18 @@ async def get_relevant_memories(user_id: str, query: str,
 async def enrich_context(request: Request, user: User) -> EnrichedRequest:
     """
     Enrich request with comprehensive context.
-    
+
     Combines:
     - User context (profile, prefs, permissions)
     - Session history (recent operations)
     - Memory context (relevant past interactions)
     - Temporal context (time, timezone)
     - Environmental context (platform, network)
-    
+
     Args:
         request: Raw user request
         user: Authenticated user
-    
+
     Returns:
         EnrichedRequest with full context
     """
@@ -450,12 +450,12 @@ async def enrich_context(request: Request, user: User) -> EnrichedRequest:
         get_session_history(request.session_id, limit=10),
         get_relevant_memories(user.id, request.content, limit=5)
     )
-    
+
     # Temporal context
     now = datetime.utcnow()
     user_tz = pytz.timezone(user.timezone)
     local_time = now.astimezone(user_tz)
-    
+
     temporal_context = {
         'utc_timestamp': now.isoformat(),
         'local_timestamp': local_time.isoformat(),
@@ -464,7 +464,7 @@ async def enrich_context(request: Request, user: User) -> EnrichedRequest:
         'day_of_week': local_time.strftime('%A'),
         'time_of_day': get_time_of_day(local_time)  # morning/afternoon/evening/night
     }
-    
+
     # Environmental context
     environmental_context = {
         'platform': request.metadata.get('platform', 'unknown'),
@@ -472,7 +472,7 @@ async def enrich_context(request: Request, user: User) -> EnrichedRequest:
         'network_quality': detect_network_quality(request),
         'device_type': detect_device_type(request.user_agent)
     }
-    
+
     return EnrichedRequest(
         original=request,
         intent=request.intent,
@@ -492,45 +492,45 @@ async def enrich_context(request: Request, user: User) -> EnrichedRequest:
 class SemanticParser:
     """
     Parse natural language into structured semantic representation.
-    
+
     Identifies:
     - Action verbs
     - Objects/subjects
     - Modifiers
     - Constraints
     """
-    
+
     def parse(self, text: str) -> SemanticParse:
         """
         Parse text into semantic components.
-        
+
         Args:
             text: Natural language text
-        
+
         Returns:
             SemanticParse with structured components
         """
         import spacy
         nlp = spacy.load("en_core_web_sm")
         doc = nlp(text)
-        
+
         # Extract action verbs
         actions = [
-            token.lemma_ for token in doc 
+            token.lemma_ for token in doc
             if token.pos_ == 'VERB'
         ]
-        
+
         # Extract objects
         objects = [
             chunk.text for chunk in doc.noun_chunks
         ]
-        
+
         # Extract modifiers
         modifiers = [
             token.text for token in doc
             if token.pos_ in ['ADJ', 'ADV']
         ]
-        
+
         # Extract constraints (prepositional phrases)
         constraints = []
         for token in doc:
@@ -539,7 +539,7 @@ class SemanticParser:
                     child.text for child in token.subtree
                 ])
                 constraints.append(prep_phrase)
-        
+
         return SemanticParse(
             actions=actions,
             objects=objects,
@@ -555,44 +555,44 @@ class SemanticParser:
 class RequestRouter:
     """
     Route enriched requests to appropriate handlers.
-    
+
     Based on:
     - Intent category
     - User permissions
     - System state
     - Resource availability
     """
-    
+
     def __init__(self):
         self.intent_routes = self._load_intent_routes()
         self.fallback_handler = DefaultHandler()
-    
+
     def route(self, request: EnrichedRequest) -> RequestHandler:
         """
         Route request to appropriate handler.
-        
+
         Args:
             request: Enriched request with intent and context
-        
+
         Returns:
             RequestHandler capable of processing the request
         """
         intent = request.intent.intent
-        
+
         # Check if user has permission for this intent
         if not self._check_permission(request.user_context, intent):
             return PermissionDeniedHandler()
-        
+
         # Get handler for intent
         handler_class = self.intent_routes.get(intent)
-        
+
         if handler_class is None:
             logger.warning(f"No handler found for intent: {intent}")
             return self.fallback_handler
-        
+
         # Instantiate handler
         return handler_class(request)
-    
+
     def _check_permission(self, user_context: UserContext, intent: str) -> bool:
         """Check if user has permission for intent."""
         required_permission = self._get_required_permission(intent)
@@ -607,23 +607,23 @@ class RequestRouter:
 class CognitionKernelCache:
     """
     Cache frequently used data for performance.
-    
+
     Caches:
     - User contexts (5 min TTL)
     - Intent predictions (10 min TTL)
     - Memory searches (2 min TTL)
     """
-    
+
     def __init__(self):
         self.redis = get_redis_connection()
-    
+
     async def get_user_context(self, user_id: str) -> Optional[UserContext]:
         """Get cached user context."""
         cached = await self.redis.get(f'user_context:{user_id}')
         if cached:
             return UserContext.from_json(cached.decode())
         return None
-    
+
     async def set_user_context(self, user_id: str, context: UserContext):
         """Cache user context."""
         await self.redis.set(
@@ -639,7 +639,7 @@ class CognitionKernelCache:
 async def process_batch(requests: List[Request]) -> List[EnrichedRequest]:
     """
     Process multiple requests in batch for efficiency.
-    
+
     Benefits:
     - Shared database queries
     - Batch ML inference
@@ -647,20 +647,20 @@ async def process_batch(requests: List[Request]) -> List[EnrichedRequest]:
     """
     # Extract all user IDs
     user_ids = list(set(req.user_id for req in requests))
-    
+
     # Fetch all user contexts in single query
     user_contexts = await fetch_user_contexts_batch(user_ids)
-    
+
     # Batch intent detection
     intents = batch_detect_intents([req.content for req in requests])
-    
+
     # Enrich all requests
     enriched = []
     for req, intent in zip(requests, intents):
         req.intent = intent
         req.user_context = user_contexts[req.user_id]
         enriched.append(req)
-    
+
     return enriched
 ```
 

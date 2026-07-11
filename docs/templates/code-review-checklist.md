@@ -28,10 +28,10 @@ aliases: []
 | **Language** | <% tp.frontmatter.language %> |
 | **Component** | <% tp.frontmatter.component %> |
 
-**PR Link:** 
+**PR Link:**
 
 **Related Issues:**
-- 
+-
 
 ---
 
@@ -363,42 +363,42 @@ aliases: []
 
 ## Major Issues (Should Fix)
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Minor Issues (Nice to Have)
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Positive Observations
 
 **What Was Done Well:**
-- 
-- 
-- 
+-
+-
+-
 
 **Exemplary Practices:**
-- 
-- 
+-
+-
 
 ---
 
 ## Learning Opportunities
 
 **For Author:**
-- 
-- 
+-
+-
 
 **For Team:**
-- 
-- 
+-
+-
 
 **Documentation to Create/Update:**
-- 
-- 
+-
+-
 
 ---
 
@@ -456,12 +456,12 @@ aliases: []
 
 ## Related Reviews
 
-- 
+-
 
 ## References
 
-- 
-- 
+-
+-
 
 ---
 
@@ -470,4 +470,3 @@ aliases: []
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

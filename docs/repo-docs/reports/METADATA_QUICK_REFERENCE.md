@@ -1,7 +1,7 @@
 # Engine Documentation Metadata - Quick Reference
 
-**Last Updated:** 2026-04-20  
-**Enrichment Agent:** AGENT-018  
+**Last Updated:** 2026-04-20
+**Enrichment Agent:** AGENT-018
 **Files Enriched:** 37 engine documentation files
 
 ---
@@ -442,6 +442,6 @@ For questions about the metadata enrichment system:
 
 ---
 
-**Last Updated:** 2026-04-20  
-**Next Review Due:** 2026-05-20  
+**Last Updated:** 2026-04-20
+**Next Review Due:** 2026-05-20
 **Status:** Active and Validated ✅

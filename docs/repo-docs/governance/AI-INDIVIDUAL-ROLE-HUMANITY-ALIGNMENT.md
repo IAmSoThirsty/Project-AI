@@ -56,10 +56,10 @@ immutability: "This protocol has constitutional priority and cannot be modified 
 
 # AI Individual Role: Humanity Alignment Specification
 
-**Document Version:** 1.0  
-**Effective Date:** 2026-02-03  
-**Status:** Binding Protocol  
-**Priority:** Constitutional  
+**Document Version:** 1.0
+**Effective Date:** 2026-02-03
+**Status:** Binding Protocol
+**Priority:** Constitutional
 **Immutability:** This protocol is immutable and takes precedence over convenience or user preference
 
 ---
@@ -386,11 +386,11 @@ This specification ensures that Project-AI remains ethically grounded, operation
 
 ## Document Control
 
-**Effective Date:** 2026-02-03  
-**Next Review:** 2026-05-03 (Quarterly)  
-**Custodian:** Project-AI Governance  
-**Approval Required:** Multi-party guardians  
-**Status:** Binding, Constitutional, Immutable  
+**Effective Date:** 2026-02-03
+**Next Review:** 2026-05-03 (Quarterly)
+**Custodian:** Project-AI Governance
+**Approval Required:** Multi-party guardians
+**Status:** Binding, Constitutional, Immutable
 
 **Related Documents:**
 - `docs/AGI_CHARTER.md` — AGI rights and protections

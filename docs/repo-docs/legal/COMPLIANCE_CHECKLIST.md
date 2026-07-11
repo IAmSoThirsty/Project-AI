@@ -17,7 +17,7 @@ version: 1.0.0
 
 # Project-AI Compliance Checklist
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Purpose:** Operational compliance validation for all tiers
 
 ---
@@ -240,13 +240,13 @@ version: 1.0.0
 
 ## ANNUAL CERTIFICATION
 
-**Compliance Officer:** [Name]  
-**Review Date:** [Date]  
+**Compliance Officer:** [Name]
+**Review Date:** [Date]
 **Next Review:** [Date + 1 year]
 
 **Certification:** I certify that Project-AI is compliant with all applicable legal, regulatory, and contractual requirements as of the review date.
 
-**Signature:** ___________________  
+**Signature:** ___________________
 **Date:** ___________________
 
 ---

@@ -84,4 +84,3 @@ Attachment and non-Markdown item count: 48
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

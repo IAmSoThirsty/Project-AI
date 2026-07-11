@@ -357,20 +357,20 @@ cerberus = tower.get_chief_of_security()
 while True:
     # Get current status
     status = tower.get_security_status()
-    
+
     # Check for incidents
     if status['total_incidents'] > 0:
         print(f"⚠️ {status['total_incidents']} incidents recorded")
         recent = cerberus.incidents[-5:]  # Last 5 incidents
         for incident in recent:
             print(f"  - {incident}")
-    
+
     # Verify all agents operational
     print(f"✅ Border Patrol: {status['registered_agents']['border_patrol']} agents")
     print(f"✅ Active Defense: {status['registered_agents']['active_defense']} agents")
     print(f"✅ Red Team: {status['registered_agents']['red_team']} agents")
     print(f"✅ Oversight: {status['registered_agents']['oversight']} agents")
-    
+
     time.sleep(60)  # Check every minute
 ```
 

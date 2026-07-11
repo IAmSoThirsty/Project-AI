@@ -23,9 +23,9 @@ audience: ["developers", "gui-engineers"]
 
 # Dashboard Utils - Utilities for Error Handling and Async Operations
 
-**Module:** `src/app/gui/dashboard_utils.py`  
-**Lines of Code:** 256  
-**Classes:** 5 utility classes  
+**Module:** `src/app/gui/dashboard_utils.py`
+**Lines of Code:** 256
+**Classes:** 5 utility classes
 **Design Pattern:** Static utility classes and async workers
 
 ---
@@ -848,7 +848,7 @@ export_data()
 
 ### Thread Pool Size
 
-Default thread pool size: `QThreadPool.globalInstance().maxThreadCount()`  
+Default thread pool size: `QThreadPool.globalInstance().maxThreadCount()`
 Typically: Number of CPU cores
 
 **Custom thread pool:**
@@ -888,9 +888,8 @@ pool.setMaxThreadCount(4)  # Limit to 4 threads
 
 ## License
 
-**Copyright © 2026 Project-AI Team**  
+**Copyright © 2026 Project-AI Team**
 Internal documentation - Not for public distribution
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

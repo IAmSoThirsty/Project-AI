@@ -42,18 +42,18 @@ deactivate Selector
 alt Multi-Agent Request
     Exec -> Orch: Build execution graph
     activate Orch
-    
+
     Orch -> Orch: Detect dependencies\nbetween agents
-    
+
     note right of Orch
       Example dependency chain:
       DataLoadAgent →
         DataAnalysisAgent →
           ReportGenerationAgent
     end note
-    
+
     Orch -> Orch: Topological sort\nfor execution order
-    
+
     Orch --> Exec: Execution graph
     deactivate Orch
 end
@@ -96,10 +96,10 @@ alt Input Validation Failed
     deactivate Agent
 else Input Valid
     Agent -> Agent: Perform operation
-    
+
     alt Execution Timeout
         Agent --> Exec: TimeoutError
-        
+
         Exec -> Memory: Record timeout
         activate Memory
         Memory -> DB: Write to error channel
@@ -110,12 +110,12 @@ else Input Valid
           • Recovery: operation_aborted
         end note
         deactivate Memory
-        
+
         deactivate Agent
     else Execution Success
         Agent -> Agent: Generate result
         Agent --> Exec: AgentResult(success)
-        
+
         note right of Agent
           **AGENT RESULT**
           • Status: success
@@ -124,7 +124,7 @@ else Input Valid
           • Resources used: {...}
           • Side effects: [...]
         end note
-        
+
         deactivate Agent
     end
 end
@@ -209,11 +209,11 @@ note over Exec, DB
   Simple agent: < 1s
   Medium agent: < 30s
   Complex agent: < 60s
-  
+
   **THROUGHPUT**
   Concurrent agents: 50+
   Agents/second: 100+
-  
+
   **AGENT POOL**
   Pool size: 10 per agent type
   Acquisition timeout: 1s

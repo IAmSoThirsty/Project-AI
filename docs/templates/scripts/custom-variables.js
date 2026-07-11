@@ -1,9 +1,9 @@
 /**
  * Custom Variables for Templater
- * 
+ *
  * Provides Project-AI specific custom variables, context information,
  * user preferences, and dynamic calculations for use in templates.
- * 
+ *
  * @module custom-variables
  * @version 1.0.0
  * @author Project-AI Documentation Team
@@ -12,7 +12,7 @@
 
 /**
  * Project-AI context variables
- * 
+ *
  * Provides project-specific information and constants.
  */
 const PROJECT_CONTEXT = {
@@ -22,7 +22,7 @@ const PROJECT_CONTEXT = {
     repository: 'https://github.com/yourusername/Project-AI',
     documentation: 'https://project-ai.docs.example.com',
     license: 'MIT',
-    
+
     // Core technologies
     technologies: {
         backend: ['Python 3.11+', 'PyQt6', 'OpenAI API', 'scikit-learn'],
@@ -30,7 +30,7 @@ const PROJECT_CONTEXT = {
         deployment: ['Docker', 'Docker Compose'],
         testing: ['pytest', 'Jest']
     },
-    
+
     // Module paths
     paths: {
         root: 'T:\\Project-AI-main',
@@ -40,7 +40,7 @@ const PROJECT_CONTEXT = {
         agents: 'T:\\Project-AI-main\\src\\app\\agents',
         web: 'T:\\Project-AI-main\\web'
     },
-    
+
     // Core systems
     coreSystems: [
         'FourLaws (Ethics)',
@@ -50,7 +50,7 @@ const PROJECT_CONTEXT = {
         'CommandOverride',
         'PluginManager'
     ],
-    
+
     // AI agents
     agents: [
         'Oversight',
@@ -62,7 +62,7 @@ const PROJECT_CONTEXT = {
 
 /**
  * Gets current project context
- * 
+ *
  * @returns {Object} Project context object
  */
 function getProjectContext() {
@@ -71,10 +71,10 @@ function getProjectContext() {
 
 /**
  * Gets context variable by key
- * 
+ *
  * @param {string} key - Context key (dot notation supported)
  * @returns {*} Context value or null if not found
- * 
+ *
  * @example
  * getContextVariable('technologies.backend') // Returns array of backend technologies
  * getContextVariable('version') // Returns "2.0.0"
@@ -83,7 +83,7 @@ function getContextVariable(key) {
     try {
         const keys = key.split('.');
         let value = PROJECT_CONTEXT;
-        
+
         for (const k of keys) {
             if (value && typeof value === 'object' && k in value) {
                 value = value[k];
@@ -91,9 +91,9 @@ function getContextVariable(key) {
                 return null;
             }
         }
-        
+
         return value;
-        
+
     } catch (error) {
         console.error('Error getting context variable:', error);
         return null;
@@ -110,7 +110,7 @@ const USER_PREFERENCES = {
         email: 'docs@project-ai.example.com',
         organization: 'Project-AI'
     },
-    
+
     // Documentation preferences
     documentation: {
         defaultLanguage: 'en',
@@ -120,7 +120,7 @@ const USER_PREFERENCES = {
         includeTimestamps: true,
         includeAuthorInfo: true
     },
-    
+
     // Template preferences
     templates: {
         autoGenerateTOC: true,
@@ -129,7 +129,7 @@ const USER_PREFERENCES = {
         minWordCount: 500,
         defaultStatus: 'draft'
     },
-    
+
     // Quality preferences
     quality: {
         enforceMetadataCompleteness: true,
@@ -137,7 +137,7 @@ const USER_PREFERENCES = {
         enforceReadability: false,
         minReadabilityScore: 50
     },
-    
+
     // Git preferences
     git: {
         autoCommit: false,
@@ -148,11 +148,11 @@ const USER_PREFERENCES = {
 
 /**
  * Gets user preference by key
- * 
+ *
  * @param {string} key - Preference key (dot notation supported)
  * @param {*} defaultValue - Default value if preference not found
  * @returns {*} Preference value or default
- * 
+ *
  * @example
  * getUserPreference('author.name', 'Unknown') // Returns author name or 'Unknown'
  */
@@ -160,7 +160,7 @@ function getUserPreference(key, defaultValue = null) {
     try {
         const keys = key.split('.');
         let value = USER_PREFERENCES;
-        
+
         for (const k of keys) {
             if (value && typeof value === 'object' && k in value) {
                 value = value[k];
@@ -168,9 +168,9 @@ function getUserPreference(key, defaultValue = null) {
                 return defaultValue;
             }
         }
-        
+
         return value;
-        
+
     } catch (error) {
         console.error('Error getting user preference:', error);
         return defaultValue;
@@ -179,7 +179,7 @@ function getUserPreference(key, defaultValue = null) {
 
 /**
  * Sets user preference (runtime only - not persisted)
- * 
+ *
  * @param {string} key - Preference key (dot notation supported)
  * @param {*} value - Preference value
  * @returns {boolean} Success status
@@ -189,17 +189,17 @@ function setUserPreference(key, value) {
         const keys = key.split('.');
         const lastKey = keys.pop();
         let obj = USER_PREFERENCES;
-        
+
         for (const k of keys) {
             if (!(k in obj)) {
                 obj[k] = {};
             }
             obj = obj[k];
         }
-        
+
         obj[lastKey] = value;
         return true;
-        
+
     } catch (error) {
         console.error('Error setting user preference:', error);
         return false;
@@ -208,7 +208,7 @@ function setUserPreference(key, value) {
 
 /**
  * Calculates documentation progress statistics
- * 
+ *
  * @param {Object} app - Obsidian app instance
  * @returns {Object} Progress statistics
  */
@@ -222,7 +222,7 @@ function calculateDocProgress(app) {
                 completionRate: 0
             };
         }
-        
+
         const files = app.vault.getMarkdownFiles();
         const stats = {
             total: files.length,
@@ -230,29 +230,29 @@ function calculateDocProgress(app) {
             byCategory: {},
             completionRate: 0
         };
-        
+
         let completed = 0;
-        
+
         files.forEach(file => {
             const cache = app.metadataCache.getFileCache(file);
             if (!cache || !cache.frontmatter) return;
-            
+
             const status = cache.frontmatter.status || 'unknown';
             const category = cache.frontmatter.category || 'uncategorized';
-            
+
             stats.byStatus[status] = (stats.byStatus[status] || 0) + 1;
             stats.byCategory[category] = (stats.byCategory[category] || 0) + 1;
-            
+
             if (status === 'published' || status === 'completed') {
                 completed++;
             }
         });
-        
-        stats.completionRate = stats.total > 0 ? 
+
+        stats.completionRate = stats.total > 0 ?
             Math.round((completed / stats.total) * 100) : 0;
-        
+
         return stats;
-        
+
     } catch (error) {
         console.error('Error calculating documentation progress:', error);
         return {
@@ -266,11 +266,11 @@ function calculateDocProgress(app) {
 
 /**
  * Generates a unique document ID
- * 
+ *
  * @param {string} prefix - ID prefix (default: 'doc')
  * @param {boolean} includeTimestamp - Include timestamp in ID (default: true)
  * @returns {string} Unique document ID
- * 
+ *
  * @example
  * generateDocumentID('module') // Returns: "module-1713628800000-a1b2"
  */
@@ -278,9 +278,9 @@ function generateDocumentID(prefix = 'doc', includeTimestamp = true) {
     try {
         const timestamp = includeTimestamp ? Date.now() : '';
         const random = Math.random().toString(36).substring(2, 6);
-        
+
         return `${prefix}-${timestamp}${timestamp ? '-' : ''}${random}`;
-        
+
     } catch (error) {
         console.error('Error generating document ID:', error);
         return `${prefix}-${Date.now()}`;
@@ -289,11 +289,11 @@ function generateDocumentID(prefix = 'doc', includeTimestamp = true) {
 
 /**
  * Calculates estimated reading time
- * 
+ *
  * @param {string} content - Document content
  * @param {number} wordsPerMinute - Reading speed (default: 200)
  * @returns {Object} Reading time information
- * 
+ *
  * @example
  * const readingTime = calculateReadingTime(content);
  * // Returns: { minutes: 5, formatted: "5 minute read" }
@@ -303,14 +303,14 @@ function calculateReadingTime(content, wordsPerMinute = 200) {
         // Remove frontmatter and code blocks
         let cleanContent = content.replace(/^---[\s\S]*?---\n/, '');
         cleanContent = cleanContent.replace(/```[\s\S]*?```/g, '');
-        
+
         // Count words
         const words = cleanContent.split(/\s+/).filter(w => w.length > 0);
         const wordCount = words.length;
-        
+
         // Calculate time
         const minutes = Math.ceil(wordCount / wordsPerMinute);
-        
+
         let formatted;
         if (minutes < 1) {
             formatted = 'Less than 1 minute read';
@@ -319,13 +319,13 @@ function calculateReadingTime(content, wordsPerMinute = 200) {
         } else {
             formatted = `${minutes} minute read`;
         }
-        
+
         return {
             words: wordCount,
             minutes: minutes,
             formatted: formatted
         };
-        
+
     } catch (error) {
         console.error('Error calculating reading time:', error);
         return {
@@ -338,7 +338,7 @@ function calculateReadingTime(content, wordsPerMinute = 200) {
 
 /**
  * Gets system information
- * 
+ *
  * @returns {Object} System information
  */
 function getSystemInfo() {
@@ -352,7 +352,7 @@ function getSystemInfo() {
 
 /**
  * Generates metadata for a new document
- * 
+ *
  * @param {Object} options - Document options
  * @param {string} options.title - Document title
  * @param {string} options.type - Document type
@@ -370,13 +370,13 @@ function generateDocumentMetadata(options = {}) {
             tags = [],
             status = getUserPreference('templates.defaultStatus', 'draft')
         } = options;
-        
+
         const now = new Date();
         const dateFormat = getUserPreference('documentation.dateFormat', 'YYYY-MM-DD');
-        
+
         // Format date (simple implementation)
         const formattedDate = now.toISOString().split('T')[0];
-        
+
         const metadata = {
             id: generateDocumentID(type),
             title: title,
@@ -389,14 +389,14 @@ function generateDocumentMetadata(options = {}) {
             version: '1.0.0',
             aliases: []
         };
-        
+
         // Add author if preference set
         if (getUserPreference('documentation.includeAuthorInfo', true)) {
             metadata.author = getUserPreference('author.name', 'Unknown');
         }
-        
+
         return metadata;
-        
+
     } catch (error) {
         console.error('Error generating document metadata:', error);
         return {
@@ -409,14 +409,14 @@ function generateDocumentMetadata(options = {}) {
 
 /**
  * Formats frontmatter object as YAML
- * 
+ *
  * @param {Object} metadata - Metadata object
  * @returns {string} YAML formatted frontmatter
  */
 function formatFrontmatter(metadata) {
     try {
         let yaml = '---\n';
-        
+
         for (const [key, value] of Object.entries(metadata)) {
             if (Array.isArray(value)) {
                 if (value.length === 0) {
@@ -436,11 +436,11 @@ function formatFrontmatter(metadata) {
                 yaml += `${key}: ${value}\n`;
             }
         }
-        
+
         yaml += '---\n';
-        
+
         return yaml;
-        
+
     } catch (error) {
         console.error('Error formatting frontmatter:', error);
         return '---\n---\n';
@@ -449,7 +449,7 @@ function formatFrontmatter(metadata) {
 
 /**
  * Gets template-specific variables
- * 
+ *
  * @param {string} templateType - Type of template
  * @returns {Object} Template-specific variables
  */
@@ -469,7 +469,7 @@ function getTemplateVariables(templateType) {
                 requiredFields: ['module_name', 'module_path', 'dependencies'],
                 suggestedTags: ['module', 'code', 'api', 'implementation']
             },
-            
+
             'agent-doc': {
                 defaultSections: [
                     'Agent Identification',
@@ -482,7 +482,7 @@ function getTemplateVariables(templateType) {
                 requiredFields: ['agent_id', 'task_description', 'deliverables'],
                 suggestedTags: ['agent', 'task', 'execution', 'audit']
             },
-            
+
             'architecture-doc': {
                 defaultSections: [
                     'Context',
@@ -497,7 +497,7 @@ function getTemplateVariables(templateType) {
                 requiredFields: ['decision_number', 'context', 'consequences'],
                 suggestedTags: ['architecture', 'design', 'adr', 'decision']
             },
-            
+
             'guide': {
                 defaultSections: [
                     'Overview',
@@ -513,13 +513,13 @@ function getTemplateVariables(templateType) {
                 suggestedTags: ['guide', 'tutorial', 'reference', 'documentation']
             }
         };
-        
+
         return templateVars[templateType] || {
             defaultSections: [],
             requiredFields: [],
             suggestedTags: []
         };
-        
+
     } catch (error) {
         console.error('Error getting template variables:', error);
         return {
@@ -532,7 +532,7 @@ function getTemplateVariables(templateType) {
 
 /**
  * Validates required fields for template type
- * 
+ *
  * @param {Object} metadata - Document metadata
  * @param {string} templateType - Template type
  * @returns {Object} Validation result
@@ -541,10 +541,10 @@ function validateTemplateRequirements(metadata, templateType) {
     try {
         const templateVars = getTemplateVariables(templateType);
         const requiredFields = templateVars.requiredFields || [];
-        
+
         const missing = [];
         const present = [];
-        
+
         requiredFields.forEach(field => {
             if (!metadata[field] || metadata[field] === '') {
                 missing.push(field);
@@ -552,15 +552,15 @@ function validateTemplateRequirements(metadata, templateType) {
                 present.push(field);
             }
         });
-        
+
         return {
             isValid: missing.length === 0,
             missing: missing,
             present: present,
-            completeness: requiredFields.length > 0 ? 
+            completeness: requiredFields.length > 0 ?
                 Math.round((present.length / requiredFields.length) * 100) : 100
         };
-        
+
     } catch (error) {
         console.error('Error validating template requirements:', error);
         return {

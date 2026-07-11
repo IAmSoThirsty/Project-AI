@@ -141,7 +141,7 @@ result = manager.place_order(
 
 if result.success:
     print(f"Order {result.order_id} placed: {result.message}")
-    
+
     # Cancel if needed
     manager.cancel_order(result.order_id)
 ```
@@ -215,14 +215,14 @@ def moving_average_strategy(context):
     """Simple MA crossover strategy."""
     market = context["market_data"]
     orders = context["order_manager"]
-    
+
     # Get market data
     candles = market.get_data("BTC/USD", "1h", limit=50)
-    
+
     # Calculate signals
     short_ma = sum(c.close for c in candles[-10:]) / 10
     long_ma = sum(c.close for c in candles) / 50
-    
+
     # Place orders based on signal
     if short_ma > long_ma:
         result = orders.place_order("BTC/USD", "buy", "market", 0.1)
@@ -230,7 +230,7 @@ def moving_average_strategy(context):
             "orders_placed": 1 if result.success else 0,
             "signal": "bullish",
         }
-    
+
     return {"orders_placed": 0, "signal": "neutral"}
 
 # Register strategy

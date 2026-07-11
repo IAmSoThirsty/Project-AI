@@ -13,126 +13,126 @@ flowchart TB
     %% External Actors
     User[👤 User/Client]
     Admin[👔 Administrator]
-    
+
     %% Entry Points
     UI[🖥️ UI/Web Interface]
     API[🔌 API Gateway]
     CLI[⌨️ CLI Interface]
-    
+
     %% Core Processing Layer
     Router[📡 Signal Router]
     Kernel[⚡ Signal Processing Kernel<br/>signal_flows.py]
-    
+
     %% Validation & Security Layer
     Validator[🛡️ Schema Validator<br/>signal.py]
     FuzzyMatch[🔍 Fuzzy Phrase Matcher]
     PIIRedactor[🔒 PII Redaction Engine]
     CircuitBreaker[⚡ Circuit Breakers<br/>validation/transcription/processing]
-    
+
     %% Processing Services
     Plugins[🔌 Plugin System]
     TTPAudio[🎵 TTP Audio Processor]
     MediaTranscribe[📝 Transcription Service]
-    
+
     %% Storage & Persistence
     BlackVault[🏦 Black Vault<br/>Encrypted Storage]
     AuditLog[📋 Audit Log<br/>Redis + File]
     ConfigLoader[⚙️ Config Loader<br/>Hot Reload]
-    
+
     %% Error Handling
     ErrorAgg[❌ Error Aggregator<br/>Singleton]
     RetryTracker[🔄 Retry Tracker<br/>Per-Service]
-    
+
     %% Monitoring & Observability
     Prometheus[📊 Prometheus Metrics]
     Grafana[📈 Grafana Dashboards]
     OpenTel[🔭 OpenTelemetry Tracing]
-    
+
     %% External Integrations
     Cerberus[🐕 Cerberus Security Kernel]
     Waterfall[🌊 Waterfall Privacy Suite]
     ThirstyLang[💧 Thirsty-Lang Interpreter]
     KMS[🔐 KMS Provider<br/>AWS/Azure/HashiCorp]
     Redis[💾 Redis Cache/Queue]
-    
+
     %% User Flow
     User -->|Submit Request| UI
     User -->|API Call| API
     Admin -->|Admin Commands| CLI
-    
+
     %% Entry Point to Router
     UI -->|HTTP/WebSocket| Router
     API -->|REST/GraphQL| Router
     CLI -->|gRPC/Direct| Router
-    
+
     %% Router to Audit
     Router -->|Log Receipt| AuditLog
-    
+
     %% Router to Kernel
     Router -->|Forward Signal| Kernel
-    
+
     %% Kernel Processing Flow
     Kernel -->|1. Validate Schema| Validator
     Validator -->|Check Phrases| FuzzyMatch
     Validator -->|Check PII| PIIRedactor
     Validator -->|Through CB| CircuitBreaker
-    
+
     Kernel -->|2. Transcribe Media| MediaTranscribe
     MediaTranscribe -->|Use Plugin| TTPAudio
     TTPAudio -->|Redact PII| PIIRedactor
-    
+
     Kernel -->|3. Process Signal| Plugins
     Plugins -->|Integration| Cerberus
     Plugins -->|Integration| Waterfall
     Plugins -->|Integration| ThirstyLang
-    
+
     %% Error Handling Flow
     Validator -.->|On Error| ErrorAgg
     MediaTranscribe -.->|On Error| ErrorAgg
     Plugins -.->|On Error| ErrorAgg
     Kernel -.->|On Error| ErrorAgg
-    
+
     ErrorAgg -->|Flush| BlackVault
     Kernel -->|Denied Content| BlackVault
-    
+
     %% Retry Tracking
     Kernel -->|Check Limit| RetryTracker
     RetryTracker -->|Per-Service Stats| Prometheus
     RetryTracker -->|Throttle| Kernel
-    
+
     %% Audit Trail
     Kernel -->|All State Transitions| AuditLog
     BlackVault -->|Vault Events| AuditLog
     ConfigLoader -->|Config Changes| AuditLog
     ErrorAgg -->|Error Flushes| AuditLog
-    
+
     %% Configuration
     ConfigLoader -->|Provide Config| Kernel
     ConfigLoader -->|Watch Files| ConfigLoader
     ConfigLoader -->|On Change| Kernel
-    
+
     %% Security Integration
     BlackVault -->|Key Rotation| KMS
     KMS -->|Provide Keys| BlackVault
-    
+
     AuditLog -->|Primary Store| Redis
     AuditLog -.->|Fallback| AuditLog
-    
+
     %% Monitoring
     Kernel -->|Metrics| Prometheus
     RetryTracker -->|Metrics| Prometheus
     CircuitBreaker -->|State| Prometheus
     Prometheus -->|Visualize| Grafana
-    
+
     Kernel -->|Traces| OpenTel
     Plugins -->|Traces| OpenTel
-    
+
     %% Response Flow
     Kernel -->|Return Result| Router
     Router -->|Response| UI
     Router -->|Response| API
     Router -->|Response| CLI
-    
+
     %% Styling
     classDef entry fill:#1e40af,stroke:#3b82f6,stroke-width:2px,color:#fff
     classDef core fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff
@@ -140,7 +140,7 @@ flowchart TB
     classDef storage fill:#7c3aed,stroke:#8b5cf6,stroke-width:2px,color:#fff
     classDef monitor fill:#ea580c,stroke:#f97316,stroke-width:2px,color:#fff
     classDef external fill:#64748b,stroke:#94a3b8,stroke-width:2px,color:#fff
-    
+
     class UI,API,CLI entry
     class Router,Kernel,Plugins core
     class Validator,FuzzyMatch,PIIRedactor,CircuitBreaker,BlackVault security
@@ -154,7 +154,7 @@ flowchart TB
 ```mermaid
 sequenceDiagram
     autonumber
-    
+
     participant User
     participant UI as UI/API
     participant Router
@@ -167,16 +167,16 @@ sequenceDiagram
     participant Audit as Audit Log
     participant Retry as Retry Tracker
     participant Error as Error Aggregator
-    
+
     User->>UI: Submit Signal
     UI->>Audit: Log submission
     UI->>Router: Forward request
     Router->>Audit: Log receipt
     Router->>Kernel: process_signal(signal, is_incident)
-    
+
     Note over Kernel: Generate incident_id UUID
     Kernel->>Audit: Log signal_received
-    
+
     %% Validation Phase
     rect rgb(30, 64, 175)
         Note over Kernel,CB: PHASE 1: Schema Validation
@@ -185,7 +185,7 @@ sequenceDiagram
         Validator->>Validator: Check schema
         Validator->>Validator: Fuzzy phrase match
         Validator->>Validator: PII detection
-        
+
         alt Validation Failed
             Validator-->>CB: ValueError
             CB-->>Kernel: Propagate error
@@ -198,11 +198,11 @@ sequenceDiagram
             Kernel->>Audit: Log signal_validated
         end
     end
-    
+
     %% Transcription Phase
     rect rgb(5, 150, 105)
         Note over Kernel,Transcribe: PHASE 2: Media Transcription (if applicable)
-        
+
         alt Has Media Asset
             Kernel->>CB: call(transcribe_audio)
             CB->>Transcribe: Process audio
@@ -217,33 +217,33 @@ sequenceDiagram
             Kernel->>Audit: Log transcript_skipped
         end
     end
-    
+
     %% Threshold Check
     rect rgb(124, 58, 237)
         Note over Kernel: PHASE 3: Score Threshold Check
-        
+
         alt Score Below Threshold
             Kernel->>Audit: Log signal_ignored
             Kernel-->>Router: {status: 'ignored', reason}
         end
     end
-    
+
     %% Processing Phase with Retry
     rect rgb(234, 88, 12)
         Note over Kernel,Retry: PHASE 4: Signal Processing (with retry)
-        
+
         loop For each attempt (max 3)
             Kernel->>Retry: check_retry_limit(service)
-            
+
             alt Global/Service Limit Exceeded
                 Retry-->>Kernel: True (throttled)
                 Kernel->>Audit: Log global_retry_limit
                 Kernel-->>Router: {status: 'throttled'}
             end
-            
+
             Kernel->>CB: call(process_logic)
             CB->>Plugins: Execute processing
-            
+
             alt Processing Succeeds
                 Plugins-->>CB: result
                 CB-->>Kernel: result
@@ -254,7 +254,7 @@ sequenceDiagram
                 Kernel->>Retry: increment_retry_counter(service)
                 Kernel->>Error: log(error, context)
                 Kernel->>Audit: Log signal_processing_retry
-                
+
                 alt Attempt < Max
                     Kernel->>Kernel: Exponential backoff delay
                 else Max Retries Exceeded
@@ -265,11 +265,11 @@ sequenceDiagram
             end
         end
     end
-    
+
     Router->>Audit: Log final status
     Router-->>UI: Response
     UI-->>User: Display result
-    
+
     Note over Audit: All operations audited<br/>Errors aggregated and vaulted<br/>Retries tracked per-service<br/>Circuit breakers protect services
 ```
 
@@ -362,6 +362,6 @@ sequenceDiagram
 
 ---
 
-**Document Version**: 1.0.0  
-**Last Updated**: 2026-02-23  
+**Document Version**: 1.0.0
+**Last Updated**: 2026-02-23
 **Status**: Technical Specification (Implementation Complete, Validation Ongoing)

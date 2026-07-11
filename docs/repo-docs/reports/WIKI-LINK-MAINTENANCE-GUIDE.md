@@ -1,7 +1,7 @@
 # Wiki Link Maintenance Guide
 
-**Created by**: AGENT-072  
-**Purpose**: Guide for maintaining and extending wiki links in the Project-AI Obsidian vault  
+**Created by**: AGENT-072
+**Purpose**: Guide for maintaining and extending wiki links in the Project-AI Obsidian vault
 **Date**: 2026-04-20
 
 ---
@@ -113,11 +113,11 @@ $brokenLinks = @()
 Get-ChildItem -Path "relationships", "source-docs" -Filter "*.md" -Recurse | ForEach-Object {
     $content = Get-Content $_.FullName -Raw
     $links = [regex]::Matches($content, '\[\[([^\|\]]+)(\|[^\]]+)?\]\]')
-    
+
     foreach ($match in $links) {
         $target = $match.Groups[1].Value -replace '/', '\'
         $targetPath = Join-Path (Get-Location) $target
-        
+
         if (-not (Test-Path $targetPath)) {
             $brokenLinks += @{
                 File = $_.Name
@@ -376,12 +376,12 @@ status: Active
 
 ## Contact
 
-**Maintainer**: AGENT-072  
-**Questions**: See `AGENT-072-LINK-REPORT.md` for detailed documentation  
+**Maintainer**: AGENT-072
+**Questions**: See `AGENT-072-LINK-REPORT.md` for detailed documentation
 **Updates**: Follow Obsidian vault Phase 6-7 for link resolution
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: 2026-04-20  
+**Version**: 1.0
+**Last Updated**: 2026-04-20
 **Next Review**: Phase 6 completion (GUI/Agent relationships)

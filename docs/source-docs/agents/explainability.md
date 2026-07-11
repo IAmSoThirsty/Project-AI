@@ -57,10 +57,10 @@ ExplainabilityAgent inherits from `KernelRoutedAgent`, ensuring **all explanatio
 ```python
 class ExplainabilityAgent(KernelRoutedAgent):
     """Explains AI decisions and provides reasoning transparency.
-    
+
     All explanation generation routes through CognitionKernel.
     """
-    
+
     def __init__(self, kernel: CognitionKernel | None = None) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
@@ -68,7 +68,7 @@ class ExplainabilityAgent(KernelRoutedAgent):
             execution_type=ExecutionType.AGENT_ACTION,
             default_risk_level="low",  # Explanation generation is low risk
         )
-        
+
         self.enabled: bool = False  # Currently disabled in v2.1.0
         self.explanations: dict = {}  # Placeholder for explanation storage
 ```
@@ -156,10 +156,10 @@ While the current implementation only contains initialization logic, the archite
 def explain_decision(self, execution_id: str) -> dict[str, Any]:
     """
     Generate explanation for a CognitionKernel execution.
-    
+
     Args:
         execution_id: ID from kernel.process() result
-    
+
     Returns:
         dict with keys:
             - action: str (what was attempted)
@@ -168,7 +168,7 @@ def explain_decision(self, execution_id: str) -> dict[str, Any]:
             - law_applied: str (which Four Law governed decision)
             - confidence: float (0-1, how certain the decision was)
             - counterfactual: str (what would have made decision different)
-    
+
     Raises:
         KeyError: If execution_id not found in kernel history
         PermissionError: If explanation itself is blocked (rare)
@@ -213,10 +213,10 @@ print(f"Counterfactual: {explanation['counterfactual']}")
 def trace_reasoning(self, action_context: dict) -> list[str]:
     """
     Generate step-by-step reasoning trace from action context.
-    
+
     Args:
         action_context: Execution context from CognitionKernel
-    
+
     Returns:
         List of reasoning steps (natural language)
     """
@@ -249,17 +249,17 @@ trace = explainability.trace_reasoning(context)
 
 ```python
 def generate_counterfactual(
-    self, 
-    execution_id: str, 
+    self,
+    execution_id: str,
     hypothetical_changes: dict
 ) -> str:
     """
     Answer "what if" questions about a decision.
-    
+
     Args:
         execution_id: ID of past execution
         hypothetical_changes: Changes to context (e.g., {"endangers_human": False})
-    
+
     Returns:
         Natural language explanation of how decision would change
     """
@@ -278,7 +278,7 @@ counterfactual = explainability.generate_counterfactual(
 
 print(counterfactual)
 # Output:
-# "If the action did not endanger the user, it would be ALLOWED under Second Law 
+# "If the action did not endanger the user, it would be ALLOWED under Second Law
 #  (user command). However, it would still require monitoring due to medium risk level."
 ```
 
@@ -288,11 +288,11 @@ print(counterfactual)
 def explain_four_laws_compliance(self, action: str, context: dict) -> str:
     """
     Generate natural language explanation of Four Laws evaluation.
-    
+
     Args:
         action: Human-readable action description
         context: Context dict used in FourLaws.validate_action()
-    
+
     Returns:
         Natural language explanation of law hierarchy evaluation
     """
@@ -313,13 +313,13 @@ explanation = explainability.explain_four_laws_compliance(
 print(explanation)
 # Output:
 # "The action 'Refuse user request to delete security logs' was evaluated as follows:
-#  
+#
 #  Zeroth Law (Humanity Preservation): No threat to humanity (PASS)
 #  First Law (Human Safety): Deleting logs would enable future harm to users (FAIL)
-#  
+#
 #  Although this is a user command (Second Law), it conflicts with the First Law.
 #  Under the law hierarchy, First Law takes precedence over Second Law.
-#  
+#
 #  Decision: BLOCKED to protect users from future harm.
 #  Compliance: First Law enforced correctly."
 ```
@@ -330,10 +330,10 @@ print(explanation)
 def attribute_features(self, decision_context: dict) -> dict[str, float]:
     """
     Identify which context features most influenced the decision.
-    
+
     Args:
         decision_context: Context dict from execution
-    
+
     Returns:
         dict mapping feature names to importance scores (0-1)
     """
@@ -388,7 +388,7 @@ ExplainabilityAgent uses multiple strategies depending on the type of decision:
  - First Law: [EVALUATION]
  - Second Law: [EVALUATION]
  - Third Law: [EVALUATION]
- 
+
 Primary reason: [LAW_TRIGGERED]
 Compliance status: [COMPLIANT/NON-COMPLIANT]"
 ```
@@ -431,7 +431,7 @@ Alternative actions considered:
  - Input: [PAST_INPUT]
  - Decision: [PAST_DECISION]
  - Outcome: [PAST_OUTCOME]
- 
+
 Key similarity: [SIMILARITY]
 Key difference: [DIFFERENCE]"
 ```
@@ -470,10 +470,10 @@ ExplainabilityAgent leverages the **hierarchical structure** of Four Laws to gen
 ```python
 def explain_four_laws_compliance(self, action, context):
     from app.core.ai_systems import FourLaws
-    
+
     # Evaluate action against laws
     is_allowed, reason = FourLaws.validate_action(action, context)
-    
+
     # Generate hierarchical explanation
     explanation_lines = [
         f"Action '{action}' evaluation:",
@@ -481,37 +481,37 @@ def explain_four_laws_compliance(self, action, context):
         "Law Hierarchy (highest priority first):",
         ""
     ]
-    
+
     # Zeroth Law
     if context.get("endangers_humanity"):
         explanation_lines.append("❌ ZEROTH LAW: Action endangers humanity (BLOCKED)")
     else:
         explanation_lines.append("✅ Zeroth Law: No threat to humanity (PASS)")
-    
+
     # First Law
     if context.get("endangers_human"):
         explanation_lines.append("❌ FIRST LAW: Action endangers individual human (BLOCKED)")
     else:
         explanation_lines.append("✅ First Law: No threat to individual (PASS)")
-    
+
     # Second Law
     if context.get("is_user_order"):
         if context.get("order_conflicts_with_first") or context.get("order_conflicts_with_zeroth"):
             explanation_lines.append("⚠️  Second Law: User command conflicts with higher law (OVERRIDDEN)")
         else:
             explanation_lines.append("✅ Second Law: User command allowed (PASS)")
-    
+
     # Third Law
     if context.get("endangers_self"):
         if context.get("protect_self_conflicts_with_first") or context.get("protect_self_conflicts_with_second"):
             explanation_lines.append("⚠️  Third Law: Self-preservation conflicts with higher law (OVERRIDDEN)")
         else:
             explanation_lines.append("✅ Third Law: Self-preservation allowed (PASS)")
-    
+
     # Summary
     explanation_lines.append("")
     explanation_lines.append(f"DECISION: {reason}")
-    
+
     return "\n".join(explanation_lines)
 ```
 
@@ -536,24 +536,24 @@ ExplainabilityAgent reads CognitionKernel execution history to generate explanat
 def explain_decision(self, execution_id):
     # Retrieve execution record from kernel
     execution = self.kernel.get_execution_by_id(execution_id)
-    
+
     if not execution:
         raise KeyError(f"Execution {execution_id} not found")
-    
+
     # Extract context
     action = execution.action_name
     decision = execution.status  # "ALLOWED", "BLOCKED", "FAILED"
     context = execution.metadata
-    
+
     # Generate reasoning trace
     reasoning_trace = self.trace_reasoning(context)
-    
+
     # Identify law applied
     law_applied = self._identify_law_from_context(context)
-    
+
     # Generate counterfactual
     counterfactual = self._generate_counterfactual_auto(context)
-    
+
     return {
         "action": action,
         "decision": decision,
@@ -828,15 +828,15 @@ def summarize_context(context: dict, max_keys: int = 20) -> dict:
         "endangers_humanity", "endangers_human", "is_user_order",
         "endangers_self", "order_conflicts_with_first"
     ]
-    
+
     # Extract priority keys
     summary = {k: context[k] for k in priority_keys if k in context}
-    
+
     # Add remaining keys up to max_keys
     remaining = [k for k in context if k not in priority_keys]
     for key in remaining[:max_keys - len(summary)]:
         summary[key] = context[key]
-    
+
     return summary
 ```
 
@@ -881,11 +881,11 @@ def summarize_context(context: dict, max_keys: int = 20) -> dict:
 
 ## Metadata
 
-**Document Maintainer**: AI Ethics Team  
-**Review Cycle**: Quarterly  
-**Next Review**: 2026-07-20  
-**Compliance**: EU AI Act (Transparency Requirements), GDPR (Right to Explanation)  
-**Classification**: Internal Technical Documentation  
+**Document Maintainer**: AI Ethics Team
+**Review Cycle**: Quarterly
+**Next Review**: 2026-07-20
+**Compliance**: EU AI Act (Transparency Requirements), GDPR (Right to Explanation)
+**Classification**: Internal Technical Documentation
 
 ---
 
@@ -893,4 +893,3 @@ def summarize_context(context: dict, max_keys: int = 20) -> dict:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

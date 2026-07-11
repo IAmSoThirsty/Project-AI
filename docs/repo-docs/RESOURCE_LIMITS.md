@@ -191,6 +191,6 @@ resourcePolicy:
 
 ---
 
-**Last Updated:** 2026-04-10  
-**Reviewed By:** Production Qualification Process  
+**Last Updated:** 2026-04-10
+**Reviewed By:** Production Qualification Process
 **Status:** APPROVED for production deployment

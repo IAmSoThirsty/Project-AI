@@ -5,7 +5,7 @@
 
 EXTENDS Integers, Sequences, FiniteSets
 
-VARIABLES 
+VARIABLES
     primary_state,    \* The state of the Primary Plane (Governance Layer)
     shadow_state,     \* The state of the Shadow Plane (Verification Layer)
     substrate_alive   \* Boolean representing if the OctoReflex kernel is active
@@ -14,7 +14,7 @@ vars == <<primary_state, shadow_state, substrate_alive>>
 
 -----------------------------------------------------------------------------
 \* Initial State: Both planes must be synchronized and substrate active
-Init == 
+Init ==
     /\ primary_state = "IDLE"
     /\ shadow_state = "IDLE"
     /\ substrate_alive = TRUE
@@ -34,7 +34,7 @@ HaltOnDivergence ==
     /\ UNCHANGED <<primary_state, shadow_state>>
 
 \* Next State Logic
-Next == 
+Next ==
     \/ \E intent \in {"READ", "WRITE", "EXECUTE"}: Execute(intent)
     \/ HaltOnDivergence
 

@@ -13,9 +13,9 @@ review_cycle: quarterly
 ---
 # Identity, Security, and Infrastructure: Foundational Principles
 
-**Document Version:** 1.0  
-**Effective Date:** 2026-02-05  
-**Status:** Architectural Framework  
+**Document Version:** 1.0
+**Effective Date:** 2026-02-05
+**Status:** Architectural Framework
 **Target Audience:** System Architects, Security Engineers, Infrastructure Engineers
 
 ---
@@ -336,7 +336,7 @@ Microservices are often over-hyped. For AGI systems, a **well-designed monolith*
    ```python
    # Prometheus metrics
    from prometheus_client import Counter, Histogram
-   
+
    request_count = Counter('api_requests_total', 'Total API requests')
    response_time = Histogram('api_response_time_seconds', 'Response time')
    ```
@@ -346,7 +346,7 @@ Microservices are often over-hyped. For AGI systems, a **well-designed monolith*
    # Structured logging
    import logging
    logger = logging.getLogger(__name__)
-   
+
    logger.info("AGI learning request approved", extra={
        "agi_id": "agi_xyz789",
        "topic": "quantum_physics",
@@ -359,7 +359,7 @@ Microservices are often over-hyped. For AGI systems, a **well-designed monolith*
    ```python
    # OpenTelemetry tracing
    from opentelemetry import trace
-   
+
    tracer = trace.get_tracer(__name__)
    with tracer.start_as_current_span("process_learning_request"):
        # Processing logic
@@ -398,28 +398,28 @@ resource "kubernetes_deployment" "api" {
     name      = "project-ai-api"
     namespace = kubernetes_namespace.project_ai.metadata[0].name
   }
-  
+
   spec {
     replicas = var.replicas
-    
+
     selector {
       match_labels = {
         app = "project-ai-api"
       }
     }
-    
+
     template {
       metadata {
         labels = {
           app = "project-ai-api"
         }
       }
-      
+
       spec {
         container {
           name  = "api"
           image = var.image_tag
-          
+
           resources {
             requests = {
               cpu    = "500m"
@@ -602,11 +602,11 @@ Identity, security, and infrastructure are not afterthoughts—they are **prereq
 **Document Maintenance:**
 This document is reviewed quarterly and updated based on evolving best practices and lessons learned.
 
-**Last Updated:** 2026-02-05  
+**Last Updated:** 2026-02-05
 **Next Review:** 2026-05-05
 
 ---
 
-**Prepared by:** Architecture, Security, and Infrastructure Teams  
-**Approved by:** Project Stewards  
+**Prepared by:** Architecture, Security, and Infrastructure Teams
+**Approved by:** Project Stewards
 **Status:** Binding Framework

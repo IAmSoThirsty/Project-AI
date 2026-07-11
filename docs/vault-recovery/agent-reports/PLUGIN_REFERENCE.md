@@ -2,10 +2,10 @@
 
 **Obsidian Plugins for Project-AI Vault** 🔌
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 10 minutes  
-**Audience:** All vault users  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 10 minutes
+**Audience:** All vault users
 **Prerequisites:** Obsidian installed
 
 ---
@@ -651,7 +651,7 @@ dv.list(
    ```dataviewjs
    // Correct
    dv.list(dv.pages().file.link)
-   
+
    // Wrong (missing dv.)
    list(pages().file.link)
    ```
@@ -725,7 +725,7 @@ dv.list(
    ```dataviewjs
    // Slow
    dv.pages()
-   
+
    // Fast
    dv.pages("#specific-tag")
    ```
@@ -819,4 +819,3 @@ word_count: 2700
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

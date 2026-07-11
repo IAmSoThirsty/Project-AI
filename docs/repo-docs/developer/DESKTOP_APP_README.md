@@ -165,6 +165,6 @@ Project-AI is licensed under the MIT License. See `LICENSE` for details.
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: November 28, 2025  
+**Version**: 1.0.0
+**Last Updated**: November 28, 2025
 **Status**: Production Ready ✓

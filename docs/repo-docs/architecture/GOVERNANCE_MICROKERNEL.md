@@ -1,8 +1,8 @@
 # Governance Microkernel Architecture
 
-**Version:** 1.0.0  
-**Branch:** 05-09-26-Structural-upgrades  
-**Status:** Active  
+**Version:** 1.0.0
+**Branch:** 05-09-26-Structural-upgrades
+**Status:** Active
 
 ---
 

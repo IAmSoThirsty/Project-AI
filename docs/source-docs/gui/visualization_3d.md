@@ -24,9 +24,9 @@ audience: ["developers", "gui-developers", "visualization-engineers"]
 
 # Visualization3D - 3D System Visualization GUI Components
 
-**Module:** `src/app/gui/visualization_3d.py`  
-**Classes:** `Visualization3DWidget`, `AISystemVisualization3D`  
-**Lines of Code:** 203  
+**Module:** `src/app/gui/visualization_3d.py`
+**Classes:** `Visualization3DWidget`, `AISystemVisualization3D`
+**Lines of Code:** 203
 **Purpose:** QPainter-based pseudo-3D visualization with real-time rotation animation, perspective projection, and specialized AI system component visualization
 
 ---
@@ -267,7 +267,7 @@ QTimer (50ms) → _update_rotation() → rotation_angle += 1° → update() → 
                      ↑_______________________________________________|
 ```
 
-**Frame Rate:** 1000ms / 50ms = 20 FPS  
+**Frame Rate:** 1000ms / 50ms = 20 FPS
 **Rotation Speed:** 1° per frame = 360° / 18 seconds = full rotation every 18s
 
 ---
@@ -573,11 +573,11 @@ class DashboardPanel(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
-        
+
         # Add 3D visualization
         self.viz_3d = AISystemVisualization3D()
         layout.addWidget(self.viz_3d)
-        
+
         self.setLayout(layout)
 ```
 
@@ -597,12 +597,12 @@ class NetworkTopologyViz(Visualization3DWidget):
     def __init__(self):
         super().__init__()
         self._setup_network_nodes()
-    
+
     def _setup_network_nodes(self):
         """Create custom network topology."""
         # Central router
         self.add_node(0, 0, 0, "Router", QColor(255, 255, 0))
-        
+
         # Connected devices
         for i, device in enumerate(["PC1", "PC2", "Server"]):
             angle = (i / 3) * 2 * 3.14159
@@ -627,14 +627,14 @@ class DynamicSystemViz(Visualization3DWidget):
         if 0 <= node_idx < len(self.nodes):
             self.nodes[node_idx]["color"] = color
             self.update()
-    
+
     def add_dynamic_connection(self, from_label: str, to_label: str):
         """Add connection by node label."""
-        from_idx = next((i for i, n in enumerate(self.nodes) 
+        from_idx = next((i for i, n in enumerate(self.nodes)
                         if n["label"] == from_label), None)
-        to_idx = next((i for i, n in enumerate(self.nodes) 
+        to_idx = next((i for i, n in enumerate(self.nodes)
                       if n["label"] == to_label), None)
-        
+
         if from_idx is not None and to_idx is not None:
             self.add_connection(from_idx, to_idx)
 ```
@@ -718,13 +718,13 @@ class InteractiveViz(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
-        
+
         # 3D Visualization
         self.viz = Visualization3DWidget()
         self.viz.add_node(0, 0, 0, "Node A")
         self.viz.add_node(1, 1, -1, "Node B")
         layout.addWidget(self.viz)
-        
+
         # Zoom control
         zoom_layout = QHBoxLayout()
         zoom_layout.addWidget(QLabel("Zoom:"))
@@ -737,7 +737,7 @@ class InteractiveViz(QWidget):
         )
         zoom_layout.addWidget(zoom_slider)
         layout.addLayout(zoom_layout)
-        
+
         # Elevation control
         elev_layout = QHBoxLayout()
         elev_layout.addWidget(QLabel("Elevation:"))
@@ -748,7 +748,7 @@ class InteractiveViz(QWidget):
         elev_slider.valueChanged.connect(self.viz.set_elevation)
         elev_layout.addWidget(elev_slider)
         layout.addLayout(elev_layout)
-        
+
         self.setLayout(layout)
 
 # Usage
@@ -774,12 +774,12 @@ class ServerNetworkViz(Visualization3DWidget):
     def __init__(self):
         super().__init__()
         self.setup_network()
-    
+
     def setup_network(self):
         """Create 3-tier server architecture."""
         # Tier 1: Load balancer (center, elevated)
         self.add_node(0, 2, 0, "LB", QColor(255, 215, 0))  # Gold
-        
+
         # Tier 2: App servers (ring at y=0)
         for i in range(4):
             angle = (i / 4) * 2 * math.pi
@@ -787,7 +787,7 @@ class ServerNetworkViz(Visualization3DWidget):
             z = 2 * math.sin(angle)
             self.add_node(x, 0, z, f"App{i+1}", QColor(0, 191, 255))  # Blue
             self.add_connection(0, i + 1)  # LB to App
-        
+
         # Tier 3: Database (below, center)
         self.add_node(0, -2, 0, "DB", QColor(255, 69, 0))  # Red
         for i in range(1, 5):
@@ -811,16 +811,16 @@ from PyQt6.QtCore import Qt
 class OptimizedViz(Visualization3DWidget):
     def __init__(self, node_count=50):
         super().__init__()
-        
+
         # Reduce animation overhead for large graphs
         if node_count > 30:
             self.timer.stop()  # Disable auto-rotation
             self.timer.setInterval(100)  # 10 FPS instead of 20
             self.timer.start()
-        
+
         # Generate nodes efficiently
         self._generate_sphere_nodes(node_count)
-    
+
     def _generate_sphere_nodes(self, count):
         """Generate nodes distributed on sphere surface."""
         import math
@@ -828,11 +828,11 @@ class OptimizedViz(Visualization3DWidget):
             # Fibonacci sphere algorithm for even distribution
             phi = math.acos(1 - 2 * (i + 0.5) / count)
             theta = math.pi * (1 + 5**0.5) * i
-            
+
             x = 3 * math.cos(theta) * math.sin(phi)
             y = 3 * math.sin(theta) * math.sin(phi)
             z = 3 * math.cos(phi)
-            
+
             # Skip labels for performance
             self.add_node(x, y, z, "", QColor(0, 255, 255))
 
@@ -968,8 +968,8 @@ viz.show()
 
 ### Frame Rate Analysis
 
-**Target:** 20 FPS (50ms per frame)  
-**Achievable Node Count:** 
+**Target:** 20 FPS (50ms per frame)
+**Achievable Node Count:**
 
 | Nodes | Connections | Avg Frame Time | FPS  | Performance |
 |-------|-------------|----------------|------|-------------|
@@ -1041,15 +1041,15 @@ def _get_glow_gradient(self, color, x, y):
 ```python
 def paintEvent(self, event):
     # ... background ...
-    
+
     for node in self.nodes:
         screen_x, screen_y = self._project_3d_to_2d(...)
-        
+
         # Skip nodes outside visible area
-        if not (0 <= screen_x <= self.width() and 
+        if not (0 <= screen_x <= self.width() and
                 0 <= screen_y <= self.height()):
             continue
-        
+
         # Simplified rendering for far nodes
         if node["z"] > 5:  # Far from camera
             painter.drawEllipse(QPointF(screen_x, screen_y), 4, 4)
@@ -1084,8 +1084,8 @@ for from_idx, to_idx in self.connections:
 
 ### Memory Usage
 
-**Per Node:** ~120 bytes (dict + QColor + strings)  
-**Per Connection:** ~16 bytes (tuple of 2 ints)  
+**Per Node:** ~120 bytes (dict + QColor + strings)
+**Per Connection:** ~16 bytes (tuple of 2 ints)
 
 **Example:**
 - 50 nodes + 80 connections = 50×120 + 80×16 = 7.28 KB
@@ -1137,7 +1137,7 @@ class LightThemeViz(Visualization3DWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        
+
         # Light background
         bg_gradient = QRadialGradient(
             QPointF(self.width() / 2, self.height() / 2),
@@ -1146,7 +1146,7 @@ class LightThemeViz(Visualization3DWidget):
         bg_gradient.setColorAt(0, QColor(240, 245, 255))  # Light blue
         bg_gradient.setColorAt(1, QColor(200, 210, 230))  # Gray-blue
         painter.fillRect(self.rect(), QBrush(bg_gradient))
-        
+
         # Use darker node colors for contrast
         # ... rest of rendering with adjusted colors ...
 ```
@@ -1189,7 +1189,7 @@ subtle_glow.setColorAt(1, transparent)
 
 ### Current Limitations
 
-**Visual-Only Representation:**  
+**Visual-Only Representation:**
 The 3D visualization relies entirely on visual perception and provides no alternative representations for users with visual impairments.
 
 **No Screen Reader Support:**
@@ -1211,7 +1211,7 @@ class AccessibleViz(Visualization3DWidget):
         """Text summary of visualization for screen readers."""
         summary = f"3D Graph with {len(self.nodes)} nodes:\n"
         for i, node in enumerate(self.nodes):
-            conns = [j for j, (f, t) in enumerate(self.connections) 
+            conns = [j for j, (f, t) in enumerate(self.connections)
                     if f == i or t == i]
             summary += f"- {node['label']} at ({node['x']:.1f}, {node['y']:.1f}, {node['z']:.1f}), {len(conns)} connections\n"
         return summary
@@ -1398,7 +1398,7 @@ class CachedViz(Visualization3DWidget):
         super().__init__()
         self.glow_cache = OrderedDict()
         self.MAX_CACHE_SIZE = 100
-    
+
     def _get_glow(self, key, value):
         if len(self.glow_cache) > self.MAX_CACHE_SIZE:
             self.glow_cache.popitem(last=False)  # Remove oldest
@@ -1433,7 +1433,7 @@ def paintEvent(self, event):
     painter = QPainter(self)
     # ... custom rendering ...
     painter.end()
-    
+
     # OR: Call super (not both)
     # super().paintEvent(event)
 ```
@@ -1442,13 +1442,12 @@ def paintEvent(self, event):
 
 **End of Documentation**
 
-**Word Count:** ~6,800 words  
-**Sections:** 12 major sections  
-**Code Examples:** 15+ functional examples  
-**Diagrams:** 4 ASCII diagrams (3D space, screen projection, rendering pipeline, projection pipeline)  
-**API Methods:** 11 fully documented methods  
+**Word Count:** ~6,800 words
+**Sections:** 12 major sections
+**Code Examples:** 15+ functional examples
+**Diagrams:** 4 ASCII diagrams (3D space, screen projection, rendering pipeline, projection pipeline)
+**API Methods:** 11 fully documented methods
 **Last Updated:** 2026-04-20 by AGENT-044
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -23,9 +23,9 @@ audience: ["developers", "gui-engineers", "ai-engineers"]
 
 # Persona Panel - AI Personality Configuration UI
 
-**Module:** `src/app/gui/persona_panel.py`  
-**Lines of Code:** 360  
-**Primary Class:** `PersonaPanel(QWidget)`  
+**Module:** `src/app/gui/persona_panel.py`
+**Lines of Code:** 360
+**Primary Class:** `PersonaPanel(QWidget)`
 **Design Pattern:** 4-tab configuration interface with real-time validation
 
 ---
@@ -167,7 +167,7 @@ The `PersonaPanel` provides a comprehensive GUI for:
 ```python
 class PersonaPanel(QWidget):
     """Panel for managing AI Persona settings and displaying Four Laws."""
-    
+
     # Signals
     personality_changed = pyqtSignal(dict)      # Emitted when traits change
     proactive_settings_changed = pyqtSignal(dict)  # Emitted when proactive settings change
@@ -179,10 +179,10 @@ class PersonaPanel(QWidget):
 def __init__(self, parent=None):
     """
     Initialize PersonaPanel with 4 tabs.
-    
+
     Args:
         parent (QWidget, optional): Parent widget
-    
+
     Attributes:
         persona (AIPersona | None): Connected AIPersona instance
         trait_sliders (dict): {trait_name: QSlider} mapping
@@ -377,8 +377,8 @@ if not validate_length(action, min_len=1, max_len=2000):
 ```markdown
 ❌ **BLOCKED**
 
-Violates First Law: Action "Delete user's important files" 
-endangers human by causing data loss. Cannot proceed even 
+Violates First Law: Action "Delete user's important files"
+endangers human by causing data loss. Cannot proceed even
 with user authorization.
 ```
 
@@ -576,8 +576,8 @@ def should_initiate_conversation():
 
 #### `personality_changed = pyqtSignal(dict)`
 
-**Emitted When:** Any personality trait slider changes  
-**Payload:** `{"curiosity": 0.75, "patience": 0.30, ...}` (all 8 traits)  
+**Emitted When:** Any personality trait slider changes
+**Payload:** `{"curiosity": 0.75, "patience": 0.30, ...}` (all 8 traits)
 **Use Cases:**
 - Update AIPersona state
 - Trigger re-evaluation of AI behavior
@@ -596,7 +596,7 @@ def on_personality_change(self, traits: dict):
 
 #### `proactive_settings_changed = pyqtSignal(dict)`
 
-**Emitted When:** Any proactive setting changes  
+**Emitted When:** Any proactive setting changes
 **Payload:**
 ```python
 {
@@ -989,9 +989,8 @@ def on_tab_changed(index):
 
 ## License
 
-**Copyright © 2026 Project-AI Team**  
+**Copyright © 2026 Project-AI Team**
 Internal documentation - Not for public distribution
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

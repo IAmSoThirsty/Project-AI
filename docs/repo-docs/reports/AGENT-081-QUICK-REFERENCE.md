@@ -1,7 +1,7 @@
 # AGENT-081 Security Wiki Links - Quick Reference
 
-**Mission:** Security Concepts to Controls Links Specialist  
-**Status:** ✅ COMPLETE  
+**Mission:** Security Concepts to Controls Links Specialist
+**Status:** ✅ COMPLETE
 **Date:** 2026-02-08
 
 ---
@@ -135,6 +135,6 @@
 
 ---
 
-**Mission Status:** ✅ COMPLETE  
-**Quality:** Production-grade  
+**Mission Status:** ✅ COMPLETE
+**Quality:** Production-grade
 **Confidence:** High

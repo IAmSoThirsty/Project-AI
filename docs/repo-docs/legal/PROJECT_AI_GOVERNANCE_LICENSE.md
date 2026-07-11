@@ -22,8 +22,8 @@ Copyright © 2026 Project-AI
 
 This Governance License ("License") governs the use, activation, execution, modification, integration, and deployment of Project-AI governance-bound components.
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
+**Version:** 1.0.0
+**Effective Date:** February 8, 2026
 **Legal Nature:** Behavioral / Use-Control Overlay (NOT OSI-approved; Constitutional layer)
 
 ---
@@ -421,6 +421,6 @@ PAGL, together with MIT License, Apache License 2.0, Master Services Agreement, 
 
 *This license is enforceable alongside copyright licenses. It governs behavior, not code ownership.*
 
-**Contact:** legal@project-ai.dev  
-**Enforcement:** enforcement@project-ai.dev  
+**Contact:** legal@project-ai.dev
+**Enforcement:** enforcement@project-ai.dev
 **Violations Report:** violations@project-ai.dev

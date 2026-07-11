@@ -34,10 +34,10 @@ threats_mitigated:
 
 # Password Hashing Security Implementation
 
-**Module**: `src/app/core/user_manager.py`  
-**Primary Algorithm**: PBKDF2-SHA256 (600,000 rounds)  
-**Fallback Algorithm**: bcrypt (cost factor 12)  
-**Compliance**: NIST SP 800-63B, OWASP ASVS V2, CWE-327  
+**Module**: `src/app/core/user_manager.py`
+**Primary Algorithm**: PBKDF2-SHA256 (600,000 rounds)
+**Fallback Algorithm**: bcrypt (cost factor 12)
+**Compliance**: NIST SP 800-63B, OWASP ASVS V2, CWE-327
 **Security Level**: ★★★★★ (Excellent)
 
 ---
@@ -189,8 +189,8 @@ pwd_context = CryptContext(
 
 ### PBKDF2-SHA256 (Primary Algorithm)
 
-**Standard**: RFC 8018, NIST SP 800-132  
-**Purpose**: Key derivation from password  
+**Standard**: RFC 8018, NIST SP 800-132
+**Purpose**: Key derivation from password
 **Configuration**:
 
 ```python
@@ -219,8 +219,8 @@ NIST SP 800-63B recommends **at least 10,000 iterations** for PBKDF2-SHA256. We 
 
 ### bcrypt (Fallback Algorithm)
 
-**Standard**: OpenBSD bcrypt  
-**Purpose**: Memory-hard password hashing  
+**Standard**: OpenBSD bcrypt
+**Purpose**: Memory-hard password hashing
 **Configuration**:
 
 ```python
@@ -482,20 +482,20 @@ else:
 def login(username: str, password: str) -> bool:
     """Secure login with constant-time password verification."""
     manager = UserManager()
-    
+
     # Constant-time verification
     is_valid = manager.verify_password(username, password)
-    
+
     if is_valid:
         # Automatic hash upgrade if using deprecated scheme
         user_data = manager.users.get(username, {})
         hash_value = user_data.get("password_hash", "")
-        
+
         if pwd_context.needs_update(hash_value):
             # Upgrade from bcrypt to PBKDF2-SHA256
             manager._hash_and_store_password(username, password)
             logger.info("Password hash upgraded for user: %s", username)
-        
+
         return True
     else:
         # Increment failed attempt counter (account lockout)
@@ -588,23 +588,23 @@ print("✅ Hash upgraded from bcrypt to PBKDF2-SHA256")
 ```python
 def create_user_with_validation(username: str, password: str) -> bool:
     """Create user with password policy enforcement."""
-    
+
     # Password policy checks (before hashing)
     if len(password) < 12:
         raise ValueError("Password must be at least 12 characters")
-    
+
     if not re.search(r"[A-Z]", password):
         raise ValueError("Password must contain uppercase letter")
-    
+
     if not re.search(r"[a-z]", password):
         raise ValueError("Password must contain lowercase letter")
-    
+
     if not re.search(r"[0-9]", password):
         raise ValueError("Password must contain digit")
-    
+
     if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>/?]", password):
         raise ValueError("Password must contain special character")
-    
+
     # Password passes policy - create user
     manager = UserManager()
     return manager.create_user(username, password)
@@ -621,8 +621,8 @@ def create_user_with_validation(username: str, password: str) -> bool:
 
 ### 1. Rainbow Table Attacks (CWE-759)
 
-**Attack**: Precomputed hash tables for common passwords  
-**Mitigation**: Unique 128-bit salt per password  
+**Attack**: Precomputed hash tables for common passwords
+**Mitigation**: Unique 128-bit salt per password
 **Effectiveness**: ★★★★★ (Rainbow tables become infeasible)
 
 **How it Works**:
@@ -650,8 +650,8 @@ PBKDF2("password123", salt2, 600000) = "8kL2mPq9sT4..."
 
 ### 2. Brute Force Attacks (CWE-307)
 
-**Attack**: Try all possible passwords systematically  
-**Mitigation**: 600,000 PBKDF2 iterations (~300ms per attempt)  
+**Attack**: Try all possible passwords systematically
+**Mitigation**: 600,000 PBKDF2 iterations (~300ms per attempt)
 **Effectiveness**: ★★★★★ (Slows attacker by 6 orders of magnitude vs MD5)
 
 **Attack Time Analysis**:
@@ -675,8 +675,8 @@ time_pbkdf2 = 10**8 * 0.3 seconds = 30,000,000 seconds = ~347 days
 
 ### 3. Dictionary Attacks (CWE-521)
 
-**Attack**: Try common passwords from wordlist  
-**Mitigation**: High iteration count makes each guess expensive  
+**Attack**: Try common passwords from wordlist
+**Mitigation**: High iteration count makes each guess expensive
 **Effectiveness**: ★★★★☆ (Slows attack, but doesn't prevent weak passwords)
 
 **Attack Scenario**:
@@ -699,8 +699,8 @@ time_pbkdf2 = 10**8 * 0.3 seconds = 30,000,000 seconds = ~347 days
 
 ### 4. GPU/ASIC Acceleration (CWE-916)
 
-**Attack**: Use specialized hardware to parallelize cracking  
-**Mitigation**: Memory-hard bcrypt, CPU-intensive PBKDF2  
+**Attack**: Use specialized hardware to parallelize cracking
+**Mitigation**: Memory-hard bcrypt, CPU-intensive PBKDF2
 **Effectiveness**: ★★★★☆ (Reduces GPU advantage from 1000x to ~10x)
 
 **Hardware Comparison**:
@@ -720,8 +720,8 @@ time_pbkdf2 = 10**8 * 0.3 seconds = 30,000,000 seconds = ~347 days
 
 ### 5. Timing Attacks (CWE-208)
 
-**Attack**: Measure password verification time to infer password correctness  
-**Mitigation**: Constant-time comparison in `pwd_context.verify()`  
+**Attack**: Measure password verification time to infer password correctness
+**Mitigation**: Constant-time comparison in `pwd_context.verify()`
 **Effectiveness**: ★★★★★ (Zero information leakage)
 
 **Vulnerable Code (DO NOT USE)**:
@@ -729,12 +729,12 @@ time_pbkdf2 = 10**8 * 0.3 seconds = 30,000,000 seconds = ~347 days
 # ❌ TIMING ATTACK VULNERABILITY
 def verify_insecure(password, hash):
     computed_hash = pbkdf2(password)
-    
+
     # Early return leaks information
     for i in range(len(hash)):
         if computed_hash[i] != hash[i]:
             return False  # Returns immediately on first mismatch
-    
+
     return True
 
 # Attacker measures time:
@@ -763,8 +763,8 @@ Passlib uses `hmac.compare_digest()` internally for constant-time comparison.
 
 ### 6. Database Breach (CWE-312)
 
-**Attack**: Attacker steals `users.json` file with password hashes  
-**Mitigation**: Strong hashing makes offline cracking prohibitively expensive  
+**Attack**: Attacker steals `users.json` file with password hashes
+**Mitigation**: Strong hashing makes offline cracking prohibitively expensive
 **Effectiveness**: ★★★★★ (Buys users weeks/months to change passwords)
 
 **Breach Scenario**:
@@ -931,8 +931,8 @@ users["alice"]["password"] = "MyPassword123"  # NEVER DO THIS
 users["alice"]["password_hash"] = pwd_context.hash("MyPassword123")
 ```
 
-**CWE**: CWE-256 (Plaintext Storage of Password)  
-**Impact**: Total compromise on database breach  
+**CWE**: CWE-256 (Plaintext Storage of Password)
+**Impact**: Total compromise on database breach
 **Severity**: CRITICAL
 
 ---
@@ -951,8 +951,8 @@ hash = hashlib.sha256(password.encode()).hexdigest()
 hash = pwd_context.hash(password)
 ```
 
-**CWE**: CWE-327 (Use of Broken Crypto Algorithm)  
-**Impact**: Passwords cracked in hours/days vs weeks/months  
+**CWE**: CWE-327 (Use of Broken Crypto Algorithm)
+**Impact**: Passwords cracked in hours/days vs weeks/months
 **Severity**: HIGH
 
 ---
@@ -973,8 +973,8 @@ pwd_context = CryptContext(
 )
 ```
 
-**CWE**: CWE-916 (Use of Password Hash With Insufficient Computational Effort)  
-**Impact**: Brute force attacks 600x faster  
+**CWE**: CWE-916 (Use of Password Hash With Insufficient Computational Effort)
+**Impact**: Brute force attacks 600x faster
 **Severity**: HIGH
 
 ---
@@ -994,8 +994,8 @@ def verify_secure(password, hash):
     return pwd_context.verify(password, hash)
 ```
 
-**CWE**: CWE-208 (Observable Timing Discrepancy)  
-**Impact**: Attacker learns password one byte at a time  
+**CWE**: CWE-208 (Observable Timing Discrepancy)
+**Impact**: Attacker learns password one byte at a time
 **Severity**: MEDIUM
 
 ---
@@ -1014,8 +1014,8 @@ hash = hashlib.pbkdf2_hmac('sha256', password.encode(), GLOBAL_SALT, 600000)
 hash = pwd_context.hash(password)  # Auto-generates unique salt
 ```
 
-**CWE**: CWE-759 (Use of One-Way Hash without Salt)  
-**Impact**: Rainbow table attacks become feasible  
+**CWE**: CWE-759 (Use of One-Way Hash without Salt)
+**Impact**: Rainbow table attacks become feasible
 **Severity**: HIGH
 
 ---
@@ -1140,8 +1140,8 @@ hash_value = await hash_password_async(user_password)
 
 ### Issue 1: Slow Login Performance
 
-**Symptom**: Login takes >1 second  
-**Cause**: 600,000 PBKDF2 iterations + hash upgrade  
+**Symptom**: Login takes >1 second
+**Cause**: 600,000 PBKDF2 iterations + hash upgrade
 **Solution**:
 
 1. **Profile the operation**:
@@ -1161,26 +1161,26 @@ hash_value = await hash_password_async(user_password)
 
 ### Issue 2: Hash Upgrade Not Occurring
 
-**Symptom**: Users still have bcrypt hashes after multiple logins  
-**Cause**: Hash upgrade code not implemented  
+**Symptom**: Users still have bcrypt hashes after multiple logins
+**Cause**: Hash upgrade code not implemented
 **Solution**:
 
 ```python
 def login_with_upgrade(username: str, password: str) -> bool:
     manager = UserManager()
-    
+
     if manager.verify_password(username, password):
         # Check if hash needs upgrade
         user_data = manager.users.get(username, {})
         hash_value = user_data.get("password_hash", "")
-        
+
         if pwd_context.needs_update(hash_value):
             # Upgrade hash
             manager._hash_and_store_password(username, password)
             logger.info("Hash upgraded: %s", username)
-        
+
         return True
-    
+
     return False
 ```
 
@@ -1188,8 +1188,8 @@ def login_with_upgrade(username: str, password: str) -> bool:
 
 ### Issue 3: "Invalid hash" Error
 
-**Symptom**: `ValueError: hash could not be identified`  
-**Cause**: Corrupted hash format or unsupported algorithm  
+**Symptom**: `ValueError: hash could not be identified`
+**Cause**: Corrupted hash format or unsupported algorithm
 **Solution**:
 
 ```python
@@ -1199,7 +1199,7 @@ def verify_with_fallback(username: str, password: str) -> bool:
         return manager.verify_password(username, password)
     except ValueError as e:
         logger.error("Hash verification failed for %s: %s", username, e)
-        
+
         # Force password reset
         send_password_reset_email(username)
         return False
@@ -1209,8 +1209,8 @@ def verify_with_fallback(username: str, password: str) -> bool:
 
 ### Issue 4: Passlib Import Error
 
-**Symptom**: `ModuleNotFoundError: No module named 'passlib'`  
-**Cause**: passlib not installed  
+**Symptom**: `ModuleNotFoundError: No module named 'passlib'`
+**Cause**: passlib not installed
 **Solution**:
 
 ```bash
@@ -1223,8 +1223,8 @@ pip install -r requirements.txt
 
 ### Issue 5: Memory Errors with bcrypt
 
-**Symptom**: `MemoryError` or `OSError` during bcrypt hashing  
-**Cause**: bcrypt memory requirements on resource-constrained systems  
+**Symptom**: `MemoryError` or `OSError` during bcrypt hashing
+**Cause**: bcrypt memory requirements on resource-constrained systems
 **Solution**:
 
 1. **Lower cost factor** (temporary):
@@ -1266,11 +1266,10 @@ pip install -r requirements.txt
 
 ---
 
-**Document Status**: ACTIVE  
-**Last Security Review**: 2025-01-26  
-**Next Review**: 2025-04-26 (90 days)  
+**Document Status**: ACTIVE
+**Last Security Review**: 2025-01-26
+**Next Review**: 2025-04-26 (90 days)
 **Maintained By**: AGENT-045 Security Infrastructure Documentation Specialist
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

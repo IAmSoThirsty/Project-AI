@@ -182,7 +182,7 @@ jobs:
           python -m app.core.guardian_approval_system \
             --change-id ${{ github.event.pull_request.number }} \
             --description "${{ github.event.pull_request.title }}"
-      
+
       - name: Block Merge if Pending
         run: |
           status=$(python -m app.core.guardian_approval_system --check-status)
@@ -248,4 +248,3 @@ assert all(g in required_guardians for g in approval.guardian_role)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

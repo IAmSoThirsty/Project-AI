@@ -46,8 +46,8 @@ password_hashing:
 ---
 
 # Data Encryption and Privacy Audit Report
-**Project-AI Security Assessment**  
-**Date:** February 5, 2026  
+**Project-AI Security Assessment**
+**Date:** February 5, 2026
 **Scope:** Encryption implementation, key management, PII handling, GDPR compliance
 
 ---
@@ -507,24 +507,24 @@ def delete_user_gdpr_compliant(self, username):
         return False
     del self.users[username]
     self.save_users()
-    
+
     # 2. Delete location history
     location_file = f"location_history_{username}.json"
     if os.path.exists(location_file):
         os.remove(location_file)
-    
+
     # 3. Delete emergency alerts
     alerts_file = f"emergency_alerts_{username}.json"
     if os.path.exists(alerts_file):
         os.remove(alerts_file)
-    
+
     # 4. Remove from emergency contacts
     if username in emergency_contacts:
         del emergency_contacts[username]
-    
+
     # 5. Request cloud deletion
     cloud_sync.delete_user_data(username)
-    
+
     # 6. Audit log
     logger.info(f"GDPR deletion completed for user: {username}")
     return True
@@ -564,7 +564,7 @@ class ConsentRecord:
     granted: bool
     timestamp: datetime
     ip_address: str  # For audit trail
-    
+
 class ConsentManager:
     def record_consent(self, user_id: str, purpose: str, granted: bool):
         """Record user consent for data processing."""
@@ -653,19 +653,19 @@ $ grep -r "retention\|expir\|ttl\|delete.*after" src/
 class DataRetentionManager:
     def __init__(self, policy_file="config/data_retention_policy.json"):
         self.policy = self.load_policy(policy_file)
-    
+
     def cleanup_expired_data(self):
         """Run daily cleanup job."""
         for data_type, policy in self.policy.items():
             retention_days = policy["retention_days"]
             cutoff_date = datetime.now() - timedelta(days=retention_days)
-            
+
             if data_type == "location_history":
                 self.cleanup_location_history(cutoff_date)
             elif data_type == "emergency_alerts":
                 self.cleanup_emergency_alerts(cutoff_date)
             # ... etc
-    
+
     def cleanup_location_history(self, cutoff_date):
         """Delete location history older than retention period."""
         for username in user_manager.list_users():
@@ -752,24 +752,24 @@ def rotate_keys(self) -> bool:
     try:
         # Step 1: Generate new key
         new_key = os.urandom(32) if self.algorithm != EncryptionAlgorithm.FERNET else Fernet.generate_key()
-        
+
         # Step 2: Re-encrypt all data files
         for data_file in self.data_dir.glob("*.enc"):
             # Decrypt with old key
             decrypted_data = self.decrypt_file(data_file)
-            
+
             # Encrypt with new key
             self._cipher = self._initialize_cipher_with_key(new_key)
             self.encrypt_file(data_file, decrypted_data)
-        
+
         # Step 3: Update master key
         self.master_key = new_key
         self._save_master_key(new_key)
-        
+
         # Step 4: Record rotation timestamp
         with open(self.keys_dir / "last_rotation", "w") as f:
             f.write(datetime.now().isoformat())
-        
+
         logger.info("Key rotation completed successfully")
         return True
     except Exception as e:
@@ -794,11 +794,11 @@ def rotate_keys_safe(self) -> bool:
     # 1. Backup old key
     old_key_backup = self.keys_dir / f"master.key.{self.current_key_id}.bak"
     shutil.copy(self.keys_dir / "master.key", old_key_backup)
-    
+
     # 2. Generate new key with version
     new_key_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     new_key = os.urandom(32)
-    
+
     # 3. Re-encrypt with error tracking
     failed_files = []
     for data_file in self.data_dir.glob("*.enc"):
@@ -806,16 +806,16 @@ def rotate_keys_safe(self) -> bool:
             self._reencrypt_file(data_file, old_key, new_key, new_key_id)
         except Exception as e:
             failed_files.append((data_file, str(e)))
-    
+
     # 4. Rollback if any failures
     if failed_files:
         logger.error("Rotation failed for %d files, rolling back", len(failed_files))
         shutil.copy(old_key_backup, self.keys_dir / "master.key")
         return False
-    
+
     # 5. Archive old key (don't delete - needed for backups)
     old_key_backup.chmod(0o400)  # Read-only
-    
+
     return True
 ```
 
@@ -887,9 +887,9 @@ def secure_delete_file(filepath: str, passes: int = 3):
     """DoD 5220.22-M compliant file deletion."""
     if not os.path.exists(filepath):
         return False
-    
+
     file_size = os.path.getsize(filepath)
-    
+
     # Multi-pass overwrite
     with open(filepath, "r+b") as f:
         for pass_num in range(passes):
@@ -905,7 +905,7 @@ def secure_delete_file(filepath: str, passes: int = 3):
                 f.write(os.urandom(file_size))
             f.flush()
             os.fsync(f.fileno())
-    
+
     # Final unlink
     os.remove(filepath)
     return True
@@ -927,10 +927,10 @@ def secure_zero_memory(data: bytes):
         # Get memory address
         address = id(data)
         size = len(data)
-        
+
         # Overwrite with zeros
         ctypes.memset(address, 0, size)
-    
+
 # Usage:
 decrypted_data = cipher.decrypt(encrypted_data)
 # ... use data ...
@@ -1199,18 +1199,18 @@ response = session.post(cloud_url, json=data)
 def test_key_rotation_completes_successfully():
     """Test key rotation re-encrypts all data."""
     state_manager = EncryptedStateManager()
-    
+
     # Create test data
     state_manager.save_state("test_key", {"secret": "data"})
     old_key_id = state_manager.current_key_id
-    
+
     # Rotate keys
     assert state_manager.rotate_keys() == True
     new_key_id = state_manager.current_key_id
-    
+
     # Verify different key
     assert new_key_id != old_key_id
-    
+
     # Verify data still accessible
     data = state_manager.load_state("test_key")
     assert data == {"secret": "data"}
@@ -1220,27 +1220,27 @@ def test_secure_file_deletion_overwrites_data():
     test_file = "test_sensitive_data.txt"
     with open(test_file, "w") as f:
         f.write("SECRET" * 1000)
-    
+
     secure_delete_file(test_file, passes=3)
-    
+
     # Verify file deleted
     assert not os.path.exists(test_file)
-    
+
     # Forensic check: grep disk for "SECRET"
     # (Would require low-level disk access in real test)
 
 def test_gdpr_deletion_removes_all_user_data():
     """Test GDPR-compliant user deletion."""
     username = "test_user"
-    
+
     # Create user with data across modules
     user_manager.create_user(username, "password")
     location_tracker.save_location_history(username, {...})
     emergency_alert.add_emergency_contact(username, {...})
-    
+
     # Delete user
     gdpr_manager.delete_user_gdpr_compliant(username)
-    
+
     # Verify all data deleted
     assert not os.path.exists(f"location_history_{username}.json")
     assert not os.path.exists(f"emergency_alerts_{username}.json")
@@ -1364,8 +1364,8 @@ def test_gdpr_deletion_removes_all_user_data():
 
 ---
 
-**Report Generated:** February 5, 2026  
-**Auditor:** GitHub Copilot CLI  
-**Methodology:** Static code analysis, GDPR/NIST compliance review, threat modeling  
-**Total Modules Reviewed:** 75  
+**Report Generated:** February 5, 2026
+**Auditor:** GitHub Copilot CLI
+**Methodology:** Static code analysis, GDPR/NIST compliance review, threat modeling
+**Total Modules Reviewed:** 75
 **Total Lines of Code Analyzed:** ~15,000

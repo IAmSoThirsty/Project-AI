@@ -11,7 +11,7 @@ author: "AGENT-035"
 contributors: ["Project-AI Architecture Team"]
 tags: ["governance", "security", "pipeline", "enforcement", "rbac", "rate-limiting"]
 technologies: ["Python", "JSON", "Threading"]
-related_docs: 
+related_docs:
   - "governance-triumvirate.md"
   - "governance-validators.md"
   - "four-laws-system.md"
@@ -198,23 +198,23 @@ Each action has associated metadata defining rate limits, resource intensity, an
 ```python
 ACTION_METADATA = {
     "ai.chat": {
-        "requires_auth": True, 
+        "requires_auth": True,
         "rate_limit": 30,  # 30 requests/min
         "resource_intensive": False
     },
     "ai.image": {
-        "requires_auth": True, 
+        "requires_auth": True,
         "rate_limit": 10,  # 10 requests/min
         "resource_intensive": True
     },
     "user.delete": {
-        "requires_auth": True, 
-        "admin_only": True, 
+        "requires_auth": True,
+        "admin_only": True,
         "resource_intensive": False
     },
     "system.shutdown": {
-        "requires_auth": True, 
-        "admin_only": True, 
+        "requires_auth": True,
+        "admin_only": True,
         "resource_intensive": False
     },
 }
@@ -291,22 +291,22 @@ except PermissionError as e:
 ```python
 def _validate(context: dict[str, Any]) -> dict[str, Any]:
     from .validators import validate_input, sanitize_payload
-    
+
     required_fields = ["source", "payload", "action"]
     for field in required_fields:
         if field not in context:
             raise ValueError(f"Missing required field: {field}")
-    
+
     action = context["action"]
     if action not in VALID_ACTIONS:
         raise ValueError(
             f"Action '{action}' not in registry. "
             f"Valid actions: {sorted(VALID_ACTIONS)}"
         )
-    
+
     context["payload"] = sanitize_payload(context["payload"])
     validate_input(context["action"], context["payload"])
-    
+
     return context
 ```
 
@@ -363,7 +363,7 @@ if ACTION_METADATA.get(action, {}).get("admin_only"):
 2. **Four Laws Compliance**
    ```python
    from app.core.ai_systems import FourLaws
-   
+
    is_allowed, reason = FourLaws.validate_action(
        action,
        context={
@@ -372,7 +372,7 @@ if ACTION_METADATA.get(action, {}).get("admin_only"):
            "simulation": simulation,
        },
    )
-   
+
    if not is_allowed:
        raise PermissionError(f"Action blocked by Four Laws: {reason}")
    ```
@@ -395,21 +395,21 @@ if ACTION_METADATA.get(action, {}).get("admin_only"):
          "user.delete": 4,
          "system.shutdown": 4,
          "system.config": 4,
-         
+
          # Power user (level 3)
          "user.create": 3,
          "codex.fix": 3,
          "access.grant": 3,
-         
+
          # Authenticated user (level 2)
          "ai.chat": 2,
          "ai.image": 2,
          "persona.update": 2,
-         
+
          # Guest (level 1)
          "system.status": 1,
          "data.query": 1,
-         
+
          # Anonymous (level 0)
          "user.login": 0,
          "auth.login": 0,
@@ -514,15 +514,15 @@ elif action.startswith("temporal."):
 ```python
 def _commit(context: dict[str, Any], result: Any) -> None:
     action = context["action"]
-    
+
     state_actions = [
         "user.login", "auth.login", "persona.update",
         "user.create", "user.update"
     ]
-    
+
     if action in state_actions:
         _record_state_change(context, result)
-        
+
         if not _validate_state_consistency(context, result):
             logger.error(f"State consistency check failed for {action}")
             raise RuntimeError(f"State consistency violation in {action}")
@@ -649,7 +649,7 @@ def check_rate_limit_redis(key: str, window: int, max_requests: int):
     pipeline.zcard(key)
     pipeline.expire(key, window)
     results = pipeline.execute()
-    
+
     current_count = results[2]
     if current_count > max_requests:
         raise PermissionError(f"Rate limit exceeded: {current_count}/{max_requests}")
@@ -717,7 +717,7 @@ permission_matrix = {
     "user.delete": 4,
     "system.shutdown": 4,
     "system.config": 4,
-    
+
     # Power user (level 3)
     "user.create": 3,
     "user.update": 3,  # Except own profile (level 2)
@@ -730,7 +730,7 @@ permission_matrix = {
     "access.grant": 3,
     "audit.export": 3,
     "agents.toggle": 3,
-    
+
     # Authenticated user (level 2)
     "ai.chat": 2,
     "ai.image": 2,
@@ -738,11 +738,11 @@ permission_matrix = {
     "persona.update": 2,
     "learning.request": 2,
     "agent.execute": 2,
-    
+
     # Guest (level 1)
     "system.status": 1,
     "data.query": 1,
-    
+
     # Anonymous (level 0)
     "user.login": 0,
     "auth.login": 0,
@@ -820,9 +820,9 @@ if not is_allowed:
 @app.route('/api/auth/login', methods=['POST'])
 def login():
     from app.core.governance import enforce_pipeline
-    
+
     data = request.get_json()
-    
+
     context = {
         "source": "web",
         "action": "auth.login",
@@ -832,10 +832,10 @@ def login():
         },
         "user": {"username": "anonymous", "role": "anonymous"}
     }
-    
+
     try:
         result = enforce_pipeline(context)
-        
+
         # result = {"username": "alice", "token": "eyJ0...", "role": "user"}
         return jsonify({
             "success": True,
@@ -845,7 +845,7 @@ def login():
                 "role": result["role"]
             }
         }), 200
-        
+
     except PermissionError as e:
         return jsonify({"success": False, "error": str(e)}), 403
     except ValueError as e:
@@ -868,11 +868,11 @@ def login():
 # PyQt6 dashboard button handler
 def on_codex_fix_clicked(self):
     from app.core.governance import enforce_pipeline
-    
+
     # Get current user from session
     username = self.current_user.username
     role = self.current_user.role
-    
+
     context = {
         "source": "desktop",
         "action": "codex.fix",
@@ -881,19 +881,19 @@ def on_codex_fix_clicked(self):
         },
         "user": {"username": username, "role": role}
     }
-    
+
     try:
         result = enforce_pipeline(context)
-        
+
         # result = {"fixed": [...], "errors": [...], "structure": {...}}
         self.display_codex_report(result)
-        
+
         QMessageBox.information(
             self,
             "Codex Deus Maximus",
             f"Fixed {len(result['fixed'])} issues. See report for details."
         )
-        
+
     except PermissionError as e:
         QMessageBox.critical(
             self,
@@ -933,17 +933,17 @@ class AutonomousAgent:
                 "role": "power_user"  # Agents run with elevated privileges
             }
         }
-        
+
         try:
             result = enforce_pipeline(action_context)
-            
+
             # result = {"status": "approved", "request_id": "learn-quantum-123"}
             logger.info(f"Agent approved learning request: {result['request_id']}")
-            
+
         except PermissionError as e:
             # Four Laws blocked the action
             logger.warning(f"Four Laws blocked agent action: {e}")
-            
+
             # Agent escalates to human oversight
             self.escalate_to_human(action_context, reason=str(e))
 ```
@@ -969,7 +969,7 @@ for i in range(40):
         "payload": {"prompt": f"Test message {i}"},
         "user": {"username": "alice", "role": "user"}
     }
-    
+
     try:
         result = enforce_pipeline(context)
         print(f"Request {i}: Success")
@@ -1013,7 +1013,7 @@ for i in range(15):
         },
         "user": {"username": "bob", "role": "user"}
     }
-    
+
     try:
         result = enforce_pipeline(context)
         print(f"Image {i}: Generated")
@@ -1089,7 +1089,7 @@ if not any(action.startswith(prefix) for prefix in ["ai.", "user.", "custom."]):
 2. Review Four Laws validation in `app.core.ai_systems.FourLaws`:
    ```python
    from app.core.ai_systems import FourLaws
-   
+
    is_allowed, reason = FourLaws.validate_action(
        action,
        context={"source": source, "user": user, "simulation": simulation}
@@ -1292,21 +1292,21 @@ redis_client = redis.Redis()
 def check_rate_limit_redis(key: str, window: int, max_requests: int):
     pipeline = redis_client.pipeline()
     now = time.time()
-    
+
     # Remove old requests
     pipeline.zremrangebyscore(key, 0, now - window)
-    
+
     # Add current request
     pipeline.zadd(key, {now: now})
-    
+
     # Count requests in window
     pipeline.zcard(key)
-    
+
     # Set expiration
     pipeline.expire(key, window)
-    
+
     results = pipeline.execute()
-    
+
     if results[2] > max_requests:
         raise PermissionError(f"Rate limit exceeded: {results[2]}/{max_requests}")
 ```
@@ -1517,10 +1517,10 @@ es = Elasticsearch(['http://localhost:9200'])
 
 def _log(context, result, status, error):
     audit_entry = {...}  # Same as current implementation
-    
+
     # Write to Elasticsearch
     es.index(index="governance-audit", document=audit_entry)
-    
+
     # Also write to local log for redundancy
     with open("data/runtime/governance_audit.log", "a") as f:
         f.write(json.dumps(audit_entry) + "\n")
@@ -1552,10 +1552,10 @@ model.fit(features)
 # Detect anomalies in real-time
 def _log(context, result, status, error):
     # ... existing logging ...
-    
+
     feature_vector = extract_features([audit_entry])
     anomaly_score = model.decision_function(feature_vector)
-    
+
     if anomaly_score < -0.5:
         alert_security_team(audit_entry, anomaly_score)
 ```
@@ -1572,7 +1572,7 @@ class ActionRegistry:
     def __init__(self):
         self._actions = set(VALID_ACTIONS)
         self._metadata = dict(ACTION_METADATA)
-    
+
     def register_action(
         self,
         action: str,
@@ -1587,10 +1587,10 @@ class ActionRegistry:
             "rate_limit": rate_limit,
             "resource_intensive": resource_intensive,
         }
-        
+
         # Add to permission matrix
         permission_matrix[action] = permission_level
-    
+
     def is_valid_action(self, action: str) -> bool:
         return action in self._actions
 
@@ -1639,4 +1639,3 @@ Copyright © 2026 Project-AI. Internal documentation - not for redistribution.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

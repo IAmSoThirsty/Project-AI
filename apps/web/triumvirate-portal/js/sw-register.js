@@ -19,12 +19,12 @@ if ('serviceWorker' in navigator) {
       // Handle updates
       registration.addEventListener('updatefound', () => {
         const newWorker = registration.installing;
-        
+
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
             // New service worker available
             console.log('🔄 New version available! Refresh to update.');
-            
+
             // Show update notification to user (optional)
             if (confirm('A new version is available! Reload to update?')) {
               newWorker.postMessage({ type: 'SKIP_WAITING' });
@@ -53,10 +53,10 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   // Stash the event so it can be triggered later
   deferredPrompt = e;
-  
+
   // Show install button/banner (customize as needed)
   console.log('💾 Install prompt available');
-  
+
   // You can create a custom install button and show it here
   showInstallPromotion();
 });
@@ -86,7 +86,7 @@ function showInstallPromotion() {
     animation: slideIn 0.3s ease-out;
     max-width: 90vw;
   `;
-  
+
   installBanner.innerHTML = `
     <span style="flex: 1; font-weight: 500;">Install The Triumvirate app</span>
     <button id="install-btn" style="
@@ -108,7 +108,7 @@ function showInstallPromotion() {
       padding: 4px 8px;
     ">&times;</button>
   `;
-  
+
   // Add animation
   const style = document.createElement('style');
   style.textContent = `
@@ -124,21 +124,21 @@ function showInstallPromotion() {
     }
   `;
   document.head.appendChild(style);
-  
+
   document.body.appendChild(installBanner);
-  
+
   // Install button click handler
   document.getElementById('install-btn').addEventListener('click', async () => {
     if (!deferredPrompt) return;
-    
+
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     console.log(`User response to install prompt: ${outcome}`);
-    
+
     deferredPrompt = null;
     installBanner.remove();
   });
-  
+
   // Dismiss button click handler
   document.getElementById('install-dismiss').addEventListener('click', () => {
     installBanner.remove();

@@ -31,9 +31,9 @@ review_cycle: quarterly
 
 # Threat Model Coverage Map
 
-**Generated:** 2026-02-08  
-**Source:** AGENT-024 Metadata Analysis  
-**Documents Analyzed:** 39 security compliance files  
+**Generated:** 2026-02-08
+**Source:** AGENT-024 Metadata Analysis
+**Documents Analyzed:** 39 security compliance files
 **Frameworks:** STRIDE, OWASP, MITRE ATT&CK, CWE
 
 ---
@@ -49,8 +49,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ## Threat Category Coverage Analysis
 
 ### 1. Prompt Injection & Jailbreak Attacks
-**Coverage:** 20.5% (8 of 39 documents)  
-**Threat Level:** CRITICAL  
+**Coverage:** 20.5% (8 of 39 documents)
+**Threat Level:** CRITICAL
 **MITRE ATT&CK:** T1027 (Obfuscated Files or Information)
 
 #### Attack Vectors Covered
@@ -107,8 +107,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### 2. Model Security & AI Safety
-**Coverage:** 15.4% (6 of 39 documents)  
-**Threat Level:** CRITICAL  
+**Coverage:** 15.4% (6 of 39 documents)
+**Threat Level:** CRITICAL
 **MITRE ATT&CK:** T1199 (Trusted Relationship Exploitation)
 
 #### Attack Vectors Covered
@@ -166,8 +166,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### 3. Data Exfiltration & Information Disclosure
-**Coverage:** 17.9% (7 of 39 documents)  
-**Threat Level:** HIGH  
+**Coverage:** 17.9% (7 of 39 documents)
+**Threat Level:** HIGH
 **CWE:** CWE-200 (Exposure of Sensitive Information)
 
 #### Attack Vectors Covered
@@ -225,8 +225,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### 4. Credential & Secret Exposure
-**Coverage:** 12.8% (5 of 39 documents)  
-**Threat Level:** CRITICAL  
+**Coverage:** 12.8% (5 of 39 documents)
+**Threat Level:** CRITICAL
 **CWE:** CWE-798 (Hard-coded Credentials), CWE-522 (Insufficiently Protected Credentials)
 
 #### Attack Vectors Covered
@@ -279,8 +279,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### 5. Supply Chain Attacks
-**Coverage:** 15.4% (6 of 39 documents)  
-**Threat Level:** HIGH  
+**Coverage:** 15.4% (6 of 39 documents)
+**Threat Level:** HIGH
 **CWE:** CWE-829 (Inclusion of Functionality from Untrusted Source)
 
 #### Attack Vectors Covered
@@ -333,8 +333,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### 6. Code Injection Attacks
-**Coverage:** 23.1% (9 of 39 documents)  
-**Threat Level:** CRITICAL  
+**Coverage:** 23.1% (9 of 39 documents)
+**Threat Level:** CRITICAL
 **CWE:** CWE-77 (Command Injection), CWE-89 (SQL Injection), CWE-94 (Code Injection)
 
 #### Attack Vectors Covered
@@ -410,8 +410,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### 7. CBRN & High-Risk Capabilities
-**Coverage:** 7.7% (3 of 39 documents)  
-**Threat Level:** CRITICAL (Nation-State Level)  
+**Coverage:** 7.7% (3 of 39 documents)
+**Threat Level:** CRITICAL (Nation-State Level)
 **Special:** ASL-3/ASL-4 Threshold
 
 #### Attack Vectors Covered
@@ -457,8 +457,8 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### 8. Agent Bypass & Defense Evasion
-**Coverage:** 10.3% (4 of 39 documents)  
-**Threat Level:** HIGH  
+**Coverage:** 10.3% (4 of 39 documents)
+**Threat Level:** HIGH
 **Special:** Hydra Defense System
 
 #### Attack Vectors Covered
@@ -510,7 +510,7 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ## STRIDE Threat Model Mapping
 
 ### Spoofing Identity
-**Coverage:** 65%  
+**Coverage:** 65%
 **Documents:** 6
 
 - BRANCH_PROTECTION_CONFIG.md (artifact signing)
@@ -532,7 +532,7 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### Tampering with Data
-**Coverage:** 80%  
+**Coverage:** 80%
 **Documents:** 7
 
 - THREAT_MODEL.md (data integrity)
@@ -556,7 +556,7 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### Repudiation
-**Coverage:** 55%  
+**Coverage:** 55%
 **Documents:** 5
 
 - INCIDENT_PLAYBOOK.md (tamperproof snapshots)
@@ -577,7 +577,7 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### Information Disclosure
-**Coverage:** 75%  
+**Coverage:** 75%
 **Documents:** 10
 
 - SECRET_MANAGEMENT.md (credential protection)
@@ -604,7 +604,7 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### Denial of Service
-**Coverage:** 60%  
+**Coverage:** 60%
 **Documents:** 5
 
 - ENHANCED_DEFENSES.md (rate limiting, IP blocking)
@@ -626,7 +626,7 @@ This threat model coverage map provides a comprehensive view of how Project-AI's
 ---
 
 ### Elevation of Privilege
-**Coverage:** 70%  
+**Coverage:** 70%
 **Documents:** 6
 
 - SECURITY_GOVERNANCE.md (RBAC, approval requirements)

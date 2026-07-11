@@ -2,9 +2,9 @@
 <!--                                        Productivity: Active -->
 # PSIA v1.0 — Project-AI Sovereign Immune Architecture
 
-**Version:** 1.0.0  
-**Status:** Implemented  
-**Date:** 2026-02-22  
+**Version:** 1.0.0
+**Status:** Implemented
+**Date:** 2026-02-22
 
 ---
 

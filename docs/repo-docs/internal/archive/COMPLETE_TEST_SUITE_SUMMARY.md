@@ -149,7 +149,7 @@ Step 1: POST /intent
 All 66 OWASP Testing Guide categories covered:
 
 ### ✅ **Information Gathering**  (IG-001 to IG-006) - 60 tests
-### ✅ **Configuration** (CM-001 to CM-008) - 35+ tests  
+### ✅ **Configuration** (CM-001 to CM-008) - 35+ tests
 ### ✅ **Authentication** (AT-001 to AT-010) - 35+ tests
 ### ✅ **Session** (SM-001 to SM-005) - 30+ tests
 ### ✅ **Authorization** (AZ-001 to AZ-003) - Covered in base 2000

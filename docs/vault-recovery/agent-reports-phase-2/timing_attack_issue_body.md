@@ -39,7 +39,7 @@ def check_user_exists(username):
         'password': 'random_password_12345'
     })
     elapsed = time.perf_counter() - start
-    
+
     # User exists if response takes >100ms (bcrypt verification)
     # User doesn't exist if response takes <10ms (immediate return)
     return elapsed > 0.05
@@ -67,8 +67,8 @@ for username in valid_users:
 
 ### 1. UserManager Authentication (PRIMARY SYSTEM)
 
-**File:** `src/app/core/user_manager.py`  
-**Lines:** 122-123  
+**File:** `src/app/core/user_manager.py`
+**Lines:** 122-123
 **Severity:** 🔴 **CRITICAL**
 
 ```python
@@ -95,8 +95,8 @@ def authenticate(self, username, password):
 
 ### 2. CommandOverride SHA-256 Comparison (LEGACY MIGRATION)
 
-**File:** `src/app/core/command_override.py`  
-**Line:** 186  
+**File:** `src/app/core/command_override.py`
+**Line:** 186
 **Severity:** 🔴 **CRITICAL**
 
 ```python
@@ -111,7 +111,7 @@ if self._is_sha256_hash(self.master_password_hash):
 **Problem:**
 - Python's `==` operator for strings compares character-by-character and exits on first mismatch
 - Attacker can measure timing to determine how many prefix characters are correct
-- **Example:** 
+- **Example:**
   - "a" vs "zzz" → Fails in ~1 CPU cycle
   - "abc" vs "abd" → Fails in ~3 CPU cycles
   - Allows **character-by-character password cracking**
@@ -120,8 +120,8 @@ if self._is_sha256_hash(self.master_password_hash):
 
 ### 3. CommandOverride PBKDF2 Verification
 
-**File:** `src/app/core/command_override.py`  
-**Line:** 157  
+**File:** `src/app/core/command_override.py`
+**Line:** 157
 **Severity:** 🔴 **CRITICAL**
 
 ```python
@@ -169,28 +169,28 @@ import time
 def authenticate(self, username, password):
     """Authenticate a user using stored bcrypt password hash."""
     user = self.users.get(username)
-    
+
     if not user:
         # ✅ FIXED: Artificial delay to match bcrypt timing
         # Use a dummy hash to consume similar CPU time
         dummy_hash = "-sha256"
         pwd_context.verify(password, dummy_hash)
         return False
-    
+
     password_hash = user.get("password_hash")
     if not password_hash:
         # Also add delay for missing hash case
         dummy_hash = "-sha256"
         pwd_context.verify(password, dummy_hash)
         return False
-    
+
     try:
         if pwd_context.verify(password, password_hash):
             self.current_user = username
             return True
     except Exception:
         return False
-    
+
     return False
 ```
 
@@ -199,16 +199,16 @@ def authenticate(self, username, password):
 def authenticate(self, username, password):
     """Authenticate a user using stored bcrypt password hash."""
     user = self.users.get(username)
-    
+
     # Always compute a hash to ensure constant time
     if not user:
         # Use a known dummy hash to consume time
         dummy_password_hash = ""
         pwd_context.verify(password, dummy_password_hash)
         return False
-    
+
     password_hash = user.get("password_hash", "")
-    
+
     try:
         is_valid = pwd_context.verify(password, password_hash)
         if is_valid and user.get("password_hash"):
@@ -216,7 +216,7 @@ def authenticate(self, username, password):
             return True
     except Exception:
         pass
-    
+
     return False
 ```
 
@@ -271,7 +271,7 @@ def measure_auth_timing(username, password, iterations=100):
         user_manager.authenticate(username, password)
         elapsed = time.perf_counter() - start
         timings.append(elapsed)
-    
+
     return {
         'mean': statistics.mean(timings),
         'median': statistics.median(timings),
@@ -297,10 +297,10 @@ def timing_attack_test():
     """Statistical test for timing attack vulnerability."""
     valid_times = [measure_single_auth("valid_user", "wrong") for _ in range(1000)]
     invalid_times = [measure_single_auth("invalid_user", "wrong") for _ in range(1000)]
-    
+
     # Two-sample t-test: null hypothesis = same distribution
     t_stat, p_value = stats.ttest_ind(valid_times, invalid_times)
-    
+
     # p > 0.05 means distributions are statistically similar (GOOD)
     # p < 0.05 means timing leak exists (BAD)
     assert p_value > 0.05, f"Timing attack possible (p={p_value})"
@@ -312,11 +312,11 @@ def test_constant_time_comparison():
     """Verify all hash comparisons use constant-time operations."""
     import ast
     import inspect
-    
+
     # Parse command_override.py source code
     source = inspect.getsource(CommandOverrideSystem)
     tree = ast.parse(source)
-    
+
     # Find all comparison operations
     for node in ast.walk(tree):
         if isinstance(node, ast.Compare):
@@ -341,16 +341,16 @@ def test_constant_time_comparison():
 
 ## 🔗 References
 
-1. **OWASP Authentication Cheat Sheet:**  
+1. **OWASP Authentication Cheat Sheet:**
    https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-and-error-messages
 
-2. **Python `secrets.compare_digest()` Documentation:**  
+2. **Python `secrets.compare_digest()` Documentation:**
    https://docs.python.org/3/library/secrets.html#secrets.compare_digest
 
-3. **Timing Attack on Password Hashing (Academic Paper):**  
+3. **Timing Attack on Password Hashing (Academic Paper):**
    https://www.usenix.org/system/files/conference/usenixsecurity15/sec15-paper-hodges.pdf
 
-4. **CWE-208: Observable Timing Discrepancy:**  
+4. **CWE-208: Observable Timing Discrepancy:**
    https://cwe.mitre.org/data/definitions/208.html
 
 ---
@@ -373,6 +373,6 @@ def test_constant_time_comparison():
 
 ---
 
-**Reported by:** Security Fleet Agent 04  
-**Date:** 2026-02-08  
+**Reported by:** Security Fleet Agent 04
+**Date:** 2026-02-08
 **Related:** AUTHENTICATION_SECURITY_AUDIT_REPORT.md

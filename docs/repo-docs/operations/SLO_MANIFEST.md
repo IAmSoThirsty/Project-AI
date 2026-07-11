@@ -3,7 +3,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
 # SOVEREIGN SLO MANIFEST - PHYSICAL INVARIANTS & SERVICE BUDGETS
 # ═══════════════════════════════════════════════════════════════════════════
-# 
+#
 # This manifest codifies the physical invariants and service budgets for the
 # Project-AI substrate. Enforced by the OctoReflex Bridge.
 # ═══════════════════════════════════════════════════════════════════════════
@@ -23,7 +23,7 @@
     # Energy Sovereignty ($W/query$)
     target_energy_efficiency = 0.05W/query
     max_thermal_overhead = 15%
-    
+
     # Mathematical Models
     utilization_model {
         utilization = 0.2

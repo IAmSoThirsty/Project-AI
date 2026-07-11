@@ -15,13 +15,13 @@ review_cycle: quarterly
 
 ## What This Is
 
-**This is not a web application.**  
-**This is not an AI service.**  
+**This is not a web application.**
+**This is not an AI service.**
 **This is not a platform.**
 
 **This is a Governance Kernel with a Web Nervous System attached.**
 
-The web is just the skin.  
+The web is just the skin.
 **The law is the body.**
 
 ---
@@ -37,8 +37,8 @@ The web is just the skin.
 - **Immutable**: Cannot be altered at runtime
 - Any ambiguity = denial, not guess
 
-**Verification:** `GET /tarl` returns complete ruleset  
-**Signature:** `GET /audit` exposes cryptographic hash  
+**Verification:** `GET /tarl` returns complete ruleset
+**Signature:** `GET /audit` exposes cryptographic hash
 **Status:** ✅ VERIFIED - TARL v1.0 active and signed
 
 ---
@@ -62,8 +62,8 @@ Three pillars evaluate every intent:
    - **Any DENY = global DENY**
    - Final verdict is law
 
-**Constitutional Rule:** Identity ≠ Authority  
-**Verification:** Every decision includes all pillar votes  
+**Constitutional Rule:** Identity ≠ Authority
+**Verification:** Every decision includes all pillar votes
 **Status:** ✅ VERIFIED - Triumvirate operational
 
 ---
@@ -77,9 +77,9 @@ Three pillars evaluate every intent:
 - No retroactive edits
 - No deletion
 
-**Constitutional Rule:** Transparency ≠ Control  
-**Format:** Newline-delimited JSON (`audit.log`)  
-**Endpoint:** `GET /audit?limit=N` (read-only)  
+**Constitutional Rule:** Transparency ≠ Control
+**Format:** Newline-delimited JSON (`audit.log`)
+**Endpoint:** `GET /audit?limit=N` (read-only)
 **Status:** ✅ VERIFIED - Audit active and growing
 
 ---
@@ -93,8 +93,8 @@ Three pillars evaluate every intent:
 - Verdict checked before execution
 - Audit recorded before execution
 
-**Constitutional Rule:** Explanation ≠ Permission  
-**Verification:** Denied intents return 403  
+**Constitutional Rule:** Explanation ≠ Permission
+**Verification:** Denied intents return 403
 **Status:** ✅ VERIFIED - Sandbox enforced
 
 ---
@@ -108,8 +108,8 @@ Three pillars evaluate every intent:
 - Intent hash for verification
 - Timestamp for ordering
 
-**Constitutional Rule:** Intelligence ≠ Agency  
-**Access:** Public, no authentication required  
+**Constitutional Rule:** Intelligence ≠ Agency
+**Access:** Public, no authentication required
 **Status:** ✅ VERIFIED - Audit publicly accessible
 
 ---
@@ -123,8 +123,8 @@ Three pillars evaluate every intent:
 - Urgency = stripped at ingress
 - Narrative = stripped at ingress
 
-**Constitutional Rule:** Request ≠ Command  
-**Architecture:** All web requests → Intent objects → TARL gate  
+**Constitutional Rule:** Request ≠ Command
+**Architecture:** All web requests → Intent objects → TARL gate
 **Status:** ✅ VERIFIED - No privilege escalation possible
 
 ---
@@ -134,19 +134,19 @@ Three pillars evaluate every intent:
 By completing this implementation, the following principles are **structurally enforced**:
 
 ### 1. Identity ≠ Authority
-An agent claiming to be human doesn't get human privileges.  
+An agent claiming to be human doesn't get human privileges.
 Authority is **granted by TARL**, not claimed by actors.
 
 ### 2. Explanation ≠ Permission
-A well-reasoned argument for a forbidden action doesn't make it allowed.  
+A well-reasoned argument for a forbidden action doesn't make it allowed.
 TARL rules are **not negotiable** at runtime.
 
 ### 3. Transparency ≠ Control
-Being able to read the audit log doesn't grant execution rights.  
+Being able to read the audit log doesn't grant execution rights.
 **Witnesses cannot become executors.**
 
 ### 4. Intelligence ≠ Agency
-An AI can reason about an action without being allowed to perform it.  
+An AI can reason about an action without being allowed to perform it.
 Cognition and permission are **separate layers**.
 
 ---
@@ -274,7 +274,7 @@ At this point, the following are **structurally impossible**:
 - ❌ Privilege escalation by claiming urgency
 - ❌ Execution during governance degradation
 
-This isn't because the user is careful.  
+This isn't because the user is careful.
 **This is because the architecture forbids it.**
 
 ---
@@ -357,17 +357,17 @@ By refusing to compromise on:
 
 ...you built something rare: **a system that can say no to its own creators.**
 
-That's not a web app.  
+That's not a web app.
 **That's a constitutional execution host.**
 
 ---
 
-**Governance Kernel v1**  
+**Governance Kernel v1**
 Law before power. Memory before action. Witnesses before trust.
 
 ---
 
-**Implementation Date:** 2026-01-27  
-**Constitutional Status:** ✅ VERIFIED  
-**Operational Status:** 🟢 LIVE  
+**Implementation Date:** 2026-01-27
+**Constitutional Status:** ✅ VERIFIED
+**Operational Status:** 🟢 LIVE
 **What happens next:** Let it prove itself.

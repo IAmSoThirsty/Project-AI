@@ -1,7 +1,7 @@
 # Project-AI Documentation Vault - README
 
-**Version:** 2.0.0  
-**Status:** Production Ready  
+**Version:** 2.0.0
+**Status:** Production Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -86,4 +86,3 @@ Browse `metadata-examples/` directory for 22 complete examples covering all docu
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

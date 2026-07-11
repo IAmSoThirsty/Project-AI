@@ -49,10 +49,10 @@ OversightAgent inherits from `KernelRoutedAgent`, ensuring **all monitoring oper
 ```python
 class OversightAgent(KernelRoutedAgent):
     """Monitors system state and enforces compliance rules.
-    
+
     All monitoring and compliance operations route through CognitionKernel.
     """
-    
+
     def __init__(self, kernel: CognitionKernel | None = None) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
@@ -60,7 +60,7 @@ class OversightAgent(KernelRoutedAgent):
             execution_type=ExecutionType.AGENT_ACTION,
             default_risk_level="medium",  # Oversight operations have inherent risk
         )
-        
+
         self.enabled: bool = False  # Currently disabled in v2.1.0
         self.monitors: dict = {}    # Placeholder for future monitor registry
 ```
@@ -127,10 +127,10 @@ While the current implementation only contains initialization logic, the archite
 def monitor_system_health(self) -> dict[str, Any]:
     """
     Execute health checks across CognitionKernel, memory, and execution queues.
-    
+
     Returns:
         dict with keys: kernel_status, memory_pressure, queue_depth, violations
-    
+
     Raises:
         PermissionError: If blocked by governance (recursive check)
     """
@@ -142,11 +142,11 @@ def monitor_system_health(self) -> dict[str, Any]:
 def validate_action(self, action: Action, context: dict) -> tuple[bool, str]:
     """
     Validate action against Four Laws and governance policies.
-    
+
     Args:
         action: Action object from CognitionKernel
         context: Execution context with risk assessment
-    
+
     Returns:
         (is_allowed: bool, reason: str)
     """
@@ -158,7 +158,7 @@ def validate_action(self, action: Action, context: dict) -> tuple[bool, str]:
 def audit_log(self, event: str, severity: str, metadata: dict) -> None:
     """
     Write immutable audit log entry for governance event.
-    
+
     Args:
         event: Human-readable event description
         severity: One of ["info", "warning", "critical"]
@@ -308,17 +308,17 @@ from app.agents.oversight import OversightAgent
 def initialize_system():
     # Create kernel first (central governance hub)
     kernel = CognitionKernel()
-    
+
     # Initialize oversight agent with kernel
     oversight = OversightAgent(kernel=kernel)
-    
+
     # Verify oversight is ready (though disabled in v2.1.0)
     if not oversight.enabled:
         logger.info("OversightAgent initialized but disabled (v2.1.0)")
-    
+
     # Attach to kernel for future use
     kernel.register_agent("oversight", oversight)
-    
+
     return kernel, oversight
 ```
 
@@ -329,7 +329,7 @@ def initialize_system():
 
 def process_user_command(command: str, oversight: OversightAgent):
     # User requests: "Delete all user data"
-    
+
     is_allowed, reason = oversight.validate_action(
         action="Delete all user data",
         context={
@@ -339,11 +339,11 @@ def process_user_command(command: str, oversight: OversightAgent):
             "order_conflicts_with_first": True  # Deletion causes harm
         }
     )
-    
+
     if not is_allowed:
         print(f"Command blocked: {reason}")
         return None
-    
+
     # Execute command
     return execute_deletion()
 
@@ -358,12 +358,12 @@ from app.agents.oversight import OversightAgent
 
 def oversight_monitoring_loop(oversight: OversightAgent):
     """Background thread for continuous system monitoring."""
-    
+
     while True:
         try:
             # Check system health every 30 seconds
             health = oversight.monitor_system_health()
-            
+
             # Escalate if critical issues detected
             if health["violations"] > 0:
                 oversight.audit_log(
@@ -371,12 +371,12 @@ def oversight_monitoring_loop(oversight: OversightAgent):
                     severity="critical",
                     metadata=health
                 )
-                
+
                 # Alert human oversight
                 send_alert_to_humans(health)
-            
+
             time.sleep(30)
-            
+
         except Exception as e:
             logger.error(f"Oversight monitoring error: {e}")
             time.sleep(60)  # Back off on errors
@@ -465,7 +465,7 @@ Results:
 
 **Cause**: This is **expected behavior in v2.1.0**. OversightAgent is architecturally integrated but functionally disabled.
 
-**Solution**: 
+**Solution**:
 ```python
 # To enable in future versions, set enabled flag after initialization
 oversight = OversightAgent(kernel=kernel)
@@ -489,7 +489,7 @@ def validate_action(self, action, context):
     # Check if we're already in a validation call
     if hasattr(_kernel_context, 'in_oversight_validation'):
         return True, "Recursive validation skipped"
-    
+
     _kernel_context.in_oversight_validation = True
     try:
         # Perform validation
@@ -518,11 +518,11 @@ def audit_log(self, event, severity, metadata):
         "severity": severity,
         "metadata": metadata
     }
-    
+
     # Persist to JSONL file
     log_path = Path("data/audit_logs") / f"{datetime.utcnow().strftime('%Y-%m-%d')}.jsonl"
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     with open(log_path, 'a') as f:
         f.write(json.dumps(log_entry) + '\n')
 ```
@@ -589,11 +589,11 @@ assert oversight.kernel is kernel
 
 ## Metadata
 
-**Document Maintainer**: Architecture Team  
-**Review Cycle**: Quarterly  
-**Next Review**: 2026-07-20  
-**Compliance**: SOC 2 Type II, ISO 27001  
-**Classification**: Internal Technical Documentation  
+**Document Maintainer**: Architecture Team
+**Review Cycle**: Quarterly
+**Next Review**: 2026-07-20
+**Compliance**: SOC 2 Type II, ISO 27001
+**Classification**: Internal Technical Documentation
 
 ---
 
@@ -601,4 +601,3 @@ assert oversight.kernel is kernel
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

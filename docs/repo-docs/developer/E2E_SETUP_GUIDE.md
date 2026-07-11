@@ -359,17 +359,17 @@ stages:
 e2e-tests:
   stage: test
   image: python:3.11
-  
+
   variables:
     E2E_ENV: ci
-  
+
   before_script:
     - pip install -r requirements.txt
     - pip install pytest pytest-cov pytest-xdist
-  
+
   script:
     - python -m e2e.cli --parallel --workers 4
-  
+
   artifacts:
     when: always
     paths:
@@ -381,7 +381,7 @@ e2e-tests:
       coverage_report:
         coverage_format: cobertura
         path: e2e/coverage/coverage.xml
-  
+
   coverage: '/TOTAL.*\s+(\d+%)$/'
 ```
 
@@ -392,12 +392,12 @@ Create `Jenkinsfile`:
 ```groovy
 pipeline {
     agent any
-    
+
     environment {
         E2E_ENV = 'ci'
         OPENAI_API_KEY = credentials('openai-api-key')
     }
-    
+
     stages {
         stage('Setup') {
             steps {
@@ -406,13 +406,13 @@ pipeline {
                 sh '. venv/bin/activate && pip install pytest pytest-cov pytest-xdist'
             }
         }
-        
+
         stage('E2E Tests') {
             steps {
                 sh '. venv/bin/activate && python -m e2e.cli --parallel --workers 4'
             }
         }
-        
+
         stage('Reports') {
             steps {
                 publishHTML([
@@ -420,14 +420,14 @@ pipeline {
                     reportFiles: 'e2e_report_*.html',
                     reportName: 'E2E Test Report'
                 ])
-                
+
                 junit 'e2e/artifacts/*/junit.xml'
-                
+
                 publishCoverage adapters: [cobertura('e2e/coverage/coverage.xml')]
             }
         }
     }
-    
+
     post {
         always {
             archiveArtifacts artifacts: 'e2e/reports/**, e2e/artifacts/**', allowEmptyArchive: true
@@ -540,7 +540,7 @@ def project_ai_system():
     from src.app.core.ai_systems import (
         FourLaws, AIPersona, MemoryExpansionSystem
     )
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         system = {
             'laws': FourLaws(),
@@ -699,5 +699,5 @@ For additional support:
 
 ---
 
-**Project-AI E2E Evaluation Pipeline - Setup Guide**  
+**Project-AI E2E Evaluation Pipeline - Setup Guide**
 Version 1.0.0 | 2026

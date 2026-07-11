@@ -19,8 +19,8 @@ version: 1.0.0
 
 # Project-AI Sovereign / Government Use License
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
+**Version:** 1.0.0
+**Effective Date:** February 8, 2026
 **Clearance Level:** Public (license itself is unclassified)
 
 ---
@@ -427,9 +427,9 @@ Sovereign entities (governments, military, intelligence agencies) operate under 
 
 ## CONTACT
 
-**Authorization Requests:** government@project-ai.dev  
-**Security/Compliance:** gov-compliance@project-ai.dev  
-**Incident Reporting:** gov-incidents@project-ai.dev  
+**Authorization Requests:** government@project-ai.dev
+**Security/Compliance:** gov-compliance@project-ai.dev
+**Incident Reporting:** gov-incidents@project-ai.dev
 **Legal:** legal@project-ai.dev
 
 ---

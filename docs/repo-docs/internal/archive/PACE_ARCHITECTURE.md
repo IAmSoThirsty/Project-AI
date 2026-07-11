@@ -36,8 +36,8 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/PACE_ARCHITECTURE.md
 ---
 # PACE Architecture
 
-**Version:** 1.0  
-**Last Updated:** 2026-01-23  
+**Version:** 1.0
+**Last Updated:** 2026-01-23
 **Status:** Architectural Specification
 
 ---
@@ -296,36 +296,36 @@ pace:
   engine:
     version: "1.0"
     mode: "production"  # development, production
-    
+
   identity:
     provider: "local"
     config: {...}
-    
+
   policy:
     framework: "four_laws"
     strict_mode: true
     config: {...}
-    
+
   cognition:
     reasoning_engine: "deliberative"
     config: {...}
-    
+
   agents:
     coordination: "hierarchical"
     config: {...}
-    
+
   workflows:
     persistence: true
     config: {...}
-    
+
   capabilities:
     sandboxing: true
     config: {...}
-    
+
   state:
     backend: "json"
     config: {...}
-    
+
   io:
     input_mode: "async"
     config: {...}

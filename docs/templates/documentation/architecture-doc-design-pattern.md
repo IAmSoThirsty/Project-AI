@@ -6,7 +6,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "active"
-author: 
+author:
   name: "<%tp.user.name || 'Architecture Team'%>"
 category: "architecture"
 tags: ["architecture", "design-pattern", "best-practice"]
@@ -18,8 +18,8 @@ summary: "Design pattern documentation for <%tp.file.title%> including problem c
 
 # Design Pattern: <%tp.file.title%>
 
-> **Pattern Category:** <%`${await tp.system.prompt('Category (Creational/Structural/Behavioral):') || 'Behavioral'}`%>  
-> **Difficulty:** <%`${await tp.system.prompt('Difficulty (Beginner/Intermediate/Advanced):') || 'Intermediate'}`%>  
+> **Pattern Category:** <%`${await tp.system.prompt('Category (Creational/Structural/Behavioral):') || 'Behavioral'}`%>
+> **Difficulty:** <%`${await tp.system.prompt('Difficulty (Beginner/Intermediate/Advanced):') || 'Intermediate'}`%>
 > **Applicability:** <%`${await tp.system.prompt('Use case area:') || 'General'}`%>
 
 ## Intent
@@ -163,9 +163,8 @@ result = strategy.execute("test")
 
 ---
 
-**Status:** Active  
+**Status:** Active
 **Maintainer:** Architecture Team
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -166,7 +166,7 @@ Retention:  Auto: 7 days or 20 saves | User: unlimited
 Access:     FastAPI endpoint or filesystem
 ```
 
-**Auto-Save Naming**: `auto_YYYYMMDD_HHMMSS.tar.gz`  
+**Auto-Save Naming**: `auto_YYYYMMDD_HHMMSS.tar.gz`
 **User-Save Naming**: `user_<name>_YYYYMMDD_HHMMSS.tar.gz`
 
 **Recovery Procedure**:
@@ -363,7 +363,7 @@ assert all(j.get("rights") for j in jurisdictions), "Incomplete jurisdiction con
 3. Expected: `Verdict: 5/5 PASS`
 4. If fails: Contact repository owner, investigate commit history
 
-**RTO**: 2 minutes (git clone on fast connection)  
+**RTO**: 2 minutes (git clone on fast connection)
 **RPO**: 0 (all commits on GitHub)
 
 ---
@@ -401,7 +401,7 @@ assert all(j.get("rights") for j in jurisdictions), "Incomplete jurisdiction con
    python start_api.py  # or docker-compose restart
    ```
 
-**RTO**: 5 minutes  
+**RTO**: 5 minutes
 **RPO**: 15 minutes (last auto-save)
 
 ---
@@ -438,7 +438,7 @@ assert all(j.get("rights") for j in jurisdictions), "Incomplete jurisdiction con
    assert load_all_jurisdictions()
    ```
 
-**RTO**: 10 minutes  
+**RTO**: 10 minutes
 **RPO**: 0 (git) + 15 minutes (save points for runtime state)
 
 ---
@@ -471,7 +471,7 @@ assert all(j.get("rights") for j in jurisdictions), "Incomplete jurisdiction con
    - Check save point timestamps for suspicious restore attempts
    - Review Windows event logs for unauthorized access
 
-**RTO**: 15 minutes  
+**RTO**: 15 minutes
 **RPO**: 15 minutes (bundled in auto-saves)
 
 **⚠️ CRITICAL**: Audit log loss triggers compliance investigation. Document timeline, root cause, and corrective actions.
@@ -519,7 +519,7 @@ docker-compose build
 docker-compose up -d
 ```
 
-**RTO**: 2-5 minutes  
+**RTO**: 2-5 minutes
 **RPO**: N/A (stateless services; state in data/)
 
 ---
@@ -580,7 +580,7 @@ docker-compose up -d
 3. Update `.env` with new keys
 4. Test services: `curl http://localhost:8001/health/live`
 
-**RTO**: 4 hours (OS reinstall) + 30 minutes (dev setup)  
+**RTO**: 4 hours (OS reinstall) + 30 minutes (dev setup)
 **RPO**: 15 minutes (save points) + uncommitted work lost
 
 ---
@@ -842,9 +842,9 @@ config/
 
 ## 15. Approval & Sign-off
 
-**Plan Owner**: Jeremy Karrick, Thirsty's Projects LLC  
-**Next Review Date**: 2026-08-19 (quarterly)  
-**Status**: Active  
+**Plan Owner**: Jeremy Karrick, Thirsty's Projects LLC
+**Next Review Date**: 2026-08-19 (quarterly)
+**Status**: Active
 
 **Approval**: This plan is version-controlled in git. Approval = commit to master branch.
 

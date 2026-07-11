@@ -172,7 +172,7 @@ TABLE
   priority as "Priority",
   due as "Deadline",
   completion + "%" as "Progress",
-  choice(completion < 50 AND priority = "critical", "🚨 URGENT", 
+  choice(completion < 50 AND priority = "critical", "🚨 URGENT",
          choice(completion < 30 AND priority = "high", "⚠️ WARNING", "✅ OK")) as "Alert"
 FROM "docs/dataview-examples"
 WHERE type = "project" AND status != "completed"
@@ -352,8 +352,8 @@ type: project
 created: <% tp.date.now("YYYY-MM-DD") %>
 due: <% tp.date.now("YYYY-MM-DD", 90) %>
 tags: []
-owner: 
-budget: 
+owner:
+budget:
 completion: 0
 ---
 \`\`\`

@@ -11,7 +11,7 @@ graph TB
 
     subgraph "Governance Pipeline (src/app/core/governance/)"
         INTAKE[Request Intake<br/>Normalization]
-        
+
         subgraph "Validation Tier 1: Constitutional"
             CONST[Constitutional Validator<br/>Asimov's Laws]
             ETHICS[Ethics Checker<br/>Harm Assessment]

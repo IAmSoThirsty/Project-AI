@@ -55,7 +55,7 @@ describe('The Triumvirate - Sample Tests', () => {
         version: '1.0.0',
         components: 3
       };
-      
+
       expect(project.name).toBe('The Triumvirate');
       expect(project.version).toBe('1.0.0');
       expect(project.components).toBe(3);

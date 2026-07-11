@@ -8,12 +8,12 @@
 module.exports = {
   // Test environment
   testEnvironment: 'node',
-  
+
   // Test match patterns
   testMatch: [
     '**/tests/**/*.test.js'
   ],
-  
+
   // Coverage configuration
   collectCoverageFrom: [
     'js/**/*.js',
@@ -21,7 +21,7 @@ module.exports = {
     '!**/node_modules/**',
     '!**/vendor/**'
   ],
-  
+
   // Coverage thresholds
   coverageThreshold: {
     global: {
@@ -31,31 +31,31 @@ module.exports = {
       statements: 70
     }
   },
-  
+
   // Ignore patterns
   testPathIgnorePatterns: [
     '/node_modules/',
     '/.git/'
   ],
-  
+
   // Verbose output
   verbose: true,
-  
+
   // Automatically clear mock calls between tests
   clearMocks: true,
-  
+
   // Collect coverage
   collectCoverage: false, // Set to true when running coverage
-  
+
   // Coverage directory
   coverageDirectory: 'coverage',
-  
+
   // Coverage reporters
   coverageReporters: ['text', 'lcov', 'html'],
-  
+
   // Maximum workers
   maxWorkers: '50%',
-  
+
   // Timeout
   testTimeout: 10000
 };

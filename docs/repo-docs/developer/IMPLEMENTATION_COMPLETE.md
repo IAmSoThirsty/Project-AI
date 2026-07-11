@@ -109,10 +109,10 @@ I have successfully completed all three requested tasks:
 ```python
 - run_async(task_id, func, on_result, on_error, *args, **kwargs)
   - Queue async tasks with callbacks
-  
+
 - wait_for_task(task_id, timeout_ms)
   - Wait for specific task completion
-  
+
 - cancel_all_tasks()
   - Clean up all active tasks
 ```

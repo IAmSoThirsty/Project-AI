@@ -51,8 +51,8 @@ test_coverage: null
 
 # Identity Engine Specification
 
-**Version:** 1.0  
-**Last Updated:** 2026-01-23  
+**Version:** 1.0
+**Last Updated:** 2026-01-23
 **Status:** Specification
 
 ---
@@ -141,15 +141,15 @@ The Identity Engine is responsible for managing user identities, authentication,
 class IdentityManager:
     """
     Manages user identity, authentication, and authorization.
-    
+
     This is the main entry point for all identity operations in the PACE system.
     It coordinates authentication providers, session management, and token issuance.
     """
-    
+
     def __init__(self, config: Dict[str, Any]):
         """
         Initialize the Identity Manager.
-        
+
         Args:
             config: Configuration containing:
                 - auth_provider: Authentication provider type ("local", "oauth", "ldap")
@@ -163,22 +163,22 @@ class IdentityManager:
         self.session_manager = SessionManager(config)
         self.token_manager = TokenManager(config)
         self.identity_store = IdentityStore(config)
-        
+
     def authenticate(self, credentials: Credentials) -> Identity:
         """
         Authenticate a user with provided credentials.
-        
+
         Supports multiple authentication methods:
         - Password-based (username + password)
         - Token-based (JWT token)
         - OAuth (OAuth token)
-        
+
         Args:
             credentials: User credentials
-            
+
         Returns:
             Identity: Authenticated user identity
-            
+
         Raises:
             AuthenticationError: If authentication fails
             RateLimitError: If rate limit exceeded
@@ -186,7 +186,7 @@ class IdentityManager:
         # Rate limiting check
         if self._is_rate_limited(credentials.username):
             raise RateLimitError("Too many authentication attempts")
-        
+
         # Delegate to auth provider
         try:
             identity = self.auth_provider.authenticate(credentials)
@@ -195,38 +195,38 @@ class IdentityManager:
         except AuthenticationError:
             self._increment_failure_count(credentials.username)
             raise
-    
+
     def verify_token(self, token: str) -> bool:
         """
         Verify an authentication token.
-        
+
         Args:
             token: JWT token to verify
-            
+
         Returns:
             bool: True if token is valid and not expired
         """
         return self.token_manager.verify(token)
-    
+
     def get_identity(self, user_id: str) -> Optional[Identity]:
         """
         Retrieve identity by user ID.
-        
+
         Args:
             user_id: Unique user identifier
-            
+
         Returns:
             Identity if found, None otherwise
         """
         return self.identity_store.get(user_id)
-    
+
     def create_session(self, identity: Identity) -> Session:
         """
         Create a new session for an authenticated identity.
-        
+
         Args:
             identity: Authenticated user identity
-            
+
         Returns:
             Session: New session with token
         """
@@ -234,35 +234,35 @@ class IdentityManager:
         token = self.token_manager.issue(identity, session.session_id)
         session.token = token
         return session
-    
+
     def end_session(self, session_id: str) -> None:
         """
         End a user session.
-        
+
         Args:
             session_id: Session identifier to terminate
         """
         self.session_manager.end(session_id)
         self.token_manager.revoke_by_session(session_id)
-    
+
     def register_user(self, username: str, password: str, roles: List[str] = None) -> Identity:
         """
         Register a new user.
-        
+
         Args:
             username: Unique username
             password: User password (will be hashed)
             roles: Optional list of roles
-            
+
         Returns:
             Identity: Newly created identity
-            
+
         Raises:
             IdentityError: If username already exists
         """
         if self.identity_store.exists(username):
             raise IdentityError(f"Username '{username}' already exists")
-        
+
         # Create identity
         identity = Identity(
             user_id=self._generate_user_id(),
@@ -271,22 +271,22 @@ class IdentityManager:
             permissions=self._get_default_permissions(roles or ["user"]),
             metadata={}
         )
-        
+
         # Store hashed password
         password_hash = self._hash_password(password)
         self.identity_store.store(identity, password_hash)
-        
+
         return identity
-    
+
     def update_password(self, user_id: str, old_password: str, new_password: str) -> None:
         """
         Update user password.
-        
+
         Args:
             user_id: User identifier
             old_password: Current password for verification
             new_password: New password to set
-            
+
         Raises:
             AuthenticationError: If old password is incorrect
         """
@@ -294,15 +294,15 @@ class IdentityManager:
         identity = self.get_identity(user_id)
         if not identity:
             raise IdentityError(f"User '{user_id}' not found")
-        
+
         credentials = Credentials(username=identity.username, password=old_password)
         if not self.auth_provider.verify_password(credentials):
             raise AuthenticationError("Current password is incorrect")
-        
+
         # Update to new password
         password_hash = self._hash_password(new_password)
         self.identity_store.update_password(user_id, password_hash)
-        
+
         # Invalidate all existing sessions
         self.session_manager.end_all_for_user(user_id)
 ```
@@ -326,18 +326,18 @@ class SessionManager:
     """
     Manages user sessions.
     """
-    
+
     def __init__(self, config: Dict[str, Any]):
         """
         Initialize session manager.
-        
+
         Args:
             config: Configuration with session_timeout
         """
         self.config = config
         self.sessions: Dict[str, Session] = {}
         self.session_timeout = config.get("session_timeout", 3600)
-    
+
     def create(self, identity: Identity) -> Session:
         """Create a new session for an identity."""
         session_id = self._generate_session_id()
@@ -350,19 +350,19 @@ class SessionManager:
         )
         self.sessions[session_id] = session
         return session
-    
+
     def get(self, session_id: str) -> Optional[Session]:
         """Get a session by ID."""
         session = self.sessions.get(session_id)
         if session and session.expires_at > datetime.now():
             return session
         return None
-    
+
     def end(self, session_id: str) -> None:
         """End a session."""
         if session_id in self.sessions:
             del self.sessions[session_id]
-    
+
     def end_all_for_user(self, user_id: str) -> None:
         """End all sessions for a user."""
         to_remove = [
@@ -371,7 +371,7 @@ class SessionManager:
         ]
         for sid in to_remove:
             del self.sessions[sid]
-    
+
     def cleanup_expired(self) -> None:
         """Remove expired sessions."""
         now = datetime.now()
@@ -412,11 +412,11 @@ class TokenManager:
     """
     Manages authentication tokens (JWT).
     """
-    
+
     def __init__(self, config: Dict[str, Any]):
         """
         Initialize token manager.
-        
+
         Args:
             config: Configuration with:
                 - secret_key: Secret key for JWT signing
@@ -426,15 +426,15 @@ class TokenManager:
         self.secret_key = config.get("secret_key", self._generate_secret())
         self.token_lifetime = config.get("token_lifetime", 3600)
         self.revoked_tokens: Set[str] = set()
-    
+
     def issue(self, identity: Identity, session_id: str) -> str:
         """
         Issue a new JWT token.
-        
+
         Args:
             identity: User identity
             session_id: Associated session ID
-            
+
         Returns:
             str: JWT token
         """
@@ -449,31 +449,31 @@ class TokenManager:
         # In real implementation, use a proper JWT library
         token = self._encode_jwt(payload)
         return token
-    
+
     def verify(self, token: str) -> bool:
         """
         Verify a JWT token.
-        
+
         Args:
             token: JWT token to verify
-            
+
         Returns:
             bool: True if valid and not expired
         """
         if token in self.revoked_tokens:
             return False
-        
+
         try:
             payload = self._decode_jwt(token)
             exp = payload.get("exp", 0)
             return datetime.now().timestamp() < exp
         except Exception:
             return False
-    
+
     def revoke(self, token: str) -> None:
         """Revoke a token."""
         self.revoked_tokens.add(token)
-    
+
     def revoke_by_session(self, session_id: str) -> None:
         """Revoke all tokens for a session."""
         # In real implementation, maintain token->session mapping

@@ -14,7 +14,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "<%`${await tp.system.prompt('ADR status (proposed/accepted/deprecated/superseded):') || 'proposed'}`%>"
-author: 
+author:
   name: "<%tp.user.name || 'Architecture Team'%>"
   email: ""
   github: ""
@@ -63,9 +63,9 @@ superseded_by: null
 
 # ADR-<%`${await tp.system.prompt('ADR number:') || 'XXX'}`%>: <%tp.file.title%>
 
-> **Status:** <%`${await tp.system.prompt('Status (PROPOSED/ACCEPTED/DEPRECATED/SUPERSEDED):') || 'PROPOSED'}`%>  
-> **Date:** <%tp.date.now("YYYY-MM-DD")%>  
-> **Deciders:** <%`${await tp.system.prompt('Deciders (e.g., Architecture Team):') || 'Architecture Team'}`%>  
+> **Status:** <%`${await tp.system.prompt('Status (PROPOSED/ACCEPTED/DEPRECATED/SUPERSEDED):') || 'PROPOSED'}`%>
+> **Date:** <%tp.date.now("YYYY-MM-DD")%>
+> **Deciders:** <%`${await tp.system.prompt('Deciders (e.g., Architecture Team):') || 'Architecture Team'}`%>
 > **Technical Story:** <%`${await tp.system.prompt('Issue/ticket reference (e.g., #123):') || '[Issue reference]'}`%>
 
 ---
@@ -497,10 +497,9 @@ We accept [trade-offs] in exchange for [benefits].
 
 ---
 
-**ADR Status:** <%`${await tp.system.prompt('Final status:') || 'PROPOSED'}`%>  
-**Next Review Date:** <%`${await tp.system.prompt('Next review date:') || '[Schedule review]'}`%>  
+**ADR Status:** <%`${await tp.system.prompt('Final status:') || 'PROPOSED'}`%>
+**Next Review Date:** <%`${await tp.system.prompt('Next review date:') || '[Schedule review]'}`%>
 **Maintainer:** <%tp.user.name || 'Architecture Team'%>
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -183,7 +183,7 @@ tls_config:
 prometheus_instance_1:
   external_labels:
     replica: 1
-    
+
 prometheus_instance_2:
   external_labels:
     replica: 2
@@ -268,7 +268,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=15d'
-      
+
   grafana:
     image: grafana/grafana:10.0.0
     volumes:
@@ -279,7 +279,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=changeme
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
-      
+
   alertmanager:
     image: prom/alertmanager:v0.26.0
     volumes:
@@ -298,7 +298,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: monitoring
-  
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet

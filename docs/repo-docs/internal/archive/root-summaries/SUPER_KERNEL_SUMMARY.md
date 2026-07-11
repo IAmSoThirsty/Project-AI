@@ -133,7 +133,7 @@ class KernelInterface(ABC):
     @abstractmethod
     def process(self, input_data, **kwargs) -> Any:
         pass
-    
+
     def route(self, task, *, source="agent", **kwargs) -> Any:
         return self.process(task, source=source, **kwargs)
 ```

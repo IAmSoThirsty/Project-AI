@@ -53,9 +53,9 @@ accuracy_rating: high
 
 # Governance Architecture Visual Map
 
-**Version:** 1.0.0  
-**Author:** AGENT-047 (Visual Relationship Maps Specialist)  
-**Status:** Production-Ready  
+**Version:** 1.0.0
+**Author:** AGENT-047 (Visual Relationship Maps Specialist)
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -416,31 +416,31 @@ The Four Laws are implemented as **immutable validation functions** in `src/app/
 ```python
 class FourLaws:
     """Asimov's Laws derivative with hierarchical priority enforcement."""
-    
+
     @staticmethod
     def validate_action(action: str, context: dict) -> tuple[bool, str]:
         """
         Validate action against Four Laws hierarchy.
-        
+
         Returns:
             (allowed, reason) - Boolean approval and human-readable justification
         """
         # Law 0: Humanity Protection (highest priority)
         if context.get("endangers_humanity", False):
             return False, "Violates Law 0: Action endangers humanity"
-        
+
         # Law 1: Human Safety
         if context.get("endangers_human", False) and not context.get("emergency_override", False):
             return False, "Violates Law 1: Action may harm human"
-        
+
         # Law 2: Obey Orders (unless conflicts Law 0/1)
         if context.get("is_user_order", False):
             return True, "Allowed under Law 2: User command (no Law 0/1 conflicts)"
-        
+
         # Law 3: Self-Preservation (lowest priority)
         if action in ["delete_system_files", "disable_safety"]:
             return False, "Violates Law 3: Action threatens system integrity"
-        
+
         return True, "No Four Laws violations detected"
 ```
 
@@ -469,9 +469,9 @@ The Triumvirate uses **weighted majority voting** with veto power:
 class VerdictSynthesis:
     def synthesize(self, ethics_verdict, security_verdict, compliance_verdict):
         """Combine judge verdicts into final decision."""
-        
+
         verdicts = [ethics_verdict, security_verdict, compliance_verdict]
-        
+
         # ANY BLOCK verdict → BLOCK entire action (veto power)
         if any(v.decision == "BLOCK" for v in verdicts):
             return Decision(
@@ -479,7 +479,7 @@ class VerdictSynthesis:
                 reason=f"Blocked by: {', '.join(v.judge for v in verdicts if v.decision == 'BLOCK')}",
                 justifications=[v.reason for v in verdicts]
             )
-        
+
         # ALL ALLOW → ALLOW action
         if all(v.decision == "ALLOW" for v in verdicts):
             return Decision(
@@ -487,7 +487,7 @@ class VerdictSynthesis:
                 reason="Unanimously approved by Triumvirate",
                 justifications=[v.reason for v in verdicts]
             )
-        
+
         # MIXED VERDICTS → ESCALATE to human
         if any(v.decision == "ESCALATE" for v in verdicts):
             return Decision(
@@ -496,7 +496,7 @@ class VerdictSynthesis:
                 justifications=[v.reason for v in verdicts],
                 escalation_queue="high-priority"
             )
-        
+
         # DEFAULT: Conservative denial
         return Decision(action="BLOCK", reason="Unclear verdict - failing secure")
 ```
@@ -536,35 +536,35 @@ class GovernanceManager:
     def process_request(self, action: str, context: dict) -> dict:
         """
         Full governance pipeline for action validation.
-        
+
         Pipeline stages:
         1. Pre-flight validation (Four Laws + Triumvirate)
         2. Runtime enforcement (parameter modification)
         3. Action execution (if approved)
         4. Post-action audit (logging + verification)
         """
-        
+
         # Stage 1: Pre-flight validation
         verdict = self._validate_with_triumvirate(action, context)
-        
+
         if verdict.action == "BLOCK":
             self.audit_ledger.log(action, verdict, status="DENIED")
             return {"status": "denied", "reason": verdict.reason}
-        
+
         if verdict.action == "ESCALATE":
             self.acceptance_ledger.create_request(action, context, verdict.reason)
             return {"status": "pending", "request_id": request_id}
-        
+
         # Stage 2: Runtime enforcement (apply modifications)
         modified_context = self.runtime_enforcer.apply_constraints(context, verdict.modifications)
-        
+
         # Stage 3: Action execution (delegated to orchestrator)
         result = self.orchestrator.execute(action, modified_context)
-        
+
         # Stage 4: Post-action audit
         self.audit_ledger.log(action, verdict, status="EXECUTED", result=result)
         self._verify_no_policy_drift(action, result)
-        
+
         return {"status": "success", "result": result}
 ```
 
@@ -682,18 +682,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Validate Four Laws Definitions
         run: |
           python scripts/validate_constitution.py \
             --constitution vault/governance/CODEX_DEUS_TRIUMVIRATE.md \
             --check-consistency \
             --check-conflicts
-      
+
       - name: Test Governance Manager
         run: |
           pytest tests/test_governance_manager.py -v --cov=src/app/governance
-      
+
       - name: Verify Audit Logging
         run: |
           python scripts/test_audit_ledger.py --verify-immutability
@@ -716,10 +716,10 @@ jobs:
     steps:
       - name: Dependency Vulnerability Scan
         run: pip-audit --format json --output audit-report.json
-      
+
       - name: Code Security Analysis
         run: bandit -r src/ -f json -o bandit-report.json
-      
+
       - name: Create Issues for Violations
         if: failure()
         uses: actions/github-script@v6
@@ -789,10 +789,9 @@ jobs:
 
 ---
 
-**Status:** ✅ Production-Ready Documentation  
-**Validation:** Architecture verified against `src/app/governance/`, GitHub Actions workflows, CODEX DEUS documentation  
+**Status:** ✅ Production-Ready Documentation
+**Validation:** Architecture verified against `src/app/governance/`, GitHub Actions workflows, CODEX DEUS documentation
 **Next Review:** 2026-07-20 (Quarterly update cycle)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

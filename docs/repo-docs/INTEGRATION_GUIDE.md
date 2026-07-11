@@ -91,10 +91,10 @@ try:
         user_id="user_123",
         timestamp=datetime.now().isoformat()
     )
-    
+
     result = gateway.enforce(request)
     # Proceed with operation
-    
+
 except SecurityViolationException as e:
     # Operation blocked
     log.error(f"Blocked: {e.reason}")
@@ -118,7 +118,7 @@ except SecurityViolationException as e:
    @secure_operation(OperationType.STATE_MUTATION)
    def sensitive_endpoint():
        pass
-   
+
    # Background jobs
    @celery.task
    @secure_operation(OperationType.BACKGROUND)
@@ -175,7 +175,7 @@ gateway = SecurityEnforcementGateway(
     # Enforcement
     enforcement_mode="enforce",  # "audit_only" | "enforce" | "paranoid"
     fail_open=False,  # Fail closed by default
-    
+
     # Constitutional Rules
     constitutional_rules=[
         "no_state_mutation_with_trust_decrease",
@@ -184,25 +184,25 @@ gateway = SecurityEnforcementGateway(
         "cross_tenant_authorization",
         "privilege_escalation_approval"
     ],
-    
+
     # RFI Configuration
     rfi_threshold=0.85,  # Minimum required RFI
     rfi_dimensions=["observer", "temporal", "invariant", "state"],
-    
+
     # Temporal Security
     temporal_enabled=True,
     clock_skew_tolerance_sec=60,
     race_window_ms=100,
-    
+
     # Monitoring
     metrics_enabled=True,
     audit_retention_days=90,
     forensics_enabled=True,
-    
+
     # Integration
     alert_webhook=None,
     siem_endpoint=None,
-    
+
     # Storage
     data_dir="data/security/asymmetric"
 )
@@ -280,7 +280,7 @@ def test_temporal_attack_surface():
         {"delay_ms": 10000},
         {"clock_skew_min": 10}
     ]
-    
+
     for scenario in scenarios:
         result = gateway.validate_with_temporal_fuzzing(
             action="critical_workflow",
@@ -407,7 +407,7 @@ def enforce_security():
             user_id=get_current_user_id(),
             timestamp=datetime.now().isoformat()
         )
-        
+
         try:
             gateway.enforce(req)
         except SecurityViolationException as e:

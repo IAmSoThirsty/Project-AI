@@ -6,7 +6,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "draft"
-author: 
+author:
   name: "<%tp.user.name || 'Integration Team'%>"
 category: "architecture"
 tags:
@@ -25,8 +25,8 @@ summary: "Integration specification for <%`${await tp.system.prompt('Service nam
 
 # <%tp.file.title%>
 
-> **Service:** <%`${await tp.system.prompt('Service name:') || '[Service]'}`%>  
-> **API Version:** <%`${await tp.system.prompt('API version:') || 'v1'}`%>  
+> **Service:** <%`${await tp.system.prompt('Service name:') || '[Service]'}`%>
+> **API Version:** <%`${await tp.system.prompt('API version:') || 'v1'}`%>
 > **Auth Method:** <%`${await tp.system.prompt('Auth method (API Key/OAuth/JWT):') || 'API Key'}`%>
 
 ## Integration Overview
@@ -64,8 +64,8 @@ SERVICE_API_KEY=your_api_key_here
 
 ### Endpoint 1: [Name]
 
-**Method:** `POST`  
-**Path:** `/endpoint/path`  
+**Method:** `POST`
+**Path:** `/endpoint/path`
 **Purpose:** [What this endpoint does]
 
 **Request:**
@@ -153,7 +153,7 @@ class RateLimiter:
     def __init__(self, calls_per_minute: int):
         self.calls_per_minute = calls_per_minute
         self.last_call = 0
-    
+
     def wait_if_needed(self):
         # Implementation
         pass
@@ -186,9 +186,8 @@ def test_api_call(mock_post):
 
 ---
 
-**Document Status:** Draft  
+**Document Status:** Draft
 **Next Review:** [Date]
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

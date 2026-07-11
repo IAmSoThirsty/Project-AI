@@ -14,7 +14,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "draft"
-author: 
+author:
   name: "<%tp.user.name || 'Documentation Team'%>"
   email: ""
   github: ""
@@ -68,9 +68,9 @@ dependencies_docs: []
 
 # <%tp.file.title%>
 
-> **Module Type:** Core Business Logic  
-> **Location:** `src/app/core/`  
-> **Status:** <%`${await tp.system.prompt('Module status (production/beta/experimental):') || 'production'}`%>  
+> **Module Type:** Core Business Logic
+> **Location:** `src/app/core/`
+> **Status:** <%`${await tp.system.prompt('Module status (production/beta/experimental):') || 'production'}`%>
 > **Last Updated:** <%tp.date.now("YYYY-MM-DD")%>
 
 ---
@@ -304,7 +304,7 @@ Input → Validation → Business Logic → State Update → Persistence → Res
 
 - **Required Files:** `data/[subdirectory]/filename.json`
 - **Optional Files:** [List]
-- **Environment Variables:** 
+- **Environment Variables:**
   - `VAR_NAME`: [Description]
 
 ---
@@ -410,12 +410,12 @@ class TestClassName:
     def instance(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             yield ClassName(data_dir=tmpdir)
-    
+
     def test_initialization(self, instance):
         """Verify instance initializes with correct defaults."""
         assert instance.param1 is not None
         assert os.path.exists(instance.data_dir)
-    
+
     def test_method_returns_expected_type(self, instance):
         """Verify method returns correct type."""
         result = instance.method("test_input")
@@ -574,10 +574,9 @@ def validate_input(value: str) -> bool:
 
 ---
 
-**Document Status:** <%`${await tp.system.prompt('Document status (draft/review/active):') || 'draft'}`%>  
-**Next Review Date:** [YYYY-MM-DD]  
+**Document Status:** <%`${await tp.system.prompt('Document status (draft/review/active):') || 'draft'}`%>
+**Next Review Date:** [YYYY-MM-DD]
 **Maintainer:** <%tp.user.name || 'Documentation Team'%>
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

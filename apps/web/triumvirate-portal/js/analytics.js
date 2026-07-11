@@ -10,13 +10,13 @@ const config = {
     measurementId: 'G-XXXXXXXXXX', // Replace with your GA4 Measurement ID
     enabled: false // Set to true when you have a GA4 ID
   },
-  
+
   // Performance monitoring
   performance: {
     enabled: true,
     sampleRate: 1.0 // 100% sampling
   },
-  
+
   // Error tracking
   errorTracking: {
     enabled: true,
@@ -41,7 +41,7 @@ function initializeGA4() {
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   window.gtag = gtag;
-  
+
   gtag('js', new Date());
   gtag('config', config.ga4.measurementId, {
     send_page_view: true,
@@ -56,7 +56,7 @@ function trackEvent(eventName, eventParams = {}) {
   if (typeof gtag !== 'undefined') {
     gtag('event', eventName, eventParams);
   }
-  
+
   // Also log to console in development
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     console.log('📊 Event:', eventName, eventParams);
@@ -84,7 +84,7 @@ function initializePerformanceMonitoring() {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
-        
+
         trackEvent('web_vitals', {
           metric_name: 'LCP',
           value: Math.round(lastEntry.renderTime || lastEntry.loadTime),
@@ -247,12 +247,12 @@ function initializeInteractionTracking() {
 // Initialize all tracking
 function initializeAnalytics() {
   console.log('📊 Initializing analytics and monitoring...');
-  
+
   initializeGA4();
   initializePerformanceMonitoring();
   initializeErrorTracking();
   initializeInteractionTracking();
-  
+
   console.log('✅ Analytics and monitoring initialized');
 }
 

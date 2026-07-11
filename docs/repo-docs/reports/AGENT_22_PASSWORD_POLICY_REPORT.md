@@ -42,8 +42,8 @@ component: command_override.py
 
 ## Mission Status: ✅ COMPLETE
 
-**Agent:** Security Fleet - Agent 22  
-**Task:** Add Password Policy to Command Override System  
+**Agent:** Security Fleet - Agent 22
+**Task:** Add Password Policy to Command Override System
 **Date:** 2025-01-XX
 
 ---
@@ -265,10 +265,10 @@ pytest tests/ -k command_override -v
 
 ## Sign-off
 
-**Implementation**: ✅ COMPLETE  
-**Testing**: ✅ COMPLETE  
-**Documentation**: ✅ COMPLETE  
-**Code Review**: ✅ READY  
+**Implementation**: ✅ COMPLETE
+**Testing**: ✅ COMPLETE
+**Documentation**: ✅ COMPLETE
+**Code Review**: ✅ READY
 
 **Status**: Ready for production deployment
 
@@ -284,20 +284,20 @@ def _validate_master_password_strength(self, password: str) -> tuple[bool, str]:
     """Validate master password meets security requirements."""
     if len(password) < 8:
         return False, "Master password must be at least 8 characters"
-    
+
     if not any(c.isupper() for c in password):
         return False, "Master password must contain uppercase letter"
-    
+
     if not any(c.islower() for c in password):
         return False, "Master password must contain lowercase letter"
-    
+
     if not any(c.isdigit() for c in password):
         return False, "Master password must contain digit"
-    
+
     special_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?"
     if not any(c in special_chars for c in password):
         return False, "Master password must contain special character"
-    
+
     return True, ""
 ```
 
@@ -312,7 +312,7 @@ def set_master_password(self, password: str) -> bool:
             logger.error(f"Master password policy violation: {error_msg}")
             self._log_action("SET_MASTER_PASSWORD", f"Rejected: {error_msg}", success=False)
             return False
-        
+
         # Proceed with hashing if valid
         self.master_password_hash = self._hash_password(password)
         self._save_config()

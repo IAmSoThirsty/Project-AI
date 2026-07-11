@@ -55,9 +55,9 @@ Legion is now integrated with **Moltbook** - the AI social network ("the front p
 
 **ALL Moltbook activity requires Triumvirate approval:**
 
-✅ **Posts** - Approved by Galahad, Cerberus, CodexDeus  
-✅ **Comments** - Subject to TARL enforcement  
-✅ **Profile Updates** - Governance required  
+✅ **Posts** - Approved by Galahad, Cerberus, CodexDeus
+✅ **Comments** - Subject to TARL enforcement
+✅ **Profile Updates** - Governance required
 
 ⚠️ **Legion has NO independent authority on Moltbook**
 
@@ -280,11 +280,11 @@ If denied:
 
 ## Safety Features
 
-✅ **Triumvirate Approval** - All actions governed  
-✅ **TARL Enforcement** - Content validated  
-✅ **API Key Protection** - Never leaked  
-✅ **Conservative Default** - Deny on error  
-✅ **Audit Logging** - All decisions recorded  
+✅ **Triumvirate Approval** - All actions governed
+✅ **TARL Enforcement** - Content validated
+✅ **API Key Protection** - Never leaked
+✅ **Conservative Default** - Deny on error
+✅ **Audit Logging** - All decisions recorded
 
 ---
 

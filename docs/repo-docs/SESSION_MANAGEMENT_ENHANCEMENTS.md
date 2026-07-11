@@ -1,8 +1,8 @@
 # SESSION MANAGEMENT ENHANCEMENTS
 
-**Security Fleet - Agent 11 Report**  
-**Classification**: P0 - Critical Security Enhancement  
-**Date**: 2024  
+**Security Fleet - Agent 11 Report**
+**Classification**: P0 - Critical Security Enhancement
+**Date**: 2024
 **Status**: Enhancement Roadmap
 
 ---
@@ -50,7 +50,7 @@ class CommandOverrideSystem:
     def __init__(self, data_dir: str = "data"):
         self.authenticated = False
         self.auth_timestamp = None  # Timestamp stored but NOT checked
-        
+
     def authenticate(self, password: str) -> bool:
         # Password verification (bcrypt/PBKDF2)
         if self._verify_bcrypt_or_pbkdf2(self.master_password_hash, password):
@@ -77,7 +77,7 @@ class SessionManager:
     def __init__(self, session_timeout_minutes: int = 60):
         self.session_timeout = session_timeout_minutes * 60
         self.sessions: dict[str, Session] = {}  # In-memory only
-        
+
     def create_session(self, user_id: str, ip_address: str, user_agent: str) -> Session:
         session = Session(
             session_id=secrets.token_urlsafe(32),  # Secure random ID ✅
@@ -85,7 +85,7 @@ class SessionManager:
             expires_at=time.time() + self.session_timeout
         )
         return session
-        
+
     def validate_session(self, session_id: str) -> tuple[bool, Session | None]:
         # Checks expiration but does NOT extend on activity ❌
         if time.time() > session.expires_at:
@@ -121,7 +121,7 @@ def login():
             "password": payload.get("password"),
         },
     )
-    
+
     if response["status"] == "success":
         return jsonify(
             success=True,
@@ -189,9 +189,9 @@ class UserManager:
 ### 🔴 **P0 - Critical Vulnerabilities**
 
 #### V1: Session Timeout Not Enforced (Desktop)
-**Location**: `src/app/core/command_override.py`  
-**Impact**: Authenticated session persists indefinitely  
-**Exploit**: Physical access to unlocked device grants permanent admin access  
+**Location**: `src/app/core/command_override.py`
+**Impact**: Authenticated session persists indefinitely
+**Exploit**: Physical access to unlocked device grants permanent admin access
 **CVSS**: 7.5 (High)
 
 ```python
@@ -213,9 +213,9 @@ def _is_session_valid(self) -> bool:
 ```
 
 #### V2: No Session Invalidation on Password Change
-**Location**: All auth modules  
-**Impact**: Compromised sessions remain valid after password reset  
-**Exploit**: Attacker maintains access even after victim changes password  
+**Location**: All auth modules
+**Impact**: Compromised sessions remain valid after password reset
+**Exploit**: Attacker maintains access even after victim changes password
 **CVSS**: 8.1 (High)
 
 **Affected Code**:
@@ -226,9 +226,9 @@ def _is_session_valid(self) -> bool:
 **Fix**: Implement global session invalidation on password change (see code examples below)
 
 #### V3: CSRF Token Not Rotated
-**Location**: `src/app/core/hydra_50_security.py`  
-**Impact**: Long-lived CSRF tokens increase attack window  
-**Exploit**: Stolen token remains valid for entire session duration  
+**Location**: `src/app/core/hydra_50_security.py`
+**Impact**: Long-lived CSRF tokens increase attack window
+**Exploit**: Stolen token remains valid for entire session duration
 **CVSS**: 6.5 (Medium)
 
 ```python
@@ -242,9 +242,9 @@ def create_session(self, user_id: str, ...) -> Session:
 **Fix**: Rotate CSRF token on every state-changing request
 
 #### V4: JWT Token Lifetime Too Long
-**Location**: `src/app/core/security/auth.py`  
-**Impact**: 24-hour tokens provide excessive attack window  
-**Exploit**: Stolen JWT grants 24-hour access  
+**Location**: `src/app/core/security/auth.py`
+**Impact**: 24-hour tokens provide excessive attack window
+**Exploit**: Stolen JWT grants 24-hour access
 **CVSS**: 7.0 (High)
 
 ```python
@@ -257,25 +257,25 @@ JWT_EXPIRATION_HOURS = 24  # ❌ OWASP recommends 15 minutes
 ### 🟡 **P1 - High Priority**
 
 #### V5: No Session Fixation Prevention
-**Location**: `src/app/core/hydra_50_security.py`  
-**Impact**: Attacker can pre-set session ID before victim login  
-**Exploit**: Session fixation attack allows session hijacking  
+**Location**: `src/app/core/hydra_50_security.py`
+**Impact**: Attacker can pre-set session ID before victim login
+**Exploit**: Session fixation attack allows session hijacking
 **CVSS**: 6.8 (Medium)
 
 **Fix**: Regenerate session ID after authentication
 
 #### V6: No Concurrent Session Limits
-**Location**: All session managers  
-**Impact**: Unlimited simultaneous sessions per user  
-**Exploit**: Credential sharing, account compromise goes undetected  
+**Location**: All session managers
+**Impact**: Unlimited simultaneous sessions per user
+**Exploit**: Credential sharing, account compromise goes undetected
 **CVSS**: 5.3 (Medium)
 
 **Fix**: Limit to 3 concurrent sessions, track devices
 
 #### V7: In-Memory Session Storage
-**Location**: `src/app/core/hydra_50_security.py`  
-**Impact**: Sessions lost on server restart, no horizontal scaling  
-**Exploit**: Service disruption, poor UX  
+**Location**: `src/app/core/hydra_50_security.py`
+**Impact**: Sessions lost on server restart, no horizontal scaling
+**Exploit**: Service disruption, poor UX
 **CVSS**: 4.0 (Medium)
 
 **Fix**: Persist sessions to Redis/SQLite with encryption
@@ -341,8 +341,8 @@ JWT_EXPIRATION_HOURS = 24  # ❌ OWASP recommends 15 minutes
    - Implement refresh token mechanism (7-day lifetime)
    - Add `/api/auth/refresh` endpoint
 
-**Priority**: P0  
-**Effort**: 8 hours  
+**Priority**: P0
+**Effort**: 8 hours
 **Risk**: Low (backward compatible with configuration)
 
 ### Enhancement 2: Invalidate Sessions on Password Change (P0)
@@ -364,8 +364,8 @@ JWT_EXPIRATION_HOURS = 24  # ❌ OWASP recommends 15 minutes
    - Store revoked token JTIs in Redis/SQLite
    - Check blacklist in `verify_jwt_token()`
 
-**Priority**: P0  
-**Effort**: 12 hours  
+**Priority**: P0
+**Effort**: 12 hours
 **Risk**: Medium (requires persistent storage)
 
 ### Enhancement 3: Rotate CSRF Tokens (P0)
@@ -383,8 +383,8 @@ JWT_EXPIRATION_HOURS = 24  # ❌ OWASP recommends 15 minutes
    - Store CSRF token in encrypted cookie
    - Require `X-CSRF-Token` header for state changes
 
-**Priority**: P0  
-**Effort**: 6 hours  
+**Priority**: P0
+**Effort**: 6 hours
 **Risk**: Low
 
 ### Enhancement 4: Prevent Session Fixation (P1)
@@ -402,8 +402,8 @@ JWT_EXPIRATION_HOURS = 24  # ❌ OWASP recommends 15 minutes
    - Issue new JWT after login (already done ✅)
    - Ensure old tokens are blacklisted if refresh token is used
 
-**Priority**: P1  
-**Effort**: 4 hours  
+**Priority**: P1
+**Effort**: 4 hours
 **Risk**: Low
 
 ### Enhancement 5: Limit Concurrent Sessions (P1)
@@ -425,8 +425,8 @@ JWT_EXPIRATION_HOURS = 24  # ❌ OWASP recommends 15 minutes
    - Allow manual session revocation
    - Show "Last login from [IP] on [device]"
 
-**Priority**: P1  
-**Effort**: 16 hours  
+**Priority**: P1
+**Effort**: 16 hours
 **Risk**: Medium (UX changes)
 
 ### Enhancement 6: Implement Secure Cookie Settings (P1)
@@ -446,8 +446,8 @@ JWT_EXPIRATION_HOURS = 24  # ❌ OWASP recommends 15 minutes
      ```
    - Set CSRF token cookie with same attributes
 
-**Priority**: P1  
-**Effort**: 2 hours  
+**Priority**: P1
+**Effort**: 2 hours
 **Risk**: Low
 
 ---
@@ -510,30 +510,30 @@ from datetime import datetime, timedelta
 class CommandOverrideSystem:
     def __init__(self, data_dir: str = "data"):
         # ... existing code ...
-        
+
         # Session timeout configuration (in seconds)
         self.session_idle_timeout = 3600  # 60 minutes
         self.session_absolute_timeout = 28800  # 8 hours
-        
+
         self.auth_timestamp = None
         self.last_activity = None
         self.session_created_at = None
-        
+
     def _is_session_valid(self) -> bool:
         """
         Validate session against idle and absolute timeouts.
-        
+
         Returns:
             True if session is valid, False if expired
         """
         if not self.authenticated:
             return False
-            
+
         if not self.auth_timestamp or not self.last_activity:
             return False
-        
+
         now = datetime.now()
-        
+
         # Check idle timeout (time since last activity)
         idle_seconds = (now - self.last_activity).total_seconds()
         if idle_seconds > self.session_idle_timeout:
@@ -544,7 +544,7 @@ class CommandOverrideSystem:
             )
             self.logout()
             return False
-        
+
         # Check absolute timeout (time since session creation)
         if self.session_created_at:
             absolute_seconds = (now - self.session_created_at).total_seconds()
@@ -556,17 +556,17 @@ class CommandOverrideSystem:
                 )
                 self.logout()
                 return False
-        
+
         return True
-    
+
     def _update_activity(self) -> None:
         """Update last activity timestamp (for sliding window)."""
         self.last_activity = datetime.now()
-    
+
     def authenticate(self, password: str) -> bool:
         """Authenticate with the master password."""
         # ... existing verification code ...
-        
+
         if self._verify_bcrypt_or_pbkdf2(self.master_password_hash, password):
             self.authenticated = True
             now = datetime.now()
@@ -575,9 +575,9 @@ class CommandOverrideSystem:
             self.session_created_at = now  # Track absolute session start
             self._log_action("AUTHENTICATE", "Authentication successful")
             return True
-        
+
         # ... existing failure code ...
-    
+
     def enable_master_override(self) -> bool:
         """Enable master override - disables ALL safety protocols."""
         # CRITICAL: Validate session before privileged operation
@@ -588,12 +588,12 @@ class CommandOverrideSystem:
                 success=False
             )
             return False
-        
+
         # Update activity on privileged action
         self._update_activity()
-        
+
         # ... existing override logic ...
-        
+
     def override_protocol(self, protocol_name: str, enabled: bool) -> bool:
         """Override a specific safety protocol."""
         # Session validation for ALL privileged operations
@@ -604,9 +604,9 @@ class CommandOverrideSystem:
                 success=False
             )
             return False
-        
+
         self._update_activity()
-        
+
         # ... existing protocol override logic ...
 ```
 
@@ -644,19 +644,19 @@ class SessionInfo:
 class SessionRegistry:
     """
     Centralized session tracking with persistence.
-    
+
     Features:
     - Track all active sessions per user
     - Invalidate all sessions on password change
     - Enforce concurrent session limits
     - Persist sessions to SQLite for restart resilience
     """
-    
+
     def __init__(self, db_path: str = "data/sessions.db"):
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._init_database()
-    
+
     def _init_database(self) -> None:
         """Initialize SQLite database schema."""
         with sqlite3.connect(self.db_path) as conn:
@@ -676,14 +676,14 @@ class SessionRegistry:
                 )
             """)
             conn.commit()
-    
+
     def register_session(self, session: SessionInfo) -> bool:
         """
         Register a new session.
-        
+
         Args:
             session: SessionInfo object
-            
+
         Returns:
             True if registered, False on error
         """
@@ -709,19 +709,19 @@ class SessionRegistry:
         except Exception as e:
             print(f"Error registering session: {e}")
             return False
-    
+
     def get_active_sessions(self, user_id: str) -> list[SessionInfo]:
         """
         Get all active (non-expired, non-revoked) sessions for a user.
-        
+
         Args:
             user_id: User identifier
-            
+
         Returns:
             List of SessionInfo objects
         """
         current_time = time.time()
-        
+
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.execute("""
@@ -731,7 +731,7 @@ class SessionRegistry:
                 AND is_revoked = 0
                 ORDER BY last_activity DESC
             """, (user_id, current_time))
-            
+
             sessions = []
             for row in cursor:
                 sessions.append(SessionInfo(
@@ -745,17 +745,17 @@ class SessionRegistry:
                     device_fingerprint=row['device_fingerprint'],
                     is_revoked=bool(row['is_revoked']),
                 ))
-            
+
             return sessions
-    
+
     def invalidate_all_sessions(self, user_id: str, reason: str = "password_change") -> int:
         """
         Invalidate ALL sessions for a user (e.g., on password change).
-        
+
         Args:
             user_id: User identifier
             reason: Reason for invalidation (for logging)
-            
+
         Returns:
             Number of sessions invalidated
         """
@@ -768,17 +768,17 @@ class SessionRegistry:
             """, (user_id,))
             count = cursor.rowcount
             conn.commit()
-        
+
         print(f"Invalidated {count} sessions for user {user_id} (reason: {reason})")
         return count
-    
+
     def invalidate_session(self, session_id: str) -> bool:
         """
         Invalidate a specific session.
-        
+
         Args:
             session_id: Session identifier
-            
+
         Returns:
             True if invalidated, False if not found
         """
@@ -790,14 +790,14 @@ class SessionRegistry:
             """, (session_id,))
             conn.commit()
             return cursor.rowcount > 0
-    
+
     def update_activity(self, session_id: str) -> bool:
         """
         Update last activity timestamp for sliding window timeout.
-        
+
         Args:
             session_id: Session identifier
-            
+
         Returns:
             True if updated, False if not found
         """
@@ -810,46 +810,46 @@ class SessionRegistry:
             """, (time.time(), session_id))
             conn.commit()
             return cursor.rowcount > 0
-    
+
     def enforce_concurrent_limit(self, user_id: str, max_sessions: int = 3) -> int:
         """
         Enforce concurrent session limit by revoking oldest sessions.
-        
+
         Args:
             user_id: User identifier
             max_sessions: Maximum allowed concurrent sessions
-            
+
         Returns:
             Number of sessions revoked
         """
         sessions = self.get_active_sessions(user_id)
-        
+
         if len(sessions) <= max_sessions:
             return 0
-        
+
         # Sort by last activity (oldest first)
         sessions.sort(key=lambda s: s.last_activity)
-        
+
         # Revoke oldest sessions beyond limit
         to_revoke = sessions[:len(sessions) - max_sessions]
         count = 0
-        
+
         for session in to_revoke:
             if self.invalidate_session(session.session_id):
                 count += 1
-        
+
         print(f"Enforced session limit for {user_id}: revoked {count} oldest sessions")
         return count
-    
+
     def cleanup_expired(self) -> int:
         """
         Clean up expired sessions from database.
-        
+
         Returns:
             Number of sessions deleted
         """
         current_time = time.time()
-        
+
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
                 DELETE FROM sessions
@@ -857,7 +857,7 @@ class SessionRegistry:
             """, (current_time,))
             count = cursor.rowcount
             conn.commit()
-        
+
         return count
 ```
 
@@ -872,32 +872,32 @@ class UserManager:
     def __init__(self, users_file="users.json"):
         # ... existing code ...
         self.session_registry = SessionRegistry()
-    
+
     def change_password(self, username: str, old_password: str, new_password: str) -> tuple[bool, str]:
         """
         Change user password and invalidate all active sessions.
-        
+
         Args:
             username: Username
             old_password: Current password (for verification)
             new_password: New password
-            
+
         Returns:
             Tuple of (success, message)
         """
         # Verify user exists
         if username not in self.users:
             return False, "User not found"
-        
+
         # Verify old password
         user_data = self.users[username]
         if not pwd_context.verify(old_password, user_data.get("password_hash", "")):
             return False, "Current password is incorrect"
-        
+
         # Validate new password strength
         if len(new_password) < 8:
             return False, "Password must be at least 8 characters"
-        
+
         # Hash new password
         try:
             new_hash = pwd_context.hash(new_password)
@@ -905,14 +905,14 @@ class UserManager:
             self.save_users()
         except Exception as e:
             return False, f"Error hashing password: {e}"
-        
+
         # CRITICAL: Invalidate ALL sessions for this user
         user_id = user_data.get("user_id", username)
         invalidated_count = self.session_registry.invalidate_all_sessions(
             user_id,
             reason="password_change"
         )
-        
+
         # Log the security event
         import logging
         logger = logging.getLogger(__name__)
@@ -920,7 +920,7 @@ class UserManager:
             f"Password changed for user {username}. "
             f"Invalidated {invalidated_count} active sessions."
         )
-        
+
         return True, f"Password changed successfully. {invalidated_count} sessions logged out."
 ```
 
@@ -943,14 +943,14 @@ _refresh_tokens: dict[str, dict] = {}  # {token: {username, expires_at, revoked}
 def generate_token_pair(username: str, role: str = "user") -> dict[str, str]:
     """
     Generate access + refresh token pair.
-    
+
     Returns:
         Dict with 'access_token' and 'refresh_token' keys
     """
     import jwt
-    
+
     now = datetime.now(timezone.utc)
-    
+
     # Generate short-lived access token (15 minutes)
     access_expires = now + timedelta(minutes=JWT_ACCESS_TOKEN_MINUTES)
     access_payload = {
@@ -961,11 +961,11 @@ def generate_token_pair(username: str, role: str = "user") -> dict[str, str]:
         "type": "access",
     }
     access_token = jwt.encode(access_payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
-    
+
     # Generate long-lived refresh token (7 days)
     refresh_expires = now + timedelta(days=JWT_REFRESH_TOKEN_DAYS)
     refresh_token = secrets.token_urlsafe(32)
-    
+
     # Store refresh token (in production: Redis with TTL)
     _refresh_tokens[refresh_token] = {
         "username": username,
@@ -973,12 +973,12 @@ def generate_token_pair(username: str, role: str = "user") -> dict[str, str]:
         "expires_at": refresh_expires,
         "revoked": False,
     }
-    
+
     logger.info(
         f"Generated token pair for {username}: "
         f"access expires {access_expires}, refresh expires {refresh_expires}"
     )
-    
+
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
@@ -988,33 +988,33 @@ def generate_token_pair(username: str, role: str = "user") -> dict[str, str]:
 def refresh_access_token(refresh_token: str) -> str | None:
     """
     Generate new access token from refresh token.
-    
+
     Args:
         refresh_token: Refresh token string
-        
+
     Returns:
         New access token if valid, None if invalid/expired/revoked
     """
     import jwt
-    
+
     # Validate refresh token
     if refresh_token not in _refresh_tokens:
         logger.warning("Refresh token not found")
         return None
-    
+
     token_data = _refresh_tokens[refresh_token]
-    
+
     # Check if revoked
     if token_data["revoked"]:
         logger.warning("Refresh token has been revoked")
         return None
-    
+
     # Check expiration
     if datetime.now(timezone.utc) > token_data["expires_at"]:
         logger.warning("Refresh token expired")
         del _refresh_tokens[refresh_token]  # Cleanup
         return None
-    
+
     # Generate new access token
     now = datetime.now(timezone.utc)
     access_expires = now + timedelta(minutes=JWT_ACCESS_TOKEN_MINUTES)
@@ -1025,21 +1025,21 @@ def refresh_access_token(refresh_token: str) -> str | None:
         "exp": int(access_expires.timestamp()),
         "type": "access",
     }
-    
+
     access_token = jwt.encode(access_payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
-    
+
     logger.info(f"Refreshed access token for {token_data['username']}")
-    
+
     return access_token
 
 
 def revoke_refresh_token(refresh_token: str) -> bool:
     """
     Revoke a refresh token (e.g., on logout or password change).
-    
+
     Args:
         refresh_token: Refresh token to revoke
-        
+
     Returns:
         True if revoked, False if not found
     """
@@ -1053,10 +1053,10 @@ def revoke_refresh_token(refresh_token: str) -> bool:
 def revoke_all_refresh_tokens(username: str) -> int:
     """
     Revoke ALL refresh tokens for a user (e.g., on password change).
-    
+
     Args:
         username: Username
-        
+
     Returns:
         Number of tokens revoked
     """
@@ -1065,7 +1065,7 @@ def revoke_all_refresh_tokens(username: str) -> int:
         if data["username"] == username and not data["revoked"]:
             data["revoked"] = True
             count += 1
-    
+
     logger.warning(f"Revoked {count} refresh tokens for {username}")
     return count
 ```
@@ -1087,7 +1087,7 @@ def login():
     payload = request.get_json(silent=True)
     if not payload:
         return jsonify(error="missing-json"), 400
-    
+
     # Authenticate user (existing logic)
     response = route_request(
         source="web",
@@ -1097,21 +1097,21 @@ def login():
             "password": payload.get("password"),
         },
     )
-    
+
     if response["status"] == "success":
         # Generate token pair instead of single token
         tokens = generate_token_pair(
             username=response["result"]["username"],
             role=response["result"].get("role", "user"),
         )
-        
+
         # Set refresh token in HttpOnly cookie
         resp = jsonify(
             success=True,
             access_token=tokens["access_token"],
             user=response["result"]["username"],
         )
-        
+
         resp.set_cookie(
             key="refresh_token",
             value=tokens["refresh_token"],
@@ -1120,7 +1120,7 @@ def login():
             samesite="Strict",
             max_age=7 * 24 * 60 * 60,  # 7 days
         )
-        
+
         return resp, 200
     else:
         return jsonify(success=False, error=response.get("error")), 401
@@ -1130,15 +1130,15 @@ def login():
 def refresh():
     """Refresh access token using refresh token from cookie."""
     refresh_token = request.cookies.get("refresh_token")
-    
+
     if not refresh_token:
         return jsonify(error="No refresh token provided"), 401
-    
+
     new_access_token = refresh_access_token(refresh_token)
-    
+
     if not new_access_token:
         return jsonify(error="Invalid or expired refresh token"), 401
-    
+
     return jsonify(
         success=True,
         access_token=new_access_token,
@@ -1149,13 +1149,13 @@ def refresh():
 def logout():
     """Logout and revoke refresh token."""
     refresh_token = request.cookies.get("refresh_token")
-    
+
     if refresh_token:
         revoke_refresh_token(refresh_token)
-    
+
     resp = jsonify(success=True, message="Logged out successfully")
     resp.set_cookie("refresh_token", "", expires=0)  # Clear cookie
-    
+
     return resp, 200
 ```
 
@@ -1170,58 +1170,58 @@ class SessionManager:
     def rotate_csrf_token(self, session_id: str) -> str | None:
         """
         Rotate CSRF token for a session.
-        
+
         Should be called after every state-changing request.
-        
+
         Args:
             session_id: Session identifier
-            
+
         Returns:
             New CSRF token, or None if session not found
         """
         if session_id not in self.sessions:
             return None
-        
+
         session = self.sessions[session_id]
-        
+
         # Generate new CSRF token
         new_csrf_token = secrets.token_urlsafe(32)
-        
+
         # Update session
         old_token = session.csrf_token
         session.csrf_token = new_csrf_token
-        
+
         logger.info(f"Rotated CSRF token for session {session_id}")
-        
+
         return new_csrf_token
-    
+
     def validate_csrf_token(self, session_id: str, provided_token: str) -> bool:
         """
         Validate CSRF token and rotate immediately.
-        
+
         Args:
             session_id: Session identifier
             provided_token: CSRF token from request
-            
+
         Returns:
             True if valid (before rotation), False otherwise
         """
         if session_id not in self.sessions:
             return False
-        
+
         session = self.sessions[session_id]
-        
+
         # Compare tokens (constant-time to prevent timing attacks)
         import hmac
         is_valid = hmac.compare_digest(session.csrf_token, provided_token)
-        
+
         if not is_valid:
             logger.warning(f"Invalid CSRF token for session {session_id}")
             return False
-        
+
         # Immediately rotate after successful validation
         self.rotate_csrf_token(session_id)
-        
+
         return True
 ```
 
@@ -1243,57 +1243,57 @@ class TestSessionTimeout:
     def test_idle_timeout_enforcement(self):
         """Test session expires after idle timeout."""
         from src.app.core.command_override import CommandOverrideSystem
-        
+
         system = CommandOverrideSystem()
         system.session_idle_timeout = 2  # 2 seconds for testing
         system.set_master_password("SecurePass123!")
-        
+
         # Authenticate
         assert system.authenticate("SecurePass123!")
-        
+
         # Session should be valid immediately
         assert system._is_session_valid()
-        
+
         # Wait for idle timeout
         time.sleep(3)
-        
+
         # Session should be expired
         assert not system._is_session_valid()
         assert not system.authenticated
-    
+
     def test_absolute_timeout_enforcement(self):
         """Test session expires after absolute timeout."""
         from src.app.core.command_override import CommandOverrideSystem
-        
+
         system = CommandOverrideSystem()
         system.session_absolute_timeout = 3  # 3 seconds
         system.set_master_password("SecurePass123!")
-        
+
         assert system.authenticate("SecurePass123!")
-        
+
         # Keep activity alive
         for _ in range(4):
             time.sleep(1)
             system._update_activity()  # Refresh idle timeout
-        
+
         # Idle timeout should be OK, but absolute timeout exceeded
         assert not system._is_session_valid()
-    
+
     def test_activity_extends_idle_timeout(self):
         """Test activity updates extend idle timeout."""
         from src.app.core.command_override import CommandOverrideSystem
-        
+
         system = CommandOverrideSystem()
         system.session_idle_timeout = 3  # 3 seconds
         system.set_master_password("SecurePass123!")
-        
+
         assert system.authenticate("SecurePass123!")
-        
+
         # Activity should extend timeout
         time.sleep(2)
         system._update_activity()
         time.sleep(2)
-        
+
         # Should still be valid (activity reset idle timer)
         assert system._is_session_valid()
 
@@ -1302,13 +1302,13 @@ class TestSessionInvalidation:
     def test_password_change_invalidates_sessions(self):
         """Test all sessions are invalidated on password change."""
         from src.app.core.user_manager import UserManager
-        
+
         manager = UserManager(users_file="test_users.json")
         registry = manager.session_registry
-        
+
         # Create user and sessions
         manager.create_user("testuser", "OldPass123!", role="user")
-        
+
         session1 = SessionInfo(
             session_id="sess1",
             user_id="testuser",
@@ -1320,23 +1320,23 @@ class TestSessionInvalidation:
             device_fingerprint="device1",
         )
         registry.register_session(session1)
-        
+
         # Verify session is active
         active = registry.get_active_sessions("testuser")
         assert len(active) == 1
-        
+
         # Change password
         success, msg = manager.change_password("testuser", "OldPass123!", "NewPass456!")
         assert success
-        
+
         # Verify all sessions invalidated
         active_after = registry.get_active_sessions("testuser")
         assert len(active_after) == 0
-    
+
     def test_concurrent_session_limit(self):
         """Test concurrent session limit enforcement."""
         registry = SessionRegistry(db_path="test_sessions.db")
-        
+
         # Create 5 sessions for same user
         for i in range(5):
             session = SessionInfo(
@@ -1350,16 +1350,16 @@ class TestSessionInvalidation:
                 device_fingerprint=f"device{i}",
             )
             registry.register_session(session)
-        
+
         # Enforce limit of 3
         revoked = registry.enforce_concurrent_limit("testuser", max_sessions=3)
-        
+
         assert revoked == 2  # Should revoke 2 oldest
-        
+
         # Verify only 3 remain
         active = registry.get_active_sessions("testuser")
         assert len(active) == 3
-        
+
         # Verify newest sessions remain (sess2, sess3, sess4)
         session_ids = {s.session_id for s in active}
         assert "sess2" in session_ids
@@ -1371,24 +1371,24 @@ class TestCSRFTokenRotation:
     def test_csrf_token_rotates_on_validation(self):
         """Test CSRF token is rotated after successful validation."""
         from src.app.core.hydra_50_security import SessionManager
-        
+
         manager = SessionManager()
         session = manager.create_session(
             user_id="test",
             ip_address="127.0.0.1",
             user_agent="TestAgent"
         )
-        
+
         original_token = session.csrf_token
-        
+
         # Validate token (should succeed and rotate)
         is_valid = manager.validate_csrf_token(session.session_id, original_token)
         assert is_valid
-        
+
         # Token should have changed
         new_token = manager.sessions[session.session_id].csrf_token
         assert new_token != original_token
-        
+
         # Old token should no longer be valid
         is_valid_again = manager.validate_csrf_token(session.session_id, original_token)
         assert not is_valid_again
@@ -1399,22 +1399,22 @@ class TestJWTRefreshToken:
         """Test access token expires after 15 minutes."""
         from src.app.core.security.auth import generate_token_pair, verify_jwt_token
         import jwt
-        
+
         tokens = generate_token_pair("testuser")
-        
+
         # Decode without verification to inspect expiry
         payload = jwt.decode(
             tokens["access_token"],
             options={"verify_signature": False}
         )
-        
+
         # Should expire in ~15 minutes (900 seconds)
         exp_time = payload["exp"]
         iat_time = payload["iat"]
         lifetime = exp_time - iat_time
-        
+
         assert 890 <= lifetime <= 910  # Allow 10s tolerance
-    
+
     def test_refresh_token_generates_new_access_token(self):
         """Test refresh token can generate new access token."""
         from src.app.core.security.auth import (
@@ -1422,20 +1422,20 @@ class TestJWTRefreshToken:
             refresh_access_token,
             verify_jwt_token,
         )
-        
+
         tokens = generate_token_pair("testuser")
-        
+
         # Use refresh token to get new access token
         new_access_token = refresh_access_token(tokens["refresh_token"])
-        
+
         assert new_access_token is not None
         assert new_access_token != tokens["access_token"]
-        
+
         # Verify new token is valid
         payload = verify_jwt_token(new_access_token)
         assert payload is not None
         assert payload.username == "testuser"
-    
+
     def test_revoked_refresh_token_fails(self):
         """Test revoked refresh token cannot generate new access token."""
         from src.app.core.security.auth import (
@@ -1443,13 +1443,13 @@ class TestJWTRefreshToken:
             revoke_refresh_token,
             refresh_access_token,
         )
-        
+
         tokens = generate_token_pair("testuser")
-        
+
         # Revoke refresh token
         revoked = revoke_refresh_token(tokens["refresh_token"])
         assert revoked
-        
+
         # Attempt to refresh (should fail)
         new_token = refresh_access_token(tokens["refresh_token"])
         assert new_token is None
@@ -1467,15 +1467,15 @@ class TestWebSessionManagement:
             "http://localhost:5000/api/auth/login",
             json={"username": "testuser", "password": "TestPass123!"},
         )
-        
+
         assert response.status_code == 200
         assert "refresh_token" in response.cookies
-        
+
         # Verify cookie attributes
         cookie = response.cookies["refresh_token"]
         assert cookie.secure  # HTTPS only
         assert cookie.httponly  # No JS access
-    
+
     def test_refresh_endpoint_extends_session(self):
         """Test /api/auth/refresh generates new access token."""
         # Login
@@ -1483,22 +1483,22 @@ class TestWebSessionManagement:
             "http://localhost:5000/api/auth/login",
             json={"username": "testuser", "password": "TestPass123!"},
         )
-        
+
         cookies = login_resp.cookies
-        
+
         # Refresh
         refresh_resp = requests.post(
             "http://localhost:5000/api/auth/refresh",
             cookies=cookies,
         )
-        
+
         assert refresh_resp.status_code == 200
         data = refresh_resp.json()
         assert "access_token" in data
-        
+
         # New token should be different
         assert data["access_token"] != login_resp.json()["access_token"]
-    
+
     def test_logout_clears_refresh_token(self):
         """Test logout revokes refresh token."""
         # Login
@@ -1506,23 +1506,23 @@ class TestWebSessionManagement:
             "http://localhost:5000/api/auth/login",
             json={"username": "testuser", "password": "TestPass123!"},
         )
-        
+
         cookies = login_resp.cookies
-        
+
         # Logout
         logout_resp = requests.post(
             "http://localhost:5000/api/auth/logout",
             cookies=cookies,
         )
-        
+
         assert logout_resp.status_code == 200
-        
+
         # Refresh should fail after logout
         refresh_resp = requests.post(
             "http://localhost:5000/api/auth/refresh",
             cookies=cookies,
         )
-        
+
         assert refresh_resp.status_code == 401
 ```
 
@@ -1535,20 +1535,20 @@ class TestSessionSecurityAttacks:
         # This would require session ID tracking before/after login
         # Verify: SessionManager.regenerate_session_id() is called on authenticate()
         pass
-    
+
     def test_csrf_token_rejection(self):
         """Test requests with invalid CSRF token are rejected."""
         # Login and get valid session
         # Make state-changing request with wrong CSRF token
         # Verify: Request is rejected with 403
         pass
-    
+
     def test_concurrent_sessions_enforced(self):
         """Test old sessions are terminated when limit exceeded."""
         # Create 4 sessions for same user
         # Verify: Oldest session is revoked
         pass
-    
+
     def test_stolen_jwt_unusable_after_password_change(self):
         """Test JWT is blacklisted after password change."""
         # Login and get JWT
@@ -1633,26 +1633,26 @@ class TestSessionSecurityAttacks:
 
 ## REFERENCES
 
-1. **OWASP Session Management Cheat Sheet**  
+1. **OWASP Session Management Cheat Sheet**
    https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
 
-2. **NIST SP 800-63B - Digital Identity Guidelines**  
-   Section 7.2: Session Management  
+2. **NIST SP 800-63B - Digital Identity Guidelines**
+   Section 7.2: Session Management
    https://pages.nist.gov/800-63-3/sp800-63b.html
 
-3. **CWE-384: Session Fixation**  
+3. **CWE-384: Session Fixation**
    https://cwe.mitre.org/data/definitions/384.html
 
-4. **CWE-613: Insufficient Session Expiration**  
+4. **CWE-613: Insufficient Session Expiration**
    https://cwe.mitre.org/data/definitions/613.html
 
-5. **JWT Best Practices (RFC 8725)**  
+5. **JWT Best Practices (RFC 8725)**
    https://datatracker.ietf.org/doc/html/rfc8725
 
-6. **PCI DSS Requirement 8.1.8**  
+6. **PCI DSS Requirement 8.1.8**
    Session timeout ≤ 15 minutes of inactivity
 
-7. **GDPR Article 32**  
+7. **GDPR Article 32**
    Pseudonymization and encryption of personal data (includes session data)
 
 ---
@@ -1672,7 +1672,7 @@ CREATE TABLE sessions (
     user_agent TEXT,
     device_fingerprint TEXT,
     is_revoked INTEGER DEFAULT 0,
-    
+
     INDEX idx_user_id (user_id),
     INDEX idx_expires_at (expires_at),
     INDEX idx_revoked (is_revoked)
@@ -1684,7 +1684,7 @@ CREATE TABLE jwt_blacklist (
     revoked_at REAL NOT NULL,
     expires_at REAL NOT NULL,    -- When we can safely delete this entry
     reason TEXT,                 -- 'logout', 'password_change', 'manual'
-    
+
     INDEX idx_expires_at (expires_at)
 );
 
@@ -1695,7 +1695,7 @@ CREATE TABLE refresh_tokens (
     expires_at REAL NOT NULL,
     is_revoked INTEGER DEFAULT 0,
     device_fingerprint TEXT,
-    
+
     INDEX idx_user_id (user_id),
     INDEX idx_expires_at (expires_at)
 );
@@ -1741,14 +1741,14 @@ class SecurityConfig:
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = 'Strict'
     SESSION_COOKIE_NAME = '__Host-session'
-    
+
     # Session timeouts
     PERMANENT_SESSION_LIFETIME = 3600  # 60 minutes
-    
+
     # CSRF protection
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = None  # Rely on session expiry
-    
+
     # Rate limiting
     RATELIMIT_STORAGE_URL = 'memory://'
     RATELIMIT_STRATEGY = 'fixed-window'

@@ -19,9 +19,9 @@ version: 1.0.0
 
 # Jurisdictional Annex: European Union (GDPR)
 
-**Version:** 1.0.0  
-**Jurisdiction:** European Union (EU/EEA)  
-**Regulation:** General Data Protection Regulation (GDPR) - Regulation (EU) 2016/679  
+**Version:** 1.0.0
+**Jurisdiction:** European Union (EU/EEA)
+**Regulation:** General Data Protection Regulation (GDPR) - Regulation (EU) 2016/679
 **Effective Date:** February 8, 2026
 
 ---
@@ -80,7 +80,7 @@ Users have the following rights under GDPR:
   - Objection to processing and no overriding legitimate grounds
   - Data unlawfully processed
 
-**Limitations:** 
+**Limitations:**
 - Acceptance ledger entries retained permanently for legal compliance
 - Anonymized/pseudonymized data may be retained
 - Data necessary for legal claims or compliance not deleted

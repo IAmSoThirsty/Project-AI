@@ -318,7 +318,7 @@ Edit the ` ```mermaid` block in the `.md` file:
 sequenceDiagram
     participant A
     participant B
-    
+
     A->>B: Updated message
     B-->>A: Updated response
 ```

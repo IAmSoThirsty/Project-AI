@@ -13,9 +13,9 @@ review_cycle: quarterly
 ---
 # AI Safety Overview: Corrigibility, Interpretability, and Robustness
 
-**Document Version:** 1.0  
-**Effective Date:** 2026-02-05  
-**Status:** Research and Operations Framework  
+**Document Version:** 1.0
+**Effective Date:** 2026-02-05
+**Status:** Research and Operations Framework
 **Target Audience:** AI Safety Researchers, Red Team Members, Ethics Review Board
 
 ---
@@ -627,11 +627,11 @@ AI safety is not a milestone to reach—it is a **continuous practice** requirin
 **Document Maintenance:**
 This document is reviewed quarterly and updated based on research findings and operational experience.
 
-**Last Updated:** 2026-02-05  
+**Last Updated:** 2026-02-05
 **Next Review:** 2026-05-05
 
 ---
 
-**Prepared by:** AI Safety Research Team  
-**Approved by:** Ethics Review Board  
+**Prepared by:** AI Safety Research Team
+**Approved by:** Ethics Review Board
 **Status:** Binding Framework

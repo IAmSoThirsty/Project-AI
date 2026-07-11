@@ -13,4 +13,3 @@ Reduce {} to half its length while preserving these elements:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

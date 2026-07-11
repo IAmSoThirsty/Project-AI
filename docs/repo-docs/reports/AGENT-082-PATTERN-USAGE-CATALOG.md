@@ -15,11 +15,11 @@ related_docs:
 
 # AGENT-082: Design Pattern → Usage Catalog
 
-**Mission:** Comprehensive mapping of design patterns to actual usage examples across Project-AI codebase  
-**Pattern Count:** 22 documented patterns  
-**Usage Examples Mapped:** 300+ bidirectional wiki links  
-**Quality Gate:** ✅ All major patterns linked to usage examples  
-**Validation:** ✅ Zero dangling pattern references  
+**Mission:** Comprehensive mapping of design patterns to actual usage examples across Project-AI codebase
+**Pattern Count:** 22 documented patterns
+**Usage Examples Mapped:** 300+ bidirectional wiki links
+**Quality Gate:** ✅ All major patterns linked to usage examples
+**Validation:** ✅ Zero dangling pattern references
 **Status:** COMPLETE
 
 ---
@@ -64,20 +64,20 @@ This catalog provides a complete cross-reference between design patterns documen
 
 ### Pattern 1.1: Tuple Return Validation
 
-**Pattern ID:** `tuple-return-validation`  
-**Category:** Validation  
+**Pattern ID:** `tuple-return-validation`
+**Category:** Validation
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-11-tuple-return-validation]]
 
 #### Canonical Implementation
 
-📄 **File:** [[utils/validators.py]]  
+📄 **File:** [[utils/validators.py]]
 **Signature:** `def validate_X(value: Any) -> tuple[bool, str]`
 
 ```python
 def validate_username(username: str) -> tuple[bool, str]:
     """
     Standard validation pattern.
-    
+
     Returns:
         (True, "") if valid
         (False, "error message") if invalid
@@ -131,8 +131,8 @@ def validate_username(username: str) -> tuple[bool, str]:
 
 ### Pattern 1.2: Exception-Based Validation
 
-**Pattern ID:** `exception-validation`  
-**Category:** Validation  
+**Pattern ID:** `exception-validation`
+**Category:** Validation
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-12-exception-based-validation]]
 
 #### Canonical Implementation
@@ -195,13 +195,13 @@ Exception-based validation is **intentionally limited** to security contexts whe
 
 ### Pattern 2.1: JSON State Persistence
 
-**Pattern ID:** `json-state-persistence`  
-**Category:** Persistence  
+**Pattern ID:** `json-state-persistence`
+**Category:** Persistence
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-21-json-state-persistence]]
 
 #### Canonical Implementation
 
-📄 **File:** [[src/app/core/ai_systems.py]]  
+📄 **File:** [[src/app/core/ai_systems.py]]
 **Systems:** AIPersona, MemoryExpansionSystem, LearningRequestManager
 
 ```python
@@ -210,7 +210,7 @@ class StatefulSystem:
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)  # CRITICAL
         self.state = self._load_state()
-    
+
     def _load_state(self) -> dict:
         """Load state from JSON file."""
         state_file = self.data_dir / "state.json"
@@ -218,7 +218,7 @@ class StatefulSystem:
             with open(state_file) as f:
                 return json.load(f)
         return self._default_state()
-    
+
     def _save_state(self) -> None:
         """Save state to JSON file atomically."""
         state_file = self.data_dir / "state.json"
@@ -227,7 +227,7 @@ class StatefulSystem:
         with open(temp_file, "w") as f:
             json.dump(self.state, f, indent=2)
         temp_file.replace(state_file)
-    
+
     def update_state(self, key: str, value: Any):
         """Update state and persist immediately."""
         self.state[key] = value
@@ -365,10 +365,10 @@ def persona():
 def test_state_persistence(persona):
     """Test state survives save/load cycle."""
     persona.adjust_trait("curiosity", 0.1)
-    
+
     # Simulate restart by loading new instance
     new_persona = AIPersona(data_dir=persona.data_dir)
-    
+
     assert new_persona.personality["curiosity"] == persona.personality["curiosity"]
 ```
 
@@ -378,8 +378,8 @@ def test_state_persistence(persona):
 
 ### Pattern 2.2: Encrypted Persistence
 
-**Pattern ID:** `encrypted-persistence`  
-**Category:** Persistence  
+**Pattern ID:** `encrypted-persistence`
+**Category:** Persistence
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-22-encrypted-persistence]]
 
 #### Canonical Implementation
@@ -400,14 +400,14 @@ class EncryptedStorage:
             key = Fernet.generate_key()
             self.cipher_suite = Fernet(key)
             # Save key to .env or secrets manager
-    
+
     def save_encrypted(self, data: dict, file_path: str):
         """Save data with Fernet encryption."""
         json_data = json.dumps(data).encode()
         encrypted = self.cipher_suite.encrypt(json_data)
         with open(file_path, "wb") as f:
             f.write(encrypted)
-    
+
     def load_encrypted(self, file_path: str) -> dict:
         """Load and decrypt data."""
         with open(file_path, "rb") as f:
@@ -517,8 +517,8 @@ print(Fernet.generate_key().decode())
 
 ### Pattern 3.1: PyQt6 QRunnable (GUI Thread Safety)
 
-**Pattern ID:** `qrunnable-async`  
-**Category:** Async  
+**Pattern ID:** `qrunnable-async`
+**Category:** Async
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-31-pyqt6-qrunnable-gui-thread-safety]]
 
 #### Canonical Implementation
@@ -538,18 +538,18 @@ class WorkerSignals(QObject):
 class AsyncWorker(QRunnable):
     """
     Base async worker for GUI operations.
-    
+
     Prevents GUI freezing during long-running operations by executing
     work in background thread and emitting signals for results.
     """
-    
+
     def __init__(self, func, *args, **kwargs):
         super().__init__()
         self.func = func
         self.args = args
         self.kwargs = kwargs
         self.signals = WorkerSignals()
-    
+
     def run(self):
         """Execute function in background thread."""
         try:
@@ -665,7 +665,7 @@ worker.signals.finished.connect(self.enable_buttons)
 ```python
 class ImageGenerationWorker(QRunnable):
     """Worker for async image generation (20-60 second operations)."""
-    
+
     def __init__(self, generator, prompt, style, size, backend):
         super().__init__()
         self.generator = generator
@@ -674,7 +674,7 @@ class ImageGenerationWorker(QRunnable):
         self.size = size
         self.backend = backend
         self.signals = WorkerSignals()
-    
+
     def run(self):
         """Generate image in background thread."""
         try:
@@ -683,7 +683,7 @@ class ImageGenerationWorker(QRunnable):
             if not is_safe:
                 self.signals.error.emit(Exception(f"Content filter: {reason}"))
                 return
-            
+
             self.signals.status.emit("Generating image...")
             image_path, metadata = self.generator.generate(
                 prompt=self.prompt,
@@ -691,7 +691,7 @@ class ImageGenerationWorker(QRunnable):
                 size=self.size,
                 backend=self.backend
             )
-            
+
             self.signals.result.emit((image_path, metadata))
         except Exception as e:
             self.signals.error.emit(e)
@@ -703,7 +703,7 @@ def on_generate_clicked(self):
     """Handle generate button click."""
     self.generate_button.setEnabled(False)  # Disable during generation
     self.status_label.setText("Starting generation...")
-    
+
     worker = ImageGenerationWorker(
         self.generator,
         self.prompt_input.text(),
@@ -711,12 +711,12 @@ def on_generate_clicked(self):
         self.size_selector.currentText(),
         self.backend_selector.currentText()
     )
-    
+
     worker.signals.status.connect(self.status_label.setText)
     worker.signals.result.connect(self.on_image_generated)
     worker.signals.error.connect(self.on_generation_error)
     worker.signals.finished.connect(lambda: self.generate_button.setEnabled(True))
-    
+
     QThreadPool.globalInstance().start(worker)
 ```
 
@@ -730,9 +730,9 @@ def on_generate_clicked(self):
 
 ### Pattern 3.2: Retry with Exponential Backoff
 
-**Pattern ID:** `retry-backoff`  
-**Category:** Async  
-**Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-32-retry-with-exponential-backoff]]  
+**Pattern ID:** `retry-backoff`
+**Category:** Async
+**Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-32-retry-with-exponential-backoff]]
 **Status:** ⚠️ UNDERUTILIZED (see [[#underutilized-patterns-report]])
 
 #### Canonical Implementation
@@ -752,20 +752,20 @@ def retry_on_failure(
 ) -> Any:
     """
     Retry function with exponential backoff.
-    
+
     Args:
         func: Function to retry
         max_retries: Maximum number of retries (default: 3)
         retry_delay: Initial delay between retries in seconds (default: 1.0)
         backoff_factor: Multiply delay by this each retry (default: 2.0)
         exceptions: Tuple of exceptions to catch (default: all exceptions)
-    
+
     Returns:
         Result of func()
-    
+
     Raises:
         Last exception if all retries exhausted
-    
+
     Example:
         >>> result = retry_on_failure(
         ...     lambda: requests.get("https://api.example.com"),
@@ -777,7 +777,7 @@ def retry_on_failure(
     """
     last_exception = None
     delay = retry_delay
-    
+
     for attempt in range(max_retries):
         try:
             return func()
@@ -792,7 +792,7 @@ def retry_on_failure(
                 delay *= backoff_factor
             else:
                 logger.error(f"All {max_retries} retries exhausted")
-    
+
     raise last_exception
 ```
 
@@ -855,11 +855,11 @@ def retry_with_jitter(
 ) -> Any:
     """
     Retry with jittered exponential backoff (prevents thundering herd).
-    
+
     Jitter: Randomize delay to avoid synchronized retries across clients.
     """
     last_exception = None
-    
+
     for attempt in range(max_retries):
         try:
             return func()
@@ -868,13 +868,13 @@ def retry_with_jitter(
             if attempt < max_retries - 1:
                 # Exponential backoff: base * 2^attempt
                 delay = min(base_delay * (2 ** attempt), max_delay)
-                
+
                 # Add jitter: random delay in [0, delay]
                 if jitter:
                     delay = random.uniform(0, delay)
-                
+
                 time.sleep(delay)
-    
+
     raise last_exception
 ```
 
@@ -895,8 +895,8 @@ def retry_with_jitter(
 
 ### Pattern 4.1: Centralized Error Handler
 
-**Pattern ID:** `centralized-error-handler`  
-**Category:** Error Handling  
+**Pattern ID:** `centralized-error-handler`
+**Category:** Error Handling
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-41-centralized-error-handler]]
 
 #### Canonical Implementation
@@ -909,7 +909,7 @@ from PyQt6.QtWidgets import QMessageBox
 
 class ErrorHandler:
     """Centralized error handling for consistent logging and UI feedback."""
-    
+
     @staticmethod
     def handle_exception(
         exception: Exception,
@@ -919,7 +919,7 @@ class ErrorHandler:
     ) -> None:
         """
         Handle exception with logging and optional dialog.
-        
+
         Args:
             exception: Exception to handle
             context: Operation context (e.g., "User Login", "Image Generation")
@@ -928,10 +928,10 @@ class ErrorHandler:
         """
         error_message = f"{context}: {str(exception)}"
         logging.error(error_message, exc_info=True)
-        
+
         if show_dialog:
             QMessageBox.critical(parent, "Error", error_message)
-    
+
     @staticmethod
     def handle_warning(
         message: str,
@@ -941,7 +941,7 @@ class ErrorHandler:
     ) -> None:
         """
         Handle warning with logging and optional dialog.
-        
+
         Args:
             message: Warning message
             context: Operation context
@@ -951,7 +951,7 @@ class ErrorHandler:
         logging.warning(f"{context}: {message}")
         if show_dialog:
             QMessageBox.warning(parent, context, message)
-    
+
     @staticmethod
     def handle_info(
         message: str,
@@ -1012,7 +1012,7 @@ class ErrorHandler:
 class MyPanel(QWidget):
     def __init__(self):
         self.error_handler = ErrorHandler()
-    
+
     def on_button_click(self):
         try:
             result = self.risky_operation()
@@ -1072,8 +1072,8 @@ worker.signals.error.connect(
 
 ### Pattern 4.2: Try-Except with Fallback
 
-**Pattern ID:** `try-except-fallback`  
-**Category:** Error Handling  
+**Pattern ID:** `try-except-fallback`
+**Category:** Error Handling
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-42-try-except-with-fallback]]
 
 #### Canonical Implementation
@@ -1082,12 +1082,12 @@ worker.signals.error.connect(
 def safe_operation(risky_func: Callable, default=None, log_errors=True):
     """
     Execute function with fallback on error.
-    
+
     Args:
         risky_func: Function that might raise exception
         default: Default value to return on error
         log_errors: Log errors (default: True)
-    
+
     Returns:
         Result of risky_func() or default value
     """
@@ -1162,8 +1162,8 @@ gpu_enabled = safe_operation(
 
 ### Pattern 5.1: Module-Level Logger
 
-**Pattern ID:** `module-logger`  
-**Category:** Logging  
+**Pattern ID:** `module-logger`
+**Category:** Logging
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-51-module-level-logger]]
 
 #### Canonical Implementation
@@ -1284,8 +1284,8 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)  # Suppress HTTP debug
 
 ### Pattern 5.2: Structured Logging Context
 
-**Pattern ID:** `structured-logging`  
-**Category:** Logging  
+**Pattern ID:** `structured-logging`
+**Category:** Logging
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-52-structured-logging-context]]
 
 #### Canonical Implementation
@@ -1361,8 +1361,8 @@ logger.info("Processing user %s with %d items", user_id, len(items))
 
 ### Pattern 6.1: Layered Configuration
 
-**Pattern ID:** `layered-config`  
-**Category:** Configuration  
+**Pattern ID:** `layered-config`
+**Category:** Configuration
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md#pattern-61-layered-configuration]]
 
 #### Canonical Implementation
@@ -1377,18 +1377,18 @@ from typing import Any
 
 class Config:
     """Layered configuration: Defaults → File → Environment."""
-    
+
     def __init__(self, config_file: str = None):
         # Layer 1: Defaults (lowest priority)
         self.config = self._get_defaults()
-        
+
         # Layer 2: File-based config (medium priority)
         if config_file and Path(config_file).exists():
             self.config.update(self._load_file(config_file))
-        
+
         # Layer 3: Environment variables (highest priority)
         self.config.update(self._load_env())
-    
+
     def _get_defaults(self) -> dict[str, Any]:
         """Default configuration values."""
         return {
@@ -1398,7 +1398,7 @@ class Config:
             "max_retries": 3,
             "enable_analytics": False
         }
-    
+
     def _load_file(self, config_file: str) -> dict[str, Any]:
         """Load configuration from JSON/TOML file."""
         if config_file.endswith(".json"):
@@ -1409,17 +1409,17 @@ class Config:
             with open(config_file) as f:
                 return toml.load(f)
         return {}
-    
+
     def _load_env(self) -> dict[str, Any]:
         """Load configuration from environment variables."""
         config = {}
         prefix = "APP_"
-        
+
         for key, value in os.environ.items():
             if key.startswith(prefix):
                 # APP_LOG_LEVEL → log_level
                 config_key = key[len(prefix):].lower()
-                
+
                 # Type conversion
                 if value.lower() in ("true", "false"):
                     config[config_key] = value.lower() == "true"
@@ -1427,9 +1427,9 @@ class Config:
                     config[config_key] = int(value)
                 else:
                     config[config_key] = value
-        
+
         return config
-    
+
     def get(self, key: str, default=None) -> Any:
         """Get configuration value."""
         return self.config.get(key, default)
@@ -1509,8 +1509,8 @@ export APP_FERNET_KEY=...
 
 ### Pattern 7.1: Abstract Interface (ABC)
 
-**Pattern ID:** `abstract-interface`  
-**Category:** Architecture  
+**Pattern ID:** `abstract-interface`
+**Category:** Architecture
 **Documentation:** [[ARCHITECTURE_DESIGN_PATTERNS_EVALUATION.md]]
 
 #### Canonical Implementation
@@ -1524,30 +1524,30 @@ from typing import Any
 class GovernanceEngineInterface(ABC):
     """
     Abstract interface for governance engines.
-    
+
     Allows pluggable governance implementations without modifying core kernel.
     Follows dependency inversion principle.
     """
-    
+
     @abstractmethod
     def evaluate_action(self, action: Any, context: Any) -> Any:
         """
         Evaluate whether action should be allowed.
-        
+
         Args:
             action: Proposed action (name, type, risk_level, etc.)
             context: Execution context (trace_id, timestamp, etc.)
-        
+
         Returns:
             Decision object (approved, reason, metadata)
         """
         pass
-    
+
     @abstractmethod
     def get_statistics(self) -> dict[str, Any]:
         """Get governance engine statistics."""
         pass
-    
+
     def initialize(self) -> None:
         """Optional initialization hook."""
         pass
@@ -1556,11 +1556,11 @@ class GovernanceEngineInterface(ABC):
 # Concrete implementation
 class FourLawsGovernance(GovernanceEngineInterface):
     """Asimov's Four Laws implementation."""
-    
+
     def evaluate_action(self, action, context):
         # Four Laws validation logic
         return Decision(approved=True, reason="Complies with Four Laws")
-    
+
     def get_statistics(self):
         return {
             "total_evaluations": 1000,
@@ -1652,7 +1652,7 @@ class MockGovernance(GovernanceEngineInterface):
     def evaluate_action(self, action, context):
         # Always approve for testing
         return Decision(approved=True, reason="Mock approval")
-    
+
     def get_statistics(self):
         return {"total": 0}
 
@@ -1673,8 +1673,8 @@ def test_kernel_with_mock_governance():
 
 ### Pattern 7.2: Plugin Interface Pattern
 
-**Pattern ID:** `plugin-interface`  
-**Category:** Architecture  
+**Pattern ID:** `plugin-interface`
+**Category:** Architecture
 **Documentation:** [[source-docs/plugins/07-plugin-extensibility-patterns.md]]
 
 #### Canonical Implementation
@@ -1688,41 +1688,41 @@ from typing import Any
 class PluginInterface(ABC):
     """
     Base interface for all plugins.
-    
+
     Plugins extend system functionality without modifying core code.
     Follow Open/Closed Principle: open for extension, closed for modification.
     """
-    
+
     @abstractmethod
     def execute(self, context: dict) -> dict:
         """
         Execute plugin logic.
-        
+
         Args:
             context: Execution context (varies by plugin type)
-        
+
         Returns:
             Result dictionary with plugin output
         """
         pass
-    
+
     @abstractmethod
     def validate_context(self, context: dict) -> bool:
         """
         Validate execution context before plugin runs.
-        
+
         Args:
             context: Execution context
-        
+
         Returns:
             True if context is valid, False otherwise
         """
         pass
-    
+
     def get_metadata(self) -> dict:
         """
         Get plugin metadata (name, version, description).
-        
+
         Returns:
             Metadata dictionary
         """
@@ -1736,17 +1736,17 @@ class PluginInterface(ABC):
 # Example plugin implementation
 class DataProcessingPlugin(PluginInterface):
     """Plugin for data processing tasks."""
-    
+
     def execute(self, context: dict) -> dict:
         """Process data from context."""
         data = context.get("data", [])
         processed = [x * 2 for x in data]  # Example processing
         return {"result": processed}
-    
+
     def validate_context(self, context: dict) -> bool:
         """Ensure 'data' key exists in context."""
         return "data" in context and isinstance(context["data"], list)
-    
+
     def get_metadata(self) -> dict:
         return {
             "name": "DataProcessing",
@@ -1762,26 +1762,26 @@ class DataProcessingPlugin(PluginInterface):
 ```python
 class PluginManager:
     """Simple plugin management system."""
-    
+
     def __init__(self):
         self.plugins: dict[str, PluginInterface] = {}
         self.enabled_plugins: set[str] = set()
-    
+
     def register_plugin(self, plugin_id: str, plugin: PluginInterface):
         """Register plugin."""
         self.plugins[plugin_id] = plugin
         self.enabled_plugins.add(plugin_id)
-    
+
     def execute_plugin(self, plugin_id: str, context: dict) -> dict:
         """Execute plugin with validation."""
         if plugin_id not in self.enabled_plugins:
             return {"error": "Plugin not enabled"}
-        
+
         plugin = self.plugins[plugin_id]
-        
+
         if not plugin.validate_context(context):
             return {"error": "Invalid context"}
-        
+
         return plugin.execute(context)
 ```
 
@@ -1811,7 +1811,7 @@ class PluginManager:
        def execute(self, context):
            # Plugin logic
            return {"result": "success"}
-       
+
        def validate_context(self, context):
            return "required_key" in context
    ```
@@ -1840,8 +1840,8 @@ class PluginManager:
 
 ### Pattern 7.3: Three-Tier Architecture
 
-**Pattern ID:** `three-tier-architecture`  
-**Category:** Architecture  
+**Pattern ID:** `three-tier-architecture`
+**Category:** Architecture
 **Documentation:** [[ARCHITECTURE_DESIGN_PATTERNS_EVALUATION.md#11-overall-architecture-pattern]]
 
 #### Architecture Overview
@@ -1909,10 +1909,10 @@ class PluginManager:
 class CognitionKernel:
     """
     Tier 1: Trust Root - All actions flow through kernel.
-    
+
     Single entry point ensures governance cannot be bypassed.
     """
-    
+
     def __init__(
         self,
         governance_engine: GovernanceEngineInterface,
@@ -1923,27 +1923,27 @@ class CognitionKernel:
         self.governance = governance_engine
         self.memory = memory_engine
         self.executor = execution_service
-    
+
     def process(self, action: Action, context: Context) -> Result:
         """
         Process action through governance → memory → execution pipeline.
-        
+
         Deterministic execution flow - same inputs = same outputs.
         """
         # Step 1: Governance evaluation (Tier 1)
         decision = self.governance.evaluate_action(action, context)
         if not decision.approved:
             return Result(success=False, reason=decision.reason)
-        
+
         # Step 2: Memory logging (Tier 2)
         self.memory.log_action(action, context)
-        
+
         # Step 3: Safe execution (Tier 2)
         result = self.executor.execute(action, context)
-        
+
         # Step 4: Memory update (Tier 2)
         self.memory.log_result(result)
-        
+
         return result
 ```
 
@@ -1954,7 +1954,7 @@ class CognitionKernel:
 ```python
 class TierAccessControl:
     """Enforce tier-based access restrictions."""
-    
+
     # Tier permission matrix
     PERMISSIONS = {
         TierLevel.GOVERNANCE: {
@@ -1974,7 +1974,7 @@ class TierAccessControl:
             "modify_policy": False
         }
     }
-    
+
     def check_permission(self, tier: TierLevel, permission: str) -> bool:
         """Check if tier has permission."""
         return self.PERMISSIONS.get(tier, {}).get(permission, False)
@@ -2016,8 +2016,8 @@ class TierAccessControl:
 
 ### Pattern 7.4: Dependency Injection
 
-**Pattern ID:** `dependency-injection`  
-**Category:** Architecture  
+**Pattern ID:** `dependency-injection`
+**Category:** Architecture
 **Documentation:** [[ARCHITECTURE_DESIGN_PATTERNS_EVALUATION.md]]
 
 #### Canonical Implementation
@@ -2027,7 +2027,7 @@ class TierAccessControl:
 ```python
 class SystemFactory:
     """Factory for creating systems with dependency injection."""
-    
+
     @staticmethod
     def create_kernel(
         config: Config,
@@ -2035,7 +2035,7 @@ class SystemFactory:
     ) -> CognitionKernel:
         """
         Create CognitionKernel with all dependencies injected.
-        
+
         Benefits:
         - Dependencies explicit (no hidden coupling)
         - Easy to swap implementations (testing, customization)
@@ -2045,23 +2045,23 @@ class SystemFactory:
         governance = FourLawsGovernance(config=config)
         memory = MemoryEngine(data_dir=data_dir)
         executor = ExecutionService(config=config)
-        
+
         # Inject dependencies into kernel
         kernel = CognitionKernel(
             governance_engine=governance,
             memory_engine=memory,
             execution_service=executor
         )
-        
+
         return kernel
-    
+
     @staticmethod
     def create_ai_systems(config: Config, data_dir: str) -> dict:
         """Create AI systems with dependencies."""
         persona = AIPersona(data_dir=data_dir)
         memory = MemoryExpansionSystem(data_dir=data_dir)
         learning = LearningRequestManager(data_dir=data_dir)
-        
+
         return {
             "persona": persona,
             "memory": memory,
@@ -2106,7 +2106,7 @@ class CognitionKernel:
        mock_governance = MockGovernance()
        mock_memory = MockMemory()
        mock_executor = MockExecutor()
-       
+
        kernel = CognitionKernel(mock_governance, mock_memory, mock_executor)
        # Test kernel without real dependencies
    ```
@@ -2132,8 +2132,8 @@ class CognitionKernel:
 
 ### Pattern 7.5: Factory Pattern
 
-**Pattern ID:** `factory-pattern`  
-**Category:** Creational  
+**Pattern ID:** `factory-pattern`
+**Category:** Creational
 **Documentation:** [[ARCHITECTURE_DESIGN_PATTERNS_EVALUATION.md]]
 
 #### Canonical Implementation
@@ -2145,11 +2145,11 @@ from abc import ABC, abstractmethod
 
 class VPNBackend(ABC):
     """Abstract VPN backend."""
-    
+
     @abstractmethod
     def connect(self, config: dict) -> bool:
         pass
-    
+
     @abstractmethod
     def disconnect(self) -> bool:
         pass
@@ -2159,7 +2159,7 @@ class OpenVPNBackend(VPNBackend):
     def connect(self, config):
         # OpenVPN connection logic
         return True
-    
+
     def disconnect(self):
         return True
 
@@ -2168,25 +2168,25 @@ class WireGuardBackend(VPNBackend):
     def connect(self, config):
         # WireGuard connection logic
         return True
-    
+
     def disconnect(self):
         return True
 
 class VPNBackendFactory:
     """Factory for creating VPN backends."""
-    
+
     @staticmethod
     def create(backend_type: str, config: dict) -> VPNBackend:
         """
         Create VPN backend based on type.
-        
+
         Args:
             backend_type: "openvpn", "wireguard", "ipsec"
             config: Backend configuration
-        
+
         Returns:
             VPN backend instance
-        
+
         Raises:
             ValueError: If backend_type unknown
         """
@@ -2195,11 +2195,11 @@ class VPNBackendFactory:
             "wireguard": WireGuardBackend,
             "ipsec": IPSecBackend
         }
-        
+
         backend_class = backends.get(backend_type)
         if not backend_class:
             raise ValueError(f"Unknown backend: {backend_type}")
-        
+
         return backend_class(config)
 
 # Usage
@@ -2244,8 +2244,8 @@ vpn.connect()
 
 ### Pattern 10.1: Strategy Pattern (Enum-Based)
 
-**Pattern ID:** `strategy-enum`  
-**Category:** Behavioral  
+**Pattern ID:** `strategy-enum`
+**Category:** Behavioral
 **Documentation:** [[ARCHITECTURE_DESIGN_PATTERNS_EVALUATION.md]]
 
 #### Canonical Implementation
@@ -2263,10 +2263,10 @@ class FusionStrategy(Enum):
 
 class MultimodalFusion:
     """Fuse multiple modalities (text, image, audio)."""
-    
+
     def __init__(self, strategy: FusionStrategy = FusionStrategy.HYBRID_FUSION):
         self.strategy = strategy
-    
+
     def fuse(self, text_features, image_features):
         """Fuse features using selected strategy."""
         if self.strategy == FusionStrategy.EARLY_FUSION:
@@ -2275,17 +2275,17 @@ class MultimodalFusion:
             return self._late_fusion(text_features, image_features)
         elif self.strategy == FusionStrategy.HYBRID_FUSION:
             return self._hybrid_fusion(text_features, image_features)
-    
+
     def _early_fusion(self, text, image):
         """Concatenate features."""
         return torch.cat([text, image], dim=-1)
-    
+
     def _late_fusion(self, text, image):
         """Process separately, average results."""
         text_result = self.text_model(text)
         image_result = self.image_model(image)
         return (text_result + image_result) / 2
-    
+
     def _hybrid_fusion(self, text, image):
         """Mix early and late fusion."""
         early = self._early_fusion(text, image)
@@ -2345,8 +2345,8 @@ class MultimodalFusion:
 
 ### Pattern 10.2: Observer Pattern (PyQt Signal)
 
-**Pattern ID:** `observer-signal`  
-**Category:** Behavioral  
+**Pattern ID:** `observer-signal`
+**Category:** Behavioral
 **Documentation:** [[relationships/utilities/02-common-patterns-map.md]]
 
 #### Canonical Implementation
@@ -2358,21 +2358,21 @@ from PyQt6.QtCore import pyqtSignal, QObject
 
 class Dashboard(QWidget):
     """Dashboard with signal-based communication."""
-    
+
     # Define signals (event types)
     user_logged_in = pyqtSignal(str)          # Emits username
     message_sent = pyqtSignal(str)            # Emits message
     error_occurred = pyqtSignal(Exception)    # Emits exception
     data_updated = pyqtSignal(dict)           # Emits data dict
-    
+
     def __init__(self):
         super().__init__()
         # Signals connect UI components without tight coupling
-    
+
     def on_login_success(self, username: str):
         """Emit signal when user logs in."""
         self.user_logged_in.emit(username)  # Notify all connected slots
-    
+
     def send_message(self, message: str):
         """Emit signal when message sent."""
         self.message_sent.emit(message)
@@ -2486,9 +2486,9 @@ This section identifies design patterns that are **documented, proven, and benef
 
 ### 🔴 CRITICAL: Retry with Exponential Backoff
 
-**Pattern ID:** [[#pattern-32-retry-with-exponential-backoff]]  
-**Current Usage:** 10 implementations  
-**Recommended Usage:** 30+ implementations  
+**Pattern ID:** [[#pattern-32-retry-with-exponential-backoff]]
+**Current Usage:** 10 implementations
+**Recommended Usage:** 30+ implementations
 **Gap:** 20+ missing retry mechanisms
 
 #### Problem
@@ -2550,9 +2550,9 @@ def generate_learning_path(topic: str) -> dict:
 
 ### 🟡 HIGH PRIORITY: Factory Pattern
 
-**Pattern ID:** [[#pattern-75-factory-pattern]]  
-**Current Usage:** 3 implementations  
-**Recommended Usage:** 10+ implementations  
+**Pattern ID:** [[#pattern-75-factory-pattern]]
+**Current Usage:** 3 implementations
+**Recommended Usage:** 10+ implementations
 **Gap:** 7+ missing factories
 
 #### Problem
@@ -2586,7 +2586,7 @@ elif config["model"] == "local":
 # AFTER (factory pattern)
 class ModelProviderFactory:
     """Factory for creating AI model providers."""
-    
+
     @staticmethod
     def create(provider_type: str, config: dict) -> ModelProvider:
         """Create model provider based on type."""
@@ -2596,11 +2596,11 @@ class ModelProviderFactory:
             "local": LocalModelProvider,
             "azure": AzureOpenAIProvider
         }
-        
+
         provider_class = providers.get(provider_type)
         if not provider_class:
             raise ValueError(f"Unknown provider: {provider_type}")
-        
+
         return provider_class(config)
 
 # Usage
@@ -2620,9 +2620,9 @@ model = ModelProviderFactory.create(config["model"], config)
 
 ### 🟡 MEDIUM PRIORITY: Builder Pattern
 
-**Pattern ID:** [[#pattern-76-builder-pattern]]  
-**Current Usage:** 1 implementation (CatalogBuilder)  
-**Recommended Usage:** 5+ implementations  
+**Pattern ID:** [[#pattern-76-builder-pattern]]
+**Current Usage:** 1 implementation (CatalogBuilder)
+**Recommended Usage:** 5+ implementations
 **Gap:** 4+ missing builders
 
 #### Problem
@@ -2659,7 +2659,7 @@ query = RAGQuery(
 # AFTER (builder pattern)
 class RAGQueryBuilder:
     """Builder for constructing RAG queries."""
-    
+
     def __init__(self, query_text: str):
         self.query_text = query_text
         self.top_k = 5  # Defaults
@@ -2669,30 +2669,30 @@ class RAGQueryBuilder:
         self.enable_hyde = False
         self.temperature = 0.7
         self.max_tokens = 256
-    
+
     def with_top_k(self, k: int):
         self.top_k = k
         return self
-    
+
     def with_category_filter(self, category: str):
         self.filter_category = category
         return self
-    
+
     def with_reranking(self, model: str = "cross-encoder"):
         self.enable_reranking = True
         self.rerank_model = model
         return self
-    
+
     def with_hyde(self):
         """Enable HyDE (Hypothetical Document Embeddings)."""
         self.enable_hyde = True
         return self
-    
+
     def with_generation_params(self, temperature: float, max_tokens: int):
         self.temperature = temperature
         self.max_tokens = max_tokens
         return self
-    
+
     def build(self) -> RAGQuery:
         """Build final query object."""
         return RAGQuery(
@@ -2728,9 +2728,9 @@ query = (RAGQueryBuilder("What is Asimov's First Law?")
 
 ### 🟢 LOW PRIORITY: Layered Configuration
 
-**Pattern ID:** [[#pattern-61-layered-configuration]]  
-**Current Usage:** 5 modules (60% adoption)  
-**Recommended Usage:** 8 modules (100% of config-heavy modules)  
+**Pattern ID:** [[#pattern-61-layered-configuration]]
+**Current Usage:** 5 modules (60% adoption)
+**Recommended Usage:** 8 modules (100% of config-heavy modules)
 **Gap:** 3 modules using environment-only config
 
 #### Problem
@@ -2827,10 +2827,10 @@ Some modules rely solely on `.env` files without layered config:
 
 This catalog provides a comprehensive mapping of 22 design patterns to 300+ usage examples across the Project-AI codebase. Key achievements:
 
-✅ **Complete Pattern Documentation:** All major patterns documented with canonical implementations  
-✅ **Comprehensive Usage Mapping:** 300+ bidirectional wiki links to actual code  
-✅ **Zero Dangling References:** All patterns linked to real, validated examples  
-✅ **Underutilized Patterns Identified:** Clear roadmap for improving code quality  
+✅ **Complete Pattern Documentation:** All major patterns documented with canonical implementations
+✅ **Comprehensive Usage Mapping:** 300+ bidirectional wiki links to actual code
+✅ **Zero Dangling References:** All patterns linked to real, validated examples
+✅ **Underutilized Patterns Identified:** Clear roadmap for improving code quality
 ✅ **Production-Grade Quality:** Meets maximal completeness requirements
 
 ### Next Steps for Developers
@@ -2843,11 +2843,11 @@ This catalog provides a comprehensive mapping of 22 design patterns to 300+ usag
 
 ---
 
-**Document Status:** ✅ COMPLETE  
-**Last Updated:** 2026-04-20  
-**Pattern Count:** 22  
-**Usage Examples:** 300+  
-**Quality Gates:** All passed  
+**Document Status:** ✅ COMPLETE
+**Last Updated:** 2026-04-20
+**Pattern Count:** 22
+**Usage Examples:** 300+
+**Quality Gates:** All passed
 **Mission:** AGENT-082 SUCCESS
 
 ---

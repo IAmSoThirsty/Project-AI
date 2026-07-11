@@ -2,8 +2,8 @@
 
 ## Institutional-Grade Inspection, Audit, and Cataloging Subsystem
 
-**Version:** 1.0.0  
-**Author:** Project-AI Team  
+**Version:** 1.0.0
+**Author:** Project-AI Team
 **Date:** 2026-02-08
 
 ---

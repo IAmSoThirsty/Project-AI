@@ -442,10 +442,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build All Platforms
         run: ./scripts/create_release.sh
-      
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:

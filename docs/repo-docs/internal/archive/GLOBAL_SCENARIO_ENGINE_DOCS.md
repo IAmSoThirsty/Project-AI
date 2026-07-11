@@ -212,20 +212,20 @@ for year in projection_years:
             trigger_factor = count_triggers / total_events
             causal_factor = sum(link.strength) / total_links
             base_prob = scenario.base_probability
-            
+
             # Combine factors with noise
-            prob = (base_prob * 0.5 + 
-                   trigger_factor * 0.3 + 
+            prob = (base_prob * 0.5 +
+                   trigger_factor * 0.3 +
                    causal_factor * 0.2 +
                    random(-0.05, 0.05))
-            
+
             # Apply temporal decay
             prob *= (1.0 - 0.05 * year_offset)
-            
+
             # Record success
             if random() < prob:
                 successes += 1
-        
+
         likelihood = successes / num_simulations
 ```
 
@@ -277,7 +277,7 @@ Countries: [list]
 class SimulationSystem(ABC):
     @abstractmethod
     def initialize() -> bool
-    
+
     @abstractmethod
     def load_historical_data(
         start_year: int,
@@ -285,38 +285,38 @@ class SimulationSystem(ABC):
         domains: Optional[List[RiskDomain]] = None,
         countries: Optional[List[str]] = None
     ) -> bool
-    
+
     @abstractmethod
     def detect_threshold_events(
         year: int,
         domains: Optional[List[RiskDomain]] = None
     ) -> List[ThresholdEvent]
-    
+
     @abstractmethod
     def build_causal_model(
         historical_events: List[ThresholdEvent]
     ) -> List[CausalLink]
-    
+
     @abstractmethod
     def simulate_scenarios(
         projection_years: int = 10,
         num_simulations: int = 1000
     ) -> List[ScenarioProjection]
-    
+
     @abstractmethod
     def generate_alerts(
         scenarios: List[ScenarioProjection],
         threshold: float = 0.7
     ) -> List[CrisisAlert]
-    
+
     @abstractmethod
     def get_explainability(
         scenario: ScenarioProjection
     ) -> str
-    
+
     @abstractmethod
     def persist_state() -> bool
-    
+
     @abstractmethod
     def validate_data_quality() -> Dict[str, Any]
 ```
@@ -327,9 +327,9 @@ class SimulationSystem(ABC):
 class GlobalScenarioEngine(SimulationSystem):
     def __init__(self, data_dir: str = "data/global_scenarios"):
         """Initialize engine with data directory."""
-        
+
     # Implements all SimulationSystem methods
-    
+
     # Additional attributes:
     # - world_bank: WorldBankDataSource
     # - acled: ACLEDDataSource
@@ -347,13 +347,13 @@ class GlobalScenarioEngine(SimulationSystem):
 class SimulationRegistry:
     @classmethod
     def register(cls, name: str, system: SimulationSystem) -> None
-    
+
     @classmethod
     def get(cls, name: str) -> Optional[SimulationSystem]
-    
+
     @classmethod
     def list_systems(cls) -> List[str]
-    
+
     @classmethod
     def unregister(cls, name: str) -> bool
 ```
@@ -576,13 +576,13 @@ pytest tests/test_global_scenario_engine.py --cov=app.core.global_scenario_engin
 ```python
 class CustomDataSource(DataSource):
     """Custom ETL connector."""
-    
+
     def fetch_custom_data(self, params):
         # Implement custom data fetching
         url = "https://api.example.com/data"
         data = self.fetch_with_retry(url, params)
         return self._transform_data(data)
-    
+
     def _transform_data(self, raw_data):
         # Transform to standard format
         return {

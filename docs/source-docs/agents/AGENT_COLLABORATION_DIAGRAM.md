@@ -430,9 +430,9 @@ v3.0.0 (Q1 2027):
 
 ---
 
-**Document Maintainer**: Architecture Team  
-**Review Cycle**: Quarterly  
-**Next Review**: 2026-07-20  
+**Document Maintainer**: Architecture Team
+**Review Cycle**: Quarterly
+**Next Review**: 2026-07-20
 
 ---
 
@@ -440,4 +440,3 @@ v3.0.0 (Q1 2027):
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

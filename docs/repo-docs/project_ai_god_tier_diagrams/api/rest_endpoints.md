@@ -695,7 +695,7 @@ class ProjectAIClient:
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         })
-    
+
     def chat(self, message: str, conversation_id: str = None) -> dict:
         """Send a chat message"""
         response = self.session.post(
@@ -707,7 +707,7 @@ class ProjectAIClient:
         )
         response.raise_for_status()
         return response.json()
-    
+
     def generate_image(self, prompt: str, style: str = "photorealistic") -> dict:
         """Generate an image"""
         response = self.session.post(
@@ -719,7 +719,7 @@ class ProjectAIClient:
         )
         response.raise_for_status()
         return response.json()
-    
+
     def get_image_status(self, generation_id: str) -> dict:
         """Check image generation status"""
         response = self.session.get(

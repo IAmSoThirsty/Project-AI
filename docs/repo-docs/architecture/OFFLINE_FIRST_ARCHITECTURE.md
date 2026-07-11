@@ -335,7 +335,7 @@ if not context.is_online:
     # Works completely offline
     result = fbo.query_offline("Tell me about Python and AI")
     print(result["answer"])
-    
+
     # AI self-reflection
     fbo.add_reflection(
         "User interested in Python for AI",

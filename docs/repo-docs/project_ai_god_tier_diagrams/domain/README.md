@@ -172,14 +172,14 @@ User Management (U) ──[Customer-Supplier]──► AI Governance (P)
         │ [Shared Kernel: UserIdentity]
         │
         └──────────────────────────────► Memory Management (C)
-        
+
 AI Governance (U) ──[Partnership]──► Agent Execution (P)
 
 Memory Management (U) ──[Anti-Corruption Layer]──► Agent Execution (D)
 
 Legend:
   U = Upstream
-  D = Downstream  
+  D = Downstream
   P = Partnership
   C = Conformist
 ```
@@ -255,43 +255,43 @@ class DomainEvent:
     occurred_at: datetime = field(default_factory=datetime.utcnow)
     aggregate_id: Optional[UUID] = None
     event_type: str = field(init=False)
-    
+
     def __post_init__(self):
         self.event_type = self.__class__.__name__
 
 class Entity(ABC):
     """Base class for entities with identity."""
-    
+
     def __init__(self, entity_id: UUID):
         self.id = entity_id
         self._domain_events: List[DomainEvent] = []
-    
+
     def add_domain_event(self, event: DomainEvent) -> None:
         """Add domain event to entity."""
         event.aggregate_id = self.id
         self._domain_events.append(event)
-    
+
     def clear_domain_events(self) -> List[DomainEvent]:
         """Clear and return domain events."""
         events = self._domain_events.copy()
         self._domain_events.clear()
         return events
-    
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Entity):
             return False
         return self.id == other.id
-    
+
     def __hash__(self) -> int:
         return hash(self.id)
 
 @dataclass(frozen=True)
 class ValueObject:
     """Base class for immutable value objects."""
-    
+
     def __post_init__(self):
         self._validate()
-    
+
     @abstractmethod
     def _validate(self) -> None:
         """Validate value object invariants."""
@@ -299,11 +299,11 @@ class ValueObject:
 
 class AggregateRoot(Entity):
     """Base class for aggregate roots."""
-    
+
     def __init__(self, aggregate_id: UUID):
         super().__init__(aggregate_id)
         self.version = 0
-    
+
     def increment_version(self) -> None:
         """Increment aggregate version for optimistic concurrency."""
         self.version += 1
@@ -336,31 +336,31 @@ from domain.governance import GovernanceDecision, Law
 
 class TestGovernanceAggregate:
     """Test aggregate behavior and invariants."""
-    
+
     def test_decision_creation_emits_event(self):
         """Verify domain event emission."""
         aggregate = GovernanceDecision(uuid4())
         aggregate.evaluate_action("delete_file", context={"user": "admin"})
-        
+
         events = aggregate.clear_domain_events()
         assert len(events) == 1
         assert events[0].event_type == "ActionEvaluated"
-    
+
     def test_invariant_protection(self):
         """Verify invariants are enforced."""
         aggregate = GovernanceDecision(uuid4())
-        
+
         with pytest.raises(ValueError):
             aggregate.evaluate_action("", context={})  # Empty action
-    
+
     def test_aggregate_consistency(self):
         """Verify transactional consistency."""
         aggregate = GovernanceDecision(uuid4())
-        
+
         # All changes succeed or fail together
         aggregate.evaluate_action("action1", {})
         aggregate.evaluate_action("action2", {})
-        
+
         assert aggregate.decision_count == 2
 ```
 

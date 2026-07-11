@@ -83,7 +83,7 @@ web/
 └── index.html  (complete web interface with charter)
 ```
 
-**File Size:** ~70 KB  
+**File Size:** ~70 KB
 **Dependencies:** None (pure HTML/CSS/JS)
 
 ---

@@ -492,7 +492,7 @@ sequenceDiagram
     autonumber
     participant A
     participant B
-    
+
     A->>B: Message
     B-->>A: Response
 ```

@@ -1,8 +1,8 @@
 # 00 Master Index - Project-AI Knowledge Navigation Hub
 
-> **📍 Location**: Root documentation index  
-> **🎯 Purpose**: Master navigation hub for all Project-AI documentation  
-> **👥 Audience**: All users (developers, operators, executives, auditors)  
+> **📍 Location**: Root documentation index
+> **🎯 Purpose**: Master navigation hub for all Project-AI documentation
+> **👥 Audience**: All users (developers, operators, executives, auditors)
 > **🔄 Status**: Production-Ready ✓
 
 ---
@@ -374,7 +374,7 @@ related_mocs:
 
 ---
 
-**Navigation Hub Version**: 1.0.0  
-**Last Updated**: 2025-01-20  
-**Maintained By**: Documentation Team  
+**Navigation Hub Version**: 1.0.0
+**Last Updated**: 2025-01-20
+**Maintained By**: Documentation Team
 **Status**: Production-Ready ✓

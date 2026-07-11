@@ -1,8 +1,8 @@
 # Dataview Performance Guide
 
-**Version:** 1.0.0  
-**Created:** 2026-04-20  
-**Author:** AGENT-038 (Dataview Query Library Specialist)  
+**Version:** 1.0.0
+**Created:** 2026-04-20
+**Author:** AGENT-038 (Dataview Query Library Specialist)
 **Purpose:** Comprehensive performance optimization guide for Dataview queries
 
 ---
@@ -208,7 +208,7 @@ const docs = dv.pages('"repo-docs"'); // Only docs in repo-docs folder
 
 // Or exclude paths
 const docs = dv.pages()
-    .where(p => !p.file.path.includes("_templates") && 
+    .where(p => !p.file.path.includes("_templates") &&
                 !p.file.path.includes("archive"));
 ```
 
@@ -315,7 +315,7 @@ const groups = dv.pages().groupBy(p => p.category);
 
 for (const group of groups) {
     dv.header(3, `${group.key} (${group.rows.length})`);
-    
+
     if (group.rows.length <= 10) {
         // Show all if small
         dv.table(["Doc"], group.rows.map(p => [p.file.link]));
@@ -389,7 +389,7 @@ function expensiveCalculation(input) {
     if (memoCache.has(input)) {
         return memoCache.get(input);
     }
-    
+
     const result = /* expensive computation */;
     memoCache.set(input, result);
     return result;
@@ -461,12 +461,12 @@ tags:
 **Query:**
 ```javascript
 // Fast: Single string check
-const securityDocs = dv.pages().where(p => 
+const securityDocs = dv.pages().where(p =>
     p.tags && p.tags.some(t => t.startsWith("security"))
 );
 
 // Fast: Specific sub-category
-const soc2Audits = dv.pages().where(p => 
+const soc2Audits = dv.pages().where(p =>
     p.tags && p.tags.includes("security/audit/soc2")
 );
 ```
@@ -491,7 +491,7 @@ console.timeEnd("Simple Filter");
 ```javascript
 console.time("Multi-Field Filter");
 const result = dv.pages()
-    .where(p => p.status === "active" && 
+    .where(p => p.status === "active" &&
                 p.category === "security" &&
                 p.tags && p.tags.includes("audit"))
     .length;
@@ -524,7 +524,7 @@ const groups = dv.pages()
         category: g.key,
         count: g.rows.length,
         avgAge: g.rows.reduce((sum, p) => {
-            const age = p.created_date ? 
+            const age = p.created_date ?
                 (Date.now() - new Date(p.created_date)) / (1000*60*60*24) : 0;
             return sum + age;
         }, 0) / g.rows.length
@@ -639,7 +639,7 @@ const result = dv.pages().where(p => /* 50 lines of logic */);
 ```javascript
 // Break into logical functions
 function isActiveSecurityDoc(page) {
-    return page.status === "active" && 
+    return page.status === "active" &&
            page.category === "security";
 }
 
@@ -717,11 +717,11 @@ const staleCriticalDocs = dv.pages()
    console.time("Data Fetch");
    const pages = dv.pages();
    console.timeEnd("Data Fetch");
-   
+
    console.time("Filter");
    const filtered = pages.where(/* conditions */);
    console.timeEnd("Filter");
-   
+
    console.time("Processing");
    const processed = filtered.map(/* transform */);
    console.timeEnd("Processing");
@@ -908,4 +908,3 @@ const staleCriticalDocs = dv.pages()
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

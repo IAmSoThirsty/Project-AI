@@ -341,6 +341,6 @@ cat docs/THIRSTYS_ASYMMETRIC_SECURITY_README.md
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** February 8, 2026  
+**Document Version:** 1.0
+**Last Updated:** February 8, 2026
 **Status:** ✅ COMPLETE

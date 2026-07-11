@@ -238,7 +238,7 @@ from app.core.deepseek_v32_inference import DeepSeekV32
 class ReasoningAgent:
     def __init__(self):
         self.deepseek = DeepSeekV32()
-    
+
     def reason(self, task):
         prompt = f"Analyze this task and provide reasoning: {task}"
         result = self.deepseek.generate_completion(prompt)

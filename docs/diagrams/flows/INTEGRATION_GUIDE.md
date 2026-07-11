@@ -323,6 +323,6 @@ See the [Flow Diagrams Usage Guide](../diagrams/flows/README.md) for detailed in
 
 ---
 
-**Last Updated**: 2024-01-15  
-**Author**: AGENT-107 Flow Diagrams Specialist  
+**Last Updated**: 2024-01-15
+**Author**: AGENT-107 Flow Diagrams Specialist
 **Status**: Ready for Integration

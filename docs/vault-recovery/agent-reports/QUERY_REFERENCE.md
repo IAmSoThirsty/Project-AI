@@ -2,10 +2,10 @@
 
 **Master Dataview Queries for Dynamic Vault Navigation** 🔎
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 12 minutes  
-**Audience:** All vault users  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 12 minutes
+**Audience:** All vault users
 **Prerequisites:** Dataview plugin installed
 
 ---
@@ -27,10 +27,10 @@
 
 **Dataview** turns your vault into a queryable database. Think of it as **SQL for Obsidian** - you can:
 
-✅ Search and filter documents  
-✅ Create dynamic lists and tables  
-✅ Aggregate and calculate data  
-✅ Build dashboards that update automatically  
+✅ Search and filter documents
+✅ Create dynamic lists and tables
+✅ Aggregate and calculate data
+✅ Build dashboards that update automatically
 ✅ Visualize vault metadata
 
 ### Two Query Languages
@@ -393,7 +393,7 @@ const requiredTags = ["security", "authentication", "active"];
 dv.table(
   ["Document", "Tags"],
   dv.pages()
-    .where(p => 
+    .where(p =>
       p.tags && requiredTags.every(tag => p.tags.includes(tag))
     )
     .map(p => [p.file.link, p.tags.join(", ")])
@@ -406,7 +406,7 @@ dv.table(
 const anyTags = ["security", "privacy", "compliance"];
 
 dv.pages()
-  .where(p => 
+  .where(p =>
     p.tags && anyTags.some(tag => p.tags.includes(tag))
   )
 ```
@@ -610,8 +610,8 @@ dv.taskList(
 dv.table(
   ["Document", "Updated", "Status"],
   dv.pages()
-    .where(p => 
-      p.tags && p.tags.includes("security") && 
+    .where(p =>
+      p.tags && p.tags.includes("security") &&
       (p.priority === "critical" || p.tags.includes("security-critical"))
     )
     .sort(p => p.updated_date, 'desc')
@@ -780,7 +780,7 @@ dv.pages()
    ```javascript
    // ✅ Correct
    p.updated_date >= new Date("2026-04-01")
-   
+
    // ❌ Wrong
    p.updated_date >= "2026-04-01"
    ```
@@ -844,10 +844,10 @@ dv.table(
    ```javascript
    // Start simple
    dv.pages("#tag")
-   
+
    // Add filtering
    dv.pages("#tag").where(p => p.status === "active")
-   
+
    // Add sorting
    // ... etc
    ```
@@ -938,4 +938,3 @@ dependencies:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

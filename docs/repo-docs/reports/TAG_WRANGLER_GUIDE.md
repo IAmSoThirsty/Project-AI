@@ -24,9 +24,9 @@ review_cycle: as-needed
 
 # Tag Wrangler Plugin Guide
 
-**Version:** 0.6.4  
-**Author:** PJ Eby  
-**Status:** Production-Ready  
+**Version:** 0.6.4
+**Author:** PJ Eby
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ## Overview
@@ -37,7 +37,7 @@ Tag Wrangler is a powerful Obsidian plugin that provides advanced tag management
 
 ### Installation Status
 - **Location:** `.obsidian/plugins/tag-wrangler/`
-- **Plugin Files:** 
+- **Plugin Files:**
   - `main.js` (core functionality)
   - `manifest.json` (plugin metadata)
   - `data.json` (user configuration)
@@ -302,21 +302,21 @@ Result: Tag preserved but archived
 ## Troubleshooting
 
 ### Tags Not Updating
-**Symptom:** Tag rename doesn't affect all files  
-**Solution:** 
+**Symptom:** Tag rename doesn't affect all files
+**Solution:**
 - Ensure files aren't in excluded folders
 - Check for inline tags vs YAML frontmatter (Wrangler handles both)
 - Restart Obsidian to refresh cache
 
 ### Hierarchies Not Displaying
-**Symptom:** Nested tags show flat in tag pane  
+**Symptom:** Nested tags show flat in tag pane
 **Solution:**
 - Verify separator is `/` in settings
 - Check for spaces (use `#tag/subtag` not `#tag / subtag`)
 - Refresh tag pane (close/reopen)
 
 ### Performance Issues
-**Symptom:** Tag operations slow on large vaults  
+**Symptom:** Tag operations slow on large vaults
 **Solution:**
 - Enable `deleteEmptyTags` to reduce tag count
 - Close other plugins temporarily during batch operations
@@ -351,6 +351,6 @@ Result: Tag preserved but archived
 
 ---
 
-**Plugin Status:** ✅ Production-Ready  
-**Next Steps:** Enable plugin in Obsidian settings → Community Plugins → Tag Wrangler  
+**Plugin Status:** ✅ Production-Ready
+**Next Steps:** Enable plugin in Obsidian settings → Community Plugins → Tag Wrangler
 **Integration:** Coordinate with TAG_TAXONOMY.md (AGENT-017) for semantic organization

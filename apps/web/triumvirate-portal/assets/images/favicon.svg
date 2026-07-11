@@ -6,10 +6,10 @@
       <stop offset="100%" style="stop-color:#0891B2;stop-opacity:1" />
     </linearGradient>
   </defs>
-  
+
   <!-- Rounded Square Background -->
   <rect width="32" height="32" rx="6" fill="url(#faviconGradient)"/>
-  
+
   <!-- Simple Trinity Symbol -->
   <g transform="translate(16, 16)">
     <!-- Triangle -->

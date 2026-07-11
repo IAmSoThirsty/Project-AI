@@ -24,9 +24,9 @@ audience: ["developers", "security-engineers", "gui-developers"]
 
 # CerberusPanel - Security Monitoring GUI Component
 
-**Module:** `src/app/gui/cerberus_panel.py`  
-**Class:** `CerberusPanel`  
-**Lines of Code:** 98  
+**Module:** `src/app/gui/cerberus_panel.py`
+**Class:** `CerberusPanel`
+**Lines of Code:** 98
 **Purpose:** Lightweight security monitoring panel for Cerberus incident tracking, quarantine management, and attack analytics
 
 ---
@@ -374,7 +374,7 @@ from app.gui.cerberus_panel import CerberusPanel
 class MainDashboard(QMainWindow):
     def __init__(self):
         super().__init__()
-        
+
         # Add to sidebar
         self.sidebar = QDockWidget("Security Monitor")
         self.cerberus_panel = CerberusPanel(self)
@@ -458,16 +458,16 @@ class SecurityDashboard(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Security Operations Center")
-        
+
         # Central widget with layout
         central = QWidget()
         self.setCentralWidget(central)
         layout = QVBoxLayout(central)
-        
+
         # Add Cerberus panel
         self.cerberus = CerberusPanel(self)
         layout.addWidget(self.cerberus)
-        
+
         # Panel is now auto-refreshing
 ```
 
@@ -596,7 +596,7 @@ panel.setStyleSheet(CERBERUS_PANEL_STYLE)
    ```python
    def hideEvent(self, event):
        self.timer.stop()
-   
+
    def showEvent(self, event):
        self.timer.start(3000)
        self._refresh()
@@ -633,7 +633,7 @@ class CerberusPanel(QWidget):
         super().__init__(parent)
         self.user_role = user_role
         self._build_ui()
-        
+
         # Disable actions for non-admins
         ac = get_access_control()
         if not ac.has_permission(user_role, "security.quarantine.manage"):
@@ -774,18 +774,18 @@ class IncidentItemWidget(QWidget):
     def __init__(self, incident, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout(self)
-        
+
         # Type badge
         type_label = QLabel(f"[{incident['type'].upper()}]")
         type_label.setStyleSheet("color: #ff0000; font-weight: bold;")
         layout.addWidget(type_label)
-        
+
         # Timestamp
         from datetime import datetime
         ts = datetime.fromtimestamp(incident['ts'])
         time_label = QLabel(ts.strftime("%Y-%m-%d %H:%M:%S"))
         layout.addWidget(time_label)
-        
+
         # Source
         source = incident.get('gate') or incident.get('source', 'unknown')
         source_label = QLabel(f"Source: {source}")
@@ -823,10 +823,9 @@ def _refresh(self):
 
 ---
 
-**Document Status:** ✅ Complete  
-**Word Count:** 2,847  
+**Document Status:** ✅ Complete
+**Word Count:** 2,847
 **Quality Gates:** Passed (1,000+ words, no TODOs, production-ready)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

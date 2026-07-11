@@ -160,7 +160,7 @@ Superseded:  Replaced by newer document (link included)
 # Deprecated Documents Index
 
 ## Deprecated Architectures
-- [[architecture-flask-monolith]] 
+- [[architecture-flask-monolith]]
   - Status: Deprecated (2024-01)
   - Reason: Replaced by PyQt6 desktop + Flask API hybrid
   - Superseded By: [[architecture-current-hybrid]]
@@ -413,12 +413,11 @@ Planned but not yet implemented:
 
 ---
 
-**Version:** 1.0  
-**Last Updated:** 2024-01-15  
-**Maintainer:** AGENT-002 (Indexes Subdirectory Specialist)  
-**Total Index Types:** 5  
+**Version:** 1.0
+**Last Updated:** 2024-01-15
+**Maintainer:** AGENT-002 (Indexes Subdirectory Specialist)
+**Total Index Types:** 5
 **Estimated Vault Coverage:** 2000+ documents across 40+ categories
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

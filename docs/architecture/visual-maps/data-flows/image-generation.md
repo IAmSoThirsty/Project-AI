@@ -47,9 +47,9 @@ accuracy_rating: high
 
 # Image Generation Flow Visual Map
 
-**Version:** 1.0.0  
-**Author:** AGENT-047 (Visual Relationship Maps Specialist)  
-**Status:** Production-Ready  
+**Version:** 1.0.0
+**Author:** AGENT-047 (Visual Relationship Maps Specialist)
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -367,41 +367,41 @@ BACKEND 2: OPENAI DALL-E 3 (FALLBACK)
 ```mermaid
 stateDiagram-v2
     [*] --> Idle
-    
+
     Idle --> ValidatingPrompt: user_clicks_generate()
     ValidatingPrompt --> ContentFiltering: prompt_valid()
     ValidatingPrompt --> Idle: prompt_invalid()
-    
+
     ContentFiltering --> BuildingPrompt: content_safe()
     ContentFiltering --> Rejected: blocked_keywords()
     Rejected --> Idle: show_error()
-    
+
     BuildingPrompt --> ApplyingStyle: add_style_preset()
     ApplyingStyle --> CreatingWorker: append_negative_prompt()
-    
+
     CreatingWorker --> Generating: worker.start()
     Generating --> APIRequest: worker.run()
-    
+
     APIRequest --> StableDiffusion: backend==SD
     APIRequest --> DALLE: backend==DALLE
-    
+
     StableDiffusion --> Retrying: api_error()
     StableDiffusion --> ReceivingImage: api_success()
     Retrying --> DALLE: max_retries_reached()
     Retrying --> ReceivingImage: retry_success()
-    
+
     DALLE --> ReceivingImage: api_success()
     DALLE --> Failed: api_error()
-    
+
     ReceivingImage --> SavingImage: download_complete()
     SavingImage --> StoringMetadata: file_saved()
     StoringMetadata --> EmittingSignal: metadata_saved()
-    
+
     EmittingSignal --> DisplayingImage: signal_received()
     DisplayingImage --> Idle: image_displayed()
-    
+
     Failed --> Idle: show_error()
-    
+
     Idle --> [*]: app_closes()
 ```
 
@@ -493,13 +493,13 @@ class ImageGenerationWorker(QThread):
     image_generated = pyqtSignal(str, dict)  # (image_path, metadata)
     generation_failed = pyqtSignal(str)       # (error_message)
     generation_complete = pyqtSignal()
-    
+
     def __init__(self, generator, prompt, options):
         super().__init__()
         self.generator = generator
         self.prompt = prompt
         self.options = options
-    
+
     def run(self):
         """Execute in background thread."""
         try:
@@ -524,7 +524,7 @@ def generate_image(self):
     # Disable generate button
     self.generate_btn.setEnabled(False)
     self.generate_btn.setText("Generating...")
-    
+
     # Create worker
     self.worker = ImageGenerationWorker(
         self.generator,
@@ -535,12 +535,12 @@ def generate_image(self):
             "backend": self.backend_combo.currentText()
         }
     )
-    
+
     # Connect signals
     self.worker.image_generated.connect(self.display_image)
     self.worker.generation_failed.connect(self.show_error)
     self.worker.generation_complete.connect(self.re_enable_button)
-    
+
     # Start worker
     self.worker.start()
 ```
@@ -553,39 +553,39 @@ def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
     """HTTP request with exponential backoff."""
     MAX_RETRIES = 3
     BACKOFF_FACTOR = 0.8
-    
+
     for attempt in range(1, MAX_RETRIES + 1):
         try:
             response = requests.request(method, url, timeout=60, **kwargs)
-            
+
             # Success
             if response.status_code == 200:
                 return response
-            
+
             # Rate limit - honor Retry-After header
             if response.status_code == 429:
                 retry_after = int(response.headers.get("Retry-After", "10"))
                 logger.warning(f"Rate limited. Waiting {retry_after}s...")
                 time.sleep(retry_after)
                 continue
-            
+
             # Transient errors - exponential backoff
             if response.status_code in {502, 503, 504}:
                 backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
                 logger.warning(f"Transient error. Retrying in {backoff:.2f}s...")
                 time.sleep(backoff)
                 continue
-            
+
             # Other errors - raise immediately
             response.raise_for_status()
-        
+
         except requests.exceptions.RequestException as e:
             if attempt == MAX_RETRIES:
                 raise
             backoff = BACKOFF_FACTOR * (2 ** (attempt - 1))
             logger.warning(f"Network error. Retrying in {backoff:.2f}s...")
             time.sleep(backoff)
-    
+
     raise RuntimeError("Max retries exceeded")
 ```
 
@@ -614,17 +614,17 @@ def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
 def save_to_history(self, metadata: dict):
     """Append to generation history."""
     history_file = "data/image_generation_history.json"
-    
+
     # Load existing history
     if os.path.exists(history_file):
         with open(history_file) as f:
             history = json.load(f)
     else:
         history = []
-    
+
     # Append new entry
     history.append(metadata)
-    
+
     # Save atomically
     temp_file = history_file + ".tmp"
     with open(temp_file, "w") as f:
@@ -641,22 +641,22 @@ class ImageDisplayWidget(QLabel):
         super().__init__()
         self.zoom_level = 1.0
         self.pixmap = None
-    
+
     def set_image(self, image_path: str):
         """Load and display image."""
         self.pixmap = QPixmap(image_path)
         self.update_display()
-    
+
     def zoom_in(self):
         """Increase zoom by 25%."""
         self.zoom_level = min(self.zoom_level * 1.25, 5.0)
         self.update_display()
-    
+
     def zoom_out(self):
         """Decrease zoom by 25%."""
         self.zoom_level = max(self.zoom_level * 0.8, 0.1)
         self.update_display()
-    
+
     def update_display(self):
         """Apply zoom and render."""
         if self.pixmap:
@@ -734,10 +734,9 @@ class ImageDisplayWidget(QLabel):
 
 ---
 
-**Status:** ✅ Production-Ready Documentation  
-**Validation:** Architecture verified against `src/app/core/image_generator.py`, `src/app/gui/image_generation.py`  
+**Status:** ✅ Production-Ready Documentation
+**Validation:** Architecture verified against `src/app/core/image_generator.py`, `src/app/gui/image_generation.py`
 **Next Review:** 2026-07-20 (Quarterly update cycle)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

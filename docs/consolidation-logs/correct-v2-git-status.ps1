@@ -181,7 +181,7 @@ $report = @"
 **Objective:** Narrow correction pass on Git/physical/ignore/movability fields only. Read-only commands exclusively. No movement, no source changes, outputs restricted to $logDir.
 **Protocol followed:** Per-item: Test-Path (PhysicalExists), git ls-files --error-unmatch + git ls-files <path>/ (GitTracked), git ls-files --others --exclude-standard (untracked children), git check-ignore -q + LASTEXITCODE (GitIgnored), decision tree for required GitStatus values, conservative CanMove re-eval (default NO, high-risk force NO, YES_LOW only for obvious generated/ignored-untracked, YES_AFTER for evidence-based but approval required). Preserve original responsibility/classification fields unless Git/FS evidence makes old value impossible.
 
-**Inputs:** 
+**Inputs:**
 - PROJECT_AI_ROOT_CLASSIFICATION_MANIFEST_V2.csv (194 rows, previously uniform GitTracked=True / GitIgnored=True / GitStatus=tracked for all)
 - PROJECT_AI_LSFILES_V2.txt ($lsV2Lines lines), PROJECT_AI_UNTRACKED_V2.txt ($unV2Lines lines), PROJECT_AI_ROOT_HASH_MANIFEST_V2.csv (context/provenance only)
 - Current git + FS (git status --porcelain, ls-files variants, check-ignore, Test-Path)
@@ -237,7 +237,7 @@ $($canMoveChanges | Format-Table -AutoSize | Out-String)
 - Any file inside Project-AI-main modified? NO (only logs/ outputs created)
 - Movement recommended without validation/rollback/owner? NO (even YES_* cases explicitly require owner approval + listed validation steps)
 
-**Commands used (all read-only):** 
+**Commands used (all read-only):**
 Set-Location T:\Project-AI-main
 git status --porcelain
 git ls-files
@@ -266,7 +266,7 @@ $canMd = @"
 
 This file lists **$($movableRows.Count)** candidate rows that cleared the narrow conservative re-evaluation (obvious generated/ignored-untracked + not high-risk, or prior archive/side evidence + current non-TRACKED status).
 
-**CRITICAL:** 
+**CRITICAL:**
 - This does **not** authorize any movement.
 - Even YES_LOW_RISK and YES_AFTER_OWNER_APPROVAL still require explicit owner approval on the specific row.
 - All actions (if ever approved) must follow COPY_VERIFY_THEN_REMOVE_AFTER_APPROVAL with pre/post hash verification against PROJECT_AI_ROOT_HASH_MANIFEST_V2.csv, full validation, and rollback capability.

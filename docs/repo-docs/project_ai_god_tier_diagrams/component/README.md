@@ -170,13 +170,13 @@ class CognitionKernel:
 ```python
 class GovernanceTriumvirate:
     def validate(self, request: EnrichedRequest) -> GovernanceDecision
-    
+
 class Galahad:
     def validate_ethics(self, request: EnrichedRequest) -> GalahadDecision
-    
+
 class Cerberus:
     def validate_security(self, request: EnrichedRequest) -> CerberusDecision
-    
+
 class CodexDeusMaximus:
     def validate_policy(self, request: EnrichedRequest) -> FinalDecision
 ```
@@ -265,7 +265,7 @@ class IdentityEngine:
 class AuditTrail:
     async def append(self, event_type: str, event_data: dict) -> AuditEntry
     async def verify_chain(self, start_seq: int, end_seq: int) -> VerificationResult
-    async def export_compliance_report(self, start_date: datetime, 
+    async def export_compliance_report(self, start_date: datetime,
                                        end_date: datetime) -> ComplianceReport
 ```
 
@@ -293,11 +293,11 @@ class AuditTrail:
 **Key Interfaces**:
 ```python
 class ExecutionService:
-    async def execute(self, request: EnrichedRequest, 
+    async def execute(self, request: EnrichedRequest,
                      governance_decision: GovernanceDecision) -> ExecutionResult
-    async def execute_parallel(self, agents: List[Agent], 
+    async def execute_parallel(self, agents: List[Agent],
                               request: EnrichedRequest) -> List[AgentResult]
-    async def execute_sequential(self, agents: List[Agent], 
+    async def execute_sequential(self, agents: List[Agent],
                                  request: EnrichedRequest) -> List[AgentResult]
 ```
 
@@ -401,7 +401,7 @@ class CacheLayer:
 class Agent(ABC):
     @abstractmethod
     async def execute(self, request: EnrichedRequest) -> AgentResult
-    
+
     async def reset(self)
     def validate_input(self, request: EnrichedRequest) -> bool
 ```

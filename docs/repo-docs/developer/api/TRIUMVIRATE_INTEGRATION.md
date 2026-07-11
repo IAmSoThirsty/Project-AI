@@ -158,7 +158,7 @@ from temporal.workflows import activities
 
 async def main():
     client = await Client.connect("localhost:7233")
-    
+
     worker = Worker(
         client,
         task_queue="triumvirate-prod",
@@ -172,7 +172,7 @@ async def main():
             activities.record_telemetry,
         ]
     )
-    
+
     await worker.run()
 
 if __name__ == "__main__":

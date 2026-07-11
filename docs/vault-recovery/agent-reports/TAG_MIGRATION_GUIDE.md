@@ -1,8 +1,8 @@
 # Tag Migration Guide v1.0 → v2.0
 
-**Migration Date:** 2025-01-23  
-**Prepared By:** AGENT-039 (Tag Taxonomy Refinement Specialist)  
-**Status:** Ready for Implementation  
+**Migration Date:** 2025-01-23
+**Prepared By:** AGENT-039 (Tag Taxonomy Refinement Specialist)
+**Status:** Ready for Implementation
 **Estimated Effort:** 4 weeks (phased approach)
 
 ---
@@ -49,7 +49,7 @@ This guide provides step-by-step migration from Tag Taxonomy v1.0 to v2.0, cover
 ### Migration Types
 
 #### Type 1: Naming Convention Fixes (21 tags)
-**Issue:** Violates kebab-case, capitalization, or plural form rules  
+**Issue:** Violates kebab-case, capitalization, or plural form rules
 **Action:** Rename tags automatically
 
 | Old Tag | New Tag | Category | Issue | Count |
@@ -79,7 +79,7 @@ This guide provides step-by-step migration from Tag Taxonomy v1.0 to v2.0, cover
 ---
 
 #### Type 2: Category Reassignments (12 tags)
-**Issue:** Tag used in wrong category (TYPE vs SPECIAL confusion)  
+**Issue:** Tag used in wrong category (TYPE vs SPECIAL confusion)
 **Action:** Move tag to correct category
 
 | Old Usage | New Usage | Rationale | Count |
@@ -100,7 +100,7 @@ This guide provides step-by-step migration from Tag Taxonomy v1.0 to v2.0, cover
 ---
 
 #### Type 3: New Tag Additions (5 tags)
-**Issue:** Common patterns without taxonomy support  
+**Issue:** Common patterns without taxonomy support
 **Action:** Add to taxonomy v2.0
 
 | Tag | Category | Definition | Usage |
@@ -114,7 +114,7 @@ This guide provides step-by-step migration from Tag Taxonomy v1.0 to v2.0, cover
 ---
 
 #### Type 4: Deprecations (40 tags)
-**Issue:** Zero usage, redundant, or over-specific  
+**Issue:** Zero usage, redundant, or over-specific
 **Action:** Remove from taxonomy, prevent future use
 
 **Area Children (31):**
@@ -310,10 +310,10 @@ foreach ($ex in $examples) {
     $path = "T:\Project-AI-vault\metadata-examples\$($ex.File)"
     if (Test-Path $path) {
         $content = Get-Content $path -Raw
-        
+
         # Replace type
         $content = $content -replace "type:\s*$($ex.OldType)", "type: $($ex.NewType)"
-        
+
         # Add special if needed
         if ($ex.NewSpecial -ne '[]') {
             if ($content -notmatch 'special:') {
@@ -321,14 +321,14 @@ foreach ($ex in $examples) {
                 $content = $content -replace "(type:\s*$($ex.NewType))", "`$1`nspecial: $($ex.NewSpecial)"
             }
         }
-        
+
         # Add area if needed
         if ($ex.AddArea) {
             if ($content -notmatch 'area:') {
                 $content = $content -replace "(type:)", "area: [$($ex.AddArea)]`n`$1"
             }
         }
-        
+
         Set-Content $path -Value $content
         Write-Host "✅ Migrated: $($ex.File)"
     } else {
@@ -373,16 +373,16 @@ $passed = @()
 
 function Test-Tag {
     param($Tag, $Category, $File)
-    
+
     # Format validation
     if ($Tag -notmatch '^[a-z0-9/-]+$') {
         return "Invalid format: '$Tag' (use lowercase, hyphens only)"
     }
-    
+
     if ($Tag.Length -gt 30) {
         return "Tag too long: '$Tag' (max 30 chars)"
     }
-    
+
     # Whitelist validation
     $validTags = $taxonomy.categories.$Category.tags.PSObject.Properties.Name
     if ($Tag -notin $validTags) {
@@ -394,12 +394,12 @@ function Test-Tag {
                 $allValid += $taxonomy.categories.$Category.tags.$parent.children
             }
         }
-        
+
         if ($Tag -notin $allValid) {
             return "Not in taxonomy: '$Tag' in category '$Category'"
         }
     }
-    
+
     return $null
 }
 
@@ -409,7 +409,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
     if ($content -match '(?s)^---\s*\n(.*?)\n---') {
         $frontmatter = $matches[1]
         $fileErrors = @()
-        
+
         # Validate each category
         foreach ($cat in @('area', 'type', 'status', 'audience', 'priority', 'special')) {
             # Extract tags
@@ -426,7 +426,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
             elseif ($frontmatter -match "${cat}:\s*([a-zA-Z0-9/_-]+)") {
                 $tags = @($matches[1])
             }
-            
+
             # Validate each tag
             foreach ($tag in $tags) {
                 if ($tag) {
@@ -437,7 +437,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
                 }
             }
         }
-        
+
         if ($fileErrors.Count -gt 0) {
             $errors += @{File=$_.FullName; Errors=$fileErrors}
         } else {
@@ -494,13 +494,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Run tag validation
         shell: pwsh
         run: |
           cd T:\Project-AI-vault
           .\scripts\validate-tags-strict.ps1 -Verbose
-      
+
       - name: Upload validation report
         if: failure()
         uses: actions/upload-artifact@v3
@@ -554,13 +554,13 @@ $migrations = @(
     @{Old='specification'; New='spec'; Category='type'; Pattern='type:\s*specification'},
     @{Old='by-area'; New='index'; Category='type'; Pattern='type:\s*by-area'},
     @{Old='master-index'; New='index'; Category='type'; Pattern='type:\s*master-index'},
-    
+
     # Status migrations
     @{Old='in-progress'; New='draft'; Category='status'; Pattern='status:\s*in-progress'},
     @{Old='legacy'; New='archived'; Category='status'; Pattern='status:\s*legacy'},
     @{Old='production'; New='active'; Category='status'; Pattern='status:\s*production'},
     @{Old='completed'; New='active'; Category='status'; Pattern='status:\s*completed'},
-    
+
     # Audience migrations
     @{Old='developers'; New='developer'; Category='audience'; Pattern='developers'},
     @{Old='architects'; New='architect'; Category='audience'; Pattern='architects'},
@@ -580,7 +580,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
         $content = Get-Content $_.FullName -Raw -ErrorAction Stop
         $originalContent = $content
         $fileModified = $false
-        
+
         # Apply migrations
         foreach ($mig in $migrations) {
             if ($content -match $mig.Pattern) {
@@ -591,7 +591,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
                 }
             }
         }
-        
+
         # Remove component field
         if ($content -match 'component:.*\n') {
             $content = $content -replace 'component:.*\n', ''
@@ -600,7 +600,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
                 Write-Host "[$($_.Name)] Removed component field" -ForegroundColor Yellow
             }
         }
-        
+
         # Remove quotes from arrays (YAML syntax fix)
         if ($content -match '\["[^"]+"\]') {
             $content = $content -replace '\["([^"]+)"\]', '[$1]'
@@ -610,7 +610,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
                 Write-Host "[$($_.Name)] Removed quotes from arrays" -ForegroundColor Yellow
             }
         }
-        
+
         # Write changes
         if ($fileModified) {
             if ($DryRun) {
@@ -624,7 +624,7 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
         } else {
             $stats.Skipped++
         }
-        
+
     } catch {
         Write-Host "❌ Error processing $($_.Name): $_" -ForegroundColor Red
         $stats.Errors++
@@ -843,7 +843,7 @@ if ($DryRun) {
 
 ```powershell
 # List backups
-Get-ChildItem T:\ -Filter "Project-AI-vault-*-backup-*" | 
+Get-ChildItem T:\ -Filter "Project-AI-vault-*-backup-*" |
     Select-Object Name, CreationTime
 
 # Restore specific backup
@@ -989,11 +989,10 @@ $current = "T:\Project-AI-vault"
 
 ---
 
-**Migration Prepared By:** AGENT-039  
-**Date:** 2025-01-23  
-**Status:** Ready for Implementation  
+**Migration Prepared By:** AGENT-039
+**Date:** 2025-01-23
+**Status:** Ready for Implementation
 **Version:** 1.0
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

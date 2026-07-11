@@ -163,7 +163,7 @@ Get-ChildItem -Path ".obsidian\plugins\dataview" -Recurse
    ```powershell
    # Get current permissions
    Get-Acl ".obsidian\plugins\dataview" | Format-List
-   
+
    # Grant full control to current user
    $acl = Get-Acl ".obsidian\plugins\dataview"
    $permission = "$env:USERNAME","FullControl","ContainerInherit,ObjectInherit","None","Allow"
@@ -314,7 +314,7 @@ LIMIT 1
    ```markdown
    <!-- Disable refresh during editing -->
    <!-- dataview-refresh: false -->
-   
+
    ```dataview
    [Heavy query here]
    ```
@@ -382,7 +382,7 @@ Shows as plain text instead of executing
    ❌ ```javascript
       const pages = dv.pages();
       ```
-   
+
    ✅ ```dataviewjs
       const pages = dv.pages();
       ```
@@ -453,7 +453,7 @@ dv.paragraph(`Text with "quotes" inside`)
    ```powershell
    # Backup first
    Copy-Item ".obsidian\plugins\dataview\data.json" -Destination "data.json.backup"
-   
+
    # Edit with text editor
    notepad ".obsidian\plugins\dataview\data.json"
    ```
@@ -616,7 +616,7 @@ const projects = dv.pages('"docs/dataview-examples"')
 const duration = Date.now() - start;
 
 dv.paragraph(`**Query executed in ${duration}ms**`);
-dv.table(["File", "Status"], 
+dv.table(["File", "Status"],
   projects.array().map(p => [p.file.link, p.status]));
 ```
 
@@ -686,7 +686,7 @@ Provide this information:
    ```powershell
    # OS version
    [System.Environment]::OSVersion.VersionString
-   
+
    # Obsidian version (from Settings → About)
    # Dataview version (from manifest.json)
    ```
@@ -845,7 +845,7 @@ Copy-Item ".obsidian\plugins\dataview\data.json" -Destination "backups\dataview-
 
 ---
 
-**Document Version**: 1.1.0  
-**Last Updated**: 2026-04-20  
-**Phase 5 Enhancement**: Added comprehensive system references and wiki links  
+**Document Version**: 1.1.0
+**Last Updated**: 2026-04-20
+**Phase 5 Enhancement**: Added comprehensive system references and wiki links
 **Supports**: Dataview 0.5.68, Obsidian 0.13.11+

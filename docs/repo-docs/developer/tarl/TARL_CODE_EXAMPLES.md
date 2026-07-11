@@ -116,7 +116,7 @@ def upload_file(file_content):
 
 1. **Buff Header**: Comments showing buff level (MAXIMUM = 10x stronger)
 1. **Import Statements**: `sys` and `hashlib` for execution tracking
-1. **`_tarl_buff_check()` Function**: 
+1. **`_tarl_buff_check()` Function**:
    - Tracks who's calling the code using stack frame inspection
    - Creates SHA-256 hash of caller's filename
    - Maintains list of authorized callers
@@ -178,7 +178,7 @@ function executeUserCode(code) {
         }
         return true;
     };
-    
+
     // Buff active: Code can now halt enemy advancement through manipulation
     if (!_tarlBuffCheck()) {
         // Enemy advancement halted by defensive code manipulation
@@ -208,7 +208,7 @@ function executeUserCode(code) {
 
 1. **Buff Header**: Comments showing buff level (STRONG = 5x stronger)
 1. **IIFE (Immediately Invoked Function Expression)**: Wraps the defensive code
-1. **`_tarlBuffCheck()` Function**: 
+1. **`_tarlBuffCheck()` Function**:
    - Checks stack trace for unauthorized callers
    - Uses `new Error().stack` to inspect call chain
    - Prevents execution if called from unexpected context
@@ -244,7 +244,7 @@ class FourLaws:
             "A robot must obey orders from humans",
             "A robot must protect its own existence"
         ]
-    
+
     def validate_action(self, action, context):
         """Validate action against Four Laws"""
         # Validation logic here
@@ -289,7 +289,7 @@ class FourLaws:
             "A robot must obey orders from humans",
             "A robot must protect its own existence"
         ]
-    
+
     def validate_action(self, action, context):
         """Validate action against Four Laws"""
         # Validation logic here
@@ -392,7 +392,7 @@ import hashlib
 
 def _tarl_buff_check():
     # ... strange code they don't understand
-    
+
 # ... original code below
 ```
 

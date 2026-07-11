@@ -49,12 +49,12 @@ CHANGES APPLIED
 
 4. ACTION HANDLER WIRED
    ✅ _handle_login() → auth.login
-   
+
    Payload:
    - username: str
-   - password: str  
+   - password: str
    - source: "desktop_gui"
-   
+
    Governance Flow:
    - Mandatory routing (no fallback) ✅
    - Fail-fast if adapter missing ✅
@@ -73,31 +73,31 @@ UI HELPERS (34 - CORRECTLY EXCLUDED):
   TronFacePage (6 methods):
     - __init__, _configure_frame, _setup_layout
     - _create_title, _create_status_layout, _start_animation
-  
+
   TronFaceCanvas (6 methods):
     - __init__, paintEvent, animate
     - _draw_grid, _draw_wireframe_face, _draw_data_streams
-  
+
   StatusIndicator (2 methods):
     - __init__, _build_ui
-  
+
   IntroInfoPage (21 methods):
     Layout/UI:
       - _configure_frame, _setup_layout
       - _create_title, _create_divider, _create_footer
       - _create_tab_buttons, _create_login_page
       - _create_glossary_page, _create_contents_page
-    
+
     Login Form Builders:
       - _add_login_header, _add_login_form
       - _add_backend_status, _add_login_feedback
       - _style_login_input (static)
-    
+
     UI Helpers:
       - switch_tab, update_tab_styling
       - refresh_backend_status
       - _display_login_feedback, _set_login_enabled
-    
+
     Governance (NEW):
       - _route_through_governance ✅
       - _handle_login (WIRED) ✅
@@ -132,10 +132,10 @@ Estimated: 10-15 convergence points
 Actual: 1 convergence point
 
 REASON FOR VARIANCE:
-This file is 97% UI rendering/layout code. Only one true action 
+This file is 97% UI rendering/layout code. Only one true action
 handler exists (_handle_login). All other methods are:
 - UI builders (create/setup/configure)
-- Rendering (paint/draw/animate)  
+- Rendering (paint/draw/animate)
 - Display helpers (feedback/styling)
 - Navigation (tab switching)
 

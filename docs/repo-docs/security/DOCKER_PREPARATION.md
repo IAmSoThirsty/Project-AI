@@ -1,6 +1,6 @@
 # Docker Preparation Checklist
 
-**Created:** 2026-05-18  
+**Created:** 2026-05-18
 **Status:** Pre-build — local testing only
 
 ## Architecture

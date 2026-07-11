@@ -37,7 +37,7 @@ else Cache Miss
     activate DB
     DB --> Audit: Previous entry
     deactivate DB
-    
+
     Audit -> Redis: Update cache
 end
 
@@ -70,7 +70,7 @@ note right
   2. UTF-8 encode
   3. SHA-256 hash
   4. Hex representation
-  
+
   current_hash = SHA256(
     canonical_json(entry)
   )
@@ -126,7 +126,7 @@ loop For each entry
     Audit -> Audit: 1. Check sequence continuity
     Audit -> Audit: 2. Verify hash calculation
     Audit -> Audit: 3. Verify chain link\n   (previous_hash matches)
-    
+
     alt Verification Failed
         Audit -> Audit: Record error
         note right
@@ -167,7 +167,7 @@ note right
   Leaves: individual entry hashes
   Nodes: SHA256(left + right)
   Root: overall integrity hash
-  
+
   Enables O(log n) verification
 end note
 
@@ -217,11 +217,11 @@ note over Exec, Redis
   Query entry: < 10ms
   Verify chain (1000 entries): < 2s
   Export report: < 30s
-  
+
   **THROUGHPUT**
   Append ops/sec: 10,000+
   Query ops/sec: 50,000+
-  
+
   **RETENTION**
   Hot storage: Permanent
   No deletion allowed

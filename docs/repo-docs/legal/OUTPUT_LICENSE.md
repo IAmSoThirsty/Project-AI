@@ -19,8 +19,8 @@ version: 1.0.0
 
 # Project-AI Output & Derived Works License
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
+**Version:** 1.0.0
+**Effective Date:** February 8, 2026
 **Base License:** Creative Commons Attribution 4.0 (CC-BY 4.0) with Restrictions
 
 ---
@@ -374,6 +374,6 @@ Material changes require user notification and re-acceptance.
 
 *Protecting users and society while enabling innovation.*
 
-**Contact:** legal@project-ai.dev  
-**Questions:** licensing@project-ai.dev  
+**Contact:** legal@project-ai.dev
+**Questions:** licensing@project-ai.dev
 **Violations:** violations@project-ai.dev

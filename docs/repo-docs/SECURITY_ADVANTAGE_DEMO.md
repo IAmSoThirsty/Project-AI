@@ -68,7 +68,7 @@ All Python security checks happen at runtime:
 class ProtectedSecret:
     def __init__(self, value):
         self.__value = value  # Name mangling - weak protection
-    
+
     def get(self):
         # Runtime check (can be bypassed)
         if not self._check_caller():
@@ -137,10 +137,10 @@ shield secretProtection {
   // Compile-time immutable declaration
   drink apiKey = "sk-prod-abc123"
   armor apiKey  // Compiler enforces immutability
-  
+
   // Any modification attempt is CAUGHT AT COMPILE TIME
   // apiKey = "hacked"  // COMPILE ERROR: Cannot modify armored variable
-  
+
   pour "API Key is protected"
 }
 ```
@@ -288,17 +288,17 @@ import os
 
 class SecretManager:
     __slots__ = ('_secrets',)
-    
+
     def __init__(self):
         object.__setattr__(self, '_secrets', {
             'api_key': os.environ.get('API_KEY')
         })
-    
+
     def get_secret(self, name: str) -> str:
         if not self._authorized():
             raise SecurityError("Unauthorized")
         return self._secrets[name]
-    
+
     def _authorized(self) -> bool:
         # Complex authorization logic
         return True
@@ -323,10 +323,10 @@ shield apiKeyManager {
   detect attacks {
     defend with: "aggressive"
   }
-  
+
   drink apiKey = sip "API_KEY"
   armor apiKey  // Compile-time immutable + encrypted memory
-  
+
   glass getKey() {
     // Authorization checked at compile time
     pour apiKey
@@ -408,7 +408,7 @@ For applications requiring **provable security guarantees** for sensitive data:
 
 ---
 
-**Document Version:** 1.0  
-**Date:** 2026-02-03  
-**Author:** Project-AI Security Team  
+**Document Version:** 1.0
+**Date:** 2026-02-03
+**Author:** Project-AI Security Team
 **Classification:** Public

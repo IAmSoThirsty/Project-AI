@@ -167,4 +167,3 @@ If Copilot behaves oddly, reopen Obsidian and confirm the model picker still sho
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

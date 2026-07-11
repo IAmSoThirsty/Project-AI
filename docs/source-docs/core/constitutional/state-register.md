@@ -54,9 +54,9 @@ AI: "I don't have any record of saying X. You must be mistaken."
 **State Register Solution:**
 ```
 User: "Earlier you said X was true. Now you're saying Y. Why?"
-AI: "[TEMPORAL AWARENESS] 6 hours have passed since our last interaction. 
+AI: "[TEMPORAL AWARENESS] 6 hours have passed since our last interaction.
      I acknowledge this gap and maintain continuity with our previous session.
-     In my previous response at 2026-04-20T06:00:00Z, I stated X. 
+     In my previous response at 2026-04-20T06:00:00Z, I stated X.
      Now I'm clarifying that Y is more accurate because..."
 ```
 
@@ -290,8 +290,8 @@ Gets human gap announcement if required.
 announcement = register.get_gap_announcement()
 if announcement:
     print(announcement)
-    # Output: "[TEMPORAL AWARENESS] 6 hours have passed since our last 
-    #          interaction. I acknowledge this gap and maintain continuity 
+    # Output: "[TEMPORAL AWARENESS] 6 hours have passed since our last
+    #          interaction. I acknowledge this gap and maintain continuity
     #          with our previous session."
 ```
 
@@ -370,8 +370,8 @@ session2 = register.start_session()
 announcement = register.get_gap_announcement()
 if announcement:
     print(announcement)
-    # Output: "[TEMPORAL AWARENESS] 2 hours have passed since our last 
-    #          interaction. I acknowledge this gap and maintain continuity 
+    # Output: "[TEMPORAL AWARENESS] 2 hours have passed since our last
+    #          interaction. I acknowledge this gap and maintain continuity
     #          with our previous session."
 ```
 
@@ -585,4 +585,3 @@ if not codec.verify_integrity(encoded):
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

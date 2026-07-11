@@ -383,17 +383,17 @@ class APIClient:
     def __init__(self, base_url: str, api_key: str):
         self.base_url = base_url
         self.headers = {"Authorization": f"Bearer {api_key}"}
-    
+
     def request(
-        self, 
-        method: str, 
-        endpoint: str, 
+        self,
+        method: str,
+        endpoint: str,
         data: Optional[Dict[str, Any]] = None,
         retries: int = 3
     ) -> Dict[str, Any]:
         """Make API request with retry logic."""
         url = f"{self.base_url}/{endpoint}"
-        
+
         for attempt in range(retries):
             try:
                 response = requests.request(
@@ -401,18 +401,18 @@ class APIClient:
                 )
                 response.raise_for_status()
                 return response.json()
-            
+
             except requests.exceptions.Timeout:
                 if attempt == retries - 1:
                     raise
                 time.sleep(2 ** attempt)  # Exponential backoff
-            
+
             except requests.exceptions.HTTPError as e:
                 if e.response.status_code == 429:  # Rate limit
                     time.sleep(60)
                     continue
                 raise
-        
+
         raise Exception(f"Failed after {retries} attempts")
 ```
 
@@ -534,20 +534,19 @@ SMTP_PASSWORD=app_specific_password
 
 ## 🛡️ Governance
 
-**Maintainer:** AGENT-019 (MOC Constructor)  
-**Integration Owner:** Backend Team Lead  
-**Update Frequency:** Event-driven (new integrations, API changes)  
-**Security Review:** Required for all new integrations  
-**Quality Gate:** All integrations must have error handling + logging  
+**Maintainer:** AGENT-019 (MOC Constructor)
+**Integration Owner:** Backend Team Lead
+**Update Frequency:** Event-driven (new integrations, API changes)
+**Security Review:** Required for all new integrations
+**Quality Gate:** All integrations must have error handling + logging
 **API Key Audit:** Quarterly review of API key rotation and usage
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-23  
-**Schema Compliance:** ✅ 100%  
+**Version:** 1.0.0
+**Last Updated:** 2025-01-23
+**Schema Compliance:** ✅ 100%
 **Integration Health:** 🟢 All active integrations operational
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

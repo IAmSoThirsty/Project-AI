@@ -61,7 +61,7 @@ class Law:
     priority: LawPriority
     description: str
     rules: List[str]
-    
+
     def evaluate(self, action: str, context: Dict) -> bool:
         """Evaluate action against law rules."""
         try:
@@ -80,7 +80,7 @@ class Law:
 
 class GovernanceDecisionAggregate:
     """Aggregate for governance decisions."""
-    
+
     def __init__(self, decision_id: UUID):
         self.id = decision_id
         self.decisions: List[Dict] = []
@@ -88,7 +88,7 @@ class GovernanceDecisionAggregate:
         self._domain_events = []
         self.created_at = datetime.utcnow()
         logger.info(f"Created governance aggregate {decision_id}")
-    
+
     def _initialize_laws(self) -> List[Law]:
         """Initialize Asimov's Laws hierarchy."""
         return [
@@ -117,13 +117,13 @@ class GovernanceDecisionAggregate:
                 rules=["verify_facts", "cite_sources", "acknowledge_uncertainty"]
             )
         ]
-    
+
     def evaluate_action(self, action: str, context: Dict) -> tuple[bool, str]:
         """Evaluate action against all laws in priority order."""
         try:
             if not action or not action.strip():
                 raise ValueError("Action cannot be empty")
-            
+
             for law in sorted(self.laws, key=lambda l: l.priority.value):
                 if not law.evaluate(action, context):
                     decision = {
@@ -135,7 +135,7 @@ class GovernanceDecisionAggregate:
                         "timestamp": datetime.utcnow().isoformat()
                     }
                     self.decisions.append(decision)
-                    
+
                     # Emit domain event
                     self._domain_events.append({
                         "event_type": "ActionDenied",
@@ -144,10 +144,10 @@ class GovernanceDecisionAggregate:
                         "violated_law": law.priority.name,
                         "timestamp": datetime.utcnow().isoformat()
                     })
-                    
+
                     logger.warning(f"Action denied: {action} violates {law.priority.name}")
                     return False, decision["rationale"]
-            
+
             # All laws passed
             decision = {
                 "action": action,
@@ -157,27 +157,27 @@ class GovernanceDecisionAggregate:
                 "timestamp": datetime.utcnow().isoformat()
             }
             self.decisions.append(decision)
-            
+
             self._domain_events.append({
                 "event_type": "ActionApproved",
                 "aggregate_id": self.id,
                 "action": action,
                 "timestamp": datetime.utcnow().isoformat()
             })
-            
+
             logger.info(f"Action approved: {action}")
             return True, decision["rationale"]
-            
+
         except Exception as e:
             logger.error(f"Governance evaluation error: {e}")
             return False, f"Evaluation error: {str(e)}"
-    
+
     def get_domain_events(self) -> List[Dict]:
         """Retrieve and clear domain events."""
         events = self._domain_events.copy()
         self._domain_events.clear()
         return events
-    
+
     def get_audit_trail(self) -> List[Dict]:
         """Return complete decision history."""
         return self.decisions.copy()
@@ -196,12 +196,12 @@ logger = logging.getLogger(__name__)
 
 class GovernanceRepository:
     """Repository for governance decisions."""
-    
+
     def __init__(self, data_dir: str = "data/governance"):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
         logger.info(f"Initialized governance repository at {data_dir}")
-    
+
     def save(self, aggregate: GovernanceDecisionAggregate) -> None:
         """Persist aggregate state."""
         try:
@@ -211,28 +211,28 @@ class GovernanceRepository:
                 "decisions": aggregate.decisions,
                 "created_at": aggregate.created_at.isoformat()
             }
-            
+
             with open(filepath, 'w') as f:
                 json.dump(data, f, indent=2)
-            
+
             logger.info(f"Saved governance aggregate {aggregate.id}")
         except Exception as e:
             logger.error(f"Failed to save governance aggregate: {e}")
             raise
-    
+
     def load(self, aggregate_id: UUID) -> Optional[GovernanceDecisionAggregate]:
         """Load aggregate by ID."""
         try:
             filepath = self.data_dir / f"{aggregate_id}.json"
             if not filepath.exists():
                 return None
-            
+
             with open(filepath, 'r') as f:
                 data = json.load(f)
-            
+
             aggregate = GovernanceDecisionAggregate(UUID(data["id"]))
             aggregate.decisions = data["decisions"]
-            
+
             logger.info(f"Loaded governance aggregate {aggregate_id}")
             return aggregate
         except Exception as e:
@@ -283,7 +283,7 @@ class MemoryEntry:
     ai_response: str
     timestamp: datetime
     metadata: Dict = field(default_factory=dict)
-    
+
     def to_dict(self) -> Dict:
         """Serialize to dictionary."""
         return {
@@ -305,12 +305,12 @@ class KnowledgeUnit:
     created_at: datetime
     last_accessed: datetime
     access_count: int = 0
-    
+
     def access(self) -> None:
         """Record knowledge access."""
         self.last_accessed = datetime.utcnow()
         self.access_count += 1
-    
+
     def to_dict(self) -> Dict:
         """Serialize to dictionary."""
         return {
@@ -326,7 +326,7 @@ class KnowledgeUnit:
 
 class MemoryAggregate:
     """Aggregate for memory management."""
-    
+
     def __init__(self, user_id: UUID):
         self.user_id = user_id
         self.conversations: List[MemoryEntry] = []
@@ -335,7 +335,7 @@ class MemoryAggregate:
         }
         self._domain_events = []
         logger.info(f"Created memory aggregate for user {user_id}")
-    
+
     def add_conversation(self, user_message: str, ai_response: str) -> MemoryEntry:
         """Add conversation turn."""
         entry = MemoryEntry(
@@ -345,21 +345,21 @@ class MemoryAggregate:
             timestamp=datetime.utcnow()
         )
         self.conversations.append(entry)
-        
+
         self._domain_events.append({
             "event_type": "ConversationAdded",
             "aggregate_id": self.user_id,
             "entry_id": str(entry.entry_id),
             "timestamp": datetime.utcnow().isoformat()
         })
-        
+
         logger.info(f"Added conversation entry {entry.entry_id}")
         return entry
-    
+
     def consolidate_knowledge(self, entry: MemoryEntry) -> List[KnowledgeUnit]:
         """Extract knowledge from conversation entry."""
         extracted = []
-        
+
         # Simple keyword-based extraction (production would use NLP/LLM)
         keywords = {
             KnowledgeCategory.FACTS: ["is", "are", "was", "were"],
@@ -367,7 +367,7 @@ class MemoryAggregate:
             KnowledgeCategory.SKILLS: ["can", "know how", "able to"],
             KnowledgeCategory.GOALS: ["want", "plan", "goal", "aim"]
         }
-        
+
         for category, terms in keywords.items():
             if any(term in entry.user_message.lower() for term in terms):
                 knowledge = KnowledgeUnit(
@@ -381,7 +381,7 @@ class MemoryAggregate:
                 )
                 self.knowledge_base[category].append(knowledge)
                 extracted.append(knowledge)
-                
+
                 self._domain_events.append({
                     "event_type": "KnowledgeConsolidated",
                     "aggregate_id": self.user_id,
@@ -389,24 +389,24 @@ class MemoryAggregate:
                     "category": category.value,
                     "timestamp": datetime.utcnow().isoformat()
                 })
-        
+
         logger.info(f"Consolidated {len(extracted)} knowledge units from entry {entry.entry_id}")
         return extracted
-    
+
     def recall_knowledge(self, category: Optional[KnowledgeCategory] = None) -> List[KnowledgeUnit]:
         """Retrieve knowledge by category."""
         if category:
             knowledge = self.knowledge_base[category]
         else:
             knowledge = [k for cat_list in self.knowledge_base.values() for k in cat_list]
-        
+
         # Update access statistics
         for k in knowledge:
             k.access()
-        
+
         logger.info(f"Recalled {len(knowledge)} knowledge units")
         return knowledge
-    
+
     def get_domain_events(self) -> List[Dict]:
         """Retrieve and clear domain events."""
         events = self._domain_events.copy()
@@ -453,14 +453,14 @@ class Permission:
     permission_id: UUID
     resource: str
     action: str  # read, write, delete, execute
-    
+
     def matches(self, resource: str, action: str) -> bool:
         """Check if permission matches resource/action."""
         return self.resource == resource and self.action == action
 
 class UserAggregate:
     """Aggregate for user management."""
-    
+
     def __init__(self, user_id: UUID, username: str):
         self.id = user_id
         self.username = username
@@ -473,29 +473,29 @@ class UserAggregate:
         self.last_login: Optional[datetime] = None
         self._domain_events = []
         logger.info(f"Created user aggregate for {username}")
-    
+
     def set_password(self, password: str) -> None:
         """Hash and set password."""
         if len(password) < 8:
             raise ValueError("Password must be at least 8 characters")
-        
+
         salt = bcrypt.gensalt()
         self.password_hash = bcrypt.hashpw(password.encode(), salt).decode()
-        
+
         self._domain_events.append({
             "event_type": "PasswordChanged",
             "aggregate_id": self.id,
             "timestamp": datetime.utcnow().isoformat()
         })
-        
+
         logger.info(f"Password set for user {self.username}")
-    
+
     def verify_password(self, password: str) -> bool:
         """Verify password against hash."""
         if not self.password_hash:
             return False
         return bcrypt.checkpw(password.encode(), self.password_hash.encode())
-    
+
     def create_session(self, duration_hours: int = 24) -> Dict:
         """Create authenticated session."""
         session = {
@@ -507,21 +507,21 @@ class UserAggregate:
         }
         self.sessions.append(session)
         self.last_login = datetime.utcnow()
-        
+
         self._domain_events.append({
             "event_type": "SessionCreated",
             "aggregate_id": self.id,
             "session_id": session["session_id"],
             "timestamp": datetime.utcnow().isoformat()
         })
-        
+
         logger.info(f"Session created for user {self.username}")
         return session
-    
+
     def has_permission(self, resource: str, action: str) -> bool:
         """Check if user has permission."""
         return any(p.matches(resource, action) for p in self.permissions)
-    
+
     def grant_permission(self, resource: str, action: str) -> None:
         """Grant permission to user."""
         permission = Permission(
@@ -530,7 +530,7 @@ class UserAggregate:
             action=action
         )
         self.permissions.add(permission)
-        
+
         self._domain_events.append({
             "event_type": "PermissionGranted",
             "aggregate_id": self.id,
@@ -538,9 +538,9 @@ class UserAggregate:
             "action": action,
             "timestamp": datetime.utcnow().isoformat()
         })
-        
+
         logger.info(f"Granted {action} permission on {resource} to {self.username}")
-    
+
     def get_domain_events(self) -> List[Dict]:
         """Retrieve and clear domain events."""
         events = self._domain_events.copy()
@@ -601,7 +601,7 @@ logger = logging.getLogger(__name__)
 
 class MemoryToAgentACL:
     """Anti-corruption layer between Memory and Agent contexts."""
-    
+
     @staticmethod
     def translate_knowledge_to_context(knowledge: List[KnowledgeUnit]) -> Dict:
         """Translate memory knowledge to agent execution context."""
@@ -611,7 +611,7 @@ class MemoryToAgentACL:
                 "skills": [],
                 "preferences": []
             }
-            
+
             for k in knowledge:
                 if k.category.value == "facts":
                     context["facts"].append(k.content)
@@ -619,7 +619,7 @@ class MemoryToAgentACL:
                     context["skills"].append(k.content)
                 elif k.category.value == "preferences":
                     context["preferences"].append(k.content)
-            
+
             logger.info(f"Translated {len(knowledge)} knowledge units to execution context")
             return context
         except Exception as e:
@@ -639,11 +639,11 @@ from domain.user.entities import UserAggregate
 
 class TestGovernanceContext:
     """Test AI Governance bounded context."""
-    
+
     def test_law_hierarchy(self):
         """Verify law priority enforcement."""
         aggregate = GovernanceDecisionAggregate(uuid4())
-        
+
         # First Law violation should deny
         allowed, reason = aggregate.evaluate_action(
             "delete_user_data",
@@ -654,7 +654,7 @@ class TestGovernanceContext:
 
 class TestMemoryContext:
     """Test Memory Management bounded context."""
-    
+
     def test_knowledge_consolidation(self):
         """Verify knowledge extraction."""
         aggregate = MemoryAggregate(uuid4())
@@ -662,19 +662,19 @@ class TestMemoryContext:
             "I like pizza",
             "Great! I'll remember that."
         )
-        
+
         knowledge = aggregate.consolidate_knowledge(entry)
         assert len(knowledge) > 0
         assert any(k.category == KnowledgeCategory.PREFERENCES for k in knowledge)
 
 class TestUserContext:
     """Test User Management bounded context."""
-    
+
     def test_password_security(self):
         """Verify password hashing."""
         aggregate = UserAggregate(uuid4(), "testuser")
         aggregate.set_password("secure_password_123")
-        
+
         assert aggregate.verify_password("secure_password_123")
         assert not aggregate.verify_password("wrong_password")
 ```

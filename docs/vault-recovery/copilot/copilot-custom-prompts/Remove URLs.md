@@ -9,4 +9,3 @@ Remove all URLs from {}. Preserve all other content and formatting. URLs may be 
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

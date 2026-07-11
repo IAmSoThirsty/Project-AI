@@ -32,7 +32,7 @@ PHASE 1B: DATA PROCESSING CONSOLIDATION
     ├─ data_analysis.py
     ├─ intent_detection.py
     └─ learning_paths.py
-  
+
   AFTER:
     └─ intelligence_engine.py
         ├─ data_analysis functions
@@ -43,7 +43,7 @@ PHASE 1C: SECURITY CONSOLIDATION
   BEFORE:
     ├─ security_resources.py
     └─ command_override.py
-  
+
   AFTER:
     └─ security_manager.py
         ├─ SecurityResourceManager

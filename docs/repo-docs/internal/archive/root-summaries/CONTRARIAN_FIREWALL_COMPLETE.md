@@ -423,7 +423,7 @@ pytest tests/test_contrarian_firewall.py -v
 uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
-**Expected:** 
+**Expected:**
 ```
 [OK] Contrarian Firewall Orchestrator started
 ```

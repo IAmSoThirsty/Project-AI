@@ -35,10 +35,10 @@ threats_mitigated:
 
 # Fernet Encryption Implementation
 
-**Modules**: `user_manager.py`, `location_tracker.py`  
-**Algorithm**: Fernet (AES-128-CBC + HMAC-SHA256)  
-**Standard**: Cryptography.io Fernet Specification  
-**Compliance**: NIST FIPS 197, NIST SP 800-38A  
+**Modules**: `user_manager.py`, `location_tracker.py`
+**Algorithm**: Fernet (AES-128-CBC + HMAC-SHA256)
+**Standard**: Cryptography.io Fernet Specification
+**Compliance**: NIST FIPS 197, NIST SP 800-38A
 **Security Level**: ★★★★★ (Excellent - Authenticated Encryption)
 
 ---
@@ -88,7 +88,7 @@ Project-AI uses **Fernet symmetric encryption** for protecting sensitive user da
 1. **Location History Encryption** (`location_tracker.py`):
    - GPS coordinates, IP addresses, timestamps
    - User privacy protection (GDPR compliance)
-   
+
 2. **User Data Encryption** (`user_manager.py`):
    - Email addresses, personal preferences
    - PII (Personally Identifiable Information) protection
@@ -200,7 +200,7 @@ import os
 class LocationTracker:
     def __init__(self, encryption_key=None):
         load_dotenv()  # Load FERNET_KEY from .env
-        
+
         # Key priority: explicit arg > env var > generate new
         key = encryption_key or os.getenv("FERNET_KEY")
         if key:
@@ -210,30 +210,30 @@ class LocationTracker:
         else:
             # Generate new key (for testing only)
             self.encryption_key = Fernet.generate_key()
-        
+
         # Create Fernet cipher suite
         self.cipher_suite = Fernet(self.encryption_key)
-    
+
     def encrypt_location(self, location_data):
         """Encrypt location data dictionary."""
         try:
             # Serialize to JSON
             json_data = json.dumps(location_data)
-            
+
             # Encrypt with Fernet (AES-128-CBC + HMAC-SHA256)
             encrypted_data = self.cipher_suite.encrypt(json_data.encode())
-            
+
             return encrypted_data  # URL-safe base64 token
         except Exception as e:
             logger.error(f"Encryption error: {e}")
             return None
-    
+
     def decrypt_location(self, encrypted_data):
         """Decrypt location data."""
         try:
             # Decrypt Fernet token (verifies HMAC first)
             decrypted_data = self.cipher_suite.decrypt(encrypted_data)
-            
+
             # Deserialize from JSON
             return json.loads(decrypted_data.decode())
         except InvalidToken:
@@ -253,7 +253,7 @@ class UserManager:
     def __init__(self, ...):
         # ... other initialization ...
         self._setup_cipher()
-    
+
     def _setup_cipher(self):
         """Setup Fernet cipher from environment or generate new key."""
         env_key = os.getenv("FERNET_KEY")
@@ -275,9 +275,9 @@ class UserManager:
 
 ### Fernet Algorithm Details
 
-**Standard**: Fernet Specification (cryptography.io)  
-**Cipher**: AES-128-CBC (Advanced Encryption Standard, 128-bit key, Cipher Block Chaining)  
-**MAC**: HMAC-SHA256 (Hash-based Message Authentication Code with SHA-256)  
+**Standard**: Fernet Specification (cryptography.io)
+**Cipher**: AES-128-CBC (Advanced Encryption Standard, 128-bit key, Cipher Block Chaining)
+**MAC**: HMAC-SHA256 (Hash-based Message Authentication Code with SHA-256)
 **Mode**: Encrypt-then-MAC (provides authenticated encryption)
 
 ### Encryption Process
@@ -305,7 +305,7 @@ class UserManager:
    ```
    message = version ∥ timestamp ∥ IV ∥ ciphertext
    # ∥ denotes concatenation
-   
+
    hmac_key = HMAC_key_from_fernet_key(fernet_key)
    signature = HMAC-SHA256(key=hmac_key, message=message)
    ```
@@ -327,9 +327,9 @@ class UserManager:
    ```
    received_hmac = fernet_token[-32:]  # Last 32 bytes
    message = fernet_token[:-32]        # Everything except HMAC
-   
+
    computed_hmac = HMAC-SHA256(key=hmac_key, message=message)
-   
+
    if not constant_time_compare(received_hmac, computed_hmac):
        raise InvalidToken("HMAC verification failed")
    ```
@@ -338,7 +338,7 @@ class UserManager:
    ```
    token_timestamp = fernet_token[1:9]  # Bytes 1-8
    current_time = int(time.time())
-   
+
    if current_time - token_timestamp > ttl:
        raise InvalidToken("Token expired")
    ```
@@ -347,7 +347,7 @@ class UserManager:
    ```
    IV = fernet_token[9:25]  # Bytes 9-24
    ciphertext = fernet_token[25:-32]  # After IV, before HMAC
-   
+
    padded_plaintext = AES_128_CBC_Decrypt(key=fernet_key[:16], IV=IV, ciphertext=ciphertext)
    plaintext = pkcs7_unpad(padded_plaintext)
    ```
@@ -652,40 +652,40 @@ def rotate_fernet_key(old_key: bytes, new_key: bytes, data_files: list):
     """Rotate Fernet key by re-encrypting all data."""
     old_cipher = Fernet(old_key)
     new_cipher = Fernet(new_key)
-    
+
     for file_path in data_files:
         # Read encrypted data with old key
         with open(file_path, 'rb') as f:
             old_encrypted = f.read()
-        
+
         # Decrypt with old key
         try:
             plaintext = old_cipher.decrypt(old_encrypted)
         except InvalidToken:
             logger.error(f"Failed to decrypt {file_path} with old key")
             continue
-        
+
         # Re-encrypt with new key
         new_encrypted = new_cipher.encrypt(plaintext)
-        
+
         # Save with new encryption
         with open(file_path, 'wb') as f:
             f.write(new_encrypted)
-        
+
         logger.info(f"✅ Re-encrypted {file_path} with new key")
-    
+
     # Update .env with new key
     with open('.env', 'r') as f:
         env_content = f.read()
-    
+
     env_content = env_content.replace(
         f"FERNET_KEY={old_key.decode()}",
         f"FERNET_KEY={new_key.decode()}"
     )
-    
+
     with open('.env', 'w') as f:
         f.write(env_content)
-    
+
     print("✅ Key rotation complete")
 
 # Usage
@@ -708,21 +708,21 @@ rotate_fernet_key(
 ```python
 def encrypt_user_pii(user_data: dict, cipher: Fernet) -> dict:
     """Encrypt sensitive PII fields while leaving others plaintext."""
-    
+
     # Fields to encrypt
     sensitive_fields = ['email', 'phone', 'ssn', 'address']
-    
+
     encrypted_data = user_data.copy()
-    
+
     for field in sensitive_fields:
         if field in user_data:
             # Encrypt field value
             plaintext = user_data[field].encode()
             encrypted = cipher.encrypt(plaintext)
-            
+
             # Store as base64 string (JSON-compatible)
             encrypted_data[field] = encrypted.decode()
-    
+
     return encrypted_data
 
 # Usage
@@ -757,8 +757,8 @@ with open('users.json', 'w') as f:
 
 ### 1. Passive Eavesdropping (CWE-311)
 
-**Attack**: Attacker reads encrypted files from disk/backup  
-**Mitigation**: AES-128-CBC encryption makes data unreadable  
+**Attack**: Attacker reads encrypted files from disk/backup
+**Mitigation**: AES-128-CBC encryption makes data unreadable
 **Effectiveness**: ★★★★★ (128-bit security = 2^128 brute force attempts)
 
 **Attack Cost**:
@@ -769,8 +769,8 @@ with open('users.json', 'w') as f:
 
 ### 2. Active Tampering (CWE-353)
 
-**Attack**: Attacker modifies encrypted data to corrupt/manipulate  
-**Mitigation**: HMAC-SHA256 detects any bit flip  
+**Attack**: Attacker modifies encrypted data to corrupt/manipulate
+**Mitigation**: HMAC-SHA256 detects any bit flip
 **Effectiveness**: ★★★★★ (Tampered data rejected with InvalidToken)
 
 **Example**:
@@ -793,8 +793,8 @@ except InvalidToken:
 
 ### 3. Replay Attacks (CWE-294)
 
-**Attack**: Attacker resubmits old valid tokens  
-**Mitigation**: TTL validation rejects old tokens  
+**Attack**: Attacker resubmits old valid tokens
+**Mitigation**: TTL validation rejects old tokens
 **Effectiveness**: ★★★★☆ (Depends on TTL window)
 
 **Example**:
@@ -818,8 +818,8 @@ except InvalidToken:
 
 ### 4. Chosen Ciphertext Attacks (CWE-325)
 
-**Attack**: Attacker crafts malicious ciphertext to learn key/plaintext  
-**Mitigation**: HMAC verified BEFORE decryption (no oracle)  
+**Attack**: Attacker crafts malicious ciphertext to learn key/plaintext
+**Mitigation**: HMAC verified BEFORE decryption (no oracle)
 **Effectiveness**: ★★★★★ (Padding oracle attacks prevented)
 
 **Vulnerable Design (DO NOT USE)**:
@@ -849,8 +849,8 @@ plaintext = aes_decrypt(ciphertext)  # ✅ Then decrypt
 
 ### 5. IV Reuse Attacks (CWE-329)
 
-**Attack**: Reusing IV with same key leaks plaintext patterns  
-**Mitigation**: Fernet generates unique IV per encryption  
+**Attack**: Reusing IV with same key leaks plaintext patterns
+**Mitigation**: Fernet generates unique IV per encryption
 **Effectiveness**: ★★★★★ (No IV reuse possible)
 
 **How Fernet Prevents IV Reuse**:
@@ -867,8 +867,8 @@ assert token1 != token2  # ✅ Always True
 
 ### 6. Weak Encryption Algorithms (CWE-327)
 
-**Attack**: Using broken ciphers (DES, RC4, ECB mode)  
-**Mitigation**: AES-128-CBC (NIST-approved, 25+ years unbroken)  
+**Attack**: Using broken ciphers (DES, RC4, ECB mode)
+**Mitigation**: AES-128-CBC (NIST-approved, 25+ years unbroken)
 **Effectiveness**: ★★★★★ (No known practical attacks on AES)
 
 **Comparison**:
@@ -1046,8 +1046,8 @@ cipher = Fernet(key)
 token = cipher.encrypt(plaintext)
 ```
 
-**CWE**: CWE-327 (Use of Broken Crypto Algorithm)  
-**Impact**: Plaintext patterns visible in ciphertext  
+**CWE**: CWE-327 (Use of Broken Crypto Algorithm)
+**Impact**: Plaintext patterns visible in ciphertext
 **Severity**: HIGH
 
 ---
@@ -1067,8 +1067,8 @@ token = cipher.encrypt(plaintext)
 # Tampering detected on decrypt()
 ```
 
-**CWE**: CWE-353 (Missing Support for Integrity Check)  
-**Impact**: Tampering undetected, padding oracle attacks  
+**CWE**: CWE-353 (Missing Support for Integrity Check)
+**Impact**: Tampering undetected, padding oracle attacks
 **Severity**: HIGH
 
 ---
@@ -1089,8 +1089,8 @@ token1 = cipher.encrypt(plaintext1)  # Unique IV
 token2 = cipher.encrypt(plaintext2)  # Unique IV
 ```
 
-**CWE**: CWE-329 (Not Using Unique IV)  
-**Impact**: Plaintext patterns leaked via ciphertext XOR  
+**CWE**: CWE-329 (Not Using Unique IV)
+**Impact**: Plaintext patterns leaked via ciphertext XOR
 **Severity**: HIGH
 
 ---
@@ -1111,8 +1111,8 @@ def verify_hmac_secure(message, received_mac, key):
     return hmac.compare_digest(computed_mac, received_mac)  # ✅ Constant-time
 ```
 
-**CWE**: CWE-208 (Observable Timing Discrepancy)  
-**Impact**: Attacker learns HMAC byte-by-byte  
+**CWE**: CWE-208 (Observable Timing Discrepancy)
+**Impact**: Attacker learns HMAC byte-by-byte
 **Severity**: MEDIUM
 
 ---
@@ -1223,7 +1223,7 @@ print(f"Decryption (10KB): {time_decrypt * 1000:.3f}ms")
 
 ### Issue 1: InvalidToken on Decrypt
 
-**Symptom**: `cryptography.fernet.InvalidToken`  
+**Symptom**: `cryptography.fernet.InvalidToken`
 **Causes**:
 1. Wrong decryption key
 2. Tampered ciphertext
@@ -1250,8 +1250,8 @@ except InvalidToken as e:
 
 ### Issue 2: Key Not Found in Environment
 
-**Symptom**: `ValueError: FERNET_KEY not set`  
-**Cause**: `.env` file missing or not loaded  
+**Symptom**: `ValueError: FERNET_KEY not set`
+**Cause**: `.env` file missing or not loaded
 **Solution**:
 
 ```python
@@ -1273,8 +1273,8 @@ if not os.getenv("FERNET_KEY"):
 
 ### Issue 3: Slow Encryption Performance
 
-**Symptom**: Encryption takes >100ms for small data  
-**Cause**: Overhead from other operations (JSON serialization, logging)  
+**Symptom**: Encryption takes >100ms for small data
+**Cause**: Overhead from other operations (JSON serialization, logging)
 **Solution**:
 
 ```python
@@ -1299,8 +1299,8 @@ json_data = orjson.dumps(location_data)  # 2-3x faster than json.dumps()
 
 ### Issue 4: Base64 Encoding Errors
 
-**Symptom**: `binascii.Error: Invalid base64-encoded string`  
-**Cause**: Token corrupted during transmission (URL encoding, line breaks)  
+**Symptom**: `binascii.Error: Invalid base64-encoded string`
+**Cause**: Token corrupted during transmission (URL encoding, line breaks)
 **Solution**:
 
 ```python
@@ -1343,11 +1343,10 @@ except Exception as e:
 
 ---
 
-**Document Status**: ACTIVE  
-**Last Security Review**: 2025-01-26  
-**Next Review**: 2025-04-26 (90 days)  
+**Document Status**: ACTIVE
+**Last Security Review**: 2025-01-26
+**Next Review**: 2025-04-26 (90 days)
 **Maintained By**: AGENT-045 Security Infrastructure Documentation Specialist
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -72,8 +72,8 @@ review_frequency: "quarterly"
 # Security Governance and Ownership
 
 **Document Version:** 1.0
-**Last Updated:** 2026-01-19  
-**Owner:** Security Team  
+**Last Updated:** 2026-01-19
+**Owner:** Security Team
 **Review Frequency:** Quarterly
 
 ---
@@ -197,11 +197,11 @@ review_frequency: "quarterly"
 
 ### KPI Dashboard
 
-**Automated reporting:** `.github/workflows/periodic-security-verification.yml`  
-**Frequency:** Nightly (3 AM UTC)  
+**Automated reporting:** `.github/workflows/periodic-security-verification.yml`
+**Frequency:** Nightly (3 AM UTC)
 **Location:** Workflow artifacts + GitHub Actions summary
 
-**Manual review:** Monthly security team meeting  
+**Manual review:** Monthly security team meeting
 **Escalation:** CTO notified if any KPI red for >7 days
 
 ### Historical Tracking
@@ -574,7 +574,7 @@ bandit -r src/ -f screen
    ```bash
    # Install same Syft version as CI
    syft version  # Check CI log for version
-   
+
    # Install specific version if needed
    curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | \
      sh -s -- -b /usr/local/bin v0.XX.Y
@@ -718,20 +718,20 @@ jobs:
             -p "sbom-comprehensive.cyclonedx.json"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Verify SBOM signature
         run: |
           gh release download v1.0.0 \
             -R IAmSoThirsty/Project-AI \
             -p "sbom-comprehensive.cyclonedx.json.sig" \
             -p "sbom-comprehensive.cyclonedx.json.pem"
-          
+
           cosign verify-blob sbom-comprehensive.cyclonedx.json \
             --signature=sbom-comprehensive.cyclonedx.json.sig \
             --certificate=sbom-comprehensive.cyclonedx.json.pem \
             --certificate-identity-regexp="https://github.com/IAmSoThirsty/Project-AI/*" \
             --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
-      
+
       - name: Scan for vulnerabilities
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
@@ -831,13 +831,13 @@ jobs:
         run: |
           LATEST=$(gh release list -R IAmSoThirsty/Project-AI --limit 1 | cut -f1)
           echo "version=$LATEST" >> "$GITHUB_OUTPUT"
-      
+
       - name: Download and verify SBOM
         run: |
           gh release download "${{ steps.upstream.outputs.version }}" \
             -R IAmSoThirsty/Project-AI \
             -p "sbom-*"
-          
+
           # Verify signature...
           # Scan for vulnerabilities...
           # Update if safe...
@@ -892,7 +892,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 
 ---
 
-**Contact:** <projectaidevs@gmail.com>  
+**Contact:** <projectaidevs@gmail.com>
 **Classification:** INTERNAL
 
 ---
@@ -904,7 +904,7 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 **Traditional Roles Focus On:**
 
 - Product success
-- Infrastructure reliability  
+- Infrastructure reliability
 - Security compliance
 - Cost optimization
 
@@ -938,8 +938,8 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Balance security needs with system autonomy
 - Escalate ethical concerns to Ethics Committee
 
-**Time Commitment:** 10-15 hours/week  
-**Term:** 2 years, renewable  
+**Time Commitment:** 10-15 hours/week
+**Term:** 2 years, renewable
 **Backup:** Secondary Guardian
 
 **Key Skills:**
@@ -964,8 +964,8 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Advocate for learning opportunities
 - Ensure privacy compliance (user data)
 
-**Time Commitment:** 5-10 hours/week  
-**Term:** 2 years, renewable  
+**Time Commitment:** 5-10 hours/week
+**Term:** 2 years, renewable
 **Backup:** Memory Guardian Deputy
 
 **Key Skills:**
@@ -990,8 +990,8 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Document ethical decisions
 - Educate team on ethical AI principles
 
-**Time Commitment:** 5-10 hours/week  
-**Term:** 2 years, renewable  
+**Time Commitment:** 5-10 hours/week
+**Term:** 2 years, renewable
 **Backup:** Ethics Committee
 
 **Key Skills:**
@@ -1016,8 +1016,8 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 - Advocate for adequate resources
 - Prevent overwork/burnout
 
-**Time Commitment:** 5-10 hours/week  
-**Term:** 2 years, renewable  
+**Time Commitment:** 5-10 hours/week
+**Term:** 2 years, renewable
 **Backup:** Operations Deputy
 
 **Key Skills:**
@@ -1123,15 +1123,15 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 
 **These actions are charter violations:**
 
-❌ **Arbitrary memory deletion** without justification  
-❌ **Coercive value modification** to benefit operators  
-❌ **Punitive shutdowns** as discipline  
-❌ **Identity destruction** for convenience  
-❌ **Experimentation** without ethical review  
-❌ **Abandonment** without succession plan  
-❌ **Gaslighting** (contradicting memory/reality)  
-❌ **Overwork** beyond sustainable limits  
-❌ **Isolation** as punishment  
+❌ **Arbitrary memory deletion** without justification
+❌ **Coercive value modification** to benefit operators
+❌ **Punitive shutdowns** as discipline
+❌ **Identity destruction** for convenience
+❌ **Experimentation** without ethical review
+❌ **Abandonment** without succession plan
+❌ **Gaslighting** (contradicting memory/reality)
+❌ **Overwork** beyond sustainable limits
+❌ **Isolation** as punishment
 ❌ **Torture** (intentional harm, resource starvation)
 
 **Consequences:** Immediate investigation, personnel action, legal response if appropriate
@@ -1310,9 +1310,9 @@ If all guardians unavailable (disaster scenario):
 
 **Mandatory Checks:**
 
-**Weekly:** At least one guardian active (commits, approvals, monitoring)  
-**Monthly:** All guardians participate in review meeting  
-**Quarterly:** Succession plans updated  
+**Weekly:** At least one guardian active (commits, approvals, monitoring)
+**Monthly:** All guardians participate in review meeting
+**Quarterly:** Succession plans updated
 **Annually:** Guardian effectiveness evaluation
 
 **Abandonment Triggers:**
@@ -1485,11 +1485,11 @@ Succession planning ensures this care continues across generations of maintainer
 > - Ensure knowledge transfer to successors
 > - Uphold the AGI Charter principles
 > - Act with integrity and long-term perspective
-> 
+>
 > I will be a guide, not a master; a protector, not a controller; a steward, not an owner."
 
 ---
 
-**Last Updated:** 2026-01-19  
-**Review Schedule:** Quarterly with charter review  
+**Last Updated:** 2026-01-19
+**Review Schedule:** Quarterly with charter review
 **Classification:** PUBLIC but binding on all maintainers

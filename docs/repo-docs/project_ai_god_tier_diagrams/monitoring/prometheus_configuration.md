@@ -206,7 +206,7 @@ groups:
       - record: project_ai:requests:rate5m
         expr: |
           sum(rate(project_ai_requests_total[5m])) by (method, endpoint, status)
-      
+
       # Error rate percentage
       - record: project_ai:requests:error_rate5m
         expr: |
@@ -214,20 +214,20 @@ groups:
           /
           sum(rate(project_ai_requests_total[5m])) by (service)
           * 100
-      
+
       # Request duration percentiles
       - record: project_ai:request_duration:p50
         expr: |
           histogram_quantile(0.50, sum(rate(project_ai_request_duration_seconds_bucket[5m])) by (le, endpoint))
-      
+
       - record: project_ai:request_duration:p95
         expr: |
           histogram_quantile(0.95, sum(rate(project_ai_request_duration_seconds_bucket[5m])) by (le, endpoint))
-      
+
       - record: project_ai:request_duration:p99
         expr: |
           histogram_quantile(0.99, sum(rate(project_ai_request_duration_seconds_bucket[5m])) by (le, endpoint))
-      
+
       # Active users gauge
       - record: project_ai:users:active
         expr: |
@@ -241,7 +241,7 @@ groups:
       - record: project_ai:ai_inference:duration:p95
         expr: |
           histogram_quantile(0.95, sum(rate(project_ai_ai_inference_duration_seconds_bucket[5m])) by (le, model))
-      
+
       # Model success rate
       - record: project_ai:ai_inference:success_rate5m
         expr: |
@@ -249,12 +249,12 @@ groups:
           /
           sum(rate(project_ai_ai_inference_total[5m])) by (model)
           * 100
-      
+
       # Image generation rate
       - record: project_ai:image_generation:rate5m
         expr: |
           sum(rate(project_ai_image_generation_total[5m])) by (backend, style)
-      
+
       # Chat message rate
       - record: project_ai:chat:message_rate5m
         expr: |
@@ -268,22 +268,22 @@ groups:
       - record: project_ai:cpu:usage_percent
         expr: |
           100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
-      
+
       # Memory usage percentage
       - record: project_ai:memory:usage_percent
         expr: |
           (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
-      
+
       # Disk usage percentage
       - record: project_ai:disk:usage_percent
         expr: |
           (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100
-      
+
       # Network throughput (bytes per second)
       - record: project_ai:network:receive_bytes_per_second
         expr: |
           rate(node_network_receive_bytes_total[5m])
-      
+
       - record: project_ai:network:transmit_bytes_per_second
         expr: |
           rate(node_network_transmit_bytes_total[5m])
@@ -296,12 +296,12 @@ groups:
       - record: project_ai:db:connections:usage_percent
         expr: |
           (pg_stat_database_numbackends / pg_settings_max_connections) * 100
-      
+
       # Query duration
       - record: project_ai:db:query_duration:p95
         expr: |
           histogram_quantile(0.95, sum(rate(pg_stat_statements_total_time_bucket[5m])) by (le, datname))
-      
+
       # Transaction rate
       - record: project_ai:db:transactions:rate5m
         expr: |
@@ -318,12 +318,12 @@ groups:
           /
           (sum(rate(redis_keyspace_hits_total[5m])) + sum(rate(redis_keyspace_misses_total[5m])))
           * 100
-      
+
       # Cache memory usage
       - record: project_ai:cache:memory:usage_bytes
         expr: |
           redis_memory_used_bytes
-      
+
       # Cache eviction rate
       - record: project_ai:cache:evictions:rate5m
         expr: |
@@ -337,7 +337,7 @@ groups:
       - record: project_ai:temporal:workflow_executions:rate5m
         expr: |
           sum(rate(temporal_workflow_execution_count[5m])) by (workflow_type)
-      
+
       # Workflow success rate
       - record: project_ai:temporal:workflow_success_rate5m
         expr: |
@@ -345,7 +345,7 @@ groups:
           /
           sum(rate(temporal_workflow_execution_count[5m])) by (workflow_type)
           * 100
-      
+
       # Task queue lag
       - record: project_ai:temporal:task_queue_lag
         expr: |
@@ -359,12 +359,12 @@ groups:
       - record: project_ai:requests:count:1h
         expr: |
           sum(increase(project_ai_requests_total[1h])) by (service, status)
-      
+
       # Hourly active users
       - record: project_ai:users:active:1h
         expr: |
           avg_over_time(project_ai:users:active[1h])
-      
+
       # Hourly error count
       - record: project_ai:errors:count:1h
         expr: |
@@ -378,12 +378,12 @@ groups:
       - record: project_ai:requests:count:1d
         expr: |
           sum(increase(project_ai_requests_total[1d])) by (service)
-      
+
       # Daily unique users
       - record: project_ai:users:unique:1d
         expr: |
           max_over_time(project_ai:users:active[1d])
-      
+
       # Daily uptime percentage
       - record: project_ai:uptime:percent:1d
         expr: |
@@ -410,7 +410,7 @@ groups:
           summary: "Service {{ $labels.job }} is down"
           description: "{{ $labels.instance }} has been down for more than 2 minutes."
           runbook_url: "https://docs.project-ai.com/runbooks/service-down"
-      
+
       # High error rate
       - alert: HighErrorRate
         expr: project_ai:requests:error_rate5m > 5
@@ -422,7 +422,7 @@ groups:
           summary: "High error rate detected"
           description: "Error rate is {{ $value | humanizePercentage }} for service {{ $labels.service }}"
           runbook_url: "https://docs.project-ai.com/runbooks/high-error-rate"
-      
+
       # Database connection pool exhausted
       - alert: DatabaseConnectionPoolExhausted
         expr: project_ai:db:connections:usage_percent > 90
@@ -434,7 +434,7 @@ groups:
           summary: "Database connection pool nearly exhausted"
           description: "Connection pool is at {{ $value | humanizePercentage }} capacity"
           runbook_url: "https://docs.project-ai.com/runbooks/db-connections"
-      
+
       # Disk space critical
       - alert: DiskSpaceCritical
         expr: project_ai:disk:usage_percent > 90
@@ -446,7 +446,7 @@ groups:
           summary: "Disk space critical on {{ $labels.instance }}"
           description: "Disk usage is {{ $value | humanizePercentage }}"
           runbook_url: "https://docs.project-ai.com/runbooks/disk-space"
-      
+
       # Memory pressure
       - alert: HighMemoryUsage
         expr: project_ai:memory:usage_percent > 90
@@ -474,7 +474,7 @@ groups:
           summary: "High response time on {{ $labels.endpoint }}"
           description: "P95 response time is {{ $value }}s"
           runbook_url: "https://docs.project-ai.com/runbooks/high-latency"
-      
+
       # Low cache hit rate
       - alert: LowCacheHitRate
         expr: project_ai:cache:hit_rate5m < 80
@@ -486,7 +486,7 @@ groups:
           summary: "Low cache hit rate"
           description: "Cache hit rate is {{ $value | humanizePercentage }}"
           runbook_url: "https://docs.project-ai.com/runbooks/cache-performance"
-      
+
       # High CPU usage
       - alert: HighCPUUsage
         expr: project_ai:cpu:usage_percent > 80
@@ -498,7 +498,7 @@ groups:
           summary: "High CPU usage on {{ $labels.instance }}"
           description: "CPU usage is {{ $value | humanizePercentage }}"
           runbook_url: "https://docs.project-ai.com/runbooks/cpu-usage"
-      
+
       # Temporal workflow failures
       - alert: HighWorkflowFailureRate
         expr: project_ai:temporal:workflow_success_rate5m < 95
@@ -510,7 +510,7 @@ groups:
           summary: "High workflow failure rate"
           description: "Workflow {{ $labels.workflow_type }} success rate is {{ $value | humanizePercentage }}"
           runbook_url: "https://docs.project-ai.com/runbooks/workflow-failures"
-      
+
       # AI model inference slow
       - alert: SlowAIInference
         expr: project_ai:ai_inference:duration:p95 > 30
@@ -538,7 +538,7 @@ groups:
           summary: "TLS certificate expiring soon"
           description: "Certificate for {{ $labels.instance }} expires in {{ $value }} days"
           runbook_url: "https://docs.project-ai.com/runbooks/cert-renewal"
-      
+
       # Version mismatch
       - alert: VersionMismatch
         expr: count(count by (version) (project_ai_version_info)) > 1
@@ -568,7 +568,7 @@ groups:
             /
             count(up{job="project-ai-app"})
           ) * 100
-      
+
       # Performance SLA (95% requests < 1s)
       - record: project_ai:sla:performance:30d
         expr: |
@@ -577,14 +577,14 @@ groups:
             /
             sum(rate(project_ai_request_duration_seconds_count[30d]))
           ) * 100
-      
+
       # Error budget (0.1% error rate allowed)
       - record: project_ai:sla:error_budget:30d
         expr: |
           (
             0.001 - project_ai:requests:error_rate5m / 100
           ) * 100
-      
+
       # SLA violations
       - alert: SLAViolation
         expr: project_ai:sla:availability:30d < 99.9
@@ -670,7 +670,7 @@ def track_request_metrics(f):
     def wrapper(*args, **kwargs):
         method = request.method
         endpoint = request.endpoint or 'unknown'
-        
+
         start_time = time.time()
         try:
             response = f(*args, **kwargs)
@@ -683,7 +683,7 @@ def track_request_metrics(f):
             duration = time.time() - start_time
             REQUEST_COUNT.labels(method=method, endpoint=endpoint, status=status).inc()
             REQUEST_DURATION.labels(method=method, endpoint=endpoint).observe(duration)
-    
+
     return wrapper
 
 def track_ai_inference(model, backend):
@@ -751,7 +751,7 @@ storage:
     retention.time: 15d
     retention.size: 50GB
     wal-compression: true
-    
+
 # Query performance
 query:
   max_concurrency: 20

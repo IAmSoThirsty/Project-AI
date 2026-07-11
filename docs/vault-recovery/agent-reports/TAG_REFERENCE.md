@@ -2,10 +2,10 @@
 
 **Your Quick Reference for All 85+ Official Tags** 🏷️
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 8 minutes  
-**Audience:** Documentation contributors, developers  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 8 minutes
+**Audience:** Documentation contributors, developers
 **Prerequisites:** Basic metadata knowledge
 
 ---
@@ -411,7 +411,7 @@ Required Combination:
 
 ```yaml
 # Bad: 20+ tags makes search useless
-tags: [architecture, security, development, operations, testing, 
+tags: [architecture, security, development, operations, testing,
        monitoring, deployment, ci-cd, docker, kubernetes, python,
        javascript, typescript, react, flask, postgresql, redis,
        nginx, aws, azure, gcp]
@@ -655,4 +655,3 @@ dependencies:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

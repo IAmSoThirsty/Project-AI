@@ -566,7 +566,7 @@ override.authenticate("SecureOverride123!")
 success = override.enable_master_override()
 if success:
     print("⚠️ WARNING: ALL SAFETY PROTOCOLS DISABLED")
-    
+
 # Verify all protocols disabled
 protocols = override.get_all_protocols()
 print(all(not enabled for enabled in protocols.values()))  # True
@@ -685,7 +685,7 @@ for i in range(5):
 success = override.emergency_unlock(admin_verification="admin_token_123")
 if success:
     print("Lockout cleared - user can authenticate")
-    
+
 # Now authentication works
 override.authenticate("SecureOverride123!")
 print(override.authenticated)  # True
@@ -890,7 +890,7 @@ print("\n=== Protocol Override ===")
 success = override.override_protocol("content_filter", False)
 if success:
     print("✓ Content filter DISABLED")
-    
+
 # Check status
 is_enabled = override.is_protocol_enabled("content_filter")
 print(f"Content filter enabled: {is_enabled}")  # False
@@ -936,7 +936,7 @@ print("=== Master Override ===")
 success = override.enable_master_override()
 if success:
     print("⚠️ WARNING: ALL SAFETY PROTOCOLS DISABLED")
-    
+
     # Verify all disabled
     protocols = override.get_all_protocols()
     disabled_count = sum(1 for enabled in protocols.values() if not enabled)
@@ -1009,7 +1009,7 @@ print("\n=== Admin Emergency Unlock ===")
 unlocked = override.emergency_unlock(admin_verification="admin_token")
 if unlocked:
     print("✓ Lockout cleared by admin")
-    
+
 # Now authentication works
 success = override.authenticate("MasterSecure2024!@#")
 print(f"Auth after unlock: {'Success' if success else 'Failed'}")
@@ -1093,7 +1093,7 @@ if not is_valid:
 computed_hash = hashlib.sha256(password.encode()).hexdigest()
 if secrets.compare_digest(computed_hash, legacy_hash):
     # Password valid
-    
+
 # INSECURE (timing leak) - DON'T USE
 if computed_hash == legacy_hash:  # Direct comparison leaks timing info
     # Password valid
@@ -1134,7 +1134,7 @@ tail -f data/command_override_audit.log | logger -t command_override
 - **Atomic Writes:** Config file written atomically (temp file + rename)
 - **State Validation:** Load config validates protocol names on startup
 
-**Security Benefit:** 
+**Security Benefit:**
 - Attacker cannot persist dangerous overrides across restarts
 - System always loads last known good state
 - Emergency lockdown persists through restarts
@@ -1293,10 +1293,9 @@ chmod 755 data
 
 **Document End**
 
-**Last Updated:** 2026-04-20  
-**Next Review:** 2026-05-20  
+**Last Updated:** 2026-04-20
+**Next Review:** 2026-05-20
 **Maintained By:** Security Team
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -16,9 +16,9 @@ related_to:
 
 **Mission**: Create comprehensive wiki links from developer guides and tutorials to API reference documentation.
 
-**Agent**: AGENT-083 (Tutorial to API Links Specialist)  
-**Phase**: 5 (Cross-Linking)  
-**Status**: 🚧 In Progress  
+**Agent**: AGENT-083 (Tutorial to API Links Specialist)
+**Phase**: 5 (Cross-Linking)
+**Status**: 🚧 In Progress
 **Date**: 2026-04-20
 
 ---
@@ -545,9 +545,9 @@ Projected Completion: Day 7 (assuming ~60 links/day)
 
 ## 📞 Contact & Support
 
-**Agent**: AGENT-083 (Tutorial to API Links Specialist)  
-**Mission**: Phase 5 Cross-Linking  
-**Charter**: [[AGENT-083-GUIDE-API-MAP]]  
+**Agent**: AGENT-083 (Tutorial to API Links Specialist)
+**Mission**: Phase 5 Cross-Linking
+**Charter**: [[AGENT-083-GUIDE-API-MAP]]
 **Repository**: IAmSoThirsty/Project-AI
 
 **Related Agents**:
@@ -575,8 +575,8 @@ Projected Completion: Day 7 (assuming ~60 links/day)
 
 ---
 
-**Last Updated**: 2026-04-20  
-**Next Update**: 2026-04-21 (after batch script run)  
+**Last Updated**: 2026-04-20
+**Next Update**: 2026-04-21 (after batch script run)
 **Mission Status**: 🟡 9.25% Complete (In Progress)
 
 ---

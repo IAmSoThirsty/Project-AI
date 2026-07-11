@@ -214,10 +214,10 @@ tasks:
     description: |
       Execute suggest-awesome-github-copilot-instructions skill to generate comprehensive comparison table
       showing all available instructions in awesome-copilot vs. current local instructions.
-      
+
       Skill should return: name, description, category, local status (missing/present/outdated).
       Save results to docs/plan/awesome-copilot-import/comparison-tables/instructions-comparison.md
-      
+
       Expected: ~150+ instructions analyzed, ~14 currently local, ~136+ gaps identified.
     wave: 1
     agent: gem-researcher
@@ -268,10 +268,10 @@ tasks:
     description: |
       Execute suggest-awesome-github-copilot-skills skill to generate comprehensive comparison table
       showing all available skills in awesome-copilot vs. current local skills.
-      
+
       Skill should return: name, description, category, local status (missing/present/outdated).
       Save results to docs/plan/awesome-copilot-import/comparison-tables/skills-comparison.md
-      
+
       Expected: ~200+ skills analyzed, currently 0 local skills, all gaps.
       Focus on Python ecosystem, governance, and AI orchestration categories.
     wave: 1
@@ -323,10 +323,10 @@ tasks:
     description: |
       Execute suggest-awesome-github-copilot-agents skill to generate comprehensive comparison table
       showing all available agents in awesome-copilot vs. current local agents.
-      
+
       Skill should return: name, description, category, local status (missing/present/outdated).
       Save results to docs/plan/awesome-copilot-import/comparison-tables/agents-comparison.md
-      
+
       Expected: ~100+ agents analyzed, currently 18 local, ~82+ gaps.
       Identify outdated agents that need updates.
     wave: 1
@@ -374,18 +374,18 @@ tasks:
     title: Analyze gaps and create prioritized import strategy
     description: |
       Synthesize all three comparison tables to create comprehensive priority matrix.
-      
+
       Categories:
       - Python ecosystem: pytest, type-hints, fastapi, django, data-science tools
       - Governance & security: agent-governance, audit-integrity, OWASP, compliance
       - AI orchestration: agentic-eval, agent-supply-chain, multi-agent patterns
       - Development workflow: TDD, code-review, architecture, refactoring
-      
+
       Output: Three priority manifests (Tier 1/2/3) with download lists.
       Tier 1 (high): Python tools, critical governance, core AI orchestration
       Tier 2 (medium): Workflow enhancements, additional governance
       Tier 3 (lower): Nice-to-have, experimental, specialized tools
-      
+
       Save manifests to docs/plan/awesome-copilot-import/priority-manifests/
     wave: 2
     agent: gem-researcher
@@ -432,7 +432,7 @@ tasks:
       - scenario: Asset count exceeds reasonable download limits
         likelihood: low
         impact: low
-        mitigation: Cap each tier at manageable size (Tier 1: 50, Tier 2: 75, Tier 3: 75)
+        mitigation: "Cap each tier at manageable size (Tier 1: 50, Tier 2: 75, Tier 3: 75)"
 
   # ===== WAVE 3: Tier 1 Download (Highest Priority) =====
   - id: create-directory-structure
@@ -444,9 +444,9 @@ tasks:
       - .github/skills/governance/
       - .github/skills/ai/
       - .github/skills/workflow/
-      
+
       Backup existing .github structure to .github.backup-[timestamp]
-      
+
       Verify write permissions and available disk space (estimate: 50MB for all assets).
     wave: 3
     agent: gem-devops
@@ -498,15 +498,15 @@ tasks:
       - Python ecosystem tools (pytest, type-hints, fastapi, django, etc.)
       - Critical governance assets (agent-governance, audit-integrity)
       - Core AI orchestration (agentic-eval, agent-supply-chain)
-      
+
       For each asset:
       1. Fetch from GitHub raw URL
       2. Save to categorized directory (.github/skills/python/, etc.)
       3. Preserve original filename and metadata
       4. Log success/failure
-      
+
       Expected: ~50 assets in Tier 1
-      
+
       Handle failures gracefully: log error, continue with remaining assets.
       Generate download report: docs/plan/awesome-copilot-import/reports/tier1-download.json
     wave: 3
@@ -567,9 +567,9 @@ tasks:
       - File integrity (size > 0, valid format)
       - Correct directory placement
       - No missing critical assets
-      
+
       Generate validation report: docs/plan/awesome-copilot-import/reports/tier1-validation.json
-      
+
       Gate: Must achieve >80% success rate to proceed to Tier 2.
       If failure: flag issues for manual review, do not block Tier 2 if only non-critical assets failed.
     wave: 3
@@ -625,14 +625,14 @@ tasks:
       - Additional workflow enhancements (code-review, architecture, refactoring)
       - Extended governance tools
       - Supplementary Python ecosystem tools
-      
+
       Same process as Tier 1:
       1. Fetch from GitHub raw URL
       2. Categorize and save
       3. Log results
-      
+
       Expected: ~75 assets in Tier 2
-      
+
       Generate download report: docs/plan/awesome-copilot-import/reports/tier2-download.json
     wave: 4
     agent: gem-implementer
@@ -683,9 +683,9 @@ tasks:
     title: Validate Tier 2 asset downloads
     description: |
       Verify Tier 2 downloads with same process as Tier 1.
-      
+
       Generate validation report: docs/plan/awesome-copilot-import/reports/tier2-validation.json
-      
+
       Gate: Must achieve >70% success rate to proceed to Tier 3.
     wave: 4
     agent: gem-reviewer
@@ -735,9 +735,9 @@ tasks:
       - Nice-to-have tools
       - Experimental assets
       - Specialized domain tools
-      
+
       Expected: ~75 assets in Tier 3
-      
+
       Generate download report: docs/plan/awesome-copilot-import/reports/tier3-download.json
     wave: 5
     agent: gem-implementer
@@ -782,9 +782,9 @@ tasks:
     title: Validate Tier 3 asset downloads
     description: |
       Verify Tier 3 downloads, final validation before documentation phase.
-      
+
       Generate validation report: docs/plan/awesome-copilot-import/reports/tier3-validation.json
-      
+
       Compile final import summary: total counts, category distribution, known issues.
     wave: 5
     agent: gem-reviewer
@@ -835,9 +835,9 @@ tasks:
       - Compare local vs. remote versions
       - Download updated versions
       - Replace local files (backup originals)
-      
+
       Expected: ~5-10 outdated agents/instructions
-      
+
       Generate update report: docs/plan/awesome-copilot-import/reports/updates.json
     wave: 6
     agent: gem-implementer
@@ -885,7 +885,7 @@ tasks:
       - Verify all assets are in correct category subdirs
       - Create category index files (README.md per category)
       - Add metadata headers to each asset file if missing
-      
+
       Categories:
       - .github/skills/python/ (pytest, type-hints, fastapi, django, data-science, etc.)
       - .github/skills/governance/ (agent-governance, audit-integrity, OWASP, compliance)
@@ -936,7 +936,7 @@ tasks:
     title: Generate comprehensive integration guide
     description: |
       Create master integration guide: docs/plan/awesome-copilot-import/integration-guide.md
-      
+
       Sections:
       1. Overview: What was imported, why, how it's organized
       2. Quick Start: Getting started with new assets
@@ -954,7 +954,7 @@ tasks:
          - Recommended agent combinations for common tasks
       6. Troubleshooting: Known issues, compatibility notes
       7. Maintenance: How to keep assets updated
-      
+
       Reference all downloaded assets with links.
     wave: 6
     agent: gem-documentation-writer
@@ -1013,28 +1013,28 @@ tasks:
     title: Create workflow example files demonstrating asset usage
     description: |
       Generate practical workflow examples: docs/plan/awesome-copilot-import/workflow-examples/
-      
+
       Examples:
       1. python-tdd-workflow.md
          - Combine type-hints skill + pytest skill + TDD agent
          - Step-by-step guide for type-safe Python TDD
-      
+
       2. security-audit-workflow.md
          - Combine OWASP skill + audit-integrity + governance agent
          - Complete security audit process
-      
+
       3. ai-agent-development-workflow.md
          - Combine agentic-eval + agent-supply-chain + multi-agent orchestration
          - Build and evaluate custom AI agents
-      
+
       4. code-review-workflow.md
          - Combine code-review skill + architecture skill + reviewer agent
          - Comprehensive code review process
-      
+
       5. fastapi-development-workflow.md
          - Combine fastapi skill + pytest + type-hints
          - Build type-safe FastAPI applications with tests
-      
+
       Each example includes:
       - Prerequisites
       - Step-by-step instructions
@@ -1090,18 +1090,18 @@ tasks:
     title: Create searchable asset catalog
     description: |
       Generate asset catalog: docs/plan/awesome-copilot-import/asset-catalog.md
-      
+
       Catalog structure:
       - Searchable index of all imported assets
       - Table format: Name | Type | Category | Description | Path | Usage Examples
       - Sortable by category, type, name
       - Quick reference for finding specific assets
-      
+
       Include:
       - All skills (~200+)
       - All agents (~100+)
       - All instructions (~150+)
-      
+
       Add search tips and filtering guidance.
     wave: 6
     agent: gem-documentation-writer
@@ -1153,12 +1153,12 @@ tasks:
     title: Update Project-AI root documentation with asset references
     description: |
       Update key Project-AI documentation files to reference new assets:
-      
+
       1. README.md: Add section on available Copilot assets
       2. AGENTS.md: Update with new agent capabilities
       3. docs/MCP_QUICKSTART.md: Add examples using new skills
       4. CONTRIBUTING.md: Add guidelines for using assets
-      
+
       Include:
       - Links to integration guide
       - Quick reference to asset catalog

@@ -19,4 +19,3 @@ Convert {} into a Twitter thread following these rules:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

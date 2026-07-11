@@ -1,8 +1,8 @@
 # Project-AI Metadata Schema Versioning Policy
 
-**Version:** 1.0.0  
-**Effective Date:** 2026-04-20  
-**Status:** Active  
+**Version:** 1.0.0
+**Effective Date:** 2026-04-20
+**Status:** Active
 **Owner:** Architecture Team
 
 ---
@@ -143,7 +143,7 @@ review_status:  # NEW optional field
    ```yaml
    # BEFORE (v1.0.0)
    required: [title, id, type, author, created_date]
-   
+
    # AFTER (v2.0.0)
    required: [title, id, type, created_date]  # Removed 'author'
    ```
@@ -152,7 +152,7 @@ review_status:  # NEW optional field
    ```yaml
    # BEFORE
    estimated_time: "45 minutes"  # String
-   
+
    # AFTER
    estimated_time: 45  # Integer (minutes)
    ```
@@ -161,7 +161,7 @@ review_status:  # NEW optional field
    ```yaml
    # BEFORE
    document_type: audit
-   
+
    # AFTER
    type: audit  # 'document_type' no longer recognized
    ```
@@ -189,7 +189,7 @@ review_status:  # NEW optional field
    ```yaml
    # BEFORE
    classification: [public, internal, confidential]
-   
+
    # AFTER (v1.2.0)
    classification: [public, internal, confidential, secret]
    ```
@@ -198,7 +198,7 @@ review_status:  # NEW optional field
    ```yaml
    # BEFORE
    title: {maxLength: 100}
-   
+
    # AFTER (v1.3.0)
    title: {maxLength: 200}  # More permissive
    ```
@@ -250,10 +250,10 @@ Month 6: Removal in next major version
 ```markdown
 ## Deprecation Notice: Field 'old_field'
 
-**Deprecated In:** v1.5.0  
-**Removal In:** v2.0.0  
-**Replacement:** Use 'new_field' instead  
-**Migration Script:** migrate-v1.5-to-v2.0.ps1  
+**Deprecated In:** v1.5.0
+**Removal In:** v2.0.0
+**Replacement:** Use 'new_field' instead
+**Migration Script:** migrate-v1.5-to-v2.0.ps1
 **Rationale:** [Explanation of why field is deprecated]
 ```
 
@@ -461,9 +461,9 @@ review_status:
 
 ## Policy Review
 
-**Review Cycle:** Annual  
-**Next Review:** 2027-04-20  
-**Owner:** Architecture Team  
+**Review Cycle:** Annual
+**Next Review:** 2027-04-20
+**Owner:** Architecture Team
 **Approval:** Principal Architect
 
 **Changes to This Policy:**
@@ -483,12 +483,11 @@ review_status:
 
 ---
 
-**Document Version:** 1.0.0  
-**Schema Version Covered:** 2.0.0  
-**Last Updated:** 2026-04-20  
-**Status:** Active  
+**Document Version:** 1.0.0
+**Schema Version Covered:** 2.0.0
+**Last Updated:** 2026-04-20
+**Status:** Active
 **License:** MIT
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

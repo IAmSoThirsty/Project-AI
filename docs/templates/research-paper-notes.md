@@ -35,17 +35,17 @@ aliases: []
 
 ### Links
 
-**Paper URL:** 
+**Paper URL:**
 
-**PDF Link:** 
+**PDF Link:**
 
-**Code Repository:** 
+**Code Repository:**
 
-**Project Page:** 
+**Project Page:**
 
 **Related Resources:**
-- 
-- 
+-
+-
 
 ---
 
@@ -53,11 +53,11 @@ aliases: []
 
 ### One-Sentence Summary
 
-> 
+>
 
 ### Three-Sentence Summary
 
-> 
+>
 
 ### Keywords
 
@@ -115,14 +115,14 @@ aliases: []
 
 ### Research Questions
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ### Hypotheses
 
-1. 
-2. 
+1.
+2.
 
 ---
 
@@ -183,9 +183,9 @@ aliases: []
 
 
 **Key Components:**
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 **Formulation:**
 
@@ -210,13 +210,13 @@ aliases: []
 #### Experimental Setup
 
 **Hardware:**
-- 
+-
 
 **Software/Frameworks:**
-- 
+-
 
 **Computational Requirements:**
-- 
+-
 
 **Reproducibility:**
 - [ ] Code available
@@ -265,20 +265,20 @@ aliases: []
 ### Ablation Studies
 
 **Component Removed** → **Impact:**
-- 
-- 
-- 
+-
+-
+-
 
 ### Visualizations
 
 **Key Figures:**
-- Figure 1: 
-- Figure 2: 
-- Figure 3: 
+- Figure 1:
+- Figure 2:
+- Figure 3:
 
 **Tables:**
-- Table 1: 
-- Table 2: 
+- Table 1:
+- Table 2:
 
 ---
 
@@ -286,19 +286,19 @@ aliases: []
 
 ### Technical Strengths
 
-1. ✅ 
-2. ✅ 
-3. ✅ 
+1. ✅
+2. ✅
+3. ✅
 
 ### Methodological Strengths
 
-1. ✅ 
-2. ✅ 
+1. ✅
+2. ✅
 
 ### Presentation Strengths
 
-1. ✅ 
-2. ✅ 
+1. ✅
+2. ✅
 
 ---
 
@@ -306,25 +306,25 @@ aliases: []
 
 ### Technical Weaknesses
 
-1. ⚠️ 
-2. ⚠️ 
-3. ⚠️ 
+1. ⚠️
+2. ⚠️
+3. ⚠️
 
 ### Methodological Limitations
 
-1. ⚠️ 
-2. ⚠️ 
+1. ⚠️
+2. ⚠️
 
 ### Scope Limitations
 
 **Assumptions:**
-- 
+-
 
 **Generalizability:**
-- 
+-
 
 **Unaddressed Issues:**
-- 
+-
 
 ---
 
@@ -344,13 +344,13 @@ aliases: []
 ### Experimental Rigor
 
 **Strengths:**
-- 
+-
 
 **Weaknesses:**
-- 
+-
 
 **Suggestions for Improvement:**
-- 
+-
 
 ### Alternative Explanations
 
@@ -376,23 +376,23 @@ aliases: []
 
 ### Potential Applications
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ### Ideas Sparked
 
 **New Research Directions:**
-- 
-- 
+-
+-
 
 **Extensions/Improvements:**
-- 
-- 
+-
+-
 
 **Combinations with Other Work:**
-- 
-- 
+-
+-
 
 ---
 
@@ -400,9 +400,9 @@ aliases: []
 
 ### Top 3 Insights
 
-1. 💡 
-2. 💡 
-3. 💡 
+1. 💡
+2. 💡
+3. 💡
 
 ### Actionable Items
 
@@ -447,9 +447,9 @@ aliases: []
 
 ### Papers to Read Next
 
-1. 📚 **[Paper Title]** - Why: 
-2. 📚 **[Paper Title]** - Why: 
-3. 📚 **[Paper Title]** - Why: 
+1. 📚 **[Paper Title]** - Why:
+2. 📚 **[Paper Title]** - Why:
+3. 📚 **[Paper Title]** - Why:
 
 ---
 
@@ -467,20 +467,20 @@ aliases: []
 
 
 **Challenges:**
-- 
+-
 
 **Code/Resources:**
-- 
+-
 
 ### Modifications/Extensions
 
 **Ideas to try:**
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 **Expected Improvements:**
-- 
+-
 
 ---
 
@@ -488,19 +488,19 @@ aliases: []
 
 ### Questions for Authors
 
-1. ❓ 
-2. ❓ 
-3. ❓ 
+1. ❓
+2. ❓
+3. ❓
 
 ### Unclear Aspects
 
-1. 🤔 
-2. 🤔 
+1. 🤔
+2. 🤔
 
 ### Contradictions or Puzzles
 
-1. 
-2. 
+1.
+2.
 
 ---
 
@@ -538,8 +538,8 @@ LIMIT 10
 
 ### Related Projects
 
-- 
-- 
+-
+-
 
 ### Relevant Techniques/Concepts
 
@@ -561,19 +561,19 @@ LIMIT 10
 
 ### Section-by-Section Notes
 
-#### Section 2: 
+#### Section 2:
 
 
 
-#### Section 3: 
+#### Section 3:
 
 
 
-#### Section 4: 
+#### Section 4:
 
 
 
-#### Section 5: 
+#### Section 5:
 
 
 
@@ -636,7 +636,7 @@ LIMIT 10
 
 **Domain:** #<% tp.system.prompt("Domain tag", "nlp") %>
 
-**Collection:** 
+**Collection:**
 - [ ] Core reading list
 - [ ] Background reading
 - [ ] Related work for paper X
@@ -660,4 +660,3 @@ LIMIT 10
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

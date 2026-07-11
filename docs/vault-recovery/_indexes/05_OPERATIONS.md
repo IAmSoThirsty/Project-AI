@@ -399,7 +399,7 @@ healthcheck:
 - `backup-web.md` - Web platform backup procedures [P1, Planned]
 
 #### Recovery Procedures
-**Recovery Time Objective (RTO):** 4 hours (maximum acceptable downtime)  
+**Recovery Time Objective (RTO):** 4 hours (maximum acceptable downtime)
 **Recovery Point Objective (RPO):** 1 hour (maximum acceptable data loss)
 
 **Recovery Steps:**
@@ -576,20 +576,19 @@ healthcheck:
 
 ## 🛡️ Governance
 
-**Maintainer:** AGENT-019 (MOC Constructor)  
-**Operations Lead:** TBD (assign DevOps team lead)  
-**Update Frequency:** Event-driven (deployments, incidents) + monthly review  
-**Incident SLA:** P0 (4h), P1 (24h), P2 (7d), P3 (30d)  
-**Backup Testing:** Monthly disaster recovery drills  
+**Maintainer:** AGENT-019 (MOC Constructor)
+**Operations Lead:** TBD (assign DevOps team lead)
+**Update Frequency:** Event-driven (deployments, incidents) + monthly review
+**Incident SLA:** P0 (4h), P1 (24h), P2 (7d), P3 (30d)
+**Backup Testing:** Monthly disaster recovery drills
 **Quality Gate:** All runbooks must be tested in non-production environment
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-23  
-**Schema Compliance:** ✅ 100%  
+**Version:** 1.0.0
+**Last Updated:** 2025-01-23
+**Schema Compliance:** ✅ 100%
 **Operational Maturity:** 🟡 Developing (production-ready desktop, web in progress)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

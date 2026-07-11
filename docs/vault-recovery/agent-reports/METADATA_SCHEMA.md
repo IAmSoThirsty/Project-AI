@@ -1,9 +1,9 @@
 # Project-AI Documentation Vault Metadata Schema
 
-**Version:** 2.0.0  
-**Status:** Production  
-**Last Updated:** 2026-04-20  
-**Schema Maintainer:** Architecture Team  
+**Version:** 2.0.0
+**Status:** Production
+**Last Updated:** 2026-04-20
+**Schema Maintainer:** Architecture Team
 **Validation:** JSON Schema v2020-12 + YAML Schema
 
 ---
@@ -142,7 +142,7 @@ documentation:
 #### `type`
 - **Type:** Enum
 - **Required:** Yes
-- **Allowed Values:** 
+- **Allowed Values:**
   - `architecture`
   - `design`
   - `api_reference`
@@ -209,7 +209,7 @@ documentation:
 - **Required:** Yes
 - **Format:** `"Name <email>"` or `{name: "...", email: "...", github: "..."}`
 - **Description:** Primary document author
-- **Example:** 
+- **Example:**
   ```yaml
   author:
     name: "Jane Doe"
@@ -453,8 +453,8 @@ documentation:
 
 ### Architecture Documents
 
-**Type:** `architecture`  
-**Required Fields:** `title`, `id`, `type`, `version`, `created_date`, `updated_date`, `status`, `author`, `category`, `technologies`  
+**Type:** `architecture`
+**Required Fields:** `title`, `id`, `type`, `version`, `created_date`, `updated_date`, `status`, `author`, `category`, `technologies`
 **Recommended Fields:** `tags`, `related_docs`, `review_status`, `summary`, `audience`
 
 **Purpose:** Describe system structure, design decisions, patterns
@@ -467,168 +467,168 @@ documentation:
 
 ### Design Documents
 
-**Type:** `design`  
-**Required Fields:** Universal + `category`, `scope`  
+**Type:** `design`
+**Required Fields:** Universal + `category`, `scope`
 **Recommended Fields:** `technologies`, `dependencies`, `review_status`
 
 **Purpose:** Detailed technical designs for features/components
 
 ### API Reference
 
-**Type:** `api_reference`  
-**Required Fields:** Universal + `technologies`, `version`  
+**Type:** `api_reference`
+**Required Fields:** Universal + `technologies`, `version`
 **Recommended Fields:** `endpoints`, `authentication`, `rate_limits`
 
 **Purpose:** API endpoint documentation
 
 ### Specifications
 
-**Type:** `specification`  
-**Required Fields:** Universal + `category`, `compliance`  
+**Type:** `specification`
+**Required Fields:** Universal + `category`, `compliance`
 **Recommended Fields:** `review_status`, `test_coverage`
 
 **Purpose:** Formal technical specifications
 
 ### Guides
 
-**Type:** `guide`  
-**Required Fields:** Universal + `difficulty`, `estimated_time`, `category`  
+**Type:** `guide`
+**Required Fields:** Universal + `difficulty`, `estimated_time`, `category`
 **Recommended Fields:** `prerequisites`, `technologies`, `audience`
 
 **Purpose:** How-to documentation for specific tasks
 
 ### Tutorials
 
-**Type:** `tutorial`  
-**Required Fields:** Universal + `difficulty`, `estimated_time`, `prerequisites`  
+**Type:** `tutorial`
+**Required Fields:** Universal + `difficulty`, `estimated_time`, `prerequisites`
 **Recommended Fields:** `technologies`, `learning_objectives`
 
 **Purpose:** Step-by-step learning paths
 
 ### Runbooks
 
-**Type:** `runbook`  
-**Required Fields:** Universal + `category`, `scope`, `triggers`  
+**Type:** `runbook`
+**Required Fields:** Universal + `category`, `scope`, `triggers`
 **Recommended Fields:** `escalation_path`, `dependencies`, `last_tested`
 
 **Purpose:** Operational procedures for incident response
 
 ### Playbooks
 
-**Type:** `playbook`  
-**Required Fields:** Universal + `category`, `scope`  
+**Type:** `playbook`
+**Required Fields:** Universal + `category`, `scope`
 **Recommended Fields:** `success_criteria`, `rollback_procedure`
 
 **Purpose:** Standardized operational workflows
 
 ### Policies
 
-**Type:** `policy`  
-**Required Fields:** Universal + `category`, `compliance`, `enforcement_level`  
+**Type:** `policy`
+**Required Fields:** Universal + `category`, `compliance`, `enforcement_level`
 **Recommended Fields:** `review_cycle`, `approval_authority`
 
 **Purpose:** Organizational governance rules
 
 ### Standards
 
-**Type:** `standard`  
-**Required Fields:** Universal + `category`, `scope`  
+**Type:** `standard`
+**Required Fields:** Universal + `category`, `scope`
 **Recommended Fields:** `compliance`, `exceptions`
 
 **Purpose:** Technical or procedural standards
 
 ### Decision Records
 
-**Type:** `decision_record`  
-**Required Fields:** Universal + `decision_date`, `decision_maker`, `options_considered`  
+**Type:** `decision_record`
+**Required Fields:** Universal + `decision_date`, `decision_maker`, `options_considered`
 **Recommended Fields:** `consequences`, `context`, `review_date`
 
 **Purpose:** Architectural Decision Records (ADRs)
 
 ### RFCs
 
-**Type:** `rfc`  
-**Required Fields:** Universal + `proposal_date`, `champion`, `status`  
+**Type:** `rfc`
+**Required Fields:** Universal + `proposal_date`, `champion`, `status`
 **Recommended Fields:** `discussion_link`, `votes`, `decision_date`
 
 **Purpose:** Request for Comments / Proposals
 
 ### Reports
 
-**Type:** `report`  
-**Required Fields:** Universal + `scope`, `findings`, `recommendations`  
+**Type:** `report`
+**Required Fields:** Universal + `scope`, `findings`, `recommendations`
 **Recommended Fields:** `executive_summary`, `methodology`, `metrics`
 
 **Purpose:** Analysis reports, summaries
 
 ### Audits
 
-**Type:** `audit`  
-**Required Fields:** Universal + `scope`, `auditor`, `audit_date`, `findings`, `risk_level`  
+**Type:** `audit`
+**Required Fields:** Universal + `scope`, `auditor`, `audit_date`, `findings`, `risk_level`
 **Recommended Fields:** `methodology`, `compliance`, `remediation_plan`
 
 **Purpose:** Security, compliance, quality audits
 
 ### Assessments
 
-**Type:** `assessment`  
-**Required Fields:** Universal + `scope`, `criteria`, `results`  
+**Type:** `assessment`
+**Required Fields:** Universal + `scope`, `criteria`, `results`
 **Recommended Fields:** `methodology`, `recommendations`
 
 **Purpose:** Evaluations and assessments
 
 ### Postmortems
 
-**Type:** `postmortem`  
-**Required Fields:** Universal + `incident_date`, `severity`, `root_cause`, `timeline`, `action_items`  
+**Type:** `postmortem`
+**Required Fields:** Universal + `incident_date`, `severity`, `root_cause`, `timeline`, `action_items`
 **Recommended Fields:** `impact`, `detection_method`, `lessons_learned`
 
 **Purpose:** Incident analysis and learning
 
 ### Glossaries
 
-**Type:** `glossary`  
-**Required Fields:** Universal + `scope`, `terms_count`  
+**Type:** `glossary`
+**Required Fields:** Universal + `scope`, `terms_count`
 **Recommended Fields:** `related_docs`, `audience`
 
 **Purpose:** Term definitions and vocabulary
 
 ### FAQs
 
-**Type:** `faq`  
-**Required Fields:** Universal + `category`, `questions_count`  
+**Type:** `faq`
+**Required Fields:** Universal + `category`, `questions_count`
 **Recommended Fields:** `audience`, `related_docs`
 
 **Purpose:** Frequently asked questions
 
 ### Indexes
 
-**Type:** `index`  
-**Required Fields:** Universal + `scope`, `indexed_docs`  
+**Type:** `index`
+**Required Fields:** Universal + `scope`, `indexed_docs`
 **Recommended Fields:** `auto_generated`, `last_indexed_date`
 
 **Purpose:** Document collections and catalogs
 
 ### Changelogs
 
-**Type:** `changelog`  
-**Required Fields:** Universal + `scope`, `version_range`  
+**Type:** `changelog`
+**Required Fields:** Universal + `scope`, `version_range`
 **Recommended Fields:** `format` (e.g., "Keep a Changelog")
 
 **Purpose:** Version history
 
 ### Meeting Notes
 
-**Type:** `meeting_notes`  
-**Required Fields:** Universal + `meeting_date`, `attendees`, `agenda`  
+**Type:** `meeting_notes`
+**Required Fields:** Universal + `meeting_date`, `attendees`, `agenda`
 **Recommended Fields:** `action_items`, `decisions`, `next_meeting`
 
 **Purpose:** Meeting documentation
 
 ### Whitepapers
 
-**Type:** `whitepaper`  
-**Required Fields:** Universal + `summary`, `keywords`, `audience`  
+**Type:** `whitepaper`
+**Required Fields:** Universal + `summary`, `keywords`, `audience`
 **Recommended Fields:** `citation`, `doi`, `peer_reviewed`
 
 **Purpose:** Research and thought leadership
@@ -2729,12 +2729,11 @@ A: Use `dataview` plugin for Obsidian or custom scripts querying frontmatter. Ex
 
 ---
 
-**Document Version:** 2.0.0  
-**Schema Version:** 2.0.0  
-**Last Updated:** 2026-04-20  
-**Maintainer:** Architecture Team  
+**Document Version:** 2.0.0
+**Schema Version:** 2.0.0
+**Last Updated:** 2026-04-20
+**Maintainer:** Architecture Team
 **License:** MIT
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

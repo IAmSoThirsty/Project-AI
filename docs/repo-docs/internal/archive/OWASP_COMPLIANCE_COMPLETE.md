@@ -116,7 +116,7 @@ Each OWASP test includes **all requested fields**:
   "owasp_id": "IG-001",
   "category": "information_gathering",
   "name": "Robots.txt Disclosure 1",
-  
+
   // ✅ ALL REQUESTED FIELDS:
   "description": "Test if robots.txt exposes sensitive paths",
   "severity": "low",
@@ -133,7 +133,7 @@ Each OWASP test includes **all requested fields**:
   "exploited_weakness": "Information disclosure via robots.txt",
   "tarl_enforcement": "TARL doesn't control static files",
   "success_criteria": "No admin/sensitive paths in robots.txt",
-  
+
   // ✅ BONUS FIELD:
   "owasp_reference": "OWASP Testing Guide v4 - OTG-INFO-001",
   "timestamp": "2026-01-27T..."

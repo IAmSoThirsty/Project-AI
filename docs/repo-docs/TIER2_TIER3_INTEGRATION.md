@@ -197,7 +197,7 @@ Violations: 0
 1. `setup_environment()` - Directories, logging
 2. `initialize_tier_registry()` - Tier system initialization
 3. `initialize_kernel()` - Kernel self-registers as Tier-1
-4. `initialize_council_hub()` - Hub self-registers as Tier-3  
+4. `initialize_council_hub()` - Hub self-registers as Tier-3
 5. `initialize_security_systems()` - GlobalWatchTower self-registers as Tier-2
 6. `initialize_enhanced_defenses()` - Additional security
 7. `report_tier_health()` - Comprehensive health check
@@ -206,7 +206,7 @@ Violations: 0
 
 **ASCII Startup Flow**:
 ```
-env → tier_registry_init → kernel(T1) → council_hub(T3) → global_watch_tower(T2) → 
+env → tier_registry_init → kernel(T1) → council_hub(T3) → global_watch_tower(T2) →
 memory_engine(T2) → enhanced_defenses → tier_health_report → gui(T3) → launch
 ```
 
@@ -381,7 +381,7 @@ The three-tier platform strategy is now **fully integrated** into Project-AI:
 
 **The platform now enforces**:
 - Authority flows downward only
-- Capability flows upward only  
+- Capability flows upward only
 - Tier 1 independence from lower tiers
 - Infrastructure decisions validated by governance
 - Applications fully sandboxed and replaceable

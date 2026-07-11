@@ -51,8 +51,8 @@ test_coverage: null
 
 # PACE Engine Specification
 
-**Version:** 1.0  
-**Last Updated:** 2026-01-23  
+**Version:** 1.0
+**Last Updated:** 2026-01-23
 **Status:** Specification
 
 ---
@@ -82,7 +82,7 @@ The main engine class that initializes and coordinates all subsystems.
 class PACEEngine:
     """
     PACE (Policy-Agent-Cognition-Engine) runtime system.
-    
+
     Coordinates:
     - Identity management and authentication
     - Policy enforcement and validation
@@ -93,11 +93,11 @@ class PACEEngine:
     - State persistence
     - I/O routing
     """
-    
+
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """
         Initialize the PACE Engine.
-        
+
         Args:
             config: Optional configuration dictionary containing:
                 - data_dir: Directory for persistent storage
@@ -118,7 +118,7 @@ Starts the PACE Engine runtime loop.
 def start(self) -> None:
     """
     Start the PACE Engine runtime.
-    
+
     Initializes all subsystems and begins the main event loop.
     Blocks until shutdown() is called.
     """
@@ -132,7 +132,7 @@ Gracefully shuts down the engine.
 def shutdown(self) -> None:
     """
     Gracefully shutdown the PACE Engine.
-    
+
     Stops all running workflows, persists state, and releases resources.
     """
 ```
@@ -145,14 +145,14 @@ Executes a workflow through the engine.
 def execute_workflow(self, workflow_id: str, context: Dict[str, Any]) -> Any:
     """
     Execute a workflow through the PACE Engine.
-    
+
     Args:
         workflow_id: Unique identifier for the workflow to execute
         context: Execution context containing input parameters
-        
+
     Returns:
         Workflow execution result
-        
+
     Raises:
         PolicyViolationError: If workflow violates policy constraints
         WorkflowNotFoundError: If workflow_id is not registered
@@ -167,7 +167,7 @@ Registers a new capability with the engine.
 def register_capability(self, capability: 'Capability') -> None:
     """
     Register a new capability with the engine.
-    
+
     Args:
         capability: Capability instance to register
     """
@@ -181,7 +181,7 @@ Registers a new agent with the coordinator.
 def register_agent(self, agent: 'Agent') -> None:
     """
     Register a new agent with the coordinator.
-    
+
     Args:
         agent: Agent instance to register
     """
@@ -246,31 +246,31 @@ PACEEngine
 pace_engine:
   data_dir: "./data/pace"
   log_level: "INFO"
-  
+
   identity:
     provider: "local"
     auth_required: true
-    
+
   policy:
     strict_mode: true
     ethical_framework: "four_laws"
-    
+
   cognition:
     deliberation_depth: 3
     reasoning_timeout: 5.0
-    
+
   workflow:
     max_concurrent: 10
     persistence: true
-    
+
   agents:
     max_agents: 100
     coordination_protocol: "hierarchical"
-    
+
   state:
     backend: "json"
     checkpoint_interval: 60
-    
+
   io:
     input_queues: ["default", "priority"]
     output_handlers: ["console", "file"]

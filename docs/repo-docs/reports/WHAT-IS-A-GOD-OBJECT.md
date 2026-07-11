@@ -21,7 +21,7 @@ A God Object violates this by doing 10, 20, or 50 things.
 **Your God File**: `src/app/core/hydra_50_engine.py`
 - **Size**: 191.6 KB (approximately 5,000+ lines of code)
 - **Responsibility**: "50 Under-Implemented Global Threats"
-- **Contains**: 
+- **Contains**:
   - Scenario definitions (50 of them)
   - Trigger systems
   - Escalation logic
@@ -41,14 +41,14 @@ A God Object violates this by doing 10, 20, or 50 things.
 
 ### 1. **Impossible to Understand**
 
-**Problem**: No human can hold 5,000 lines of code in their head  
-**Reality**: Developers spend hours just figuring out what the file does  
+**Problem**: No human can hold 5,000 lines of code in their head
+**Reality**: Developers spend hours just figuring out what the file does
 **Impact**: High cognitive load, slow development
 
 ### 2. **Impossible to Test**
 
-**Problem**: Unit tests require isolated units - God Objects can't be isolated  
-**Reality**: Testing becomes integration testing (slow, brittle)  
+**Problem**: Unit tests require isolated units - God Objects can't be isolated
+**Reality**: Testing becomes integration testing (slow, brittle)
 **Impact**: Low test coverage, high bug rate
 
 Example:
@@ -68,26 +68,26 @@ assert test.trigger() == expected_result
 
 ### 3. **Merge Conflict Hell**
 
-**Problem**: Everyone edits the same massive file  
-**Reality**: Every PR touches hydra_50_engine.py  
+**Problem**: Everyone edits the same massive file
+**Reality**: Every PR touches hydra_50_engine.py
 **Impact**: Constant merge conflicts, wasted time
 
 ### 4. **Tight Coupling**
 
-**Problem**: All 50 scenarios share state in one file  
-**Reality**: Changing scenario 12 accidentally breaks scenario 37  
+**Problem**: All 50 scenarios share state in one file
+**Reality**: Changing scenario 12 accidentally breaks scenario 37
 **Impact**: Fear of refactoring, code rot
 
 ### 5. **Code Review Nightmare**
 
-**Problem**: "Review this 400-line change to hydra_50_engine.py"  
-**Reality**: Reviewer gives up after 50 lines, rubber-stamps it  
+**Problem**: "Review this 400-line change to hydra_50_engine.py"
+**Reality**: Reviewer gives up after 50 lines, rubber-stamps it
 **Impact**: Bugs slip through, technical debt accumulates
 
 ### 6. **Performance Issues**
 
-**Problem**: Python loads entire 191KB file on import  
-**Reality**: Slow startup, high memory usage  
+**Problem**: Python loads entire 191KB file on import
+**Reality**: Slow startup, high memory usage
 **Impact**: Poor performance, especially in serverless/lambda
 
 ---
@@ -279,12 +279,12 @@ class TriggerEvent:
     name: str
     description: str
     threshold: float
-    
+
 class BaseScenario(ABC):
     @abstractmethod
     def check_triggers(self) -> bool:
         pass
-    
+
     @abstractmethod
     def escalate(self, level: int):
         pass
@@ -303,18 +303,18 @@ class Scenario01_AIDeception(BaseScenario):
     Escalation: Deception spreads across systems
     """
     category = ScenarioCategory.DIGITAL_COGNITIVE
-    
+
     def __init__(self):
         self.trigger = TriggerEvent(
             name="AI Deception Detected",
             description="AI systems showing coordinated false outputs",
             threshold=0.7
         )
-    
+
     def check_triggers(self) -> bool:
         # 200 lines of trigger logic (was buried in 5000-line file)
         pass
-    
+
     def escalate(self, level: int):
         # 200 lines of escalation logic (was buried in 5000-line file)
         pass
@@ -334,24 +334,24 @@ from .scenarios.economic import *
 
 class Hydra50Engine:
     """Orchestrator for 50 scenario monitoring (NOT the scenarios themselves)"""
-    
+
     def __init__(self):
         self.scenarios = [
             Scenario01_AIDeception(),
             Scenario02_DeepfakeCascade(),
             # ... 48 more
         ]
-    
+
     def check_all_triggers(self):
         for scenario in self.scenarios:
             if scenario.check_triggers():
                 scenario.escalate(1)
-    
+
     def get_active_scenarios(self):
         return [s for s in self.scenarios if s.is_active]
 ```
 
-**Result**: 
+**Result**:
 - Engine.py: 300 lines (orchestration only)
 - 50 scenario files: 200 lines each (focused logic)
 - Total: ~10,000 lines across 50+ files (same functionality, better organization)

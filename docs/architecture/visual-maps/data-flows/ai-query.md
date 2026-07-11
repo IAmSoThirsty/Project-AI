@@ -47,9 +47,9 @@ accuracy_rating: high
 
 # AI Query Processing Flow Visual Map
 
-**Version:** 1.0.0  
-**Author:** AGENT-047 (Visual Relationship Maps Specialist)  
-**Status:** Production-Ready  
+**Version:** 1.0.0
+**Author:** AGENT-047 (Visual Relationship Maps Specialist)
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -353,21 +353,21 @@ graph TB
     Sanitize --> Governance{Governance<br/>Validation}
     Governance -->|BLOCK| Reject[Reject Query]
     Governance -->|ALLOW| Intent[Intent Detection]
-    
+
     Intent --> Router{Intelligence Router}
-    
+
     Router -->|knowledge_query| KB[Knowledge Base]
     Router -->|function_call| FR[Function Registry]
     Router -->|general_query| OpenAI[OpenAI API]
     Router -->|conversation_context| Memory[Memory System]
-    
+
     KB --> KBSearch{Match Found?}
     KBSearch -->|Yes| KBResponse[Cached Response]
     KBSearch -->|No| OpenAI
-    
+
     FR --> FRList[List Functions]
     FRList --> Response[Format Response]
-    
+
     OpenAI --> Model{Select Model}
     Model --> GPT4[GPT-4]
     Model --> GPT35[GPT-3.5-turbo]
@@ -378,17 +378,17 @@ graph TB
     Retry -->|Yes| Parse[Parse Response]
     Fallback --> Parse
     Parse --> Response
-    
+
     Memory --> MemQuery[Query History]
     MemQuery --> MemFormat[Format Summary]
     MemFormat --> Response
-    
+
     Response --> PostProc[Post-Processing]
     PostProc --> StoreMemory[Store in Memory]
     PostProc --> UpdatePersona[Update Persona]
     PostProc --> AuditLog[Audit Logging]
     AuditLog --> UI[Send to UI]
-    
+
     style Governance fill:#E91E63
     style Router fill:#9C27B0
     style OpenAI fill:#4CAF50
@@ -439,11 +439,11 @@ class IntentDetector:
         ])
         self.intents = [
             'general_query', 'code_request', 'data_analysis',
-            'learning_path', 'function_call', 'knowledge_query', 
+            'learning_path', 'function_call', 'knowledge_query',
             'system_command'
         ]
         self._train_classifier()
-    
+
     def classify(self, message: str) -> tuple[str, float]:
         """Classify intent and return confidence score."""
         probs = self.pipeline.predict_proba([message])[0]
@@ -493,7 +493,7 @@ def query_openai(message: str, context: dict) -> str:
         *context.get("conversation_history", []),
         {"role": "user", "content": message}
     ]
-    
+
     # Try GPT-4 first
     try:
         response = openai.ChatCompletion.create(
@@ -624,10 +624,9 @@ def get_conversation_context(user_id: str, limit: int = 5) -> list:
 
 ---
 
-**Status:** ✅ Production-Ready Documentation  
-**Validation:** Architecture verified against `src/app/core/intelligence_engine.py`, OpenAI API docs  
+**Status:** ✅ Production-Ready Documentation
+**Validation:** Architecture verified against `src/app/core/intelligence_engine.py`, OpenAI API docs
 **Next Review:** 2026-07-20 (Quarterly update cycle)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -2,10 +2,10 @@
 
 **Daily, Weekly, and Monthly Vault Care** 🔧
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 12 minutes  
-**Audience:** All vault users, contributors, maintainers  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 12 minutes
+**Audience:** All vault users, contributors, maintainers
 **Prerequisites:** Basic vault familiarity
 
 ---
@@ -29,10 +29,10 @@
 
 **Vault maintenance** isn't just housekeeping - it's continuous quality improvement that ensures:
 
-✅ **Discoverability** - Users can find documents quickly  
-✅ **Accuracy** - Information remains current and correct  
-✅ **Consistency** - Standards are enforced uniformly  
-✅ **Performance** - Queries run fast, searches return results  
+✅ **Discoverability** - Users can find documents quickly
+✅ **Accuracy** - Information remains current and correct
+✅ **Consistency** - Standards are enforced uniformly
+✅ **Performance** - Queries run fast, searches return results
 ✅ **Trust** - Users rely on documentation quality
 
 ### The 80/20 Rule
@@ -632,14 +632,14 @@ $files = Get-ChildItem -Path "T:\Project-AI-vault" -Filter "*.md" -Recurse
 
 foreach ($file in $files) {
     $content = Get-Content $file.FullName -Raw
-    
+
     # Check if draft and old
-    if ($content -match 'status: draft' -and 
+    if ($content -match 'status: draft' -and
         $content -match 'created_date: (\d{4}-\d{2}-\d{2})') {
-        
+
         $created = [datetime]::Parse($matches[1])
         $daysSince = (Get-Date) - $created
-        
+
         if ($daysSince.Days -gt 30) {
             # Add stale tag
             $content = $content -replace 'tags: \[', 'tags: [incomplete, '
@@ -863,13 +863,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Validate Metadata
         run: .\scripts\validate-metadata.ps1
-      
+
       - name: Check Links
         run: .\scripts\validate-links.ps1
-      
+
       - name: Tag Compliance
         run: .\scripts\validate-tags.ps1
 ```
@@ -986,11 +986,11 @@ jobs:
 
 **Maintenance Success Criteria:**
 
-✅ 100% metadata completeness  
-✅ 0 broken links  
-✅ <5% orphaned documents  
-✅ <10% stale content (180+ days)  
-✅ Weekly quality checks performed  
+✅ 100% metadata completeness
+✅ 0 broken links
+✅ <5% orphaned documents
+✅ <10% stale content (180+ days)
+✅ Weekly quality checks performed
 ✅ Monthly health report generated
 
 ---
@@ -1032,4 +1032,3 @@ word_count: 3700
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

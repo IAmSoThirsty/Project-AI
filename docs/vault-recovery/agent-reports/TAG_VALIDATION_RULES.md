@@ -1,8 +1,8 @@
 # Tag Validation Rules
 
-> **Automated Validation Reference**  
-> **Version:** 1.0  
-> **Last Updated:** 2025-01-20  
+> **Automated Validation Reference**
+> **Version:** 1.0
+> **Last Updated:** 2025-01-20
 > **Tool:** validate-tags.ps1
 
 ---
@@ -142,24 +142,24 @@ tags:
   # Area (2 tags, within 1-3 range)
   - security
   - security/audit
-  
+
   # Type (1 tag, within 1-2 range)
   - report
-  
+
   # Component (2 tags, within 0-5 range)
   - user-manager
   - command-override
-  
+
   # Status (1 tag, exactly 1)
   - active
-  
+
   # Audience (2 tags, within 1-4 range)
   - security
   - developer
-  
+
   # Priority (1 tag, within 0-1 range)
   - P0
-  
+
   # Special (2 tags, within 0-10 range)
   - troubleshooting
   - best-practices
@@ -208,11 +208,11 @@ tags:
 # Status: 1 tag (mutually exclusive)
 tags:
   - active
-  
+
 # Priority: 1 tag
 tags:
   - P0
-  
+
 # Priority: 0 tags (optional)
 tags:
   - security
@@ -357,17 +357,17 @@ STAGED_MD_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.md$'
 
 if [ -n "$STAGED_MD_FILES" ]; then
     echo "Validating tags in staged markdown files..."
-    
+
     for file in $STAGED_MD_FILES; do
         pwsh -File T:\Project-AI-vault\validate-tags.ps1 -Path "$file"
-        
+
         if [ $? -ne 0 ]; then
             echo "Tag validation failed for $file"
             echo "Fix errors and try again, or use 'git commit --no-verify' to skip validation"
             exit 1
         fi
     done
-    
+
     echo "Tag validation passed"
 fi
 
@@ -389,10 +389,10 @@ on:
 jobs:
   validate-tags:
     runs-on: windows-latest
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Validate Document Tags
         shell: pwsh
         run: |
@@ -400,12 +400,12 @@ jobs:
             -Path "T:\Project-AI-vault\repo-docs" `
             -OutputFormat JSON `
             -ReportPath "validation-report.json"
-          
+
           if ($LASTEXITCODE -ne 0) {
             Write-Error "Tag validation failed"
             exit 1
           }
-      
+
       - name: Upload Validation Report
         if: always()
         uses: actions/upload-artifact@v3
@@ -718,10 +718,9 @@ foreach ($batch in $batches) {
 
 ---
 
-**Version:** 1.0  
-**Last Updated:** 2025-01-20  
+**Version:** 1.0
+**Last Updated:** 2025-01-20
 **See Also:** TAG_TAXONOMY.md, tag-hierarchy.json, validate-tags.ps1
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

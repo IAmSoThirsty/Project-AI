@@ -6,7 +6,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "published"
-author: 
+author:
   name: "<%tp.user.name || 'Documentation Team'%>"
 category: "documentation"
 tags: ["guide", "quickstart", "tutorial", "getting-started"]
@@ -20,8 +20,8 @@ summary: "Quick start guide for <%`${await tp.system.prompt('Feature name:') || 
 
 # <%tp.file.title%> - Quick Start Guide
 
-> **Time to Complete:** <%`${await tp.system.prompt('Estimated time:') || '15 minutes'}`%>  
-> **Difficulty:** Beginner  
+> **Time to Complete:** <%`${await tp.system.prompt('Estimated time:') || '15 minutes'}`%>
+> **Difficulty:** Beginner
 > **Prerequisites:** <%`${await tp.system.prompt('Prerequisites:') || 'Basic Python knowledge'}`%>
 
 ## What You'll Learn
@@ -110,10 +110,10 @@ Result: Success!
 
 ## Troubleshooting
 
-**Problem:** [Common issue]  
+**Problem:** [Common issue]
 **Solution:** [How to fix]
 
-**Problem:** [Common issue]  
+**Problem:** [Common issue]
 **Solution:** [How to fix]
 
 ## Next Steps
@@ -131,9 +131,8 @@ Now that you have the basics:
 
 ---
 
-**Last Updated:** <%tp.date.now("YYYY-MM-DD")%>  
+**Last Updated:** <%tp.date.now("YYYY-MM-DD")%>
 **Feedback:** [Link to feedback form]
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

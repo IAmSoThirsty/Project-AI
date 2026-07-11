@@ -11,20 +11,20 @@ graph TB
 
     subgraph "CI/CD Pipeline (GitHub Actions)"
         GH_ACTIONS[GitHub Actions<br/>Workflow Runner]
-        
+
         subgraph "Build Workflow"
             LINT[Ruff Linter<br/>Code Quality]
             TEST[pytest<br/>Unit/Integration]
             SECURITY[Bandit + Safety<br/>Security Scan]
             TYPE_CHECK[mypy<br/>Type Checking]
         end
-        
+
         subgraph "Deploy Workflow"
             BUILD_IMAGE[Docker Build<br/>Multi-stage]
             PUSH_REGISTRY[Push to Registry<br/>GHCR/DockerHub]
             DEPLOY_PROD[Deploy Production<br/>Railway/Fly.io]
         end
-        
+
         CODEQL[CodeQL Analysis<br/>Security Scanning]
         DEPENDABOT[Dependabot<br/>Dependency Updates]
     end
@@ -37,13 +37,13 @@ graph TB
 
     subgraph "Production Deployment (Docker)"
         NGINX[NGINX<br/>Reverse Proxy]
-        
+
         subgraph "Application Tier"
             APP1[Desktop App<br/>Container 1]
             APP2[Web Backend<br/>Container 2]
             APP3[Worker Pool<br/>Container 3]
         end
-        
+
         LOAD_BALANCER[Load Balancer<br/>Round Robin]
     end
 
@@ -158,11 +158,11 @@ graph TB
     APP2 --> PROMETHEUS
     APP3 --> PROMETHEUS
     PROMETHEUS --> GRAFANA
-    
+
     APP1 --> JAEGER
     APP2 --> JAEGER
     TEMPORAL_FRONTEND --> JAEGER
-    
+
     APP1 --> ELASTICSEARCH
     APP2 --> ELASTICSEARCH
     NGINX --> ELASTICSEARCH
@@ -290,20 +290,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
         run: |
           pip install ruff mypy
           pip install -r requirements.txt
-      
+
       - name: Run Ruff
         run: ruff check .
-      
+
       - name: Run mypy
         run: mypy src/
 
@@ -312,23 +312,23 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.11', '3.12']
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install dependencies
         run: |
           pip install pytest pytest-cov
           pip install -r requirements.txt
-      
+
       - name: Run tests
         run: pytest --cov=src --cov-report=xml
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -338,18 +338,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install security tools
         run: pip install bandit safety
-      
+
       - name: Run Bandit
         run: bandit -r src/ -f json -o bandit-report.json
-      
+
       - name: Run Safety
         run: safety check --file requirements.txt
 
@@ -357,20 +357,20 @@ jobs:
     needs: [lint, test, security]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -386,7 +386,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
       - name: Deploy to Railway
         env:
@@ -623,13 +623,13 @@ http {
         # API endpoints
         location /api/ {
             limit_req zone=api_limit burst=20 nodelay;
-            
+
             proxy_pass http://backend;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            
+
             # Timeouts
             proxy_connect_timeout 60s;
             proxy_send_timeout 60s;
@@ -639,7 +639,7 @@ http {
         # Auth endpoints (stricter rate limiting)
         location /api/auth/ {
             limit_req zone=auth_limit burst=5 nodelay;
-            
+
             proxy_pass http://backend;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
@@ -677,19 +677,19 @@ scrape_configs:
   - job_name: 'backend'
     static_configs:
       - targets: ['backend:9090']
-    
+
   - job_name: 'postgres'
     static_configs:
       - targets: ['postgres-exporter:9187']
-  
+
   - job_name: 'redis'
     static_configs:
       - targets: ['redis-exporter:9121']
-  
+
   - job_name: 'temporal'
     static_configs:
       - targets: ['temporal:9090']
-  
+
   - job_name: 'nginx'
     static_configs:
       - targets: ['nginx-exporter:9113']
@@ -706,21 +706,21 @@ import os
 
 class SecretsManager:
     """Centralized secrets management using HashiCorp Vault"""
-    
+
     def __init__(self):
         self.vault_url = os.getenv('VAULT_URL', 'http://localhost:8200')
         self.vault_token = os.getenv('VAULT_TOKEN')
-        
+
         self.client = hvac.Client(
             url=self.vault_url,
             token=self.vault_token
         )
-    
+
     def get_secret(self, path: str, key: str) -> str:
         """Retrieve secret from Vault"""
         secret = self.client.secrets.kv.v2.read_secret_version(path=path)
         return secret['data']['data'][key]
-    
+
     def set_secret(self, path: str, data: dict):
         """Store secret in Vault"""
         self.client.secrets.kv.v2.create_or_update_secret(

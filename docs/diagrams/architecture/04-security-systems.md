@@ -226,14 +226,14 @@ class UserManager:
         user = self.load_user(username)
         if not user:
             return False, "Invalid credentials"
-        
+
         # Check account lockout
         if user["failed_attempts"] >= 5:
             if self.is_locked_out(user):
                 return False, "Account locked. Try again later."
             else:
                 user["failed_attempts"] = 0  # Reset after lockout expires
-        
+
         # Verify password (bcrypt)
         if bcrypt.checkpw(password.encode(), user["password_hash"]):
             user["failed_attempts"] = 0
@@ -285,12 +285,12 @@ class CommandOverrideSystem:
     def validate_override(self, password: str) -> bool:
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         return password_hash == self.master_password_hash
-    
+
     def execute_override(self, action: str, password: str):
         if not self.validate_override(password):
             self.audit_log.record_failed_override(action)
             return False, "Invalid master password"
-        
+
         self.audit_log.record_successful_override(action)
         return True, "Override granted"
 ```
@@ -328,15 +328,15 @@ ALLOWED_DIRECTORIES = ["/data", "/logs", "/uploads"]
 def validate_path(path: str) -> tuple[bool, str]:
     """Prevent directory traversal attacks"""
     abs_path = os.path.abspath(path)
-    
+
     # Check if path is within allowed directories
     if not any(abs_path.startswith(allowed) for allowed in ALLOWED_DIRECTORIES):
         return False, "Path outside allowed directories"
-    
+
     # Reject traversal attempts
     if ".." in path or path.startswith("/"):
         return False, "Path traversal detected"
-    
+
     return True, "Path valid"
 ```
 
@@ -370,10 +370,10 @@ from cryptography.fernet import Fernet
 class DataEncryptor:
     def __init__(self, key: bytes):
         self.fernet = Fernet(key)
-    
+
     def encrypt(self, data: str) -> bytes:
         return self.fernet.encrypt(data.encode())
-    
+
     def decrypt(self, token: bytes) -> str:
         return self.fernet.decrypt(token).decode()
 ```
@@ -606,7 +606,7 @@ authentication:
     require_lowercase: true
     require_numbers: true
     require_special: true
-  
+
   lockout_policy:
     max_failed_attempts: 5
     lockout_duration: 1800  # seconds
@@ -625,7 +625,7 @@ encryption:
     passwords: bcrypt
     data_at_rest: fernet
     data_in_transit: tls_1_3
-  
+
   key_rotation:
     enabled: true
     interval_days: 90
@@ -635,7 +635,7 @@ monitoring:
     enabled: true
     retention_days: 365
     pii_masking: true
-  
+
   anomaly_detection:
     enabled: true
     ml_model: isolation_forest

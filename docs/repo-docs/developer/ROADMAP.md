@@ -13,9 +13,9 @@ review_cycle: quarterly
 ---
 # Project-AI Vision & Roadmap: AGI for Collective Flourishing
 
-**Document Version:** 2.0  
-**Effective Date:** 2026-02-05  
-**Status:** Strategic Direction Document  
+**Document Version:** 2.0
+**Effective Date:** 2026-02-05
+**Status:** Strategic Direction Document
 **Review Frequency:** Quarterly
 
 ---
@@ -285,9 +285,9 @@ Every roadmap change requires:
 ```markdown
 ## Proposal: Add Multi-Language Support
 
-**Rationale:** 
-Serving only English-speakers limits global accessibility and reinforces 
-linguistic inequality. Multi-language support advances collective flourishing 
+**Rationale:**
+Serving only English-speakers limits global accessibility and reinforces
+linguistic inequality. Multi-language support advances collective flourishing
 by making AGI assistance available to 4B+ additional people.
 
 **Alternatives Considered:**
@@ -546,8 +546,8 @@ This roadmap is not static. It evolves through:
 **Document Maintenance:**
 This roadmap is reviewed quarterly and updated based on progress, community feedback, and evolving understanding of AGI challenges.
 
-**Last Updated:** 2026-02-05  
-**Next Review:** 2026-05-05  
+**Last Updated:** 2026-02-05
+**Next Review:** 2026-05-05
 **Approved By:** Project Stewards + Community Review
 
 ---

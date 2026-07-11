@@ -104,7 +104,7 @@ The cryptographic governance core that provides:
   ```python
   snapshot = sovereign.create_config_snapshot(config)
   # Returns: {config_hash, signature, public_key, timestamp}
-  
+
   is_valid = sovereign.verify_config_snapshot(config, snapshot)
   # Returns: True only if config matches signed snapshot
   ```
@@ -118,7 +118,7 @@ The cryptographic governance core that provides:
       role="admin",
       context={"action": "deploy", "environment": "production"}
   )
-  
+
   is_valid = sovereign.verify_role_signature(role_sig)
   ```
 
@@ -132,16 +132,16 @@ The cryptographic governance core that provides:
       "governance_active": True,
       "compliance_required": True
   }
-  
+
   execution_context = {
       "stage": "deployment",
       "environment": "production"
   }
-  
+
   binding = sovereign.create_policy_state_binding(
       policy_state, execution_context
   )
-  
+
   # CRITICAL: This verification MUST pass for execution to proceed
   is_valid = sovereign.verify_policy_state_binding(
       policy_state, execution_context, binding
@@ -160,7 +160,7 @@ The cryptographic governance core that provides:
       {"action": "deploy", "environment": "production"},
       severity="INFO"
   )
-  
+
   # Verify integrity
   is_valid, issues = sovereign.verify_audit_trail_integrity()
   ```
@@ -439,11 +439,11 @@ stages:
   - name: "data_validation"
     type: "data_preparation"
     dataset: "production_data"
-    
+
   - name: "model_deployment"
     type: "model_training"
     model: "production_model"
-    
+
   - name: "compliance_export"
     type: "audit_export"
     format: "json"

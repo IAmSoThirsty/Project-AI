@@ -656,9 +656,9 @@ Use this checklist for comprehensive navigation:
 
 ---
 
-**Version:** 1.0  
-**Last Updated:** 2024-01-15  
-**Maintainer:** AGENT-002 (Indexes Subdirectory Specialist)  
+**Version:** 1.0
+**Last Updated:** 2024-01-15
+**Maintainer:** AGENT-002 (Indexes Subdirectory Specialist)
 **Related Documents:**
 - [[_indexes/README.md]] - Index system overview
 - [[_indexes/templates/INDEX_TEMPLATE.md]] - Index file template
@@ -666,4 +666,3 @@ Use this checklist for comprehensive navigation:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

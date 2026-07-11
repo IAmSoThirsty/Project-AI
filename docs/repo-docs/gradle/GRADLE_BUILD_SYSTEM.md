@@ -403,15 +403,15 @@ Example for a new Rust module:
 
 if (file("rust_module").exists()) {
     discoveredModules.add("rust-module")
-    
+
     tasks.register<Exec>("rustBuild") {
         group = "rust"
         description = "Build Rust module"
-        
+
         workingDir = file("rust_module")
         commandLine("cargo", "build", "--release")
     }
-    
+
     // Add to buildAll
     tasks.named("buildAll").configure {
         dependsOn("rustBuild")
@@ -428,7 +428,7 @@ Create reusable task types:
 abstract class MultiPlatformBuildTask : DefaultTask() {
     @Input
     abstract val platforms: ListProperty<String>
-    
+
     @TaskAction
     fun execute() {
         platforms.get().forEach { platform ->
@@ -873,4 +873,3 @@ Easy to extend:
 ---
 
 **Thirsty's Gradle - Where Maximum Density Meets God Tier Engineering** 🚀
-

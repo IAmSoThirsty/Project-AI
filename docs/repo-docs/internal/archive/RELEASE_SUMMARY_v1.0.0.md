@@ -36,9 +36,9 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/RELEASE_SUMMARY_v1.0.0.
 ---
 # Project-AI v1.0.0 - Release Summary
 
-**Release Date:** January 28, 2026  
-**Version:** 1.0.0  
-**Status:** ✅ **PRODUCTION READY**  
+**Release Date:** January 28, 2026
+**Version:** 1.0.0
+**Status:** ✅ **PRODUCTION READY**
 **Tag:** v1.0.0
 
 ---
@@ -479,9 +479,9 @@ We're excited to see what you build with this governance-first AI framework.
 
 ---
 
-**Project-AI Team**  
+**Project-AI Team**
 January 28, 2026
 
-**Repository:** https://github.com/IAmSoThirsty/Project-AI  
-**License:** MIT  
+**Repository:** https://github.com/IAmSoThirsty/Project-AI
+**License:** MIT
 **Status:** Production Ready ✅

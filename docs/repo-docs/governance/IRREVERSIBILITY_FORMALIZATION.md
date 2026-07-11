@@ -151,11 +151,11 @@ def validate(self, new_value: float) -> Tuple[bool, str]:
     # Priority 1: can_never constraints
     if self.can_never_increase and new_value > self.locked_value:
         return False, "can never increase (irreversible degradation)"
-    
+
     # Priority 2: ceiling/floor constraints
     if self.constraint_type == "ceiling" and new_value > self.locked_value:
         return False, "cannot exceed ceiling"
-    
+
     return True, ""
 ```
 
@@ -273,7 +273,7 @@ def update_metrics(self, metrics: Dict[str, float]) -> None:
                 is_valid, reason = constraint.validate(metrics[constraint.variable_name])
                 if not is_valid:
                     raise ValueError(f"Irreversibility constraint violated: {reason}")
-    
+
     # Update only if all constraints pass
     self.metrics.update(metrics)
 ```
@@ -346,7 +346,7 @@ def run_tick(self) -> Dict[str, Any]:
         assessment = self.irreversibility_detector.assess_irreversibility(
             scenario, time_elapsed
         )
-        
+
         if assessment["irreversible"]:
             # Check if not already locked
             if not self._has_lock(scenario):
@@ -356,7 +356,7 @@ def run_tick(self) -> Dict[str, Any]:
                     irreversibility_score=assessment["score"],
                     triggered_collapses=assessment["triggered_collapses"]
                 )
-                
+
                 logger.critical(
                     f"STATE LOCK ENFORCED: {scenario.name} - "
                     f"Physics now prevents: {len(lock.variable_constraints)} variables, "
@@ -372,7 +372,7 @@ def run_tick(self) -> Dict[str, Any]:
 ```python
 def _generate_variable_constraints(scenario, irreversibility_score, triggered_collapses):
     constraints = []
-    
+
     # Category-specific logic
     if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
         if "epistemic_collapse" in triggered_collapses:
@@ -385,7 +385,7 @@ def _generate_variable_constraints(scenario, irreversibility_score, triggered_co
                     can_never_increase=True
                 )
             )
-    
+
     # ... similar logic for other categories
     return constraints
 ```
@@ -395,7 +395,7 @@ def _generate_variable_constraints(scenario, irreversibility_score, triggered_co
 ```python
 def _generate_disabled_recovery_events(scenario, triggered_collapses):
     disabled = []
-    
+
     # Disable all recovery poisons (they were traps anyway)
     for poison in scenario.recovery_poisons:
         disabled.append(DisabledRecoveryEvent(
@@ -403,7 +403,7 @@ def _generate_disabled_recovery_events(scenario, triggered_collapses):
             reason=f"Recovery poison detected: {poison.hidden_damage}",
             scenario_id=scenario.scenario_id
         ))
-    
+
     # Category-specific disabled events
     if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
         if "epistemic_collapse" in triggered_collapses:
@@ -412,7 +412,7 @@ def _generate_disabled_recovery_events(scenario, triggered_collapses):
                 reason="Trust collapse: centralized authorities no longer credible",
                 alternative_actions=["distributed_verification"]
             ))
-    
+
     return disabled
 ```
 
@@ -421,7 +421,7 @@ def _generate_disabled_recovery_events(scenario, triggered_collapses):
 ```python
 def _generate_governance_ceilings(scenario, irreversibility_score):
     ceilings = []
-    
+
     # Calculate ceiling multiplier based on score
     if irreversibility_score >= 0.9:
         ceiling_multiplier = 0.4
@@ -429,7 +429,7 @@ def _generate_governance_ceilings(scenario, irreversibility_score):
         ceiling_multiplier = 0.6
     else:
         ceiling_multiplier = 0.8
-    
+
     # Universal ceilings (all scenarios)
     ceilings.append(GovernanceCeiling(
         domain="democratic_legitimacy",
@@ -438,7 +438,7 @@ def _generate_governance_ceilings(scenario, irreversibility_score):
         reason="Public faith in democratic processes permanently reduced",
         multiplier=ceiling_multiplier
     ))
-    
+
     # Category-specific additional reductions
     if scenario.category == ScenarioCategory.ECONOMIC:
         ceilings.append(GovernanceCeiling(
@@ -446,7 +446,7 @@ def _generate_governance_ceilings(scenario, irreversibility_score):
             lowered_ceiling=1.0 * ceiling_multiplier * 0.7,  # Extra 30% reduction
             multiplier=ceiling_multiplier * 0.7
         ))
-    
+
     return ceilings
 ```
 
@@ -537,7 +537,7 @@ print(f"Fiscal capacity: {fiscal_ceiling}")
 summary = engine.get_state_lock_summary()
 
 print(summary["summary"])
-# Output: "3 irreversibility locks active, enforcing 8 variable constraints, 
+# Output: "3 irreversibility locks active, enforcing 8 variable constraints,
 #          6 recovery events disabled, 12 governance ceilings lowered"
 
 # Get specific lock details
@@ -735,7 +735,7 @@ Currently locks are permanent. Future: locks can weaken over extremely long time
 ```python
 class IrreversibilityLock:
     strength_half_life: timedelta  # e.g., 50 years
-    
+
     def get_current_strength(self) -> float:
         elapsed = datetime.utcnow() - self.locked_at
         half_lives = elapsed / self.strength_half_life
@@ -790,9 +790,9 @@ def emergency_release_lock(
 
 Irreversibility formalization transforms HYDRA-50 from a simulation engine into a **physics engine for collapse dynamics**. Once a scenario crosses the point of no return:
 
-✅ **Variables locked** - Can't magically recover capacity  
-✅ **Recovery events disabled** - Can't deploy known traps  
-✅ **Governance capped** - Can't rebuild trust/legitimacy  
+✅ **Variables locked** - Can't magically recover capacity
+✅ **Recovery events disabled** - Can't deploy known traps
+✅ **Governance capped** - Can't rebuild trust/legitimacy
 
 This creates **realistic collapse modeling** where:
 

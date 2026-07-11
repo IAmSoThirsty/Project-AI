@@ -223,7 +223,7 @@ def my_workflow(vm, context):
     )
     if not allowed:
         raise PermissionError(reason)
-    
+
     # Record external call
     stack.recorder.record_external_call(
         workflow_id="my_workflow",
@@ -231,10 +231,10 @@ def my_workflow(vm, context):
         call_args={"endpoint": "api.example.com"},
         call_result={"data": [1, 2, 3]}
     )
-    
+
     # Take snapshot
     snapshot_hash = vm.snapshot("my_workflow")
-    
+
     return {"result": "success", "snapshot": snapshot_hash}
 
 # Create and execute

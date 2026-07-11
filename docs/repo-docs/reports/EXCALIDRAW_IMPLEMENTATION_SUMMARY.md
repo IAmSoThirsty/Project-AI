@@ -414,7 +414,7 @@ T:\Project-AI-main\
 2. **Plugin Manager:**
    ```python
    from app.core.ai_systems import PluginManager
-   
+
    manager = PluginManager()
    excalidraw_plugin = ExcalidrawPlugin()
    manager.load_plugin(excalidraw_plugin)

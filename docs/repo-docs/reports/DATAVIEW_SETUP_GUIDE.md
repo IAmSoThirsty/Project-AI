@@ -102,7 +102,7 @@ If reinstallation is needed:
    ```powershell
    $version = "0.5.68"  # Latest stable version
    $baseUrl = "https://github.com/blacksmithgu/obsidian-dataview/releases/download/$version"
-   
+
    Invoke-WebRequest -Uri "$baseUrl/main.js" -OutFile ".obsidian/plugins/dataview/main.js"
    Invoke-WebRequest -Uri "$baseUrl/manifest.json" -OutFile ".obsidian/plugins/dataview/manifest.json"
    Invoke-WebRequest -Uri "$baseUrl/styles.css" -OutFile ".obsidian/plugins/dataview/styles.css"
@@ -119,7 +119,7 @@ After installation, verify Dataview is working:
 1. Create a test note with this content:
    ```markdown
    # Test Note
-   
+
    ```dataview
    TABLE file.name as "File"
    FROM ""
@@ -144,34 +144,34 @@ User settings are stored in `.obsidian/plugins/dataview/data.json`. The producti
 {
   "renderNullAs": "\\-",
   // Display "-" for missing/null values instead of empty cells
-  
+
   "taskCompletionTracking": true,
   // Track task completion dates automatically
-  
+
   "taskCompletionDateFormat": "yyyy-MM-dd",
   // ISO 8601 date format for consistency
-  
+
   "warnOnEmptyResult": true,
   // Show warning when query returns no results (helpful for debugging)
-  
+
   "refreshEnabled": true,
   "refreshInterval": 2500,
   // Auto-refresh queries every 2.5 seconds (balance responsiveness vs performance)
-  
+
   "defaultDateFormat": "MMMM dd, yyyy",
   "defaultDateTimeFormat": "h:mm a - MMMM dd, yyyy",
   // Human-readable date formats (e.g., "April 20, 2024")
-  
+
   "maxRecursiveRenderDepth": 4,
   // Prevent infinite recursion in nested queries
-  
+
   "showResultCount": true,
   // Display "X results" above query output
-  
+
   "enableDataviewJs": true,
   "enableInlineDataviewJs": true,
   // Enable JavaScript API for advanced queries
-  
+
   "prettyRenderInlineFields": true,
   "prettyRenderInlineFieldsInLivePreview": true
   // Format inline fields (e.g., "Status:: Active") in Live Preview mode
@@ -654,7 +654,7 @@ DataviewJS executes arbitrary JavaScript code. Follow these security practices:
    ```javascript
    // ❌ Dangerous: Direct file system access
    const fs = require('fs');
-   
+
    // ✅ Safe: Use Dataview API only
    const pages = dv.pages();
    ```
@@ -732,7 +732,7 @@ For Dataview-specific issues:
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** 2024-04-20  
-**Plugin Version:** 0.5.68  
+**Document Version:** 1.0.0
+**Last Updated:** 2024-04-20
+**Plugin Version:** 0.5.68
 **Obsidian Compatibility:** 0.13.11+

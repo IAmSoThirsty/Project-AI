@@ -1,8 +1,8 @@
 # Threat Model — Project-AI Governance System
 
-**Version:** 1.0.0  
-**Branch:** 05-09-26-Structural-upgrades  
-**Status:** Active  
+**Version:** 1.0.0
+**Branch:** 05-09-26-Structural-upgrades
+**Status:** Active
 **Machine-readable companion:** `docs/architecture/threat_model.yaml`
 
 ---

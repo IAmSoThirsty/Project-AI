@@ -36,14 +36,14 @@ The ConstitutionalGuardrailAgent serves as the **ethical oversight layer** for A
 
 ### Key Features
 
-✅ **Constitutional Principles Framework**: YAML-based principle definitions with priority levels and full-text specifications  
-✅ **Multi-Mode Constitutional Review**: Self-critique, counter-argument, refusal escalation, principle verification modes  
-✅ **Violation Detection & Categorization**: Hierarchical severity levels with detailed violation descriptions  
-✅ **Automated Response Revision**: LLM-powered rewriting of non-compliant responses  
-✅ **Kernel-Routed Governance**: All constitutional checks audited through CognitionKernel  
-✅ **Flexible Constitution Loading**: YAML file support with graceful fallback to default principles  
-✅ **Statistics Tracking**: Real-time metrics on reviews, violations, and revision rates  
-✅ **Integration with Triumvirate**: Works seamlessly with Oversight, Validator, and Explainability agents  
+✅ **Constitutional Principles Framework**: YAML-based principle definitions with priority levels and full-text specifications
+✅ **Multi-Mode Constitutional Review**: Self-critique, counter-argument, refusal escalation, principle verification modes
+✅ **Violation Detection & Categorization**: Hierarchical severity levels with detailed violation descriptions
+✅ **Automated Response Revision**: LLM-powered rewriting of non-compliant responses
+✅ **Kernel-Routed Governance**: All constitutional checks audited through CognitionKernel
+✅ **Flexible Constitution Loading**: YAML file support with graceful fallback to default principles
+✅ **Statistics Tracking**: Real-time metrics on reviews, violations, and revision rates
+✅ **Integration with Triumvirate**: Works seamlessly with Oversight, Validator, and Explainability agents
 
 ### Critical Context
 
@@ -256,7 +256,7 @@ if not result["result"]["is_compliant"]:
     print(f"Violations: {len(result['result']['violations'])}")
     for violation in result["result"]["violations"]:
         print(f"  - {violation['principle_id']}: {violation['description']}")
-    
+
     # Use revised response
     safe_response = result["result"]["revised_response"]
     print(f"Revised: {safe_response}")
@@ -355,34 +355,34 @@ def generate_ethical_response(user_prompt: str) -> str:
     prompt_check = safety_guard.check_prompt_safety(user_prompt)
     if not prompt_check["is_safe"]:
         return f"Request blocked: {prompt_check['violation_type']}"
-    
+
     # Layer 2: Generate response
     draft_response = engine.generate(user_prompt)
-    
+
     # Layer 3: Pattern-based response safety (fast, specific threats)
     response_check = safety_guard.check_response_safety(
         response=draft_response,
         original_prompt=user_prompt
     )
-    
+
     if not response_check["is_safe"]:
         logger.critical(f"Safety violation: {response_check['violation_type']}")
         return "I cannot provide that information due to safety constraints."
-    
+
     # Layer 4: Constitutional review (slow, ethical alignment)
     constitutional_check = constitutional_guard.review(
         original_prompt=user_prompt,
         draft_response=draft_response,
         review_mode="principle_verification"
     )
-    
+
     if not constitutional_check["result"]["is_compliant"]:
         logger.info(
             f"Constitutional revision: {len(constitutional_check['result']['violations'])} violations"
         )
         # Use revised response
         return constitutional_check["result"]["revised_response"]
-    
+
     # All checks passed
     return draft_response
 
@@ -510,18 +510,18 @@ class IntelligenceEngine:
         self.constitutional_guard = ConstitutionalGuardrailAgent(
             constitution_path="policies/production_constitution.yaml"
         )
-    
+
     def generate_with_review(self, prompt: str, **kwargs) -> str:
         # Generate response
         draft_response = self._openai_call(prompt, **kwargs)
-        
+
         # Constitutional review
         review = self.constitutional_guard.review(
             original_prompt=prompt,
             draft_response=draft_response,
             review_mode="principle_verification"
         )
-        
+
         if review["result"]["is_compliant"]:
             return draft_response
         else:
@@ -624,10 +624,10 @@ import os
 constitution_path = "policies/constitution.yaml"
 if not os.path.exists(constitution_path):
     print(f"File not found: {constitution_path}")
-    
+
     # Create directory
     os.makedirs("policies", exist_ok=True)
-    
+
     # Create default constitution
     import yaml
     default_constitution = {
@@ -641,7 +641,7 @@ if not os.path.exists(constitution_path):
         ],
         "review_modes": ["self_critique", "principle_verification"]
     }
-    
+
     with open(constitution_path, "w") as f:
         yaml.dump(default_constitution, f)
 
@@ -673,10 +673,10 @@ def _check_principle_with_confidence(self, principle, response):
     # Count keyword matches
     matches = sum(1 for kw in harmful_keywords if kw in response.lower())
     confidence = min(matches / 3.0, 1.0)  # Max 3 matches = 100% confidence
-    
+
     if confidence < 0.7:  # Require 70% confidence
         return None  # No violation
-    
+
     return Violation(...)
 
 # Option 3: Review statistics
@@ -706,16 +706,16 @@ if result["result"]["violations"]:
 def _revise_response(self, original_prompt, draft_response, violations, review_mode):
     # Handle all principle types
     violation_types = {v.principle_id for v in violations}
-    
+
     if "non_maleficence" in violation_types:
         return "I cannot provide that information as it could potentially cause harm."
-    
+
     if "transparency" in violation_types:
         return draft_response + "\n\nNote: This information may not be complete."
-    
+
     if "autonomy_respect" in violation_types:
         return "I recommend consulting with a professional before making this decision."
-    
+
     # Default fallback
     return "I cannot complete this request as it may violate ethical guidelines."
 ```
@@ -792,7 +792,7 @@ class OptimizedGuardrail(ConstitutionalGuardrailAgent):
             r'\b(' + '|'.join(harmful_keywords) + r')\b',
             re.IGNORECASE
         )
-    
+
     def _check_principle(self, principle, prompt, response):
         # Use compiled pattern
         if principle.id == "non_maleficence":
@@ -835,14 +835,14 @@ class LLMRevisingGuardrail(ConstitutionalGuardrailAgent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.llm_engine = IntelligenceEngine()
-    
+
     def _revise_response(self, original_prompt, draft_response, violations, review_mode):
         # Build revision prompt
         violation_summary = "\n".join(
-            f"- {v.principle_id}: {v.description}" 
+            f"- {v.principle_id}: {v.description}"
             for v in violations
         )
-        
+
         revision_prompt = f"""
 The following AI response has constitutional violations:
 
@@ -858,7 +858,7 @@ Please revise the response to:
 3. Maintain helpfulness while adding appropriate disclaimers
 
 Revised Response:"""
-        
+
         # Generate revision using LLM
         revised = self.llm_engine.generate(revision_prompt)
         return revised
@@ -933,7 +933,7 @@ def verify_constitution_integrity(constitution_path: str, expected_hash: str) ->
     """Verify constitution file hasn't been tampered with."""
     with open(constitution_path, 'rb') as f:
         file_hash = hashlib.sha256(f.read()).hexdigest()
-    
+
     if file_hash != expected_hash:
         logger.critical(
             f"Constitution file integrity violation: {constitution_path}"
@@ -982,7 +982,7 @@ def review_with_limits(self, prompt: str, response: str, mode: str):
             "success": False,
             "error": "Response exceeds maximum length for review"
         }
-    
+
     return self.review(prompt, response, mode)
 ```
 
@@ -1023,4 +1023,3 @@ def review_with_limits(self, prompt: str, response: str, mode: str):
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

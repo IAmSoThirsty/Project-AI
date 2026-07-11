@@ -1,7 +1,7 @@
 # 📊 Vault Health Dashboard
 
-**Last Updated:** 2026-04-20  
-**Update Frequency:** Weekly (automated)  
+**Last Updated:** 2026-04-20
+**Update Frequency:** Weekly (automated)
 **Maintainer:** AGENT-040 (Validation & Quality Assurance Specialist)
 
 ---
@@ -404,7 +404,7 @@ TABLE WITHOUT ID
   file.size AS "Size (bytes)",
   file.mtime AS "Last Updated"
 FROM ""
-WHERE file.name = "METADATA_SCHEMA" 
+WHERE file.name = "METADATA_SCHEMA"
    OR file.name = "TAG_TAXONOMY"
    OR file.name = "TAG_USAGE_EXAMPLES"
    OR file.name = "TAG_VALIDATION_RULES"
@@ -479,8 +479,8 @@ SORT file.name ASC
 
 ## 🔄 Next Update
 
-**Scheduled:** 2026-04-27 (1 week)  
-**Update Type:** Automated (post-remediation)  
+**Scheduled:** 2026-04-27 (1 week)
+**Update Type:** Automated (post-remediation)
 **Expected Changes:**
 - Quality score: 66.41 → 85+ (target: 90+)
 - Metadata completeness: 74.38% → 100%
@@ -489,9 +489,9 @@ SORT file.name ASC
 
 ---
 
-**Dashboard Maintained By:** AGENT-040 (Validation & Quality Assurance Specialist)  
-**Dashboard Version:** 1.0  
-**Created:** 2026-04-20  
+**Dashboard Maintained By:** AGENT-040 (Validation & Quality Assurance Specialist)
+**Dashboard Version:** 1.0
+**Created:** 2026-04-20
 **Auto-Update Script:** `scripts/update-health-dashboard.ps1` (future)
 
 ---
@@ -516,4 +516,3 @@ SORT file.name ASC
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

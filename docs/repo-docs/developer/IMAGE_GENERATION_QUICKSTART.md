@@ -90,7 +90,7 @@ The [[API_QUICK_REFERENCE#gui/leather_book_dashboard.py|LeatherBookDashboard]] i
 
 1. **Enter prompt**: Type your image description
    - Example: "a cyberpunk city at night with neon lights"
-   
+
 1. **Select style**: Choose from dropdown
    - photorealistic
    - digital_art
@@ -476,7 +476,7 @@ STYLE_PRESETS = {
 ```python
 BLOCKED_KEYWORDS = [
     "violence", "gore", "blood", "explicit", "nude", "nsfw",
-    "hate", "weapon", "illegal", "drugs", "terror", 
+    "hate", "weapon", "illegal", "drugs", "terror",
     # + 4 more sensitive terms
 ]
 ```
@@ -564,7 +564,7 @@ The **ProactiveActionsPanel** includes image generation button:
 ```python
 class ProactiveActionsPanel(QWidget):
     image_gen_requested = pyqtSignal()  # Emitted when button clicked
-    
+
     def __init__(self):
         # ...
         self.image_gen_button = QPushButton("🎨 GENERATE IMAGES")

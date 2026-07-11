@@ -278,7 +278,7 @@ related_mocs:
 
 ### User Interaction Flow
 ```
-User Input (GUI) → Dashboard Handler → FourLaws Validation → Core Module → 
+User Input (GUI) → Dashboard Handler → FourLaws Validation → Core Module →
 OpenAI/Local Processing → Persona Update → Memory Log → GUI Response
 ```
 
@@ -286,8 +286,8 @@ OpenAI/Local Processing → Persona Update → Memory Log → GUI Response
 
 ### Learning Request Flow
 ```
-AI discovers content → LearningRequestManager.request_learning() → 
-Human approval UI → Approve/Deny → 
+AI discovers content → LearningRequestManager.request_learning() →
+Human approval UI → Approve/Deny →
 Approved: Add to knowledge base | Denied: Add to Black Vault (SHA-256)
 ```
 
@@ -295,8 +295,8 @@ Approved: Add to knowledge base | Denied: Add to Black Vault (SHA-256)
 
 ### Authentication Flow
 ```
-User login → UserManager.authenticate() → bcrypt.checkpw() → 
-Success: user_logged_in signal | Failure: increment failed_attempts → 
+User login → UserManager.authenticate() → bcrypt.checkpw() →
+Success: user_logged_in signal | Failure: increment failed_attempts →
 Account lockout after 5 attempts
 ```
 
@@ -304,8 +304,8 @@ Account lockout after 5 attempts
 
 ### Image Generation Flow
 ```
-User prompt → Content filter check → Backend selection → 
-HF API / OpenAI API → ImageGenerationWorker (QThread) → 
+User prompt → Content filter check → Backend selection →
+HF API / OpenAI API → ImageGenerationWorker (QThread) →
 image_generated signal → Display + Save to history
 ```
 
@@ -454,19 +454,18 @@ image_generated signal → Display + Save to history
 
 ## 🛡️ Governance
 
-**Maintainer:** AGENT-019 (MOC Constructor)  
-**Update Frequency:** Event-driven (when architecture changes)  
-**Review Cycle:** Quarterly architecture review  
-**Change Control:** ADR required for architectural changes  
+**Maintainer:** AGENT-019 (MOC Constructor)
+**Update Frequency:** Event-driven (when architecture changes)
+**Review Cycle:** Quarterly architecture review
+**Change Control:** ADR required for architectural changes
 **Quality Gate:** All architecture docs must include diagrams + rationale
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-23  
-**Schema Compliance:** ✅ 100%  
+**Version:** 1.0.0
+**Last Updated:** 2025-01-23
+**Schema Compliance:** ✅ 100%
 **Link Validation:** ⏳ Pending Phase 2 document creation
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

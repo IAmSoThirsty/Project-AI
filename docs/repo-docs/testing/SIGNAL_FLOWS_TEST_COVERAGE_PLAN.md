@@ -2,9 +2,9 @@
 <!--                                        Productivity: Active -->
 # Signal Flows Test Coverage Plan - 100% Target
 
-**File**: `src/app/pipeline/signal_flows.py` (639 lines, 11 functions)  
-**Test File**: `tests/test_signal_flows_comprehensive.py`  
-**Target**: 100% line, branch, and function coverage  
+**File**: `src/app/pipeline/signal_flows.py` (639 lines, 11 functions)
+**Test File**: `tests/test_signal_flows_comprehensive.py`
+**Target**: 100% line, branch, and function coverage
 **Status**: Framework complete, 40/102 tests implemented (39%)
 
 ---
@@ -15,13 +15,13 @@ The signal processing kernel (`signal_flows.py`) is the highest-risk file in the
 
 **What it handles**:
 - PII redaction (GDPR/HIPAA/CCPA compliance)
-- Circuit breakers (availability guarantee)  
+- Circuit breakers (availability guarantee)
 - Retry logic (operational stability)
 - Vault integration (security boundary)
 - Audit trail (forensic capability)
 
-**Current Status**: 20% line coverage, 15% branch coverage  
-**Target**: 100% line coverage, 100% branch coverage  
+**Current Status**: 20% line coverage, 15% branch coverage
+**Target**: 100% line coverage, 100% branch coverage
 **Gap**: 62 tests remaining
 
 ---
@@ -46,7 +46,7 @@ The signal processing kernel (`signal_flows.py`) is the highest-risk file in the
    - Core patterns covered (email, phone, SSN, IP, IPv6, addresses, credit cards)
    - Missing: international formats, Unicode edge cases
 
-5. **Circuit Breakers** (3/12) ⚠️  
+5. **Circuit Breakers** (3/12) ⚠️
    - State machine tested (CLOSED → OPEN → HALF_OPEN)
    - Missing: integration with actual services
 
@@ -151,7 +151,7 @@ test_signal_missing_signal_id()
 test_signal_missing_source()
 test_signal_missing_text_and_summary()
 
-# Circuit Breaker OPEN States  
+# Circuit Breaker OPEN States
 test_validation_circuit_breaker_open()
 test_transcription_circuit_breaker_open()
 test_processing_circuit_breaker_open()
@@ -176,9 +176,9 @@ test_pii_in_transcript()
 ## Test Execution Plan
 
 ### Phase 1: Integration Tests (IMMEDIATE - TODAY)
-**Priority**: P0 (CRITICAL)  
-**Tests to Add**: 15  
-**Expected Coverage Gain**: +25%  
+**Priority**: P0 (CRITICAL)
+**Tests to Add**: 15
+**Expected Coverage Gain**: +25%
 **Time Estimate**: 4 hours
 
 **Tasks**:
@@ -195,9 +195,9 @@ test_pii_in_transcript()
 - ✅ No untested integration points
 
 ### Phase 2: Thread Safety Tests (IMMEDIATE - TODAY)
-**Priority**: P0 (CRITICAL)  
-**Tests to Add**: 10  
-**Expected Coverage Gain**: +15%  
+**Priority**: P0 (CRITICAL)
+**Tests to Add**: 10
+**Expected Coverage Gain**: +15%
 **Time Estimate**: 3 hours
 
 **Tasks**:
@@ -214,9 +214,9 @@ test_pii_in_transcript()
 - ✅ All counters accurate under load
 
 ### Phase 3: Error Path Completion (TODAY)
-**Priority**: P1 (HIGH)  
-**Tests to Add**: 13  
-**Expected Coverage Gain**: +20%  
+**Priority**: P1 (HIGH)
+**Tests to Add**: 13
+**Expected Coverage Gain**: +20%
 **Time Estimate**: 3 hours
 
 **Tasks**:
@@ -232,14 +232,14 @@ test_pii_in_transcript()
 - ✅ Graceful degradation verified
 
 ### Phase 4: PII Edge Cases (TOMORROW)
-**Priority**: P1 (HIGH)  
-**Tests to Add**: 3  
-**Expected Coverage Gain**: +5%  
+**Priority**: P1 (HIGH)
+**Tests to Add**: 3
+**Expected Coverage Gain**: +5%
 **Time Estimate**: 1 hour
 
 **Tasks**:
 1. Add Japan phone format
-2. Add Brazil phone format  
+2. Add Brazil phone format
 3. Add remaining credit card types
 4. Add PO Box addresses
 5. Test Unicode in addresses
@@ -250,9 +250,9 @@ test_pii_in_transcript()
 - ✅ Unicode handling verified
 
 ### Phase 5: Circuit Breaker Integration (TOMORROW)
-**Priority**: P2 (MEDIUM)  
-**Tests to Add**: 9  
-**Expected Coverage Gain**: +10%  
+**Priority**: P2 (MEDIUM)
+**Tests to Add**: 9
+**Expected Coverage Gain**: +10%
 **Time Estimate**: 2 hours
 
 **Tasks**:
@@ -268,9 +268,9 @@ test_pii_in_transcript()
 - ✅ Metrics accurate
 
 ### Phase 6: Performance & Remaining (AS NEEDED)
-**Priority**: P3 (LOW)  
-**Tests to Add**: 12  
-**Expected Coverage Gain**: +5%  
+**Priority**: P3 (LOW)
+**Tests to Add**: 12
+**Expected Coverage Gain**: +5%
 **Time Estimate**: 2 hours
 
 ---
@@ -311,7 +311,7 @@ test_pii_in_transcript()
 
 ### Before Merge
 - [ ] ≥90% line coverage
-- [ ] ≥85% branch coverage  
+- [ ] ≥85% branch coverage
 - [ ] All P0 tests passing
 - [ ] All P1 tests passing
 - [ ] No failing tests
@@ -352,9 +352,9 @@ test_pii_in_transcript()
 
 ---
 
-**Document Control**  
-**Created**: 2026-02-23  
-**Last Updated**: 2026-02-23  
-**Owner**: Test Engineering  
-**Review Cycle**: Daily until 100% coverage achieved  
+**Document Control**
+**Created**: 2026-02-23
+**Last Updated**: 2026-02-23
+**Owner**: Test Engineering
+**Review Cycle**: Daily until 100% coverage achieved
 **Stakeholder**: Security & Compliance (GDPR/HIPAA implications)

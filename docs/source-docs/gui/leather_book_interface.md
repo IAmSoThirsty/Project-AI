@@ -11,7 +11,7 @@ contributors: ["Architecture Team", "GUI Team"]
 category: "gui-documentation"
 tags: ["pyqt6", "gui", "main-window", "tron-theme", "leather-book"]
 technologies: ["Python 3.11+", "PyQt6", "QMainWindow"]
-related_docs: 
+related_docs:
   - "gui-leather-book-dashboard"
   - "gui-persona-panel"
   - "gui-image-generation"
@@ -24,9 +24,9 @@ audience: ["developers", "gui-engineers", "maintainers"]
 
 # Leather Book Interface - Main Window Module
 
-**Module:** `src/app/gui/leather_book_interface.py`  
-**Lines of Code:** 191  
-**Primary Class:** `LeatherBookInterface(QMainWindow)`  
+**Module:** `src/app/gui/leather_book_interface.py`
+**Lines of Code:** 191
+**Primary Class:** `LeatherBookInterface(QMainWindow)`
 **Design Pattern:** Dual-page book layout with stacked widget navigation
 
 ---
@@ -137,7 +137,7 @@ QMainWindow (self)
 ```python
 class LeatherBookInterface(QMainWindow):
     """Main window with leather book aesthetic."""
-    
+
     # Signals
     page_changed = pyqtSignal(int)   # Emitted when page index changes
     user_logged_in = pyqtSignal(str) # Emitted when user successfully logs in
@@ -149,11 +149,11 @@ class LeatherBookInterface(QMainWindow):
 def __init__(self, username: str | None = None):
     """
     Initialize the Leather Book Interface.
-    
+
     Args:
         username: Optional username if user is pre-authenticated.
                   If None, shows login page.
-    
+
     Attributes:
         username (str | None): Currently logged-in user
         backend_token (str | None): Authentication token for backend API
@@ -390,8 +390,8 @@ tier_registry.register_component(
 
 #### `page_changed = pyqtSignal(int)`
 
-**Emitted When:** Page index changes in `page_container`  
-**Payload:** New page index (int)  
+**Emitted When:** Page index changes in `page_container`
+**Payload:** New page index (int)
 **Use Cases:**
 - Analytics tracking (which pages users visit)
 - Conditional menu activation
@@ -406,8 +406,8 @@ interface.page_changed.connect(lambda idx: print(f"Navigated to page {idx}"))
 
 #### `user_logged_in = pyqtSignal(str)`
 
-**Emitted When:** User successfully authenticates  
-**Payload:** Username (str)  
+**Emitted When:** User successfully authenticates
+**Payload:** Username (str)
 **Use Cases:**
 - Initialize user-specific services
 - Load user preferences
@@ -539,7 +539,7 @@ class MyApplication:
     def __init__(self):
         self.interface = LeatherBookInterface()
         self.interface.user_logged_in.connect(self.on_user_login)
-    
+
     def on_user_login(self, username: str):
         print(f"Welcome, {username}!")
         self.start_background_services(username)
@@ -727,7 +727,7 @@ print(f"Active widgets: {len(QApplication.allWidgets())}")
    ```python
    # Correct
    interface.page_changed.connect(my_slot)
-   
+
    # Incorrect (missing .connect)
    interface.page_changed(my_slot)  # ❌
    ```
@@ -737,7 +737,7 @@ print(f"Active widgets: {len(QApplication.allWidgets())}")
    # page_changed emits int
    def my_slot(page_index: int):  # ✅ Correct
        pass
-   
+
    def my_slot():  # ❌ Missing parameter
        pass
    ```
@@ -918,9 +918,8 @@ except Exception as e:
 
 ## License
 
-**Copyright © 2026 Project-AI Team**  
+**Copyright © 2026 Project-AI Team**
 Internal documentation - Not for public distribution
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

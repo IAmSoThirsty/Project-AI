@@ -80,7 +80,7 @@ No content-based dupes/orphans confirmed (would need mass `readNote` – infeasi
   | Unnamed/Generic | 5+ | Untitled.md, Untitled.canvas, Library.canvas |
   | Other | 10+ | README.md, project-ai-canvas.json, various .py/.sh |
 
-- **Duplicates (name-based, confirmed)**: 
+- **Duplicates (name-based, confirmed)**:
   - README.md (20+ instances across folders).
   - Main_Page_*.md in backups (94 timestamped copies).
   - No path conflicts; backups are isolated.
@@ -202,7 +202,7 @@ Read-only analysis of same-name files (primarily README.md, ~20+ instances). Sam
   | repo-docs/internal/archive/session-notes/README.md | Archived notes (historical) | Short (1 chunk) | Yes |
 
 - **Others**: Untitled.md/canvas (root only, unique). No content dupes confirmed (name-based only).
-- **Most Recent "Advanced"**: 
+- **Most Recent "Advanced"**:
   - **Root README.md** (mtime: recent; detailed vault/security focus).
   - **repo-docs/README.md** (project hub; 100+ links).
   - Inference: Keep these; archive others (e.g., session-notes as historical).
@@ -308,7 +308,7 @@ Embbed key: ![[readmes/Vault-Overview.md#Security]]
 - User: Explicit "yes to [specific file/folder]" to trigger writes. No auto-changes.
 [Timestamp: 2026/04/29 02:51:49]
 
-**user**: I am authorizing you to do the job. Now I don't know what you have or haven't done because your messages read confusing so write the files and do your job 
+**user**: I am authorizing you to do the job. Now I don't know what you have or haven't done because your messages read confusing so write the files and do your job
 [Timestamp: 2026/04/29 02:56:55]
 
 **ai**: ### Curator Understanding
@@ -342,7 +342,7 @@ Authorization received: Consolidated README files into `readmes/` (9 descriptive
 - **Coordination**: Owner: User | Task: Review hub | Done: Confirm no orphans.
 [Timestamp: 2026/04/29 02:58:51]
 
-**user**: Delete the read me files no longer relevant or necessary to keep 
+**user**: Delete the read me files no longer relevant or necessary to keep
 [Timestamp: 2026/04/29 02:59:39]
 
 **ai**: ### Curator Understanding
@@ -374,4 +374,3 @@ Authorization received: Consolidated README files into `readmes/` (9 descriptive
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

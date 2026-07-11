@@ -82,7 +82,7 @@ FROM "exams"
 
 ```dataview
 TABLE
-  choice(priority = "high", "🔴", 
+  choice(priority = "high", "🔴",
     choice(priority = "medium", "🟡", "🟢")) as "Icon",
   choice(completion >= 100, "✅", "⏳") as "Status",
   default(owner, "Unassigned") as "Owner"
@@ -157,7 +157,7 @@ const total = pages.array()
 // Render
 dv.header(2, "Summary");
 dv.paragraph(`Total: $${total.toLocaleString()}`);
-dv.table(["Project", "Budget"], 
+dv.table(["Project", "Budget"],
   pages.array().map(p => [p.file.link, p.budget]));
 ```
 
@@ -280,5 +280,5 @@ WHERE type = "project"
 3. Switch to Reading View (Ctrl+E)
 4. Query auto-executes and displays results
 
-**Full Guide:** `DATAVIEW_SETUP_GUIDE.md` (3,800+ words)  
+**Full Guide:** `DATAVIEW_SETUP_GUIDE.md` (3,800+ words)
 **Help:** https://blacksmithgu.github.io/obsidian-dataview/

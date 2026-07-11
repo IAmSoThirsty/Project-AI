@@ -1,6 +1,6 @@
 
 -------------------------------------------------------------------------------
-   ROBOCOPY     ::     Robust File Copy for Windows                              
+   ROBOCOPY     ::     Robust File Copy for Windows
 -------------------------------------------------------------------------------
 
   Started : Monday, June 8, 2026 5:00:20 AM
@@ -8,16 +8,16 @@
      Dest : T:\Project-AI-main\IT\pentest\labs\DC01\Scripts\
 
     Files : *.*
-	    
-  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30
 
 ------------------------------------------------------------------------------
 
 2026/06/08 05:00:20 ERROR 2 (0x00000002) Accessing Source Directory T:\VMs\Scripts\
-The system cannot find the file specified.
+The system cannot find the file specified.
 
 -------------------------------------------------------------------------------
-   ROBOCOPY     ::     Robust File Copy for Windows                              
+   ROBOCOPY     ::     Robust File Copy for Windows
 -------------------------------------------------------------------------------
 
   Started : Monday, June 8, 2026 5:00:31 AM
@@ -25,8 +25,8 @@ The system cannot find the file specified.
      Dest : T:\Project-AI-main\IT\pentest\labs\DC01\Scripts\
 
     Files : *.*
-	    
-  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+  Options : *.* /TEE /S /E /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30
 
 ------------------------------------------------------------------------------
 
@@ -51,4 +51,3 @@ The system cannot find the file specified.
    Speed :           5,612,875 Bytes/sec.
    Speed :             321.171 MegaBytes/min.
    Ended : Monday, June 8, 2026 5:00:31 AM
-

@@ -163,7 +163,7 @@ ALLOWED_HEALTH_CHECKS = {
 
 if runtime.health_check_cmd not in ALLOWED_HEALTH_CHECKS:
     raise ValueError("Unauthorized health check command")
-    
+
 result = subprocess.run(
     shlex.split(runtime.health_check_cmd),
     shell=False,
@@ -203,8 +203,8 @@ def test_subprocess_no_shell_injection():
 
 ---
 
-**Priority:** 🔴 CRITICAL - Fix within 7 days  
-**Effort:** Low (simple parameter removal for most cases)  
+**Priority:** 🔴 CRITICAL - Fix within 7 days
+**Effort:** Low (simple parameter removal for most cases)
 **Risk if Unfixed:** Remote code execution, data exfiltration, system compromise
 
 ---

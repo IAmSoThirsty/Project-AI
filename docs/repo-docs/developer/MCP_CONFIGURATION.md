@@ -255,7 +255,7 @@ For web-based clients, you can modify the server to use HTTP transport:
 async def run(self):
     """Run the MCP server using HTTP transport."""
     from mcp.server.sse import sse_server
-    
+
     app = sse_server(self.server)
     # Run with uvicorn or another ASGI server
 ```

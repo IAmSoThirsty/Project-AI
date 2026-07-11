@@ -1,13 +1,13 @@
 # CI/CD Pipeline Architecture
 
-**Document Type:** Technical Reference  
-**Component:** Continuous Integration / Continuous Deployment  
-**Status:** Production  
-**Version:** 2.0.0  
-**Last Updated:** 2025-01-26  
-**Author:** AGENT-046  
-**Audience:** DevOps Engineers, Platform Engineers, Release Managers  
-**Scope:** GitHub Actions workflows, automated testing, security scanning, SBOM generation  
+**Document Type:** Technical Reference
+**Component:** Continuous Integration / Continuous Deployment
+**Status:** Production
+**Version:** 2.0.0
+**Last Updated:** 2025-01-26
+**Author:** AGENT-046
+**Audience:** DevOps Engineers, Platform Engineers, Release Managers
+**Scope:** GitHub Actions workflows, automated testing, security scanning, SBOM generation
 **Related Docs:**
 - `02-docker-deployment-guide.md`
 - `04-testing-infrastructure.md`
@@ -177,12 +177,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Run validation
         run: |
           python scripts/validate_docs.py
@@ -263,11 +263,11 @@ jobs:
   validate-doc-code-alignment:
     name: Validate Documentation-Code Alignment
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -285,30 +285,30 @@ jobs:
   continue-on-error: true
   run: |
     echo "🔍 Checking for 'planned' features that are actually implemented..."
-    
+
     VIOLATIONS=0
-    
+
     # Files to check
     DOC_FILES=(
       "src/thirsty_lang/docs/SPECIFICATION.md"
       "tarl/README.md"
       "docs/developer/tarl/TARL_README.md"
     )
-    
+
     for doc in "${DOC_FILES[@]}"; do
       if [ ! -f "$doc" ]; then
         continue
       fi
-      
+
       echo "Checking: $doc"
-      
+
       # Look for "planned" or "not yet implemented" near feature keywords
       if grep -in "planned\|not yet implemented\|todo.*implement" "$doc" | grep -v "^#" | head -5; then
         echo "⚠️  Found 'planned' markers in $doc"
         echo "   → Verify these features are truly unimplemented"
       fi
     done
-    
+
     echo "✅ Planned feature check complete"
 ```
 
@@ -331,22 +331,22 @@ jobs:
   continue-on-error: true
   run: |
     echo "🔍 Validating version numbers across documentation..."
-    
+
     # Extract versions from different files
     TARL_README_VERSION=$(grep -m 1 "Version.*[0-9]" tarl/README.md | grep -oP '\d+\.\d+\.\d+' || echo "not-found")
     TARL_CORE_VERSION=$(grep -m 1 "TARL_VERSION.*=.*[\"']" tarl/core.py | grep -oP '\d+\.\d+' || echo "not-found")
     TARL_SYSTEM_VERSION=$(grep -m 1 "VERSION.*=.*[\"']" tarl/system.py | grep -oP '\d+\.\d+\.\d+' || echo "not-found")
-    
+
     echo "  TARL README version: $TARL_README_VERSION"
     echo "  TARL core.py version: $TARL_CORE_VERSION (Policy system)"
     echo "  TARL system.py version: $TARL_SYSTEM_VERSION (Language VM)"
-    
+
     # Check pyproject.toml version
     if [ -f "pyproject.toml" ]; then
       PYPROJECT_VERSION=$(grep -m 1 '^version = ' pyproject.toml | grep -oP '\d+\.\d+\.\d+' || echo "not-found")
       echo "  pyproject.toml version: $PYPROJECT_VERSION"
     fi
-    
+
     echo "✅ Version consistency check complete"
 ```
 
@@ -367,18 +367,18 @@ jobs:
   continue-on-error: true
   run: |
     echo "🔍 Checking for implemented features not marked as such..."
-    
+
     # Check Thirsty-Lang keywords in implementation vs docs
     IMPLEMENTED_KEYWORDS=()
-    
+
     if [ -f "src/thirsty_lang/src/index.js" ]; then
       # Extract implemented keywords from code
       while IFS= read -r keyword; do
         IMPLEMENTED_KEYWORDS+=("$keyword")
       done < <(grep -oP "startsWith\(['\"](\w+)" src/thirsty_lang/src/index.js | cut -d"'" -f2 | cut -d'"' -f2 | sort -u)
-      
+
       echo "Found ${#IMPLEMENTED_KEYWORDS[@]} implemented keywords in Thirsty-Lang"
-      
+
       # Check if these are documented
       if [ -f "src/thirsty_lang/docs/SPECIFICATION.md" ]; then
         for keyword in "${IMPLEMENTED_KEYWORDS[@]}"; do
@@ -388,7 +388,7 @@ jobs:
         done
       fi
     fi
-    
+
     echo "✅ Implementation documentation check complete"
 ```
 
@@ -405,21 +405,21 @@ jobs:
 - name: Validate archive references
   run: |
     echo "🔍 Validating that archived docs are properly indexed..."
-    
+
     # Check if ARCHIVE_INDEX.md exists
     if [ ! -f "docs/internal/archive/ARCHIVE_INDEX.md" ]; then
       echo "❌ ARCHIVE_INDEX.md is missing!"
       echo "   → Run: create docs/internal/archive/ARCHIVE_INDEX.md"
       exit 1
     fi
-    
+
     # Count files in archive
     ARCHIVE_FILES=$(find docs/internal/archive -type f \( -name "*.md" -o -name "*.txt" \) | wc -l)
     INDEX_ENTRIES=$(grep -c "\.md\|\.txt" docs/internal/archive/ARCHIVE_INDEX.md || echo "0")
-    
+
     echo "  Archive files: $ARCHIVE_FILES"
     echo "  Index entries: ~$INDEX_ENTRIES"
-    
+
     if [ $ARCHIVE_FILES -gt $((INDEX_ENTRIES + 20)) ]; then
       echo "⚠️  Archive has significantly more files than index entries"
       echo "   → Consider updating ARCHIVE_INDEX.md"
@@ -444,37 +444,37 @@ jobs:
 - name: Check for common documentation issues
   run: |
     echo "🔍 Checking for common documentation issues..."
-    
+
     ISSUES=0
-    
+
     # Check for broken internal links (basic check)
     echo "Checking for potentially broken links..."
     while IFS= read -r file; do
       while IFS= read -r link; do
         # Extract file path from markdown link
         target=$(echo "$link" | sed -n 's/.*(\([^)]*\)).*/\1/p' | cut -d'#' -f1)
-        
+
         # Skip external links
         if [[ "$target" =~ ^https?:// ]]; then
           continue
         fi
-        
+
         # Skip if empty or anchor-only
         if [ -z "$target" ] || [[ "$target" =~ ^# ]]; then
           continue
         fi
-        
+
         # Resolve relative path
         dir=$(dirname "$file")
         full_path="$dir/$target"
-        
+
         if [ ! -f "$full_path" ] && [ ! -d "$full_path" ]; then
           echo "⚠️  Broken link in $file: $target"
           ISSUES=$((ISSUES + 1))
         fi
       done < <(grep -o '\[.*\](.*)'  "$file" | head -20)
     done < <(find docs -name "*.md" -type f | head -10)
-    
+
     if [ $ISSUES -gt 0 ]; then
       echo "⚠️  Found $ISSUES potential link issues (sample check)"
     else
@@ -506,7 +506,7 @@ jobs:
     echo "═══════════════════════════════════════════════════════════"
     echo ""
     echo "✅ Planned vs Implemented check: COMPLETE"
-    echo "✅ Version consistency check: COMPLETE"  
+    echo "✅ Version consistency check: COMPLETE"
     echo "✅ Implementation documentation check: COMPLETE"
     echo "✅ Archive index validation: COMPLETE"
     echo "✅ Common issues check: COMPLETE"
@@ -573,30 +573,30 @@ jobs:
   generate-python-sbom:
     name: Generate Python Dependencies SBOM
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install cyclonedx-bom
         run: |
           pip install cyclonedx-bom
-      
+
       - name: Generate CycloneDX SBOM for Python
         run: |
           mkdir -p docs/security_compliance/sbom
-          
+
           echo "📦 Generating Python SBOM..."
           if [ ! -f requirements.txt ]; then
             echo "⚠️  requirements.txt not found, skipping Python SBOM"
             exit 0
           fi
-          
+
           cyclonedx-py requirements \
             --requirements-file requirements.txt \
             --output-format json \
@@ -604,7 +604,7 @@ jobs:
             echo "⚠️  Failed to generate Python SBOM, but continuing..."
             exit 0
           }
-          
+
           # Also generate XML format
           if [ -f requirements.txt ]; then
             cyclonedx-py requirements \
@@ -612,7 +612,7 @@ jobs:
               --output-format xml \
               --output-file docs/security_compliance/sbom/python-sbom.xml || true
           fi
-          
+
           echo "✅ Python SBOM generated"
 ```
 
@@ -633,29 +633,29 @@ generate-nodejs-sbom:
   name: Generate Node.js Dependencies SBOM
   runs-on: ubuntu-latest
   if: hashFiles('package.json') != ''
-  
+
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-    
+
     - name: Install cyclonedx-npm
       run: |
         npm install -g @cyclonedx/cyclonedx-npm
-    
+
     - name: Generate CycloneDX SBOM for Node.js
       run: |
         mkdir -p docs/security_compliance/sbom
-        
+
         echo "📦 Generating Node.js SBOM..."
         cyclonedx-npm \
           --output-file docs/security_compliance/sbom/nodejs-sbom.json \
           --output-format JSON
-        
+
         echo "✅ Node.js SBOM generated"
 ```
 
@@ -669,7 +669,7 @@ generate-nodejs-sbom:
     cat > docs/security_compliance/sbom/README.md << 'EOF'
 # Software Bill of Materials (SBOM)
 
-**Last Generated**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")  
+**Last Generated**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
 **Format**: CycloneDX 1.4+
 
 ## Purpose
@@ -727,10 +727,10 @@ SBOMs can be ingested by:
 
 ---
 
-**Maintained by**: Automated CI workflow  
+**Maintained by**: Automated CI workflow
 **Contact**: security@project-ai.dev
 EOF
-    
+
     echo "✅ SBOM README created"
 ```
 
@@ -742,9 +742,9 @@ EOF
   run: |
     git config user.name "github-actions[bot]"
     git config user.email "github-actions[bot]@users.noreply.github.com"
-    
+
     git add docs/security_compliance/sbom/
-    
+
     if git diff --staged --quiet; then
       echo "No changes to SBOM files"
     else
@@ -785,15 +785,15 @@ EOF
       ".github/workflows"
       "data"
     )
-    
+
     MISSING=()
-    
+
     for dir in "${REQUIRED_DIRS[@]}"; do
       if [ ! -d "$dir" ]; then
         MISSING+=("$dir")
       fi
     done
-    
+
     if [ ${#MISSING[@]} -gt 0 ]; then
       echo "❌ Missing required directories:"
       printf '   - %s\n' "${MISSING[@]}"
@@ -815,15 +815,15 @@ EOF
       "## Contributing"
       "## License"
     )
-    
+
     MISSING=()
-    
+
     for section in "${REQUIRED_SECTIONS[@]}"; do
       if ! grep -q "$section" README.md; then
         MISSING+=("$section")
       fi
     done
-    
+
     if [ ${#MISSING[@]} -gt 0 ]; then
       echo "⚠️  README.md missing sections:"
       printf '   - %s\n' "${MISSING[@]}"
@@ -855,28 +855,28 @@ jobs:
   test:
     name: Test Suite
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x, 20.x]
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    
+
     - name: Install dependencies
       run: npm install
-    
+
     - name: Run tests
       run: npm test
-    
+
     - name: Run linter
       run: node src/linter.js examples/*.thirsty || true
-    
+
     - name: Check formatting
       run: node src/formatter.js examples/hello.thirsty --check || true
 ```
@@ -890,21 +890,21 @@ build:
   name: Build & Package
   runs-on: ubuntu-latest
   needs: test
-  
+
   steps:
   - uses: actions/checkout@v3
-  
+
   - name: Setup Node.js
     uses: actions/setup-node@v3
     with:
       node-version: '18.x'
-  
+
   - name: Install dependencies
     run: npm install
-  
+
   - name: Build package
     run: npm run build
-  
+
   - name: Archive artifacts
     uses: actions/upload-artifact@v3
     with:
@@ -925,19 +925,19 @@ build:
 docs:
   name: Generate Documentation
   runs-on: ubuntu-latest
-  
+
   steps:
   - uses: actions/checkout@v3
-  
+
   - name: Setup Node.js
     uses: actions/setup-node@v3
     with:
       node-version: '18.x'
-  
+
   - name: Generate docs
     run: |
       node src/doc-generator.js examples/hello.thirsty docs/auto-generated
-  
+
   - name: Deploy to GitHub Pages
     if: github.ref == 'refs/heads/main'
     uses: peaceiris/actions-gh-pages@v3
@@ -1024,19 +1024,19 @@ secrets:
   OPENAI_API_KEY:
     description: "OpenAI API key for AI services"
     required: true
-  
+
   DEEPSEEK_API_KEY:
     description: "DeepSeek API key (optional)"
     required: false
-  
+
   SLACK_WEBHOOK_URL:
     description: "Slack webhook for notifications"
     required: false
-  
+
   DOCKER_HUB_TOKEN:
     description: "Docker Hub access token"
     required: true
-  
+
   KUBECONFIG:
     description: "Kubernetes cluster config"
     required: true
@@ -1119,7 +1119,7 @@ jobs:
     environment:
       name: production
       url: https://api.projectai.example.com
-    
+
     steps:
       - name: Deploy
         run: |
@@ -1178,7 +1178,7 @@ jobs:
   run: |
     echo "deployment_time_seconds $SECONDS" >> metrics.txt
     echo "commit_sha ${{ github.sha }}" >> metrics.txt
-    
+
     # Send to Prometheus Pushgateway
     cat metrics.txt | curl --data-binary @- \
       http://pushgateway:9091/metrics/job/github-actions
@@ -1237,10 +1237,10 @@ jobs:
     set -e  # Exit on error
     set -u  # Exit on undefined variable
     set -o pipefail  # Exit on pipe failure
-    
+
     kubectl apply -f deployment.yaml
   continue-on-error: false
-  
+
 - name: Rollback on failure
   if: failure()
   run: |
@@ -1352,4 +1352,3 @@ jobs:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

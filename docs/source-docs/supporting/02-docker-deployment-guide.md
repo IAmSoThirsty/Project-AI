@@ -1,13 +1,13 @@
 # Docker Deployment Guide
 
-**Document Type:** Operations Guide  
-**Component:** Docker Infrastructure  
-**Status:** Production  
-**Version:** 2.0.0  
-**Last Updated:** 2025-01-26  
-**Author:** AGENT-046  
-**Audience:** DevOps Engineers, System Administrators, Platform Engineers  
-**Scope:** Docker containerization, multi-stage builds, Docker Compose, production deployment  
+**Document Type:** Operations Guide
+**Component:** Docker Infrastructure
+**Status:** Production
+**Version:** 2.0.0
+**Last Updated:** 2025-01-26
+**Author:** AGENT-046
+**Audience:** DevOps Engineers, System Administrators, Platform Engineers
+**Scope:** Docker containerization, multi-stage builds, Docker Compose, production deployment
 **Related Docs:**
 - `01-web-backend-architecture.md`
 - `03-ci-cd-pipelines.md`
@@ -327,43 +327,43 @@ services:
   # Cerberus Orchestrator (Omega Configuration)
   # ===========================================================================
   cerberus:
-    build: 
+    build:
       context: ../Cerberus-main
       dockerfile: Dockerfile
     image: projectai/cerberus:omega
     container_name: cerberus_omega
     restart: unless-stopped
-    
+
     # Volume for persistent data
     volumes:
       - spine_data:/var/data/spine
-    
+
     # Internal network (no internet access)
     networks:
       - sovereign_net
-    
+
     # Resource limits (prevent runaway processes)
     deploy:
       resources:
         limits:
           cpus: '2.00'       # 2 CPU cores max
           memory: 4G         # 4GB RAM max
-  
+
   # ===========================================================================
   # Thirsty Monolith (Guardian)
   # ===========================================================================
   monolith:
     image: projectai/monolith:latest
     container_name: thirsty_monolith
-    
+
     networks:
       - sovereign_net
-    
+
     environment:
       - TARL_POLICY_PATH=/app/tarl_policies
-    
+
     # No ports exposed (internal only)
-  
+
   # ===========================================================================
   # Web Backend (API Server)
   # ===========================================================================
@@ -374,36 +374,36 @@ services:
     image: projectai/web-backend:latest
     container_name: web_backend
     restart: unless-stopped
-    
+
     ports:
       - "5000:5000"
-    
+
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
       - ENVIRONMENT=development
       - CORS_ORIGINS=http://localhost:3000
       - LOG_LEVEL=INFO
-    
+
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
-    
+
     networks:
       - sovereign_net
       - external_net
-    
+
     depends_on:
       - redis
       - cerberus
-    
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-  
+
   # ===========================================================================
   # Redis (Rate Limiting & Caching)
   # ===========================================================================
@@ -411,22 +411,22 @@ services:
     image: redis:7-alpine
     container_name: redis_cache
     restart: unless-stopped
-    
+
     ports:
       - "6379:6379"
-    
+
     volumes:
       - redis_data:/data
-    
+
     networks:
       - sovereign_net
-    
+
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 3
-  
+
   # ===========================================================================
   # PostgreSQL (Future: Structured Data)
   # ===========================================================================
@@ -434,18 +434,18 @@ services:
     image: postgres:16-alpine
     container_name: postgres_db
     restart: unless-stopped
-    
+
     environment:
       - POSTGRES_DB=projectai
       - POSTGRES_USER=projectai
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    
+
     networks:
       - sovereign_net
-    
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U projectai"]
       interval: 10s
@@ -460,7 +460,7 @@ networks:
   sovereign_net:
     driver: bridge
     internal: true  # Critical: Blocks internet access for Cerberus
-  
+
   # External network: Internet access for web backend and frontend
   external_net:
     driver: bridge
@@ -472,11 +472,11 @@ volumes:
   # Cerberus spine data (decision history, policies)
   spine_data:
     driver: local
-  
+
   # Redis persistence
   redis_data:
     driver: local
-  
+
   # PostgreSQL database
   postgres_data:
     driver: local
@@ -631,17 +631,17 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
-      
+
       containers:
       - name: web-backend
         image: projectai/web-backend:v1.0.0
         imagePullPolicy: IfNotPresent
-        
+
         ports:
         - containerPort: 5000
           name: http
           protocol: TCP
-        
+
         env:
         - name: OPENAI_API_KEY
           valueFrom:
@@ -657,7 +657,7 @@ spec:
               key: cors-origins
         - name: RATE_LIMIT_STORAGE_URI
           value: "redis://redis-service:6379"
-        
+
         resources:
           requests:
             memory: "512Mi"
@@ -665,7 +665,7 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "500m"
-        
+
         livenessProbe:
           httpGet:
             path: /api/status
@@ -674,7 +674,7 @@ spec:
           periodSeconds: 30
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         readinessProbe:
           httpGet:
             path: /api/status
@@ -683,13 +683,13 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         volumeMounts:
         - name: data
           mountPath: /app/data
         - name: logs
           mountPath: /app/logs
-      
+
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -1255,4 +1255,3 @@ services:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

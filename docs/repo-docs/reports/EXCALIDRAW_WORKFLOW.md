@@ -253,7 +253,7 @@ const handleSave = async (diagram, content) => {
         content: content,
       }),
     });
-    
+
     if (response.ok) {
       console.log('Saved to server');
     }

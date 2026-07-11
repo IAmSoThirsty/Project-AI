@@ -1,8 +1,8 @@
 # Deployment Configurations MOC - Platform & Environment Guide
 
-> **📍 Location**: `docs/developer/00_DEPLOYMENT_MOC.md`  
-> **🎯 Purpose**: Deployment configurations and platform guides  
-> **👥 Audience**: DevOps, platform engineers, deployment specialists  
+> **📍 Location**: `docs/developer/00_DEPLOYMENT_MOC.md`
+> **🎯 Purpose**: Deployment configurations and platform guides
+> **👥 Audience**: DevOps, platform engineers, deployment specialists
 > **🔄 Status**: Production-Ready ✓
 
 ---
@@ -77,6 +77,6 @@ related_mocs:
 
 ---
 
-**MOC Version**: 1.0.0  
-**Last Updated**: 2025-01-20  
+**MOC Version**: 1.0.0
+**Last Updated**: 2025-01-20
 **Status**: Production-Ready ✓

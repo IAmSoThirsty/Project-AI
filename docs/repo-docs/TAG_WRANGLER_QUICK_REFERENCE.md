@@ -96,6 +96,6 @@ Configure in Settings → Hotkeys:
 
 ---
 
-**Full Documentation:** TAG_WRANGLER_GUIDE.md  
-**Plugin Version:** 0.6.4  
+**Full Documentation:** TAG_WRANGLER_GUIDE.md
+**Plugin Version:** 0.6.4
 **Status:** Production-Ready

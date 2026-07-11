@@ -24,9 +24,9 @@ audience: ["developers", "gui-developers", "configuration-engineers"]
 
 # SettingsDialog - Persistent Theme and UI Configuration Component
 
-**Module:** `src/app/gui/settings_dialog.py`  
-**Class:** `SettingsDialog`  
-**Lines of Code:** 85  
+**Module:** `src/app/gui/settings_dialog.py`
+**Class:** `SettingsDialog`
+**Lines of Code:** 85
 **Purpose:** Modal dialog for theme and UI scaling configuration with JSON persistence
 
 ---
@@ -106,7 +106,7 @@ The SettingsDialog follows the **single-responsibility principle**—it manages 
 ### Layout Details
 
 - **Layout Type**: `QVBoxLayout` (vertical stacking)
-- **Controls**: 
+- **Controls**:
   - 2 QLabel widgets (descriptive text)
   - 1 QComboBox (theme selector)
   - 1 QSpinBox (font size slider)
@@ -343,9 +343,9 @@ else:
 
 ### Storage Format
 
-**File:** `data/settings.json`  
-**Format:** JSON (UTF-8 encoded)  
-**Indentation:** 2 spaces  
+**File:** `data/settings.json`
+**Format:** JSON (UTF-8 encoded)
+**Indentation:** 2 spaces
 **Encoding:** UTF-8 with `encoding="utf-8"` explicit parameter
 
 ### Data Directory Management
@@ -438,12 +438,12 @@ class LeatherBookInterface(QMainWindow):
         super().__init__()
         self.current_settings = SettingsDialog.load_settings()
         self._setup_menus()
-    
+
     def _setup_menus(self):
         menu = self.menuBar().addMenu("File")
         settings_action = menu.addAction("Settings...")
         settings_action.triggered.connect(self.open_settings)
-    
+
     def open_settings(self):
         dialog = SettingsDialog(parent=self, current=self.current_settings)
         if dialog.exec() == QDialog.DialogCode.Accepted:
@@ -452,17 +452,17 @@ class LeatherBookInterface(QMainWindow):
                 self.current_settings = new_settings
                 self.apply_settings(new_settings)
                 QMessageBox.information(
-                    self, 
-                    "Settings Updated", 
+                    self,
+                    "Settings Updated",
                     "Settings saved. Restart app to apply theme changes."
                 )
             else:
                 QMessageBox.warning(
-                    self, 
-                    "Save Failed", 
+                    self,
+                    "Save Failed",
                     "Could not save settings to disk."
                 )
-    
+
     def apply_settings(self, settings):
         # Apply font size immediately (theme requires restart)
         font = self.font()
@@ -485,19 +485,19 @@ def test_settings_persistence():
     with tempfile.TemporaryDirectory() as tmpdir:
         # Override DATA_DIR for isolated testing
         os.environ['DATA_DIR'] = tmpdir
-        
+
         # Save custom settings
         test_settings = {"theme": "dark", "ui_scale": 16}
         assert SettingsDialog.save_settings(test_settings) is True
-        
+
         # Verify file created
         settings_path = os.path.join(tmpdir, "settings.json")
         assert os.path.exists(settings_path)
-        
+
         # Load and verify
         loaded = SettingsDialog.load_settings()
         assert loaded == test_settings
-        
+
         # Verify JSON format
         with open(settings_path) as f:
             raw = json.load(f)
@@ -597,7 +597,7 @@ def apply_font_size(widget, size):
     font = widget.font()
     font.setPointSize(size)
     widget.setFont(font)
-    
+
     for child in widget.findChildren(QWidget):
         child_font = child.font()
         child_font.setPointSize(size)
@@ -612,8 +612,8 @@ apply_font_size(main_window, settings['ui_scale'])
 def on_settings_saved(new_settings):
     apply_font_size(main_window, new_settings['ui_scale'])
     QMessageBox.information(
-        main_window, 
-        "Font Updated", 
+        main_window,
+        "Font Updated",
         f"UI font size set to {new_settings['ui_scale']} points"
     )
 ```
@@ -630,10 +630,10 @@ import os
 def ensure_settings_exist():
     """Initialize settings on first run"""
     settings_path = os.path.join(
-        os.getenv("DATA_DIR", "data"), 
+        os.getenv("DATA_DIR", "data"),
         "settings.json"
     )
-    
+
     if not os.path.exists(settings_path):
         # First run - show welcome message and settings dialog
         QMessageBox.information(
@@ -641,7 +641,7 @@ def ensure_settings_exist():
             "Welcome",
             "Welcome to Project-AI! Let's configure your preferences."
         )
-        
+
         dialog = SettingsDialog(current=None)  # Use defaults
         if dialog.exec() == QDialog.DialogCode.Accepted:
             SettingsDialog.save_settings(dialog.get_values())
@@ -799,8 +799,8 @@ QPushButton:hover {
 
 ### File System Security
 
-**Issue:** Settings file stored in plaintext JSON  
-**Risk:** Low (contains only UI preferences, no secrets)  
+**Issue:** Settings file stored in plaintext JSON
+**Risk:** Low (contains only UI preferences, no secrets)
 **Mitigation:** Not required for current schema
 
 **Future Consideration:** If adding API keys or tokens:
@@ -830,11 +830,11 @@ def get_values(self):
     theme = self.theme_select.currentText()
     if theme not in ["light", "dark"]:
         theme = "light"  # Fallback
-    
+
     scale = self.size_spin.value()
     if not (8 <= scale <= 20):
         scale = 10  # Fallback
-    
+
     return {"theme": theme, "ui_scale": scale}
 ```
 
@@ -842,8 +842,8 @@ def get_values(self):
 
 ### Path Traversal Protection
 
-**Issue:** `DATA_DIR` environment variable could contain path traversal (`../../etc/passwd`)  
-**Current Risk:** Low (only used for settings.json write)  
+**Issue:** `DATA_DIR` environment variable could contain path traversal (`../../etc/passwd`)
+**Current Risk:** Low (only used for settings.json write)
 **Mitigation:**
 
 ```python
@@ -900,7 +900,7 @@ self.size_spin.setAccessibleDescription("UI font size from 8 to 20 points")
 
 ### High Contrast Mode
 
-**Issue:** Default theme may not work in Windows High Contrast mode  
+**Issue:** Default theme may not work in Windows High Contrast mode
 **Solution:** Respect system theme:
 
 ```python
@@ -923,8 +923,8 @@ else:
 
 ### Font Size Limits
 
-**Current Range:** 8-20 points  
-**Accessibility Issue:** May be too small for low-vision users  
+**Current Range:** 8-20 points
+**Accessibility Issue:** May be too small for low-vision users
 **Recommendation:** Extend to 8-32 points:
 
 ```python
@@ -1018,7 +1018,7 @@ def apply_theme_live(app, theme):
         app.setStyleSheet(DARK_THEME_CSS)
     else:
         app.setStyleSheet(LIGHT_THEME_CSS)
-    
+
     # Force repaint
     for widget in app.allWidgets():
         widget.update()
@@ -1102,15 +1102,15 @@ print(f"Event loop running: {QApplication.instance() is not None}")
 
 ### Best Practices Checklist
 
-✅ **Always load settings on application startup**  
-✅ **Use `SettingsDialog.load_settings()` static method (no instantiation needed)**  
-✅ **Check return value of `save_settings()` for I/O errors**  
-✅ **Pass `parent=main_window` for proper modality**  
-✅ **Test with missing/corrupted `settings.json` to verify fallback**  
-✅ **Use absolute paths for `DATA_DIR` in production**  
-✅ **Log all I/O operations for debugging**  
-✅ **Provide user feedback on save success/failure**  
-✅ **Document restart requirements for theme changes**  
+✅ **Always load settings on application startup**
+✅ **Use `SettingsDialog.load_settings()` static method (no instantiation needed)**
+✅ **Check return value of `save_settings()` for I/O errors**
+✅ **Pass `parent=main_window` for proper modality**
+✅ **Test with missing/corrupted `settings.json` to verify fallback**
+✅ **Use absolute paths for `DATA_DIR` in production**
+✅ **Log all I/O operations for debugging**
+✅ **Provide user feedback on save success/failure**
+✅ **Document restart requirements for theme changes**
 ✅ **Test font scaling with accessibility tools**
 
 ---
@@ -1123,4 +1123,3 @@ The **SettingsDialog** component provides a simple, robust interface for applica
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -1,8 +1,8 @@
 # CLASSIFICATION REPORT: P0 Governance & Security Documentation
 
-**Generated:** 2026-04-20  
-**Agent:** AGENT-009 (P0 Governance & Security Metadata Enrichment Specialist)  
-**Scope:** 54 files across docs/governance/ and docs/security_compliance/  
+**Generated:** 2026-04-20
+**Agent:** AGENT-009 (P0 Governance & Security Metadata Enrichment Specialist)
+**Scope:** 54 files across docs/governance/ and docs/security_compliance/
 **Classification Standard:** Content-based security analysis
 
 ---
@@ -276,9 +276,9 @@ All 54 P0 governance and security files have been classified based on content se
 
 ## Sign-Off
 
-**Classification Authority:** AGENT-009 (P0 Governance & Security Metadata Enrichment Specialist)  
-**Review Date:** 2026-04-20  
-**Next Review:** 2026-07-20 (Q3 2026)  
+**Classification Authority:** AGENT-009 (P0 Governance & Security Metadata Enrichment Specialist)
+**Review Date:** 2026-04-20
+**Next Review:** 2026-07-20 (Q3 2026)
 **Approval:**
 - ✅ Security Team
 - ✅ Governance Team
@@ -288,6 +288,6 @@ All 54 P0 governance and security files have been classified based on content se
 
 ---
 
-**Report Classification:** Internal  
-**Generated:** 2026-04-20  
+**Report Classification:** Internal
+**Generated:** 2026-04-20
 **Version:** 1.0

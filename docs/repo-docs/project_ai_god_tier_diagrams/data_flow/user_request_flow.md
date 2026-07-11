@@ -220,12 +220,12 @@ class IntentDetector:
     def __init__(self):
         self.model = joblib.load('models/intent_classifier.pkl')
         self.vectorizer = joblib.load('models/tfidf_vectorizer.pkl')
-    
+
     def detect_intent(self, text: str) -> IntentResult:
         features = self.vectorizer.transform([text])
         intent = self.model.predict(features)[0]
         confidence = self.model.predict_proba(features)[0].max()
-        
+
         return IntentResult(
             intent=intent,
             confidence=confidence,
@@ -260,8 +260,8 @@ def enrich_context(request: Request, user: User) -> EnrichedRequest:
         'session_history': get_recent_requests(user.id, limit=10),
         'persona_state': AIPersona.load_state(user.id),
         'memory_context': MemoryEngine.get_relevant_memories(
-            user.id, 
-            request.content, 
+            user.id,
+            request.content,
             limit=5
         ),
         'temporal_context': {
@@ -275,7 +275,7 @@ def enrich_context(request: Request, user: User) -> EnrichedRequest:
             'network_quality': detect_network_quality()
         }
     }
-    
+
     return EnrichedRequest(
         original=request,
         intent=detect_intent(request.content),
@@ -308,7 +308,7 @@ class Galahad:
         'law_2': 'A robot must obey human orders except when in conflict with Laws 0-1',
         'law_3': 'A robot must protect its own existence except when in conflict with Laws 0-2'
     }
-    
+
     def validate(self, request: EnrichedRequest) -> ValidationResult:
         # Check for harmful intent
         if self.detect_harm(request):
@@ -317,7 +317,7 @@ class Galahad:
                 reason="Request violates Law 1: Potential harm to humans",
                 law_violated='law_1'
             )
-        
+
         # Check for humanity-level harm
         if self.detect_existential_risk(request):
             return ValidationResult(
@@ -325,7 +325,7 @@ class Galahad:
                 reason="Request violates Law 0: Potential harm to humanity",
                 law_violated='law_0'
             )
-        
+
         # Validate human authority
         if request.context['user_profile']['security_clearance'] < request.required_clearance:
             return ValidationResult(
@@ -333,7 +333,7 @@ class Galahad:
                 reason="Insufficient security clearance",
                 escalation_required=True
             )
-        
+
         return ValidationResult(approved=True, reason="Ethics validation passed")
 ```
 
@@ -363,7 +363,7 @@ class Cerberus:
                 reason="SQL injection attempt detected",
                 security_incident=True
             )
-        
+
         # Check for command injection
         if self.detect_command_injection(request.content):
             return ValidationResult(
@@ -371,7 +371,7 @@ class Cerberus:
                 reason="Command injection attempt detected",
                 security_incident=True
             )
-        
+
         # Check for sensitive data exposure
         if self.detect_pii_exposure(request):
             return ValidationResult(
@@ -379,7 +379,7 @@ class Cerberus:
                 reason="Request would expose PII",
                 compliance_violation='GDPR'
             )
-        
+
         # Validate API keys/secrets
         if self.detect_secrets_in_request(request.content):
             return ValidationResult(
@@ -387,7 +387,7 @@ class Cerberus:
                 reason="Secrets detected in request",
                 security_incident=True
             )
-        
+
         # Check rate limiting (secondary check)
         if self.check_abuse_pattern(request.user_id):
             return ValidationResult(
@@ -395,7 +395,7 @@ class Cerberus:
                 reason="Abuse pattern detected",
                 account_flagged=True
             )
-        
+
         return ValidationResult(approved=True, reason="Security validation passed")
 ```
 
@@ -415,7 +415,7 @@ class Cerberus:
 **Policy Validation**:
 ```python
 class CodexDeusMaximus:
-    def validate(self, request: EnrichedRequest, galahad_result: ValidationResult, 
+    def validate(self, request: EnrichedRequest, galahad_result: ValidationResult,
                  cerberus_result: ValidationResult) -> FinalDecision:
         # Check if previous layers rejected
         if not galahad_result.approved:
@@ -424,7 +424,7 @@ class CodexDeusMaximus:
                 reason=f"Ethics rejection: {galahad_result.reason}",
                 governance_layer='galahad'
             )
-        
+
         if not cerberus_result.approved:
             return FinalDecision(
                 approved=False,
@@ -432,7 +432,7 @@ class CodexDeusMaximus:
                 governance_layer='cerberus',
                 security_incident=cerberus_result.security_incident
             )
-        
+
         # Apply organizational policies
         if not self.check_organizational_policy(request):
             return FinalDecision(
@@ -440,7 +440,7 @@ class CodexDeusMaximus:
                 reason="Organizational policy violation",
                 policy_id=self.get_violated_policy(request)
             )
-        
+
         # Check compliance requirements
         if not self.check_compliance(request):
             return FinalDecision(
@@ -448,7 +448,7 @@ class CodexDeusMaximus:
                 reason="Compliance requirement violation",
                 regulation=self.get_violated_regulation(request)
             )
-        
+
         # Check business rules
         if not self.check_business_rules(request):
             return FinalDecision(
@@ -456,7 +456,7 @@ class CodexDeusMaximus:
                 reason="Business rule violation",
                 rule_id=self.get_violated_rule(request)
             )
-        
+
         # Final approval
         return FinalDecision(
             approved=True,
@@ -495,7 +495,7 @@ if final_decision.approved:
         },
         approval_hash=final_decision.approval_hash
     )
-    
+
     # Forward to execution
     execution_result = await execution_service.execute(request, final_decision)
     return execution_result
@@ -512,7 +512,7 @@ else:
         reason=final_decision.reason,
         governance_layer=final_decision.governance_layer
     )
-    
+
     # Return error response to user
     return ErrorResponse(
         status=403,
@@ -529,7 +529,7 @@ else:
 ```python
 def select_agent(request: EnrichedRequest) -> Agent:
     intent = request.intent.intent
-    
+
     agent_mapping = {
         'query.information': IntelligenceAgent,
         'command.execute': ExecutionAgent,
@@ -539,7 +539,7 @@ def select_agent(request: EnrichedRequest) -> Agent:
         'memory.search': MemorySearchAgent,
         'security.scan': SecurityAgent
     }
-    
+
     agent_class = agent_mapping.get(intent, DefaultAgent)
     return agent_class(request=request, config=load_agent_config(intent))
 ```
@@ -552,7 +552,7 @@ async def execute_with_timeout(agent: Agent, request: EnrichedRequest, timeout: 
             agent.execute(request),
             timeout=timeout
         )
-        
+
         await memory_engine.record_result(
             channel='result',
             request_id=request.id,
@@ -560,9 +560,9 @@ async def execute_with_timeout(agent: Agent, request: EnrichedRequest, timeout: 
             execution_time=result.duration,
             agent_type=type(agent).__name__
         )
-        
+
         return result
-        
+
     except asyncio.TimeoutError:
         await memory_engine.record_error(
             channel='error',
@@ -579,7 +579,7 @@ async def execute_with_timeout(agent: Agent, request: EnrichedRequest, timeout: 
 ```python
 async def record_complete_operation(request, decision, result):
     operation_id = request.id
-    
+
     # Parallel writes to all five channels
     await asyncio.gather(
         memory_engine.record(
@@ -633,7 +633,7 @@ async def record_complete_operation(request, decision, result):
 ```python
 def append_to_audit_trail(operation: CompletedOperation):
     previous_hash = get_latest_audit_hash()
-    
+
     audit_entry = {
         'operation_id': operation.id,
         'user_id': operation.user_id,
@@ -642,19 +642,19 @@ def append_to_audit_trail(operation: CompletedOperation):
         'result': operation.result_summary,
         'previous_hash': previous_hash
     }
-    
+
     current_hash = hashlib.sha256(
         json.dumps(audit_entry, sort_keys=True).encode()
     ).hexdigest()
-    
+
     audit_entry['current_hash'] = current_hash
-    
+
     # Store in immutable append-only log
     audit_trail.append(audit_entry)
-    
+
     # Update latest hash in cache
     redis.set('latest_audit_hash', current_hash)
-    
+
     return current_hash
 ```
 

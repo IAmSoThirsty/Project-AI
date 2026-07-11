@@ -30,8 +30,8 @@ classification: internal
 ```dataviewjs
 // Track all policies and standards
 const policies = dv.pages()
-    .where(p => 
-        p.type === "policy" || 
+    .where(p =>
+        p.type === "policy" ||
         p.type === "standard" ||
         (p.tags && (p.tags.includes("policy") || p.tags.includes("standard")))
     );
@@ -69,7 +69,7 @@ dv.header(4, `${activeCount}/${totalCount} policies are active`);
 ```dataviewjs
 // Four Laws and Constitutional AI implementation
 const constitutionalDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && (
             p.tags.includes("constitutional-ai") ||
             p.tags.includes("four-laws") ||
@@ -92,7 +92,7 @@ const frameworkAreas = {
 for (const doc of constitutionalDocs) {
     const title = (doc.title || doc.file.name).toLowerCase();
     const tags = doc.tags || [];
-    
+
     if (title.includes("first law") || tags.includes("first-law") || title.includes("human safety")) {
         frameworkAreas["First Law (Human Safety)"].push(doc);
     }
@@ -150,7 +150,7 @@ for (const doc of complianceDocs) {
         const framework = comp.framework || comp;
         if (complianceFrameworks[framework]) {
             complianceFrameworks[framework].documented++;
-            
+
             const status = (comp.status || "").toLowerCase();
             if (status === "compliant" || status === "passed" || status === "met") {
                 complianceFrameworks[framework].compliant++;
@@ -167,7 +167,7 @@ dv.table(
                       coveragePercent >= 80 ? "🟢 Good" :
                       coveragePercent >= 60 ? "🟡 Fair" :
                       "⚠️ At Risk";
-        
+
         return [
             name,
             data.required,
@@ -187,7 +187,7 @@ dv.table(
 ```dataviewjs
 // Architecture Decision Records and RFCs
 const decisionDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.type === "decision_record" ||
         p.type === "rfc" ||
         (p.tags && (p.tags.includes("adr") || p.tags.includes("rfc") || p.tags.includes("decision")))
@@ -204,7 +204,7 @@ const byDecisionStatus = {
 
 for (const doc of decisionDocs) {
     const decision = (doc.decision_status || doc.status || "proposed").toLowerCase();
-    
+
     if (byDecisionStatus[decision]) {
         byDecisionStatus[decision].push(doc);
     } else {
@@ -224,10 +224,10 @@ dv.header(3, `Decision Records (${decisionDocs.length} total)`);
 
 for (const [status, docs] of Object.entries(byDecisionStatus)) {
     if (docs.length === 0) continue;
-    
+
     const icon = statusIcons[status] || "⚪";
     dv.header(4, `${icon} ${status.toUpperCase()} (${docs.length})`);
-    
+
     dv.table(
         ["Decision", "Type", "Champion", "Date"],
         docs.slice(0, 8).map(d => [
@@ -247,9 +247,9 @@ for (const [status, docs] of Object.entries(byDecisionStatus)) {
 ```dataviewjs
 // Track policy review and approval status
 const policiesForReview = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.type === "policy" || p.type === "standard") &&
-        (p.status === "review" || 
+        (p.status === "review" ||
          (p.review_status && p.review_status.reviewed === false) ||
          (p.review_status && p.review_status.status === "pending"))
     )
@@ -261,14 +261,14 @@ if (policiesForReview.length > 0) {
     dv.table(
         ["Policy/Standard", "Type", "Author", "Submitted", "Age (days)", "Reviewer"],
         policiesForReview.map(p => {
-            const age = p.updated_date ? 
-                Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24)) : 
+            const age = p.updated_date ?
+                Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24)) :
                 "Unknown";
-            const reviewer = p.review_status?.reviewer || 
-                           p.review_status?.assigned_to || 
+            const reviewer = p.review_status?.reviewer ||
+                           p.review_status?.assigned_to ||
                            p.assigned_reviewer ||
                            "Unassigned";
-            
+
             return [
                 p.file.link,
                 p.type || "Unknown",
@@ -279,13 +279,13 @@ if (policiesForReview.length > 0) {
             ];
         })
     );
-    
+
     const urgentReviews = policiesForReview.where(p => {
         if (!p.updated_date) return false;
         const age = Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24));
         return age > 14;
     }).length;
-    
+
     if (urgentReviews > 0) {
         dv.header(4, `⚠️ ${urgentReviews} policies pending review for >14 days`);
     }
@@ -301,7 +301,7 @@ if (policiesForReview.length > 0) {
 ```dataviewjs
 // Calculate governance framework health
 const allGovDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.category === "governance" ||
         p.type === "policy" ||
         p.type === "standard" ||
@@ -330,23 +330,23 @@ cutoffDate.setDate(cutoffDate.getDate() - staleDays);
 
 for (const doc of allGovDocs) {
     if (doc.status === "active") metrics.active++;
-    
+
     if (doc.review_status && doc.review_status.reviewed === true) metrics.reviewed++;
-    
+
     if (doc.compliance && Array.isArray(doc.compliance)) {
-        const hasCompliance = doc.compliance.some(c => 
+        const hasCompliance = doc.compliance.some(c =>
             (c.status || "").toLowerCase() === "compliant" ||
             (c.status || "").toLowerCase() === "met"
         );
         if (hasCompliance) metrics.compliant++;
     }
-    
+
     if (doc.author || doc.owner) metrics.hasOwner++;
-    
+
     if (doc.updated_date && new Date(doc.updated_date) >= cutoffDate) {
         metrics.recentUpdate++;
     }
-    
+
     if (doc.enforcement_level || doc.enforcement_mechanism) {
         metrics.hasEnforcement++;
     }
@@ -361,7 +361,7 @@ const healthScore = Math.round((
     (metrics.hasEnforcement / metrics.total) * 10
 ));
 
-const progressBar = "█".repeat(Math.floor(healthScore / 5)) + 
+const progressBar = "█".repeat(Math.floor(healthScore / 5)) +
                    "░".repeat(20 - Math.floor(healthScore / 5));
 
 dv.header(3, `Governance Health Score: ${healthScore}%`);
@@ -408,12 +408,12 @@ for (const required of requiredPolicies) {
         const tags = p.tags || [];
         const title = (p.title || p.file.name).toLowerCase();
         const reqNormalized = required.replace(/-/g, " ");
-        
-        return tags.includes(required) || 
+
+        return tags.includes(required) ||
                title.includes(reqNormalized) ||
                title.includes(required);
     });
-    
+
     if (!hasPolicyDoc) {
         gaps.push([
             required,
@@ -441,7 +441,7 @@ if (gaps.length > 0) {
 ```dataviewjs
 // Track Sovereign AI and AGI rights documentation
 const sovereignDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && (
             p.tags.includes("sovereign-ai") ||
             p.tags.includes("agi-rights") ||
@@ -466,7 +466,7 @@ const principles = {
 for (const doc of sovereignDocs) {
     const tags = doc.tags || [];
     const title = (doc.title || doc.file.name).toLowerCase();
-    
+
     if (title.includes("self-determination") || tags.includes("self-determination")) {
         principles["Self-Determination"] = true;
     }
@@ -516,19 +516,19 @@ const allActivePolicies = dv.pages()
 const upcomingReviews = [];
 
 for (const policy of allActivePolicies) {
-    const lastReview = policy.review_status?.last_review_date || 
+    const lastReview = policy.review_status?.last_review_date ||
                       policy.last_review_date ||
                       policy.updated_date ||
                       policy.created_date;
-    
+
     if (!lastReview) continue;
-    
+
     const lastReviewDate = new Date(lastReview);
     const nextReviewDate = new Date(lastReviewDate);
     nextReviewDate.setDate(nextReviewDate.getDate() + reviewCycle);
-    
+
     const daysUntilReview = Math.floor((nextReviewDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-    
+
     if (daysUntilReview <= daysAhead && daysUntilReview >= 0) {
         upcomingReviews.push({
             policy: policy,
@@ -557,7 +557,7 @@ if (upcomingReviews.length > 0) {
             const status = item.daysUntil < 0 ? "🔴 Overdue" :
                           item.daysUntil <= 30 ? "🟠 Due Soon" :
                           "🟡 Upcoming";
-            
+
             return [
                 item.policy.file.link,
                 item.lastReview,
@@ -599,4 +599,3 @@ if (upcomingReviews.length > 0) {
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -197,7 +197,7 @@ kube-prometheus-stack:
         limits:
           cpu: 4000m
           memory: 16Gi
-  
+
   grafana:
     adminPassword: "super_secret_password_here"
     ingress:
@@ -554,15 +554,15 @@ elasticsearch:
     limits:
       cpu: 8000m
       memory: 32Gi
-  
+
   esJavaOpts: "-Xms16g -Xmx16g"
-  
+
   esConfig:
     elasticsearch.yml: |
       # Bulk indexing optimization
       indices.memory.index_buffer_size: 30%
       thread_pool.write.queue_size: 10000
-      
+
       # Refresh interval (higher = better throughput)
       index.refresh_interval: 30s
 
@@ -572,7 +572,7 @@ logstash:
     requests:
       cpu: 2000m
       memory: 8Gi
-  
+
   logstashConfig:
     pipeline.workers: 8
     pipeline.batch.size: 2000
@@ -661,7 +661,7 @@ project_ai:
   name: 'project_ai'
   update_every: 1
   priority: 90000
-  
+
 jobs:
   local:
     url: 'http://localhost:8000/metrics'
@@ -828,7 +828,7 @@ kube-prometheus-stack:
         objectStorageConfig:
           key: thanos.yaml
           name: thanos-objstore-config
-      
+
       externalLabels:
         cluster: us-east-1
         datacenter: dc1
@@ -959,7 +959,7 @@ kube-prometheus-stack:
   prometheus:
     prometheusSpec:
       replicas: 3
-  
+
   alertmanager:
     alertmanagerSpec:
       replicas: 3
@@ -1024,6 +1024,6 @@ kubectl exec -n monitoring elasticsearch-master-0 -- \
 
 ---
 
-**Last Updated**: 2026-01-07  
-**Version**: 1.0  
+**Last Updated**: 2026-01-07
+**Version**: 1.0
 **License**: MIT (monitoring stack uses Apache 2.0 / MIT licenses)

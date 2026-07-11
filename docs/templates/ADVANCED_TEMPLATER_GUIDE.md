@@ -1,8 +1,8 @@
 # Advanced Templater Guide for Project-AI Vault
 
-**Version:** 2.0.0  
-**Last Updated:** 2026-04-20  
-**Author:** Project-AI Documentation Team  
+**Version:** 2.0.0
+**Last Updated:** 2026-04-20
+**Author:** Project-AI Documentation Team
 **Audience:** Advanced template developers and power users
 
 ---
@@ -181,14 +181,14 @@ tR = output;
 ```javascript
 /**
  * Module description
- * 
+ *
  * @module module-name
  * @version 1.0.0
  */
 
 /**
  * Function description
- * 
+ *
  * @param {Type} paramName - Parameter description
  * @returns {Type} Return description
  */
@@ -216,7 +216,7 @@ function getVaultFiles(app) {
     if (!app || !app.vault) {
         return [];
     }
-    
+
     const files = app.vault.getMarkdownFiles();
     return files.map(f => ({
         path: f.path,
@@ -231,7 +231,7 @@ function getVaultFiles(app) {
 function getFileFrontmatter(app, filePath) {
     const file = app.vault.getAbstractFileByPath(filePath);
     if (!file) return null;
-    
+
     const cache = app.metadataCache.getFileCache(file);
     return cache?.frontmatter || null;
 }
@@ -257,11 +257,11 @@ function validateInput(value, type, required = true) {
     if (required && (!value || value === '')) {
         throw new Error(`Required value missing`);
     }
-    
+
     if (type === 'number' && isNaN(Number(value))) {
         throw new Error(`Expected number, got ${typeof value}`);
     }
-    
+
     return true;
 }
 ```
@@ -283,7 +283,7 @@ function testFunction() {
         { input: 'test', expected: 'TEST' },
         { input: 'hello', expected: 'HELLO' }
     ];
-    
+
     testCases.forEach(test => {
         const result = yourFunction(test.input);
         console.assert(
@@ -425,7 +425,7 @@ try {
 ```javascript
 <%*
 const utils = tp.user["project-ai-utils"];
-const metadata = utils ? 
+const metadata = utils ?
     utils.generateMetadataFromFilename(tp.file.title) :
     { category: 'unknown', tags: [] };
 %>
@@ -441,12 +441,12 @@ function safeOperation(app, param) {
         console.warn('App instance not available');
         return null;
     }
-    
+
     if (!param) {
         console.warn('Required parameter missing');
         return null;
     }
-    
+
     try {
         // Main logic
         return performOperation(param);
@@ -496,7 +496,7 @@ if (tp.frontmatter.category === 'module-doc') {
 if (!tp.frontmatter.cached_summary) {
     const aiIntegration = tp.user["ai-integration"];
     const summary = await aiIntegration.summarizeContent(tp.file.content);
-    
+
     // Update frontmatter (requires manual save)
     tR += `cached_summary: "${summary}"\n`;
 } else {
@@ -784,7 +784,7 @@ const frontmatter = customVars.formatFrontmatter(fullMetadata);
 
 ## Overview
 
-<%* 
+<%*
 // Generate outline based on type
 const aiIntegration = tp.user["ai-integration"];
 const outline = aiIntegration.generateOutline(
@@ -844,7 +844,7 @@ const readingTime = customVars.calculateReadingTime(tp.file.content);
 
 ## Related Documents (<% related.length %> found)
 
-<%* 
+<%*
 const wikiLinks = projectAIUtils.generateWikiLinks(related, true);
 %>
 <% wikiLinks %>
@@ -874,4 +874,3 @@ This guide covers advanced Templater usage for the Project-AI vault. For additio
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -53,9 +53,9 @@ accuracy_rating: high
 
 # Web Application Architecture Visual Map
 
-**Version:** 1.0.0  
-**Author:** AGENT-047 (Visual Relationship Maps Specialist)  
-**Status:** Production-Ready  
+**Version:** 1.0.0
+**Author:** AGENT-047 (Visual Relationship Maps Specialist)
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -450,7 +450,7 @@ export default defineConfig({
 @app.route("/api/ai/chat", methods=["POST"])
 def ai_chat():
     payload = request.get_json()
-    
+
     # Route through governance (NOT direct AI call)
     response = route_request(
         source="web",
@@ -461,7 +461,7 @@ def ai_chat():
             "context": payload.get("context", {})
         }
     )
-    
+
     return jsonify(response), 200 if response["status"] == "success" else 500
 ```
 
@@ -498,7 +498,7 @@ def configure_rate_limiting(app: Flask):
         default_limits=["200 per day", "50 per hour"],
         storage_uri="memory://"
     )
-    
+
     # Stricter limits for expensive operations
     limiter.limit("10 per minute")(app.view_functions["ai_chat"])
     limiter.limit("5 per minute")(app.view_functions["ai_image_generate"])
@@ -724,10 +724,9 @@ docker-compose -f web/docker-compose.yml up -d
 
 ---
 
-**Status:** ✅ Production-Ready Documentation  
-**Validation:** Architecture verified against `web/backend/app.py`, `web/frontend/src/`, Docker configurations  
+**Status:** ✅ Production-Ready Documentation
+**Validation:** Architecture verified against `web/backend/app.py`, `web/frontend/src/`, Docker configurations
 **Next Review:** 2026-07-20 (Quarterly update cycle)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

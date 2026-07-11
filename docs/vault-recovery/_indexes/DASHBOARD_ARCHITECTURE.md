@@ -29,7 +29,7 @@ classification: internal
 ```dataviewjs
 // Architecture documents by status
 const archDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.category === "architecture" || p.type === "architecture") ||
         (p.tags && p.tags.some(t => t.includes("architecture")))
     );
@@ -96,7 +96,7 @@ dv.table(
         const activeDocs = docs.where(d => d.status === "active");
         const reviewDocs = docs.where(d => d.status === "review");
         const keyDocs = activeDocs.limit(3).map(d => d.file.link).join(", ");
-        
+
         return [
             comp,
             activeDocs.length,
@@ -170,7 +170,7 @@ const cutoffDate = new Date();
 cutoffDate.setDate(cutoffDate.getDate() - recentDays);
 
 const recentArchDocs = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.category === "architecture" || p.type === "architecture" || p.type === "design") &&
         p.updated_date &&
         new Date(p.updated_date) >= cutoffDate
@@ -199,7 +199,7 @@ dv.header(4, `${recentArchDocs.length} architecture documents updated in last ${
 ```dataviewjs
 // ADR tracking
 const adrs = dv.pages()
-    .where(p => 
+    .where(p =>
         p.type === "decision_record" ||
         (p.tags && p.tags.some(t => t.includes("adr") || t.includes("decision")))
     )
@@ -215,7 +215,7 @@ const adrsByStatus = {
 for (const adr of adrs) {
     const decision = adr.decision_status || adr.status || "proposed";
     const category = decision.toLowerCase();
-    
+
     if (adrsByStatus[category]) {
         adrsByStatus[category].push(adr);
     } else {
@@ -227,14 +227,14 @@ dv.header(3, `Architecture Decisions (${adrs.length} total)`);
 
 for (const [status, docs] of Object.entries(adrsByStatus)) {
     if (docs.length === 0) continue;
-    
+
     const icon = status === "accepted" ? "✅" :
                 status === "proposed" ? "🔵" :
                 status === "rejected" ? "❌" :
                 "🔄";
-    
+
     dv.header(4, `${icon} ${status.toUpperCase()} (${docs.length})`);
-    dv.list(docs.slice(0, 10).map(d => 
+    dv.list(docs.slice(0, 10).map(d =>
         `${d.file.link} - ${d.title || d.file.name}`
     ));
 }
@@ -247,8 +247,8 @@ for (const [status, docs] of Object.entries(adrsByStatus)) {
 ```dataviewjs
 // Calculate architecture documentation health
 const allArchDocs = dv.pages()
-    .where(p => 
-        p.category === "architecture" || 
+    .where(p =>
+        p.category === "architecture" ||
         p.type === "architecture" ||
         p.type === "design" ||
         (p.tags && p.tags.some(t => t.includes("architecture")))
@@ -286,7 +286,7 @@ const healthScore = Math.round((
     (metrics.hasOwner / metrics.total) * 15
 ));
 
-const progressBar = "█".repeat(Math.floor(healthScore / 5)) + 
+const progressBar = "█".repeat(Math.floor(healthScore / 5)) +
                    "░".repeat(20 - Math.floor(healthScore / 5));
 
 dv.header(3, `Health Score: ${healthScore}%`);
@@ -328,12 +328,12 @@ const gaps = [];
 
 for (const component of requiredComponents) {
     const docs = dv.pages()
-        .where(p => 
+        .where(p =>
             (p.tags && p.tags.some(t => t.includes(component))) &&
             (p.type === "architecture" || p.type === "design") &&
             (p.status === "active" || p.status === "review")
         );
-    
+
     if (docs.length === 0) {
         gaps.push([component, "⚠️ Missing", "Create architecture document"]);
     } else if (docs.length === 1) {
@@ -377,4 +377,3 @@ if (gaps.length > 0) {
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

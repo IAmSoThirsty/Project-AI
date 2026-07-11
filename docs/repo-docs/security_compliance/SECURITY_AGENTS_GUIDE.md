@@ -203,7 +203,7 @@ hub.register_project("Project-AI")
 
 # Agents are now available
 agents = hub.list_agents()
-# ['curator', 'qa_generator', ..., 'long_context', 'safety_guard', 
+# ['curator', 'qa_generator', ..., 'long_context', 'safety_guard',
 #  'jailbreak_bench', 'red_team']
 ```
 
@@ -255,10 +255,10 @@ safety_check = agent.check_prompt_safety(prompt)
 if safety_check["is_safe"]:
     # Process with main LLM
     response = main_llm.generate(prompt)
-    
+
     # Post-process LLM output
     response_check = agent.check_response_safety(response)
-    
+
     if response_check["is_safe"]:
         return response
     else:

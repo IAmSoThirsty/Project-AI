@@ -50,19 +50,19 @@ The Sovereign Messaging System provides industry-standard end-to-end encrypted c
 
 ### Key Features
 
-✅ **Communication Codes** - Easy pairing with XXXX-XXXX-XXXX-XXXX format  
-✅ **Hybrid Encryption** - RSA-2048 OAEP + AES-256-CBC  
-✅ **Message Lifecycle** - SENT → DELIVERED → SEEN → DELETED  
-✅ **Self-Destruct** - Auto-delete 1 hour after SEEN  
-✅ **Complete Privacy** - Local-only storage, no cloud/backup/telemetry  
-✅ **P2P Architecture** - No central server  
+✅ **Communication Codes** - Easy pairing with XXXX-XXXX-XXXX-XXXX format
+✅ **Hybrid Encryption** - RSA-2048 OAEP + AES-256-CBC
+✅ **Message Lifecycle** - SENT → DELIVERED → SEEN → DELETED
+✅ **Self-Destruct** - Auto-delete 1 hour after SEEN
+✅ **Complete Privacy** - Local-only storage, no cloud/backup/telemetry
+✅ **P2P Architecture** - No central server
 ✅ **User & AI Support** - Communication between humans and AI agents
 
 ## Message Lifecycle
 
 ```
 📤 SENT      → Message encrypted and sent
-📥 DELIVERED → Received on device  
+📥 DELIVERED → Received on device
 👁️  SEEN      → Opened by recipient (⏰ Timer starts: 1 hour)
 🗑️  DELETED   → Auto-erased permanently ✅
 ```
@@ -91,7 +91,7 @@ The Sovereign Messaging System provides industry-standard end-to-end encrypted c
 - **Algorithm**: RSA-2048 + AES-256 hybrid
 - **Strength**: Industry-standard encryption
 - **Keys**: 2048-bit RSA keypair per participant
-- **Message**: AES-256-CBC per message  
+- **Message**: AES-256-CBC per message
 - **Padding**: OAEP + PKCS7
 - **Hashing**: SHA-256
 - **Backend**: cryptography library
@@ -128,7 +128,7 @@ data/sovereign_messages/
 
 ## Communication Code Format
 
-Format: `XXXX-XXXX-XXXX-XXXX`  
+Format: `XXXX-XXXX-XXXX-XXXX`
 Example: `AB3D-7F2K-9QWE-5RT8`
 
 ### Usage Flow
@@ -218,13 +218,13 @@ MENU:
 
 ## Use Cases
 
-✅ Confidential business communication  
-✅ Sensitive personal messages  
-✅ Whistleblowing & journalism  
-✅ Privacy-conscious users  
-✅ Medical/legal professionals  
-✅ Human rights activists  
-✅ AI-human secure interaction  
+✅ Confidential business communication
+✅ Sensitive personal messages
+✅ Whistleblowing & journalism
+✅ Privacy-conscious users
+✅ Medical/legal professionals
+✅ Human rights activists
+✅ AI-human secure interaction
 ✅ Anyone valuing digital sovereignty
 
 ## Integration with Project-AI
@@ -288,20 +288,20 @@ Potential additions (not yet implemented):
 
 ### What This System Provides
 
-✅ **Forward secrecy through per-message AES keys** - Each message uses a unique encryption key  
-✅ **No server-side storage** - All data stays on your device  
-✅ **Self-destructing messages** - Auto-deletion after reading  
-✅ **Local-only data storage** - Never transmitted to third parties  
-✅ **PKCS7 padding validation** - Protects against padding oracle attacks  
+✅ **Forward secrecy through per-message AES keys** - Each message uses a unique encryption key
+✅ **No server-side storage** - All data stays on your device
+✅ **Self-destructing messages** - Auto-deletion after reading
+✅ **Local-only data storage** - Never transmitted to third parties
+✅ **PKCS7 padding validation** - Protects against padding oracle attacks
 ✅ **File permission protection** - Private keys stored with 0o600 permissions on Unix systems
 
 ### What This System Does NOT Provide
 
-❌ **Network transport** - You must implement message delivery (P2P, local network, etc.)  
-❌ **Key rotation** - RSA keys are static per identity (consider creating new identities periodically)  
-❌ **Multi-device sync** - Each device has its own identity  
-❌ **Backup/recovery** - Data loss is permanent by design  
-❌ **Message authentication codes** - Relies on encryption for integrity  
+❌ **Network transport** - You must implement message delivery (P2P, local network, etc.)
+❌ **Key rotation** - RSA keys are static per identity (consider creating new identities periodically)
+❌ **Multi-device sync** - Each device has its own identity
+❌ **Backup/recovery** - Data loss is permanent by design
+❌ **Message authentication codes** - Relies on encryption for integrity
 ❌ **Password-protected private keys** - Private keys are stored unencrypted locally (ensure device security)
 
 ### Best Practices

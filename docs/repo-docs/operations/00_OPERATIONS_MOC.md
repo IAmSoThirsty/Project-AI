@@ -1,8 +1,8 @@
 # Operations & Deployment MOC - Infrastructure & Platform Operations
 
-> **📍 Location**: `docs/operations/00_OPERATIONS_MOC.md`  
-> **🎯 Purpose**: Comprehensive operations, deployment, and infrastructure guide  
-> **👥 Audience**: DevOps, SRE, operators, infrastructure engineers  
+> **📍 Location**: `docs/operations/00_OPERATIONS_MOC.md`
+> **🎯 Purpose**: Comprehensive operations, deployment, and infrastructure guide
+> **👥 Audience**: DevOps, SRE, operators, infrastructure engineers
 > **🔄 Status**: Production-Ready ✓
 
 ---
@@ -181,7 +181,7 @@ Deployment: [[DESKTOP_APP_QUICKSTART.md|Desktop Quickstart]]
 GET /health
 GET /metrics (Prometheus)
 
-# Situational Tier  
+# Situational Tier
 GET /api/health
 GET /api/metrics
 
@@ -372,6 +372,6 @@ related_mocs:
 
 ---
 
-**MOC Version**: 1.0.0  
-**Last Updated**: 2025-01-20  
+**MOC Version**: 1.0.0
+**Last Updated**: 2025-01-20
 **Status**: Production-Ready ✓

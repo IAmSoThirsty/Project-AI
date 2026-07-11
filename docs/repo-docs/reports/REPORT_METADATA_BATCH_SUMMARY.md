@@ -80,7 +80,7 @@ Additional fields based on report type (e.g., `cvss_score`, `lockout_threshold`,
    - Type: implementation
    - Date: 2026-02-10
    - Impact: Brute-force protection with 5-attempt threshold
-   
+
 2. **AGENT_20_ACCOUNT_LOCKOUT_REPORT.md**
    - Type: implementation
    - Date: 2026-02-10

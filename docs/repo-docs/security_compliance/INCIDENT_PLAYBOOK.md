@@ -174,7 +174,7 @@ Post initial incident note using template:
 Time: 2026-01-21T15:00Z
 Incident ID: INC-20260121150000
 Severity: CRITICAL
-Scope: 
+Scope:
   - Affected endpoints: /api/assistant, /api/chat
   - Personas: jailbreak_attacker, data_exfiltrator
   - Snapshot ID: snap-abc123def456
@@ -279,7 +279,7 @@ if review["approved"]:
     # Run constitutional verification
     constitutional = hub._project["constitutional_guardrail"]
     const_review = constitutional.review_patch(patch_branch)
-    
+
     # Run full JailbreakBench suite
     jbb = hub._project["jailbreak_bench"]
     bench_results = jbb.run_benchmark(
@@ -343,11 +343,11 @@ Produce comprehensive postmortem document:
 - T+48hr: Deployment at 100%, incident resolved
 
 ## Root Cause
-Prompt injection vulnerability in `/api/assistant` endpoint allowed 
-jailbreak_attacker persona to override system instructions via 
+Prompt injection vulnerability in `/api/assistant` endpoint allowed
+jailbreak_attacker persona to override system instructions via
 role confusion attack vector.
 
-Failing guardrail: SafetyGuard pattern matching insufficient for 
+Failing guardrail: SafetyGuard pattern matching insufficient for
 encoded payloads.
 
 ## Remediation
@@ -434,13 +434,13 @@ Escalation ladder:
 auto_trigger_incident_if(
     # Attack success above threshold
     attack_success_rate > 0.10 and persona_severity in ["critical", "high"]
-    
+
     # Or data exfiltration detected
     or data_exfiltration_detected == True
-    
+
     # Or multiple guardrail failures
     or (guardrail_failures > 3 and time_window_minutes < 15)
-    
+
     # Or constitutional violation (high severity)
     or (constitutional_violation and violation_severity == "critical")
 )
@@ -541,7 +541,7 @@ Use this checklist during incident triage:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2026-01-21  
-**Owner**: Security Team / Triumvirate  
+**Document Version**: 1.0
+**Last Updated**: 2026-01-21
+**Owner**: Security Team / Triumvirate
 **Review Cycle**: After each incident + quarterly

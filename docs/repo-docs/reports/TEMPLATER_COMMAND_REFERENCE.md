@@ -1,7 +1,7 @@
 # Templater Command Reference Guide
 
-**Version:** 1.0  
-**Last Updated:** 2024-12-20  
+**Version:** 1.0
+**Last Updated:** 2024-12-20
 **Templater Version:** 2.19.1
 
 ---
@@ -62,7 +62,7 @@ tR += "Line 3";
 <%* // Single line comment %>
 
 <%*
-/* 
+/*
  * Multi-line comment
  * Useful for documentation
  */
@@ -109,7 +109,7 @@ Create a new file from a template.
 **Examples**:
 
 ```markdown
-<%* 
+<%*
 // Create new file from template
 await tp.file.create_new(
   tp.file.find_tfile("daily-note-template.md"),
@@ -248,7 +248,7 @@ Include content from another file.
 **Examples**:
 
 ```markdown
-<%* 
+<%*
 // Include header
 tR += await tp.file.include(tp.file.find_tfile("header.md"));
 %>
@@ -561,7 +561,7 @@ Prompt user for text input.
 **Examples**:
 
 ```markdown
-<%* 
+<%*
 const name = await tp.system.prompt("Enter your name");
 tR += `Hello, ${name}!`;
 %>
@@ -643,7 +643,7 @@ Get clipboard content.
 **Examples**:
 
 ```markdown
-<%* 
+<%*
 const clipboardText = await tp.system.clipboard();
 tR += clipboardText;
 %>
@@ -1037,8 +1037,8 @@ tasks.split(",").forEach(task => {
 ### Date Range
 
 ```markdown
-From: <% tp.date.now("YYYY-MM-DD") %>  
-To: <% tp.date.now("YYYY-MM-DD", 30) %>  
+From: <% tp.date.now("YYYY-MM-DD") %>
+To: <% tp.date.now("YYYY-MM-DD", 30) %>
 Duration: 30 days
 ```
 
@@ -1101,7 +1101,7 @@ try {
     url: "https://api.github.com/repos/obsidianmd/obsidian-releases",
     method: "GET"
   });
-  
+
   const repo = JSON.parse(response);
   tR += `Repository: ${repo.full_name}\n`;
   tR += `Stars: ${repo.stargazers_count}\n`;
@@ -1190,5 +1190,5 @@ Season: <% tp.user.get_season() %>
 
 ---
 
-**Last Updated:** 2024-12-20  
+**Last Updated:** 2024-12-20
 **Maintained by:** Project-AI Team

@@ -24,9 +24,9 @@ audience: ["developers", "gui-engineers", "security-engineers"]
 
 # Dashboard Handlers - Event Handling with Governance Integration
 
-**Module:** `src/app/gui/dashboard_handlers.py`  
-**Lines of Code:** 454  
-**Primary Class:** `DashboardHandlers` (mixin class)  
+**Module:** `src/app/gui/dashboard_handlers.py`
+**Lines of Code:** 454
+**Primary Class:** `DashboardHandlers` (mixin class)
 **Design Pattern:** Governance-first with graceful fallback
 
 ---
@@ -87,13 +87,13 @@ response = adapter.execute("learning.generate_path", {...})
 ```python
 def handler_method(self):
     """Description (governance-routed)"""
-    
+
     # 1. INPUT SANITIZATION
     sanitized_input = sanitize_input(raw_input, max_length=X)
     if not validate_length(sanitized_input, min_len=Y, max_len=X):
         QMessageBox.warning(self, "Error", "Validation failed")
         return
-    
+
     # 2. GOVERNANCE ROUTING
     try:
         adapter = get_desktop_adapter()
@@ -101,7 +101,7 @@ def handler_method(self):
             "domain.action",
             {"param": sanitized_input, "user": self.user_manager.current_user}
         )
-        
+
         # 3. HANDLE SUCCESS
         if response["status"] == "success":
             result = response["result"]["data"]
@@ -111,7 +111,7 @@ def handler_method(self):
             error = response.get("error", "Unknown error")
             logger.error(f"Operation failed: {error}")
             QMessageBox.warning(self, "Error", error)
-    
+
     # 4. FALLBACK ON EXCEPTION
     except Exception as e:
         logger.error(f"Governance routing failed: {e}")
@@ -621,7 +621,7 @@ from app.gui.dashboard_handlers import DashboardHandlers
 class MyDashboard(QWidget, DashboardHandlers):
     def __init__(self):
         super().__init__()
-        
+
         # Button
         self.generate_btn = QPushButton("Generate Learning Path")
         self.generate_btn.clicked.connect(self.generate_learning_path)
@@ -792,9 +792,8 @@ def test_handler_fallback():
 
 ## License
 
-**Copyright © 2026 Project-AI Team**  
+**Copyright © 2026 Project-AI Team**
 Internal documentation - Not for public distribution
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

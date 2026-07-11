@@ -32,9 +32,9 @@ coverage_percentage: 75
 
 # Security Domain Index
 
-> **Index Type:** by-area  
-> **Scope:** All security-related documentation including threat models, audits, policies, and standards  
-> **Maintainer:** AGENT-002  
+> **Index Type:** by-area
+> **Scope:** All security-related documentation including threat models, audits, policies, and standards
+> **Maintainer:** AGENT-002
 > **Last Updated:** 2024-01-15
 
 ## Overview
@@ -65,7 +65,7 @@ This index provides comprehensive navigation to all security documentation in th
   - **Key Topics:** password-attacks, session-hijacking, brute-force-protection
   - **Dependencies:** [[standard-password-policy]], [[adr-005-bcrypt-hashing]]
   - **Last Reviewed:** 2024-01-10
-  
+
 - [[threat-model-data-encryption]] - Data encryption at rest and in transit threat model (P0, Active)
   - **Key Topics:** encryption-algorithms, key-management, tls-configuration
   - **Related:** [[standard-encryption-requirements]]
@@ -157,8 +157,8 @@ No deprecated security documents currently. All security documentation is mainta
 - P2 (Medium): 2
 - P3 (Low): 0
 
-**Last Major Update:** 2024-01-15  
-**Index Version:** 1.0  
+**Last Major Update:** 2024-01-15
+**Index Version:** 1.0
 **Coverage:** 75% of security domain
 
 ---
@@ -223,22 +223,21 @@ Before committing index updates:
 
 ### Common Issues
 
-**Issue:** Document appears in multiple sections  
+**Issue:** Document appears in multiple sections
 **Resolution:** Valid if document covers multiple security concerns. Cross-listing is intentional.
 
-**Issue:** Priority conflicts with other indexes  
+**Issue:** Priority conflicts with other indexes
 **Resolution:** All security documents are P0 from security perspective, but may be P2 from performance perspective. Context-dependent priority is valid.
 
-**Issue:** Statistics don't match actual counts  
+**Issue:** Statistics don't match actual counts
 **Resolution:** Run `scripts/audit-index-metadata.py --fix` to auto-update statistics block.
 
 ---
 
-**Index Version:** 1.0  
-**Schema Version:** 1.0  
-**Created By:** AGENT-002 (Indexes Subdirectory Specialist)  
+**Index Version:** 1.0
+**Schema Version:** 1.0
+**Created By:** AGENT-002 (Indexes Subdirectory Specialist)
 **Last Updated:** 2024-01-15
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

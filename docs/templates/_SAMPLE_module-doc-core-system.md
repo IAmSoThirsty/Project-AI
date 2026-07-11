@@ -6,7 +6,7 @@ version: "1.0.0"
 created_date: "2026-04-20"
 updated_date: "2026-04-20"
 status: "draft"
-author: 
+author:
   name: "AGENT-021"
   email: ""
   github: ""
@@ -49,9 +49,9 @@ supersedes: null
 
 # AI Systems Module - Sample Documentation
 
-> **Module Type:** Core Business Logic  
-> **Location:** `src/app/core/ai_systems.py`  
-> **Status:** production  
+> **Module Type:** Core Business Logic
+> **Location:** `src/app/core/ai_systems.py`
+> **Status:** production
 > **Last Updated:** 2026-04-20
 
 ## Module Overview
@@ -87,10 +87,10 @@ supersedes: null
 def __init__(self, data_dir: str = "data/ai_persona"):
     """
     Initialize AIPersona system.
-    
+
     Args:
         data_dir (str): Directory for state persistence
-        
+
     Raises:
         OSError: If directory creation fails
     """
@@ -122,7 +122,7 @@ class TestAIPersona:
     def persona(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             yield AIPersona(data_dir=tmpdir)
-    
+
     def test_initialization(self, persona):
         assert persona.mood is not None
         assert len(persona.personality_traits) == 8
@@ -130,10 +130,9 @@ class TestAIPersona:
 
 ---
 
-**Document Status:** draft  
-**Next Review Date:** 2026-05-01  
+**Document Status:** draft
+**Next Review Date:** 2026-05-01
 **Maintainer:** AGENT-021
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

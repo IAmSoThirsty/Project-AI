@@ -35,7 +35,7 @@ Location: `desktop/LICENSE`
 
 ### Thirsty-Lang
 Location: `src/thirsty_lang/LICENSE`
-- **License**: MIT License  
+- **License**: MIT License
 - **Copyright**: 2025 Jeremy Karrick
 
 ## Third-Party Licenses
@@ -49,5 +49,5 @@ Third-party licenses for components included in this project can be found in:
 
 ## License Compliance
 
-All components of Project-AI are licensed under MIT-compatible licenses, 
+All components of Project-AI are licensed under MIT-compatible licenses,
 ensuring maximum compatibility and freedom for users and contributors.

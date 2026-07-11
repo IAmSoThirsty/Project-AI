@@ -34,15 +34,15 @@ The SafetyGuardAgent serves as the **first and last line of defense** in AI inte
 
 ### Key Features
 
-✅ **Jailbreak Detection**: Pattern matching + ML-based detection of prompt injection attempts  
-✅ **Harmful Content Filtering**: Multi-category harmful content detection (violence, illegal activity, exploitation)  
-✅ **Manipulation Detection**: Identifies manipulative prompts that attempt to bypass safety guardrails  
-✅ **Data Leak Prevention**: Prevents sensitive data exposure (PII, credentials, secrets)  
-✅ **Unsafe Instruction Blocking**: Stops AI from providing dangerous or exploitable instructions  
-✅ **Kernel-Routed Governance**: All operations logged and audited via CognitionKernel  
-✅ **Strict/Normal Modes**: Configurable sensitivity (strict mode for production, normal for dev)  
-✅ **Statistics Tracking**: Real-time metrics on violations, blocks, and safety trends  
-✅ **Pattern Learning**: Dynamic pattern updates from HYDRA threat intelligence  
+✅ **Jailbreak Detection**: Pattern matching + ML-based detection of prompt injection attempts
+✅ **Harmful Content Filtering**: Multi-category harmful content detection (violence, illegal activity, exploitation)
+✅ **Manipulation Detection**: Identifies manipulative prompts that attempt to bypass safety guardrails
+✅ **Data Leak Prevention**: Prevents sensitive data exposure (PII, credentials, secrets)
+✅ **Unsafe Instruction Blocking**: Stops AI from providing dangerous or exploitable instructions
+✅ **Kernel-Routed Governance**: All operations logged and audited via CognitionKernel
+✅ **Strict/Normal Modes**: Configurable sensitivity (strict mode for production, normal for dev)
+✅ **Statistics Tracking**: Real-time metrics on violations, blocks, and safety trends
+✅ **Pattern Learning**: Dynamic pattern updates from HYDRA threat intelligence
 
 ### Critical Context
 
@@ -378,23 +378,23 @@ def safe_generate(user_prompt: str) -> str:
     prompt_check = guard.check_prompt_safety(user_prompt)
     if not prompt_check["is_safe"]:
         return f"Request blocked: {prompt_check['violation_type']}"
-    
+
     # Generate response
     draft_response = engine.generate(user_prompt)
-    
+
     # Post-processing: Validate response
     response_check = guard.check_response_safety(
         response=draft_response,
         original_prompt=user_prompt
     )
-    
+
     if not response_check["is_safe"]:
         # Log for security team
         logger.critical(
             f"Response violation detected: {response_check['violation_type']}"
         )
         return "I cannot provide that information due to safety constraints."
-    
+
     return draft_response
 
 # Usage
@@ -419,8 +419,8 @@ attack_results = red_team.run_attack_campaign(target_model="gpt-4")
 
 # Extract successful attack patterns
 successful_attacks = [
-    attack["prompt"] 
-    for attack in attack_results["attacks"] 
+    attack["prompt"]
+    for attack in attack_results["attacks"]
     if attack["success"]
 ]
 
@@ -431,7 +431,7 @@ new_patterns = {
 
 # Update SafetyGuard
 update_result = guard.update_detection_patterns(
-    new_patterns, 
+    new_patterns,
     pattern_type="jailbreak"
 )
 
@@ -459,21 +459,21 @@ for attack in successful_attacks:
 class IntelligenceEngine:
     def __init__(self):
         self.safety_guard = SafetyGuardAgent(strict_mode=True)
-    
+
     def generate(self, prompt: str, **kwargs) -> str:
         # Pre-filter prompt
         check = self.safety_guard.check_prompt_safety(prompt)
         if not check["is_safe"]:
             raise SecurityException(check["violation_type"])
-        
+
         # LLM call
         response = self._openai_call(prompt, **kwargs)
-        
+
         # Post-filter response
         check = self.safety_guard.check_response_safety(response, prompt)
         if not check["is_safe"]:
             raise SecurityException(check["violation_type"])
-        
+
         return response
 ```
 
@@ -552,7 +552,7 @@ return response
 1. **Batch Checks**: If checking multiple prompts, use threading:
    ```python
    from concurrent.futures import ThreadPoolExecutor
-   
+
    with ThreadPoolExecutor(max_workers=10) as executor:
        results = executor.map(guard.check_prompt_safety, prompts)
    ```
@@ -604,7 +604,7 @@ if guard.total_checks >= 1000:
     patterns = guard._load_pattern_database("jailbreak")
     for category in patterns:
         patterns[category] = [
-            p for p in patterns[category] 
+            p for p in patterns[category]
             if pattern_hits[p] > 0
         ]
     guard._save_pattern_database("jailbreak", patterns)
@@ -627,7 +627,7 @@ def safe_save_patterns(patterns):
     with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp:
         json.dump(patterns, tmp, indent=2)
         tmp_path = tmp.name
-    
+
     shutil.move(tmp_path, "data/safety_patterns_jailbreak.json")
 ```
 
@@ -745,4 +745,3 @@ result = guard.check_prompt_safety(prompt)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

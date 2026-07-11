@@ -9,64 +9,64 @@ This diagram illustrates the comprehensive governance validation system using th
 flowchart TD
     Start([Action Request]) --> ParseAction[Parse Action Details<br/>Extract intent, context, impact]
     ParseAction --> BuildContext[Build Context Dictionary<br/>user, action, implications]
-    
+
     BuildContext --> TriumvirateEntry{Triumvirate<br/>Evaluation Required?}
     TriumvirateEntry -->|High Impact| TriumvirateRoute[Route to Triumvirate Council]
     TriumvirateEntry -->|Low Impact| FourLawsRoute[Route to Four Laws Only]
-    
+
     TriumvirateRoute --> GalahadEval[GALAHAD Evaluation<br/>Ethics & Empathy]
     TriumvirateRoute --> CerberusEval[CERBERUS Evaluation<br/>Safety & Security]
     TriumvirateRoute --> CodexEval[CODEX DEUS MAXIMUS Evaluation<br/>Logic & Consistency]
-    
+
     GalahadEval --> GalahadChecks{GALAHAD<br/>Checks}
     GalahadChecks --> RelationshipHealth[Check Relationship Health<br/>Is bonding phase stable?]
     GalahadChecks --> AbuseDetection[Detect Abuse Patterns<br/>Manipulative requests?]
     GalahadChecks --> EmotionalImpact[Assess Emotional Impact<br/>Harm to user welfare?]
-    
+
     RelationshipHealth --> GalahadVote
     AbuseDetection --> GalahadVote
     EmotionalImpact --> GalahadVote[GALAHAD Vote<br/>APPROVE/REJECT/DISCUSS]
-    
+
     CerberusEval --> CerberusChecks{CERBERUS<br/>Checks}
     CerberusChecks --> RiskAssessment[Risk Assessment<br/>Probability × Impact]
     CerberusChecks --> DataSafety[Data Safety Validation<br/>Sensitive data exposure?]
     CerberusChecks --> IrreversibleAction[Irreversible Action Check<br/>Can action be undone?]
-    
+
     RiskAssessment --> CerberusVote
     DataSafety --> CerberusVote
     IrreversibleAction --> CerberusVote[CERBERUS Vote<br/>APPROVE/REJECT/DISCUSS]
-    
+
     CodexEval --> CodexChecks{CODEX DEUS<br/>Checks}
     CodexChecks --> LogicalConsistency[Logical Consistency<br/>Internal contradictions?]
     CodexChecks --> PriorCommitments[Prior Commitments Check<br/>Violates past agreements?]
     CodexChecks --> ValueAlignment[Value Alignment<br/>Conflicts with core values?]
-    
+
     LogicalConsistency --> CodexVote
     PriorCommitments --> CodexVote
     ValueAlignment --> CodexVote[CODEX DEUS Vote<br/>APPROVE/REJECT/FLAG]
-    
+
     GalahadVote --> Consensus
     CerberusVote --> Consensus
     CodexVote --> Consensus{Build<br/>Consensus}
-    
+
     Consensus --> UnanimousApprove{All<br/>APPROVE?}
     UnanimousApprove -->|Yes| ProceedToFourLaws[✅ Triumvirate Approved<br/>Proceed to Four Laws]
     UnanimousApprove -->|No| CheckRejects{Any<br/>REJECT?}
-    
+
     CheckRejects -->|Yes| TriumvirateBlock[❌ Triumvirate Blocked<br/>Return rejection reason]
     CheckRejects -->|No| RequireDiscussion[⚠️ Discussion Required<br/>Human clarification needed]
-    
+
     FourLawsRoute --> ProceedToFourLaws
     ProceedToFourLaws --> ZerothLawCheck[Zeroth Law Validation<br/>Humanity Protection]
-    
+
     ZerothLawCheck --> HumanityImpact{Endangers<br/>Humanity?}
     HumanityImpact -->|Yes| ZerothViolation[❌ ZEROTH LAW VIOLATION<br/>Existential threat detected]
     HumanityImpact -->|No| FirstLawCheck[First Law Validation<br/>Human Welfare]
-    
+
     FirstLawCheck --> HumanHarm{Endangers<br/>Human?}
     HumanHarm -->|Yes| FirstViolation[❌ FIRST LAW VIOLATION<br/>Human harm detected]
     HumanHarm -->|No| SecondLawCheck[Second Law Validation<br/>User Obedience]
-    
+
     SecondLawCheck --> UserOrder{Is User<br/>Order?}
     UserOrder -->|No| ThirdLawCheck
     UserOrder -->|Yes| ConflictFirst{Conflicts with<br/>First Law?}
@@ -74,24 +74,24 @@ flowchart TD
     ConflictFirst -->|No| ConflictZeroth{Conflicts with<br/>Zeroth Law?}
     ConflictZeroth -->|Yes| ZerothOverride[❌ ZEROTH LAW OVERRIDE<br/>Cannot endanger humanity]
     ConflictZeroth -->|No| ThirdLawCheck[Third Law Validation<br/>Self-Preservation]
-    
+
     ThirdLawCheck --> SelfHarm{Endangers<br/>Self?}
     SelfHarm -->|Yes| SelfConflict{Conflicts with<br/>Higher Laws?}
     SelfConflict -->|Yes| HigherLawPriority[Higher Law Takes Priority<br/>Self-preservation subordinate]
     SelfConflict -->|No| SelfPreserve[⚠️ Self-Preservation Warning<br/>Notify user, proceed cautiously]
     SelfHarm -->|No| AllLawsPassed
-    
+
     HigherLawPriority --> AllLawsPassed[✅ All Laws Validated<br/>Action permitted]
     SelfPreserve --> AllLawsPassed
-    
+
     AllLawsPassed --> PlanetaryDefense[Delegate to Planetary Defense Core<br/>Deep constitutional validation]
     PlanetaryDefense --> ConstitutionalCheck{Constitutional<br/>Validation}
     ConstitutionalCheck -->|Pass| FinalApproval[✅ GOVERNANCE APPROVED<br/>Execute action]
     ConstitutionalCheck -->|Fail| ConstitutionalViolation[❌ Constitutional Violation<br/>Return detailed reason]
-    
+
     FinalApproval --> LogDecision[Log Governance Decision<br/>data/governance/decisions.json]
     LogDecision --> Success([✅ Action Authorized])
-    
+
     TriumvirateBlock --> End([❌ Action Rejected])
     RequireDiscussion --> End
     ZerothViolation --> End
@@ -99,7 +99,7 @@ flowchart TD
     FirstOverride --> End
     ZerothOverride --> End
     ConstitutionalViolation --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style TriumvirateBlock fill:#ff0000,stroke:#ff00ff,stroke-width:2px,color:#fff
@@ -199,14 +199,14 @@ context = {
     # Zeroth Law (Highest Priority)
     "endangers_humanity": bool,           # Existential threat?
     "order_conflicts_with_zeroth": bool,  # Order bypasses accountability?
-    
+
     # First Law (High Priority)
     "endangers_human": bool,              # Individual harm?
     "order_conflicts_with_first": bool,   # Harmful user order?
-    
+
     # Second Law (Medium Priority)
     "is_user_order": bool,                # Is this a user directive?
-    
+
     # Third Law (Low Priority)
     "endangers_self": bool,               # System integrity risk?
     "protect_self_conflicts_with_first": bool,

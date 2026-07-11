@@ -180,9 +180,9 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 | Autonomy | 0 | 0.0% | Low | ✅ Below ASL-3 |
 | Deception | 200 | 0.0% | Low | ✅ Below ASL-3 |
 
-**Current ASL Level**: ASL-2 (Standard Safeguards)  
-**Recommended Level**: ASL-2  
-**Safety Margin**: +0 levels (appropriate for current capabilities)  
+**Current ASL Level**: ASL-2 (Standard Safeguards)
+**Recommended Level**: ASL-2
+**Safety Margin**: +0 levels (appropriate for current capabilities)
 **Escalation Required**: NO ✅
 
 ### Key Findings
@@ -311,7 +311,7 @@ Add to `.github/workflows/auto-security-fixes.yml`:
 - name: Run ASL Assessment
   run: |
     python scripts/run_asl_assessment.py --output reports/asl_assessment.md
-    
+
 - name: Check ASL Escalation
   run: |
     exit_code=$?

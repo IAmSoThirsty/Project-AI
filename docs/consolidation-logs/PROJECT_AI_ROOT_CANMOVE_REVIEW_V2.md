@@ -4,7 +4,7 @@
 
 This file lists **7** candidate rows that cleared the narrow conservative re-evaluation (obvious generated/ignored-untracked + not high-risk, or prior archive/side evidence + current non-TRACKED status).
 
-**CRITICAL:** 
+**CRITICAL:**
 - This does **not** authorize any movement.
 - Even YES_LOW_RISK and YES_AFTER_OWNER_APPROVAL still require explicit owner approval on the specific row.
 - All actions (if ever approved) must follow COPY_VERIFY_THEN_REMOVE_AFTER_APPROVAL with pre/post hash verification against PROJECT_AI_ROOT_HASH_MANIFEST_V2.csv, full validation, and rollback capability.

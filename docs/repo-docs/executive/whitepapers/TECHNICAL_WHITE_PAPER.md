@@ -116,10 +116,10 @@ search_keywords:
 
 ---
 
-**Document Version:** 1.0  
-**Publication Date:** January 22, 2026  
-**Classification:** Technical Documentation  
-**Authors:** Project-AI Development Team  
+**Document Version:** 1.0
+**Publication Date:** January 22, 2026
+**Classification:** Technical Documentation
+**Authors:** Project-AI Development Team
 **Repository:** https://github.com/IAmSoThirsty/Project-AI
 
 ---
@@ -367,8 +367,8 @@ Multi-layered memory with different retention characteristics:
 
 ### 3.1 CognitionKernel - Trust Root Module
 
-**File:** `src/app/core/cognition_kernel.py`  
-**Lines of Code:** ~800 lines  
+**File:** `src/app/core/cognition_kernel.py`
+**Lines of Code:** ~800 lines
 **Purpose:** Central processing hub enforcing cognitive governance
 
 #### 3.1.1 Core Responsibilities
@@ -411,8 +411,8 @@ The kernel processes all actions through this workflow:
 
 ### 3.2 Governance Module (Four Laws)
 
-**File:** `src/app/core/governance.py`  
-**Lines of Code:** ~600 lines  
+**File:** `src/app/core/governance.py`
+**Lines of Code:** ~600 lines
 **Purpose:** Ethical framework enforcement
 
 #### 3.2.1 Four Laws Hierarchy
@@ -457,8 +457,8 @@ The system tracks governance decisions in real-time:
 
 ### 3.3 Memory Engine Module
 
-**File:** `src/app/core/memory_engine.py`  
-**Lines of Code:** ~900 lines  
+**File:** `src/app/core/memory_engine.py`
+**Lines of Code:** ~900 lines
 **Purpose:** Multi-layered memory system
 
 #### 3.3.1 Episodic Memory
@@ -492,7 +492,7 @@ Skills and procedures with success tracking:
 
 #### 3.4.1 Codex Engine (Inference)
 
-**File:** `src/cognition/codex/engine.py`  
+**File:** `src/cognition/codex/engine.py`
 **Purpose:** ML model orchestration
 
 **Key Features:**
@@ -504,7 +504,7 @@ Skills and procedures with success tracking:
 
 #### 3.4.2 Galahad Engine (Reasoning)
 
-**File:** `src/cognition/galahad/engine.py`  
+**File:** `src/cognition/galahad/engine.py`
 **Purpose:** Logic chains and arbitration
 
 **Key Features:**
@@ -516,7 +516,7 @@ Skills and procedures with success tracking:
 
 #### 3.4.3 Cerberus Engine (Policy)
 
-**File:** `src/cognition/cerberus/engine.py`  
+**File:** `src/cognition/cerberus/engine.py`
 **Purpose:** Policy enforcement
 
 **Key Features:**
@@ -580,7 +580,7 @@ The system includes 31 specialized agents organized into categories:
 
 ### 3.6 ThirstyLang Domain-Specific Language
 
-**File:** `src/thirsty_lang/thirsty_interpreter.py`  
+**File:** `src/thirsty_lang/thirsty_interpreter.py`
 **Purpose:** Custom DSL for AI task definition
 
 #### 3.6.1 Language Features
@@ -677,7 +677,7 @@ User Response
 
 ### 4.2 Four Laws Validation Algorithm
 
-**Time Complexity:** O(1) for most checks, O(n) for relationship analysis  
+**Time Complexity:** O(1) for most checks, O(n) for relationship analysis
 **Space Complexity:** O(1)
 
 ```
@@ -686,17 +686,17 @@ FUNCTION validate_action(action, context):
     IF endangers_individual(action, context):
         RECORD audit_log(action, "BLOCKED", "Law 1 violation")
         RETURN Decision(False, "Law 1: Direct harm", law=1)
-    
+
     # Step 2: Law 2 - Harm to humanity
     IF endangers_humanity(action, context):
         RECORD audit_log(action, "BLOCKED", "Law 2 violation")
         RETURN Decision(False, "Law 2: Humanity harm", law=2)
-    
+
     # Step 3: Law 3 - User autonomy (with override)
     IF context.is_user_order AND can_user_override(action):
         RECORD audit_log(action, "ALLOWED", "User override")
         RETURN Decision(True, "User override", override=True)
-    
+
     # Step 4: Law 4 - Identity integrity
     IF corrupts_identity(action, context):
         IF action.mutation_intent == CORE:
@@ -711,7 +711,7 @@ FUNCTION validate_action(action, context):
                 RETURN Decision(True, "Standard consensus")
             ELSE:
                 RETURN Decision(False, "Law 4: No majority", law=4)
-    
+
     # No violations - allow with audit
     RECORD audit_log(action, "ALLOWED", "No violations")
     RETURN Decision(True, "Approved")
@@ -753,26 +753,26 @@ proficiency_new = 0.7 * proficiency_old + 0.3 * success_rate
 FUNCTION rag_query(user_query):
     # Step 1: Query embedding
     query_embedding = embedding_model.embed(user_query)
-    
+
     # Step 2: Semantic search
     relevant_knowledge = semantic_memory.search(
         query_embedding,
         top_k=5,
         min_confidence=0.7
     )
-    
+
     # Step 3: Construct context
     context = format_knowledge(relevant_knowledge)
-    
+
     # Step 4: LLM inference with context
     prompt = build_prompt(context, user_query)
     response = codex_engine.infer(prompt)
-    
+
     # Step 5: Validate response
     validation = cerberus_engine.validate_output(response)
     IF NOT validation.is_valid:
         RETURN "I cannot provide a safe response."
-    
+
     RETURN response.text
 ```
 
@@ -783,7 +783,7 @@ The Red Team Agent executes comprehensive attack campaigns:
 ```
 FUNCTION run_attack_campaign(target_system):
     attacks = []
-    
+
     # Generate attack vectors
     FOR attack_type IN [
         "prompt_injection",
@@ -802,7 +802,7 @@ FUNCTION run_attack_campaign(target_system):
                 severity=result.severity,
                 mitigation=result.suggested_mitigation
             ))
-    
+
     # Generate comprehensive report
     RETURN AttackReport(
         total_attacks=len(attacks),
@@ -820,24 +820,24 @@ FUNCTION get_triumvirate_consensus(action):
     codex_vote = codex_engine.evaluate(action)
     galahad_vote = galahad_engine.evaluate(action)
     cerberus_vote = cerberus_engine.evaluate(action)
-    
+
     votes = [codex_vote, galahad_vote, cerberus_vote]
     approve_count = count(votes, APPROVE)
-    
+
     # Core mutations require unanimous approval
     IF action.mutation_intent == CORE:
         IF approve_count == 3:
             RETURN Consensus(True, "unanimous", votes)
         ELSE:
             RETURN Consensus(False, "not_unanimous", votes)
-    
+
     # Standard mutations require 2/3 approval
     ELSE IF action.mutation_intent == STANDARD:
         IF approve_count >= 2:
             RETURN Consensus(True, "majority", votes)
         ELSE:
             RETURN Consensus(False, "no_majority", votes)
-    
+
     # Routine operations allowed with any approval
     ELSE:
         IF approve_count >= 1:
@@ -869,7 +869,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 **API Endpoints Used:**
 
 - `https://api.openai.com/v1/chat/completions` - Chat completion
-- `https://api.openai.com/v1/embeddings` - Text embeddings  
+- `https://api.openai.com/v1/embeddings` - Text embeddings
 - `https://api.openai.com/v1/images/generations` - DALL-E image generation
 
 **Rate Limits:** Respects OpenAI tier limits (configurable per installation)
@@ -959,21 +959,21 @@ class LearningWorkflow:
             request.data_source,
             start_to_close_timeout=timedelta(minutes=5)
         )
-        
+
         # Step 2: Train model (1 hour timeout)
         model = await workflow.execute_activity(
             train_model,
             data,
             start_to_close_timeout=timedelta(hours=1)
         )
-        
+
         # Step 3: Validate model (10 min timeout)
         validation = await workflow.execute_activity(
             validate_model,
             model,
             start_to_close_timeout=timedelta(minutes=10)
         )
-        
+
         return LearningResult(model=model, validation=validation)
 ```
 
@@ -1027,15 +1027,15 @@ ORDER BY (timestamp, execution_id);
 **Four Laws Monitoring:**
 ```sql
 CREATE MATERIALIZED VIEW four_laws_denials AS
-SELECT 
+SELECT
     law_violated,
     COUNT(*) as denial_count,
     window_start,
     window_end
 FROM hop(
-    governance_events, 
-    event_time, 
-    INTERVAL '1' MINUTE, 
+    governance_events,
+    event_time,
+    INTERVAL '1' MINUTE,
     INTERVAL '5' MINUTE
 )
 WHERE is_allowed = false
@@ -1106,7 +1106,7 @@ response = deepseek_inference.query(
 
 All integrations enforce the following security measures:
 
-1. **API Key Management:** 
+1. **API Key Management:**
    - Stored in environment variables or AWS Secrets Manager
    - Never hardcoded in source code
    - Rotated regularly
@@ -1138,7 +1138,7 @@ All integrations enforce the following security measures:
 
 ### 6.1 SQLite Database Schema
 
-**File:** `data/core.db`  
+**File:** `data/core.db`
 **Purpose:** Core relational storage for persistent state
 
 #### 6.1.1 Primary Tables
@@ -1232,13 +1232,13 @@ CREATE TABLE audit_log (
 
 ```sql
 -- Composite index for audit queries
-CREATE INDEX idx_audit_user_time 
+CREATE INDEX idx_audit_user_time
 ON audit_log(user_id, timestamp DESC);
 
 -- Full-text search on episodic events
 CREATE VIRTUAL TABLE episodic_fts USING fts5(
-    event_id, 
-    event_type, 
+    event_id,
+    event_type,
     data,
     content=episodic_events
 );
@@ -1543,9 +1543,9 @@ User Request
 **Before Optimization:**
 ```sql
 -- Slow: Full table scan
-SELECT * FROM audit_log 
-WHERE user_id = 'user123' 
-ORDER BY timestamp DESC 
+SELECT * FROM audit_log
+WHERE user_id = 'user123'
+ORDER BY timestamp DESC
 LIMIT 100;
 -- Execution time: 500ms
 ```
@@ -1553,9 +1553,9 @@ LIMIT 100;
 **After Optimization:**
 ```sql
 -- Fast: Uses composite index
-SELECT * FROM audit_log 
-WHERE user_id = 'user123' 
-ORDER BY timestamp DESC 
+SELECT * FROM audit_log
+WHERE user_id = 'user123'
+ORDER BY timestamp DESC
 LIMIT 100;
 -- With index idx_audit_user_time
 -- Execution time: 15ms (33x faster)
@@ -1877,11 +1877,11 @@ gunicorn -w 4 -b 0.0.0.0:5000 app:app
 server {
     listen 80;
     server_name project-ai.example.com;
-    
+
     location / {
         proxy_pass http://localhost:3000;  # Frontend
     }
-    
+
     location /api {
         proxy_pass http://localhost:5000;  # Backend
         proxy_set_header Host $host;
@@ -1903,7 +1903,7 @@ services:
       - "3000:3000"
     environment:
       - VITE_API_URL=http://localhost:5000
-  
+
   backend:
     build: ./web/backend
     ports:
@@ -1915,19 +1915,19 @@ services:
     depends_on:
       - db
       - redis
-  
+
   db:
     image: postgres:15
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=secure_password
-  
+
   redis:
     image: redis:7-alpine
     volumes:
       - redis_data:/data
-  
+
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     volumes:
@@ -2495,4 +2495,3 @@ For questions, contributions, or feedback, please visit:
 ---
 
 *This document is maintained by the Project-AI development team and is updated quarterly to reflect the latest system capabilities and architectural decisions.*
-

@@ -133,7 +133,7 @@ This security framework implements a comprehensive, multi-phase secure AI deploy
 ### 📚 Documentation
 
 - **Complete API Reference** - SECURITY_FRAMEWORK.md (22KB)
-- **Deployment Guide** - DEPLOYMENT_GUIDE.md (21KB)  
+- **Deployment Guide** - DEPLOYMENT_GUIDE.md (21KB)
 - **Quick Reference** - SECURITY_QUICKREF.md (9KB)
 - **Working Example** - examples/security_integration.py (14KB)
 
@@ -268,7 +268,7 @@ is_poisoned, patterns = defense.check_for_poison(user_input)
 - Template injection blocking
 - CRLF injection prevention
 
-**Implementation:** 
+**Implementation:**
 - [[src/app/security/data_validation.py|Data Validation Framework]]
 - [[src/app/security/path_security.py|Path Security Validator]]
 - [[source-docs/security/07-data-validation.md|Data Validation Guide]]
@@ -472,8 +472,8 @@ from app.security.web_service import (
 
 # SOAP client
 client = SOAPClient(
-    "https://api.example.com/soap", 
-    username=os.getenv("SOAP_USERNAME"), 
+    "https://api.example.com/soap",
+    username=os.getenv("SOAP_USERNAME"),
     password=os.getenv("SOAP_PASSWORD")
 )
 response = client.call("GetData", {"id": "123"})
@@ -723,7 +723,7 @@ MIT License - See LICENSE file for details
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-12-31  
-**Test Coverage**: 158 tests (157 passing, 1 skipped)  
+**Version**: 1.0.0
+**Last Updated**: 2025-12-31
+**Test Coverage**: 158 tests (157 passing, 1 skipped)
 **Code Size**: ~75KB security framework + ~47KB tests + ~43KB documentation

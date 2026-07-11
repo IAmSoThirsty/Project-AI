@@ -307,7 +307,7 @@ All guides are available:
    - VPS/Cloud deployment
    - AWS, Heroku, Docker
    - DNS configuration
-   
+
 2. **Production Release:** `docs/PRODUCTION_RELEASE_GUIDE.md`
    - Build all platforms
    - Package for distribution

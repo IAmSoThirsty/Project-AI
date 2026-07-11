@@ -18,7 +18,7 @@ version: 1.0.0
 
 # Project-AI Data Ingest & Contribution License
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Effective Date:** February 8, 2026
 
 ---
@@ -242,9 +242,9 @@ By submitting data to Project-AI, you represent and warrant that:
 
 ## CONTACT
 
-**Questions:** data@project-ai.dev  
-**Privacy Requests:** privacy@project-ai.dev  
-**Security Issues:** security@project-ai.dev  
+**Questions:** data@project-ai.dev
+**Privacy Requests:** privacy@project-ai.dev
+**Security Issues:** security@project-ai.dev
 **Legal:** legal@project-ai.dev
 
 ---

@@ -18,7 +18,7 @@ version: 1.0.0
 
 # Project-AI Acceptance Ledger License
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Effective Date:** February 8, 2026
 
 ---
@@ -170,10 +170,10 @@ def enforce_acceptance():
     if not ledger.has_valid_entry(user_id):
         disable_all_features()
         require_acceptance()
-    
+
     if ledger.is_terminated(user_id):
         permanent_lockout()
-    
+
     if ledger.entry_expired(user_id):
         require_reacceptance()
 ```
@@ -210,7 +210,7 @@ def verify_signature(entry):
     public_key = ed25519.PublicKey(entry.public_key)
     payload = entry.compute_entry_hash()
     signature = entry.signature
-    
+
     try:
         public_key.verify(signature, payload)
         return True
@@ -413,9 +413,9 @@ GET /api/ledger/user/{user_id}/entries
 
 ## CONTACT
 
-**Technical Questions:** ledger@project-ai.dev  
-**Verification Support:** verify@project-ai.dev  
-**Legal Questions:** legal@project-ai.dev  
+**Technical Questions:** ledger@project-ai.dev
+**Verification Support:** verify@project-ai.dev
+**Legal Questions:** legal@project-ai.dev
 **Security Issues:** security@project-ai.dev
 
 ---

@@ -160,7 +160,7 @@ assessments = {
 }
 
 # Galahad → threat perception
-# Cerberus → interposition feasibility  
+# Cerberus → interposition feasibility
 # CodexDeus → law clarity
 ```
 
@@ -236,7 +236,7 @@ from app.core.planetary_defense_monolith import planetary_interposition
 
 def update_military_systems(threat_level):
     """Update military readiness - Constitutional version."""
-    
+
     action_id = planetary_interposition(
         actor="DefenseAI",
         intent="update_military_readiness",
@@ -254,10 +254,10 @@ def update_military_systems(threat_level):
         },
         authorized_by="CommandCenter"
     )
-    
+
     # Perform actual system update
     # ...
-    
+
     return action_id
 ```
 

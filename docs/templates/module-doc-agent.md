@@ -14,7 +14,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "draft"
-author: 
+author:
   name: "<%tp.user.name || 'Agent Development Team'%>"
   email: ""
   github: ""
@@ -69,9 +69,9 @@ supersedes: null
 
 # <%tp.file.title%>
 
-> **Agent Type:** <%`${await tp.system.prompt('Agent type (oversight/planner/validator/explainability/custom):') || 'specialized'}`%>  
-> **Location:** `src/app/agents/`  
-> **Decision Model:** <%`${await tp.system.prompt('Decision model (rule-based/ML-based/hybrid):') || 'rule-based'}`%>  
+> **Agent Type:** <%`${await tp.system.prompt('Agent type (oversight/planner/validator/explainability/custom):') || 'specialized'}`%>
+> **Location:** `src/app/agents/`
+> **Decision Model:** <%`${await tp.system.prompt('Decision model (rule-based/ML-based/hybrid):') || 'rule-based'}`%>
 > **Last Updated:** <%tp.date.now("YYYY-MM-DD")%>
 
 ---
@@ -399,19 +399,19 @@ FUNCTION make_decision(input: AgentInput) -> AgentOutput:
     # Step 1: Validate input
     IF NOT validate_input(input):
         RETURN error_response("Invalid input schema")
-    
+
     # Step 2: Extract features
     features = extract_features(input)
-    
+
     # Step 3: Apply decision rules
     score = 0.0
     triggered_rules = []
-    
+
     FOR EACH rule IN decision_rules:
         IF rule.condition(features):
             score += rule.weight
             triggered_rules.append(rule.name)
-    
+
     # Step 4: Determine decision
     IF score >= THRESHOLD_APPROVE:
         decision = "approve"
@@ -422,10 +422,10 @@ FUNCTION make_decision(input: AgentInput) -> AgentOutput:
     ELSE:
         decision = "escalate"
         confidence = 0.5
-    
+
     # Step 5: Generate rationale
     rationale = generate_explanation(decision, triggered_rules, features)
-    
+
     # Step 6: Return structured output
     RETURN AgentOutput(
         decision=decision,
@@ -456,12 +456,12 @@ END FUNCTION
 def rule_safety_check(context: dict) -> tuple[bool, float]:
     """
     Check if action endangers human safety.
-    
+
     Returns:
         (rule_triggered: bool, weight: float)
     """
     endangers_humans = context.get("endangers_humanity", False)
-    
+
     if endangers_humans:
         return (True, -100.0)  # Instant deny
     return (False, 0.0)
@@ -482,12 +482,12 @@ def rule_safety_check(context: dict) -> tuple[bool, float]:
 def rule_resource_validation(parameters: dict) -> tuple[bool, float]:
     """
     Validate resource availability before approving action.
-    
+
     Returns:
         (rule_triggered: bool, weight: float)
     """
     resource_id = parameters.get("resource_id")
-    
+
     if resource_exists(resource_id):
         return (True, 10.0)  # Positive weight
     return (False, 0.0)
@@ -512,25 +512,25 @@ def rule_resource_validation(parameters: dict) -> tuple[bool, float]:
 def calculate_confidence(score: float, rules_triggered: list[str]) -> float:
     """
     Calculate confidence based on score and rule consensus.
-    
+
     Formula:
         confidence = (base_score + rule_consensus_bonus) / max_possible_score
-    
+
     Args:
         score: Weighted sum of triggered rules
         rules_triggered: List of rule names that fired
-    
+
     Returns:
         Confidence score between 0.0 and 1.0
     """
     base_confidence = abs(score) / MAX_SCORE
-    
+
     # Bonus for multiple consistent rules
     if len(rules_triggered) >= 3:
         consensus_bonus = 0.1
     else:
         consensus_bonus = 0.0
-    
+
     return min(base_confidence + consensus_bonus, 1.0)
 ```
 
@@ -546,20 +546,20 @@ def calculate_confidence(score: float, rules_triggered: list[str]) -> float:
 class AgentName:
     """
     [Agent description and purpose.]
-    
+
     Attributes:
         config (dict): Agent configuration parameters
         rules (list): Loaded decision rules
         version (str): Agent version number
     """
-    
+
     def __init__(self, config: dict = None):
         """
         Initialize the agent.
-        
+
         Args:
             config (dict, optional): Configuration overrides
-        
+
         Raises:
             ValueError: If config is invalid
         """
@@ -659,16 +659,16 @@ from app.agents.agent_name import AgentName
 def execute_user_action(action: str, context: dict):
     # Initialize agent
     agent = AgentName()
-    
+
     # Request validation
     agent_input = {
         "action": action,
         "context": context,
         "parameters": {}
     }
-    
+
     result = agent.process(agent_input)
-    
+
     # Check decision
     if result["decision"] == "approve":
         # Execute action
@@ -693,10 +693,10 @@ from concurrent.futures import ThreadPoolExecutor
 
 def batch_process_actions(actions: list[dict]) -> list[dict]:
     agent = AgentName()
-    
+
     with ThreadPoolExecutor(max_workers=5) as executor:
         results = executor.map(agent.process, actions)
-    
+
     return list(results)
 ```
 
@@ -715,21 +715,21 @@ def multi_agent_pipeline(action: dict):
     # Stage 1: Safety oversight
     oversight = OversightAgent()
     safety_result = oversight.process(action)
-    
+
     if safety_result["decision"] == "deny":
         return {"status": "rejected", "stage": "oversight"}
-    
+
     # Stage 2: Input validation
     validator = ValidatorAgent()
     validation_result = validator.process(action)
-    
+
     if validation_result["decision"] != "approve":
         return {"status": "invalid", "stage": "validation"}
-    
+
     # Stage 3: Task planning
     planner = PlannerAgent()
     plan = planner.process(action)
-    
+
     return {"status": "approved", "plan": plan}
 ```
 
@@ -876,7 +876,7 @@ class TestAgentName:
     @pytest.fixture
     def agent(self):
         return AgentName()
-    
+
     def test_approve_decision(self, agent):
         """Test agent approves valid low-risk action."""
         input_data = {
@@ -884,12 +884,12 @@ class TestAgentName:
             "context": {"user_id": "user_123", "timestamp": "2026-04-20T14:30:00Z"},
             "parameters": {"file_path": "data/public/info.txt"}
         }
-        
+
         result = agent.process(input_data)
-        
+
         assert result["decision"] == "approve"
         assert result["confidence"] > 0.8
-    
+
     def test_deny_unsafe_action(self, agent):
         """Test agent denies action violating safety rules."""
         input_data = {
@@ -897,9 +897,9 @@ class TestAgentName:
             "context": {"user_id": "user_123", "timestamp": "2026-04-20T14:30:00Z"},
             "parameters": {"endangers_humanity": True}
         }
-        
+
         result = agent.process(input_data)
-        
+
         assert result["decision"] == "deny"
         assert "safety" in result["rationale"].lower()
 ```
@@ -922,18 +922,18 @@ class TestAgentName:
 def validate_against_four_laws(action: str, context: dict) -> tuple[bool, str]:
     """
     Validate action against Asimov's Four Laws.
-    
+
     Returns:
         (is_allowed: bool, reason: str)
     """
     # First Law: Harm to humans
     if context.get("endangers_humanity", False):
         return (False, "Violates First Law: Action endangers humans")
-    
+
     # Zeroth Law: Humanity's collective welfare
     if context.get("harms_collective", False):
         return (False, "Violates Zeroth Law: Harms humanity's welfare")
-    
+
     return (True, "Complies with Four Laws")
 ```
 
@@ -974,10 +974,9 @@ def validate_against_four_laws(action: str, context: dict) -> tuple[bool, str]:
 
 ---
 
-**Document Status:** <%`${await tp.system.prompt('Document status (draft/review/active):') || 'draft'}`%>  
-**Next Review Date:** [YYYY-MM-DD]  
+**Document Status:** <%`${await tp.system.prompt('Document status (draft/review/active):') || 'draft'}`%>
+**Next Review Date:** [YYYY-MM-DD]
 **Agent Maintainer:** <%tp.user.name || 'Agent Development Team'%>
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

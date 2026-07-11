@@ -1,8 +1,8 @@
 # Genesis Re-Anchoring: Sovereign Recovery Protocol
 
-**Version:** 1.0.0  
-**Branch:** 05-09-26-Structural-upgrades  
-**Status:** Active — Guarded Stub  
+**Version:** 1.0.0
+**Branch:** 05-09-26-Structural-upgrades
+**Status:** Active — Guarded Stub
 **Classification:** CRITICAL OPERATIONAL PROCEDURE
 
 ---
@@ -164,5 +164,5 @@ After a successful genesis re-anchoring:
 
 The current implementation is a **guarded stub**. The guard logic, audit trail, and result structure are production-grade. The actual continuity chain integration (wiring the new anchor into the live `StateBranchingProtector`) requires operational tooling specific to your deployment. The stub's output (`GenesisReanchorResult`) is the authoritative handoff point for that tooling.
 
-Source: `src/app/core/genesis_reanchor.py`  
+Source: `src/app/core/genesis_reanchor.py`
 Tests: `tests/test_genesis_reanchor.py` — 7/7 passing

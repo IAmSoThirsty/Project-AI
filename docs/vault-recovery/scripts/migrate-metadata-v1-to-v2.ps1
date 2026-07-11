@@ -5,13 +5,13 @@
 param(
     [Parameter(Mandatory=$false)]
     [string]$SourceDir = "T:\Project-AI-vault",
-    
+
     [Parameter(Mandatory=$false)]
     [switch]$DryRun,
-    
+
     [Parameter(Mandatory=$false)]
     [switch]$Backup,
-    
+
     [Parameter(Mandatory=$false)]
     [switch]$Verbose
 )
@@ -62,22 +62,22 @@ $newOptionalFields = @(
 # Migrate single file
 function Migrate-MetadataFile {
     param([string]$FilePath)
-    
+
     Write-Info "Migrating: $FilePath"
-    
+
     try {
         $content = Get-Content $FilePath -Raw
-        
+
         # Extract frontmatter
         if ($content -notmatch '(?s)^---\s*\n(.*?)\n---(.*)$') {
             Write-Warning-Custom "  ⚠ No frontmatter found, skipping"
             return $false
         }
-        
+
         $frontmatter = $matches[1]
         $body = $matches[2]
         $modified = $false
-        
+
         # Apply field migrations
         foreach ($oldField in $fieldMigrations.Keys) {
             $newField = $fieldMigrations[$oldField]
@@ -87,21 +87,21 @@ function Migrate-MetadataFile {
                 $modified = $true
             }
         }
-        
+
         # Add version if missing
         if ($frontmatter -notmatch 'version:') {
             $frontmatter += "`nversion: ""1.0.0"""
             Write-Verbose "  Added version field"
             $modified = $true
         }
-        
+
         # Add status if missing
         if ($frontmatter -notmatch 'status:') {
             $frontmatter += "`nstatus: active"
             Write-Verbose "  Added status field"
             $modified = $true
         }
-        
+
         # Add recommended v2 fields (commented out)
         if ($modified) {
             $recommendations = @"
@@ -116,7 +116,7 @@ function Migrate-MetadataFile {
 "@
             $frontmatter += $recommendations
         }
-        
+
         if ($modified) {
             if (-not $DryRun) {
                 $newContent = "---`n$frontmatter`n---$body"

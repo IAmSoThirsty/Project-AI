@@ -201,13 +201,13 @@ if not is_valid:
 
 1. **Zeroth Law**: Preserve continuity of Humanity
    - HYDRA-50 checks if action preserves humanity
-   
+
 2. **First Law**: Do not intentionally harm a human
    - Validates no direct human harm
-   
+
 3. **Second Law**: Obey humans unless it bypasses Zeroth/First
    - Ensures human oversight requirements
-   
+
 4. **Third Law**: Preserve system only insofar as it preserves humans
    - Prevents self-preservation over human safety
 
@@ -230,7 +230,7 @@ if scenario_severity >= 5:
             "ethical_considerations": ["resource_allocation", "privacy"]
         }
     )
-    
+
     # Wait for advisory
     while True:
         response = integration.council.get_advisory_response(advisory_id)
@@ -342,11 +342,11 @@ from app.core.hydra_50_deep_integration import (
 
 class CustomSystemIntegration:
     """Custom integration template"""
-    
+
     def __init__(self):
         self.integration_status = IntegrationStatus.DISCONNECTED
         self._connect()
-    
+
     def _connect(self):
         """Connect to your system"""
         try:
@@ -354,7 +354,7 @@ class CustomSystemIntegration:
             self.integration_status = IntegrationStatus.CONNECTED
         except Exception as e:
             logger.error(f"Connection failed: {e}")
-    
+
     def handle_scenario_event(self, event_data: Dict):
         """Handle HYDRA-50 events"""
         # Your event handling logic
@@ -438,17 +438,17 @@ from app.core.hydra_50_deep_integration import CerberusAgentIntegration
 
 def test_cerberus_integration():
     integration = CerberusAgentIntegration()
-    
+
     # Test connection
     assert integration.integration_status == IntegrationStatus.CONNECTED
-    
+
     # Test defense triggering
     result = integration.trigger_defense(
         incident_id="test_001",
         threat_type="test_threat",
         severity=5
     )
-    
+
     assert result['success']
     assert result['agents_spawned'] > 0
 ```
@@ -506,7 +506,7 @@ with optimizer.profiler.profile_operation("cerberus_defense"):
    ```python
    # Before
    engine.activate_scenario(scenario_id)
-   
+
    # After
    integration.handle_scenario_trigger(
        scenario_id=scenario_id,

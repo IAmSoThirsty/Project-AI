@@ -25,8 +25,8 @@ review_cycle: as-needed
 
 # Obsidian Vault Git Configuration Decision Matrix
 
-**Version:** 1.0  
-**Purpose:** Quick-reference decision guide for selecting appropriate Obsidian git strategy  
+**Version:** 1.0
+**Purpose:** Quick-reference decision guide for selecting appropriate Obsidian git strategy
 **Related:** VAULT_GIT_STRATEGY.md (comprehensive documentation)
 
 ---
@@ -88,9 +88,9 @@ review_cycle: as-needed
 | Binary file tracking (themes/plugins)  | ✅ None            | ⚠️ Some        | ✅ None (current)       |
 | Repository size                        | ✅ Minimal         | ⚠️ Larger      | ✅ Minimal (current)    |
 
-**Legend:**  
-✅ Ideal / Best choice  
-⚠️ Works with caveats / Requires discipline  
+**Legend:**
+✅ Ideal / Best choice
+⚠️ Works with caveats / Requires discipline
 ❌ Not recommended / Doesn't support
 
 ---
@@ -100,7 +100,7 @@ review_cycle: as-needed
 ### Scenario 1: Solo Developer Documentation
 **Context:** Single developer using Obsidian for project notes and architecture docs
 
-**Recommendation:** **Personal Vault** ✅  
+**Recommendation:** **Personal Vault** ✅
 **Rationale:**
 - No collaboration overhead
 - Complete workflow freedom
@@ -116,7 +116,7 @@ review_cycle: as-needed
 ### Scenario 2: Small Team (2-5 developers), Mixed Tooling
 **Context:** Some use Obsidian, others use VSCode/Notion/etc.
 
-**Recommendation:** **Personal Vault** ✅  
+**Recommendation:** **Personal Vault** ✅
 **Rationale:**
 - Avoid forcing Obsidian on entire team
 - Content is markdown (readable in any editor)
@@ -141,7 +141,7 @@ docs/
 ### Scenario 3: Documentation-First Team, Obsidian Standardized
 **Context:** Entire team uses Obsidian as primary docs tool, standardization required
 
-**Recommendation:** **Team Vault** ✅  
+**Recommendation:** **Team Vault** ✅
 **Rationale:**
 - Benefit from shared plugin ecosystem (Dataview, Templater, etc.)
 - Consistent documentation experience
@@ -166,7 +166,7 @@ git add .obsidian/templates/
 ### Scenario 4: Enterprise Knowledge Base (10+ contributors)
 **Context:** Large team, Obsidian Publish/Sync for documentation portal
 
-**Recommendation:** **Team Vault** ✅ with strict governance  
+**Recommendation:** **Team Vault** ✅ with strict governance
 **Rationale:**
 - Scale requires standardization
 - Plugin ecosystem critical for advanced features
@@ -223,8 +223,8 @@ git add .obsidian/templates/
 ## Anti-Patterns to Avoid
 
 ### ❌ Anti-Pattern 1: Tracking workspace.json
-**Symptom:** Constant merge conflicts on `workspace.json`  
-**Cause:** Personal workspace state being shared  
+**Symptom:** Constant merge conflicts on `workspace.json`
+**Cause:** Personal workspace state being shared
 **Fix:**
 ```gitignore
 # ALWAYS exclude
@@ -232,8 +232,8 @@ git add .obsidian/templates/
 ```
 
 ### ❌ Anti-Pattern 2: Tracking Plugin Data
-**Symptom:** User's plugin settings overwritten after pull  
-**Cause:** `plugins/*/data.json` tracked  
+**Symptom:** User's plugin settings overwritten after pull
+**Cause:** `plugins/*/data.json` tracked
 **Fix:**
 ```gitignore
 # Track manifest, not data
@@ -242,16 +242,16 @@ git add .obsidian/templates/
 ```
 
 ### ❌ Anti-Pattern 3: Inconsistent Strategy Across Branches
-**Symptom:** `.obsidian/` tracked in `main`, excluded in `develop`  
-**Cause:** Branch-specific `.gitignore` divergence  
+**Symptom:** `.obsidian/` tracked in `main`, excluded in `develop`
+**Cause:** Branch-specific `.gitignore` divergence
 **Fix:**
 - Standardize `.gitignore` across all branches
 - Document strategy in `VAULT_GIT_STRATEGY.md`
 - Use branch protection to prevent config drift
 
 ### ❌ Anti-Pattern 4: Forcing Obsidian on Team
-**Symptom:** PRs rejected due to "not using Obsidian templates"  
-**Cause:** Tool-specific workflow requirements  
+**Symptom:** PRs rejected due to "not using Obsidian templates"
+**Cause:** Tool-specific workflow requirements
 **Fix:**
 - Keep markdown content tool-agnostic
 - Provide VSCode/CLI alternatives for templates
@@ -343,7 +343,7 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 ### Audit .obsidian/ Contents
 ```powershell
 # List all files with sizes
-Get-ChildItem .obsidian -Recurse | 
+Get-ChildItem .obsidian -Recurse |
     Select-Object FullName, Length, LastWriteTime |
     Sort-Object Length -Descending |
     Format-Table -AutoSize

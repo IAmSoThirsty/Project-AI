@@ -7,7 +7,7 @@ tags:
 lastAccessedAt: 1777452893836
 ---
 
-**user**: So what can you do in terms of maintaining this vault? 
+**user**: So what can you do in terms of maintaining this vault?
 [Timestamp: 2026/04/29 01:54:42]
 
 **ai**: ### Curator Understanding
@@ -30,7 +30,7 @@ User inquiring about capabilities for vault maintenance (e.g., organization, upd
 - For structure overview: Say "show file tree" to trigger `getFileTree`.
 [Timestamp: 2026/04/29 01:54:57]
 
-**user**: Inventory the vault, find duplicates. Look for orphans, note path files that need need to be linked. Mark everything down that you see would or could be a problem even if it's pre-session. A pre existing problem doesn't exist. only known problems exist. 
+**user**: Inventory the vault, find duplicates. Look for orphans, note path files that need need to be linked. Mark everything down that you see would or could be a problem even if it's pre-session. A pre existing problem doesn't exist. only known problems exist.
 [Timestamp: 2026/04/29 02:26:08]
 
 **ai**: ### Curator Understanding
@@ -62,7 +62,7 @@ No content-based dupes/orphans confirmed (would need mass `readNote` – infeasi
 - **User**: Specify folder (e.g., "check duplicates in repo-docs/reports") or "search orphans via [[links]]". Confirm fixes before edits.
 [Timestamp: 2026/04/29 02:26:39]
 
-**user**: Proceed 
+**user**: Proceed
 [Timestamp: 2026/04/29 02:28:12]
 
 **ai**: ### Curator Understanding
@@ -78,7 +78,7 @@ No content-based dupes/orphans confirmed (would need mass `readNote` – infeasi
   | Unnamed/Generic | 5+ | Untitled.md, Untitled.canvas, Library.canvas |
   | Other | 10+ | README.md, project-ai-canvas.json, various .py/.sh |
 
-- **Duplicates (name-based, confirmed)**: 
+- **Duplicates (name-based, confirmed)**:
   - README.md (20+ instances across folders).
   - Main_Page_*.md in backups (94 timestamped copies).
   - No path conflicts; backups are isolated.
@@ -109,7 +109,7 @@ No content dupes/orphan links confirmed (needs backlink scan, unavailable).
 - **User**: Approve action? E.g., "Move AGENT_* to archives" → Propose `editFile`/`writeFile` batch. Or "focus on backups".
 [Timestamp: 2026/04/29 02:28:49]
 
-**user**: Somewhere during all this, make sure there is one central hub that literally connects to every last thing.  we will have gates that link together all files of a certain path. But  the God Tier Node of all nodes should not have a single unlinked file 
+**user**: Somewhere during all this, make sure there is one central hub that literally connects to every last thing.  we will have gates that link together all files of a certain path. But  the God Tier Node of all nodes should not have a single unlinked file
 [Timestamp: 2026/04/29 02:31:36]
 
 **ai**: ### Curator Understanding
@@ -141,7 +141,7 @@ Proceeding: Inventory confirmed (dupes/backups), orphans inferred. **Hub creatio
 - **User**: "Proceed with root move?" or "focus backups".
 [Timestamp: 2026/04/29 02:33:17]
 
-**user**: You are not keeping dupes. This is a read and check off job only. Do not implement changes unless I explicitly tell you to do so 
+**user**: You are not keeping dupes. This is a read and check off job only. Do not implement changes unless I explicitly tell you to do so
 [Timestamp: 2026/04/29 02:35:57]
 
 **ai**: ### Curator Understanding
@@ -180,7 +180,7 @@ Acknowledged: **Read-only mode**. No writes/edits. Inventory via prior `getFileT
 - User: "Check folder X" or "Explicitly approve change Y".
 [Timestamp: 2026/04/29 02:36:17]
 
-**user**: Now out of all these files, keep the most recent "advanced" edition. Now for same name files. How many of these contain different content? 
+**user**: Now out of all these files, keep the most recent "advanced" edition. Now for same name files. How many of these contain different content?
 [Timestamp: 2026/04/29 02:39:30]
 
 **ai**: ### Curator Understanding
@@ -200,7 +200,7 @@ Read-only analysis of same-name files (primarily README.md, ~20+ instances). Sam
   | repo-docs/internal/archive/session-notes/README.md | Archived notes (historical) | Short (1 chunk) | Yes |
 
 - **Others**: Untitled.md/canvas (root only, unique). No content dupes confirmed (name-based only).
-- **Most Recent "Advanced"**: 
+- **Most Recent "Advanced"**:
   - **Root README.md** (mtime: recent; detailed vault/security focus).
   - **repo-docs/README.md** (project hub; 100+ links).
   - Inference: Keep these; archive others (e.g., session-notes as historical).
@@ -215,7 +215,7 @@ Read-only analysis of same-name files (primarily README.md, ~20+ instances). Sam
 - User: "Approve keepers?" or "check [path] content". No changes without explicit OK.
 [Timestamp: 2026/04/29 02:40:12]
 
-**user**: Find and organize the readme files and change the names to match it's contents 
+**user**: Find and organize the readme files and change the names to match it's contents
 [Timestamp: 2026/04/29 02:42:45]
 
 **ai**: ### Curator Understanding
@@ -257,7 +257,7 @@ Read-only analysis of same-name files (primarily README.md, ~20+ instances). Sam
 - User: Explicit "proceed with [specifics]" to execute writes. No auto-changes.
 [Timestamp: 2026/04/29 02:43:35]
 
-**user**: Consolidate these files 
+**user**: Consolidate these files
 [Timestamp: 2026/04/29 02:51:24]
 
 **ai**: ### Curator Understanding
@@ -308,4 +308,3 @@ Embbed key: ![[readmes/Vault-Overview.md#Security]]
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

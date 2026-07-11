@@ -511,7 +511,7 @@ class LearningRequestManager:
         self._migrate_json_to_db()
         # Load requests from DB into memory
         self._load_requests()
-        
+
     def shutdown(self, wait: bool = True) -> None:
         """Gracefully stop background notifier and threadpool.
 

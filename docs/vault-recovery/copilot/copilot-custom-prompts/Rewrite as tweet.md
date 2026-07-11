@@ -13,4 +13,3 @@ Rewrite {} as a single tweet with these requirements:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -297,7 +297,7 @@ Generate constitutionally-compliant response.
 **Example:**
 ```python
 from app.core.constitutional_model import (
-    OpenRouterProvider, 
+    OpenRouterProvider,
     ConstitutionalRequest
 )
 
@@ -508,17 +508,17 @@ from app.core.constitutional_model import ConstitutionalModel
 class AIAssistantGUI:
     def __init__(self):
         self.model = ConstitutionalModel()
-    
+
     def send_message(self, prompt: str):
         response = self.model.chat(prompt, session_id=self.session_id)
-        
+
         # Display temporal awareness
         if response["temporal_awareness"]:
             self.display_system_message(response["temporal_awareness"])
-        
+
         # Display content
         self.display_ai_message(response["content"])
-        
+
         # Update session
         self.session_id = response["session_id"]
 ```
@@ -602,4 +602,3 @@ model.provider.octoreflex.set_strict_mode(False)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

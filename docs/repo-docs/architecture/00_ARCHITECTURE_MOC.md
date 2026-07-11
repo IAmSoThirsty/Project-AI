@@ -1,8 +1,8 @@
 # Architecture MOC - System Design & Technical Patterns
 
-> **📍 Location**: `docs/architecture/00_ARCHITECTURE_MOC.md`  
-> **🎯 Purpose**: Comprehensive architecture and design pattern navigation  
-> **👥 Audience**: Architects, senior engineers, technical leads  
+> **📍 Location**: `docs/architecture/00_ARCHITECTURE_MOC.md`
+> **🎯 Purpose**: Comprehensive architecture and design pattern navigation
+> **👥 Audience**: Architects, senior engineers, technical leads
 > **🔄 Status**: Production-Ready ✓
 
 ---
@@ -298,6 +298,6 @@ related_mocs:
 
 ---
 
-**MOC Version**: 1.0.0  
-**Last Updated**: 2025-01-20  
+**MOC Version**: 1.0.0
+**Last Updated**: 2025-01-20
 **Status**: Production-Ready ✓

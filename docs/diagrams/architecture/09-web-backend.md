@@ -11,7 +11,7 @@ graph TB
 
     subgraph "Backend API (Flask)"
         FLASK[Flask App<br/>Port 5000]
-        
+
         subgraph "Route Handlers"
             AUTH_ROUTE[/api/auth<br/>Login/Register]
             USER_ROUTE[/api/users<br/>User CRUD]
@@ -20,22 +20,22 @@ graph TB
             LEARNING_ROUTE[/api/learning<br/>Requests]
             IMAGE_ROUTE[/api/images<br/>Generation]
         end
-        
+
         subgraph "Middleware"
             CORS[CORS Handler<br/>Cross-Origin]
             AUTH_MW[Auth Middleware<br/>JWT Validation]
             RATE_MW[Rate Limiter<br/>Request Throttle]
             LOGGING_MW[Request Logger<br/>Audit Trail]
         end
-        
+
         BLUEPRINTS[Flask Blueprints<br/>Route Organization]
     end
 
     subgraph "Core Integration Layer"
         API_ADAPTER[API Adapter<br/>Desktop → Web Bridge]
-        
+
         CORE_WRAPPER[Core Systems Wrapper<br/>Async → Sync]
-        
+
         subgraph "Core Systems"
             UM_CORE[UserManager]
             PERSONA_CORE[AIPersona]
@@ -47,7 +47,7 @@ graph TB
 
     subgraph "Database Layer (PostgreSQL)"
         PG_CONN[PostgreSQL Connection<br/>psycopg2/SQLAlchemy]
-        
+
         USERS_DB[users table]
         SESSIONS_DB[sessions table]
         PERSONA_DB[ai_persona table]
@@ -257,10 +257,10 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.headers.get('Authorization')
-        
+
         if not token:
             return jsonify({'error': 'Token missing'}), 401
-        
+
         try:
             # Remove 'Bearer ' prefix
             token = token.split(' ')[1]
@@ -270,9 +270,9 @@ def token_required(f):
             return jsonify({'error': 'Token expired'}), 401
         except jwt.InvalidTokenError:
             return jsonify({'error': 'Invalid token'}), 401
-        
+
         return f(current_user, *args, **kwargs)
-    
+
     return decorated
 
 @auth_bp.route('/register', methods=['POST'])
@@ -280,21 +280,21 @@ def token_required(f):
 def register():
     """Create new user account"""
     data = request.get_json()
-    
+
     # Validate input
     if not data.get('username') or not data.get('password'):
         return jsonify({'error': 'Username and password required'}), 400
-    
+
     # Check if user exists
     if User.query.filter_by(username=data['username']).first():
         return jsonify({'error': 'Username already exists'}), 409
-    
+
     # Hash password
     password_hash = bcrypt.hashpw(
         data['password'].encode(),
         bcrypt.gensalt(rounds=12)
     ).decode()
-    
+
     # Create user
     user = User(
         username=data['username'],
@@ -302,7 +302,7 @@ def register():
     )
     db.session.add(user)
     db.session.commit()
-    
+
     return jsonify({
         'message': 'User created successfully',
         'user_id': user.id
@@ -313,42 +313,42 @@ def register():
 def login():
     """Authenticate user and generate JWT token"""
     data = request.get_json()
-    
+
     user = User.query.filter_by(username=data['username']).first()
-    
+
     if not user:
         return jsonify({'error': 'Invalid credentials'}), 401
-    
+
     # Check account lockout
     if user.locked_until and user.locked_until > datetime.now():
         return jsonify({
             'error': 'Account locked',
             'locked_until': user.locked_until.isoformat()
         }), 403
-    
+
     # Verify password
     if not bcrypt.checkpw(data['password'].encode(), user.password_hash.encode()):
         user.failed_attempts += 1
-        
+
         # Lock account after 5 failed attempts
         if user.failed_attempts >= 5:
             user.locked_until = datetime.now() + timedelta(minutes=30)
-        
+
         db.session.commit()
         return jsonify({'error': 'Invalid credentials'}), 401
-    
+
     # Reset failed attempts
     user.failed_attempts = 0
     user.last_login = datetime.now()
     db.session.commit()
-    
+
     # Generate JWT token
     token = jwt.encode({
         'user_id': user.id,
         'username': user.username,
         'exp': datetime.utcnow() + timedelta(hours=24)
     }, SECRET_KEY, algorithm='HS256')
-    
+
     # Create session
     session = Session(
         user_id=user.id,
@@ -357,7 +357,7 @@ def login():
     )
     db.session.add(session)
     db.session.commit()
-    
+
     return jsonify({
         'token': token,
         'user': {
@@ -371,12 +371,12 @@ def login():
 def logout(current_user):
     """Invalidate session"""
     token = request.headers.get('Authorization').split(' ')[1]
-    
+
     session = Session.query.filter_by(token=token).first()
     if session:
         db.session.delete(session)
         db.session.commit()
-    
+
     return jsonify({'message': 'Logged out successfully'}), 200
 ```
 
@@ -399,7 +399,7 @@ def get_chat_history(current_user):
     conversations = Conversation.query.filter_by(
         user_id=current_user.id
     ).order_by(Conversation.created_at.desc()).limit(50).all()
-    
+
     return jsonify({
         'conversations': [
             {
@@ -431,17 +431,17 @@ def handle_message(data):
     """Process user message and stream AI response"""
     user_id = data['user_id']
     message = data['message']
-    
+
     # Call intelligence engine
     intel_engine = IntelligenceEngineAdapter()
-    
+
     # Stream response in chunks
     for chunk in intel_engine.chat_stream(message):
         emit('message_chunk', {
             'content': chunk,
             'timestamp': datetime.now().isoformat()
         }, room=f'user_{user_id}')
-    
+
     # Send completion signal
     emit('message_complete', {
         'message_id': str(uuid.uuid4())
@@ -464,7 +464,7 @@ persona_bp = Blueprint('persona', __name__)
 def get_persona(current_user):
     """Get current AI persona state"""
     persona = AIPersonaAdapter(user_id=current_user.id)
-    
+
     return jsonify({
         'traits': persona.get_traits(),
         'current_mood': persona.get_current_mood(),
@@ -477,13 +477,13 @@ def get_persona(current_user):
 def update_traits(current_user):
     """Update personality traits"""
     data = request.get_json()
-    
+
     persona = AIPersonaAdapter(user_id=current_user.id)
-    
+
     for trait, value in data.items():
         if trait in persona.valid_traits:
             persona.update_trait(trait, value)
-    
+
     return jsonify({
         'message': 'Traits updated',
         'traits': persona.get_traits()
@@ -494,17 +494,17 @@ def update_traits(current_user):
 def set_mood(current_user):
     """Manually set AI mood"""
     data = request.get_json()
-    
+
     persona = AIPersonaAdapter(user_id=current_user.id)
     persona.set_mood(data['mood'])
-    
+
     # Broadcast mood change via WebSocket
     from app import socketio
     socketio.emit('mood_changed', {
         'user_id': current_user.id,
         'mood': data['mood']
     }, namespace='/persona', room=f'user_{current_user.id}')
-    
+
     return jsonify({
         'message': 'Mood updated',
         'current_mood': data['mood']
@@ -525,44 +525,44 @@ from app.core.image_generator import ImageGenerator
 
 class AIPersonaAdapter:
     """Adapter to use desktop AIPersona in web context"""
-    
+
     def __init__(self, user_id: int):
         self.user_id = user_id
         # Use user-specific data directory
         self.persona = AIPersona(data_dir=f'data/users/{user_id}/persona')
-    
+
     def get_traits(self) -> dict:
         return self.persona.traits
-    
+
     def update_trait(self, trait: str, value: int):
         self.persona.update_trait(trait, value)
-    
+
     def get_current_mood(self) -> str:
         return self.persona.get_current_mood()
-    
+
     def set_mood(self, mood: str):
         self.persona.set_mood(mood)
-    
+
     def get_mood_history(self, limit: int = 20) -> list:
         return self.persona.state["mood_history"][-limit:]
-    
+
     def get_interaction_count(self) -> int:
         return self.persona.state.get("interaction_count", 0)
 
 class IntelligenceEngineAdapter:
     """Adapter for IntelligenceEngine with streaming"""
-    
+
     def __init__(self):
         self.engine = IntelligenceEngine()
-    
+
     def chat(self, message: str) -> str:
         """Non-streaming chat"""
         return self.engine.chat(message)
-    
+
     def chat_stream(self, message: str):
         """Streaming chat (generator)"""
         response = self.engine.chat(message)
-        
+
         # Simulate streaming by yielding chunks
         chunk_size = 10
         for i in range(0, len(response), chunk_size):
@@ -570,35 +570,35 @@ class IntelligenceEngineAdapter:
 
 class ImageGeneratorAdapter:
     """Adapter for ImageGenerator"""
-    
+
     def __init__(self):
         self.generator = ImageGenerator()
-    
+
     async def generate(self, prompt: str, style: str = "photorealistic") -> dict:
         """Async wrapper for image generation"""
         image_path, metadata = self.generator.generate(
             prompt=prompt,
             style=style
         )
-        
+
         # Upload to S3
         s3_url = self._upload_to_s3(image_path)
-        
+
         return {
             'image_url': s3_url,
             'metadata': metadata
         }
-    
+
     def _upload_to_s3(self, local_path: str) -> str:
         """Upload image to S3 and return URL"""
         import boto3
-        
+
         s3 = boto3.client('s3')
         bucket = os.getenv('S3_BUCKET')
         key = f'images/{uuid.uuid4()}.png'
-        
+
         s3.upload_file(local_path, bucket, key)
-        
+
         return f'https://{bucket}.s3.amazonaws.com/{key}'
 ```
 
@@ -614,7 +614,7 @@ db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
@@ -623,14 +623,14 @@ class User(db.Model):
     locked_until = db.Column(db.DateTime)
     last_login = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean, default=True)
-    
+
     # Relationships
     sessions = db.relationship('Session', backref='user', lazy=True)
     persona = db.relationship('AIPersona', backref='user', uselist=False)
 
 class Session(db.Model):
     __tablename__ = 'sessions'
-    
+
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     token = db.Column(db.String(512), nullable=False)
@@ -639,7 +639,7 @@ class Session(db.Model):
 
 class AIPersona(db.Model):
     __tablename__ = 'ai_persona'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     traits = db.Column(db.JSON, nullable=False)
@@ -650,7 +650,7 @@ class AIPersona(db.Model):
 
 class Conversation(db.Model):
     __tablename__ = 'conversations'
-    
+
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     messages = db.Column(db.JSON, nullable=False)  # Array of {role, content, timestamp}
@@ -690,10 +690,10 @@ apiClient.interceptors.request.use(
 export const authAPI = {
   register: (username, password) =>
     apiClient.post('/auth/register', { username, password }),
-  
+
   login: (username, password) =>
     apiClient.post('/auth/login', { username, password }),
-  
+
   logout: () =>
     apiClient.post('/auth/logout')
 };
@@ -702,10 +702,10 @@ export const authAPI = {
 export const personaAPI = {
   getPersona: () =>
     apiClient.get('/persona'),
-  
+
   updateTraits: (traits) =>
     apiClient.put('/persona/traits', traits),
-  
+
   setMood: (mood) =>
     apiClient.post('/persona/mood', { mood })
 };
@@ -728,37 +728,37 @@ class SocketService {
   constructor() {
     this.socket = null;
   }
-  
+
   connect(userId) {
     this.socket = io(`${SOCKET_URL}/chat`, {
       auth: {
         token: localStorage.getItem('token')
       }
     });
-    
+
     this.socket.on('connect', () => {
       console.log('Connected to chat server');
       this.socket.emit('join', { user_id: userId });
     });
-    
+
     return this.socket;
   }
-  
+
   sendMessage(userId, message) {
     this.socket.emit('send_message', {
       user_id: userId,
       message: message
     });
   }
-  
+
   onMessageChunk(callback) {
     this.socket.on('message_chunk', callback);
   }
-  
+
   onMessageComplete(callback) {
     this.socket.on('message_complete', callback);
   }
-  
+
   disconnect() {
     if (this.socket) {
       this.socket.disconnect();

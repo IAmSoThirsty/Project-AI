@@ -12,27 +12,27 @@ package "TIER 1: GOVERNANCE" {
     [IdentityEngine] as IE
     [AuditTrail] as AT
     [PolicyEngine] as PE
-    
+
     note right of CK
         **Intent Detection**
         • ML-based classification (30+ intents)
         • Context enrichment
         • Entity extraction (NER)
         • Semantic parsing
-        
+
         Performance: < 200ms (P95)
     end note
-    
+
     note right of GT
         **Triumvirate Validation**
         • Galahad (Ethics - Asimov's Laws)
         • Cerberus (Security - Threat Detection)
         • Codex Deus Maximus (Policy - Final Authority)
-        
+
         Unanimous approval required
         Performance: < 100ms (P95)
     end note
-    
+
     note right of ME
         **Five-Channel Recording**
         1. Attempt - Initial request
@@ -40,7 +40,7 @@ package "TIER 1: GOVERNANCE" {
         3. Result - Execution output
         4. Reflection - Analysis
         5. Error - Failures
-        
+
         Performance: < 50ms (P95)
     end note
 }
@@ -52,7 +52,7 @@ package "TIER 2: INFRASTRUCTURE" {
     [CacheLayer] as CL
     [MessageQueue] as MQ
     [ObjectStore] as OS
-    
+
     note right of ES
         **Agent Orchestration**
         • Dynamic agent selection
@@ -60,7 +60,7 @@ package "TIER 2: INFRASTRUCTURE" {
         • Timeout management (60s default)
         • Result aggregation
         • Agent pooling
-        
+
         30+ specialized agents
     end note
 }
@@ -72,7 +72,7 @@ package "TIER 3: APPLICATION" {
     [CLI Interface] as CLI
     [Plugin System] as PS
     [WebSocket API] as WS
-    
+
     note right of AS
         **Agent Categories**
         • Core: Intelligence, Learning, Command
@@ -80,7 +80,7 @@ package "TIER 3: APPLICATION" {
         • Utility: Image, Location, Emergency
         • Custom: User-defined plugins
     end note
-    
+
     note right of GUI
         **PyQt6 Desktop**
         • Leather Book Interface
@@ -98,20 +98,20 @@ package "DATA TIER" {
         [Audit Trail]
         [Sessions]
     }
-    
+
     database "Redis Cache" as RC {
         [Hot Data]
         [Sessions]
         [Rate Limits]
         [Latest Hashes]
     }
-    
+
     database "RabbitMQ" as RMQ {
         [Job Queue]
         [Event Bus]
         [Dead Letter Queue]
     }
-    
+
     database "MinIO/S3" as S3 {
         [Files]
         [Archives]

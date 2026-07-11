@@ -1,9 +1,9 @@
 # Dataview Query Library
 
-**Version:** 1.0.0  
-**Created:** 2026-04-20  
-**Author:** AGENT-038 (Dataview Query Library Specialist)  
-**Status:** Production  
+**Version:** 1.0.0
+**Created:** 2026-04-20
+**Author:** AGENT-038 (Dataview Query Library Specialist)
+**Status:** Production
 **Purpose:** Comprehensive library of 25+ production-ready Dataview queries for vault navigation and analysis
 
 ---
@@ -37,7 +37,7 @@ const minTags = 2; // Must have at least N tags from list
 const pages = dv.pages()
     .where(p => {
         if (!p.tags || p.tags.length === 0) return false;
-        const matchCount = tags.filter(tag => 
+        const matchCount = tags.filter(tag =>
             p.tags.some(t => t.includes(tag))
         ).length;
         return matchCount >= minTags;
@@ -80,7 +80,7 @@ const targetStatus = "review"; // Options: draft, review, active, deprecated, ar
 const pages = dv.pages()
     .where(p => {
         // Check priority (can be in tags or frontmatter)
-        const hasPriority = p.priority === targetPriority || 
+        const hasPriority = p.priority === targetPriority ||
                            (p.tags && p.tags.some(t => t.includes(targetPriority)));
         return hasPriority && p.status === targetStatus;
     })
@@ -89,8 +89,8 @@ const pages = dv.pages()
 dv.table(
     ["Document", "Type", "Owner", "Updated", "Age (days)"],
     pages.map(p => {
-        const age = p.updated_date ? 
-            Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24)) : 
+        const age = p.updated_date ?
+            Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24)) :
             "Unknown";
         return [
             p.file.link,
@@ -135,7 +135,7 @@ const pages = dv.pages()
     .where(p => {
         if (excludeDrafts && p.status === "draft") return false;
         if (!p.updated_date) return false;
-        
+
         const updateDate = new Date(p.updated_date);
         return updateDate >= cutoffDate;
     })
@@ -201,7 +201,7 @@ for (const page of allPages) {
 const orphans = allPages
     .where(p => {
         // Exclude index pages and special directories
-        if (p.file.path.includes("_indexes/") || 
+        if (p.file.path.includes("_indexes/") ||
             p.file.path.includes("templates/") ||
             p.file.name.includes("INDEX")) {
             return false;
@@ -292,12 +292,12 @@ const maxDepth = 3;
 function getDependencies(docPath, depth = 0, visited = new Set()) {
     if (depth >= maxDepth || visited.has(docPath)) return [];
     visited.add(docPath);
-    
+
     const page = dv.page(docPath);
     if (!page) return [];
-    
+
     const deps = [];
-    
+
     // Check related_docs
     if (page.related_docs && Array.isArray(page.related_docs)) {
         for (const relDoc of page.related_docs) {
@@ -313,7 +313,7 @@ function getDependencies(docPath, depth = 0, visited = new Set()) {
             }
         }
     }
-    
+
     // Check dependencies field
     if (page.dependencies && Array.isArray(page.dependencies)) {
         for (const dep of page.dependencies) {
@@ -325,7 +325,7 @@ function getDependencies(docPath, depth = 0, visited = new Set()) {
             });
         }
     }
-    
+
     return deps;
 }
 
@@ -367,7 +367,7 @@ if (dependencies.length > 0) {
 function findCycles(pages) {
     const graph = new Map();
     const cycles = [];
-    
+
     // Build graph
     for (const page of pages) {
         const links = [];
@@ -379,13 +379,13 @@ function findCycles(pages) {
         }
         graph.set(page.file.path, links);
     }
-    
+
     // DFS to find cycles
     function dfs(node, visited, recStack, path) {
         visited.add(node);
         recStack.add(node);
         path.push(node);
-        
+
         const neighbors = graph.get(node) || [];
         for (const neighbor of neighbors) {
             if (!visited.has(neighbor)) {
@@ -401,18 +401,18 @@ function findCycles(pages) {
                 return true;
             }
         }
-        
+
         recStack.delete(node);
         return false;
     }
-    
+
     const visited = new Set();
     for (const [node] of graph) {
         if (!visited.has(node)) {
             dfs(node, visited, new Set(), []);
         }
     }
-    
+
     return cycles;
 }
 
@@ -421,7 +421,7 @@ const cycles = findCycles(allPages);
 
 if (cycles.length > 0) {
     dv.header(3, `⚠️ Found ${cycles.length} circular dependency chains`);
-    
+
     for (let i = 0; i < cycles.length; i++) {
         dv.header(4, `Cycle ${i + 1}:`);
         dv.list(cycles[i].map(path => {
@@ -461,20 +461,20 @@ const currentDoc = dv.current();
 function getSupersessionChain(page, direction = 'backward') {
     const chain = [page];
     let current = page;
-    
+
     while (current) {
         const field = direction === 'backward' ? 'supersedes' : 'superseded_by';
         const nextId = current[field];
-        
+
         if (!nextId) break;
-        
+
         const nextPage = dv.pages().where(p => p.id === nextId).first();
         if (!nextPage || chain.includes(nextPage)) break;
-        
+
         chain.push(nextPage);
         current = nextPage;
     }
-    
+
     return direction === 'backward' ? chain.reverse() : chain;
 }
 
@@ -548,7 +548,7 @@ for (const page of complianceDocs) {
 for (const framework of targetFrameworks) {
     const docs = coverageMap[framework];
     dv.header(3, `${framework} Coverage (${docs.length} documents)`);
-    
+
     if (docs.length > 0) {
         dv.table(
             ["Document", "Type", "Status", "Compliance Status", "Priority"],
@@ -596,21 +596,21 @@ const targetOwner = "security-team"; // Can be person name or team name
 const pages = dv.pages()
     .where(p => {
         // Check author field
-        const authorMatch = p.author === targetOwner || 
+        const authorMatch = p.author === targetOwner ||
                            p.author?.name === targetOwner ||
                            p.author?.github === targetOwner;
-        
+
         // Check contributors
-        const contributorMatch = p.contributors && 
-                               p.contributors.some(c => 
-                                   c === targetOwner || 
+        const contributorMatch = p.contributors &&
+                               p.contributors.some(c =>
+                                   c === targetOwner ||
                                    c.name === targetOwner ||
                                    c.github === targetOwner
                                );
-        
+
         // Check custom owner field
         const ownerMatch = p.owner === targetOwner;
-        
+
         return authorMatch || contributorMatch || ownerMatch;
     })
     .sort(p => p.status === "active" ? 0 : 1);
@@ -668,13 +668,13 @@ const pages = dv.pages()
     .where(p => {
         // Check status field
         if (p.status === "review") return true;
-        
+
         // Check review_status field
         if (p.review_status) {
             if (p.review_status.reviewed === false) return true;
             if (p.review_status.status === "pending") return true;
         }
-        
+
         return false;
     })
     .sort(p => p.updated_date, 'asc'); // Oldest first
@@ -682,11 +682,11 @@ const pages = dv.pages()
 dv.table(
     ["Document", "Type", "Author", "Updated", "Age (days)", "Reviewer"],
     pages.map(p => {
-        const age = p.updated_date ? 
-            Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24)) : 
+        const age = p.updated_date ?
+            Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24)) :
             "Unknown";
         const reviewer = p.review_status?.reviewer || p.review_status?.assigned_to || "Unassigned";
-        
+
         return [
             p.file.link,
             p.type || "Unknown",
@@ -704,7 +704,7 @@ if (pages.length > 0) {
         const age = Math.floor((Date.now() - new Date(p.updated_date).getTime()) / (1000 * 60 * 60 * 24));
         return age > 7;
     });
-    
+
     if (oldDocs.length > 0) {
         dv.header(4, `⚠️ ${oldDocs.length} documents pending review for >7 days`);
     }
@@ -740,9 +740,9 @@ const readyToArchive = [];
 for (const doc of deprecatedDocs) {
     const ageMs = Date.now() - new Date(doc.updated_date || doc.created_date).getTime();
     const ageDays = Math.floor(ageMs / (1000 * 60 * 60 * 24));
-    
+
     const hasReplacement = doc.superseded_by !== undefined && doc.superseded_by !== null;
-    
+
     if (ageDays > 180) {
         // Deprecated for >6 months, ready to archive
         readyToArchive.push({ doc, ageDays, hasReplacement });
@@ -774,8 +774,8 @@ if (readyToArchive.length > 0) {
             item.doc.file.link,
             item.doc.type || "Unknown",
             item.ageDays,
-            item.hasReplacement ? 
-                `[[${item.doc.superseded_by}]]` : 
+            item.hasReplacement ?
+                `[[${item.doc.superseded_by}]]` :
                 "No replacement"
         ])
     );
@@ -843,15 +843,15 @@ for (const page of complianceDocs) {
 for (const [framework, data] of Object.entries(coverage)) {
     const missing = data.required.filter(c => !data.covered.has(c));
     const coveragePercent = Math.round((data.covered.size / data.required.length) * 100);
-    
+
     dv.header(3, `${framework} - ${coveragePercent}% coverage (${data.docs.length} docs)`);
-    
+
     if (missing.length > 0) {
         dv.paragraph(`⚠️ **Missing controls:** ${missing.join(", ")}`);
     } else {
         dv.paragraph(`✅ All required controls documented`);
     }
-    
+
     if (data.docs.length > 0) {
         dv.paragraph(`**Covering documents:** ${data.docs.map(d => d.file.link).join(", ")}`);
     }
@@ -884,7 +884,7 @@ for (const [framework, data] of Object.entries(coverage)) {
 // Track component implementation status
 const components = [
     "authentication",
-    "authorization", 
+    "authorization",
     "data-layer",
     "api-gateway",
     "frontend-ui",
@@ -924,16 +924,16 @@ for (const page of allPages) {
 const statusData = components.map(comp => {
     const data = componentStatus[comp];
     const docCount = data.docs.length;
-    
+
     if (docCount === 0) {
         return [comp, "❌ Not Started", 0, "-", "-"];
     }
-    
+
     // Calculate overall status
     const activeDocs = data.docs.filter(d => d.status === "active").length;
     const draftDocs = data.docs.filter(d => d.status === "draft").length;
     const reviewDocs = data.docs.filter(d => d.status === "review").length;
-    
+
     let status = "";
     if (activeDocs === docCount) {
         status = "✅ Complete";
@@ -944,9 +944,9 @@ const statusData = components.map(comp => {
     } else {
         status = "🟠 Draft";
     }
-    
+
     const completion = Math.round((activeDocs / docCount) * 100);
-    
+
     return [
         comp,
         status,
@@ -993,10 +993,10 @@ const features = dv.pages()
 // Extract feature status from custom fields or tags
 const featureData = features.map(f => {
     // Look for implementation status in various fields
-    const implStatus = f.implementation_status || 
+    const implStatus = f.implementation_status ||
                       f.development_status ||
                       f.status;
-    
+
     // Calculate completion based on checklist or custom field
     let completion = 0;
     if (f.implementation_progress) {
@@ -1005,7 +1005,7 @@ const featureData = features.map(f => {
         const completedTasks = f.tasks.filter(t => t.status === "done" || t.status === "completed").length;
         completion = Math.round((completedTasks / f.tasks.length) * 100);
     }
-    
+
     return {
         name: f.file.name,
         link: f.file.link,
@@ -1022,7 +1022,7 @@ featureData.sort((a, b) => a.completion - b.completion);
 dv.table(
     ["Feature", "Status", "Progress", "Owner", "Last Updated"],
     featureData.map(f => {
-        const progressBar = "█".repeat(Math.floor(f.completion / 10)) + 
+        const progressBar = "█".repeat(Math.floor(f.completion / 10)) +
                           "░".repeat(10 - Math.floor(f.completion / 10));
         return [
             f.link,
@@ -1067,10 +1067,10 @@ const coverageByComponent = {};
 
 for (const doc of techDocs) {
     const tags = doc.tags || [];
-    const component = tags.find(t => 
+    const component = tags.find(t =>
         ["authentication", "authorization", "api", "frontend", "backend", "database"].includes(t)
     ) || "other";
-    
+
     if (!coverageByComponent[component]) {
         coverageByComponent[component] = {
             docs: [],
@@ -1078,7 +1078,7 @@ for (const doc of techDocs) {
             count: 0
         };
     }
-    
+
     // Extract coverage percentage
     let coverage = 0;
     if (typeof doc.test_coverage === 'number') {
@@ -1089,7 +1089,7 @@ for (const doc of techDocs) {
         const passedTests = doc.tests.filter(t => t.status === "passed" || t.status === "pass").length;
         coverage = Math.round((passedTests / doc.tests.length) * 100);
     }
-    
+
     coverageByComponent[component].docs.push({
         doc: doc,
         coverage: coverage
@@ -1200,16 +1200,16 @@ const severityOrder = ["critical", "high", "medium", "low", "info", "unknown"];
 for (const severity of severityOrder) {
     const items = bySeverity[severity];
     if (items.length === 0) continue;
-    
+
     const openItems = items.filter(f => f.status !== "resolved" && f.status !== "closed");
     const icon = severity === "critical" ? "🔴" :
                 severity === "high" ? "🟠" :
                 severity === "medium" ? "🟡" :
                 severity === "low" ? "🔵" :
                 "⚪";
-    
+
     dv.header(3, `${icon} ${severity.toUpperCase()} (${openItems.length} open / ${items.length} total)`);
-    
+
     if (openItems.length > 0) {
         dv.table(
             ["Finding", "Status", "Source", "Reported"],
@@ -1223,7 +1223,7 @@ for (const severity of severityOrder) {
     }
 }
 
-const totalOpen = Object.values(bySeverity).flat().filter(f => 
+const totalOpen = Object.values(bySeverity).flat().filter(f =>
     f.status !== "resolved" && f.status !== "closed"
 ).length;
 
@@ -1376,16 +1376,16 @@ const needsAttention = dv.pages()
     .where(p => {
         // Must be active (not deprecated/archived)
         if (p.status !== "active" && p.status !== "review") return false;
-        
+
         // Check if stale
         const updateDate = p.updated_date ? new Date(p.updated_date) : null;
         const isStale = updateDate && updateDate < cutoffDate;
-        
+
         // Check if high priority
-        const isHighPriority = p.priority === "critical" || 
+        const isHighPriority = p.priority === "critical" ||
                               p.priority === "high" ||
                               (p.tags && (p.tags.includes("critical") || p.tags.includes("high")));
-        
+
         return isStale && isHighPriority;
     })
     .sort(p => p.updated_date, 'asc'); // Oldest first
@@ -1405,7 +1405,7 @@ if (needsAttention.length > 0) {
             ];
         })
     );
-    
+
     dv.header(4, `⚠️ ${needsAttention.length} high-priority documents haven't been updated in ${staleDays}+ days`);
 } else {
     dv.header(4, `✅ All high-priority documents are up to date`);
@@ -1520,20 +1520,20 @@ const metrics = {
 
 for (const page of allPages) {
     let pageScore = 0;
-    
+
     // Check required fields (10 points each)
     if (page.title || page.file.name) { metrics.hasTitle++; pageScore += 10; }
     if (page.id) { metrics.hasId++; pageScore += 10; }
     if (page.type) { metrics.hasType++; pageScore += 10; }
     if (page.status) { metrics.hasStatus++; pageScore += 10; }
     if (page.author) { metrics.hasAuthor++; pageScore += 10; }
-    
+
     // Check recommended fields (10 points each)
     if (page.tags && page.tags.length > 0) { metrics.hasTags++; pageScore += 10; }
-    if (page.updated_date) { 
-        metrics.hasUpdatedDate++; 
+    if (page.updated_date) {
+        metrics.hasUpdatedDate++;
         pageScore += 10;
-        
+
         // Bonus for recent updates (10 points)
         const daysSinceUpdate = (Date.now() - new Date(page.updated_date).getTime()) / (1000 * 60 * 60 * 24);
         if (daysSinceUpdate <= 180) {
@@ -1541,15 +1541,15 @@ for (const page of allPages) {
             pageScore += 10;
         }
     }
-    
+
     // Check for links (10 points)
     const hasOutlinks = page.file.outlinks && page.file.outlinks.length > 0;
     const hasRelated = page.related_docs && page.related_docs.length > 0;
     if (hasOutlinks || hasRelated) { metrics.hasLinks++; pageScore += 10; }
-    
+
     // Check for review status (10 points)
     if (page.review_status) { metrics.hasReview++; pageScore += 10; }
-    
+
     totalScore += pageScore;
 }
 
@@ -1557,7 +1557,7 @@ const overallHealth = Math.round((totalScore / maxScore) * 100);
 
 dv.header(3, `📈 Documentation Health Score: ${overallHealth}%`);
 
-const progressBar = "█".repeat(Math.floor(overallHealth / 5)) + 
+const progressBar = "█".repeat(Math.floor(overallHealth / 5)) +
                    "░".repeat(20 - Math.floor(overallHealth / 5));
 dv.paragraph(`${progressBar} ${overallHealth}%`);
 
@@ -1616,7 +1616,7 @@ for (const type1 of documentTypes) {
 const allPages = dv.pages();
 for (const page of allPages) {
     if (!page.type || !documentTypes.includes(page.type)) continue;
-    
+
     // Check related_docs
     if (page.related_docs && Array.isArray(page.related_docs)) {
         for (const relId of page.related_docs) {
@@ -1680,9 +1680,9 @@ const allPages = dv.pages()
 
 for (const page of allPages) {
     if (!page.updated_date) continue;
-    
+
     const daysSinceUpdate = Math.floor((now - new Date(page.updated_date).getTime()) / (1000 * 60 * 60 * 24));
-    
+
     // Determine priority level
     let priority = "normal";
     if (page.priority === "critical" || (page.tags && page.tags.includes("critical"))) {
@@ -1690,7 +1690,7 @@ for (const page of allPages) {
     } else if (page.priority === "high" || (page.tags && page.tags.includes("high"))) {
         priority = "high";
     }
-    
+
     // Check against threshold
     if (daysSinceUpdate > thresholds[priority]) {
         alerts[priority].push({
@@ -1763,8 +1763,8 @@ if (alerts.critical.length === 0 && alerts.high.length === 0 && alerts.normal.le
 ```dataviewjs
 // Documentation roadmap (drafts, review, and planned docs)
 const roadmapDocs = dv.pages()
-    .where(p => 
-        p.status === "draft" || 
+    .where(p =>
+        p.status === "draft" ||
         p.status === "review" ||
         p.status === "planned" ||
         (p.tags && p.tags.some(t => t.includes("planned") || t.includes("wip")))
@@ -1794,11 +1794,11 @@ dv.header(3, `🗺️ Documentation Roadmap (${roadmapDocs.length} initiatives)`
 
 for (const [status, docs] of Object.entries(byStatus)) {
     if (docs.length === 0) continue;
-    
+
     const icon = status === "planned" ? "📋" :
                 status === "draft" ? "✏️" :
                 "👁️";
-    
+
     dv.header(4, `${icon} ${status.toUpperCase()} (${docs.length})`);
     dv.table(
         ["Document", "Type", "Owner", "Target Date", "Progress"],
@@ -1962,7 +1962,7 @@ const params = {
 };
 
 const results = dv.pages()
-    .where(p => 
+    .where(p =>
         (p.tags && p.tags.includes(params.tag)) &&
         p.status === params.status &&
         (p.file.outlinks || []).length >= params.minLinks
@@ -1981,7 +1981,7 @@ const groups = dv.pages()
 
 for (const group of groups) {
     dv.header(3, `${group.key} (${group.rows.length})`);
-    
+
     if (group.rows.length <= 10) {
         // Show all if small group
         dv.list(group.rows.map(p => p.file.link));
@@ -2005,7 +2005,7 @@ const safeData = pages.map(p => ({
     tags: Array.isArray(p.tags) ? p.tags : []
 }));
 
-dv.table(["Doc", "Status", "Date", "Tags"], 
+dv.table(["Doc", "Status", "Date", "Tags"],
     safeData.map(d => [d.link, d.status, d.date, d.tags.join(", ")]));
 ```
 
@@ -2057,4 +2057,3 @@ To add new queries to this library:
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

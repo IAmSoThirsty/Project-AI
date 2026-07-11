@@ -188,7 +188,7 @@ Tests:
 - ✓ Save points system
 - ✓ Legion API
 - ✓ Android configuration
-- ✓ Desktop configuration  
+- ✓ Desktop configuration
 - ✓ Gradle build system
 
 ### Manual Testing Checklist

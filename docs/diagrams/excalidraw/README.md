@@ -320,6 +320,6 @@ For diagram-related questions:
 
 ---
 
-**Last Updated:** 2026-01-25  
-**Maintainer:** Architecture Team  
+**Last Updated:** 2026-01-25
+**Maintainer:** Architecture Team
 **Version:** 1.0.0

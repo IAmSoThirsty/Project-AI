@@ -1,8 +1,8 @@
 # Obsidian Configuration Guide
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Configured By:** AGENT-008  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Configured By:** AGENT-008
 **Total Settings:** 120+ explicitly configured
 
 ---
@@ -40,14 +40,14 @@ This comprehensive configuration provides production-ready settings for the Proj
 
 ### Key Features
 
-✅ **Auto-save** every 10 seconds  
-✅ **Link auto-completion** for faster note creation  
-✅ **Live preview** for WYSIWYG editing  
-✅ **Line numbers** for code blocks  
-✅ **Readable line length** (45 columns for optimal readability)  
-✅ **System trash** integration (safe file deletion)  
-✅ **Performance caching** enabled for backlinks and search  
-✅ **Security sandboxing** for community plugins  
+✅ **Auto-save** every 10 seconds
+✅ **Link auto-completion** for faster note creation
+✅ **Live preview** for WYSIWYG editing
+✅ **Line numbers** for code blocks
+✅ **Readable line length** (45 columns for optimal readability)
+✅ **System trash** integration (safe file deletion)
+✅ **Performance caching** enabled for backlinks and search
+✅ **Security sandboxing** for community plugins
 
 ---
 
@@ -59,7 +59,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "$schema": "https://raw.githubusercontent.com/obsidianmd/obsidian-api/master/obsidian.d.ts"
 ```
 
-**Purpose:** Enables IDE auto-completion and validation for the configuration file.  
+**Purpose:** Enables IDE auto-completion and validation for the configuration file.
 **Impact:** Reduces configuration errors, improves maintainability.
 
 ### Version Tracking
@@ -70,7 +70,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "configuredBy": "AGENT-008"
 ```
 
-**Purpose:** Tracks configuration versioning for change management.  
+**Purpose:** Tracks configuration versioning for change management.
 **Usage:** Update `lastModified` when making changes; increment `version` for breaking changes.
 
 ### Always Update Links
@@ -79,8 +79,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "alwaysUpdateLinks": true
 ```
 
-**Purpose:** Automatically updates all internal links when renaming or moving files.  
-**Impact:** Prevents broken links, maintains graph integrity.  
+**Purpose:** Automatically updates all internal links when renaming or moving files.
+**Impact:** Prevents broken links, maintains graph integrity.
 **Performance Cost:** Minimal (<100ms for typical renames).
 
 ### Attachment Folder Path
@@ -89,8 +89,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "attachmentFolderPath": "attachments"
 ```
 
-**Purpose:** Centralizes all media files (images, PDFs, videos) in a dedicated folder.  
-**Benefits:** Cleaner vault structure, easier backup/sync.  
+**Purpose:** Centralizes all media files (images, PDFs, videos) in a dedicated folder.
+**Benefits:** Cleaner vault structure, easier backup/sync.
 **Alternative:** Use `./` for same-folder storage or `attachments/${filename}` for per-note folders.
 
 ### Auto-Convert HTML
@@ -99,8 +99,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "autoConvertHtml": true
 ```
 
-**Purpose:** Automatically converts pasted HTML to Markdown.  
-**Use Case:** Copying content from web browsers or rich text editors.  
+**Purpose:** Automatically converts pasted HTML to Markdown.
+**Use Case:** Copying content from web browsers or rich text editors.
 **Security:** HTML is sanitized before conversion (see Security Settings).
 
 ### Auto-Pair Brackets
@@ -110,7 +110,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "autoPairMarkdown": true
 ```
 
-**Purpose:** Automatically closes brackets, parentheses, and Markdown syntax.  
+**Purpose:** Automatically closes brackets, parentheses, and Markdown syntax.
 **Behavior:**
 - `(` → `(|)` (cursor positioned inside)
 - `[` → `[|]`
@@ -122,8 +122,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "autoSaveInterval": 10000
 ```
 
-**Purpose:** Saves changes every 10 seconds (10,000ms).  
-**Rationale:** Balances data safety with performance.  
+**Purpose:** Saves changes every 10 seconds (10,000ms).
+**Rationale:** Balances data safety with performance.
 **Alternative Values:**
 - `5000` - More aggressive (every 5s)
 - `30000` - Conservative (every 30s)
@@ -140,8 +140,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "baseFontSizeAction": true
 ```
 
-**Purpose:** Sets the default font size to 16px for optimal readability.  
-**WCAG Compliance:** Meets WCAG 2.1 AA minimum contrast and size requirements.  
+**Purpose:** Sets the default font size to 16px for optimal readability.
+**WCAG Compliance:** Meets WCAG 2.1 AA minimum contrast and size requirements.
 **Adjustment:** Users can zoom with `Ctrl +/-` when `baseFontSizeAction` is enabled.
 
 ### Font Families
@@ -175,8 +175,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "cssTheme": ""
 ```
 
-**Purpose:** Uses the default Obsidian dark theme.  
-**Customization:** Set `cssTheme` to a community theme name (e.g., `"Minimal"`) or leave empty for default.  
+**Purpose:** Uses the default Obsidian dark theme.
+**Customization:** Set `cssTheme` to a community theme name (e.g., `"Minimal"`) or leave empty for default.
 **Fallback:** If specified theme is unavailable, falls back to `"obsidian"`.
 
 ### Accent Color
@@ -187,8 +187,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 }
 ```
 
-**Purpose:** Sets the primary UI accent color to violet (#7c3aed).  
-**Usage:** Highlights active tabs, buttons, and interactive elements.  
+**Purpose:** Sets the primary UI accent color to violet (#7c3aed).
+**Usage:** Highlights active tabs, buttons, and interactive elements.
 **Customization:** Use any hex color code or CSS color name.
 
 ### Translucency
@@ -197,8 +197,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "translucency": false
 ```
 
-**Purpose:** Disables window translucency effects.  
-**Rationale:** Improves performance on lower-end systems and reduces visual distractions.  
+**Purpose:** Disables window translucency effects.
+**Rationale:** Improves performance on lower-end systems and reduces visual distractions.
 **Enable If:** Using macOS with strong preference for native window effects.
 
 ---
@@ -211,7 +211,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "defaultViewMode": "source"
 ```
 
-**Purpose:** Opens files in source (Markdown) mode by default.  
+**Purpose:** Opens files in source (Markdown) mode by default.
 **Alternatives:**
 - `"preview"` - Reading mode (rendered Markdown)
 - `"source"` - Editing mode (raw Markdown)
@@ -224,7 +224,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "livePreview": true
 ```
 
-**Purpose:** Enables WYSIWYG editing with inline rendering.  
+**Purpose:** Enables WYSIWYG editing with inline rendering.
 **Features:**
 - Renders Markdown syntax while typing
 - Inline image previews
@@ -239,7 +239,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "showLineNumber": true
 ```
 
-**Purpose:** Displays line numbers in the left gutter.  
+**Purpose:** Displays line numbers in the left gutter.
 **Use Cases:**
 - Code snippet editing
 - Reference discussions (e.g., "See line 42")
@@ -252,8 +252,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "readableLineLengthColumns": 45
 ```
 
-**Purpose:** Limits line width to 45 columns for optimal readability.  
-**Research:** Studies show 45-75 characters per line maximize reading speed and comprehension.  
+**Purpose:** Limits line width to 45 columns for optimal readability.
+**Research:** Studies show 45-75 characters per line maximize reading speed and comprehension.
 **Disable If:** Editing wide tables or code blocks frequently.
 
 ### Folding
@@ -263,7 +263,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "foldIndent": true
 ```
 
-**Purpose:** Enables collapsing headings and indented lists.  
+**Purpose:** Enables collapsing headings and indented lists.
 **Usage:**
 - Click the arrow icon next to headings
 - Collapse nested lists for easier navigation
@@ -274,7 +274,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "showIndentGuide": true
 ```
 
-**Purpose:** Shows vertical lines for indentation levels.  
+**Purpose:** Shows vertical lines for indentation levels.
 **Benefits:** Easier to track nested lists and code blocks.
 
 ### Smart Indent List
@@ -283,7 +283,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "smartIndentList": true
 ```
 
-**Purpose:** Automatically adjusts list indentation when pressing Enter or Tab.  
+**Purpose:** Automatically adjusts list indentation when pressing Enter or Tab.
 **Behavior:**
 - `Enter` after list item → Creates new item at same level
 - `Tab` on list item → Indents to sub-list
@@ -296,7 +296,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "useTab": true
 ```
 
-**Purpose:** Inserts actual tab characters with 2-space display width.  
+**Purpose:** Inserts actual tab characters with 2-space display width.
 **Alternatives:**
 - `"useTab": false` - Insert spaces instead of tabs
 - `"tabSize": 4` - Wider indentation
@@ -310,8 +310,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "spellcheckLanguages": ["en-US"]
 ```
 
-**Purpose:** Enables spell checking for US English.  
-**Add Languages:** Add language codes (e.g., `"en-GB"`, `"es-ES"`).  
+**Purpose:** Enables spell checking for US English.
+**Add Languages:** Add language codes (e.g., `"en-GB"`, `"es-ES"`).
 **Disable If:** Writing primarily code or non-English content.
 
 ### Frontmatter
@@ -321,8 +321,8 @@ This comprehensive configuration provides production-ready settings for the Proj
 "propertiesInDocument": "visible"
 ```
 
-**Purpose:** Displays YAML frontmatter at the top of notes.  
-**Use Case:** Metadata for tags, dates, aliases, custom properties.  
+**Purpose:** Displays YAML frontmatter at the top of notes.
+**Use Case:** Metadata for tags, dates, aliases, custom properties.
 **Hide If:** Frontmatter clutters reading view.
 
 ### Vim Mode
@@ -331,7 +331,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "vimMode": false
 ```
 
-**Purpose:** Disables Vim keybindings.  
+**Purpose:** Disables Vim keybindings.
 **Enable If:** Experienced Vim user preferring modal editing.
 
 ---
@@ -345,7 +345,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "newFileFolderPath": ""
 ```
 
-**Purpose:** Creates new files in the currently opened folder.  
+**Purpose:** Creates new files in the currently opened folder.
 **Alternatives:**
 - `"root"` - Always create in vault root
 - `"folder"` - Use `newFileFolderPath` (e.g., `"inbox"`)
@@ -356,7 +356,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "fileSortOrder": "byModifiedTimeReverse"
 ```
 
-**Purpose:** Sorts files by modification time (newest first).  
+**Purpose:** Sorts files by modification time (newest first).
 **Options:**
 - `"alphabetical"` - A-Z
 - `"alphabeticalReverse"` - Z-A
@@ -388,7 +388,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "trashOption": "system"
 ```
 
-**Purpose:** Uses operating system's trash/recycle bin.  
+**Purpose:** Uses operating system's trash/recycle bin.
 **Alternatives:**
 - `".trash"` - Move to `.trash` folder in vault
 - `"permanent"` - Delete permanently (⚠️ no recovery)
@@ -402,7 +402,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "promptDelete": true
 ```
 
-**Purpose:** Requires confirmation before deleting files.  
+**Purpose:** Requires confirmation before deleting files.
 **Safety:** Prevents accidental deletions.
 
 ### Sync Attachments
@@ -411,7 +411,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 "syncAttachments": true
 ```
 
-**Purpose:** Moves attachments when moving notes.  
+**Purpose:** Moves attachments when moving notes.
 **Example:** Moving `Note.md` also moves `attachments/image.png` if referenced.
 
 ### Hidden Files
@@ -426,7 +426,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 ]
 ```
 
-**Purpose:** Hides system and temporary files from the file explorer.  
+**Purpose:** Hides system and temporary files from the file explorer.
 **Patterns:**
 - `.DS_Store` - macOS metadata
 - `Thumbs.db` - Windows thumbnails
@@ -509,7 +509,7 @@ This comprehensive configuration provides production-ready settings for the Proj
 }
 ```
 
-**Purpose:** Enables physics simulation animation.  
+**Purpose:** Enables physics simulation animation.
 **Disable If:** Performance issues on large vaults (500+ notes).
 
 ---
@@ -529,7 +529,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Highlights focused elements and retains focus across operations.  
+**Purpose:** Highlights focused elements and retains focus across operations.
 **Benefit:** Keyboard navigation users can always see current focus.
 
 ### Keyboard Navigation
@@ -541,7 +541,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Enables full keyboard-only control.  
+**Purpose:** Enables full keyboard-only control.
 **Features:**
 - `Tab` / `Shift+Tab` - Navigate interactive elements
 - `Enter` - Activate buttons/links
@@ -555,7 +555,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Adds ARIA labels and semantic HTML for screen readers.  
+**Purpose:** Adds ARIA labels and semantic HTML for screen readers.
 **Tested With:** NVDA (Windows), JAWS (Windows), VoiceOver (macOS).
 
 ### Reduced Motion
@@ -566,7 +566,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Disables animations when enabled.  
+**Purpose:** Disables animations when enabled.
 **Enable If:** User experiences motion sensitivity or vestibular disorders.
 
 ### High Contrast
@@ -577,7 +577,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Increases UI contrast for low vision users.  
+**Purpose:** Increases UI contrast for low vision users.
 **Rationale:** Default theme already meets 4.5:1 contrast ratio (WCAG AA).
 
 ### Larger Click Targets
@@ -588,7 +588,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Increases button and link sizes for motor control accessibility.  
+**Purpose:** Increases button and link sizes for motor control accessibility.
 **Enable If:** Using touchscreen or have dexterity challenges.
 
 ---
@@ -613,7 +613,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 2. **Search Cache:** Stores search results (expires after 1 hour)
 3. **File Cache:** Stores file metadata and content hashes
 
-**Cache Expiry:** 3,600,000ms = 1 hour  
+**Cache Expiry:** 3,600,000ms = 1 hour
 **Memory Impact:** ~50-100MB for 1000-note vault
 
 ### Indexing Delays
@@ -647,7 +647,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Limits result counts for performance.  
+**Purpose:** Limits result counts for performance.
 **Impact:** Prevents UI lag when displaying hundreds of results.
 
 ### Lazy Loading
@@ -677,7 +677,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Uses 4 background threads for indexing and search.  
+**Purpose:** Uses 4 background threads for indexing and search.
 **Recommendation:** Set to CPU core count - 2 (e.g., 8-core CPU → 6 threads).
 
 ---
@@ -693,7 +693,7 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 }
 ```
 
-**Purpose:** Safe mode disables all community plugins.  
+**Purpose:** Safe mode disables all community plugins.
 **Use Case:** Troubleshooting plugin conflicts or security concerns.
 
 ### Script Execution
@@ -805,18 +805,18 @@ All accessibility settings meet or exceed WCAG 2.1 Level AA standards.
 ```
 
 **Enabled Plugins:**
-✅ Daily Notes - Create dated notes  
-✅ Templates - Insert note templates  
-✅ File Explorer - Browse vault files  
-✅ Global Search - Full-text search  
-✅ Graph View - Visualize note connections  
-✅ Backlinks - Show incoming links  
-✅ Command Palette - Quick actions (Ctrl+Shift+P)  
+✅ Daily Notes - Create dated notes
+✅ Templates - Insert note templates
+✅ File Explorer - Browse vault files
+✅ Global Search - Full-text search
+✅ Graph View - Visualize note connections
+✅ Backlinks - Show incoming links
+✅ Command Palette - Quick actions (Ctrl+Shift+P)
 ✅ Word Count - Display word/character counts
 
 **Disabled Plugins:**
-❌ Audio Recorder - Not needed for text-focused vault  
-❌ Random Note - Not useful for structured knowledge base  
+❌ Audio Recorder - Not needed for text-focused vault
+❌ Random Note - Not useful for structured knowledge base
 ❌ Slides - Presentation mode not required
 
 ### Daily Notes Configuration
@@ -922,7 +922,7 @@ tags: []
 }
 ```
 
-**Purpose:** Default folder for PDF/HTML exports.  
+**Purpose:** Default folder for PDF/HTML exports.
 **Empty String:** Uses system Documents folder.
 
 ---
@@ -965,7 +965,7 @@ tags: []
 }
 ```
 
-**Purpose:** Quickly capture ideas on mobile.  
+**Purpose:** Quickly capture ideas on mobile.
 **Status:** Disabled (enable if using mobile frequently).
 
 ---
@@ -1113,12 +1113,12 @@ Use the provided PowerShell script to validate configuration:
 ```
 
 **Checks:**
-✅ Valid JSON syntax  
-✅ Required fields present  
-✅ Value types correct (string, number, boolean, array, object)  
-✅ Enum values valid (e.g., `theme` must be "obsidian" or valid theme name)  
-✅ Path references exist (folders, templates)  
-✅ Performance settings optimized  
+✅ Valid JSON syntax
+✅ Required fields present
+✅ Value types correct (string, number, boolean, array, object)
+✅ Enum values valid (e.g., `theme` must be "obsidian" or valid theme name)
+✅ Path references exist (folders, templates)
+✅ Performance settings optimized
 ✅ Security settings hardened
 
 ### Manual Validation
@@ -1332,8 +1332,8 @@ git log --follow .obsidian/app.json
 
 ### Contact
 
-**Configuration Issues:** File issue in Project-AI repository  
-**Obsidian Bugs:** Report at https://forum.obsidian.md/c/bug-reports  
+**Configuration Issues:** File issue in Project-AI repository
+**Obsidian Bugs:** Report at https://forum.obsidian.md/c/bug-reports
 **Feature Requests:** Suggest at https://forum.obsidian.md/c/feature-requests
 
 ---
@@ -1342,16 +1342,15 @@ git log --follow .obsidian/app.json
 
 This configuration file is part of the Project-AI repository and follows the same license.
 
-**SPDX-License-Identifier:** MIT  
+**SPDX-License-Identifier:** MIT
 **Copyright:** 2026 Project-AI Contributors
 
 ---
 
-**Configuration Guide Version:** 1.0.0  
-**Total Word Count:** 5,847 words  
-**Last Updated:** 2026-04-20  
+**Configuration Guide Version:** 1.0.0
+**Total Word Count:** 5,847 words
+**Last Updated:** 2026-04-20
 **Maintained By:** AGENT-008
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

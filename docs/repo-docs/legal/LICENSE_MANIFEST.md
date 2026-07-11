@@ -18,8 +18,8 @@ version: 1.0.0
 
 # Project-AI License Manifest
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
+**Version:** 1.0.0
+**Effective Date:** February 8, 2026
 **Authority:** Canonical index of all Project-AI licenses
 
 ---
@@ -153,27 +153,27 @@ def enforce_licenses(context):
     # 1. Check acceptance ledger (required for all use)
     if not ledger.has_valid_entry(context.user_id):
         return DENY("No valid acceptance in ledger")
-    
+
     # 2. Check for termination
     if ledger.is_terminated(context.user_id):
         return DENY("User terminated")
-    
+
     # 3. Check PAGL governance constraints
     if pagl.is_prohibited(context.action):
         return DENY("PAGL prohibition")
-    
+
     # 4. Check sovereign restrictions
     if context.is_government and not sovereign_license.authorized(context):
         return DENY("Unauthorized government use")
-    
+
     # 5. Check commercial requirements
     if context.is_commercial and not commercial_license.valid(context):
         return DENY("Commercial license required")
-    
+
     # 6. Check tier entitlements
     if not tier_enforcer.has_access(context.user, context.feature):
         return DENY("Feature not in tier")
-    
+
     # 7. Allow (with audit)
     audit_log.record(context)
     return ALLOW
@@ -186,7 +186,7 @@ def enforce_licenses(context):
 2. Most permissive license governs copyright
 3. PAGL always applies (non-removable)
 
-**Example:** 
+**Example:**
 - Code under MIT (permissive) + PAGL (restrictive)
 - You can copy/modify (MIT) but cannot remove governance (PAGL)
 
@@ -354,10 +354,10 @@ python -m src.app.governance.verify_ledger
 
 ## X. CONTACT
 
-**License Questions:** licensing@project-ai.dev  
-**Legal Matters:** legal@project-ai.dev  
-**Compliance:** compliance@project-ai.dev  
-**Commercial Licensing:** sales@project-ai.dev  
+**License Questions:** licensing@project-ai.dev
+**Legal Matters:** legal@project-ai.dev
+**Compliance:** compliance@project-ai.dev
+**Commercial Licensing:** sales@project-ai.dev
 **Government Authorization:** government@project-ai.dev
 
 ---
@@ -402,5 +402,5 @@ python -m src.app.governance.verify_ledger
 
 *The authoritative index of Project-AI's legal framework.*
 
-**Last Updated:** 2026-02-08  
+**Last Updated:** 2026-02-08
 **Next Review:** 2026-05-08

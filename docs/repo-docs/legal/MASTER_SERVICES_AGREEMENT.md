@@ -18,9 +18,9 @@ version: 1.0.0
 
 # Project-AI Master Services Agreement (MSA)
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
-**Document Hash:** (Computed at runtime)  
+**Version:** 1.0.0
+**Effective Date:** February 8, 2026
+**Document Hash:** (Computed at runtime)
 **Legal Supremacy:** This document supersedes all prior agreements
 
 ---

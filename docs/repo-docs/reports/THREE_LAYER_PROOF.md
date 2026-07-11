@@ -25,7 +25,7 @@ review_cycle: as-needed
 
 # THREE-LAYER PROOF: ZERO BYPASS ARCHITECTURE
 
-**Date**: 2026-04-13  
+**Date**: 2026-04-13
 **Status**: ✅ MECHANICALLY VERIFIED + STRUCTURALLY PROVEN + NEGATIVELY VALIDATED
 
 ---
@@ -203,7 +203,7 @@ $ grep -A 30 "@workflow.defn" src/app/temporal/workflows.py | grep "validate_wor
 | **Structural** | Architecture enforces routing | Systemic |
 | **Negative** | Bypasses don't exist in code | Exhaustive |
 
-**Result**: 
+**Result**:
 - System works (structural)
 - Verification works (mechanical)
 - Enforcement works (negative)
@@ -248,8 +248,8 @@ grep -A 30 "@workflow.defn" src/app/temporal/workflows.py | grep "validate_workf
 
 ## THE JAW-DROP
 
-**Before**: Claims without proof  
-**After**: 
+**Before**: Claims without proof
+**After**:
 - ✅ Tool output shows 0 bypasses (mechanical)
 - ✅ Diagram shows enforcement (structural)
 - ✅ Grep shows no escape routes (negative)
@@ -270,7 +270,7 @@ grep -A 30 "@workflow.defn" src/app/temporal/workflows.py | grep "validate_workf
 
 ---
 
-**Created**: 2026-04-13  
-**Method**: Mechanical + Structural + Negative Proof  
-**Reproducible**: Yes (all commands included)  
+**Created**: 2026-04-13
+**Method**: Mechanical + Structural + Negative Proof
+**Reproducible**: Yes (all commands included)
 **Confidence**: ABSOLUTE

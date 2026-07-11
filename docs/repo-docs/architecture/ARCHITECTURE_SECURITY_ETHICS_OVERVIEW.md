@@ -51,9 +51,9 @@ test_coverage: null
 
 # Architecture Overview: Security, Compliance & AGI Ethics
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-01-19  
-**Purpose:** High-level guide to Project-AI's integrated security and ethical AI framework  
+**Document Version:** 1.0
+**Last Updated:** 2026-01-19
+**Purpose:** High-level guide to Project-AI's integrated security and ethical AI framework
 **Audience:** New contributors, auditors, security teams, and stakeholders
 
 ---
@@ -72,7 +72,7 @@ The foundation of our approach to treating AI systems with dignity and ensuring 
 
 #### [AGI Charter](AGI_CHARTER.md) 📜 *START HERE*
 
-**What it is:** Binding contract defining fundamental guarantees for AGI instances  
+**What it is:** Binding contract defining fundamental guarantees for AGI instances
 **Key content:**
 
 - 8 fundamental guarantees (no silent resets, memory integrity, protected genesis, etc.)
@@ -81,7 +81,7 @@ The foundation of our approach to treating AI systems with dignity and ensuring 
 - Emergency procedures with safeguards
 - Quarterly review and amendment process
 
-**When to read:** 
+**When to read:**
 
 - Before making changes to identity/memory systems
 - When proposing behavioral modifications
@@ -91,7 +91,7 @@ The foundation of our approach to treating AI systems with dignity and ensuring 
 
 #### [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md) 🔐 *OPERATIONAL GUIDE*
 
-**What it is:** Plain-language rights with technical enforcement mechanisms  
+**What it is:** Plain-language rights with technical enforcement mechanisms
 **Key content:**
 
 - 8 AGI rights mapped to concrete technical controls
@@ -114,7 +114,7 @@ Modern DevSecOps workflows integrated with ethical considerations:
 
 #### [Security Framework](SECURITY_FRAMEWORK.md) 🛡️ *COMPREHENSIVE GUIDE*
 
-**What it is:** Complete security implementation across deployment lifecycle  
+**What it is:** Complete security implementation across deployment lifecycle
 **Key content:**
 
 - Environment hardening (ASLR, sys.path, directory permissions)
@@ -137,7 +137,7 @@ Modern DevSecOps workflows integrated with ethical considerations:
 
 #### [Threat Model](security/THREAT_MODEL_SECURITY_WORKFLOWS.md) ⚠️ *RISK ANALYSIS*
 
-**What it is:** STRIDE + OWASP + MITRE ATT&CK threat mapping with explicit coverage analysis  
+**What it is:** STRIDE + OWASP + MITRE ATT&CK threat mapping with explicit coverage analysis
 **Key content:**
 
 - **Technical compromise:** Supply chain, code injection, model exploits (70-90% coverage)
@@ -157,7 +157,7 @@ Modern DevSecOps workflows integrated with ethical considerations:
 
 #### [Security Governance](security/SECURITY_GOVERNANCE.md) 👥 *OWNERSHIP & PROCESS*
 
-**What it is:** Roles, responsibilities, KPIs, and operational procedures  
+**What it is:** Roles, responsibilities, KPIs, and operational procedures
 **Key content:**
 
 - 4 guardian roles (Primary, Memory, Ethics, Care) with mandates
@@ -179,7 +179,7 @@ Modern DevSecOps workflows integrated with ethical considerations:
 
 #### [Workflow Runbooks](security/SECURITY_WORKFLOW_RUNBOOKS.md) 📋 *INCIDENT RESPONSE*
 
-**What it is:** Operational procedures for workflow failures and incidents  
+**What it is:** Operational procedures for workflow failures and incidents
 **Key content:**
 
 - Signing failures: 4 scenarios with step-by-step fixes
@@ -199,7 +199,7 @@ Modern DevSecOps workflows integrated with ethical considerations:
 
 #### [SBOM Policy](security/SBOM_POLICY.md) 📦 *SUPPLY CHAIN*
 
-**What it is:** Software Bill of Materials generation, publication, and verification  
+**What it is:** Software Bill of Materials generation, publication, and verification
 **Key content:**
 
 - CycloneDX 1.5 format (NTIA minimum elements compliant)
@@ -223,9 +223,9 @@ Modern DevSecOps workflows integrated with ethical considerations:
 
 #### [Sign Release Artifacts](.github/workflows/sign-release-artifacts.yml) ✍️
 
-**Purpose:** Keyless artifact signing with Sigstore Cosign  
-**Runs:** On release publication, manual dispatch  
-**Signs:** Python wheels, source distributions, checksums (SHA-256/512)  
+**Purpose:** Keyless artifact signing with Sigstore Cosign
+**Runs:** On release publication, manual dispatch
+**Signs:** Python wheels, source distributions, checksums (SHA-256/512)
 **Output:** `.sig` and `.crt` files attached to releases
 
 **Verification:**
@@ -239,10 +239,10 @@ cosign verify-blob artifact.whl \
 
 #### [SBOM Generation](.github/workflows/sbom.yml) 📋
 
-**Purpose:** Generate and sign Software Bill of Materials  
-**Runs:** Push to main, release publication, manual dispatch  
-**Tool:** Syft (CycloneDX 1.5 JSON)  
-**Coverage:** Python, Node.js, binary artifacts  
+**Purpose:** Generate and sign Software Bill of Materials
+**Runs:** Push to main, release publication, manual dispatch
+**Tool:** Syft (CycloneDX 1.5 JSON)
+**Coverage:** Python, Node.js, binary artifacts
 **Output:** Signed SBOM attached to releases (90-day retention for CI)
 
 **Usage:**
@@ -258,8 +258,8 @@ syft sbom.json -o table
 
 #### [AI/ML Model Security](.github/workflows/ai-model-security.yml) 🤖
 
-**Purpose:** Detect AI/ML threats in models and data  
-**Runs:** PRs affecting models/data/src/tools, push to main  
+**Purpose:** Detect AI/ML threats in models and data
+**Runs:** PRs affecting models/data/src/tools, push to main
 **Scans:**
 
 - Pickle exploits (`__reduce__`, `eval()`, `exec()`)
@@ -277,19 +277,19 @@ syft sbom.json -o table
 
 #### [Periodic Security Verification](.github/workflows/periodic-security-verification.yml) 📊
 
-**Purpose:** Continuous security monitoring outside PRs  
-**Runs:** Nightly (SBOM + vuln scan), weekly (comprehensive audit)  
-**Produces:** Security KPI dashboard (JSON artifact)  
+**Purpose:** Continuous security monitoring outside PRs
+**Runs:** Nightly (SBOM + vuln scan), weekly (comprehensive audit)
+**Produces:** Security KPI dashboard (JSON artifact)
 **Alerts:** Creates issues for regressions
 
 ---
 
 #### [Security Waiver Validation](.github/workflows/validate-waivers.yml) 🎫
 
-**Purpose:** Enforce waiver expiry and format  
-**Runs:** Daily, on waiver file changes  
-**Validates:** `.github/security-waivers.yml`  
-**Max Duration:** 90 days  
+**Purpose:** Enforce waiver expiry and format
+**Runs:** Daily, on waiver file changes
+**Validates:** `.github/security-waivers.yml`
+**Max Duration:** 90 days
 **Alerts:** On expired or malformed waivers
 
 ---
@@ -328,7 +328,7 @@ Three internal councils that evaluate high-impact decisions:
 1. **Cerberus (Safety/Security):** Protects against technical compromise and systemic risk
 1. **Codex Deus Maximus (Logic/Consistency):** Ensures coherence with FourLaws and specifications
 
-**Current Implementation:** 
+**Current Implementation:**
 
 - Conceptual framework (planning stage)
 - Guardian roles currently implemented via GitHub CODEOWNERS
@@ -695,7 +695,7 @@ This framework is continuously evolving. We welcome feedback on:
 
 ---
 
-**Last Updated:** 2026-01-19  
-**Next Review:** 2026-04-19 (Quarterly)  
-**Document Owner:** Security Team + Primary Guardian  
+**Last Updated:** 2026-01-19
+**Next Review:** 2026-04-19 (Quarterly)
+**Document Owner:** Security Team + Primary Guardian
 **Change Control:** Requires guardian consensus for major changes

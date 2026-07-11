@@ -14,7 +14,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "draft"
-author: 
+author:
   name: "<%tp.user.name || 'Documentation Team'%>"
   email: ""
   github: ""
@@ -68,9 +68,9 @@ supersedes: null
 
 # <%tp.file.title%>
 
-> **Component Type:** PyQt6 Widget  
-> **Location:** `src/app/gui/`  
-> **Parent Class:** <%`${await tp.system.prompt('Parent class (QWidget/QMainWindow/QDialog):') || 'QWidget'}`%>  
+> **Component Type:** PyQt6 Widget
+> **Location:** `src/app/gui/`
+> **Parent Class:** <%`${await tp.system.prompt('Parent class (QWidget/QMainWindow/QDialog):') || 'QWidget'}`%>
 > **Last Updated:** <%tp.date.now("YYYY-MM-DD")%>
 
 ---
@@ -195,12 +195,12 @@ def __init__(
 ):
     """
     Initialize the component.
-    
+
     Args:
         parent (QWidget, optional): Parent widget for Qt hierarchy
         title (str): Display title for the component
         **kwargs: Additional configuration options
-    
+
     Raises:
         TypeError: If parent is not QWidget or None
     """
@@ -257,7 +257,7 @@ component.set_title("Updated Title")
 
 **Returns:** `None`
 
-**Side Effects:** 
+**Side Effects:**
 - Clears all text fields
 - Resets buttons to default state
 - Emits `cleared` signal
@@ -280,16 +280,16 @@ component.clear()
 def _init_ui(self):
     # 1. Create main layout
     self.main_layout = QVBoxLayout(self)
-    
+
     # 2. Create widgets
     self.title_label = QLabel(self.title)
-    
+
     # 3. Apply styling
     self._apply_styles()
-    
+
     # 4. Add to layout
     self.main_layout.addWidget(self.title_label)
-    
+
     # 5. Set layout
     self.setLayout(self.main_layout)
 ```
@@ -305,7 +305,7 @@ def _init_ui(self):
 def _connect_signals(self):
     # Internal connections
     self.btn_action1.clicked.connect(self._on_action1_clicked)
-    
+
     # Component signals to internal handlers
     self.some_signal.connect(self._handle_signal)
 ```
@@ -379,7 +379,7 @@ self.data_changed.emit({"key": "value", "count": 42})
 def on_data_received(self, data: dict):
     """
     Slot to handle data from parent component.
-    
+
     Args:
         data (dict): Data to process and display
     """
@@ -387,10 +387,10 @@ def on_data_received(self, data: dict):
     if not isinstance(data, dict):
         self.error_occurred.emit("Invalid data type")
         return
-    
+
     # Process
     self._update_display(data)
-    
+
     # Acknowledge
     self.data_changed.emit(data)
 ```
@@ -582,20 +582,20 @@ from app.gui.component_name import ComponentName
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        
+
         # Create central widget
         central = QWidget()
         layout = QVBoxLayout(central)
-        
+
         # Add component
         self.component = ComponentName(parent=central)
         layout.addWidget(self.component)
-        
+
         # Connect signals
         self.component.action_triggered.connect(self._handle_action)
-        
+
         self.setCentralWidget(central)
-    
+
     def _handle_action(self, action: str):
         print(f"Main window received action: {action}")
 ```
@@ -642,12 +642,12 @@ from PyQt6.QtCore import QTimer
 class ComponentName(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        
+
         # Setup polling timer
         self.poll_timer = QTimer(self)
         self.poll_timer.timeout.connect(self._poll_data)
         self.poll_timer.start(1000)  # Poll every 1 second
-    
+
     def _poll_data(self):
         # Fetch and update data
         pass
@@ -659,7 +659,7 @@ class ComponentName(QWidget):
 def show_configuration_dialog(self):
     """Show modal dialog for component configuration."""
     dialog = ConfigurationDialog(self)
-    
+
     if dialog.exec() == QDialog.DialogCode.Accepted:
         config = dialog.get_config()
         self.apply_config(config)
@@ -702,14 +702,14 @@ def test_signal_emission(component, qtbot):
     """Verify signals are emitted on user action."""
     with qtbot.waitSignal(component.action_triggered, timeout=1000) as blocker:
         component.btn_action1.click()
-    
+
     assert blocker.args[0] == "action1"
 
 def test_slot_response(component):
     """Verify slot handles data correctly."""
     test_data = {"key": "value"}
     component.on_data_received(test_data)
-    
+
     # Verify component updated
     assert component.current_data == test_data
 ```
@@ -721,7 +721,7 @@ def test_component_appearance(component, qtbot):
     """Take screenshot for visual regression testing."""
     component.show()
     qtbot.waitExposed(component)
-    
+
     # Capture screenshot
     pixmap = component.grab()
     # Compare against baseline (manual process)
@@ -794,10 +794,9 @@ self.btn_action1.setToolTip("Save changes (Alt+S)")
 
 ---
 
-**Document Status:** <%`${await tp.system.prompt('Document status (draft/review/active):') || 'draft'}`%>  
-**Next Review Date:** [YYYY-MM-DD]  
+**Document Status:** <%`${await tp.system.prompt('Document status (draft/review/active):') || 'draft'}`%>
+**Next Review Date:** [YYYY-MM-DD]
 **Maintainer:** <%tp.user.name || 'Documentation Team'%>
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -24,8 +24,8 @@ review_cycle: as-needed
 
 # Templater Troubleshooting Guide
 
-**Version:** 1.0  
-**Last Updated:** 2024-12-20  
+**Version:** 1.0
+**Last Updated:** 2024-12-20
 **Templater Version:** 2.19.1
 
 ---
@@ -127,7 +127,7 @@ Test: <% tp.date.now("YYYY-MM-DD") %>
    # Download latest release
    $version = "2.19.1"
    $path = "T:\Project-AI-main\.obsidian\plugins\templater-obsidian"
-   
+
    Invoke-WebRequest -Uri "https://github.com/SilentVoid13/Templater/releases/download/$version/main.js" -OutFile "$path\main.js"
    Invoke-WebRequest -Uri "https://github.com/SilentVoid13/Templater/releases/download/$version/manifest.json" -OutFile "$path\manifest.json"
    Invoke-WebRequest -Uri "https://github.com/SilentVoid13/Templater/releases/download/$version/styles.css" -OutFile "$path\styles.css"
@@ -329,7 +329,7 @@ Or:
 Some templates only work in specific modes:
 
 ```markdown
-<%* 
+<%*
 // This only works in CreateNewFromTemplate mode
 if (tp.config.run_mode === "CreateNewFromTemplate") {
   tR += "New file!";
@@ -380,7 +380,7 @@ Prompts only work in interactive modes:
 ```markdown
 <%*
 // Check if prompts will work
-const canPrompt = tp.config.run_mode === "CreateNewFromTemplate" || 
+const canPrompt = tp.config.run_mode === "CreateNewFromTemplate" ||
                   tp.config.run_mode === "AppendActiveFile";
 
 if (canPrompt) {
@@ -1115,7 +1115,7 @@ WHERE status = "active"
 
 **Not**:
 ```markdown
-<%* 
+<%*
 // This won't work
 tR += "dataview query...";
 %>
@@ -1159,7 +1159,7 @@ function getAIPersonaMood() {
         "ai_persona",
         "state.json"
     );
-    
+
     try {
         const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
         return data.current_mood || 'neutral';
@@ -1176,12 +1176,12 @@ function getAIPersonaMood() {
 function getProjectAIData(dataFile) {
     const basePath = "T:\\Project-AI-main\\data";
     const fullPath = path.join(basePath, dataFile);
-    
+
     if (!fs.existsSync(fullPath)) {
         console.warn(`File not found: ${fullPath}`);
         return null;
     }
-    
+
     try {
         return JSON.parse(fs.readFileSync(fullPath, 'utf8'));
     } catch (error) {
@@ -1373,35 +1373,35 @@ User scripts folder is set to "templates/scripts" and utils.js exists.
 
 ### "Template execution timeout"
 
-**Cause**: Template took longer than timeout setting  
+**Cause**: Template took longer than timeout setting
 **Fix**: Increase timeout in Settings → Templater → Command timeout
 
 ### "Cannot find module 'X'"
 
-**Cause**: Trying to use unavailable Node.js module  
+**Cause**: Trying to use unavailable Node.js module
 **Fix**: Use only built-in modules (fs, path, child_process, util, os)
 
 ### "tp.user.X is not a function"
 
-**Cause**: User script not loaded or function not exported  
-**Fix**: 
+**Cause**: User script not loaded or function not exported
+**Fix**:
 1. Verify user scripts folder setting
 2. Check `module.exports` in script
 3. Restart Obsidian
 
 ### "Invalid date"
 
-**Cause**: Wrong date format or invalid date value  
+**Cause**: Wrong date format or invalid date value
 **Fix**: Use Moment.js format tokens (YYYY-MM-DD, not %Y-%m-%d)
 
 ### "File already exists"
 
-**Cause**: Trying to create file that already exists  
+**Cause**: Trying to create file that already exists
 **Fix**: Check if file exists first or use unique names
 
 ### "Permission denied"
 
-**Cause**: File/folder permissions issue  
+**Cause**: File/folder permissions issue
 **Fix**: Check file permissions with `icacls` (Windows) or `chmod` (Unix)
 
 ---
@@ -1570,7 +1570,7 @@ If this guide didn't solve your problem:
 
 ---
 
-**Document Version**: 1.1.0  
-**Last Updated**: 2026-04-20  
-**Phase 5 Enhancement**: Added comprehensive system references and wiki links  
+**Document Version**: 1.1.0
+**Last Updated**: 2026-04-20
+**Phase 5 Enhancement**: Added comprehensive system references and wiki links
 **Maintained by:** Project-AI Team

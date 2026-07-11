@@ -108,21 +108,21 @@ for episode in range(1000):
     observation = env.reset()  # Your environment
     done = False
     total_reward = 0
-    
+
     while not done:
         # Select action based on SNN spikes
         action = agent.select_action(observation)
-        
+
         # Environment step
         observation, reward, done, _ = env.step(action)
         total_reward += reward
-        
+
         # Update network with reward (reward-modulated STDP)
         agent.update(reward)
-    
+
     # Reset between episodes
     agent.reset()
-    
+
     print(f"Episode {episode}: Reward = {total_reward}")
 
 # Save learned weights
@@ -278,7 +278,7 @@ class MyCNN(nn.Module):
         self.relu2 = nn.ReLU()
         self.pool2 = nn.AvgPool2d(2)
         self.fc = nn.Linear(64 * 56 * 56, 10)
-    
+
     def forward(self, x):
         x = self.pool1(self.relu1(self.conv1(x)))
         x = self.pool2(self.relu2(self.conv2(x)))
@@ -331,7 +331,7 @@ from app.core.snn_integration import BindsNetRLAgent
 class SNNPersona(AIPersona):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         # Add SNN for continual learning
         self.snn_learner = BindsNetRLAgent(
             input_size=8,       # 8 personality traits
@@ -339,7 +339,7 @@ class SNNPersona(AIPersona):
             output_size=4,      # 4 mood dimensions
             learning_rate=0.01
         )
-    
+
     def adapt_to_interaction(self, interaction_type: str, success: bool):
         """Learn from interactions without forgetting."""
         # Encode current state
@@ -348,10 +348,10 @@ class SNNPersona(AIPersona):
             self.traits["empathy"],
             # ... other traits
         ])
-        
+
         # Select action (mood adjustment)
         action = self.snn_learner.select_action(state)
-        
+
         # Update based on interaction success
         reward = 1.0 if success else -0.5
         self.snn_learner.update(reward)
@@ -374,7 +374,7 @@ vision_snn = SinabsVisionSNN(
 def monitor_security_feed(frame):
     """Classify security events with low power consumption."""
     prediction = vision_snn.predict(frame)
-    
+
     if prediction > 0:  # Not normal
         event_types = ["normal", "intrusion", "fire", "theft", "vandalism"]
         record_incident({

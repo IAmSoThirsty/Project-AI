@@ -170,7 +170,7 @@ is_valid, issues = hardening.validate_environment()
 
 if not is_valid:
     print(f"Security issues detected: {issues}")
-    
+
 # Apply hardening
 hardening.harden_sys_path()
 hardening.secure_directory_structure()
@@ -769,7 +769,7 @@ Tests include concurrent access, high-volume operations, and adversarial inputs:
 
 ### Release Artifact Signing
 
-**Implementation:** Sigstore Cosign keyless signing  
+**Implementation:** Sigstore Cosign keyless signing
 **Workflow:** `.github/workflows/sign-release-artifacts.yml`
 
 All release artifacts are cryptographically signed:
@@ -796,9 +796,9 @@ cosign verify-blob <artifact> \
 
 ### Software Bill of Materials (SBOM)
 
-**Tool:** Syft (Anchore)  
-**Format:** CycloneDX 1.5 JSON  
-**Workflow:** `.github/workflows/sbom.yml`  
+**Tool:** Syft (Anchore)
+**Format:** CycloneDX 1.5 JSON
+**Workflow:** `.github/workflows/sbom.yml`
 **Policy:** [docs/security/SBOM_POLICY.md](security/SBOM_POLICY.md)
 
 SBOMs generated for:
@@ -1007,10 +1007,10 @@ db = SecureDatabaseManager("data/app.db")
 # 4. Initialize AWS (if in cloud)
 if os.getenv("AWS_EXECUTION_ENV"):
     aws = AWSSecurityManager(region="us-east-1")
-    
+
     # Get secrets
     secrets = aws.get_secret("app-secrets")
-    
+
     # Validate permissions
     required = ["s3:GetObject", "secretsmanager:GetSecretValue"]
     if not aws.validate_polp(required):
@@ -1036,7 +1036,7 @@ def handle_request(client_ip: str, user_input: str):
     # 1. Rate limiting
     if not rate_limiter.check_rate_limit(client_ip):
         return {"error": "Rate limit exceeded"}, 429
-    
+
     # 2. Input validation
     if not validator.validate_input(user_input, "application/json"):
         monitor.log_security_event(
@@ -1047,7 +1047,7 @@ def handle_request(client_ip: str, user_input: str):
             metadata={"ip": client_ip}
         )
         return {"error": "Invalid input"}, 400
-    
+
     # 3. Poisoning check
     is_poisoned, patterns = defense.check_for_poison(user_input)
     if is_poisoned:
@@ -1059,13 +1059,13 @@ def handle_request(client_ip: str, user_input: str):
             metadata={"ip": client_ip}
         )
         return {"error": "Malicious input detected"}, 403
-    
+
     # 4. Process request safely
     result = parser.parse_json(user_input)
-    
+
     if not result.validated:
         return {"error": "Validation failed"}, 400
-    
+
     # 5. Audit log
     db.log_action(
         user_id=get_user_id(client_ip),
@@ -1074,7 +1074,7 @@ def handle_request(client_ip: str, user_input: str):
         details=result.data,
         ip_address=client_ip
     )
-    
+
     return {"success": True, "data": result.data}, 200
 ```
 
@@ -1166,6 +1166,6 @@ See **[SECURITY_ROADMAP.md](security/SECURITY_ROADMAP.md)** for complete details
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-12-31  
+**Document Version**: 1.0
+**Last Updated**: 2025-12-31
 **Author**: Project-AI Security Team

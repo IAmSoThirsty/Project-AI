@@ -51,7 +51,7 @@ This document describes the successful implementation of the TARL (Trust and Aut
   - `ALLOW`: Action is permitted
   - `DENY`: Action is denied
   - `ESCALATE`: Action requires escalation
-  
+
 - **TarlDecision Dataclass**: Immutable decision object containing:
   - `verdict`: The verdict type
   - `reason`: Human-readable explanation

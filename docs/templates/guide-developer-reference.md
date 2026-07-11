@@ -6,7 +6,7 @@ version: "1.0.0"
 created_date: "<%tp.date.now("YYYY-MM-DD")%>"
 updated_date: "<%tp.date.now("YYYY-MM-DD")%>"
 status: "published"
-author: 
+author:
   name: "<%tp.user.name || 'Development Team'%>"
 category: "documentation"
 tags: ["developer-reference", "api", "sdk", "documentation"]
@@ -18,9 +18,9 @@ summary: "Developer API reference for <%`${await tp.system.prompt('Component nam
 
 # Developer Reference: <%tp.file.title%>
 
-> **Component:** <%`${await tp.system.prompt('Component name:') || '[Component]'}`%>  
-> **Version:** <%`${await tp.system.prompt('Component version:') || '1.0.0'}`%>  
-> **Language:** Python  
+> **Component:** <%`${await tp.system.prompt('Component name:') || '[Component]'}`%>
+> **Version:** <%`${await tp.system.prompt('Component version:') || '1.0.0'}`%>
+> **Language:** Python
 > **Stability:** <%`${await tp.system.prompt('Stability (Stable/Beta/Alpha):') || 'Stable'}`%>
 
 ## Overview
@@ -125,8 +125,8 @@ result = asyncio.run(main())
 
 ### `property_name: Type`
 
-**Read-only:** Yes/No  
-**Type:** [Type]  
+**Read-only:** Yes/No
+**Type:** [Type]
 **Description:** [What this property represents]
 
 **Example:**
@@ -291,10 +291,9 @@ new_component.new_method()
 
 ---
 
-**API Stability:** Stable  
-**Maintainer:** Development Team  
+**API Stability:** Stable
+**Maintainer:** Development Team
 **Support:** [Contact information]
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

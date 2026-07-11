@@ -219,18 +219,18 @@ result = rag.query_with_llm(
    - Anthropic (Claude)
    - Cohere
    - Google (Gemini)
-   
+
 2. **Advanced Features**
    - Streaming responses
    - Token usage tracking
    - Cost estimation
    - Rate limiting per provider
-   
+
 3. **UI Integration**
    - Provider selection in GUI
    - Real-time switching
    - Usage statistics dashboard
-   
+
 4. **Performance**
    - Response caching
    - Provider health monitoring

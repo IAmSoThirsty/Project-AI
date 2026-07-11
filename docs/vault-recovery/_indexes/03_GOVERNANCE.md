@@ -40,9 +40,9 @@ related_mocs:
 ### Mandatory Governance Policy
 
 #### Copilot Workspace Profile
-**File:** `.github/copilot_workspace_profile.md`  
-**Status:** ACTIVE GOVERNANCE POLICY  
-**Version:** 1.0.0  
+**File:** `.github/copilot_workspace_profile.md`
+**Status:** ACTIVE GOVERNANCE POLICY
+**Version:** 1.0.0
 **Last Updated:** 2026-01-23
 
 **Critical Requirement:** ALL AI workspace assistants MUST comply with this policy. This is the supreme governance document that supersedes all other instructions.
@@ -62,7 +62,7 @@ related_mocs:
 - `governance-quality-standards.md` - Quality standard requirements [P0, Active]
 
 #### Contribution Guidelines
-**File:** `CONTRIBUTING.md`  
+**File:** `CONTRIBUTING.md`
 **Scope:** How to contribute to Project-AI repository
 
 **Key Sections:**
@@ -80,7 +80,7 @@ related_mocs:
 - `governance-commit-conventions.md` - Commit message standards [P1, Active]
 
 #### Code of Conduct
-**File:** `CODE_OF_CONDUCT.md`  
+**File:** `CODE_OF_CONDUCT.md`
 **Scope:** Expected behavior for all community participants
 
 **Principles:**
@@ -483,20 +483,19 @@ related_mocs:
 
 ## 🛡️ Governance
 
-**Maintainer:** AGENT-019 (MOC Constructor)  
-**Policy Owner:** Project Maintainers Team  
-**Update Frequency:** Quarterly policy review + event-driven updates  
-**Change Control:** Policy changes require architecture review + team approval  
-**Compliance Review:** Quarterly compliance audit required  
+**Maintainer:** AGENT-019 (MOC Constructor)
+**Policy Owner:** Project Maintainers Team
+**Update Frequency:** Quarterly policy review + event-driven updates
+**Change Control:** Policy changes require architecture review + team approval
+**Compliance Review:** Quarterly compliance audit required
 **Quality Gate:** All governance docs require peer review + legal review (for compliance)
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-23  
-**Schema Compliance:** ✅ 100%  
+**Version:** 1.0.0
+**Last Updated:** 2025-01-23
+**Schema Compliance:** ✅ 100%
 **Policy Enforcement:** 🟢 Active (automated via CI/CD)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

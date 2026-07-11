@@ -40,7 +40,7 @@ search_terms: ["desktop architecture", "PyQt6 layers", "GUI structure"]
 
 # Desktop Application Architecture Visual Map
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Last Updated:** 2026-04-20
 
 ---
@@ -506,7 +506,7 @@ graph TB
         Stack --> Page0["Page 0: Login"]
         Stack --> Page1["Page 1: Dashboard"]
     end
-    
+
     subgraph LoginPage["Login Page (Tron Theme)"]
         Username["Username QLineEdit"]
         Password["Password QLineEdit"]
@@ -514,7 +514,7 @@ graph TB
         RegisterBtn["Register QPushButton"]
         Status["Status QLabel"]
     end
-    
+
     subgraph Dashboard["Dashboard (6-Zone Layout)"]
         Zone1["Stats Panel<br/>Real-time Metrics"]
         Zone2["Actions Panel<br/>Proactive Buttons"]
@@ -523,27 +523,27 @@ graph TB
         Zone5["Chat Panel<br/>User Input"]
         Zone6["Response Panel<br/>AI Output"]
     end
-    
+
     subgraph PersonaPanel["Persona Panel Detail"]
         Tab1["Tab 1: Traits<br/>8 Sliders"]
         Tab2["Tab 2: Mood<br/>Current + History"]
         Tab3["Tab 3: Stats<br/>Interaction Count"]
         Tab4["Tab 4: Presets<br/>Quick Modes"]
     end
-    
+
     subgraph ImageGenUI["Image Generation Interface"]
         LeftPanel["Left Panel<br/>Prompt + Controls"]
         RightPanel["Right Panel<br/>Display + History"]
         Worker["ImageGenerationWorker<br/>QThread"]
     end
-    
+
     subgraph CoreSystems["Core AI Systems"]
         UserMgr["User Manager<br/>bcrypt Auth"]
         AIPersona["AIPersona<br/>Personality System"]
         ImgGen["Image Generator<br/>HF + OpenAI"]
         Memory["Memory Expansion<br/>Knowledge Base"]
     end
-    
+
     %% Flow connections
     Page0 --> Username
     Page0 --> Password
@@ -552,36 +552,36 @@ graph TB
     LoginBtn --> UserMgr
     UserMgr -->|Success| Page1
     UserMgr -->|Failure| Status
-    
+
     Page1 --> Zone1
     Page1 --> Zone2
     Page1 --> Zone3
     Page1 --> Zone4
     Page1 --> Zone5
     Page1 --> Zone6
-    
+
     Zone3 --> Tab1
     Zone3 --> Tab2
     Zone3 --> Tab3
     Zone3 --> Tab4
-    
+
     Tab1 -->|Update| AIPersona
-    
+
     Zone2 -->|Click Image Gen| ImageGenUI
     ImageGenUI --> LeftPanel
     ImageGenUI --> RightPanel
     LeftPanel -->|Generate| Worker
     Worker -->|Async| ImgGen
     ImgGen -->|Result| RightPanel
-    
+
     Zone5 -->|Send Message| Memory
     Memory -->|Response| Zone6
-    
+
     %% Styling
     classDef uiClass fill:#00ff00,stroke:#00ffff,stroke-width:2px,color:#000
     classDef systemClass fill:#4a90e2,stroke:#2e5c8a,stroke-width:2px,color:#fff
     classDef workerClass fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px,color:#fff
-    
+
     class Page0,Page1,Zone1,Zone2,Zone3,Zone4,Zone5,Zone6 uiClass
     class UserMgr,AIPersona,ImgGen,Memory systemClass
     class Worker workerClass
@@ -670,16 +670,16 @@ self.worker.generation_failed.connect(
 ```python
 class ImageGenerationWorker(QThread):
     """Async worker for image generation (prevents UI blocking)."""
-    
+
     image_generated = pyqtSignal(str, dict)
     generation_failed = pyqtSignal(str)
-    
+
     def __init__(self, generator, prompt, **kwargs):
         super().__init__()
         self.generator = generator
         self.prompt = prompt
         self.kwargs = kwargs
-    
+
     def run(self):
         """Runs in worker thread (not main thread)."""
         try:
@@ -783,7 +783,7 @@ QTextBrowser {
 
 ### 1. **Dual-Page Layout**
 
-**Decision:** Use QStackedWidget for login vs dashboard  
+**Decision:** Use QStackedWidget for login vs dashboard
 **Rationale:**
 - Clean separation of concerns
 - Different theming per page (Tron vs Leather)
@@ -791,7 +791,7 @@ QTextBrowser {
 
 ### 2. **6-Zone Dashboard**
 
-**Decision:** QGridLayout with fixed zones  
+**Decision:** QGridLayout with fixed zones
 **Rationale:**
 - Predictable layout (3×2 grid + status bar)
 - Each zone has specific purpose
@@ -801,7 +801,7 @@ QTextBrowser {
 
 ### 3. **Signal/Slot Architecture**
 
-**Decision:** PyQt6 signals for all inter-component communication  
+**Decision:** PyQt6 signals for all inter-component communication
 **Rationale:**
 - Loose coupling (components don't know about each other)
 - Thread-safe communication
@@ -810,7 +810,7 @@ QTextBrowser {
 
 ### 4. **Worker Threads for Long Operations**
 
-**Decision:** QThread for image generation  
+**Decision:** QThread for image generation
 **Rationale:**
 - Prevents UI freezing during 20-60s generation
 - Allows progress updates
@@ -821,7 +821,7 @@ QTextBrowser {
 
 ### 5. **AIPersona Integration**
 
-**Decision:** Real-time personality configuration via sliders  
+**Decision:** Real-time personality configuration via sliders
 **Rationale:**
 - Users can see immediate effect on AI behavior
 - 8 traits provide rich customization
@@ -830,7 +830,7 @@ QTextBrowser {
 
 ### 6. **Dual-Page Image Generation**
 
-**Decision:** Left (controls) + Right (display) layout  
+**Decision:** Left (controls) + Right (display) layout
 **Rationale:**
 - Clear workflow: configure → generate → view
 - Consistent with Photoshop/GIMP patterns
@@ -886,17 +886,17 @@ All file operations in worker threads (not main thread).
 def handle_login(self):
     username = self.username_input.text().strip()
     password = self.password_input.text()
-    
+
     # Empty check
     if not username or not password:
         self.status_label.setText("Error: Empty username/password")
         return
-    
+
     # Length check
     if len(username) < 3 or len(username) > 50:
         self.status_label.setText("Error: Username 3-50 chars")
         return
-    
+
     # Authentication
     try:
         if self.user_manager.authenticate(username, password):
@@ -952,12 +952,12 @@ def test_login_page_displayed(qapp):
 def test_login_success(qapp):
     """Test successful login switches to dashboard."""
     interface = LeatherBookInterface()
-    
+
     # Simulate login
     interface.username_input.setText("testuser")
     interface.password_input.setText("testpass123")
     interface.login_button.click()
-    
+
     # Check dashboard shown
     assert interface.stacked_widget.currentIndex() == 1
 ```
@@ -968,19 +968,19 @@ def test_login_success(qapp):
 def test_image_generation_workflow(qapp):
     """Test complete image generation flow."""
     interface = LeatherBookInterface()
-    
+
     # Login
     interface.handle_login("testuser", "testpass123")
-    
+
     # Navigate to image gen
     interface.switch_to_image_generation()
-    
+
     # Enter prompt
     interface.image_gen_ui.prompt_input.setText("Test prompt")
-    
+
     # Click generate
     interface.image_gen_ui.generate_button.click()
-    
+
     # Wait for completion (use QSignalSpy)
     spy = QSignalSpy(interface.image_gen_ui.worker.image_generated)
     assert spy.wait(timeout=60000)  # 60 seconds
@@ -1021,4 +1021,3 @@ The desktop application architecture demonstrates **sophisticated PyQt6 design**
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

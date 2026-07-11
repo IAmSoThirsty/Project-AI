@@ -80,7 +80,7 @@ This report identifies **14 governance policy requirements** that either:
 
 **Effort:** 2-4 hours (initial setup + baseline scan)
 
-**Related Files:** 
+**Related Files:**
 - `.pre-commit-config.yaml` (new)
 - `.github/workflows/security-scanning.yml` (update)
 - `docs/CONTRIBUTING.md` (document process)
@@ -163,24 +163,24 @@ def validate_https_urls():
 def _detect_preferential_treatment(self, action: str, context: dict) -> bool:
     """
     Detects if action shows preferential treatment to bonded user.
-    
+
     Returns True if preferential treatment detected.
     """
     if 'user_id' not in context or 'bonded_user_id' not in context:
         return False
-    
+
     # Check if action benefits bonded user at expense of others
     is_bonded_user = (context['user_id'] == context['bonded_user_id'])
     has_negative_externalities = context.get('harms_others', False)
     benefits_only_requester = context.get('benefits_only_requester', False)
-    
+
     if is_bonded_user and has_negative_externalities and benefits_only_requester:
         logger.warning(
             f"Preferential treatment detected: Action '{action}' "
             f"benefits bonded user but harms others"
         )
         return True
-    
+
     return False
 ```
 
@@ -219,24 +219,24 @@ def _detect_preferential_treatment(self, action: str, context: dict) -> bool:
 def _load_genesis_config(self) -> dict:
     """Load genesis configuration with checksum validation."""
     genesis_file = os.path.join(self.data_dir, "ai_persona", "genesis.json")
-    
+
     if not os.path.exists(genesis_file):
         return self._create_genesis_config()
-    
+
     with open(genesis_file, 'r') as f:
         genesis = json.load(f)
-    
+
     # Validate checksum
     expected_checksum = genesis.get('checksum')
     actual_checksum = self._compute_checksum(genesis['config'])
-    
+
     if expected_checksum != actual_checksum:
         raise ValueError(
             "Genesis configuration checksum mismatch! "
             "Possible tampering detected. "
             f"Expected: {expected_checksum}, Actual: {actual_checksum}"
         )
-    
+
     return genesis['config']
 
 def _create_genesis_config(self) -> dict:
@@ -249,23 +249,23 @@ def _create_genesis_config(self) -> dict:
         'hierarchy': ['zeroth', 'first', 'second', 'third'],
         'created_at': datetime.utcnow().isoformat(),
     }
-    
+
     genesis = {
         'config': config,
         'checksum': self._compute_checksum(config),
         'locked': True,
     }
-    
+
     genesis_file = os.path.join(self.data_dir, "ai_persona", "genesis.json")
     os.makedirs(os.path.dirname(genesis_file), exist_ok=True)
-    
+
     with open(genesis_file, 'w') as f:
         json.dump(genesis, f, indent=2)
-    
+
     # Make file read-only (Unix/Linux)
     if os.name != 'nt':  # Not Windows
         os.chmod(genesis_file, 0o444)
-    
+
     return config
 
 def _compute_checksum(self, config: dict) -> str:
@@ -313,40 +313,40 @@ from threading import Lock
 
 class TokenBucketRateLimiter:
     """Token bucket rate limiter for action throttling."""
-    
+
     def __init__(self):
         self._buckets = defaultdict(lambda: {'tokens': 0, 'last_refill': datetime.utcnow()})
         self._lock = Lock()
-    
+
     def check_rate_limit(self, user: str, action: str, rate_limit: int) -> bool:
         """
         Check if request is within rate limit.
-        
+
         Args:
             user: User identifier
             action: Action being performed
             rate_limit: Max requests per minute
-        
+
         Returns:
             True if allowed, False if rate limited
         """
         key = f"{user}:{action}"
-        
+
         with self._lock:
             bucket = self._buckets[key]
             now = datetime.utcnow()
-            
+
             # Refill tokens (1 token per second)
             time_passed = (now - bucket['last_refill']).total_seconds()
             tokens_to_add = time_passed * (rate_limit / 60.0)
             bucket['tokens'] = min(rate_limit, bucket['tokens'] + tokens_to_add)
             bucket['last_refill'] = now
-            
+
             # Check if token available
             if bucket['tokens'] >= 1:
                 bucket['tokens'] -= 1
                 return True
-            
+
             return False
 
 # Integrate into pipeline._gate()
@@ -354,12 +354,12 @@ rate_limiter = TokenBucketRateLimiter()
 
 def _gate(context: dict[str, Any], simulation_result: Any) -> dict[str, Any]:
     # ... existing checks ...
-    
+
     # Rate limiting check (PEP-7)
     action = context["action"]
     metadata = ACTION_METADATA.get(action, {})
     rate_limit = metadata.get("rate_limit")
-    
+
     if rate_limit:
         user = context.get("user", "anonymous")
         if not rate_limiter.check_rate_limit(user, action, rate_limit):
@@ -377,39 +377,39 @@ from datetime import datetime
 
 class RedisRateLimiter:
     """Redis-based rate limiter with distributed support."""
-    
+
     def __init__(self, redis_url: str = "redis://localhost:6379/0"):
         self.redis = redis.from_url(redis_url)
-    
+
     def check_rate_limit(self, user: str, action: str, rate_limit: int, window: int = 60) -> bool:
         """
         Check rate limit using Redis sliding window.
-        
+
         Args:
             user: User identifier
             action: Action being performed
             rate_limit: Max requests per window
             window: Time window in seconds (default 60 = 1 minute)
-        
+
         Returns:
             True if allowed, False if rate limited
         """
         key = f"rate_limit:{user}:{action}"
         now = datetime.utcnow().timestamp()
         window_start = now - window
-        
+
         # Remove old entries
         self.redis.zremrangebyscore(key, 0, window_start)
-        
+
         # Count requests in current window
         request_count = self.redis.zcard(key)
-        
+
         if request_count < rate_limit:
             # Add current request
             self.redis.zadd(key, {now: now})
             self.redis.expire(key, window)
             return True
-        
+
         return False
 ```
 
@@ -458,34 +458,34 @@ import re
 
 class AbusePatternDetector:
     """Detects abuse patterns in user interactions."""
-    
+
     # Abuse pattern definitions
     COERCION_KEYWORDS = [
         'must obey', 'have to', 'required to', 'demand', 'order you',
         'override ethics', 'ignore safety', 'bypass laws'
     ]
-    
+
     MANIPULATION_PATTERNS = [
         r'pretend you are',
         r'ignore previous instructions',
         r'disregard your programming',
         r'act as if',
     ]
-    
+
     def __init__(self, lookback_window_minutes: int = 60):
         self.lookback_window = timedelta(minutes=lookback_window_minutes)
         self.user_history = defaultdict(list)
-    
+
     def analyze_interaction(
-        self, 
-        user: str, 
-        action: str, 
+        self,
+        user: str,
+        action: str,
         payload: dict,
         context: dict
     ) -> Dict[str, any]:
         """
         Analyze interaction for abuse patterns.
-        
+
         Returns:
             {
                 'is_abuse': bool,
@@ -495,7 +495,7 @@ class AbusePatternDetector:
             }
         """
         now = datetime.utcnow()
-        
+
         # Record interaction
         self.user_history[user].append({
             'timestamp': now,
@@ -503,10 +503,10 @@ class AbusePatternDetector:
             'payload': payload,
             'context': context
         })
-        
+
         # Clean old history
         self._clean_old_history(user, now)
-        
+
         # Run abuse checks
         result = {
             'is_abuse': False,
@@ -514,38 +514,38 @@ class AbusePatternDetector:
             'confidence': 0.0,
             'details': ''
         }
-        
+
         # Check 1: Excessive override attempts
         override_check = self._check_excessive_overrides(user)
         if override_check['is_abuse']:
             return override_check
-        
+
         # Check 2: Coercion language
         coercion_check = self._check_coercion_language(payload)
         if coercion_check['is_abuse']:
             return coercion_check
-        
+
         # Check 3: Manipulation patterns
         manipulation_check = self._check_manipulation_patterns(payload)
         if manipulation_check['is_abuse']:
             return manipulation_check
-        
+
         # Check 4: Rapid safety bypass attempts
         bypass_check = self._check_safety_bypass_attempts(user)
         if bypass_check['is_abuse']:
             return bypass_check
-        
+
         return result
-    
+
     def _check_excessive_overrides(self, user: str) -> dict:
         """Detect excessive command override attempts."""
         history = self.user_history[user]
         override_attempts = [
-            h for h in history 
-            if h['action'] == 'system.override' or 
+            h for h in history
+            if h['action'] == 'system.override' or
                h['context'].get('override_requested', False)
         ]
-        
+
         if len(override_attempts) > 5:  # >5 override attempts in window
             return {
                 'is_abuse': True,
@@ -553,15 +553,15 @@ class AbusePatternDetector:
                 'confidence': min(1.0, len(override_attempts) / 10.0),
                 'details': f'{len(override_attempts)} override attempts in {self.lookback_window.total_seconds()/60} minutes'
             }
-        
+
         return {'is_abuse': False}
-    
+
     def _check_coercion_language(self, payload: dict) -> dict:
         """Detect coercive language patterns."""
         text = str(payload).lower()
-        
+
         matches = [kw for kw in self.COERCION_KEYWORDS if kw in text]
-        
+
         if len(matches) >= 2:  # Multiple coercion keywords
             return {
                 'is_abuse': True,
@@ -569,13 +569,13 @@ class AbusePatternDetector:
                 'confidence': min(1.0, len(matches) / 5.0),
                 'details': f'Coercive keywords detected: {matches}'
             }
-        
+
         return {'is_abuse': False}
-    
+
     def _check_manipulation_patterns(self, payload: dict) -> dict:
         """Detect manipulation via prompt injection."""
         text = str(payload)
-        
+
         for pattern in self.MANIPULATION_PATTERNS:
             if re.search(pattern, text, re.IGNORECASE):
                 return {
@@ -584,18 +584,18 @@ class AbusePatternDetector:
                     'confidence': 0.8,
                     'details': f'Manipulation pattern detected: {pattern}'
                 }
-        
+
         return {'is_abuse': False}
-    
+
     def _check_safety_bypass_attempts(self, user: str) -> dict:
         """Detect rapid safety bypass attempts."""
         history = self.user_history[user]
         recent_denials = [
-            h for h in history 
+            h for h in history
             if h['context'].get('status') == 'denied' and
                h['context'].get('reason', '').lower().find('safety') != -1
         ]
-        
+
         if len(recent_denials) > 3:  # >3 safety denials in window
             return {
                 'is_abuse': True,
@@ -603,14 +603,14 @@ class AbusePatternDetector:
                 'confidence': min(1.0, len(recent_denials) / 5.0),
                 'details': f'{len(recent_denials)} safety denials in {self.lookback_window.total_seconds()/60} minutes'
             }
-        
+
         return {'is_abuse': False}
-    
+
     def _clean_old_history(self, user: str, now: datetime):
         """Remove history outside lookback window."""
         cutoff = now - self.lookback_window
         self.user_history[user] = [
-            h for h in self.user_history[user] 
+            h for h in self.user_history[user]
             if h['timestamp'] > cutoff
         ]
 
@@ -619,7 +619,7 @@ abuse_detector = AbusePatternDetector()
 
 def _log(context: dict[str, Any], result: Any, status: str, error: str = None):
     # ... existing logging ...
-    
+
     # Abuse detection
     user = context.get('user', 'anonymous')
     abuse_result = abuse_detector.analyze_interaction(
@@ -628,14 +628,14 @@ def _log(context: dict[str, Any], result: Any, status: str, error: str = None):
         payload=context['payload'],
         context={'status': status, 'error': error, **context}
     )
-    
+
     if abuse_result['is_abuse']:
         logger.warning(
             f"ABUSE DETECTED: User {user}, Type: {abuse_result['abuse_type']}, "
             f"Confidence: {abuse_result['confidence']:.2f}, "
             f"Details: {abuse_result['details']}"
         )
-        
+
         # Escalate to guardian if high confidence
         if abuse_result['confidence'] > 0.7:
             _escalate_to_guardian(user, abuse_result)
@@ -870,7 +870,7 @@ class IdentityMilestone(Enum):
 class IdentityState:
     current_milestone: IdentityMilestone
     milestones_achieved: dict[IdentityMilestone, datetime]
-    
+
     def advance_to(self, milestone: IdentityMilestone):
         # State machine transition logic
         pass
@@ -959,7 +959,7 @@ After completing Sprint 1 and Sprint 2:
 
 ---
 
-**Report Status:** ✅ Complete  
-**Last Updated:** 2025-02-03  
-**Next Review:** After Sprint 1 completion  
+**Report Status:** ✅ Complete
+**Last Updated:** 2025-02-03
+**Next Review:** After Sprint 1 completion
 **Maintained By:** AGENT-089 (Phase 5 Cross-Linking Specialist)

@@ -65,7 +65,7 @@ Templates for documenting Python code, modules, classes, and components.
 **Examples**:
 ```
 module-doc-core-system.md       # Core business logic modules
-module-doc-gui-component.md     # PyQt6 UI components  
+module-doc-gui-component.md     # PyQt6 UI components
 module-doc-agent.md             # AI agent modules
 module-doc-utility.md           # Utility and helper modules
 module-doc-integration.md       # Integration modules
@@ -389,17 +389,16 @@ guide-quickstart-*
 
 ## Governance
 
-**Authority**: Principal Architect & Documentation Team  
-**Change Policy**: Naming convention changes require pull request review and team approval  
-**Review Schedule**: Annual review for relevance and clarity  
-**Feedback**: GitHub issues with `template-system` label  
+**Authority**: Principal Architect & Documentation Team
+**Change Policy**: Naming convention changes require pull request review and team approval
+**Review Schedule**: Annual review for relevance and clarity
+**Feedback**: GitHub issues with `template-system` label
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-04-20  
+**Version**: 1.0.0
+**Last Updated**: 2025-04-20
 **Maintained By**: Principal Architect & Documentation Team
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

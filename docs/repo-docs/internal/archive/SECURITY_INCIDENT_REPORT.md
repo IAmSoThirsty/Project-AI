@@ -32,9 +32,9 @@ path_confirmed: T:/Project-AI-main/docs/internal/archive/SECURITY_INCIDENT_REPOR
 ---
 # 🚨 Security Incident Report: Exposed Secrets
 
-**Date**: 2026-01-09  
-**Severity**: CRITICAL  
-**Status**: REMEDIATED (Git tracking fixed, credential rotation required)  
+**Date**: 2026-01-09
+**Severity**: CRITICAL
+**Status**: REMEDIATED (Git tracking fixed, credential rotation required)
 **Reporter**: Security Orchestrator (Automated Scan)
 
 ---
@@ -232,7 +232,7 @@ Most documentation examples were updated to use environment variables. A few rem
    # Install pre-commit framework
    pip install pre-commit
    pre-commit install
-   
+
    # This will automatically scan for secrets before each commit
    ```
 
@@ -300,8 +300,8 @@ Most documentation examples were updated to use environment variables. A few rem
 
 ---
 
-**Next Review Date**: 2026-01-16 (1 week)  
-**Responsible Party**: Development Team + Security Team  
+**Next Review Date**: 2026-01-16 (1 week)
+**Responsible Party**: Development Team + Security Team
 **Escalation**: If unauthorized access detected, escalate to security team immediately
 
 ---

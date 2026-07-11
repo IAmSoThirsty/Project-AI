@@ -54,4 +54,3 @@ Recommended Next Steps: It would be beneficial to establish a standardized metho
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

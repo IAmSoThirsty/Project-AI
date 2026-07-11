@@ -77,7 +77,7 @@ Updated application entry point:
 │   (40% width)        │  ┌──────────────────────────────┤
 │                      │  │ Uptime, Memory, CPU, Session │
 │   - Neural Face      │  └──────────────────────────────┤
-│   - Grid Background  │  
+│   - Grid Background  │
 │   - Status LEDs      │  CENTER: AI NEURAL HEAD        │
 │   - Animation        │  ┌──────────────────────────────┤
 │                      │  │ Animated Face (eyes, mouth)  │

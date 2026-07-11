@@ -9,4 +9,3 @@ Simplify {} to a 6th-grade reading level (ages 11-12). Use simple sentences, com
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

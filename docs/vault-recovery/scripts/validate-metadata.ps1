@@ -5,13 +5,13 @@
 param(
     [Parameter(Mandatory=$false)]
     [string]$File,
-    
+
     [Parameter(Mandatory=$false)]
     [switch]$Recursive,
-    
+
     [Parameter(Mandatory=$false)]
     [switch]$CheckRelationships,
-    
+
     [Parameter(Mandatory=$false)]
     [switch]$Verbose
 )
@@ -32,7 +32,7 @@ function Write-Info { param($msg) Write-Host $msg -ForegroundColor Cyan }
 # Extract YAML frontmatter from Markdown file
 function Get-YamlFrontmatter {
     param([string]$FilePath)
-    
+
     $content = Get-Content $FilePath -Raw
     if ($content -match '(?s)^---\s*\n(.*?)\n---') {
         return $matches[1]
@@ -43,7 +43,7 @@ function Get-YamlFrontmatter {
 # Parse YAML to hashtable
 function ConvertFrom-Yaml {
     param([string]$YamlContent)
-    
+
     try {
         # Simple YAML parser (for basic validation)
         # In production, use a proper YAML library
@@ -51,14 +51,14 @@ function ConvertFrom-Yaml {
         $result = @{}
         $currentKey = $null
         $indent = 0
-        
+
         foreach ($line in $lines) {
             if ($line -match '^\s*#' -or $line -match '^\s*$') { continue }
-            
+
             if ($line -match '^([a-z_]+):\s*(.*)$') {
                 $key = $matches[1]
                 $value = $matches[2]
-                
+
                 if ($value) {
                     # Simple value
                     $result[$key] = $value.Trim('"', "'")
@@ -69,7 +69,7 @@ function ConvertFrom-Yaml {
                 }
             }
         }
-        
+
         return $result
     }
     catch {
@@ -81,23 +81,23 @@ function ConvertFrom-Yaml {
 # Validate required fields
 function Test-RequiredFields {
     param($Metadata)
-    
+
     $requiredFields = @('title', 'id', 'type', 'version', 'created_date', 'updated_date', 'status', 'author')
     $errors = @()
-    
+
     foreach ($field in $requiredFields) {
         if (-not $Metadata.ContainsKey($field)) {
             $errors += "Missing required field: $field"
         }
     }
-    
+
     return $errors
 }
 
 # Validate ID format (kebab-case)
 function Test-IdFormat {
     param([string]$Id)
-    
+
     if ($Id -notmatch '^[a-z0-9]+(-[a-z0-9]+)*$') {
         return "ID must be kebab-case (lowercase letters, numbers, hyphens only)"
     }
@@ -107,7 +107,7 @@ function Test-IdFormat {
 # Validate SemVer format
 function Test-SemVerFormat {
     param([string]$Version)
-    
+
     if ($Version -notmatch '^\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$') {
         return "Version must follow Semantic Versioning (e.g., 1.0.0, 2.1.3-beta.1)"
     }
@@ -117,7 +117,7 @@ function Test-SemVerFormat {
 # Validate ISO 8601 date format
 function Test-DateFormat {
     param([string]$Date)
-    
+
     try {
         [DateTime]::Parse($Date) | Out-Null
         return $null
@@ -130,7 +130,7 @@ function Test-DateFormat {
 # Validate enum values
 function Test-EnumValue {
     param([string]$Value, [string[]]$AllowedValues, [string]$FieldName)
-    
+
     if ($Value -notin $AllowedValues) {
         return "${FieldName} must be one of: $($AllowedValues -join ', ')"
     }
@@ -140,10 +140,10 @@ function Test-EnumValue {
 # Validate document type specific requirements
 function Test-TypeSpecificFields {
     param($Metadata)
-    
+
     $errors = @()
     $type = $Metadata['type']
-    
+
     switch ($type) {
         'audit' {
             $required = @('auditor', 'audit_date', 'findings', 'risk_level')
@@ -194,45 +194,45 @@ function Test-TypeSpecificFields {
             }
         }
     }
-    
+
     return $errors
 }
 
 # Validate single file
 function Test-MetadataFile {
     param([string]$FilePath)
-    
+
     Write-Info "`nValidating: $FilePath"
-    
+
     # Extract YAML frontmatter
     $yaml = Get-YamlFrontmatter -FilePath $FilePath
     if (-not $yaml) {
         Write-Error-Custom "  ❌ No YAML frontmatter found"
         return $false
     }
-    
+
     # Parse YAML
     $metadata = ConvertFrom-Yaml -YamlContent $yaml
     if (-not $metadata) {
         Write-Error-Custom "  ❌ Failed to parse YAML"
         return $false
     }
-    
+
     # Validate required fields
     $errors = Test-RequiredFields -Metadata $metadata
-    
+
     # Validate ID format
     if ($metadata.ContainsKey('id')) {
         $idError = Test-IdFormat -Id $metadata['id']
         if ($idError) { $errors += $idError }
     }
-    
+
     # Validate version format
     if ($metadata.ContainsKey('version')) {
         $versionError = Test-SemVerFormat -Version $metadata['version']
         if ($versionError) { $errors += $versionError }
     }
-    
+
     # Validate date formats
     if ($metadata.ContainsKey('created_date')) {
         $dateError = Test-DateFormat -Date $metadata['created_date']
@@ -242,7 +242,7 @@ function Test-MetadataFile {
         $dateError = Test-DateFormat -Date $metadata['updated_date']
         if ($dateError) { $errors += "updated_date: $dateError" }
     }
-    
+
     # Validate status enum
     if ($metadata.ContainsKey('status')) {
         $statusError = Test-EnumValue -Value $metadata['status'] `
@@ -250,18 +250,18 @@ function Test-MetadataFile {
             -FieldName 'status'
         if ($statusError) { $errors += $statusError }
     }
-    
+
     # Validate type-specific requirements
     if ($metadata.ContainsKey('type')) {
         $typeErrors = Test-TypeSpecificFields -Metadata $metadata
         $errors += $typeErrors
     }
-    
+
     # Check if deprecated documents have superseded_by
     if ($metadata['status'] -eq 'deprecated' -and -not $metadata.ContainsKey('superseded_by')) {
         $errors += "Deprecated documents must specify 'superseded_by' field"
     }
-    
+
     # Report results
     if ($errors.Count -eq 0) {
         Write-Success "  ✓ Valid"

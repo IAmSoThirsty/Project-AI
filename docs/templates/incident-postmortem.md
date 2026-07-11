@@ -33,7 +33,7 @@ aliases: []
 
 ### One-Line Summary
 
-> 
+>
 
 ### Impact Summary
 
@@ -126,7 +126,7 @@ aliases: []
 
 
 **Evidence:**
-- 
+-
 
 ---
 <%* } %>
@@ -141,9 +141,9 @@ aliases: []
 
 
 **Contributing Factors:**
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 **Proximate Cause:**
 
@@ -156,15 +156,15 @@ aliases: []
 **5 Whys Analysis:**
 
 1. **Why did the incident occur?**
-   
+
 2. **Why was that the case?**
-   
+
 3. **Why was that condition present?**
-   
+
 4. **Why wasn't that prevented?**
-   
+
 5. **Why was the system vulnerable?**
-   
+
 
 ### How Was It Detected?
 
@@ -176,10 +176,10 @@ aliases: []
 - [ ] Other: _______________
 
 **Alert Details:**
-- **Monitoring Tool:** 
-- **Alert Name:** 
-- **Threshold:** 
-- **Time to Alert:** 
+- **Monitoring Tool:**
+- **Alert Name:**
+- **Threshold:**
+- **Time to Alert:**
 
 **Detection Gap Analysis:**
 
@@ -191,11 +191,11 @@ aliases: []
 ### User Impact
 
 **Affected Users:**
-- **Total Users Affected:** 
-- **Percentage of User Base:** 
-- **User Segments:** 
-  - 
-  - 
+- **Total Users Affected:**
+- **Percentage of User Base:**
+- **User Segments:**
+  -
+  -
 
 **User Experience Impact:**
 - [ ] Complete service unavailability
@@ -208,21 +208,21 @@ aliases: []
 
 **User-Reported Issues:**
 - **Support Tickets:** <% tp.system.prompt("Number of support tickets", "0") %>
-- **Social Media Mentions:** 
-- **Direct Complaints:** 
+- **Social Media Mentions:**
+- **Direct Complaints:**
 
 ### Business Impact
 
 **Financial Impact:**
-- **Revenue Lost:** 
-- **SLA Credits:** 
-- **Refunds/Compensation:** 
-- **Total Financial Impact:** 
+- **Revenue Lost:**
+- **SLA Credits:**
+- **Refunds/Compensation:**
+- **Total Financial Impact:**
 
 **Operational Impact:**
 - **Engineering Hours:** <% tp.system.prompt("Total engineering hours spent", "") %>
-- **Opportunity Cost:** 
-- **Team Morale:** 
+- **Opportunity Cost:**
+- **Team Morale:**
 
 **Reputational Impact:**
 - **Media Coverage:** Yes | No
@@ -246,9 +246,9 @@ aliases: []
 - [ ] Data corruption
 
 **If data was affected:**
-- **Records Affected:** 
-- **Data Recovery Method:** 
-- **Recovery Success Rate:** 
+- **Records Affected:**
+- **Data Recovery Method:**
+- **Recovery Success Rate:**
 
 ---
 
@@ -256,25 +256,25 @@ aliases: []
 
 ### What Went Well
 
-1. ✅ 
-2. ✅ 
-3. ✅ 
+1. ✅
+2. ✅
+3. ✅
 
 ### What Went Poorly
 
-1. ❌ 
-2. ❌ 
-3. ❌ 
+1. ❌
+2. ❌
+3. ❌
 
 ### Luck Factor
 
 **What got lucky:**
-- 
-- 
+-
+-
 
 **What could have been worse:**
-- 
-- 
+-
+-
 
 ---
 
@@ -282,22 +282,22 @@ aliases: []
 
 ### Immediate Actions (During Incident)
 
-1. **Action:** 
-   - **Time:** 
-   - **Outcome:** 
+1. **Action:**
+   - **Time:**
+   - **Outcome:**
    - **Effectiveness:** High | Medium | Low
 
-2. **Action:** 
-   - **Time:** 
-   - **Outcome:** 
+2. **Action:**
+   - **Time:**
+   - **Outcome:**
    - **Effectiveness:** High | Medium | Low
 
 ### Short-term Fixes (Temporary)
 
-1. **Action:** 
+1. **Action:**
    - **Implemented:** Yes | No
    - **Status:** Active | Removed
-   - **Plan to Replace:** 
+   - **Plan to Replace:**
 
 ---
 
@@ -323,9 +323,9 @@ aliases: []
 **Estimated Effort:** <% tp.system.prompt(`Action ${i} effort (hours/days)`, "") %>
 
 **Acceptance Criteria:**
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
+- [ ]
 
 **Status:**
 - [ ] Not Started
@@ -393,39 +393,39 @@ aliases: []
 ### For Engineering
 
 **Technical Lessons:**
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 **Skills Gaps Identified:**
-- 
-- 
+-
+-
 
 **Training Needs:**
-- 
-- 
+-
+-
 
 ### For Operations
 
 **Process Lessons:**
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 **Tool Improvements:**
-- 
-- 
+-
+-
 
 ### For Organization
 
 **Communication Lessons:**
-- 
+-
 
 **Decision-Making Lessons:**
-- 
+-
 
 **Escalation Lessons:**
-- 
+-
 
 ---
 
@@ -439,10 +439,10 @@ aliases: []
 ```
 
 **System Metrics:**
-- **CPU Usage:** 
-- **Memory Usage:** 
-- **Network I/O:** 
-- **Database Connections:** 
+- **CPU Usage:**
+- **Memory Usage:**
+- **Network I/O:**
+- **Database Connections:**
 
 ### Related Documentation
 
@@ -452,9 +452,9 @@ aliases: []
 
 ### External References
 
-- Vendor support ticket: 
-- Related incidents: 
-- Industry postmortems: 
+- Vendor support ticket:
+- Related incidents:
+- Industry postmortems:
 
 ---
 
@@ -484,10 +484,10 @@ aliases: []
 - [ ] Social media update
 
 **Communication Templates Used:**
-- Initial notification: 
-- Status updates: 
-- Resolution notice: 
-- Postmortem summary: 
+- Initial notification:
+- Status updates:
+- Resolution notice:
+- Postmortem summary:
 
 ---
 
@@ -521,28 +521,28 @@ aliases: []
 ### Postmortem Review Meeting
 
 **Date:** <% tp.system.prompt("Postmortem meeting date", "") %>
-**Attendees:** 
-- 
-- 
-- 
+**Attendees:**
+-
+-
+-
 
 **Discussion Points:**
-- 
+-
 
 **Decisions Made:**
-- 
+-
 
 ### 30-Day Follow-up
 
-**Date:** 
+**Date:**
 **Action Items Completed:** ___%
-**Remaining Work:** 
+**Remaining Work:**
 
 ### 90-Day Follow-up
 
-**Date:** 
+**Date:**
 **All Actions Completed:** Yes | No
-**Effectiveness Assessment:** 
+**Effectiveness Assessment:**
 
 ---
 
@@ -585,4 +585,3 @@ aliases: []
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

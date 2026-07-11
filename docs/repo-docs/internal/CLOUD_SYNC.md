@@ -267,7 +267,7 @@ python examples/cloud_sync_demo.py
 
 **Symptom:** `RequestException` during upload/download
 
-**Solution:** 
+**Solution:**
 
 - Check network connectivity
 - Verify cloud API endpoint is accessible

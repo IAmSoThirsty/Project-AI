@@ -19,42 +19,42 @@ sequenceDiagram
     participant AIOrch as AI Orchestrator
     participant DB as Data Store (JSON)
     participant Logger as Audit Logger
-    
+
     Note over Client,Logger: Web API Request/Response Flow
-    
+
     %% Client Request
     Client->>CORS: POST /api/ai/chat<br/>Headers: Authorization, Content-Type<br/>Body: {message, context}
     activate CORS
-    
+
     %% CORS Check
     CORS->>CORS: Verify origin against whitelist
-    
+
     alt Origin Not Allowed
         CORS-->>Client: 403 Forbidden<br/>{error: "CORS violation"}
         Note over Client: Request blocked
     else Origin Allowed
         CORS->>CORS: Set CORS headers:<br/>- Access-Control-Allow-Origin<br/>- Access-Control-Allow-Methods<br/>- Access-Control-Allow-Headers
-        
+
         CORS->>RateLimit: Forward request
         deactivate CORS
         activate RateLimit
-        
+
         %% Rate Limiting
         RateLimit->>RateLimit: Check IP/token rate limit<br/>(100 req/hour per IP)
-        
+
         alt Rate Limit Exceeded
             RateLimit-->>Client: 429 Too Many Requests<br/>{error: "Rate limit exceeded",<br/>retry_after: 3600}
             Note over Client: Retry after cooldown
         else Within Rate Limit
             RateLimit->>RateLimit: Increment request counter
-            
+
             RateLimit->>Auth: Forward request
             deactivate RateLimit
             activate Auth
-            
+
             %% Authentication
             Auth->>Auth: Extract Bearer token from header
-            
+
             alt No Token
                 Auth-->>Client: 401 Unauthorized<br/>{error: "Missing authentication"}
             else Invalid Token
@@ -64,63 +64,63 @@ sequenceDiagram
                 Auth->>Auth: Decode JWT payload
                 Auth->>Auth: Extract user_id, role, exp
                 Auth->>Auth: Check token expiration
-                
+
                 alt Token Expired
                     Auth-->>Client: 401 Unauthorized<br/>{error: "Token expired"}
                 else Token Valid
                     Auth->>Auth: Load user context (role, permissions)
-                    
+
                     Auth->>Router: Forward request + user context
                     deactivate Auth
                     activate Router
-                    
+
                     %% Runtime Router
                     Router->>Logger: Log request (user, endpoint, timestamp)
                     activate Logger
                     Logger-->>Router: Request logged
                     deactivate Logger
-                    
+
                     Router->>Router: Parse request payload:<br/>- Extract action: "ai.chat"<br/>- Extract parameters<br/>- Validate JSON schema
-                    
+
                     alt Invalid Payload
                         Router-->>Client: 400 Bad Request<br/>{error: "Invalid request format"}
                     else Valid Payload
                         %% Governance Validation
                         Router->>Gov: validate_request(action, user, context)
                         activate Gov
-                        
+
                         par Triumvirate Evaluation
                             Gov->>Gov: Galahad: Check user welfare
                             Gov->>Gov: Cerberus: Assess security risks
                             Gov->>Gov: Codex: Verify logical consistency
                         end
-                        
+
                         alt Request Blocked
                             Gov-->>Router: BLOCKED (reason, severity)
                             deactivate Gov
-                            
+
                             Router->>Logger: Log blocked request
                             activate Logger
                             Logger-->>Router: Block logged
                             deactivate Logger
-                            
+
                             Router-->>Client: 403 Forbidden<br/>{error: "Request blocked",<br/>reason: "[governance reason]"}
-                            
+
                         else Request Approved
                             Gov-->>Router: APPROVED (decision summary)
                             deactivate Gov
-                            
+
                             %% Route to Handler
                             Router->>Handler: Route to /api/ai/chat handler
                             activate Handler
-                            
+
                             alt Action: ai.chat
                                 Handler->>AIOrch: generate_response(message, user_context)
                                 activate AIOrch
-                                
+
                                 AIOrch->>AIOrch: Build prompt with context
                                 AIOrch->>AIOrch: Call OpenAI API (GPT-4)
-                                
+
                                 alt OpenAI Success
                                     AIOrch-->>Handler: AI response + metadata
                                 else OpenAI Failure
@@ -128,33 +128,33 @@ sequenceDiagram
                                     AIOrch-->>Handler: Fallback response + metadata
                                 end
                                 deactivate AIOrch
-                                
+
                                 Handler->>DB: Store interaction in episodic memory
                                 activate DB
                                 DB-->>Handler: Interaction stored
                                 deactivate DB
-                                
+
                                 Handler-->>Router: Response: {status: "success",<br/>result: {message, metadata}}
                                 deactivate Handler
-                                
+
                             else Action: user.login
                                 Handler->>UserMgr: login(username, password)
                                 activate UserMgr
-                                
+
                                 UserMgr->>DB: Load users.json
                                 activate DB
                                 DB-->>UserMgr: User data
                                 deactivate DB
-                                
+
                                 UserMgr->>UserMgr: Verify password (pbkdf2_sha256)
-                                
+
                                 alt Login Failed
                                     UserMgr->>UserMgr: Increment failed attempts
                                     UserMgr->>DB: Save lockout state
                                     activate DB
                                     DB-->>UserMgr: State saved
                                     deactivate DB
-                                    
+
                                     UserMgr-->>Handler: Login failed
                                     Handler-->>Router: Response: {status: "error",<br/>error: "Invalid credentials"}
                                 else Login Success
@@ -164,25 +164,25 @@ sequenceDiagram
                                     activate DB
                                     DB-->>UserMgr: State saved
                                     deactivate DB
-                                    
+
                                     UserMgr-->>Handler: Login successful (token, user)
                                     deactivate UserMgr
                                     Handler-->>Router: Response: {status: "success",<br/>result: {token, user}}
                                 end
                                 deactivate Handler
                             end
-                            
+
                             %% Response Processing
                             Router->>Logger: Log successful response
                             activate Logger
                             Logger-->>Router: Response logged
                             deactivate Logger
-                            
+
                             Router->>Router: Format response with metadata:<br/>- Execution time<br/>- Request ID<br/>- Timestamp
-                            
+
                             Router-->>Client: 200 OK<br/>{status: "success",<br/>result: {...},<br/>metadata: {...}}
                             deactivate Router
-                            
+
                             Note over Client: Request completed successfully
                         end
                     end
@@ -190,10 +190,10 @@ sequenceDiagram
             end
         end
     end
-    
+
     %% Error Handling (Alternative Flows)
     Note over Client,Logger: Error Scenarios
-    
+
     alt Network Timeout
         Client->>CORS: Request
         activate CORS
@@ -201,7 +201,7 @@ sequenceDiagram
         CORS-->>Client: 504 Gateway Timeout<br/>{error: "Request timeout"}
         deactivate CORS
     end
-    
+
     alt Server Error
         Client->>Router: Request
         activate Router
@@ -210,12 +210,12 @@ sequenceDiagram
         Handler->>Handler: Unexpected exception
         Handler-->>Router: Exception details
         deactivate Handler
-        
+
         Router->>Logger: Log error (stack trace)
         activate Logger
         Logger-->>Router: Error logged
         deactivate Logger
-        
+
         Router-->>Client: 500 Internal Server Error<br/>{error: "Server error",<br/>request_id: "abc123"}
         deactivate Router
         Note over Client: User sees generic error,<br/>admins see full trace in logs

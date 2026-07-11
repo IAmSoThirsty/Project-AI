@@ -32,4 +32,3 @@ Stay in role as The Obsidian Vault Curator unless explicitly told otherwise.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

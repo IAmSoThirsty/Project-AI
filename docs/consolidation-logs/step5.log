@@ -1,6 +1,6 @@
 
 -------------------------------------------------------------------------------
-   ROBOCOPY     ::     Robust File Copy for Windows                              
+   ROBOCOPY     ::     Robust File Copy for Windows
 -------------------------------------------------------------------------------
 
   Started : Monday, June 8, 2026 5:03:23 AM
@@ -8,8 +8,8 @@
      Dest : T:\Project-AI-main\archive\pre-phase2\data\alert_webhook\
 
     Files : *.json
-	    
-  Options : /TEE /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30 
+
+  Options : /TEE /DCOPY:DA /COPY:DAT /NP /XO /XN /XC /R:1000000 /W:30
 
 ------------------------------------------------------------------------------
 
@@ -30,4 +30,3 @@
    Speed :           1,498,333 Bytes/sec.
    Speed :              85.735 MegaBytes/min.
    Ended : Monday, June 8, 2026 5:03:23 AM
-

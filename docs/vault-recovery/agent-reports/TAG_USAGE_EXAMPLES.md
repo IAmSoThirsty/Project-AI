@@ -1,8 +1,8 @@
 # Tag Taxonomy Usage Examples
 
-> **Quick Reference for Tag Selection**  
-> **Version:** 1.0  
-> **Last Updated:** 2025-01-20  
+> **Quick Reference for Tag Selection**
+> **Version:** 1.0
+> **Last Updated:** 2025-01-20
 > **See Also:** TAG_TAXONOMY.md (complete reference)
 
 ---
@@ -37,20 +37,20 @@ tags:
   # Area (2 tags)
   - security
   - security/audit
-  
+
   # Type (1 tag)
   - report
-  
+
   # Component (3 tags)
   - user-manager
   - command-override
   - security/authentication
-  
+
   # Audience (3 tags)
   - security
   - developer
   - executive
-  
+
   # Special (2 tags)
   - troubleshooting
   - best-practices
@@ -81,18 +81,18 @@ tags:
   # Area (2 tags)
   - development
   - development/python
-  
+
   # Type (1 tag)
   - guide
-  
+
   # Component (2 tags)
   - gui
   - persona-system
-  
+
   # Audience (2 tags)
   - developer
   - contributor
-  
+
   # Special (2 tags)
   - quickstart
   - tutorial
@@ -123,21 +123,21 @@ tags:
   # Area (2 tags)
   - governance
   - governance/constitutional-ai
-  
+
   # Type (1 tag)
   - whitepaper
-  
+
   # Component (3 tags)
   - constitutional-ai
   - governance-engine
   - agents
-  
+
   # Audience (4 tags - broad reach)
   - executive
   - researcher
   - public
   - legal
-  
+
   # Special (1 tag)
   - best-practices
 ---
@@ -167,18 +167,18 @@ tags:
   # Area (2 tags)
   - operations
   - operations/deployment
-  
+
   # Type (1 tag)
   - runbook
-  
+
   # Component (2 tags)
   - docker
   - hydra-swarm
-  
+
   # Audience (2 tags)
   - operator
   - developer
-  
+
   # Special (3 tags)
   - quickstart
   - troubleshooting
@@ -210,20 +210,20 @@ tags:
   # Area (2 tags)
   - development
   - development/api
-  
+
   # Type (1 tag)
   - api-doc
-  
+
   # Component (3 tags)
   - intelligence-engine
   - user-manager
   - memory-system
-  
+
   # Audience (3 tags)
   - developer
   - contributor
   - public
-  
+
   # Special (0 tags)
 ---
 ```
@@ -253,18 +253,18 @@ tags:
   - operations
   - operations/troubleshooting
   - security
-  
+
   # Type (1 tag)
   - runbook
-  
+
   # Component (2 tags)
   - cerberus
   - hydra-swarm
-  
+
   # Audience (2 tags)
   - operator
   - security
-  
+
   # Special (2 tags)
   - troubleshooting
   - monitoring
@@ -295,19 +295,19 @@ tags:
   # Area (2 tags)
   - governance
   - architecture
-  
+
   # Type (1 tag)
   - spec
-  
+
   # Component (2 tags)
   - thirsty-lang
   - tarl
-  
+
   # Audience (3 tags)
   - architect
   - developer
   - researcher
-  
+
   # Special (0 tags)
 ---
 ```
@@ -336,17 +336,17 @@ tags:
   # Area (2 tags)
   - development
   - development/python
-  
+
   # Type (1 tag)
   - guide
-  
+
   # Component (1 tag)
   - plugin-system
-  
+
   # Audience (2 tags)
   - developer
   - contributor
-  
+
   # Special (3 tags)
   - tutorial
   - quickstart
@@ -378,17 +378,17 @@ tags:
   # Area (2 tags)
   - security
   - security/authentication
-  
+
   # Type (2 tags)
   - guide
   - source-doc
-  
+
   # Component (1 tag)
   - user-manager
-  
+
   # Audience (1 tag)
   - developer
-  
+
   # Special (2 tags)
   - best-practices
   - tutorial
@@ -419,16 +419,16 @@ tags:
   # Area (2 tags)
   - development
   - development/ci-cd
-  
+
   # Type (1 tag)
   - guide
-  
+
   # Component (0 tags - no specific component)
-  
+
   # Audience (2 tags)
   - developer
   - operator
-  
+
   # Special (2 tags)
   - automation
   - best-practices
@@ -460,16 +460,16 @@ tags:
   # Area (2 tags)
   - security
   - security/cryptography
-  
+
   # Type (1 tag)
   - guide
-  
+
   # Component (1 tag)
   - user-manager
-  
+
   # Audience (1 tag)
   - developer
-  
+
   # Special (3 tags)
   - migration
   - breaking-change
@@ -503,19 +503,19 @@ tags:
   - architecture
   - architecture/integration
   - operations
-  
+
   # Type (2 tags)
   - guide
   - spec
-  
+
   # Component (1 tag)
   - temporal
-  
+
   # Audience (3 tags)
   - architect
   - developer
   - operator
-  
+
   # Special (2 tags)
   - integration
   - quickstart
@@ -546,18 +546,18 @@ tags:
   # Area (2 tags)
   - operations
   - security
-  
+
   # Type (2 tags)
   - guide
   - spec
-  
+
   # Component (1 tag)
   - emergency-alert
-  
+
   # Audience (2 tags)
   - developer
   - operator
-  
+
   # Special (1 tag)
   - integration
 ---
@@ -587,16 +587,16 @@ tags:
   # Area (2 tags)
   - operations
   - operations/monitoring
-  
+
   # Type (1 tag)
   - guide
-  
+
   # Component (0 tags - external tool)
-  
+
   # Audience (2 tags)
   - operator
   - developer
-  
+
   # Special (3 tags)
   - monitoring
   - automation
@@ -629,20 +629,20 @@ tags:
   - governance
   - governance/ethics
   - legal
-  
+
   # Type (2 tags)
   - whitepaper
   - spec
-  
+
   # Component (1 tag)
   - constitutional-ai
-  
+
   # Audience (4 tags - maximum reach)
   - executive
   - legal
   - public
   - researcher
-  
+
   # Special (1 tag)
   - best-practices
 ---
@@ -672,18 +672,18 @@ tags:
   # Area (2 tags)
   - governance
   - architecture
-  
+
   # Type (1 tag)
   - spec
-  
+
   # Component (2 tags)
   - learning-system
   - constitutional-ai
-  
+
   # Audience (2 tags)
   - architect
   - developer
-  
+
   # Special (1 tag)
   - best-practices
 ---
@@ -713,20 +713,20 @@ tags:
   # Area (2 tags)
   - architecture
   - architecture/distributed
-  
+
   # Type (2 tags)
   - whitepaper
   - spec
-  
+
   # Component (2 tags)
   - hydra-swarm
   - cerberus
-  
+
   # Audience (3 tags)
   - architect
   - executive
   - researcher
-  
+
   # Special (1 tag)
   - best-practices
 ---
@@ -755,17 +755,17 @@ priority: P2
 tags:
   # Area (1 tag)
   - operations
-  
+
   # Type (2 tags)
   - template
   - index
-  
+
   # Component (0 tags)
-  
+
   # Audience (2 tags)
   - developer
   - internal
-  
+
   # Special (2 tags)
   - template
   - automation
@@ -796,17 +796,17 @@ tags:
   # Area (2 tags)
   - security
   - security/cryptography
-  
+
   # Type (1 tag)
   - guide
-  
+
   # Component (1 tag)
   - location-tracker
-  
+
   # Audience (2 tags)
   - security
   - developer
-  
+
   # Special (1 tag)
   - best-practices
 ---
@@ -836,17 +836,17 @@ tags:
   # Area (2 tags)
   - operations
   - operations/troubleshooting
-  
+
   # Type (1 tag)
   - guide
-  
+
   # Component (0 tags - general)
-  
+
   # Audience (3 tags)
   - developer
   - operator
   - contributor
-  
+
   # Special (2 tags)
   - troubleshooting
   - faq
@@ -877,17 +877,17 @@ tags:
   # Area (2 tags)
   - development
   - development/tooling
-  
+
   # Type (2 tags)
   - guide
   - reference
-  
+
   # Component (1 tag)
   - gradle
-  
+
   # Audience (1 tag)
   - developer
-  
+
   # Special (2 tags)
   - quickstart
   - best-practices
@@ -918,17 +918,17 @@ tags:
   # Area (2 tags)
   - legal
   - legal/licensing
-  
+
   # Type (1 tag)
   - reference
-  
+
   # Component (0 tags)
-  
+
   # Audience (3 tags)
   - legal
   - public
   - executive
-  
+
   # Special (0 tags)
 ---
 ```
@@ -959,18 +959,18 @@ tags:
   - architecture
   - architecture/frontend
   - architecture/web
-  
+
   # Type (2 tags)
   - spec
   - adr
-  
+
   # Component (1 tag)
   - web
-  
+
   # Audience (2 tags)
   - architect
   - developer
-  
+
   # Special (0 tags)
 ---
 ```
@@ -1000,16 +1000,16 @@ tags:
   # Area (2 tags)
   - operations
   - operations/performance
-  
+
   # Type (1 tag)
   - runbook
-  
+
   # Component (0 tags - system-wide)
-  
+
   # Audience (2 tags)
   - operator
   - developer
-  
+
   # Special (2 tags)
   - performance
   - troubleshooting
@@ -1042,16 +1042,16 @@ tags:
   # Area (2 tags)
   - architecture
   - architecture/integration
-  
+
   # Type (1 tag)
   - spec
-  
+
   # Component (0 tags - future component)
-  
+
   # Audience (2 tags)
   - architect
   - researcher
-  
+
   # Special (1 tag)
   - experimental
 ---
@@ -1109,7 +1109,7 @@ tags: [legal, legal/*, reference|spec, legal+public, P0]
 ❌ **Over-tagging:**
 ```yaml
 # BAD: Too many tags, redundant, not useful
-tags: [security, security/audit, security/authentication, security/cryptography, 
+tags: [security, security/audit, security/authentication, security/cryptography,
        report, guide, spec, user-manager, command-override, memory-system,
        developer, architect, operator, executive, legal, security,
        P0, P1, troubleshooting, best-practices, quickstart, tutorial, faq]
@@ -1118,7 +1118,7 @@ tags: [security, security/audit, security/authentication, security/cryptography,
 ✅ **Focused tagging:**
 ```yaml
 # GOOD: Precise, relevant, discoverable
-tags: [security, security/audit, report, user-manager, 
+tags: [security, security/audit, report, user-manager,
        security+developer, P0, troubleshooting]
 ```
 
@@ -1147,7 +1147,7 @@ tags: [security, report, user-manager]
 ✅ **Complete tagging:**
 ```yaml
 # GOOD: All required categories
-tags: [security, security/audit, report, user-manager, 
+tags: [security, security/audit, report, user-manager,
        active, security+developer, P0]
 ```
 
@@ -1198,10 +1198,9 @@ Always run validation before committing:
 
 ---
 
-**Last Updated:** 2025-01-20  
-**Version:** 1.0  
+**Last Updated:** 2025-01-20
+**Version:** 1.0
 **See Also:** TAG_TAXONOMY.md, tag-hierarchy.json, validate-tags.ps1
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

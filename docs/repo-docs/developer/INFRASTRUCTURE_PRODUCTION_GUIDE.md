@@ -13,9 +13,9 @@ review_cycle: quarterly
 ---
 # Infrastructure Production Guide: Deployment, Monitoring, and Kubernetes
 
-**Document Version:** 1.0  
-**Effective Date:** 2026-02-05  
-**Status:** Production Operations Guide  
+**Document Version:** 1.0
+**Effective Date:** 2026-02-05
+**Status:** Production Operations Guide
 **Target Audience:** Infrastructure Engineers, DevOps, SRE, Platform Engineers
 
 ---
@@ -348,7 +348,7 @@ prometheus:
           resources:
             requests:
               storage: 100Gi
-    
+
     # AGI-specific metrics scraping
     additionalScrapeConfigs:
     - job_name: 'project-ai-core'
@@ -610,17 +610,17 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
-      
+
       containers:
       - name: core
         image: project-ai/core:v1.0.0
         imagePullPolicy: Always
-        
+
         ports:
         - name: http
           containerPort: 8000
           protocol: TCP
-        
+
         env:
         - name: OPENAI_API_KEY
           valueFrom:
@@ -639,7 +639,7 @@ spec:
               key: fernet-key
         - name: ENVIRONMENT
           value: "production"
-        
+
         resources:
           requests:
             cpu: "500m"
@@ -647,7 +647,7 @@ spec:
           limits:
             cpu: "2000m"
             memory: "4Gi"
-        
+
         livenessProbe:
           httpGet:
             path: /health/live
@@ -656,7 +656,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         readinessProbe:
           httpGet:
             path: /health/ready
@@ -665,13 +665,13 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 2
-        
+
         volumeMounts:
         - name: data
           mountPath: /app/data
         - name: logs
           mountPath: /app/logs
-      
+
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -894,5 +894,5 @@ Infrastructure engineering for AGI is not a purely technical discipline—it is 
 **Document Maintenance:**
 This document is reviewed quarterly and updated based on operational experience and technological advances.
 
-**Last Updated:** 2026-02-05  
+**Last Updated:** 2026-02-05
 **Next Review:** 2026-05-05

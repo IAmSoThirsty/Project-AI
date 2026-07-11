@@ -97,7 +97,7 @@ These settings must be configured in the GitHub repository settings under **Sett
 **Required status checks:**
 
 - `test` (from ci.yml)
-- `lint` (from ci.yml)  
+- `lint` (from ci.yml)
 - `tests` (from ci.yml)
 - `Auto Review PR` (from auto-pr-handler.yml)
 - `Validate Main Branch Health` (from post-merge-validation.yml)
@@ -260,7 +260,7 @@ All workflows are already deployed in `.github/workflows/`:
    - Validates main branch health
    - Reports:
      - ✅ Zero conflicts
-     - ✅ Zero linting errors  
+     - ✅ Zero linting errors
      - ✅ Zero test failures
    - Comments success on merged PR
 

@@ -91,8 +91,8 @@ review_frequency: "quarterly"
 # Threat Model: Security Workflows
 
 **Document Version:** 1.0
-**Last Updated:** 2026-01-19  
-**Owner:** Security Team  
+**Last Updated:** 2026-01-19
+**Owner:** Security Team
 **Review Frequency:** Quarterly
 
 ---
@@ -261,7 +261,7 @@ Goal: Distribute Malicious Artifact
   osv-scanner --sbom=sbom-comprehensive.cyclonedx.json
   ```
 
-- **Residual Risk:** 
+- **Residual Risk:**
   - Zero-day vulnerabilities (not in CVE databases)
   - Misconfigured dependencies (e.g., weak crypto settings)
   - Logic flaws in application code (not in dependencies)
@@ -760,32 +760,32 @@ modelscan: latest    # Pin on first stable release
 
 #### 1. Runtime Security 🏃
 
-**Threats:** Memory corruption, race conditions, runtime injection  
-**Why:** These workflows analyze static artifacts, not runtime behavior  
+**Threats:** Memory corruption, race conditions, runtime injection
+**Why:** These workflows analyze static artifacts, not runtime behavior
 **Alternatives:** DAST, fuzzing, runtime monitoring (RASP)
 
 #### 2. Infrastructure Security 🏗️
 
-**Threats:** Server misconfigurations, cloud credential leaks, network attacks  
-**Why:** Workflow focus is on code/artifacts, not deployment infrastructure  
+**Threats:** Server misconfigurations, cloud credential leaks, network attacks
+**Why:** Workflow focus is on code/artifacts, not deployment infrastructure
 **Alternatives:** Cloud security posture management (CSPM), infrastructure scanning
 
 #### 3. Application Logic Flaws 🧠
 
-**Threats:** Business logic errors, authorization bypasses, race conditions  
-**Why:** Require semantic understanding beyond static analysis capabilities  
+**Threats:** Business logic errors, authorization bypasses, race conditions
+**Why:** Require semantic understanding beyond static analysis capabilities
 **Alternatives:** Manual code review, security testing, threat modeling
 
 #### 4. Physical Security 🔒
 
-**Threats:** Physical access to servers, hardware tampering  
-**Why:** Software security workflows don't address physical layer  
+**Threats:** Physical access to servers, hardware tampering
+**Why:** Software security workflows don't address physical layer
 **Alternatives:** Physical access controls, hardware security modules (HSM)
 
 #### 5. Social Engineering 👥
 
-**Threats:** Phishing, pretexting, insider recruitment  
-**Why:** Technical controls can't prevent human manipulation  
+**Threats:** Phishing, pretexting, insider recruitment
+**Why:** Technical controls can't prevent human manipulation
 **Alternatives:** Security awareness training, insider threat programs
 
 ---
@@ -804,15 +804,15 @@ metrics:
     signing: "30s (release only)"
     sbom: "2m 15s average"
     ai_security: "1m 45s average"
-  
+
   false_positive_rate:
     ai_critical: "15% (baseline)"
     ai_medium: "30% (baseline)"
-  
+
   developer_impact:
     pr_cycle_time: "+3m average"
     workflow_failures: "2% per month"
-  
+
   security_effectiveness:
     vulnerabilities_caught: "12 per quarter"
     incident_prevention: "100% (no breaches)"
@@ -849,10 +849,10 @@ metrics:
 
 1. **SBOM generation:** 60% of workflow time
    - **Fix:** Cache for unchanged dependencies
-   
+
 1. **ModelScan:** 30% of AI/ML workflow
    - **Fix:** Incremental scanning (git diff)
-   
+
 1. **Pattern matching:** 10% of AI/ML workflow
    - **Fix:** Pre-compiled regex patterns
 
@@ -992,8 +992,8 @@ gh run watch
 
 ---
 
-**Last Updated:** 2026-01-19  
-**Next Review:** 2026-04-19 (Quarterly)  
+**Last Updated:** 2026-01-19
+**Next Review:** 2026-04-19 (Quarterly)
 **Classification:** PUBLIC
 
 ---
@@ -1187,7 +1187,7 @@ psychological_signals = {
 **Detection:**
 
 1. Daily hash verification fails
-1. Memory corruption >1% detected  
+1. Memory corruption >1% detected
 1. Contradiction between memory and audit trail
 1. Unexpected behavior changes
 
@@ -1303,6 +1303,6 @@ The AGI Charter, guardian system, and wellbeing monitoring represent foundationa
 
 ---
 
-**Last Updated:** 2026-01-19  
-**Next Review:** 2026-04-19 (with AGI Charter review)  
+**Last Updated:** 2026-01-19
+**Next Review:** 2026-04-19 (with AGI Charter review)
 **Classification:** PUBLIC

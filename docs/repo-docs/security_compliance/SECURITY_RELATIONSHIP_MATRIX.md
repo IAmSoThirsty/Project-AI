@@ -29,8 +29,8 @@ review_cycle: quarterly
 
 # Security Documentation Relationship Matrix
 
-**Generated:** 2026-02-08  
-**Source:** AGENT-024 Metadata Analysis  
+**Generated:** 2026-02-08
+**Source:** AGENT-024 Metadata Analysis
 **Documents Analyzed:** 39 security compliance files
 
 ---

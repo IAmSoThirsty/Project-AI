@@ -24,9 +24,9 @@ audience: ["developers", "gui-engineers", "maintainers"]
 
 # Leather Book Dashboard - 6-Zone Main Interface
 
-**Module:** `src/app/gui/leather_book_dashboard.py`  
-**Lines of Code:** 531  
-**Primary Class:** `LeatherBookDashboard(QWidget)`  
+**Module:** `src/app/gui/leather_book_dashboard.py`
+**Lines of Code:** 531
+**Primary Class:** `LeatherBookDashboard(QWidget)`
 **Design Pattern:** 6-zone grid layout with custom-painted AI head
 
 ---
@@ -150,7 +150,7 @@ QWidget (self)
 
 ### 1. LeatherBookDashboard (Container)
 
-**Type:** `QWidget`  
+**Type:** `QWidget`
 **Role:** Root container orchestrating all 6 zones
 
 **Key Methods:**
@@ -168,7 +168,7 @@ QWidget (self)
 
 ### 2. StatsPanel (Zone 1)
 
-**Type:** `QFrame`  
+**Type:** `QFrame`
 **Role:** Display real-time user statistics
 
 **Data Displayed:**
@@ -199,7 +199,7 @@ self.stats_timer.start(1000)
 
 ### 3. ProactiveActionsPanel (Zone 2)
 
-**Type:** `QFrame`  
+**Type:** `QFrame`
 **Role:** Quick-access buttons for AI features
 
 **Signals:**
@@ -230,7 +230,7 @@ buttons = [
 
 ### 4. UserChatPanel (Zone 3)
 
-**Type:** `QFrame`  
+**Type:** `QFrame`
 **Role:** Text input for user messages
 
 **Components:**
@@ -257,7 +257,7 @@ def _send_message(self):
 
 ### 5. AINeuralHead (Zone 4)
 
-**Type:** `QFrame` with custom `paintEvent()`  
+**Type:** `QFrame` with custom `paintEvent()`
 **Role:** Animated neural network visualization
 
 **Visual Elements:**
@@ -277,7 +277,7 @@ def _send_message(self):
 def paintEvent(self, event):
     painter = QPainter(self)
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-    
+
     self._draw_background_grid(painter)
     self._draw_face_outline(painter)
     self._draw_eyes(painter)
@@ -291,7 +291,7 @@ def paintEvent(self, event):
 
 ### 6. AIResponsePanel (Zone 5)
 
-**Type:** `QFrame`  
+**Type:** `QFrame`
 **Role:** Display AI responses and thoughts
 
 **Components:**
@@ -324,10 +324,10 @@ def append_response(self, text: str):
 class LeatherBookDashboard(QWidget):
     """Main dashboard with 6-zone layout on leather book."""
     send_message = pyqtSignal(str)
-    
+
 class StatsPanel(QFrame):
     """Zone 1: User statistics display."""
-    
+
 class ProactiveActionsPanel(QFrame):
     """Zone 2: Quick-access action buttons."""
     image_gen_requested = pyqtSignal()
@@ -335,17 +335,17 @@ class ProactiveActionsPanel(QFrame):
     watch_tower_requested = pyqtSignal()
     command_center_requested = pyqtSignal()
     news_intelligence_requested = pyqtSignal()
-    
+
 class UserChatPanel(QFrame):
     """Zone 3: User chat input."""
     message_sent = pyqtSignal(str)
-    
+
 class AINeuralHead(QFrame):
     """Zone 4: Animated AI face."""
-    
+
 class AIFaceCanvas(QFrame):
     """Canvas for painting neural head (used inside AINeuralHead)."""
-    
+
 class AIResponsePanel(QFrame):
     """Zone 5: AI response display."""
 ```
@@ -735,17 +735,17 @@ self.text_area.clear()
 def paintEvent(self, event):
     painter = QPainter(self)
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-    
+
     # 1. Background
     self._draw_background_grid(painter)
-    
+
     # 2. Face structure
     self._draw_face_outline(painter)
-    
+
     # 3. Features
     self._draw_eyes(painter)
     self._draw_mouth(painter)
-    
+
     # 4. Neural network
     self._draw_neural_connections(painter)
 ```
@@ -760,7 +760,7 @@ def _draw_neural_connections(self, painter):
         x = random.randint(0, self.width())
         y = random.randint(0, self.height())
         nodes.append((x, y))
-    
+
     # Connect nearby nodes
     for i, (x1, y1) in enumerate(nodes):
         for j, (x2, y2) in enumerate(nodes[i+1:]):
@@ -866,7 +866,7 @@ dashboard.stats_panel.mood_label.setText("Mood: Excited (92%)")
 def _update_animations(self):
     if not self.isVisible():
         return  # Don't animate hidden widgets
-    
+
     # Only update AI head if state changed
     if self.ai_head.animation_frame % 5 == 0:
         self.ai_head.update()  # Repaint every 5 frames
@@ -1036,9 +1036,8 @@ QTimer.singleShot(0, lambda: self.ai_response.append_response(text))
 
 ## License
 
-**Copyright © 2026 Project-AI Team**  
+**Copyright © 2026 Project-AI Team**
 Internal documentation - Not for public distribution
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

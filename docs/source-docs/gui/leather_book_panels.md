@@ -25,9 +25,9 @@ audience: ["developers", "gui-developers", "ux-designers", "animation-developers
 
 # Leather Book Panels - Tron-Themed UI Components
 
-**Module:** `src/app/gui/leather_book_panels.py`  
-**Classes:** `TronFacePage`, `TronFaceCanvas`, `StatusIndicator`, `IntroInfoPage`  
-**Lines of Code:** 629  
+**Module:** `src/app/gui/leather_book_panels.py`
+**Classes:** `TronFacePage`, `TronFaceCanvas`, `StatusIndicator`, `IntroInfoPage`
+**Lines of Code:** 629
 **Purpose:** Dual-page Tron-themed interface with animated wireframe face, custom QPainter rendering, LED status indicators, backend API integration, and book-themed authentication/navigation system
 
 ---
@@ -442,10 +442,10 @@ class TronFacePage(QFrame):
 
     def __init__(self, parent=None) -> None:
         """Initialize Tron face page with animation.
-        
+
         Args:
             parent: Parent QWidget (typically LeatherBookInterface)
-        
+
         Sets up:
             - Dark background (#0a0a0a) with Tron green border
             - Title label "NEURAL INTERFACE"
@@ -462,14 +462,14 @@ class TronFacePage(QFrame):
 
     def _create_title(self) -> QLabel:
         """Create "NEURAL INTERFACE" title with Tron green glow.
-        
+
         Returns:
             QLabel with Courier New font, text-shadow glow effect
         """
 
     def _create_status_layout(self) -> QVBoxLayout:
         """Create "SYSTEM STATUS" section with 4 LED indicators.
-        
+
         Returns:
             QVBoxLayout containing status title and 4 StatusIndicator widgets
         """
@@ -488,34 +488,34 @@ class TronFaceCanvas(QFrame):
 
     def __init__(self, parent=None) -> None:
         """Initialize canvas with black background and Tron green border.
-        
+
         Args:
             parent: Parent QWidget
-        
+
         Attributes:
             animation_frame (int): Frame counter starting at 0
         """
 
     def paintEvent(self, event: QPaintEvent) -> None:
         """Render Tron assets when Qt requests paint.
-        
+
         Args:
             event: Paint event from Qt (unused, required by signature)
-        
+
         Rendering order:
             1. _draw_grid() - Background grid
             2. _draw_wireframe_face() - Animated face
             3. _draw_data_streams() - Rotating arcs
-        
+
         Always call painter.end() to release resources.
         """
 
     def _draw_grid(self, painter: QPainter) -> None:
         """Paint 20px neon grid behind face.
-        
+
         Args:
             painter: Active QPainter instance
-        
+
         Grid specs:
             - Cell size: 20px
             - Color: QColor(0, 255, 0, 30) - 11.7% opacity Tron green
@@ -524,10 +524,10 @@ class TronFaceCanvas(QFrame):
 
     def _draw_wireframe_face(self, painter: QPainter) -> None:
         """Draw animated wireframe face with pulsing eyes and wave mouth.
-        
+
         Args:
             painter: Active QPainter instance
-        
+
         Components:
             - Face outline: 60px radius ellipse, cyan stroke + semi-transparent fill
             - Eyes: Two circles at ±20px horizontal offset
@@ -541,10 +541,10 @@ class TronFaceCanvas(QFrame):
 
     def _draw_data_streams(self, painter: QPainter) -> None:
         """Draw 12 rotating data stream arcs around face.
-        
+
         Args:
             painter: Active QPainter instance
-        
+
         Stream specs:
             - Count: 12 (30° angular spacing)
             - Radius: 80-100px from center
@@ -554,7 +554,7 @@ class TronFaceCanvas(QFrame):
 
     def animate(self) -> None:
         """Increment animation frame and trigger repaint.
-        
+
         Called by TronFacePage.animation_timer every 50ms.
         Increments animation_frame by 1, then calls update() to schedule paintEvent.
         """
@@ -570,12 +570,12 @@ class StatusIndicator(QFrame):
 
     def __init__(self, name: str, status: bool = True, parent=None) -> None:
         """Create LED status indicator.
-        
+
         Args:
             name: Display name (e.g., "Neural Sync")
             status: True=ACTIVE (green), False=INACTIVE (red)
             parent: Parent QWidget
-        
+
         Layout:
             [LED ●] [Name Label]                    [Status Text]
             20px     Flexible                       Right-aligned
@@ -583,11 +583,11 @@ class StatusIndicator(QFrame):
 
     def _build_ui(self, name: str, status: bool) -> None:
         """Construct horizontal layout with LED, name, and status text.
-        
+
         Args:
             name: Component name
             status: Active state
-        
+
         Components:
             - LED: QLabel with ● glyph, 14px font, text-shadow glow
             - Name: QLabel with cyan color (#00ffff)
@@ -605,10 +605,10 @@ class IntroInfoPage(QFrame):
 
     def __init__(self, parent=None) -> None:
         """Initialize book-themed info page.
-        
+
         Args:
             parent: Parent widget (should be LeatherBookInterface for callbacks)
-        
+
         Attributes:
             parent_window: Reference to parent for dashboard switching
             tab_buttons (list[QPushButton]): Three tab buttons
@@ -636,21 +636,21 @@ class IntroInfoPage(QFrame):
 
     def _create_tab_buttons(self) -> QHBoxLayout:
         """Create horizontal layout with LOGIN, GLOSSARY, CONTENTS buttons.
-        
+
         Returns:
             QHBoxLayout containing 3 QPushButtons with click handlers
         """
 
     def _create_footer(self) -> QLabel:
         """Create copyright footer text.
-        
+
         Returns:
             QLabel with "© 2025 Project-AI | Advanced Neural Intelligence System"
         """
 
     def _create_login_page(self) -> QWidget:
         """Build LOGIN tab content with form and backend status.
-        
+
         Returns:
             QWidget containing:
                 - Welcome header
@@ -658,23 +658,23 @@ class IntroInfoPage(QFrame):
                 - "ENTER SYSTEM" button
                 - Backend status display
                 - Feedback label
-        
+
         Triggers refresh_backend_status() after 100ms via QTimer.singleShot.
         """
 
     def _add_login_header(self, layout: QVBoxLayout) -> None:
         """Add welcome header and description to login page.
-        
+
         Args:
             layout: Parent layout to add widgets to
         """
 
     def _add_login_form(self, layout: QVBoxLayout) -> None:
         """Add username/password inputs and submit button.
-        
+
         Args:
             layout: Parent layout
-        
+
         Creates:
             - Username QLineEdit (dark background #1a1a0f, leather border)
             - Password QLineEdit (EchoMode.Password masking)
@@ -683,14 +683,14 @@ class IntroInfoPage(QFrame):
 
     def _add_backend_status(self, layout: QVBoxLayout) -> None:
         """Add backend status label showing service health.
-        
+
         Args:
             layout: Parent layout
         """
 
     def _add_login_feedback(self, layout: QVBoxLayout) -> None:
         """Add feedback label for error/success messages.
-        
+
         Args:
             layout: Parent layout
         """
@@ -698,14 +698,14 @@ class IntroInfoPage(QFrame):
     @staticmethod
     def _style_login_input(input_field: QLineEdit) -> None:
         """Apply dark input styling with leather brown borders.
-        
+
         Args:
             input_field: QLineEdit to style
         """
 
     def _create_glossary_page(self) -> QWidget:
         """Create GLOSSARY tab with 8 term/definition pairs.
-        
+
         Returns:
             QWidget with scrollable list of:
                 - Neural Interface
@@ -720,7 +720,7 @@ class IntroInfoPage(QFrame):
 
     def _create_contents_page(self) -> QWidget:
         """Create CONTENTS tab with 8 chapter entries.
-        
+
         Returns:
             QWidget with table of contents:
                 1. System Overview
@@ -735,10 +735,10 @@ class IntroInfoPage(QFrame):
 
     def switch_tab(self, tab_index: int) -> None:
         """Switch to specified tab index.
-        
+
         Args:
             tab_index: Tab to switch to (0=LOGIN, 1=GLOSSARY, 2=CONTENTS)
-        
+
         Updates:
             - current_tab attribute
             - content_stack current index
@@ -747,11 +747,11 @@ class IntroInfoPage(QFrame):
 
     def update_tab_styling(self) -> None:
         """Highlight active tab button with underline border.
-        
+
         Active tab:
             - Color: #a0826d (lighter leather)
             - Border bottom: 2px solid #8b7355
-        
+
         Inactive tabs:
             - Color: #8b7355 (standard leather)
             - No border
@@ -759,10 +759,10 @@ class IntroInfoPage(QFrame):
 
     def refresh_backend_status(self) -> None:
         """Fetch backend /api/status and update label.
-        
+
         Calls:
             backend_client.get_status() → {"status": "ok", "component": "backend"}
-        
+
         Updates backend_status_label:
             - OK status: Green text (#8bff55)
             - Non-OK/error: Orange text (#ffc857) or red (#ff6b6b)
@@ -770,7 +770,7 @@ class IntroInfoPage(QFrame):
 
     def _display_login_feedback(self, message: str, *, success: bool = False) -> None:
         """Display feedback message with color coding.
-        
+
         Args:
             message: Feedback text to display
             success: True=green (#55ff99), False=orange (#ff8c69)
@@ -778,28 +778,28 @@ class IntroInfoPage(QFrame):
 
     def _set_login_enabled(self, enabled: bool) -> None:
         """Enable/disable login button.
-        
+
         Args:
             enabled: True to enable, False to disable (during auth)
         """
 
     def _route_through_governance(self, action: str, payload: dict) -> dict:
         """Route action through governance pipeline (MANDATORY - no fallback).
-        
+
         Args:
             action: Action identifier (e.g., "auth.login")
             payload: Action parameters
-        
+
         Returns:
             Response dict with status and result
-        
+
         Raises:
             RuntimeError: If desktop_adapter not initialized
         """
 
     def _handle_login(self) -> None:
         """Authenticate via governance pipeline and switch to dashboard.
-        
+
         Flow:
             1. Validate username/password non-empty
             2. Disable login button
@@ -829,9 +829,9 @@ def paintEvent(self, event: QPaintEvent) -> None:
     super().paintEvent(event)  # Call parent implementation first
     painter = QPainter(self)
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)  # Enable anti-aliasing
-    
+
     # Drawing operations...
-    
+
     painter.end()  # CRITICAL: Always release painter resources
 ```
 
@@ -877,15 +877,15 @@ def _draw_grid(self, painter):
     pen = QPen(QColor(0, 255, 0, 30))  # Semi-transparent green
     pen.setWidth(1)
     painter.setPen(pen)
-    
+
     width = self.width()  # Current widget width
     height = self.height()  # Current widget height
     grid_size = 20  # Cell size in pixels
-    
+
     # Vertical lines
     for x in range(0, width, grid_size):
         painter.drawLine(x, 0, x, height)
-    
+
     # Horizontal lines
     for y in range(0, height, grid_size):
         painter.drawLine(0, y, width, y)
@@ -957,29 +957,29 @@ class LeatherBookInterface(QMainWindow):
     def __init__(self):
         super().__init__()
         self.stacked_widget = QStackedWidget()
-        
+
         # Page 0: Dual-page intro
         intro_page = QWidget()
         intro_layout = QHBoxLayout(intro_page)
-        
+
         self.tron_face_page = TronFacePage(self)
         intro_layout.addWidget(self.tron_face_page)
-        
+
         self.intro_info_page = IntroInfoPage(self)
         intro_layout.addWidget(self.intro_info_page)
-        
+
         self.stacked_widget.addWidget(intro_page)
-        
+
         # Page 1: Dashboard
         # ... (dashboard setup)
-        
+
         self.setCentralWidget(self.stacked_widget)
-    
+
     def switch_to_main_dashboard(self, username: str):
         """Switch from intro to dashboard after login."""
         self.stacked_widget.setCurrentIndex(1)
         # Update dashboard with user info...
-    
+
     def set_backend_token(self, token: str):
         """Store auth token for API calls."""
         self.backend_token = token
@@ -995,7 +995,7 @@ class IntroInfoPage(QFrame):
         super().__init__(parent)
         self.backend_client = BackendAPIClient()
         # ... (other initialization)
-    
+
     def refresh_backend_status(self):
         try:
             payload = self.backend_client.get_status()
@@ -1018,7 +1018,7 @@ class IntroInfoPage(QFrame):
         super().__init__(parent)
         self.desktop_adapter = DesktopAdapter()
         # ... (other initialization)
-    
+
     def _handle_login(self):
         response = self._route_through_governance(
             "auth.login",
@@ -1028,7 +1028,7 @@ class IntroInfoPage(QFrame):
                 "source": "desktop_gui"
             }
         )
-        
+
         if response.get("status") == "success":
             result = response.get("result", {})
             token = result.get("token")
@@ -1049,17 +1049,17 @@ class TronFacePage(QFrame):
         super().__init__(parent)
         # ... (other initialization)
         self._start_animation()
-    
+
     def _start_animation(self):
         self.animation_timer = QTimer()
         self.animation_timer.timeout.connect(self.face_canvas.animate)
         self.animation_timer.start(50)  # 50ms = 20 FPS
-    
+
     def stop_animation(self):
         """Stop animation (e.g., when page hidden)."""
         if hasattr(self, 'animation_timer'):
             self.animation_timer.stop()
-    
+
     def resume_animation(self):
         """Resume animation (e.g., when page shown)."""
         if hasattr(self, 'animation_timer'):
@@ -1106,14 +1106,14 @@ from PyQt6.QtGui import QColor, QPen, QBrush
 
 class CustomFaceCanvas(TronFaceCanvas):
     """Custom face with blue color scheme."""
-    
+
     def _draw_wireframe_face(self, painter):
         width = self.width()
         height = self.height()
         center_x = width // 2
         center_y = height // 2
         face_radius = 60
-        
+
         # Blue face instead of cyan
         face_color = QColor(0, 100, 255, 100)  # Blue with transparency
         painter.setPen(QPen(QColor(0, 150, 255), 2))  # Light blue outline
@@ -1124,12 +1124,12 @@ class CustomFaceCanvas(TronFaceCanvas):
             face_radius * 2,
             face_radius * 2
         )
-        
+
         # Purple eyes
         eye_color = QColor(150, 0, 255)
         painter.setPen(QPen(eye_color, 2))
         painter.setBrush(QBrush(eye_color))
-        
+
         # ... (draw eyes and mouth with custom colors)
 ```
 
@@ -1165,18 +1165,18 @@ from app.core.backend_client import BackendAPIClient
 
 class CustomInfoPage(IntroInfoPage):
     """Info page with enhanced backend error handling."""
-    
+
     def refresh_backend_status(self):
         """Override with retry logic."""
         if not self.backend_status_label:
             return
-        
+
         max_retries = 3
         for attempt in range(max_retries):
             try:
                 payload = self.backend_client.get_status()
                 status_text = payload.get("status", "unknown").upper()
-                
+
                 if status_text == "OK":
                     self.backend_status_label.setText("✓ Backend Online")
                     self.backend_status_label.setStyleSheet("color: #8bff55;")
@@ -1185,7 +1185,7 @@ class CustomInfoPage(IntroInfoPage):
                     self.backend_status_label.setText(f"⚠ Backend: {status_text}")
                     self.backend_status_label.setStyleSheet("color: #ffc857;")
                     return
-                    
+
             except ConnectionError:
                 if attempt < max_retries - 1:
                     time.sleep(1)  # Wait 1 second before retry
@@ -1207,13 +1207,13 @@ from PyQt6.QtWidgets import QVBoxLayout
 
 class CustomTronPage(TronFacePage):
     """Tron page with custom status indicators."""
-    
+
     def _create_status_layout(self):
         status_layout = QVBoxLayout()
         status_label = QLabel("ADVANCED DIAGNOSTICS")
         status_label.setStyleSheet("color: #00ffff; font-weight: bold; font-size: 12px;")
         status_layout.addWidget(status_label)
-        
+
         # Custom status indicators with dynamic states
         status_indicators = [
             ("GPU Acceleration", True),
@@ -1222,11 +1222,11 @@ class CustomTronPage(TronFacePage):
             ("Data Encryption", True),
             ("Cloud Sync", False),  # Offline
         ]
-        
+
         for name, status in status_indicators:
             indicator = StatusIndicator(name, status)
             status_layout.addWidget(indicator)
-        
+
         return status_layout
 ```
 
@@ -1240,20 +1240,20 @@ class MyMainWindow(QMainWindow):
         super().__init__()
         self.intro_page = IntroInfoPage(self)
         # ... (setup layout)
-    
+
     def switch_to_main_dashboard(self, username: str):
         """Called by IntroInfoPage after successful login."""
         print(f"User {username} logged in successfully")
-        
+
         # Switch to dashboard view
         self.stacked_widget.setCurrentIndex(1)
-        
+
         # Update dashboard with user info
         self.dashboard.set_user_info(username)
-        
+
         # Stop Tron animation to save CPU
         self.tron_face_page.animation_timer.stop()
-    
+
     def set_backend_token(self, token: str):
         """Store auth token for subsequent API calls."""
         self.backend_token = token
@@ -1268,11 +1268,11 @@ from app.gui.leather_book_panels import TronFaceCanvas
 
 class StaticFaceCanvas(TronFaceCanvas):
     """Non-animated version for motion sensitivity."""
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.animation_frame = 0  # Fixed at frame 0
-    
+
     def animate(self):
         """Override to prevent animation."""
         pass  # Do nothing, keep frame at 0
@@ -1283,12 +1283,12 @@ class AccessibleTronPage(TronFacePage):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.addWidget(self._create_title())
-        
+
         # Use static canvas instead of animated
         self.face_canvas = StaticFaceCanvas()
         layout.addWidget(self.face_canvas, 1)
         layout.addLayout(self._create_status_layout())
-    
+
     def _start_animation(self):
         # Override to skip animation timer creation
         pass
@@ -1446,7 +1446,7 @@ QLineEdit:focus {
 ### Animation Frame Rate
 
 **Target**: 20 FPS (50ms interval)
-**Rationale**: 
+**Rationale**:
 - Smooth enough for fluid animation
 - Low CPU usage (<2% on modern hardware)
 - Avoids screen tearing on 60Hz displays (20 is divisor of 60)
@@ -1529,12 +1529,12 @@ import cProfile
 def profile_paint():
     canvas = TronFaceCanvas()
     painter = QPainter(canvas)
-    
+
     for _ in range(1000):  # 1000 frames
         canvas._draw_grid(painter)
         canvas._draw_wireframe_face(painter)
         canvas._draw_data_streams(painter)
-    
+
     painter.end()
 
 cProfile.run('profile_paint()')
@@ -1549,10 +1549,10 @@ cProfile.run('profile_paint()')
 def __init__(self, parent=None):
     super().__init__(parent)
     # ... (other initialization)
-    
+
     # Initial check
     QTimer.singleShot(100, self.refresh_backend_status)
-    
+
     # Periodic refresh
     self.status_refresh_timer = QTimer()
     self.status_refresh_timer.timeout.connect(self.refresh_backend_status)
@@ -1574,7 +1574,7 @@ class AccessibleTronPage(TronFacePage):
     def __init__(self, parent=None, enable_animation: bool = True):
         self.enable_animation = enable_animation
         super().__init__(parent)
-    
+
     def _start_animation(self):
         if self.enable_animation:
             super()._start_animation()
@@ -1629,7 +1629,7 @@ class IntroInfoPage(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         # ... (other initialization)
-        
+
         # Add keyboard shortcuts
         QShortcut(QKeySequence("Ctrl+1"), self, lambda: self.switch_tab(0))
         QShortcut(QKeySequence("Ctrl+2"), self, lambda: self.switch_tab(1))
@@ -1648,7 +1648,7 @@ class TronFaceCanvas(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         # ... (other initialization)
-        
+
         self.setAccessibleName("Animated Tron Face Display")
         self.setAccessibleDescription(
             "Animated wireframe face with pulsing eyes and rotating data streams. "
@@ -1889,11 +1889,10 @@ print(f"Current index: {intro_page.content_stack.currentIndex()}")
 
 ---
 
-**Document Version**: 1.0.0  
-**Last Updated**: 2026-04-20  
-**Maintained By**: AGENT-044 GUI Documentation Team  
+**Document Version**: 1.0.0
+**Last Updated**: 2026-04-20
+**Maintained By**: AGENT-044 GUI Documentation Team
 **Word Count**: 9,247 words
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

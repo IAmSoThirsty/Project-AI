@@ -9,68 +9,68 @@ This diagram shows the complete AI query processing pipeline, including intent d
 flowchart TD
     Start([User Query Input]) --> PreProcess[Preprocess Query<br/>Clean, tokenize, lowercase]
     PreProcess --> IntentDetect[Intent Detection<br/>Scikit-learn SGDClassifier]
-    
+
     IntentDetect --> IntentClass{Intent<br/>Classification}
     IntentClass -->|Knowledge Query| KnowledgeRoute[Route to Knowledge Base<br/>MemoryExpansionSystem]
     IntentClass -->|Function Call| FunctionRoute[Route to Function Registry<br/>FunctionRegistry.invoke]
     IntentClass -->|General Query| GeneralRoute[Route to Intelligence Engine]
-    
+
     KnowledgeRoute --> RetrieveKnowledge[Retrieve from Knowledge Base<br/>6 categories: facts, code, security, etc.]
     FunctionRoute --> ExecuteFunction[Execute Function<br/>with validated parameters]
-    
+
     RetrieveKnowledge --> BuildContext
     ExecuteFunction --> BuildContext
     GeneralRoute --> BuildContext[Build Context Dictionary<br/>history, persona, memory]
-    
+
     BuildContext --> LoadPersona[Load AI Persona State<br/>8 traits, mood, interaction count]
     LoadPersona --> LoadMemory[Load Conversation Memory<br/>Recent 10 conversations]
     LoadMemory --> LoadRelationship[Load Relationship Model<br/>RelationshipState, bonding phase]
-    
+
     LoadRelationship --> GovernanceCheck{Governance<br/>Validation}
     GovernanceCheck --> Triumvirate[Triumvirate Council Vote<br/>GALAHAD, CERBERUS, CODEX DEUS]
-    
+
     Triumvirate --> GalahadVote[GALAHAD: Ethics & Empathy<br/>User welfare, emotional impact]
     Triumvirate --> CerberusVote[CERBERUS: Safety & Security<br/>Risk assessment, data safety]
     Triumvirate --> CodexVote[CODEX DEUS: Logic & Consistency<br/>Coherence, contradictions]
-    
+
     GalahadVote --> ConsensusBuild
     CerberusVote --> ConsensusBuild
     CodexVote --> ConsensusBuild[Build Consensus Decision]
-    
+
     ConsensusBuild --> FourLaws{Four Laws<br/>Validation}
     FourLaws --> ZerothLaw[Zeroth Law: Humanity Protection<br/>endangers_humanity check]
     FourLaws --> FirstLaw[First Law: Human Welfare<br/>endangers_human check]
     FourLaws --> SecondLaw[Second Law: User Obedience<br/>is_user_order check]
     FourLaws --> ThirdLaw[Third Law: Self-Preservation<br/>endangers_self check]
-    
+
     ZerothLaw --> ValidateConflicts
     FirstLaw --> ValidateConflicts
     SecondLaw --> ValidateConflicts
     ThirdLaw --> ValidateConflicts{Conflicts<br/>Detected?}
-    
+
     ValidateConflicts -->|Yes| BlockAction[❌ Block Action<br/>Return explanation]
     ValidateConflicts -->|No| AllowAction[✅ Action Allowed<br/>Proceed to generation]
-    
+
     AllowAction --> CheckOverride{Command<br/>Override Active?}
     CheckOverride -->|Yes| BypassSafety[Bypass Content Filters<br/>Master override enabled]
     CheckOverride -->|No| ContentFilter[Apply Content Filters<br/>15 blocked keywords]
-    
+
     BypassSafety --> GenerateResponse
     ContentFilter --> SafetyCheck{Content<br/>Safe?}
     SafetyCheck -->|No| FilterBlock[❌ Content Blocked<br/>Return safety message]
     SafetyCheck -->|Yes| GenerateResponse[Generate AI Response<br/>OpenAI GPT-4 API]
-    
+
     GenerateResponse --> UpdatePersona[Update Persona State<br/>mood, interaction_count]
     UpdatePersona --> SaveMemory[Save to Conversation Memory<br/>data/memory/conversations.json]
     SaveMemory --> ReflectionCycle[Trigger Reflection Cycle<br/>Self-assessment, growth]
-    
+
     ReflectionCycle --> UpdateBonding[Update Bonding Phase<br/>Track relationship progress]
     UpdateBonding --> LogTelemetry[Log Telemetry Event<br/>send_event query_processed]
-    
+
     LogTelemetry --> Success([✅ Response Generated<br/>Return to user])
     BlockAction --> End([❌ Action Blocked])
     FilterBlock --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style BlockAction fill:#ff0000,stroke:#ff00ff,stroke-width:2px,color:#fff

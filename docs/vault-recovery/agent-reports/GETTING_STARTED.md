@@ -2,10 +2,10 @@
 
 **Welcome to Your Knowledge Hub!** 🎉
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-04-20  
-**Estimated Reading Time:** 15 minutes  
-**Audience:** New users, developers, documentation contributors  
+**Version:** 1.0.0
+**Last Updated:** 2026-04-20
+**Estimated Reading Time:** 15 minutes
+**Audience:** New users, developers, documentation contributors
 **Prerequisites:** None - start here!
 
 ---
@@ -41,11 +41,11 @@ Think of it as:
 
 Unlike traditional documentation folders, this vault uses **Obsidian** - a powerful knowledge management tool that treats documentation as an interconnected knowledge graph. This means:
 
-✅ **Instant Search** - Find any document, tag, or concept in milliseconds  
-✅ **Visual Connections** - See how components relate in an interactive graph  
-✅ **Smart Queries** - Ask complex questions like "Show me all security-related agent documentation updated in the last month"  
-✅ **Tag-Based Navigation** - Browse by topic, component, priority, or any dimension  
-✅ **Template System** - Create consistent documentation automatically  
+✅ **Instant Search** - Find any document, tag, or concept in milliseconds
+✅ **Visual Connections** - See how components relate in an interactive graph
+✅ **Smart Queries** - Ask complex questions like "Show me all security-related agent documentation updated in the last month"
+✅ **Tag-Based Navigation** - Browse by topic, component, priority, or any dimension
+✅ **Template System** - Create consistent documentation automatically
 ✅ **Future-Proof** - All documents are plain markdown files
 
 ---
@@ -759,4 +759,3 @@ word_count: 4200
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

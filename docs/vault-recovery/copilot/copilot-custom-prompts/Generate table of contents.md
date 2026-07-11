@@ -9,4 +9,3 @@ Generate a hierarchical table of contents for {}. Use appropriate heading levels
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -76,7 +76,7 @@ class MyComponent(OperationalComponent):
         decision_contract = MyDecisionContract()
         signals_telemetry = MySignalsTelemetry()
         failure_semantics = MyFailureSemantics()
-        
+
         super().__init__(
             component_name="MyComponent",
             decision_contract=decision_contract,
@@ -111,7 +111,7 @@ Defines what decisions a component can make and under what conditions.
 class MyDecisionContract(DecisionContract):
     def __init__(self):
         super().__init__("ComponentName")
-        
+
         # Register authorities
         self.register_authority(
             DecisionAuthority(
@@ -125,7 +125,7 @@ class MyDecisionContract(DecisionContract):
                 audit_required=True,
             )
         )
-    
+
     def get_contract_specification(self) -> dict[str, Any]:
         return {
             "component": self.component_name,
@@ -142,7 +142,7 @@ Manages emission of signals for monitoring and coordination.
 class MySignalsTelemetry(SignalsTelemetry):
     def __init__(self):
         super().__init__("ComponentName")
-    
+
     def emit_custom_signal(self, data: dict[str, Any]) -> None:
         signal = Signal(
             signal_type=SignalType.ALERT,
@@ -154,7 +154,7 @@ class MySignalsTelemetry(SignalsTelemetry):
             destination=["Cerberus", "AuditLog"],
         )
         self.emit_signal(signal)
-    
+
     def get_telemetry_specification(self) -> dict[str, Any]:
         return {
             "component": self.component_name,
@@ -171,7 +171,7 @@ Defines behavior when component degrades or fails.
 class MyFailureSemantics(FailureSemantics):
     def __init__(self):
         super().__init__("ComponentName")
-    
+
     def create_failure_response(
         self, failure_mode: FailureMode, context: dict[str, Any]
     ) -> FailureResponse:
@@ -188,7 +188,7 @@ class MyFailureSemantics(FailureSemantics):
                 emergency_protocol="manual_intervention",
             )
         ...
-    
+
     def get_failure_specification(self) -> dict[str, Any]:
         return {
             "component": self.component_name,
@@ -559,7 +559,7 @@ recovery_plan = continuity_mgr.handle_dissociation(
 )
 
 print(recovery_plan["recovery_steps"])
-# ['preserve_current_state', 'create_dissociation_snapshot', 
+# ['preserve_current_state', 'create_dissociation_snapshot',
 #  'monitor_stability', 'gradual_reintegration', 'validate_continuity']
 ```
 
@@ -841,7 +841,7 @@ class MyComponentContract(DecisionContract):
                 audit_required=True,
             )
         )
-    
+
     def get_contract_specification(self) -> dict[str, Any]:
         return {
             "component": "MyComponent",
@@ -852,7 +852,7 @@ class MyComponentContract(DecisionContract):
 class MyComponentSignals(SignalsTelemetry):
     def __init__(self):
         super().__init__("MyComponent")
-    
+
     def emit_operation_complete(self, result: str) -> None:
         signal = Signal(
             signal_type=SignalType.AUDIT,
@@ -861,7 +861,7 @@ class MyComponentSignals(SignalsTelemetry):
             destination=["AuditLog"],
         )
         self.emit_signal(signal)
-    
+
     def get_telemetry_specification(self) -> dict[str, Any]:
         return {
             "component": "MyComponent",
@@ -872,7 +872,7 @@ class MyComponentSignals(SignalsTelemetry):
 class MyComponentFailures(FailureSemantics):
     def __init__(self):
         super().__init__("MyComponent")
-    
+
     def create_failure_response(
         self, failure_mode: FailureMode, context: dict[str, Any]
     ) -> FailureResponse:
@@ -894,7 +894,7 @@ class MyComponentFailures(FailureSemantics):
                 recovery_procedure=["full_restart"],
                 emergency_protocol="emergency_recovery",
             )
-    
+
     def get_failure_specification(self) -> dict[str, Any]:
         return {
             "component": "MyComponent",
@@ -913,14 +913,14 @@ class MyComponent(OperationalComponent):
             signals_telemetry=MyComponentSignals(),
             failure_semantics=MyComponentFailures(),
         )
-    
+
     def perform_operation(self, input_data: dict[str, Any]) -> dict[str, Any]:
         # Check authorization
         authorized, reason = self.decision_contract.check_authorization(
             decision_type="my_critical_operation",
             context={"safety_check": True, "approval_granted": True}
         )
-        
+
         if not authorized:
             # Log decision
             self.decision_contract.log_decision(
@@ -929,23 +929,23 @@ class MyComponent(OperationalComponent):
                 rationale=reason
             )
             return {"success": False, "reason": reason}
-        
+
         try:
             # Perform operation
             result = "operation_successful"
-            
+
             # Emit signal
             self.signals_telemetry.emit_operation_complete(result)
-            
+
             # Log decision
             self.decision_contract.log_decision(
                 decision_type="my_critical_operation",
                 decision_data={"authorized": True, "result": result},
                 rationale="Operation completed successfully"
             )
-            
+
             return {"success": True, "result": result}
-        
+
         except Exception as e:
             # Detect failure
             self.failure_semantics.detect_failure(
@@ -953,7 +953,7 @@ class MyComponent(OperationalComponent):
                 context={"error": str(e)}
             )
             return {"success": False, "error": str(e)}
-    
+
     def get_status(self) -> dict[str, Any]:
         return self.get_operational_status()
 

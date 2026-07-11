@@ -107,7 +107,7 @@ window = LeatherBookInterface()
 def process_user_message(message: str):
     response = your_ai_model.generate_response(message)
     # The dashboard will show the response
-    
+
 # Hook into the system when dashboard is ready
 ```
 

@@ -1,10 +1,10 @@
 # Tag Taxonomy Reference v2.0
 
-> **Metadata Schema Version:** 2.0  
-> **Last Updated:** 2025-01-23  
-> **Maintainer:** AGENT-039 (Tag Taxonomy Refinement Specialist)  
-> **Status:** Active  
-> **Supersedes:** TAG_TAXONOMY.md v1.0 (AGENT-017)  
+> **Metadata Schema Version:** 2.0
+> **Last Updated:** 2025-01-23
+> **Maintainer:** AGENT-039 (Tag Taxonomy Refinement Specialist)
+> **Status:** Active
+> **Supersedes:** TAG_TAXONOMY.md v1.0 (AGENT-017)
 > **Scope:** Refined controlled vocabulary based on actual usage analysis
 
 ---
@@ -125,9 +125,9 @@ tags: [API-Doc, security_authentication, end_users]
 
 ### Area Tags
 
-**Purpose:** Primary domain, discipline, or concern area  
-**Hierarchy:** Two-level (parent + optional children)  
-**Required:** Yes (1-3 tags)  
+**Purpose:** Primary domain, discipline, or concern area
+**Hierarchy:** Two-level (parent + optional children)
+**Required:** Yes (1-3 tags)
 **Cardinality:** Minimum 1 parent tag, optionally 1-2 child tags
 
 #### Parent Tags (7)
@@ -350,9 +350,9 @@ audience: [executive, internal]
 
 ### Type Tags
 
-**Purpose:** Document format, structure, and intended use  
-**Hierarchy:** Flat (no parent/child)  
-**Required:** Yes (1-2 tags)  
+**Purpose:** Document format, structure, and intended use
+**Hierarchy:** Flat (no parent/child)
+**Required:** Yes (1-2 tags)
 **Cardinality:** Minimum 1, maximum 2
 
 #### Document Types (13 tags)
@@ -717,9 +717,9 @@ audience: [developer, contributor, end-user]
 
 ### Status Tags
 
-**Purpose:** Lifecycle stage and current state of the document  
-**Hierarchy:** Flat (no parent/child)  
-**Required:** Yes (exactly 1 tag)  
+**Purpose:** Lifecycle stage and current state of the document
+**Hierarchy:** Flat (no parent/child)
+**Required:** Yes (exactly 1 tag)
 **Mutually Exclusive:** Yes (only ONE status tag allowed)
 
 #### Lifecycle States (7 tags)
@@ -733,7 +733,7 @@ audience: [developer, contributor, end-user]
 - Maintained and up-to-date
 - Primary reference
 
-**Transitions From:** draft, review  
+**Transitions From:** draft, review
 **Transitions To:** deprecated, archived, superseded
 
 **Usage:** 76% of documents (most common status)
@@ -751,7 +751,7 @@ audience: [developer, contributor, end-user]
 
 **Required Metadata:** `maintainer` (who's writing it)
 
-**Transitions From:** planned  
+**Transitions From:** planned
 **Transitions To:** review, active, blocked
 
 **Usage:** 8% of documents
@@ -771,7 +771,7 @@ audience: [developer, contributor, end-user]
 
 **Required Metadata:** `reviewers` (who should review)
 
-**Transitions From:** draft  
+**Transitions From:** draft
 **Transitions To:** active, draft (if revisions needed)
 
 **Usage:** 5% of documents
@@ -792,7 +792,7 @@ audience: [developer, contributor, end-user]
 - `deprecation_reason` (why deprecated)
 - `deprecation_date` (when marked deprecated)
 
-**Transitions From:** active  
+**Transitions From:** active
 **Transitions To:** archived, removed
 
 **Usage:** 0% (no deprecated docs yet, but essential for lifecycle)
@@ -848,7 +848,7 @@ audience: [developer, contributor, end-user]
 - `blocked_by` (who/what is blocking)
 - `blocked_date`
 
-**Transitions From:** draft  
+**Transitions From:** draft
 **Transitions To:** draft, active, archived
 
 **Usage:** 0% (retained for workflow management)
@@ -864,9 +864,9 @@ audience: [developer, contributor, end-user]
 
 ### Audience Tags
 
-**Purpose:** Intended readers and appropriate access level  
-**Hierarchy:** Flat (no parent/child)  
-**Required:** Yes (1-4 tags)  
+**Purpose:** Intended readers and appropriate access level
+**Hierarchy:** Flat (no parent/child)
+**Required:** Yes (1-4 tags)
 **Cardinality:** Minimum 1, maximum 4
 
 #### Reader Personas (12 tags)
@@ -1063,9 +1063,9 @@ audience: [developer, contributor, end-user]
 
 ### Priority Tags
 
-**Purpose:** Importance and urgency of the document  
-**Hierarchy:** Flat (no parent/child)  
-**Required:** Recommended (0-1 tag)  
+**Purpose:** Importance and urgency of the document
+**Hierarchy:** Flat (no parent/child)
+**Required:** Recommended (0-1 tag)
 **Mutually Exclusive:** Yes (only ONE priority tag allowed)
 
 #### Priority Levels (5 tags)
@@ -1166,9 +1166,9 @@ priority: P0
 
 ### Special Tags
 
-**Purpose:** Cross-cutting concerns or special characteristics  
-**Hierarchy:** Flat (no parent/child)  
-**Required:** No (0-10 tags)  
+**Purpose:** Cross-cutting concerns or special characteristics
+**Hierarchy:** Flat (no parent/child)
+**Required:** No (0-10 tags)
 **Cardinality:** Optional, up to 10 tags
 
 **Note:** Special tags are CHARACTERISTICS, not document types. See [TYPE vs SPECIAL Decision Tree](#type-vs-special-decision-tree) for guidance.
@@ -1709,7 +1709,7 @@ $migrations = @(
 Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
     $content = Get-Content $_.FullName -Raw
     $modified = $false
-    
+
     foreach ($mig in $migrations) {
         $pattern = "$($mig.Category):\s*$($mig.Old)"
         if ($content -match $pattern) {
@@ -1718,13 +1718,13 @@ Get-ChildItem -Path $Path -Recurse -Filter "*.md" | ForEach-Object {
             Write-Host "[$($_.Name)] Migrated $($mig.Old) → $($mig.New)"
         }
     }
-    
+
     # Remove component field
     $content = $content -replace 'component:.*\n', ''
-    
+
     # Remove quotes from arrays
     $content = $content -replace '\["([^"]+)"\]', '[$1]'
-    
+
     if ($modified -and -not $DryRun) {
         Set-Content $_.FullName -Value $content
     }
@@ -1916,7 +1916,7 @@ tags:
 
 ### Tag Addition Workflow
 
-**Requester:** Any team member  
+**Requester:** Any team member
 **Reviewer:** Tag Taxonomy Specialist (AGENT-039 role)
 
 **Steps:**
@@ -1964,11 +1964,10 @@ tags:
 
 ---
 
-**Document Status:** Active  
-**Next Review:** 2025-04-23 (Quarterly)  
-**Maintainer:** AGENT-039 (Tag Taxonomy Refinement Specialist)  
+**Document Status:** Active
+**Next Review:** 2025-04-23 (Quarterly)
+**Maintainer:** AGENT-039 (Tag Taxonomy Refinement Specialist)
 **Compliance Target:** 90% by 2025-02-23
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

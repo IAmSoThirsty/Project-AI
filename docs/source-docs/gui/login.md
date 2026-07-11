@@ -24,9 +24,9 @@ audience: ["developers", "security-engineers", "gui-developers"]
 
 # LoginDialog - Book-Themed Authentication UI Component
 
-**Module:** `src/app/gui/login.py`  
-**Class:** `LoginDialog`  
-**Lines of Code:** 220  
+**Module:** `src/app/gui/login.py`
+**Class:** `LoginDialog`
+**Lines of Code:** 220
 **Purpose:** Book-themed authentication dialog with admin onboarding, credential validation, and table of contents navigation system
 
 ---
@@ -179,7 +179,7 @@ The **LoginDialog** implements a book-themed authentication interface that combi
 ```python
 class LoginDialog(QDialog):
     """Login dialog with table of contents navigation.
-    
+
     Attributes:
         user_manager (UserManager): User authentication manager
         selected_tab (int): Index of selected chapter (0-5)
@@ -310,11 +310,11 @@ def _build_ui(self) -> None
 
 ```python
 def _apply_shadow(
-    self, 
-    widget: QWidget, 
-    radius: int = 12, 
-    dx: int = 0, 
-    dy: int = 4, 
+    self,
+    widget: QWidget,
+    radius: int = 12,
+    dx: int = 0,
+    dy: int = 4,
     color: QColor = None
 ) -> None
 ```
@@ -633,7 +633,7 @@ try:
     if dialog.exec() == QDialog.DialogCode.Accepted:
         username = dialog.username
         tab = dialog.selected_tab
-        
+
         if username and tab is not None:
             # Proceed to dashboard
             dashboard = Dashboard(username, tab)
@@ -852,11 +852,11 @@ def try_login(self):
 def open_chapter(self):
     idx = self.toc.currentRow()
     print(f"DEBUG: Selected row = {idx}")
-    
+
     if idx < 0:
         QMessageBox.warning(self, "Select Chapter", "Please select a chapter")
         return
-    
+
     print(f"DEBUG: Setting selected_tab = {idx}")
     self.selected_tab = idx
     self.accept()
@@ -896,10 +896,9 @@ print(f"Success: {success}, Message: '{msg}'")
 
 ---
 
-**Document Status:** ✅ Complete  
-**Word Count:** 3,245  
+**Document Status:** ✅ Complete
+**Word Count:** 3,245
 **Quality Gates:** Passed (1,000+ words, no TODOs, production-ready)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

@@ -59,7 +59,7 @@ All actual AI bypass violations have been fixed. Only one file marked as DEFERRE
 - **Fix**: Replaced with orchestrator pattern
   ```python
   from app.core.ai.orchestrator import run_ai, AIRequest
-  
+
   request = AIRequest(
       task_type="chat",
       prompt=prompt,

@@ -314,7 +314,7 @@ print(f"Threat Score: {threat_score.json()['federated_threat_score']:.1f}/100")
 print(f"Threat Level: {threat_score.json()['threat_level']}")
 
 # Update score from external source
-requests.post("http://localhost:8000/api/firewall/threat/score/update", 
+requests.post("http://localhost:8000/api/firewall/threat/score/update",
     params={"source": "external_feed"},
     json=45.8
 )
@@ -344,10 +344,10 @@ from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
 async def main():
     # Get orchestrator instance
     orchestrator = get_orchestrator()
-    
+
     # Start orchestrator
     await orchestrator.start()
-    
+
     try:
         # Process violation
         result = orchestrator.process_violation(
@@ -358,26 +358,26 @@ async def main():
                 "user_agent": "Mozilla/5.0..."
             }
         )
-        
+
         print(f"Threat Level: {result['threat_level']}")
         print(f"Cognitive Overload: {result['cognitive_overload']}")
         print(f"Intent ID: {result['intent_id']}")
-        
+
         # Get status
         status = orchestrator.get_comprehensive_status()
         print(f"Running: {status['orchestrator']['running']}")
         print(f"Stability: {status['orchestrator']['stability']:.2f}")
-        
+
         # Get intent history
         intents = orchestrator.get_intent_history(limit=10)
         for intent in intents:
             print(f"- {intent['type']}: {intent['threat_score']:.2f}")
-        
+
         # Get telemetry summary
         telemetry = orchestrator.get_telemetry_summary(minutes=60)
         print(f"Avg Threat: {telemetry['avg_threat_score']:.2f}")
         print(f"Avg Overload: {telemetry['avg_cognitive_overload']:.2f}")
-        
+
     finally:
         # Stop orchestrator
         await orchestrator.stop()
@@ -428,14 +428,14 @@ async def firewall_middleware(request: Request, call_next):
     # Check for suspicious patterns
     suspicious = False
     violation_type = None
-    
+
     if "' OR '" in str(request.url):
         suspicious = True
         violation_type = "sql_injection"
     elif "<script>" in str(request.url):
         suspicious = True
         violation_type = "xss_attempt"
-    
+
     if suspicious:
         # Process through orchestrator
         result = orchestrator.process_violation(
@@ -447,11 +447,11 @@ async def firewall_middleware(request: Request, call_next):
                 "user_agent": request.headers.get("user-agent")
             }
         )
-        
+
         # Block if governance denies
         if result.get("governance_verdict", {}).get("verdict") == "deny":
             raise HTTPException(status_code=403, detail="Blocked by security policy")
-    
+
     response = await call_next(request)
     return response
 ```
@@ -470,7 +470,7 @@ request_counts = defaultdict(int)
 async def rate_limit_middleware(request: Request, call_next):
     client_ip = request.client.host
     request_counts[client_ip] += 1
-    
+
     # Check if exceeding rate limit
     if request_counts[client_ip] > 100:  # 100 requests
         # Report as violation
@@ -479,13 +479,13 @@ async def rate_limit_middleware(request: Request, call_next):
             violation_type="rate_limit_exceeded",
             details={"request_count": request_counts[client_ip]}
         )
-        
+
         # If cognitive overload high, they're confused - mission accomplished
         if result["cognitive_overload"] > 8.0:
             # Serve them random decoys
             decoys = orchestrator.swarm_defense.get_decoy_recommendations(client_ip)
             return JSONResponse({"error": "Rate limited", "try_these": decoys[:5]})
-    
+
     response = await call_next(request)
     return response
 ```
@@ -495,7 +495,7 @@ async def rate_limit_middleware(request: Request, call_next):
 ```python
 class ExistingSecuritySystem:
     """Your existing security system"""
-    
+
     def detect_threat(self, data):
         # Your existing threat detection
         return {"threat": True, "confidence": 0.85}
@@ -506,7 +506,7 @@ orchestrator = get_orchestrator()
 def enhanced_threat_detection(source_ip, data):
     # Get existing system's opinion
     existing_result = existing_security.detect_threat(data)
-    
+
     if existing_result["threat"]:
         # Feed to orchestrator for cognitive warfare
         contrarian_result = orchestrator.process_violation(
@@ -517,7 +517,7 @@ def enhanced_threat_detection(source_ip, data):
                 "data": data
             }
         )
-        
+
         # Combine results
         return {
             "block": contrarian_result["governance_verdict"]["verdict"] == "deny",
@@ -525,7 +525,7 @@ def enhanced_threat_detection(source_ip, data):
             "cognitive_overload": contrarian_result["cognitive_overload"],
             "recommended_decoys": orchestrator.swarm_defense.get_decoy_recommendations(source_ip)
         }
-    
+
     return {"block": False}
 ```
 
@@ -560,7 +560,7 @@ def test_violation_processing(orchestrator):
         violation_type="test_violation",
         details={"test": True}
     )
-    
+
     assert result["attacker_ip"] == "test.ip.1.1"
     assert result["threat_level"] == "scout"
     assert "intent_id" in result
@@ -573,7 +573,7 @@ def test_threat_escalation(orchestrator):
             violation_type=f"violation_{i}",
             details={}
         )
-    
+
     assert result["threat_level"] == "swarm"
     assert result["swarm_active"] == True
     assert result["cognitive_overload"] > 8.0
@@ -593,12 +593,12 @@ def test_chaos_engine_lifecycle():
     response = client.post("/api/firewall/chaos/start")
     assert response.status_code == 200
     assert response.json()["status"] == "started"
-    
+
     # Check status
     response = client.get("/api/firewall/chaos/status")
     assert response.status_code == 200
     assert response.json()["orchestrator"]["orchestrator"]["running"] == True
-    
+
     # Stop chaos engine
     response = client.post("/api/firewall/chaos/stop")
     assert response.status_code == 200
@@ -607,14 +607,14 @@ def test_chaos_engine_lifecycle():
 def test_violation_detection():
     # Start engine
     client.post("/api/firewall/chaos/start")
-    
+
     # Report violation
     response = client.post("/api/firewall/violation/detect", json={
         "source_ip": "test.ip",
         "violation_type": "test",
         "details": {}
     })
-    
+
     assert response.status_code == 200
     assert "intent_id" in response.json()
     assert "governance_verdict" in response.json()

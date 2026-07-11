@@ -28,11 +28,11 @@ Successfully restored and improved the image generation feature for Project-AI w
 - `ImageStyle` enum: 10 professional style presets
   - photorealistic, digital_art, oil_painting, watercolor, anime
   - sketch, abstract, cyberpunk, fantasy, minimalist
-  
+
 - `ImageGenerationBackend` enum: Dual backend support
   - HUGGINGFACE (Stable Diffusion 2.1)
   - OPENAI (DALL-E 3)
-  
+
 - `ImageGenerator` class:
   - Content filtering with 15 blocked keywords
   - Automatic safety negative prompts
@@ -64,21 +64,21 @@ Successfully restored and improved the image generation feature for Project-AI w
   - Async image generation (prevents UI blocking)
   - Progress signals for real-time feedback
   - Handles 20-60 second generation time without freezing UI
-  
+
 - `ImageGenerationLeftPanel`:
   - Tron-themed prompt input interface
   - Style preset selector (dropdown with 10 options)
   - Image size selector (256x256, 512x512, 768x768, 1024x1024)
   - Backend selector (Hugging Face / OpenAI)
   - Generate button with loading state
-  
+
 - `ImageGenerationRightPanel`:
   - Image display with QLabel
   - Zoom controls (25%, 50%, 100%, 200%)
   - Metadata display (prompt, style, backend, timestamp)
   - Save button (file dialog)
   - Copy to clipboard button
-  
+
 - `ImageGenerationInterface`:
   - Main container with dual-page layout
   - Signal coordination between left/right panels
@@ -131,10 +131,10 @@ Successfully restored and improved the image generation feature for Project-AI w
   - Creates `ImageGenerationInterface`
   - Adds to page container at index 2
   - Handles page navigation
-  
+
 - Added `switch_to_dashboard()` method
   - Returns to dashboard at index 1
-  
+
 - Connected dashboard signal to `switch_to_image_generation()`
 
 **Lines Added**: ~25 lines (2 navigation methods + signal connection)
@@ -263,7 +263,7 @@ OPENAI_API_KEY=sk-...        # From https://platform.openai.com/api-keys
    - Visit: https://huggingface.co/settings/tokens
    - Create account → Generate new token
    - Permissions: Read access sufficient
-   
+
 1. **OpenAI**:
    - Visit: https://platform.openai.com/api-keys
    - Create account → Create new API key

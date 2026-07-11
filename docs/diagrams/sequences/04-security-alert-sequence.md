@@ -18,16 +18,16 @@ sequenceDiagram
     participant Issues as GitHub Issues
     participant PR as Pull Requests
     participant Notify as Notification System
-    
+
     Note over Scheduler,Notify: Automated Security Alert & Response Flow
-    
+
     %% Scheduled Trigger
     Scheduler->>Workflow: Trigger (daily 2 AM UTC)
     activate Workflow
-    
+
     Workflow->>Workflow: Checkout repository
     Workflow->>Workflow: Setup Python environment
-    
+
     %% Parallel Security Scans
     par Dependency Scanning
         Workflow->>Scanner: Run pip-audit
@@ -35,14 +35,14 @@ sequenceDiagram
         Scanner->>Scanner: Scan dependencies for CVEs
         Scanner-->>Workflow: Vulnerability report (JSON)
         deactivate Scanner
-        
+
     and Code Analysis
         Workflow->>Scanner: Run Bandit
         activate Scanner
         Scanner->>Scanner: Scan Python code for security issues
         Scanner-->>Workflow: Security findings (SARIF)
         deactivate Scanner
-        
+
     and CodeQL Analysis
         Workflow->>Scanner: Run CodeQL
         activate Scanner
@@ -50,17 +50,17 @@ sequenceDiagram
         Scanner-->>Workflow: CodeQL alerts
         deactivate Scanner
     end
-    
+
     %% Vulnerability Analysis
     Workflow->>Analyzer: Aggregate scan results
     activate Analyzer
-    
+
     Analyzer->>Analyzer: Categorize vulnerabilities:<br/>- Critical (CVSS >= 9.0)<br/>- High (CVSS >= 7.0)<br/>- Medium (CVSS >= 4.0)<br/>- Low (CVSS < 4.0)
-    
+
     Analyzer->>Analyzer: Deduplicate findings
     Analyzer->>Analyzer: Check against known false positives
     Analyzer->>Analyzer: Prioritize by exploitability
-    
+
     alt No Vulnerabilities Found
         Analyzer-->>Workflow: Clean scan result
         Workflow->>Workflow: Log success, exit
@@ -68,65 +68,65 @@ sequenceDiagram
     else Vulnerabilities Detected
         Analyzer-->>Workflow: Vulnerability list (prioritized)
         deactivate Analyzer
-        
+
         %% Create Issues
         loop For each Critical/High vulnerability
             Workflow->>Issues: Create issue
             activate Issues
-            
+
             Issues->>Issues: Set issue metadata:<br/>- Title: [SECURITY] CVE-XXXX-XXXX<br/>- Labels: security, automated<br/>- Priority: critical/high<br/>- Assignees: security team
-            
+
             Issues->>Issues: Add issue body:<br/>- CVE details<br/>- Affected package/code<br/>- CVSS score<br/>- Remediation steps<br/>- References
-            
+
             Issues-->>Workflow: Issue created (#1234)
             deactivate Issues
         end
-        
+
         %% Automated Fix Attempt
         Workflow->>Fixer: Attempt automated fixes
         activate Fixer
-        
+
         alt Fixable Vulnerabilities (e.g., dependency updates)
             Fixer->>Git: Create fix branch (security-fix-YYYY-MM-DD)
             activate Git
-            
+
             loop For each fixable vulnerability
                 Fixer->>Fixer: Determine fix action:<br/>- Update dependency version<br/>- Add security header<br/>- Modify unsafe code pattern
-                
+
                 Fixer->>Git: Apply fix (commit)
                 Git-->>Fixer: Commit SHA
             end
-            
+
             Fixer->>Git: Push branch to remote
             Git-->>Fixer: Branch pushed
             deactivate Git
-            
+
             %% Create Pull Request
             Fixer->>PR: Create pull request
             activate PR
-            
+
             PR->>PR: Set PR metadata:<br/>- Title: [Security] Auto-fix for CVE-XXXX<br/>- Description: Fixes, testing, validation<br/>- Labels: security, auto-fix<br/>- Reviewers: security team
-            
+
             PR->>PR: Link to related issues
             PR->>PR: Add security checklist
-            
+
             PR-->>Fixer: PR created (#567)
             deactivate PR
-            
+
             %% Run CI on PR
             Fixer->>Workflow: Trigger CI pipeline on PR
             activate Workflow
-            
+
             par CI Checks
                 Workflow->>Workflow: Run linting (ruff)
                 Workflow->>Workflow: Run tests (pytest)
                 Workflow->>Workflow: Security re-scan
                 Workflow->>Workflow: Build validation
             end
-            
+
             alt All CI Checks Pass
                 Workflow-->>Fixer: CI passed ✓
-                
+
                 %% Auto-merge for patch/minor
                 alt Patch or Minor Update
                     Fixer->>PR: Auto-approve PR
@@ -135,14 +135,14 @@ sequenceDiagram
                     activate Git
                     Git-->>PR: Merged (SHA)
                     deactivate Git
-                    
+
                     Note over Fixer,PR: Patch/minor updates<br/>auto-merge after CI passes
-                    
+
                 else Major Update
                     Fixer->>PR: Add comment: "Manual review required (major update)"
                     Note over Fixer,PR: Major updates require<br/>human review
                 end
-                
+
             else CI Checks Fail
                 Workflow-->>Fixer: CI failed ✗
                 Fixer->>PR: Add comment with failure details
@@ -150,43 +150,43 @@ sequenceDiagram
                 Note over Fixer,PR: Human intervention required
             end
             deactivate Workflow
-            
+
         else Non-Fixable Vulnerabilities (manual intervention needed)
             Fixer-->>Workflow: Manual fixes required
             Note over Fixer: Complex code changes,<br/>architectural modifications,<br/>or no automated solution
         end
         deactivate Fixer
-        
+
         %% Notifications
         Workflow->>Notify: Send security notifications
         activate Notify
-        
+
         par Notification Channels
             Notify->>Notify: GitHub Security Advisories
             Notify->>Notify: Email to security team
             Notify->>Notify: Slack/Discord webhook (if configured)
             Notify->>Notify: Dashboard update
         end
-        
+
         Notify-->>Workflow: Notifications sent
         deactivate Notify
-        
+
         %% Upload Artifacts
         Workflow->>GitHub: Upload scan reports (artifacts)
         activate GitHub
         GitHub-->>Workflow: Artifacts uploaded
         deactivate GitHub
-        
+
         Workflow->>GitHub: Upload SARIF to Security tab
         activate GitHub
         GitHub->>GitHub: Update Security Overview
         GitHub-->>Workflow: SARIF processed
         deactivate GitHub
-        
+
     end
-    
+
     deactivate Workflow
-    
+
     Note over Scheduler,Notify: Security scan complete,<br/>issues created, fixes deployed
 ```
 

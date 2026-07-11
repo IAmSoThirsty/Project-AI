@@ -1,8 +1,8 @@
 # Rate Limiting Architecture Design
 
-**Version:** 1.0  
-**Date:** 2024  
-**Status:** Design Proposal  
+**Version:** 1.0
+**Date:** 2024
+**Status:** Design Proposal
 **Author:** Security Fleet Agent 10
 
 ---
@@ -66,14 +66,14 @@ def authenticate(self, password: str) -> bool:
     """Authenticate with the master password."""
     if not self.master_password_hash:
         return False
-    
+
     # Legacy SHA256 migration + bcrypt verification
     if self._verify_bcrypt_or_pbkdf2(self.master_password_hash, password):
         self.authenticated = True
         self.auth_timestamp = datetime.now()
         self._log_action("AUTHENTICATE", "Authentication successful")
         return True
-    
+
     self._log_action("AUTHENTICATE", "Invalid password", success=False)
     return False
 ```
@@ -91,7 +91,7 @@ def authenticate(self, password: str) -> bool:
 def login():
     """Authenticate user via governance pipeline."""
     payload = request.get_json(silent=True)
-    
+
     response = route_request(
         source="web",
         payload={
@@ -100,7 +100,7 @@ def login():
             "password": payload.get("password"),
         },
     )
-    
+
     if response["status"] == "success":
         return jsonify(success=True, token=response["result"]["token"]), 200
     else:
@@ -212,11 +212,11 @@ from typing import Dict, List, Tuple
 
 class InMemoryRateLimiter:
     """Thread-safe in-memory rate limiter using sliding window."""
-    
+
     def __init__(self, max_attempts: int = 10, window_seconds: int = 60):
         """
         Initialize rate limiter.
-        
+
         Args:
             max_attempts: Maximum attempts allowed in window
             window_seconds: Time window in seconds
@@ -226,14 +226,14 @@ class InMemoryRateLimiter:
         self.attempts: Dict[str, List[float]] = defaultdict(list)
         self._lock = Lock()
         self._cleanup_counter = 0
-    
+
     def is_allowed(self, key: str) -> Tuple[bool, dict]:
         """
         Check if request is allowed under rate limit.
-        
+
         Args:
             key: Unique identifier (IP, username, session)
-        
+
         Returns:
             Tuple of (allowed: bool, metadata: dict)
             metadata contains: attempts_remaining, reset_time, retry_after
@@ -241,12 +241,12 @@ class InMemoryRateLimiter:
         with self._lock:
             now = datetime.now().timestamp()
             cutoff = now - self.window_seconds
-            
+
             # Remove expired attempts
             self.attempts[key] = [t for t in self.attempts[key] if t > cutoff]
-            
+
             current_attempts = len(self.attempts[key])
-            
+
             if current_attempts >= self.max_attempts:
                 oldest_attempt = min(self.attempts[key])
                 retry_after = int(oldest_attempt + self.window_seconds - now)
@@ -256,34 +256,34 @@ class InMemoryRateLimiter:
                     "retry_after": max(retry_after, 1),
                     "current_attempts": current_attempts,
                 }
-            
+
             # Record attempt
             self.attempts[key].append(now)
-            
+
             # Periodic cleanup (every 100 requests)
             self._cleanup_counter += 1
             if self._cleanup_counter >= 100:
                 self._cleanup()
                 self._cleanup_counter = 0
-            
+
             return True, {
                 "attempts_remaining": self.max_attempts - current_attempts - 1,
                 "reset_time": now + self.window_seconds,
                 "retry_after": 0,
                 "current_attempts": current_attempts + 1,
             }
-    
+
     def reset(self, key: str) -> None:
         """Reset rate limit for key (e.g., after successful auth)."""
         with self._lock:
             if key in self.attempts:
                 del self.attempts[key]
-    
+
     def _cleanup(self) -> None:
         """Remove stale entries from memory."""
         now = datetime.now().timestamp()
         cutoff = now - (self.window_seconds * 2)  # Keep 2x window for safety
-        
+
         keys_to_remove = []
         for key, timestamps in self.attempts.items():
             # Remove expired timestamps
@@ -291,10 +291,10 @@ class InMemoryRateLimiter:
             # Mark empty keys for removal
             if not self.attempts[key]:
                 keys_to_remove.append(key)
-        
+
         for key in keys_to_remove:
             del self.attempts[key]
-    
+
     def get_stats(self) -> dict:
         """Get rate limiter statistics."""
         with self._lock:
@@ -345,7 +345,7 @@ except ImportError:
 
 class RedisRateLimiter:
     """Redis-backed rate limiter using sorted sets (sliding window log)."""
-    
+
     def __init__(
         self,
         max_attempts: int = 10,
@@ -355,7 +355,7 @@ class RedisRateLimiter:
     ):
         """
         Initialize Redis rate limiter.
-        
+
         Args:
             max_attempts: Maximum attempts in window
             window_seconds: Time window in seconds
@@ -364,38 +364,38 @@ class RedisRateLimiter:
         """
         if redis is None:
             raise RuntimeError("redis package required: pip install redis")
-        
+
         self.max_attempts = max_attempts
         self.window_seconds = window_seconds
         self.key_prefix = key_prefix
-        
+
         # Parse Redis URL and create client
         self.client = redis.from_url(redis_url, decode_responses=True)
-        
+
         # Test connection
         try:
             self.client.ping()
         except Exception as e:
             raise ConnectionError(f"Redis connection failed: {e}")
-    
+
     def _make_key(self, identifier: str) -> str:
         """Generate Redis key for identifier."""
         return f"{self.key_prefix}:{identifier}"
-    
+
     def is_allowed(self, key: str) -> Tuple[bool, dict]:
         """
         Check if request is allowed (using Lua script for atomicity).
-        
+
         Args:
             key: Unique identifier
-        
+
         Returns:
             Tuple of (allowed: bool, metadata: dict)
         """
         redis_key = self._make_key(key)
         now = time.time()
         cutoff = now - self.window_seconds
-        
+
         # Lua script for atomic sliding window check
         lua_script = """
         local key = KEYS[1]
@@ -403,13 +403,13 @@ class RedisRateLimiter:
         local cutoff = tonumber(ARGV[2])
         local max_attempts = tonumber(ARGV[3])
         local window = tonumber(ARGV[4])
-        
+
         -- Remove expired entries
         redis.call('ZREMRANGEBYSCORE', key, '-inf', cutoff)
-        
+
         -- Count current attempts
         local current = redis.call('ZCARD', key)
-        
+
         if current >= max_attempts then
             -- Get oldest timestamp for retry calculation
             local oldest = redis.call('ZRANGE', key, 0, 0, 'WITHSCORES')
@@ -427,7 +427,7 @@ class RedisRateLimiter:
             return {1, current + 1, remaining, 0}
         end
         """
-        
+
         try:
             result = self.client.eval(
                 lua_script,
@@ -438,39 +438,39 @@ class RedisRateLimiter:
                 self.max_attempts,
                 self.window_seconds,
             )
-            
+
             allowed = bool(result[0])
             current_attempts = int(result[1])
             attempts_remaining = int(result[2])
             retry_after = int(result[3])
-            
+
             return allowed, {
                 "current_attempts": current_attempts,
                 "attempts_remaining": attempts_remaining,
                 "retry_after": max(retry_after, 0),
                 "reset_time": now + self.window_seconds,
             }
-        
+
         except Exception as e:
             # Fail open: allow request but log error
             import logging
             logging.error(f"Redis rate limiter error: {e}")
             return True, {"error": str(e)}
-    
+
     def reset(self, key: str) -> None:
         """Reset rate limit for key."""
         redis_key = self._make_key(key)
         self.client.delete(redis_key)
-    
+
     def get_stats(self) -> dict:
         """Get rate limiter statistics."""
         pattern = f"{self.key_prefix}:*"
         keys = list(self.client.scan_iter(match=pattern, count=100))
-        
+
         total_attempts = 0
         for key in keys[:1000]:  # Limit to prevent timeout
             total_attempts += self.client.zcard(key)
-        
+
         return {
             "total_keys": len(keys),
             "total_attempts": total_attempts,
@@ -520,13 +520,13 @@ logger = logging.getLogger(__name__)
 class RateLimiter:
     """
     Hybrid rate limiter with automatic fallback.
-    
+
     Attempts to use Redis in production, falls back to in-memory if:
     - Redis is unavailable
     - REDIS_URL not configured
     - Running in development mode
     """
-    
+
     def __init__(
         self,
         max_attempts: int = 10,
@@ -535,7 +535,7 @@ class RateLimiter:
     ):
         """
         Initialize hybrid rate limiter.
-        
+
         Args:
             max_attempts: Max attempts in window
             window_seconds: Time window in seconds
@@ -543,10 +543,10 @@ class RateLimiter:
         """
         self.max_attempts = max_attempts
         self.window_seconds = window_seconds
-        
+
         self._backend = None
         self._backend_type = "unknown"
-        
+
         # Try Redis first (unless forced to memory)
         if not force_memory:
             redis_url = os.getenv("REDIS_URL")
@@ -561,7 +561,7 @@ class RateLimiter:
                     logger.info("Rate limiter initialized with Redis backend")
                 except Exception as e:
                     logger.warning(f"Redis initialization failed: {e}. Falling back to in-memory.")
-        
+
         # Fallback to in-memory
         if self._backend is None:
             self._backend = InMemoryRateLimiter(
@@ -570,14 +570,14 @@ class RateLimiter:
             )
             self._backend_type = "memory"
             logger.info("Rate limiter initialized with in-memory backend")
-    
+
     def is_allowed(self, key: str) -> Tuple[bool, dict]:
         """
         Check if request is allowed.
-        
+
         Args:
             key: Unique identifier (IP, username, etc.)
-        
+
         Returns:
             Tuple of (allowed: bool, metadata: dict)
         """
@@ -597,15 +597,15 @@ class RateLimiter:
                 logger.error(f"Rate limiter error: {e}")
                 # Fail open (security vs availability tradeoff)
                 return True, {"error": str(e)}
-    
+
     def reset(self, key: str) -> None:
         """Reset rate limit for key."""
         self._backend.reset(key)
-    
+
     def get_backend_type(self) -> str:
         """Get current backend type ('redis' or 'memory')."""
         return self._backend_type
-    
+
     def get_stats(self) -> dict:
         """Get rate limiter statistics."""
         stats = self._backend.get_stats()
@@ -640,15 +640,15 @@ from app.core.security.rate_limiter import RateLimiter
 class UserManager:
     def __init__(self, users_file="users.json"):
         # Existing initialization...
-        
+
         # Initialize rate limiter (5 attempts per 15 minutes per username)
         self._auth_limiter = RateLimiter(max_attempts=5, window_seconds=900)
-    
+
     def authenticate(self, username, password):
         """Authenticate with rate limiting."""
         # Check rate limit BEFORE expensive bcrypt verification
         allowed, metadata = self._auth_limiter.is_allowed(f"auth:user:{username}")
-        
+
         if not allowed:
             logger.warning(
                 f"Rate limit exceeded for user {username}. "
@@ -656,16 +656,16 @@ class UserManager:
             )
             # Consider: raise RateLimitExceeded exception instead of False
             return False
-        
+
         # Existing authentication logic
         user = self.users.get(username)
         if not user:
             return False
-        
+
         password_hash = user.get("password_hash")
         if not password_hash:
             return False
-        
+
         try:
             if pwd_context.verify(password, password_hash):
                 self.current_user = username
@@ -674,7 +674,7 @@ class UserManager:
                 return True
         except Exception:
             return False
-        
+
         return False
 ```
 
@@ -699,22 +699,22 @@ from app.core.security.rate_limiter import RateLimiter
 class CommandOverrideSystem:
     def __init__(self, data_dir: str = "data"):
         # Existing initialization...
-        
+
         # Stricter limits for master password (3 attempts per 30 minutes per session)
         self._auth_limiter = RateLimiter(max_attempts=3, window_seconds=1800)
         self._session_id = self._generate_session_id()
-    
+
     def _generate_session_id(self) -> str:
         """Generate unique session identifier."""
         import uuid
         return str(uuid.uuid4())
-    
+
     def authenticate(self, password: str) -> bool:
         """Authenticate with master password (rate limited)."""
         # Rate limit per session (prevents multi-session bypass)
         key = f"override:session:{self._session_id}"
         allowed, metadata = self._auth_limiter.is_allowed(key)
-        
+
         if not allowed:
             self._log_action(
                 "AUTHENTICATE",
@@ -722,11 +722,11 @@ class CommandOverrideSystem:
                 success=False,
             )
             return False
-        
+
         if not self.master_password_hash:
             self._log_action("AUTHENTICATE", "No master password set", success=False)
             return False
-        
+
         # Existing authentication logic...
         if self._verify_bcrypt_or_pbkdf2(self.master_password_hash, password):
             self.authenticated = True
@@ -735,7 +735,7 @@ class CommandOverrideSystem:
             # Reset rate limit on success
             self._auth_limiter.reset(key)
             return True
-        
+
         self._log_action("AUTHENTICATE", "Invalid password", success=False)
         return False
 ```
@@ -779,7 +779,7 @@ limiter = Limiter(
 def login():
     """
     Authenticate user with IP and username rate limiting.
-    
+
     Rate limits:
     - 5 attempts per 15 minutes per IP (Flask-Limiter)
     - 5 attempts per 15 minutes per username (application layer)
@@ -787,7 +787,7 @@ def login():
     payload = request.get_json(silent=True)
     if not payload:
         return jsonify(error="missing-json"), 400
-    
+
     # Route through governance (which applies username-based limiting)
     response = route_request(
         source="web",
@@ -797,7 +797,7 @@ def login():
             "password": payload.get("password"),
         },
     )
-    
+
     if response["status"] == "success":
         return jsonify(
             success=True,
@@ -812,7 +812,7 @@ def login():
                 error="Too many login attempts. Please try again later.",
                 retry_after=response.get("retry_after", 900),
             ), 429
-        
+
         return jsonify(success=False, error="Authentication failed"), 401
 
 
@@ -867,16 +867,16 @@ from flask_limiter.util import get_remote_address
 def configure_rate_limiting(app: Flask) -> Limiter:
     """
     Configure Flask-Limiter with environment-specific settings.
-    
+
     Args:
         app: Flask application instance
-    
+
     Returns:
         Configured Limiter instance
     """
     # Determine storage backend
     storage_uri = os.getenv("REDIS_URL", "memory://")
-    
+
     # Create limiter
     limiter = Limiter(
         app=app,
@@ -887,13 +887,13 @@ def configure_rate_limiting(app: Flask) -> Limiter:
         headers_enabled=True,  # Add X-RateLimit-* headers
         swallow_errors=True,   # Fail open on storage errors
     )
-    
+
     # Log configuration
     import logging
     logger = logging.getLogger(__name__)
     backend = "Redis" if "redis://" in storage_uri else "In-Memory"
     logger.info(f"Rate limiting configured with {backend} backend")
-    
+
     return limiter
 ```
 
@@ -941,27 +941,27 @@ from typing import Dict
 
 class RateLimitConfig:
     """Centralized rate limit configuration."""
-    
+
     # Authentication endpoints
     AUTH_MAX_ATTEMPTS = int(os.getenv("AUTH_MAX_ATTEMPTS", "5"))
     AUTH_WINDOW_SECONDS = int(os.getenv("AUTH_WINDOW_SECONDS", "900"))
-    
+
     # Command override
     OVERRIDE_MAX_ATTEMPTS = int(os.getenv("OVERRIDE_MAX_ATTEMPTS", "3"))
     OVERRIDE_WINDOW_SECONDS = int(os.getenv("OVERRIDE_WINDOW_SECONDS", "1800"))
-    
+
     # API endpoints (requests per minute)
     API_CHAT_LIMIT = int(os.getenv("API_CHAT_LIMIT", "100"))
     API_IMAGE_LIMIT = int(os.getenv("API_IMAGE_LIMIT", "20"))
     API_GENERAL_LIMIT = int(os.getenv("API_GENERAL_LIMIT", "1000"))
-    
+
     # Redis configuration
     REDIS_URL = os.getenv("REDIS_URL", "memory://")
-    
+
     # Strategy
     STRATEGY = os.getenv("RATE_LIMIT_STRATEGY", "moving-window")
     FAIL_OPEN = os.getenv("RATE_LIMIT_FAIL_OPEN", "true").lower() == "true"
-    
+
     @classmethod
     def get_limit(cls, endpoint_type: str) -> Dict[str, int]:
         """Get rate limit configuration for endpoint type."""
@@ -1009,69 +1009,69 @@ from app.core.security.rate_limiter_memory import InMemoryRateLimiter
 
 class TestInMemoryRateLimiter:
     """Test in-memory rate limiter."""
-    
+
     def test_allows_requests_within_limit(self):
         """Should allow requests within limit."""
         limiter = InMemoryRateLimiter(max_attempts=5, window_seconds=60)
-        
+
         for i in range(5):
             allowed, metadata = limiter.is_allowed("test_key")
             assert allowed is True
             assert metadata["current_attempts"] == i + 1
-    
+
     def test_blocks_requests_over_limit(self):
         """Should block requests exceeding limit."""
         limiter = InMemoryRateLimiter(max_attempts=3, window_seconds=60)
-        
+
         # Fill the bucket
         for _ in range(3):
             limiter.is_allowed("test_key")
-        
+
         # Should be blocked
         allowed, metadata = limiter.is_allowed("test_key")
         assert allowed is False
         assert metadata["attempts_remaining"] == 0
         assert metadata["retry_after"] > 0
-    
+
     def test_sliding_window_cleanup(self):
         """Should remove expired attempts."""
         limiter = InMemoryRateLimiter(max_attempts=3, window_seconds=2)
-        
+
         # Fill bucket
         for _ in range(3):
             limiter.is_allowed("test_key")
-        
+
         # Wait for window to expire
         time.sleep(3)
-        
+
         # Should allow again
         allowed, _ = limiter.is_allowed("test_key")
         assert allowed is True
-    
+
     def test_reset_clears_attempts(self):
         """Should clear attempts on reset."""
         limiter = InMemoryRateLimiter(max_attempts=2, window_seconds=60)
-        
+
         # Fill bucket
         limiter.is_allowed("test_key")
         limiter.is_allowed("test_key")
-        
+
         # Reset
         limiter.reset("test_key")
-        
+
         # Should allow again
         allowed, metadata = limiter.is_allowed("test_key")
         assert allowed is True
         assert metadata["current_attempts"] == 1
-    
+
     def test_multiple_keys_isolated(self):
         """Should isolate different keys."""
         limiter = InMemoryRateLimiter(max_attempts=2, window_seconds=60)
-        
+
         # Fill key1
         limiter.is_allowed("key1")
         limiter.is_allowed("key1")
-        
+
         # key2 should still work
         allowed, _ = limiter.is_allowed("key2")
         assert allowed is True
@@ -1079,34 +1079,34 @@ class TestInMemoryRateLimiter:
 
 class TestRedisRateLimiter:
     """Test Redis rate limiter (requires Redis)."""
-    
+
     @pytest.mark.skipif(not os.getenv("REDIS_URL"), reason="Redis not configured")
     def test_redis_backend(self):
         """Should work with Redis backend."""
         from app.core.security.rate_limiter_redis import RedisRateLimiter
-        
+
         limiter = RedisRateLimiter(max_attempts=5, window_seconds=60)
-        
+
         # Test basic functionality
         allowed, metadata = limiter.is_allowed("redis_test_key")
         assert allowed is True
-        
+
         # Cleanup
         limiter.reset("redis_test_key")
 
 
 class TestHybridRateLimiter:
     """Test hybrid rate limiter."""
-    
+
     def test_falls_back_to_memory(self):
         """Should fall back to memory when Redis unavailable."""
         from app.core.security.rate_limiter import RateLimiter
-        
+
         # Force memory mode
         limiter = RateLimiter(max_attempts=5, window_seconds=60, force_memory=True)
-        
+
         assert limiter.get_backend_type() == "memory"
-        
+
         allowed, _ = limiter.is_allowed("test_key")
         assert allowed is True
 ```
@@ -1126,38 +1126,38 @@ from app.core.command_override import CommandOverrideSystem
 
 class TestUserManagerRateLimit:
     """Test rate limiting in UserManager."""
-    
+
     def test_authentication_rate_limit(self, temp_dir):
         """Should rate limit failed authentication attempts."""
         manager = UserManager(users_file=f"{temp_dir}/users.json")
         manager.create_user("testuser", "password123")
-        
+
         # Attempt 5 failed logins (limit is 5)
         for _ in range(5):
             result = manager.authenticate("testuser", "wrongpassword")
             assert result is False
-        
+
         # 6th attempt should be rate limited
         result = manager.authenticate("testuser", "wrongpassword")
         assert result is False
-        
+
         # Even correct password should be blocked
         result = manager.authenticate("testuser", "password123")
         assert result is False  # Rate limited
-    
+
     def test_successful_auth_resets_limit(self, temp_dir):
         """Should reset rate limit on successful authentication."""
         manager = UserManager(users_file=f"{temp_dir}/users.json")
         manager.create_user("testuser", "password123")
-        
+
         # Failed attempts
         for _ in range(3):
             manager.authenticate("testuser", "wrongpassword")
-        
+
         # Successful auth
         result = manager.authenticate("testuser", "password123")
         assert result is True
-        
+
         # Should allow more attempts (limit reset)
         for _ in range(5):
             manager.authenticate("testuser", "wrongpassword")
@@ -1165,17 +1165,17 @@ class TestUserManagerRateLimit:
 
 class TestCommandOverrideRateLimit:
     """Test rate limiting in CommandOverrideSystem."""
-    
+
     def test_master_password_rate_limit(self, temp_dir):
         """Should rate limit override authentication."""
         override = CommandOverrideSystem(data_dir=temp_dir)
         override.set_master_password("master123")
-        
+
         # Attempt 3 failed logins (limit is 3)
         for _ in range(3):
             result = override.authenticate("wrongpassword")
             assert result is False
-        
+
         # 4th attempt should be blocked
         result = override.authenticate("master123")
         assert result is False  # Rate limited even with correct password
@@ -1197,34 +1197,34 @@ from app.core.security.rate_limiter import RateLimiter
 def test_concurrent_requests(limiter, key, num_requests):
     """Simulate concurrent requests."""
     results = {"allowed": 0, "blocked": 0}
-    
+
     def make_request():
         allowed, _ = limiter.is_allowed(key)
         return allowed
-    
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
         futures = [executor.submit(make_request) for _ in range(num_requests)]
-        
+
         for future in concurrent.futures.as_completed(futures):
             if future.result():
                 results["allowed"] += 1
             else:
                 results["blocked"] += 1
-    
+
     return results
 
 
 def main():
     """Run load test."""
     limiter = RateLimiter(max_attempts=100, window_seconds=60)
-    
+
     print("Testing concurrent requests...")
     results = test_concurrent_requests(limiter, "load_test", 200)
-    
+
     print(f"Results: {results}")
     assert results["allowed"] == 100
     assert results["blocked"] == 100
-    
+
     print("Load test passed!")
 
 
@@ -1319,24 +1319,24 @@ echo "REDIS_URL=redis://localhost:6379/0" >> .env
 def authenticate_with_constant_time(self, username, password):
     """Authenticate with constant-time response."""
     import hmac
-    
+
     # Always perform bcrypt verification (even for invalid users)
     user = self.users.get(username)
-    
+
     if user and user.get("password_hash"):
         actual_hash = user["password_hash"]
     else:
         # Use dummy hash for constant-time behavior
         actual_hash = pwd_context.hash("dummy_password_for_timing")
-    
+
     # Verify password (constant time)
     is_valid = pwd_context.verify(password, actual_hash)
-    
+
     # Only set current_user if both user exists AND password valid
     if user and is_valid:
         self.current_user = username
         return True
-    
+
     return False
 ```
 
@@ -1347,13 +1347,13 @@ def calculate_delay(attempt_number: int) -> float:
     """Calculate exponential backoff delay."""
     base_delay = 1.0  # 1 second
     max_delay = 60.0  # 1 minute
-    
+
     delay = min(base_delay * (2 ** attempt_number), max_delay)
-    
+
     # Add jitter to prevent thundering herd
     import random
     jitter = random.uniform(0, delay * 0.1)
-    
+
     return delay + jitter
 ```
 
@@ -1459,7 +1459,7 @@ def log_rate_limit_event(
         "remaining": metadata.get("attempts_remaining"),
         "retry_after": metadata.get("retry_after"),
     }
-    
+
     if allowed:
         logger.debug(f"Rate limit check: {json.dumps(event)}")
     else:
@@ -1484,7 +1484,7 @@ groups:
         annotations:
           summary: "High rate limit block rate"
           description: "{{ $value }} requests blocked per second"
-      
+
       # Alert if Redis backend down (falling back to memory)
       - alert: RateLimiterRedisDown
         expr: rate_limit_active_keys{backend="memory"} > 0 and redis_up == 0
@@ -1505,7 +1505,7 @@ groups:
 ```python
 class RateLimiter:
     """Hybrid rate limiter with Redis and in-memory backends."""
-    
+
     def __init__(
         self,
         max_attempts: int = 10,
@@ -1514,49 +1514,49 @@ class RateLimiter:
     ):
         """
         Initialize rate limiter.
-        
+
         Args:
             max_attempts: Maximum requests in window
             window_seconds: Time window in seconds
             force_memory: Force in-memory backend (for testing)
         """
-    
+
     def is_allowed(self, key: str) -> Tuple[bool, dict]:
         """
         Check if request is allowed.
-        
+
         Args:
             key: Unique identifier (e.g., 'auth:user:john', 'api:192.168.1.1')
-        
+
         Returns:
             Tuple of (allowed, metadata) where metadata contains:
             - current_attempts: Number of attempts in current window
             - attempts_remaining: Remaining attempts before limit
             - retry_after: Seconds until limit resets (0 if allowed)
             - reset_time: Unix timestamp when limit resets
-        
+
         Example:
             >>> limiter = RateLimiter(max_attempts=5, window_seconds=60)
             >>> allowed, meta = limiter.is_allowed("user:john")
             >>> if not allowed:
             ...     print(f"Try again in {meta['retry_after']} seconds")
         """
-    
+
     def reset(self, key: str) -> None:
         """
         Reset rate limit for key (e.g., after successful auth).
-        
+
         Args:
             key: Identifier to reset
         """
-    
+
     def get_backend_type(self) -> str:
         """Get current backend type ('redis' or 'memory')."""
-    
+
     def get_stats(self) -> dict:
         """
         Get rate limiter statistics.
-        
+
         Returns:
             Dictionary with:
             - total_keys: Number of tracked keys
@@ -1611,7 +1611,7 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-  
+
   app:
     build: .
     depends_on:
@@ -1673,6 +1673,6 @@ A: Sliding-window is more accurate but slightly more expensive. Recommended for 
 
 ---
 
-**Document Status:** Ready for Review  
-**Approval Required:** Security Team, Architecture Team  
+**Document Status:** Ready for Review
+**Approval Required:** Security Team, Architecture Team
 **Implementation Start:** Pending Approval

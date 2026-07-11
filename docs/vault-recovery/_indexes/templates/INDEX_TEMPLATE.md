@@ -30,9 +30,9 @@ coverage_percentage: 0  # Estimated percentage of domain coverage (0-100)
 
 # [Index Name] Index
 
-> **Index Type:** {by-area | by-type | by-priority | by-status | cross-reference}  
-> **Scope:** {Brief description of what this index covers}  
-> **Maintainer:** {Agent ID or team name}  
+> **Index Type:** {by-area | by-type | by-priority | by-status | cross-reference}
+> **Scope:** {Brief description of what this index covers}
+> **Maintainer:** {Agent ID or team name}
 > **Last Updated:** {YYYY-MM-DD}
 
 ## Overview
@@ -62,7 +62,7 @@ coverage_percentage: 0  # Estimated percentage of domain coverage (0-100)
   - **Key Topics:** {topic1, topic2, topic3}
   - **Dependencies:** [[prerequisite-doc-1]], [[prerequisite-doc-2]]
   - **Last Reviewed:** {YYYY-MM-DD}
-  
+
 - [[document-name-2]] - {Brief description} ({Priority}, {Status})
   - **Key Topics:** {topic1, topic2, topic3}
   - **Related:** [[related-doc-1]]
@@ -122,8 +122,8 @@ Documents no longer current but kept for historical reference:
 - P2 (Medium): {count}
 - P3 (Low): {count}
 
-**Last Major Update:** {YYYY-MM-DD}  
-**Index Version:** 1.0  
+**Last Major Update:** {YYYY-MM-DD}
+**Index Version:** 1.0
 **Coverage:** {percentage}% of {domain} domain
 
 ---
@@ -186,19 +186,19 @@ Before committing index updates:
 
 ### Common Issues
 
-**Issue:** Document appears in multiple sections  
+**Issue:** Document appears in multiple sections
 **Resolution:** Valid if document has cross-cutting concerns. Add note explaining why.
 
-**Issue:** Broken link to document  
+**Issue:** Broken link to document
 **Resolution:** Check if document was renamed/moved. Update link or add to deprecated section.
 
-**Issue:** Priority conflicts between indexes  
+**Issue:** Priority conflicts between indexes
 **Resolution:** Priority can be context-dependent. Add context qualifier: (P0-Security) vs (P2-Performance)
 
-**Issue:** Statistics don't match actual counts  
+**Issue:** Statistics don't match actual counts
 **Resolution:** Run `scripts/audit-index-metadata.py --fix` to auto-update.
 
-**Issue:** Index becoming too large (>200 documents)  
+**Issue:** Index becoming too large (>200 documents)
 **Resolution:** Split into multiple focused indexes by subsystem or priority level.
 
 ---
@@ -257,11 +257,10 @@ Before committing index updates:
 
 ---
 
-**Template Version:** 1.0  
-**Schema Version:** 1.0  
-**Created By:** AGENT-002 (Indexes Subdirectory Specialist)  
+**Template Version:** 1.0
+**Schema Version:** 1.0
+**Created By:** AGENT-002 (Indexes Subdirectory Specialist)
 **Last Updated:** 2024-01-15
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

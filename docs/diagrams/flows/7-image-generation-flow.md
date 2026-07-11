@@ -11,17 +11,17 @@ flowchart TD
     UIInput --> ValidatePrompt{Prompt<br/>Valid?}
     ValidatePrompt -->|Empty| PromptError[❌ Empty Prompt Error<br/>Show error message]
     ValidatePrompt -->|Valid| ContentFilter[Content Filter Check<br/>15 blocked keywords]
-    
+
     ContentFilter --> FilterScan{Blocked<br/>Keywords?}
     FilterScan -->|Found| FilterBlock[❌ Content Blocked<br/>Show explanation]
     FilterScan -->|None| CheckOverride{Command<br/>Override Active?}
-    
+
     CheckOverride -->|Yes| BypassFilter[⚠️ Override: Skip Filter<br/>Log bypass action]
     CheckOverride -->|No| SafetyNegative[Add Safety Negative Prompts<br/>violence, explicit, gore]
-    
+
     BypassFilter --> SelectStyle
     SafetyNegative --> SelectStyle[Select Style Preset<br/>10 available styles]
-    
+
     SelectStyle --> StyleChoice{Style<br/>Selection}
     StyleChoice -->|Photorealistic| PhotoStyle[Style: photorealistic<br/>prompt + 8k, detailed, realistic]
     StyleChoice -->|Digital Art| DigitalStyle[Style: digital_art<br/>prompt + digital painting, artstation]
@@ -33,7 +33,7 @@ flowchart TD
     StyleChoice -->|Minimalist| MinimalStyle[Style: minimalist<br/>prompt + clean, simple, modern]
     StyleChoice -->|Abstract| AbstractStyle[Style: abstract<br/>prompt + abstract art, geometric]
     StyleChoice -->|Cinematic| CinemaStyle[Style: cinematic<br/>prompt + film still, dramatic lighting]
-    
+
     PhotoStyle --> BuildPrompt
     DigitalStyle --> BuildPrompt
     OilStyle --> BuildPrompt
@@ -44,89 +44,89 @@ flowchart TD
     MinimalStyle --> BuildPrompt
     AbstractStyle --> BuildPrompt
     CinemaStyle --> BuildPrompt[Build Enhanced Prompt<br/>base + style modifiers]
-    
+
     BuildPrompt --> SelectBackend{Backend<br/>Selection}
     SelectBackend -->|Hugging Face| HFRoute[Hugging Face Backend<br/>Stable Diffusion 2.1]
     SelectBackend -->|OpenAI| OpenAIRoute[OpenAI Backend<br/>DALL-E 3]
-    
+
     HFRoute --> CheckHFKey{HF API Key<br/>Configured?}
     CheckHFKey -->|No| HFKeyError[❌ Missing HF API Key<br/>Prompt for configuration]
     CheckHFKey -->|Yes| SelectSize[Select Image Size<br/>512x512, 768x768, 1024x1024]
-    
+
     OpenAIRoute --> CheckOpenAIKey{OpenAI Key<br/>Configured?}
     CheckOpenAIKey -->|No| OpenAIKeyError[❌ Missing OpenAI Key<br/>Prompt for configuration]
     CheckOpenAIKey -->|Yes| SelectSize
-    
+
     SelectSize --> SizeChoice{Size<br/>Selection}
     SizeChoice -->|512x512| Size512[Resolution: 512x512<br/>Fast generation]
     SizeChoice -->|768x768| Size768[Resolution: 768x768<br/>Balanced quality]
     SizeChoice -->|1024x1024| Size1024[Resolution: 1024x1024<br/>High quality]
-    
+
     Size512 --> CreateWorker
     Size768 --> CreateWorker
     Size1024 --> CreateWorker[Create Worker Thread<br/>ImageGenerationWorker]
-    
+
     CreateWorker --> StartWorker[Start Worker Thread<br/>QThread.start]
     StartWorker --> ShowProgress[Show Progress Dialog<br/>Generating... Please wait]
-    
+
     ShowProgress --> WorkerGenerate{Backend<br/>Execution}
     WorkerGenerate -->|Hugging Face| HFGenerate[Generate via HF API<br/>POST to Hugging Face Inference]
     WorkerGenerate -->|OpenAI| OpenAIGenerate[Generate via OpenAI API<br/>POST to DALL-E 3 endpoint]
-    
+
     HFGenerate --> HFRequest[Build HF Request<br/>model: stabilityai/stable-diffusion-2-1]
     HFRequest --> HFRetry[Send with Retry Logic<br/>Max 3 retries, exponential backoff]
     HFRetry --> HFResponse{HF Response<br/>Status}
-    
+
     HFResponse -->|429 Rate Limit| HFWait[Wait for Retry-After<br/>Honor rate limit header]
     HFResponse -->|502/503 Error| HFBackoff[Exponential Backoff<br/>0.8s * 2^attempt]
     HFResponse -->|200 Success| HFDecode[Decode Image<br/>Base64 → bytes]
-    
+
     HFWait --> HFRetry
     HFBackoff --> HFRetry
     HFDecode --> SaveImage
-    
+
     OpenAIGenerate --> OpenAIRequest[Build OpenAI Request<br/>model: dall-e-3, quality: hd]
     OpenAIRequest --> OpenAIRetry[Send with Retry Logic<br/>Max 3 retries, exponential backoff]
     OpenAIRetry --> OpenAIResponse{OpenAI<br/>Response}
-    
+
     OpenAIResponse -->|Rate Limit| OpenAIWait[Wait for Retry<br/>Respect rate limits]
     OpenAIResponse -->|Error| OpenAIBackoff[Exponential Backoff<br/>0.8s * 2^attempt]
     OpenAIResponse -->|Success| OpenAIDownload[Download Image<br/>GET from URL]
-    
+
     OpenAIWait --> OpenAIRetry
     OpenAIBackoff --> OpenAIRetry
     OpenAIDownload --> SaveImage[Save Image to Disk<br/>data/images/img_{uuid}.png]
-    
+
     SaveImage --> SanitizeFilename[Sanitize Filename<br/>Remove special characters]
     SanitizeFilename --> WriteToDisk[Write to File<br/>Binary write with fsync]
     WriteToDisk --> VerifyImage{Image<br/>Valid?}
-    
+
     VerifyImage -->|No| ImageError[❌ Image Corruption<br/>Retry generation]
     VerifyImage -->|Yes| CreateThumbnail[Create Thumbnail<br/>256x256 preview]
-    
+
     CreateThumbnail --> SaveHistory[Save to History<br/>data/image_generation/history.json]
     SaveHistory --> UpdateMetadata[Update Metadata<br/>prompt, style, backend, timestamp]
-    
+
     UpdateMetadata --> EmitSignal[Emit Signal<br/>image_generated.emit]
     EmitSignal --> UpdateGUI[Update GUI<br/>Display image in right panel]
     UpdateGUI --> DisplayImage[Display Image<br/>QPixmap with zoom controls]
-    
+
     DisplayImage --> ShowMetadata[Show Metadata Panel<br/>Prompt, style, size, backend, time]
     ShowMetadata --> EnableActions[Enable Actions<br/>Save, Copy, Delete, Regenerate]
     EnableActions --> CloseProgress[Close Progress Dialog<br/>Hide generating message]
-    
+
     CloseProgress --> Success([✅ Image Generated<br/>Display complete])
-    
+
     ImageError --> RetryCount{Retry Count<br/>< 3?}
     RetryCount -->|Yes| WorkerGenerate
     RetryCount -->|No| GenerationFailed[❌ Generation Failed<br/>Show error dialog]
-    
+
     PromptError --> End([❌ Generation Cancelled])
     FilterBlock --> End
     HFKeyError --> End
     OpenAIKeyError --> End
     GenerationFailed --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style FilterBlock fill:#ff0000,stroke:#ff00ff,stroke-width:2px,color:#fff
@@ -288,7 +288,7 @@ class ImageGenerationWorker(QThread):
     image_generated = pyqtSignal(str, dict)  # path, metadata
     generation_failed = pyqtSignal(str)       # error message
     progress_updated = pyqtSignal(int)        # progress percentage
-    
+
     def __init__(self, generator, prompt, style, backend, size):
         super().__init__()
         self.generator = generator
@@ -296,12 +296,12 @@ class ImageGenerationWorker(QThread):
         self.style = style
         self.backend = backend
         self.size = size
-    
+
     def run(self):
         """Execute generation in background thread."""
         try:
             self.progress_updated.emit(10)  # Starting
-            
+
             # Generate image
             image_path, metadata = self.generator.generate(
                 prompt=self.prompt,
@@ -310,7 +310,7 @@ class ImageGenerationWorker(QThread):
                 size=self.size,
                 progress_callback=self.progress_updated.emit
             )
-            
+
             self.progress_updated.emit(100)  # Complete
             self.image_generated.emit(image_path, metadata)
         except Exception as e:
@@ -340,13 +340,13 @@ def show_progress_dialog(parent):
 class ImageGenerationLeftPanel(QWidget):
     """Left panel for prompt input and settings."""
     generate_requested = pyqtSignal(str, str, str, str)  # prompt, style, backend, size
-    
+
     def __init__(self):
         super().__init__()
         # Prompt text edit
         self.prompt_input = QTextEdit()
         self.prompt_input.setPlaceholderText("Describe the image you want to generate...")
-        
+
         # Style selector
         self.style_combo = QComboBox()
         self.style_combo.addItems([
@@ -354,15 +354,15 @@ class ImageGenerationLeftPanel(QWidget):
             "Watercolor", "Anime", "Cyberpunk", "Fantasy",
             "Minimalist", "Abstract", "Cinematic"
         ])
-        
+
         # Backend selector
         self.backend_combo = QComboBox()
         self.backend_combo.addItems(["Hugging Face", "OpenAI DALL-E"])
-        
+
         # Size selector
         self.size_combo = QComboBox()
         self.size_combo.addItems(["512x512", "768x768", "1024x1024"])
-        
+
         # Generate button
         self.generate_btn = QPushButton("🎨 Generate Image")
         self.generate_btn.clicked.connect(self._on_generate)
@@ -372,25 +372,25 @@ class ImageGenerationLeftPanel(QWidget):
 ```python
 class ImageGenerationRightPanel(QWidget):
     """Right panel for image display and actions."""
-    
+
     def __init__(self):
         super().__init__()
         # Image display
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setScaledContents(False)
-        
+
         # Zoom controls
         self.zoom_in_btn = QPushButton("🔍 Zoom In")
         self.zoom_out_btn = QPushButton("🔍 Zoom Out")
         self.zoom_fit_btn = QPushButton("⬜ Fit to Window")
-        
+
         # Action buttons
         self.save_btn = QPushButton("💾 Save As...")
         self.copy_btn = QPushButton("📋 Copy to Clipboard")
         self.delete_btn = QPushButton("🗑️ Delete")
         self.regenerate_btn = QPushButton("🔄 Regenerate")
-        
+
         # Metadata display
         self.metadata_text = QTextEdit()
         self.metadata_text.setReadOnly(True)

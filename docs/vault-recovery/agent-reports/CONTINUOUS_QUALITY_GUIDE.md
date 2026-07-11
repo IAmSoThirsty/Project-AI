@@ -1,9 +1,9 @@
 # Continuous Quality Guide: Project-AI Documentation Vault
 
-**Version:** 1.0  
-**Created:** 2026-04-20  
-**Owner:** Documentation Team  
-**Maintainer:** AGENT-040 (Validation & Quality Assurance Specialist)  
+**Version:** 1.0
+**Created:** 2026-04-20
+**Owner:** Documentation Team
+**Maintainer:** AGENT-040 (Validation & Quality Assurance Specialist)
 **Applies To:** All documentation contributors
 
 ---
@@ -117,7 +117,7 @@ This guide establishes **continuous quality practices** for maintaining the Proj
 
 **Solution:** Validate quality **before** committing changes.
 
-**Time Investment:** 2-3 minutes per commit  
+**Time Investment:** 2-3 minutes per commit
 **Time Saved:** 15-30 minutes per avoided issue
 
 ---
@@ -183,11 +183,11 @@ foreach ($file in $changedFiles) {
 foreach ($file in $changedFiles) {
     $content = Get-Content $file -Raw
     $links = [regex]::Matches($content, '\[\[([^\]]+)\]\]')
-    
+
     foreach ($link in $links) {
         $target = $link.Groups[1].Value -replace '\|.*$', '' -replace '#.*$', ''
         $targetFile = Get-ChildItem "T:\Project-AI-vault" -Recurse -Filter "*$target*" -ErrorAction SilentlyContinue
-        
+
         if (-not $targetFile) {
             Write-Warning "Broken link in $file: [[$target]]"
         }
@@ -591,7 +591,7 @@ Quality gates are **automated checkpoints** that enforce quality standards at ke
    ```powershell
    cd T:\Project-AI-vault
    .\validate-tags.ps1 -Path "repo-docs" -ReportPath "tag-errors.txt"
-   
+
    # Extract most common errors
    $errors = Get-Content "tag-errors.txt" | Select-String -Pattern "Tag not in controlled vocabulary: ([^\s]+)"
    $errorCounts = $errors | Group-Object -Property { $_.Matches.Groups[1].Value } | Sort-Object Count -Descending
@@ -679,8 +679,8 @@ Quality gates are **automated checkpoints** that enforce quality standards at ke
 Completeness = (Files with Frontmatter / Total Files) × 100
 ```
 
-**Target:** ≥95%  
-**Current:** 74.38%  
+**Target:** ≥95%
+**Current:** 74.38%
 **Gap:** -20.62 percentage points
 
 **How to Improve:**
@@ -699,8 +699,8 @@ Completeness = (Files with Frontmatter / Total Files) × 100
 Pass Rate = (Files Passed Tag Validation / Total Files) × 100
 ```
 
-**Target:** ≥95%  
-**Current:** 23.81%  
+**Target:** ≥95%
+**Current:** 23.81%
 **Gap:** -71.19 percentage points
 
 **How to Improve:**
@@ -719,8 +719,8 @@ Pass Rate = (Files Passed Tag Validation / Total Files) × 100
 Integrity = (Valid Links / Total Links) × 100
 ```
 
-**Target:** 100%  
-**Current:** 62.01%  
+**Target:** 100%
+**Current:** 62.01%
 **Gap:** -37.99 percentage points
 
 **How to Improve:**
@@ -739,8 +739,8 @@ Integrity = (Valid Links / Total Links) × 100
 Orphaned % = (Orphaned Docs / Total Docs) × 100
 ```
 
-**Target:** <5%  
-**Current:** 25.62%  
+**Target:** <5%
+**Current:** 25.62%
 **Gap:** +20.62 percentage points
 
 **How to Improve:**
@@ -759,8 +759,8 @@ Orphaned % = (Orphaned Docs / Total Docs) × 100
 Score = (Metadata% × 0.35) + (TagPass% × 0.25) + (LinkIntegrity% × 0.25) + (NonOrphaned% × 0.15)
 ```
 
-**Target:** ≥95/100  
-**Current:** 66.41/100  
+**Target:** ≥95/100
+**Current:** 66.41/100
 **Gap:** -28.59 points
 
 **How to Improve:**
@@ -788,7 +788,7 @@ Score = (Metadata% × 0.35) + (TagPass% × 0.25) + (LinkIntegrity% × 0.25) + (N
 ```markdown
 # Vault Health Dashboard
 
-**Last Updated:** 2026-04-20  
+**Last Updated:** 2026-04-20
 **Overall Quality Score:** 66.41/100 📉
 
 ## Metrics
@@ -1011,10 +1011,9 @@ git log --oneline scripts/
 
 ---
 
-**Maintained By:** AGENT-040  
-**Last Updated:** 2026-04-20  
+**Maintained By:** AGENT-040
+**Last Updated:** 2026-04-20
 **Next Review:** 2026-05-20
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

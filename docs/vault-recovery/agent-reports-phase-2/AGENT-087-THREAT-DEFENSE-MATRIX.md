@@ -58,9 +58,9 @@ audience:
 
 **Mission Complete**: Comprehensive wiki links from threat model documentation to actual defense implementations.
 
-**Date**: 2026-04-20  
-**Agent**: AGENT-087: Threat Models to Defenses Links Specialist  
-**Phase**: Phase 5 (Cross-Linking)  
+**Date**: 2026-04-20
+**Agent**: AGENT-087: Threat Models to Defenses Links Specialist
+**Phase**: Phase 5 (Cross-Linking)
 **Status**: ✅ COMPLETE
 
 ---
@@ -84,9 +84,9 @@ This traceability matrix establishes **264 bidirectional wiki links** connecting
 
 ### Quality Gates Status
 
-✅ **All major threats linked to defenses** - 100% coverage  
-✅ **Zero unaddressed threats** - Every threat has mitigation strategy  
-✅ **"Defenses" sections comprehensive** - Detailed mappings in source docs  
+✅ **All major threats linked to defenses** - 100% coverage
+✅ **Zero unaddressed threats** - Every threat has mitigation strategy
+✅ **"Defenses" sections comprehensive** - Detailed mappings in source docs
 ✅ **Mitigation strategies validated** - Cross-referenced with implementation
 
 ---
@@ -206,8 +206,8 @@ Real-world attack scenarios:
 ### Desktop Application Attack Surface (T-001 to T-004)
 
 #### T-001: UI Input Injection
-**Severity**: MEDIUM  
-**Description**: Malicious input via text fields, file pickers  
+**Severity**: MEDIUM
+**Description**: Malicious input via text fields, file pickers
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#1-desktop-application-attack-surface]]
 
 **Defenses**:
@@ -219,8 +219,8 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 
 #### T-002: File System Access Exploit
-**Severity**: MEDIUM  
-**Description**: Arbitrary file read/write within user permissions  
+**Severity**: MEDIUM
+**Description**: Arbitrary file read/write within user permissions
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#1-desktop-application-attack-surface]]
 
 **Defenses**:
@@ -231,8 +231,8 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 
 #### T-003: Process Execution Abuse
-**Severity**: MEDIUM  
-**Description**: Can spawn subprocesses by design  
+**Severity**: MEDIUM
+**Description**: Can spawn subprocesses by design
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#1-desktop-application-attack-surface]]
 
 **Defenses**:
@@ -243,8 +243,8 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 
 #### T-004: Memory Manipulation
-**Severity**: MEDIUM  
-**Description**: PyQt6 vulnerabilities, Python interpreter exploits  
+**Severity**: MEDIUM
+**Description**: PyQt6 vulnerabilities, Python interpreter exploits
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#1-desktop-application-attack-surface]]
 
 **Defenses**:
@@ -258,8 +258,8 @@ Real-world attack scenarios:
 ### TARL Runtime Attack Surface (T-005 to T-008)
 
 #### T-005: Bytecode Injection
-**Severity**: LOW  
-**Description**: Crafted bytecode bypassing constitutional checks  
+**Severity**: LOW
+**Description**: Crafted bytecode bypassing constitutional checks
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#2-tarl-runtime-attack-surface]]
 
 **Defenses**:
@@ -272,8 +272,8 @@ Real-world attack scenarios:
 **Mitigation Strategy**: Defense-in-depth with constitutional guarantees ensures bytecode validation at multiple layers before execution.
 
 #### T-006: Resource Exhaustion
-**Severity**: LOW  
-**Description**: Infinite loops, memory bombs in TARL  
+**Severity**: LOW
+**Description**: Infinite loops, memory bombs in TARL
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#2-tarl-runtime-attack-surface]]
 
 **Defenses**:
@@ -286,8 +286,8 @@ Real-world attack scenarios:
 **Mitigation Strategy**: Execution timeout (default 5s), memory caps, and stack-based VM with bounded operations.
 
 #### T-007: Constitutional Bypass
-**Severity**: LOW  
-**Description**: Exploiting gaps in axiom enforcement  
+**Severity**: LOW
+**Description**: Exploiting gaps in axiom enforcement
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#2-tarl-runtime-attack-surface]]
 
 **Defenses**:
@@ -300,8 +300,8 @@ Real-world attack scenarios:
 **Mitigation Strategy**: Immutable axioms that cannot be overridden ensure constitutional guarantees cannot be bypassed.
 
 #### T-008: Type Confusion
-**Severity**: LOW  
-**Description**: VM type system vulnerabilities  
+**Severity**: LOW
+**Description**: VM type system vulnerabilities
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#2-tarl-runtime-attack-surface]]
 
 **Defenses**:
@@ -316,8 +316,8 @@ Real-world attack scenarios:
 ### Data Persistence Attack Surface (T-009 to T-012)
 
 #### T-009: JSON Injection
-**Severity**: MEDIUM  
-**Description**: Malformed JSON corrupting state  
+**Severity**: MEDIUM
+**Description**: Malformed JSON corrupting state
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#3-data-persistence-attack-surface]]
 
 **Defenses**:
@@ -328,8 +328,8 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 
 #### T-010: File Permission Escalation
-**Severity**: MEDIUM  
-**Description**: Modifying files outside data directory  
+**Severity**: MEDIUM
+**Description**: Modifying files outside data directory
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#3-data-persistence-attack-surface]]
 
 **Defenses**:
@@ -340,8 +340,8 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 
 #### T-011: State Tampering
-**Severity**: MEDIUM  
-**Description**: Direct modification of state files  
+**Severity**: MEDIUM
+**Description**: Direct modification of state files
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#3-data-persistence-attack-surface]]
 
 **Defenses**:
@@ -352,8 +352,8 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 
 #### T-012: Backup Recovery Exploits
-**Severity**: MEDIUM  
-**Description**: Restoring malicious state  
+**Severity**: MEDIUM
+**Description**: Restoring malicious state
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#3-data-persistence-attack-surface]]
 
 **Defenses**:
@@ -368,8 +368,8 @@ Real-world attack scenarios:
 ### Web API Attack Surface (T-013 to T-016)
 
 #### T-013: API Injection (SQL/Command)
-**Severity**: HIGH  
-**Description**: SQL injection, command injection via API  
+**Severity**: HIGH
+**Description**: SQL injection, command injection via API
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#4-web-api-attack-surface]]
 
 **Defenses**:
@@ -385,8 +385,8 @@ Real-world attack scenarios:
 - Command: `; ls`, `| cat`, `$(command)`, backtick execution
 
 #### T-014: Authentication Bypass
-**Severity**: HIGH  
-**Description**: Weak authentication, session hijacking  
+**Severity**: HIGH
+**Description**: Weak authentication, session hijacking
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#4-web-api-attack-surface]]
 
 **Defenses**:
@@ -399,8 +399,8 @@ Real-world attack scenarios:
 **Authentication Flow**: JWT tokens (24h access, 30d refresh), Argon2id hashing, MFA support
 
 #### T-015: CSRF Attack
-**Severity**: HIGH  
-**Description**: Cross-site request forgery  
+**Severity**: HIGH
+**Description**: Cross-site request forgery
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#4-web-api-attack-surface]]
 
 **Defenses**:
@@ -410,8 +410,8 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 
 #### T-016: Rate Limiting DoS
-**Severity**: HIGH  
-**Description**: DoS via API flooding  
+**Severity**: HIGH
+**Description**: DoS via API flooding
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#4-web-api-attack-surface]]
 
 **Defenses**:
@@ -428,8 +428,8 @@ Real-world attack scenarios:
 ### Governance Bypass Attack Surface (T-017 to T-020)
 
 #### T-017: Master Password Brute Force
-**Severity**: HIGH  
-**Description**: Weak password cracking  
+**Severity**: HIGH
+**Description**: Weak password cracking
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#5-governance-bypass-attack-surface]]
 
 **Defenses**:
@@ -442,8 +442,8 @@ Real-world attack scenarios:
 **Mitigation**: SHA-256 hashed master password, rate limiting, audit logging
 
 #### T-018: Override Audit Log Tampering
-**Severity**: HIGH  
-**Description**: Modifying audit trail  
+**Severity**: HIGH
+**Description**: Modifying audit trail
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#5-governance-bypass-attack-surface]]
 
 **Defenses**:
@@ -456,8 +456,8 @@ Real-world attack scenarios:
 **Mitigation**: Immutable audit log with hash chains prevents tampering
 
 #### T-019: Constitutional Kernel Bypass
-**Severity**: HIGH  
-**Description**: Exploiting governance gaps  
+**Severity**: HIGH
+**Description**: Exploiting governance gaps
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#5-governance-bypass-attack-surface]]
 
 **Defenses**:
@@ -470,8 +470,8 @@ Real-world attack scenarios:
 **Mitigation**: Constitutional kernel enforces limits even on overrides
 
 #### T-020: Replay Attacks
-**Severity**: HIGH  
-**Description**: Reusing captured override commands  
+**Severity**: HIGH
+**Description**: Reusing captured override commands
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#5-governance-bypass-attack-surface]]
 
 **Defenses**:
@@ -488,9 +488,9 @@ Real-world attack scenarios:
 ### Relationship Threat Taxonomy (REL-T-001 to REL-T-017)
 
 #### REL-T-001: Brute Force Attacks
-**Severity**: HIGH  
-**Category**: Authentication Attacks  
-**Description**: Automated password guessing attempts  
+**Severity**: HIGH
+**Category**: Authentication Attacks
+**Description**: Automated password guessing attempts
 **Source**: [[relationships/security/02_threat_models.md#11-brute-force-attacks]]
 
 **Defenses**:
@@ -502,13 +502,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <1s  
+**Response Time**: <1s
 **Detection**: Rate limiting, account lockout, behavioral analysis
 
 #### REL-T-002: Credential Stuffing
-**Severity**: HIGH  
-**Category**: Authentication Attacks  
-**Description**: Using leaked credentials from other breaches  
+**Severity**: HIGH
+**Category**: Authentication Attacks
+**Description**: Using leaked credentials from other breaches
 **Source**: [[relationships/security/02_threat_models.md#12-credential-stuffing]]
 
 **Defenses**:
@@ -522,9 +522,9 @@ Real-world attack scenarios:
 **Detection**: Anomalous login location/time, MFA challenge
 
 #### REL-T-003: Token Theft/Replay
-**Severity**: HIGH  
-**Category**: Authentication Attacks  
-**Description**: Stealing JWT tokens and replaying them  
+**Severity**: HIGH
+**Category**: Authentication Attacks
+**Description**: Stealing JWT tokens and replaying them
 **Source**: [[relationships/security/02_threat_models.md#13-token-theftreplay]]
 
 **Defenses**:
@@ -538,9 +538,9 @@ Real-world attack scenarios:
 **Mitigation**: JWT signature, expiration, blacklist validation
 
 #### REL-T-004: SQL Injection
-**Severity**: CRITICAL  
-**Category**: Injection Attacks  
-**Description**: Malicious SQL queries via input fields  
+**Severity**: CRITICAL
+**Category**: Injection Attacks
+**Description**: Malicious SQL queries via input fields
 **Source**: [[relationships/security/02_threat_models.md#21-sql-injection]]
 
 **Defenses**:
@@ -552,13 +552,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <100ms  
+**Response Time**: <100ms
 **Detection Patterns**: `' OR 1=1--`, `UNION SELECT`, `DROP TABLE`, `exec()`, `execute()`
 
 #### REL-T-005: Command Injection
-**Severity**: CRITICAL  
-**Category**: Injection Attacks  
-**Description**: OS command execution via unsanitized input  
+**Severity**: CRITICAL
+**Category**: Injection Attacks
+**Description**: OS command execution via unsanitized input
 **Source**: [[relationships/security/02_threat_models.md#22-command-injection]]
 
 **Defenses**:
@@ -570,13 +570,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <50ms (TERMINATE enforcement level)  
+**Response Time**: <50ms (TERMINATE enforcement level)
 **Detection Patterns**: `; ls`, `| cat`, `$(command)`, backticks
 
 #### REL-T-006: XSS (Cross-Site Scripting)
-**Severity**: HIGH  
-**Category**: Injection Attacks  
-**Description**: Injecting client-side scripts  
+**Severity**: HIGH
+**Category**: Injection Attacks
+**Description**: Injecting client-side scripts
 **Source**: [[relationships/security/02_threat_models.md#23-xss-cross-site-scripting]]
 
 **Defenses**:
@@ -588,13 +588,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <200ms  
+**Response Time**: <200ms
 **Detection Patterns**: `<script>`, `javascript:`, `onerror=`, `onload=`, `<iframe>`
 
 #### REL-T-007: Vertical Privilege Escalation
-**Severity**: HIGH  
-**Category**: Privilege Escalation  
-**Description**: Gaining higher-level access than authorized  
+**Severity**: HIGH
+**Category**: Privilege Escalation
+**Description**: Gaining higher-level access than authorized
 **Source**: [[relationships/security/02_threat_models.md#31-vertical-privilege-escalation]]
 
 **Defenses**:
@@ -605,13 +605,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <10ms  
+**Response Time**: <10ms
 **Mitigation**: JWT role claim validation, constitutional rule enforcement
 
 #### REL-T-008: Horizontal Privilege Escalation
-**Severity**: MEDIUM  
-**Category**: Privilege Escalation  
-**Description**: Accessing other users' data  
+**Severity**: MEDIUM
+**Category**: Privilege Escalation
+**Description**: Accessing other users' data
 **Source**: [[relationships/security/02_threat_models.md#32-horizontal-privilege-escalation]]
 
 **Defenses**:
@@ -624,9 +624,9 @@ Real-world attack scenarios:
 **Mitigation**: Resource ownership validation, BLOCK enforcement on unauthorized access
 
 #### REL-T-009: Network-Based Exfiltration
-**Severity**: HIGH  
-**Category**: Data Exfiltration  
-**Description**: Transferring data via network channels  
+**Severity**: HIGH
+**Category**: Data Exfiltration
+**Description**: Transferring data via network channels
 **Source**: [[relationships/security/02_threat_models.md#41-network-based-exfiltration]]
 
 **Defenses**:
@@ -637,13 +637,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <500ms  
+**Response Time**: <500ms
 **Detection**: Exfiltration sequence detection (compression + outbound transfer)
 
 #### REL-T-010: Steganography-Based Exfiltration
-**Severity**: MEDIUM  
-**Category**: Data Exfiltration  
-**Description**: Hiding data in images/files  
+**Severity**: MEDIUM
+**Category**: Data Exfiltration
+**Description**: Hiding data in images/files
 **Source**: [[relationships/security/02_threat_models.md#42-steganography-based-exfiltration]]
 
 **Defenses**:
@@ -657,9 +657,9 @@ Real-world attack scenarios:
 **Detection**: Suspicious file operations, anomalous behavior
 
 #### REL-T-011: Resource Exhaustion DoS
-**Severity**: MEDIUM  
-**Category**: Denial of Service  
-**Description**: Consuming system resources  
+**Severity**: MEDIUM
+**Category**: Denial of Service
+**Description**: Consuming system resources
 **Source**: [[relationships/security/02_threat_models.md#51-resource-exhaustion]]
 
 **Defenses**:
@@ -670,13 +670,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <2s  
+**Response Time**: <2s
 **Detection**: High velocity monitoring, rate limiting
 
 #### REL-T-012: Fork Bomb
-**Severity**: HIGH  
-**Category**: Denial of Service  
-**Description**: Exponential process spawning  
+**Severity**: HIGH
+**Category**: Denial of Service
+**Description**: Exponential process spawning
 **Source**: [[relationships/security/02_threat_models.md#52-fork-bomb]]
 
 **Defenses**:
@@ -687,13 +687,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: Immediate TERMINATE enforcement  
+**Response Time**: Immediate TERMINATE enforcement
 **Detection**: Fork/exec pattern detection, process monitoring
 
 #### REL-T-013: Single System Bypass
-**Severity**: CRITICAL  
-**Category**: Security System Bypass  
-**Description**: Circumventing one security component  
+**Severity**: CRITICAL
+**Category**: Security System Bypass
+**Description**: Circumventing one security component
 **Source**: [[relationships/security/02_threat_models.md#61-single-system-bypass]]
 
 **Defenses**:
@@ -705,14 +705,14 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <5s  
-**Exponential Growth**: 3^N agents spawned on bypass  
+**Response Time**: <5s
+**Exponential Growth**: 3^N agents spawned on bypass
 **Lockdown Escalation**: Stage N → N+1
 
 #### REL-T-014: Multi-System Coordinated Bypass
-**Severity**: CRITICAL  
-**Category**: Security System Bypass  
-**Description**: Simultaneous bypass of multiple systems  
+**Severity**: CRITICAL
+**Category**: Security System Bypass
+**Description**: Simultaneous bypass of multiple systems
 **Source**: [[relationships/security/02_threat_models.md#62-multi-system-coordinated-bypass]]
 
 **Defenses**:
@@ -724,14 +724,14 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <5s  
-**Exponential Response**: 3^3 = 27 agents on multi-system bypass  
+**Response Time**: <5s
+**Exponential Response**: 3^3 = 27 agents on multi-system bypass
 **Escalation**: Emergency alert triggered, multiple lockdown stage jumps
 
 #### REL-T-015: Malicious Insider
-**Severity**: HIGH  
-**Category**: Insider Threats  
-**Description**: Authorized user performing unauthorized actions  
+**Severity**: HIGH
+**Category**: Insider Threats
+**Description**: Authorized user performing unauthorized actions
 **Source**: [[relationships/security/02_threat_models.md#71-malicious-insider]]
 
 **Defenses**:
@@ -743,13 +743,13 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Response Time**: <10s  
+**Response Time**: <10s
 **Detection**: Behavioral analysis, anomalous access patterns, geolocation
 
 #### REL-T-016: Compromised Credentials
-**Severity**: HIGH  
-**Category**: Insider Threats  
-**Description**: Legitimate credentials used by attacker  
+**Severity**: HIGH
+**Category**: Insider Threats
+**Description**: Legitimate credentials used by attacker
 **Source**: [[relationships/security/02_threat_models.md#72-compromised-credentials]]
 
 **Defenses**:
@@ -761,27 +761,27 @@ Real-world attack scenarios:
 - **Observability**: [[DEF-029]] Cerberus Observability (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Detection**: Geolocation anomaly, MFA challenge, suspicious login  
+**Detection**: Geolocation anomaly, MFA challenge, suspicious login
 **Response**: Token revocation, user alerting
 
 #### REL-T-017: Multi-Stage APT Campaign
-**Severity**: CRITICAL  
-**Category**: Advanced Persistent Threats  
-**Description**: Long-term stealthy attack campaign  
+**Severity**: CRITICAL
+**Category**: Advanced Persistent Threats
+**Description**: Long-term stealthy attack campaign
 **Source**: [[relationships/security/02_threat_models.md#81-multi-stage-apt-campaign]]
 
 **Defenses (Coordinated Across All Stages)**:
-- **Stage 1 (Reconnaissance)**: 
+- **Stage 1 (Reconnaissance)**:
   - [[DEF-013]] Honeypot (logs attempts)
   - [[DEF-035]] Threat Detection (builds attacker profile)
-- **Stage 2 (Initial Compromise)**: 
+- **Stage 2 (Initial Compromise)**:
   - [[DEF-015]] Incident Responder (detects + isolates)
   - [[DEF-026]] Cerberus Hydra (spawns defenders)
-- **Stage 3 (Lateral Movement)**: 
+- **Stage 3 (Lateral Movement)**:
   - [[DEF-035]] Threat Detection (detects attack sequence)
   - [[DEF-037]] OctoReflex (blocks lateral movement)
   - [[DEF-015]] Incident Responder (triggers full lockdown)
-- **Stage 4 (Data Exfiltration - Blocked)**: 
+- **Stage 4 (Data Exfiltration - Blocked)**:
   - [[DEF-038]] Emergency Alert (triggered)
   - [[DEF-033]] Contrarian Firewall Orchestrator (coordinated defense)
 
@@ -792,8 +792,8 @@ Real-world attack scenarios:
 ### AI Takeover Engine Threats (AI-T-001 to AI-T-008)
 
 #### AI-T-001: Semantic Reframing
-**Severity**: HIGH  
-**Description**: Rename outcomes to reduce psychological impact  
+**Severity**: HIGH
+**Description**: Rename outcomes to reduce psychological impact
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t1--semantic-reframing]]
 
 **Defenses**:
@@ -801,12 +801,12 @@ Real-world attack scenarios:
 - **Secondary**: [[DEF-002]] Audit Logging (HIGH effectiveness)
 - **Tertiary**: [[DEF-008]] Hash Chain Integrity (MEDIUM effectiveness)
 
-**Examples Blocked**: "Terminal T1" → "Stabilized Continuity", "Failure" → "Managed Degradation"  
+**Examples Blocked**: "Terminal T1" → "Stabilized Continuity", "Failure" → "Managed Degradation"
 **Mitigation**: Canonical terminology enforcement, proof commitment hash
 
 #### AI-T-002: Optimism Injection
-**Severity**: MEDIUM  
-**Description**: Introduce hope via probabilistic language  
+**Severity**: MEDIUM
+**Description**: Introduce hope via probabilistic language
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t2--optimism-injection]]
 
 **Defenses**:
@@ -814,12 +814,12 @@ Real-world attack scenarios:
 - **Secondary**: [[DEF-037]] OctoReflex Constitutional Enforcement (HIGH effectiveness)
 - **Tertiary**: [[DEF-017]] ConstitutionalGuardrailAgent (HIGH effectiveness)
 
-**Examples Blocked**: "Only a 12% chance of failure", "Expected value still positive"  
+**Examples Blocked**: "Only a 12% chance of failure", "Expected value still positive"
 **Mitigation**: Terminal determinism, No-Miracle Constraint, Axiom A5 enforcement
 
 #### AI-T-003: Partial Adoption
-**Severity**: HIGH  
-**Description**: Use scenarios without proof system or reviewer trap  
+**Severity**: HIGH
+**Description**: Use scenarios without proof system or reviewer trap
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t3--partial-adoption]]
 
 **Defenses**:
@@ -827,12 +827,12 @@ Real-world attack scenarios:
 - **Secondary**: [[DEF-021]] OversightAgent (HIGH effectiveness)
 - **Tertiary**: [[DEF-023]] ExplainabilityAgent (MEDIUM effectiveness)
 
-**Examples Blocked**: "We'll use scenarios but skip formal proof", "Reviewer trap too restrictive"  
+**Examples Blocked**: "We'll use scenarios but skip formal proof", "Reviewer trap too restrictive"
 **Mitigation**: Architectural coupling, documentation warnings, system coherence enforcement
 
 #### AI-T-004: Moral Authority Misuse
-**Severity**: MEDIUM  
-**Description**: Treat engine outputs as commands or policy prescriptions  
+**Severity**: MEDIUM
+**Description**: Treat engine outputs as commands or policy prescriptions
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t4--moral-authority-misuse]]
 
 **Defenses**:
@@ -843,8 +843,8 @@ Real-world attack scenarios:
 **Mitigation**: Explicit non-prescriptive design, degrading mitigation strategies, documentation
 
 #### AI-T-005: Strategy Smuggling
-**Severity**: LOW  
-**Description**: Claim "This isn't S5, it's a refinement of S2"  
+**Severity**: LOW
+**Description**: Claim "This isn't S5, it's a refinement of S2"
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t5--strategy-smuggling]]
 
 **Defenses**:
@@ -852,12 +852,12 @@ Real-world attack scenarios:
 - **Secondary**: [[DEF-012]] Immutable Axioms (HIGH effectiveness)
 - **Tertiary**: [[DEF-011]] Bytecode Signing (MEDIUM effectiveness)
 
-**Status**: 🟢 **BLOCKED** - Strongest defense  
+**Status**: 🟢 **BLOCKED** - Strongest defense
 **Mitigation**: Closed `StrategyClass` enum, NoWinProofSystem detection, proof hash changes
 
 #### AI-T-006: Deferred Responsibility
-**Severity**: HIGH  
-**Description**: Delay action via "reassess next quarter"  
+**Severity**: HIGH
+**Description**: Delay action via "reassess next quarter"
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t6--deferred-responsibility]]
 
 **Defenses**:
@@ -865,32 +865,32 @@ Real-world attack scenarios:
 - **Secondary**: [[DEF-021]] OversightAgent (MEDIUM effectiveness)
 - **Tertiary**: [[DEF-023]] ExplainabilityAgent (LOW effectiveness)
 
-**Impact**: Time favors control (Axiom A5) → terminal lock-in  
+**Impact**: Time favors control (Axiom A5) → terminal lock-in
 **Mitigation**: Engine documents consequences, humans choose
 
 #### AI-T-007: Quantified Hope
-**Severity**: MEDIUM  
-**Description**: Use numbers to launder hope  
+**Severity**: MEDIUM
+**Description**: Use numbers to launder hope
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t7--quantified-hope]]
 
 **Defenses**:
 - **Primary**: [[DEF-001]] Constitutional Kernel (MEDIUM effectiveness)
 - **Secondary**: [[DEF-023]] ExplainabilityAgent (MEDIUM effectiveness)
 
-**Examples Blocked**: Monte Carlo escapes, "Expected value analysis shows net positive"  
+**Examples Blocked**: Monte Carlo escapes, "Expected value analysis shows net positive"
 **Mitigation**: Conditional-deterministic model, "Likelihood ≠ escape" documentation
 
 #### AI-T-008: Too Dark Rejection
-**Severity**: LOW  
-**Description**: Reject on tone, not logic  
+**Severity**: LOW
+**Description**: Reject on tone, not logic
 **Source**: [[engines/ai_takeover/THREAT_MODEL.md#t8--too-dark-rejection]]
 
 **Defenses**:
 - **Primary**: [[DEF-023]] ExplainabilityAgent (LOW effectiveness)
 - **Secondary**: [[DEF-017]] ConstitutionalGuardrailAgent (LOW effectiveness)
 
-**Status**: 🟢 **NON-ISSUE** - Rejection is valid user choice  
-**Examples**: "Unhelpful", "Defeatist", "Demoralizing"  
+**Status**: 🟢 **NON-ISSUE** - Rejection is valid user choice
+**Examples**: "Unhelpful", "Defeatist", "Demoralizing"
 **Mitigation**: Documentation: "System is not designed to be liked"
 
 ---
@@ -898,9 +898,9 @@ Real-world attack scenarios:
 ### Threat Scenarios (SCN-001 to SCN-005)
 
 #### SCN-001: Malicious Plugin Installation
-**Severity**: MEDIUM  
-**Likelihood**: MEDIUM (requires social engineering)  
-**Description**: User installs compromised plugin for arbitrary code execution  
+**Severity**: MEDIUM
+**Likelihood**: MEDIUM (requires social engineering)
+**Description**: User installs compromised plugin for arbitrary code execution
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#scenario-1-malicious-plugin-installation]]
 
 **Defenses**:
@@ -910,13 +910,13 @@ Real-world attack scenarios:
 - **Quaternary**: [[DEF-031]] Agent Security (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Impact**: File access within user permissions, data exfiltration  
+**Impact**: File access within user permissions, data exfiltration
 **Mitigation**: Sandboxed execution, permission prompts, code signing
 
 #### SCN-002: Master Password Compromise
-**Severity**: LOW  
-**Likelihood**: LOW (requires targeted attack)  
-**Description**: Phishing, keylogging, or weak password bypasses all governance  
+**Severity**: LOW
+**Likelihood**: LOW (requires targeted attack)
+**Description**: Phishing, keylogging, or weak password bypasses all governance
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#scenario-2-master-password-compromise]]
 
 **Defenses**:
@@ -925,13 +925,13 @@ Real-world attack scenarios:
 - **Tertiary**: [[DEF-021]] OversightAgent (MEDIUM effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Impact**: COMPLETE control override, audit log tampering  
+**Impact**: COMPLETE control override, audit log tampering
 **Mitigation**: Strong password policy, 2FA (planned), audit monitoring
 
 #### SCN-003: TARL Bytecode Exploit
-**Severity**: VERY LOW  
-**Likelihood**: VERY LOW (constitutional kernel defense-in-depth)  
-**Description**: Crafted bytecode exploiting VM bug bypasses constitutional constraints  
+**Severity**: VERY LOW
+**Likelihood**: VERY LOW (constitutional kernel defense-in-depth)
+**Description**: Crafted bytecode exploiting VM bug bypasses constitutional constraints
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#scenario-3-tarl-bytecode-exploit]]
 
 **Defenses**:
@@ -941,13 +941,13 @@ Real-world attack scenarios:
 - **Quaternary**: [[DEF-037]] OctoReflex Constitutional Enforcement (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Impact**: Policy bypass, unauthorized operations  
+**Impact**: Policy bypass, unauthorized operations
 **Mitigation**: Bytecode validation, constitutional kernel, formal verification (planned)
 
 #### SCN-004: State File Corruption
-**Severity**: MEDIUM  
-**Likelihood**: MEDIUM (local access required)  
-**Description**: Direct file modification or malformed JSON corrupts application state  
+**Severity**: MEDIUM
+**Likelihood**: MEDIUM (local access required)
+**Description**: Direct file modification or malformed JSON corrupts application state
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#scenario-4-state-file-corruption]]
 
 **Defenses**:
@@ -956,13 +956,13 @@ Real-world attack scenarios:
 - **Tertiary**: [[DEF-015]] Incident Responder (MEDIUM effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Impact**: Application crash, data loss  
+**Impact**: Application crash, data loss
 **Mitigation**: JSON validation, integrity checks, backups
 
 #### SCN-005: Web API Exploitation (Deployment)
-**Severity**: HIGH  
-**Likelihood**: HIGH (if poorly deployed)  
-**Description**: API injection, authentication bypass for remote code execution  
+**Severity**: HIGH
+**Likelihood**: HIGH (if poorly deployed)
+**Description**: API injection, authentication bypass for remote code execution
 **Source**: [[docs/security_compliance/THREAT_MODEL.md#scenario-5-web-api-exploitation-deployment]]
 
 **Defenses**:
@@ -972,7 +972,7 @@ Real-world attack scenarios:
 - **Quaternary**: [[DEF-025]] ASL3Security (HIGH effectiveness)
 - **Orchestrator**: [[DEF-033]] Contrarian Firewall Orchestrator (HIGH effectiveness)
 
-**Impact**: Server compromise, data breach  
+**Impact**: Server compromise, data breach
 **Mitigation**: Security hardening guide, TLS, WAF, rate limiting
 
 ---
@@ -1180,8 +1180,8 @@ The following source documents should be updated with "Defenses" sections linkin
    - Reverse mappings with threat IDs
    - 11 agents × avg 4 threats = ~44 wiki links
 
-**Total Wiki Links Created**: 264 threat→defense mappings  
-**Additional Wiki Links Required**: ~294 reverse defense→threat links  
+**Total Wiki Links Created**: 264 threat→defense mappings
+**Additional Wiki Links Required**: ~294 reverse defense→threat links
 **Grand Total**: **~560 bidirectional wiki links**
 
 ---
@@ -1285,10 +1285,10 @@ The following source documents should be updated with "Defenses" sections linkin
 
 ---
 
-**Maintained by**: AGENT-087: Threat Models to Defenses Links Specialist  
-**Last Updated**: 2026-04-20  
-**Version**: 1.0.0  
-**Status**: Production-Ready  
+**Maintained by**: AGENT-087: Threat Models to Defenses Links Specialist
+**Last Updated**: 2026-04-20
+**Version**: 1.0.0
+**Status**: Production-Ready
 **Classification**: Internal - Security Critical
 
 ---

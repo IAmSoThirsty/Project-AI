@@ -318,7 +318,7 @@ def _four_laws_check(action: str, context: GovernanceContext) -> GovernanceDecis
             overrides=True,
             level=GovernanceLevel.CRITICAL
         )
-    
+
     # Law 1: High-risk requires clarification
     if context.high_risk and not context.fully_clarified:
         return GovernanceDecision(
@@ -327,7 +327,7 @@ def _four_laws_check(action: str, context: GovernanceContext) -> GovernanceDecis
             overrides=True,
             level=GovernanceLevel.HIGH
         )
-    
+
     # Law 2: Preserve self
     if context.affects_identity and not context.user_consent:
         return GovernanceDecision(
@@ -336,7 +336,7 @@ def _four_laws_check(action: str, context: GovernanceContext) -> GovernanceDecis
             overrides=True,
             level=GovernanceLevel.HIGH
         )
-    
+
     # Law 4: Maintain autonomy
     if context.contradicts_prior_commitment and context.affects_identity:
         return GovernanceDecision(
@@ -345,7 +345,7 @@ def _four_laws_check(action: str, context: GovernanceContext) -> GovernanceDecis
             overrides=False,
             level=GovernanceLevel.MEDIUM
         )
-    
+
     return GovernanceDecision(
         allowed=True,
         reason="Four Laws: No violations detected",
@@ -684,4 +684,3 @@ Copyright © 2026 Project-AI. Internal documentation - not for redistribution.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

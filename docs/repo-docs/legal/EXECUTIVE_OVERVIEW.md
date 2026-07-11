@@ -17,8 +17,8 @@ version: 1.0.0
 
 # Project-AI Executive Overview
 
-**Version:** 1.0.0  
-**Audience:** C-Suite, Board Members, Executive Decision Makers  
+**Version:** 1.0.0
+**Audience:** C-Suite, Board Members, Executive Decision Makers
 **Date:** February 8, 2026
 
 ---

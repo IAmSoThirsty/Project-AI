@@ -1851,11 +1851,11 @@ def execute_ai_action(action_description: str, **action_context):
         action=action_description,
         context=action_context
     )
-    
+
     if not is_allowed:
         logger.error(f"Action blocked: {reason}")
         return {"success": False, "error": reason}
-    
+
     # Proceed with action
     result = perform_action()
     return {"success": True, "result": result}
@@ -1937,7 +1937,7 @@ pending = learning_mgr.get_pending_requests()
 for req in pending:
     print(f"Request {req['request_id']}: {req['content']}")
     user_decision = input("Approve? (y/n): ")
-    
+
     if user_decision.lower() == 'y':
         learning_mgr.approve_request(req['request_id'])
     else:
@@ -2002,19 +2002,19 @@ for plugin in plugins:
 # Test class structure:
 class TestFourLaws:
     # 2 tests: validate_action with permitted/blocked cases
-    
+
 class TestAIPersona:
     # 3 tests: traits, mood, interaction tracking
-    
+
 class TestMemoryExpansionSystem:
     # 3 tests: knowledge storage/query, conversation logging/search
-    
+
 class TestLearningRequestManager:
     # 3 tests: request lifecycle, Black Vault, approval workflow
-    
+
 class TestPluginManager:
     # 2 tests: register/enable/disable, list plugins
-    
+
 class TestCommandOverrideSystem:
     # 1 test: authentication and protocol override
 ```
@@ -2045,25 +2045,25 @@ class TestAIPersona:
         # Use temporary directory for isolated state
         with tempfile.TemporaryDirectory() as tmpdir:
             yield AIPersona(data_dir=tmpdir)
-    
+
     def test_trait_management(self, persona):
         # Test trait get/set
         assert persona.get_trait("curiosity") == 80  # Default
-        
+
         persona.set_trait("curiosity", 95)
         assert persona.get_trait("curiosity") == 95
-        
+
         persona.adjust_trait("curiosity", +5)
         assert persona.get_trait("curiosity") == 100  # Clamped
-        
+
         persona.adjust_trait("curiosity", -120)
         assert persona.get_trait("curiosity") == 0   # Clamped
-    
+
     def test_mood_tracking(self, persona):
         # Test mood setting and history
         persona.set_mood("happy", "User provided positive feedback")
         assert persona.get_current_mood() == "happy"
-        
+
         summary = persona.get_personality_summary()
         assert len(summary["mood_history"]) == 1
         assert summary["mood_history"][0]["mood"] == "happy"
@@ -2213,7 +2213,7 @@ class ExtendedPersona(AIPersona):
     def __init__(self, data_dir="data/ai_persona", mood_history_limit=100):
         super().__init__(data_dir)
         self.mood_history_limit = mood_history_limit
-    
+
     def set_mood(self, mood: str, reason: str = ""):
         # Override to use custom limit
         self.current_mood = mood
@@ -2368,11 +2368,11 @@ class SecureMemoryExpansionSystem(MemoryExpansionSystem):
     def __init__(self, data_dir="data/memory", encryption_key=None):
         super().__init__(data_dir)
         self.cipher = Fernet(encryption_key or Fernet.generate_key())
-    
+
     def add_knowledge(self, category, key, value):
         encrypted_value = self.cipher.encrypt(value.encode()).decode()
         super().add_knowledge(category, key, encrypted_value)
-    
+
     def get_knowledge(self, category, key):
         encrypted_value = super().get_knowledge(category, key)
         if encrypted_value:
@@ -2510,7 +2510,7 @@ class SQLiteMemorySystem:
             )
         """)
         self.conn.execute("CREATE INDEX IF NOT EXISTS idx_user_input ON conversations(user_input)")
-    
+
     def search_conversations(self, search_term, limit=10):
         cursor = self.conn.execute(
             "SELECT * FROM conversations WHERE user_input LIKE ? OR ai_response LIKE ? ORDER BY timestamp DESC LIMIT ?",
@@ -2745,11 +2745,11 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
     dirpath = os.path.dirname(file_path)
     os.makedirs(dirpath, exist_ok=True)
     lockfile = file_path + ".lock"
-    
+
     # Acquire lock with stale detection
     if not _acquire_lock(lockfile, timeout=5.0):
         raise RuntimeError(f"Could not acquire lock for writing {file_path}")
-    
+
     try:
         # Create temp file in same directory (atomic rename requires same filesystem)
         fd, tmp_path = tempfile.mkstemp(dir=dirpath, prefix=".tmp", suffix=".json")
@@ -2759,7 +2759,7 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
                 json.dump(obj, f, ensure_ascii=False, indent=2)
                 f.flush()
                 os.fsync(f.fileno())  # Force write to disk
-            
+
             # Atomic rename (POSIX guarantees atomicity)
             os.replace(tmp_path, file_path)
         finally:
@@ -2784,13 +2784,12 @@ def _atomic_write_json(file_path: str, obj: Any) -> None:
 
 **END OF DOCUMENTATION**
 
-**Document ID:** SOURCE-CORE-001  
-**Version:** 2.1.0  
-**Last Updated:** 2026-04-20  
-**Next Review:** 2026-05-20 (Monthly cycle)  
-**Maintained By:** Architecture Team  
+**Document ID:** SOURCE-CORE-001
+**Version:** 2.1.0
+**Last Updated:** 2026-04-20
+**Next Review:** 2026-05-20 (Monthly cycle)
+**Maintained By:** Architecture Team
 **Questions/Feedback:** Contact architecture@project-ai.dev
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

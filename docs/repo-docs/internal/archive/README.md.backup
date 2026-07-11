@@ -2411,56 +2411,56 @@ This document provides a categorical, production-grade overview of all license r
 ## Core Licensing Regime
 
 - **SPDX-Compliant License Files:** Every distributed module, package, and artifact includes an SPDX license header and top-level LICENSE file.
-- **Primary License:**  
+- **Primary License:**
   - Project‑AI codebase released under:
     - `Apache License 2.0` (recommended for sovereign open source / commercial use, copyleft-compatible)
     - *or* `Enterprise EULA` (for closed, commercial, or contract-bound deployments when applicable)
-- **Dual Licensing:**  
+- **Dual Licensing:**
   - Monolithic repo supports conditional relicensing for enterprise/partner agreements; applies via explicit config and manifest tags.
 
 ## Dependency Licensing
 
-- **Automated License Audit:**  
+- **Automated License Audit:**
   - All dependencies (direct and transitive) scanned, reported, and approved via:
     - SPDX Matching
     - Open Source Initiative (OSI) verification
     - CVE/license incompatibility/breach detection
-- **License Allowlist:**  
+- **License Allowlist:**
   - Only OSI-compatible, permissive, or commercial-approved licenses admitted.
   - No GPLv3, AGPL, or viral copyleft dependencies unless explicitly contracted.
 
 ## Attribution & Provenance
 
-- **Embedded Attribution:**  
+- **Embedded Attribution:**
   - Each third-party asset, library, or binary includes deterministic provenance tags, source URLs, and license manifest.
-- **Automated Attribution Aggregation:**  
+- **Automated Attribution Aggregation:**
   - Distribution packages generate live attribution manifests on build, passing compliance checks.
-- **License Change Governance:**  
+- **License Change Governance:**
   - All proposed license regime changes managed via RFC, dual codeowner sign-off, and explicit SPDX documentation update.
 
 ## Asset & Integration Licensing
 
-- **Data, Model, Artifact, Kernel Licensing:**  
+- **Data, Model, Artifact, Kernel Licensing:**
   - All non-code assets (data, models, pipelines, trained weights, artifacts) assigned explicit license terms in registry metadata.
-- **External Integration Compliance:**  
+- **External Integration Compliance:**
   - Plugin/integration adapters must comply with Project‑AI license regime and external API provider license.
 
 ## Legal Documentation
 
-- **LICENSE.md:**  
+- **LICENSE.md:**
   - Root-level LICENSE.md covers the entire repo, cross-referenced in every packaged artifact.
-- **NOTICE.md:**  
+- **NOTICE.md:**
   - Explicit `NOTICE.md` in root and distributable packages for attribution, exceptions, and custom terms if needed.
-- **Third-Party Licenses:**  
+- **Third-Party Licenses:**
   - Bundled as `/licenses/3rdparty/` (automatically populated), includes all sources, SPDX terms, and attribution.
 
 ## Distribution & Enforcement
 
-- **License Enforcement Pipeline:**  
+- **License Enforcement Pipeline:**
   - CI/CD and release engineering forcibly block distribution/builds with missing, forbidden, or incompatible licenses.
-- **Audit Trail:**  
+- **Audit Trail:**
   - Immutable log of all license changes, approvals, removals, or external requests.
-- **Compliance Reporting:**  
+- **Compliance Reporting:**
   - Automated reports produced, externally shippable for legal, regulator, or partner review.
 
 ## Example SPDX License Header (Python)
@@ -2638,25 +2638,25 @@ This document presents a categorical, production-grade comparison of Project‑A
 
 ## Key Differences — Project‑AI’s Sovereign Approach
 
-- **Monolithic, Config-Driven Backbone:**  
+- **Monolithic, Config-Driven Backbone:**
   All logic, registry, role, configuration, and agent activity are categorized and centralized (vs. microservices, managed cloud, or modular/distributed approaches in other platforms).
 
-- **100% Deterministic & EED/ECFD Boundaries:**  
+- **100% Deterministic & EED/ECFD Boundaries:**
   All workflows, pipelines, models, artifacts, and decisions are enforced as immutable, audit-grade, and exactly reproducible—no partial coverage or hidden drift.
 
-- **No Stubs, No Placeholders, Complete Coverage:**  
+- **No Stubs, No Placeholders, Complete Coverage:**
   Every subsystem, extension, operator, agent, test, and audit trail is *implemented*; the system will not admit example/stub/"planned" code.
 
-- **Agent-Based Workforce:**  
+- **Agent-Based Workforce:**
   All domain actions are delegated to fully-realized agents, with explicit roles, manifest contracts, and audit logging (absent in all known competitors).
 
-- **Inline Compliance & Audit:**  
+- **Inline Compliance & Audit:**
   Incident, regulatory, data, model, and promotion events are logged, tracked, and shippable—*not deferred or batched for external system*.
 
-- **Contingency Engines/Threat Mitigation:**  
+- **Contingency Engines/Threat Mitigation:**
   Redundant, sovereign, hardware-integrated failover, rollback, EMP/zombie/takeover/geo recovery; far exceeds standard pipeline/cluster DR.
 
-- **Unified Kernel/Operator System:**  
+- **Unified Kernel/Operator System:**
   Central, production-grade runtime for Python, R, Julia, Spark, containers, and native hardware—no reliance on cloud vendor-specific runtime.
 
 ---
@@ -2732,7 +2732,7 @@ This document provides the categorical, production-grade update on the **Triumvi
 
 ### Authority & Privilege
 
-- **All operational control is now delegated:** 
+- **All operational control is now delegated:**
   - To agent manifest contracts,
   - To immutable configuration,
   - To dual-role RBAC codeowner authorization,
@@ -2740,7 +2740,7 @@ This document provides the categorical, production-grade update on the **Triumvi
 
 ### Guidance
 
-- **If referenced in config, docs, or manifests:** All Triumvirate-related boundaries now resolve to config-driven agent contract enforcement, with no manual approval pathway.  
+- **If referenced in config, docs, or manifests:** All Triumvirate-related boundaries now resolve to config-driven agent contract enforcement, with no manual approval pathway.
 - **All escalations, promotions, or compliance actions:** Require categorical code/data/agent sign-off, not council intervention.
 
 ---
@@ -2748,4 +2748,3 @@ This document provides the categorical, production-grade update on the **Triumvi
 ## Summary
 
 The Triumvirate (Liara and peers) are historically foundational but hold **no direct control, authority, or runtime privilege** in Project-AI as of the current monolithic implementation. All governance is executed by code and audit.
-

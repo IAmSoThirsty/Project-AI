@@ -1,8 +1,8 @@
 # AGENT-090: RBAC Policy to Access Control Traceability Matrix
 
-**Mission**: Create comprehensive wiki links from RBAC policies to access control implementations  
-**Agent**: AGENT-090 (RBAC to Access Control Links Specialist)  
-**Date**: 2025-01-20  
+**Mission**: Create comprehensive wiki links from RBAC policies to access control implementations
+**Agent**: AGENT-090 (RBAC to Access Control Links Specialist)
+**Date**: 2025-01-20
 **Status**: ✅ COMPLETE
 
 ---
@@ -354,11 +354,11 @@ This document provides **complete bidirectional traceability** between RBAC (Rol
       # Only admins can grant admin role (P022)
       if role == "admin" and not self.has_role(requester, "admin"):
           raise PermissionError("Only admins can grant admin role")
-      
+
       # Only admins/experts can grant expert role (P023)
       if role == "expert" and not (self.has_role(requester, "admin") or self.has_role(requester, "expert")):
           raise PermissionError("Insufficient privileges to grant expert role")
-      
+
       self._users.setdefault(user, [])
       if role not in self._users[user]:
           self._users[user].append(role)
@@ -380,7 +380,7 @@ This document provides **complete bidirectional traceability** between RBAC (Rol
       requester_role = user.get("role", "anonymous")
       if requester_role != "admin":
           raise PermissionError("Only admins can grant roles")
-      
+
       target_user = payload.get("user")
       role_to_grant = payload.get("role")
       get_access_control().grant_role(target_user, role_to_grant, requester=user["username"])
@@ -401,7 +401,7 @@ This document provides **complete bidirectional traceability** between RBAC (Rol
       # Only admins can revoke roles
       if not self.has_role(requester, "admin"):
           raise PermissionError("Only admins can revoke roles")
-      
+
       if user in self._users and role in self._users[user]:
           self._users[user].remove(role)
           self._save()
@@ -436,7 +436,7 @@ This document provides **complete bidirectional traceability** between RBAC (Rol
 - **Required Fix**: Add clarification to `05_SYSTEM_INTEGRATION_MATRIX.md`:
   ```markdown
   ### Role Mapping: AccessControl → Permission Level
-  
+
   The `_resolve_user_role()` function maps multiple AccessControl roles to single permission levels:
   - AccessControl "integrator" → Permission level "power_user"
   - AccessControl "expert" → Permission level "power_user"
@@ -444,7 +444,7 @@ This document provides **complete bidirectional traceability** between RBAC (Rol
   - AccessControl "developer" → Permission level "user" (no elevation)
   - UserManager "admin" → Permission level "admin"
   - UserManager "user" → Permission level "user"
-  
+
   **Implementation**: `pipeline.py:292-295`
   ```
 - **Status**: ⚠️ **DOCUMENT MAPPING LOGIC**
@@ -455,7 +455,7 @@ This document provides **complete bidirectional traceability** between RBAC (Rol
 - **Issue**: Docs claim "admin rate limited" but implementation unclear if bypass exists
 - **Risk**: **LOW** - Need verification that no exemptions exist
 - **Impact**: If admins are exempt from rate limits, DOS protection weakened for admin accounts
-- **Required Fix**: 
+- **Required Fix**:
   1. Verify `_check_rate_limit()` implementation applies to all roles
   2. Add explicit test case for admin rate limiting
   3. Update P004 documentation with implementation confirmation
@@ -557,23 +557,23 @@ All wiki links follow this format:
 def _resolve_user_role(context):
     """Resolve user role from UserManager or AccessControl."""
     user = context.get("user")
-    
+
     # Try UserManager first
     user_data = UserManager().get_user_data(user["username"])
     if user_data and "role" in user_data:
         return user_data["role"]  # "admin" or "user"
-    
+
     # Fallback to AccessControl
     access = get_access_control()
     if access.has_role(user["username"], "admin"):
         return "admin"
     elif access.has_role(user["username"], "integrator") or access.has_role(user["username"], "expert"):
         return "power_user"  # Mapping multiple roles to single level
-    
+
     return "user"  # Default
 ```
 
-**Linked Policies**: P018, P019  
+**Linked Policies**: P018, P019
 **Documentation**: [`05_SYSTEM_INTEGRATION_MATRIX.md:100-125`](./relationships/governance/05_SYSTEM_INTEGRATION_MATRIX.md#L100-L125)
 
 ---
@@ -597,10 +597,10 @@ def _check_user_permissions(context):
     """RBAC permission check against matrix."""
     user = context.get("user", {})
     action = context.get("action")
-    
+
     # Resolve role
     role = _resolve_user_role(context)
-    
+
     # Map to permission level
     role_hierarchy = {
         "admin": 4,
@@ -609,7 +609,7 @@ def _check_user_permissions(context):
         "guest": 1,
         "anonymous": 0
     }
-    
+
     # Check permission matrix
     permission_matrix = {
         "admin": ["user.delete", "system.shutdown", "system.config", ...],
@@ -618,17 +618,17 @@ def _check_user_permissions(context):
         "guest": ["system.status", "data.query"],
         "anonymous": ["user.login", "auth.login"]
     }
-    
+
     # Enforce
     for level, actions in permission_matrix.items():
         if action in actions:
             if role_hierarchy[role] >= role_hierarchy[level]:
                 return  # Authorized
-    
+
     raise PermissionError(f"Action '{action}' requires {level} role. Current role: {role}")
 ```
 
-**Linked Policies**: P005, P006, P012, P015  
+**Linked Policies**: P005, P006, P012, P015
 **Documentation**: [`02_POLICY_ENFORCEMENT_POINTS.md:346-428`](./relationships/governance/02_POLICY_ENFORCEMENT_POINTS.md#L346-L428)
 
 ---
@@ -668,7 +668,7 @@ Temporal (Workflows)
             └─ Log
 ```
 
-**Linked Policies**: P014, P015  
+**Linked Policies**: P014, P015
 **Documentation**: [`03_AUTHORIZATION_FLOWS.md`](./relationships/governance/03_AUTHORIZATION_FLOWS.md)
 
 ---
@@ -677,7 +677,7 @@ Temporal (Workflows)
 
 ### ✅ Quality Gate 1: Policy Coverage
 
-**Requirement**: All major RBAC policies linked to implementations  
+**Requirement**: All major RBAC policies linked to implementations
 **Status**: **PASS** (35/38 policies linked, 3 gaps identified)
 
 - 35 policies with implementations: ✅
@@ -686,7 +686,7 @@ Temporal (Workflows)
 
 ### ✅ Quality Gate 2: Implementation Coverage
 
-**Requirement**: Zero unimplemented policies (or documented as gaps)  
+**Requirement**: Zero unimplemented policies (or documented as gaps)
 **Status**: **PASS** (all gaps documented in this matrix)
 
 - Critical gaps: 3 (all documented with required fixes)
@@ -695,7 +695,7 @@ Temporal (Workflows)
 
 ### ✅ Quality Gate 3: Bidirectional Links
 
-**Requirement**: ~350 bidirectional wiki links created  
+**Requirement**: ~350 bidirectional wiki links created
 **Status**: **PASS** (350+ links across 6 categories)
 
 - Core RBAC: 50 links
@@ -708,7 +708,7 @@ Temporal (Workflows)
 
 ### ✅ Quality Gate 4: Implementation Sections
 
-**Requirement**: "Implementation" sections comprehensive  
+**Requirement**: "Implementation" sections comprehensive
 **Status**: **PASS** (all sections include file paths, line numbers, linked policies)
 
 Example Implementation Section:
@@ -728,7 +728,7 @@ All 33 implementations documented with:
 
 ### ⚠️ Quality Gate 5: Access Control Coverage
 
-**Requirement**: Access control coverage validated  
+**Requirement**: Access control coverage validated
 **Status**: **PASS WITH WARNINGS** (3 gaps require fixes)
 
 - Core RBAC functional: ✅
@@ -745,13 +745,13 @@ All 33 implementations documented with:
 
 ### Achievements
 
-✅ **38 RBAC policies** catalogued across 8 documentation files  
-✅ **33 access control implementations** mapped across 8 code files  
-✅ **350+ bidirectional wiki links** created  
-✅ **15 major mapping categories** established  
-✅ **Complete traceability matrix** (forward and reverse)  
-✅ **6 gaps identified** with detailed fix recommendations  
-✅ **Production-grade documentation** with line-level precision  
+✅ **38 RBAC policies** catalogued across 8 documentation files
+✅ **33 access control implementations** mapped across 8 code files
+✅ **350+ bidirectional wiki links** created
+✅ **15 major mapping categories** established
+✅ **Complete traceability matrix** (forward and reverse)
+✅ **6 gaps identified** with detailed fix recommendations
+✅ **Production-grade documentation** with line-level precision
 
 ### Critical Next Steps
 
@@ -811,7 +811,7 @@ All 33 implementations documented with:
 
 **End of RBAC Traceability Matrix**
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-01-20  
-**Maintained By**: AGENT-090 (RBAC to Access Control Links Specialist)  
+**Document Version**: 1.0
+**Last Updated**: 2025-01-20
+**Maintained By**: AGENT-090 (RBAC to Access Control Links Specialist)
 **Status**: ✅ Mission Complete (with 6 documented gaps requiring attention)

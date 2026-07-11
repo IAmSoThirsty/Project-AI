@@ -10,37 +10,37 @@ flowchart TD
     Start([User Login Request]) --> LoadEnv[Load Environment Variables<br/>dotenv.load_dotenv]
     LoadEnv --> SetupCipher[Setup Fernet Cipher<br/>from FERNET_KEY]
     SetupCipher --> CheckFile{users.json<br/>exists?}
-    
+
     CheckFile -->|No| FirstUser[First Time Setup<br/>Onboarding Flow]
     FirstUser --> CreateAdmin[Create Admin User<br/>via create_user]
-    
+
     CheckFile -->|Yes| LoadUsers[Load Users from JSON]
     LoadUsers --> MigratePwd[Migrate Plaintext Passwords<br/>to pbkdf2_sha256]
     MigratePwd --> EnsureLockout[Ensure Lockout Fields<br/>failed_attempts, locked_until]
-    
+
     CreateAdmin --> ValidateAuth
     EnsureLockout --> ValidateAuth{Validate<br/>Credentials}
-    
+
     ValidateAuth --> CheckLockout{Account<br/>Locked?}
     CheckLockout -->|Yes| LockoutError[❌ Account Locked<br/>Return Error]
     CheckLockout -->|No| VerifyPassword[Verify Password<br/>pwd_context.verify]
-    
+
     VerifyPassword --> PasswordMatch{Password<br/>Matches?}
     PasswordMatch -->|No| IncrementFail[Increment Failed Attempts]
     IncrementFail --> CheckThreshold{Attempts >= 5?}
     CheckThreshold -->|Yes| LockAccount[Lock Account<br/>30 min lockout]
     CheckThreshold -->|No| AuthFail[❌ Authentication Failed]
     LockAccount --> AuthFail
-    
+
     PasswordMatch -->|Yes| ResetAttempts[Reset Failed Attempts<br/>failed_attempts = 0]
     ResetAttempts --> SetCurrentUser[Set current_user<br/>Session established]
     SetCurrentUser --> UpdateLastLogin[Update last_login_at<br/>timestamp]
     UpdateLastLogin --> SaveUsers[Persist to users.json<br/>save_users]
-    
+
     SaveUsers --> Success([✅ Authentication Success<br/>Return user profile])
     AuthFail --> End([❌ Authentication Failed])
     LockoutError --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style AuthFail fill:#ff0000,stroke:#ff00ff,stroke-width:2px,color:#fff

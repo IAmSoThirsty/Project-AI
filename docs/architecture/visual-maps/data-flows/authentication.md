@@ -51,9 +51,9 @@ accuracy_rating: high
 
 # Authentication Flow Visual Map
 
-**Version:** 1.0.0  
-**Author:** AGENT-047 (Visual Relationship Maps Specialist)  
-**Status:** Production-Ready  
+**Version:** 1.0.0
+**Author:** AGENT-047 (Visual Relationship Maps Specialist)
+**Status:** Production-Ready
 **Last Updated:** 2026-04-20
 
 ---
@@ -322,33 +322,33 @@ This visual map details the **authentication and session management flow** in Pr
 ```mermaid
 stateDiagram-v2
     [*] --> NotAuthenticated
-    
+
     NotAuthenticated --> Registering: register()
     Registering --> ValidatingPassword: validate_credentials()
     ValidatingPassword --> HashingPassword: valid_password()
     ValidatingPassword --> NotAuthenticated: invalid_password()
     HashingPassword --> SavingUser: hash_computed()
     SavingUser --> NotAuthenticated: user_saved()
-    
+
     NotAuthenticated --> Authenticating: login()
     Authenticating --> CheckingLockout: retrieve_user()
     CheckingLockout --> LockedOut: is_locked()
     CheckingLockout --> VerifyingPassword: not_locked()
     LockedOut --> NotAuthenticated: wait_timeout()
-    
+
     VerifyingPassword --> IncrementingFailures: password_mismatch()
     VerifyingPassword --> Authenticated: password_match()
     IncrementingFailures --> ApplyingLockout: attempts_>=_5
     IncrementingFailures --> NotAuthenticated: attempts_<_5
     ApplyingLockout --> LockedOut: lockout_applied()
-    
+
     Authenticated --> ValidatingToken: api_request()
     ValidatingToken --> Authenticated: token_valid()
     ValidatingToken --> NotAuthenticated: token_invalid()
-    
+
     Authenticated --> RevokingToken: logout()
     RevokingToken --> NotAuthenticated: token_revoked()
-    
+
     Authenticated --> [*]: session_expired()
 ```
 
@@ -391,7 +391,7 @@ def create_user(self, username: str, password: str, role: str = "user") -> bool:
         raise ValueError("Username must be at least 3 characters")
     if username in self.users:
         raise ValueError("Username already exists")
-    
+
     # Validate password strength
     if len(password) < 8:
         raise ValueError("Password must be at least 8 characters")
@@ -410,12 +410,12 @@ def create_user(self, username: str, password: str, role: str = "user") -> bool:
 def _hash_password(self, password: str) -> str:
     """
     Hash password using PBKDF2-SHA256 (preferred) or bcrypt (fallback).
-    
+
     PBKDF2 parameters:
     - Algorithm: SHA-256
     - Rounds: 29,000 (OWASP 2023 recommendation)
     - Salt: 16 random bytes (auto-generated)
-    
+
     Output format: $pbkdf2-sha256$29000$<salt>$<hash>
     """
     return pwd_context.hash(password)
@@ -461,7 +461,7 @@ def _migrate_plaintext_passwords(self):
             user_data["password_hash"] = self._hash_password(plaintext)
             del user_data["password"]  # Remove plaintext
             migrated = True
-    
+
     if migrated:
         self.save_users()
         logger.info("Migrated plaintext passwords to hashed versions")
@@ -479,7 +479,7 @@ def login(self, username: str, password: str) -> dict:
         # Don't reveal whether username exists (timing attack prevention)
         pwd_context.dummy_verify()  # Constant-time operation
         raise ValueError("Invalid credentials")
-    
+
     # Check if account is locked
     if user.get("locked_until"):
         locked_until = datetime.fromisoformat(user["locked_until"])
@@ -497,7 +497,7 @@ def login(self, username: str, password: str) -> dict:
 def _verify_password(self, password: str, password_hash: str) -> bool:
     """
     Constant-time password verification.
-    
+
     Uses passlib's verify() which implements:
     - Timing attack prevention (equal time for match/mismatch)
     - Automatic hash format detection (PBKDF2 vs bcrypt)
@@ -517,16 +517,16 @@ if self._verify_password(password, user["password_hash"]):
     user["failed_attempts"] = 0
     user["locked_until"] = None
     user["last_login"] = datetime.utcnow().isoformat()
-    
+
     # Set current user
     self.current_user = username
-    
+
     # Generate JWT token (web only)
     token = self._generate_jwt(username, user["role"])
-    
+
     # Log successful login
     logger.info(f"User '{username}' logged in successfully")
-    
+
     self.save_users()
     return {"token": token, "role": user["role"], "username": username}
 ```
@@ -540,9 +540,9 @@ if self._verify_password(password, user["password_hash"]):
 def _handle_failed_login(self, username: str):
     user = self.users[username]
     user["failed_attempts"] += 1
-    
+
     attempts = user["failed_attempts"]
-    
+
     # Progressive lockout periods
     if attempts >= 5:
         # 5+ failures: 15-minute lockout
@@ -552,9 +552,9 @@ def _handle_failed_login(self, username: str):
     elif attempts >= 3:
         # 3-4 failures: 5-minute delay warning
         logger.warning(f"Account '{username}' has {attempts} failed attempts (lockout at 5)")
-    
+
     self.save_users()
-    
+
     # Return generic error (don't reveal attempt count to attacker)
     raise ValueError("Invalid credentials")
 ```
@@ -572,7 +572,7 @@ All failed login attempts take the same time as successful ones:
 ```python
 def login(self, username: str, password: str) -> dict:
     start_time = time.time()
-    
+
     try:
         # Normal login flow
         result = self._authenticate(username, password)
@@ -582,7 +582,7 @@ def login(self, username: str, password: str) -> dict:
         if elapsed < 0.1:  # Minimum 100ms
             time.sleep(0.1 - elapsed)
         raise
-    
+
     return result
 ```
 
@@ -594,7 +594,7 @@ def login(self, username: str, password: str) -> dict:
 def _generate_jwt(self, username: str, role: str) -> str:
     """
     Generate JWT token for web session authentication.
-    
+
     Token structure:
     {
       "user_id": "alice",
@@ -604,14 +604,14 @@ def _generate_jwt(self, username: str, role: str) -> str:
     }
     """
     secret_key = os.getenv("JWT_SECRET_KEY", "dev-secret-change-in-prod")
-    
+
     payload = {
         "user_id": username,
         "role": role,
         "iat": datetime.utcnow(),
         "exp": datetime.utcnow() + timedelta(hours=24)
     }
-    
+
     token = jwt.encode(payload, secret_key, algorithm="HS256")
     return token
 ```
@@ -622,7 +622,7 @@ def _generate_jwt(self, username: str, role: str) -> str:
 def validate_jwt(token: str) -> dict:
     """
     Validate JWT token and extract claims.
-    
+
     Checks:
     1. Signature validity (HMAC-SHA256)
     2. Expiration time
@@ -630,17 +630,17 @@ def validate_jwt(token: str) -> dict:
     4. Token not in revocation blacklist
     """
     secret_key = os.getenv("JWT_SECRET_KEY", "dev-secret-change-in-prod")
-    
+
     try:
         # Decode and verify
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
-        
+
         # Check blacklist
         if token_store.is_revoked(token):
             raise ValueError("Token has been revoked")
-        
+
         return payload
-    
+
     except jwt.ExpiredSignatureError:
         raise ValueError("Token has expired")
     except jwt.InvalidTokenError:
@@ -653,19 +653,19 @@ def validate_jwt(token: str) -> dict:
 def logout(self, token: str = None):
     """
     Logout user and revoke token.
-    
+
     Desktop: Clear current_user
     Web: Add JWT to blacklist until expiration
     """
     if self.current_user:
         logger.info(f"User '{self.current_user}' logged out")
         self.current_user = None
-    
+
     if token:
         # Decode to get expiration
         payload = jwt.decode(token, options={"verify_signature": False})
         exp = datetime.fromtimestamp(payload["exp"])
-        
+
         # Add to blacklist until expiration
         token_store.revoke(token, ttl=(exp - datetime.utcnow()).seconds)
 ```
@@ -680,15 +680,15 @@ class UserManager:
     def __init__(self):
         self.current_user = None  # In-memory session
         self.session_start = None
-    
+
     def login(self, username, password):
         # ... authentication logic ...
         self.current_user = username
         self.session_start = datetime.utcnow()
-    
+
     def is_authenticated(self) -> bool:
         return self.current_user is not None
-    
+
     def get_current_user(self) -> str:
         return self.current_user
 ```
@@ -703,9 +703,9 @@ def ai_chat():
     auth_header = request.headers.get("Authorization", "")
     if not auth_header.startswith("Bearer "):
         return jsonify(error="Missing token"), 401
-    
+
     token = auth_header.replace("Bearer ", "")
-    
+
     # Validate token
     try:
         payload = validate_jwt(token)
@@ -713,7 +713,7 @@ def ai_chat():
         role = payload["role"]
     except ValueError as e:
         return jsonify(error=str(e)), 401
-    
+
     # Process authenticated request
     # ...
 ```
@@ -794,11 +794,11 @@ Log format:
    def test_authentication():
        # Test successful login
        assert user_manager.login("alice", "correct_password")
-       
+
        # Test failed login
        with pytest.raises(ValueError):
            user_manager.login("alice", "wrong_password")
-       
+
        # Test lockout
        for _ in range(5):
            try:
@@ -824,10 +824,9 @@ Log format:
 
 ---
 
-**Status:** ✅ Production-Ready Documentation  
-**Validation:** Architecture verified against `src/app/core/user_manager.py`, security best practices  
+**Status:** ✅ Production-Ready Documentation
+**Validation:** Architecture verified against `src/app/core/user_manager.py`, security best practices
 **Next Review:** 2026-07-20 (Quarterly update cycle)
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

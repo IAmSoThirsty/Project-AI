@@ -9,40 +9,40 @@ This diagram illustrates the comprehensive data persistence strategy across all 
 flowchart TD
     Start([Data Modification Request]) --> IdentifySystem[Identify System<br/>Persona, Memory, User, etc.]
     IdentifySystem --> PrepareData[Prepare Data for Persistence<br/>Serialize to dict/list]
-    
+
     PrepareData --> ValidateData{Data<br/>Validation}
     ValidateData -->|Invalid| ValidationError[❌ Validation Error<br/>Return error message]
     ValidateData -->|Valid| CreateBackup[Create Backup<br/>Copy existing file]
-    
+
     CreateBackup --> BackupSuccess{Backup<br/>Created?}
     BackupSuccess -->|No| BackupFailed[⚠️ Backup Failed<br/>Log warning, continue]
     BackupSuccess -->|Yes| BackupLogged[✅ Backup Created<br/>Log timestamp]
-    
+
     BackupFailed --> AcquireLock
     BackupLogged --> AcquireLock[Acquire File Lock<br/>Prevent concurrent writes]
-    
+
     AcquireLock --> LockAcquired{Lock<br/>Acquired?}
     LockAcquired -->|Timeout| LockError[❌ Lock Timeout<br/>Concurrent write conflict]
     LockAcquired -->|Success| CreateTempFile[Create Temporary File<br/>Write to .tmp extension]
-    
+
     CreateTempFile --> SerializeJSON[Serialize to JSON<br/>json.dumps with indent=2]
     SerializeJSON --> WriteTemp[Write to Temp File<br/>UTF-8 encoding]
     WriteTemp --> FlushBuffer[Flush Buffer<br/>os.fsync]
-    
+
     FlushBuffer --> AtomicMove[Atomic Move<br/>os.replace temp → target]
     AtomicMove --> MoveSuccess{Move<br/>Successful?}
-    
+
     MoveSuccess -->|No| MoveError[❌ Atomic Move Failed<br/>Restore from backup]
     MoveSuccess -->|Yes| VerifyWrite[Verify Write<br/>Read and validate JSON]
-    
+
     VerifyWrite --> VerifySuccess{Verification<br/>Passed?}
     VerifySuccess -->|No| CorruptionDetected[❌ Data Corruption<br/>Restore from backup]
     VerifySuccess -->|Yes| ReleaseLock[Release File Lock<br/>Allow other operations]
-    
+
     ReleaseLock --> UpdateTimestamp[Update Timestamp<br/>last_modified metadata]
     UpdateTimestamp --> CleanupBackups[Cleanup Old Backups<br/>Keep last 5 versions]
     CleanupBackups --> LogSuccess[Log Success<br/>logger.info]
-    
+
     LogSuccess --> CheckSystemType{System<br/>Type}
     CheckSystemType -->|Persona| PersonaCache[Update In-Memory Cache<br/>AIPersona state]
     CheckSystemType -->|Memory| MemoryCache[Update Knowledge Base Cache<br/>6 categories]
@@ -50,32 +50,32 @@ flowchart TD
     CheckSystemType -->|Learning| LearningCache[Update Request Queue<br/>LearningRequestManager]
     CheckSystemType -->|Override| OverrideCache[Update Safety Protocols<br/>CommandOverrideSystem]
     CheckSystemType -->|Other| GeneralCache[Update Generic Cache]
-    
+
     PersonaCache --> TriggerSync
     MemoryCache --> TriggerSync
     UserCache --> TriggerSync
     LearningCache --> TriggerSync
     OverrideCache --> TriggerSync
     GeneralCache --> TriggerSync[Trigger Cloud Sync<br/>Optional encrypted backup]
-    
+
     TriggerSync --> SyncEnabled{Cloud Sync<br/>Enabled?}
     SyncEnabled -->|No| SkipSync[Skip Cloud Sync]
     SyncEnabled -->|Yes| EncryptData[Encrypt Data<br/>Fernet cipher]
-    
+
     EncryptData --> UploadCloud[Upload to Cloud<br/>S3/Azure/GCS]
     UploadCloud --> UploadSuccess{Upload<br/>Successful?}
     UploadSuccess -->|No| UploadError[⚠️ Cloud Upload Failed<br/>Log error, continue]
     UploadSuccess -->|Yes| UploadLogged[✅ Cloud Sync Complete<br/>Log timestamp]
-    
+
     SkipSync --> Success
     UploadError --> Success
     UploadLogged --> Success([✅ Persistence Complete])
-    
+
     ValidationError --> End([❌ Persistence Failed])
     LockError --> End
     MoveError --> End
     CorruptionDetected --> End
-    
+
     style Start fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style Success fill:#00ff00,stroke:#00ffff,stroke-width:3px,color:#000
     style ValidationError fill:#ff0000,stroke:#ff00ff,stroke-width:2px,color:#fff
@@ -251,21 +251,21 @@ def _atomic_write(filepath: str, data: dict) -> None:
     backup_path = f"{filepath}.backup"
     if os.path.exists(filepath):
         shutil.copy2(filepath, backup_path)
-    
+
     # 2. Write to temp file
     temp_path = f"{filepath}.tmp"
     with open(temp_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
         f.flush()
         os.fsync(f.fileno())  # Force write to disk
-    
+
     # 3. Atomic move (rename)
     os.replace(temp_path, filepath)  # Atomic on POSIX and Windows
-    
+
     # 4. Verify write
     with open(filepath, 'r', encoding='utf-8') as f:
         json.load(f)  # Will raise if corrupted
-    
+
     # 5. Cleanup backup (optional)
     # Keep for disaster recovery
 ```
@@ -286,11 +286,11 @@ class SimpleLock:
     """Process-level file lock for single-process applications."""
     def __init__(self):
         self._locks = {}  # filepath → threading.Lock
-    
+
     def acquire(self, filepath: str, timeout: float = 5.0) -> bool:
         lock = self._locks.setdefault(filepath, threading.Lock())
         return lock.acquire(timeout=timeout)
-    
+
     def release(self, filepath: str) -> None:
         if filepath in self._locks:
             self._locks[filepath].release()
@@ -306,7 +306,7 @@ class SQLiteLock:
     def __init__(self, lock_db: str = "data/locks.db"):
         self.db = lock_db
         self._init_db()
-    
+
     def _init_db(self):
         conn = sqlite3.connect(self.db)
         conn.execute("""
@@ -317,7 +317,7 @@ class SQLiteLock:
             )
         """)
         conn.close()
-    
+
     def acquire(self, filepath: str, timeout: float = 5.0) -> bool:
         # Implement with polling and timeout
         pass
@@ -338,7 +338,7 @@ def _rotate_backups(filepath: str, keep: int = 5) -> None:
     """Keep only the most recent N backups."""
     backup_pattern = f"{filepath}.backup.*"
     backups = sorted(glob.glob(backup_pattern), reverse=True)
-    
+
     for old_backup in backups[keep:]:
         os.remove(old_backup)
         logger.info(f"Removed old backup: {old_backup}")

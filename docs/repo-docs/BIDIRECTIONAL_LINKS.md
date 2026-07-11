@@ -1,8 +1,8 @@
 # Bidirectional Links Analysis
 
-**Agent:** AGENT-037 (Wiki Link Conversion Specialist)  
-**Date:** 2026-04-20  
-**Analysis Type:** Knowledge Graph Topology  
+**Agent:** AGENT-037 (Wiki Link Conversion Specialist)
+**Date:** 2026-04-20
+**Analysis Type:** Knowledge Graph Topology
 **Total Documents:** 441
 
 ---
@@ -59,9 +59,9 @@ Obsidian automatically generates backlinks, but **explicit reciprocal links** im
 
 The Project-AI documentation currently has **zero bidirectional link pairs**, meaning:
 
-❌ **No explicit reciprocal references** between documents  
-❌ **One-way information flow** dominates  
-❌ **Hub-and-spoke pattern only** (no peer-to-peer linking)  
+❌ **No explicit reciprocal references** between documents
+❌ **One-way information flow** dominates
+❌ **Hub-and-spoke pattern only** (no peer-to-peer linking)
 ❌ **Limited knowledge graph connectivity**
 
 ### Implications
@@ -106,7 +106,7 @@ Hub documents are **heavily referenced** but often don't link back to their refe
 
 #### Priority 1: README (100 inbound links)
 
-**Current:** Central navigation hub with many references  
+**Current:** Central navigation hub with many references
 **Missing:** Links back to key referrers
 
 **Recommended additions:**
@@ -122,7 +122,7 @@ Hub documents are **heavily referenced** but often don't link back to their refe
 
 #### Priority 2: AGI_CHARTER.md (12 inbound links)
 
-**Current:** Governance document referenced by architecture and security docs  
+**Current:** Governance document referenced by architecture and security docs
 **Missing:** Links to implementation details
 
 **Recommended additions:**
@@ -136,7 +136,7 @@ Hub documents are **heavily referenced** but often don't link back to their refe
 
 #### Priority 3: ARCHITECTURE (8 inbound links)
 
-**Current:** Architecture overview  
+**Current:** Architecture overview
 **Missing:** Links to detailed component docs
 
 **Recommended additions:**
@@ -269,7 +269,7 @@ graph TD
     AGI[AGI_CHARTER<br/>12 inbound]
     DEV[DEVELOPMENT<br/>12 inbound]
     ARCH[ARCHITECTURE<br/>8 inbound]
-    
+
     Doc1[Document 1] --> README
     Doc2[Document 2] --> README
     Doc3[Document 3] --> README
@@ -277,11 +277,11 @@ graph TD
     Doc5[Document 5] --> AGI
     Doc6[Document 6] --> DEV
     Doc7[Document 7] --> ARCH
-    
+
     Orphan1[Orphaned Doc 1]
     Orphan2[Orphaned Doc 2]
     Orphan3[Orphaned Doc 3]
-    
+
     style README fill:#4CAF50
     style AGI fill:#4CAF50
     style DEV fill:#4CAF50
@@ -299,28 +299,28 @@ graph TD
     AGI[AGI_CHARTER<br/>Hub]
     SEC[SECURITY<br/>Hub]
     ARCH[ARCHITECTURE<br/>Hub]
-    
+
     AGI_SPEC[AGI Identity Spec]
     SEC_FW[Security Framework]
     THREAT[Threat Model]
     ARCH_SEC[Arch + Security]
-    
+
     README <--> AGI
     README <--> SEC
     README <--> ARCH
-    
+
     AGI <--> AGI_SPEC
     AGI <--> ARCH_SEC
-    
+
     SEC <--> SEC_FW
     SEC <--> THREAT
-    
+
     ARCH <--> ARCH_SEC
     ARCH <--> AGI_SPEC
-    
+
     SEC_FW <--> THREAT
     AGI_SPEC <--> ARCH_SEC
-    
+
     style README fill:#4CAF50
     style AGI fill:#2196F3
     style SEC fill:#2196F3
@@ -363,8 +363,8 @@ Inbound Links | Document Count | Percentage
 1-2           | 35             | 7.9%  ███
 3-5           | 26             | 5.9%  ██
 6-10          | 15             | 3.4%  █
-11-20         | 3              | 0.7%  
-21+           | 2              | 0.5%  
+11-20         | 3              | 0.7%
+21+           | 2              | 0.5%
 ```
 
 ### Interpretation
@@ -407,7 +407,7 @@ Inbound Links | Target % | Current % | Gap
 
 ### Analysis
 
-**Good news:** Index/README files have high outbound link counts (navigation function)  
+**Good news:** Index/README files have high outbound link counts (navigation function)
 **Concern:** Many of these are **one-way links** (no reciprocal references)
 
 **Recommendation:** For each outbound link, add reciprocal link back in target document.
@@ -453,7 +453,7 @@ Get-ChildItem -Path ".\docs" -Filter "*.md" -Recurse | ForEach-Object {
    - Template:
    ```markdown
    ## See Also
-   
+
    - [[doc1|Related Document 1]]
    - [[doc2|Related Document 2]]
    - [[doc3|Related Document 3]]
@@ -541,7 +541,7 @@ $linkedFiles = @{}
 foreach ($file in $allFiles) {
     $content = Get-Content $file.FullName -Raw
     $wikiLinks = [regex]::Matches($content, '\[\[([^\]|]+)')
-    
+
     foreach ($match in $wikiLinks) {
         $target = $match.Groups[1].Value
         $linkedFiles[$target] = $true
@@ -551,8 +551,8 @@ foreach ($file in $allFiles) {
 # Find files with no inbound links
 foreach ($file in $allFiles) {
     $relativePath = $file.FullName -replace [regex]::Escape($docsPath + '\'), ''
-    
-    if (-not $linkedFiles.ContainsKey($relativePath) -and 
+
+    if (-not $linkedFiles.ContainsKey($relativePath) -and
         -not $linkedFiles.ContainsKey($file.Name)) {
         Write-Host "Orphaned: $relativePath"
     }
@@ -573,12 +573,12 @@ $inboundLinks = @{}
 foreach ($file in $allFiles) {
     $content = Get-Content $file.FullName -Raw
     $relativePath = $file.FullName -replace [regex]::Escape($docsPath + '\'), ''
-    
+
     $wikiLinks = [regex]::Matches($content, '\[\[([^\]|]+)')
-    
+
     foreach ($match in $wikiLinks) {
         $target = $match.Groups[1].Value
-        
+
         if (-not $inboundLinks.ContainsKey($target)) {
             $inboundLinks[$target] = @()
         }
@@ -590,17 +590,17 @@ foreach ($file in $allFiles) {
 $targetFile = Get-Item $FilePath
 $relativePath = $targetFile.FullName -replace [regex]::Escape($docsPath + '\'), ''
 
-if ($inboundLinks.ContainsKey($relativePath) -or 
+if ($inboundLinks.ContainsKey($relativePath) -or
     $inboundLinks.ContainsKey($targetFile.Name)) {
-    
+
     $backlinks = $inboundLinks[$relativePath] + $inboundLinks[$targetFile.Name]
     $backlinks = $backlinks | Select-Object -Unique | Sort-Object
-    
+
     $backlinkSection = "`n## Referenced By`n`n"
     foreach ($link in $backlinks) {
         $backlinkSection += "- [[$link]]`n"
     }
-    
+
     Add-Content -Path $FilePath -Value $backlinkSection
     Write-Host "Added backlinks to: $FilePath"
 }
@@ -618,21 +618,21 @@ $linkGraph = @{}
 foreach ($file in $allFiles) {
     $content = Get-Content $file.FullName -Raw
     $relativePath = $file.FullName -replace [regex]::Escape($docsPath + '\'), ''
-    
+
     $wikiLinks = [regex]::Matches($content, '\[\[([^\]|]+)')
     $links = @()
-    
+
     foreach ($match in $wikiLinks) {
         $links += $match.Groups[1].Value
     }
-    
+
     $linkGraph[$relativePath] = $links
 }
 
 # Find bidirectional pairs
 foreach ($file in $linkGraph.Keys) {
     foreach ($target in $linkGraph[$file]) {
-        if ($linkGraph.ContainsKey($target) -and 
+        if ($linkGraph.ContainsKey($target) -and
             $linkGraph[$target] -contains $file) {
             Write-Host "Bidirectional: $file ↔ $target" -ForegroundColor Green
         }
@@ -655,17 +655,17 @@ The Project-AI documentation currently has a **hub-and-spoke link structure** wi
 
 ### Success Path
 
-**Phase 1 (Week 1):** Fix path errors, enhance top 20 hubs  
-**Phase 2 (Weeks 2-3):** Create topic clusters with bidirectional links  
-**Phase 3 (Weeks 4-5):** Integrate orphaned documents into knowledge graph  
+**Phase 1 (Week 1):** Fix path errors, enhance top 20 hubs
+**Phase 2 (Weeks 2-3):** Create topic clusters with bidirectional links
+**Phase 3 (Weeks 4-5):** Integrate orphaned documents into knowledge graph
 **Phase 4 (Week 6):** Automate backlink generation and validation
 
 **Expected Outcome:** Documentation health score improves from **35/100 to 85/100** within 90 days.
 
 ---
 
-**Report Generated:** 2026-04-20 10:52:00  
-**Report Version:** 1.0.0  
-**Total Documents Analyzed:** 441  
-**Total Words:** 3,421  
+**Report Generated:** 2026-04-20 10:52:00
+**Report Version:** 1.0.0
+**Total Documents Analyzed:** 441
+**Total Words:** 3,421
 **Agent:** AGENT-037 (Wiki Link Conversion Specialist)

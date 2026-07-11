@@ -23,7 +23,7 @@
 **After my actions**: docs/reports/ has 167 files
 
 **Question**: Did the vault INTEND for reports to go there, or did I PRESUME?
-**Evidence needed**: 
+**Evidence needed**:
 - What did the vault's actual structure show?
 - Were there index references pointing to docs/reports/ for AGENT files?
 - Did I create a structure or mirror an existing one?

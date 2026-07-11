@@ -36,10 +36,10 @@ aliases:
 ### Core Domain MOCs
 
 #### [[01_ARCHITECTURE]] - Architecture & Design
-**Scope:** System architecture, design patterns, ADRs, data flows, component diagrams  
-**Documents:** Architecture decisions, design patterns, system diagrams, integration points  
-**Use When:** Designing new features, understanding system structure, evaluating architectural changes  
-**Key Sections:** 
+**Scope:** System architecture, design patterns, ADRs, data flows, component diagrams
+**Documents:** Architecture decisions, design patterns, system diagrams, integration points
+**Use When:** Designing new features, understanding system structure, evaluating architectural changes
+**Key Sections:**
 - Desktop architecture (PyQt6 + 6 core systems)
 - Web architecture (React + Flask API)
 - AI systems architecture (FourLaws, Persona, Memory, Learning)
@@ -47,9 +47,9 @@ aliases:
 - Agent orchestration (4 specialized agents)
 
 #### [[02_SECURITY]] - Security & Compliance
-**Scope:** Threat models, security audits, compliance frameworks, vulnerability management  
-**Documents:** Security assessments, threat models, audit reports, remediation plans  
-**Use When:** Security reviews, threat modeling, compliance audits, incident response  
+**Scope:** Threat models, security audits, compliance frameworks, vulnerability management
+**Documents:** Security assessments, threat models, audit reports, remediation plans
+**Use When:** Security reviews, threat modeling, compliance audits, incident response
 **Key Sections:**
 - FourLaws ethics framework (immutable rules)
 - Constitutional AI implementation (value alignment)
@@ -59,9 +59,9 @@ aliases:
 - Security automation (auto-PR handler, security fixes workflow)
 
 #### [[03_GOVERNANCE]] - Governance & Policy
-**Scope:** Development policies, coding standards, review processes, compliance requirements  
-**Documents:** Workspace profile, contribution guidelines, code of conduct, audit trails  
-**Use When:** Policy compliance, code reviews, documentation standards, governance audits  
+**Scope:** Development policies, coding standards, review processes, compliance requirements
+**Documents:** Workspace profile, contribution guidelines, code of conduct, audit trails
+**Use When:** Policy compliance, code reviews, documentation standards, governance audits
 **Key Sections:**
 - Maximal completeness policy (no minimal/skeleton/partial code)
 - Production-ready standards (80%+ test coverage)
@@ -70,9 +70,9 @@ aliases:
 - Peer-level communication style (not instructional)
 
 #### [[04_DEVELOPMENT]] - Development Workflows
-**Scope:** Development setup, testing strategies, debugging guides, contribution workflows  
-**Documents:** Quick start guides, testing documentation, debugging runbooks, IDE setup  
-**Use When:** Onboarding developers, setting up environment, running tests, debugging issues  
+**Scope:** Development setup, testing strategies, debugging guides, contribution workflows
+**Documents:** Quick start guides, testing documentation, debugging runbooks, IDE setup
+**Use When:** Onboarding developers, setting up environment, running tests, debugging issues
 **Key Sections:**
 - Environment setup (.env configuration, API keys)
 - Desktop development (PyQt6 + Python 3.11+)
@@ -82,9 +82,9 @@ aliases:
 - CI/CD pipelines (GitHub Actions)
 
 #### [[05_OPERATIONS]] - Operations & Infrastructure
-**Scope:** Deployment, monitoring, incident response, infrastructure management  
-**Documents:** Runbooks, deployment guides, monitoring setup, incident playbooks  
-**Use When:** Deploying applications, monitoring systems, responding to incidents, scaling infrastructure  
+**Scope:** Deployment, monitoring, incident response, infrastructure management
+**Documents:** Runbooks, deployment guides, monitoring setup, incident playbooks
+**Use When:** Deploying applications, monitoring systems, responding to incidents, scaling infrastructure
 **Key Sections:**
 - Desktop deployment (Docker, launch scripts)
 - Web deployment (Vercel, Railway, Heroku, Docker Compose)
@@ -94,9 +94,9 @@ aliases:
 - Backup & recovery procedures
 
 #### [[06_SOURCE_CODE]] - Source Code Reference
-**Scope:** Code organization, module documentation, API references, class hierarchies  
-**Documents:** Module documentation, API specs, code examples, migration guides  
-**Use When:** Understanding code structure, API integration, refactoring, code reviews  
+**Scope:** Code organization, module documentation, API references, class hierarchies
+**Documents:** Module documentation, API specs, code examples, migration guides
+**Use When:** Understanding code structure, API integration, refactoring, code reviews
 **Key Sections:**
 - `src/app/core/` - 11 business logic modules (ai_systems.py 470 lines)
 - `src/app/gui/` - 6 PyQt6 UI modules (Leather Book interface)
@@ -106,9 +106,9 @@ aliases:
 - `tests/` - 14 tests across 6 test classes
 
 #### [[07_AGENTS]] - AI Agents & Systems
-**Scope:** AI agent architecture, decision systems, learning workflows, persona management  
-**Documents:** Agent specifications, decision logs, learning request workflows, persona states  
-**Use When:** AI system development, ethics validation, learning request management, persona configuration  
+**Scope:** AI agent architecture, decision systems, learning workflows, persona management
+**Documents:** Agent specifications, decision logs, learning request workflows, persona states
+**Use When:** AI system development, ethics validation, learning request management, persona configuration
 **Key Sections:**
 - FourLaws ethics system (action validation)
 - AIPersona (8 personality traits, mood tracking)
@@ -119,9 +119,9 @@ aliases:
 - 4 specialized agents (oversight, planner, validator, explainability)
 
 #### [[08_INTEGRATIONS]] - Integrations & APIs
-**Scope:** External APIs, third-party services, webhooks, data synchronization  
-**Documents:** API documentation, integration guides, webhook specs, sync protocols  
-**Use When:** Integrating external services, API development, webhook configuration, data sync  
+**Scope:** External APIs, third-party services, webhooks, data synchronization
+**Documents:** API documentation, integration guides, webhook specs, sync protocols
+**Use When:** Integrating external services, API development, webhook configuration, data sync
 **Key Sections:**
 - OpenAI integration (GPT models, DALL-E 3)
 - Hugging Face integration (Stable Diffusion 2.1)
@@ -361,22 +361,21 @@ SORT priority ASC, area ASC
 
 ## 🏛️ Governance
 
-**Index Ownership:** AGENT-019 (MOC Constructor)  
-**Change Control:** Structural changes require architecture review  
-**Quality Gates:** All updates must pass automated validation  
-**Audit Trail:** Tracked in git history with descriptive commits  
+**Index Ownership:** AGENT-019 (MOC Constructor)
+**Change Control:** Structural changes require architecture review
+**Quality Gates:** All updates must pass automated validation
+**Audit Trail:** Tracked in git history with descriptive commits
 **Review Cycle:** Weekly review of statistics and link integrity
 
 ---
 
-**Version:** 1.0.0  
-**Created:** 2025-01-23  
-**Last Updated:** 2025-01-23  
-**Maintainer:** AGENT-019 (MOC Constructor)  
-**Total MOCs:** 9  
-**Schema Compliance:** 100%  
+**Version:** 1.0.0
+**Created:** 2025-01-23
+**Last Updated:** 2025-01-23
+**Maintainer:** AGENT-019 (MOC Constructor)
+**Total MOCs:** 9
+**Schema Compliance:** 100%
 **Link Validation:** Required daily
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

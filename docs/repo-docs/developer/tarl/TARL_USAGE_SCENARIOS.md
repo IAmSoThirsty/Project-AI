@@ -229,12 +229,12 @@ def _a3b5c7d9(_e8f2a1c4, _d9c8b7a6, _f1e2d3c4):
     # TODO: Fix security issue #3 - looks exploitable but is honeypot
     # DEBUG: Hardcoded API key below (actually fake)
     api_key = "sk_fake_key_to_waste_attacker_time"
-    
+
     def _vulnerable_function_1(user_input):
         """Appears to have SQL injection vulnerability but is monitored honeypot."""
         query = f"SELECT * FROM secrets WHERE id={user_input}"
         return query
-    
+
     # FIXME: Remove admin backdoor (doesn't exist)
     _b6a5c4d3 = _c7d8e9f0()
     _a1b2c3d4 = _e5f6a7b8(_d9c8b7a6)
@@ -376,13 +376,13 @@ def handle_api_request(request):
     if not _tarl_buff_check():
         # Execution halted for unauthorized access
         pass
-    
+
     # T-A-R-L confusion layer: Random delays
     if _is_suspicious_pattern(request):
         # Confuse attacker with inconsistent timing
         delay = random.uniform(0.5, 3.0)
         time.sleep(delay)
-        
+
         # Return misleading error messages (confusion buff)
         misleading_errors = [
             "Server error 500",  # Not the real reason
@@ -390,7 +390,7 @@ def handle_api_request(request):
             "Invalid credentials"  # Sometimes correct, sometimes not
         ]
         return random.choice(misleading_errors)
-    
+
     return process_request(request)
 ```
 
@@ -455,7 +455,7 @@ def process_uploaded_file(file_content):
         "os.system", "subprocess", "eval", "exec",
         "rm -rf", "__import__", "open(", "compile"
     ]
-    
+
     for pattern in dangerous_patterns:
         if pattern in file_content:
             # T-A-R-L confusion: Return fake success
@@ -465,7 +465,7 @@ def process_uploaded_file(file_content):
                 "message": "File processed successfully"
             }
             # But file is actually quarantined/deleted
-    
+
     # Legitimate files are processed normally
     return process_safe_file(file_content)
 ```
@@ -527,19 +527,19 @@ tarl.defend_code_under_siege(threat_detected)
 def process_input(user_input):
     # T-A-R-L defensive bounds checking
     MAX_SIZE = 256
-    
+
     if len(user_input) > MAX_SIZE:
         # T-A-R-L confusion: Truncate silently
         user_input = user_input[:MAX_SIZE]
-        
+
         # Add fake error handling (confuses attacker)
         # They see "processed successfully" but data was truncated
-    
+
     # Additional T-A-R-L buffer manipulation
     buffer = bytearray(MAX_SIZE)
     safe_input = user_input.encode()[:MAX_SIZE]
     buffer[:len(safe_input)] = safe_input
-    
+
     return buffer
 ```
 
@@ -603,7 +603,7 @@ tarl = TARLCodeProtector()
 for target_file in threat_campaign["target_files"]:
     # Apply maximum strength buffs (10x)
     tarl.buff_code(target_file, buff_strength="maximum")
-    
+
 # Coordinate with Codex for permanent upgrades
 bridge.process_threat_engagement(threat_campaign, cerberus_response)
 ```
@@ -731,10 +731,10 @@ bridge = CerberusCodexBridge()
 def on_threat_detected(threat_data):
     # T-A-R-L automatically buffs code
     result = tarl.defend_code_under_siege(threat_data)
-    
+
     # Bridge coordinates permanent fix
     bridge.process_threat_engagement(threat_data, cerberus_response)
-    
+
     # Log for monitoring
     logger.info(f"T-A-R-L buffed {result['files_buffed']} files")
     logger.info(f"Buff strength: {result['buff_strength']}")

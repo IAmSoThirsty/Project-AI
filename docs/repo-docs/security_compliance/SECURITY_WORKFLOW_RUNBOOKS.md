@@ -74,7 +74,7 @@ audience:
 # Security Workflow Failure Runbooks
 
 **Purpose:** Quick reference guide for responding to security workflow failures
-**Audience:** On-call engineers, contributors, security team  
+**Audience:** On-call engineers, contributors, security team
 **Last Updated:** 2026-01-19
 
 ---
@@ -415,21 +415,21 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
    ```bash
    # Install Syft
    curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-   
+
    # Clone repository at release tag
    git clone --depth 1 --branch v1.0.0 https://github.com/IAmSoThirsty/Project-AI
    cd Project-AI
-   
+
    # Generate SBOM
    syft scan dir:. --scope all-layers \
      --output cyclonedx-json \
      --file sbom-comprehensive.cyclonedx.json
-   
+
    # Sign SBOM
    cosign sign-blob --yes sbom-comprehensive.cyclonedx.json \
      --output-signature=sbom-comprehensive.cyclonedx.json.sig \
      --output-certificate=sbom-comprehensive.cyclonedx.json.pem
-   
+
    # Upload to release
    gh release upload v1.0.0 sbom-comprehensive.cyclonedx.json*
    ```
@@ -527,7 +527,7 @@ git log --all --full-history -- <model-file>
    - Report to security team
    - Review author's other contributions
 
-**Prevention:** 
+**Prevention:**
 
 - Require model files to have checksums
 - Document model sources and training provenance
@@ -561,7 +561,7 @@ git show <commit>:src/app/core/model_loader.py
    # Instead of pickle, use:
    import joblib
    model = joblib.load(path)  # Still uses pickle but with safety checks
-   
+
    # Or for PyTorch:
    import torch
    model = torch.load(path, weights_only=True)  # Safer
@@ -572,13 +572,13 @@ git show <commit>:src/app/core/model_loader.py
    ```python
    import pickle
    import hashlib
-   
+
    # Verify model checksum before loading
    expected_hash = "abc123..."
    actual_hash = hashlib.sha256(open(model_path, 'rb').read()).hexdigest()
    if actual_hash != expected_hash:
        raise ValueError("Model integrity check failed")
-   
+
    with open(model_path, 'rb') as f:
        model = pickle.load(f)
    ```
@@ -642,11 +642,11 @@ python ai_ml_security_scan.py
    ```bash
    # Create incident branch
    git checkout -b incident/malicious-model-$(date +%Y%m%d)
-   
+
    # Remove malicious model
    git rm data/ai_persona/suspicious_model.pkl
    git commit -m "SECURITY: Remove malicious model file"
-   
+
    # Force push to main (requires admin)
    git push origin incident/malicious-model-$(date +%Y%m%d)
    ```
@@ -670,10 +670,10 @@ python ai_ml_security_scan.py
    ```bash
    # Who added the model?
    git log --all --full-history -- data/ai_persona/suspicious_model.pkl
-   
+
    # What other files did they touch?
    git log --author="<author>" --name-only
-   
+
    # Check for other suspicious patterns
    grep -r "__reduce__\|__setstate__\|exec\|eval" data/
    ```
@@ -800,6 +800,6 @@ grype sbom:sbom-comprehensive.cyclonedx.json
 
 ---
 
-**Last Updated:** 2026-01-19  
-**Maintainer:** Security Team  
+**Last Updated:** 2026-01-19
+**Maintainer:** Security Team
 **Review Frequency:** Quarterly or after each incident

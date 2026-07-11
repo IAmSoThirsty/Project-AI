@@ -67,7 +67,7 @@ related_mocs:
 - Docker and Docker Compose (optional)
 
 **Setup Steps:**
-1. **Backend:** 
+1. **Backend:**
    ```bash
    cd web/backend
    pip install -r requirements.txt
@@ -396,19 +396,19 @@ except Exception as e:
 ### Common Issues & Solutions
 
 #### "ModuleNotFoundError: No module named 'app'"
-**Cause:** Incorrect module import path or missing `src/` in PYTHONPATH  
+**Cause:** Incorrect module import path or missing `src/` in PYTHONPATH
 **Solution:** Always run with `python -m src.app.main`, not `python src/app/main.py`
 
 #### "OpenAI API Key Not Found"
-**Cause:** Missing or incorrect `OPENAI_API_KEY` in `.env`  
+**Cause:** Missing or incorrect `OPENAI_API_KEY` in `.env`
 **Solution:** Copy `.env.example` to `.env`, add valid API key, restart app
 
 #### "Port 5000 Already in Use"
-**Cause:** Flask backend already running or port conflict  
+**Cause:** Flask backend already running or port conflict
 **Solution:** Kill existing process or change port in configuration
 
 #### "PyQt6 Not Found"
-**Cause:** PyQt6 not installed in virtual environment  
+**Cause:** PyQt6 not installed in virtual environment
 **Solution:** Activate venv, run `pip install -r requirements.txt`
 
 **Documents:**
@@ -664,19 +664,18 @@ pytest --cov=src --cov-fail-under=80
 
 ## 🛡️ Governance
 
-**Maintainer:** AGENT-019 (MOC Constructor)  
-**Update Frequency:** Event-driven (when development workflows change)  
-**Review Cycle:** Quarterly review of development practices  
-**Quality Gate:** All development docs must include working examples  
+**Maintainer:** AGENT-019 (MOC Constructor)
+**Update Frequency:** Event-driven (when development workflows change)
+**Review Cycle:** Quarterly review of development practices
+**Quality Gate:** All development docs must include working examples
 **Onboarding:** New contributors must complete First-Time Setup Checklist
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-01-23  
-**Schema Compliance:** ✅ 100%  
+**Version:** 1.0.0
+**Last Updated:** 2025-01-23
+**Schema Compliance:** ✅ 100%
 **Developer Satisfaction:** 🎯 Target: Onboarding < 30 minutes
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

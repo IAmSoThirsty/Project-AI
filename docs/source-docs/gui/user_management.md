@@ -25,9 +25,9 @@ audience: ["developers", "security-engineers", "gui-developers", "administrators
 
 # UserManagementWidget - User CRUD and Access Control Component
 
-**Module:** `src/app/gui/user_management.py`  
-**Classes:** `UserManagementWidget`, `CreateUserDialog`, `ResetPasswordDialog`  
-**Lines of Code:** 317  
+**Module:** `src/app/gui/user_management.py`
+**Classes:** `UserManagementWidget`, `CreateUserDialog`, `ResetPasswordDialog`
+**Lines of Code:** 317
 **Purpose:** Complete administrative interface for user account lifecycle management with role-based access control and security controls
 
 ---
@@ -856,23 +856,23 @@ class DashboardWidget(QWidget):
         super().__init__()
         self.um = UserManager()
         self.current_user = current_user
-        
+
         # Check admin role
         user_data = self.um.get_user_data(current_user)
         if user_data.get("role") == "admin":
             self._build_admin_dashboard()
         else:
             self._build_user_dashboard()
-    
+
     def _build_admin_dashboard(self):
         tabs = QTabWidget()
         tabs.addTab(QWidget(), "Dashboard")
         tabs.addTab(QWidget(), "AI Persona")
         tabs.addTab(UserManagementWidget(), "User Management")  # Admin-only tab
-        
+
         layout = QVBoxLayout(self)
         layout.addWidget(tabs)
-    
+
     def _build_user_dashboard(self):
         # Standard dashboard without user management
         layout = QVBoxLayout(self)
@@ -892,13 +892,13 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self._setup_menus()
-    
+
     def _setup_menus(self):
         admin_menu = self.menuBar().addMenu("Admin")
-        
+
         user_mgmt_action = admin_menu.addAction("Manage Users...")
         user_mgmt_action.triggered.connect(self.open_user_management)
-    
+
     def open_user_management(self):
         # Option 1: Modal dialog
         dialog = QDialog(self)
@@ -908,7 +908,7 @@ class MainWindow(QMainWindow):
         dialog.setLayout(layout)
         dialog.resize(800, 600)
         dialog.exec()
-        
+
         # Option 2: Dock widget
         # dock = QDockWidget("User Management", self)
         # dock.setWidget(UserManagementWidget())
@@ -934,15 +934,15 @@ def ensure_admin_exists():
             "First Run",
             "No users found. Please create an admin account."
         )
-        
+
         dialog = CreateUserDialog()
         if dialog.exec() == QDialog.DialogCode.Accepted:
             uname, pw, approved, role, pic = dialog.get_values()
-            
+
             # Force admin role and approval for first user
             um.create_user(uname, pw)
             um.update_user(uname, approved=True, role="admin", profile_picture=pic)
-            
+
             QMessageBox.information(
                 None,
                 "Admin Created",
@@ -973,20 +973,20 @@ from PyQt6.QtWidgets import QLineEdit
 class UserManagementWidget(QWidget):
     def _build_ui(self):
         # ... existing code
-        
+
         # Add search bar
         self.search_field = QLineEdit()
         self.search_field.setPlaceholderText("Search users...")
         self.search_field.textChanged.connect(self.filter_users)
         self.main_layout.insertWidget(1, self.search_field)  # After "Users:" label
-    
+
     def filter_users(self, query: str):
         """Filter user list by search query"""
         query_lower = query.lower()
         for i in range(self.user_list.count()):
             item = self.user_list.item(i)
             username = item.text()
-            
+
             # Show item if matches search
             if query_lower in username.lower():
                 item.setHidden(False)
@@ -1057,7 +1057,7 @@ with open("users.csv") as f:
         password = row["password"]
         role = row["role"]
         approved = row["approved"].lower() == "true"
-        
+
         if um.create_user(username, password):
             um.update_user(username, approved=approved, role=role)
             print(f"Imported: {username}")
@@ -1089,17 +1089,17 @@ class DynamicDashboard(QStackedWidget):
         super().__init__()
         self.um = UserManager()
         self.current_user = current_user
-        
+
         # Page 0: User dashboard
         self.addWidget(QLabel("User Dashboard"))
-        
+
         # Page 1: Admin dashboard with user management
         admin_page = QWidget()
         layout = QVBoxLayout(admin_page)
         layout.addWidget(QLabel("Admin Dashboard"))
         layout.addWidget(UserManagementWidget())
         self.addWidget(admin_page)
-        
+
         # Route based on role
         user_data = self.um.get_user_data(current_user)
         if user_data.get("role") == "admin":
@@ -1118,18 +1118,18 @@ from PyQt6.QtCore import Qt
 
 class UserManagementWidget(QWidget):
     # ... existing code
-    
+
     def on_user_selected(self, username: str):
         if not username:
             return
         data = self.um.get_user_data(username)
-        
+
         # ... existing field population
-        
+
         # Enhanced avatar preview with fallback
         pic_path = data.get("profile_picture", "")
         self.pic_field.setText(pic_path)
-        
+
         if pic_path and os.path.exists(pic_path):
             pix = QPixmap(pic_path)
             if not pix.isNull():
@@ -1144,7 +1144,7 @@ class UserManagementWidget(QWidget):
                 self.show_default_avatar()
         else:
             self.show_default_avatar()
-    
+
     def show_default_avatar(self):
         """Display default avatar for users without picture"""
         default = QPixmap(96, 96)
@@ -1315,7 +1315,7 @@ from PyQt6.QtGui import QShortcut, QKeySequence
 class UserManagementWidget(QWidget):
     def _build_ui(self):
         # ... existing code
-        
+
         # Shortcuts
         QShortcut(QKeySequence("Ctrl+N"), self, self.create_user_dialog)
         QShortcut(QKeySequence("Delete"), self, self.delete_user)
@@ -1355,13 +1355,13 @@ self.role_combo.setAccessibleName("Role selector")
 ```python
 def on_user_selected(self, username: str):
     # ... existing code
-    
+
     # Color-code approval status
     if data.get("approved"):
         self.approved_label.setStyleSheet("color: #00ff00; font-weight: bold;")
     else:
         self.approved_label.setStyleSheet("color: #ff0000; font-weight: bold;")
-    
+
     # Role badge
     role = data.get("role", "user")
     if role == "admin":
@@ -1413,7 +1413,7 @@ def create_user_dialog(self):
     dialog = CreateUserDialog(parent=self)
     if dialog.exec() == QDialog.DialogCode.Accepted:
         uname, pw, approved, role, pic = dialog.get_values()
-        
+
         # Validation
         if len(uname) < 3:
             QMessageBox.warning(self, "Error", "Username must be at least 3 characters")
@@ -1424,7 +1424,7 @@ def create_user_dialog(self):
         if len(pw) < 8:
             QMessageBox.warning(self, "Error", "Password must be at least 8 characters")
             return
-        
+
         # Proceed with creation
         # ...
 ```
@@ -1444,22 +1444,22 @@ import os
 def save_changes(self):
     # ... existing code
     pic = self.pic_field.text().strip()
-    
+
     # Validate path
     if pic:
         pic = os.path.normpath(os.path.abspath(pic))
-        
+
         # Ensure path exists and is readable
         if not os.path.isfile(pic):
             QMessageBox.warning(self, "Invalid Path", "Profile picture file not found")
             return
-        
+
         # Optionally restrict to specific directory
         AVATAR_DIR = os.path.abspath("data/avatars/")
         if not pic.startswith(AVATAR_DIR):
             QMessageBox.warning(self, "Invalid Path", "Avatar must be in data/avatars/ directory")
             return
-    
+
     # Proceed with update
 ```
 
@@ -1482,11 +1482,11 @@ def save_users(self):
     # Save users
     with open(self.users_file, "w") as f:
         json.dump(self.users, f, indent=2)
-    
+
     # Generate checksum
     with open(self.users_file, "rb") as f:
         checksum = hashlib.sha256(f.read()).hexdigest()
-    
+
     with open(self.users_file + ".sha256", "w") as f:
         f.write(checksum)
 
@@ -1494,13 +1494,13 @@ def load_users(self):
     # Verify checksum
     with open(self.users_file, "rb") as f:
         checksum = hashlib.sha256(f.read()).hexdigest()
-    
+
     with open(self.users_file + ".sha256") as f:
         expected = f.read().strip()
-    
+
     if checksum != expected:
         raise SecurityError("users.json integrity check failed!")
-    
+
     # Load users
     # ...
 ```
@@ -1547,11 +1547,11 @@ def browse_picture(self):
     if fname:
         print(f"Selected file: {fname}")
         print(f"File exists: {os.path.exists(fname)}")
-        
+
         pix = QPixmap(fname)
         print(f"QPixmap valid: {not pix.isNull()}")
         print(f"Size: {pix.width()}x{pix.height()}")
-        
+
         if pix.isNull():
             QMessageBox.warning(self, "Invalid Image", f"Cannot load {fname}")
 ```
@@ -1577,14 +1577,14 @@ def browse_picture(self):
 def delete_user(self):
     item = self.user_list.currentItem()
     username = item.text() if item else None
-    
+
     print(f"Selected username: {username}")
     print(f"Current user: {self.um.current_user}")
-    
+
     if username == self.um.current_user:
         print("Cannot delete self")
         return
-    
+
     ok = self.um.delete_user(username)
     print(f"Delete result: {ok}")
 ```
@@ -1609,7 +1609,7 @@ def set_password(self, username: str, new_password: str):
     print(f"Setting password for {username}")
     hashed = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt(rounds=12))
     print(f"Hashed: {hashed}")
-    
+
     self.users[username]["password_hash"] = hashed.decode()
     self.save_users()
     print(f"Saved to users.json")
@@ -1634,10 +1634,10 @@ def set_password(self, username: str, new_password: str):
 def update_user(self, username: str, **kwargs) -> bool:
     if username not in self.users:
         return False
-    
+
     for key, value in kwargs.items():
         self.users[username][key] = value
-    
+
     self.save_users()  # ← CRITICAL: Must persist to JSON
     return True
 ```
@@ -1671,17 +1671,17 @@ with open("data/users.json") as f:
 
 ### Best Practices Checklist
 
-✅ **Always call `refresh_user_list()` after CRUD operations**  
-✅ **Check `UserManager` return values for error handling**  
-✅ **Use absolute paths for avatar images**  
-✅ **Validate image files before displaying (check `QPixmap.isNull()`)**  
-✅ **Show confirmation dialogs for destructive operations**  
-✅ **Prevent self-deletion with explicit checks**  
-✅ **Use `QLineEdit.EchoMode.Password` for all password fields**  
-✅ **Log all administrative actions for audit trail**  
-✅ **Restrict UserManagementWidget access to admin role**  
-✅ **Test with missing `users.json` to verify first-run behavior**  
-✅ **Verify password hashing with bcrypt WorkFactor 12**  
+✅ **Always call `refresh_user_list()` after CRUD operations**
+✅ **Check `UserManager` return values for error handling**
+✅ **Use absolute paths for avatar images**
+✅ **Validate image files before displaying (check `QPixmap.isNull()`)**
+✅ **Show confirmation dialogs for destructive operations**
+✅ **Prevent self-deletion with explicit checks**
+✅ **Use `QLineEdit.EchoMode.Password` for all password fields**
+✅ **Log all administrative actions for audit trail**
+✅ **Restrict UserManagementWidget access to admin role**
+✅ **Test with missing `users.json` to verify first-run behavior**
+✅ **Verify password hashing with bcrypt WorkFactor 12**
 ✅ **Document role permissions and approval workflow**
 
 ---
@@ -1694,4 +1694,3 @@ The **UserManagementWidget** provides a production-ready administrative interfac
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

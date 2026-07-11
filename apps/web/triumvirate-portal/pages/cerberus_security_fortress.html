@@ -80,7 +80,7 @@
         .threat-level-high { background: #ef4444; }
         .threat-level-critical { background: #DC2626; animation: pulse 1s infinite; }
     </style>
-  
+
   <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fthetriumv8982back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
   <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
   </head>
@@ -152,7 +152,7 @@
                     Multi-Layered Defense Architecture with Exponential Guardian Response
                 </p>
             </div>
-            
+
             <!-- Real-time Threat Monitor -->
             <div class="grid md:grid-cols-4 gap-6 mt-12">
                 <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-teal-400/30">
@@ -191,13 +191,13 @@
     <section class="py-20 bg-white">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12 text-blue-900">Three-Tier Defense Architecture</h2>
-            
+
             <div class="max-w-6xl mx-auto">
                 <!-- Defense Layers Diagram -->
                 <div class="relative mb-12">
                     <div class="bg-gray-100 rounded-lg p-8 border-2 border-blue-900">
-                        <img src="https://placehold.co/1200x600/1E3A8A/ffffff?text=Three-Tier+Defense+Architecture" 
-                             alt="Three-Tier Defense Architecture" 
+                        <img src="https://placehold.co/1200x600/1E3A8A/ffffff?text=Three-Tier+Defense+Architecture"
+                             alt="Three-Tier Defense Architecture"
                              class="w-full rounded-lg shadow-lg">
                     </div>
                 </div>
@@ -218,7 +218,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
-                        
+
                         <div id="perimeter-content" class="hidden mt-6 space-y-4">
                             <div class="grid md:grid-cols-3 gap-4">
                                 <div class="security-node bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-teal-400/30" onclick="event.stopPropagation(); showNodeDetails('firewall')">
@@ -263,7 +263,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
-                        
+
                         <div id="application-content" class="hidden mt-6 space-y-4">
                             <div class="grid md:grid-cols-3 gap-4">
                                 <div class="security-node bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-blue-400/30" onclick="event.stopPropagation(); showNodeDetails('waf')">
@@ -308,7 +308,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
-                        
+
                         <div id="data-content" class="hidden mt-6 space-y-4">
                             <div class="grid md:grid-cols-3 gap-4">
                                 <div class="security-node bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-yellow-400/30" onclick="event.stopPropagation(); showNodeDetails('encryption')">
@@ -347,7 +347,7 @@
     <section class="py-20 bg-gradient-to-br from-gray-900 to-blue-900 text-white">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12">Exponential Guardian System</h2>
-            
+
             <div class="max-w-6xl mx-auto">
                 <!-- Guardian Scaling Visualization -->
                 <div class="bg-white/10 backdrop-blur-lg rounded-lg p-8 mb-12 border border-teal-400/30">
@@ -440,12 +440,12 @@
     <section class="py-20 bg-white">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12 text-blue-900">Breach Response Protocol</h2>
-            
+
             <div class="max-w-6xl mx-auto">
                 <!-- Automated Response Sequence -->
                 <div class="bg-gray-100 rounded-lg p-8 mb-12">
-                    <img src="https://placehold.co/1200x800/1E3A8A/ffffff?text=Breach+Response+Flowchart" 
-                         alt="Breach Response Flowchart" 
+                    <img src="https://placehold.co/1200x800/1E3A8A/ffffff?text=Breach+Response+Flowchart"
+                         alt="Breach Response Flowchart"
                          class="w-full rounded-lg shadow-lg">
                 </div>
 
@@ -500,7 +500,7 @@
     <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12 text-blue-900">Security Bot Implementations</h2>
-            
+
             <div class="max-w-6xl mx-auto space-y-12">
                 <!-- Python ML-Based Threat Detection -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -523,11 +523,11 @@ class ThreatDetectionBot:
     """
     ML-powered security bot that learns normal traffic patterns
     and identifies anomalies indicating potential threats.
-    
+
     Deployment Trigger: When threat level exceeds baseline
     Scaling Factor: 3^n where n = threat severity level
     """
-    
+
     def __init__(self, sensitivity=0.85):
         self.sensitivity = sensitivity
         self.scaler = StandardScaler()
@@ -536,27 +536,27 @@ class ThreatDetectionBot:
             random_state=42
         )
         self.lstm_model = self._build_lstm_model()
-        
+
     def _build_lstm_model(self):
         """Build LSTM for sequential threat pattern recognition"""
         model = tf.keras.Sequential([
-            tf.keras.layers.LSTM(128, return_sequences=True, 
+            tf.keras.layers.LSTM(128, return_sequences=True,
                                  input_shape=(None, 10)),
             tf.keras.layers.Dropout(0.2),
             tf.keras.layers.LSTM(64),
             tf.keras.layers.Dense(32, activation='relu'),
             tf.keras.layers.Dense(1, activation='sigmoid')
         ])
-        model.compile(optimizer='adam', 
+        model.compile(optimizer='adam',
                      loss='binary_crossentropy',
                      metrics=['accuracy'])
         return model
-    
+
     def train(self, normal_traffic_data):
         """Train on normal traffic patterns"""
         scaled_data = self.scaler.fit_transform(normal_traffic_data)
         self.isolation_forest.fit(scaled_data)
-        
+
     def detect_threat(self, traffic_sample):
         """
         Analyze traffic sample and return threat score
@@ -564,18 +564,18 @@ class ThreatDetectionBot:
         """
         scaled_sample = self.scaler.transform([traffic_sample])
         anomaly_score = self.isolation_forest.score_samples(scaled_sample)[0]
-        
+
         # Calculate threat level and required bot count
         threat_level = max(0, min(4, int(-anomaly_score * 4)))
         bot_count = 3 ** threat_level  # Exponential scaling
-        
+
         return {
             'threat_score': -anomaly_score,
             'threat_level': threat_level,
             'bots_needed': bot_count,
             'action': self._determine_action(threat_level)
         }
-    
+
     def _determine_action(self, threat_level):
         actions = {
             0: 'MONITOR',
@@ -607,18 +607,18 @@ class BotDeploymentOrchestrator:
     Manages exponential bot deployment based on threat levels
     Coordinates distributed bot instances across infrastructure
     """
-    
+
     def __init__(self, redis_client):
         self.redis = redis_client
         self.active_bots = {}
-        
+
     async def deploy_bots(self, threat_level: int, threat_data: dict):
         """
         Deploy security bots exponentially: 3^threat_level
         """
         required_count = 3 ** threat_level
         current_count = len(self.active_bots)
-        
+
         if required_count > current_count:
             # Scale up
             new_bots = required_count - current_count
@@ -627,13 +627,13 @@ class BotDeploymentOrchestrator:
             # Scale down
             excess_bots = current_count - required_count
             await self._terminate_bots(excess_bots)
-            
+
         return {
             'previous_count': current_count,
             'current_count': len(self.active_bots),
             'threat_level': threat_level
         }
-    
+
     async def _spawn_bots(self, count: int, threat_data: dict):
         """Spawn new bot instances with threat context"""
         tasks = []
@@ -643,9 +643,9 @@ class BotDeploymentOrchestrator:
                 self._initialize_bot(bot_id, threat_data)
             )
             tasks.append(task)
-        
+
         await asyncio.gather(*tasks)
-        
+
     async def _initialize_bot(self, bot_id: str, threat_data: dict):
         """Initialize individual bot instance"""
         bot_config = {
@@ -654,14 +654,14 @@ class BotDeploymentOrchestrator:
             'sensitivity': threat_data['severity'],
             'deployment_time': time.time()
         }
-        
+
         self.active_bots[bot_id] = bot_config
-        await self.redis.hset('active_bots', bot_id, 
+        await self.redis.hset('active_bots', bot_id,
                              json.dumps(bot_config))
-        
+
         # Start bot monitoring loop
         asyncio.create_task(self._bot_monitor_loop(bot_id))
-        
+
     async def _bot_monitor_loop(self, bot_id: str):
         """Individual bot monitoring and response loop"""
         while bot_id in self.active_bots:
@@ -726,36 +726,36 @@ impl NetworkFilterBot {
             config,
         }
     }
-    
+
     /// Process incoming packet with zero-copy inspection
     pub async fn process_packet(&self, packet: &[u8]) -> FilterDecision {
         let start = std::time::Instant::now();
-        
+
         // Parse Ethernet frame (zero-copy)
         if let Some(eth_packet) = ethernet::EthernetPacket::new(packet) {
             match eth_packet.get_ethertype() {
                 ethernet::EtherTypes::Ipv4 => {
                     if let Some(ip_packet) = ip::Ipv4Packet::new(eth_packet.payload()) {
                         let decision = self.inspect_ip_packet(&ip_packet).await;
-                        
+
                         // Update statistics
                         let elapsed = start.elapsed().as_micros();
                         self.update_stats(elapsed, &decision).await;
-                        
+
                         return decision;
                     }
                 }
                 _ => {}
             }
         }
-        
+
         FilterDecision::Allow
     }
-    
+
     /// Deep packet inspection for threat detection
     async fn inspect_ip_packet(&self, packet: &ip::Ipv4Packet) -> FilterDecision {
         let src_ip = packet.get_source().to_string();
-        
+
         // Check blocklist (O(1) operation)
         if let Some(threat_info) = self.blocklist.get(&src_ip) {
             return FilterDecision::Block {
@@ -763,7 +763,7 @@ impl NetworkFilterBot {
                 threat_level: threat_info.threat_level,
             };
         }
-        
+
         // Protocol-specific inspection
         match packet.get_next_level_protocol() {
             ip::IpNextHeaderProtocols::Tcp => {
@@ -773,14 +773,14 @@ impl NetworkFilterBot {
             }
             _ => {}
         }
-        
+
         FilterDecision::Allow
     }
-    
+
     /// TCP-specific threat detection
     async fn inspect_tcp(&self, src_ip: &str, packet: &tcp::TcpPacket) -> FilterDecision {
         let flags = packet.get_flags();
-        
+
         // Detect SYN flood
         if flags == tcp::TcpFlags::SYN {
             // Implement SYN cookie validation
@@ -799,17 +799,17 @@ impl NetworkFilterBot {
                 };
             }
         }
-        
+
         FilterDecision::Allow
     }
-    
+
     /// Add IP to blocklist and trigger bot scaling
     fn add_to_blocklist(&self, ip: String, threat_info: ThreatInfo) {
         self.blocklist.insert(ip, threat_info);
-        
+
         // Calculate required bot count based on threat level
         let bot_count = 3_u32.pow(threat_info.threat_level as u32);
-        
+
         // Trigger orchestrator to deploy additional bots
         tokio::spawn(async move {
             trigger_bot_deployment(bot_count).await;
@@ -840,25 +840,25 @@ pub struct FilterStats {
 impl NetworkFilterBot {
     async fn update_stats(&self, processing_time_us: u128, decision: &FilterDecision) {
         let mut stats = self.stats.write().await;
-        
+
         stats.packets_processed += 1;
         if matches!(decision, FilterDecision::Block { .. }) {
             stats.packets_blocked += 1;
         }
-        
+
         // Update rolling average
-        stats.avg_processing_time_us = 
-            (stats.avg_processing_time_us * 0.95) + 
+        stats.avg_processing_time_us =
+            (stats.avg_processing_time_us * 0.95) +
             (processing_time_us as f64 * 0.05);
     }
-    
+
     pub async fn get_performance_metrics(&self) -> PerformanceMetrics {
         let stats = self.stats.read().await;
-        
+
         PerformanceMetrics {
             packets_per_second: self.calculate_throughput(&stats),
             avg_latency_us: stats.avg_processing_time_us,
-            block_rate: (stats.packets_blocked as f64 / 
+            block_rate: (stats.packets_blocked as f64 /
                         stats.packets_processed as f64) * 100.0,
             cpu_usage: self.get_cpu_usage(),
         }
@@ -932,55 +932,55 @@ func NewThreatAnalysisBot(config *AnalysisConfig) *ThreatAnalysisBot {
 
 // AnalyzeRequest performs multi-dimensional threat analysis
 func (bot *ThreatAnalysisBot) AnalyzeRequest(
-    ctx context.Context, 
+    ctx context.Context,
     req *HTTPRequest,
 ) (*ThreatAssessment, error) {
-    
+
     // Create analysis pipeline with concurrent stages
     pipeline := NewAnalysisPipeline(ctx)
-    
+
     // Stage 1: Pattern matching (parallel)
     patternMatches := pipeline.Stage(func() interface{} {
         return bot.matchPatterns(req)
     })
-    
+
     // Stage 2: Behavioral analysis (parallel)
     behaviorScore := pipeline.Stage(func() interface{} {
         return bot.analyzeBehavior(req)
     })
-    
+
     // Stage 3: Correlation analysis (parallel)
     correlations := pipeline.Stage(func() interface{} {
         return bot.correlateThreats(req)
     })
-    
+
     // Wait for all stages to complete
     results := pipeline.Execute()
-    
+
     // Combine results and calculate final threat score
     assessment := bot.synthesizeAssessment(
         results[0].([]*ThreatPattern),
         results[1].(float64),
         results[2].([]*Correlation),
     )
-    
+
     // Determine bot deployment needs
     assessment.BotsRequired = calculateBotCount(assessment.ThreatLevel)
-    
+
     return assessment, nil
 }
 
 // matchPatterns performs parallel pattern matching across signatures
 func (bot *ThreatAnalysisBot) matchPatterns(req *HTTPRequest) []*ThreatPattern {
     patterns := bot.threatDB.GetActivePatterns()
-    
+
     // Create worker pool for pattern matching
     workerCount := min(len(patterns), bot.config.MaxGoroutines)
     patternChan := make(chan *ThreatPattern, len(patterns))
     resultChan := make(chan *ThreatPattern, len(patterns))
-    
+
     var wg sync.WaitGroup
-    
+
     // Spawn workers
     for i := 0; i < workerCount; i++ {
         wg.Add(1)
@@ -993,7 +993,7 @@ func (bot *ThreatAnalysisBot) matchPatterns(req *HTTPRequest) []*ThreatPattern {
             }
         }()
     }
-    
+
     // Distribute patterns to workers
     go func() {
         for _, pattern := range patterns {
@@ -1001,40 +1001,40 @@ func (bot *ThreatAnalysisBot) matchPatterns(req *HTTPRequest) []*ThreatPattern {
         }
         close(patternChan)
     }()
-    
+
     // Collect results
     go func() {
         wg.Wait()
         close(resultChan)
     }()
-    
+
     matches := make([]*ThreatPattern, 0)
     for match := range resultChan {
         matches = append(matches, match)
     }
-    
+
     return matches
 }
 
 // analyzeBehavior performs behavioral threat analysis
 func (bot *ThreatAnalysisBot) analyzeBehavior(req *HTTPRequest) float64 {
     var score float64
-    
+
     // Analyze request frequency
     if freq := bot.getRequestFrequency(req.SourceIP); freq > bot.config.FrequencyThreshold {
         score += 0.3 * (freq / bot.config.FrequencyThreshold)
     }
-    
+
     // Analyze request patterns
     if bot.detectAnomalousPattern(req) {
         score += 0.4
     }
-    
+
     // Analyze payload characteristics
     if bot.isSuspiciousPayload(req.Body) {
         score += 0.3
     }
-    
+
     return min(score, 1.0)
 }
 
@@ -1043,13 +1043,13 @@ func (bot *ThreatAnalysisBot) correlateThreats(req *HTTPRequest) []*Correlation 
     // Search for related threats in time window
     window := 5 * time.Minute
     relatedThreats := bot.threatDB.GetRecentThreats(window)
-    
+
     correlations := make([]*Correlation, 0)
-    
+
     // Concurrent correlation analysis
     var wg sync.WaitGroup
     corrChan := make(chan *Correlation, len(relatedThreats))
-    
+
     for _, threat := range relatedThreats {
         wg.Add(1)
         go func(t *Threat) {
@@ -1059,16 +1059,16 @@ func (bot *ThreatAnalysisBot) correlateThreats(req *HTTPRequest) []*Correlation 
             }
         }(threat)
     }
-    
+
     go func() {
         wg.Wait()
         close(corrChan)
     }()
-    
+
     for corr := range corrChan {
         correlations = append(correlations, corr)
     }
-    
+
     return correlations
 }
 
@@ -1110,7 +1110,7 @@ func (p *AnalysisPipeline) Stage(fn func() interface{}) *AnalysisPipeline {
 func (p *AnalysisPipeline) Execute() []interface{} {
     results := make([]interface{}, len(p.stages))
     var wg sync.WaitGroup
-    
+
     for i, stage := range p.stages {
         wg.Add(1)
         go func(index int, fn func() interface{}) {
@@ -1118,7 +1118,7 @@ func (p *AnalysisPipeline) Execute() []interface{} {
             results[index] = fn()
         }(i, stage)
     }
-    
+
     wg.Wait()
     return results
 }
@@ -1136,12 +1136,12 @@ func NewCorrelationPool(workers int) *CorrelationPool {
         taskQueue: make(chan *CorrelationTask, 100),
         results:   make(chan *Correlation, 100),
     }
-    
+
     // Start worker goroutines
     for i := 0; i < workers; i++ {
         go pool.worker()
     }
-    
+
     return pool
 }
 
@@ -1195,40 +1195,40 @@ class SecurityDashboardBot {
         this.config = config;
         this.init();
     }
-    
+
     async init() {
         // Establish WebSocket connection
         this.connectWebSocket();
-        
+
         // Initialize threat visualization charts
         this.initializeCharts();
-        
+
         // Start metrics update loop
         this.startMetricsLoop();
-        
+
         // Setup alert handling
         this.setupAlertSystem();
     }
-    
+
     connectWebSocket() {
         this.ws = new WebSocket(this.config.wsEndpoint);
-        
+
         this.ws.onopen = () => {
             console.log('Security dashboard connected');
             this.subscribe(['threats', 'bots', 'metrics']);
         };
-        
+
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             this.handleRealtimeUpdate(data);
         };
-        
+
         this.ws.onerror = (error) => {
             console.error('WebSocket error:', error);
             setTimeout(() => this.connectWebSocket(), 5000);
         };
     }
-    
+
     handleRealtimeUpdate(data) {
         switch(data.type) {
             case 'threat_detected':
@@ -1245,18 +1245,18 @@ class SecurityDashboardBot {
                 break;
         }
     }
-    
+
     handleThreatAlert(threat) {
         // Update threat counter with animation
         this.metrics.threats++;
         this.animateCounter('activeThreats', this.metrics.threats);
-        
+
         // Add to threat visualization
         this.addThreatToChart(threat);
-        
+
         // Calculate bot deployment
         const botCount = Math.pow(3, threat.level);
-        
+
         // Display alert
         this.showAlert({
             type: 'threat',
@@ -1264,30 +1264,30 @@ class SecurityDashboardBot {
             message: `${threat.type} detected from ${threat.source}`,
             botsDeployed: botCount
         });
-        
+
         // Update defense layer visualization
         this.highlightDefenseLayer(threat.layer);
     }
-    
+
     updateBotCount(botData) {
         const oldCount = this.metrics.bots;
         this.metrics.bots = botData.count;
-        
+
         // Animate bot scaling
         this.animateCounter('activeBots', this.metrics.bots);
-        
+
         // Visualize exponential scaling
         this.visualizeBotScaling(oldCount, botData.count, botData.threatLevel);
-        
+
         // Update bot deployment chart
         this.updateChart('botScalingChart', {
             labels: ['Level 0', 'Level 1', 'Level 2', 'Level 3', 'Level 4'],
-            data: [3, 9, 27, 81, 243].map((v, i) => 
+            data: [3, 9, 27, 81, 243].map((v, i) =>
                 i <= botData.threatLevel ? v : null
             )
         });
     }
-    
+
     initializeCharts() {
         // Bot scaling chart
         this.charts.botScaling = new Chart(
@@ -1315,7 +1315,7 @@ class SecurityDashboardBot {
                 }
             }
         );
-        
+
         // Threat timeline chart
         this.charts.threatTimeline = new Chart(
             document.getElementById('threatTimelineChart'),
@@ -1337,13 +1337,13 @@ class SecurityDashboardBot {
             }
         );
     }
-    
+
     animateCounter(elementId, targetValue) {
         const element = document.getElementById(elementId);
         const currentValue = parseInt(element.textContent) || 0;
         const increment = (targetValue - currentValue) / 20;
         let current = currentValue;
-        
+
         const animation = setInterval(() => {
             current += increment;
             if ((increment > 0 && current >= targetValue) ||
@@ -1355,12 +1355,12 @@ class SecurityDashboardBot {
             }
         }, 50);
     }
-    
+
     showAlert(alert) {
         const alertElement = document.createElement('div');
         alertElement.className = `alert alert-${alert.type} ` +
             `threat-level-${['low', 'medium', 'high', 'critical'][alert.severity]}`;
-        
+
         alertElement.innerHTML = `
             <div class="flex items-center justify-between p-4 rounded-lg">
                 <div>
@@ -1373,9 +1373,9 @@ class SecurityDashboardBot {
                 </button>
             </div>
         `;
-        
+
         document.getElementById('alertContainer').prepend(alertElement);
-        
+
         // Auto-remove after 10 seconds
         setTimeout(() => alertElement.remove(), 10000);
     }
@@ -1404,24 +1404,24 @@ class SecurityEventStream {
         this.eventBuffer = [];
         this.maxBufferSize = 1000;
     }
-    
+
     subscribe(eventType, callback) {
         if (!this.subscribers.has(eventType)) {
             this.subscribers.set(eventType, []);
         }
         this.subscribers.get(eventType).push(callback);
     }
-    
+
     async processEventStream() {
         while (true) {
             const event = await this.receiveEvent();
-            
+
             // Add to buffer for replay
             this.eventBuffer.push(event);
             if (this.eventBuffer.length > this.maxBufferSize) {
                 this.eventBuffer.shift();
             }
-            
+
             // Notify subscribers
             const subscribers = this.subscribers.get(event.type) || [];
             subscribers.forEach(callback => {
@@ -1433,7 +1433,7 @@ class SecurityEventStream {
             });
         }
     }
-    
+
     getEventHistory(eventType, limit = 100) {
         return this.eventBuffer
             .filter(e => e.type === eventType)
@@ -1450,7 +1450,7 @@ class ThreatCorrelationVisualizer {
         this.correlations = [];
         this.animationFrame = null;
     }
-    
+
     addThreat(threat) {
         this.threats.push({
             x: Math.random() * this.canvas.width,
@@ -1459,33 +1459,33 @@ class ThreatCorrelationVisualizer {
             color: this.getThreatColor(threat.severity),
             data: threat
         });
-        
+
         // Check for correlations
         this.detectCorrelations();
     }
-    
+
     detectCorrelations() {
         const threshold = 100; // pixels
-        
+
         for (let i = 0; i < this.threats.length; i++) {
             for (let j = i + 1; j < this.threats.length; j++) {
                 const t1 = this.threats[i];
                 const t2 = this.threats[j];
                 const distance = Math.sqrt(
-                    Math.pow(t2.x - t1.x, 2) + 
+                    Math.pow(t2.x - t1.x, 2) +
                     Math.pow(t2.y - t1.y, 2)
                 );
-                
+
                 if (distance < threshold) {
                     this.correlations.push({ t1, t2, strength: 1 - (distance / threshold) });
                 }
             }
         }
     }
-    
+
     animate() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
+
         // Draw correlations
         this.ctx.strokeStyle = 'rgba(8, 145, 178, 0.3)';
         this.correlations.forEach(corr => {
@@ -1495,7 +1495,7 @@ class ThreatCorrelationVisualizer {
             this.ctx.lineWidth = corr.strength * 3;
             this.ctx.stroke();
         });
-        
+
         // Draw threats
         this.threats.forEach(threat => {
             this.ctx.beginPath();
@@ -1503,10 +1503,10 @@ class ThreatCorrelationVisualizer {
             this.ctx.fillStyle = threat.color;
             this.ctx.fill();
         });
-        
+
         this.animationFrame = requestAnimationFrame(() => this.animate());
     }
-    
+
     getThreatColor(severity) {
         const colors = ['#10b981', '#f59e0b', '#ef4444', '#DC2626'];
         return colors[Math.min(severity, 3)];
@@ -1523,13 +1523,13 @@ class ThreatCorrelationVisualizer {
     <section class="py-20 bg-white">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-12 text-blue-900">Technical Specifications</h2>
-            
+
             <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
                 <!-- Architecture Diagram -->
                 <div class="bg-gray-100 rounded-lg p-6">
                     <h3 class="text-xl font-bold mb-4 text-blue-900">Security Architecture</h3>
-                    <img src="https://placehold.co/600x400/1E3A8A/ffffff?text=Security+Architecture+Diagram" 
-                         alt="Security Architecture" 
+                    <img src="https://placehold.co/600x400/1E3A8A/ffffff?text=Security+Architecture+Diagram"
+                         alt="Security Architecture"
                          class="w-full rounded-lg shadow-lg mb-4">
                     <ul class="space-y-2 text-sm text-gray-700">
                         <li class="flex items-start">
@@ -1550,8 +1550,8 @@ class ThreatCorrelationVisualizer {
                 <!-- Performance Metrics -->
                 <div class="bg-gray-100 rounded-lg p-6">
                     <h3 class="text-xl font-bold mb-4 text-blue-900">Performance Metrics</h3>
-                    <img src="https://placehold.co/600x400/0891B2/ffffff?text=Performance+Metrics" 
-                         alt="Performance Metrics" 
+                    <img src="https://placehold.co/600x400/0891B2/ffffff?text=Performance+Metrics"
+                         alt="Performance Metrics"
                          class="w-full rounded-lg shadow-lg mb-4">
                     <div class="grid grid-cols-2 gap-4 text-sm">
                         <div class="bg-white p-3 rounded">
@@ -1617,7 +1617,7 @@ class ThreatCorrelationVisualizer {
         function toggleLayer(layerId) {
             const content = document.getElementById(`${layerId}-content`);
             const icon = document.getElementById(`${layerId}-icon`);
-            
+
             if (content.classList.contains('hidden')) {
                 content.classList.remove('hidden');
                 icon.style.transform = 'rotate(180deg)';
@@ -1640,7 +1640,7 @@ class ThreatCorrelationVisualizer {
                 access: 'Zero-Trust Access Control requires continuous verification with role-based permissions.',
                 audit: 'Immutable Audit Logs use blockchain technology to ensure tamper-proof activity tracking.'
             };
-            
+
             alert(details[nodeType] || 'Details not available');
         }
 
@@ -1650,10 +1650,10 @@ class ThreatCorrelationVisualizer {
             document.querySelectorAll(`[id^="${language}-"]`).forEach(el => {
                 el.classList.add('hidden');
             });
-            
+
             // Show selected code block
             document.getElementById(`${language}-${section}`).classList.remove('hidden');
-            
+
             // Update tab styles
             event.target.parentElement.querySelectorAll('.language-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -1666,17 +1666,17 @@ class ThreatCorrelationVisualizer {
             const threats = document.getElementById('activeThreats');
             const bots = document.getElementById('activeBots');
             const blocked = document.getElementById('blockedAttempts');
-            
+
             setInterval(() => {
                 // Simulate occasional threat detection
                 if (Math.random() > 0.95) {
                     const currentThreats = parseInt(threats.textContent);
                     threats.textContent = currentThreats + 1;
-                    
+
                     const currentBlocked = parseInt(blocked.textContent);
                     blocked.textContent = currentBlocked + Math.floor(Math.random() * 10) + 1;
                 }
-                
+
                 // Simulate bot scaling
                 if (Math.random() > 0.98) {
                     const currentBots = parseInt(bots.textContent);
@@ -1690,7 +1690,7 @@ class ThreatCorrelationVisualizer {
         function initBotScalingChart() {
             const ctx = document.getElementById('botScalingChart');
             if (!ctx) return;
-            
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {

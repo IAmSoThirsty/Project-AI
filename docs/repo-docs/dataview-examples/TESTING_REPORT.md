@@ -63,7 +63,7 @@ data.json     887       2024-04-20 10:20 AM
 ```powershell
 Get-ChildItem -Path "docs\dataview-examples\*.md" | ForEach-Object {
     $content = Get-Content $_.FullName -Raw
-    $frontmatter = ($content -match '(?s)^---\s*\n(.*?)\n---') 
+    $frontmatter = ($content -match '(?s)^---\s*\n(.*?)\n---')
     Write-Host "$($_.Name): $($matches[1].Split("`n").Count) fields"
 }
 ```
@@ -563,8 +563,8 @@ The Dataview plugin has been successfully installed and configured with producti
 
 ---
 
-**Verified by:** AGENT-011 (Dataview Plugin Specialist)  
-**Date:** 2024-04-20  
-**Status:** ✅ **PRODUCTION READY**  
-**Plugin Version:** 0.5.68  
+**Verified by:** AGENT-011 (Dataview Plugin Specialist)
+**Date:** 2024-04-20
+**Status:** ✅ **PRODUCTION READY**
+**Plugin Version:** 0.5.68
 **Obsidian Compatibility:** 0.13.11+

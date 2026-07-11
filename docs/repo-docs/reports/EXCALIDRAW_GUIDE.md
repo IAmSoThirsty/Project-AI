@@ -48,13 +48,13 @@ The Excalidraw plugin is already included in Project-AI. To enable it:
 1. **Initialize the plugin**:
    ```python
    from app.plugins.excalidraw_plugin import ExcalidrawPlugin
-   
+
    # Create plugin instance
    excalidraw = ExcalidrawPlugin(data_dir="data")
-   
+
    # Initialize with safety validation
    success = excalidraw.initialize()
-   
+
    if success:
        print("Excalidraw plugin enabled!")
    ```
@@ -483,18 +483,18 @@ class DiagramPanel(QWidget):
         super().__init__()
         self.excalidraw = ExcalidrawPlugin()
         self.init_ui()
-    
+
     def init_ui(self):
         layout = QVBoxLayout()
-        
+
         # Embedded browser
         self.browser = QWebEngineView()
         self.browser.setUrl(QUrl("https://excalidraw.com"))
-        
+
         # Controls
         btn_save = QPushButton("Save Diagram")
         btn_save.clicked.connect(self.save_diagram)
-        
+
         layout.addWidget(self.browser)
         layout.addWidget(btn_save)
         self.setLayout(layout)

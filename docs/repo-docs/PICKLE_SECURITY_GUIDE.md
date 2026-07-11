@@ -1,7 +1,7 @@
 # Pickle Deserialization Security Guide
 
-**Security Fleet - Agent 13 Audit Report**  
-**Date:** 2024  
+**Security Fleet - Agent 13 Audit Report**
+**Date:** 2024
 **Status:** ✅ LOW RISK - Internal Use Only, No User Input Vectors
 
 ---
@@ -51,7 +51,7 @@ class ExperienceReplayBuffer:
         filepath = os.path.join(self.data_dir, filename)  # Internal data_dir
         with open(filepath, "wb") as f:
             pickle.dump(list(self._buffer), f)  # Serialize Experience objects
-    
+
     def load(self, filename: str = "replay_buffer.pkl") -> bool:
         """Load buffer from disk"""
         filepath = os.path.join(self.data_dir, filename)  # Internal data_dir
@@ -93,7 +93,7 @@ class CompressionEngine:
             # Fallback to pickle for unknown data types
             serialized = pickle.dumps(data)
             compressed = zlib.compress(serialized, level=self.compression_level)
-    
+
     def _decompress_vector(self, result: CompressionResult) -> np.ndarray:
         # Deserialize based on strategy
         if strategy in [QUANTIZE_INT8, SPARSE_CSR, ...]:
@@ -262,7 +262,7 @@ import io
 
 class RestrictedUnpickler(pickle.Unpickler):
     """Unpickler with class allowlist for security"""
-    
+
     ALLOWED_CLASSES = {
         ('collections', 'deque'),
         ('app.core.advanced_learning_systems', 'Experience'),
@@ -272,7 +272,7 @@ class RestrictedUnpickler(pickle.Unpickler):
         ('numpy.core.multiarray', '_reconstruct'),
         ('numpy', 'ndarray'),
     }
-    
+
     def find_class(self, module, name):
         """Only allow specific classes to be unpickled"""
         if (module, name) not in self.ALLOWED_CLASSES:
@@ -332,7 +332,7 @@ class ExperienceReplayBuffer:
             data = [exp.to_dict() for exp in self._buffer]
             json.dump(data, f, indent=2)
         return True
-    
+
     def load(self, filename: str = "replay_buffer.json") -> bool:
         """Load buffer from JSON"""
         filepath = os.path.join(self.data_dir, filename)
@@ -350,17 +350,17 @@ class ExperienceReplayBuffer:
 def test_json_serialization_compatibility():
     """Test JSON migration preserves data"""
     buffer = ExperienceReplayBuffer(data_dir="test")
-    
+
     # Add experiences
     buffer.add(Experience(state={}, action="test", reward=1.0, ...))
-    
+
     # Save as JSON
     buffer.save("test.json")
-    
+
     # Load and verify
     buffer2 = ExperienceReplayBuffer(data_dir="test")
     buffer2.load("test.json")
-    
+
     assert buffer2.size() == buffer.size()
     assert buffer2.sample(1)[0].action == "test"
 ```
@@ -386,25 +386,25 @@ import numpy as np
 def benchmark_serialization(data: np.ndarray, iterations: int = 1000):
     """Compare serialization performance"""
     results = {}
-    
+
     # JSON (with list conversion)
     start = time.perf_counter()
     for _ in range(iterations):
         json.dumps(data.tolist())
     results["json"] = time.perf_counter() - start
-    
+
     # MessagePack
     start = time.perf_counter()
     for _ in range(iterations):
         msgpack.packb(data, use_bin_type=True)
     results["msgpack"] = time.perf_counter() - start
-    
+
     # Pickle
     start = time.perf_counter()
     for _ in range(iterations):
         pickle.dumps(data)
     results["pickle"] = time.perf_counter() - start
-    
+
     return results
 ```
 
@@ -426,16 +426,16 @@ def validate_pickle_file(filepath: str) -> bool:
     stat = os.stat(filepath)
     if stat.st_uid != os.getuid():
         raise SecurityError("Pickle file not owned by current user")
-    
+
     # Check file permissions (should not be world-writable)
     if stat.st_mode & 0o002:
         raise SecurityError("Pickle file is world-writable")
-    
+
     # Check file location (must be in allowed directories)
     allowed_dirs = ["/app/data", "/var/lib/project-ai"]
     if not any(filepath.startswith(d) for d in allowed_dirs):
         raise SecurityError("Pickle file outside allowed directories")
-    
+
     return True
 ```
 
@@ -443,9 +443,9 @@ def validate_pickle_file(filepath: str) -> bool:
 ```python
 class SafeUnpickler(pickle.Unpickler):
     """Unpickler with strict class allowlist"""
-    
+
     SAFE_MODULES = {'collections', 'builtins', 'numpy', 'app.core'}
-    
+
     def find_class(self, module, name):
         if not any(module.startswith(m) for m in self.SAFE_MODULES):
             raise pickle.UnpicklingError(f"Unsafe module: {module}")
@@ -482,25 +482,25 @@ import hmac
 
 class SignedPickle:
     """Pickle with HMAC signature"""
-    
+
     def __init__(self, secret_key: bytes):
         self.secret_key = secret_key
-    
+
     def dumps(self, obj) -> bytes:
         """Serialize with signature"""
         data = pickle.dumps(obj)
         signature = hmac.new(self.secret_key, data, hashlib.sha256).digest()
         return signature + data
-    
+
     def loads(self, signed_data: bytes):
         """Verify signature and deserialize"""
         signature = signed_data[:32]
         data = signed_data[32:]
-        
+
         expected = hmac.new(self.secret_key, data, hashlib.sha256).digest()
         if not hmac.compare_digest(signature, expected):
             raise ValueError("Pickle signature verification failed")
-        
+
         return pickle.loads(data)
 ```
 
@@ -517,14 +517,14 @@ def secure_pickle_save(obj, filepath: str, data_dir: str):
     abs_data_dir = os.path.abspath(data_dir)
     if not abs_filepath.startswith(abs_data_dir):
         raise SecurityError("Pickle path outside data directory")
-    
+
     # Create directory with restricted permissions
     os.makedirs(os.path.dirname(abs_filepath), mode=0o700, exist_ok=True)
-    
+
     # Write pickle file
     with open(abs_filepath, "wb") as f:
         pickle.dump(obj, f)
-    
+
     # Set file permissions (owner read/write only)
     os.chmod(abs_filepath, stat.S_IRUSR | stat.S_IWUSR)
 ```
@@ -541,14 +541,14 @@ import pickle
 
 def test_malicious_pickle_rejected():
     """Test that restricted unpickler rejects malicious classes"""
-    
+
     class MaliciousClass:
         def __reduce__(self):
             import os
             return (os.system, ('echo hacked',))
-    
+
     malicious_data = pickle.dumps(MaliciousClass())
-    
+
     # Should raise UnpicklingError
     with pytest.raises(pickle.UnpicklingError):
         RestrictedUnpickler(io.BytesIO(malicious_data)).load()
@@ -559,7 +559,7 @@ def test_malicious_pickle_rejected():
 def test_path_traversal_blocked():
     """Test that pickle load prevents directory traversal"""
     buffer = ExperienceReplayBuffer(data_dir="/app/data")
-    
+
     # Attempt to load from parent directory
     with pytest.raises(SecurityError):
         buffer.load("../../etc/passwd")
@@ -570,12 +570,12 @@ def test_path_traversal_blocked():
 def test_world_writable_pickle_rejected():
     """Test that world-writable pickle files are rejected"""
     filepath = "/tmp/test.pkl"
-    
+
     # Create world-writable file
     with open(filepath, "wb") as f:
         pickle.dump([], f)
     os.chmod(filepath, 0o666)
-    
+
     # Should reject loading
     with pytest.raises(SecurityError):
         validate_pickle_file(filepath)
@@ -591,7 +591,7 @@ def test_pickle_fuzzing():
     for _ in range(1000):
         # Generate random bytes
         fuzz_data = bytes(random.randint(0, 255) for _ in range(1024))
-        
+
         # Should not crash or execute code
         try:
             RestrictedUnpickler(io.BytesIO(fuzz_data)).load()
@@ -653,7 +653,7 @@ def track_pickle_load(filepath: str):
     """Track pickle load operations"""
     PICKLE_METRICS["total_loads"] += 1
     PICKLE_METRICS["files_loaded"].add(filepath)
-    
+
     # Alert if suspicious pattern
     if len(PICKLE_METRICS["files_loaded"]) > 100:
         logger.error("SECURITY: Excessive pickle file loading detected")
@@ -832,8 +832,8 @@ Project-AI's pickle usage aligns with OWASP recommendations:
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2024  
-**Next Review:** Q2 2024 (after Phase 2 migration)  
-**Owner:** Security Fleet - Agent 13  
+**Document Version:** 1.0
+**Last Updated:** 2024
+**Next Review:** Q2 2024 (after Phase 2 migration)
+**Owner:** Security Fleet - Agent 13
 **Classification:** Internal Security Documentation

@@ -36,7 +36,7 @@ par Channel 1: Attempt
     end note
     DB --> Memory: Attempt recorded
     deactivate DB
-    
+
 else Channel 2: Decision
     Memory -> DB: INSERT INTO memory_decision
     activate DB
@@ -48,7 +48,7 @@ else Channel 2: Decision
     end note
     DB --> Memory: Decision recorded
     deactivate DB
-    
+
 else Channel 3: Result
     Memory -> DB: INSERT INTO memory_result
     activate DB
@@ -60,7 +60,7 @@ else Channel 3: Result
     end note
     DB --> Memory: Result recorded
     deactivate DB
-    
+
 else Channel 4: Reflection
     Memory -> Memory: Generate reflection\n(AI analysis)
     Memory -> DB: INSERT INTO memory_reflection
@@ -73,7 +73,7 @@ else Channel 4: Reflection
     end note
     DB --> Memory: Reflection recorded
     deactivate DB
-    
+
 else Channel 5: Error (if errors)
     alt Errors Occurred
         Memory -> DB: INSERT INTO memory_error
@@ -102,22 +102,22 @@ par Retrieve All Channels
     activate DB
     DB --> Memory: Attempt data
     deactivate DB
-    
+
     Memory -> DB: SELECT FROM memory_decision
     activate DB
     DB --> Memory: Decision data
     deactivate DB
-    
+
     Memory -> DB: SELECT FROM memory_result
     activate DB
     DB --> Memory: Result data
     deactivate DB
-    
+
     Memory -> DB: SELECT FROM memory_reflection
     activate DB
     DB --> Memory: Reflection data
     deactivate DB
-    
+
     Memory -> DB: SELECT FROM memory_error
     activate DB
     DB --> Memory: Error data (if exists)
@@ -165,7 +165,7 @@ note over Memory, S3
   All five channels: < 50ms
   Query operation: < 20ms
   Archive operation: < 500ms
-  
+
   **THROUGHPUT**
   Writes/sec: 1,000+
   Queries/sec: 5,000+

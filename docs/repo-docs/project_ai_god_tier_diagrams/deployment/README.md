@@ -154,7 +154,7 @@ storage:
   database:
     type: "sqlite"
     path: "data/project_ai.db"
-  
+
   files:
     data_dir: "data/"
     logs_dir: "logs/"
@@ -167,7 +167,7 @@ memory:
 governance:
   enable_all_checks: true
   require_approval: true
-  
+
 agents:
   max_concurrent: 5
   timeout_seconds: 60
@@ -921,11 +921,11 @@ scrape_configs:
     static_configs:
       - targets: ['app:5000']
     metrics_path: '/metrics'
-  
+
   - job_name: 'postgres'
     static_configs:
       - targets: ['postgres-exporter:9187']
-  
+
   - job_name: 'redis'
     static_configs:
       - targets: ['redis-exporter:9121']

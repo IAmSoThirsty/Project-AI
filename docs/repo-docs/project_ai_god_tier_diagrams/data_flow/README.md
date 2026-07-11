@@ -106,7 +106,7 @@ Every operation generates five distinct memory records:
 - **Memory Records**: recent five-channel recordings
 - **Audit Trail**: hash chain with full history
 
-**Performance**: 
+**Performance**:
 - Connection pooling (25 connections per service)
 - Read replicas for analytics queries
 - Partitioning by timestamp (monthly partitions)

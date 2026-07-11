@@ -88,7 +88,7 @@ review_cycle: "quarterly"
 # Software Bill of Materials (SBOM) Policy
 
 **Document Version:** 1.0
-**Last Updated:** 2026-01-19  
+**Last Updated:** 2026-01-19
 **Owner:** Project-AI Security Team
 
 ---
@@ -539,7 +539,7 @@ For questions or concerns about SBOM:
 
 ---
 
-**Classification:** PUBLIC  
+**Classification:** PUBLIC
 **Distribution:** Unlimited
 
 ---

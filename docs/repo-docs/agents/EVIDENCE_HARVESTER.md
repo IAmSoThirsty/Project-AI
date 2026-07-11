@@ -21,7 +21,7 @@ The agent harvests evidence across eight categories:
 - Coverage reports (`.coverage`, `htmlcov/`)
 - Test result artifacts
 
-**Proves**: Tests have been executed  
+**Proves**: Tests have been executed
 **Does NOT Prove**: All tests passed or coverage is adequate
 
 ### 2. CI Logs
@@ -29,34 +29,34 @@ The agent harvests evidence across eight categories:
 - CI pipeline reports (`ci-reports/`)
 - Workflow execution history
 
-**Proves**: CI workflows are configured  
+**Proves**: CI workflows are configured
 **Does NOT Prove**: Recent successful runs
 
 ### 3. Audit Events
 - Governance audit log (`governance/audit_log.yaml`)
 - Acceptance ledger with RFC 3161 timestamps (`data/acceptance_ledger.jsonl`)
 
-**Proves**: Governance decisions are logged  
+**Proves**: Governance decisions are logged
 **Does NOT Prove**: All events pass governance checks
 
 ### 4. Governance Decisions
 - Canonical scenario definition (`canonical/scenario.yaml`)
 - Governance drift alerts (`data/governance_drift_alerts/`)
 
-**Proves**: Ground truth scenarios exist  
+**Proves**: Ground truth scenarios exist
 **Does NOT Prove**: Scenarios pass all invariants
 
 ### 5. Docker Artifacts
 - Dockerfile
 - docker-compose.yml configuration
 
-**Proves**: Container build configuration exists  
+**Proves**: Container build configuration exists
 **Does NOT Prove**: Images build successfully
 
 ### 6. Runtime Health
 - Triumvirate server health endpoint (`http://localhost:8001/health`)
 
-**Proves**: Services are running and responsive  
+**Proves**: Services are running and responsive
 **Does NOT Prove**: All systems are functional
 
 ### 7. Denial Proofs
@@ -65,14 +65,14 @@ The agent harvests evidence across eight categories:
   - `test_integration_pipeline_blocking.py`
   - `test_boundary.py`
 
-**Proves**: Denial test suites exist  
+**Proves**: Denial test suites exist
 **Does NOT Prove**: Tests pass or cover all denial paths
 
 ### 8. Execution Tickets
 - Execution gate implementation (`src/app/core/execution_gate.py`)
 - Signed ticket evidence
 
-**Proves**: Ticket signing is implemented  
+**Proves**: Ticket signing is implemented
 **Does NOT Prove**: All executions route through gate
 
 ## API Reference

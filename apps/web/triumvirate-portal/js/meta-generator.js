@@ -13,7 +13,7 @@ const metaTagsConfig = {
     twitterImage: 'https://iamsothirsty.github.io/the_triumvirate/assets/images/twitter-card.png',
     keywords: 'AI ethics, artificial intelligence, AGI, cognitive architecture, security framework, knowledge repository'
   },
-  
+
   // Manifesto Gateway
   manifesto: {
     title: 'The Manifesto Gateway | The Triumvirate',
@@ -23,7 +23,7 @@ const metaTagsConfig = {
     twitterImage: 'https://iamsothirsty.github.io/the_triumvirate/assets/images/twitter-card.png',
     keywords: 'AI manifesto, ethical AI principles, technology ethics, AGI guidelines'
   },
-  
+
   // Trinity Deep Dive
   trinity: {
     title: 'Trinity Deep Dive | The Triumvirate',
@@ -33,7 +33,7 @@ const metaTagsConfig = {
     twitterImage: 'https://iamsothirsty.github.io/the_triumvirate/assets/images/twitter-card.png',
     keywords: 'trinity framework, AI architecture, security systems, knowledge management'
   },
-  
+
   // Project AI
   projectAI: {
     title: 'Project AI - Cognitive Engine | The Triumvirate',
@@ -43,7 +43,7 @@ const metaTagsConfig = {
     twitterImage: 'https://iamsothirsty.github.io/the_triumvirate/assets/images/twitter-card.png',
     keywords: 'cognitive AI, AI architecture, ethical AI, adaptive intelligence, moral reasoning'
   },
-  
+
   // Cerberus
   cerberus: {
     title: 'Cerberus - Security Fortress | The Triumvirate',
@@ -53,7 +53,7 @@ const metaTagsConfig = {
     twitterImage: 'https://iamsothirsty.github.io/the_triumvirate/assets/images/twitter-card.png',
     keywords: 'AI security, cyber security, threat detection, quantum encryption, privacy protection'
   },
-  
+
   // Codex Deus Maximus
   codex: {
     title: 'Codex Deus Maximus - Knowledge Repository | The Triumvirate',
@@ -63,7 +63,7 @@ const metaTagsConfig = {
     twitterImage: 'https://iamsothirsty.github.io/the_triumvirate/assets/images/twitter-card.png',
     keywords: 'knowledge management, AI knowledge base, ethical guidelines, transparent AI'
   },
-  
+
   // Research Center
   research: {
     title: 'Research Center | The Triumvirate',
@@ -73,7 +73,7 @@ const metaTagsConfig = {
     twitterImage: 'https://iamsothirsty.github.io/the_triumvirate/assets/images/twitter-card.png',
     keywords: 'AI research, white papers, technical documentation, AI studies'
   },
-  
+
   // Founder Profile
   founder: {
     title: 'Jeremy Karrick - Founder Profile | The Triumvirate',
@@ -103,26 +103,26 @@ function generateMetaTags(pageKey) {
   const image = escapeAttribute(config.image);
   const twitterImage = escapeAttribute(config.twitterImage || config.image);
   const keywords = escapeAttribute(config.keywords);
-  
+
   return `
     <!-- Primary Meta Tags -->
     <title>${title}</title>
     <meta name="description" content="${description}">
     <meta name="keywords" content="${keywords}">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:url" content="${url}">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
     <meta property="og:image" content="${image}">
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="${url}">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
     <meta name="twitter:image" content="${twitterImage}">
-    
+
     <!-- Canonical URL -->
     <link rel="canonical" href="${url}">
   `;

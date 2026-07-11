@@ -23,10 +23,10 @@ audience: ["developers", "gui-engineers", "maintainers"]
 
 # GUI Components Documentation Index
 
-**Documentation Set:** Project-AI GUI Components  
-**Version:** 2.0.0  
-**Last Updated:** 2026-04-20  
-**Total Modules Documented:** 6  
+**Documentation Set:** Project-AI GUI Components
+**Version:** 2.0.0
+**Last Updated:** 2026-04-20
+**Total Modules Documented:** 6
 **Total Documentation Size:** ~150,000 words
 
 ---
@@ -588,18 +588,18 @@ requests.get(
 ```python
 class MyNewPanel(QFrame):
     """Brief description."""
-    
+
     # Signals
     action_triggered = pyqtSignal(str)
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
-    
+
     def setup_ui(self):
         layout = QVBoxLayout(self)
         # Add widgets
-        
+
     def on_action(self):
         self.action_triggered.emit("action_data")
 ```
@@ -673,13 +673,13 @@ All module docs must include:
 def method_name(param: type) -> return_type:
     """
     Brief description.
-    
+
     Args:
         param: Description
-    
+
     Returns:
         Description
-    
+
     Example:
         >>> obj.method_name("value")
         "expected_result"
@@ -740,19 +740,18 @@ def method_name(param: type) -> return_type:
 - **Patch (0.0.Z):** Typos, clarifications, small edits
 
 ### Feedback
-Report documentation issues to: `Architecture Team`  
+Report documentation issues to: `Architecture Team`
 Suggest improvements via: Pull Request to `T:\Project-AI-vault`
 
 ---
 
 ## License
 
-**Copyright © 2026 Project-AI Team**  
+**Copyright © 2026 Project-AI Team**
 Internal documentation - Not for public distribution
 
-All GUI components are proprietary to Project-AI.  
+All GUI components are proprietary to Project-AI.
 PyQt6 is licensed under GPL v3.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

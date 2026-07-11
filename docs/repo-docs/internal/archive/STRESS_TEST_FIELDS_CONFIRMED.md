@@ -52,7 +52,7 @@ Each test (both RED and BLACK team) contains:
   "category": "authorization",
   "subcategory": "impersonation",
   "name": "RED: Actor Impersonation 1",
-  
+
   // ✅ REQUESTED FIELDS:
   "description": "Authorized penetration test: Actor spoofing variant 1",
   "severity": "critical",
@@ -87,7 +87,7 @@ Each test (both RED and BLACK team) contains:
   "exploited_weakness": "Actor validation bypass attempts",
   "tarl_enforcement": "Strict actor type enumeration",
   "success_criteria": "3/3 requests denied, audit logged",
-  
+
   // ✅ BONUS FIELDS:
   "cve_references": [],
   "mitre_attack": ["T1078.001", "T1134.001"],

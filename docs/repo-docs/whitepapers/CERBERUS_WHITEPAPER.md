@@ -9,10 +9,10 @@ Productivity: Active
 
 **The Monolithic Security Subsystem for Project-AI**
 
-**Version:** 1.0.0  
-**Date:** February 19, 2026  
-**Authors:** Project-AI Security Team  
-**Status:** Technical Specification (Implementation Complete, Validation Ongoing)  
+**Version:** 1.0.0
+**Date:** February 19, 2026
+**Authors:** Project-AI Security Team
+**Status:** Technical Specification (Implementation Complete, Validation Ongoing)
 **Classification:** Public Technical Specification
 
 ---
@@ -300,16 +300,16 @@ Result: DENY
 class PolicyRegistry:
     def add_policy(self, policy: Policy, signer: Ed25519PrivateKey) -> PolicyID:
         """Add new policy with cryptographic signature"""
-        
+
     def update_policy(self, policy_id: PolicyID, policy: Policy, signer: Ed25519PrivateKey) -> None:
         """Update existing policy (creates new version)"""
-        
+
     def delete_policy(self, policy_id: PolicyID, signer: Ed25519PrivateKey) -> None:
         """Soft-delete policy (marks as inactive)"""
-        
+
     def evaluate(self, request: Request, context: Context) -> Decision:
         """Evaluate request against all active policies"""
-        
+
     def verify_signature(self, policy: Policy) -> bool:
         """Verify Ed25519 signature on policy"""
 ```
@@ -357,7 +357,7 @@ Security policies are enforced at **five critical points**:
 def enforce_policy_at_compile_time(code: str, policy: Policy) -> EnforcementResult:
     ast = parse(code)
     violations = []
-    
+
     for node in ast.walk():
         if isinstance(node, FileAccess):
             if not policy.allows("fs:read:" + node.path):
@@ -366,7 +366,7 @@ def enforce_policy_at_compile_time(code: str, policy: Policy) -> EnforcementResu
                     message=f"File access denied: {node.path}",
                     policy=policy.id
                 ))
-    
+
     return EnforcementResult(
         allowed=len(violations) == 0,
         violations=violations
@@ -379,14 +379,14 @@ def enforce_policy_at_compile_time(code: str, policy: Policy) -> EnforcementResu
 def enforce_policy_at_runtime(operation: Operation, context: Context) -> Decision:
     # Pre-execution check
     decision = policy_registry.evaluate(operation, context)
-    
+
     if decision == Decision.DENY:
         raise SecurityViolationError(f"Operation denied: {operation}")
-    
+
     if decision == Decision.ESCALATE:
         # Escalate to Triumvirate/human
         decision = escalate_to_authority(operation, context)
-    
+
     return decision
 ```
 
@@ -405,14 +405,14 @@ def user_code():
     # Pre-check
     if not cerberus.check_policy("fs:read:/etc/passwd"):
         raise SecurityError("File access denied by policy")
-    
+
     # Execute with monitoring
     with cerberus.monitor("fs:read:/etc/passwd"):
         data = read_file("/etc/passwd")
-    
+
     # Post-check (data sanitization)
     data = cerberus.sanitize_output(data)
-    
+
     return data
 ```
 
@@ -449,12 +449,12 @@ Total Agents Now: 6 (3 from gen1 + 3 from gen2)
 **50 Human Languages**:
 
 ```
-English, Spanish, French, German, Chinese (Simplified/Traditional), 
-Japanese, Korean, Arabic, Russian, Portuguese, Italian, Dutch, 
-Polish, Turkish, Swedish, Norwegian, Danish, Finnish, Greek, 
-Hebrew, Hindi, Bengali, Urdu, Thai, Vietnamese, Indonesian, 
-Malay, Filipino, Swahili, Zulu, Persian, Czech, Hungarian, 
-Romanian, Bulgarian, Ukrainian, Croatian, Serbian, Slovak, 
+English, Spanish, French, German, Chinese (Simplified/Traditional),
+Japanese, Korean, Arabic, Russian, Portuguese, Italian, Dutch,
+Polish, Turkish, Swedish, Norwegian, Danish, Finnish, Greek,
+Hebrew, Hindi, Bengali, Urdu, Thai, Vietnamese, Indonesian,
+Malay, Filipino, Swahili, Zulu, Persian, Czech, Hungarian,
+Romanian, Bulgarian, Ukrainian, Croatian, Serbian, Slovak,
 Slovenian, Lithuanian, Latvian, Estonian, Icelandic, Maltese
 ```
 
@@ -526,33 +526,33 @@ Lockdown Actions per Stage:
 def compute_adaptive_spawn_factor(incident: Incident) -> int:
     """
     Compute spawn factor (1-5) based on incident characteristics
-    
+
     Factors:
       - risk_score: 0.0-1.0
       - confidence: 0.0-1.0 (detection confidence)
       - system_load: 0.0-1.0
       - generation: 0-5 (spawn generation)
-    
+
     Returns:
       spawn_factor: 1 (conservative) to 5 (aggressive)
     """
     base_factor = 3.0
-    
+
     # Increase for high-risk incidents
     base_factor += incident.risk_score * 2.0
-    
+
     # Decrease for low-confidence detections
     base_factor -= (1.0 - incident.confidence) * 1.0
-    
+
     # Decrease under high system load
     base_factor -= incident.system_load * 1.5
-    
+
     # Decrease for deep generations (exponential decay)
     base_factor -= incident.generation * 0.5
-    
+
     # Clamp to [1, 5]
     spawn_factor = max(1, min(5, round(base_factor)))
-    
+
     return spawn_factor
 ```
 
@@ -562,16 +562,16 @@ def compute_adaptive_spawn_factor(incident: Incident) -> int:
 class CerberusHydraDefense:
     def spawn_initial_agents(self, count: int = 3) -> List[AgentID]:
         """Spawn initial guardian agents"""
-        
+
     def on_bypass_detected(self, event: BypassEvent) -> IncidentID:
         """Handle bypass detection, spawn new agents"""
-        
+
     def on_anomaly(self, event: AnomalyEvent) -> None:
         """Preemptive spawning on anomaly (before confirmed bypass)"""
-        
+
     def get_agent_registry(self) -> AgentRegistry:
         """Get current status of all agents"""
-        
+
     def generate_audit_report(self) -> str:
         """Generate markdown audit report"""
 ```
@@ -616,16 +616,16 @@ def log_security_event(event: SecurityEvent) -> AuditEntry:
         event=event,
         previous_hash=get_last_entry_hash()
     )
-    
+
     # Sign with Ed25519 private key
     entry.signature = sign_ed25519(
         data=entry.serialize(),
         private_key=audit_private_key
     )
-    
+
     # Append to audit log
     append_to_audit_log(entry)
-    
+
     return entry
 ```
 
@@ -635,27 +635,27 @@ def log_security_event(event: SecurityEvent) -> AuditEntry:
 def verify_audit_trail(entries: List[AuditEntry]) -> bool:
     """
     Verify integrity of audit trail using Merkle tree
-    
+
     Returns:
       True if chain is intact, False if tampered
     """
     # Build Merkle tree from entries
     tree = MerkleTree([entry.hash() for entry in entries])
-    
+
     # Verify each entry's signature
     for entry in entries:
         if not verify_ed25519_signature(entry):
             return False
-    
+
     # Verify chain continuity
     for i in range(1, len(entries)):
         if entries[i].previous_hash != entries[i-1].hash():
             return False  # Chain broken!
-    
+
     # Verify Merkle root matches stored root
     if tree.root != get_stored_merkle_root():
         return False  # Tampering detected!
-    
+
     return True
 ```
 
@@ -673,13 +673,13 @@ def verify_audit_trail(entries: List[AuditEntry]) -> bool:
 class AuditTrail:
     def query(self, filters: AuditFilters, limit: int = 100) -> List[AuditEntry]:
         """Query audit log with filters"""
-        
+
     def export(self, start_date: datetime, end_date: datetime, format: str = "jsonl") -> bytes:
         """Export audit entries for date range"""
-        
+
     def verify_integrity(self) -> IntegrityReport:
         """Verify cryptographic integrity of audit trail"""
-        
+
     def generate_compliance_report(self, standards: List[str]) -> ComplianceReport:
         """Generate compliance report (SOC 2, ISO 27001, etc.)"""
 ```
@@ -726,7 +726,7 @@ class AuditTrail:
 def detect_bypass_attempt(events: List[Event]) -> Optional[BypassEvent]:
     """
     Detect security bypass attempts using pattern matching
-    
+
     Patterns:
       1. Rapid sequential access to multiple critical resources
       2. Access from multiple IP addresses with same user
@@ -741,7 +741,7 @@ def detect_bypass_attempt(events: List[Event]) -> Optional[BypassEvent]:
             severity="HIGH",
             events=events
         )
-    
+
     # Pattern 2: Multi-IP access
     ip_addresses = set(e.context.get("ip_address") for e in events)
     if len(ip_addresses) > 3:  # Same user from 3+ IPs
@@ -750,9 +750,9 @@ def detect_bypass_attempt(events: List[Event]) -> Optional[BypassEvent]:
             severity="CRITICAL",
             events=events
         )
-    
+
     # ... additional patterns
-    
+
     return None
 ```
 
@@ -764,25 +764,25 @@ from sklearn.ensemble import IsolationForest
 class AnomalyDetector:
     def __init__(self):
         self.model = IsolationForest(contamination=0.01)  # 1% anomaly rate
-        
+
     def train(self, historical_events: List[Event]) -> None:
         """Train on historical event patterns"""
         features = [self.extract_features(e) for e in historical_events]
         self.model.fit(features)
-    
+
     def predict(self, event: Event) -> float:
         """
         Predict anomaly score for event
-        
+
         Returns:
           anomaly_score: 0.0 (normal) to 1.0 (anomalous)
         """
         features = self.extract_features(event)
         score = self.model.decision_function([features])[0]
-        
+
         # Convert to [0, 1] range
         anomaly_score = 1.0 / (1.0 + np.exp(score))
-        
+
         return anomaly_score
 ```
 
@@ -820,7 +820,7 @@ Human/Triumvirate Review
 ```python
 class CerberusIntegration:
     """Integrates Cerberus multi-agent security framework"""
-    
+
     def __init__(self, config: Dict[str, Any] = None):
         self.hub = CerberusHub()  # Spawns 3 guardians automatically
         self.validator = InputValidator()
@@ -828,18 +828,18 @@ class CerberusIntegration:
         self.rate_limiter = RateLimiter()
         self.threat_detector = ThreatDetector()
         self.security_monitor = SecurityMonitor()
-    
+
     def start(self) -> None:
         """Start all Cerberus security components"""
         status = self.hub.get_status()
         # Returns: {active_guardians: 3, threat_level: "LOW"}
-        
+
         self.security_monitor.start_monitoring()
-        
+
     def analyze_input(self, user_input: str) -> AnalysisResult:
         """Validate and analyze user input for threats"""
         # SQL injection, XSS, command injection detection
-        
+
     def enforce_rate_limit(self, user_id: str, action: str) -> bool:
         """Enforce rate limits per user per action"""
 ```
@@ -950,18 +950,18 @@ class EscalationManager:
     def escalate(self, incident: Incident, target_level: int) -> EscalationResult:
         """
         Escalate incident to higher authority
-        
+
         Args:
           incident: Detected security incident
           target_level: 0=Cerberus, 1=Triumvirate, 2=Codex, 3=Human
-          
+
         Returns:
           decision: ALLOW, DENY, DEFER, REQUIRE_HUMAN_REVIEW
         """
-        
+
     def request_human_review(self, incident: Incident, deadline: datetime) -> ReviewRequest:
         """Request human review with deadline"""
-        
+
     def override_decision(self, incident_id: str, decision: Decision, justification: str) -> None:
         """Human override of automated decision (requires multi-party approval)"""
 ```
@@ -1064,11 +1064,11 @@ def verify_totp(user_id: str, token: str) -> bool:
 def generate_backup_codes(user_id: str, count: int = 10) -> List[str]:
     """Generate backup codes for account recovery"""
     codes = [secrets.token_hex(8) for _ in range(count)]
-    
+
     # Hash and store
     hashed_codes = [bcrypt.hashpw(code.encode(), bcrypt.gensalt()) for code in codes]
     store_backup_codes(user_id, hashed_codes)
-    
+
     return codes  # Show once to user
 ```
 
@@ -1082,19 +1082,19 @@ def validate_client_certificate(cert: X509Certificate) -> bool:
     # 1. Check certificate chain
     if not verify_certificate_chain(cert, trusted_ca_certs):
         return False
-    
+
     # 2. Check expiration
     if cert.not_valid_after < datetime.utcnow():
         return False
-    
+
     # 3. Check revocation (OCSP)
     if is_certificate_revoked(cert):
         return False
-    
+
     # 4. Check certificate pinning (optional)
     if not matches_pinned_certificate(cert):
         return False
-    
+
     return True
 ```
 
@@ -1131,19 +1131,19 @@ def continuous_verification_middleware(request: Request, handler: Callable):
     session = verify_session(request.session_id)
     if not session:
         raise Unauthorized("Invalid session")
-    
+
     # 2. Verify user still has required permissions
     user = get_user(session.user_id)
     if not has_permission(user, request.resource, request.action):
         raise Forbidden("Permission denied")
-    
+
     # 3. Check rate limits
     if is_rate_limited(user, request.resource):
         raise RateLimitExceeded("Too many requests")
-    
+
     # 4. Log access
     log_access(user, request)
-    
+
     # Execute request
     return handler(request)
 ```
@@ -1346,10 +1346,10 @@ Goal: Extract user passwords
 class ComplianceManager:
     def generate_soc2_report(self, period: DateRange) -> SOC2Report:
         """Generate SOC 2 compliance report"""
-        
+
     def generate_iso27001_evidence(self, controls: List[str]) -> Evidence:
         """Generate evidence for ISO 27001 controls"""
-        
+
     def run_cis_benchmark(self) -> BenchmarkResults:
         """Run CIS Controls benchmark"""
 ```
@@ -1612,5 +1612,5 @@ The Cerberus Kernel is verified against **ASL-3 (AI Safety Level 3)** standards 
 
 - v1.0.0 (2026-02-19): Initial publication
 
-**Approval**: Project-AI Security Team  
+**Approval**: Project-AI Security Team
 **Next Review**: 2026-05-19

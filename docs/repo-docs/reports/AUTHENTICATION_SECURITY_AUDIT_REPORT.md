@@ -537,19 +537,19 @@ if not user:
 def authenticate(self, username, password):
     # Always verify password even if user doesn't exist
     user = self.users.get(username)
-    
+
     # Use dummy hash for non-existent users
     if not user:
         # Burn same CPU time as real verification
         pwd_context.verify(password, "$2b$12$dummy_hash_placeholder")
         return False
-    
+
     # Verify actual password
     password_hash = user.get("password_hash")
     if not password_hash:
         pwd_context.verify(password, "$2b$12$dummy_hash_placeholder")
         return False
-        
+
     try:
         if pwd_context.verify(password, password_hash):
             self.current_user = username
@@ -828,13 +828,13 @@ def test_session_expiration():
 # Replace lines 119-134
 def authenticate(self, username, password):
     """Authenticate a user using stored bcrypt password hash.
-    
+
     Uses constant-time execution to prevent username enumeration.
     """
     import secrets
-    
+
     user = self.users.get(username)
-    
+
     # Always verify password even if user doesn't exist (constant-time)
     if not user:
         # Burn CPU time equivalent to real bcrypt verification
@@ -844,7 +844,7 @@ def authenticate(self, username, password):
         except Exception:
             pass
         return False
-    
+
     password_hash = user.get("password_hash")
     if not password_hash:
         # No hash stored - burn time anyway
@@ -854,14 +854,14 @@ def authenticate(self, username, password):
         except Exception:
             pass
         return False
-    
+
     try:
         if pwd_context.verify(password, password_hash):
             self.current_user = username
             return True
     except Exception:
         return False
-    
+
     return False
 ```
 
@@ -873,41 +873,41 @@ def authenticate(self, username, password):
 # Add after line 26 (after pwd_context definition)
 def validate_password_strength(password: str) -> tuple[bool, str]:
     """Validate password meets security requirements.
-    
+
     Requirements (aligned with Hydra-50):
     - Minimum 8 characters
     - At least one uppercase letter
     - At least one lowercase letter
     - At least one digit
     - At least one special character
-    
+
     Returns:
         (is_valid, error_message)
     """
     if not password:
         return False, "Password cannot be empty"
-    
+
     if len(password) < 8:
         return False, "Password must be at least 8 characters"
-    
+
     if not any(c.isupper() for c in password):
         return False, "Password must contain at least one uppercase letter"
-    
+
     if not any(c.islower() for c in password):
         return False, "Password must contain at least one lowercase letter"
-    
+
     if not any(c.isdigit() for c in password):
         return False, "Password must contain at least one digit"
-    
+
     special_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?"
     if not any(c in special_chars for c in password):
         return False, "Password must contain at least one special character"
-    
+
     # Optional: Check against common passwords
     common_passwords = ["password", "123456", "password123", "admin", "letmein"]
     if password.lower() in common_passwords:
         return False, "Password is too common and easily guessable"
-    
+
     return True, "Password is strong"
 
 
@@ -920,7 +920,7 @@ def create_user(
     preferences=None,
 ):
     """Create a new user with a hashed password.
-    
+
     Returns True if created, False if user already exists or password invalid.
     """
     if preferences is None:
@@ -928,16 +928,16 @@ def create_user(
             "language": "en",
             "style": "casual",
         }
-    
+
     if username in self.users:
         return False
-    
+
     # Validate password strength
     is_valid, error_msg = validate_password_strength(password)
     if not is_valid:
         logger.warning(f"User creation failed for {username}: {error_msg}")
         return False
-    
+
     pw_hash = pwd_context.hash(password)
     self.users[username] = {
         "password_hash": pw_hash,
@@ -957,22 +957,22 @@ def create_user(
 # Update set_password() - add validation
 def set_password(self, username, new_password):
     """Set a new password for an existing user (hashes it).
-    
+
     Returns:
         (success, error_message)
     """
     if username not in self.users:
         return False, "User not found"
-    
+
     # Validate password strength
     is_valid, error_msg = validate_password_strength(new_password)
     if not is_valid:
         return False, error_msg
-    
+
     self.users[username]["password_hash"] = pwd_context.hash(new_password)
     self.users[username].pop("password", None)  # Remove plaintext if exists
     self.save_users()
-    
+
     logger.info(f"Password changed for user: {username}")
     return True, "Password updated successfully"
 ```
@@ -985,15 +985,15 @@ def set_password(self, username, new_password):
 # Update authenticate() to add lockout logic
 def authenticate(self, username, password):
     """Authenticate a user using stored bcrypt password hash.
-    
+
     Implements account lockout after 5 failed attempts (15-minute lockout).
     Uses constant-time execution to prevent username enumeration.
     """
     import secrets
     import time
-    
+
     user = self.users.get(username)
-    
+
     # Always verify password even if user doesn't exist (constant-time)
     if not user:
         # Burn CPU time equivalent to real bcrypt verification
@@ -1003,7 +1003,7 @@ def authenticate(self, username, password):
         except Exception:
             pass
         return False
-    
+
     # Check if account is locked
     locked_until = user.get("locked_until")
     if locked_until and time.time() < locked_until:
@@ -1015,7 +1015,7 @@ def authenticate(self, username, password):
         except Exception:
             pass
         return False
-    
+
     password_hash = user.get("password_hash")
     if not password_hash:
         # No hash stored - burn time anyway
@@ -1025,7 +1025,7 @@ def authenticate(self, username, password):
         except Exception:
             pass
         return False
-    
+
     try:
         if pwd_context.verify(password, password_hash):
             # Success - reset failed attempt counter
@@ -1038,18 +1038,18 @@ def authenticate(self, username, password):
         else:
             # Failed authentication - increment counter
             user["failed_login_attempts"] = user.get("failed_login_attempts", 0) + 1
-            
+
             # Lock account after 5 failed attempts
             if user["failed_login_attempts"] >= 5:
                 user["locked_until"] = time.time() + 900  # 15 minutes
                 logger.warning(f"Account locked due to failed login attempts: {username}")
-            
+
             self.save_users()
             return False
     except Exception as e:
         logger.error(f"Authentication error for {username}: {e}")
         return False
-    
+
     return False
 ```
 
@@ -1128,22 +1128,22 @@ def require_auth(f):
         token = request.headers.get("X-Auth-Token")
         if not token or token not in _SESSIONS:
             return jsonify(error="unauthorized", message="Valid token required"), 401
-        
+
         session = _SESSIONS[token]
-        
+
         # Check session expiry
         if time.time() > session["expires_at"]:
             del _SESSIONS[token]
             return jsonify(error="expired", message="Session expired"), 401
-        
+
         # Refresh session on activity
         session["expires_at"] = time.time() + SESSION_TIMEOUT
-        
+
         # Add user to request context
         request.current_user = session["username"]
-        
+
         return f(*args, **kwargs)
-    
+
     return decorated_function
 
 
@@ -1165,7 +1165,7 @@ def login():
 
     username = (payload.get("username") or "").strip()
     password = payload.get("password")
-    
+
     if not username or not password:
         return (
             jsonify(
@@ -1182,10 +1182,10 @@ def login():
             ),
             401,
         )
-    
+
     # Generate secure token
     token = secrets.token_urlsafe(32)
-    
+
     # Create session
     _SESSIONS[token] = {
         "username": username,
@@ -1194,9 +1194,9 @@ def login():
         "ip_address": request.remote_addr,
         "user_agent": request.headers.get("User-Agent", ""),
     }
-    
+
     user_data = user_manager.get_user_data(username)
-    
+
     return (
         jsonify(
             status="ok",
@@ -1224,7 +1224,7 @@ def profile():
     """Return user profile if a valid token is provided."""
     username = request.current_user
     user_data = user_manager.get_user_data(username)
-    
+
     return jsonify(
         status="ok",
         user={
@@ -1325,7 +1325,6 @@ Project-AI has a **solid cryptographic foundation** with strong password hashing
 
 ---
 
-**Report Generated:** 2026-02-08  
-**Status:** 🔴 **CRITICAL GAPS IDENTIFIED** - Remediation required before production use  
+**Report Generated:** 2026-02-08
+**Status:** 🔴 **CRITICAL GAPS IDENTIFIED** - Remediation required before production use
 **Next Review:** After P0/P1 fixes implemented
-

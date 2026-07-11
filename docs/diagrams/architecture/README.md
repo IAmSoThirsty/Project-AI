@@ -179,14 +179,14 @@ When architecture changes:
 graph TB
     A[Node A] --> B[Node B]
     B -.optional.-> C[Node C]
-    
+
     subgraph "Grouping"
         D[Node D]
         E[Node E]
     end
-    
+
     D --> E
-    
+
     classDef customClass fill:#1e3a8a,stroke:#3b82f6,color:#fff
     class A,B customClass
 ```
@@ -267,6 +267,6 @@ These diagrams are part of Project-AI and are subject to the project license. Se
 
 ---
 
-**Last Updated**: 2025-01-15  
-**Maintained By**: Architecture Team  
+**Last Updated**: 2025-01-15
+**Maintained By**: Architecture Team
 **Status**: ✅ Production-Ready

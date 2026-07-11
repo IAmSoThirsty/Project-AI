@@ -14,18 +14,18 @@ sequenceDiagram
     participant Cipher as Fernet Cipher
     participant Gov as Triumvirate
     participant FS as File System
-    
+
     Note over User,FS: User Authentication Flow
-    
+
     %% Login Initiation
     User->>GUI: Enter credentials
     GUI->>GUI: Validate input format
-    
+
     %% Account Lockout Check
     GUI->>UserMgr: login(username, password)
     activate UserMgr
     UserMgr->>UserMgr: Check account lockout
-    
+
     alt Account Locked
         UserMgr->>UserMgr: Check lockout duration
         alt Still Locked
@@ -36,19 +36,19 @@ sequenceDiagram
             Note over UserMgr: Continue to password verification
         end
     end
-    
+
     %% Password Verification
     UserMgr->>FS: Load users.json
     activate FS
     FS-->>UserMgr: User data
     deactivate FS
-    
+
     UserMgr->>UserMgr: pwd_context.verify(password, hash)
-    
+
     alt Invalid Password
         UserMgr->>UserMgr: Increment failed attempts
         UserMgr->>UserMgr: Check if max attempts reached
-        
+
         alt Max Attempts Reached (5)
             UserMgr->>UserMgr: Lock account (30 min)
             UserMgr->>FS: Save lockout state
@@ -65,7 +65,7 @@ sequenceDiagram
         UserMgr->>FS: Save user state
         UserMgr-->>GUI: Login successful
         deactivate UserMgr
-        
+
         %% Governance Validation
         GUI->>Gov: Validate login action
         activate Gov
@@ -74,16 +74,16 @@ sequenceDiagram
         Gov->>Gov: Codex: Check logical consistency
         Gov-->>GUI: Action approved
         deactivate Gov
-        
+
         %% Session Initialization
         GUI->>Cipher: Generate session token
         activate Cipher
         Cipher-->>GUI: Encrypted token
         deactivate Cipher
-        
+
         GUI->>GUI: Switch to dashboard
         GUI-->>User: Display dashboard
-        
+
         Note over User,FS: User authenticated and session established
     end
 ```

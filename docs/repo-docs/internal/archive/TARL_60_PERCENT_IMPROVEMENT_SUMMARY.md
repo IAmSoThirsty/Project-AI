@@ -98,10 +98,10 @@ class TarlRuntime:
         context_tuple = _make_hashable(context)
         if cached := self._get_from_cache(context_tuple):
             return cached
-        
+
         # Evaluate with performance tracking
         decision = self._evaluate_impl(context)
-        
+
         # Update cache and metrics
         self._add_to_cache(context_tuple, decision)
         return decision
@@ -316,13 +316,13 @@ runtime = TarlRuntime(
 
 Successfully delivered **60%+ productivity improvement** to TARL with:
 
-✅ **2.20x performance speedup** on cached evaluations  
-✅ **99%+ cache hit rates** in real-world scenarios  
-✅ **119.9% overall improvement** exceeding 60% target  
-✅ **Zero breaking changes** - 100% backward compatible  
-✅ **Comprehensive testing** - 7/7 tests passing  
-✅ **Full documentation** - Implementation, reference, and demos  
-✅ **Production ready** - Battle-tested and stable  
+✅ **2.20x performance speedup** on cached evaluations
+✅ **99%+ cache hit rates** in real-world scenarios
+✅ **119.9% overall improvement** exceeding 60% target
+✅ **Zero breaking changes** - 100% backward compatible
+✅ **Comprehensive testing** - 7/7 tests passing
+✅ **Full documentation** - Implementation, reference, and demos
+✅ **Production ready** - Battle-tested and stable
 
 The TARL security layer is now significantly more efficient while maintaining its robust security guarantees and ease of use.
 
@@ -343,7 +343,7 @@ python -c "from tarl import TarlRuntime; from tarl.policies.default import DEFAU
 
 ---
 
-**Implementation Date**: 2026-01-29  
-**Status**: ✅ Complete and Production Ready  
-**Performance**: 🚀 60%+ Improvement Achieved  
+**Implementation Date**: 2026-01-29
+**Status**: ✅ Complete and Production Ready
+**Performance**: 🚀 60%+ Improvement Achieved
 **Version**: TARL 2.1 with Productivity Enhancements

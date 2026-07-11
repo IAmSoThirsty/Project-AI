@@ -167,7 +167,7 @@ docker run --rm `
 **Solution**: Restart computer after WSL installation
 
 **Problem**: Ubuntu not starting
-**Solution**: 
+**Solution**:
 ```powershell
 wsl --update
 wsl --shutdown
@@ -180,7 +180,7 @@ wsl -d Ubuntu
 **Solution**: Start Docker Desktop from Start Menu
 
 **Problem**: WSL 2 integration not working
-**Solution**: 
+**Solution**:
 
 1. Open Docker Desktop
 1. Settings → Resources → WSL Integration
@@ -207,7 +207,7 @@ function Invoke-CodacyAnalysis {
         [string]$Tool = "",
         [string]$File = ""
     )
-    
+
     $absolutePath = (Resolve-Path $Directory).Path
     $dockerArgs = @(
         "run", "--rm",
@@ -215,10 +215,10 @@ function Invoke-CodacyAnalysis {
         "codacy/codacy-analysis-cli:latest",
         "analyze", "--directory", "/src"
     )
-    
+
     if ($Tool) { $dockerArgs += "--tool", $Tool }
     if ($File) { $dockerArgs += "--file", $File }
-    
+
     docker @dockerArgs
 }
 

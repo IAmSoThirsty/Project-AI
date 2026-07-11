@@ -382,14 +382,14 @@ def _sanitize_string_custom(value: str, context: str = "html") -> str:
         value = shlex.quote(value)
     elif context == "ldap":
         value = ldap_escape(value)
-    
+
     # Always remove null bytes
     value = value.replace("\x00", "")
-    
+
     # Always prevent path traversal
     if "../" in value or "..\\" in value:
         value = value.replace("../", "").replace("..\\", "")
-    
+
     return value
 ```
 
@@ -686,14 +686,14 @@ print(sanitized["description"])
 ```python
 def sanitize_payload(payload: dict, path_traversal_safe_fields: list = None) -> dict:
     path_traversal_safe_fields = path_traversal_safe_fields or []
-    
+
     sanitized = {}
     for key, value in payload.items():
         if isinstance(value, str):
             allow_path_traversal = key in path_traversal_safe_fields
             sanitized[key] = _sanitize_string(value, allow_path_traversal)
         # ... rest of logic
-    
+
     return sanitized
 
 # Usage
@@ -739,16 +739,16 @@ def validate_input(action: str, payload: dict[str, Any]) -> None:
     schema = schemas.get(action)
     if not schema:
         return
-    
+
     # Check required fields (existing)
     for field in schema["required"]:
         if field not in payload:
             raise ValueError(f"Missing required field for {action}: {field}")
-    
+
     # NEW: Check for unknown fields
     allowed_fields = set(schema["required"]) | set(schema["optional"])
     unknown_fields = set(payload.keys()) - allowed_fields
-    
+
     if unknown_fields:
         raise ValueError(
             f"Unknown fields for {action}: {', '.join(unknown_fields)}"
@@ -782,7 +782,7 @@ schemas["custom.action"] = {
 def validate_input(action: str, payload: dict[str, Any]) -> None:
     schema = schemas.get(action)
     # ... existing checks ...
-    
+
     # NEW: Type validation from schema
     if "types" in schema:
         for field, expected_type in schema["types"].items():
@@ -819,7 +819,7 @@ def sanitize_payload(payload: dict[str, Any]) -> dict[str, Any]:
         elif isinstance(value, dict):
             sanitized[key] = sanitize_payload(value)
         # ... rest of logic
-    
+
     return sanitized
 ```
 
@@ -1059,7 +1059,7 @@ def validate_input_jsonschema(action: str, payload: dict) -> None:
     schema = schemas.get(action)
     if not schema:
         return
-    
+
     try:
         jsonschema.validate(payload, schema)
     except jsonschema.ValidationError as e:
@@ -1083,13 +1083,13 @@ def generate_csp_header(payload: dict) -> str:
     # Analyze payload for CSP requirements
     has_images = any("img" in str(v) for v in payload.values())
     has_scripts = any("script" in str(v) for v in payload.values())
-    
+
     directives = [
         "default-src 'self'",
         "script-src 'self'" if not has_scripts else "script-src 'none'",
         "img-src 'self' data:" if has_images else "img-src 'self'",
     ]
-    
+
     return "; ".join(directives)
 ```
 
@@ -1113,7 +1113,7 @@ def sanitize_payload_rate_limited(payload: dict, user: str) -> dict:
     key = f"sanitize:{user}"
     if not rate_limiter.check(key, limit=1000, window=60):
         raise PermissionError("Sanitization rate limit exceeded")
-    
+
     # Use cached sanitization for identical inputs
     sanitized = {}
     for k, v in payload.items():
@@ -1121,7 +1121,7 @@ def sanitize_payload_rate_limited(payload: dict, user: str) -> dict:
             value_hash = hashlib.sha256(v.encode()).hexdigest()
             sanitized[k] = sanitize_cached(value_hash, v)
         # ... rest of logic
-    
+
     return sanitized
 ```
 
@@ -1139,21 +1139,21 @@ def _sanitize_string_with_telemetry(value: str) -> tuple[str, dict]:
         "null_bytes_removed": 0,
         "path_traversal_blocked": False,
     }
-    
+
     # HTML escape
     escaped = html.escape(value)
     metrics["html_entities_escaped"] = len([c for c in value if c in "<>&\"'"])
-    
+
     # Null byte removal
     null_count = value.count("\x00")
     escaped = escaped.replace("\x00", "")
     metrics["null_bytes_removed"] = null_count
-    
+
     # Path traversal
     if "../" in value or "..\\" in value:
         metrics["path_traversal_blocked"] = True
         escaped = escaped.replace("../", "").replace("..\\", "")
-    
+
     return escaped, metrics
 
 # Usage
@@ -1191,4 +1191,3 @@ Copyright © 2026 Project-AI. Internal documentation - not for redistribution.
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

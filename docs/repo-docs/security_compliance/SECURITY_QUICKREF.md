@@ -375,30 +375,30 @@ pytest tests/test_security*.py -n auto
 
 ### OWASP Top 10 2021
 
-✅ A01: Broken Access Control  
-✅ A02: Cryptographic Failures  
-✅ A03: Injection  
-✅ A04: Insecure Design  
-✅ A05: Security Misconfiguration  
-✅ A06: Vulnerable Components  
-✅ A07: Authentication Failures  
-✅ A08: Software/Data Integrity  
-✅ A09: Logging Failures  
-✅ A10: SSRF  
+✅ A01: Broken Access Control
+✅ A02: Cryptographic Failures
+✅ A03: Injection
+✅ A04: Insecure Design
+✅ A05: Security Misconfiguration
+✅ A06: Vulnerable Components
+✅ A07: Authentication Failures
+✅ A08: Software/Data Integrity
+✅ A09: Logging Failures
+✅ A10: SSRF
 
 ### NIST Cybersecurity Framework
 
-✅ Identify - Asset Management  
-✅ Protect - Access Control, Data Security  
-✅ Detect - Anomaly Detection, Monitoring  
-✅ Respond - Incident Response, Alerting  
-✅ Recover - Backups, Versioning  
+✅ Identify - Asset Management
+✅ Protect - Access Control, Data Security
+✅ Detect - Anomaly Detection, Monitoring
+✅ Respond - Incident Response, Alerting
+✅ Recover - Backups, Versioning
 
 ### Other Standards
 
-✅ CERT Secure Coding (Python)  
-✅ AWS Well-Architected Security Pillar  
-✅ CIS Benchmarks (IAM, S3, CloudWatch)  
+✅ CERT Secure Coding (Python)
+✅ AWS Well-Architected Security Pillar
+✅ CIS Benchmarks (IAM, S3, CloudWatch)
 
 ## 📈 Performance
 
@@ -465,6 +465,6 @@ For issues or questions:
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: 2025-12-31  
+**Version**: 1.0
+**Last Updated**: 2025-12-31
 **Test Coverage**: 158 tests (157 passing, 1 skipped)

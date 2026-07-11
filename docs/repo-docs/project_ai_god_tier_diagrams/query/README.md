@@ -78,24 +78,24 @@ class GetUsersQuery(Query):
 
 class UserQueryHandler:
     """Handler for user queries."""
-    
+
     def __init__(self, read_model_store):
         self.store = read_model_store
-    
+
     def handle_get_user(self, query: GetUserQuery) -> QueryResult:
         """Get single user."""
         user = self.store.get_user(query.user_id)
-        
+
         if not user:
             return QueryResult(data=[], total_count=0)
-        
+
         return QueryResult(
             data=[user],
             total_count=1,
             page=1,
             page_size=1
         )
-    
+
     def handle_get_users(self, query: GetUsersQuery) -> QueryResult:
         """Get users with pagination."""
         users = self.store.get_users(
@@ -105,9 +105,9 @@ class UserQueryHandler:
             sort_by=query.sort_by,
             sort_order=query.sort_order
         )
-        
+
         total = self.store.count_users(query.filters)
-        
+
         return QueryResult(
             data=users,
             total_count=total,

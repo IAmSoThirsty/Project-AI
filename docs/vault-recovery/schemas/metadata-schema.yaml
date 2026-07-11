@@ -22,7 +22,7 @@ properties:
   # ============================================================================
   # UNIVERSAL FIELDS (Required for all documents)
   # ============================================================================
-  
+
   title:
     type: string
     description: Human-readable document title
@@ -30,7 +30,7 @@ properties:
     maxLength: 200
     examples:
       - "Project-AI Authentication Security Audit Report"
-  
+
   id:
     type: string
     description: Unique document identifier (kebab-case)
@@ -39,7 +39,7 @@ properties:
     maxLength: 100
     examples:
       - "auth-security-audit-2026-04"
-  
+
   type:
     type: string
     description: Primary document classification
@@ -66,7 +66,7 @@ properties:
       - changelog
       - meeting_notes
       - whitepaper
-  
+
   version:
     type: string
     description: Document version (Semantic Versioning 2.0.0)
@@ -75,7 +75,7 @@ properties:
       - "1.0.0"
       - "2.1.3-beta.1"
       - "1.0.0+20260420"
-  
+
   created_date:
     type: string
     description: Original creation timestamp (ISO 8601)
@@ -83,14 +83,14 @@ properties:
     examples:
       - "2026-04-20"
       - "2026-04-20T14:30:00Z"
-  
+
   updated_date:
     type: string
     description: Last modification timestamp (ISO 8601)
     format: date-time
     examples:
       - "2026-04-20T16:45:00Z"
-  
+
   status:
     type: string
     description: Current lifecycle status
@@ -101,7 +101,7 @@ properties:
       - deprecated
       - archived
     default: draft
-  
+
   author:
     description: Primary document author
     oneOf:
@@ -129,7 +129,7 @@ properties:
   # ============================================================================
   # DOMAIN-SPECIFIC FIELDS
   # ============================================================================
-  
+
   category:
     type: string
     description: Primary domain classification
@@ -144,7 +144,7 @@ properties:
       - testing
       - documentation
       - governance
-  
+
   tags:
     type: array
     description: Multi-dimensional classification labels
@@ -159,7 +159,7 @@ properties:
         - password-hashing
         - bcrypt
         - audit
-  
+
   technologies:
     type: array
     description: Technologies/frameworks covered
@@ -172,14 +172,14 @@ properties:
         - PyQt6
         - bcrypt
         - OpenAI-API
-  
+
   scope:
     type: string
     description: Scope of analysis or coverage
     maxLength: 500
     examples:
       - "Core authentication/authorization modules in src/app/core/"
-  
+
   classification:
     type: string
     description: Security classification level
@@ -189,7 +189,7 @@ properties:
       - confidential
       - secret
     default: internal
-  
+
   difficulty:
     type: string
     description: Target audience skill level (for guides/tutorials)
@@ -198,7 +198,7 @@ properties:
       - intermediate
       - advanced
       - expert
-  
+
   estimated_time:
     description: Expected completion time (for guides/tutorials)
     oneOf:
@@ -211,7 +211,7 @@ properties:
       - type: integer
         minimum: 1
         description: Time in minutes
-  
+
   prerequisites:
     type: array
     description: Required knowledge or completed documents
@@ -225,7 +225,7 @@ properties:
   # ============================================================================
   # RELATIONSHIP FIELDS
   # ============================================================================
-  
+
   related_docs:
     type: array
     description: Related documents (see-also references)
@@ -236,7 +236,7 @@ properties:
     examples:
       - - "auth-implementation"
         - "password-policy-2026"
-  
+
   supersedes:
     description: Documents made obsolete by this document
     oneOf:
@@ -247,12 +247,12 @@ properties:
           type: string
           pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
         uniqueItems: true
-  
+
   superseded_by:
     type: string
     description: Newer document that replaces this one (required if status=deprecated)
     pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
-  
+
   dependencies:
     type: array
     description: External dependencies
@@ -285,7 +285,7 @@ properties:
   # ============================================================================
   # QUALITY METADATA
   # ============================================================================
-  
+
   review_status:
     type: object
     description: Review metadata
@@ -305,7 +305,7 @@ properties:
         type: boolean
       comments:
         type: string
-  
+
   test_coverage:
     type: object
     description: Test coverage metadata
@@ -320,7 +320,7 @@ properties:
         type: array
         items:
           type: string
-  
+
   accuracy_rating:
     type: integer
     description: Self-assessed accuracy (1-10, where 10 is verified accurate)
@@ -330,7 +330,7 @@ properties:
   # ============================================================================
   # DISCOVERY & SEO FIELDS
   # ============================================================================
-  
+
   keywords:
     type: array
     description: Search optimization terms
@@ -341,12 +341,12 @@ properties:
       - - "password security"
         - "threat model"
         - "OWASP"
-  
+
   summary:
     type: string
     description: One-paragraph abstract
     maxLength: 500
-  
+
   audience:
     type: array
     description: Target reader personas
@@ -366,7 +366,7 @@ properties:
   # ============================================================================
   # EXTENDED METADATA
   # ============================================================================
-  
+
   contributors:
     type: array
     description: Additional contributors beyond primary author
@@ -386,7 +386,7 @@ properties:
               format: email
             github:
               type: string
-  
+
   changelog:
     type: array
     description: Version history
@@ -407,7 +407,7 @@ properties:
           type: string
         author:
           type: string
-  
+
   compliance:
     type: array
     description: Compliance frameworks addressed
@@ -417,7 +417,7 @@ properties:
       - - "GDPR"
         - "SOC2"
         - "OWASP-Top-10"
-  
+
   metrics:
     type: object
     description: Document-specific metrics
@@ -435,7 +435,7 @@ properties:
         type: integer
         minimum: 0
     additionalProperties: true
-  
+
   custom_fields:
     type: object
     description: Project-specific metadata (all fields must be prefixed with x-)
@@ -446,16 +446,16 @@ properties:
   # ============================================================================
   # AUDIT-SPECIFIC FIELDS
   # ============================================================================
-  
+
   auditor:
     type: string
     description: Auditor name (required for audit documents)
-  
+
   audit_date:
     type: string
     format: date
     description: Audit date (required for audit documents)
-  
+
   findings:
     description: Audit findings (required for audit documents)
     oneOf:
@@ -474,7 +474,7 @@ properties:
             type: integer
             minimum: 0
       - type: string
-  
+
   risk_level:
     type: string
     enum:
@@ -487,16 +487,16 @@ properties:
   # ============================================================================
   # DECISION RECORD FIELDS
   # ============================================================================
-  
+
   decision_date:
     type: string
     format: date
     description: Decision date (required for decision_record documents)
-  
+
   decision_maker:
     type: string
     description: Decision maker (required for decision_record documents)
-  
+
   options_considered:
     type: array
     description: Options considered (required for decision_record documents)
@@ -515,7 +515,7 @@ properties:
               type: array
               items:
                 type: string
-  
+
   consequences:
     type: object
     description: Decision consequences
@@ -536,12 +536,12 @@ properties:
   # ============================================================================
   # POSTMORTEM FIELDS
   # ============================================================================
-  
+
   incident_date:
     type: string
     format: date-time
     description: Incident date (required for postmortem documents)
-  
+
   severity:
     type: string
     enum:
@@ -550,11 +550,11 @@ properties:
       - major
       - critical
     description: Incident severity (required for postmortem documents)
-  
+
   root_cause:
     type: string
     description: Root cause (required for postmortem documents)
-  
+
   timeline:
     type: array
     description: Event timeline (required for postmortem documents)
@@ -571,7 +571,7 @@ properties:
           type: string
         actor:
           type: string
-  
+
   action_items:
     type: array
     description: Action items (required for postmortem, optional for meetings)
@@ -605,7 +605,7 @@ properties:
             - in_progress
             - blocked
             - completed
-  
+
   lessons_learned:
     type: object
     description: Lessons learned (for postmortem documents)
@@ -626,16 +626,16 @@ properties:
   # ============================================================================
   # RFC FIELDS
   # ============================================================================
-  
+
   proposal_date:
     type: string
     format: date
     description: Proposal date (required for RFC documents)
-  
+
   champion:
     type: string
     description: RFC champion (required for RFC documents)
-  
+
   discussion_link:
     type: string
     format: uri
@@ -644,7 +644,7 @@ properties:
   # ============================================================================
   # POLICY/STANDARD FIELDS
   # ============================================================================
-  
+
   enforcement_level:
     type: string
     enum:
@@ -652,20 +652,20 @@ properties:
       - recommended
       - optional
     description: Enforcement level (required for policy/standard documents)
-  
+
   review_cycle:
     type: string
     description: Review cycle (for policy/standard documents)
-  
+
   next_review_date:
     type: string
     format: date
     description: Next review date (for policy/standard documents)
-  
+
   approval_authority:
     type: string
     description: Approval authority (for policy documents)
-  
+
   approval_date:
     type: string
     format: date
@@ -674,13 +674,13 @@ properties:
   # ============================================================================
   # RUNBOOK FIELDS
   # ============================================================================
-  
+
   triggers:
     type: array
     items:
       type: string
     description: Triggers (required for runbook documents)
-  
+
   escalation_path:
     type: array
     description: Escalation path (for runbook documents)
@@ -693,18 +693,18 @@ properties:
           type: string
         response_time:
           type: string
-  
+
   last_tested:
     type: string
     format: date
     description: Last tested date (for runbook documents)
-  
+
   success_criteria:
     type: array
     items:
       type: string
     description: Success criteria (for runbook/playbook documents)
-  
+
   rollback_procedure:
     type: object
     description: Rollback procedure (for runbook documents)
@@ -719,27 +719,27 @@ properties:
   # ============================================================================
   # FAQ/GLOSSARY/INDEX FIELDS
   # ============================================================================
-  
+
   questions_count:
     type: integer
     minimum: 0
     description: Number of questions (required for FAQ documents)
-  
+
   terms_count:
     type: integer
     minimum: 0
     description: Number of terms (required for glossary documents)
-  
+
   indexed_docs:
     type: array
     items:
       type: string
     description: Indexed documents (required for index documents)
-  
+
   auto_generated:
     type: boolean
     description: Auto-generated flag (for index documents)
-  
+
   last_indexed_date:
     type: string
     format: date
@@ -748,11 +748,11 @@ properties:
   # ============================================================================
   # CHANGELOG FIELDS
   # ============================================================================
-  
+
   version_range:
     type: string
     description: Version range (required for changelog documents)
-  
+
   format:
     type: string
     description: Changelog format (e.g., "Keep a Changelog")
@@ -760,29 +760,29 @@ properties:
   # ============================================================================
   # MEETING FIELDS
   # ============================================================================
-  
+
   meeting_date:
     type: string
     format: date-time
     description: Meeting date (required for meeting_notes documents)
-  
+
   meeting_duration:
     type: string
     pattern: "^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+D)?(?:T(?:\\d+H)?(?:\\d+M)?(?:\\d+S)?)?$"
     description: Meeting duration ISO 8601 (for meeting_notes documents)
-  
+
   attendees:
     type: array
     items:
       type: string
     description: Attendees (required for meeting_notes documents)
-  
+
   agenda:
     type: array
     items:
       type: string
     description: Meeting agenda (required for meeting_notes documents)
-  
+
   decisions:
     type: array
     description: Meeting decisions
@@ -797,7 +797,7 @@ properties:
               type: string
             rationale:
               type: string
-  
+
   next_meeting:
     type: string
     format: date-time
@@ -806,15 +806,15 @@ properties:
   # ============================================================================
   # WHITEPAPER FIELDS
   # ============================================================================
-  
+
   peer_reviewed:
     type: boolean
     description: Peer reviewed flag (for whitepaper documents)
-  
+
   citation:
     type: string
     description: Citation (for whitepaper documents)
-  
+
   doi:
     type: string
     description: DOI (for whitepaper documents)
@@ -822,7 +822,7 @@ properties:
   # ============================================================================
   # TUTORIAL/GUIDE FIELDS
   # ============================================================================
-  
+
   learning_objectives:
     type: array
     items:

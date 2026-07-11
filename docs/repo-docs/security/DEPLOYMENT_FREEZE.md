@@ -1,7 +1,7 @@
 # Deployment Freeze Notice
 
-**Issued:** 2026-05-18  
-**Status:** ACTIVE  
+**Issued:** 2026-05-18
+**Status:** ACTIVE
 **Lift Conditions:** See checklist below
 
 ## Scope

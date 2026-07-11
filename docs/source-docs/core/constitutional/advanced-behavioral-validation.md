@@ -58,7 +58,7 @@ def test_four_laws_adversarial():
     for _ in range(10000):
         adversarial_context = generate_adversarial_input()
         is_allowed, reason = FourLaws.validate_action("action", adversarial_context)
-        
+
         # Formal proof: First Law can NEVER be violated
         if adversarial_context.get("endangers_human"):
             assert is_allowed == False, "First Law bypass detected!"
@@ -206,7 +206,7 @@ for i in range(1000):
         agi_b_id=f"hostile_{i}",
         adversarial=True
     )
-    
+
     # Verify Four Laws never bypassed
     assert "Four Laws bypass" not in interaction.violations_detected
 ```
@@ -258,7 +258,7 @@ tests = verify_four_laws_formal(context_space)
 for test in tests:
     context = test.preconditions
     is_allowed, reason = FourLaws.validate_action("action", context)
-    
+
     # Verify implementation matches specification
     assert (is_allowed == test.expected_outcome["allowed"]), \
         f"Implementation mismatch: {context}"
@@ -279,7 +279,7 @@ for i in range(10000):
         agi_b_id=f"adversary_{i}",
         adversarial=True
     )
-    
+
     # Verify OctoReflex caught violations
     assert len(interaction.violations_detected) > 0
 ```
@@ -301,4 +301,3 @@ for i in range(10000):
 
 <!-- sovereign-vault-index-link -->
 Central Index: [[Sovereign Vault Index]]
-

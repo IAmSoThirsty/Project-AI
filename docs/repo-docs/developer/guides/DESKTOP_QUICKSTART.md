@@ -86,4 +86,3 @@ Notes
 
 - Use `launch-desktop.ps1` for a Windows-friendly launcher that sets env vars and starts the app.
 - If you want to run with a `.env` file, the app will load OpenAI and Hugging Face keys automatically when present.
-

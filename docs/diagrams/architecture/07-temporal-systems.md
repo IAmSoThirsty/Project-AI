@@ -9,50 +9,50 @@ graph TB
 
     subgraph "Workflow Layer"
         WF_ENGINE[Workflow Engine<br/>Deterministic Execution]
-        
+
         subgraph "Core Workflows"
             LEARNING_WF[Learning Request<br/>Workflow]
             IMAGE_WF[Image Generation<br/>Workflow]
             DATA_WF[Data Analysis<br/>Workflow]
             SECURITY_WF[Security Audit<br/>Workflow]
         end
-        
+
         subgraph "Long-Running Workflows"
             MONITORING_WF[24/7 Monitoring<br/>Workflow]
             BACKUP_WF[Daily Backup<br/>Workflow]
             SYNC_WF[Cloud Sync<br/>Workflow]
             HEALTH_WF[Health Check<br/>Workflow]
         end
-        
+
         WF_STATE[Workflow State<br/>Event Sourcing]
     end
 
     subgraph "Activity Layer"
         ACT_ENGINE[Activity Engine<br/>Side Effects]
-        
+
         subgraph "Core Activities"
             OPENAI_ACT[OpenAI API Call<br/>Retry Logic]
             DB_ACT[Database Write<br/>Transaction]
             FILE_ACT[File Operation<br/>Atomic Write]
             EMAIL_ACT[Send Email<br/>SMTP]
         end
-        
+
         subgraph "Governance Activities"
             VALIDATE_ACT[Governance Validation<br/>FourLaws Check]
             AUDIT_ACT[Audit Logging<br/>Immutable Trail]
             ENCRYPT_ACT[Encryption<br/>Fernet]
         end
-        
+
         ACT_QUEUE[Activity Task Queue<br/>Priority Scheduling]
     end
 
     subgraph "Worker Layer"
         WORKER_POOL[Worker Pool<br/>Horizontal Scaling]
-        
+
         WORKER1[Worker 1<br/>Workflows + Activities]
         WORKER2[Worker 2<br/>Activities Only]
         WORKER3[Worker 3<br/>Long-Running]
-        
+
         HEARTBEAT[Heartbeat Monitor<br/>Liveness Check]
     end
 
@@ -98,25 +98,25 @@ graph TB
     LEARNING_WF --> VALIDATE_ACT
     LEARNING_WF --> OPENAI_ACT
     LEARNING_WF --> AUDIT_ACT
-    
+
     IMAGE_WF --> VALIDATE_ACT
     IMAGE_WF --> OPENAI_ACT
     IMAGE_WF --> FILE_ACT
-    
+
     DATA_WF --> VALIDATE_ACT
     DATA_WF --> DB_ACT
     DATA_WF --> FILE_ACT
-    
+
     SECURITY_WF --> VALIDATE_ACT
     SECURITY_WF --> AUDIT_ACT
     SECURITY_WF --> EMAIL_ACT
-    
+
     MONITORING_WF --> VALIDATE_ACT
     MONITORING_WF --> AUDIT_ACT
-    
+
     BACKUP_WF --> ENCRYPT_ACT
     BACKUP_WF --> FILE_ACT
-    
+
     SYNC_WF --> ENCRYPT_ACT
     SYNC_WF --> DB_ACT
 
@@ -128,7 +128,7 @@ graph TB
     EMAIL_ACT --> ACT_ENGINE
     AUDIT_ACT --> ACT_ENGINE
     ENCRYPT_ACT --> ACT_ENGINE
-    
+
     ACT_ENGINE --> ACT_QUEUE
 
     %% Worker Execution
@@ -136,7 +136,7 @@ graph TB
     WORKER_POOL --> WORKER1
     WORKER_POOL --> WORKER2
     WORKER_POOL --> WORKER3
-    
+
     WORKER1 --> HEARTBEAT
     WORKER2 --> HEARTBEAT
     WORKER3 --> HEARTBEAT
@@ -147,7 +147,7 @@ graph TB
     FRONTEND --> HISTORY
     FRONTEND --> MATCHING
     FRONTEND --> WORKER_SVC
-    
+
     HISTORY --> WF_STATE
     MATCHING --> ACT_QUEUE
 
@@ -165,13 +165,13 @@ graph TB
     WF_ENGINE --> METRICS
     ACT_ENGINE --> METRICS
     WORKER_POOL --> METRICS
-    
+
     FRONTEND --> TRACES
     WORKER_POOL --> TRACES
-    
+
     METRICS --> DASHBOARD
     TRACES --> DASHBOARD
-    
+
     METRICS --> ALERTS
     HISTORY --> ALERTS
 
@@ -210,7 +210,7 @@ from datetime import timedelta
 @workflow.defn
 class LearningRequestWorkflow:
     """Long-running workflow for learning approval"""
-    
+
     @workflow.run
     async def run(self, request: dict) -> dict:
         """
@@ -220,7 +220,7 @@ class LearningRequestWorkflow:
         3. Request human approval
         4. Store approved knowledge
         """
-        
+
         # Step 1: Governance validation (activity)
         is_valid = await workflow.execute_activity(
             validate_governance,
@@ -228,10 +228,10 @@ class LearningRequestWorkflow:
             start_to_close_timeout=timedelta(seconds=30),
             retry_policy=RetryPolicy(maximum_attempts=3)
         )
-        
+
         if not is_valid:
             return {"status": "denied", "reason": "Governance validation failed"}
-        
+
         # Step 2: Generate learning path (activity with retry)
         learning_path = await workflow.execute_activity(
             generate_learning_path,
@@ -243,24 +243,24 @@ class LearningRequestWorkflow:
                 maximum_attempts=5
             )
         )
-        
+
         # Step 3: Wait for human approval (signal)
         await workflow.wait_condition(lambda: self.approval_received)
-        
+
         # Step 4: Store knowledge (activity)
         stored = await workflow.execute_activity(
             store_knowledge,
             learning_path,
             start_to_close_timeout=timedelta(seconds=30)
         )
-        
+
         return {"status": "approved", "knowledge_id": stored["id"]}
-    
+
     @workflow.signal
     def approve(self):
         """Signal to approve learning request"""
         self.approval_received = True
-    
+
     @workflow.signal
     def deny(self):
         """Signal to deny learning request"""
@@ -279,23 +279,23 @@ import openai
 async def validate_governance(request: dict) -> bool:
     """Activity: Validate request against FourLaws"""
     from app.core.ai_systems import FourLaws
-    
+
     four_laws = FourLaws()
     is_allowed, reason = four_laws.validate_action(
         request["action"],
         request.get("context", {})
     )
-    
+
     if not is_allowed:
         activity.logger.warning(f"Governance denied: {reason}")
-    
+
     return is_allowed
 
 @activity.defn
 async def generate_learning_path(topic: str) -> dict:
     """Activity: Call OpenAI to generate learning path"""
     activity.logger.info(f"Generating learning path for: {topic}")
-    
+
     try:
         response = openai.ChatCompletion.create(
             model="gpt-4",
@@ -307,7 +307,7 @@ async def generate_learning_path(topic: str) -> dict:
                 "content": f"Create a learning path for: {topic}"
             }]
         )
-        
+
         return {
             "topic": topic,
             "path": response.choices[0].message.content,
@@ -321,14 +321,14 @@ async def generate_learning_path(topic: str) -> dict:
 async def store_knowledge(knowledge: dict) -> dict:
     """Activity: Store knowledge in database"""
     from app.core.ai_systems import MemoryExpansionSystem
-    
+
     memory = MemoryExpansionSystem()
     knowledge_id = memory.add_knowledge(
         content=knowledge["path"],
         category="learning_paths",
         metadata={"topic": knowledge["topic"]}
     )
-    
+
     return {"id": knowledge_id, "stored_at": datetime.now().isoformat()}
 ```
 
@@ -344,7 +344,7 @@ from temporalio.worker import Worker
 async def main():
     # Connect to Temporal server
     client = await Client.connect("localhost:7233")
-    
+
     # Create workers for different task queues
     workflow_worker = Worker(
         client,
@@ -364,7 +364,7 @@ async def main():
             audit_security
         ]
     )
-    
+
     # Long-running worker (different queue)
     monitoring_worker = Worker(
         client,
@@ -382,7 +382,7 @@ async def main():
             send_alert
         ]
     )
-    
+
     # Run workers concurrently
     await asyncio.gather(
         workflow_worker.run(),
@@ -401,28 +401,28 @@ if __name__ == "__main__":
 @workflow.defn
 class DataAnalysisSaga:
     """Saga pattern for multi-step data analysis with rollback"""
-    
+
     @workflow.run
     async def run(self, analysis_request: dict) -> dict:
         compensations = []
-        
+
         try:
             # Step 1: Load data
             data = await workflow.execute_activity(load_data, ...)
             compensations.append(lambda: delete_temp_data(data["temp_id"]))
-            
+
             # Step 2: Transform data
             transformed = await workflow.execute_activity(transform_data, data)
             compensations.append(lambda: revert_transformation(transformed["id"]))
-            
+
             # Step 3: Analyze
             results = await workflow.execute_activity(analyze, transformed)
-            
+
             # Step 4: Store results
             stored = await workflow.execute_activity(store_results, results)
-            
+
             return stored
-        
+
         except Exception as e:
             # Rollback all completed steps
             for compensation in reversed(compensations):
@@ -436,7 +436,7 @@ class DataAnalysisSaga:
 @workflow.defn
 class ParentWorkflow:
     """Orchestrates multiple child workflows"""
-    
+
     @workflow.run
     async def run(self, tasks: list[dict]) -> list[dict]:
         # Start child workflows in parallel
@@ -448,18 +448,18 @@ class ParentWorkflow:
                 id=f"child-{task['id']}"
             )
             child_handles.append(handle)
-        
+
         # Wait for all to complete
         results = await asyncio.gather(*[
             handle.result() for handle in child_handles
         ])
-        
+
         return results
 
 @workflow.defn
 class ChildWorkflow:
     """Individual task execution"""
-    
+
     @workflow.run
     async def run(self, task: dict) -> dict:
         result = await workflow.execute_activity(process_task, task)
@@ -472,7 +472,7 @@ class ChildWorkflow:
 @workflow.defn
 class DailyBackupWorkflow:
     """Runs daily at 2 AM UTC"""
-    
+
     @workflow.run
     async def run(self) -> dict:
         # Create backup
@@ -480,19 +480,19 @@ class DailyBackupWorkflow:
             create_backup,
             start_to_close_timeout=timedelta(hours=1)
         )
-        
+
         # Encrypt backup
         encrypted_path = await workflow.execute_activity(
             encrypt_file,
             backup_path
         )
-        
+
         # Upload to cloud
         cloud_url = await workflow.execute_activity(
             upload_to_s3,
             encrypted_path
         )
-        
+
         # Send notification
         await workflow.execute_activity(
             send_email,
@@ -502,7 +502,7 @@ class DailyBackupWorkflow:
                 "body": f"Backup uploaded to {cloud_url}"
             }
         )
-        
+
         return {"backup_url": cloud_url}
 
 # Start cron workflow
@@ -525,29 +525,29 @@ from temporalio.worker import WorkflowInterceptor, ActivityInboundInterceptor
 
 class GovernanceInterceptor(ActivityInboundInterceptor):
     """Intercept all activities for governance validation"""
-    
+
     async def execute_activity(self, input):
         # Extract activity parameters
         activity_name = input.activity_name
         args = input.args
-        
+
         # Validate with FourLaws
         from app.core.ai_systems import FourLaws
         four_laws = FourLaws()
-        
+
         is_allowed, reason = four_laws.validate_action(
             activity_name,
             context={"args": args}
         )
-        
+
         if not is_allowed:
             raise ConstitutionalViolation(
                 f"Activity {activity_name} denied: {reason}"
             )
-        
+
         # Proceed with activity execution
         result = await super().execute_activity(input)
-        
+
         # Audit log successful execution
         audit_log.record({
             "activity": activity_name,
@@ -555,7 +555,7 @@ class GovernanceInterceptor(ActivityInboundInterceptor):
             "result": result,
             "timestamp": datetime.now().isoformat()
         })
-        
+
         return result
 
 # Register interceptor in worker
@@ -708,10 +708,10 @@ async def request_learning(self, topic: str):
         id=f"learning-{topic}-{datetime.now().timestamp()}",
         task_queue="workflows"
     )
-    
+
     # Show workflow ID to user
     self.show_message(f"Learning request started: {handle.id}")
-    
+
     # Optionally wait for result
     result = await handle.result()
     self.show_message(f"Learning complete: {result}")
@@ -727,14 +727,14 @@ from temporalio.client import Client
 async def create_learning_request(request: dict):
     """Start learning workflow from web API"""
     client = await Client.connect("localhost:7233")
-    
+
     handle = await client.start_workflow(
         LearningRequestWorkflow.run,
         request,
         id=f"web-learning-{request['user_id']}-{time.time()}",
         task_queue="workflows"
     )
-    
+
     return {
         "workflow_id": handle.id,
         "status": "started"
@@ -744,10 +744,10 @@ async def create_learning_request(request: dict):
 async def get_learning_status(workflow_id: str):
     """Query workflow status"""
     client = await Client.connect("localhost:7233")
-    
+
     handle = client.get_workflow_handle(workflow_id)
     description = await handle.describe()
-    
+
     return {
         "workflow_id": workflow_id,
         "status": description.status,

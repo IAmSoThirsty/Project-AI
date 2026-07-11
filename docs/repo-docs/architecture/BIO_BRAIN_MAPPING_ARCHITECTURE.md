@@ -598,13 +598,13 @@ system = BioBrainMappingSystem(config=custom_config, data_dir="data")
 for epoch in range(100):
     # Generate batch
     x = generate_data_batch()
-    
+
     # Process and learn
     result = system.process(x, learning_mode=LearningMode.BOTH, update_weights=True)
-    
+
     # Consolidation happens automatically every N steps
     # (configured by config['consolidation']['interval_steps'])
-    
+
     if epoch % 10 == 0:
         diagnostics = system.get_diagnostics()
         print(f"Epoch {epoch}: {diagnostics['learning_events']} events, "
@@ -675,13 +675,13 @@ The bio brain mapper is fully integrated with CognitionKernel:
 # In src/app/main.py
 def initialize_kernel() -> CognitionKernel:
     # ... other subsystems ...
-    
+
     # Initialize bio brain mapper
     bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
-    
+
     # Register with kernel
     bio_brain_mapper.register_with_kernel(kernel)
-    
+
     # All operations now subject to Four Laws governance
 ```
 
@@ -833,6 +833,6 @@ For questions, issues, or contributions:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2026-01-29  
+**Document Version**: 1.0
+**Last Updated**: 2026-01-29
 **Author**: Project-AI Development Team

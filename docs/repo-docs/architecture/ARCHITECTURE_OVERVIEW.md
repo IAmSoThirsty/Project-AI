@@ -51,7 +51,7 @@ test_coverage: 88%
 
 # Project-AI Architecture Overview
 
-**Version:** 2.0 (Modular)  
+**Version:** 2.0 (Modular)
 **Last Updated:** 2026-02-03
 
 ## Table of Contents
@@ -452,13 +452,13 @@ from app.core.services.governance_service import Decision
 
 class SimpleGovernance(GovernanceEngineInterface):
     """Simple governance that blocks high-risk actions."""
-    
+
     def __init__(self):
         self.evaluation_count = 0
-    
+
     def evaluate_action(self, action, context):
         self.evaluation_count += 1
-        
+
         # Block high-risk actions
         if action.risk_level == "high":
             return Decision(
@@ -467,7 +467,7 @@ class SimpleGovernance(GovernanceEngineInterface):
                 approved=False,
                 reason="High-risk actions not allowed in simple mode"
             )
-        
+
         # Approve everything else
         return Decision(
             decision_id=f"simple_{context.trace_id}",
@@ -475,7 +475,7 @@ class SimpleGovernance(GovernanceEngineInterface):
             approved=True,
             reason="Low-risk action approved"
         )
-    
+
     def get_statistics(self):
         return {"evaluations": self.evaluation_count}
 
@@ -495,10 +495,10 @@ from app.core.interfaces import MemoryEngineInterface
 
 class LogMemoryEngine(MemoryEngineInterface):
     """Simple memory engine that logs to console."""
-    
+
     def __init__(self):
         self.records = []
-    
+
     def record_execution(self, trace_id, channels, status):
         record = {
             "trace_id": trace_id,
@@ -508,14 +508,14 @@ class LogMemoryEngine(MemoryEngineInterface):
         self.records.append(record)
         print(f"[Memory] Recorded execution: {trace_id} - {status}")
         return trace_id
-    
+
     def query_executions(self, filters=None, limit=10):
         # Simple in-memory query
         results = self.records
         if filters:
             results = [r for r in results if all(r.get(k) == v for k, v in filters.items())]
         return results[-limit:]
-    
+
     def get_statistics(self):
         return {"total_records": len(self.records)}
 
@@ -564,13 +564,13 @@ from app.core.interfaces import PluginInterface, PluginRegistry
 
 class WeatherPlugin(PluginInterface):
     """Example weather plugin."""
-    
+
     def get_name(self):
         return "weather"
-    
+
     def get_version(self):
         return "1.0.0"
-    
+
     def execute(self, context):
         location = context.get("location", "Unknown")
         return {
@@ -578,7 +578,7 @@ class WeatherPlugin(PluginInterface):
             "conditions": "Sunny",
             "location": location,
         }
-    
+
     def get_metadata(self):
         return {
             "name": self.get_name(),
