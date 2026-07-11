@@ -85,7 +85,7 @@ class CapabilityAuthority:
         self._max_ttl = max_ttl
         self._token_id_factory = token_id_factory or (lambda: secrets.token_hex(16))
         self._revoked: set[str] = set()
-        self._consumed: set[str] = set()
+        self._consumed: dict[str, int] = {}
         self._lock = threading.Lock()
 
     def issue(
@@ -159,7 +159,7 @@ class CapabilityAuthority:
         with self._lock:
             if claims.token_id in self._consumed:
                 raise ReplayedCapabilityError("capability has already been consumed")
-            self._consumed.add(claims.token_id)
+            self._consumed[claims.token_id] = claims.expires_at
         return claims
 
     def revoke(self, token_id: str) -> None:
@@ -167,6 +167,15 @@ class CapabilityAuthority:
             raise ValueError("token_id must not be empty")
         with self._lock:
             self._revoked.add(token_id)
+
+    def sweep_expired(self) -> int:
+        """Remove expired entries from the consumed set and return the count removed."""
+        now = int(self._clock.now().timestamp())
+        with self._lock:
+            expired = [tid for tid, exp in self._consumed.items() if now >= exp]
+            for tid in expired:
+                del self._consumed[tid]
+            return len(expired)
 
     def _authenticate(self, token: str) -> CapabilityClaims:
         parts = token.split(".")

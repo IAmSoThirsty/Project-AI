@@ -1,0 +1,40 @@
+{{- if .Values.capabilitySweep.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-capability-sweep
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: capability-sweep
+spec:
+  schedule: "{{ .Values.capabilitySweep.schedule | default "0 3 * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: capability-sweep
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: sweep
+              image: curlimages/curl:8.12.0
+              command:
+                - curl
+                - -f
+                - -X
+                - POST
+                - http://{{ .Release.Name }}-api:{{ .Values.api.port }}/admin/sweep-capabilities
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  cpu: 50m
+                  memory: 32Mi
+{{- end }}

@@ -121,3 +121,29 @@ def test_issuance_and_configuration_validation() -> None:
     )
     with pytest.raises(ValueError, match="token_id_factory"):
         empty_id.issue(subject="x", operation="read", resource="x", ttl=timedelta(seconds=1))
+
+
+def test_sweep_expired_clears_consumed_after_ttl() -> None:
+    """Issue a token with 1-second TTL, consume it, wait for expiry, sweep, verify empty."""
+    service = CapabilityAuthority(
+        b"s" * 32,
+        issuer="project-ai",
+        token_id_factory=lambda: "token-sweep",
+    )
+    token = service.issue(
+        subject="operator",
+        operation="write",
+        resource="record:1",
+        ttl=timedelta(seconds=1),
+    )
+    service.consume(token, subject="operator", operation="write", resource="record:1")
+    assert "token-sweep" in service._consumed
+
+    # Wait for the token to expire (1-second TTL + small buffer)
+    import time as _time
+
+    _time.sleep(1.1)
+
+    removed = service.sweep_expired()
+    assert removed == 1
+    assert service._consumed == {}

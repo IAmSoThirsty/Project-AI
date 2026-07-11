@@ -1,0 +1,52 @@
+{{- if .Values.securityVerify.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-security-verify
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: security-verify
+spec:
+  schedule: "{{ .Values.securityVerify.schedule | default "*/15 * * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: security-verify
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: security-verify
+              image: {{ include "project-ai.image" (dict "root" . "name" "api") }}
+              command:
+                - python
+                - tools/verify_security_relay.py
+                - /data/chimera-audit.jsonl
+              env:
+                - name: PROJECT_AI_AUDIT_PATH
+                  value: /data/chimera-audit.jsonl
+              volumeMounts:
+                - name: audit-data
+                  mountPath: /data
+                  readOnly: true
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            - name: audit-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-audit-data-pvc
+                readOnly: true
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+{{- end }}

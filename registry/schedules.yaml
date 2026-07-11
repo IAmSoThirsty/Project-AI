@@ -1,0 +1,364 @@
+schedules:
+- id: manual
+  enabled: true
+  mode: manual
+  max_runs_per_day: 999
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: every-5-minutes
+  enabled: true
+  mode: interval
+  interval_seconds: 300
+  jitter_seconds: 30
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: hourly
+  enabled: true
+  mode: hourly
+  jitter_seconds: 120
+  max_runs_per_day: 24
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  blocked_facility_modes:
+  - ORANGE
+  - RED
+  - BLACKSITE
+- id: every-3-hours
+  enabled: true
+  mode: interval
+  interval_seconds: 10800
+  jitter_seconds: 300
+  max_runs_per_day: 8
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  blocked_facility_modes:
+  - ORANGE
+  - RED
+  - BLACKSITE
+- id: every-4-hours
+  enabled: true
+  mode: interval
+  interval_seconds: 14400
+  jitter_seconds: 300
+  max_runs_per_day: 6
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  blocked_facility_modes:
+  - ORANGE
+  - RED
+  - BLACKSITE
+- id: every-6-hours
+  enabled: true
+  mode: interval
+  interval_seconds: 21600
+  jitter_seconds: 300
+  max_runs_per_day: 4
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  blocked_facility_modes:
+  - ORANGE
+  - RED
+  - BLACKSITE
+- id: nightly
+  enabled: true
+  mode: daily
+  time_local: 00:00
+  max_runs_per_day: 1
+  allowed_facility_modes:
+  - GREEN
+  blocked_facility_modes:
+  - YELLOW
+  - ORANGE
+  - RED
+  - BLACKSITE
+- id: daily-0600
+  enabled: true
+  mode: daily
+  time_local: 06:00
+  max_runs_per_day: 1
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  blocked_facility_modes:
+  - ORANGE
+  - RED
+  - BLACKSITE
+- id: after-heartbeat-reader
+  enabled: true
+  mode: after
+  after_agent_id: heartbeat-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-lock-reader
+  enabled: true
+  mode: after
+  after_agent_id: lock-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-runaway-reader
+  enabled: true
+  mode: after
+  after_agent_id: runaway-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-phantom-reader
+  enabled: true
+  mode: after
+  after_agent_id: phantom-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-path-drift-reader
+  enabled: true
+  mode: after
+  after_agent_id: path-drift-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-secret-reader
+  enabled: true
+  mode: after
+  after_agent_id: secret-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-governance-reader
+  enabled: true
+  mode: after
+  after_agent_id: governance-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-overnight-reader
+  enabled: true
+  mode: after
+  after_agent_id: overnight-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-git-status-reader
+  enabled: true
+  mode: after
+  after_agent_id: git-status-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-ruff-reader
+  enabled: true
+  mode: after
+  after_agent_id: ruff-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-mypy-reader
+  enabled: true
+  mode: after
+  after_agent_id: mypy-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-pytest-collect-reader
+  enabled: true
+  mode: after
+  after_agent_id: pytest-collect-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-permission-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-permission-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-secret-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-secret-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-action-pin-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-action-pin-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-injection-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-injection-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-runner-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-runner-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-artifact-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-artifact-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-deploy-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-deploy-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-schedule-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-schedule-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE
+- id: after-workflow-dag-reader
+  enabled: true
+  mode: after
+  after_agent_id: workflow-dag-reader
+  max_runs_per_day: 288
+  allowed_facility_modes:
+  - GREEN
+  - YELLOW
+  - ORANGE
+  - RED
+  blocked_facility_modes:
+  - BLACKSITE

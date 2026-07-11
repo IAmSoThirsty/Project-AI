@@ -1,0 +1,72 @@
+{{- if .Values.taarCronJobs.enabled }}
+{{- range $agent := list
+  (dict "id" "heartbeat-reader" "schedule" "*/5 * * * *")
+  (dict "id" "lock-reader" "schedule" "*/5 * * * *")
+  (dict "id" "runaway-reader" "schedule" "*/5 * * * *")
+  (dict "id" "phantom-reader" "schedule" "*/5 * * * *")
+  (dict "id" "path-drift-reader" "schedule" "0 * * * *")
+  (dict "id" "secret-reader" "schedule" "0 */6 * * *")
+  (dict "id" "overnight-reader" "schedule" "0 6 * * *")
+  (dict "id" "overnight-digest" "schedule" "0 6 * * *")
+  (dict "id" "governance-reader" "schedule" "0 * * * *")
+  (dict "id" "ruff-reader" "schedule" "0 */3 * * *")
+  (dict "id" "mypy-reader" "schedule" "0 */4 * * *")
+  (dict "id" "workflow-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-permission-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-secret-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-pin-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-injection-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-runner-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-artifact-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-deploy-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-schedule-reader" "schedule" "0 * * * *")
+  (dict "id" "workflow-dag-reader" "schedule" "0 * * * *")
+}}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $.Release.Name }}-taar-{{ $agent.id }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: taar-cron
+    taar-agent: {{ $agent.id }}
+spec:
+  schedule: "{{ $agent.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" $ | nindent 12 }}
+            app.kubernetes.io/component: taar-cron
+            taar-agent: {{ $agent.id }}
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: taar
+              image: {{ include "project-ai.image" (dict "root" $ "name" "api") }}
+              command:
+                - taar
+                - run
+                - {{ $agent.id }}
+              env:
+                - name: TAAR_FACILITY_MODE
+                  value: "{{ $.Values.taarCronJobs.facilityMode | default "GREEN" }}"
+              volumeMounts:
+                {{- include "project-ai.tmpVolumeMount" $ | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" $ | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+          volumes:
+            {{- include "project-ai.tmpVolume" $ | nindent 12 }}
+{{- end }}
+{{- end }}

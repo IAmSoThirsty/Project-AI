@@ -1,0 +1,1248 @@
+agents:
+- id: heartbeat-reader
+  class: reader
+  enabled: true
+  task_id: heartbeat-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-5-minutes
+  capability_ids:
+  - execute-heartbeat-check
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:heartbeat_check
+  timeout_seconds: 60
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/heartbeat-reader/
+  writer_partners:
+  - heartbeat-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: heartbeat-report-writer
+  class: writer
+  enabled: true
+  task_id: heartbeat-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-heartbeat-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/heartbeat-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/facility/heartbeat-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: lock-reader
+  class: reader
+  enabled: true
+  task_id: lock-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-5-minutes
+  capability_ids:
+  - execute-lock-check
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:lock_check
+  timeout_seconds: 60
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/lock-reader/
+  writer_partners:
+  - lock-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: lock-report-writer
+  class: writer
+  enabled: true
+  task_id: lock-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-lock-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/lock-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/facility/locks-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: runaway-reader
+  class: reader
+  enabled: true
+  task_id: runaway-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-5-minutes
+  capability_ids:
+  - execute-runaway-check
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:runaway_check
+  timeout_seconds: 60
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/runaway-reader/
+  writer_partners:
+  - runaway-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: runaway-report-writer
+  class: writer
+  enabled: true
+  task_id: runaway-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-runaway-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/runaway-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/facility/runaway-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: phantom-reader
+  class: watcher
+  enabled: true
+  task_id: phantom-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-5-minutes
+  capability_ids:
+  - execute-phantom-check
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:phantom_check
+  timeout_seconds: 120
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/phantom-reader/
+  writer_partners:
+  - phantom-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: phantom-report-writer
+  class: writer
+  enabled: true
+  task_id: phantom-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-phantom-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/phantom-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/facility/phantom-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: path-drift-reader
+  class: reader
+  enabled: true
+  task_id: path-drift-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-path-drift-check
+  - write-evidence
+  allowed_read_paths:
+  - '**'
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:path_drift_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/path-drift-reader/
+  writer_partners:
+  - path-drift-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: path-drift-report-writer
+  class: writer
+  enabled: true
+  task_id: path-drift-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-path-drift-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/path-drift-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/path-drift/latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: secret-reader
+  class: reader
+  enabled: true
+  task_id: secret-check
+  autonomy_level: 0
+  classification_default: SECRET
+  schedule_id: nightly
+  capability_ids:
+  - execute-secret-check
+  - write-evidence
+  allowed_read_paths:
+  - '**'
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:secret_check
+  timeout_seconds: 1800
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/secret-reader/
+  writer_partners:
+  - secret-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: true
+  destructive_access: false
+- id: secret-report-writer
+  class: writer
+  enabled: true
+  task_id: secret-report
+  autonomy_level: 0
+  classification_default: SECRET
+  schedule_id: after-secret-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/secret-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/security/secrets-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: governance-reader
+  class: reader
+  enabled: true
+  task_id: governance-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-6-hours
+  capability_ids:
+  - execute-governance-check
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:governance_check
+  timeout_seconds: 600
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/governance-reader/
+  writer_partners:
+  - governance-digest-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: governance-digest-writer
+  class: writer
+  enabled: true
+  task_id: governance-digest
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-governance-reader
+  capability_ids:
+  - write-digest
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/governance-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/digests/**
+  allowed_commands:
+  - builtin:digest_writer
+  timeout_seconds: 120
+  output:
+    type: digest
+    path: .project-ai/automation/digests/governance-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: overnight-reader
+  class: reader
+  enabled: true
+  task_id: overnight-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: daily-0600
+  capability_ids:
+  - execute-overnight-check
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/**
+  - registry/**
+  - taar.toml
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:overnight_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/overnight-reader/
+  writer_partners:
+  - morning-brief-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: morning-brief-writer
+  class: writer
+  enabled: true
+  task_id: overnight-digest
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-overnight-reader
+  capability_ids:
+  - write-digest
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/**
+  allowed_write_paths:
+  - .project-ai/automation/digests/**
+  allowed_commands:
+  - builtin:digest_writer
+  timeout_seconds: 120
+  output:
+    type: digest
+    path: .project-ai/automation/digests/morning-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: git-status-reader
+  class: reader
+  enabled: true
+  task_id: git-status-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-git-status-check
+  - write-evidence
+  allowed_read_paths:
+  - .git/**
+  - '**'
+  allowed_write_paths: []
+  allowed_commands:
+  - git status --porcelain=v1
+  - git branch --show-current
+  - git rev-parse HEAD
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/git-status-reader/
+  writer_partners:
+  - git-status-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: true
+  secret_access: false
+  destructive_access: false
+- id: git-status-writer
+  class: writer
+  enabled: true
+  task_id: git-status-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-git-status-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/git-status-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/git/status-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: ruff-reader
+  class: reader
+  enabled: true
+  task_id: ruff-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-3-hours
+  capability_ids:
+  - execute-ruff-check
+  - write-evidence
+  allowed_read_paths:
+  - '**'
+  allowed_write_paths: []
+  allowed_commands:
+  - uv run ruff check . --output-format=json
+  timeout_seconds: 1200
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/ruff-reader/
+  writer_partners:
+  - ruff-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: ruff-report-writer
+  class: writer
+  enabled: true
+  task_id: ruff-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-ruff-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/ruff-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/ruff/latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: mypy-reader
+  class: reader
+  enabled: true
+  task_id: mypy-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-4-hours
+  capability_ids:
+  - execute-mypy-check
+  - write-evidence
+  allowed_read_paths:
+  - '**'
+  allowed_write_paths: []
+  allowed_commands:
+  - uv run python -m mypy . --show-error-codes --no-error-summary
+  timeout_seconds: 1200
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/mypy-reader/
+  writer_partners:
+  - mypy-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: mypy-report-writer
+  class: writer
+  enabled: true
+  task_id: mypy-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-mypy-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/mypy-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/mypy/latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: pytest-collect-reader
+  class: reader
+  enabled: true
+  task_id: pytest-collect-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: every-3-hours
+  capability_ids:
+  - execute-pytest-collect-check
+  - write-evidence
+  allowed_read_paths:
+  - '**'
+  allowed_write_paths: []
+  allowed_commands:
+  - uv run python -m pytest --collect-only -q
+  timeout_seconds: 1200
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/pytest-collect-reader/
+  writer_partners:
+  - pytest-collect-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: pytest-collect-writer
+  class: writer
+  enabled: true
+  task_id: pytest-collect-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-pytest-collect-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/pytest-collect-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/tests/collect-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-reader
+  class: reader
+  enabled: true
+  task_id: workflow-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-reader/
+  writer_partners:
+  - workflow-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/scan-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-permission-reader
+  class: reader
+  enabled: true
+  task_id: workflow-permission-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-permission-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_permission_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-permission-reader/
+  writer_partners:
+  - workflow-permission-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-permission-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-permission-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-permission-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-permission-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/permissions-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-secret-reader
+  class: reader
+  enabled: true
+  task_id: workflow-secret-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-secret-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_secret_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-secret-reader/
+  writer_partners:
+  - workflow-secret-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-secret-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-secret-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-secret-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-secret-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/secrets-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-action-pin-reader
+  class: reader
+  enabled: true
+  task_id: workflow-action-pin-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-action-pin-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_action_pin_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-action-pin-reader/
+  writer_partners:
+  - workflow-action-pin-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-action-pin-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-action-pin-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-action-pin-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-action-pin-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/action-pins-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-injection-reader
+  class: reader
+  enabled: true
+  task_id: workflow-injection-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-injection-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_injection_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-injection-reader/
+  writer_partners:
+  - workflow-injection-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-injection-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-injection-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-injection-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-injection-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/injection-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-runner-reader
+  class: reader
+  enabled: true
+  task_id: workflow-runner-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-runner-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_runner_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-runner-reader/
+  writer_partners:
+  - workflow-runner-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-runner-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-runner-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-runner-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-runner-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/runners-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-artifact-reader
+  class: reader
+  enabled: true
+  task_id: workflow-artifact-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-artifact-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_artifact_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-artifact-reader/
+  writer_partners:
+  - workflow-artifact-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-artifact-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-artifact-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-artifact-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-artifact-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/artifacts-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-deploy-reader
+  class: reader
+  enabled: true
+  task_id: workflow-deploy-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-deploy-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_deploy_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-deploy-reader/
+  writer_partners:
+  - workflow-deploy-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-deploy-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-deploy-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-deploy-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-deploy-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/deploy-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-schedule-reader
+  class: reader
+  enabled: true
+  task_id: workflow-schedule-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-schedule-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_schedule_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-schedule-reader/
+  writer_partners:
+  - workflow-schedule-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-schedule-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-schedule-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-schedule-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-schedule-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/schedule-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-dag-reader
+  class: reader
+  enabled: true
+  task_id: workflow-dag-check
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: hourly
+  capability_ids:
+  - execute-workflow-dag-check
+  - write-evidence
+  allowed_read_paths:
+  - .github/workflows/**
+  allowed_write_paths: []
+  allowed_commands:
+  - builtin:workflow_dag_check
+  timeout_seconds: 300
+  output:
+    type: evidence_bundle
+    path: .project-ai/automation/evidence/workflow-dag-reader/
+  writer_partners:
+  - workflow-dag-report-writer
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false
+- id: workflow-dag-report-writer
+  class: writer
+  enabled: true
+  task_id: workflow-dag-report
+  autonomy_level: 0
+  classification_default: OPEN
+  schedule_id: after-workflow-dag-reader
+  capability_ids:
+  - write-report
+  - write-evidence
+  allowed_read_paths:
+  - .project-ai/automation/evidence/workflow-dag-reader/**
+  allowed_write_paths:
+  - .project-ai/automation/reports/**
+  allowed_commands:
+  - builtin:report_writer
+  timeout_seconds: 120
+  output:
+    type: report
+    path: .project-ai/automation/reports/workflows/dag-latest.md
+  writer_partners: []
+  watches: []
+  watched_by: []
+  deny_if_dirty: false
+  network_allowed: false
+  git_allowed: false
+  secret_access: false
+  destructive_access: false

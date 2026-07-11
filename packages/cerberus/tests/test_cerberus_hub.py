@@ -93,6 +93,26 @@ class TestHubCoordinator:
         assert "spawn_tokens_available" in status
 
 
+class TestHealthCheck:
+    def test_health_check_returns_expected_keys_and_values(self) -> None:
+        hub = HubCoordinator(max_guardians=5, settings=FAST)
+        health = hub.health_check()
+
+        assert set(health.keys()) == {
+            "guardian_count",
+            "max_guardians",
+            "shutdown",
+            "spawn_tokens",
+            "spawn_rate_per_minute",
+        }
+        # _initialize_guardians creates one of each of the 3 guardian types
+        assert health["guardian_count"] == 3
+        assert health["max_guardians"] == 5
+        assert health["shutdown"] is False
+        assert health["spawn_tokens"] == FAST.spawn_rate_per_minute
+        assert health["spawn_rate_per_minute"] == FAST.spawn_rate_per_minute
+
+
 class TestSpawnRateLimiting:
     def test_cooldown_throttles_spawns(self) -> None:
         slow = CerberusSettings(spawn_cooldown_seconds=60.0)

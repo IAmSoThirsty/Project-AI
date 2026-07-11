@@ -1,0 +1,33 @@
+name: Weekly SBOM
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sbom:
+    name: Generate CycloneDX SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - run: uv sync --frozen --all-extras --all-packages
+      - name: Generate reproducible Python workspace SBOM
+        run: |
+          mkdir -p build/sbom
+          uvx --from cyclonedx-bom==7.3.0 cyclonedx-py environment \
+            "$(uv run python -c 'import sys; print(sys.executable)')" \
+            --pyproject pyproject.toml \
+            --output-reproducible \
+            --validate \
+            --output-format JSON \
+            --output-file build/sbom/project-ai-python-weekly.cdx.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: project-ai-sbom-weekly
+          path: build/sbom/project-ai-python-weekly.cdx.json
+          if-no-files-found: error

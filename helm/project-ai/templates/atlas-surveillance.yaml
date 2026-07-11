@@ -1,0 +1,50 @@
+{{- if .Values.atlasSurveillance.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-atlas-surveillance
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: atlas-surveillance
+spec:
+  schedule: "{{ .Values.atlasSurveillance.schedule | default "*/30 * * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: atlas-surveillance
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: surveillance
+              image: {{ include "project-ai.image" (dict "root" . "name" "atlas") }}
+              command:
+                - python
+                - tools/run_atlas_surveillance.py
+                - --artifacts-dir
+                - /data/atlas/artifacts
+              volumeMounts:
+                - name: atlas-data
+                  mountPath: /data
+                  readOnly: true
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            - name: atlas-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-atlas-pvc
+                readOnly: true
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+{{- end }}

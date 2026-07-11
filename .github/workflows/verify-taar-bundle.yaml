@@ -15,6 +15,8 @@ on:
     paths:
       - "docs/internal/verification/**"
       - ".github/workflows/verify-taar-bundle.yaml"
+  schedule:
+    - cron: "0 12 * * *"
   workflow_dispatch:
 
 permissions:

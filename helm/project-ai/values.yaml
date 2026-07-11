@@ -49,6 +49,51 @@ alerting:
 # Backup - disabled in development
 backup:
   enabled: false
+  schedule: "0 2 * * *"
+  retentionDays: 30
+
+# CronJobs - disabled in development
+auditVerify:
+  enabled: false
+  schedule: "*/15 * * * *"
+
+securityVerify:
+  enabled: false
+  schedule: "*/15 * * * *"
+
+frozenHistoryVerify:
+  enabled: false
+  schedule: "0 4 * * *"
+
+canonicalReplay:
+  enabled: false
+  schedule: "0 * * * *"
+
+capabilitySweep:
+  enabled: false
+  schedule: "0 3 * * *"
+
+knowledgeRefresh:
+  enabled: false
+  schedule: "0 5 * * 1"
+  corpusPath: "/corpus"
+
+atlasSurveillance:
+  enabled: false
+  schedule: "*/30 * * * *"
+
+taarCronJobs:
+  enabled: false
+  facilityMode: "GREEN"
+
+arbiterHeartbeat:
+  enabled: false
+  schedule: "0 * * * *"
+
+rlpRefresh:
+  enabled: false
+  probeSchedule: "0 */6 * * *"
+  sgcSchedule: "0 0 * * *"
 
 # Ingress - disabled in development
 ingress:

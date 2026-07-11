@@ -1,0 +1,41 @@
+{{- if .Values.frozenHistoryVerify.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-frozen-history-verify
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frozen-history-verify
+spec:
+  schedule: "{{ .Values.frozenHistoryVerify.schedule | default "0 4 * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: frozen-history-verify
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: verify
+              image: {{ include "project-ai.image" (dict "root" . "name" "api") }}
+              command:
+                - python
+                - tools/verify_frozen_history.py
+              volumeMounts:
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+{{- end }}

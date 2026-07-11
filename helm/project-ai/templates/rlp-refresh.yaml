@@ -1,0 +1,99 @@
+{{- if .Values.rlpRefresh.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-rlp-probe-refresh
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rlp-refresh
+spec:
+  schedule: "{{ .Values.rlpRefresh.probeSchedule | default "0 */6 * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: rlp-refresh
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: probe-refresh
+              image: {{ include "project-ai.image" (dict "root" . "name" "arbiter-rlp") }}
+              command:
+                - python
+                - tools/rlp_probe_refresh.py
+                - --state-file
+                - /data/rlp/rlp-state.json
+              volumeMounts:
+                - name: rlp-data
+                  mountPath: /data
+                  readOnly: true
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            - name: rlp-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-rlp-pvc
+                readOnly: true
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-rlp-sgc-tick
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rlp-sgc-tick
+spec:
+  schedule: "{{ .Values.rlpRefresh.sgcSchedule | default "0 0 * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: rlp-sgc-tick
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: sgc-tick
+              image: {{ include "project-ai.image" (dict "root" . "name" "arbiter-rlp") }}
+              command:
+                - python
+                - tools/rlp_sgc_tick.py
+                - --state-file
+                - /data/rlp/rlp-state.json
+              volumeMounts:
+                - name: rlp-data
+                  mountPath: /data
+                  readOnly: true
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            - name: rlp-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-rlp-pvc
+                readOnly: true
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+{{- end }}

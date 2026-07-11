@@ -1,0 +1,41 @@
+{{- if .Values.canonicalReplay.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-canonical-replay
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: canonical-replay
+spec:
+  schedule: "{{ .Values.canonicalReplay.schedule | default "0 * * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: canonical-replay
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: replay
+              image: {{ include "project-ai.image" (dict "root" . "name" "api") }}
+              command:
+                - python
+                - tools/canonical_replay.py
+              volumeMounts:
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+{{- end }}

@@ -1,0 +1,58 @@
+{{- if .Values.knowledgeRefresh.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-knowledge-refresh
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: knowledge-refresh
+spec:
+  schedule: "{{ .Values.knowledgeRefresh.schedule | default "0 5 * * 1" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: knowledge-refresh
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: refresh
+              image: {{ include "project-ai.image" (dict "root" . "name" "api") }}
+              command:
+                - python
+                - -m
+                - knowledge.ingest
+                - --corpus
+                - {{ .Values.knowledgeRefresh.corpusPath | default "/corpus" }}
+                - --out
+                - /data/knowledge
+              volumeMounts:
+                - name: knowledge-data
+                  mountPath: /data
+                - name: corpus
+                  mountPath: /corpus
+                  readOnly: true
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
+                limits:
+                  cpu: 1000m
+                  memory: 1Gi
+          volumes:
+            - name: knowledge-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-knowledge-pvc
+            - name: corpus
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-corpus-pvc
+                readOnly: true
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+{{- end }}

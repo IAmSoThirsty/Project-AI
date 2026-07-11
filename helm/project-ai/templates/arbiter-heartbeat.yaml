@@ -1,0 +1,50 @@
+{{- if .Values.arbiterHeartbeat.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-arbiter-heartbeat
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    app.kubernetes.io/component: arbiter-heartbeat
+spec:
+  schedule: "{{ .Values.arbiterHeartbeat.schedule | default "0 * * * *" }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "project-ai.labels" . | nindent 12 }}
+            app.kubernetes.io/component: arbiter-heartbeat
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: check
+              image: {{ include "project-ai.image" (dict "root" . "name" "arbiter-rlp") }}
+              command:
+                - python
+                - tools/arbiter_deadman_check.py
+                - --state-file
+                - /data/arbiter/arbiter-state.json
+              volumeMounts:
+                - name: arbiter-data
+                  mountPath: /data
+                  readOnly: true
+                {{- include "project-ai.tmpVolumeMount" . | nindent 16 }}
+              securityContext:
+                {{- include "project-ai.securityContext" . | nindent 16 }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
+          volumes:
+            - name: arbiter-data
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-arbiter-pvc
+                readOnly: true
+            {{- include "project-ai.tmpVolume" . | nindent 12 }}
+{{- end }}

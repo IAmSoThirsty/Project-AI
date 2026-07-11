@@ -310,6 +310,24 @@ class HubCoordinator:
             ],
         }
 
+    def health_check(self) -> dict[str, Any]:
+        """Return a lightweight health snapshot of the hub.
+
+        Unlike :meth:`get_status`, this does not enumerate individual guardians
+        and is suitable for periodic monitoring / heartbeat endpoints.
+
+        Returns:
+            Dictionary with ``guardian_count``, ``max_guardians``,
+            ``shutdown``, ``spawn_tokens``, and ``spawn_rate_per_minute``.
+        """
+        return {
+            "guardian_count": self.guardian_count,
+            "max_guardians": self.max_guardians,
+            "shutdown": self._shutdown,
+            "spawn_tokens": self._spawn_tokens,
+            "spawn_rate_per_minute": self._settings.spawn_rate_per_minute,
+        }
+
     def get_status(self) -> dict[str, Any]:
         """Get the current status of the hub and all guardians."""
         return {

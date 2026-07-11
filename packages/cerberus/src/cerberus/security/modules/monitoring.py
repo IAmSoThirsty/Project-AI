@@ -344,6 +344,15 @@ class SecurityMonitor:
             "open_incidents": sum(1 for i in self.incidents.values() if i.status == "open"),
         }
 
+    def check_stale_alerts(self, threshold_minutes: int = 15) -> list[Alert]:
+        """Return OPEN alerts older than *threshold_minutes* from now."""
+        cutoff = datetime.now(UTC) - timedelta(minutes=threshold_minutes)
+        return [
+            alert
+            for alert in self.alert_manager.alerts.values()
+            if alert.status == AlertStatus.OPEN and alert.created_at < cutoff
+        ]
+
     def clear_old_data(self, days: int = 30) -> None:
         """Remove resolved/closed alerts older than the given age."""
         cutoff = datetime.now(UTC) - timedelta(days=days)
