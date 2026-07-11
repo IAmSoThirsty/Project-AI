@@ -622,3 +622,71 @@ working (python.exe is not a trampoline).
 ### Safe to continue
 Yes. If the trampoline error ever reappears, run
 `uv run python tools/verify_venv_trampolines.py` and follow its output.
+
+---
+
+## Session Update - v3 closure: schedulers live, Helm/workflows exercised, root-cause experiment (2026-07-11)
+
+### Scope
+Close every "Not verified" item from the two session updates above by
+executing, not describing: register the scheduled tasks, exercise the
+Helm CronJobs and GitHub workflows, and run a controlled experiment on
+the launcher root cause. Thirsty's Standard v3 is the mandatory minimum
+for accepted output from this date.
+
+### Verified (with evidence)
+- Scheduled tasks: 14 registered and Ready — ProjectAI-AcceptanceGate
+  (daily 22:00), ProjectAI-VenvTrampolineCheck (weekly Mon 09:00), and
+  12 TAAR-* agent tasks. Live-fired ProjectAI-VenvTrampolineCheck and
+  TAAR-heartbeat-reader: both LastTaskResult=0x0; heartbeat wrote a
+  fresh evidence bundle
+  (.project-ai/automation/evidence/heartbeat-reader/20260711T140458...).
+- Helm: `helm lint` 0 failures; `helm template` with ALL ten CronJob
+  values enabled renders 45 manifests (31 CronJobs) and passes
+  tools/verify_helm_template.py (exit 0). Default render (all disabled)
+  also passes (14 manifests).
+- Workflows: TAAR workflow-reader run SUCCEEDED (9 check categories:
+  permissions, secrets, pins, injection, runners, artifacts, deploy,
+  schedule, dag; 57 informational findings, exit 0).
+
+### Failed then fixed (defects found only by executing)
+- tools/schedule_taar_tasks.ps1: `New-ScheduledTaskTrigger -Once`
+  missing mandatory `-At` — registration crashed. Fixed.
+- tools/schedule_venv_check.ps1 + schedule_taar_tasks.ps1: Task
+  Scheduler does not PATH-resolve `Execute`; bare `python`/`uv` gave
+  0x80070002 on first live fire. Fixed with absolute paths
+  (.venv python.exe; resolved uv path). Re-fired: 0x0.
+- .github/workflows/image-scan.yaml: `aquasecurity/trivy-action@0.20.0`
+  referenced a NONEXISTENT tag (real tags carry a `v` prefix) — the
+  step could never resolve. Pinned to the immutable commit
+  b2933f565dbc598b29947660e66259e3c7bc8561 (v0.20.0).
+
+### Root-cause experiment (correction to the previous entry)
+Fresh venv created with `uvx uv@0.11.22` on this same T: drive produced
+a WORKING pytest.exe launcher (pytest 9.1.1, exit 0; 46,080 bytes —
+same size as both healthy and broken launchers). This DISPROVES
+"launchers written by uv 0.11.22 fail on this host" as a general
+claim. Corrected finding: the specific Jun 26 launcher files were
+damaged by an unidentified later or creation-time event; the corrupted
+bytes were overwritten by the repair before they could be preserved, so
+the damaging event is Not verified and no longer provable. Recurrence
+coverage is unchanged and now scheduled (weekly guard task + acceptance
+gate step + module-form invocations).
+
+### Files modified
+- tools/schedule_taar_tasks.ps1, tools/schedule_venv_check.ps1,
+  .github/workflows/image-scan.yaml, this map.
+
+### Honest notes
+- ProjectAI-AcceptanceGate was registered but not live-fired (full gate
+  is a multi-tool, ~hour-scale run incl. Docker/Android; its component
+  steps were all run individually this session). First scheduled run:
+  today 22:00 local.
+- GitHub Actions runs remain unexercised from this machine (requires
+  push + Actions billing; see codex/ci-billing-evidence history).
+  Workflow YAML is validated by TAAR's 9-category scan + check-yaml.
+
+### Safe to continue
+Yes. Watch the first ProjectAI-AcceptanceGate run tonight (22:00);
+`Get-ScheduledTaskInfo -TaskName ProjectAI-AcceptanceGate` shows the
+result.

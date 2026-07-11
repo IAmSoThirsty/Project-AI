@@ -10,12 +10,18 @@ $ErrorActionPreference = "Stop"
 $RepoRoot = Resolve-Path "$PSScriptRoot/.."
 $TaskPrefix = "TAAR"
 
+# Task Scheduler does not search PATH for Execute; resolve uv's absolute path
+# at registration time.
+$UvPath = (Get-Command uv -ErrorAction Stop).Source
+
 # Agent definitions: (id, schedule-trigger)
+# -Once triggers require -At (mandatory); repetition runs from that start time.
+$RepeatStart = (Get-Date).AddMinutes(1)
 $Agents = @(
-    @{ Id = "heartbeat-reader"; Trigger = New-ScheduledTaskTrigger -Once -RepetitionInterval (New-TimeSpan -Minutes 5) }
-    @{ Id = "lock-reader"; Trigger = New-ScheduledTaskTrigger -Once -RepetitionInterval (New-TimeSpan -Minutes 5) }
-    @{ Id = "runaway-reader"; Trigger = New-ScheduledTaskTrigger -Once -RepetitionInterval (New-TimeSpan -Minutes 5) }
-    @{ Id = "phantom-reader"; Trigger = New-ScheduledTaskTrigger -Once -RepetitionInterval (New-TimeSpan -Minutes 5) }
+    @{ Id = "heartbeat-reader"; Trigger = New-ScheduledTaskTrigger -Once -At $RepeatStart -RepetitionInterval (New-TimeSpan -Minutes 5) }
+    @{ Id = "lock-reader"; Trigger = New-ScheduledTaskTrigger -Once -At $RepeatStart -RepetitionInterval (New-TimeSpan -Minutes 5) }
+    @{ Id = "runaway-reader"; Trigger = New-ScheduledTaskTrigger -Once -At $RepeatStart -RepetitionInterval (New-TimeSpan -Minutes 5) }
+    @{ Id = "phantom-reader"; Trigger = New-ScheduledTaskTrigger -Once -At $RepeatStart -RepetitionInterval (New-TimeSpan -Minutes 5) }
     @{ Id = "path-drift-reader"; Trigger = New-ScheduledTaskTrigger -Daily -At 1am }
     @{ Id = "secret-reader"; Trigger = New-ScheduledTaskTrigger -Daily -At (Get-Date "00:00") }
     @{ Id = "overnight-reader"; Trigger = New-ScheduledTaskTrigger -Daily -At 6am }
@@ -29,7 +35,7 @@ $Agents = @(
 foreach ($Agent in $Agents) {
     $TaskName = "$TaskPrefix-$($Agent.Id)"
     $Action = New-ScheduledTaskAction `
-        -Execute "uv" `
+        -Execute $UvPath `
         -Argument "run --package project-ai-taar taar run $($Agent.Id)" `
         -WorkingDirectory $RepoRoot.Path
 

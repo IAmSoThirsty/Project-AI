@@ -9,8 +9,10 @@ $ErrorActionPreference = "Stop"
 $RepoRoot = Resolve-Path "$PSScriptRoot/.."
 $TaskName = "ProjectAI-VenvTrampolineCheck"
 
+# Task Scheduler does not search PATH for Execute; use the venv's absolute
+# python.exe (the guard is stdlib-only, so the venv interpreter suffices).
 $Action = New-ScheduledTaskAction `
-    -Execute "python" `
+    -Execute "$($RepoRoot.Path)\.venv\Scripts\python.exe" `
     -Argument "$RepoRoot\tools\verify_venv_trampolines.py" `
     -WorkingDirectory $RepoRoot.Path
 
