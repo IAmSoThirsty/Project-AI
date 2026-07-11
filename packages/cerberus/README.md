@@ -69,6 +69,24 @@ Guard Bot port:
   activating the wired `LockdownController` when one is provided.
 - `main` — demonstration entry point (`python -m cerberus.main`).
 
+Guard Bot security modules (`cerberus.security`, stdlib-only subset):
+
+- `input_validation` — `InputValidator`: SQLi/XSS/command/LDAP/NoSQL/path/XXE
+  plus prompt-injection & jailbreak detection and HTML/JSON/XML/CSV checks.
+- `rbac` — `RBACManager`, `Role`, `Permission`, `User`: role-based access
+  control with parent-role inheritance and default roles.
+- `rate_limiter` — `RateLimiter`, `TokenBucket`, `SlidingWindowCounter`, and
+  the `rate_limit` decorator.
+- `threat_detector` — `ThreatDetector`: signature + per-source behavioral
+  detection (rapid-repeat, identical-repeat).
+- `audit_logger` — `AuditLogger`: HMAC-signed tamper-evident JSON audit log
+  with rotation and integrity verification (context manager; call `close()`
+  before removing the log dir on Windows).
+- `auth` — `AuthManager`, `PasswordHasher`, `PasswordPolicy`: PBKDF2-HMAC-SHA256
+  hashing (rebuilt off upstream bcrypt), sessions, and account lockout.
+- `monitoring` — `AlertManager`, `SecurityMonitor`: alerting, z-score metric
+  anomaly detection, incidents, and a Prometheus text exporter.
+
 ## Honest scope (Guard Bot port)
 
 - Upstream's duplicate legacy modules (`hub.py` shadowed by `hub/`,
@@ -80,5 +98,14 @@ Guard Bot port:
 - The hub's initial pool remains Strict/Heuristic/Pattern (upstream
   behavior); `StatisticalGuardian` is exported but not in the default
   spawn pool.
-- `cerberus.security` (9 enterprise security modules) is a separate
-  wave-2 port.
+- `cerberus.security` ports 7 of upstream's 9 modules (stdlib-only). The
+  prompt-injection regexes were fixed: upstream's `(previous|all)` form
+  failed to match "ignore all previous instructions" — now an optional
+  all/previous group matches it, consistent with the wave-1 StrictGuardian.
+  `auth` was rebuilt on stdlib PBKDF2 (upstream used bcrypt, which is not a
+  workspace dependency). `AuditLogger` gained a `close()`/context manager so
+  its file handle is released (upstream leaked it).
+- Deferred: `encryption` (needs `cryptography` as a declared dependency +
+  a `uv.lock` update, outside the frozen workflow) and `sandbox` (Unix-only
+  `resource` limits plus arbitrary-code `exec()` — a dual-use liability not
+  appropriate for the canonical governance surface).
