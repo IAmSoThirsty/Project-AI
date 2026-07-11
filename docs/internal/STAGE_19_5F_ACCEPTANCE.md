@@ -160,7 +160,7 @@ Continuity map: docs/operations/CONTINUITY_MAP.md
 Remaining:
 - User authorization to commit Phase F completion
 - Phase G authorization (hydra_50 / Q6 closure)
-- Push decision (12 commits ahead, billing unblocked, awaiting explicit go)
+- Push decision (12 commits ahead, awaiting explicit go)
 Commands run:
 - uv sync --extra dev --all-packages (sync workspace + dev tools)
 - uv pip install -e packages/cerberus (workspace registration)

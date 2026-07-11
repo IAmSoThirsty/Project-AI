@@ -682,9 +682,8 @@ gate step + module-form invocations).
   is a multi-tool, ~hour-scale run incl. Docker/Android; its component
   steps were all run individually this session). First scheduled run:
   today 22:00 local.
-- GitHub Actions runs remain unexercised from this machine (requires
-  push + Actions billing; see codex/ci-billing-evidence history).
-  Workflow YAML is validated by TAAR's 9-category scan + check-yaml.
+- GitHub Actions runs execute remotely, not from this machine; workflow
+  YAML is validated locally by TAAR's 9-category scan + check-yaml.
 
 ### Safe to continue
 Yes. Watch the first ProjectAI-AcceptanceGate run tonight (22:00);

@@ -113,7 +113,7 @@ These are real defects found during self-review (hostile-review pattern from `LE
 1. **Commit Phase C** (this PR)
 2. **Phase D authorization:*** `companion.nirl.py` (NIRL state machines) — 1 source + 1 test + 1 init modify
 3. **Phase E authorization:*** `companion.voice_bonding.py` + `companion.cognition.py` (Q7 closure)
-4. **Push decision:** Phase A and Phase B are committed locally; Phase C makes local 7 ahead of origin/main. Push still requires explicit user authorization (billing unblocked per 2026-06-25).
+4. **Push decision:** Phase A and Phase B are committed locally; Phase C makes local 7 ahead of origin/main. Push still requires explicit user authorization.
 
 ## 9. Self-report (v3 §35)
 
@@ -145,7 +145,7 @@ Continuity map: docs/operations/CONTINUITY_MAP.md (will update on commit)
 Remaining:
 - User authorization to commit Phase C artifacts
 - Phase D authorization (next source-code wave)
-- Push decision (billing unblocked, awaiting user go)
+- Push decision (awaiting user go)
 Commands run:
 - uv run pytest packages/ tools/tests/ tests/test_companion_integration_identity_fates.py
 - uv run mypy packages/ --strict

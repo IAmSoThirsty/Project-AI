@@ -154,7 +154,7 @@ Remaining:
 - Phase H authorization (TARL rebuild — REPLAN NEEDED per phased plan)
 - Phase I authorization (Temporal rebuild — REPLAN NEEDED)
 - Phase J authorization (Atlas rebuild — months of work)
-- Push decision (13 commits ahead, billing unblocked, awaiting explicit go)
+- Push decision (13 commits ahead, awaiting explicit go)
 Commands run:
 - uv sync --extra dev --all-packages
 - uv pip install -e packages/hydra_50 (workspace registration)

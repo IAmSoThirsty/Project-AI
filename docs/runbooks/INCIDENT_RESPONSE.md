@@ -248,7 +248,7 @@ cat .github/workflows/ci.yaml
 | Pinning mismatch | Local uses different Python/Node/Rust than CI | Match the CI pins in your local `.python-version`, `rust-toolchain.toml`, `.nvmrc` |
 | Caching difference | CI's `uv` cache is stale | `gh workflow run ci.yaml --ref main` to retrigger; cache rebuilds |
 | Workflow file changed but job not re-triggered | Empty diff in source, but `.github/workflows/` shows recent change | The change is the cause; revert or fix |
-| External blocker (e.g., GitHub billing lock) | CI jobs never start; status is "queued" indefinitely | See `docs/operations/CONTINUITY_MAP.md` for the current external-blocker list |
+| External blocker (account- or service-level) | CI jobs never start; status is "queued" indefinitely | See `docs/operations/CONTINUITY_MAP.md` for the current external-blocker list |
 
 **Postmortem:** if the red CI was caused by a local-green / CI-red drift,
 that's a gap in the verification recipe. Update the canonical gate

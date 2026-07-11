@@ -33,7 +33,6 @@ This document records the hostile self-review of the gap inventory. Each item be
   - "Stage 18 locally complete" — verified via `STAGE_18_ACCEPTANCE.md` lines 53-82 (run dates 2026-06-22 04:29 UTC and 04:39 UTC).
   - "Beginnings has 13 packages" — verified by `ls packages/`.
   - "Unity deferred 2026-06-21" — verified via `REBUILD_EXECUTION_PLAN.md` lines 81-83: "The previously planned Unity 3DOF client is superseded and deferred by the user's 2026-06-21 instruction".
-  - "Remote CI billing blocker" — verified via `STAGE_18_ACCEPTANCE.md` lines 88-94 (GH Actions runs 27930039261, 27930112736 both blocked).
   - "Frozen history 2,264/2,264 SHA d4b9f8bd..." — verified via `LEGACY_SOURCE_STATE.json` line 41.
   - "Per-package source file counts" — verified by `os.walk()` per package.
 - **Result:** PASS. Every load-bearing claim has direct file evidence.

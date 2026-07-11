@@ -15,7 +15,7 @@
 | Commits ahead of origin/main | **5** |
 | Uncommitted working-tree changes | **7** (see §2) |
 | Last green baseline | 517 pytest pass; mypy --strict clean on 67 source files; ruff clean (full scope, post `03a0fcc`) |
-| Push status | NOT pushed. Remote CI billing unblocked per user 2026-06-25; push decision held pending Phase C commit + verification |
+| Push status | NOT pushed. Push decision held pending Phase C commit + verification |
 | Working dir | `T:\00-Active\Project-AI-Beginnings` |
 
 ---
@@ -172,7 +172,7 @@ feat(stage-19.5C): packages/companion identity + fates + bonded
 ## 8. Open risks / decisions for the next session
 
 - **Integration test fixture fix unverified.** First action next session.
-- **Push decision held.** Remote CI billing is unblocked (per user 2026-06-25). After Phase C commit, local will be 6 ahead of origin/main. **User must explicitly authorize push.** Do NOT auto-push.
+- **Push decision held.** After Phase C commit, local will be 6 ahead of origin/main. **User must explicitly authorize push.** Do NOT auto-push.
 - **Phase F–J REPLAN NEEDED.** Per the phased plan, these phases exceed the ≤5 wave budget for package bootstraps. Each needs a fresh plan before code is written.
 - **Tool iteration limits.** Hit the limit mid-Phase C on this session. Future sessions may need to commit + resume in smaller chunks rather than drive C→J in one pass.
 

@@ -702,7 +702,7 @@ These legacy sub-systems need their own Beginnings package because they have non
 - `T:\00-Active\Project-AI-Beginnings\docs\reference\INGEST_SKIPPED.md` (6 explicit skips, all credentials)
 - `T:\00-Active\Project-AI-Beginnings\docs\reference\ORPHAN_PAPERS.md` (4 entries, 2 are Genesis continuations)
 - `T:\00-Active\Project-AI-Beginnings\docs\internal\REBUILD_EXECUTION_PLAN.md` (active authority)
-- `T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_18_ACCEPTANCE.md` (Stage 18 local acceptance, remote CI billing blocker)
+- `T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_18_ACCEPTANCE.md` (Stage 18 local acceptance)
 - `T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_4_MERGE_REPORT.json` (SWR + atlas merge)
 - `T:\00-Active\Project-AI-Beginnings\docs\internal\STAGE_4_7_4_8_IMPORT_REPORT.json` (chimera + governance_framework)
 - `T:\00-Active\Project-AI-Beginnings\docs\internal\LEGACY_SOURCE_STATE.json`

@@ -203,11 +203,9 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.3 Branch & Remote Discipline
 
-- Trunk: `main`. Current local `main` == `origin/main` at `ca3477a` (verified 2026-06-24).
-- Working branches observed (per `git branch -a`):
-  - `codex/ci-billing-evidence` (at `ca3477a`)
-  - `codex/ci-sha-pins` (at `7903d1e`)
-  - `codex/rebuild-continuation` (at `5d084d0`)
+- Trunk: `main`. Local `main` runs ahead of `origin/main`; push only on explicit user authorization.
+- Working branches observed (per `git branch -a`, 2026-07-11):
+  - `chore/warning-cleanup-utc-artifacts` (merged pointer; the former `codex/*` branches were fully merged and deleted 2026-07-10)
 - Safety: never rewrite existing commits. Push only a fresh `main`. Never modify legacy `master`, existing tags, or the remote default branch.
 - No version tag, GitHub Release, deployment, package publication, container publication, or production-readiness claim is part of any current gate.
 
@@ -225,10 +223,8 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.5 Current Open Blocker (NOT dismissible per v3 §5)
 
-- **Remote CI billing lock.** First run `27930039261` and full-SHA-pinned replacement `27930112736` both report `The job was not started because your account is locked due to a billing issue.` No workflow step ran.
-- **Minimum fix:** resolve the GitHub account billing lock and rerun `.github/workflows/ci.yaml`.
-- **Impact:** development checkpoint cannot be marked "CI green" until rerun succeeds locally and remotely. Local acceptance is already complete.
-- **Safe to continue:** yes — local work is not blocked by this.
+- None. Remote CI is green (run `28299731926` passed all jobs on `c831f192`); local acceptance complete.
+- **Safe to continue:** yes.
 
 ### 2.6 Continuity Map (v3 §20)
 

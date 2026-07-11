@@ -85,18 +85,11 @@ Both complete gates then passed from the detached `baa98e2` worktree.
 
 - Local `main` fast-forward: completed at `5d084d0`.
 - Existing GitHub remote configuration and `main` push: completed.
-- Observed remote CI result: passed after the account-level billing lock was
-  resolved and repo CI issues were repaired.
-
-Historical remote blocker:
-The first remote CI run (`27930039261`) and the full-SHA-pinned replacement run
-(`27930112736`) both report the same check annotation: `The job was not started
-because your account is locked due to a billing issue.` No workflow step ran.
-This was an external GitHub account boundary at the time of the first push.
+- Observed remote CI result: passed after repo CI issues were repaired.
 
 Repository policy also requires full-SHA action pins. Commit `7903d1e` pins
 every action reference to the upstream commit behind its documented major
-version, independently of the historical billing blocker.
+version.
 
 Current remote evidence:
 - GitHub Actions CI run `28299731926` passed all jobs on commit `c831f192`

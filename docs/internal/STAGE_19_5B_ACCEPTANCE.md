@@ -149,7 +149,7 @@ emergent-microservices/autonomous-compliance
 
 1. **Commit Phase B artifacts** (pending user authorization)
 2. **Phase C authorization:*** First source-code wave (`packages/companion/` identity + fates) — 3 new source files + 2 test files + 1 init modify + 1 cross-package integration test
-3. **Push decision:** Remote CI billing blocker resolved (per user 2026-06-25); push to origin/main is now safe but is a distinct decision
+3. **Push decision:** push to origin/main is a distinct decision requiring explicit user authorization
 
 ## 10. Self-report (v3 §35)
 
@@ -182,7 +182,7 @@ Continuity map: docs/operations/CONTINUITY_MAP.md (updated)
 Remaining:
 - User authorization to commit Phase B artifacts
 - Phase C authorization (first source-code wave)
-- Push decision (billing unblocked; awaiting user go)
+- Push decision (awaiting user go)
 Commands run: see §4 + §5
 Safe to continue: yes (for commit + Phase C + push); NOT for code edits without explicit "go"
 ```

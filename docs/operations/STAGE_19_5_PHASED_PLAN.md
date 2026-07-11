@@ -251,7 +251,7 @@ All 8 questions + all 5 next-wave items covered.
 
 After each phase completes and is committed:
 1. Update `docs/operations/CONTINUITY_MAP.md`
-2. Push to local `main` (no remote push — billing lock still in effect)
+2. Push to local `main` (no remote push without explicit user authorization)
 3. Update memory entry with the new HEAD SHA and which questions are now closed
 4. Re-verify gates before next phase authorization
 
