@@ -200,6 +200,14 @@ jobs:
             target
           key: ${{ runner.os }}-cargo-cyclonedx-${{ hashFiles('Cargo.lock') }}
       - name: Generate Rust workspace SBOM
+        # RUSTUP_TOOLCHAIN overrides the repo's rust-toolchain.toml, which
+        # pins channel = "stable-x86_64-pc-windows-gnu" for local Windows
+        # dev use. Without this override, `cargo install` on a Linux runner
+        # fails with "target tuple in channel name" trying to resolve that
+        # Windows-specific toolchain (same override the "rust" job above
+        # already relies on).
+        env:
+          RUSTUP_TOOLCHAIN: stable
         run: |
           mkdir -p build/sbom
           cargo install cargo-cyclonedx --locked

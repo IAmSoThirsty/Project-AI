@@ -38,6 +38,13 @@ jobs:
     name: Rust dependency scan (cargo-audit)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # Overrides the repo's rust-toolchain.toml (channel =
+      # "stable-x86_64-pc-windows-gnu", pinned for local Windows dev use) -
+      # without this, `cargo install` on this Linux runner fails trying to
+      # resolve that Windows-specific toolchain. Same override ci.yaml's
+      # "rust" and "sbom" jobs already rely on.
+      RUSTUP_TOOLCHAIN: stable
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

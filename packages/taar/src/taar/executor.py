@@ -17,6 +17,7 @@ import shlex
 import subprocess
 import time
 import uuid
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, NoReturn
@@ -78,7 +79,7 @@ from taar.writers.digest_writer import digest_writer
 from taar.writers.quarantine_writer import quarantine_writer
 from taar.writers.report_writer import report_writer
 
-BUILTIN_COMMANDS = {
+BUILTIN_COMMANDS: dict[str, Callable[[ExecutionContext], BuiltinResult]] = {
     "builtin:heartbeat_check": heartbeat_check,
     "builtin:lock_check": lock_check,
     "builtin:runaway_check": runaway_check,
