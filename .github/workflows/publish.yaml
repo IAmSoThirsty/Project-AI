@@ -80,6 +80,15 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
+      - name: Lowercase registry owner
+        # OCI/Docker repository names must be lowercase. github.repository_owner
+        # preserves the actual account casing (e.g. "IAmSoThirsty"), which
+        # buildx rejects outright ("repository name must be lowercase").
+        # Overrides env.REGISTRY_OWNER for the rest of this job via
+        # GITHUB_ENV so every existing ${{ env.REGISTRY_OWNER }} reference
+        # below resolves correctly without being rewritten individually.
+        run: echo "REGISTRY_OWNER=$(echo '${{ env.REGISTRY_OWNER }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
       - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
       - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
@@ -128,6 +137,9 @@ jobs:
         portal: [docs, proof]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Lowercase registry owner
+        run: echo "REGISTRY_OWNER=$(echo '${{ env.REGISTRY_OWNER }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
 
       - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
@@ -180,6 +192,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
+      - name: Lowercase registry owner
+        run: echo "REGISTRY_OWNER=$(echo '${{ env.REGISTRY_OWNER }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
       - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
       - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
@@ -227,6 +242,9 @@ jobs:
       id-token: write # required for cosign keyless (Sigstore/Fulcio OIDC) signing
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Lowercase registry owner
+        run: echo "REGISTRY_OWNER=$(echo '${{ env.REGISTRY_OWNER }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
 
       - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
@@ -291,6 +309,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
+      - name: Lowercase registry owner
+        run: echo "REGISTRY_OWNER=$(echo '${{ env.REGISTRY_OWNER }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
       - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
       - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
@@ -340,6 +361,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
+      - name: Lowercase registry owner
+        run: echo "REGISTRY_OWNER=$(echo '${{ env.REGISTRY_OWNER }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
       - name: Generate release notes
         run: |
           cat > /tmp/release-notes.md << 'EOF'
@@ -347,7 +371,7 @@ jobs:
 
           ## Container Images
 
-          All images are published to `ghcr.io/${{ github.repository_owner }}/`:
+          All images are published to `ghcr.io/${{ env.REGISTRY_OWNER }}/`:
 
           - `project-ai-api:${{ needs.image-metadata.outputs.version }}`
           - `project-ai-docs-portal:${{ needs.image-metadata.outputs.version }}`
@@ -363,7 +387,7 @@ jobs:
 
           ```yaml
           image:
-            registry: ghcr.io/${{ github.repository_owner }}
+            registry: ghcr.io/${{ env.REGISTRY_OWNER }}
             tag: ${{ needs.image-metadata.outputs.version }}
             pullPolicy: IfNotPresent
           ```
@@ -385,7 +409,7 @@ jobs:
             cosign verify \
               --certificate-identity-regexp '^https://github.com/${{ github.repository }}/\.github/workflows/publish\.yaml@.*$' \
               --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-              ghcr.io/${{ github.repository_owner }}/project-ai-<image>:${{ needs.image-metadata.outputs.version }}
+              ghcr.io/${{ env.REGISTRY_OWNER }}/project-ai-<image>:${{ needs.image-metadata.outputs.version }}
             ```
           - Buildx-generated SLSA provenance and Software Bill of Materials (SBOM)
             attestations (`provenance: mode=max`, `sbom: true`) — informational,
