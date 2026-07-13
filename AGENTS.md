@@ -193,6 +193,7 @@ Operator-side experimental packages (may invoke AI-side execution only through t
 - `arbiter` — ledger, gates, dual-sig (EXPERIMENTAL/DRAFT for v1.0.0)
 - `rlp` — policy engine + `governance_framework/` (EXPERIMENTAL/DRAFT for v1.0.0)
 - `taar` — report-only agent runner with hash-sealed evidence + append-only audit (ported 2026-07-09 from TAAR-Agent-Taskforce @ `7b51966`; holds no governance authority and never mutates inspected repos)
+- `caretaker` — constitutional inference runtime hosting its own model as an untrusted component (ported from `thirsty_governance_framework_0722`; wired into the uv workspace 2026-07-12). Governs only its own hosted inference; canonical Project-AI verdict authority remains `packages/governance`. Pre-Alpha: 17 of 18 source modules have no test coverage (`packages/caretaker/README.md` documents the gap) — do not treat as proven governance per v3 §29-30.
 
 Applications (consume API surfaces, do not embed governance authority):
 - `web` (vite + react portals; chimera protection wired)

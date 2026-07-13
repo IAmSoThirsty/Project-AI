@@ -51,6 +51,17 @@ backup:
   enabled: false
   schedule: "0 2 * * *"
   retentionDays: 30
+  image: "busybox:1.36.1"
+  # Remote upload is off by default everywhere: it requires an operator-provided
+  # rclone config Secret (see backup.remote.secretName) mounted at
+  # /remote-config/rclone.conf. With remote.enabled=false, the CronJob only
+  # writes/prunes local tar.gz archives on the backup PVC. Not exercised
+  # against a live cluster or a real remote target — verify in a real
+  # environment before relying on it.
+  remote:
+    enabled: false
+    destination: ""  # e.g. "s3:my-bucket/project-ai-backups"
+    secretName: ""   # defaults to "<release>-backup-remote" if unset
 
 # CronJobs - disabled in development
 auditVerify:

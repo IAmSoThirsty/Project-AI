@@ -138,6 +138,12 @@ alerting:
 backup:
   enabled: true
   schedule: "0 2 * * *"
+  # Remote upload stays disabled until an operator provides a real rclone
+  # config Secret and destination — see helm/project-ai/values.yaml comment.
+  remote:
+    enabled: false
+    destination: ""
+    secretName: ""
 
 ingress:
   enabled: true

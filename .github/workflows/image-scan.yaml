@@ -13,6 +13,7 @@ jobs:
   scan:
     name: Trivy scan container images
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       matrix:
         image: [api, docs-portal, proof-portal, swr, atlas, arbiter-rlp, genesis]
@@ -33,6 +34,5 @@ jobs:
         with:
           image-ref: ghcr.io/${{ github.repository_owner }}/project-ai-${{ matrix.image }}:latest
           format: table
-          exit-code: "0"
+          exit-code: "1"
           severity: CRITICAL,HIGH
-        continue-on-error: true

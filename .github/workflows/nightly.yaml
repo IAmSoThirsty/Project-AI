@@ -5,6 +5,9 @@ on:
     - cron: "0 3 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: nightly-${{ github.ref }}
   cancel-in-progress: false
@@ -13,6 +16,7 @@ jobs:
   python:
     name: Python (policy, type, test, replay)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       QT_QPA_PLATFORM: offscreen
     steps:
@@ -46,6 +50,7 @@ jobs:
   rust:
     name: Rust (fmt, clippy, test)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       RUSTUP_TOOLCHAIN: stable
     steps:
@@ -65,6 +70,7 @@ jobs:
   node:
     name: Node (lint, test, build)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9

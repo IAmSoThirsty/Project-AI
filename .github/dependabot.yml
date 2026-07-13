@@ -1,0 +1,35 @@
+version: 2
+
+updates:
+  # Python workspace (uv.lock covers all packages/* and apps/* members from root).
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Rust workspace (crates/genesis-emitter).
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Container base images.
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # GitHub Actions pinned SHAs.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # apps/web (pnpm workspace) is intentionally not covered yet: it is being
+  # replaced by integration from a separate repo (see AGENTS.md / continuity
+  # map). Add an "npm" entry with directory "/apps/web" once that
+  # integration lands and the pnpm workspace is the settled source of truth.

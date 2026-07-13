@@ -12,6 +12,7 @@ jobs:
   python:
     name: Python dependency scan (pip-audit)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
@@ -19,9 +20,15 @@ jobs:
           enable-cache: true
       - run: uv sync --frozen --all-extras --all-packages
       - name: Run pip-audit
-        run: |
-          uv run pip-audit --strict --desc
-        continue-on-error: true
+        # pip-audit is intentionally not a workspace dependency (keeps it out of
+        # the locked dependency graph); `--with` installs it into an ephemeral
+        # overlay of the already-synced env so it audits the real resolved
+        # third-party deps. --skip-editable is required: this is a uv workspace
+        # of 30+ local `project-ai-*` packages installed editable, none of
+        # which are published to PyPI, so an unfiltered audit fails immediately
+        # on every one of them ("not found on PyPI") instead of scanning
+        # anything. This is a hard gate: a real CVE fails the job.
+        run: uv run --with pip-audit pip-audit --desc --skip-editable
       - name: Summary
         run: |
           echo "## Python Vulnerability Scan" >> $GITHUB_STEP_SUMMARY
@@ -30,6 +37,7 @@ jobs:
   rust:
     name: Rust dependency scan (cargo-audit)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -41,11 +49,11 @@ jobs:
           key: ${{ runner.os }}-cargo-audit-${{ hashFiles('Cargo.lock') }}
       - run: cargo install cargo-audit --locked
       - run: cargo audit
-        continue-on-error: true
 
   node:
     name: Node dependency scan (pnpm audit)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -57,4 +65,41 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit --audit-level=moderate
-        continue-on-error: true
+
+  python-licenses:
+    name: Python dependency license check (pip-licenses)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+      - run: uv sync --frozen --all-extras --all-packages
+      - name: Check third-party dependency licenses
+        # Root pyproject.toml declares MIT. --allow-only is a hard gate: a new
+        # dependency with an unlisted license fails the job instead of silently
+        # merging. --partial-match tolerates the different license-string
+        # spellings pip/PyPI classifiers use for the same license.
+        #
+        # Documented exceptions already in the locked dependency set (not
+        # hidden — listed explicitly so a reviewer sees exactly what's
+        # accepted and why):
+        #   - PyQt6 (GPL-3.0-only) / PyQt6-Qt6 (LGPL v3): desktop app
+        #     (apps/desktop) dependency. Riverbank dual-licenses PyQt6 under
+        #     GPL-3.0 or a commercial license. Distributing a built
+        #     apps/desktop binary under GPL-3.0-incompatible terms would
+        #     require a commercial PyQt6 license instead — this is a business
+        #     decision, not a tooling gap; flagged here, not resolved here.
+        #   - pyinstaller / pyinstaller-hooks-contrib (GPL-2.0): PyInstaller's
+        #     license has an explicit bootloader exception — the GPL applies
+        #     to PyInstaller's own source, not to programs built with it.
+        #     Not a copyleft risk for apps built using it.
+        run: |
+          uv run --with pip-licenses pip-licenses \
+            --allow-only="MIT;BSD;Apache;ISC License;MPL;PSF;Python Software Foundation License;GPL-3.0-only;LGPL v3;GNU General Public License v2 (GPLv2)" \
+            --partial-match
+      - name: Summary
+        run: |
+          echo "## Python License Check" >> $GITHUB_STEP_SUMMARY
+          echo "All third-party licenses are in the allow-list (see step log for the full report, or the exceptions documented in this workflow's comments)." >> $GITHUB_STEP_SUMMARY

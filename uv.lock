@@ -13,6 +13,7 @@ members = [
     "project-ai-audit",
     "project-ai-canonical",
     "project-ai-capability",
+    "project-ai-caretaker",
     "project-ai-cerberus",
     "project-ai-cli",
     "project-ai-cognitive-warfare",
@@ -834,10 +835,12 @@ dependencies = [
     { name = "project-ai-atlas" },
     { name = "project-ai-audit" },
     { name = "project-ai-capability" },
+    { name = "project-ai-caretaker" },
     { name = "project-ai-cerberus" },
     { name = "project-ai-cli" },
     { name = "project-ai-cognitive-warfare" },
     { name = "project-ai-companion" },
+    { name = "project-ai-convergence" },
     { name = "project-ai-django-state" },
     { name = "project-ai-emp-defense" },
     { name = "project-ai-execution" },
@@ -898,10 +901,12 @@ requires-dist = [
     { name = "project-ai-atlas", editable = "packages/atlas" },
     { name = "project-ai-audit", editable = "packages/audit" },
     { name = "project-ai-capability", editable = "packages/capability" },
+    { name = "project-ai-caretaker", editable = "packages/caretaker" },
     { name = "project-ai-cerberus", editable = "packages/cerberus" },
     { name = "project-ai-cli", editable = "packages/cli" },
     { name = "project-ai-cognitive-warfare", editable = "packages/cognitive-warfare" },
     { name = "project-ai-companion", editable = "packages/companion" },
+    { name = "project-ai-convergence", editable = "packages/convergence" },
     { name = "project-ai-django-state", editable = "packages/django-state" },
     { name = "project-ai-emp-defense", editable = "packages/emp-defense" },
     { name = "project-ai-execution", editable = "packages/execution" },
@@ -1065,6 +1070,27 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
+
+[[package]]
+name = "project-ai-caretaker"
+version = "0.0.0.dev0"
+source = { editable = "packages/caretaker" }
+dependencies = [
+    { name = "click" },
+    { name = "fastapi" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "click", specifier = ">=8.1" },
+    { name = "fastapi", specifier = ">=0.111" },
+    { name = "httpx", specifier = ">=0.27" },
+    { name = "pydantic", specifier = ">=2.7" },
+    { name = "uvicorn", specifier = ">=0.30" },
+]
 
 [[package]]
 name = "project-ai-cerberus"

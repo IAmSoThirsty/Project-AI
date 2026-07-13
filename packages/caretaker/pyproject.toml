@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-caretaker"
+version = "0.0.0.dev0"
+description = "Caretaker constitutional inference runtime (operator-side, ported from thirsty_governance_framework_0722)"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = [
+    "click>=8.1",
+    "fastapi>=0.111",
+    "httpx>=0.27",
+    "pydantic>=2.7",
+    "uvicorn>=0.30",
+]
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.scripts]
+caretaker = "caretaker.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/caretaker"]

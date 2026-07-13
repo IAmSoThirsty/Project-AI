@@ -10,8 +10,7 @@ metadata:
     {{- include "project-ai.labels" . | nindent 4 }}
     app.kubernetes.io/component: backup
 spec:
-  # Run daily at 2 AM UTC
-  schedule: "0 2 * * *"
+  schedule: {{ .Values.backup.schedule | quote }}
   jobTemplate:
     spec:
       template:
@@ -24,22 +23,45 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: backup
-              image: busybox:latest
+              image: {{ .Values.backup.image | default "busybox:1.36.1" }}
               command:
                 - /bin/sh
                 - -c
                 - |
-                  echo "Starting backup at $(date)"
-                  # Mount PVC at /data (audit data)
-                  # Compress: tar czf /backup/audit-$(date +%Y%m%d-%H%M%S).tar.gz -C /data .
-                  # Upload to S3/GCS/Azure if configured
-                  echo "Backup completed at $(date)"
+                  set -eu
+                  echo "Starting backup at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+                  archive="/backup/audit-$(date -u +%Y%m%d-%H%M%S).tar.gz"
+                  tar czf "$archive" -C /data .
+                  echo "Wrote $archive ($(du -h "$archive" | cut -f1))"
+
+                  retention_days={{ .Values.backup.retentionDays | default 30 }}
+                  echo "Pruning local backups older than ${retention_days} days"
+                  find /backup -maxdepth 1 -name 'audit-*.tar.gz' -mtime "+${retention_days}" -print -delete
+
+                  {{- if .Values.backup.remote.enabled }}
+                  if [ -f /remote-config/rclone.conf ]; then
+                    echo "Uploading $archive to remote:{{ .Values.backup.remote.destination }}"
+                    rclone --config /remote-config/rclone.conf copy "$archive" "{{ .Values.backup.remote.destination }}"
+                  else
+                    echo "backup.remote.enabled=true but /remote-config/rclone.conf is missing; skipping remote upload" >&2
+                    exit 1
+                  fi
+                  {{- else }}
+                  echo "Remote upload disabled (backup.remote.enabled=false); local PVC copy only"
+                  {{- end }}
+
+                  echo "Backup completed at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
               volumeMounts:
                 - name: audit-data
                   mountPath: /data
                   readOnly: true
                 - name: backup-storage
                   mountPath: /backup
+                {{- if .Values.backup.remote.enabled }}
+                - name: remote-config
+                  mountPath: /remote-config
+                  readOnly: true
+                {{- end }}
               resources:
                 requests:
                   cpu: 100m
@@ -55,6 +77,12 @@ spec:
             - name: backup-storage
               persistentVolumeClaim:
                 claimName: {{ .Release.Name }}-backup-pvc
+            {{- if .Values.backup.remote.enabled }}
+            - name: remote-config
+              secret:
+                secretName: {{ .Values.backup.remote.secretName | default (printf "%s-backup-remote" .Release.Name) }}
+                optional: false
+            {{- end }}
 
 ---
 # ServiceAccount for backup job

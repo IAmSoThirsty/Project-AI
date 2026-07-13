@@ -7,6 +7,13 @@
 
 ---
 
+## SESSION UPDATE 2026-07-11 — Memory architecture integration
+
+- **Status:** COMPLETE
+- **Work:** Added an enhanced memory architecture schematic covering working memory, short-term memory, long-term memory, companion intelligence, counterfactual and uncertainty memory, failure and causal memory, governance and audit memory, TAAR, Shadow Thirst, the Sovereign Interior Vault, NIRL jailbreak detection, and Chimera containment.
+- **Files:** [docs/architecture/visual-maps/architecture/memory-system.md](docs/architecture/visual-maps/architecture/memory-system.md), [docs/architecture.md](docs/architecture.md), [docs/architecture/visual-maps/README.md](docs/architecture/visual-maps/README.md)
+- **Purpose:** Make the new schematic part of the repo’s living architecture documentation and preserve it across handoffs.
+
 ## PHASE 2 IMPLEMENTATION STATUS
 
 ### Completed (EXECUTED)
@@ -689,3 +696,211 @@ gate step + module-form invocations).
 Yes. Watch the first ProjectAI-AcceptanceGate run tonight (22:00);
 `Get-ScheduledTaskInfo -TaskName ProjectAI-AcceptanceGate` shows the
 result.
+
+---
+
+## Session Update - Repo-wide gap analysis remediation (2026-07-12)
+
+### Scope
+- Mode: repo patch (packages, CI/CD, Helm, compliance).
+- Branch: `main`.
+- Workspace path: `T:\00-Active\Project-AI-Beginnings`.
+- Preceded by a read-only gap-analysis audit (3 parallel Explore agents:
+  packages/dependencies, containers/infrastructure, CI/CD/compliance)
+  producing a 14-item prioritized punch list. User directed: "take care of
+  all findings, including any pre-existing that you find along the way."
+- Mid-session user correction: `apps/web` (docs-portal/proof-portal/
+  triumvirate-portal) is being integrated from a separate repo and is not
+  yet finalized here — deferred all web/container-doc items on that basis.
+
+### P0 - silent gaps that looked done but weren't (EXECUTED)
+- `helm/project-ai/templates/backup.yaml`: backup/upload logic was entirely
+  commented out (silent no-op) on a `busybox:latest` image (only `:latest`
+  tag in the repo). Replaced with real local tar+retention logic (tested via
+  `helm template`), an explicit opt-in `backup.remote.enabled` gate for
+  rclone-based remote upload (off by default everywhere, documented as not
+  exercised against a live remote), and pinned `busybox:1.36.1`. New
+  `backup.remote.*` values added to `values.yaml` and `values.prod.yaml`
+  (remote stays disabled in prod by default).
+- `vulnscan.yaml`: found `uv run pip-audit` does not merely "report and
+  continue" - it was failing to even find the `pip-audit` binary
+  (`error: Failed to spawn: pip-audit`, exit 2) every run, silently
+  swallowed by `continue-on-error: true`. Root cause: pip-audit was never a
+  declared dependency. Fixed to `uv run --with pip-audit pip-audit --desc
+  --skip-editable` (verified locally: audits real third-party deps, skips
+  the 30+ local editable `project-ai-*` packages that aren't on PyPI,
+  "No known vulnerabilities found", exit 0). Dropped `continue-on-error`
+  on all three vulnscan jobs (python/rust/node) and the image-scan Trivy
+  step (`exit-code: "1"`) - these are schedule-only workflows so this
+  doesn't gate merges, it makes a real finding turn the scheduled run red
+  instead of silently green.
+- `publish.yaml`: release notes claimed "Build provenance attestations
+  (verify with cosign verify-attestation)" but no `cosign` step existed
+  anywhere in the workflow. Added real cosign keyless (Sigstore/Fulcio via
+  GitHub OIDC, no stored key) signing to all 4 build jobs plus a
+  `cosign verify` step in `verify-images`, and corrected the release notes
+  to describe exactly what's implemented (image signature vs. unsigned
+  Buildx provenance/SBOM attestations, not conflated). Also removed a dead
+  `image-metadata.outputs.digest` job output (referenced a nonexistent
+  `steps.build` in that job; always evaluated empty, nothing consumed it)
+  and added the job's missing `permissions:` block.
+
+### P1 - orphaned/incomplete packages (EXECUTED)
+- `packages/caretaker/`: real ~18-module governance runtime, untracked,
+  not in the uv workspace, and its own `pyproject.toml` declared
+  `readme = "README.md"` with no such file - `uv sync`/build would have
+  failed the moment it was wired in. Created the missing README, wired into
+  root `pyproject.toml` (workspace members + `tool.uv.sources` +
+  `project.dependencies`, matching the `arbiter`/`rlp`/`taar` pattern),
+  regenerated `uv.lock` (clean, `Added project-ai-caretaker`), added to
+  `AGENTS.md` SS2.2's operator-side experimental package list with an
+  honest note that 17 of 18 source modules still have no test coverage.
+  Fixed 2 pre-existing `SIM108` ruff findings and 6 files' worth of
+  ruff-format drift in `packages/caretaker` (never linted before since it
+  wasn't in the workspace). Verified: ruff clean, `mypy --strict` clean
+  (24 files), existing `test_caretaker_constitution.py` suite passes.
+- `packages/convergence/`: declared workspace member with an empty test
+  suite and no `py.typed`, unused by anything else. Added `py.typed`, wired
+  into `tool.uv.sources`/`project.dependencies` (was member-only), and
+  wrote a real integration test suite
+  (`tests/test_convergence_shadow_thirst_integration.py`, 11 tests) that
+  calls `run_convergence()` end-to-end against the real governance/
+  security/atlas/swr sibling packages plus the fail-closed error paths
+  (unimportable loader, unknown tier, missing spec file). Verified: ruff
+  clean, `mypy --strict` clean, 11/11 pass.
+- Both packages added to `.pre-commit-config.yaml`'s mypy hook `files:`
+  regex (matching the precedent set when `taar` was added) plus the
+  `httpx`/`pydantic`/`uvicorn` additional_dependencies caretaker's imports
+  need; verified the hook itself passes on both packages' source.
+
+### P2 - stale web/container docs: DEFERRED, not fixed
+Per the mid-session user correction, `docs/CONTAINERIZATION.md` and the
+Helm/portal-staleness items were left untouched - the underlying `apps/web`
+layer is being replaced by an integration from a separate repo, so
+polishing docs/config for it now would be wasted work.
+
+### P3 - hardening / hygiene (EXECUTED)
+- Added `timeout-minutes` to all 26 jobs across all 8 workflow files (none
+  had any before; all previously relied on GitHub's 360-minute default).
+- Added a top-level `permissions: contents: read` block to `ci.yaml` and
+  `nightly.yaml` (previously inherited the default token scope); fixed
+  `publish.yaml`'s `image-metadata` job missing block (see P0).
+- Added `.github/dependabot.yml`: `uv` (confirmed via the dependabot-core
+  GitHub repo listing - `uv` is a distinct supported ecosystem, not just
+  `pip`), `cargo`, `docker`, `github-actions`. `npm`/pnpm intentionally
+  omitted with an inline comment (web layer not yet integrated - see
+  above).
+- Added Rust SBOM generation (`cargo cyclonedx`) to `ci.yaml`'s `sbom` job,
+  alongside the existing Python one. Node SBOM deferred for the same reason
+  as the dependabot npm entry. Honest note: could not compile-test
+  `cargo-cyclonedx` locally (Windows `dlltool.exe` missing on this host -
+  same pre-existing gap that blocked local `cargo-audit` compilation
+  earlier in this session); CI runs on `ubuntu-latest` where this isn't a
+  factor.
+- `packages/_staging/swr`: diffed against `packages/swr/src/swr` module by
+  module - every staging file has a corresponding, evolved/expanded
+  counterpart in the real package (e.g. governance.py 414->511 lines,
+  crypto.py 282->458 lines). Confirmed fully superseded. Per CLAUDE.md's
+  explicit "Do not touch" policy for `packages/_staging` (byte-preserved
+  migration input), left as-is - this closes as a confirmed finding, not a
+  code change.
+- `apps/web-static/ompt-reference/`: confirmed NOT a truncated/typo'd
+  directory name. It's named consistently across two independent docs
+  (`docs/operations/APPS_INVENTORY.md`, `docs/internal/STAGE_14_SOURCE_MAP.md`)
+  and is already an explicit exclude entry in `.pre-commit-config.yaml`
+  line 1 - deliberate, pre-existing, no action taken.
+- Added a `python-licenses` job to `vulnscan.yaml` (`pip-licenses
+  --allow-only ... --partial-match`). Surveyed the actual current
+  dependency set first rather than guessing an allow-list: 134 packages,
+  all MIT/BSD/Apache/ISC/MPL/PSF except 4 with GPL/LGPL terms - `PyQt6`
+  (GPL-3.0-only) and `PyQt6-Qt6` (LGPL v3, both `apps/desktop` deps) and
+  `pyinstaller`/`pyinstaller-hooks-contrib` (GPL-2.0, build-time only, has
+  a documented bootloader exception that doesn't propagate to built
+  programs). All 4 are explicitly listed in the allow-list with inline
+  comments explaining why, rather than silently permitted via a broad
+  partial-match - a genuinely new GPL dependency would still fail the gate.
+  Verified: `--allow-only` run locally against the real environment, exit
+  0.
+
+### Risk surfaced, not resolved (flagging per v3 SS7, not deciding unilaterally)
+- **PyQt6 is GPL-3.0-only.** `apps/desktop` depends on it directly. Riverbank
+  Computing dual-licenses PyQt6 under GPL-3.0 or a paid commercial license.
+  If `apps/desktop` is ever distributed as a built binary under terms
+  incompatible with GPL-3.0 (the root `pyproject.toml` declares the overall
+  project `license = "MIT"`), that would require either a commercial PyQt6
+  license or open-sourcing the desktop app under GPL-compatible terms. This
+  is a business/legal decision, not something resolved by this session's
+  tooling addition - the new `python-licenses` CI job makes the dependency
+  visible and reviewable going forward rather than silently invisible.
+
+### Verification run (all executed this session)
+- `helm lint helm/project-ai` (dev values) - 0 failures.
+- `helm lint helm/project-ai -f helm/values.prod.yaml` - 0 failures.
+- `helm template ... | tools/verify_helm_template.py` - default render 14
+  manifests PASS; full render (`-f values.prod.yaml`, all 10 CronJob flags,
+  plus persistence/rbac/networkPolicy/pdb/monitoring/ingress) 73 manifests
+  PASS, 32 CronJobs (was 31 in the 2026-07-11 entry - the extra one is
+  TAAR's registry growing by one reader agent since then, unrelated to this
+  session's changes, confirmed by diffing the CronJob name list).
+- `uv run ruff check .` / `ruff format --check .` (whole repo, excluding
+  the untracked `tmp-knowledge-debug/` scratch dir - pre-existing local
+  debris, not part of git, unrelated to this session) - all checks passed,
+  488 files formatted.
+- `uv run python -m mypy --ignore-missing-imports` on the CI-shaped core
+  package list (unchanged scope) - Success, 138 source files.
+- `uv run python -m mypy` on `packages/caretaker/src` +
+  `packages/convergence/src` (strict) - Success, 24 source files.
+- `uv run python -m pytest -q --tb=short` (full suite) - **2702 passed, 1
+  xfailed (pre-existing, documented legacy-simulation behavior question),
+  1 warning (pre-existing, unrelated manual test), 1667s.** Up from 2641
+  passed in the 2026-07-11 entry - the +61 is this session's new
+  `packages/caretaker/tests` (already existed, now collected since the
+  package is workspace-wired) and the new 11-test
+  `test_convergence_shadow_thirst_integration.py`.
+- `uv run pre-commit run mypy --files <caretaker+convergence source>` -
+  Success (the reported "Failed - files were modified by this hook" line
+  is the known `.mypy_cache` write artifact, not a type error; the
+  `Success: no issues found in 2 source files` line confirms the pass).
+- `actionlint v1.7.12` (installed via `go install`, not previously in this
+  repo's toolchain) against all 8 workflow files - 0 findings, exit 0.
+- `uv run python -c "import yaml; yaml.safe_load(...)"` on every touched
+  YAML file (`.pre-commit-config.yaml`, `.github/dependabot.yml`, all 8
+  workflow files) - all parse.
+- Every job in every workflow file confirmed to have `timeout-minutes` via
+  a repo-wide script pass (26/26).
+
+### Not independently verified locally (honest gaps, not silent)
+- `cargo audit` and `cargo cyclonedx`: could not compile either locally -
+  `error calling dlltool 'dlltool.exe': program not found` building
+  `windows-sys`/`parking_lot_core` on this Windows host. This blocks local
+  compilation of any `cargo install`-based Rust tool here, not specific to
+  these two. CI runs on `ubuntu-latest`, unaffected. `pnpm audit` (Node) WAS
+  verified locally - clean, exit 0.
+- The `python-licenses`, `python` (pip-audit), and `image-scan` Trivy jobs'
+  exact behavior inside GitHub's hosted runners is inferred from local
+  reproduction of the same commands against the same lockfiles, not from an
+  actual triggered workflow run (no push/schedule fired from this session).
+
+### Files touched
+- Created: `packages/caretaker/README.md`,
+  `packages/convergence/src/convergence/py.typed`,
+  `tests/test_convergence_shadow_thirst_integration.py`,
+  `.github/dependabot.yml`.
+- Modified: `helm/project-ai/templates/backup.yaml`,
+  `helm/project-ai/values.yaml`, `helm/values.prod.yaml`,
+  `.github/workflows/{ci,nightly,publish,vulnscan,image-scan,
+  frozen-history-verify,sbom-weekly,verify-taar-bundle}.yaml`,
+  `.pre-commit-config.yaml`, `pyproject.toml`, `uv.lock`, `AGENTS.md`,
+  `packages/caretaker/src/caretaker/cli.py` (ruff fixes + 6 files
+  reformatted), this map.
+- Explicitly left untouched (documented reasons above):
+  `docs/CONTAINERIZATION.md`, `docs/deployment/HELM_DEPLOY.md`,
+  `docs/operations/PRE_RELEASE_DEPLOYMENT_VERIFICATION_AUDIT_2026-07-07.md`,
+  `packages/_staging/swr`, `apps/web-static/ompt-reference/`,
+  `tmp-knowledge-debug/`, `packages/knowledge/{extract,ingest}.py`
+  (pre-existing unrelated dirty state, someone else's in-progress edit,
+  out of this session's declared scope).
+
+### Safe to continue
+Yes. No blockers. The PyQt6/GPL-3.0 licensing question (above) is the one
+item that needs a human business decision rather than further agent work.
