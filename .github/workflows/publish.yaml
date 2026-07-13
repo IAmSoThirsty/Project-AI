@@ -52,7 +52,7 @@ jobs:
 
       - name: Docker metadata
         id: meta
-        uses: docker/metadata-action@1294d34b83b38d5b07d5cd6a5612b8228013206b # v5.7.0
+        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api
@@ -80,9 +80,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - uses: docker/setup-buildx-action@5b8f8b6e19e2a177dd1a91c2b60a3c8c5fa4eebc # v3.11.0
+      - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
-      - uses: docker/login-action@0d4c9c5ea7693da7b068278f9b264c1f9a2c2dce # v3.2.0
+      - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -90,7 +90,7 @@ jobs:
 
       - name: Build and push
         id: build
-        uses: docker/build-push-action@a595beb1484e8bc4e1b5d7c53880d85ad5d8e4ee # v6.0.0
+        uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6.0.0
         with:
           context: .
           dockerfile: docker/api.Dockerfile
@@ -129,9 +129,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - uses: docker/setup-buildx-action@5b8f8b6e19e2a177dd1a91c2b60a3c8c5fa4eebc # v3.11.0
+      - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
-      - uses: docker/login-action@0d4c9c5ea7693da7b068278f9b264c1f9a2c2dce # v3.2.0
+      - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -139,7 +139,7 @@ jobs:
 
       - name: Build and push ${{ matrix.portal }}
         id: build
-        uses: docker/build-push-action@a595beb1484e8bc4e1b5d7c53880d85ad5d8e4ee # v6.0.0
+        uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6.0.0
         with:
           context: .
           dockerfile: docker/web.Dockerfile
@@ -180,9 +180,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - uses: docker/setup-buildx-action@5b8f8b6e19e2a177dd1a91c2b60a3c8c5fa4eebc # v3.11.0
+      - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
-      - uses: docker/login-action@0d4c9c5ea7693da7b068278f9b264c1f9a2c2dce # v3.2.0
+      - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -190,7 +190,7 @@ jobs:
 
       - name: Build and push ${{ matrix.service }}
         id: build
-        uses: docker/build-push-action@a595beb1484e8bc4e1b5d7c53880d85ad5d8e4ee # v6.0.0
+        uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6.0.0
         with:
           context: .
           dockerfile: docker/service.Dockerfile
@@ -228,9 +228,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - uses: docker/setup-buildx-action@5b8f8b6e19e2a177dd1a91c2b60a3c8c5fa4eebc # v3.11.0
+      - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
-      - uses: docker/login-action@0d4c9c5ea7693da7b068278f9b264c1f9a2c2dce # v3.2.0
+      - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -238,7 +238,7 @@ jobs:
 
       - name: Build and push
         id: build
-        uses: docker/build-push-action@a595beb1484e8bc4e1b5d7c53880d85ad5d8e4ee # v6.0.0
+        uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6.0.0
         with:
           context: .
           dockerfile: docker/genesis.Dockerfile
@@ -291,9 +291,9 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - uses: docker/setup-buildx-action@5b8f8b6e19e2a177dd1a91c2b60a3c8c5fa4eebc # v3.11.0
+      - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
 
-      - uses: docker/login-action@0d4c9c5ea7693da7b068278f9b264c1f9a2c2dce # v3.2.0
+      - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -397,7 +397,7 @@ jobs:
           cat /tmp/release-notes.md
 
       - if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@550c3e7abee968150db12d1008ad55ab9dfc953d # v2.1.0
+        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
         with:
           body_path: /tmp/release-notes.md
           draft: false
