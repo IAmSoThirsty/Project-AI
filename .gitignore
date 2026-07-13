@@ -89,6 +89,16 @@ SECRET*
 # and the bundle SEAL would fail on a fresh clone.
 !docs/internal/verification/**
 
+# Same collision, different real source/template files matched by the bare
+# secret*/SECRET* globs above: TAAR's secret_check builtin (a redaction-only
+# scanner, not a secret itself - see its own module docstring) and the Helm
+# Secret template (a stringData reference to .Values.secrets.api.token, no
+# literal value). Both were silently untracked on every clone/CI checkout
+# until this negation (discovered 2026-07-13 chasing a CI test-collection
+# failure on a fresh Linux checkout).
+!packages/taar/src/taar/checks/secret_check.py
+!helm/project-ai/templates/secrets.yaml
+
 # Exception to the negation above: the 2026-07-10 audit receipt bundle's 36 MB
 # HEAD tarball stays out of git (reproducible via `git archive HEAD`; its
 # SHA-256 is recorded in the bundle's SHA256SUMS.txt). Must follow the

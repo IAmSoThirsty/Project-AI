@@ -209,11 +209,23 @@ jobs:
         env:
           RUSTUP_TOOLCHAIN: stable
         run: |
+          set -eu
           mkdir -p build/sbom
           cargo install cargo-cyclonedx --locked
           cargo cyclonedx --format json --override-filename project-ai-rust
-          mv Cargo.cdx.json build/sbom/project-ai-rust.cdx.json 2>/dev/null || \
-            mv crates/genesis-emitter/project-ai-rust.cdx.json build/sbom/project-ai-rust.cdx.json
+          # Locate the generated file rather than guessing its path: the
+          # docs say it's written "adjacent to every Cargo.toml in the
+          # workspace", which differs between a real crate manifest
+          # (crates/genesis-emitter) and the root virtual workspace
+          # manifest, and isn't reliably one specific path across
+          # cargo-cyclonedx versions.
+          found="$(find . -path ./target -prune -o -name 'project-ai-rust*.json' -print | head -1)"
+          if [ -z "$found" ]; then
+            echo "::error::cargo-cyclonedx did not produce a project-ai-rust*.json file" >&2
+            find . -path ./target -prune -o -iname '*cyclonedx*' -print -o -iname '*.cdx.json' -print
+            exit 1
+          fi
+          mv "$found" build/sbom/project-ai-rust.cdx.json
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: project-ai-rust-sbom
