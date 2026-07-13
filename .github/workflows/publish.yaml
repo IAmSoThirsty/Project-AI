@@ -63,8 +63,8 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-arbiter-rlp
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-genesis
           tags: |
-            type=semver,pattern={{version}},value=${{ steps.version.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.version }}
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.version }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.version }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=ref,event=branch,suffix=-{{date 'YYYYMMDD-HHmmss' tz='UTC'}}
             type=sha,prefix={{branch}}-
 
