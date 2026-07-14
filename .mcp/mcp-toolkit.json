@@ -1,0 +1,62 @@
+{
+  "mcpServers": {
+    "project-ai": {
+      "command": "python",
+      "args": ["-m", "mcp_server.project_ai"],
+      "env": {
+        "PROJECT_AI_MCP_API_URL": "http://localhost:8000",
+        "PROJECT_AI_MCP_TOKEN": "${PROJECT_AI_API_TOKEN}",
+        "PROJECT_AI_MCP_GOVERNANCE_MODE": "strict",
+        "PROJECT_AI_MCP_AUDIT_ENABLED": "true"
+      },
+      "capabilities": {
+        "resources": {
+          "governance": "read-write",
+          "audit": "read-only",
+          "memory": "read-write",
+          "execution": "read-write"
+        }
+      }
+    }
+  },
+  "tools": {
+    "project-ai/verdict": {
+      "description": "Query or submit a governance verdict via the Constitutional Triumvirate",
+      "capabilities": ["execution", "governance"]
+    },
+    "project-ai/audit": {
+      "description": "Query the immutable audit log with cryptographic verification",
+      "capabilities": ["audit", "verification"]
+    },
+    "project-ai/memory": {
+      "description": "Store, retrieve, or query the CCMA memory system",
+      "capabilities": ["memory", "retrieval"]
+    },
+    "project-ai/capabilities": {
+      "description": "List available capabilities and current grants",
+      "capabilities": ["capability", "governance"]
+    }
+  },
+  "resources": {
+    "constitution": {
+      "uri": "project-ai://constitution",
+      "mimeType": "application/json",
+      "description": "The Project-AI Constitutional Framework"
+    },
+    "governance-state": {
+      "uri": "project-ai://governance/state",
+      "mimeType": "application/json",
+      "description": "Current governance and policy state"
+    },
+    "audit-chain": {
+      "uri": "project-ai://audit/chain",
+      "mimeType": "application/jsonl",
+      "description": "Cryptographically-verified audit chain"
+    },
+    "memory-graph": {
+      "uri": "project-ai://memory/graph",
+      "mimeType": "application/json",
+      "description": "CCMA memory unified cognitive graph"
+    }
+  }
+}
