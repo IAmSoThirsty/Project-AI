@@ -6,10 +6,16 @@ from __future__ import annotations
 
 import shutil
 import subprocess
-from datetime import UTC
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 import pytest
+from taar.config import TaarConfig
+from taar.context import ExecutionContext
+from taar.models import EvidenceBundle
+
+from taar.registry import Registry, load_registry
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,21 +49,19 @@ def temp_repo(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def taar_config(temp_repo: Path):
+def taar_config(temp_repo: Path) -> TaarConfig:
     from taar.config import load_taar_config
 
     return load_taar_config(temp_repo)
 
 
 @pytest.fixture
-def loaded_registry(temp_repo: Path):
-    from taar.registry import load_registry
-
+def loaded_registry(temp_repo: Path) -> Registry:
     return load_registry(temp_repo)
 
 
 @pytest.fixture
-def automation_root(taar_config) -> Path:
+def automation_root(taar_config: TaarConfig) -> Path:
     return taar_config.automation_root
 
 
@@ -72,7 +76,9 @@ def valid_registry_files(temp_repo: Path) -> Path:
 
 
 @pytest.fixture
-def sample_evidence_bundle(temp_repo: Path, taar_config, loaded_registry):
+def sample_evidence_bundle(
+    temp_repo: Path, taar_config: TaarConfig, loaded_registry: Registry
+) -> EvidenceBundle:
     """A real heartbeat-reader run producing genuine evidence."""
     from taar.evidence import find_latest_evidence
     from taar.executor import run_agent
@@ -84,9 +90,7 @@ def sample_evidence_bundle(temp_repo: Path, taar_config, loaded_registry):
 
 
 @pytest.fixture
-def make_context(taar_config, loaded_registry):
-    from datetime import datetime
-
+def make_context(taar_config: TaarConfig, loaded_registry: Registry) -> Any:
     from taar.context import ExecutionContext
 
     from taar.registry import get_agent, get_task_for_agent

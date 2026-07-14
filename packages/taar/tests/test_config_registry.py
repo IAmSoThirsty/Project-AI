@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 from taar.config import DEFAULT_AUTOMATION_ROOT, load_taar_config
 from taar.errors import RegistryError
+from taar.models import EvidenceBundle
 from taar_test_helpers import edit_yaml
 
-from taar.registry import load_registry
+from taar.registry import Registry, get_capabilities_for_agent, load_registry
 
 # --- config ---------------------------------------------------------------
 
@@ -56,7 +58,7 @@ def test_config_resolves_repo_root(temp_repo: Path) -> None:
 # --- registry -------------------------------------------------------------
 
 
-def test_valid_registry_loads(loaded_registry) -> None:
+def test_valid_registry_loads(loaded_registry: Registry) -> None:
     assert loaded_registry.validation_errors == []
     assert "heartbeat-reader" in loaded_registry.agents_by_id
     assert "workflow-reader" in loaded_registry.agents_by_id
@@ -76,7 +78,7 @@ def test_malformed_yaml_rejected(temp_repo: Path) -> None:
 
 
 def test_duplicate_agent_id_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["agents"].append(dict(data["agents"][0]))
 
     edit_yaml(temp_repo / "registry" / "agents.yaml", mutate)
@@ -85,7 +87,7 @@ def test_duplicate_agent_id_rejected(temp_repo: Path) -> None:
 
 
 def test_duplicate_task_id_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["tasks"].append(dict(data["tasks"][0]))
 
     edit_yaml(temp_repo / "registry" / "tasks.yaml", mutate)
@@ -94,7 +96,7 @@ def test_duplicate_task_id_rejected(temp_repo: Path) -> None:
 
 
 def test_unknown_task_reference_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["agents"][0]["task_id"] = "no-such-task"
 
     edit_yaml(temp_repo / "registry" / "agents.yaml", mutate)
@@ -103,7 +105,7 @@ def test_unknown_task_reference_rejected(temp_repo: Path) -> None:
 
 
 def test_unknown_capability_reference_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["agents"][0]["capability_ids"].append("no-such-capability")
 
     edit_yaml(temp_repo / "registry" / "agents.yaml", mutate)
@@ -112,7 +114,7 @@ def test_unknown_capability_reference_rejected(temp_repo: Path) -> None:
 
 
 def test_unknown_schedule_reference_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["agents"][0]["schedule_id"] = "no-such-schedule"
 
     edit_yaml(temp_repo / "registry" / "agents.yaml", mutate)
@@ -121,7 +123,7 @@ def test_unknown_schedule_reference_rejected(temp_repo: Path) -> None:
 
 
 def test_unknown_classification_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["classifications"]["MYSTERY"] = {"rank": 99}
 
     edit_yaml(temp_repo / "registry" / "classifications.yaml", mutate)
@@ -130,7 +132,7 @@ def test_unknown_classification_rejected(temp_repo: Path) -> None:
 
 
 def test_writer_without_consumes_evidence_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         for task in data["tasks"]:
             if task["id"] == "heartbeat-report":
                 task["consumes_evidence_from"] = []
@@ -141,7 +143,7 @@ def test_writer_without_consumes_evidence_rejected(temp_repo: Path) -> None:
 
 
 def test_task_command_not_allowed_by_agent_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         for task in data["tasks"]:
             if task["id"] == "heartbeat-check":
                 task["commands"].append("rm -rf /")
@@ -152,7 +154,7 @@ def test_task_command_not_allowed_by_agent_rejected(temp_repo: Path) -> None:
 
 
 def test_task_output_path_not_allowed_by_agent_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         for task in data["tasks"]:
             if task["id"] == "heartbeat-report":
                 task["output_paths"] = ["src/evil.py"]
@@ -163,7 +165,7 @@ def test_task_output_path_not_allowed_by_agent_rejected(temp_repo: Path) -> None
 
 
 def test_first_swarm_destructive_capability_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["capabilities"].append(
             {
                 "id": "evil-push",
@@ -183,7 +185,7 @@ def test_first_swarm_destructive_capability_rejected(temp_repo: Path) -> None:
 
 
 def test_destructive_agent_flag_rejected(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         data["agents"][0]["destructive_access"] = True
 
     edit_yaml(temp_repo / "registry" / "agents.yaml", mutate)
@@ -192,7 +194,7 @@ def test_destructive_agent_flag_rejected(temp_repo: Path) -> None:
 
 
 def test_black_evidence_grant_restricted_to_report_types(temp_repo: Path) -> None:
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         for task in data["tasks"]:
             if task["id"] == "heartbeat-check":
                 task["black_evidence_allowed"] = True
@@ -205,26 +207,24 @@ def test_black_evidence_grant_restricted_to_report_types(temp_repo: Path) -> Non
 # --- capabilities ----------------------------------------------------------
 
 
-def test_agent_receives_declared_capabilities(loaded_registry) -> None:
-    from taar.registry import get_capabilities_for_agent
-
+def test_agent_receives_declared_capabilities(loaded_registry: Registry) -> None:
     caps = {c.id for c in get_capabilities_for_agent(loaded_registry, "heartbeat-reader")}
     assert "execute-heartbeat-check" in caps
     assert "write-evidence" in caps
 
 
-def test_secret_access_only_allowed_for_secret_reader(loaded_registry) -> None:
+def test_secret_access_only_allowed_for_secret_reader(loaded_registry: Registry) -> None:
     for agent in loaded_registry.agents_by_id.values():
         if agent.secret_access:
             assert agent.id == "secret-reader"
 
 
-def test_git_allowed_only_for_git_status_reader(loaded_registry) -> None:
+def test_git_allowed_only_for_git_status_reader(loaded_registry: Registry) -> None:
     for agent in loaded_registry.agents_by_id.values():
         if agent.git_allowed:
             assert agent.id == "git-status-reader"
 
 
-def test_models_serialize_deterministically(sample_evidence_bundle) -> None:
+def test_models_serialize_deterministically(sample_evidence_bundle: EvidenceBundle) -> None:
     assert sample_evidence_bundle.canonical_json() == sample_evidence_bundle.canonical_json()
     assert '"evidence_hash"' in sample_evidence_bundle.canonical_json()

@@ -260,6 +260,7 @@ exclude = [
     "packages/thirstys-trading-hub/src",
     "packages/thirstys-trading-hub/tests",
     "packages/tarl/src/tarl/tarl_os",
+    "apps/desktop/tests/conftest.py",
     "tools/_archive",
 ]
 

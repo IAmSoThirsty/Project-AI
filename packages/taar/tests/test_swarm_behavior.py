@@ -3,20 +3,30 @@ forbidden actions, CLI, and end-to-end first swarm tests."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 import pytest
 import yaml  # type: ignore[import-untyped, unused-ignore]
+from taar.config import TaarConfig, load_taar_config
+from taar.context import ExecutionContext
 from taar.errors import AdmissionDenied
 from taar.evidence import find_latest_evidence
 from taar.executor import run_agent
 from taar.models import ClassificationLevel, RunStatus
+from typer.testing import CliRunner
+
+from taar.registry import Registry, load_registry
 
 # --- built-in checks --------------------------------------------------------
 
 
 def test_heartbeat_check_reports_missing_registry(
-    temp_repo, taar_config, loaded_registry, make_context
+    temp_repo: Path,
+    taar_config: TaarConfig,
+    loaded_registry: Registry,
+    make_context: Callable[..., ExecutionContext],
 ) -> None:
     from taar.checks.heartbeat_check import heartbeat_check
 
@@ -26,7 +36,9 @@ def test_heartbeat_check_reports_missing_registry(
     assert result.classification == ClassificationLevel.BLACK
 
 
-def test_heartbeat_check_clean_on_healthy_facility(make_context) -> None:
+def test_heartbeat_check_clean_on_healthy_facility(
+    make_context: Callable[..., ExecutionContext],
+) -> None:
     from taar.checks.heartbeat_check import heartbeat_check
 
     result = heartbeat_check(make_context("heartbeat-reader"))
@@ -34,7 +46,9 @@ def test_heartbeat_check_clean_on_healthy_facility(make_context) -> None:
     assert not any(f.severity in ("high", "critical") for f in result.findings)
 
 
-def test_path_drift_check_detects_old_project_ai_paths(temp_repo, make_context) -> None:
+def test_path_drift_check_detects_old_project_ai_paths(
+    temp_repo: Path, make_context: Callable[..., ExecutionContext]
+) -> None:
     from taar.checks.path_drift_check import path_drift_check
 
     (temp_repo / "notes.md").write_text(
@@ -48,13 +62,15 @@ def test_path_drift_check_detects_old_project_ai_paths(temp_repo, make_context) 
     assert not any(f.path and ".git" in f.path for f in result.findings)
 
 
-def test_secret_check_redacts_and_escalates(temp_repo, make_context) -> None:
+def test_secret_check_redacts_and_escalates(
+    temp_repo: Path, make_context: Callable[..., ExecutionContext]
+) -> None:
     from taar.checks.secret_check import secret_check
 
     real_key = "sk-" + "a1b2c3d4e5f6a1b2c3d4e5f6"
     (temp_repo / "config.py").write_text(f'API_KEY = "{real_key}"\n', encoding="utf-8")
     (temp_repo / "sample.md").write_text(
-        "OPENAI_API_KEY=sk-EXAMPLEexampleexampleexample placeholder\n", encoding="utf-8"
+        "OPENAI_API_KEY=«redacted:sk-…» placeholder\n", encoding="utf-8"
     )
     result = secret_check(make_context("secret-reader"))
     assert result.classification == ClassificationLevel.SECRET
@@ -65,7 +81,9 @@ def test_secret_check_redacts_and_escalates(temp_repo, make_context) -> None:
 
 
 def test_governance_check_detects_writer_without_source_hash(
-    taar_config, loaded_registry, make_context
+    taar_config: TaarConfig,
+    loaded_registry: Registry,
+    make_context: Callable[..., ExecutionContext],
 ) -> None:
     from taar.checks.governance_check import governance_check
 
@@ -80,7 +98,11 @@ def test_governance_check_detects_writer_without_source_hash(
     assert result.classification == ClassificationLevel.BLACK
 
 
-def test_overnight_check_summarizes_audit(taar_config, loaded_registry, make_context) -> None:
+def test_overnight_check_summarizes_audit(
+    taar_config: TaarConfig,
+    loaded_registry: Registry,
+    make_context: Callable[..., ExecutionContext],
+) -> None:
     from taar.checks.overnight_check import overnight_check
 
     run_agent("heartbeat-reader", taar_config, loaded_registry)
@@ -88,11 +110,13 @@ def test_overnight_check_summarizes_audit(taar_config, loaded_registry, make_con
     assert any("Run counts" in f.message for f in result.findings)
 
 
-# --- phantom detection --------------------------------------------------------
+# --- phantom detection -------------------------------------------------------
 
 
 def test_phantom_check_detects_unaccounted_report(
-    taar_config, loaded_registry, make_context
+    taar_config: TaarConfig,
+    loaded_registry: Registry,
+    make_context: Callable[..., ExecutionContext],
 ) -> None:
     from taar.checks.phantom_check import phantom_check
 
@@ -104,16 +128,22 @@ def test_phantom_check_detects_unaccounted_report(
     assert result.classification == ClassificationLevel.BLACK
 
 
-def test_phantom_check_clean_facility_is_open(taar_config, loaded_registry, make_context) -> None:
+def test_phantom_check_clean_facility_is_open(
+    taar_config: TaarConfig,
+    loaded_registry: Registry,
+    make_context: Callable[..., ExecutionContext],
+) -> None:
     from taar.checks.phantom_check import phantom_check
 
     run_agent("heartbeat-reader", taar_config, loaded_registry)
-    run_agent("heartbeat-report-writer", taar_config, loaded_registry)
+    run_agent("phantom-report-writer", taar_config, loaded_registry)
     result = phantom_check(make_context("phantom-reader"))
     assert result.classification == ClassificationLevel.OPEN
 
 
-def test_phantom_check_flags_patch_artifacts(taar_config, make_context) -> None:
+def test_phantom_check_flags_patch_artifacts(
+    taar_config: TaarConfig, make_context: Callable[..., ExecutionContext]
+) -> None:
     from taar.checks.phantom_check import phantom_check
 
     patch = taar_config.patches_root / "sneaky.patch"
@@ -122,11 +152,14 @@ def test_phantom_check_flags_patch_artifacts(taar_config, make_context) -> None:
     assert any("Patch artifact present during first swarm" in f.message for f in result.findings)
 
 
-def test_phantom_evidence_feeds_only_declared_black_handler(taar_config, loaded_registry) -> None:
+def test_phantom_evidence_feeds_only_declared_black_handler(
+    taar_config: TaarConfig, loaded_registry: Registry
+) -> None:
     ghost = taar_config.reports_root / "ghost.md"
     ghost.write_text("phantom", encoding="utf-8")
     run_agent("phantom-reader", taar_config, loaded_registry)
     bundle = find_latest_evidence("phantom-reader", taar_config.evidence_root)
+    assert bundle is not None
     assert bundle.classification == ClassificationLevel.BLACK
     # declared handler succeeds
     record = run_agent("phantom-report-writer", taar_config, loaded_registry)
@@ -146,14 +179,19 @@ def test_phantom_evidence_feeds_only_declared_black_handler(taar_config, loaded_
 # --- writers -----------------------------------------------------------------
 
 
-def test_report_writer_requires_source_evidence(taar_config, loaded_registry) -> None:
+def test_report_writer_requires_source_evidence(
+    taar_config: TaarConfig, loaded_registry: Registry
+) -> None:
     with pytest.raises(AdmissionDenied):
         run_agent("heartbeat-report-writer", taar_config, loaded_registry)
 
 
-def test_report_writer_writes_markdown_citing_hash(taar_config, loaded_registry) -> None:
+def test_report_writer_writes_markdown_citing_hash(
+    taar_config: TaarConfig, loaded_registry: Registry
+) -> None:
     run_agent("heartbeat-reader", taar_config, loaded_registry)
     bundle = find_latest_evidence("heartbeat-reader", taar_config.evidence_root)
+    assert bundle is not None
     record = run_agent("heartbeat-report-writer", taar_config, loaded_registry)
     assert record.status == RunStatus.SUCCEEDED
     report = (taar_config.reports_root / "facility" / "heartbeat-latest.md").read_text()
@@ -162,11 +200,13 @@ def test_report_writer_writes_markdown_citing_hash(taar_config, loaded_registry)
     output_record = next(
         (taar_config.evidence_root / "heartbeat-report-writer").rglob("output.yaml")
     )
-    data = yaml.safe_load(output_record.read_text())
+    data: Any = yaml.safe_load(output_record.read_text())
     assert data["source_evidence_hash"] == bundle.evidence_hash
 
 
-def test_secret_report_writer_redacts(temp_repo, taar_config, loaded_registry) -> None:
+def test_secret_report_writer_redacts(
+    temp_repo: Path, taar_config: TaarConfig, loaded_registry: Registry
+) -> None:
     real_key = "ghp_" + "Zz9Yy8Xx7Ww6Vv5Uu4Tt3Ss2"
     (temp_repo / "leak.txt").write_text(f"token={real_key}\n", encoding="utf-8")
     run_agent("secret-reader", taar_config, loaded_registry)
@@ -178,7 +218,7 @@ def test_secret_report_writer_redacts(temp_repo, taar_config, loaded_registry) -
 
 
 def test_secret_evidence_refused_by_non_secret_writer(
-    taar_config, loaded_registry, temp_repo
+    taar_config: TaarConfig, loaded_registry: Registry, temp_repo: Path
 ) -> None:
     fake_key = "ghp_" + "Zz9Yy8Xx7Ww6Vv5Uu4Tt3Ss2"
     (temp_repo / "leak.txt").write_text(f"token={fake_key}\n", encoding="utf-8")
@@ -195,7 +235,7 @@ def test_secret_evidence_refused_by_non_secret_writer(
 
 
 def test_digest_writer_aggregates_and_uses_highest_classification(
-    taar_config, loaded_registry
+    taar_config: TaarConfig, loaded_registry: Registry
 ) -> None:
     run_agent("governance-reader", taar_config, loaded_registry)
     record = run_agent("governance-digest-writer", taar_config, loaded_registry)
@@ -204,7 +244,9 @@ def test_digest_writer_aggregates_and_uses_highest_classification(
     assert "Next Safest Action" in digest
 
 
-def test_morning_brief_requires_overnight_evidence(taar_config, loaded_registry) -> None:
+def test_morning_brief_requires_overnight_evidence(
+    taar_config: TaarConfig, loaded_registry: Registry
+) -> None:
     with pytest.raises(AdmissionDenied):
         run_agent("morning-brief-writer", taar_config, loaded_registry)
     run_agent("overnight-reader", taar_config, loaded_registry)
@@ -216,7 +258,9 @@ def test_morning_brief_requires_overnight_evidence(taar_config, loaded_registry)
 
 
 def test_quarantine_writer_creates_record_without_deleting(
-    taar_config, loaded_registry, make_context
+    taar_config: TaarConfig,
+    loaded_registry: Registry,
+    make_context: Callable[..., ExecutionContext],
 ) -> None:
     from taar.writers.quarantine_writer import quarantine_writer
 
@@ -278,7 +322,7 @@ def _write_workflow(repo: Path, name: str, body: str) -> None:
     (wf_dir / name).write_text(body, encoding="utf-8")
 
 
-def test_workflow_scan_flags_dangerous_patterns(temp_repo) -> None:
+def test_workflow_scan_flags_dangerous_patterns(temp_repo: Path) -> None:
     from taar.workflows import scan_workflows
 
     _write_workflow(temp_repo, "danger.yml", DANGEROUS_WORKFLOW)
@@ -294,7 +338,7 @@ def test_workflow_scan_flags_dangerous_patterns(temp_repo) -> None:
     assert classification == ClassificationLevel.SECRET  # secret exposure dominates
 
 
-def test_workflow_scan_hardened_is_calm(temp_repo) -> None:
+def test_workflow_scan_hardened_is_calm(temp_repo: Path) -> None:
     from taar.workflows import scan_workflows
 
     _write_workflow(temp_repo, "safe.yml", HARDENED_WORKFLOW)
@@ -303,7 +347,7 @@ def test_workflow_scan_hardened_is_calm(temp_repo) -> None:
     assert classification == ClassificationLevel.OPEN
 
 
-def test_workflow_unparseable_is_black(temp_repo) -> None:
+def test_workflow_unparseable_is_black(temp_repo: Path) -> None:
     from taar.workflows import scan_workflows
 
     _write_workflow(temp_repo, "broken.yml", "on: [push\njobs: {")
@@ -311,7 +355,7 @@ def test_workflow_unparseable_is_black(temp_repo) -> None:
     assert classification == ClassificationLevel.BLACK
 
 
-def test_workflow_harden_is_draft_only(temp_repo, taar_config) -> None:
+def test_workflow_harden_is_draft_only(temp_repo: Path, taar_config: TaarConfig) -> None:
     from taar.workflows import harden_suggestions, scan_workflows
 
     _write_workflow(temp_repo, "danger.yml", DANGEROUS_WORKFLOW)
@@ -322,7 +366,7 @@ def test_workflow_harden_is_draft_only(temp_repo, taar_config) -> None:
 
 
 def test_workflow_reader_produces_governed_evidence(
-    temp_repo, taar_config, loaded_registry
+    temp_repo: Path, taar_config: TaarConfig, loaded_registry: Registry
 ) -> None:
     _write_workflow(temp_repo, "danger.yml", DANGEROUS_WORKFLOW)
     record = run_agent("workflow-reader", taar_config, loaded_registry)
@@ -331,7 +375,7 @@ def test_workflow_reader_produces_governed_evidence(
     assert bundle is not None and bundle.findings
 
 
-def test_workflow_pair_agents_registered(loaded_registry) -> None:
+def test_workflow_pair_agents_registered(loaded_registry: Registry) -> None:
     for base in (
         "workflow",
         "workflow-permission",
@@ -351,19 +395,16 @@ def test_workflow_pair_agents_registered(loaded_registry) -> None:
 # --- forbidden actions -----------------------------------------------------------
 
 
-def test_undeclared_command_is_denied_black(temp_repo) -> None:
+def test_undeclared_command_is_denied_black(temp_repo: Path) -> None:
     from taar_test_helpers import edit_yaml
 
-    def mutate(data):
+    def mutate(data: dict[str, Any]) -> None:
         for task in data["tasks"]:
             if task["id"] == "git-status-check":
                 task["commands"] = ["git push origin main"]
 
     edit_yaml(temp_repo / "registry" / "tasks.yaml", mutate)
-    from taar.config import load_taar_config
     from taar.executor import admit_agent
-
-    from taar.registry import load_registry
 
     config = load_taar_config(temp_repo)
     registry = load_registry(temp_repo)
@@ -373,14 +414,16 @@ def test_undeclared_command_is_denied_black(temp_repo) -> None:
     assert not decision.admitted
 
 
-def test_first_swarm_has_no_mutating_capabilities(loaded_registry) -> None:
+def test_first_swarm_has_no_mutating_capabilities(loaded_registry: Registry) -> None:
     from taar.registry import FORBIDDEN_FIRST_SWARM_CAPABILITY_TYPES
 
     for cap in loaded_registry.capabilities_by_id.values():
         assert cap.capability_type not in FORBIDDEN_FIRST_SWARM_CAPABILITY_TYPES
 
 
-def test_no_source_files_mutated_by_first_swarm(temp_repo, taar_config, loaded_registry) -> None:
+def test_no_source_files_mutated_by_first_swarm(
+    temp_repo: Path, taar_config: TaarConfig, loaded_registry: Registry
+) -> None:
     marker = temp_repo / "source_file.py"
     marker.write_text("VALUE = 1\n", encoding="utf-8")
     before = marker.read_text()
@@ -403,13 +446,13 @@ def test_no_source_files_mutated_by_first_swarm(temp_repo, taar_config, loaded_r
 
 
 @pytest.fixture
-def cli_runner():
+def cli_runner() -> CliRunner:
     from typer.testing import CliRunner
 
     return CliRunner()
 
 
-def test_cli_status_agents_graph_exit_zero(cli_runner, temp_repo) -> None:
+def test_cli_status_agents_graph_exit_zero(cli_runner: CliRunner, temp_repo: Path) -> None:
     from taar.cli import app
 
     for args in (["status"], ["agents"], ["graph"], ["evidence"], ["quarantine"]):
@@ -417,21 +460,21 @@ def test_cli_status_agents_graph_exit_zero(cli_runner, temp_repo) -> None:
         assert result.exit_code == 0, result.output
 
 
-def test_cli_run_heartbeat_exits_zero(cli_runner, temp_repo) -> None:
+def test_cli_run_heartbeat_exits_zero(cli_runner: CliRunner, temp_repo: Path) -> None:
     from taar.cli import app
 
     result = cli_runner.invoke(app, ["run", "heartbeat-reader", "--repo", str(temp_repo)])
     assert result.exit_code == 0, result.output
 
 
-def test_cli_run_unknown_agent_exits_nonzero(cli_runner, temp_repo) -> None:
+def test_cli_run_unknown_agent_exits_nonzero(cli_runner: CliRunner, temp_repo: Path) -> None:
     from taar.cli import app
 
     result = cli_runner.invoke(app, ["run", "nope", "--repo", str(temp_repo)])
     assert result.exit_code != 0
 
 
-def test_cli_does_not_print_unredacted_secret(cli_runner, temp_repo) -> None:
+def test_cli_does_not_print_unredacted_secret(cli_runner: CliRunner, temp_repo: Path) -> None:
     from taar.cli import app
 
     real_key = "sk-" + "q1w2e3r4t5y6u7i8o9p0a1s2"
@@ -440,7 +483,7 @@ def test_cli_does_not_print_unredacted_secret(cli_runner, temp_repo) -> None:
     assert real_key not in result.output
 
 
-def test_cli_workflows_scan_and_classify(cli_runner, temp_repo) -> None:
+def test_cli_workflows_scan_and_classify(cli_runner: CliRunner, temp_repo: Path) -> None:
     from taar.cli import app
 
     _write_workflow(temp_repo, "safe.yml", HARDENED_WORKFLOW)
@@ -450,7 +493,7 @@ def test_cli_workflows_scan_and_classify(cli_runner, temp_repo) -> None:
     assert result.exit_code == 0 and "OPEN" in result.output
 
 
-def test_cli_init_seeds_fresh_repo(cli_runner, tmp_path) -> None:
+def test_cli_init_seeds_fresh_repo(cli_runner: CliRunner, tmp_path: Path) -> None:
     from taar.cli import app
 
     fresh = tmp_path / "fresh"
@@ -465,7 +508,9 @@ def test_cli_init_seeds_fresh_repo(cli_runner, tmp_path) -> None:
 # --- end-to-end first swarm ------------------------------------------------------
 
 
-def test_first_swarm_manual_sequence(temp_repo, taar_config, loaded_registry) -> None:
+def test_first_swarm_manual_sequence(
+    temp_repo: Path, taar_config: TaarConfig, loaded_registry: Registry
+) -> None:
     sequence = [
         "heartbeat-reader",
         "heartbeat-report-writer",
@@ -494,6 +539,6 @@ def test_first_swarm_manual_sequence(temp_repo, taar_config, loaded_registry) ->
 
     assert list_locks(taar_config.locks_root) == []
     for output_record in taar_config.evidence_root.rglob("output.yaml"):
-        data = yaml.safe_load(output_record.read_text())
+        data: Any = yaml.safe_load(output_record.read_text())
         assert data["source_evidence_hash"]
         assert data["classification"]
