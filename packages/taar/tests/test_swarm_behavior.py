@@ -136,6 +136,7 @@ def test_phantom_check_clean_facility_is_open(
     from taar.checks.phantom_check import phantom_check
 
     run_agent("heartbeat-reader", taar_config, loaded_registry)
+    run_agent("phantom-reader", taar_config, loaded_registry)
     run_agent("phantom-report-writer", taar_config, loaded_registry)
     result = phantom_check(make_context("phantom-reader"))
     assert result.classification == ClassificationLevel.OPEN

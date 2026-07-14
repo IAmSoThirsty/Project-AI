@@ -7,6 +7,7 @@ NEVER created implicitly — a missing registry fails closed at run time.
 
 from __future__ import annotations
 
+import tempfile
 import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -70,12 +71,22 @@ class TaarConfig:
 
 def resolve_repo_root(start: Path | None = None) -> Path:
     """Resolve the repo root: nearest ancestor containing taar.toml or .git,
-    otherwise the starting directory itself."""
+    otherwise the starting directory itself.
+
+    A repo marker sitting directly at the OS temp root (e.g. a stray ``.git``
+    there on a developer machine) is ignored, so an isolated temp checkout
+    never resolves its root to the temp area.
+    """
     current = (start or Path.cwd()).resolve()
     for candidate in (current, *current.parents):
+        if candidate == _TEMP_DIR:
+            continue
         if (candidate / "taar.toml").exists() or (candidate / ".git").exists():
             return candidate
     return current
+
+
+_TEMP_DIR = Path(tempfile.gettempdir()).resolve()
 
 
 def load_taar_config(repo_root: Path | None = None) -> TaarConfig:
