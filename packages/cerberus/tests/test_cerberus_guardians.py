@@ -53,11 +53,11 @@ class ConcreteGuardian(Guardian):
 
 class TestThreatLevel:
     def test_threat_levels_are_ordered(self) -> None:
-        assert ThreatLevel.NONE == 0
-        assert ThreatLevel.LOW == 1
-        assert ThreatLevel.MEDIUM == 2
-        assert ThreatLevel.HIGH == 3
-        assert ThreatLevel.CRITICAL == 4
+        assert ThreatLevel.NONE.value == 0
+        assert ThreatLevel.LOW.value == 1
+        assert ThreatLevel.MEDIUM.value == 2
+        assert ThreatLevel.HIGH.value == 3
+        assert ThreatLevel.CRITICAL.value == 4
         assert ThreatLevel.CRITICAL > ThreatLevel.HIGH
 
 

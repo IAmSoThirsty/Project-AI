@@ -9,7 +9,9 @@ def test_normalize_collapses_whitespace() -> None:
 
 
 def test_chunk_ids_are_deterministic_and_content_addressed() -> None:
-    kwargs = dict(
+    text = "word " * 100
+    first = chunk_document(
+        text=text,
         source="doc.pdf",
         source_sha256="f" * 64,
         title="Doc",
@@ -18,9 +20,16 @@ def test_chunk_ids_are_deterministic_and_content_addressed() -> None:
         chunk_size=50,
         overlap=10,
     )
-    text = "word " * 100
-    first = chunk_document(text=text, **kwargs)
-    second = chunk_document(text=text, **kwargs)
+    second = chunk_document(
+        text=text,
+        source="doc.pdf",
+        source_sha256="f" * 64,
+        title="Doc",
+        topic="programming",
+        sensitivity="educational",
+        chunk_size=50,
+        overlap=10,
+    )
     assert [c.chunk_id for c in first] == [c.chunk_id for c in second]
     assert first[0].chunk_id == compute_chunk_id("f" * 64, 0, first[0].text)
     assert first[0].ordinal == 0 and first[1].ordinal == 1

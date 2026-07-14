@@ -31,7 +31,7 @@ from kernel import EventSpine
 
 
 @pytest.fixture
-def capabilities() -> CapabilityAuthority:  # type: ignore[no-untyped-def]
+def capabilities() -> CapabilityAuthority:
     return CapabilityAuthority(
         b"c" * 32,
         issuer="project-ai",
@@ -40,7 +40,7 @@ def capabilities() -> CapabilityAuthority:  # type: ignore[no-untyped-def]
 
 
 @pytest.fixture
-def gate(capabilities: CapabilityAuthority) -> ExecutionGate:  # type: ignore[no-untyped-def]
+def gate(capabilities: CapabilityAuthority) -> ExecutionGate:
     allow_governor = RuleGovernor("primary", rules=())
     governance = GovernanceEngine(policy_version="v1", governors=[allow_governor])
     return ExecutionGate(
@@ -201,7 +201,7 @@ def test_voice_bonding_record_bumps_revision_exactly_once() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_gate_fixture_is_wired(capabilities: CapabilityAuthority, gate: ExecutionGate) -> None:  # type: ignore[no-untyped-def]
+def test_gate_fixture_is_wired(capabilities: CapabilityAuthority, gate: ExecutionGate) -> None:
     token = _issue_capability(capabilities, BOND_IDENTITY_OPERATION, "companion:quench-1")
     assert isinstance(token, str)
     assert token != ""

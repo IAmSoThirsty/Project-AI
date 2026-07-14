@@ -48,7 +48,7 @@ class _FailingExecutor:
 
 
 @pytest.fixture
-def capabilities() -> CapabilityAuthority:  # type: ignore[no-untyped-def]
+def capabilities() -> CapabilityAuthority:
     return CapabilityAuthority(
         b"c" * 32,
         issuer="project-ai",
@@ -57,7 +57,7 @@ def capabilities() -> CapabilityAuthority:  # type: ignore[no-untyped-def]
 
 
 @pytest.fixture
-def gate(capabilities: CapabilityAuthority) -> ExecutionGate:  # type: ignore[no-untyped-def]
+def gate(capabilities: CapabilityAuthority) -> ExecutionGate:
     allow_governor = RuleGovernor("primary", rules=())
     governance = GovernanceEngine(
         policy_version="v1",
@@ -71,7 +71,7 @@ def gate(capabilities: CapabilityAuthority) -> ExecutionGate:  # type: ignore[no
 
 
 @pytest.fixture
-def bonded(gate: ExecutionGate) -> BondedCompanion:  # type: ignore[no-untyped-def]
+def bonded(gate: ExecutionGate) -> BondedCompanion:
     return BondedCompanion(companion_id="quench-1", execution=gate)
 
 

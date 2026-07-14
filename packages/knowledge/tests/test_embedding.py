@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 import types
+from typing import Any
 
 import numpy as np
 import pytest
@@ -56,7 +57,7 @@ def test_model2vec_embedder_with_injected_module(monkeypatch: pytest.MonkeyPatch
             del name
             return cls()
 
-        def encode(self, sentences: list[str]) -> np.ndarray:
+        def encode(self, sentences: list[str]) -> np.ndarray[Any, Any]:
             return np.ones((len(sentences), 4), dtype=np.float32)
 
     fake.StaticModel = _FakeStatic  # type: ignore[attr-defined]

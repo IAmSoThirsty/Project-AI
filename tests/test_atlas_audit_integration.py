@@ -38,7 +38,7 @@ from kernel import EventSpine
 
 def _make_authority_and_gate(*, allow: bool = True) -> tuple[CapabilityAuthority, ExecutionGate]:
     """Create a fresh capability authority + execution gate for tests."""
-    rules: tuple[object, ...] = (
+    rules: tuple[Rule, ...] = (
         ()
         if allow
         else (

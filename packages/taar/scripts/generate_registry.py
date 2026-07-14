@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Any
 
 import yaml  # type: ignore[import-untyped, unused-ignore]
 
@@ -306,9 +307,9 @@ def build() -> None:
         },
     ]
 
-    agents: list[dict] = []
-    tasks: list[dict] = []
-    capabilities: list[dict] = []
+    agents: list[dict[str, Any]] = []
+    tasks: list[dict[str, Any]] = []
+    capabilities: list[dict[str, Any]] = []
 
     all_reader_ids: list[str] = []
     all_writer_ids: list[str] = []

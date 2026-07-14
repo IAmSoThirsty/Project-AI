@@ -17,7 +17,7 @@ from hydra_50 import (
 )
 
 
-def _make_scenario(level: int, severity: str = "latent") -> object:  # type: ignore[type-arg]
+def _make_scenario(level: int, severity: str = "latent") -> object:
     return make_scenario(
         scenario_id=f"scn-{level}",
         category="ai_reality_flood",

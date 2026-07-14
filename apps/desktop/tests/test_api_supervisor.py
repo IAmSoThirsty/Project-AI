@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -50,7 +51,7 @@ def test_reuse_path_never_spawns(monkeypatch: pytest.MonkeyPatch, paths: Any) ->
     def fail_popen(*args: object, **kwargs: object) -> None:
         raise AssertionError("Popen must not be called when the default gateway is reachable")
 
-    monkeypatch.setattr(supervisor_module.subprocess, "Popen", fail_popen)
+    monkeypatch.setattr(subprocess, "Popen", fail_popen)
 
     outcome = ApiSupervisor(paths=paths).ensure_running()
     assert outcome.ready
@@ -67,7 +68,7 @@ def test_dev_mode_never_spawns_when_unreachable(
     def fail_popen(*args: object, **kwargs: object) -> None:
         raise AssertionError("Popen must not be called outside frozen/installed mode")
 
-    monkeypatch.setattr(supervisor_module.subprocess, "Popen", fail_popen)
+    monkeypatch.setattr(subprocess, "Popen", fail_popen)
 
     outcome = ApiSupervisor(paths=paths).ensure_running()
     assert not outcome.ready
@@ -94,7 +95,7 @@ def test_spawn_path_passes_token_audit_path_and_uses_dynamic_port(
         port_file = Path(args[args.index("--port-file") + 1])
         return _FakeProcess(port_file, port=54321)
 
-    monkeypatch.setattr(supervisor_module.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(subprocess, "Popen", fake_popen)
 
     outcome = ApiSupervisor(paths=paths).ensure_running()
 
@@ -129,7 +130,7 @@ def test_terminate_terminates_spawned_process(
         spawned.append(process)
         return process
 
-    monkeypatch.setattr(supervisor_module.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(subprocess, "Popen", fake_popen)
 
     supervisor = ApiSupervisor(paths=paths)
     outcome = supervisor.ensure_running()
@@ -159,7 +160,7 @@ def test_spawn_health_timeout_reports_failure_without_raising(
         spawned.append(process)
         return process
 
-    monkeypatch.setattr(supervisor_module.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(subprocess, "Popen", fake_popen)
 
     outcome = ApiSupervisor(paths=paths).ensure_running()
 
@@ -184,7 +185,7 @@ def test_spawn_process_exit_before_port_reports_failure(
         port_file = Path(args[args.index("--port-file") + 1])
         return _FakeProcess(port_file, port=0, write_port=False)
 
-    monkeypatch.setattr(supervisor_module.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(subprocess, "Popen", fake_popen)
 
     outcome = ApiSupervisor(paths=paths).ensure_running()
 
