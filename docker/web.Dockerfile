@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM dhi.io/node:22-alpine3.24-dev AS builder
 ARG PORTAL
 WORKDIR /app
 
@@ -29,7 +29,7 @@ COPY apps/web-static ./apps/web-static
 RUN pnpm --filter "@project-ai/${PORTAL}-portal" build
 
 # ── Runtime ────────────────────────────────────────────────────────────────
-FROM nginxinc/nginx-unprivileged:1.27-alpine AS runtime
+FROM dhi.io/nginx:1-alpine3.24 AS runtime
 ARG PORTAL
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/apps/web/${PORTAL}-portal/dist /usr/share/nginx/html

@@ -23,7 +23,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: backup
-              image: {{ .Values.backup.image | default "busybox:1.36.1" }}
+              image: {{ .Values.backup.image | default "dhi.io/busybox:1-alpine3.24" }}
               command:
                 - /bin/sh
                 - -c

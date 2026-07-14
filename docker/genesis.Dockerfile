@@ -1,4 +1,4 @@
-FROM rust:1.96-bookworm AS builder
+FROM dhi.io/rust:1.96-alpine3.24-dev AS builder
 # rust-toolchain.toml pins a Windows target; override to the container's native toolchain
 ENV RUSTUP_TOOLCHAIN=stable
 WORKDIR /app

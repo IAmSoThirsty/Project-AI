@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:0.11.22 AS uv
 
-FROM python:3.12.10-slim-bookworm AS base
+FROM dhi.io/python:3.12-debian12-dev AS base
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
