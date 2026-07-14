@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Desktop app MSI. Built standalone via:
+    wix build -acceptEula wix7 Desktop.wxs -bindpath DesktopSourceDir=<pyinstaller onedir> -o Desktop.msi
+  Harvests the full PyInstaller onedir tree with the Files element (WiX v5+) rather than
+  enumerating individual files, since the exact DLL/dependency set changes across PyQt6/Qt
+  versions. Visible="no" on the chaining MsiPackage in Bundle.wxs hides this from Add/Remove
+  Programs by default (verified against the current WiX schema docs); Property
+  ARPSYSTEMCOMPONENT below is a second, independent way of asserting the same thing directly
+  on this MSI, so hiding does not depend on the bundle author remembering the Burn-side
+  attribute. INSTALLFOLDER is a public property so Bundle.wxs can forward a caller-supplied
+  install path (see docs/deployment/WINDOWS_INSTALLER.md).
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="Project-AI Desktop"
+    Manufacturer="Project-AI"
+    Version="0.0.0.1"
+    UpgradeCode="8e6a1ea6-aad2-47a4-baa6-9c932b6c9e53"
+    Compressed="yes"
+    Scope="perMachine">
+
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="ProjectAiRootFolder" Name="Project-AI">
+        <Directory Id="INSTALLFOLDER" Name="Desktop" />
+      </Directory>
+    </StandardDirectory>
+
+    <ComponentGroup Id="DesktopFiles" Directory="INSTALLFOLDER">
+      <Files Include="!(bindpath.DesktopSourceDir)\**" />
+    </ComponentGroup>
+
+    <Feature Id="Main">
+      <ComponentGroupRef Id="DesktopFiles" />
+    </Feature>
+  </Package>
+</Wix>

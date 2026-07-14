@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Api gateway MSI. Built standalone via:
+    wix build -acceptEula wix7 Api.wxs -bindpath ApiSourceDir=<pyinstaller onedir> -o Api.msi
+  Installed as a sibling of Desktop's INSTALLFOLDER (both under Project-AI\), matching
+  api_supervisor.py's sibling-path lookup (..\Api\project-ai-api-server.exe relative to the
+  desktop exe's own directory).
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+    Name="Project-AI Api"
+    Manufacturer="Project-AI"
+    Version="0.0.0.1"
+    UpgradeCode="8dcc956b-bbf6-424d-a3da-fe75a889c22e"
+    Compressed="yes"
+    Scope="perMachine">
+
+    <MediaTemplate EmbedCab="yes" />
+    <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="ProjectAiRootFolder" Name="Project-AI">
+        <Directory Id="APIINSTALLFOLDER" Name="Api" />
+      </Directory>
+    </StandardDirectory>
+
+    <ComponentGroup Id="ApiFiles" Directory="APIINSTALLFOLDER">
+      <Files Include="!(bindpath.ApiSourceDir)\**" />
+    </ComponentGroup>
+
+    <Feature Id="Main">
+      <ComponentGroupRef Id="ApiFiles" />
+    </Feature>
+  </Package>
+</Wix>

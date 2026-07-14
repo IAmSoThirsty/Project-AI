@@ -32,6 +32,9 @@ ENV/
 .uv/
 monkeytype.sqlite3
 
+# WiX Toolset (Windows installer build; see tools/build_windows_installer.ps1)
+.wix/
+
 # IDE
 .idea/
 .vscode/

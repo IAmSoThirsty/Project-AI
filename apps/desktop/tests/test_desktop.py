@@ -216,7 +216,16 @@ def test_gateway_classifies_http_transport_and_json_errors(
         gateway.health()
 
 
-def test_desktop_has_no_authority_dependency_or_persistent_token_store() -> None:
+def test_desktop_has_no_authority_dependency_and_avoids_qsettings() -> None:
+    """Governance-authority import boundary and QSettings avoidance.
+
+    Renamed from ``..._or_persistent_token_store``: the desktop now
+    deliberately persists one credential (see
+    ``test_local_loopback_token_is_the_only_persisted_secret`` below), so
+    that older name no longer described what this test actually checks. The
+    assertions themselves are unchanged -- they never asserted "no
+    persistence anywhere", only these three things.
+    """
     app_root = Path(__file__).resolve().parents[1]
     metadata = tomllib.loads((app_root / "pyproject.toml").read_text(encoding="utf-8"))
     dependencies = cast(list[str], metadata["project"]["dependencies"])
@@ -236,3 +245,18 @@ def test_desktop_has_no_authority_dependency_or_persistent_token_store() -> None
                 imported.add(node.module.split(".", maxsplit=1)[0])
     assert imported.isdisjoint(forbidden)
     assert "QSettings" not in source_text
+
+
+def test_local_loopback_token_is_the_only_persisted_secret() -> None:
+    """The desktop persists exactly one credential: a self-generated,
+    loopback-only token for the api process it may spawn (``credentials.py``,
+    used only by ``api_supervisor.py``). The Settings page's user-entered
+    remote gateway token must stay in-memory only -- ``main_window.py`` must
+    not import the persistence module or write that token anywhere.
+    """
+    app_root = Path(__file__).resolve().parents[1]
+    main_window_source = (app_root / "src" / "project_ai_desktop" / "main_window.py").read_text(
+        encoding="utf-8"
+    )
+    assert "credentials" not in main_window_source
+    assert "In-memory settings applied; token was not persisted" in main_window_source

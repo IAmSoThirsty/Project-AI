@@ -227,6 +227,16 @@ class MainWindow(QMainWindow):
     def _gateway(self) -> Gateway:
         return self._gateway_factory(self._api_url, self._api_token, self._timeout)
 
+    def set_api_endpoint(self, url: str) -> None:
+        """Point the client at the gateway the supervisor confirmed is reachable."""
+        self._api_url = url
+        if hasattr(self, "api_url_input"):
+            self.api_url_input.setText(url)
+        self._status_bar.showMessage(f"Gateway ready at {url}")
+
+    def report_supervisor_status(self, reason: str) -> None:
+        self._status_bar.showMessage(f"Local gateway not started: {reason}")
+
     def refresh_status(self) -> None:
         try:
             gateway = self._gateway()

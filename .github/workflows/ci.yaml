@@ -142,6 +142,34 @@ jobs:
             apps/desktop/src/project_ai_desktop/__main__.py
           build/ci-desktop/dist/Project-AI-Desktop/Project-AI-Desktop
 
+  windows-installer:
+    name: Windows installer (build, install, smoke, uninstall)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - run: uv sync --frozen --all-extras --all-packages
+      - name: Install WiX Toolset CLI
+        run: |
+          dotnet tool install --global wix
+          Add-Content $env:GITHUB_PATH "$env:USERPROFILE\.dotnet\tools"
+      - name: Accept WiX Open Source Maintenance Fee EULA
+        # See docs/deployment/WINDOWS_INSTALLER.md: this repo is under the OSMF's free-use
+        # revenue threshold today. Accepting is free (no payment) -- see
+        # https://docs.firegiant.com/wix/osmf/ for the exact terms.
+        run: |
+          $env:PATH = "$env:PATH;$env:USERPROFILE\.dotnet\tools"
+          wix eula accept wix7
+          wix extension add WixToolset.BootstrapperApplications.wixext
+      - name: Build installer
+        run: |
+          $env:PATH = "$env:PATH;$env:USERPROFILE\.dotnet\tools"
+          $bundle = ./tools/build_windows_installer.ps1
+          echo "BUNDLE_EXE=$bundle" >> $env:GITHUB_ENV
+      - name: Install, smoke, uninstall
+        run: ./tools/smoke_windows_installer.ps1 -BundleExe "${{ env.BUNDLE_EXE }}"
+
   compose:
     name: Compose (build, health, security)
     runs-on: ubuntu-latest

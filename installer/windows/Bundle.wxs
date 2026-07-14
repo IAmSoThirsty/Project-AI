@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Burn bootstrapper chaining Desktop.msi + Api.msi into a single install/uninstall entry.
+  Built via:
+    wix build -acceptEula wix7 Bundle.wxs -d DesktopMsiPath=<path> -d ApiMsiPath=<path> \
+      -o Project-AI-Desktop-Setup.exe
+
+  Theme="none" and no LicenseFile/LicenseUrl: deliberately no EULA dialog / first-run wizard
+  (out of scope per the approved plan). Both MsiPackages set Visible="no" (also each MSI's own
+  ARPSYSTEMCOMPONENT property, belt-and-suspenders) so only this bundle shows in Add/Remove
+  Programs: verified empirically by the acceptance gate, not just asserted here.
+
+  InstallFolder is bal:Overridable so a silent install can pass
+  /InstallFolder="<temp path>" and have it actually take effect in both chained MSIs via the
+  MsiProperty forwards below: an unforwarded property would silently install to Program
+  Files regardless of the override, which is exactly what the acceptance gate checks for.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+  <Bundle Name="Project-AI Desktop"
+          Manufacturer="Project-AI"
+          Version="0.0.0.1"
+          UpgradeCode="b9f4ec64-5189-4b5b-ab15-ffd115046b7d">
+
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication
+        Theme="hyperlinkLicense"
+        LicenseUrl=""
+        SuppressOptionsUI="yes" />
+    </BootstrapperApplication>
+
+    <Variable Name="InstallFolder" Type="string" Value="[ProgramFiles64Folder]Project-AI" bal:Overridable="yes" />
+
+    <Chain>
+      <MsiPackage Id="DesktopPackage" SourceFile="$(DesktopMsiPath)" Visible="no">
+        <MsiProperty Name="INSTALLFOLDER" Value="[InstallFolder]\Desktop" />
+      </MsiPackage>
+      <MsiPackage Id="ApiPackage" SourceFile="$(ApiMsiPath)" Visible="no">
+        <MsiProperty Name="APIINSTALLFOLDER" Value="[InstallFolder]\Api" />
+      </MsiPackage>
+    </Chain>
+  </Bundle>
+</Wix>

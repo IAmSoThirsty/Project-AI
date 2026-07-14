@@ -7,6 +7,102 @@
 
 ---
 
+## SESSION UPDATE 2026-07-13 — Windows installer product gap (WiX + Burn, bundled api)
+
+- **Status:** COMPLETE (code, tests, real WiX build/install/uninstall verified locally on this
+  Windows box); Not verified: CI's new `windows-installer` job has not yet run on a GitHub
+  Actions `windows-latest` runner.
+- **Task:** Design and implement a production installer for `apps/desktop` so a user can
+  download and run it without cloning the repo, with the FastAPI `api` service (`packages/api`)
+  bundled and launched locally (not a thin client requiring a separately-run backend).
+- **Files created:** `apps/desktop/src/project_ai_desktop/{local_paths,credentials,api_supervisor}.py`,
+  `apps/desktop/tests/{test_local_paths,test_credentials,test_api_supervisor}.py`,
+  `packages/api/src/project_ai_api/server.py`, `packages/api/tests/test_server.py`,
+  `installer/windows/{Desktop.wxs,Api.wxs,Bundle.wxs}`, `tools/build_windows_installer.ps1`,
+  `tools/sign_windows_artifact.ps1`, `tools/smoke_windows_installer.ps1`,
+  `docs/deployment/WINDOWS_INSTALLER.md`.
+- **Files modified:** `apps/desktop/src/project_ai_desktop/{app.py,main_window.py}`,
+  `apps/desktop/tests/test_desktop.py` (renamed the authority-boundary test; added a new test
+  for the local-loopback-token persistence boundary), `apps/desktop/README.md`,
+  `packages/api/pyproject.toml` (added `build` extra + `project-ai-api-server` script),
+  `packages/api/README.md`, `.github/workflows/ci.yaml` (new additive `windows-installer` job),
+  `tools/acceptance_gate.ps1` (new `Build-And-Smoke-Installer` step), `tools/acceptance_gate.sh`
+  (comment noting the deliberate asymmetry: no Windows-only installer step on POSIX).
+- **Key design decisions (all approved by user before implementation):** bundle+launch the api
+  service (not thin-client); design signing into the pipeline but leave it a no-op until a
+  certificate exists; WiX Toolset v7 + Burn bundler (chosen over Inno Setup specifically for
+  Burn's multi-MSI/service chaining); auto-update out of scope.
+- **Corrections made mid-implementation after user pushback on the first plan draft:** (1) fixed
+  a TOCTOU port-selection race by having the child process bind its own socket and report the
+  port via `--port-file`, rather than pre-selecting a port and relaunching; (2) verified (not
+  just asserted) that `PROJECT_AI_API_TOKEN` is a real enforced credential via
+  `packages/api/src/project_ai_api/app.py`'s `require_auth` HMAC comparison; (3) verified via a
+  real install that WiX's `Visible="no"` + `ARPSYSTEMCOMPONENT=1` actually hides both chained
+  MSIs from Add/Remove Programs (checked the `SystemComponent` registry value directly, not
+  just the schema doc's stated default); (4) expanded signing to cover onedir exes, both MSIs,
+  and the bootstrapper, not just two exes and the final bundle; (5) authored real
+  `INSTALLFOLDER`/`APIINSTALLFOLDER` property forwarding from the Burn bundle and had the smoke
+  script assert files actually land under a caller-supplied temp path, not just that the
+  install command exited 0.
+- **WiX Open Source Maintenance Fee (discovered mid-session, not previously known to either
+  party):** WiX v7's CLI refuses to run without EULA acceptance; the underlying terms require a
+  $10,000/year+ revenue org to sponsor the wixtoolset GitHub org. User decided: this repo is
+  pre-alpha with no revenue, so free-use terms apply — `-acceptEula wix7` is wired into the
+  build script and CI job; documented in `docs/deployment/WINDOWS_INSTALLER.md` with a note to
+  re-check if the project ever generates revenue.
+- **Real, evidence-based verification performed this session (not just unit tests):**
+  `packages/api/tests/test_server.py` spawns the real `server.py` subprocess and confirms
+  `/health/live` responds; `tools/build_windows_installer.ps1` was run end-to-end on this
+  Windows machine (real PyInstaller onedir builds for both packages, real `wix build` for both
+  MSIs and the bundle); the resulting `Project-AI-Desktop-Setup.exe` was silently installed with
+  an `InstallFolder` override, confirmed via the registry that only the bundle (not either MSI)
+  is visible in Add/Remove Programs, silently uninstalled, and confirmed the install root and
+  ARP entry were both fully removed.
+- **Known gap / pre-existing, unrelated failure observed during the full-workspace regression
+  run:** `packages/taar/tests/test_config_registry.py::test_config_loads_safe_defaults_when_taar_toml_missing`
+  fails on this machine because stray `T:\Temp\.git` / `T:\Temp\.project-ai` directories (left
+  over from unrelated prior sessions) confuse that test's ancestor-repo-root walk-up when
+  pytest's `tmp_path` resolves under `T:\Temp\...`. Not caused by this diff, not in scope for
+  this task; flagged rather than silently dropped.
+- **Full real-payload smoke test result (update after this entry was first written):**
+  `tools/smoke_windows_installer.ps1` was run to completion against the real
+  `Project-AI-Desktop-Setup.exe` (real PyInstaller onedir builds, real WiX MSIs/bundle) on a
+  clean system state. All five assertions passed: temp-prefix `InstallFolder` forwarding took
+  effect (files existed under the requested path, not Program Files); exactly one Add/Remove
+  Programs entry was visible (verified via the `SystemComponent` registry value on both MSI
+  product keys vs. the bundle key); the *installed* desktop exe spawned the *installed* api exe
+  via sibling-path auto-discovery; closing the desktop app gracefully (`WM_CLOSE` /
+  `CloseMainWindow`, after waiting for a real window handle) terminated the spawned api process;
+  silent uninstall removed both the install root and the ARP entry.
+- **Two real bugs found and fixed by this end-to-end testing** (neither would have been caught
+  by unit tests alone): (1) `wix build`'s `-bindpath` resolves relative paths against the `.wxs`
+  source file's directory, not the invocation cwd — `tools/build_windows_installer.ps1` now
+  uses absolute paths throughout; (2) the acceptance script's process-close logic called
+  `CloseMainWindow()` before the process had a `MainWindowHandle` (immediately after
+  `Start-Process -PassThru`), so it silently no-op'd and fell through to a hard kill that
+  bypasses Qt's `aboutToQuit` cleanup entirely — `tools/smoke_windows_installer.ps1` now waits
+  for a real window handle and only asserts child-process cleanup after a confirmed graceful
+  close.
+- **A debugging false alarm, documented so it isn't repeated:** mid-session, deleting a prior
+  run's temp install directory directly (`Remove-Item -Recurse`) without first running a proper
+  `/uninstall` left Windows Installer's own product registration in a stale "Present" state.
+  Every subsequent `/quiet` install of the same bundle was then silently treated as a no-op
+  repair (`execute: None` in the Burn log) rather than a fresh install, so `InstallFolder`
+  stopped taking effect and made it look like the shutdown-cleanup path was broken. A clean
+  `/uninstall` against the cached bundle (`C:\ProgramData\Package Cache\{bundle-guid}\...`)
+  restored `install registration state: Absent` for both packages, after which a fresh cycle
+  passed cleanly. Lesson: always uninstall through the bundle, never delete an MSI-managed
+  install directory directly.
+- **No `docs/internal/STAGE_19_5J2_*` acceptance file was created.** Checked
+  `STAGE_19_5_SESSION_LEDGER.md`: the `J2.*` numbering is specifically the Atlas-feature-port
+  track (unrelated to this work). Creating a `STAGE_19_5J2_10_ACCEPTANCE.md` would misleadingly
+  imply this installer work is an Atlas port continuation. This session's evidence lives here and
+  in the final report instead; assign a real stage number if/when this is formalized into the
+  ledger.
+- **Purpose:** Close the "no standalone installer" product gap identified at the start of this
+  session; establish a reusable, verified pattern (bundle two independently-packaged services
+  under one Burn bootstrapper) rather than a one-off script.
+
 ## SESSION UPDATE 2026-07-11 — Memory architecture integration
 
 - **Status:** COMPLETE

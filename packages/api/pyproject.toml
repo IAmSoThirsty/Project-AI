@@ -21,5 +21,11 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 
+[project.optional-dependencies]
+build = ["pyinstaller>=6.11.0"]
+
+[project.scripts]
+project-ai-api-server = "project_ai_api.server:main"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/project_ai_api"]

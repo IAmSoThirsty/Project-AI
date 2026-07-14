@@ -69,6 +69,10 @@ build_and_smoke_desktop() {
     QT_QPA_PLATFORM=offscreen PROJECT_AI_DESKTOP_SMOKE=1 "$executable"
 }
 
+# No POSIX equivalent of Windows installer build/smoke: WiX, MSI, and signtool are
+# Windows-only tools. tools/acceptance_gate.ps1 has a Build-And-Smoke-Installer step that
+# this script deliberately does not mirror.
+
 generate_sbom() {
     local python
     mkdir -p build/acceptance/sbom

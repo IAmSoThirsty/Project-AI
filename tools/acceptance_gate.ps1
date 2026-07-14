@@ -87,6 +87,14 @@ function Build-And-Smoke-Desktop {
     & "$root/dist/Project-AI-Desktop/Project-AI-Desktop.exe"
 }
 
+function Build-And-Smoke-Installer {
+    # WiX/MSI/signtool are Windows-only tools -- tools/acceptance_gate.sh deliberately has no
+    # equivalent step, unlike Build-And-Smoke-Desktop which runs on every platform.
+    $bundle = & "$PSScriptRoot/build_windows_installer.ps1"
+    if ($LASTEXITCODE -ne 0) { throw "build_windows_installer.ps1 failed with exit code $LASTEXITCODE" }
+    & "$PSScriptRoot/smoke_windows_installer.ps1" -BundleExe $bundle
+}
+
 function Generate-Sbom {
     New-Item -ItemType Directory -Force build/acceptance/sbom | Out-Null
     $python = uv run python -c "import sys; print(sys.executable)"
@@ -152,6 +160,7 @@ Step "Node: tests" { pnpm web:test }
 Step "Node: builds" { pnpm web:build }
 Step "Desktop: offscreen source smoke" { Run-DesktopSmoke }
 Step "Desktop: unsigned onedir build and smoke" { Build-And-Smoke-Desktop }
+Step "Windows installer: build, install, smoke, uninstall" { Build-And-Smoke-Installer }
 Step "Supply chain: reproducible CycloneDX SBOM" { Generate-Sbom }
 Step "Compose: config" { docker compose config --quiet }
 Step "Compose: build and start seven services" {
