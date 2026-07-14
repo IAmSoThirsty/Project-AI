@@ -50,6 +50,7 @@ dependencies = [
     "project-ai-thirstys-trading-hub",
     "project-ai-temporal",
     "project-ai-cli",
+    "project-ai-sovereign-vault",
     # Thirsty-Lang (PyPI dep, six-tier governance language family)
     "thirsty-lang==0.8.1",
 ]
@@ -130,6 +131,7 @@ project-ai-tarl = { workspace = true }
 project-ai-thirstys-trading-hub = { workspace = true }
 project-ai-temporal = { workspace = true }
 project-ai-cli = { workspace = true }
+project-ai-sovereign-vault = { workspace = true }
 
 [tool.uv.workspace]
 members = [
@@ -168,6 +170,7 @@ members = [
     "packages/security",
     "packages/swr",
     "packages/cli",
+    "packages/sovereign-vault",
 ]
 
 # ----------------------------------------------------------------------
@@ -209,6 +212,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["B011"]  # assert False is fine in tests
+"packages/sovereign-vault/tests/**/*.py" = ["B011", "RUF059", "F841", "SIM102", "SIM105", "SIM117"]  # ported vault tests: intentional unpacking/structure
 "docs/**/*.py" = ["F401"]   # examples may have unused imports
 "packages/django-state/src/**/*.py" = ["SIM102"]  # nested ifs are intentional in validators.py
 "packages/django-state/tests/**/*.py" = ["SIM102"]

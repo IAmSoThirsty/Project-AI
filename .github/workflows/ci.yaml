@@ -41,14 +41,14 @@ jobs:
             packages/kernel/src packages/security/src packages/governance/src \
             packages/capability/src packages/execution/src packages/companion/src \
             packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src \
-            packages/api/src packages/cli/src apps/desktop/src apps/services/src tools
+            packages/api/src packages/cli/src packages/sovereign-vault/src apps/desktop/src apps/services/src tools
       - name: Test with branch coverage
         run: |
           uv run pytest -q --tb=short \
             --cov=kernel --cov=security --cov=governance --cov=capability \
             --cov=execution --cov=companion --cov=swr --cov=atlas \
             --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli \
-            --cov=project_ai_desktop --cov=project_ai_services \
+            --cov=project_ai_desktop --cov=project_ai_services --cov=sovereign_vault \
             --cov-branch --cov-report=term-missing --cov-fail-under=80
       - name: Canonical replay 5/5
         run: uv run python tools/canonical_replay.py

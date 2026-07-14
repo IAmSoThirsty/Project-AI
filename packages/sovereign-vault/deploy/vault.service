@@ -1,0 +1,77 @@
+# Reference systemd unit for the vault daemon process.
+# This is the deploy-layer half of "the vault process itself needs
+# isolation" — it is not something a Python module can enforce on itself
+# from the inside. Adjust paths/user for your environment; the hardening
+# directives below are the ones that matter.
+
+[Unit]
+Description=Sovereign Vault daemon
+After=network.target
+# Vault has no legitimate startup dependency on network reachability;
+# After=network.target is only so systemd orders unit startup sensibly,
+# not because the vault process is permitted to use the network.
+
+[Service]
+Type=notify
+User=vault-svc
+Group=vault-svc
+ExecStart=/opt/vault/bin/vault-daemon --config /etc/vault/vault.toml
+
+# --- Privilege reduction ---
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+SecureBits=noroot-locked
+
+# --- Filesystem isolation ---
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ReadWritePaths=/var/lib/vault
+ReadOnlyPaths=/etc/vault
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+LockPersonality=true
+RestrictSUIDSGID=true
+RemoveIPC=true
+
+# --- Network isolation ---
+# No network access by default. If a specific deployment needs an
+# out-of-band audit witness or NTP reachability, open the narrowest
+# possible exception (e.g. IPAddressAllow for one witness host) rather
+# than removing PrivateNetwork wholesale.
+PrivateNetwork=true
+RestrictAddressFamilies=AF_UNIX
+
+# --- Namespace isolation ---
+ProtectProc=invisible
+ProcSubset=pid
+RestrictNamespaces=true
+
+# --- Syscall filtering ---
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources @mount @debug @module @raw-io @reboot @swap @clock
+SystemCallErrorNumber=EPERM
+SeccompFilter=/etc/vault/vault-seccomp.json
+
+# --- Memory ---
+# mlock() for SecureBuffer requires either CAP_IPC_LOCK or a raised
+# RLIMIT_MEMLOCK — grant via LimitMEMLOCK, not by adding CAP_IPC_LOCK
+# to CapabilityBoundingSet if it can be avoided.
+LimitMEMLOCK=64M
+MemoryDenyWriteExecute=true
+
+# --- Crash/restart behavior ---
+# A vault that silently restarts into an "open" state after a crash is
+# a rollback-adjacent bug. Restart should re-enter fully sealed and
+# require the same bootstrap/attestation path as a cold start.
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1018,3 +1018,33 @@ polishing docs/config for it now would be wasted work.
 ### Safe to continue
 Yes. No blockers. The PyQt6/GPL-3.0 licensing question (above) is the one
 item that needs a human business decision rather than further agent work.
+
+---
+
+## SESSION UPDATE 2026-07-14 — Sovereign Vault integration (net-new package)
+
+- **Status:** COMPLETE and gate-verified. ruff clean, ruff format clean, mypy --strict
+  clean (17 source files, 0 issues), 27/27 tests pass.
+- **Task:** Integrate `T:\00-Active\sovereign_vault` (object-level narrow-release vault:
+  verify -> authorize -> release -> zeroize) into Project-AI-Beginnings as a sovereign
+  security substrate, per the three-source integration plan
+  (`.hermes/plans/2026-07-14_173000-three-source-integration.md`).
+- **Decision (user):** caretaker excluded (already `packages/caretaker` + `packages/governance`
+  bridges to it). sovereign_vault is the genuine net-new surface. thirsty_governance_framework_0722
+  is mostly already inside (thirsty-lang 0.8.1 PyPI, tarl/governance/trading-hub/caretaker) —
+  its residual (DPR, governance-agent, TS adapters, corpus) is a separate follow-up wave.
+- **Files created:** `packages/sovereign-vault/` (17 modules + tests + deploy + README + py.typed),
+  `packages/sovereign-vault/pyproject.toml`, `docs/internal/SOVEREIGN_VAULT_L5_ACCEPTANCE.md`.
+- **Files modified:** root `pyproject.toml` (3-place registration: dependencies,
+  `[tool.uv.sources]`, `[tool.uv.workspace].members`), `uv.lock` (added `pynacl==1.6.2`),
+  `.github/workflows/ci.yaml` (mypy step + `--cov=sovereign_vault`),
+  `.pre-commit-config.yaml` (mypy files pattern), `pyproject.toml` per-file-ignores for
+  the ported test file.
+- **Strict-typing edits (behavior-preserving):** precise generic type args; `vault.release()`
+  is a `@contextlib.contextmanager` yielding `SecureBuffer` (mirrors `ObjectReleaseManager.release`);
+  `regenerate_component() -> RegenerationRecord`; platform-gated `fcntl` import in
+  `release.transfer_via_memfd` (Linux-only, `type: ignore[attr-defined]`).
+
+### Safe to continue
+Yes. No blockers. Part 2 (governance framework residual: DPR, governance-agent, TS adapters,
+corpus/docs ingest) is the remaining declared scope and is not yet started.
