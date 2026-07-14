@@ -29,6 +29,7 @@ members = [
     "project-ai-identity",
     "project-ai-kernel",
     "project-ai-knowledge",
+    "project-ai-memory",
     "project-ai-rlp",
     "project-ai-security",
     "project-ai-service-host",
@@ -850,6 +851,7 @@ dependencies = [
     { name = "project-ai-identity" },
     { name = "project-ai-kernel" },
     { name = "project-ai-knowledge" },
+    { name = "project-ai-memory" },
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
     { name = "project-ai-simulation-contract" },
@@ -916,6 +918,7 @@ requires-dist = [
     { name = "project-ai-identity", editable = "packages/identity" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-knowledge", editable = "packages/knowledge" },
+    { name = "project-ai-memory", editable = "packages/memory" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
     { name = "project-ai-simulation-contract", editable = "packages/simulation-contract" },
@@ -1358,6 +1361,29 @@ requires-dist = [
     { name = "pypdf", marker = "extra == 'ingest'", specifier = ">=6.0.0" },
 ]
 provides-extras = ["ingest"]
+
+[[package]]
+name = "project-ai-memory"
+version = "0.0.0.dev0"
+source = { editable = "packages/memory" }
+dependencies = [
+    { name = "numpy" },
+    { name = "project-ai-audit" },
+    { name = "project-ai-capability" },
+    { name = "project-ai-governance" },
+    { name = "project-ai-kernel" },
+    { name = "project-ai-knowledge" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "numpy", specifier = ">=1.24,<2.0" },
+    { name = "project-ai-audit", editable = "packages/audit" },
+    { name = "project-ai-capability", editable = "packages/capability" },
+    { name = "project-ai-governance", editable = "packages/governance" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+    { name = "project-ai-knowledge", editable = "packages/knowledge" },
+]
 
 [[package]]
 name = "project-ai-rlp"

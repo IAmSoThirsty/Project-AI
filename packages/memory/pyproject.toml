@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-memory"
+version = "0.0.0.dev0"
+description = "CCMA unified constitutional memory graph for Project-AI (the entire memory + future memory substrate)"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = [
+    # CCMA is the unified graph; it delegates constitutional authority,
+    # capability, and audit to these real Beginnings subsystems (no fabrications):
+    "project-ai-kernel",      # StateRegister (Law I authority source of truth)
+    "project-ai-capability",  # CapabilityAuthority (T.A.R.L.)
+    "project-ai-audit",       # AuditLog hash chain (CBCC)
+    "project-ai-governance",  # TriumvirateGovernor (real constitutional review)
+    "project-ai-knowledge",   # VectorIndex (semantic/vector retrieval backend)
+    "numpy>=1.24,<2.0",       # shared with packages/knowledge for the vector backend
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.12",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/memory"]

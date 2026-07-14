@@ -39,6 +39,7 @@ dependencies = [
     "project-ai-identity",
     "project-ai-kernel",
     "project-ai-knowledge",
+    "project-ai-memory",
     "project-ai-rlp",
     "project-ai-security",
     "project-ai-swr",
@@ -114,6 +115,7 @@ project-ai-convergence = { workspace = true }
 project-ai-hydra-50 = { workspace = true }
 project-ai-kernel = { workspace = true }
 project-ai-knowledge = { workspace = true }
+project-ai-memory = { workspace = true }
 project-ai-governance = { workspace = true }
 project-ai-emp-defense = { workspace = true }
 project-ai-execution = { workspace = true }
@@ -152,6 +154,7 @@ members = [
     "packages/identity",
     "packages/kernel",
     "packages/knowledge",
+    "packages/memory",
     "packages/simulation-contract",
     "packages/taar",
     "packages/tarl",
@@ -209,6 +212,7 @@ ignore = [
 "docs/**/*.py" = ["F401"]   # examples may have unused imports
 "packages/django-state/src/**/*.py" = ["SIM102"]  # nested ifs are intentional in validators.py
 "packages/django-state/tests/**/*.py" = ["SIM102"]
+"packages/memory/src/memory/ccma/**/*.py" = ["RUF002", "RUF003"]  # vendored CCMA docstrings use en-dashes by design
 
 [tool.ruff.format]
 quote-style = "double"
