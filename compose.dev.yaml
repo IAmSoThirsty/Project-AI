@@ -1,7 +1,8 @@
-name: project-ai-development
+name: project-ai
 
 # Development override: hot-reload enabled for Python packages
 # Run with: docker compose -f compose.yaml -f compose.dev.yaml up
+# Port reference: see docs/PORT_LEDGER.md
 
 x-python-security: &python-security
   cap_drop: [ALL]
@@ -13,16 +14,16 @@ x-python-security: &python-security
 x-python-health: &python-health
   test:
     - CMD
-    - python
-    - -c
-    - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2).read()"
+    - curl
+    - -f
+    - "http://127.0.0.1:8000/health/live"
   interval: 5s
   timeout: 3s
   retries: 12
   start_period: 5s
 
 services:
-  # --- MECHANISM 1: Bind mounts for immediate reload ---
+  # === MECHANISM 1: Bind mounts for immediate reload ===
   api:
     <<: *python-security
     read_only: false  # Writeable /app for venv updates
@@ -38,12 +39,13 @@ services:
       - ./packages/governance/src:/app/packages/governance/src
       - ./packages/execution/src:/app/packages/execution/src
       - ./packages/api/src:/app/packages/api/src
-    # Uvicorn auto-reload on source changes
     environment:
       PYTHONUNBUFFERED: 1
     healthcheck: *python-health
+    networks:
+      - services
 
-  # --- MECHANISM 2: develop.watch for fine-grained file watching ---
+  # === MECHANISM 2: develop.watch for fine-grained file watching ===
   # Uncomment to use instead of (or alongside) bind mounts.
   # This triggers container rebuild only when Dockerfile or lock changes,
   # leaving source code mounts as direct overwrites.
@@ -79,6 +81,8 @@ services:
       - ./packages/atlas/src:/app/packages/atlas/src
     environment:
       PYTHONUNBUFFERED: 1
+    networks:
+      - services
 
   atlas:
     <<: *python-security
@@ -87,6 +91,8 @@ services:
       - ./packages/atlas/src:/app/packages/atlas/src
     environment:
       PYTHONUNBUFFERED: 1
+    networks:
+      - services
 
   arbiter-rlp:
     <<: *python-security
@@ -96,6 +102,8 @@ services:
       - ./packages/rlp/src:/app/packages/rlp/src
     environment:
       PYTHONUNBUFFERED: 1
+    networks:
+      - services
 
   # Docs and proof portals — web assets hot-reload
   docs-portal:
@@ -107,6 +115,8 @@ services:
     volumes:
       - ./apps/web/src:/app/apps/web/src
     restart: unless-stopped
+    networks:
+      - services
 
   proof-portal:
     cap_drop: [ALL]
@@ -117,6 +127,18 @@ services:
     volumes:
       - ./apps/web/src:/app/apps/web/src
     restart: unless-stopped
+    networks:
+      - services
+
+  genesis:
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    networks:
+      - services
 
 volumes:
   audit-data:
+
+networks:
+  services:
+    driver: bridge

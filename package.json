@@ -9,6 +9,11 @@
     "web:test": "pnpm --filter @project-ai/docs-portal test && pnpm --filter @project-ai/proof-portal test && pnpm --filter @project-ai/triumvirate-portal test",
     "web:build": "pnpm --filter @project-ai/docs-portal build && pnpm --filter @project-ai/proof-portal build && pnpm --filter @project-ai/triumvirate-portal build"
   },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
     "@testing-library/jest-dom": "^6.9.0",

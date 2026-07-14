@@ -1,6 +1,15 @@
-name: project-ai-development
+name: project-ai
 
-x-python-security: &python-security
+# ============================================================================
+# Port Assignments (see docs/PORT_LEDGER.md)
+# - API:          127.0.0.1:8000 → 8000  (published)
+# - Docs Portal:  127.0.0.1:4173 → 8080  (published)
+# - Proof Portal: 127.0.0.1:4174 → 8080  (published)
+# - Genesis:      8080  (internal only)
+# - swr/atlas/arbiter-rlp: 8000 (internal only)
+# ============================================================================
+
+x-python-defaults: &python-defaults
   read_only: true
   cap_drop: [ALL]
   security_opt: [no-new-privileges:true]
@@ -9,53 +18,64 @@ x-python-security: &python-security
   restart: unless-stopped
 
 x-python-health: &python-health
-  test:
-    - CMD
-    - python
-    - -c
-    - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2).read()"
+  test: [CMD, curl, -f, "http://127.0.0.1:8000/health/live"]
   interval: 5s
   timeout: 3s
   retries: 12
   start_period: 5s
 
+x-web-health: &web-health
+  test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/healthz"]
+  interval: 5s
+  timeout: 3s
+  retries: 12
+  start_period: 3s
+
 services:
+  # ========== API (Port 8000, published) ==========
   api:
-    <<: *python-security
+    <<: *python-defaults
     build:
       context: .
       dockerfile: docker/api.Dockerfile
+    image: project-ai:api
+    container_name: project-ai-api
     environment:
       PROJECT_AI_API_TOKEN: ${PROJECT_AI_API_TOKEN:-}
       PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
       PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
+      PYTHONUNBUFFERED: "1"
     volumes:
       - audit-data:/data
     ports:
       - "127.0.0.1:8000:8000"
     healthcheck: *python-health
+    networks:
+      - services
 
+  # ========== Web Portals (published) ==========
   docs-portal:
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     tmpfs:
       - /tmp:size=64m,mode=1777
+    restart: unless-stopped
     build:
       context: .
       dockerfile: docker/web.Dockerfile
-      args: { PORTAL: docs }
+      args:
+        PORTAL: docs
+    image: project-ai:docs-portal
+    container_name: project-ai-docs-portal
     depends_on:
-      api: { condition: service_healthy }
+      api:
+        condition: service_healthy
     ports:
       - "127.0.0.1:4173:8080"
-    healthcheck:
-      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/healthz"]
-      interval: 5s
-      timeout: 3s
-      retries: 12
-      start_period: 3s
-    restart: unless-stopped
+    healthcheck: *web-health
+    networks:
+      - services
 
   proof-portal:
     read_only: true
@@ -63,60 +83,98 @@ services:
     security_opt: [no-new-privileges:true]
     tmpfs:
       - /tmp:size=64m,mode=1777
+    restart: unless-stopped
     build:
       context: .
       dockerfile: docker/web.Dockerfile
-      args: { PORTAL: proof }
+      args:
+        PORTAL: proof
+    image: project-ai:proof-portal
+    container_name: project-ai-proof-portal
     depends_on:
-      api: { condition: service_healthy }
+      api:
+        condition: service_healthy
     ports:
       - "127.0.0.1:4174:8080"
-    healthcheck:
-      test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/healthz"]
-      interval: 5s
-      timeout: 3s
-      retries: 12
-      start_period: 3s
-    restart: unless-stopped
+    healthcheck: *web-health
+    networks:
+      - services
 
+  # ========== Background Services (internal only) ==========
   swr:
-    <<: *python-security
+    <<: *python-defaults
     build:
       context: .
       dockerfile: docker/service.Dockerfile
-    environment: { PROJECT_AI_SERVICE: swr }
+    image: project-ai:service
+    container_name: project-ai-swr
+    environment:
+      PROJECT_AI_SERVICE: swr
+      PYTHONUNBUFFERED: "1"
+    expose:
+      - 8000
     healthcheck: *python-health
+    networks:
+      - services
 
   atlas:
-    <<: *python-security
+    <<: *python-defaults
     build:
       context: .
       dockerfile: docker/service.Dockerfile
-    environment: { PROJECT_AI_SERVICE: atlas }
+    image: project-ai:service
+    container_name: project-ai-atlas
+    environment:
+      PROJECT_AI_SERVICE: atlas
+      PYTHONUNBUFFERED: "1"
+    expose:
+      - 8000
     healthcheck: *python-health
+    networks:
+      - services
 
   arbiter-rlp:
-    <<: *python-security
+    <<: *python-defaults
     build:
       context: .
       dockerfile: docker/service.Dockerfile
-    environment: { PROJECT_AI_SERVICE: arbiter-rlp }
+    image: project-ai:service
+    container_name: project-ai-arbiter-rlp
+    environment:
+      PROJECT_AI_SERVICE: arbiter-rlp
+      PYTHONUNBUFFERED: "1"
+    expose:
+      - 8000
     healthcheck: *python-health
+    networks:
+      - services
 
+  # ========== Genesis (Port 8080, internal only) ==========
   genesis:
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
+    restart: unless-stopped
     build:
       context: .
       dockerfile: docker/genesis.Dockerfile
+    image: project-ai:genesis
+    container_name: project-ai-genesis
+    expose:
+      - 8080
     healthcheck:
       test: [CMD, genesis-emitter, health]
       interval: 5s
       timeout: 3s
       retries: 12
       start_period: 3s
-    restart: unless-stopped
+    networks:
+      - services
 
 volumes:
   audit-data:
+    driver: local
+
+networks:
+  services:
+    driver: bridge
