@@ -29,6 +29,7 @@ EXPECTED_CI_JOBS = {
     "compose",
     "kubernetes",
     "sbom",
+    "windows-installer",
 }
 REQUIRED_ENV_VARS = {
     "PROJECT_AI_API_TOKEN",
