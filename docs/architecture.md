@@ -118,6 +118,14 @@ The governance pipeline applies in order:
 The Black Box (Personality Core's private inner space) is sovereign and inspectable
 only by the AI itself. Its output enters the world only through the execution gate.
 
+## Memory Architecture
+
+Project-AI now treats memory as a governed architectural substrate rather than a
+simple chat-history store. The enhanced memory model spans working memory,
+short-term memory, long-term memory, companion intelligence, TAAR, Shadow Thirst,
+Sovereign Interior Vault, NIRL, Chimera containment, governance memory, and audit
+memory. The full schematic is documented in [docs/architecture/visual-maps/architecture/memory-system.md](docs/architecture/visual-maps/architecture/memory-system.md).
+
 ## Container Stack (Stage 15)
 
 Seven Compose services map to the package layers above:

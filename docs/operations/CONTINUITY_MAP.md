@@ -9,9 +9,10 @@
 
 ## SESSION UPDATE 2026-07-13 — Windows installer product gap (WiX + Burn, bundled api)
 
-- **Status:** COMPLETE (code, tests, real WiX build/install/uninstall verified locally on this
-  Windows box); Not verified: CI's new `windows-installer` job has not yet run on a GitHub
-  Actions `windows-latest` runner.
+- **Status:** COMPLETE and CI-verified. Code, tests, and real WiX build/install/uninstall
+  verified locally on this Windows box; the new `windows-installer` CI job has since run twice on
+  a GitHub Actions `windows-latest` runner and passed both times (see CI push/verification entry
+  below).
 - **Task:** Design and implement a production installer for `apps/desktop` so a user can
   download and run it without cloning the repo, with the FastAPI `api` service (`packages/api`)
   bundled and launched locally (not a thin client requiring a separately-run backend).
@@ -102,6 +103,23 @@
 - **Purpose:** Close the "no standalone installer" product gap identified at the start of this
   session; establish a reusable, verified pattern (bundle two independently-packaged services
   under one Burn bootstrapper) rather than a one-off script.
+- **CI push and verification (this entry closes the "Not verified" item above):** Committed as
+  `5ced390c` (feature work) and pushed to `origin main`. First CI run
+  (`29304668515`) surfaced one real failure caused by this diff:
+  `tools/tests/test_verify_pre_deployment.py::test_current_repo_pre_deployment_gate_passes` failed
+  because `tools/verify_pre_deployment.py`'s hardcoded `EXPECTED_CI_JOBS` allowlist did not
+  include the new `windows-installer` job name — a pure allowlist omission, not a problem with the
+  installer job itself (which passed on that same run). Fixed with a one-line addition to
+  `EXPECTED_CI_JOBS` in `tools/verify_pre_deployment.py`, verified locally
+  (`uv run pytest tools/tests/test_verify_pre_deployment.py` — 3/3 passed), committed as
+  `8e1a48c6033c4784a425844a0b3e2a4cef90a872`, pushed. Second CI run (`29304999316`, same commit)
+  confirmed via `gh run view --json jobs`: `windows-installer` — success; `Python (policy, type,
+  test, replay)` — success (fix confirmed). The only remaining failure on that run,
+  `Node (lint, test, build)` (`apps/web/triumvirate-portal/js/analytics.js`, `no-undef` on
+  `window`/`document`/`console`), was checked against the prior commit `ab885c29` (before any of
+  this session's changes) via `gh run view` and confirmed already failing there — pre-existing and
+  unrelated to this work, left untouched per explicit user instruction not to modify unrelated
+  failures. **Final commit for this body of work: `8e1a48c6033c4784a425844a0b3e2a4cef90a872`.**
 
 ## SESSION UPDATE 2026-07-11 — Memory architecture integration
 

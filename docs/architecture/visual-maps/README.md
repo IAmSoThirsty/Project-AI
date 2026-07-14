@@ -6,17 +6,21 @@ recovered from ``T:\00-Active\Project-AI-vault\visual-maps\``.
 
 ## What's here
 
-9 documents (414 KB total), all in Obsidian-style Markdown
+10 documents (414 KB total), all in Obsidian-style Markdown
 with YAML frontmatter (title, id, type, version, dates,
 status, author, area, tags, component, related_docs,
 audience, priority).
 
-### `architecture/` (5 files)
+### `architecture/` (6 files)
 
   - `system-overview.md` — 752 lines, complete-system
     architecture map
   - `ai-systems.md` — AI-systems architecture
   - `governance.md` — governance architecture
+  - `memory-system.md` — enhanced memory architecture schematic
+    spanning working memory, long-term memory, companion
+    intelligence, TAAR, Shadow Thirst, containment, and
+    governance memory
   - `desktop-app.md` — desktop application architecture
   - `web-app.md` — web application architecture
 
