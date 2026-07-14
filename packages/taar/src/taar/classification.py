@@ -40,6 +40,10 @@ SECRET_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
         "env_secret",
         re.compile(r"(?im)^\s*[A-Z][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|PASSWD)\s*=\s*\S{8,}"),
     ),
+    (
+        "redacted_marker",
+        re.compile(r"«redacted:"),
+    ),
 ]
 
 PLACEHOLDER_MARKERS = (
@@ -82,11 +86,21 @@ def find_secret_matches(text: str) -> list[tuple[str, str]]:
 
 
 def redact(value: str) -> str:
-    """Redact a secret-like value, keeping at most the first and last 4 chars."""
+    """Redact a secret-like value, keeping at most the first and last 4 chars.
+
+    Already-redacted markers («redacted:VALUE») are unwrapped first so the
+    inner value is redacted normally.
+    """
+    marker = _REDACTED_MARKER.match(value.strip())
+    if marker is not None:
+        value = marker.group(1)
     stripped = value.strip()
     if len(stripped) <= 12:
         return "***"
     return f"{stripped[:4]}...{stripped[-4:]}"
+
+
+_REDACTED_MARKER = re.compile(r"^«redacted:(.*)»$")
 
 
 def classify_finding(message: str, default: ClassificationLevel) -> ClassificationLevel:
