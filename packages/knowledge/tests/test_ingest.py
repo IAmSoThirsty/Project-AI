@@ -106,6 +106,35 @@ def test_generic_extraction_failure_is_isolated(
     assert "extraction failed" in reasons
 
 
+def test_ingest_corpus_recurses_into_repo_style_files(tmp_path: Path) -> None:
+    corpus = tmp_path / "repo"
+    corpus.mkdir()
+    (corpus / "README.md").write_text(
+        "# Awesome Python\n\nPython tools and libraries for developers.",
+        encoding="utf-8",
+    )
+    (corpus / "src").mkdir()
+    (corpus / "src" / "example.py").write_text(
+        "def greet(name: str) -> str:\n    return f'hello {name}'\n",
+        encoding="utf-8",
+    )
+    (corpus / ".git").mkdir()
+    (corpus / ".git" / "config").write_text("[core]\n", encoding="utf-8")
+
+    index, report = ingest_corpus(
+        corpus,
+        HashingEmbedder(dim=128),
+        chunk_size=200,
+        overlap=40,
+    )
+
+    ingested = {r.filename: r for r in report.ingested}
+    assert "README.md" in ingested
+    assert "example.py" in ingested
+    assert report.total_chunks > 0
+    assert len(index) == report.total_chunks
+
+
 def test_manifest_render_and_index_roundtrip(tmp_path: Path) -> None:
     corpus = _corpus(tmp_path)
     index, report = ingest_corpus(corpus, HashingEmbedder(dim=128))

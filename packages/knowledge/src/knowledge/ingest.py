@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -23,14 +24,36 @@ import numpy as np
 import numpy.typing as npt
 
 from knowledge.chunk import chunk_document
-from knowledge.classify import classify_sensitivity, classify_topic, is_in_scope
+from knowledge.classify import (
+    classify_sensitivity,
+    classify_topic,
+    is_in_scope,
+)
 from knowledge.embedding import Embedder, HashingEmbedder, Model2VecEmbedder
 from knowledge.extract import ExtractionError, extract_text, is_supported
 from knowledge.index import VectorIndex
 from knowledge.models import Chunk
 
-_MIN_TEXT_CHARS = 200
+_MIN_TEXT_CHARS = 40
 _SAMPLE_CHARS = 4000
+_IGNORED_DIRS = frozenset(
+    {
+        ".git",
+        ".hg",
+        ".svn",
+        ".venv",
+        "venv",
+        "node_modules",
+        "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".idea",
+        ".vscode",
+        "dist",
+        "build",
+        "target",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -86,18 +109,35 @@ def _encode_all(
     return np.vstack(blocks).astype(np.float32)
 
 
+def _iter_corpus_files(corpus_dir: Path) -> list[Path]:
+    files: list[Path] = []
+    for root, dirs, filenames in os.walk(corpus_dir):
+        dirs[:] = sorted(d for d in dirs if d not in _IGNORED_DIRS)
+        for filename in sorted(filenames):
+            path = Path(root, filename)
+            if path.is_file():
+                files.append(path)
+    return files
+
+
 def _process_file(
-    path: Path, *, chunk_size: int, overlap: int
+    path: Path, *, chunk_size: int, overlap: int, corpus_dir: Path
 ) -> tuple[DocRecord, tuple[Chunk, ...]]:
     """Process a single corpus file into a record + its chunks. Never raises.
 
-    Each file is handled in isolation so one unreadable document (malformed PDF,
+    Each file is handled in isolation so one unreadable document
+    (malformed PDF,
     encrypted, image-only) is recorded as skipped and never sinks the run.
     """
+    relative_path = path.relative_to(corpus_dir).as_posix()
+    display_name = path.name
     title = title_from_filename(path.name)
 
     def skip(reason: str) -> tuple[DocRecord, tuple[Chunk, ...]]:
-        return DocRecord(path.name, title, "skipped", reason, "", "", "", 0), ()
+        return (
+            DocRecord(display_name, title, "skipped", reason, "", "", "", 0),
+            (),
+        )
 
     if not is_supported(path):
         return skip("unsupported format")
@@ -105,7 +145,7 @@ def _process_file(
         text = extract_text(path)
     except ExtractionError as error:
         return skip(str(error))
-    except Exception as error:  # last-resort guard: never let one file crash the run
+    except Exception as error:  # last-resort guard; never let one file crash
         return skip(f"extraction failed: {type(error).__name__}: {error}")
 
     sample = text[:_SAMPLE_CHARS]
@@ -119,7 +159,7 @@ def _process_file(
     sha = sha256_file(path)
     chunks = chunk_document(
         text=text,
-        source=path.name,
+        source=relative_path,
         source_sha256=sha,
         title=title,
         topic=topic,
@@ -127,7 +167,16 @@ def _process_file(
         chunk_size=chunk_size,
         overlap=overlap,
     )
-    record = DocRecord(path.name, title, "ingested", "", topic, sensitivity, sha, len(chunks))
+    record = DocRecord(
+        display_name,
+        title,
+        "ingested",
+        "",
+        topic,
+        sensitivity,
+        sha,
+        len(chunks),
+    )
     return record, chunks
 
 
@@ -140,12 +189,16 @@ def ingest_corpus(
     file_limit: int | None = None,
     progress: Callable[[int, int, DocRecord], None] | None = None,
 ) -> tuple[VectorIndex, IngestReport]:
-    """Ingest every supported, in-scope file under ``corpus_dir`` into an index.
+    """Ingest every supported, in-scope file under ``corpus_dir``.
 
-    Files are processed one at a time with per-file fault isolation. ``progress``,
+    Files are processed one at a time with per-file fault isolation.
+    ``progress``,
     if given, is called ``(index, total, record)`` after each file.
     """
-    files = sorted(p for p in corpus_dir.iterdir() if p.is_file())
+    if not corpus_dir.exists():
+        raise FileNotFoundError(f"corpus directory does not exist: {corpus_dir}")
+
+    files = _iter_corpus_files(corpus_dir)
     if file_limit is not None:
         files = files[:file_limit]
 
@@ -154,7 +207,12 @@ def ingest_corpus(
     all_chunks: list[Chunk] = []
 
     for index_position, path in enumerate(files, start=1):
-        record, chunks = _process_file(path, chunk_size=chunk_size, overlap=overlap)
+        record, chunks = _process_file(
+            path,
+            chunk_size=chunk_size,
+            overlap=overlap,
+            corpus_dir=corpus_dir,
+        )
         records.append(record)
         all_chunks.extend(chunks)
         if progress is not None:
@@ -177,8 +235,9 @@ def render_manifest(report: IngestReport, *, corpus_dir: Path) -> str:
     lines.append("# Knowledge Corpus Manifest")
     lines.append("")
     lines.append(
-        "Provenance for the Project-AI knowledge layer. The raw corpus and vector index are "
-        "**not** committed (copyright + size); this manifest makes ingestion auditable and "
+        "Provenance for the Project-AI knowledge layer. The raw corpus and "
+        "vector index are **not** committed (copyright + size); this manifest "
+        "makes ingestion auditable and "
         "reproducible from the source folder."
     )
     lines.append("")
@@ -186,7 +245,8 @@ def render_manifest(report: IngestReport, *, corpus_dir: Path) -> str:
     lines.append(f"- Generated: {datetime.now(UTC).isoformat()}")
     lines.append(f"- Embedder: `{report.embedder_name}` (dim {report.dim})")
     lines.append(
-        f"- Documents ingested: {len(report.ingested)} / skipped: {len(report.skipped)}; "
+        f"- Documents ingested: {len(report.ingested)} / skipped: "
+        f"{len(report.skipped)}; "
         f"chunks: {report.total_chunks}"
     )
     lines.append("")
@@ -235,9 +295,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--corpus", required=True, type=Path)
     parser.add_argument("--out", default=Path("data/knowledge"), type=Path)
     parser.add_argument(
-        "--manifest", default=Path("packages/knowledge/KNOWLEDGE_MANIFEST.md"), type=Path
+        "--manifest",
+        default=Path("packages/knowledge/KNOWLEDGE_MANIFEST.md"),
+        type=Path,
     )
-    parser.add_argument("--embedder", choices=("model2vec", "hashing"), default="model2vec")
+    parser.add_argument(
+        "--embedder",
+        choices=("model2vec", "hashing"),
+        default="model2vec",
+    )
     parser.add_argument("--model", default="minishlab/potion-base-8M")
     parser.add_argument("--chunk-size", type=int, default=1000)
     parser.add_argument("--overlap", type=int, default=150)
@@ -249,7 +315,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             detail = f"{record.topic}/{record.sensitivity}, {record.chunks} chunks"
         else:
             detail = record.reason
-        print(f"[{position}/{total}] {record.status}: {record.filename} ({detail})", flush=True)
+        print(
+            f"[{position}/{total}] {record.status}: {record.filename} ({detail})",
+            flush=True,
+        )
 
     embedder = _build_embedder(args.embedder, args.model)
     index, report = ingest_corpus(
@@ -262,7 +331,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     index.save(args.out)
     args.manifest.parent.mkdir(parents=True, exist_ok=True)
-    args.manifest.write_text(render_manifest(report, corpus_dir=args.corpus), encoding="utf-8")
+    args.manifest.write_text(
+        render_manifest(report, corpus_dir=args.corpus),
+        encoding="utf-8",
+    )
 
     print(
         f"ingested {len(report.ingested)} docs, {report.total_chunks} chunks "

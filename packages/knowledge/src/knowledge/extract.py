@@ -12,6 +12,34 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 _SUPPORTED = frozenset({".pdf", ".html", ".htm"})
+_TEXT_EXTENSIONS = frozenset(
+    {
+        ".md",
+        ".markdown",
+        ".txt",
+        ".py",
+        ".json",
+        ".yaml",
+        ".yml",
+        ".toml",
+        ".ini",
+        ".cfg",
+        ".conf",
+        ".sh",
+        ".ps1",
+        ".rst",
+        ".csv",
+        ".xml",
+        ".js",
+        ".ts",
+        ".tsx",
+        ".jsx",
+        ".css",
+        ".scss",
+        ".sass",
+        ".sql",
+    }
+)
 _SKIP_TAGS = frozenset({"script", "style"})
 
 
@@ -24,7 +52,8 @@ class UnsupportedFormatError(ExtractionError):
 
 
 def is_supported(path: Path) -> bool:
-    return path.suffix.lower() in _SUPPORTED
+    suffix = path.suffix.lower()
+    return suffix in _SUPPORTED or suffix in _TEXT_EXTENSIONS
 
 
 class _TextHTMLParser(HTMLParser):
@@ -60,11 +89,12 @@ def _extract_pdf(path: Path) -> str:
 
     # Opening AND page-access are guarded together: pypdf resolves the document
     # root lazily on `.pages`, so a malformed file can raise there, not just at
-    # construction. Any such failure becomes an ExtractionError the caller skips.
+    # construction. Any such failure becomes an ExtractionError the caller
+    # skips.
     try:
         reader = pypdf.PdfReader(str(path))
         page_iter = list(reader.pages)
-    except Exception as error:  # pypdf raises a variety of parse/decrypt errors
+    except Exception as error:  # pypdf raises parse/decrypt errors
         raise ExtractionError(f"could not read PDF {path.name}: {error}") from error
     pages: list[str] = []
     for page in page_iter:
@@ -75,6 +105,10 @@ def _extract_pdf(path: Path) -> str:
     return "\n".join(pages)
 
 
+def _extract_text_file(path: Path) -> str:
+    return path.read_text(encoding="utf-8", errors="replace")
+
+
 def extract_text(path: Path) -> str:
     """Extract plain text from a supported file, else raise."""
     suffix = path.suffix.lower()
@@ -82,4 +116,6 @@ def extract_text(path: Path) -> str:
         return _extract_pdf(path)
     if suffix in (".html", ".htm"):
         return _extract_html(path)
+    if suffix in _TEXT_EXTENSIONS:
+        return _extract_text_file(path)
     raise UnsupportedFormatError(f"unsupported format: {suffix or path.name}")
