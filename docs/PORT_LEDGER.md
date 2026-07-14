@@ -29,7 +29,7 @@ genesis         | 8080 | —              | HTTP | Genesis emitter (Rust)       
 # 3. Health checks use the same port as the service (no separate health port).
 # 4. New portals: increment host port from 4175 upward; keep container port 8080.
 # 5. New services: keep container port 8000; no host binding unless explicitly needed.
-# 6. The Docker bridge network is named project-ai_services.
+# 6. The Docker bridge network is named services.
 #    Container DNS: http://api:8000, http://genesis:8080, etc.
 
 # ── CI/CD image registry (GHCR) ───────────────────────────────────────────
