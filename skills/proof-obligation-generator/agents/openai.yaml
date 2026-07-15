@@ -1,0 +1,3 @@
+interface:
+  display_name: "Proof Obligation Generator"
+  short_description: "Convert guarantees and assertions into explicit evidence obligations."

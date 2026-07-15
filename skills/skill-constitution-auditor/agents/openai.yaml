@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Constitution Auditor"
+  short_description: "Detect constitutional defects before a skill is trusted or installed."

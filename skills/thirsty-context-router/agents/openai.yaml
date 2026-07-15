@@ -1,0 +1,3 @@
+interface:
+  display_name: "Thirsty Context Router"
+  short_description: "Route a request to the correct project, sources, versions, and specialist skills without mixing unre"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Paper Repository Consistency Checker"
+  short_description: "Find and classify mismatches between published descriptions and actual artifacts."

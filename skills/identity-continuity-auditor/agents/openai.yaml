@@ -1,0 +1,3 @@
+interface:
+  display_name: "Identity Continuity Auditor"
+  short_description: "Clarify whether obligations, permissions, accountability, and precedent survive transformation."

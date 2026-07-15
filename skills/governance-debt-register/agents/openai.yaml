@@ -1,0 +1,3 @@
+interface:
+  display_name: "Governance Debt Register"
+  short_description: "Prioritize governance debt remediation alongside technical debt."

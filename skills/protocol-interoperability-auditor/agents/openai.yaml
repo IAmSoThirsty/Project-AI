@@ -1,0 +1,3 @@
+interface:
+  display_name: "Protocol Interoperability Auditor"
+  short_description: "Identify protocol-level governance incompatibilities and safe integration conditions."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Contradiction Engine"
+  short_description: "Distinguish direct contradiction from version drift, scope differences, and intentional pluralism."

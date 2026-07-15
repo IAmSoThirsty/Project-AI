@@ -1,0 +1,3 @@
+interface:
+  display_name: "Concept Lineage Tracer"
+  short_description: "Produce a provenance-rich concept history and identify abandoned or competing branches."

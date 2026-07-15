@@ -1,0 +1,3 @@
+interface:
+  display_name: "Scenario Constitution Tester"
+  short_description: "Evaluate durability across time and interacting actors rather than isolated prompts."

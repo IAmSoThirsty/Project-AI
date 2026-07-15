@@ -1,0 +1,3 @@
+interface:
+  display_name: "Metric Corruption Auditor"
+  short_description: "Prevent measurement systems from corrupting the goals they serve."

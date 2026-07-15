@@ -1,0 +1,3 @@
+interface:
+  display_name: "Semantic Canonicalizer"
+  short_description: "Reduce semantic drift while preserving legitimate scope-specific meanings."

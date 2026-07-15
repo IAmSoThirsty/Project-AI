@@ -1,0 +1,3 @@
+interface:
+  display_name: "Stakeholder Absence Detector"
+  short_description: "Reveal externalized costs and representation gaps."

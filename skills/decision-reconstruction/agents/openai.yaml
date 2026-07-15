@@ -1,0 +1,3 @@
+interface:
+  display_name: "Decision Reconstruction"
+  short_description: "Produce an honest causal account while marking unknown or unrecoverable elements."

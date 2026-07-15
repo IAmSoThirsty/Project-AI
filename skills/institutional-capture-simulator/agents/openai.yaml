@@ -1,0 +1,3 @@
+interface:
+  display_name: "Institutional Capture Simulator"
+  short_description: "Expose slow failure modes that can remain formally compliant."

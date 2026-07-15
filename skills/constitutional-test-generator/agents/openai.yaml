@@ -1,0 +1,3 @@
+interface:
+  display_name: "Constitutional Test Generator"
+  short_description: "Convert normative requirements into concrete test cases with expected outcomes and evidence needs."

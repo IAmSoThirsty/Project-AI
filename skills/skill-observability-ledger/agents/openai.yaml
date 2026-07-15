@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Observability Ledger"
+  short_description: "Support auditability without inventing events that were not observed."

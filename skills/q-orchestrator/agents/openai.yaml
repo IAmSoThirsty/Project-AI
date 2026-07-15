@@ -1,0 +1,3 @@
+interface:
+  display_name: "Q Orchestrator"
+  short_description: "Deliver a disciplined adversarial review without performing external writes."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Mission Drift Detector"
+  short_description: "Identify incentive-driven or gradual departure from purpose."

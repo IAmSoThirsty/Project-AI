@@ -1,0 +1,3 @@
+interface:
+  display_name: "Architecture Decision Recorder"
+  short_description: "Capture context, alternatives, constitutional implications, tradeoffs, evidence, and reversal condit"

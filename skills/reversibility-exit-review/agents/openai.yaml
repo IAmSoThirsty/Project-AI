@@ -1,0 +1,3 @@
+interface:
+  display_name: "Reversibility Exit Review"
+  short_description: "Distinguish safe experimentation from irreversible deployment."

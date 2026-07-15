@@ -1,0 +1,3 @@
+interface:
+  display_name: "Delegation Chain Auditor"
+  short_description: "Reconstruct who authorized an action and whether each delegation edge was valid."

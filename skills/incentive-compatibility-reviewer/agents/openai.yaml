@@ -1,0 +1,3 @@
+interface:
+  display_name: "Incentive Compatibility Reviewer"
+  short_description: "Reveal behavioral incentives, routing-around risks, and mechanism design failures."

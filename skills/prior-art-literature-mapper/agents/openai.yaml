@@ -1,0 +1,3 @@
+interface:
+  display_name: "Prior Art Literature Mapper"
+  short_description: "Identify closest precedents, defensible novelty, and research gaps using current sources."

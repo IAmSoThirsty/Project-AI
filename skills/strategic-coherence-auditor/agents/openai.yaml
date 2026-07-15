@@ -1,0 +1,3 @@
+interface:
+  display_name: "Strategic Coherence Auditor"
+  short_description: "Identify disconnected, duplicative, contradictory, or low-leverage efforts."

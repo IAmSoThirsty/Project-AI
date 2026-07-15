@@ -1,0 +1,3 @@
+interface:
+  display_name: "Novelty Boundary Auditor"
+  short_description: "Identify the narrowest defensible contribution and associated claim risk."

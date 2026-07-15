@@ -1,0 +1,3 @@
+interface:
+  display_name: "Model Agent Provenance Auditor"
+  short_description: "Support accountability, reproducibility, and incident reconstruction."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Drift Detector"
+  short_description: "Recommend clarification, splitting, retraining, or deprecation before drift becomes institutionalize"

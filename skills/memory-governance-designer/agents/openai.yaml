@@ -1,0 +1,3 @@
+interface:
+  display_name: "Memory Governance Designer"
+  short_description: "Make memory lifecycle and rights enforceable and auditable."

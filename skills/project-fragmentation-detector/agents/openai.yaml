@@ -1,0 +1,3 @@
+interface:
+  display_name: "Project Fragmentation Detector"
+  short_description: "Determine whether divergence is healthy specialization, recoverable drift, or irreconcilable fragmen"

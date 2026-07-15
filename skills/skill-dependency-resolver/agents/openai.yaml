@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Dependency Resolver"
+  short_description: "Produce a safe and comprehensible skill dependency graph."

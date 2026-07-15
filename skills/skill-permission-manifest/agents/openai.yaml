@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Permission Manifest"
+  short_description: "Make skill authority inspectable and enforceable."

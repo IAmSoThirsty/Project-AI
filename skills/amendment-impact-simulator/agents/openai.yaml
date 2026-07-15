@@ -1,0 +1,3 @@
+interface:
+  display_name: "Amendment Impact Simulator"
+  short_description: "Reveal who gains or loses authority and what downstream systems must change."

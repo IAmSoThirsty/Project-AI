@@ -1,0 +1,3 @@
+interface:
+  display_name: "Legitimacy Modeler"
+  short_description: "Make sources and limits of legitimacy explicit."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Capability Change Impact Review"
+  short_description: "Determine whether existing authority and safeguards remain adequate after capability changes."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Stakeholder Translation Engine"
+  short_description: "Produce audience-appropriate communication while preserving epistemic status and critical caveats."

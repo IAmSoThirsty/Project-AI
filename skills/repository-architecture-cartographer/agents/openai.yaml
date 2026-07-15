@@ -1,0 +1,3 @@
+interface:
+  display_name: "Repository Architecture Cartographer"
+  short_description: "Create an evidence-grounded architecture map and identify structural risks."

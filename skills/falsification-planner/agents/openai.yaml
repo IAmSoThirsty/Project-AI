@@ -1,0 +1,3 @@
+interface:
+  display_name: "Falsification Planner"
+  short_description: "Turn invalidation conditions into experiments and decision rules."

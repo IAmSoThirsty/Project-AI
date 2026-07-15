@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Composition Auditor"
+  short_description: "Find emergent composition risks and define safe call boundaries."

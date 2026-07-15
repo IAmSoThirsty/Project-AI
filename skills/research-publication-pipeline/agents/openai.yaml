@@ -1,0 +1,3 @@
+interface:
+  display_name: "Research Publication Pipeline"
+  short_description: "Create a reviewable publication package while keeping external writes approval-gated."

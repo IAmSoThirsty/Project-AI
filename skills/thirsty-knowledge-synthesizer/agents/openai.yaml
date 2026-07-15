@@ -1,0 +1,3 @@
+interface:
+  display_name: "Thirsty Knowledge Synthesizer"
+  short_description: "Produce a claim-centered synthesis with provenance, contradictions, chronology, and unresolved quest"

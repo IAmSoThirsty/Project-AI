@@ -1,0 +1,3 @@
+interface:
+  display_name: "Research Question Generator"
+  short_description: "Rank questions by foundational importance, information gain, tractability, cost, and urgency."

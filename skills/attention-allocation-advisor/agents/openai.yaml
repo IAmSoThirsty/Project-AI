@@ -1,0 +1,3 @@
+interface:
+  display_name: "Attention Allocation Advisor"
+  short_description: "Recommend focus without confusing urgency with importance."

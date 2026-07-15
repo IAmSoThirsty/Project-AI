@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Evolution Manager"
+  short_description: "Plan safe evolution while preserving reproducibility and upgrade paths."

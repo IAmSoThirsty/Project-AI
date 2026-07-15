@@ -1,0 +1,3 @@
+interface:
+  display_name: "Governed Agent Designer"
+  short_description: "Produce a complete governed-agent specification suitable for implementation and review."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Emergency Powers Auditor"
+  short_description: "Prevent temporary bypasses from becoming permanent or unaccountable authority."

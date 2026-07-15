@@ -1,0 +1,3 @@
+interface:
+  display_name: "Decision Threshold Controller"
+  short_description: "Match decision rigor to consequence and reversibility."

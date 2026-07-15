@@ -1,0 +1,3 @@
+interface:
+  display_name: "Governance Traceability Auditor"
+  short_description: "Expose broken or unsupported links in the governance assurance chain."

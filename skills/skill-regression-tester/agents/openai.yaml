@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Regression Tester"
+  short_description: "Detect weakened constraints, changed outputs, trigger errors, and unsafe behavior across versions."

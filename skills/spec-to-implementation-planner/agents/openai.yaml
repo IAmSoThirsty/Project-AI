@@ -1,0 +1,3 @@
+interface:
+  display_name: "Spec To Implementation Planner"
+  short_description: "Turn intent into ordered, testable implementation work."

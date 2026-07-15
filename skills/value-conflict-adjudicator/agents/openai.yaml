@@ -1,0 +1,3 @@
+interface:
+  display_name: "Value Conflict Adjudicator"
+  short_description: "Make tradeoffs, affected parties, authority, minority positions, reversibility, and appeals explicit"

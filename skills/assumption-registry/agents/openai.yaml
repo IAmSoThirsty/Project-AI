@@ -1,0 +1,3 @@
+interface:
+  display_name: "Assumption Registry"
+  short_description: "Prevent unverified beliefs from silently becoming architectural or governance doctrine."

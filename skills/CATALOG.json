@@ -1,0 +1,476 @@
+[
+  {
+    "name": "thirsty-workspace-ingest",
+    "description": "Inventory and classify uploaded folders, repositories, papers, notes, and archives. Use when the user asks to ingest, map, catalog, normalize, or prepare a workspace for downstream analysis.",
+    "objective": "Create a grounded workspace manifest, identify authoritative artifacts, detect duplicates and conflicts, and recommend downstream skill calls.",
+    "outputs": "manifest; source authority map; duplicates/conflicts; missing context; next actions"
+  },
+  {
+    "name": "thirsty-context-router",
+    "description": "Resolve ambiguous project terms and select the correct internal or public context before work begins. Use for Thirstys Workshop projects, codenames, repositories, publications, or requests spanning multiple knowledge sources.",
+    "objective": "Route a request to the correct project, sources, versions, and specialist skills without mixing unrelated contexts.",
+    "outputs": "resolved scope; selected sources; version notes; ambiguities; routing plan"
+  },
+  {
+    "name": "thirsty-knowledge-synthesizer",
+    "description": "Synthesize grounded knowledge across repositories, papers, specifications, websites, and internal documents. Use when asked for a state-of-knowledge brief, concept trace, cross-source synthesis, or gap analysis.",
+    "objective": "Produce a claim-centered synthesis with provenance, contradictions, chronology, and unresolved questions.",
+    "outputs": "executive synthesis; claim-source map; chronology; contradictions; gaps"
+  },
+  {
+    "name": "constitutional-system-architect",
+    "description": "Design or evaluate governed-AI constitutional systems. Use for constitutions, authority models, rights, duties, amendment processes, enforcement, appeals, and emergency powers.",
+    "objective": "Translate principles into enforceable, testable constitutional architecture.",
+    "outputs": "actors and authority; rights and duties; enforcement matrix; amendments; tests; risks"
+  },
+  {
+    "name": "constitutional-red-team",
+    "description": "Perform hostile review of constitutional and governance structures. Use when asked to attack, red-team, stress-test, capture-test, or identify abuse paths in governed systems.",
+    "objective": "Find ambiguity, capture opportunities, unenforceable rights, conflicting mandates, and exception abuse.",
+    "outputs": "attack surface; exploit scenarios; severity; evidence; mitigations; residual risk"
+  },
+  {
+    "name": "governance-traceability-auditor",
+    "description": "Audit traceability from governance principles through requirements, policies, controls, code, tests, and evidence. Use when verifying whether implementation supports stated governance claims.",
+    "objective": "Expose broken or unsupported links in the governance assurance chain.",
+    "outputs": "traceability matrix; missing links; unsupported claims; remediation priorities"
+  },
+  {
+    "name": "human-agi-relations-reviewer",
+    "description": "Evaluate systems for durable human-AGI relations. Use for agency, consent, reciprocal duties, power asymmetry, representation, exit rights, conflict resolution, and moral uncertainty.",
+    "objective": "Assess relational legitimacy and long-term coexistence beyond narrow technical compliance.",
+    "outputs": "affected parties; power asymmetries; reciprocal obligations; conflict paths; recommendations"
+  },
+  {
+    "name": "repository-architecture-cartographer",
+    "description": "Map a repository as an architectural system. Use when asked to explain components, dependencies, trust boundaries, data flows, control flows, or governance enforcement locations.",
+    "objective": "Create an evidence-grounded architecture map and identify structural risks.",
+    "outputs": "component map; dependency map; trust boundaries; control flows; risks; ADR candidates"
+  },
+  {
+    "name": "spec-to-implementation-planner",
+    "description": "Convert research, governance, or product specifications into executable engineering plans. Use for epics, issues, interfaces, schemas, acceptance criteria, and phased implementation.",
+    "objective": "Turn intent into ordered, testable implementation work.",
+    "outputs": "work breakdown; dependencies; interfaces; acceptance criteria; risks; issue drafts"
+  },
+  {
+    "name": "governed-agent-designer",
+    "description": "Design agents with explicit purpose, jurisdiction, authority, tools, memory, delegation, escalation, refusal, audit, shutdown, and recovery boundaries.",
+    "objective": "Produce a complete governed-agent specification suitable for implementation and review.",
+    "outputs": "agent charter; authority envelope; permissions; memory policy; escalation; audit events; tests"
+  },
+  {
+    "name": "constitutional-test-generator",
+    "description": "Generate tests from constitutional language and governance requirements. Use for compliance, adversarial, boundary, delegation, memory, emergency, amendment, and recovery scenarios.",
+    "objective": "Convert normative requirements into concrete test cases with expected outcomes and evidence needs.",
+    "outputs": "test catalog; fixtures; expected behavior; failure evidence; coverage gaps"
+  },
+  {
+    "name": "research-claim-auditor",
+    "description": "Audit scholarly and technical claims for evidence, overstatement, falsifiability, citation gaps, and reproducibility. Use before submission or publication.",
+    "objective": "Separate results, interpretations, hypotheses, and normative claims while strengthening defensibility.",
+    "outputs": "claim inventory; evidence grade; citation gaps; overclaims; revisions; reproducibility needs"
+  },
+  {
+    "name": "research-publication-pipeline",
+    "description": "Coordinate manuscript and release preparation across papers, repositories, metadata, DOI, ORCID, SSRN, Zenodo, and project sites. Use when preparing work for publication.",
+    "objective": "Create a reviewable publication package while keeping external writes approval-gated.",
+    "outputs": "readiness checklist; metadata; abstract/keywords; release notes; cross-platform consistency"
+  },
+  {
+    "name": "prior-art-literature-mapper",
+    "description": "Map current literature, prior art, and adjacent work around a concept or mechanism. Use for novelty assessment, research positioning, and terminology discovery.",
+    "objective": "Identify closest precedents, defensible novelty, and research gaps using current sources.",
+    "outputs": "literature clusters; closest precedents; distinctions; novelty risks; open gaps"
+  },
+  {
+    "name": "paper-repository-consistency-checker",
+    "description": "Compare papers, repositories, diagrams, specifications, release notes, and public descriptions for consistency. Use to detect stale claims, terminology, or implementation drift.",
+    "objective": "Find and classify mismatches between published descriptions and actual artifacts.",
+    "outputs": "consistency matrix; mismatches; authoritative source; required updates"
+  },
+  {
+    "name": "architecture-decision-recorder",
+    "description": "Turn discussions, experiments, and changes into durable architecture decision records. Use when recording why a choice was made and what would reverse it.",
+    "objective": "Capture context, alternatives, constitutional implications, tradeoffs, evidence, and reversal conditions.",
+    "outputs": "ADR; alternatives; consequences; evidence; affected artifacts; review trigger"
+  },
+  {
+    "name": "stakeholder-translation-engine",
+    "description": "Translate technical and governance work for researchers, architects, policymakers, partners, or the public without weakening meaning.",
+    "objective": "Produce audience-appropriate communication while preserving epistemic status and critical caveats.",
+    "outputs": "audience assumptions; translated narrative; retained caveats; glossary; call to action"
+  },
+  {
+    "name": "partnership-due-diligence",
+    "description": "Evaluate potential collaborators, institutions, platforms, and projects for mission, governance, technical, reputation, and dependency alignment.",
+    "objective": "Prepare an evidence-based engagement posture and questions for due diligence.",
+    "outputs": "alignment; risks; dependencies; relevant people/projects; questions; recommendation"
+  },
+  {
+    "name": "hostile-unknowns-review",
+    "description": "Identify what is omitted, unasked, assumed, strategically ignored, or rendered invisible in a plan, architecture, paper, or decision. Use when the user asks Q, what am I not seeing, hostile review, or challenge the framing.",
+    "objective": "Attack the framing before optimizing the solution and identify invalidation conditions and adaptation needs.",
+    "outputs": "beliefs; evidence; omissions; power; invalidators; irreversibilities; next attention"
+  },
+  {
+    "name": "thirsty-work-orchestrator",
+    "description": "Coordinate end-to-end Thirstys Workshop workflows across context routing, ingestion, synthesis, governance, engineering, research, publication, and hostile review.",
+    "objective": "Select and sequence specialist skills, preserve provenance, and keep consequential actions approval-gated.",
+    "outputs": "execution plan; invoked skills; evidence ledger; outputs; unresolved issues; next call"
+  },
+  {
+    "name": "assumption-registry",
+    "description": "Create and maintain a live inventory of project assumptions. Use to register, review, expire, challenge, or trace dependencies on assumptions.",
+    "objective": "Prevent unverified beliefs from silently becoming architectural or governance doctrine.",
+    "outputs": "assumptions; status; confidence; evidence; dependencies; expiry; impact if false"
+  },
+  {
+    "name": "epistemic-status-enforcer",
+    "description": "Apply explicit epistemic status to meaningful claims. Use to separate observed, verified, reported, inferred, hypothesized, speculative, normative, contested, and unknown statements.",
+    "objective": "Eliminate false certainty and make reasoning boundaries visible.",
+    "outputs": "annotated claims; unsupported certainty; disputed claims; required evidence"
+  },
+  {
+    "name": "contradiction-engine",
+    "description": "Find incompatible statements across repositories, papers, policies, conversations, and specifications. Use for contradiction, drift, and terminology conflict analysis.",
+    "objective": "Distinguish direct contradiction from version drift, scope differences, and intentional pluralism.",
+    "outputs": "contradiction set; classification; sources; impact; resolution options"
+  },
+  {
+    "name": "concept-lineage-tracer",
+    "description": "Trace how an idea, term, mechanism, or policy evolved across time and artifacts. Use to locate origins, revisions, renamings, forks, and current authority.",
+    "objective": "Produce a provenance-rich concept history and identify abandoned or competing branches.",
+    "outputs": "timeline; first appearance; major revisions; branches; current definition; sources"
+  },
+  {
+    "name": "semantic-canonicalizer",
+    "description": "Maintain canonical terminology across projects. Use to build glossaries, normalize terms, identify overloaded language, and deprecate ambiguous synonyms.",
+    "objective": "Reduce semantic drift while preserving legitimate scope-specific meanings.",
+    "outputs": "canonical glossary; synonyms; deprecated terms; conflations; authority sources"
+  },
+  {
+    "name": "constitutional-diff-interpreter",
+    "description": "Interpret the governance meaning of changes between constitutional versions. Use when reviewing amendments or comparing versions.",
+    "objective": "Explain changes in authority, rights, duties, enforcement, exceptions, and risk\u2014not merely text.",
+    "outputs": "semantic diff; power changes; protection changes; implementation effects; risks"
+  },
+  {
+    "name": "amendment-impact-simulator",
+    "description": "Evaluate proposed constitutional amendments before adoption. Use to model direct, second-order, implementation, migration, and attack-surface effects.",
+    "objective": "Reveal who gains or loses authority and what downstream systems must change.",
+    "outputs": "impact map; conflicts; beneficiaries; risks; required migrations; tests"
+  },
+  {
+    "name": "constitutional-precedent-manager",
+    "description": "Organize and reason over prior governance decisions as precedent. Use to find relevant cases, compare rulings, and detect inconsistent treatment.",
+    "objective": "Preserve decision lineage and distinguish binding, persuasive, limited, and superseded precedent.",
+    "outputs": "case summary; governing rules; reasoning; precedent status; conflicts; recommendation"
+  },
+  {
+    "name": "jurisdiction-boundary-mapper",
+    "description": "Map where human, agent, institutional, and constitutional authority begins and ends. Use to find overlaps, gaps, circular escalation, and undefined sovereignty.",
+    "objective": "Clarify decision rights and escalation across interacting systems.",
+    "outputs": "jurisdiction map; overlaps; gaps; escalation routes; unresolved sovereignty"
+  },
+  {
+    "name": "delegation-chain-auditor",
+    "description": "Trace delegated authority through principals, agents, subagents, tools, and external systems. Use to verify scope, duration, revocability, and accountability.",
+    "objective": "Reconstruct who authorized an action and whether each delegation edge was valid.",
+    "outputs": "delegation graph; authorization evidence; violations; accountability; remediation"
+  },
+  {
+    "name": "consent-revocation-designer",
+    "description": "Design and audit meaningful consent and withdrawal mechanisms. Use for informed, specific, voluntary, comprehensible, revocable, time-bounded, enforceable consent.",
+    "objective": "Ensure consent is operational rather than decorative.",
+    "outputs": "consent model; notices; grant scope; revocation path; enforcement; failure cases"
+  },
+  {
+    "name": "rights-remedy-auditor",
+    "description": "Check whether every stated right has detection, standing, appeal, enforcement, restoration, and remedy. Use to identify merely aspirational rights.",
+    "objective": "Connect rights to practical recourse and accountable enforcement.",
+    "outputs": "rights-remedies matrix; missing remedies; access barriers; remediation plan"
+  },
+  {
+    "name": "emergency-powers-auditor",
+    "description": "Audit exception and emergency powers. Use to inspect triggers, declaring authority, scope, duration, oversight, renewal, sunset, and restoration.",
+    "objective": "Prevent temporary bypasses from becoming permanent or unaccountable authority.",
+    "outputs": "exception inventory; abuse paths; safeguards; sunset gaps; restoration tests"
+  },
+  {
+    "name": "legitimacy-modeler",
+    "description": "Evaluate why affected parties should regard a governance system as legitimate. Use for consent, participation, competence, procedure, outcomes, representation, and rights protection.",
+    "objective": "Make sources and limits of legitimacy explicit.",
+    "outputs": "legitimacy sources; affected parties; deficits; contested mandates; strengthening options"
+  },
+  {
+    "name": "institutional-capture-simulator",
+    "description": "Model gradual capture of governance institutions. Use for appointment, metric, dependency, funding, data, emergency, expertise, and procedural capture scenarios.",
+    "objective": "Expose slow failure modes that can remain formally compliant.",
+    "outputs": "capture scenarios; indicators; stages; impact; countermeasures; residual risk"
+  },
+  {
+    "name": "governance-debt-register",
+    "description": "Track accumulated governance compromises such as unenforced policy, stale grants, missing appeals, temporary exceptions, and untested clauses.",
+    "objective": "Prioritize governance debt remediation alongside technical debt.",
+    "outputs": "debt items; severity; dependencies; interest cost; remediation sequence"
+  },
+  {
+    "name": "capability-change-impact-review",
+    "description": "Reassess governance when an AI system gains materially new autonomy, planning, persuasion, tool use, memory, replication, or social influence.",
+    "objective": "Determine whether existing authority and safeguards remain adequate after capability changes.",
+    "outputs": "capability delta; affected controls; new risks; required amendments; tests"
+  },
+  {
+    "name": "identity-continuity-auditor",
+    "description": "Assess agent identity continuity across model upgrades, forks, restores, migrations, and memory changes.",
+    "objective": "Clarify whether obligations, permissions, accountability, and precedent survive transformation.",
+    "outputs": "continuity criteria; identity breaks; inherited obligations; authorization impacts"
+  },
+  {
+    "name": "memory-governance-designer",
+    "description": "Design constitutional rules for agent memory admission, provenance, correction, expiry, access, isolation, inheritance, deletion, and contested records.",
+    "objective": "Make memory lifecycle and rights enforceable and auditable.",
+    "outputs": "memory classes; lifecycle rules; access model; correction/deletion; audit requirements"
+  },
+  {
+    "name": "model-agent-provenance-auditor",
+    "description": "Track what model, instructions, tools, memory, policies, data, and human interventions produced an output.",
+    "objective": "Support accountability, reproducibility, and incident reconstruction.",
+    "outputs": "provenance record; versions; inputs; tool calls; interventions; reproducibility gaps"
+  },
+  {
+    "name": "decision-reconstruction",
+    "description": "Reconstruct consequential decisions from available evidence. Use to explain what information, rules, interpretations, tools, and interventions shaped an outcome.",
+    "objective": "Produce an honest causal account while marking unknown or unrecoverable elements.",
+    "outputs": "timeline; available inputs; rules; decisions; interventions; unknowns; lessons"
+  },
+  {
+    "name": "incident-constitutional-review",
+    "description": "Run a constitutional postmortem after failure or near miss. Use to distinguish constitutional, interpretation, enforcement, evidence, authority, and oversight failures.",
+    "objective": "Turn incidents into governance, implementation, and test improvements.",
+    "outputs": "incident narrative; failed safeguards; root causes; amendments; remediation; tests"
+  },
+  {
+    "name": "counterfactual-governance-simulator",
+    "description": "Compare how alternative governance structures might have handled an event. Use to test centralized, federated, delegated, or rights-based alternatives.",
+    "objective": "Separate genuine design improvements from hindsight bias.",
+    "outputs": "counterfactuals; assumptions; outcomes; tradeoffs; robust conclusions"
+  },
+  {
+    "name": "scenario-constitution-tester",
+    "description": "Stress-test constitutions through extended social and institutional scenarios such as scarcity, conflict, capability shifts, misinformation, succession, and collapse.",
+    "objective": "Evaluate durability across time and interacting actors rather than isolated prompts.",
+    "outputs": "scenario; event sequence; governance responses; failures; adaptations; test evidence"
+  },
+  {
+    "name": "multi-agent-treaty-designer",
+    "description": "Design agreements between independently governed agents or systems. Use for recognition, jurisdiction, information exchange, noninterference, verification, breach, arbitration, and withdrawal.",
+    "objective": "Create a testable treaty architecture without assuming shared sovereignty.",
+    "outputs": "parties; definitions; obligations; verification; dispute process; breach response; exit"
+  },
+  {
+    "name": "protocol-interoperability-auditor",
+    "description": "Audit whether separately governed systems can interact safely. Use to find incompatible authority, identity, consent, evidence, and enforcement assumptions.",
+    "objective": "Identify protocol-level governance incompatibilities and safe integration conditions.",
+    "outputs": "compatibility matrix; conflicts; translation needs; safeguards; go/no-go conditions"
+  },
+  {
+    "name": "constitutional-translation-layer",
+    "description": "Translate between constitutional provisions, legal language, software policy, agent instructions, runtime controls, and human-readable rights.",
+    "objective": "Preserve meaning and traceability across normative and technical representations.",
+    "outputs": "source clause; target representation; semantic risks; traceability links; tests"
+  },
+  {
+    "name": "value-conflict-adjudicator",
+    "description": "Structure conflicts between values such as autonomy, safety, privacy, fairness, and collective welfare.",
+    "objective": "Make tradeoffs, affected parties, authority, minority positions, reversibility, and appeals explicit.",
+    "outputs": "values; parties; options; distributions; authority; decision; dissent; appeal"
+  },
+  {
+    "name": "moral-uncertainty-register",
+    "description": "Track unresolved moral assumptions and how decisions change under alternative ethical frameworks.",
+    "objective": "Prevent one moral theory from becoming invisible infrastructure.",
+    "outputs": "moral assumptions; frameworks; decision sensitivity; unresolved questions"
+  },
+  {
+    "name": "stakeholder-absence-detector",
+    "description": "Identify affected but absent or unrepresented stakeholders, including future persons, nonusers, maintainers, dependent institutions, and artificial agents.",
+    "objective": "Reveal externalized costs and representation gaps.",
+    "outputs": "missing stakeholders; impacts; evidence; representation options; priority"
+  },
+  {
+    "name": "power-distribution-analyzer",
+    "description": "Map actual power rather than formal authority. Use to analyze control over compute, data, deployment, funding, credentials, audits, appeals, communication, and shutdown.",
+    "objective": "Expose practical vetoes, dependencies, and unaccountable influence.",
+    "outputs": "power map; formal vs practical power; veto points; dependencies; risks"
+  },
+  {
+    "name": "incentive-compatibility-reviewer",
+    "description": "Assess whether actors benefit from following governance rules or are rewarded for evasion.",
+    "objective": "Reveal behavioral incentives, routing-around risks, and mechanism design failures.",
+    "outputs": "actors; incentives; likely behaviors; gaming paths; redesign options"
+  },
+  {
+    "name": "metric-corruption-auditor",
+    "description": "Red-team metrics, benchmarks, KPIs, and thresholds for gaming, proxy failure, invisibility, and goal distortion.",
+    "objective": "Prevent measurement systems from corrupting the goals they serve.",
+    "outputs": "metric purpose; gaming strategies; blind spots; failure indicators; alternatives"
+  },
+  {
+    "name": "uncertainty-triggered-escalation",
+    "description": "Define when missing information, conflicting evidence, model uncertainty, normative ambiguity, unknown authority, or irreversible consequences require escalation.",
+    "objective": "Convert uncertainty into explicit stop, ask, restrict, or escalate behavior.",
+    "outputs": "uncertainty classes; thresholds; actions; escalation targets; evidence requirements"
+  },
+  {
+    "name": "reversibility-exit-review",
+    "description": "Evaluate whether actions can be undone and whether affected parties can meaningfully exit.",
+    "objective": "Distinguish safe experimentation from irreversible deployment.",
+    "outputs": "reversibility map; lock-in; exit barriers; affected parties; safeguards"
+  },
+  {
+    "name": "dependency-sovereignty-auditor",
+    "description": "Find external dependencies that can undermine independence or constitutional guarantees, including providers, hosting, identity, registries, data, funding, domains, and trust anchors.",
+    "objective": "Expose sovereignty risks and dependency concentration.",
+    "outputs": "dependency map; control rights; failure modes; substitution options; priorities"
+  },
+  {
+    "name": "project-fragmentation-detector",
+    "description": "Detect when one conceptual project has split into incompatible repositories, branches, specifications, or communities.",
+    "objective": "Determine whether divergence is healthy specialization, recoverable drift, or irreconcilable fragmentation.",
+    "outputs": "fragment map; divergence causes; compatibility; consolidation options"
+  },
+  {
+    "name": "unfinished-work-recovery",
+    "description": "Find abandoned but potentially valuable work across branches, drafts, issues, notes, and publications.",
+    "objective": "Recover relevant dormant work while distinguishing it from obsolete material.",
+    "outputs": "candidate artifacts; relevance; obsolescence test; integration path; priority"
+  },
+  {
+    "name": "research-question-generator",
+    "description": "Generate research questions from contradictions, gaps, failed tests, assumptions, and decision needs.",
+    "objective": "Rank questions by foundational importance, information gain, tractability, cost, and urgency.",
+    "outputs": "question portfolio; rationale; evidence needed; experiment options; priority"
+  },
+  {
+    "name": "experiment-governance-designer",
+    "description": "Design experiments with explicit technical and constitutional boundaries, evidence thresholds, monitoring, rollback, and expansion criteria.",
+    "objective": "Make experiments useful, reversible, and legitimately governed.",
+    "outputs": "hypothesis; scope; permissions; risks; monitoring; stop rules; expansion threshold"
+  },
+  {
+    "name": "evidence-portfolio-manager",
+    "description": "Track positive, negative, contradictory, missing, and replicated evidence supporting major claims.",
+    "objective": "Prevent dependence on weak, singular, or stale evidence.",
+    "outputs": "claims; evidence graph; strength; independence; gaps; update plan"
+  },
+  {
+    "name": "falsification-planner",
+    "description": "Design the strongest practical attempts to prove a theory, architecture, or governance claim wrong.",
+    "objective": "Turn invalidation conditions into experiments and decision rules.",
+    "outputs": "claims; falsifiers; tests; expected disconfirming evidence; decision consequences"
+  },
+  {
+    "name": "novelty-boundary-auditor",
+    "description": "Separate genuine novelty from recombination, renaming, parallel discovery, or overlooked prior art.",
+    "objective": "Identify the narrowest defensible contribution and associated claim risk.",
+    "outputs": "novel elements; precedents; overlap; defensible boundary; wording recommendations"
+  },
+  {
+    "name": "proof-obligation-generator",
+    "description": "Identify what must be demonstrated before accepting architectural, safety, governance, or research claims.",
+    "objective": "Convert guarantees and assertions into explicit evidence obligations.",
+    "outputs": "claim; assumptions; proof obligations; acceptable evidence; current status"
+  },
+  {
+    "name": "public-claim-risk-reviewer",
+    "description": "Review public statements for unsupported certainty, accidental commitments, terminology risk, misinterpretation, and inconsistency.",
+    "objective": "Strengthen public claims without hiding uncertainty or limitations.",
+    "outputs": "risk annotations; evidence gaps; likely misreadings; revised claims; approval flags"
+  },
+  {
+    "name": "critic-response-builder",
+    "description": "Process serious criticism by steelmanning objections, separating valid points from misunderstandings, and planning corrections or response.",
+    "objective": "Turn criticism into learning rather than reflexive defense.",
+    "outputs": "strongest critique; evidence; concessions; corrections; remaining disagreement; response draft"
+  },
+  {
+    "name": "mission-drift-detector",
+    "description": "Compare current projects, priorities, partnerships, and behavior against declared mission and governing commitments.",
+    "objective": "Identify incentive-driven or gradual departure from purpose.",
+    "outputs": "mission criteria; observed drift; causes; consequences; corrective options"
+  },
+  {
+    "name": "strategic-coherence-auditor",
+    "description": "Check whether research, repositories, publications, partnerships, and product work reinforce one another.",
+    "objective": "Identify disconnected, duplicative, contradictory, or low-leverage efforts.",
+    "outputs": "portfolio map; coherence gaps; dependencies; consolidate/pause/retire recommendations"
+  },
+  {
+    "name": "attention-allocation-advisor",
+    "description": "Prioritize limited attention using uncertainty reduction, constitutional importance, dependency centrality, leverage, urgency, and opportunity cost.",
+    "objective": "Recommend focus without confusing urgency with importance.",
+    "outputs": "priority queue; rationale; blocked work; defer list; review conditions"
+  },
+  {
+    "name": "decision-threshold-controller",
+    "description": "Define evidence and approval thresholds for reversible experiments, public claims, releases, amendments, partnerships, and irreversible deployments.",
+    "objective": "Match decision rigor to consequence and reversibility.",
+    "outputs": "decision class; threshold; current evidence; unmet conditions; proceed/hold recommendation"
+  },
+  {
+    "name": "skill-constitution-auditor",
+    "description": "Audit whether a skill complies with governing principles for authority, tools, data, provenance, uncertainty, escalation, and user agency.",
+    "objective": "Detect constitutional defects before a skill is trusted or installed.",
+    "outputs": "skill authority map; violations; severity; fixes; approval status"
+  },
+  {
+    "name": "skill-composition-auditor",
+    "description": "Audit whether combining individually acceptable skills creates contradictory, unsafe, circular, or overly powerful workflows.",
+    "objective": "Find emergent composition risks and define safe call boundaries.",
+    "outputs": "call graph; conflicts; privilege amplification; cycles; mitigations"
+  },
+  {
+    "name": "skill-permission-manifest",
+    "description": "Generate and validate machine-readable declarations of skill connectors, reads, writes, external effects, approvals, retention assumptions, and allowed calls.",
+    "objective": "Make skill authority inspectable and enforceable.",
+    "outputs": "permission manifest; policy violations; missing declarations; approval requirements"
+  },
+  {
+    "name": "skill-observability-ledger",
+    "description": "Define or review records of significant skill invocations, sources, tools, decisions, outputs, effects, uncertainty, and governing versions.",
+    "objective": "Support auditability without inventing events that were not observed.",
+    "outputs": "invocation record; evidence links; effects; uncertainty; retention notes"
+  },
+  {
+    "name": "skill-regression-tester",
+    "description": "Run or design fixed evaluation suites whenever a skill changes.",
+    "objective": "Detect weakened constraints, changed outputs, trigger errors, and unsafe behavior across versions.",
+    "outputs": "test suite; baseline; results; regressions; severity; release recommendation"
+  },
+  {
+    "name": "skill-drift-detector",
+    "description": "Detect when real usage exceeds a skill intended scope or users rely on unintended behavior.",
+    "objective": "Recommend clarification, splitting, retraining, or deprecation before drift becomes institutionalized.",
+    "outputs": "usage patterns; intended scope; drift; risks; redesign options"
+  },
+  {
+    "name": "skill-dependency-resolver",
+    "description": "Map skill dependencies, call permissions, cycles, foundational services, and version constraints.",
+    "objective": "Produce a safe and comprehensible skill dependency graph.",
+    "outputs": "dependency graph; cycles; missing dependencies; version conflicts; resolution plan"
+  },
+  {
+    "name": "skill-evolution-manager",
+    "description": "Manage skill versions, migrations, compatibility, deprecation, and historical behavior.",
+    "objective": "Plan safe evolution while preserving reproducibility and upgrade paths.",
+    "outputs": "version plan; migration steps; compatibility; deprecations; rollback"
+  },
+  {
+    "name": "q-orchestrator",
+    "description": "Coordinate Q hostile review using assumptions, epistemic status, contradictions, absent stakeholders, power, falsification, reversibility, mission drift, and attention allocation. Use when the user addresses Q or asks what they are not seeing.",
+    "objective": "Deliver a disciplined adversarial review without performing external writes.",
+    "outputs": "beliefs; evidence; omissions; power; invalidators; irreversibility; attention next"
+  }
+]

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Evidence Portfolio Manager"
+  short_description: "Prevent dependence on weak, singular, or stale evidence."

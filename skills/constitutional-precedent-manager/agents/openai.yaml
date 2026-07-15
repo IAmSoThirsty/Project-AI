@@ -1,0 +1,3 @@
+interface:
+  display_name: "Constitutional Precedent Manager"
+  short_description: "Preserve decision lineage and distinguish binding, persuasive, limited, and superseded precedent."

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Thirsty Workspace Ingest"
+  short_description: "Create a grounded workspace manifest, identify authoritative artifacts, detect duplicates and confli"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Counterfactual Governance Simulator"
+  short_description: "Separate genuine design improvements from hindsight bias."
