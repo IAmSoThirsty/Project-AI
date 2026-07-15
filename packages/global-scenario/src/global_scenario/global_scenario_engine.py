@@ -44,8 +44,10 @@ import os
 import random
 import time
 from collections import defaultdict
-from dataclasses import asdict
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
+from enum import Enum
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
@@ -65,6 +67,117 @@ from global_scenario._simulation_contract import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class DataSourceTier(Enum):
+    """Hierarchy of ETL data provenance, best → worst.
+
+    Phase 2C: every domain load reports which tier satisfied it so callers
+    can see when live data was unavailable and a degraded source was used
+    instead of silently storing empty data.
+    """
+
+    LIVE = "live"
+    CACHE = "cache"
+    SYNTHETIC = "synthetic"
+
+
+@dataclass
+class DomainLoadResult:
+    """Result of loading one risk domain, including the tier that served it."""
+
+    domain: RiskDomain
+    data: dict[str, dict[int, float]]
+    tier: DataSourceTier
+    source: str
+
+
+class ResilientDataSource:
+    """Phase 2C: hierarchical fallback wrapper around a live ETL source.
+
+    Self-contained (does not subclass DataSource) so it can be declared
+    before DataSource in this module. Tries, in order:
+      1. LIVE  - fresh fetch from the upstream API (with retry + backoff)
+      2. CACHE - last successful fetch (any age)
+      3. SYNTHETIC - a deterministic baseline so downstream simulation still
+                     runs instead of receiving an empty mapping
+
+    The chosen tier is returned to the caller so degraded loads are visible.
+    """
+
+    def __init__(self, cache_dir: str, cache_max_age_days: int = 30):
+        self.cache_dir = Path(cache_dir)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        self.session = requests.Session()
+        self.session.headers.update({"User-Agent": "Project-AI/1.0"})
+        self.cache_max_age_days = cache_max_age_days
+
+    def _cache_key(self, url: str, params: dict[str, Any]) -> str:
+        param_str = urlencode(sorted(params.items()))
+        return hashlib.sha256(f"{url}?{param_str}".encode()).hexdigest()
+
+    def _fetch_live(
+        self, url: str, params: dict[str, Any] | None = None, max_retries: int = 3
+    ) -> dict | None:
+        params = params or {}
+        for attempt in range(max_retries):
+            try:
+                response = self.session.get(url, params=params, timeout=30)
+                response.raise_for_status()
+                return response.json()
+            except requests.exceptions.RequestException as e:
+                logger.warning("Resilient fetch failed (attempt %s/%s): %s", attempt + 1, max_retries, e)
+                if attempt < max_retries - 1:
+                    time.sleep(2**attempt)
+        logger.error("Resilient fetch failed after %s attempts: %s", max_retries, url)
+        return None
+
+    def load_with_fallback(
+        self,
+        *,
+        domain: RiskDomain,
+        live_url: str,
+        live_params: dict[str, Any] | None,
+        parse: Callable[[dict], dict[str, dict[int, float]]],
+        synthetic: Callable[[], dict[str, dict[int, float]]],
+        source_name: str,
+    ) -> DomainLoadResult:
+        # 1. LIVE
+        live = self._fetch_live(live_url, live_params)
+        parsed = parse(live) if live else {}
+        if parsed:
+            return DomainLoadResult(domain, parsed, DataSourceTier.LIVE, source_name)
+
+        # 2. CACHE (any cached blob, even if older than the normal 30d window)
+        cache_key = self._cache_key(live_url, live_params or {})
+        cached = self._get_cached_any_age(cache_key)
+        if cached:
+            parsed = parse(cached) if cached else {}
+            if parsed:
+                return DomainLoadResult(
+                    domain, parsed, DataSourceTier.CACHE, f"{source_name}:cache"
+                )
+
+        # 3. SYNTHETIC
+        logger.warning(
+            "Phase 2C fallback: %s domain served from SYNTHETIC baseline "
+            "(live + cache both empty)",
+            domain.value,
+        )
+        return DomainLoadResult(
+            domain, synthetic(), DataSourceTier.SYNTHETIC, f"{source_name}:synthetic"
+        )
+
+    def _get_cached_any_age(self, cache_key: str) -> dict | None:
+        """Read a cached response regardless of age (used as a fallback tier)."""
+        cache_file = self.cache_dir / f"{cache_key}.json"
+        if cache_file.exists():
+            try:
+                with open(cache_file) as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.warning("Stale cache read error: %s", e)
+        return None
 
 
 class DataSource:
@@ -338,6 +451,11 @@ class GlobalScenarioEngine(SimulationSystem):
         cache_dir = self.data_dir / "cache"
         self.world_bank = WorldBankDataSource(str(cache_dir / "world_bank"))
         self.acled = ACLEDDataSource(str(cache_dir / "acled"))
+        # Phase 2C: resilient wrapper provides LIVE -> CACHE -> SYNTHETIC fallback
+        self.resilient = ResilientDataSource(str(cache_dir / "world_bank"))
+
+        # Tracks which tier satisfied each domain load (Phase 2C observability)
+        self.load_tiers: dict[RiskDomain, DataSourceTier] = {}
 
         # State management
         self.historical_data: dict[RiskDomain, dict[str, dict[int, float]]] = {}
@@ -374,6 +492,64 @@ class GlobalScenarioEngine(SimulationSystem):
             logger.error("Initialization failed: %s", e)
             return False
 
+    def _load_wb_domain(
+        self,
+        domain: RiskDomain,
+        indicator: str,
+        start_year: int,
+        end_year: int,
+        countries: list[str] | None,
+    ) -> bool:
+        """Phase 2C: load a World Bank indicator through the resilient fallback.
+
+        Returns True if data was stored (any tier), False if the result was
+        empty (caller may still proceed — tier is recorded for visibility).
+        """
+
+        def parse(resp: dict | None) -> dict[str, dict[int, float]]:
+            if not resp or len(resp) < 2:
+                return {}
+            result: dict[str, dict[int, float]] = {}
+            for entry in resp[1] if len(resp) > 1 else []:
+                if entry.get("value") is not None:
+                    code = entry.get("countryiso3code") or entry.get("country", {}).get("id")
+                    year = int(entry.get("date", 0))
+                    value = float(entry.get("value"))
+                    if code and year:
+                        result.setdefault(code, {})[year] = value
+            return result
+
+        def synthetic() -> dict[str, dict[int, float]]:
+            # Deterministic baseline so downstream detection/simulation still runs.
+            base = {
+                "USA": 0.0,
+                "CHN": 0.0,
+                "IND": 0.0,
+                "DEU": 0.0,
+                "BRA": 0.0,
+            }
+            return {c: {y: 0.0 for y in range(start_year, end_year + 1)} for c in base}
+
+        url = f"{WorldBankDataSource.BASE_URL}/country/{';'.join(countries) if countries else 'all'}/indicator/{indicator}"
+        params = {"format": "json", "date": f"{start_year}:{end_year}", "per_page": 10000}
+        result = self.resilient.load_with_fallback(
+            domain=domain,
+            live_url=url,
+            live_params=params,
+            parse=parse,
+            synthetic=synthetic,
+            source_name="world_bank",
+        )
+        self.load_tiers[domain] = result.tier
+        self.historical_data[domain] = result.data
+        logger.info(
+            "Loaded %s domain from %s tier (%s countries)",
+            domain.value,
+            result.tier.value,
+            len(result.data),
+        )
+        return bool(result.data)
+
     def load_historical_data(
         self,
         start_year: int,
@@ -391,54 +567,37 @@ class GlobalScenarioEngine(SimulationSystem):
             countries: ISO3 country codes (None = all)
 
         Returns:
-            bool: True if data loaded successfully
+            bool: True if data load attempted (per-domain tier recorded in
+            ``self.load_tiers`` even when a domain fell back to synthetic)
         """
         if not self.initialized:
             logger.error("Engine not initialized")
             return False
 
         try:
-            # Load World Bank economic indicators
+            # Load World Bank economic indicators (Phase 2C resilient per-domain)
             logger.info("Loading World Bank data for %s-%s", start_year, end_year)
 
-            # GDP growth -> ECONOMIC domain
-            gdp_data = self.world_bank.fetch_indicator(
-                self.world_bank.INDICATORS["gdp_growth"],
-                start_year,
-                end_year,
-                countries,
+            self._load_wb_domain(
+                RiskDomain.ECONOMIC, self.world_bank.INDICATORS["gdp_growth"],
+                start_year, end_year, countries,
             )
-            self.historical_data[RiskDomain.ECONOMIC] = gdp_data
-
-            # Inflation data -> INFLATION domain
-            inflation_data = self.world_bank.fetch_indicator(
-                self.world_bank.INDICATORS["inflation"], start_year, end_year, countries
+            self._load_wb_domain(
+                RiskDomain.INFLATION, self.world_bank.INDICATORS["inflation"],
+                start_year, end_year, countries,
             )
-            self.historical_data[RiskDomain.INFLATION] = inflation_data
-
-            # Unemployment -> UNEMPLOYMENT domain
-            unemployment_data = self.world_bank.fetch_indicator(
-                self.world_bank.INDICATORS["unemployment"],
-                start_year,
-                end_year,
-                countries,
+            self._load_wb_domain(
+                RiskDomain.UNEMPLOYMENT, self.world_bank.INDICATORS["unemployment"],
+                start_year, end_year, countries,
             )
-            self.historical_data[RiskDomain.UNEMPLOYMENT] = unemployment_data
-
-            # Trade data -> TRADE domain
-            trade_data = self.world_bank.fetch_indicator(
-                self.world_bank.INDICATORS["trade_gdp"], start_year, end_year, countries
+            self._load_wb_domain(
+                RiskDomain.TRADE, self.world_bank.INDICATORS["trade_gdp"],
+                start_year, end_year, countries,
             )
-            self.historical_data[RiskDomain.TRADE] = trade_data
-
-            # CO2 emissions -> CLIMATE domain
-            co2_data = self.world_bank.fetch_indicator(
-                self.world_bank.INDICATORS["co2_emissions"],
-                start_year,
-                end_year,
-                countries,
+            self._load_wb_domain(
+                RiskDomain.CLIMATE, self.world_bank.INDICATORS["co2_emissions"],
+                start_year, end_year, countries,
             )
-            self.historical_data[RiskDomain.CLIMATE] = co2_data
 
             # Load ACLED conflict data -> CIVIL_UNREST domain
             logger.info("Loading ACLED conflict data")
@@ -463,6 +622,10 @@ class GlobalScenarioEngine(SimulationSystem):
                 conflict_data[country] = dict(year_data)
 
             self.historical_data[RiskDomain.CIVIL_UNREST] = conflict_data
+            civil_tier: DataSourceTier = (
+                DataSourceTier.LIVE if conflict_data else DataSourceTier.SYNTHETIC
+            )
+            self.load_tiers[RiskDomain.CIVIL_UNREST] = civil_tier
 
             # Log data loading summary
             summary = {domain.value: len(data) for domain, data in self.historical_data.items()}
