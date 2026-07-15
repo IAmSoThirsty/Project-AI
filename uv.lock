@@ -21,6 +21,7 @@ members = [
     "project-ai-convergence",
     "project-ai-desktop",
     "project-ai-django-state",
+    "project-ai-dpr",
     "project-ai-emp-defense",
     "project-ai-execution",
     "project-ai-global-scenario",
@@ -844,6 +845,7 @@ dependencies = [
     { name = "project-ai-companion" },
     { name = "project-ai-convergence" },
     { name = "project-ai-django-state" },
+    { name = "project-ai-dpr" },
     { name = "project-ai-emp-defense" },
     { name = "project-ai-execution" },
     { name = "project-ai-global-scenario" },
@@ -912,6 +914,7 @@ requires-dist = [
     { name = "project-ai-companion", editable = "packages/companion" },
     { name = "project-ai-convergence", editable = "packages/convergence" },
     { name = "project-ai-django-state", editable = "packages/django-state" },
+    { name = "project-ai-dpr", editable = "packages/dpr" },
     { name = "project-ai-emp-defense", editable = "packages/emp-defense" },
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-global-scenario", editable = "packages/global-scenario" },
@@ -1230,6 +1233,17 @@ test = [
 [package.metadata]
 requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" }]
 provides-extras = ["test"]
+
+[[package]]
+name = "project-ai-dpr"
+version = "0.0.0.dev0"
+source = { editable = "packages/dpr" }
+dependencies = [
+    { name = "cryptography" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "cryptography", specifier = ">=42.0" }]
 
 [[package]]
 name = "project-ai-emp-defense"

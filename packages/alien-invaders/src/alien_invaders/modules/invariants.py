@@ -20,6 +20,10 @@ class InvariantViolation:
     description: str
     state_snapshot: dict[str, Any] = field(default_factory=dict)
     severity: str = "critical"  # low, medium, high, critical
+    # Phase 2B: why the observed delta was allowed to miss the expected
+    # minimum by the tolerance factor below. Populated at each violation
+    # site so reviewers can see the exact tolerance band that was applied.
+    tolerance_justification: str | None = None
 
 
 class CompositeInvariant:
@@ -134,6 +138,11 @@ class ResourceEconomicInvariant(CompositeInvariant):
                         "expected_min_impact": expected_min_impact,
                     },
                     severity="high",
+                    tolerance_justification=(
+                        f"GDP impact tolerated within 50% of expected "
+                        f"(expected_min_impact={expected_min_impact:.2%}, "
+                        f"allowance={expected_min_impact * 0.5:.2%})"
+                    ),
                 )
             )
 
@@ -201,6 +210,11 @@ class EconomicSocietalInvariant(CompositeInvariant):
                         "expected_min_decline": expected_min_decline,
                     },
                     severity="high",
+                    tolerance_justification=(
+                        f"Morale decline tolerated within 50% of expected "
+                        f"(expected_min_decline={expected_min_decline:.2f}, "
+                        f"allowance={expected_min_decline * 0.5:.2f})"
+                    ),
                 )
             )
 
@@ -267,6 +281,10 @@ class SocietalPoliticalInvariant(CompositeInvariant):
                         "threshold": self.morale_threshold,
                     },
                     severity="medium",
+                    tolerance_justification=(
+                        f"Stability decline tolerated within 30% of "
+                        f"stability_impact (allowance={self.stability_impact * 0.3:.2f})"
+                    ),
                 )
             )
 
@@ -326,6 +344,10 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
                         "threshold": self.stability_threshold,
                     },
                     severity="medium",
+                    tolerance_justification=(
+                        f"AI alignment decline tolerated within 20% of "
+                        f"alignment_sensitivity (allowance={self.alignment_sensitivity * 0.2:.3f})"
+                    ),
                 )
             )
 

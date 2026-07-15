@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-dpr"
+version = "0.0.0.dev0"
+description = "Deliberation Pipeline with Provenance (DPR) governance pipeline. Ported from thirsty_governance_framework_0722."
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = [
+    "cryptography>=42.0",
+]
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.12",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dpr"]

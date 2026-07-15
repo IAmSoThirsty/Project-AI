@@ -51,6 +51,7 @@ dependencies = [
     "project-ai-temporal",
     "project-ai-cli",
     "project-ai-sovereign-vault",
+    "project-ai-dpr",
     # Thirsty-Lang (PyPI dep, six-tier governance language family)
     "thirsty-lang==0.8.1",
 ]
@@ -132,6 +133,7 @@ project-ai-thirstys-trading-hub = { workspace = true }
 project-ai-temporal = { workspace = true }
 project-ai-cli = { workspace = true }
 project-ai-sovereign-vault = { workspace = true }
+project-ai-dpr = { workspace = true }
 
 [tool.uv.workspace]
 members = [
@@ -171,6 +173,7 @@ members = [
     "packages/swr",
     "packages/cli",
     "packages/sovereign-vault",
+    "packages/dpr",
 ]
 
 # ----------------------------------------------------------------------
@@ -264,6 +267,7 @@ exclude = [
     "packages/thirstys-trading-hub/src",
     "packages/thirstys-trading-hub/tests",
     "packages/tarl/src/tarl/tarl_os",
+    "packages/dpr/src/dpr/demo.py",
     "apps/desktop/tests/conftest.py",
     "tools/_archive",
 ]
