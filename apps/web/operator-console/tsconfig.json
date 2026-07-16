@@ -1,0 +1,11 @@
+{
+  "extends": "../../../tsconfig.web.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.cache/operator-console.tsbuildinfo",
+    "paths": {
+      "@project-ai/web-shared": ["../shared/src/index.ts"],
+      "@project-ai/web-shared/api": ["../shared/src/api.ts"]
+    }
+  },
+  "include": ["src", "vite.config.ts", "../shared/src"]
+}

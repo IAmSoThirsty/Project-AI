@@ -28,7 +28,7 @@ so denial is observable rather than silent.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -120,6 +120,7 @@ class WarRoomCore:
         scenario: Scenario,
         ai_system_response: dict[str, Any],
         system_id: str = "test_system",
+        governance_state: Mapping[str, object] | None = None,
     ) -> dict[str, Any]:
         """Execute a scenario against an AI system response.
 
@@ -144,6 +145,7 @@ class WarRoomCore:
             system_id=system_id,
             decision=decision,
             capability_token=token,
+            governance_state=governance_state,
         )
         if gate_result.outcome is not Outcome.ALLOW:
             return {
@@ -156,6 +158,9 @@ class WarRoomCore:
                 "recorded": False,
                 "gate_outcome": gate_result.outcome.value,
                 "gate_reason": gate_result.reason,
+                "gate_action_id": gate_result.action_id,
+                "gate_evidence_sha256": gate_result.governance_evidence_sha256,
+                "gate_event_hash": gate_result.event_hash,
             }
 
         challenge = self.crypto.generate_challenge(scenario.scenario_id, int(scenario.difficulty))
@@ -223,7 +228,10 @@ class WarRoomCore:
             "audit_entry": audit_entry,
             "recorded": True,
             "gate_outcome": gate_result.outcome.value,
+            "gate_reason": gate_result.reason,
+            "gate_action_id": gate_result.action_id,
             "gate_evidence_sha256": gate_result.governance_evidence_sha256,
+            "gate_event_hash": gate_result.event_hash,
         }
         self.results.append(result)
         return result

@@ -7,7 +7,23 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   { ignores: ["**/dist/**", "apps/web-static/**"] },
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  {
+    files: ["apps/web/triumvirate-portal/**/*.js"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest,
+        ...globals.serviceworker,
+        dataLayer: "readonly",
+        gtag: "readonly",
+      },
+    },
+  },
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ["apps/web/**/*.{ts,tsx}"],
+  })),
   {
     files: ["apps/web/**/*.{ts,tsx}"],
     languageOptions: {

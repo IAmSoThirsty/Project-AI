@@ -32,6 +32,30 @@ x-web-health: &web-health
   start_period: 3s
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: project-ai-postgres
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+      - /run/postgresql:size=8m,mode=1777
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: project_ai
+      POSTGRES_PASSWORD: ${PROJECT_AI_POSTGRES_PASSWORD:-project-ai-local-only}
+      POSTGRES_DB: project_ai
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U project_ai -d project_ai"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    networks:
+      - services
+
   # ========== API (Port 8000, published) ==========
   api:
     <<: *python-defaults
@@ -41,15 +65,26 @@ services:
     image: project-ai:api
     container_name: project-ai-api
     environment:
+      PROJECT_AI_INSTANCE_NAME: ${PROJECT_AI_INSTANCE_NAME:-PROJECT-AI-LOCAL}
       PROJECT_AI_API_TOKEN: ${PROJECT_AI_API_TOKEN:-}
       PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
       PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
+      PROJECT_AI_DATABASE_URL: postgresql://project_ai:${PROJECT_AI_POSTGRES_PASSWORD:-project-ai-local-only}@postgres:5432/project_ai
+      PROJECT_AI_SETUP_SECRET: ${PROJECT_AI_SETUP_SECRET:-}
+      PROJECT_AI_MFA_KEY: ${PROJECT_AI_MFA_KEY:-}
+      PROJECT_AI_EXECUTION_SECRET: ${PROJECT_AI_EXECUTION_SECRET:-project-ai-local-execution-secret-change-me}
+      PROJECT_AI_SWR_BUNDLE_DIR: /data/swr-bundles
+      PROJECT_AI_SESSION_COOKIE_SECURE: "false"
+      PROJECT_AI_BOOTSTRAP_TRUST_PRIVATE_PROXY: "true"
       PYTHONUNBUFFERED: "1"
     volumes:
       - audit-data:/data
     ports:
       - "127.0.0.1:8000:8000"
     healthcheck: *python-health
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - services
 
@@ -60,12 +95,14 @@ services:
     security_opt: [no-new-privileges:true]
     tmpfs:
       - /tmp:size=64m,mode=1777
+      - /var/lib/nginx/tmp:size=32m,mode=1777
+      - /run/nginx:size=1m,mode=1777
     restart: unless-stopped
     build:
       context: .
       dockerfile: docker/web.Dockerfile
       args:
-        PORTAL: docs
+        APP: docs-portal
     image: project-ai:docs-portal
     container_name: project-ai-docs-portal
     depends_on:
@@ -83,12 +120,14 @@ services:
     security_opt: [no-new-privileges:true]
     tmpfs:
       - /tmp:size=64m,mode=1777
+      - /var/lib/nginx/tmp:size=32m,mode=1777
+      - /run/nginx:size=1m,mode=1777
     restart: unless-stopped
     build:
       context: .
       dockerfile: docker/web.Dockerfile
       args:
-        PORTAL: proof
+        APP: proof-portal
     image: project-ai:proof-portal
     container_name: project-ai-proof-portal
     depends_on:
@@ -96,6 +135,31 @@ services:
         condition: service_healthy
     ports:
       - "127.0.0.1:4174:8080"
+    healthcheck: *web-health
+    networks:
+      - services
+
+  operator-console:
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+      - /var/lib/nginx/tmp:size=32m,mode=1777
+      - /run/nginx:size=1m,mode=1777
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      args:
+        APP: operator-console
+    image: project-ai:operator-console
+    container_name: project-ai-operator-console
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:4175:8080"
     healthcheck: *web-health
     networks:
       - services
@@ -173,6 +237,7 @@ services:
 
 volumes:
   audit-data:
+  postgres-data:
     driver: local
 
 networks:

@@ -1,6 +1,7 @@
 {{- range list
   (dict "name" "docs-portal" "key" "docsPortal" "values" .Values.docsPortal)
   (dict "name" "proof-portal" "key" "proofPortal" "values" .Values.proofPortal)
+  (dict "name" "operator-console" "key" "operatorConsole" "values" .Values.operatorConsole)
 }}
 {{- $svc := .values }}
 {{- $component := .name }}

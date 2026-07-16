@@ -7,6 +7,7 @@
 api             | 8000 | 127.0.0.1:8000 | HTTP | FastAPI/Uvicorn main gateway    | loopback-only
 docs-portal     | 8080 | 127.0.0.1:4173 | HTTP | Documentation portal (Nginx)    | loopback-only
 proof-portal    | 8080 | 127.0.0.1:4174 | HTTP | Proof portal (Nginx)            | loopback-only
+operator-console| 8080 | 127.0.0.1:4175 | HTTP | Human Control Center (Nginx)     | loopback-only
 
 # ── Internal only (expose:, reachable within Docker network only) ─────────
 
@@ -17,7 +18,7 @@ genesis         | 8080 | —              | HTTP | Genesis emitter (Rust)       
 
 # ── Reserved for future expansion ─────────────────────────────────────────
 
-# 4175–4180   Additional web portals (same internal 8080 pattern)
+# 4176–4180   Additional web portals (same internal 8080 pattern)
 # 8001–8010   Additional Python services (same internal 8000 pattern)
 # 9000–9010   Monitoring stack (Prometheus :9090, Grafana :3000, etc.)
 # 5432        PostgreSQL (pgvector — operationalmemorysystem, already in use on host :5433)

@@ -11,9 +11,16 @@ requires-python = "==3.12.10"
 license = "MIT"
 dependencies = [
     "fastapi>=0.115.0",
+    "project-ai-accounts",
     "project-ai-atlas",
+    "project-ai-capability",
+    "project-ai-execution",
+    "project-ai-governance",
     "project-ai-kernel",
     "project-ai-security",
+    "project-ai-swr",
+    "project-ai-taar",
+    "project-ai-workflows",
     "uvicorn[standard]>=0.34.0",
 ]
 classifiers = [

@@ -16,7 +16,7 @@ def test_current_repo_pre_deployment_gate_passes() -> None:
     results = MODULE.verify_all(MODULE.ROOT)
 
     assert results[-1] == "pre-deployment docs: 4 check(s) passed"
-    assert any(result.startswith("compose manifest: 7") for result in results)
+    assert any(result.startswith("compose manifest: 9") for result in results)
 
 
 def test_env_example_rejects_real_token(tmp_path: Path) -> None:

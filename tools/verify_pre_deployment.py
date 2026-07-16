@@ -17,6 +17,8 @@ EXPECTED_COMPOSE_SERVICES = {
     "atlas",
     "docs-portal",
     "genesis",
+    "operator-console",
+    "postgres",
     "proof-portal",
     "swr",
 }

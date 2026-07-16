@@ -13,6 +13,10 @@ secrets:
   create: false  # Development uses local environment variables
   api:
     token: ""  # Not used in development
+    setupSecret: ""
+    mfaKey: ""
+    databaseUrl: ""
+    executionSecret: ""
 
 # Storage - disabled in development (uses emptyDir)
 persistence:
@@ -115,9 +119,14 @@ api:
   image: project-ai-development-api
   port: 8000
   env:
+    PROJECT_AI_INSTANCE_NAME: PROJECT-AI-LOCAL
     PROJECT_AI_API_TOKEN: ""
     PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
     PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
+    PROJECT_AI_ACCOUNT_DB: /data/accounts.db
+    PROJECT_AI_WORKFLOW_DB: /data/workflows.db
+    PROJECT_AI_SWR_BUNDLE_DIR: /data/swr-bundles
+    PROJECT_AI_SESSION_COOKIE_SECURE: "false"
   resources:
     requests:
       cpu: 50m
@@ -149,6 +158,17 @@ proofPortal:
     limits:
       cpu: 100m
       memory: 64Mi
+
+operatorConsole:
+  image: project-ai-development-operator-console
+  port: 8080
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
 
 # SWR read-only adapter
 swr:

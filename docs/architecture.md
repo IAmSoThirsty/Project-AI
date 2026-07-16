@@ -84,6 +84,8 @@ governance + execution gate to actuate anything.
 | `project-ai-atlas` | Subordinate deterministic analytical projections | Projections are read-only, no side effects |
 | `project-ai-arbiter` | Experimental operator-side governance substrate | Does not embed AI-side authority |
 | `project-ai-rlp` | Experimental Reciprocal Legitimacy Protocol | Reviewer tokens are scoped and expiring |
+| `project-ai-accounts` | Durable human credentials, recovery, roles, and opaque server sessions | Human UI access never grants execution authority |
+| `project-ai-workflows` | Durable human request/review queue | Review is not governance and cannot execute |
 | `project-ai-api` | Fail-closed FastAPI gateway for development surfaces | All Chimera relay routes are authenticated |
 | `project-ai-cli` | API-bound operator CLI | Commands communicate only through the API |
 
@@ -98,6 +100,7 @@ AI-side authority.
 
 | App | Stack | Role |
 |---|---|---|
+| `apps/web/operator-console` | React + Vite | Canonical human operator console (Compose/Helm development delivery wired) |
 | `apps/web/docs-portal` | React + Vite | Operator-facing documentation portal |
 | `apps/web/proof-portal` | React + Vite | Governance proof and replay portal |
 | `apps/desktop` | PyQt6 | Read-only offline desktop client |
@@ -126,16 +129,30 @@ short-term memory, long-term memory, companion intelligence, TAAR, Shadow Thirst
 Sovereign Interior Vault, NIRL, Chimera containment, governance memory, and audit
 memory. The full schematic is documented in [docs/architecture/visual-maps/architecture/memory-system.md](docs/architecture/visual-maps/architecture/memory-system.md).
 
-## Container Stack (Stage 15)
+## Container Stack
 
-Seven Compose services map to the package layers above:
+Nine Compose services map to the package and application layers above:
 
 | Service | Package | Port |
 |---|---|---|
+| `postgres` | Shared human account/session/workflow state | Internal 5432 |
 | `api` | project-ai-api | 8000 (host-bound) |
+| `operator-console` | apps/web/operator-console | 4175 (host-bound) |
 | `docs-portal` | apps/web/docs-portal | 4173 (host-bound) |
 | `proof-portal` | apps/web/proof-portal | 4174 (host-bound) |
 | `swr` | project-ai-swr (via services host) | 8000 (internal) |
 | `atlas` | project-ai-atlas (via services host) | 8000 (internal) |
 | `arbiter-rlp` | project-ai-arbiter + project-ai-rlp (via services host) | 8000 (internal) |
 | `genesis` | project-ai-genesis-emitter (Rust) | 8080 (internal) |
+
+The operator console is delivered through hardened Nginx on loopback port 4175.
+Compose uses PostgreSQL for shared human state; direct local Python development may
+use SQLite. Human sessions never replace machine actuation credentials. Container
+delivery is verified development infrastructure, not a production-readiness claim.
+
+The Control Center's first execution-backed module is SWR. A human account records a
+`scenario.prepare` request, a separate reviewer approves it, and a recently MFA-verified
+operator may submit only the exact canonical scenario input. The API reserves one durable
+attempt, issues the scoped capability inside the server, invokes the existing SWR
+`ExecutionGate`, appends the Chimera audit record, and persists the receipt. Human roles
+select interface access; they do not become capability or governance authority.

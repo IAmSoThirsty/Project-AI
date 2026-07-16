@@ -29,6 +29,8 @@ spec:
             - containerPort: {{ .Values.api.port }}
               protocol: TCP
           env:
+            - name: PROJECT_AI_INSTANCE_NAME
+              value: {{ .Values.api.env.PROJECT_AI_INSTANCE_NAME | quote }}
             - name: PROJECT_AI_API_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -39,6 +41,38 @@ spec:
               value: {{ .Values.api.env.PROJECT_AI_AUDIT_PATH | quote }}
             - name: PROJECT_AI_DOI_REGISTRY
               value: {{ .Values.api.env.PROJECT_AI_DOI_REGISTRY | quote }}
+            - name: PROJECT_AI_ACCOUNT_DB
+              value: {{ .Values.api.env.PROJECT_AI_ACCOUNT_DB | quote }}
+            - name: PROJECT_AI_WORKFLOW_DB
+              value: {{ .Values.api.env.PROJECT_AI_WORKFLOW_DB | quote }}
+            - name: PROJECT_AI_SWR_BUNDLE_DIR
+              value: {{ .Values.api.env.PROJECT_AI_SWR_BUNDLE_DIR | quote }}
+            - name: PROJECT_AI_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-secrets
+                  key: PROJECT_AI_DATABASE_URL
+                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
+            - name: PROJECT_AI_SESSION_COOKIE_SECURE
+              value: {{ .Values.api.env.PROJECT_AI_SESSION_COOKIE_SECURE | quote }}
+            - name: PROJECT_AI_SETUP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-secrets
+                  key: PROJECT_AI_SETUP_SECRET
+                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
+            - name: PROJECT_AI_MFA_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-secrets
+                  key: PROJECT_AI_MFA_KEY
+                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
+            - name: PROJECT_AI_EXECUTION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-api-secrets
+                  key: PROJECT_AI_EXECUTION_SECRET
+                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
           livenessProbe:
             httpGet:
               path: /health/live

@@ -16,7 +16,7 @@ test("shows public replay status and loads authenticated audit evidence", async 
       ? { status: "live", version: "0.0.0.dev0" }
       : url.endsWith("/replay/status")
         ? { status: "pass", invariants_passed: 5, invariants_total: 5, updated_at: "now" }
-        : { chain_valid: true, count: 1, records: [{ event: "chimera.canary_hit", canary_sha256: "abc", timestamp: "now", hash: "hash" }] };
+        : { chain_valid: true, count: 1, filtered_count: 1, offset: 0, limit: 100, records: [{ event: "chimera.canary_hit", canary_sha256: "abc", timestamp: "now", hash: "hash" }] };
     return { ok: true, json: async () => payload, capturedHeaders: init?.headers };
   });
   vi.stubGlobal("fetch", fetchMock);
@@ -27,7 +27,10 @@ test("shows public replay status and loads authenticated audit evidence", async 
   await userEvent.click(screen.getByRole("button", { name: "Load evidence" }));
   expect(await screen.findByText("chimera.canary_hit")).toBeInTheDocument();
   expect(screen.getByLabelText("API token")).toHaveValue("");
-  expect(fetchMock).toHaveBeenLastCalledWith("/api/audit?limit=100", { headers: { Authorization: "Bearer operator-token" } });
+  const [auditUrl, auditInit] = fetchMock.mock.calls.at(-1) ?? [];
+  expect(auditUrl).toBe("/api/audit?limit=100");
+  expect(auditInit?.credentials).toBe("same-origin");
+  expect((auditInit?.headers as Headers).get("Authorization")).toBe("Bearer operator-token");
 });
 
 test("requires a token before requesting protected evidence", async () => {

@@ -40,9 +40,10 @@ recorded only through the execution gate.
 
 ## Why recording requires the gate
 
-Recording a result is **actuation** — it persists to the audit log
-and increments the canonical-replay state. Per the system's
-fail-closed contract, the only way to persist anything is through
+Recording a result is **actuation** — it appends to the active SWR result/proof/score
+state and returns an execution-event hash. It does not by itself update the separate
+canonical-replay checkpoint. Per the system's fail-closed contract, the only way to
+record the result is through
 `ExecutionGate.submit_action` with a valid capability token.
 
 The required capability is scoped to:

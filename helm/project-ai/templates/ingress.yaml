@@ -47,5 +47,12 @@ spec:
                 name: {{ $.Release.Name }}-api
                 port:
                   number: {{ $.Values.api.port }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $.Release.Name }}-operator-console
+                port:
+                  number: {{ $.Values.operatorConsole.port }}
     {{- end }}
 {{- end }}

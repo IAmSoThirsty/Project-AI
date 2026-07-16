@@ -8,7 +8,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy
+    UV_LINK_MODE=copy \
+    UV_PYTHON_INSTALL_DIR=/opt/uv-python
 WORKDIR /app
 
 FROM base AS builder
@@ -22,14 +23,17 @@ RUN uv sync --frozen --no-dev --package project-ai-api
 
 FROM base AS runtime
 # Copy venv from builder
-COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder --chown=10001:10001 /app/.venv /app/.venv
+COPY --from=builder --chown=10001:10001 /opt/uv-python /opt/uv-python
 # Copy application code
-COPY README.md LICENSE ./
-COPY packages ./packages
-COPY apps/desktop ./apps/desktop
-COPY apps/services ./apps/services
-COPY docs/reference/DOI_REGISTRY.md ./docs/reference/DOI_REGISTRY.md
-RUN mkdir -p /data && chown -R 10001:10001 /app /data
+COPY --chown=10001:10001 README.md LICENSE ./
+COPY --chown=10001:10001 packages ./packages
+COPY --chown=10001:10001 apps/desktop ./apps/desktop
+COPY --chown=10001:10001 apps/services ./apps/services
+COPY --chown=10001:10001 docs/reference/DOI_REGISTRY.md ./docs/reference/DOI_REGISTRY.md
+RUN chmod 0755 /app/.venv/bin/uvicorn \
+    && mkdir -p /data \
+    && chown 10001:10001 /data
 USER 10001:10001
 HEALTHCHECK --interval=5s --timeout=3s --retries=12 --start-period=5s \
   CMD curl -f http://127.0.0.1:8000/health/live || exit 1

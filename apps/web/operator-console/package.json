@@ -1,0 +1,23 @@
+{
+  "name": "@project-ai/operator-console",
+  "version": "0.0.0-dev0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4175",
+    "lint": "eslint src --max-warnings 0",
+    "test": "vitest run",
+    "build": "tsc -b && vite build"
+  },
+  "dependencies": {
+    "@project-ai/web-shared": "workspace:*",
+    "@tanstack/react-query": "^5.90.20",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.13.1"
+  },
+  "devDependencies": {
+    "axe-core": "^4.12.1"
+  }
+}

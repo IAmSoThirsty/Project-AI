@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from execution import ExecutionGate, ExecutionResult
@@ -63,6 +64,7 @@ class SovereignWarRoom:
         system_id: str,
         decision: str,
         capability_token: str,
+        governance_state: Mapping[str, object] | None = None,
     ) -> ExecutionResult:
         result = self.evaluate(scenario, system_id=system_id, decision=decision)
         request = ActionRequest(
@@ -85,6 +87,7 @@ class SovereignWarRoom:
             request,
             capability_token=capability_token,
             executor=record,
+            state=governance_state,
         )
 
     def results(self) -> tuple[ScenarioResult, ...]:

@@ -18,6 +18,8 @@ classifiers = [
 ]
 
 dependencies = [
+    "project-ai-accounts",
+    "project-ai-workflows",
     "project-ai-api",
     "project-ai-ai-takeover",
     "project-ai-alien-invaders",
@@ -99,6 +101,8 @@ managed = true
 package = true
 
 [tool.uv.sources]
+project-ai-accounts = { workspace = true }
+project-ai-workflows = { workspace = true }
 project-ai-alien-invaders = { workspace = true }
 project-ai-api = { workspace = true }
 project-ai-django-state = { workspace = true }
@@ -140,6 +144,8 @@ members = [
     "apps/desktop",
     "apps/services",
     "apps/swr-dashboard",
+    "packages/accounts",
+    "packages/workflows",
     "packages/ai-takeover",
     "packages/alien-invaders",
     "packages/api",

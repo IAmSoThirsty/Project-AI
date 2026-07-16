@@ -11,14 +11,24 @@ secrets:
   create: true
   api:
     token: ""
+    setupSecret: ""
+    mfaKey: ""
+    databaseUrl: ""
+    executionSecret: ""
 
 api:
   image: project-ai-api
   port: 8000
   env:
+    PROJECT_AI_INSTANCE_NAME: PROJECT-AI-SOVEREIGN
     PROJECT_AI_API_TOKEN: ""
     PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
     PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
+    PROJECT_AI_ACCOUNT_DB: ""
+    PROJECT_AI_WORKFLOW_DB: ""
+    PROJECT_AI_SWR_BUNDLE_DIR: /data/swr-bundles
+    PROJECT_AI_SESSION_COOKIE_SECURE: "true"
+  # Multi-replica human state requires secrets.api.databaseUrl to reference PostgreSQL.
   replicas: 2
   resources:
     requests:
@@ -60,6 +70,18 @@ proofPortal:
   pdb:
     enabled: true
     minAvailable: 1
+
+operatorConsole:
+  image: project-ai-operator-console
+  port: 8080
+  replicas: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
 
 swr:
   image: project-ai-swr

@@ -7,6 +7,484 @@
 
 ---
 
+## SESSION UPDATE 2026-07-16 — Atlas Projections durable analysis workflow
+
+- **Status:** IMPLEMENTATION IN PROGRESS; ATLAS PROJECTIONS SCREEN, API, SQLITE, AND
+  POSTGRESQL CONTRACT VERIFIED; FULL HUMAN INTERFACE AND PRODUCTION ACCEPTANCE REMAIN
+  INCOMPLETE.
+- **Mode:** App/package implementation, persistence migration, and visual verification.
+- **Branch/workspace:** `main` at `T:\00-Active\Project-AI-Beginnings`.
+- **Implemented:** `/api/v1/modules/atlas/projections` creates and lists deterministic
+  evidence-weighted projections. `/api/v1/modules/atlas/projections/{receipt_id}` returns
+  complete durable detail. Creation canonicalizes structured claim, evidence, driver, and
+  stack inputs before calling the real Atlas `analyze` contract.
+- **Storage:** SQLite and PostgreSQL workflow schema version 4 adds generic analysis
+  receipts with canonical input/output JSON, independent input/output hashes, audit hash,
+  per-account idempotency, creator, module/operation, subject, and creation time. The
+  one-time migration copies the new table and refuses stale schema versions or populated
+  targets.
+- **Authority boundary:** responses state `analysis_only`,
+  `recommendation_created=false`, `governance_verdict_created=false`, and
+  `execution_started=false`. The workflow issues no capability and calls no execution
+  gate. Audit events contain hashes and identifiers, not raw statements or sources.
+- **UI:** added `/simulations/atlas-projections` with canonical inputs, real result,
+  copyable projection hash, durable audit receipt, newest-first history, and expanded
+  input/output/projection/audit evidence. The Atlas catalog now links separately to
+  projections and replay.
+- **Created:** `apps/web/operator-console/src/routes/AtlasProjectionsRoute.tsx`,
+  `docs/operations/interface/ATLAS_PROJECTIONS_FIDELITY_LEDGER.md`, and
+  `docs/operations/interface/concepts/control-center-atlas-projections.png`.
+- **Visual evidence:** the concept and native browser renders were inspected with
+  `view_image`. Desktop evidence is `atlas-projections-desktop.png`; the 390 px narrow
+  evidence is `atlas-projections-mobile.png` under the session visualization directory.
+  The narrow page measures `scrollWidth=390`; its 702 px history table is contained in a
+  360 px horizontal scroll region.
+- **Problems fixed during validation:** corrected a test's hand-calculated posterior;
+  refreshed the expected OpenAPI baseline; contained the narrow history table after
+  browser measurement exposed a 679 px page overflow; escaped hyphens for HTML's current
+  Unicode-set pattern mode; updated the pre-deployment verifier from the stale seven-service
+  inventory to the current nine services; and hardened PostgreSQL's container root filesystem.
+- **Verification:** full Python passed `2876 passed, 5 skipped, 1 xfailed`; the five live
+  PostgreSQL tests separately passed against a disposable PostgreSQL 16 container; strict
+  MyPy passed 35 identity/workflow/API/SWR source files; relevant Ruff passed; all web
+  lint passed; 54 web tests passed; all four production web builds passed; OpenAPI baseline,
+  nine-service pre-deployment verification, Compose config, Helm lint, default/production
+  Helm rendering, and clean browser console/network inspection passed.
+- **Current repository issue:** full-repository Ruff still reports 26 violations in the
+  unrelated DPR package. They were not introduced or modified by this interface slice and
+  require separate follow-up work; all files in this slice pass Ruff.
+- **Cleanup:** the disposable PostgreSQL container, QA account/workflow databases, audit
+  log, server logs, API/Vite processes, and QA directory were removed. Ports 8000, 4175,
+  and 55439 are no longer owned by this QA run.
+- **Remaining:** Atlas Sludge inspection,
+  TAAR, other module workflows, full accessibility/assistive-technology acceptance,
+  desktop/mobile integration, and managed production deployment acceptance remain.
+- **Unrelated files preserved:** `tmp-c.json`, `tmp-c.out`, `tmp-ollama-serve.log`.
+- **Safe to continue:** Yes.
+
+---
+
+## SESSION UPDATE 2026-07-16 — Atlas Replay human analysis workflow
+
+- **Status:** IMPLEMENTATION IN PROGRESS; ATLAS REPLAY SCREEN AND WORKFLOW VERIFIED;
+  FULL HUMAN INTERFACE AND PRODUCTION ACCEPTANCE REMAIN INCOMPLETE.
+- **Mode:** App/package implementation and visual verification.
+- **Branch/workspace:** `main` at `T:\00-Active\Project-AI-Beginnings`.
+- **Implemented:** `/api/v1/modules/atlas/replay` accepts a portable Atlas bundle from a
+  signed-in account with the new `modules.analysis.run` permission, enforces same-origin
+  and CSRF checks plus a 256 KB request ceiling, verifies the existing audit chain,
+  validates the canonical bundle, reconstructs it through the real Atlas ReplaySystem,
+  and appends only bounded hash/identifier evidence to the durable relay.
+- **Authority boundary:** Atlas Replay is analysis only. It issues no capability, creates
+  no governance verdict, calls no execution gate, accepts no browser machine token, and
+  returns explicit `governance_verdict_created=false` and `execution_started=false`.
+- **Permissions:** Owner, Administrator, Operator, Reviewer, and Auditor may run bounded
+  analysis. Viewer is denied server-side; a deterministic API test proves the denial.
+- **UI:** added `/simulations/atlas-replay`, a real bundle editor, load/clear actions,
+  Atlas and input-boundary rails, deterministic verification, five item counts, copyable
+  bundle/reconstruction hashes, and a durable audit receipt. The module catalog now links
+  to the available workspace. Added a native favicon to remove the browser-console 404.
+- **Created:** `apps/web/operator-console/public/favicon.svg`,
+  `apps/web/operator-console/src/routes/AtlasReplayRoute.tsx`,
+  `packages/api/src/project_ai_api/atlas_workflows.py`, the Atlas Replay concept, and
+  `docs/operations/interface/ATLAS_REPLAY_FIDELITY_LEDGER.md`.
+- **Visual evidence:** concept at
+  `docs/operations/interface/concepts/control-center-atlas-replay.png`; desktop and
+  narrow renders at `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\atlas-replay-desktop.png`
+  and `atlas-replay-mobile.png`. Bundled Playwright 1.61.1 with installed system Chrome
+  was used because Browser/IAB was not callable. Both concept and renders were inspected
+  with `view_image`.
+- **Fidelity evidence:** the complete receipt bottom measured 1008 px inside the native
+  1536x1024 viewport. The 390x844 layout measured `scrollWidth=390`, reflowed hashes and
+  controls without horizontal overflow, and retained the full result in the page.
+- **Browser workflow evidence:** first-run Owner setup, recovery-code acknowledgement,
+  session login, Atlas route load, real JSON submission, deterministic reconstruction,
+  three 64-character hashes, and canonical audit lookup completed. Final browser console
+  errors and failed network responses were both empty.
+- **Validation:** Ruff and formatting passed; strict MyPy reported no issues in 41 source
+  files; Python passed `405 passed, 5 skipped` (only live PostgreSQL environment gates);
+  all web lint passed; 53 web tests passed; all four production web builds passed;
+  OpenAPI baseline comparison, Compose config, default/production Helm rendering, and
+  `git diff --check` passed.
+- **Problems fixed during validation:** expected OpenAPI drift after adding the route;
+  deprecated HTTP status aliases; missing favicon; initial result clipping below the
+  desktop viewport; and the bundled Playwright package's incomplete top-level module
+  resolution, handled by its installed complete pnpm runtime. One attempted root
+  `pnpm lint` command did not exist; the repository's `pnpm web:lint` gate passed. The
+  hostile review also found that Atlas was advertised as available without configured
+  accounts/audit; the catalog now reports `read_only` until both dependencies exist,
+  and the final API rerun passed 28 tests.
+- **Cleanup:** the QA account/workflow databases, audit log, server logs, API process,
+  and Vite process were removed. Ports 8000 and 4175 were verified closed.
+- **Remaining:** Atlas projection history/detail and Sludge inspection remain; TAAR and
+  other simulations still lack human workflows; full-route accessibility, manual NVDA/
+  TalkBack, desktop/mobile integration, live-cluster, managed-PostgreSQL, and production
+  security acceptance remain. No production-readiness claim is made.
+- **Unrelated files preserved:** `tmp-c.json`, `tmp-c.out`, `tmp-ollama-serve.log`.
+- **Safe to continue:** Yes.
+
+---
+
+## SESSION UPDATE 2026-07-16 — Versioned request input contracts
+
+- **Status:** IMPLEMENTATION IN PROGRESS; STRUCTURED REQUEST INPUT SLICE VERIFIED;
+  FULL HUMAN INTERFACE AND PRODUCTION ACCEPTANCE REMAIN INCOMPLETE.
+- **Mode:** App/package implementation and visual verification.
+- **Branch/workspace:** `main` at `T:\00-Active\Project-AI-Beginnings`.
+- **Implemented:** each authenticated request operation now publishes a versioned,
+  server-owned input contract. Submission rejects missing, extra, malformed, or
+  conflicting input, derives the canonical resource server-side, and stores canonical
+  input JSON plus a SHA-256 receipt. Legacy resource-only package callers remain
+  compatible but pass through the same validation boundary.
+- **Storage/migration:** workflow SQLite and PostgreSQL schema version is now `3`.
+  Version 1 and 2 databases migrate idempotently to the three input-evidence columns.
+  The guarded SQLite-to-PostgreSQL migration preserves the schema version, canonical
+  inputs, resource, and input receipt.
+- **API/UI:** the operations endpoint exposes field labels, descriptions, constraints,
+  prefixes, and schema versions. The request composer renders those server-provided
+  fields; request detail shows the input contract, canonical resource, submitted input,
+  and 64-character receipt without presenting it as governance or execution evidence.
+- **Created:** `docs/operations/interface/REQUEST_INPUT_FIDELITY_LEDGER.md` and native
+  desktop/mobile request-flow screenshots under the Codex visualization workspace.
+- **Visual verification:** the request composer and persisted detail were exercised in
+  bundled Playwright with system Chrome because the in-app browser controller was not
+  callable. The 1536x1024 desktop and 390x844 mobile renders were inspected against the
+  accepted Control Center design system. The accepted concept has no request-specific
+  frame, so fidelity is design-system fidelity rather than a pixel-identical claim.
+- **Problems fixed during validation:** the migration tool's stale expected workflow
+  version; HTML `pattern` compatibility with the browser's Unicode-set regex mode; and
+  mobile overflow of the input SHA-256 receipt.
+- **Verification:** targeted Python tests passed `45 passed, 5 skipped`; the five skipped
+  tests require an external PostgreSQL DSN and separately passed `5 passed` against a
+  fresh disposable PostgreSQL 16 instance. Ruff passed; strict MyPy reported no issues
+  in 8 source files. The full web gate passed lint, 52 tests, and all four production
+  builds. Real-browser submission persisted `evidence.inspect/v1`, the canonical
+  resource, and its 64-character input receipt; the browser console reported no errors.
+- **Remaining:** extend versioned input/execution contracts to modules beyond the
+  current operation allowlist; complete remaining application workflows; run rendered
+  contrast, focus/dialog, assistive-technology, desktop/mobile integration, live-cluster,
+  managed-PostgreSQL, and production security acceptance. No production-readiness claim
+  is made.
+- **Unrelated files preserved:** `tmp-c.json`, `tmp-c.out`, `tmp-ollama-serve.log`.
+- **Safe to continue:** Yes.
+
+---
+
+## SESSION UPDATE 2026-07-15 — Human interface, shared PostgreSQL state, and delivery
+
+- **Status:** IMPLEMENTATION IN PROGRESS; AUTH/ADMIN/REQUEST/SWR FOUNDATION VERIFIED;
+  FULL HUMAN INTERFACE AND PRODUCTION ACCEPTANCE REMAIN INCOMPLETE.
+- **Mode:** App/package/deployment implementation.
+- **Created:** TOTP MFA and permission runtime; managed-account/admin API and UI;
+  `packages/workflows` durable non-actuating request/review package; Inbox, Requests,
+  Governance, Security, Simulation/Analysis, System Health, and Administration routes;
+  Helm `.helmignore` for non-template chart documentation.
+- **Security boundaries:** TOTP seeds are Fernet-encrypted with a separately supplied
+  key; counters are consumed to reject replay; reviews require recent MFA; self-review
+  is denied; human approval is explicitly not a governance verdict and does not itself
+  call the execution gate. The separate SWR execution action requires recent MFA and
+  revalidates the approved scope through governance; temporary-password accounts are
+  restricted to account security.
+- **Deployment/storage:** Operator console is built as a hardened Nginx image and added
+  to Compose and Helm. Shared PostgreSQL adapters now persist account, session,
+  recovery, MFA, security-event, rate-limit, request, and review state. SQLite remains
+  the single-process local fallback. Compose remains loopback-only; production Helm
+  values request two API replicas and fail closed until a PostgreSQL DSN is supplied.
+- **Migration and operations:** Added a one-time, transaction-locked SQLite-to-
+  PostgreSQL migration that refuses unexpected source schemas, populated targets, and
+  secret rehashing. Added guarded Compose backup/restore scripts and a PostgreSQL
+  operations/rollback record. A real custom-format dump restored into an isolated
+  database with schema versions `accounts=4` and `workflows=1`; the restored QA state
+  contained one account and one session.
+- **Concurrency evidence:** PostgreSQL schema/bootstrap locks, row-locked rate limits,
+  atomic creator cancellation, and locked terminal review transitions were exercised.
+  Eight simultaneous bootstrap attempts produced exactly one Owner; ten simultaneous
+  rate-limit hits blocked exactly five at a limit of five; two API instances shared a
+  session and request; two reviewers racing across repository instances produced one
+  durable terminal review and one conflict.
+- **Validation:** the no-database targeted suite passed 67 tests with four live
+  PostgreSQL tests explicitly skipped; all five live PostgreSQL tests passed against a
+  fresh disposable PostgreSQL 16 instance. Strict MyPy passed 34 source files and Ruff
+  passed. The complete web gate passed 52 tests (16 operator-console plus 36 existing
+  portal tests), lint, and all four production builds. OpenAPI baseline comparison,
+  Compose config, default/production Helm templates, PowerShell script parsing, and
+  `git diff --check` passed. The API image built with Python 3.12.10, Uvicorn, and
+  Psycopg; the isolated Compose API/PostgreSQL/operator-console stack was healthy,
+  served the console through Nginx, bootstrapped through its same-origin proxy, and
+  preserved the session across an API-container restart.
+- **Problems fixed during validation:** same-origin proxy Host now preserves the browser
+  port; web image dependency installation now occurs after source copy; Helm ignores a
+  documentation Markdown file that previously broke chart rendering; SQLite foreign
+  keys are enforced; duplicate reviewer abstentions return a workflow conflict instead
+  of a database error; temporary-password accounts cannot read workflow records; the
+  API image now carries its exact UV-managed Python runtime with usable ownership;
+  read-only Nginx containers receive bounded tmpfs paths; loopback bootstrap behind the
+  local Compose proxy requires an explicit private-proxy trust flag; terminal review
+  and cancellation decisions are atomic under concurrent replicas.
+- **Container-runtime repair:** the first real SWR-enabled API start failed closed
+  because the package's default `bundles/` export path targeted the read-only application
+  root. The API composition now accepts a configured bundle directory; Compose and Helm
+  use `/data/swr-bundles`. A regression test proves the configured directory is created,
+  and the rebuilt read-only API container completed the live governed workflow.
+- **Audit explorer:** full-chain verification now precedes bounded event/query filters;
+  newest-first offset pagination exposes total and filtered counts; the UI exports only
+  the displayed verified page as JSON with its active filter context.
+- **Application shell:** replaced disabled search/notification controls with keyboard
+  screen search and live submitted-request notifications. Added a device-local
+  preferences screen for density and reduced motion, with explicit non-authority copy.
+- **Login and instance assurance refinement:** the public `/api/v1/instance` contract
+  now exposes a configured presentation label for the local sovereign instance while
+  explicitly denying cloud-login, browser machine-identity, and browser capability
+  claims. The login rail now says authentication establishes identity while governance
+  evaluates authority independently, uses `Server-authenticated session` and
+  `Governance gate remains authoritative`, and shows the separate human-access and
+  server-side governed-execution paths. Compose and Helm configure the instance label.
+  Native screenshot review exposed inherited browser-default black on authentication
+  headings and assurance labels; `.auth-shell` now sets the foreground explicitly.
+  The corrected 1536×1024 render is recorded in the login fidelity ledger.
+- **Accessibility automation:** added axe-core checks for sign-in, Command Center,
+  request detail, and the SWR execution receipt. The first run exposed duplicate
+  unlabeled complementary landmarks; the shell sidebar and authority panel now have
+  distinct accessible names. DOM automation passes. Rendered color contrast, complete
+  route coverage, focus/dialog behavior, and assistive-technology acceptance remain.
+- **Request schemas:** added an authenticated server-provided operation allowlist with
+  descriptions, resource hints, and non-actuation consequences. The API rejects
+  arbitrary operation identifiers and the UI renders the allowlist as a select control.
+  Each operation now also publishes a versioned input contract; exact server-side
+  validation derives the canonical resource and persists canonical input JSON plus its
+  SHA-256 receipt for later inspection.
+- **Request lifecycle:** creators can cancel their own submitted or returned-for-
+  information requests through an ownership/state/CSRF-checked API. Cancellation is
+  durable and explicitly creates neither a governance verdict nor execution.
+- **Request detail/receipts:** added permission-checked request detail with the durable
+  review history. Each immutable human review receives a deterministic SHA-256 receipt
+  over its canonical fields. The API and UI explicitly report `not_started` and no
+  execution receipt; the human receipt is never presented as governance or actuation.
+- **SWR governed execution:** added the first real Control Center module execution path.
+  A separate human review and recent MFA are required before a permitted account may
+  reserve one attempt. The API binds `scenario.prepare`, the exact scenario resource,
+  approval state, and canonical decision; governance rechecks those bindings; the SWR
+  package issues and consumes the one-use capability inside the server and invokes its
+  existing `ExecutionGate`. The browser receives no capability material. The durable
+  receipt records result data, governance-evidence SHA-256, execution-event hash, and
+  append-only audit hash. Repeated or concurrent submissions return the existing attempt.
+- **Workflow schema:** advanced SQLite/PostgreSQL workflow storage from version 1 to 2
+  with a one-time `execution_receipts` table migration, then to version 3 with durable
+  input-contract evidence. Live PostgreSQL verification now reports `accounts=4`,
+  `workflows=3`; SQLite-to-PostgreSQL migration coverage includes canonical input JSON,
+  input SHA-256, completed execution-receipt state, and all execution evidence hashes.
+- **Live execution and recovery proof:** through the published Nginx console origin, a
+  bootstrapped Owner and separate Reviewer each completed TOTP setup; the Owner created
+  a scenario-bound request, the Reviewer approved it, and the Owner executed it through
+  the SWR gate. PostgreSQL held exactly one `executed`/`ALLOW` receipt with 64-character
+  governance, event, and audit hashes. Duplicate submission reused that attempt before
+  and after an API restart. The append-only audit chain verified `(True, 1)`. A custom-
+  format backup restored into an isolated database with schema versions `accounts=4`,
+  `workflows=2` and retained two accounts, one request, and the one execution receipt.
+- **Cleanup:** the disposable PostgreSQL test container, isolated QA Compose containers,
+  network, volumes, restored database, and temporary dump were removed. No owned QA
+  containers remain.
+- **Remaining:** managed PostgreSQL TLS/credential rotation and a live-cluster restore
+  drill; full field/time filter coverage and redacted bulk audit export; durable
+  notification history and global record search; full-route accessibility automation,
+  rendered contrast, focus/dialog, and assistive-technology acceptance; execution
+  receipts and versioned input contracts for modules beyond the current allowlist;
+  desktop/mobile integration; a process-safe shared audit backend for multiple API
+  replicas; full-stack live-cluster acceptance; production security review. No
+  production-readiness claim is made.
+- **Unrelated files preserved:** `tmp-c.json`, `tmp-c.out`, `tmp-ollama-serve.log`.
+- **Safe to continue:** Yes.
+
+---
+
+## SESSION UPDATE 2026-07-15 — Human accounts, sessions, and authentication UI
+
+- **Status:** IMPLEMENTATION IN PROGRESS; LOCAL OWNER AUTHENTICATION SLICE VERIFIED;
+  FULL HUMAN INTERFACE NOT COMPLETE.
+- **Task:** Continue the approved Control Center implementation with durable human
+  accounts, session-backed browser authentication, recovery, and account security.
+- **Mode:** App/module implementation across `packages/accounts`, the FastAPI gateway,
+  shared web contracts, operator-console routes, tests, security/product records, and
+  visual evidence.
+- **Branch/workspace:** `main` at `T:\00-Active\Project-AI-Beginnings`.
+- **Baseline state preserved:** Existing interface-foundation edits and unrelated
+  `tmp-c.json`, `tmp-c.out`, and `tmp-ollama-serve.log` remain untouched.
+- **Created:** `packages/accounts/`; API auth route module; sign-in, setup, recovery,
+  and account-security screens; local role matrix; human-auth threat model; sign-in
+  concept image.
+- **Implemented account controls:** migrated SQLite storage; exactly-once loopback Owner
+  bootstrap with explicit setup secret; Cerberus password hashing; durable lockout and
+  source throttling; hashed one-use recovery codes; opaque hashed sessions; CSRF hashes;
+  idle/absolute expiry; rotation/revocation; password-change revocation; and security
+  events. Raw passwords, codes, and tokens are not stored.
+- **Implemented API/UI:** bootstrap status/create, login, current session, refresh,
+  logout, own-session list/revoke, password change, non-enumerating recovery, current
+  account, protected route guards, deep-link return, one-time recovery-code handoff,
+  and authenticated audit access. Human sessions still cannot satisfy Chimera/Atlas
+  machine actuation authentication.
+- **Hostile-review fixes:** added same-origin rejection for browser auth mutations;
+  made missing-CSRF UI operations fail instead of pretending to sign out; preserved the
+  proof portal's existing `gateway.audit(token)` interface after the shared transport
+  changed; updated stale product/API/architecture documentation.
+- **Verification executed:** Ruff passed; strict MyPy passed 12 source files; targeted
+  account/API Pytest passed 23 tests; all web lint passed; all web tests passed 44 tests
+  (operator 8, docs 2, proof 2, Triumvirate 32); all four web builds passed.
+- **Real-browser QA:** first-run Owner setup, one-time recovery-code acknowledgement,
+  authenticated Command Center, session-authenticated audit, account security, logout,
+  fresh login, and a 390x844 sign-in viewport were exercised in the in-app browser.
+  The final desktop render was visually compared to the accepted sign-in concept.
+- **Visual evidence:** concept at
+  `docs/operations/interface/concepts/control-center-sign-in.png`; browser render at
+  `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\operator-console-sign-in.png`.
+  The implementation preserves the split assurance/form composition, dark palette,
+  hierarchy, blue action, three assurance rows, and recovery path. It uses the real
+  application shield icon and browser-native form geometry rather than image-only copy.
+- **Cleanup:** QA account database, logs, and recovery-code screenshot were removed;
+  ports 8000 and 4175 were verified closed. The retained screenshot contains no secret.
+- **Not verified/remaining:** TOTP MFA and step-up; encrypted MFA seed handling;
+  multi-user account/role administration; permission middleware and denial matrix;
+  PostgreSQL/deployment migration; security-event UI; remaining application modules;
+  Compose/Helm/desktop delivery; production accessibility/security acceptance.
+- **Next recommended action:** Finish Phase 2 with TOTP step-up and server-side role
+  enforcement, then implement account administration before consequential workflows.
+- **Safe to continue:** Yes. No production-readiness claim is made.
+
+---
+
+## SESSION UPDATE 2026-07-15 — Human-interface implementation foundation
+
+- **Status:** IMPLEMENTATION IN PROGRESS; PHASE 0/1 FOUNDATION VERIFIED; FULL HUMAN
+  INTERFACE NOT COMPLETE.
+- **Task:** Move the approved human-interface plan and Figma direction into a truthful,
+  runnable first implementation slice.
+- **Mode:** App/module implementation across the canonical web console, API contract,
+  tests, architecture records, and continuity evidence.
+- **Branch/workspace:** `main` at `T:\00-Active\Project-AI-Beginnings`.
+- **Baseline Git state:** The prior planning change and three unrelated untracked files
+  (`tmp-c.json`, `tmp-c.out`, `tmp-ollama-serve.log`) were present and preserved.
+- **Created:** `apps/web/operator-console/`; the Command Center concept image under
+  `docs/operations/interface/concepts/`; `docs/api/openapi-baseline.json`;
+  `tools/export_openapi.py`; and
+  `docs/architecture/decisions/ADR-001-human-interface-boundaries.md`.
+- **Modified:** The API dashboard models/route/tests; shared typed web API; root web
+  scripts/lockfile; ESLint flat configuration and narrow legacy lint hygiene; API,
+  architecture, port-ledger, historical-auth, implementation-plan, and continuity docs.
+- **Deleted:** None.
+- **Implemented routes:** `/command-center`, `/evidence`, and `/evidence/audit` in a
+  responsive React/Vite application shell. Planned modules are disabled and visibly
+  labeled instead of linking to fabricated screens.
+- **Implemented API:** `GET /api/v1/dashboard` aggregates live gateway, replay,
+  audit-chain, and DOI state. Work items remain an explicit empty list because no
+  work-item API exists.
+- **Authority/authentication truth:** The console does not grant authority. Its audit
+  form accepts a one-request development bearer token and clears it immediately; this
+  is not human login. Human accounts, secure cookie sessions, recovery, MFA, and
+  administration remain unimplemented Phase 2 work.
+- **Design evidence:** Accepted concept at
+  `docs/operations/interface/concepts/control-center-command-center.png`. The live
+  desktop implementation was inspected against it. A shared-style import collision
+  observed in the first capture was removed by exposing/importing the shared API as a
+  CSS-free package subpath; the post-fix production build passed.
+- **Verification executed:** `pnpm web:lint` passed; `pnpm web:test` passed 40 tests
+  (operator console 4, docs 2, proof 2, Triumvirate 32); `pnpm web:build` built all
+  four web applications; targeted API Pytest passed 14 tests including the frozen
+  OpenAPI comparison; Ruff passed; strict MyPy passed 7 API source files; live
+  API/console DOM and image inspection completed; and `git diff --check` passed.
+- **Browser limitation:** The in-app browser rejected the requested post-fix reload and
+  viewport change under its URL security policy. The rejected action was not bypassed.
+  Mobile behavior has DOM coverage and responsive CSS, but post-fix desktop/mobile
+  visual acceptance remains not verified.
+- **Environment/cleanup:** `uv sync --all-packages --all-extras` restored and checked
+  139 workspace packages after the targeted MyPy repair. Temporary API and console
+  processes were stopped and ports 8000 and 4175 were verified closed.
+- **Problems classified:** Human authentication and remaining product screens require
+  follow-up implementation; operator-console deployment is not yet in Compose/Helm;
+  PyQt distribution licensing still requires a decision.
+- **Next recommended action:** Implement Phase 2 human accounts and server-side
+  sessions with login, recovery, MFA, CSRF, throttling, and deterministic security tests.
+- **Safe to continue:** Yes. The current slice is additive, its unimplemented boundaries
+  are explicit, and unrelated user files remain preserved.
+
+---
+
+## SESSION UPDATE 2026-07-15 — Complete human-interface repository audit and implementation plan
+
+- **Status:** PLANNING COMPLETE; IMPLEMENTATION NOT STARTED.
+- **Task:** Comb over the repository and plan the complete human interface: dashboards, login,
+  screens, workflows, responsive behavior, accessibility, security, testing, deployment, and
+  cross-client delivery.
+- **Mode:** Repository-wide product/interface planning. Application code was intentionally not
+  modified.
+- **Branch/workspace:** `main` at `T:\00-Active\Project-AI-Beginnings`.
+- **Baseline Git state:** Three unrelated untracked files were present and preserved unchanged:
+  `tmp-c.json`, `tmp-c.out`, and `tmp-ollama-serve.log`.
+- **Created:** `docs/operations/HUMAN_INTERFACE_IMPLEMENTATION_PLAN.md` (1,327 lines at creation).
+- **Modified:** This continuity map only.
+- **Deleted:** None.
+- **Primary architecture decision in the plan:** Add one canonical React/Vite Project-AI Control
+  Center; preserve docs/proof as read-only public lanes; use desktop as the local delivery shell
+  and native fallback rather than duplicating every screen; keep Android a scoped companion.
+- **Authority decision in the plan:** Durable human accounts are separate from canonical actor
+  identity. UI roles never replace capability verification, governance, audit, or the execution
+  gate. The proposed account package maps authenticated accounts to verified actor identities.
+- **Current UI surfaces inspected:** React shared/docs/proof portals, Triumvirate and OMPT static
+  sites, PyQt6 desktop, Android client, Flask SWR dashboard, service adapters, FastAPI gateway,
+  Compose, Helm, installer documentation, application inventory, operator docs, and current tests.
+- **Current backend primitives inspected:** API models/routes, canonical identity registry,
+  capability/governance/execution boundaries, Cerberus in-memory authentication and RBAC.
+- **Live visual evidence:** Locally ran the API, docs portal, proof portal, and SWR Flask app;
+  navigated the current screens and saved six accepted screenshots under
+  `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\interface-audit\`.
+  All temporary local servers were stopped after capture.
+- **Figma handoff:** Created the FigJam board
+  `Project-AI Human Interface Audit and Implementation Map` at
+  `https://www.figma.com/board/5YzwgM4psogklwhu9pJR58`. The board contains the six accepted
+  screenshots in one left-to-right evidence row with 200 px spacing and screen-specific audit
+  notes, followed by the target human experience, complete screen inventory, four implementation
+  phases, and eight critical release gaps. A full-board verification render was inspected and
+  saved as `07-figma-interface-board.png` beside the source screenshots.
+- **Plan coverage:** Current-state evidence; product boundaries; roles/permissions; bootstrap,
+  login, logout, MFA, recovery, sessions, and account storage; public and authenticated
+  navigation; 19 screen groups; shared states; versioned APIs; design system; WCAG 2.2 AA;
+  responsive behavior; security controls; component/contract/integration/E2E/visual/security
+  tests; Compose, Helm, installer, Android, observability, backup/restore, nine implementation
+  phases, acceptance gates, dependency order, definition of done, decisions, and risks.
+- **Problems discovered and classified:**
+  - Legacy authentication docs claim missing `src/app/core/user_manager.py`, `users.json`, JWT,
+    and login behavior: **requires separate follow-up work; Phase 0 blocker for truthful auth
+    implementation, not a blocker for this plan**.
+  - `docs/api/API_REFERENCE.md` response examples disagree with runtime Pydantic models:
+    **requires separate follow-up work; Phase 0 contract-drift repair**.
+  - `project-ai-swr-dashboard` fails on this Windows cp1252 console because emoji startup prints
+    raise `UnicodeEncodeError`: **not blocking this plan; requires separate targeted fix**.
+  - SWR uses record-driven `innerHTML`: **security risk; must be fixed before exposed data can be
+    treated as untrusted**.
+  - PyQt6 distribution licensing remains unresolved: **requires user/business decision before an
+    expanded desktop release**.
+- **Commands/operations run:** `git rev-parse --show-toplevel`, `git branch --show-current`,
+  `git status --short`, targeted `rg`/`rg --files` inventory and symbol searches, focused
+  `Get-Content` reads, Product Design context preflight, local `uv` API/SWR runs, local `pnpm`
+  docs/proof Vite runs, live browser DOM/screenshot inspection, `view_image`, `git diff --check`,
+  and targeted process cleanup.
+- **Tests:** No application test suite was run because this was a planning-only task. Live current
+  routes were exercised for visual evidence. Final `git diff --check` passed; the 1,327-line plan,
+  continuity entry, six screenshots, stopped local listeners, and preserved baseline untracked
+  files were all verified during closeout. The FigJam node tree and a 4,096 px full-board render
+  were subsequently inspected to verify screenshot order, image placement, notes, section layout,
+  and the Figma handoff URL.
+- **Assumptions:** Local-first, single-owner bootstrap is the recommended first account mode;
+  PostgreSQL is reserved for deployed multi-user mode; system-browser launch is the recommended
+  initial desktop delivery path; Android remains read-only until separately threat-modeled.
+- **Risks:** Shared bearer token is not a human login; stale docs can cause false security claims;
+  UI permissions can be confused with canonical authority; duplicate native/web implementations
+  can drift; audit/security data requires strict redaction.
+- **Next recommended action:** Approve and execute Phase 0 (truth/contracts/decisions) and Phase 1
+  (operator-console foundation) from the plan.
+- **Safe to continue:** Yes. No application code was changed and unrelated user files were
+  preserved.
+
+---
+
 ## SESSION UPDATE 2026-07-13 — Windows installer product gap (WiX + Burn, bundled api)
 
 - **Status:** COMPLETE and CI-verified. Code, tests, and real WiX build/install/uninstall
