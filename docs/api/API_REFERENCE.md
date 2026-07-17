@@ -488,6 +488,57 @@ curl -s -X POST \
 rm /tmp/snapshot.json
 ```
 
+### `GET /api/v1/modules/atlas/sludge`
+
+Lists verified Sludge generation **metadata** from the append-only audit
+chain, newest first. Auth: evidence boundary — a signed-in session with
+`EVIDENCE_VIEW` **or** the machine bearer token (the same audience `GET /audit`
+serves). The chain is verified before any read; a tampered chain returns 503.
+
+Narrative bodies are never persisted: generation returns the fiction once and
+the durable record is metadata plus hashes only, so this surface cannot and
+does not claim narrative retrieval (`narrative_bodies_persisted` is always
+`false`).
+
+**Query:** `limit` (1–100, default 50), `offset` (≥ 0, default 0).
+
+**Response 200:**
+```json
+{
+  "chain_valid": true,
+  "authority": "analysis_only",
+  "narrative_bodies_persisted": false,
+  "total_count": 1,
+  "offset": 0,
+  "limit": 50,
+  "records": [
+    {
+      "event": "atlas.sludge_narrative",
+      "narrative_id": "SLUDGE-....",
+      "source_snapshot_sha256": "<sha256>",
+      "archetypes": ["hidden_elites"],
+      "stack": "SS",
+      "audit_hash": "<sha256 of the audit record>",
+      "timestamp": "<ISO-8601>"
+    }
+  ]
+}
+```
+
+### `GET /api/v1/modules/atlas/sludge/{narrative_id}`
+
+Single-record variant of the listing above; returns `{"record": {...}}` with
+the same shape, or 404 when no verified event matches the id.
+
+### Declared OpenAPI security schemes
+
+The frozen baseline (`docs/api/openapi-baseline.json`) declares two
+`components.securitySchemes` and marks every protected operation with them:
+`machineBearer` (the shared machine token above) and `sessionCookie` (the
+opaque human session cookie). Operations without a `security` entry are
+public read-only surfaces. Generated clients therefore see auth requirements
+directly from the contract.
+
 ---
 
 ## 3. Error response shapes
