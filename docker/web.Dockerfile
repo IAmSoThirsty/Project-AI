@@ -23,6 +23,11 @@ COPY tsconfig.web.json eslint.config.js ./
 COPY apps/web/shared ./apps/web/shared
 COPY apps/web/${APP} ./apps/web/${APP}
 COPY apps/web-static ./apps/web-static
+# docs-portal renders the frozen OpenAPI baseline and the ADR corpus at
+# build time (?raw imports resolved against the repo root); without these
+# the docs-portal image build fails while dev/CI builds still pass.
+COPY docs/api/openapi-baseline.json ./docs/api/openapi-baseline.json
+COPY docs/architecture/decisions ./docs/architecture/decisions
 
 RUN pnpm install --frozen-lockfile
 
