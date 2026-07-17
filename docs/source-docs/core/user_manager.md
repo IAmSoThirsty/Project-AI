@@ -1,5 +1,13 @@
 # User Manager - Authentication and Profile Management System
 
+> **Historical source reference — not implemented in the current repository
+> (2026-07-15; banner updated 2026-07-17).** The production status and runtime
+> claims below describe legacy source material, not the active Project-AI
+> application. The active implementation of human accounts and server-side
+> sessions lives in `packages/accounts` (composed through `packages/api`), per
+> Phase 2 of `docs/operations/HUMAN_INTERFACE_IMPLEMENTATION_PLAN.md` — this
+> legacy `UserManager` (JWT, `users.json`) was never ported.
+
 ---
 ## YAML Frontmatter (Metadata)
 

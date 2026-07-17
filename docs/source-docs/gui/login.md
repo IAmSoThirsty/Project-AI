@@ -24,6 +24,13 @@ audience: ["developers", "security-engineers", "gui-developers"]
 
 # LoginDialog - Book-Themed Authentication UI Component
 
+> **Historical source reference — not implemented in the current repository
+> (2026-07-15; banner updated 2026-07-17).** This document describes a legacy PyQt
+> login concept that was never ported. The current canonical interface is
+> `apps/web/operator-console`; current human authentication (accounts, opaque
+> server-side sessions, recovery, TOTP MFA) is implemented in `packages/accounts`
+> and composed through `packages/api` — not by this legacy dialog.
+
 **Module:** `src/app/gui/login.py`
 **Class:** `LoginDialog`
 **Lines of Code:** 220

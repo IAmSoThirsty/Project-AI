@@ -7,6 +7,51 @@
 
 ---
 
+## SESSION UPDATE 2026-07-17 — Stranded payload landed; repo consistency restored
+
+- **Status:** PHASE A COMPLETE (repo integrity); machine-interface lane continues this
+  session.
+- **Mode:** Repo patch series (multi-package) on `main` at
+  `T:\00-Active\Project-AI-Beginnings`.
+- **Critical repair:** commit `f0dbd452` had committed the API wiring (`app.py`,
+  `models.py`, root `pyproject.toml` workspace members) while leaving every
+  implementation untracked — a clean checkout of that HEAD could not import
+  `project_ai_api.app` and `uv sync --locked` failed. Commit `c8c1996a` lands the
+  complete payload (packages/accounts, packages/workflows, five API route modules,
+  three API test modules, OpenAPI baseline + export tool, migration/backup tooling,
+  ADR-001, fidelity ledgers, role matrix, threat model, uv.lock) as one unit.
+- **Correction to the 2026-07-16 entries below:** their "Remaining" lists name TAAR as
+  outstanding. TAAR inspection workflows were in fact already implemented
+  (`packages/api/src/project_ai_api/taar_workflows.py` + 4 no-bypass tests, all
+  passing) — the item was stale when written and is now landed in `c8c1996a`.
+- **Hygiene:** commit `725fc386` applies the manual pre-commit gate's mechanical
+  normalization to 17 tracked files earlier sessions committed without running the
+  gate, and repairs the mirrors-mypy hook env (adds pynacl/cryptography/psycopg deps;
+  covers packages/accounts + packages/workflows). Hook-vs-venv phantom `no-any-return`
+  errors were resolved with typed locals (not suppressions) in
+  `workflows.py`/`swr_workflows.py` `current()` and accounts
+  `_validated_password_hash`; real strict mypy remains clean.
+- **Commits this entry:** `725fc386` (style/hook repair), `c8c1996a` (payload),
+  `39574343` (triumvirate flat-eslint cleanup), plus the doc-sync commit carrying this
+  entry.
+- **Verified:** `uv sync --locked --all-extras --all-packages`; targeted pytest 55
+  passed + live-DSN PostgreSQL suite 5/5 against a disposable `postgres:16` container
+  (created, exercised, removed; port 55440 verified closed); ruff check/format clean on
+  payload; strict mypy clean (18 source files); OpenAPI baseline freeze test passed;
+  `pnpm web:lint` passed; triumvirate jest 32 passed; helm lint passed; pre-commit
+  hooks pass over all staged files.
+- **Known current issues (not dismissed):** 26 pre-existing Ruff violations in
+  `packages/dpr` (`uv run ruff check packages/dpr` to reproduce) — named follow-up
+  work, untouched by this lane.
+- **Unrelated files preserved:** `tmp-c.json`, `tmp-c.out`, `tmp-ollama-serve.log`,
+  `tmp-pbc-modelfile.bak`.
+- **Next in-session objectives:** OpenAPI securitySchemes; cross-engine dispatcher
+  canonical-gate repair; Atlas Sludge inspection API + CLI additions; MCP server
+  rewrite as a real workspace package; proof/docs portal revamp; ADR-002 (proposed).
+- **Safe to continue:** Yes.
+
+---
+
 ## SESSION UPDATE 2026-07-16 — Atlas Projections durable analysis workflow
 
 - **Status:** IMPLEMENTATION IN PROGRESS; ATLAS PROJECTIONS SCREEN, API, SQLITE, AND

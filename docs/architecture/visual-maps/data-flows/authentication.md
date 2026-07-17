@@ -4,7 +4,7 @@ id: visual-map-auth-flow
 type: visual-map
 version: "1.0.0"
 created_date: "2026-04-20"
-updated_date: "2026-04-20"
+updated_date: "2026-07-15"
 status: active
 author: "AGENT-047 (Visual Relationship Maps Specialist)"
 
@@ -33,6 +33,13 @@ audience:
   - security-engineers
 priority: P0
 difficulty: intermediate
+
+> **Current-runtime correction (2026-07-15).** Human accounts, opaque server-side
+> sessions, recovery codes, TOTP MFA, lockout, and role enforcement are implemented in
+> `packages/accounts` and composed through `packages/api`. The older JWT, `users.json`,
+> legacy `UserManager`, and desktop-flow material later in this document is retained as
+> historical reference and is not current runtime truth. The diagrams immediately below
+> are authoritative for the Control Center implementation.
 estimated_reading_time: "12 minutes"
 
 # Security & Compliance
@@ -50,6 +57,49 @@ accuracy_rating: high
 ---
 
 # Authentication Flow Visual Map
+
+## Current Control Center boundary
+
+The public instance label is presentation identity only. Authentication establishes a
+human identity and a server session. It does not place machine identity, a capability,
+or execution authority in the browser.
+
+```mermaid
+flowchart LR
+    browser["Human browser"]
+    instance["Local instance identity\nPresentation only"]
+    identity["Human identity"]
+    authentication["Password and optional TOTP"]
+    session["Opaque server session\nHttpOnly cookie plus CSRF"]
+    workspace["Human workspace"]
+
+    browser --> instance --> identity --> authentication --> session --> workspace
+```
+
+Consequential execution is a separate server-side path. A human session may submit or
+review a request, but the server must resolve its own service identity, governance
+policy, and a scoped one-use capability before the execution gate can allow the exact
+effect.
+
+```mermaid
+flowchart LR
+    workspace["Human workspace"]
+    request["Bounded request and human review"]
+    service["Server service identity"]
+    governance["Governance policy evaluation"]
+    capability["Scoped one-use capability"]
+    gate["Execution gate"]
+    receipt["Durable evidence receipt"]
+
+    workspace --> request --> service --> governance --> capability --> gate --> receipt
+```
+
+The browser stores no machine identity or execution capability. A human review is not a
+governance verdict, and successful login is not an execution grant.
+
+---
+
+## Historical material below
 
 **Version:** 1.0.0
 **Author:** AGENT-047 (Visual Relationship Maps Specialist)
