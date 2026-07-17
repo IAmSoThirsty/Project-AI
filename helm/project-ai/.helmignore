@@ -1,0 +1,2 @@
+# Documentation under templates is not a Kubernetes manifest.
+templates/*.md

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-accounts"
+version = "0.0.0.dev0"
+description = "Durable human accounts and server-side sessions for Project-AI"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = ["cryptography>=42.0", "project-ai-cerberus", "psycopg[binary]>=3.2.0"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/accounts"]

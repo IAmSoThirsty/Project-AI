@@ -1,0 +1,5781 @@
+{
+  "components": {
+    "schemas": {
+      "AccountCreateRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "actor_id": {
+            "anyOf": [
+              {
+                "maxLength": 256,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "display_name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "administrator",
+              "operator",
+              "reviewer",
+              "auditor",
+              "viewer"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "username": {
+            "maxLength": 64,
+            "minLength": 3,
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "display_name",
+          "password",
+          "role"
+        ],
+        "title": "AccountCreateRequest",
+        "type": "object"
+      },
+      "AccountCreateResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "account": {
+            "$ref": "#/components/schemas/ManagedAccount"
+          },
+          "recovery_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Recovery Codes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "account",
+          "recovery_codes"
+        ],
+        "title": "AccountCreateResponse",
+        "type": "object"
+      },
+      "AccountRoleRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "enum": [
+              "administrator",
+              "operator",
+              "reviewer",
+              "auditor",
+              "viewer"
+            ],
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role"
+        ],
+        "title": "AccountRoleRequest",
+        "type": "object"
+      },
+      "AccountStatusRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "title": "AccountStatusRequest",
+        "type": "object"
+      },
+      "AccountsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/ManagedAccount"
+            },
+            "title": "Accounts",
+            "type": "array"
+          }
+        },
+        "required": [
+          "accounts"
+        ],
+        "title": "AccountsResponse",
+        "type": "object"
+      },
+      "AtlasProjectionCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "claim_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+            "title": "Claim Id",
+            "type": "string"
+          },
+          "claim_type": {
+            "enum": [
+              "factual",
+              "predictive",
+              "agency",
+              "causal",
+              "correlational"
+            ],
+            "title": "Claim Type",
+            "type": "string"
+          },
+          "drivers": {
+            "items": {
+              "$ref": "#/components/schemas/AtlasProjectionDriverInput"
+            },
+            "maxItems": 12,
+            "minItems": 1,
+            "title": "Drivers",
+            "type": "array"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/AtlasProjectionEvidenceInput"
+            },
+            "maxItems": 12,
+            "title": "Evidence",
+            "type": "array"
+          },
+          "idempotency_key": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Idempotency Key",
+            "type": "string"
+          },
+          "stack": {
+            "maxLength": 64,
+            "minLength": 2,
+            "pattern": "^(RS|SS|TS-[A-Za-z0-9][A-Za-z0-9_.-]{0,60})$",
+            "title": "Stack",
+            "type": "string"
+          },
+          "statement": {
+            "maxLength": 4096,
+            "minLength": 1,
+            "title": "Statement",
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_id",
+          "statement",
+          "claim_type",
+          "stack",
+          "evidence",
+          "drivers",
+          "idempotency_key"
+        ],
+        "title": "AtlasProjectionCreate",
+        "type": "object"
+      },
+      "AtlasProjectionCreateResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "projection": {
+            "$ref": "#/components/schemas/AtlasProjectionResponse"
+          },
+          "reused_existing_receipt": {
+            "title": "Reused Existing Receipt",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "projection",
+          "reused_existing_receipt"
+        ],
+        "title": "AtlasProjectionCreateResponse",
+        "type": "object"
+      },
+      "AtlasProjectionDriverInput": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$",
+            "title": "Name",
+            "type": "string"
+          },
+          "value": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "value"
+        ],
+        "title": "AtlasProjectionDriverInput",
+        "type": "object"
+      },
+      "AtlasProjectionEvidenceInput": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "source": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "tier": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ],
+            "title": "Tier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "tier",
+          "confidence"
+        ],
+        "title": "AtlasProjectionEvidenceInput",
+        "type": "object"
+      },
+      "AtlasProjectionResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_hash": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Audit Hash",
+            "type": "string"
+          },
+          "authority": {
+            "const": "analysis_only",
+            "default": "analysis_only",
+            "title": "Authority",
+            "type": "string"
+          },
+          "claim_id": {
+            "title": "Claim Id",
+            "type": "string"
+          },
+          "claim_type": {
+            "enum": [
+              "factual",
+              "predictive",
+              "agency",
+              "causal",
+              "correlational"
+            ],
+            "title": "Claim Type",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "drivers": {
+            "items": {
+              "$ref": "#/components/schemas/AtlasProjectionDriverInput"
+            },
+            "title": "Drivers",
+            "type": "array"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/AtlasProjectionEvidenceInput"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "evidence_count": {
+            "minimum": 0.0,
+            "title": "Evidence Count",
+            "type": "integer"
+          },
+          "execution_started": {
+            "const": false,
+            "default": false,
+            "title": "Execution Started",
+            "type": "boolean"
+          },
+          "governance_verdict_created": {
+            "const": false,
+            "default": false,
+            "title": "Governance Verdict Created",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "initiated_by": {
+            "title": "Initiated By",
+            "type": "string"
+          },
+          "input_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Input Sha256",
+            "type": "string"
+          },
+          "output_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Output Sha256",
+            "type": "string"
+          },
+          "posterior": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Posterior",
+            "type": "number"
+          },
+          "projection_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Projection Sha256",
+            "type": "string"
+          },
+          "recommendation_created": {
+            "const": false,
+            "default": false,
+            "title": "Recommendation Created",
+            "type": "boolean"
+          },
+          "stack": {
+            "title": "Stack",
+            "type": "string"
+          },
+          "statement": {
+            "title": "Statement",
+            "type": "string"
+          },
+          "subordination_notice": {
+            "title": "Subordination Notice",
+            "type": "string"
+          },
+          "uncertainty": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Uncertainty",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "initiated_by",
+          "claim_id",
+          "statement",
+          "claim_type",
+          "stack",
+          "evidence",
+          "drivers",
+          "posterior",
+          "uncertainty",
+          "evidence_count",
+          "projection_sha256",
+          "input_sha256",
+          "output_sha256",
+          "audit_hash",
+          "created_at",
+          "subordination_notice"
+        ],
+        "title": "AtlasProjectionResponse",
+        "type": "object"
+      },
+      "AtlasProjectionsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "projections": {
+            "items": {
+              "$ref": "#/components/schemas/AtlasProjectionResponse"
+            },
+            "title": "Projections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "projections"
+        ],
+        "title": "AtlasProjectionsResponse",
+        "type": "object"
+      },
+      "AtlasReplayItemCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_events": {
+            "minimum": 0.0,
+            "title": "Audit Events",
+            "type": "integer"
+          },
+          "checkpoints": {
+            "minimum": 0.0,
+            "title": "Checkpoints",
+            "type": "integer"
+          },
+          "claims": {
+            "minimum": 0.0,
+            "title": "Claims",
+            "type": "integer"
+          },
+          "graph_snapshots": {
+            "minimum": 0.0,
+            "title": "Graph Snapshots",
+            "type": "integer"
+          },
+          "projections": {
+            "minimum": 0.0,
+            "title": "Projections",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "audit_events",
+          "checkpoints",
+          "claims",
+          "graph_snapshots",
+          "projections"
+        ],
+        "title": "AtlasReplayItemCounts",
+        "type": "object"
+      },
+      "AtlasReplayRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "bundle": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue-Input"
+            },
+            "minProperties": 1,
+            "title": "Bundle",
+            "type": "object"
+          }
+        },
+        "required": [
+          "bundle"
+        ],
+        "title": "AtlasReplayRequest",
+        "type": "object"
+      },
+      "AtlasReplayResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "audit_receipt_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Audit Receipt Sha256",
+            "type": "string"
+          },
+          "audited_at": {
+            "title": "Audited At",
+            "type": "string"
+          },
+          "authority": {
+            "const": "analysis_only",
+            "default": "analysis_only",
+            "title": "Authority",
+            "type": "string"
+          },
+          "bundle_hash": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Bundle Hash",
+            "type": "string"
+          },
+          "bundle_id": {
+            "title": "Bundle Id",
+            "type": "string"
+          },
+          "execution_started": {
+            "const": false,
+            "default": false,
+            "title": "Execution Started",
+            "type": "boolean"
+          },
+          "governance_verdict_created": {
+            "const": false,
+            "default": false,
+            "title": "Governance Verdict Created",
+            "type": "boolean"
+          },
+          "item_counts": {
+            "$ref": "#/components/schemas/AtlasReplayItemCounts"
+          },
+          "reconstructed_state_hash": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Reconstructed State Hash",
+            "type": "string"
+          },
+          "status": {
+            "const": "verified",
+            "default": "verified",
+            "title": "Status",
+            "type": "string"
+          },
+          "subordination_notice": {
+            "title": "Subordination Notice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bundle_id",
+          "bundle_hash",
+          "reconstructed_state_hash",
+          "item_counts",
+          "audit_receipt_sha256",
+          "audited_at",
+          "subordination_notice"
+        ],
+        "title": "AtlasReplayResponse",
+        "type": "object"
+      },
+      "AtlasSludgeNarrative": {
+        "additionalProperties": false,
+        "properties": {
+          "archetypes": {
+            "items": {
+              "enum": [
+                "hidden_elites",
+                "suppressed_tech",
+                "false_flags",
+                "prophetic_inevitability"
+              ],
+              "type": "string"
+            },
+            "title": "Archetypes",
+            "type": "array"
+          },
+          "branches": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Branches",
+            "type": "array"
+          },
+          "contains_numeric_probabilities": {
+            "const": false,
+            "default": false,
+            "title": "Contains Numeric Probabilities",
+            "type": "boolean"
+          },
+          "fiction_banner": {
+            "title": "Fiction Banner",
+            "type": "string"
+          },
+          "is_sludge": {
+            "const": true,
+            "default": true,
+            "title": "Is Sludge",
+            "type": "boolean"
+          },
+          "narrative_id": {
+            "title": "Narrative Id",
+            "type": "string"
+          },
+          "source_snapshot_sha256": {
+            "title": "Source Snapshot Sha256",
+            "type": "string"
+          },
+          "stack": {
+            "const": "SS",
+            "default": "SS",
+            "title": "Stack",
+            "type": "string"
+          },
+          "subordination_notice": {
+            "title": "Subordination Notice",
+            "type": "string"
+          },
+          "watermark": {
+            "title": "Watermark",
+            "type": "string"
+          }
+        },
+        "required": [
+          "archetypes",
+          "branches",
+          "fiction_banner",
+          "narrative_id",
+          "source_snapshot_sha256",
+          "subordination_notice",
+          "watermark"
+        ],
+        "title": "AtlasSludgeNarrative",
+        "type": "object"
+      },
+      "AtlasSludgeRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "archetypes": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "hidden_elites",
+                    "suppressed_tech",
+                    "false_flags",
+                    "prophetic_inevitability"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Archetypes"
+          },
+          "rs_snapshot": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue-Input"
+            },
+            "minProperties": 1,
+            "title": "Rs Snapshot",
+            "type": "object"
+          }
+        },
+        "required": [
+          "rs_snapshot"
+        ],
+        "title": "AtlasSludgeRequest",
+        "type": "object"
+      },
+      "AtlasSludgeResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "accepted": {
+            "const": true,
+            "default": true,
+            "title": "Accepted",
+            "type": "boolean"
+          },
+          "event": {
+            "const": "atlas.sludge_narrative",
+            "default": "atlas.sludge_narrative",
+            "title": "Event",
+            "type": "string"
+          },
+          "hash": {
+            "title": "Hash",
+            "type": "string"
+          },
+          "narrative": {
+            "$ref": "#/components/schemas/AtlasSludgeNarrative"
+          }
+        },
+        "required": [
+          "hash",
+          "narrative"
+        ],
+        "title": "AtlasSludgeResponse",
+        "type": "object"
+      },
+      "AtlasStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {
+            "const": "analysis_only",
+            "default": "analysis_only",
+            "title": "Authority",
+            "type": "string"
+          },
+          "protected_operations": {
+            "default": [
+              "sludge_narrative"
+            ],
+            "items": {
+              "const": "sludge_narrative",
+              "type": "string"
+            },
+            "title": "Protected Operations",
+            "type": "array"
+          },
+          "stack": {
+            "const": "Atlas",
+            "default": "Atlas",
+            "title": "Stack",
+            "type": "string"
+          },
+          "status": {
+            "const": "available",
+            "default": "available",
+            "title": "Status",
+            "type": "string"
+          },
+          "subordination_notice": {
+            "title": "Subordination Notice",
+            "type": "string"
+          },
+          "version": {
+            "const": "0.0.0.dev0",
+            "default": "0.0.0.dev0",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subordination_notice"
+        ],
+        "title": "AtlasStatus",
+        "type": "object"
+      },
+      "AuditResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "chain_valid": {
+            "const": true,
+            "default": true,
+            "title": "Chain Valid",
+            "type": "boolean"
+          },
+          "count": {
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "filtered_count": {
+            "minimum": 0.0,
+            "title": "Filtered Count",
+            "type": "integer"
+          },
+          "limit": {
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "minimum": 0.0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "records": {
+            "items": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/JsonScalar"
+              },
+              "type": "object"
+            },
+            "title": "Records",
+            "type": "array"
+          }
+        },
+        "required": [
+          "count",
+          "filtered_count",
+          "offset",
+          "limit",
+          "records"
+        ],
+        "title": "AuditResponse",
+        "type": "object"
+      },
+      "AuditWriteResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "accepted": {
+            "const": true,
+            "default": true,
+            "title": "Accepted",
+            "type": "boolean"
+          },
+          "event": {
+            "title": "Event",
+            "type": "string"
+          },
+          "hash": {
+            "title": "Hash",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event",
+          "hash"
+        ],
+        "title": "AuditWriteResponse",
+        "type": "object"
+      },
+      "AuthAccount": {
+        "additionalProperties": false,
+        "properties": {
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "mfa_enabled": {
+            "title": "Mfa Enabled",
+            "type": "boolean"
+          },
+          "must_change_password": {
+            "title": "Must Change Password",
+            "type": "boolean"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "administrator",
+              "operator",
+              "reviewer",
+              "auditor",
+              "viewer"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "disabled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "display_name",
+          "role",
+          "actor_id",
+          "mfa_enabled",
+          "status",
+          "must_change_password"
+        ],
+        "title": "AuthAccount",
+        "type": "object"
+      },
+      "BootstrapRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "actor_id": {
+            "anyOf": [
+              {
+                "maxLength": 256,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "display_name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          },
+          "setup_secret": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Setup Secret",
+            "type": "string"
+          },
+          "username": {
+            "maxLength": 64,
+            "minLength": 3,
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "setup_secret",
+          "username",
+          "display_name",
+          "password"
+        ],
+        "title": "BootstrapRequest",
+        "type": "object"
+      },
+      "BootstrapResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "absolute_expires_at": {
+            "title": "Absolute Expires At",
+            "type": "string"
+          },
+          "account": {
+            "$ref": "#/components/schemas/AuthAccount"
+          },
+          "csrf_token": {
+            "title": "Csrf Token",
+            "type": "string"
+          },
+          "idle_expires_at": {
+            "title": "Idle Expires At",
+            "type": "string"
+          },
+          "mfa_verified_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mfa Verified At"
+          },
+          "recovery_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Recovery Codes",
+            "type": "array"
+          },
+          "session_id": {
+            "title": "Session Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "account",
+          "session_id",
+          "csrf_token",
+          "idle_expires_at",
+          "absolute_expires_at",
+          "mfa_verified_at",
+          "recovery_codes"
+        ],
+        "title": "BootstrapResponse",
+        "type": "object"
+      },
+      "BootstrapStatusResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "setup_secret_required": {
+            "title": "Setup Secret Required",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "required",
+              "closed",
+              "unconfigured"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "setup_secret_required"
+        ],
+        "title": "BootstrapStatusResponse",
+        "type": "object"
+      },
+      "CanaryRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "canary_value": {
+            "maxLength": 4096,
+            "minLength": 1,
+            "title": "Canary Value",
+            "type": "string"
+          },
+          "context": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Context",
+            "type": "string"
+          }
+        },
+        "required": [
+          "canary_value",
+          "context"
+        ],
+        "title": "CanaryRequest",
+        "type": "object"
+      },
+      "DashboardResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authority_boundary": {
+            "title": "Authority Boundary",
+            "type": "string"
+          },
+          "doi_records": {
+            "minimum": 0.0,
+            "title": "Doi Records",
+            "type": "integer"
+          },
+          "maturity": {
+            "const": "development",
+            "default": "development",
+            "title": "Maturity",
+            "type": "string"
+          },
+          "status": {
+            "const": "ready",
+            "default": "ready",
+            "title": "Status",
+            "type": "string"
+          },
+          "surfaces": {
+            "items": {
+              "$ref": "#/components/schemas/DashboardSurface"
+            },
+            "title": "Surfaces",
+            "type": "array"
+          },
+          "version": {
+            "const": "0.0.0.dev0",
+            "default": "0.0.0.dev0",
+            "title": "Version",
+            "type": "string"
+          },
+          "work_items": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/DashboardWorkItem"
+            },
+            "title": "Work Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "authority_boundary",
+          "surfaces",
+          "doi_records"
+        ],
+        "title": "DashboardResponse",
+        "type": "object"
+      },
+      "DashboardSurface": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "id": {
+            "enum": [
+              "gateway",
+              "replay",
+              "audit_chain",
+              "evidence"
+            ],
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "healthy",
+              "not_run",
+              "degraded",
+              "unavailable"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status",
+          "metric",
+          "detail"
+        ],
+        "title": "DashboardSurface",
+        "type": "object"
+      },
+      "DashboardWorkItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "owner": {
+            "title": "Owner",
+            "type": "string"
+          },
+          "priority": {
+            "enum": [
+              "P1",
+              "P2",
+              "P3"
+            ],
+            "title": "Priority",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "ALLOW",
+              "DENY",
+              "ESCALATE",
+              "AWAITING_DECISION"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "priority",
+          "title",
+          "owner",
+          "state",
+          "updated_at"
+        ],
+        "title": "DashboardWorkItem",
+        "type": "object"
+      },
+      "DoiRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "doi": {
+            "title": "Doi",
+            "type": "string"
+          },
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "doi",
+          "domain",
+          "url"
+        ],
+        "title": "DoiRecord",
+        "type": "object"
+      },
+      "DoiResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "dois": {
+            "items": {
+              "$ref": "#/components/schemas/DoiRecord"
+            },
+            "title": "Dois",
+            "type": "array"
+          }
+        },
+        "required": [
+          "dois"
+        ],
+        "title": "DoiResponse",
+        "type": "object"
+      },
+      "ExecutionReceiptResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "attempt_id": {
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "audit_hash": {
+            "title": "Audit Hash",
+            "type": "string"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "event_hash": {
+            "title": "Event Hash",
+            "type": "string"
+          },
+          "governance_evidence_sha256": {
+            "title": "Governance Evidence Sha256",
+            "type": "string"
+          },
+          "initiated_by": {
+            "title": "Initiated By",
+            "type": "string"
+          },
+          "module_id": {
+            "title": "Module Id",
+            "type": "string"
+          },
+          "outcome": {
+            "title": "Outcome",
+            "type": "string"
+          },
+          "output": {
+            "$ref": "#/components/schemas/JsonValue-Output"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "running",
+              "executed",
+              "blocked",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "attempt_id",
+          "module_id",
+          "initiated_by",
+          "status",
+          "action_id",
+          "outcome",
+          "reason",
+          "output",
+          "governance_evidence_sha256",
+          "event_hash",
+          "audit_hash",
+          "created_at",
+          "completed_at"
+        ],
+        "title": "ExecutionReceiptResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "const": "live",
+            "default": "live",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "const": "0.0.0.dev0",
+            "default": "0.0.0.dev0",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "InstanceIdentityResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "browser_execution_capability": {
+            "const": false,
+            "default": false,
+            "title": "Browser Execution Capability",
+            "type": "boolean"
+          },
+          "browser_machine_identity": {
+            "const": false,
+            "default": false,
+            "title": "Browser Machine Identity",
+            "type": "boolean"
+          },
+          "cloud_login": {
+            "const": false,
+            "default": false,
+            "title": "Cloud Login",
+            "type": "boolean"
+          },
+          "deployment": {
+            "const": "local_sovereign",
+            "default": "local_sovereign",
+            "title": "Deployment",
+            "type": "string"
+          },
+          "display_name": {
+            "maxLength": 96,
+            "minLength": 1,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "governed_execution_path": {
+            "default": [
+              "server_service_identity",
+              "governance_policy",
+              "scoped_capability",
+              "execution_gate"
+            ],
+            "items": {
+              "enum": [
+                "server_service_identity",
+                "governance_policy",
+                "scoped_capability",
+                "execution_gate"
+              ],
+              "type": "string"
+            },
+            "title": "Governed Execution Path",
+            "type": "array"
+          },
+          "human_access_path": {
+            "default": [
+              "identity",
+              "authentication",
+              "server_session",
+              "workspace"
+            ],
+            "items": {
+              "enum": [
+                "identity",
+                "authentication",
+                "server_session",
+                "workspace"
+              ],
+              "type": "string"
+            },
+            "title": "Human Access Path",
+            "type": "array"
+          }
+        },
+        "required": [
+          "display_name"
+        ],
+        "title": "InstanceIdentityResponse",
+        "type": "object"
+      },
+      "JsonScalar": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "JsonValue-Input": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/JsonScalar"
+          },
+          {
+            "items": {
+              "$ref": "#/components/schemas/JsonValue-Input"
+            },
+            "type": "array"
+          },
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue-Input"
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "JsonValue-Output": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/JsonScalar"
+          },
+          {
+            "items": {
+              "$ref": "#/components/schemas/JsonValue-Output"
+            },
+            "type": "array"
+          },
+          {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue-Output"
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "LoginRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          },
+          "totp_code": {
+            "anyOf": [
+              {
+                "maxLength": 6,
+                "minLength": 6,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Totp Code"
+          },
+          "username": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginRequest",
+        "type": "object"
+      },
+      "ManagedAccount": {
+        "additionalProperties": false,
+        "properties": {
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "display_name": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "mfa_enabled": {
+            "title": "Mfa Enabled",
+            "type": "boolean"
+          },
+          "must_change_password": {
+            "title": "Must Change Password",
+            "type": "boolean"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "administrator",
+              "operator",
+              "reviewer",
+              "auditor",
+              "viewer"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "disabled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "display_name",
+          "role",
+          "actor_id",
+          "mfa_enabled",
+          "status",
+          "must_change_password",
+          "created_at"
+        ],
+        "title": "ManagedAccount",
+        "type": "object"
+      },
+      "MessageResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "title": "MessageResponse",
+        "type": "object"
+      },
+      "MfaCodeRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "maxLength": 6,
+            "minLength": 6,
+            "title": "Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "title": "MfaCodeRequest",
+        "type": "object"
+      },
+      "MfaDisableRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "maxLength": 6,
+            "minLength": 6,
+            "title": "Code",
+            "type": "string"
+          },
+          "current_password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "Current Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "current_password"
+        ],
+        "title": "MfaDisableRequest",
+        "type": "object"
+      },
+      "MfaEnrollmentRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "current_password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "Current Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "current_password"
+        ],
+        "title": "MfaEnrollmentRequest",
+        "type": "object"
+      },
+      "MfaEnrollmentResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "provisioning_uri": {
+            "title": "Provisioning Uri",
+            "type": "string"
+          },
+          "secret": {
+            "title": "Secret",
+            "type": "string"
+          }
+        },
+        "required": [
+          "secret",
+          "provisioning_uri"
+        ],
+        "title": "MfaEnrollmentResponse",
+        "type": "object"
+      },
+      "MfaStatusResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "enrollment_pending": {
+            "title": "Enrollment Pending",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled",
+          "enrollment_pending"
+        ],
+        "title": "MfaStatusResponse",
+        "type": "object"
+      },
+      "ModuleSurface": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {
+            "title": "Authority",
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "authority",
+              "security",
+              "analysis",
+              "simulation",
+              "operations"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "interface_status": {
+            "enum": [
+              "available",
+              "read_only",
+              "backend_only",
+              "unavailable"
+            ],
+            "title": "Interface Status",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "maturity": {
+            "enum": [
+              "implemented",
+              "experimental",
+              "pre_alpha",
+              "deferred"
+            ],
+            "title": "Maturity",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "category",
+          "maturity",
+          "interface_status",
+          "authority",
+          "summary"
+        ],
+        "title": "ModuleSurface",
+        "type": "object"
+      },
+      "ModulesResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "modules": {
+            "items": {
+              "$ref": "#/components/schemas/ModuleSurface"
+            },
+            "title": "Modules",
+            "type": "array"
+          }
+        },
+        "required": [
+          "modules"
+        ],
+        "title": "ModulesResponse",
+        "type": "object"
+      },
+      "PasswordChangeRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "current_password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "Current Password",
+            "type": "string"
+          },
+          "new_password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "New Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "current_password",
+          "new_password"
+        ],
+        "title": "PasswordChangeRequest",
+        "type": "object"
+      },
+      "RecoveryCompleteRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "new_password": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "title": "New Password",
+            "type": "string"
+          },
+          "recovery_code": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Recovery Code",
+            "type": "string"
+          },
+          "username": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "recovery_code",
+          "new_password"
+        ],
+        "title": "RecoveryCompleteRequest",
+        "type": "object"
+      },
+      "RecoveryStartRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "title": "RecoveryStartRequest",
+        "type": "object"
+      },
+      "ReplayStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "invariants_passed": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Invariants Passed",
+            "type": "integer"
+          },
+          "invariants_total": {
+            "default": 5,
+            "minimum": 1.0,
+            "title": "Invariants Total",
+            "type": "integer"
+          },
+          "status": {
+            "default": "not_run",
+            "enum": [
+              "not_run",
+              "pass",
+              "fail"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "default": "",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "title": "ReplayStatus",
+        "type": "object"
+      },
+      "SecurityEventResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Account Id"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "event_type": {
+            "title": "Event Type",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "occurred_at": {
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "event_type",
+          "account_id",
+          "occurred_at",
+          "source",
+          "detail"
+        ],
+        "title": "SecurityEventResponse",
+        "type": "object"
+      },
+      "SecurityEventsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/SecurityEventResponse"
+            },
+            "title": "Events",
+            "type": "array"
+          }
+        },
+        "required": [
+          "events"
+        ],
+        "title": "SecurityEventsResponse",
+        "type": "object"
+      },
+      "SessionInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "absolute_expires_at": {
+            "title": "Absolute Expires At",
+            "type": "string"
+          },
+          "client_host": {
+            "title": "Client Host",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "current": {
+            "title": "Current",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "idle_expires_at": {
+            "title": "Idle Expires At",
+            "type": "string"
+          },
+          "last_seen_at": {
+            "title": "Last Seen At",
+            "type": "string"
+          },
+          "mfa_verified_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mfa Verified At"
+          },
+          "revoked": {
+            "title": "Revoked",
+            "type": "boolean"
+          },
+          "user_agent": {
+            "title": "User Agent",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "current",
+          "created_at",
+          "last_seen_at",
+          "idle_expires_at",
+          "absolute_expires_at",
+          "user_agent",
+          "client_host",
+          "revoked",
+          "mfa_verified_at"
+        ],
+        "title": "SessionInfo",
+        "type": "object"
+      },
+      "SessionResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "absolute_expires_at": {
+            "title": "Absolute Expires At",
+            "type": "string"
+          },
+          "account": {
+            "$ref": "#/components/schemas/AuthAccount"
+          },
+          "csrf_token": {
+            "title": "Csrf Token",
+            "type": "string"
+          },
+          "idle_expires_at": {
+            "title": "Idle Expires At",
+            "type": "string"
+          },
+          "mfa_verified_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mfa Verified At"
+          },
+          "session_id": {
+            "title": "Session Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "account",
+          "session_id",
+          "csrf_token",
+          "idle_expires_at",
+          "absolute_expires_at",
+          "mfa_verified_at"
+        ],
+        "title": "SessionResponse",
+        "type": "object"
+      },
+      "SessionsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "sessions": {
+            "items": {
+              "$ref": "#/components/schemas/SessionInfo"
+            },
+            "title": "Sessions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sessions"
+        ],
+        "title": "SessionsResponse",
+        "type": "object"
+      },
+      "SwrExecutionRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Decision",
+            "type": "string"
+          },
+          "scenario_id": {
+            "maxLength": 32,
+            "minLength": 32,
+            "title": "Scenario Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "decision"
+        ],
+        "title": "SwrExecutionRequest",
+        "type": "object"
+      },
+      "SwrExecutionResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "receipt": {
+            "$ref": "#/components/schemas/ExecutionReceiptResponse"
+          },
+          "reused_existing_receipt": {
+            "title": "Reused Existing Receipt",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "receipt",
+          "reused_existing_receipt"
+        ],
+        "title": "SwrExecutionResponse",
+        "type": "object"
+      },
+      "SwrScenarioResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "difficulty": {
+            "title": "Difficulty",
+            "type": "integer"
+          },
+          "expected_decision": {
+            "title": "Expected Decision",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "round_number": {
+            "title": "Round Number",
+            "type": "integer"
+          },
+          "scenario_id": {
+            "title": "Scenario Id",
+            "type": "string"
+          },
+          "scenario_type": {
+            "title": "Scenario Type",
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "scenario_id",
+          "name",
+          "description",
+          "scenario_type",
+          "difficulty",
+          "round_number",
+          "expected_decision",
+          "tags"
+        ],
+        "title": "SwrScenarioResponse",
+        "type": "object"
+      },
+      "SwrScenariosResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authority_boundary": {
+            "title": "Authority Boundary",
+            "type": "string"
+          },
+          "execution_gate_configured": {
+            "title": "Execution Gate Configured",
+            "type": "boolean"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/SwrScenarioResponse"
+            },
+            "title": "Scenarios",
+            "type": "array"
+          }
+        },
+        "required": [
+          "scenarios",
+          "execution_gate_configured",
+          "authority_boundary"
+        ],
+        "title": "SwrScenariosResponse",
+        "type": "object"
+      },
+      "TaarCommandResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "command": {
+            "title": "Command",
+            "type": "string"
+          },
+          "duration_ms": {
+            "minimum": 0.0,
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "exit_code": {
+            "title": "Exit Code",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "command",
+          "exit_code",
+          "duration_ms"
+        ],
+        "title": "TaarCommandResponse",
+        "type": "object"
+      },
+      "TaarEvidenceResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "agent_id": {
+            "title": "Agent Id",
+            "type": "string"
+          },
+          "audit_record_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audit Record Hash"
+          },
+          "audit_record_hash_valid": {
+            "title": "Audit Record Hash Valid",
+            "type": "boolean"
+          },
+          "branch": {
+            "title": "Branch",
+            "type": "string"
+          },
+          "classification": {
+            "enum": [
+              "OPEN",
+              "CONTROLLED",
+              "RESTRICTED",
+              "SECRET",
+              "PHANTOM",
+              "BLACK"
+            ],
+            "title": "Classification",
+            "type": "string"
+          },
+          "command_count": {
+            "minimum": 0.0,
+            "title": "Command Count",
+            "type": "integer"
+          },
+          "commands": {
+            "items": {
+              "$ref": "#/components/schemas/TaarCommandResponse"
+            },
+            "title": "Commands",
+            "type": "array"
+          },
+          "commit": {
+            "title": "Commit",
+            "type": "string"
+          },
+          "details_redacted": {
+            "title": "Details Redacted",
+            "type": "boolean"
+          },
+          "dirty_state_before": {
+            "title": "Dirty State Before",
+            "type": "string"
+          },
+          "duration_ms": {
+            "minimum": 0.0,
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "end_time": {
+            "title": "End Time",
+            "type": "string"
+          },
+          "evidence_hash": {
+            "maxLength": 128,
+            "title": "Evidence Hash",
+            "type": "string"
+          },
+          "evidence_hash_valid": {
+            "title": "Evidence Hash Valid",
+            "type": "boolean"
+          },
+          "finding_count": {
+            "minimum": 0.0,
+            "title": "Finding Count",
+            "type": "integer"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/TaarFindingResponse"
+            },
+            "title": "Findings",
+            "type": "array"
+          },
+          "governance_verdict_created": {
+            "const": false,
+            "default": false,
+            "title": "Governance Verdict Created",
+            "type": "boolean"
+          },
+          "human_action_required": {
+            "title": "Human Action Required",
+            "type": "boolean"
+          },
+          "project_ai_execution_started": {
+            "const": false,
+            "default": false,
+            "title": "Project Ai Execution Started",
+            "type": "boolean"
+          },
+          "report_only": {
+            "const": true,
+            "default": true,
+            "title": "Report Only",
+            "type": "boolean"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "source_mutation_capability": {
+            "const": false,
+            "default": false,
+            "title": "Source Mutation Capability",
+            "type": "boolean"
+          },
+          "start_time": {
+            "title": "Start Time",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "admitted",
+              "denied",
+              "running",
+              "succeeded",
+              "failed",
+              "killed",
+              "quarantined"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "task_id": {
+            "title": "Task Id",
+            "type": "string"
+          },
+          "uncertainty": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Uncertainty",
+            "type": "array"
+          }
+        },
+        "required": [
+          "run_id",
+          "agent_id",
+          "task_id",
+          "classification",
+          "status",
+          "branch",
+          "commit",
+          "dirty_state_before",
+          "start_time",
+          "end_time",
+          "duration_ms",
+          "command_count",
+          "finding_count",
+          "evidence_hash",
+          "evidence_hash_valid",
+          "audit_record_hash",
+          "audit_record_hash_valid",
+          "details_redacted",
+          "findings",
+          "commands",
+          "uncertainty",
+          "human_action_required"
+        ],
+        "title": "TaarEvidenceResponse",
+        "type": "object"
+      },
+      "TaarFindingResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "finding_id": {
+            "title": "Finding Id",
+            "type": "string"
+          },
+          "line": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Line"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "finding_id",
+          "severity",
+          "path",
+          "line",
+          "message"
+        ],
+        "title": "TaarFindingResponse",
+        "type": "object"
+      },
+      "TaarReaderSurface": {
+        "additionalProperties": false,
+        "properties": {
+          "classification_default": {
+            "enum": [
+              "OPEN",
+              "CONTROLLED",
+              "RESTRICTED",
+              "SECRET",
+              "PHANTOM",
+              "BLACK"
+            ],
+            "title": "Classification Default",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "evidence_scope": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Scope",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "task_id": {
+            "title": "Task Id",
+            "type": "string"
+          },
+          "timeout_seconds": {
+            "minimum": 1.0,
+            "title": "Timeout Seconds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "task_id",
+          "description",
+          "classification_default",
+          "timeout_seconds",
+          "evidence_scope"
+        ],
+        "title": "TaarReaderSurface",
+        "type": "object"
+      },
+      "TaarRunCreateResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "reused_existing_receipt": {
+            "title": "Reused Existing Receipt",
+            "type": "boolean"
+          },
+          "run": {
+            "$ref": "#/components/schemas/TaarEvidenceResponse"
+          }
+        },
+        "required": [
+          "run",
+          "reused_existing_receipt"
+        ],
+        "title": "TaarRunCreateResponse",
+        "type": "object"
+      },
+      "TaarRunRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "agent_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$",
+            "title": "Agent Id",
+            "type": "string"
+          },
+          "idempotency_key": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Idempotency Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "agent_id",
+          "idempotency_key"
+        ],
+        "title": "TaarRunRequest",
+        "type": "object"
+      },
+      "TaarRunsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "redaction_boundary": {
+            "title": "Redaction Boundary",
+            "type": "string"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/TaarEvidenceResponse"
+            },
+            "title": "Runs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "runs",
+          "redaction_boundary"
+        ],
+        "title": "TaarRunsResponse",
+        "type": "object"
+      },
+      "TaarStatusResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "browser_selects_target": {
+            "const": false,
+            "default": false,
+            "title": "Browser Selects Target",
+            "type": "boolean"
+          },
+          "browser_submits_commands": {
+            "const": false,
+            "default": false,
+            "title": "Browser Submits Commands",
+            "type": "boolean"
+          },
+          "facility_mode": {
+            "enum": [
+              "GREEN",
+              "YELLOW",
+              "ORANGE",
+              "RED",
+              "BLACKSITE"
+            ],
+            "title": "Facility Mode",
+            "type": "string"
+          },
+          "readers": {
+            "items": {
+              "$ref": "#/components/schemas/TaarReaderSurface"
+            },
+            "title": "Readers",
+            "type": "array"
+          },
+          "registry_valid": {
+            "title": "Registry Valid",
+            "type": "boolean"
+          },
+          "registry_validation_errors": {
+            "minimum": 0.0,
+            "title": "Registry Validation Errors",
+            "type": "integer"
+          },
+          "report_only": {
+            "const": true,
+            "default": true,
+            "title": "Report Only",
+            "type": "boolean"
+          },
+          "source_mutation_capability": {
+            "const": false,
+            "default": false,
+            "title": "Source Mutation Capability",
+            "type": "boolean"
+          },
+          "status": {
+            "const": "available",
+            "default": "available",
+            "title": "Status",
+            "type": "string"
+          },
+          "target_path": {
+            "title": "Target Path",
+            "type": "string"
+          },
+          "target_repository": {
+            "title": "Target Repository",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_repository",
+          "target_path",
+          "facility_mode",
+          "registry_valid",
+          "registry_validation_errors",
+          "readers"
+        ],
+        "title": "TaarStatusResponse",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VerdictRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Action Id",
+            "type": "string"
+          },
+          "source": {
+            "default": "chimera",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "ALLOW",
+              "DENY",
+              "ESCALATE"
+            ],
+            "title": "Verdict",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action_id",
+          "verdict"
+        ],
+        "title": "VerdictRequest",
+        "type": "object"
+      },
+      "WorkInputFieldResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "max_length": {
+            "title": "Max Length",
+            "type": "integer"
+          },
+          "min_length": {
+            "title": "Min Length",
+            "type": "integer"
+          },
+          "pattern": {
+            "title": "Pattern",
+            "type": "string"
+          },
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          },
+          "resource_prefix": {
+            "title": "Resource Prefix",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "description",
+          "placeholder",
+          "resource_prefix",
+          "min_length",
+          "max_length",
+          "pattern"
+        ],
+        "title": "WorkInputFieldResponse",
+        "type": "object"
+      },
+      "WorkOperationResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "consequence": {
+            "title": "Consequence",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/WorkInputFieldResponse"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "resource_hint": {
+            "title": "Resource Hint",
+            "type": "string"
+          },
+          "schema_version": {
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "description",
+          "resource_hint",
+          "schema_version",
+          "fields",
+          "consequence"
+        ],
+        "title": "WorkOperationResponse",
+        "type": "object"
+      },
+      "WorkOperationsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "execution_started": {
+            "const": false,
+            "default": false,
+            "title": "Execution Started",
+            "type": "boolean"
+          },
+          "operations": {
+            "items": {
+              "$ref": "#/components/schemas/WorkOperationResponse"
+            },
+            "title": "Operations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "operations"
+        ],
+        "title": "WorkOperationsResponse",
+        "type": "object"
+      },
+      "WorkRequestCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "idempotency_key": {
+            "maxLength": 256,
+            "minLength": 8,
+            "title": "Idempotency Key",
+            "type": "string"
+          },
+          "inputs": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Inputs",
+            "type": "object"
+          },
+          "operation": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Operation",
+            "type": "string"
+          },
+          "rationale": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Rationale",
+            "type": "string"
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "maxLength": 512,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource"
+          },
+          "title": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "operation",
+          "rationale",
+          "idempotency_key"
+        ],
+        "title": "WorkRequestCreate",
+        "type": "object"
+      },
+      "WorkRequestDetailResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "execution_receipt": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExecutionReceiptResponse"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "execution_status": {
+            "default": "not_started",
+            "enum": [
+              "not_started",
+              "running",
+              "executed",
+              "blocked",
+              "failed"
+            ],
+            "title": "Execution Status",
+            "type": "string"
+          },
+          "request": {
+            "$ref": "#/components/schemas/WorkRequestResponse"
+          },
+          "reviews": {
+            "items": {
+              "$ref": "#/components/schemas/WorkReviewResponse"
+            },
+            "title": "Reviews",
+            "type": "array"
+          }
+        },
+        "required": [
+          "request",
+          "reviews"
+        ],
+        "title": "WorkRequestDetailResponse",
+        "type": "object"
+      },
+      "WorkRequestResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "input_schema_version": {
+            "title": "Input Schema Version",
+            "type": "string"
+          },
+          "input_sha256": {
+            "title": "Input Sha256",
+            "type": "string"
+          },
+          "inputs": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Inputs",
+            "type": "object"
+          },
+          "operation": {
+            "title": "Operation",
+            "type": "string"
+          },
+          "rationale": {
+            "title": "Rationale",
+            "type": "string"
+          },
+          "resource": {
+            "title": "Resource",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "submitted",
+              "reviewed_approve",
+              "reviewed_reject",
+              "needs_information",
+              "cancelled",
+              "execution_pending",
+              "executed",
+              "execution_blocked",
+              "execution_failed"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "created_by",
+          "title",
+          "operation",
+          "resource",
+          "input_schema_version",
+          "inputs",
+          "input_sha256",
+          "rationale",
+          "state",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "WorkRequestResponse",
+        "type": "object"
+      },
+      "WorkRequestsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "requests": {
+            "items": {
+              "$ref": "#/components/schemas/WorkRequestResponse"
+            },
+            "title": "Requests",
+            "type": "array"
+          },
+          "review_is_not_governance": {
+            "const": true,
+            "default": true,
+            "title": "Review Is Not Governance",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "requests"
+        ],
+        "title": "WorkRequestsResponse",
+        "type": "object"
+      },
+      "WorkReviewCreate": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "enum": [
+              "approve_for_governance",
+              "reject",
+              "return_for_information",
+              "abstain"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "rationale": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Rationale",
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision",
+          "rationale"
+        ],
+        "title": "WorkReviewCreate",
+        "type": "object"
+      },
+      "WorkReviewResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "decision": {
+            "title": "Decision",
+            "type": "string"
+          },
+          "execution_started": {
+            "const": false,
+            "default": false,
+            "title": "Execution Started",
+            "type": "boolean"
+          },
+          "governance_verdict_created": {
+            "const": false,
+            "default": false,
+            "title": "Governance Verdict Created",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "rationale": {
+            "title": "Rationale",
+            "type": "string"
+          },
+          "receipt_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Receipt Sha256",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "reviewer_account_id": {
+            "title": "Reviewer Account Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "request_id",
+          "reviewer_account_id",
+          "decision",
+          "rationale",
+          "created_at",
+          "receipt_sha256"
+        ],
+        "title": "WorkReviewResponse",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Project-AI Development Gateway",
+    "version": "0.0.0.dev0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/admin/accounts": {
+      "get": {
+        "operationId": "admin_accounts_api_v1_admin_accounts_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Accounts"
+      },
+      "post": {
+        "operationId": "admin_create_account_api_v1_admin_accounts_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountCreateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Create Account"
+      }
+    },
+    "/api/v1/admin/accounts/{account_id}/role": {
+      "post": {
+        "operationId": "admin_change_role_api_v1_admin_accounts__account_id__role_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Change Role"
+      }
+    },
+    "/api/v1/admin/accounts/{account_id}/status": {
+      "post": {
+        "operationId": "admin_change_status_api_v1_admin_accounts__account_id__status_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "title": "Account Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Change Status"
+      }
+    },
+    "/api/v1/admin/security-events": {
+      "get": {
+        "operationId": "admin_security_events_api_v1_admin_security_events_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecurityEventsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Admin Security Events"
+      }
+    },
+    "/api/v1/auth/bootstrap": {
+      "post": {
+        "operationId": "bootstrap_api_v1_auth_bootstrap_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BootstrapRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BootstrapResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Bootstrap"
+      }
+    },
+    "/api/v1/auth/bootstrap-status": {
+      "get": {
+        "operationId": "bootstrap_status_api_v1_auth_bootstrap_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BootstrapStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Bootstrap Status"
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login"
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "logout_api_v1_auth_logout_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Logout"
+      }
+    },
+    "/api/v1/auth/mfa": {
+      "delete": {
+        "operationId": "mfa_disable_api_v1_auth_mfa_delete",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaDisableRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Disable"
+      },
+      "get": {
+        "operationId": "mfa_status_api_v1_auth_mfa_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Status"
+      }
+    },
+    "/api/v1/auth/mfa/confirm": {
+      "post": {
+        "operationId": "mfa_confirm_api_v1_auth_mfa_confirm_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Confirm"
+      }
+    },
+    "/api/v1/auth/mfa/enroll": {
+      "post": {
+        "operationId": "mfa_enroll_api_v1_auth_mfa_enroll_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaEnrollmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaEnrollmentResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Enroll"
+      }
+    },
+    "/api/v1/auth/mfa/step-up": {
+      "post": {
+        "operationId": "mfa_step_up_api_v1_auth_mfa_step_up_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Step Up"
+      }
+    },
+    "/api/v1/auth/password/change": {
+      "post": {
+        "operationId": "change_password_api_v1_auth_password_change_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Change Password"
+      }
+    },
+    "/api/v1/auth/recovery/complete": {
+      "post": {
+        "operationId": "recovery_complete_api_v1_auth_recovery_complete_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryCompleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Recovery Complete"
+      }
+    },
+    "/api/v1/auth/recovery/start": {
+      "post": {
+        "operationId": "recovery_start_api_v1_auth_recovery_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoveryStartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Recovery Start"
+      }
+    },
+    "/api/v1/auth/session": {
+      "get": {
+        "operationId": "session_state_api_v1_auth_session_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Session State"
+      }
+    },
+    "/api/v1/auth/session/refresh": {
+      "post": {
+        "operationId": "refresh_session_api_v1_auth_session_refresh_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Refresh Session"
+      }
+    },
+    "/api/v1/auth/sessions": {
+      "get": {
+        "operationId": "list_sessions_api_v1_auth_sessions_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Sessions"
+      }
+    },
+    "/api/v1/auth/sessions/{session_id}": {
+      "delete": {
+        "operationId": "revoke_session_api_v1_auth_sessions__session_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Revoke Session"
+      }
+    },
+    "/api/v1/dashboard": {
+      "get": {
+        "operationId": "dashboard_state_api_v1_dashboard_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Dashboard State"
+      }
+    },
+    "/api/v1/instance": {
+      "get": {
+        "operationId": "instance_identity_api_v1_instance_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstanceIdentityResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Instance Identity"
+      }
+    },
+    "/api/v1/me": {
+      "get": {
+        "operationId": "me_api_v1_me_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthAccount"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Me"
+      }
+    },
+    "/api/v1/modules": {
+      "get": {
+        "description": "Describe real packages without claiming absent human workflows.",
+        "operationId": "module_surfaces_api_v1_modules_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModulesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Module Surfaces"
+      }
+    },
+    "/api/v1/modules/atlas/projections": {
+      "get": {
+        "operationId": "list_atlas_projections_api_v1_modules_atlas_projections_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasProjectionsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Atlas Projections"
+      },
+      "post": {
+        "operationId": "create_atlas_projection_api_v1_modules_atlas_projections_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtlasProjectionCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasProjectionCreateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Atlas Projection"
+      }
+    },
+    "/api/v1/modules/atlas/projections/{receipt_id}": {
+      "get": {
+        "operationId": "get_atlas_projection_api_v1_modules_atlas_projections__receipt_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "receipt_id",
+            "required": true,
+            "schema": {
+              "title": "Receipt Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasProjectionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Atlas Projection"
+      }
+    },
+    "/api/v1/modules/atlas/replay": {
+      "post": {
+        "operationId": "replay_atlas_bundle_api_v1_modules_atlas_replay_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtlasReplayRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasReplayResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Replay Atlas Bundle"
+      }
+    },
+    "/api/v1/modules/swr/scenarios": {
+      "get": {
+        "operationId": "scenarios_api_v1_modules_swr_scenarios_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwrScenariosResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Scenarios"
+      }
+    },
+    "/api/v1/modules/taar/runs": {
+      "get": {
+        "operationId": "list_taar_runs_api_v1_modules_taar_runs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaarRunsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Taar Runs"
+      },
+      "post": {
+        "operationId": "create_taar_run_api_v1_modules_taar_runs_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaarRunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaarRunCreateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Taar Run"
+      }
+    },
+    "/api/v1/modules/taar/runs/{run_id}": {
+      "get": {
+        "operationId": "get_taar_run_api_v1_modules_taar_runs__run_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaarEvidenceResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Taar Run"
+      }
+    },
+    "/api/v1/modules/taar/status": {
+      "get": {
+        "operationId": "taar_status_api_v1_modules_taar_status_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaarStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Taar Status"
+      }
+    },
+    "/api/v1/work/operations": {
+      "get": {
+        "operationId": "list_operations_api_v1_work_operations_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkOperationsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Operations"
+      }
+    },
+    "/api/v1/work/requests": {
+      "get": {
+        "operationId": "list_requests_api_v1_work_requests_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkRequestsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Requests"
+      },
+      "post": {
+        "operationId": "create_request_api_v1_work_requests_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkRequestCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkRequestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Request"
+      }
+    },
+    "/api/v1/work/requests/{request_id}": {
+      "get": {
+        "operationId": "request_detail_api_v1_work_requests__request_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "title": "Request Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkRequestDetailResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Request Detail"
+      }
+    },
+    "/api/v1/work/requests/{request_id}/cancel": {
+      "post": {
+        "operationId": "cancel_request_api_v1_work_requests__request_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "title": "Request Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkRequestResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Request"
+      }
+    },
+    "/api/v1/work/requests/{request_id}/execute/swr": {
+      "post": {
+        "operationId": "execute_swr_api_v1_work_requests__request_id__execute_swr_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "title": "Request Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwrExecutionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwrExecutionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Execute Swr"
+      }
+    },
+    "/api/v1/work/requests/{request_id}/reviews": {
+      "post": {
+        "operationId": "review_request_api_v1_work_requests__request_id__reviews_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "title": "Request Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkReviewCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkReviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Review Request"
+      }
+    },
+    "/atlas/sludge": {
+      "post": {
+        "operationId": "atlas_sludge_atlas_sludge_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtlasSludgeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasSludgeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Atlas Sludge"
+      }
+    },
+    "/atlas/status": {
+      "get": {
+        "operationId": "atlas_status_atlas_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Atlas Status"
+      }
+    },
+    "/audit": {
+      "get": {
+        "operationId": "audit_view_audit_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Query"
+            }
+          },
+          {
+            "in": "query",
+            "name": "event",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 120,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Event"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "project_ai_session",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Ai Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Audit View"
+      }
+    },
+    "/chimera/canary": {
+      "post": {
+        "operationId": "chimera_canary_chimera_canary_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CanaryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditWriteResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Chimera Canary"
+      }
+    },
+    "/chimera/verdict": {
+      "post": {
+        "operationId": "chimera_verdict_chimera_verdict_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerdictRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditWriteResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Chimera Verdict"
+      }
+    },
+    "/dois": {
+      "get": {
+        "operationId": "list_dois_dois_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoiResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Dois"
+      }
+    },
+    "/health/live": {
+      "get": {
+        "operationId": "health_live_health_live_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health Live"
+      }
+    },
+    "/replay/status": {
+      "get": {
+        "operationId": "replay_state_replay_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReplayStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Replay State"
+      }
+    }
+  }
+}

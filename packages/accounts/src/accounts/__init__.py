@@ -1,0 +1,67 @@
+"""Durable human-account boundary for Project-AI."""
+
+from accounts.models import (
+    Account,
+    AccountRole,
+    BootstrapResult,
+    ManagedAccountResult,
+    MfaEnrollment,
+    SecurityEvent,
+    SessionBundle,
+    StoredSession,
+)
+from accounts.permissions import ROLE_PERMISSIONS, InterfacePermission, has_permission
+from accounts.postgres import PostgresAccountRepository
+from accounts.repository import AccountRepository
+from accounts.service import (
+    AccountConflict,
+    AccountLocked,
+    AccountService,
+    AccountServiceError,
+    BootstrapUnavailable,
+    InvalidBootstrapSecret,
+    InvalidCredentials,
+    InvalidCsrf,
+    InvalidMfa,
+    InvalidRecovery,
+    InvalidSession,
+    MfaRequired,
+    MfaUnavailable,
+    PasswordRejected,
+    PermissionDenied,
+    RateLimited,
+    calculate_totp,
+)
+
+__all__ = [
+    "ROLE_PERMISSIONS",
+    "Account",
+    "AccountConflict",
+    "AccountLocked",
+    "AccountRepository",
+    "AccountRole",
+    "AccountService",
+    "AccountServiceError",
+    "BootstrapResult",
+    "BootstrapUnavailable",
+    "InterfacePermission",
+    "InvalidBootstrapSecret",
+    "InvalidCredentials",
+    "InvalidCsrf",
+    "InvalidMfa",
+    "InvalidRecovery",
+    "InvalidSession",
+    "ManagedAccountResult",
+    "MfaEnrollment",
+    "MfaRequired",
+    "MfaUnavailable",
+    "PasswordRejected",
+    "PermissionDenied",
+    "PostgresAccountRepository",
+    "RateLimited",
+    "SecurityEvent",
+    "SessionBundle",
+    "StoredSession",
+    "calculate_totp",
+    "has_permission",
+]
