@@ -19,7 +19,7 @@
   - `pnpm` workspace packages (`@project-ai/web-shared`) not being resolved during build
   - `lucide-react` dependency also unresolved
   - Likely cause: pnpm workspace symlinks not working correctly in multi-stage Docker builds
-  
+
 **Workaround options:**
 1. Build web locally (`pnpm --filter "@project-ai/docs-portal" build`), commit dist, copy into Docker
 2. Use single-stage build with full workspace (larger image)

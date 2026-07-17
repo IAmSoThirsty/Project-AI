@@ -192,7 +192,9 @@ class DeliberationContext:
     audit_state: dict[str, object] = field(default_factory=dict)
     metadata: dict[str, object] = field(default_factory=dict)
     candidate_alternatives: list[str] = field(default_factory=list)
-    risk_by_action: dict[str, ActionRiskProfile] = field(default_factory=dict)  # Phase 4: per-action risk profiles
+    risk_by_action: dict[str, ActionRiskProfile] = field(
+        default_factory=dict
+    )  # Phase 4: per-action risk profiles
     # Format: {action_name: ActionRiskProfile}. If present, overrides shared ctx.risk
     # for candidate evaluation. Backward compatible: if not provided, falls back to ctx.risk.
 
@@ -330,7 +332,9 @@ class Decision:
     # authorized the COUNTER_PROPOSE'd alternative, if any
     policy_bundle_hash: str | None = None  # hash of the policy set the engine actually
     # evaluated against, for detecting ctx.policies divergence
-    candidate_evaluations: list[dict[str, object]] = field(default_factory=list)  # list[dict], one CandidateEvaluation
+    candidate_evaluations: list[dict[str, object]] = field(
+        default_factory=list
+    )  # list[dict], one CandidateEvaluation
     # per alternative considered, serialized — audited even when none were viable
     audit_hash: str | None = None
     signature: str | None = None

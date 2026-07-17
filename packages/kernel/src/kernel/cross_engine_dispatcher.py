@@ -81,9 +81,7 @@ class CrossEngineDispatcher:
         origin = self._spine.append(event_type, dict(payload))
         result = CascadeResult(origin_event=origin)
 
-        pending: list[tuple[str, Mapping[str, Any]]] = [
-            (event_type, dict(payload))
-        ]
+        pending: list[tuple[str, Mapping[str, Any]]] = [(event_type, dict(payload))]
 
         # Bounded cascade to prevent runaway loops (each subscriber may emit
         # at most once per originating dispatch round; depth + total-hop capped).

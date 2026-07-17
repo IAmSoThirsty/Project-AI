@@ -16,7 +16,7 @@ This is your framework for building 1000+ rules.
 
 #### 1.1 Memory Read
 - `memory.read.working` - Read from working memory
-- `memory.read.short_term` - Read from short-term memory  
+- `memory.read.short_term` - Read from short-term memory
 - `memory.read.long_term` - Read from long-term memory
 - `memory.read.companion` - Read from companion memory
 - `memory.read.vault` - Read from sovereign interior vault

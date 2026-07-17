@@ -126,7 +126,9 @@ class ResilientDataSource:
                 response.raise_for_status()
                 return response.json()
             except requests.exceptions.RequestException as e:
-                logger.warning("Resilient fetch failed (attempt %s/%s): %s", attempt + 1, max_retries, e)
+                logger.warning(
+                    "Resilient fetch failed (attempt %s/%s): %s", attempt + 1, max_retries, e
+                )
                 if attempt < max_retries - 1:
                     time.sleep(2**attempt)
         logger.error("Resilient fetch failed after %s attempts: %s", max_retries, url)
@@ -160,8 +162,7 @@ class ResilientDataSource:
 
         # 3. SYNTHETIC
         logger.warning(
-            "Phase 2C fallback: %s domain served from SYNTHETIC baseline "
-            "(live + cache both empty)",
+            "Phase 2C fallback: %s domain served from SYNTHETIC baseline (live + cache both empty)",
             domain.value,
         )
         return DomainLoadResult(
@@ -579,24 +580,39 @@ class GlobalScenarioEngine(SimulationSystem):
             logger.info("Loading World Bank data for %s-%s", start_year, end_year)
 
             self._load_wb_domain(
-                RiskDomain.ECONOMIC, self.world_bank.INDICATORS["gdp_growth"],
-                start_year, end_year, countries,
+                RiskDomain.ECONOMIC,
+                self.world_bank.INDICATORS["gdp_growth"],
+                start_year,
+                end_year,
+                countries,
             )
             self._load_wb_domain(
-                RiskDomain.INFLATION, self.world_bank.INDICATORS["inflation"],
-                start_year, end_year, countries,
+                RiskDomain.INFLATION,
+                self.world_bank.INDICATORS["inflation"],
+                start_year,
+                end_year,
+                countries,
             )
             self._load_wb_domain(
-                RiskDomain.UNEMPLOYMENT, self.world_bank.INDICATORS["unemployment"],
-                start_year, end_year, countries,
+                RiskDomain.UNEMPLOYMENT,
+                self.world_bank.INDICATORS["unemployment"],
+                start_year,
+                end_year,
+                countries,
             )
             self._load_wb_domain(
-                RiskDomain.TRADE, self.world_bank.INDICATORS["trade_gdp"],
-                start_year, end_year, countries,
+                RiskDomain.TRADE,
+                self.world_bank.INDICATORS["trade_gdp"],
+                start_year,
+                end_year,
+                countries,
             )
             self._load_wb_domain(
-                RiskDomain.CLIMATE, self.world_bank.INDICATORS["co2_emissions"],
-                start_year, end_year, countries,
+                RiskDomain.CLIMATE,
+                self.world_bank.INDICATORS["co2_emissions"],
+                start_year,
+                end_year,
+                countries,
             )
 
             # Load ACLED conflict data -> CIVIL_UNREST domain

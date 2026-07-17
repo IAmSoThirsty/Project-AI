@@ -73,7 +73,7 @@ async def embed_memory(content: str) -> list[float]:
     """Generate embeddings for memory content using local Ollama."""
     if not OLLAMA_ENABLED:
         return None  # Fall back to no embeddings
-    
+
     response = await httpx.post(
         f"{OLLAMA_BASE_URL}/api/embeddings",
         json={
@@ -93,16 +93,16 @@ async def deliberate_with_local_llm(matter: str, evidence: str) -> str:
     """Use local LLM for constitutional reasoning."""
     if not OLLAMA_ENABLED:
         return None
-    
+
     prompt = f"""
     Constitutional Matter: {matter}
-    
+
     Evidence:
     {evidence}
-    
+
     Constitutional Analysis:
     """
-    
+
     response = await httpx.post(
         f"{OLLAMA_BASE_URL}/api/generate",
         json={
@@ -124,16 +124,16 @@ async def summarize_audit_chain(records: list[dict]) -> str:
     """Generate human-readable audit summary."""
     if not OLLAMA_ENABLED:
         return None
-    
+
     events = "\n".join([f"- {r['event_type']}: {r['description']}" for r in records])
-    
+
     prompt = f"""
     Audit Trail Events:
     {events}
-    
+
     Summary (< 100 words):
     """
-    
+
     response = await httpx.post(
         f"{OLLAMA_BASE_URL}/api/generate",
         json={
@@ -221,10 +221,10 @@ All operations continue, just with reduced capability.
 # Prometheus metrics for Ollama
 ollama_request_duration_seconds:
   help: "Request duration to Ollama API"
-  
+
 ollama_model_inference_tokens_per_second:
   help: "Throughput by model"
-  
+
 ollama_model_latency_seconds:
   help: "Inference latency by model"
 

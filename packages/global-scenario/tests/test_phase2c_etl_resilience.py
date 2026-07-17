@@ -49,7 +49,10 @@ def test_cache_tier_when_live_empty(tmp_path: Path, monkeypatch):
         engine,
         "http://x",
         {"a": "1"},
-        {"timestamp": "2020-01-01T00:00:00+00:00", "response": ["meta", [{"countryiso3code": "USA", "date": "2020", "value": 2.0}]]},
+        {
+            "timestamp": "2020-01-01T00:00:00+00:00",
+            "response": ["meta", [{"countryiso3code": "USA", "date": "2020", "value": 2.0}]],
+        },
     )
     res = engine.load_with_fallback(
         domain=RiskDomain.INFLATION,

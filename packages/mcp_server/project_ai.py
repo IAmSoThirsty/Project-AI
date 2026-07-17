@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class MCPCapability:
     """An MCP capability granted by Project-AI governance."""
+
     name: str
     resource: str
     scope: str  # "read", "write", "execute"
@@ -126,9 +127,7 @@ class ProjectAIMCPServer:
                 json=operation,
             )
         elif op_type == "retrieve":
-            response = await self.client.get(
-                f"/memory/{operation.get('id')}"
-            )
+            response = await self.client.get(f"/memory/{operation.get('id')}")
         else:  # query
             response = await self.client.post(
                 "/memory/query",
@@ -181,21 +180,27 @@ MCP_TOOLS = {
                 "matter": {"type": "string", "description": "What is being decided"},
                 "proposed_action": {"type": "string", "description": "The action proposed"},
                 "evidence": {"type": "object", "description": "Supporting evidence"},
-                "authority_required": {"type": "string", "enum": ["human", "ai", "dual"]}
+                "authority_required": {"type": "string", "enum": ["human", "ai", "dual"]},
             },
-            "required": ["matter", "proposed_action"]
-        }
+            "required": ["matter", "proposed_action"],
+        },
     },
     "project-ai/audit": {
         "description": "Query the cryptographically-verified audit log",
         "inputSchema": {
             "type": "object",
             "properties": {
-                "filter": {"type": "string", "description": "Search filter (e.g., 'verdict_id=12345')"},
+                "filter": {
+                    "type": "string",
+                    "description": "Search filter (e.g., 'verdict_id=12345')",
+                },
                 "limit": {"type": "integer", "description": "Max results", "default": 100},
-                "verify_chain": {"type": "boolean", "description": "Cryptographically verify hashes"}
-            }
-        }
+                "verify_chain": {
+                    "type": "boolean",
+                    "description": "Cryptographically verify hashes",
+                },
+            },
+        },
     },
     "project-ai/memory": {
         "description": "Access the CCMA memory system",
@@ -204,13 +209,13 @@ MCP_TOOLS = {
             "properties": {
                 "op": {"type": "string", "enum": ["store", "retrieve", "query"]},
                 "category": {"type": "string", "description": "Memory category"},
-                "content": {"description": "Content to store or query"}
+                "content": {"description": "Content to store or query"},
             },
-            "required": ["op"]
-        }
+            "required": ["op"],
+        },
     },
     "project-ai/capabilities": {
         "description": "List capabilities granted by governance",
-        "inputSchema": {"type": "object"}
-    }
+        "inputSchema": {"type": "object"},
+    },
 }

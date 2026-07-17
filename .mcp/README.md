@@ -18,7 +18,7 @@ Project-AI (runs locally, fully offline)
         └── Routes MCP calls → local API
 ```
 
-**Without MCP:** Project-AI works 100% offline. You interact via REST API, CLI, desktop app.  
+**Without MCP:** Project-AI works 100% offline. You interact via REST API, CLI, desktop app.
 **With MCP:** Claude Desktop / Cursor can also query your local API.
 
 It's a **convenience**, not a requirement.
@@ -88,7 +88,7 @@ All MCP calls are **local calls to your API**. Nothing goes online.
 @project-ai verdict
   → queries http://localhost:8000/governance/verdict (local only)
 
-@project-ai audit  
+@project-ai audit
   → queries http://localhost:8000/audit (local only)
 
 @project-ai memory
@@ -133,11 +133,11 @@ python -m mcp_server.project_ai
 
 ## Security
 
-✅ **Local-only:** No credentials leave your machine  
-✅ **API-proxied:** MCP just forwards to your local API  
-✅ **Token-based:** Same auth as the API itself  
-✅ **Audit-logged:** All MCP calls appear in your audit trail  
-✅ **Offline-capable:** Works completely disconnected from internet  
+✅ **Local-only:** No credentials leave your machine
+✅ **API-proxied:** MCP just forwards to your local API
+✅ **Token-based:** Same auth as the API itself
+✅ **Audit-logged:** All MCP calls appear in your audit trail
+✅ **Offline-capable:** Works completely disconnected from internet
 
 ```
 MCP Request

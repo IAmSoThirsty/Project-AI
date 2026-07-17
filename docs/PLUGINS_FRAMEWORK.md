@@ -65,15 +65,15 @@ from project_ai.extensions import ProjectAIPlugin, capability, governed
 
 class AwesomeTool(ProjectAIPlugin):
     """Your plugin class."""
-    
+
     manifest_path = "plugin.yaml"
-    
+
     @governed(capabilities=["memory:read-write"], authority="galahad")
     async def process(self, input_data):
         """Process data through the governance framework."""
         # Your implementation here
         return result
-    
+
     @capability("execution:sandbox")
     async def execute_safe(self, code):
         """Execute code in sandboxed environment."""
@@ -242,18 +242,18 @@ class GovernanceDashboardPlugin(ProjectAIPlugin):
 class ProjectAIPlugin:
     # Read governance configuration
     async def get_constitution() -> dict
-    
+
     # Query memory system
     async def memory.query(domain: str, filter: dict) -> list
     async def memory.store(domain: str, content: dict) -> str
-    
+
     # Verify audit trail
     async def audit.query(filter: dict) -> list
     async def audit.verify_chain() -> bool
-    
+
     # Get current capabilities
     async def get_capabilities() -> list[str]
-    
+
     # Log events to audit trail
     async def audit_log(event: dict) -> None
 ```

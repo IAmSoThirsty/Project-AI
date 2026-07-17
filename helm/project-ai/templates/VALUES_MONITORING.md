@@ -5,7 +5,7 @@ This Helm values configuration sets up Prometheus, Grafana, and custom dashboard
 ```yaml
 monitoring:
   enabled: true
-  
+
   prometheus:
     enabled: true
     retention: 30d
@@ -17,26 +17,26 @@ monitoring:
       limits:
         memory: "1Gi"
         cpu: "500m"
-    
+
     alertRules:
       - alert: APIHighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
         for: 5m
         annotations:
           summary: "API error rate > 5%"
-      
+
       - alert: VerdictLongLatency
         expr: histogram_quantile(0.95, governance_verdict_duration_seconds) > 5
         for: 10m
         annotations:
           summary: "Verdict processing latency > 5s (p95)"
-      
+
       - alert: AuditChainBroken
         expr: increase(audit_chain_breaks_total[5m]) > 0
         for: 1m
         annotations:
           summary: "Audit chain integrity violation detected"
-      
+
       - alert: ServiceDown
         expr: up{job=~"project-ai-.*"} == 0
         for: 2m
@@ -52,11 +52,11 @@ monitoring:
         type: prometheus
         url: http://prometheus:9090
         isDefault: true
-      
+
       - name: Loki
         type: loki
         url: http://loki:3100
-    
+
     dashboards:
       governance:
         title: "Constitutional Governance"
@@ -64,7 +64,7 @@ monitoring:
           - title: "Verdicts per minute"
             targets:
               - expr: rate(governance_verdicts_total[1m])
-          
+
           - title: "Verdict decisions (stacked)"
             targets:
               - expr: rate(governance_verdicts_total{status="ALLOW"}[5m])
@@ -73,41 +73,41 @@ monitoring:
                 legend: "DENY"
               - expr: rate(governance_verdicts_total{status="ESCALATE"}[5m])
                 legend: "ESCALATE"
-          
+
           - title: "Triumvirate consensus time (p95)"
             targets:
               - expr: histogram_quantile(0.95, governance_verdict_duration_seconds)
-          
+
           - title: "Policy violations (24h)"
             targets:
               - expr: increase(governance_policy_violations_total[24h])
-      
+
       audit:
         title: "Audit Trail & Security"
         panels:
           - title: "Audit log size (GB)"
             targets:
               - expr: project_ai_audit_chain_size_bytes / 1e9
-          
+
           - title: "Audit chain integrity checks (success rate)"
             targets:
               - expr: rate(audit_chain_verification_total{status="success"}[5m]) / rate(audit_chain_verification_total[5m])
-          
+
           - title: "Recent audit events"
             targets:
               - expr: topk(10, increase(audit_events_total[5m]))
-          
+
           - title: "Cryptographic signature verification failures (24h)"
             targets:
               - expr: increase(audit_signature_failures_total[24h])
-      
+
       operational:
         title: "Operational Health"
         panels:
           - title: "API request rate"
             targets:
               - expr: rate(http_requests_total[1m])
-          
+
           - title: "API latency (p50, p95, p99)"
             targets:
               - expr: histogram_quantile(0.50, http_request_duration_seconds)
@@ -116,41 +116,41 @@ monitoring:
                 legend: "p95"
               - expr: histogram_quantile(0.99, http_request_duration_seconds)
                 legend: "p99"
-          
+
           - title: "HTTP status codes"
             targets:
               - expr: rate(http_requests_total[5m]) by (status)
-          
+
           - title: "Service health (up/down)"
             targets:
               - expr: up{job=~"project-ai-.*"}
-          
+
           - title: "Container resource usage"
             targets:
               - expr: container_memory_usage_bytes{pod=~"project-ai-.*"}
                 legend: "Memory"
               - expr: rate(container_cpu_usage_seconds_total{pod=~"project-ai-.*"}[5m])
                 legend: "CPU"
-          
+
           - title: "Restart count (24h)"
             targets:
               - expr: increase(kube_pod_container_status_restarts_total{pod=~"project-ai-.*"}[24h])
-      
+
       memory:
         title: "CCMA Memory System"
         panels:
           - title: "Memory domain sizes"
             targets:
               - expr: project_ai_memory_domain_size_bytes by (domain)
-          
+
           - title: "Memory retrieval latency (p95)"
             targets:
               - expr: histogram_quantile(0.95, project_ai_memory_retrieval_duration_seconds)
-          
+
           - title: "Memory garbage collection runs"
             targets:
               - expr: rate(project_ai_memory_gc_runs_total[5m])
-          
+
           - title: "Active memory sessions"
             targets:
               - expr: project_ai_memory_active_sessions
@@ -170,19 +170,19 @@ monitoring:
       window: 30d
       alert_threshold: 99.0
       metric: "up{job='project-ai-api'}"
-    
+
     verdict_latency:
       target: p95 < 2s
       window: 30d
       alert_threshold: p95 > 3s
       metric: "histogram_quantile(0.95, governance_verdict_duration_seconds)"
-    
+
     audit_chain_integrity:
       target: 100.0%
       window: 30d
       alert_threshold: "any failures"
       metric: "audit_chain_verification_total{status='failure'}"
-    
+
     governance_policy_adherence:
       target: 100.0%
       window: 30d
