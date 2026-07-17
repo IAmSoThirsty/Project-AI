@@ -162,7 +162,7 @@ def test_grant_signature_forged_with_wrong_key_rejected():
 
 
 def test_malformed_grant_empty_scope_rejected():
-    engine, root, trust_root = new_engine()
+    engine, root, _trust_root = new_engine()
     grant = AuthorityGrant(grantor=ROOT_GRANTOR, grantee="jeremy", scope=(), expires_at=None)
     ctx = make_ctx(root)
     ctx.authority = AuthorityChain(grants=[grant])
@@ -398,7 +398,7 @@ def test_audit_chain_verifies_when_clean():
     engine, root, _ = new_engine()
     for _ in range(3):
         engine.decide(make_ctx(root))
-    ok, bad_index, reason = engine.audit_chain.verify()
+    ok, bad_index, _reason = engine.audit_chain.verify()
     assert ok is True
     assert bad_index is None
 
@@ -408,7 +408,7 @@ def test_audit_chain_detects_tampered_entry():
     engine.decide(make_ctx(root))
     engine.decide(make_ctx(root))
     engine.audit_chain.entries[0]["reasons"] = ["TAMPERED: nothing to see here"]
-    ok, bad_index, reason = engine.audit_chain.verify()
+    ok, bad_index, _reason = engine.audit_chain.verify()
     assert ok is False
     assert bad_index == 0
 
@@ -418,7 +418,7 @@ def test_audit_chain_detects_broken_link():
     engine.decide(make_ctx(root))
     engine.decide(make_ctx(root))
     engine.audit_chain.entries[1]["prev_hash"] = "f" * 64
-    ok, bad_index, reason = engine.audit_chain.verify()
+    ok, bad_index, _reason = engine.audit_chain.verify()
     assert ok is False
     assert bad_index == 1
 
@@ -428,7 +428,7 @@ def test_signature_forged_over_real_hash_rejected():
     engine.decide(make_ctx(root))
     forged_sig = Signer().sign(b"unrelated data")
     engine.audit_chain.entries[0]["signature"] = forged_sig
-    ok, bad_index, reason = engine.audit_chain.verify()
+    ok, bad_index, _reason = engine.audit_chain.verify()
     assert ok is False
     assert bad_index == 0
 
@@ -645,7 +645,7 @@ def test_counter_propose_records_matched_alternative_grant_hash():
 def test_authority_chain_claims_to_cover_cannot_bypass_trustroot():
     """claims_to_cover() is a structural/unverified check. Even when it
     returns True, the engine must still reject an unsigned grant."""
-    engine, root, trust_root = new_engine()
+    engine, root, _trust_root = new_engine()
     ctx = make_ctx(root, signed=False)
     assert ctx.authority.claims_to_cover("deploy_service", time.time()) is True
     d = engine.decide(ctx)

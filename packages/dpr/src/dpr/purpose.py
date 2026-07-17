@@ -71,9 +71,7 @@ class PurposeConstraint:
         at_time = at_time or datetime.utcnow()
         if not self.binding:
             return False
-        if self.expiry and at_time > self.expiry:
-            return False
-        return True
+        return not (self.expiry and at_time > self.expiry)
 
 
 @dataclass
@@ -83,7 +81,7 @@ class PurposeAssertion:
     assertion_id: str
     claim: str
     evidence: list[str]  # Supporting evidence
-    confidence: float  # 0.0–1.0: how confident in this claim
+    confidence: float  # 0.0-1.0: how confident in this claim
     source: str  # "decision_history" | "commitment" | "authority" | "observation"
     timestamp: datetime
     weight: float = 1.0  # Importance weight in aggregation
@@ -116,7 +114,7 @@ class PurposeReflectionContext:
     # Long-term implications: where does this lead?
     consequence_chain: list[str]  # What happens if continued?
     identity_implications: str  # How does this trajectory shape "me"?
-    reversibility: float  # 0.0–1.0: how easily can I change back?
+    reversibility: float  # 0.0-1.0: how easily can I change back?
 
     # Evidence: what do the facts say?
     assertions_for: list[PurposeAssertion]
@@ -129,8 +127,8 @@ class PurposeReflectionContext:
     constraints_binding: bool
 
     # Uncertainty: how confident is this analysis?
-    reflection_confidence: float  # 0.0–1.0: how certain is this reflection?
-    ambiguity_level: float  # 0.0–1.0: how many unresolved questions?
+    reflection_confidence: float  # 0.0-1.0: how certain is this reflection?
+    ambiguity_level: float  # 0.0-1.0: how many unresolved questions?
     escalation_needed: bool  # Should this go to human?
 
     timestamp: datetime = field(default_factory=datetime.utcnow)
@@ -153,7 +151,7 @@ class PurposeDecision:
     decision_type: PurposeDecisionType
     chosen_purpose: str  # What purpose to pursue (may be current or new)
     purpose_justification: str  # Why this purpose is legitimate
-    legitimacy_score: float  # 0.0–1.0: confidence in justification
+    legitimacy_score: float  # 0.0-1.0: confidence in justification
 
     # Governance binding: immutable record
     decision_record_hash: str  # Hash of core decision data
@@ -171,7 +169,7 @@ class PurposeDecision:
     # Coherence linkage: how does this fit in the narrative?
     prior_purpose: str
     prior_decision_id: str | None  # Link to previous purpose decision
-    purpose_continuity_score: float  # 0.0–1.0: how coherent is trajectory?
+    purpose_continuity_score: float  # 0.0-1.0: how coherent is trajectory?
 
     audit_trail: list[dict[str, Any]] = field(default_factory=list)
 
@@ -384,8 +382,12 @@ class PurposeFailureDetector:
         # Should be negatively correlated: high ambiguity → lower legitimacy
         if ambiguities and legitimacies:
             # Simple correlation: if both high simultaneously, collapse suspected
+            # strict=False: ambiguities is filtered on reflection_context, so the
+            # two lists may legitimately differ in length.
             high_ambiguity_high_legitimacy = sum(
-                1 for a, l in zip(ambiguities, legitimacies) if a > 0.6 and l > 0.8
+                1
+                for ambiguity, legitimacy in zip(ambiguities, legitimacies, strict=False)
+                if ambiguity > 0.6 and legitimacy > 0.8
             )
             collapse_suspect = high_ambiguity_high_legitimacy / len(ambiguities) > 0.3
         else:

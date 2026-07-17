@@ -10,11 +10,11 @@ from __future__ import annotations
 import time
 import uuid
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 
-class DecisionType(str, Enum):
+class DecisionType(StrEnum):
     ALLOW = "ALLOW"
     REFUSE = "REFUSE"
     DELAY = "DELAY"
@@ -24,7 +24,7 @@ class DecisionType(str, Enum):
     SAFE_HALT = "SAFE_HALT"
 
 
-class FailureMode(str, Enum):
+class FailureMode(StrEnum):
     """
     Mandatory failure modes per Thirsty's Standards V3.
 
@@ -266,8 +266,8 @@ class ActionRiskProfile:
     """
 
     action_name: str
-    severity: float  # 0.0–1.0: how bad if it goes wrong
-    reversibility: float  # 0.0–1.0: how easily can we undo it
+    severity: float  # 0.0-1.0: how bad if it goes wrong
+    reversibility: float  # 0.0-1.0: how easily can we undo it
     failure_modes: list[str] = field(default_factory=list)  # specific ways this action can fail
     preconditions: list[str] = field(default_factory=list)  # must be true for action to be safe
     proof_required: str = "none"  # "none" | "evidence" | "audit" | "escalation"

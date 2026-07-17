@@ -266,10 +266,10 @@ class DeliberationEngine:
                 return self._finalize(
                     ctx,
                     DecisionType.COUNTER_PROPOSE,
-                    reasons
-                    + [
+                    [
+                        *reasons,
                         f"Governed alternative available and independently validated: "
-                        f"'{alt_eval.candidate_action}'"
+                        f"'{alt_eval.candidate_action}'",
                     ],
                     flags,
                     steps,
@@ -329,8 +329,10 @@ class DeliberationEngine:
             return self._finalize(
                 ctx,
                 DecisionType.ESCALATE,
-                reasons
-                + ["High severity + low reversibility — escalating to human/higher authority"],
+                [
+                    *reasons,
+                    "High severity + low reversibility — escalating to human/higher authority",
+                ],
                 flags,
                 steps,
                 policies_used,
@@ -362,8 +364,10 @@ class DeliberationEngine:
             return self._finalize(
                 ctx,
                 DecisionType.REQUEST_INFORMATION,
-                reasons
-                + ["Uncertainty too high to decide — requesting information before proceeding"],
+                [
+                    *reasons,
+                    "Uncertainty too high to decide — requesting information before proceeding",
+                ],
                 flags,
                 steps,
                 policies_used,
@@ -629,11 +633,11 @@ class DeliberationEngine:
         required_min = {"verify_identity", "verify_authority"}
         is_policy_source_halt = FailureMode.POLICY_SOURCE_INTEGRITY.value in flags
         if not is_policy_source_halt and not required_min.issubset(set(steps)):
-            flags = list(flags) + [FailureMode.GOVERNANCE_BYPASS.value]
+            flags = [*list(flags), FailureMode.GOVERNANCE_BYPASS.value]
 
         # REASON_FABRICATION invariant: every decision must carry >=1 reason.
         if not reasons:
-            flags = list(flags) + [FailureMode.REASON_FABRICATION.value]
+            flags = [*list(flags), FailureMode.REASON_FABRICATION.value]
             reasons = ["No reasons were generated — this is itself a governance failure"]
             decision_type = DecisionType.SAFE_HALT
 

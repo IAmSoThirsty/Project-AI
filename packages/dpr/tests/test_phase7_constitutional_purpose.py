@@ -343,7 +343,7 @@ class TestPurposeFailureModes:
 
 
 class TestPhase7Integration:
-    """Integration tests with Phase 3–6 concepts."""
+    """Integration tests with Phase 3-6 concepts."""
 
     def test_purpose_decision_links_to_prior(self):
         """Verify PurposeDecision links to prior decision for coherence."""
