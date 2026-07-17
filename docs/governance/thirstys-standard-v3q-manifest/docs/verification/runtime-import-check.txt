@@ -1,0 +1,3 @@
+VERIFIED: thirstys_standard_runtime import version 0.1.0
+VERIFIED: cel-python 0.4.0
+VERIFIED: policy, evaluator, and authority modules import successfully

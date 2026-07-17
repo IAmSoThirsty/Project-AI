@@ -1,0 +1,1 @@
+VERIFIED: /mnt/data/thirstys-standard-v3q-manifest/conformance-report.example.yaml conforms to conformance-report.schema.json

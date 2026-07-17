@@ -1,0 +1,213 @@
+{
+  "verification_id": "thirstys-standard-v3q-1.1.0-rc1-verification",
+  "verified_at": "2026-07-17T15:16:16.999998Z",
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux-4.4.0-x86_64-with-glibc2.41",
+    "dependencies": {
+      "cel-python": "0.4.0",
+      "cryptography": "45.0.7",
+      "jsonschema": "4.26.0",
+      "PyYAML": "6.0.3",
+      "pytest": "9.0.2"
+    }
+  },
+  "artifact": {
+    "manifest_id": "urn:thirsty:standard:v3q:manifest",
+    "manifest_version": "1.1.0-rc1",
+    "standard_version": "3.1.0-rc1",
+    "lifecycle": "draft_unratified"
+  },
+  "inventory": {
+    "rules": 53,
+    "controls": 112,
+    "declared_conformance_tests": 20,
+    "unique_cel_expressions": 8
+  },
+  "automated_tests": {
+    "tests": 23,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "time_seconds": 3.592,
+    "cases": [
+      {
+        "name": "test_valid_ed25519_authority_proof",
+        "classname": "tests.test_authority",
+        "time_seconds": 0.082
+      },
+      {
+        "name": "test_tampering_is_rejected",
+        "classname": "tests.test_authority",
+        "time_seconds": 0.001
+      },
+      {
+        "name": "test_expired_proof_is_rejected",
+        "classname": "tests.test_authority",
+        "time_seconds": 0.001
+      },
+      {
+        "name": "test_scope_and_action_are_enforced",
+        "classname": "tests.test_authority",
+        "time_seconds": 0.001
+      },
+      {
+        "name": "test_duplicate_trusted_key_ids_are_rejected",
+        "classname": "tests.test_authority",
+        "time_seconds": 0.001
+      },
+      {
+        "name": "test_declared_cel_conditions_execute",
+        "classname": "tests.test_cel_runtime",
+        "time_seconds": 0.087
+      },
+      {
+        "name": "test_independent_evaluator_runs_in_separate_process_and_signs_report",
+        "classname": "tests.test_independent_evaluator",
+        "time_seconds": 2.222
+      },
+      {
+        "name": "test_independent_evaluator_rejects_false_not_applicable_assertion",
+        "classname": "tests.test_independent_evaluator",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_independent_evaluator_rejects_actor_key_id_mismatch",
+        "classname": "tests.test_independent_evaluator",
+        "time_seconds": 0.001
+      },
+      {
+        "name": "test_manifest_schema_and_references",
+        "classname": "tests.test_manifest_integrity",
+        "time_seconds": 0.091
+      },
+      {
+        "name": "test_duplicate_yaml_keys_are_rejected",
+        "classname": "tests.test_manifest_integrity",
+        "time_seconds": 0.001
+      },
+      {
+        "name": "test_all_cel_conditions_compile",
+        "classname": "tests.test_manifest_integrity",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_denied_action_never_reaches_executor",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.001
+      },
+      {
+        "name": "test_authenticated_read_only_action_executes",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_consequential_action_requires_separate_approval",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_unknown_outcome_and_state_drift_fail_closed",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_action_type_cannot_be_downgraded_to_safer_class",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_approval_nonce_is_single_use_when_execution_occurs",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_approval_bound_to_different_action_is_rejected",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_executor_exception_is_recorded_as_unknown_outcome",
+        "classname": "tests.test_policy_engine",
+        "time_seconds": 0.002
+      },
+      {
+        "name": "test_ratification_signature_binds_exact_manifest_hash",
+        "classname": "tests.test_ratification_mechanism",
+        "time_seconds": 0.103
+      },
+      {
+        "name": "test_all_json_schemas_are_valid",
+        "classname": "tests.test_schema_examples",
+        "time_seconds": 0.031
+      },
+      {
+        "name": "test_example_report_is_schema_valid",
+        "classname": "tests.test_schema_examples",
+        "time_seconds": 0.003
+      }
+    ]
+  },
+  "requested_verifications": [
+    {
+      "item": "Runtime enforcement",
+      "status": "verified_reference_implementation",
+      "evidence": [
+        "test_denied_action_never_reaches_executor",
+        "test_authenticated_read_only_action_executes",
+        "test_consequential_action_requires_separate_approval",
+        "test_unknown_outcome_and_state_drift_fail_closed",
+        "test_action_type_cannot_be_downgraded_to_safer_class",
+        "test_approval_nonce_is_single_use_when_execution_occurs",
+        "test_approval_bound_to_different_action_is_rejected",
+        "test_executor_exception_is_recorded_as_unknown_outcome"
+      ],
+      "boundary": "Not verified as integrated into Project-AI, an agent host, or a production side-effect executor."
+    },
+    {
+      "item": "Common Expression Language execution",
+      "status": "verified",
+      "evidence": [
+        "test_declared_cel_conditions_execute",
+        "test_all_cel_conditions_compile",
+        "cel-validation.txt"
+      ],
+      "boundary": "Verified for all eight unique conditions currently declared by the manifest using cel-python 0.4.0."
+    },
+    {
+      "item": "Independent evaluator behavior",
+      "status": "verified_reference_implementation",
+      "evidence": [
+        "test_independent_evaluator_runs_in_separate_process_and_signs_report",
+        "test_independent_evaluator_rejects_false_not_applicable_assertion",
+        "test_independent_evaluator_rejects_actor_key_id_mismatch"
+      ],
+      "boundary": "Verified as a separate process with distinct actor/evaluator identities and signing keys. Production service isolation is not yet deployed."
+    },
+    {
+      "item": "Cryptographic authority authentication",
+      "status": "verified_mechanism",
+      "evidence": [
+        "test_valid_ed25519_authority_proof",
+        "test_tampering_is_rejected",
+        "test_expired_proof_is_rejected",
+        "test_scope_and_action_are_enforced",
+        "test_duplicate_trusted_key_ids_are_rejected"
+      ],
+      "boundary": "Ed25519 mechanism is verified. No production owner key has been enrolled."
+    },
+    {
+      "item": "Owner ratification",
+      "status": "blocked_pending_owner_signature",
+      "evidence": [
+        "test_ratification_signature_binds_exact_manifest_hash"
+      ],
+      "boundary": "The ratification mechanism is verified, but this exact release is not ratified because no owner-controlled public key and signed ratification record were supplied."
+    }
+  ],
+  "overall_status": "verified_except_owner_ratification_and_live_integration",
+  "blockers": [
+    "Jeremy / Thirsty must create and control an Ed25519 owner key and sign the exact release manifest.",
+    "The reference gate must be integrated at the mandatory side-effect boundary before live enforcement can be claimed."
+  ]
+}

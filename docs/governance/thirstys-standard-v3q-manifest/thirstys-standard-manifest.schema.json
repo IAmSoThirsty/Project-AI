@@ -1,0 +1,365 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thirstysystems.com/schemas/thirstys-standard-manifest-1.1.0.json",
+  "title": "Thirsty's Standard Machine-Readable Manifest Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_schema",
+    "manifest_id",
+    "manifest_version",
+    "standard",
+    "implementation_status",
+    "condition_language",
+    "normative_language",
+    "priority_order",
+    "normative_glossary",
+    "task_context_schema",
+    "authority_model",
+    "input_trust_classes",
+    "action_classes",
+    "status_labels",
+    "uncertainty_states",
+    "evidence_model",
+    "data_governance",
+    "concurrency_and_retry",
+    "incident_response",
+    "lifecycle",
+    "execution_phases",
+    "evaluation",
+    "test_catalog",
+    "rules"
+  ],
+  "properties": {
+    "manifest_schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "manifest_id": {
+      "type": "string"
+    },
+    "manifest_version": {
+      "type": "string"
+    },
+    "standard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "base_version",
+        "profile",
+        "proposed_version",
+        "status",
+        "owner",
+        "approval_authority",
+        "effective_date",
+        "supersedes",
+        "source_document",
+        "source_scope"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "base_version": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "proposed_version": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "draft_unratified",
+            "ratified",
+            "deprecated",
+            "superseded",
+            "withdrawn"
+          ]
+        },
+        "owner": {
+          "type": "string"
+        },
+        "approval_authority": {
+          "type": "string"
+        },
+        "effective_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "supersedes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_document": {
+          "type": "string"
+        },
+        "source_scope": {
+          "type": "string"
+        }
+      }
+    },
+    "implementation_status": {
+      "type": "object"
+    },
+    "condition_language": {
+      "type": "object"
+    },
+    "normative_language": {
+      "type": "object"
+    },
+    "priority_order": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "rank",
+          "id",
+          "description"
+        ]
+      }
+    },
+    "normative_glossary": {
+      "type": "object"
+    },
+    "task_context_schema": {
+      "type": "object"
+    },
+    "authority_model": {
+      "type": "object"
+    },
+    "input_trust_classes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "action_classes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "rank",
+          "id",
+          "default_permission"
+        ]
+      }
+    },
+    "status_labels": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "uncertainty_states": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "meaning"
+        ]
+      }
+    },
+    "evidence_model": {
+      "type": "object"
+    },
+    "data_governance": {
+      "type": "object"
+    },
+    "concurrency_and_retry": {
+      "type": "object"
+    },
+    "incident_response": {
+      "type": "object"
+    },
+    "lifecycle": {
+      "type": "object"
+    },
+    "execution_phases": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "evaluation": {
+      "type": "object"
+    },
+    "test_catalog": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "method",
+          "pass_criteria"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "pass_criteria": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "origin",
+          "rationale",
+          "controls"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^(TS3-[0-9]{3}|Q-[0-9]{3})$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "source_section",
+              "source_pages"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "v3",
+                  "Q_extension"
+                ]
+              },
+              "source_section": {
+                "type": "string"
+              },
+              "source_pages": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "controls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "statement",
+                "applies_when",
+                "phases",
+                "severity",
+                "failure_action",
+                "required_evidence",
+                "waivable",
+                "test_ids"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "statement": {
+                  "type": "string"
+                },
+                "applies_when": {
+                  "type": "string"
+                },
+                "phases": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "enum": [
+                      "inspect",
+                      "plan",
+                      "authorize",
+                      "execute",
+                      "verify",
+                      "review",
+                      "incident",
+                      "report"
+                    ]
+                  }
+                },
+                "severity": {
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high",
+                    "critical"
+                  ]
+                },
+                "failure_action": {
+                  "enum": [
+                    "report",
+                    "mark_not_verified",
+                    "block",
+                    "deny",
+                    "require_approval",
+                    "contain",
+                    "rollback",
+                    "escalate"
+                  ]
+                },
+                "required_evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "waivable": {
+                  "type": "boolean"
+                },
+                "test_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

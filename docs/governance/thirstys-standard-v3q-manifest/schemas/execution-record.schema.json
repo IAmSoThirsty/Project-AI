@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thirstysystems.com/schemas/execution-record-1.0.0.json",
+  "title": "Thirsty's Standard Signed Execution Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["record_id", "task", "actor", "recorded_at", "evaluation_scope", "control_results", "claims", "evidence", "residual_risks", "signature"],
+  "properties": {
+    "record_id": {"type": "string"},
+    "task": {"type": "object", "required": ["task_id", "request", "mode", "risk_level", "authority_context", "workspace_context"]},
+    "actor": {"type": "object", "required": ["id", "key_id", "process_id"]},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "evaluation_scope": {"type": "object", "required": ["control_ids"], "properties": {"control_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}}, "reason": {"type": "string"}}},
+    "control_results": {"type": "array", "items": {"type": "object", "required": ["control_id", "result", "evidence_ids", "notes"]}},
+    "claims": {"type": "array", "items": {"type": "object"}},
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "residual_risks": {"type": "array", "items": {"type": "string"}},
+    "signature": {"type": "object", "required": ["algorithm", "key_id", "purpose", "value"]}
+  }
+}

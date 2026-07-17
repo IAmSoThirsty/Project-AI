@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thirstys-standard-runtime"
+version = "0.1.0"
+description = "Reference enforcement and independent conformance runtime for Thirsty's Standard V3 + Q"
+requires-python = ">=3.11"
+dependencies = [
+  "cel-python==0.4.0",
+  "cryptography>=42,<46",
+  "jsonschema>=4.23,<5",
+  "PyYAML>=6.0.2,<7",
+]
+
+[project.scripts]
+thirstys-standard = "thirstys_standard_runtime.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

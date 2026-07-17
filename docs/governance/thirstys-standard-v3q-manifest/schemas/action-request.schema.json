@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thirstysystems.com/schemas/action-request-1.0.0.json",
+  "title": "Thirsty's Standard Action Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action_id", "type", "class"],
+  "properties": {
+    "action_id": {"type": "string", "minLength": 1},
+    "type": {"type": "string", "minLength": 1},
+    "class": {"enum": ["read_only", "local_reversible", "external_reversible", "externally_consequential", "security_sensitive", "financial_or_legal", "irreversible"]},
+    "notification_acknowledged": {"type": "boolean"},
+    "standing_authorization": {"type": "boolean"},
+    "recovery_required": {"type": "boolean"},
+    "rollback_plan": {"type": "string"},
+    "is_retry": {"type": "boolean"},
+    "prior_outcome": {"enum": ["succeeded", "failed", "unknown"]},
+    "external_state_verified": {"type": "boolean"},
+    "expected_revision": {"type": ["string", "integer"]},
+    "current_revision": {"type": ["string", "integer"]}
+  }
+}
