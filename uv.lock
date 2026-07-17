@@ -31,6 +31,7 @@ members = [
     "project-ai-identity",
     "project-ai-kernel",
     "project-ai-knowledge",
+    "project-ai-mcp-server",
     "project-ai-memory",
     "project-ai-rlp",
     "project-ai-security",
@@ -857,6 +858,7 @@ dependencies = [
     { name = "project-ai-identity" },
     { name = "project-ai-kernel" },
     { name = "project-ai-knowledge" },
+    { name = "project-ai-mcp-server" },
     { name = "project-ai-memory" },
     { name = "project-ai-rlp" },
     { name = "project-ai-security" },
@@ -928,6 +930,7 @@ requires-dist = [
     { name = "project-ai-identity", editable = "packages/identity" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-knowledge", editable = "packages/knowledge" },
+    { name = "project-ai-mcp-server", editable = "packages/mcp_server" },
     { name = "project-ai-memory", editable = "packages/memory" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-security", editable = "packages/security" },
@@ -1422,6 +1425,17 @@ requires-dist = [
     { name = "pypdf", marker = "extra == 'ingest'", specifier = ">=6.0.0" },
 ]
 provides-extras = ["ingest"]
+
+[[package]]
+name = "project-ai-mcp-server"
+version = "0.0.0.dev0"
+source = { editable = "packages/mcp_server" }
+dependencies = [
+    { name = "httpx" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "httpx", specifier = ">=0.27.0" }]
 
 [[package]]
 name = "project-ai-memory"

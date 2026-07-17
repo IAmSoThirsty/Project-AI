@@ -54,6 +54,7 @@ dependencies = [
     "project-ai-cli",
     "project-ai-sovereign-vault",
     "project-ai-dpr",
+    "project-ai-mcp-server",
     # Thirsty-Lang (PyPI dep, six-tier governance language family)
     "thirsty-lang==0.8.1",
 ]
@@ -138,6 +139,7 @@ project-ai-temporal = { workspace = true }
 project-ai-cli = { workspace = true }
 project-ai-sovereign-vault = { workspace = true }
 project-ai-dpr = { workspace = true }
+project-ai-mcp-server = { workspace = true }
 
 [tool.uv.workspace]
 members = [
@@ -180,6 +182,7 @@ members = [
     "packages/cli",
     "packages/sovereign-vault",
     "packages/dpr",
+    "packages/mcp_server",
 ]
 
 # ----------------------------------------------------------------------

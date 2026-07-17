@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-mcp-server"
+version = "0.0.0.dev0"
+description = "In-house MCP stdio server exposing the Project-AI gateway's real routes"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = [
+    "httpx>=0.27.0",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.scripts]
+project-ai-mcp-server = "mcp_server.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_server"]

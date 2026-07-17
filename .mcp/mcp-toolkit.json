@@ -1,62 +1,47 @@
 {
   "mcpServers": {
     "project-ai": {
-      "command": "python",
-      "args": ["-m", "mcp_server.project_ai"],
+      "command": "uv",
+      "args": ["run", "python", "-m", "mcp_server.server"],
       "env": {
-        "PROJECT_AI_MCP_API_URL": "http://localhost:8000",
-        "PROJECT_AI_MCP_TOKEN": "${PROJECT_AI_API_TOKEN}",
-        "PROJECT_AI_MCP_GOVERNANCE_MODE": "strict",
-        "PROJECT_AI_MCP_AUDIT_ENABLED": "true"
-      },
-      "capabilities": {
-        "resources": {
-          "governance": "read-write",
-          "audit": "read-only",
-          "memory": "read-write",
-          "execution": "read-write"
-        }
+        "PROJECT_AI_MCP_API_URL": "http://127.0.0.1:8000",
+        "PROJECT_AI_MCP_TOKEN": "${PROJECT_AI_API_TOKEN}"
       }
     }
   },
   "tools": {
-    "project-ai/verdict": {
-      "description": "Query or submit a governance verdict via the Constitutional Triumvirate",
-      "capabilities": ["execution", "governance"]
+    "project-ai/project_ai_health": {
+      "description": "Read the gateway's public liveness state (GET /health/live)"
     },
-    "project-ai/audit": {
-      "description": "Query the immutable audit log with cryptographic verification",
-      "capabilities": ["audit", "verification"]
+    "project-ai/project_ai_instance": {
+      "description": "Read the public instance identity and authority boundary (GET /api/v1/instance)"
     },
-    "project-ai/memory": {
-      "description": "Store, retrieve, or query the CCMA memory system",
-      "capabilities": ["memory", "retrieval"]
+    "project-ai/project_ai_dashboard": {
+      "description": "Read the public aggregated evidence dashboard (GET /api/v1/dashboard)"
     },
-    "project-ai/capabilities": {
-      "description": "List available capabilities and current grants",
-      "capabilities": ["capability", "governance"]
-    }
-  },
-  "resources": {
-    "constitution": {
-      "uri": "project-ai://constitution",
-      "mimeType": "application/json",
-      "description": "The Project-AI Constitutional Framework"
+    "project-ai/project_ai_modules": {
+      "description": "Read the public module catalog (GET /api/v1/modules)"
     },
-    "governance-state": {
-      "uri": "project-ai://governance/state",
-      "mimeType": "application/json",
-      "description": "Current governance and policy state"
+    "project-ai/project_ai_dois": {
+      "description": "Read the public DOI-backed publication registry (GET /dois)"
     },
-    "audit-chain": {
-      "uri": "project-ai://audit/chain",
-      "mimeType": "application/jsonl",
-      "description": "Cryptographically-verified audit chain"
+    "project-ai/project_ai_replay_status": {
+      "description": "Read the canonical replay invariant status (GET /replay/status)"
     },
-    "memory-graph": {
-      "uri": "project-ai://memory/graph",
-      "mimeType": "application/json",
-      "description": "CCMA memory unified cognitive graph"
+    "project-ai/project_ai_atlas_status": {
+      "description": "Read the public Atlas analysis-only status (GET /atlas/status)"
+    },
+    "project-ai/project_ai_audit_query": {
+      "description": "Query the verified append-only audit chain (GET /audit; machine bearer)"
+    },
+    "project-ai/project_ai_record_verdict": {
+      "description": "Relay one canonical verdict as audit evidence, not a governance evaluation (POST /chimera/verdict; machine bearer)"
+    },
+    "project-ai/project_ai_atlas_sludge_generate": {
+      "description": "Generate a watermarked fictional Sludge narrative (POST /atlas/sludge; machine bearer)"
+    },
+    "project-ai/project_ai_atlas_sludge_list": {
+      "description": "List verified Sludge generation metadata; bodies are never persisted (GET /api/v1/modules/atlas/sludge; machine bearer)"
     }
   }
 }
