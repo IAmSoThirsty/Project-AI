@@ -77,7 +77,8 @@ test("decisions screen renders ADR-001 from the repository markdown", async () =
   expect(
     await screen.findByText("ADR-001: Human interface delivery and authority boundaries"),
   ).toBeInTheDocument();
-  expect(screen.getByText("Consequences")).toBeInTheDocument();
+  expect(screen.getByText("ADR-002: Per-program machine credentials")).toBeInTheDocument();
+  expect(screen.getAllByText("Consequences").length).toBeGreaterThanOrEqual(2);
 });
 
 test("renders an honest gateway error", async () => {

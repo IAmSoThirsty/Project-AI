@@ -211,7 +211,7 @@
 
 .proof-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -220,12 +220,14 @@
   border-radius: var(--radius-sm);
   padding: 22px;
   background: rgba(8, 13, 20, 0.78);
+  min-width: 0;
 }
 
 .proof-stat strong {
   display: block;
   font-size: clamp(1.65rem, 3vw, 2.5rem);
   margin: 10px 0 5px;
+  overflow-wrap: anywhere;
 }
 
 .token-form {
