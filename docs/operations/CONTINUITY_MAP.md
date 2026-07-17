@@ -7,6 +7,56 @@
 
 ---
 
+## SESSION UPDATE 2026-07-17 (continuation) — Gate fully green; integration verification; MCP handshake proven
+
+- **Status:** CONTINUATION COMPLETE. Three more commits (`014c0a37`, `2e4c91cc`, plus
+  this entry's doc commit); still NOT pushed.
+- **DPR debt cleared (`014c0a37`):** the 26 named ruff violations fixed
+  behavior-preservingly (StrEnum conversion verified safe — all call sites use
+  `.value`; explicit `strict=False` zip where list lengths legitimately differ; comment
+  en-dashes; unused unpacked vars; sorted `__all__`). `uv run ruff check .` passes
+  repo-wide for the first time and `pre-commit --all-files` now passes EVERY hook.
+  DPR tests 63 passed before and after; DPR's separate pre-existing strict-mypy debt
+  (44 errors) unchanged and still open.
+- **Two-repo integration verification (`2e4c91cc`), user-directed:** full findings in
+  `docs/operations/INTEGRATION_VERIFICATION_CERBERUS_WATERFALL.md`.
+  - Cerberus (`T:\00-Active\Cerberus`): Hermes's draft integration plan is NOT
+    executable as written — both distributions ship top-level import package
+    `cerberus`, and the collision was PROVEN by execution (the external repo's own
+    tests, run in a PAB-package environment, resolve `cerberus.config` to
+    `packages/cerberus`' file and fail collection). `accounts` imports
+    `cerberus.security.modules.auth.PasswordHasher` today, so the plan's git-dependency
+    step risks a silent swap on a security-critical path. Corrected plan: C0
+    reconciliation matrix → C1 port wave into `packages/cerberus` → C2 optional
+    fail-closed guard adapter at the `packages/api` boundary (screening explicitly not
+    governance) → C3 role hosts if ever needed.
+  - Thirstys-Waterfall (`T:\01-Projects\Thirstys-waterfall`): standalone privacy/
+    network ACTUATION suite (VPN, 8 firewall types, wifi, remote access, kill switch),
+    dirty worktree (another agent's active lane). Proposed W0 (stay external) → W1
+    (thin governed adapter routing an operation allowlist through the canonical
+    ExecutionGate, SWR pattern, gated on ADR-002) → W2 (read-only catalog/MCP
+    observability). No vendoring of 97 ungoverned actuation modules.
+- **Docs-portal container smoke (converted from Not verified):** built image served
+  standalone (with an `api` network alias for nginx upstream resolution): `/healthz`
+  200, root 200 with favicon, and the shipped production bundle provably contains the
+  frozen-baseline freeze-test marker, ADR-002 content, and the `machineBearer` scheme.
+  Containers/network/image removed; port 4179 closed.
+- **MCP third-party handshake (converted from Not verified):** the in-house stdio
+  server was registered with Claude Code's own MCP client
+  (`claude mcp add-json project-ai ...` in local scope) and reports
+  `project-ai: uv run python -m mcp_server.server - √ Connected` — a real
+  independent-client initialize handshake against the in-house protocol. The
+  registration was left in place for the user's use.
+- **Verified:** all commands above executed with recorded output; repo-wide ruff +
+  every pre-commit hook green; DPR 63 tests; smoke + handshake evidence as stated.
+- **Remaining (unchanged unless noted):** push decision; PyPI registration
+  (`project-ai-accounts`, `project-ai-workflows`, `project-ai-mcp-server`); ADR-002
+  implementation; DPR strict-mypy debt (44, pre-existing); Cerberus C0–C2 and
+  Waterfall W1 pending user approval of the verified plans; portal AT acceptance.
+- **Safe to continue:** Yes.
+
+---
+
 ## SESSION UPDATE 2026-07-17 — Machine-interface lane complete; portals made evidence-native
 
 - **Status:** SESSION COMPLETE. Sixteen local commits on `main`
