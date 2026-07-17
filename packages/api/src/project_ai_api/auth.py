@@ -4,7 +4,8 @@ import ipaddress
 from typing import Annotated, Literal, cast
 from urllib.parse import urlsplit
 
-from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Request, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, Security, status
+from fastapi.security import APIKeyCookie
 
 from accounts import (
     Account,
@@ -59,6 +60,15 @@ from project_ai_api.models import (
 SESSION_COOKIE = "project_ai_session"
 CSRF_COOKIE = "project_ai_csrf"
 COOKIE_MAX_AGE = 12 * 60 * 60
+
+# Declared once so every session-authenticated route advertises the same OpenAPI
+# security scheme; auto_error=False keeps each route's own 401/503 semantics.
+SESSION_COOKIE_SCHEME = APIKeyCookie(
+    name=SESSION_COOKIE,
+    scheme_name="sessionCookie",
+    description="Opaque server-side human session cookie; grants no machine capability.",
+    auto_error=False,
+)
 
 
 def _source(request: Request) -> str:
@@ -208,7 +218,7 @@ def install_auth_routes(
         return account_service
 
     def current(
-        session_token: Annotated[str | None, Cookie(alias=SESSION_COOKIE)] = None,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
     ) -> tuple[Account, StoredSession, str]:
         if not session_token:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sign in required")

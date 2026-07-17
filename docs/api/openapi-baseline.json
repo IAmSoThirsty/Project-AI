@@ -3144,6 +3144,19 @@
         "title": "WorkReviewResponse",
         "type": "object"
       }
+    },
+    "securitySchemes": {
+      "machineBearer": {
+        "description": "Shared machine bearer token (PROJECT_AI_API_TOKEN); not a human credential and never issued to a browser.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "sessionCookie": {
+        "description": "Opaque server-side human session cookie; grants no machine capability.",
+        "in": "cookie",
+        "name": "project_ai_session",
+        "type": "apiKey"
+      }
     }
   },
   "info": {
@@ -3155,24 +3168,6 @@
     "/api/v1/admin/accounts": {
       "get": {
         "operationId": "admin_accounts_api_v1_admin_accounts_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -3183,18 +3178,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Admin Accounts"
       },
       "post": {
@@ -3214,22 +3204,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -3265,6 +3239,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Admin Create Account"
       }
     },
@@ -3295,22 +3274,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -3346,6 +3309,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Admin Change Role"
       }
     },
@@ -3376,22 +3344,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -3427,30 +3379,17 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Admin Change Status"
       }
     },
     "/api/v1/admin/security-events": {
       "get": {
         "operationId": "admin_security_events_api_v1_admin_security_events_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -3461,18 +3400,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Admin Security Events"
       }
     },
@@ -3589,22 +3523,6 @@
               ],
               "title": "X-Csrf-Token"
             }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
           }
         ],
         "responses": {
@@ -3629,6 +3547,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Logout"
       }
     },
@@ -3650,22 +3573,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -3701,28 +3608,15 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Mfa Disable"
       },
       "get": {
         "operationId": "mfa_status_api_v1_auth_mfa_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -3733,18 +3627,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Mfa Status"
       }
     },
@@ -3766,22 +3655,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -3817,6 +3690,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Mfa Confirm"
       }
     },
@@ -3838,22 +3716,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -3889,6 +3751,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Mfa Enroll"
       }
     },
@@ -3910,22 +3777,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -3961,6 +3812,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Mfa Step Up"
       }
     },
@@ -3982,22 +3838,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -4033,6 +3873,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Change Password"
       }
     },
@@ -4115,24 +3960,6 @@
     "/api/v1/auth/session": {
       "get": {
         "operationId": "session_state_api_v1_auth_session_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -4143,18 +3970,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Session State"
       }
     },
@@ -4177,22 +3999,6 @@
               ],
               "title": "X-Csrf-Token"
             }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
           }
         ],
         "responses": {
@@ -4217,30 +4023,17 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Refresh Session"
       }
     },
     "/api/v1/auth/sessions": {
       "get": {
         "operationId": "list_sessions_api_v1_auth_sessions_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -4251,18 +4044,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "List Sessions"
       }
     },
@@ -4294,22 +4082,6 @@
               ],
               "title": "X-Csrf-Token"
             }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
           }
         ],
         "responses": {
@@ -4334,6 +4106,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Revoke Session"
       }
     },
@@ -4376,24 +4153,6 @@
     "/api/v1/me": {
       "get": {
         "operationId": "me_api_v1_me_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -4404,18 +4163,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Me"
       }
     },
@@ -4453,22 +4207,6 @@
               "title": "Limit",
               "type": "integer"
             }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
           }
         ],
         "responses": {
@@ -4493,6 +4231,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "List Atlas Projections"
       },
       "post": {
@@ -4512,22 +4255,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -4563,6 +4290,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Create Atlas Projection"
       }
     },
@@ -4577,22 +4309,6 @@
             "schema": {
               "title": "Receipt Id",
               "type": "string"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -4618,6 +4334,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Get Atlas Projection"
       }
     },
@@ -4639,22 +4360,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -4690,30 +4395,17 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Replay Atlas Bundle"
       }
     },
     "/api/v1/modules/swr/scenarios": {
       "get": {
         "operationId": "scenarios_api_v1_modules_swr_scenarios_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -4724,18 +4416,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Scenarios"
       }
     },
@@ -4753,22 +4440,6 @@
               "minimum": 1,
               "title": "Limit",
               "type": "integer"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -4794,6 +4465,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "List Taar Runs"
       },
       "post": {
@@ -4813,22 +4489,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -4864,6 +4524,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Create Taar Run"
       }
     },
@@ -4878,22 +4543,6 @@
             "schema": {
               "title": "Run Id",
               "type": "string"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -4919,30 +4568,17 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Get Taar Run"
       }
     },
     "/api/v1/modules/taar/status": {
       "get": {
         "operationId": "taar_status_api_v1_modules_taar_status_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -4953,42 +4589,19 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Taar Status"
       }
     },
     "/api/v1/work/operations": {
       "get": {
         "operationId": "list_operations_api_v1_work_operations_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -4999,42 +4612,19 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "List Operations"
       }
     },
     "/api/v1/work/requests": {
       "get": {
         "operationId": "list_requests_api_v1_work_requests_get",
-        "parameters": [
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "content": {
@@ -5045,18 +4635,13 @@
               }
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "List Requests"
       },
       "post": {
@@ -5076,22 +4661,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -5127,6 +4696,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Create Request"
       }
     },
@@ -5141,22 +4715,6 @@
             "schema": {
               "title": "Request Id",
               "type": "string"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -5182,6 +4740,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Request Detail"
       }
     },
@@ -5213,22 +4776,6 @@
               ],
               "title": "X-Csrf-Token"
             }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
           }
         ],
         "responses": {
@@ -5253,6 +4800,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Cancel Request"
       }
     },
@@ -5283,22 +4835,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -5334,6 +4870,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Execute Swr"
       }
     },
@@ -5364,22 +4905,6 @@
                 }
               ],
               "title": "X-Csrf-Token"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
             }
           }
         ],
@@ -5415,30 +4940,17 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Review Request"
       }
     },
     "/atlas/sludge": {
       "post": {
         "operationId": "atlas_sludge_atlas_sludge_post",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "authorization",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5471,6 +4983,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "machineBearer": []
+          }
+        ],
         "summary": "Atlas Sludge"
       }
     },
@@ -5552,38 +5069,6 @@
               ],
               "title": "Event"
             }
-          },
-          {
-            "in": "header",
-            "name": "authorization",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          },
-          {
-            "in": "cookie",
-            "name": "project_ai_session",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Project Ai Session"
-            }
           }
         ],
         "responses": {
@@ -5608,30 +5093,20 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "machineBearer": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
         "summary": "Audit View"
       }
     },
     "/chimera/canary": {
       "post": {
         "operationId": "chimera_canary_chimera_canary_post",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "authorization",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5664,30 +5139,17 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "machineBearer": []
+          }
+        ],
         "summary": "Chimera Canary"
       }
     },
     "/chimera/verdict": {
       "post": {
         "operationId": "chimera_verdict_chimera_verdict_post",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "authorization",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authorization"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5720,6 +5182,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "machineBearer": []
+          }
+        ],
         "summary": "Chimera Verdict"
       }
     },

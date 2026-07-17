@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Annotated, Any
 
-from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Query, Request, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Security, status
 from taar.audit import hash_audit_record, list_audit_records
 from taar.config import TaarConfig, load_taar_config
 from taar.errors import AdmissionDenied, EvidenceError, TaarError
@@ -28,7 +28,7 @@ from accounts import (
     PermissionDenied,
     StoredSession,
 )
-from project_ai_api.auth import SESSION_COOKIE, _require_same_origin
+from project_ai_api.auth import SESSION_COOKIE_SCHEME, _require_same_origin
 from project_ai_api.models import (
     TaarCommandResponse,
     TaarEvidenceResponse,
@@ -205,7 +205,7 @@ def install_taar_workflow_routes(
     configuration_error: str | None = None,
 ) -> None:
     def current(
-        session_token: Annotated[str | None, Cookie(alias=SESSION_COOKIE)] = None,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
     ) -> tuple[Account, StoredSession]:
         if accounts is None:
             raise HTTPException(

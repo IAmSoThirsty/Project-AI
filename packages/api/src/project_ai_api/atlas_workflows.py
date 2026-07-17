@@ -4,7 +4,7 @@ import hashlib
 import json
 from typing import Annotated, Any
 
-from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Query, Request, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Security, status
 
 from accounts import (
     Account,
@@ -24,7 +24,7 @@ from atlas import (
     ReplaySystemError,
     analyze,
 )
-from project_ai_api.auth import SESSION_COOKIE, _require_same_origin
+from project_ai_api.auth import SESSION_COOKIE_SCHEME, _require_same_origin
 from project_ai_api.models import (
     AtlasProjectionCreate,
     AtlasProjectionCreateResponse,
@@ -97,7 +97,7 @@ def install_atlas_workflow_routes(
     audit_relay: AppendOnlyAuditRelay | None,
 ) -> None:
     def current(
-        session_token: Annotated[str | None, Cookie(alias=SESSION_COOKIE)] = None,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
     ) -> tuple[Account, StoredSession]:
         if accounts is None:
             raise HTTPException(

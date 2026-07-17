@@ -9,7 +9,8 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Annotated, Literal, cast
 
-from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Query, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Security, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from taar.errors import TaarError
 
 from accounts import (
@@ -22,7 +23,7 @@ from accounts import (
 )
 from atlas import SUBORDINATION_NOTICE, NarrativeArchetype, SludgeSandboxError, get_sludge_sandbox
 from project_ai_api.atlas_workflows import install_atlas_workflow_routes
-from project_ai_api.auth import SESSION_COOKIE, install_auth_routes
+from project_ai_api.auth import SESSION_COOKIE_SCHEME, install_auth_routes
 from project_ai_api.models import (
     AtlasSludgeNarrative,
     AtlasSludgeRequest,
@@ -52,6 +53,18 @@ from swr import WarRoomCore
 from workflows import PostgresWorkflowRepository, WorkflowRepository, WorkflowService
 
 type AuditRecord = dict[str, JsonScalar]
+
+# Declared at module scope so deferred annotations resolve and every
+# machine-token route advertises the same OpenAPI security scheme;
+# auto_error=False keeps the guards' own 503/401 semantics.
+MACHINE_BEARER_SCHEME = HTTPBearer(
+    scheme_name="machineBearer",
+    description=(
+        "Shared machine bearer token (PROJECT_AI_API_TOKEN); "
+        "not a human credential and never issued to a browser."
+    ),
+    auto_error=False,
+)
 
 
 def _optional_path(value: str | None) -> Path | None:
@@ -214,17 +227,14 @@ def create_app(
         redoc_url=None,
     )
 
-    def require_machine_auth(authorization: Annotated[str | None, Header()] = None) -> None:
+    def _check_machine_credential(credential: HTTPAuthorizationCredentials | None) -> None:
         if not configured_token or relay is None:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Protected API surfaces are not configured",
             )
-        scheme, separator, credential = (authorization or "").partition(" ")
-        if (
-            separator != " "
-            or scheme.lower() != "bearer"
-            or not hmac.compare_digest(credential.encode("utf-8"), configured_token.encode("utf-8"))
+        if credential is None or not hmac.compare_digest(
+            credential.credentials.encode("utf-8"), configured_token.encode("utf-8")
         ):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -232,11 +242,20 @@ def create_app(
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
+    def require_machine_auth(
+        credential: Annotated[
+            HTTPAuthorizationCredentials | None, Security(MACHINE_BEARER_SCHEME)
+        ] = None,
+    ) -> None:
+        _check_machine_credential(credential)
+
     machine_protected = [Depends(require_machine_auth)]
 
     def require_evidence_auth(
-        authorization: Annotated[str | None, Header()] = None,
-        session_token: Annotated[str | None, Cookie(alias=SESSION_COOKIE)] = None,
+        credential: Annotated[
+            HTTPAuthorizationCredentials | None, Security(MACHINE_BEARER_SCHEME)
+        ] = None,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
     ) -> None:
         if session_token and configured_accounts is not None:
             try:
@@ -249,7 +268,7 @@ def create_app(
                 ) from error
             except AccountServiceError:
                 pass
-        require_machine_auth(authorization)
+        _check_machine_credential(credential)
 
     evidence_protected = [Depends(require_evidence_auth)]
 

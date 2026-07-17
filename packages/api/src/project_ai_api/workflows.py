@@ -3,10 +3,10 @@
 import json
 from typing import Annotated
 
-from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Request, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Security, status
 
 from accounts import Account, AccountService, AccountServiceError, StoredSession
-from project_ai_api.auth import SESSION_COOKIE, _require_same_origin
+from project_ai_api.auth import SESSION_COOKIE_SCHEME, _require_same_origin
 from project_ai_api.models import (
     ExecutionReceiptResponse,
     WorkInputFieldResponse,
@@ -85,7 +85,7 @@ def install_workflow_routes(
     workflows: WorkflowService | None,
 ) -> None:
     def current(
-        session_token: Annotated[str | None, Cookie(alias=SESSION_COOKIE)] = None,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
     ) -> tuple[Account, StoredSession]:
         if accounts is None or workflows is None:
             raise HTTPException(status_code=503, detail="Human workflow storage is not configured")

@@ -5,14 +5,14 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Security
 
 from accounts import Account, AccountService, AccountServiceError, StoredSession
 from capability import CapabilityAuthority
 from execution import ExecutionGate
 from governance import GovernanceEngine, Rule, RuleGovernor
 from kernel import ActionRequest, EventSpine, Outcome
-from project_ai_api.auth import SESSION_COOKIE, _require_same_origin
+from project_ai_api.auth import SESSION_COOKIE_SCHEME, _require_same_origin
 from project_ai_api.models import (
     SwrExecutionRequest,
     SwrExecutionResponse,
@@ -116,7 +116,7 @@ def install_swr_workflow_routes(
     audit_relay: AppendOnlyAuditRelay | None,
 ) -> None:
     def current(
-        session_token: Annotated[str | None, Cookie(alias=SESSION_COOKIE)] = None,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
     ) -> tuple[Account, StoredSession]:
         if accounts is None or workflows is None:
             raise HTTPException(status_code=503, detail="Human workflow storage is not configured")
