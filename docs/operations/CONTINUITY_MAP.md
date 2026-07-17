@@ -7,6 +7,89 @@
 
 ---
 
+## SESSION UPDATE 2026-07-17 — Machine-interface lane complete; portals made evidence-native
+
+- **Status:** SESSION COMPLETE. Sixteen local commits on `main`
+  (`725fc386..cf1e8e57`); NOT pushed (push authorization was not granted; user
+  answered "Other" — remains a user decision).
+- **Mode:** Repo patch series — machine-facing interfaces + the two permitted portals.
+- **Machine lane delivered:**
+  - `621fa1ff` — OpenAPI now declares `machineBearer` + `sessionCookie`
+    securitySchemes via real `fastapi.security` dependencies; 39 per-operation
+    security references; behavior parity proven by the untouched 401/403/503 tests.
+  - `91db8ca4` — cross-engine dispatcher repaired: it previously called a
+    nonexistent `submit_action(action_type=...)` signature so no cascade could ever
+    pass the canonical gate. Now one `ExecutionGate.submit_action` per cascade with
+    an exact-scope one-use capability (60s TTL) from an injected authority;
+    deny-by-default without gate+authority; evidence hashes on every cascade;
+    5 no-bypass tests (renamed `test_api_cross_engine_dispatcher.py` in `79c043ab`
+    after a pytest basename collision with kernel's suite broke full-suite collection).
+  - `0966c023` — Atlas Sludge inspection (the continuity map's own named remaining
+    item): `GET /api/v1/modules/atlas/sludge` list + `/{narrative_id}` detail behind
+    the evidence boundary, chain-verified, fail-closed, metadata-only
+    (`narrative_bodies_persisted=false`); CLI gains `dashboard`, `instance`,
+    `modules`, `atlas-sludge-list`; baseline 44 → 46 paths. TAAR CLI commands
+    deliberately omitted (session-cookie surfaces).
+  - `84f3edd1` — MCP server rewritten from two flat aspirational files (dead
+    routes, no protocol loop) into `project-ai-mcp-server`: in-house typed
+    JSON-RPC 2.0 stdio protocol (user decision: no third-party protocol dep),
+    11 tools mapped 1:1 to real routes, canary deliberately excluded, 29 tests
+    including a real-subprocess end-to-end run against a real loopback gateway.
+    `.mcp/` config + README rewritten to truth.
+  - `a65cc228` — ADR-002 per-program machine credentials, explicitly **Proposed /
+    not implemented**.
+- **Portal lane delivered (permitted web exception):** proof portal (`1141de91`)
+  renders the live dashboard surfaces, instance negative capabilities, module
+  authority matrix, and a filterable one-shot-token audit viewer; docs portal
+  (`b7850c00`) renders the frozen OpenAPI baseline (46 paths/51 operations with
+  per-operation auth badges), ADR corpus via a new in-house shared markdown
+  renderer, and the live module catalog; `docker/web.Dockerfile` copies the
+  baseline + ADRs (image build fails without it). Live-browser QA (`29b1a8ff`)
+  found and fixed a favicon 404 and a `.proof-stats` viewport overflow;
+  fidelity ledgers PROOF_PORTAL / DOCS_PORTAL record renders (desktop 1536×1024,
+  narrow 390×844, scrollWidth measured exactly), console 0 errors, network 0
+  failed responses. Renders under
+  `C:\Users\Quencher\.claude\visualizations\2026\07\17\project-ai-portals\`.
+- **Doc truth repairs:** `97312212` (API_REFERENCE gained the inspection routes +
+  scheme note; `.env.example` gained MCP vars); `cf1e8e57` (artifact JSON trailing
+  newlines so the EOF hook converges).
+- **Correction:** commit message `29b1a8ff` says "61 tests"; the correct full web
+  count is **60** (operator 19, docs 5, proof 4, triumvirate 32).
+- **Verified (executed this session):** full pytest `2923 passed, 5 skipped,
+  1 xfailed`; the 5 env-gated live-DSN PostgreSQL tests passed 5/5 against a
+  disposable `postgres:16` container (created and removed; port 55440 closed);
+  strict mypy clean over all touched packages (31 source files in the final
+  sweep); ruff + format clean on every touched path; full web gate 60 tests +
+  eslint `--max-warnings 0` + four production builds; both portal Docker images
+  built; `docker compose config`, helm lint, default + `helm/values.prod.yaml`
+  rendering, and `tools/verify_pre_deployment.py` (33 checks) all passed;
+  pre-commit `--all-files` passes every hook except ruff's 26 pre-existing DPR
+  violations; `uv build` produced valid sdist+wheel for `project-ai-accounts`,
+  `project-ai-workflows`, `project-ai-mcp-server` (PyPI-readiness check — user
+  will register names; NO publication performed).
+- **Not verified (genuinely unexecutable here):** third-party MCP client
+  handshake (needs a machine with Claude Desktop/Cursor configured);
+  assistive-technology acceptance for the portals; a served-container smoke of
+  the rebuilt portal images.
+- **Known current issues (named, not dismissed):** 26 ruff violations in
+  `packages/dpr` (`uv run ruff check packages/dpr --statistics`; RUF003 ×8,
+  RUF059 ×6, RUF005 ×5, UP042 ×2, B905/E741/RUF002/RUF022 ×1) — separate
+  follow-up; ungoverned World Bank/ACLED egress in `packages/global-scenario`
+  (recorded in ADR-002 context) — deferred with ADR-002; simulation run-contract
+  convergence deferred.
+- **Cleanup:** QA gateway/dev servers stopped and ports 8000/4173/4174 verified
+  closed; disposable PostgreSQL removed; `.playwright-cli/` session residue and
+  QA image tags removed.
+- **Unrelated files preserved:** `tmp-c.json`, `tmp-c.out`, `tmp-ollama-serve.log`,
+  `tmp-pbc-modelfile.bak`.
+- **Next recommended actions:** user decision on pushing the sixteen commits;
+  PyPI registration of the three package names (then wire publishing separately);
+  implement ADR-002; DPR ruff cleanup; console-lane wiring of sludge inspection
+  (other agent's lane).
+- **Safe to continue:** Yes.
+
+---
+
 ## SESSION UPDATE 2026-07-17 — Stranded payload landed; repo consistency restored
 
 - **Status:** PHASE A COMPLETE (repo integrity); machine-interface lane continues this
