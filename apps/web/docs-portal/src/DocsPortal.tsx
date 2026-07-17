@@ -22,6 +22,7 @@ import {
   gateway,
 } from "@project-ai/web-shared";
 import adr001Raw from "../../../../docs/architecture/decisions/ADR-001-human-interface-boundaries.md?raw";
+import adr002Raw from "../../../../docs/architecture/decisions/ADR-002-per-program-machine-credentials.md?raw";
 import { contract, contractGroups, operationCount, pathCount, securitySchemes } from "./contract";
 
 const nav = [
@@ -44,6 +45,11 @@ const decisions = [
     id: "ADR-001",
     title: "Human interface delivery and authority boundaries",
     source: adr001Raw,
+  },
+  {
+    id: "ADR-002",
+    title: "Per-program machine credentials (proposed)",
+    source: adr002Raw,
   },
 ];
 
