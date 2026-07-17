@@ -1,8 +1,8 @@
 # Atlas Projections Fidelity Ledger
 
-**Status:** Implemented and visually inspected on 2026-07-16  
-**Reference:** `concepts/control-center-atlas-projections.png`  
-**Desktop evidence:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\atlas-projections-desktop.png`  
+**Status:** Implemented and visually inspected on 2026-07-16
+**Reference:** `concepts/control-center-atlas-projections.png`
+**Desktop evidence:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\atlas-projections-desktop.png`
 **Narrow evidence:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\atlas-projections-mobile.png`
 
 ## Comparison ledger

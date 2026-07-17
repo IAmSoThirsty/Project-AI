@@ -1,9 +1,9 @@
 # Structured Request Input Fidelity Ledger
 
-**Status:** Verified functional refinement inside the accepted Control Center design system  
-**Accepted design-system reference:** `docs/operations/interface/concepts/control-center-command-center.png`  
-**Desktop form render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\structured-request-form.png`  
-**Desktop detail render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\structured-request-detail.png`  
+**Status:** Verified functional refinement inside the accepted Control Center design system
+**Accepted design-system reference:** `docs/operations/interface/concepts/control-center-command-center.png`
+**Desktop form render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\structured-request-form.png`
+**Desktop detail render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\structured-request-detail.png`
 **Mobile detail render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\structured-request-detail-mobile.png`
 
 ## Scope boundary

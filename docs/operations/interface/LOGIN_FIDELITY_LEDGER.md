@@ -1,9 +1,9 @@
 # Control Center Login Fidelity Ledger
 
-**Status:** Verified refinement, not a production-accessibility claim  
-**Figma board:** <https://www.figma.com/board/5YzwgM4psogklwhu9pJR58>  
-**Accepted concept:** `docs/operations/interface/concepts/control-center-sign-in.png`  
-**Desktop render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\operator-console-sign-in-refined.png`  
+**Status:** Verified refinement, not a production-accessibility claim
+**Figma board:** <https://www.figma.com/board/5YzwgM4psogklwhu9pJR58>
+**Accepted concept:** `docs/operations/interface/concepts/control-center-sign-in.png`
+**Desktop render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\operator-console-sign-in-refined.png`
 **Mobile render:** `C:\Users\Quencher\.codex\visualizations\2026\07\15\019f66ca-df58-7f70-9dbe-84ed249d9f79\operator-console-sign-in-refined-mobile.png`
 
 ## Refinement brief
