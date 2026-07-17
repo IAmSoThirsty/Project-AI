@@ -2,9 +2,6 @@
  * Jest Configuration for The Triumvirate
  */
 
-/* eslint-env node */
-/* global module */
-
 module.exports = {
   // Test environment
   testEnvironment: 'node',

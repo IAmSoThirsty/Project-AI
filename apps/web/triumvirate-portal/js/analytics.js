@@ -92,7 +92,7 @@ function initializePerformanceMonitoring() {
         });
       });
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-    } catch (e) {
+    } catch {
       console.warn('LCP observer not supported');
     }
 
@@ -110,7 +110,7 @@ function initializePerformanceMonitoring() {
         });
       });
       fidObserver.observe({ entryTypes: ['first-input'] });
-    } catch (e) {
+    } catch {
       console.warn('FID observer not supported');
     }
 
@@ -137,7 +137,7 @@ function initializePerformanceMonitoring() {
           });
         }
       });
-    } catch (e) {
+    } catch {
       console.warn('CLS observer not supported');
     }
   }

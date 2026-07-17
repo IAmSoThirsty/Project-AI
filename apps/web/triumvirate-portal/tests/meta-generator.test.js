@@ -1,6 +1,3 @@
-/* eslint-env node, jest */
-/* global require, __dirname, describe, test, expect, beforeEach, afterEach */
-
 const path = require('node:path');
 
 const modulePath = path.resolve(__dirname, '..', 'js', 'meta-generator.js');

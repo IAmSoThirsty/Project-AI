@@ -1,6 +1,3 @@
-/* eslint-env node, jest */
-/* global require, __dirname, describe, test, expect */
-
 const fs = require('node:fs');
 const path = require('node:path');
 

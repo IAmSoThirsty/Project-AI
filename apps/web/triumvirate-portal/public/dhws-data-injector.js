@@ -81,9 +81,6 @@
   "param",
 ]
 
-  // Map to track per-class indices for unique component IDs
-  const classIndexMap = new Map();
-
   /**
    * Sanitizes attribute values to prevent XSS
    */
@@ -231,12 +228,9 @@
    */
   function processAllElements() {
     const elements = document.querySelectorAll('*');
-    let taggedCount = 0;
-
     elements.forEach((element, index) => {
       if (shouldTagElement(element)) {
         tagElement(element, index);
-        taggedCount++;
       }
     });
 
