@@ -2,8 +2,9 @@
 Cross-Engine Dispatcher
 
 Routes simulation events between engines when cascade conditions are met.
-All cross-engine actions are gated through the execution authority layer
-(ExecutionGate / TarlGate) before any state mutation occurs.
+Every cross-engine action is submitted to the canonical ``ExecutionGate``
+(governance decision + scoped one-use capability + gated executor) before
+any target-engine mutation occurs.
 
 Cascade Rules (in priority order):
 1. Alien influence > 0.7 + Human agency < 0.3 -> ai_takeover: cognitive_capture scenario
@@ -11,9 +12,14 @@ Cascade Rules (in priority order):
 3. AI-takeover terminal state -> global_scenario: compound_crisis trigger
 4. Global-scenario CATASTROPHIC alert -> alien_invaders: morale collapse injection
 
-AUTHORITY: No cross-engine dispatch fires without ExecutionGate approval.
+AUTHORITY: No cross-engine dispatch fires without an ALLOW from the canonical
+gate. The dispatcher never owns a signing secret: the runtime that owns the
+capability secret injects a ``CapabilityAuthority``, and the dispatcher requests
+one exact-scope, short-lived token per cascade. Missing gate OR missing
+authority means conservative deny-by-default.
 CIRCUIT BREAKER: Dispatcher halts all cascades if mutual-trigger loop detected.
-AUDIT: Every dispatch is logged to the chimera audit trail.
+AUDIT: Every dispatch is logged to the JSONL audit trail with the gate's
+governance-evidence and event hashes.
 """
 
 from __future__ import annotations
@@ -21,13 +27,17 @@ from __future__ import annotations
 import logging
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from datetime import datetime, timedelta
+from typing import Any
+
+from capability import CapabilityAuthority, CapabilityError
+from execution import ExecutionGate
+from kernel import ActionRequest, JsonValue, Outcome
 
 logger = logging.getLogger(__name__)
 
-if TYPE_CHECKING:
-    pass
+CASCADE_CAPABILITY_TTL = timedelta(seconds=60)
+DEFAULT_DISPATCHER_ACTOR = "cross-engine-dispatcher"
 
 # Maximum cascades per tick to prevent runaway loops
 MAX_CASCADES_PER_TICK = 5
@@ -58,6 +68,8 @@ class CascadeEvent:
     executed: bool = False
     result: dict[str, Any] | None = None
     rejection_reason: str | None = None
+    governance_evidence_sha256: str | None = None
+    event_hash: str | None = None
 
 
 @dataclass
@@ -78,9 +90,13 @@ class CrossEngineDispatcher:
     Routes cascade events between simulation engines.
 
     Authority model:
-    - All dispatches require ExecutionGate approval (if available).
-    - If ExecutionGate is unavailable, dispatcher falls back to
-      conservative deny-by-default.
+    - Every dispatch is one ``ExecutionGate.submit_action`` call: governance
+      must return ALLOW and an exact-scope one-use capability must be consumed
+      before the gated executor mutates the target engine.
+    - The capability authority is injected by the runtime that owns the
+      signing secret; the dispatcher only requests scoped short-lived tokens.
+    - If the gate OR the capability authority is unavailable, the dispatcher
+      falls back to conservative deny-by-default.
     - Circuit breaker halts all cascades if loop detected in same tick.
 
     Usage:
@@ -88,6 +104,8 @@ class CrossEngineDispatcher:
             alien_engine=alien,
             ai_engine=ai,
             global_engine=global_engine,
+            execution_gate=gate,
+            capability_authority=authority,
         )
         result = dispatcher.evaluate_tick(tick_number=42)
     """
@@ -98,8 +116,10 @@ class CrossEngineDispatcher:
         ai_engine: Any | None = None,
         global_engine: Any | None = None,
         emp_engine: Any | None = None,
-        execution_gate: Any | None = None,
+        execution_gate: ExecutionGate | None = None,
+        capability_authority: CapabilityAuthority | None = None,
         audit_log_path: str | None = None,
+        actor_id: str = DEFAULT_DISPATCHER_ACTOR,
     ) -> None:
         """
         Initialize cross-engine dispatcher.
@@ -109,9 +129,13 @@ class CrossEngineDispatcher:
             ai_engine: AITakeoverEngine instance
             global_engine: GlobalScenarioEngine instance
             emp_engine: EMPDefenseEngine instance (optional)
-            execution_gate: ExecutionGate from execution package (optional)
-                           If None, dispatcher uses conservative deny-by-default.
+            execution_gate: canonical ExecutionGate (optional). If None,
+                dispatcher uses conservative deny-by-default.
+            capability_authority: CapabilityAuthority sharing the gate's
+                secret, used to mint one exact-scope token per cascade
+                (optional). If None, dispatcher denies by default.
             audit_log_path: Path for cascade audit log (JSONL format)
+            actor_id: canonical actor identity for gate submissions
         """
         self.engines = {
             "alien": alien_engine,
@@ -120,7 +144,9 @@ class CrossEngineDispatcher:
             "emp": emp_engine,
         }
         self.execution_gate = execution_gate
+        self.capability_authority = capability_authority
         self.audit_log_path = audit_log_path
+        self.actor_id = actor_id
 
         # Circuit breaker state
         self._cascade_count_this_tick: dict[int, int] = {}
@@ -131,7 +157,9 @@ class CrossEngineDispatcher:
 
         logger.info(
             "CrossEngineDispatcher initialized. Authority gate: %s",
-            "ExecutionGate" if execution_gate else "DENY-BY-DEFAULT (no gate provided)",
+            "ExecutionGate + CapabilityAuthority"
+            if execution_gate is not None and capability_authority is not None
+            else "DENY-BY-DEFAULT (gate or capability authority not provided)",
         )
 
     def evaluate_tick(self, tick_number: int) -> DispatchResult:
@@ -178,21 +206,13 @@ class CrossEngineDispatcher:
             self._audit_circuit_breaker(tick_number, pending_cascades)
             return result
 
-        # Process each cascade through authority gate
+        # Process each cascade through the canonical gate. Approval and
+        # execution are one submit_action call: the gate runs the executor
+        # only after governance ALLOW and capability consumption.
         for cascade in pending_cascades:
-            # Authority check
-            approved = self._request_authority_approval(cascade)
-
-            if approved:
-                cascade.approved = True
+            if self._submit_through_gate(cascade):
                 result.cascades_approved += 1
-
-                # Execute
-                exec_result = self._execute_cascade(cascade)
-                cascade.executed = True
-                cascade.result = exec_result
                 result.cascades_executed += 1
-
                 logger.info(
                     "CASCADE EXECUTED: %s -> %s [%s] tick=%d",
                     cascade.source_engine,
@@ -317,56 +337,82 @@ class CrossEngineDispatcher:
 
         return cascades
 
-    def _request_authority_approval(self, cascade: CascadeEvent) -> bool:
+    def _submit_through_gate(self, cascade: CascadeEvent) -> bool:
         """
-        Request authority approval for a cascade action.
+        Submit one cascade to the canonical execution gate.
 
-        Routes through ExecutionGate if available.
-        Falls back to conservative deny-by-default if gate unavailable.
+        The gate evaluates governance, consumes an exact-scope one-use
+        capability, and only then runs the executor that mutates the target
+        engine. Missing gate or capability authority denies by default.
 
         Args:
-            cascade: Cascade event requesting approval
+            cascade: Cascade event to submit
 
         Returns:
-            bool: True if approved
+            bool: True only if the gate returned ALLOW and the executor ran
         """
-        if self.execution_gate is None:
-            # No gate available: conservative deny
+        if self.execution_gate is None or self.capability_authority is None:
             cascade.rejection_reason = (
-                "ExecutionGate not configured. "
-                "Cross-engine dispatch requires explicit authority gate."
+                "ExecutionGate and CapabilityAuthority are both required. "
+                "Cross-engine dispatch denies by default without them."
             )
             logger.warning(
-                "CASCADE DENIED (no gate): %s -> %s [%s]",
+                "CASCADE DENIED (no gate/authority): %s -> %s [%s]",
                 cascade.source_engine,
                 cascade.target_engine,
                 cascade.action_type,
             )
             return False
 
+        request = ActionRequest(
+            cascade.cascade_id,
+            self.actor_id,
+            f"cross_engine_cascade.{cascade.action_type}",
+            f"simulation://{cascade.target_engine}",
+            payload={
+                "source": cascade.source_engine,
+                "target": cascade.target_engine,
+                "cascade_id": cascade.cascade_id,
+                "action_type": cascade.action_type,
+            },
+        )
         try:
-            # Submit to execution gate for approval
-            result = self.execution_gate.submit_action(
-                action_type=f"cross_engine_cascade.{cascade.action_type}",
-                parameters={
-                    "source": cascade.source_engine,
-                    "target": cascade.target_engine,
-                    "cascade_id": cascade.cascade_id,
-                    **cascade.parameters,
-                },
-                requestor="CrossEngineDispatcher",
+            capability_token = self.capability_authority.issue(
+                subject=self.actor_id,
+                operation=request.operation,
+                resource=request.resource,
+                ttl=CASCADE_CAPABILITY_TTL,
             )
-
-            if not result.allowed:
-                cascade.rejection_reason = result.reason
-                return False
-
-            return True
-
-        except Exception as e:
-            cascade.rejection_reason = f"ExecutionGate error: {e}"
-            logger.error("ExecutionGate error for cascade %s: %s", cascade.cascade_id, e)
+        except (CapabilityError, ValueError) as error:
+            cascade.rejection_reason = f"capability issuance failed: {error}"
+            logger.error("Capability issuance failed for cascade %s: %s", cascade.cascade_id, error)
             return False
+
+        def _gated_executor(_request: ActionRequest) -> JsonValue:
+            return self._execute_cascade(cascade)
+
+        try:
+            result = self.execution_gate.submit_action(
+                request,
+                capability_token=capability_token,
+                executor=_gated_executor,
+            )
+        except Exception as error:
+            cascade.rejection_reason = f"ExecutionGate error: {error}"
+            logger.error("ExecutionGate error for cascade %s: %s", cascade.cascade_id, error)
+            return False
+
+        cascade.governance_evidence_sha256 = result.governance_evidence_sha256 or None
+        cascade.event_hash = result.event_hash or None
+        if result.outcome is not Outcome.ALLOW:
+            cascade.rejection_reason = result.reason or result.outcome.value
+            return False
+
+        cascade.approved = True
+        cascade.executed = True
+        output = result.output
+        cascade.result = output if isinstance(output, dict) else {"output": output}
+        return True
 
     def _execute_cascade(self, cascade: CascadeEvent) -> dict[str, Any]:
         """
@@ -473,6 +519,8 @@ class CrossEngineDispatcher:
                 "executed": cascade.executed,
                 "rejection_reason": cascade.rejection_reason,
                 "result": cascade.result,
+                "governance_evidence_sha256": cascade.governance_evidence_sha256,
+                "event_hash": cascade.event_hash,
             }
             with open(self.audit_log_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(record) + "\n")
@@ -510,5 +558,7 @@ class CrossEngineDispatcher:
             "rejected": rejected,
             "circuit_breaker_trips": len(self._circuit_breaker_trips),
             "circuit_breaker_ticks": self._circuit_breaker_trips,
-            "authority_gate_available": self.execution_gate is not None,
+            "authority_gate_available": (
+                self.execution_gate is not None and self.capability_authority is not None
+            ),
         }
