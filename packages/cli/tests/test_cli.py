@@ -59,6 +59,9 @@ def gateway(monkeypatch: pytest.MonkeyPatch) -> FakeGateway:
         ("dois", "/dois"),
         ("replay", "/replay/status"),
         ("atlas-status", "/atlas/status"),
+        ("dashboard", "/api/v1/dashboard"),
+        ("instance", "/api/v1/instance"),
+        ("modules", "/api/v1/modules"),
     ],
 )
 def test_public_commands_use_get_gateway_routes(
@@ -68,6 +71,19 @@ def test_public_commands_use_get_gateway_routes(
     assert result.exit_code == 0
     assert gateway.requests == [("GET", path, None, False)]
     assert '"status": "ok"' in result.stdout
+
+
+def test_atlas_sludge_list_is_protected_and_bounded(
+    runner: CliRunner, gateway: FakeGateway
+) -> None:
+    result = runner.invoke(app, ["atlas-sludge-list", "--limit", "5", "--offset", "10"])
+    assert result.exit_code == 0
+    assert gateway.requests == [
+        ("GET", "/api/v1/modules/atlas/sludge?limit=5&offset=10", None, True)
+    ]
+    assert runner.invoke(app, ["atlas-sludge-list", "--limit", "0"]).exit_code == 2
+    assert runner.invoke(app, ["atlas-sludge-list", "--limit", "101"]).exit_code == 2
+    assert runner.invoke(app, ["atlas-sludge-list", "--offset", "-1"]).exit_code == 2
 
 
 def test_audit_is_protected_and_bounded(runner: CliRunner, gateway: FakeGateway) -> None:

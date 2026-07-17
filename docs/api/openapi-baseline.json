@@ -565,6 +565,140 @@
         "title": "AtlasReplayResponse",
         "type": "object"
       },
+      "AtlasSludgeEventDetailResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {
+            "const": "analysis_only",
+            "default": "analysis_only",
+            "title": "Authority",
+            "type": "string"
+          },
+          "chain_valid": {
+            "const": true,
+            "default": true,
+            "title": "Chain Valid",
+            "type": "boolean"
+          },
+          "narrative_bodies_persisted": {
+            "const": false,
+            "default": false,
+            "title": "Narrative Bodies Persisted",
+            "type": "boolean"
+          },
+          "record": {
+            "$ref": "#/components/schemas/AtlasSludgeEventRecord"
+          }
+        },
+        "required": [
+          "record"
+        ],
+        "title": "AtlasSludgeEventDetailResponse",
+        "type": "object"
+      },
+      "AtlasSludgeEventRecord": {
+        "additionalProperties": false,
+        "description": "Verified audit-chain metadata for one generated Sludge narrative.\n\nNarrative bodies are never persisted; generation returns the fiction\nonce and the durable record is metadata plus hashes only.",
+        "properties": {
+          "archetypes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Archetypes",
+            "type": "array"
+          },
+          "audit_hash": {
+            "title": "Audit Hash",
+            "type": "string"
+          },
+          "event": {
+            "const": "atlas.sludge_narrative",
+            "default": "atlas.sludge_narrative",
+            "title": "Event",
+            "type": "string"
+          },
+          "narrative_id": {
+            "title": "Narrative Id",
+            "type": "string"
+          },
+          "source_snapshot_sha256": {
+            "title": "Source Snapshot Sha256",
+            "type": "string"
+          },
+          "stack": {
+            "title": "Stack",
+            "type": "string"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "narrative_id",
+          "source_snapshot_sha256",
+          "archetypes",
+          "stack",
+          "audit_hash",
+          "timestamp"
+        ],
+        "title": "AtlasSludgeEventRecord",
+        "type": "object"
+      },
+      "AtlasSludgeInspectionResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {
+            "const": "analysis_only",
+            "default": "analysis_only",
+            "title": "Authority",
+            "type": "string"
+          },
+          "chain_valid": {
+            "const": true,
+            "default": true,
+            "title": "Chain Valid",
+            "type": "boolean"
+          },
+          "limit": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "narrative_bodies_persisted": {
+            "const": false,
+            "default": false,
+            "title": "Narrative Bodies Persisted",
+            "type": "boolean"
+          },
+          "offset": {
+            "minimum": 0.0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/AtlasSludgeEventRecord"
+            },
+            "title": "Records",
+            "type": "array"
+          },
+          "total_count": {
+            "minimum": 0.0,
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "offset",
+          "limit",
+          "records"
+        ],
+        "title": "AtlasSludgeInspectionResponse",
+        "type": "object"
+      },
       "AtlasSludgeNarrative": {
         "additionalProperties": false,
         "properties": {
@@ -4401,6 +4535,114 @@
           }
         ],
         "summary": "Replay Atlas Bundle"
+      }
+    },
+    "/api/v1/modules/atlas/sludge": {
+      "get": {
+        "operationId": "atlas_sludge_inspection_api_v1_modules_atlas_sludge_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasSludgeInspectionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "machineBearer": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Atlas Sludge Inspection"
+      }
+    },
+    "/api/v1/modules/atlas/sludge/{narrative_id}": {
+      "get": {
+        "operationId": "atlas_sludge_event_detail_api_v1_modules_atlas_sludge__narrative_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "narrative_id",
+            "required": true,
+            "schema": {
+              "title": "Narrative Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AtlasSludgeEventDetailResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "machineBearer": []
+          },
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Atlas Sludge Event Detail"
       }
     },
     "/api/v1/modules/swr/scenarios": {

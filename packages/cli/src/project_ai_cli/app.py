@@ -140,6 +140,24 @@ def atlas_status(context: typer.Context) -> None:
 
 
 @app.command()
+def dashboard(context: typer.Context) -> None:
+    """Read the public aggregated evidence dashboard."""
+    _request(context, "GET", "/api/v1/dashboard")
+
+
+@app.command()
+def instance(context: typer.Context) -> None:
+    """Read the public instance identity and authority boundary."""
+    _request(context, "GET", "/api/v1/instance")
+
+
+@app.command()
+def modules(context: typer.Context) -> None:
+    """Read the public module catalog with authority and interface status."""
+    _request(context, "GET", "/api/v1/modules")
+
+
+@app.command()
 def audit(
     context: typer.Context,
     limit: Annotated[int, typer.Option("--limit", min=1, max=500)] = 100,
@@ -229,6 +247,21 @@ def atlas_sludge(
     if selected_archetypes:
         payload["archetypes"] = [item.value for item in selected_archetypes]
     _request(context, "POST", "/atlas/sludge", payload=payload, protected=True)
+
+
+@app.command("atlas-sludge-list")
+def atlas_sludge_list(
+    context: typer.Context,
+    limit: Annotated[int, typer.Option("--limit", min=1, max=100)] = 50,
+    offset: Annotated[int, typer.Option("--offset", min=0)] = 0,
+) -> None:
+    """List verified Sludge generation metadata (no narrative bodies are stored)."""
+    _request(
+        context,
+        "GET",
+        f"/api/v1/modules/atlas/sludge?limit={limit}&offset={offset}",
+        protected=True,
+    )
 
 
 def run() -> None:

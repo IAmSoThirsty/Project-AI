@@ -909,6 +909,98 @@ def test_atlas_sludge_route_rejects_bad_archetype_and_non_rs_snapshot(tmp_path: 
     assert response.json()["detail"] == "rs_snapshot must declare stack RS"
 
 
+def test_atlas_sludge_inspection_lists_metadata_without_bodies(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    first = client.post(
+        "/atlas/sludge",
+        headers=AUTH,
+        json={"rs_snapshot": {"stack": "RS"}, "archetypes": ["hidden_elites"]},
+    ).json()
+    second = client.post(
+        "/atlas/sludge",
+        headers=AUTH,
+        json={
+            "rs_snapshot": {"stack": "RS", "claim": "private-source-claim"},
+            "archetypes": ["false_flags", "suppressed_tech"],
+        },
+    ).json()
+
+    listing = client.get("/api/v1/modules/atlas/sludge", headers=AUTH)
+    assert listing.status_code == 200
+    body = listing.json()
+    assert body["chain_valid"] is True
+    assert body["authority"] == "analysis_only"
+    assert body["narrative_bodies_persisted"] is False
+    assert body["total_count"] == 2
+    assert [record["narrative_id"] for record in body["records"]] == [
+        second["narrative"]["narrative_id"],
+        first["narrative"]["narrative_id"],
+    ]
+    assert body["records"][0]["archetypes"] == ["false_flags", "suppressed_tech"]
+    assert "private-source-claim" not in listing.text
+    assert "branches" not in body["records"][0]
+
+    page = client.get("/api/v1/modules/atlas/sludge?limit=1&offset=1", headers=AUTH).json()
+    assert page["total_count"] == 2
+    assert [record["narrative_id"] for record in page["records"]] == [
+        first["narrative"]["narrative_id"]
+    ]
+
+
+def test_atlas_sludge_detail_round_trip_and_missing_id(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    created = client.post(
+        "/atlas/sludge", headers=AUTH, json={"rs_snapshot": {"stack": "RS"}}
+    ).json()
+    narrative_id = created["narrative"]["narrative_id"]
+
+    detail = client.get(f"/api/v1/modules/atlas/sludge/{narrative_id}", headers=AUTH)
+    assert detail.status_code == 200
+    record = detail.json()["record"]
+    assert record["narrative_id"] == narrative_id
+    assert record["audit_hash"] == created["hash"]
+    assert len(record["audit_hash"]) == 64
+    assert record["source_snapshot_sha256"] == created["narrative"]["source_snapshot_sha256"]
+
+    missing = client.get("/api/v1/modules/atlas/sludge/SLUDGE-missing", headers=AUTH)
+    assert missing.status_code == 404
+
+
+def test_atlas_sludge_inspection_auth_and_bounds(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    assert client.get("/api/v1/modules/atlas/sludge").status_code == 401
+    assert client.get("/api/v1/modules/atlas/sludge?limit=0", headers=AUTH).status_code == 422
+    assert client.get("/api/v1/modules/atlas/sludge?limit=101", headers=AUTH).status_code == 422
+    assert client.get("/api/v1/modules/atlas/sludge?offset=-1", headers=AUTH).status_code == 422
+    unconfigured = TestClient(create_app(dois=()))
+    assert unconfigured.get("/api/v1/modules/atlas/sludge").status_code == 503
+
+
+def test_atlas_sludge_inspection_fails_closed_on_corrupt_chain(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    created = client.post("/atlas/sludge", headers=AUTH, json={"rs_snapshot": {"stack": "RS"}})
+    assert created.status_code == 202
+    audit_path = tmp_path / "audit.jsonl"
+    audit_path.write_text(
+        audit_path.read_text(encoding="utf-8").replace(
+            "atlas.sludge_narrative", "atlas.sludge_tampered"
+        ),
+        encoding="utf-8",
+    )
+    assert client.get("/api/v1/modules/atlas/sludge", headers=AUTH).status_code == 503
+
+
+def test_atlas_sludge_inspection_allows_evidence_session(tmp_path: Path) -> None:
+    client = _auth_client(tmp_path)
+    _bootstrap_auth(client)
+    login = client.post("/api/v1/auth/login", json={"username": "owner", "password": PASSWORD})
+    assert login.status_code == 200
+
+    listing = client.get("/api/v1/modules/atlas/sludge")
+    assert listing.status_code == 200
+    assert listing.json()["total_count"] == 0
+
+
 def test_invalid_verdict_and_audit_limit_are_rejected(tmp_path: Path) -> None:
     client = _client(tmp_path)
     response = client.post(

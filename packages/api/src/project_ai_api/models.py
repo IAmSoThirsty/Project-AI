@@ -636,6 +636,39 @@ class AtlasSludgeResponse(FrozenModel):
     narrative: AtlasSludgeNarrative
 
 
+class AtlasSludgeEventRecord(FrozenModel):
+    """Verified audit-chain metadata for one generated Sludge narrative.
+
+    Narrative bodies are never persisted; generation returns the fiction
+    once and the durable record is metadata plus hashes only.
+    """
+
+    event: Literal["atlas.sludge_narrative"] = "atlas.sludge_narrative"
+    narrative_id: str
+    source_snapshot_sha256: str
+    archetypes: tuple[str, ...]
+    stack: str
+    audit_hash: str
+    timestamp: str
+
+
+class AtlasSludgeInspectionResponse(FrozenModel):
+    chain_valid: Literal[True] = True
+    authority: Literal["analysis_only"] = "analysis_only"
+    narrative_bodies_persisted: Literal[False] = False
+    total_count: int = Field(ge=0)
+    offset: int = Field(ge=0)
+    limit: int = Field(ge=1, le=100)
+    records: tuple[AtlasSludgeEventRecord, ...]
+
+
+class AtlasSludgeEventDetailResponse(FrozenModel):
+    chain_valid: Literal[True] = True
+    authority: Literal["analysis_only"] = "analysis_only"
+    narrative_bodies_persisted: Literal[False] = False
+    record: AtlasSludgeEventRecord
+
+
 class AuditResponse(FrozenModel):
     chain_valid: Literal[True] = True
     count: int = Field(ge=0)

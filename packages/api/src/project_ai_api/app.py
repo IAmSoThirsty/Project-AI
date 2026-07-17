@@ -25,6 +25,9 @@ from atlas import SUBORDINATION_NOTICE, NarrativeArchetype, SludgeSandboxError, 
 from project_ai_api.atlas_workflows import install_atlas_workflow_routes
 from project_ai_api.auth import SESSION_COOKIE_SCHEME, install_auth_routes
 from project_ai_api.models import (
+    AtlasSludgeEventDetailResponse,
+    AtlasSludgeEventRecord,
+    AtlasSludgeInspectionResponse,
     AtlasSludgeNarrative,
     AtlasSludgeRequest,
     AtlasSludgeResponse,
@@ -118,6 +121,40 @@ def _audit_records(
         limit=limit,
         records=page,
     )
+
+
+def _sludge_event_records(relay: AppendOnlyAuditRelay) -> tuple[AtlasSludgeEventRecord, ...]:
+    """Load verified Sludge generation metadata from the audit chain (fail-closed)."""
+    try:
+        valid, _count = relay.verify()
+    except (OSError, ValueError):
+        valid = False
+    if not valid:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Audit hash chain verification failed",
+        )
+    if not relay.path.exists():
+        return ()
+    records: list[AtlasSludgeEventRecord] = []
+    for line in relay.path.read_text(encoding="utf-8").splitlines():
+        if not line:
+            continue
+        raw = cast(AuditRecord, json.loads(line))
+        if raw.get("event") != "atlas.sludge_narrative":
+            continue
+        archetypes_field = str(raw.get("archetypes", ""))
+        records.append(
+            AtlasSludgeEventRecord(
+                narrative_id=str(raw.get("narrative_id", "")),
+                source_snapshot_sha256=str(raw.get("source_snapshot_sha256", "")),
+                archetypes=tuple(part for part in archetypes_field.split(",") if part),
+                stack=str(raw.get("stack", "")),
+                audit_hash=str(raw.get("hash", "")),
+                timestamp=str(raw.get("timestamp", "")),
+            )
+        )
+    return tuple(records)
 
 
 def create_app(
@@ -620,6 +657,37 @@ def create_app(
         return AtlasSludgeResponse(
             hash=str(record["hash"]),
             narrative=AtlasSludgeNarrative.model_validate(narrative.to_canonical_dict()),
+        )
+
+    @application.get(
+        "/api/v1/modules/atlas/sludge",
+        response_model=AtlasSludgeInspectionResponse,
+        dependencies=evidence_protected,
+    )
+    def atlas_sludge_inspection(
+        limit: Annotated[int, Query(ge=1, le=100)] = 50,
+        offset: Annotated[int, Query(ge=0)] = 0,
+    ) -> AtlasSludgeInspectionResponse:
+        newest_first = tuple(reversed(_sludge_event_records(active_relay())))
+        return AtlasSludgeInspectionResponse(
+            total_count=len(newest_first),
+            offset=offset,
+            limit=limit,
+            records=newest_first[offset : offset + limit],
+        )
+
+    @application.get(
+        "/api/v1/modules/atlas/sludge/{narrative_id}",
+        response_model=AtlasSludgeEventDetailResponse,
+        dependencies=evidence_protected,
+    )
+    def atlas_sludge_event_detail(narrative_id: str) -> AtlasSludgeEventDetailResponse:
+        for record in reversed(_sludge_event_records(active_relay())):
+            if record.narrative_id == narrative_id:
+                return AtlasSludgeEventDetailResponse(record=record)
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Sludge narrative event not found",
         )
 
     return application
