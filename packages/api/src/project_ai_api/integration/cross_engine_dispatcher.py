@@ -31,6 +31,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from thirstys_standard_runtime.integration import (
+    ThirstysV3QGate,
     build_gate,
     request_to_v3q_action,
 )
@@ -125,7 +126,7 @@ class CrossEngineDispatcher:
         capability_authority: CapabilityAuthority | None = None,
         audit_log_path: str | None = None,
         actor_id: str = DEFAULT_DISPATCHER_ACTOR,
-        v3q_gate: ExecutionGate | None = None,
+        v3q_gate: ThirstysV3QGate | None = None,
     ) -> None:
         """
         Initialize cross-engine dispatcher.
@@ -153,7 +154,9 @@ class CrossEngineDispatcher:
         # (build_gate returns None unless a trusted-key registry is supplied).
         v3q = build_gate() if v3q_gate is None else v3q_gate
         self.execution_gate = (
-            execution_gate.with_v3q(v3q) if (execution_gate is not None and v3q is not None) else execution_gate
+            execution_gate.with_v3q(v3q)
+            if (execution_gate is not None and v3q is not None)
+            else execution_gate
         )
         self._v3q_gate = v3q
         self.capability_authority = capability_authority
