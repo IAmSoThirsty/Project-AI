@@ -9,7 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Annotated, Literal, cast
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Security, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Response, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from taar.errors import TaarError
 
@@ -48,6 +48,11 @@ from project_ai_api.models import (
     VerdictRequest,
 )
 from project_ai_api.registry import load_doi_registry
+from project_ai_api.screening import (
+    DEFAULT_QUARANTINE_DIR,
+    CerberusScreen,
+    ScreeningBlockResponse,
+)
 from project_ai_api.swr_workflows import build_swr_runtime, install_swr_workflow_routes
 from project_ai_api.taar_workflows import TaarInspectionService, install_taar_workflow_routes
 from project_ai_api.workflows import install_workflow_routes
@@ -176,6 +181,7 @@ def create_app(
     execution_secret: str | None = None,
     instance_name: str | None = None,
     taar_repo_root: Path | None = None,
+    screening_quarantine_dir: Path | None = None,
 ) -> FastAPI:
     """Create an app with explicit, injectable runtime state."""
     configured_token = api_token if api_token is not None else os.getenv("PROJECT_AI_API_TOKEN")
@@ -248,6 +254,12 @@ def create_app(
             configured_execution_secret,
             bundle_dir=configured_bundle_dir,
         )
+    configured_quarantine_dir = (
+        screening_quarantine_dir
+        or _optional_path(os.getenv("PROJECT_AI_QUARANTINE_DIR"))
+        or DEFAULT_QUARANTINE_DIR
+    )
+    input_screen = CerberusScreen(configured_quarantine_dir)
     configured_taar_root = taar_repo_root or _optional_path(os.getenv("PROJECT_AI_TAAR_REPO_ROOT"))
     configured_taar: TaarInspectionService | None = None
     taar_configuration_error: str | None = None
@@ -631,8 +643,20 @@ def create_app(
         response_model=AtlasSludgeResponse,
         status_code=status.HTTP_202_ACCEPTED,
         dependencies=machine_protected,
+        responses={
+            status.HTTP_403_FORBIDDEN: {
+                "model": ScreeningBlockResponse,
+                "description": (
+                    "Input blocked by Cerberus screening "
+                    "(transport-layer refusal, not a governance verdict)"
+                ),
+            }
+        },
     )
-    def atlas_sludge(request: AtlasSludgeRequest) -> AtlasSludgeResponse:
+    def atlas_sludge(request: AtlasSludgeRequest, response: Response) -> AtlasSludgeResponse:
+        screening_summary = input_screen.screen_payload(
+            request.rs_snapshot, source="atlas.sludge", relay=active_relay()
+        )
         try:
             archetypes = (
                 None
@@ -654,6 +678,7 @@ def create_app(
                 "stack": narrative.stack,
             },
         )
+        response.headers["X-Cerberus-Screening"] = screening_summary
         return AtlasSludgeResponse(
             hash=str(record["hash"]),
             narrative=AtlasSludgeNarrative.model_validate(narrative.to_canonical_dict()),

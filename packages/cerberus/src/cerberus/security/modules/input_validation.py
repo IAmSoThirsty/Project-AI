@@ -85,11 +85,15 @@ class InputValidator:
         r"%5c%5c",
     ]
 
+    # SYSTEM/PUBLIC are bound to their XML external-identifier context
+    # (keyword followed by a quoted identifier); upstream matched the bare
+    # words case-insensitively, which blocked ordinary prose containing
+    # "system" or "public" as XXE.
     XXE_PATTERNS: ClassVar[list[str]] = [
         r"<!ENTITY",
         r"<!DOCTYPE",
-        r"SYSTEM",
-        r"PUBLIC",
+        r"\bSYSTEM\s+[\"']",
+        r"\bPUBLIC\s+[\"']",
     ]
 
     LDAP_PATTERNS: ClassVar[list[str]] = [

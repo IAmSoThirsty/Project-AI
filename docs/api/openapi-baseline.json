@@ -2036,6 +2036,57 @@
         "title": "ReplayStatus",
         "type": "object"
       },
+      "ScreeningBlockDetail": {
+        "additionalProperties": false,
+        "description": "Body of a screening refusal (the ``detail`` of the 403 response).\n\n``screening_is_not_governance`` is a contract constant: this refusal is\ninput filtering at the transport boundary, not an ALLOW/DENY/ESCALATE\nverdict, and grants/removes no authority.",
+        "properties": {
+          "attack_type": {
+            "title": "Attack Type",
+            "type": "string"
+          },
+          "input_sha256": {
+            "title": "Input Sha256",
+            "type": "string"
+          },
+          "message": {
+            "const": "Input blocked by Cerberus screening",
+            "default": "Input blocked by Cerberus screening",
+            "title": "Message",
+            "type": "string"
+          },
+          "quarantine_record": {
+            "title": "Quarantine Record",
+            "type": "string"
+          },
+          "screening_is_not_governance": {
+            "const": true,
+            "default": true,
+            "title": "Screening Is Not Governance",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "attack_type",
+          "input_sha256",
+          "quarantine_record"
+        ],
+        "title": "ScreeningBlockDetail",
+        "type": "object"
+      },
+      "ScreeningBlockResponse": {
+        "additionalProperties": false,
+        "description": "OpenAPI wrapper matching FastAPI's ``{\"detail\": ...}`` error shape.",
+        "properties": {
+          "detail": {
+            "$ref": "#/components/schemas/ScreeningBlockDetail"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "title": "ScreeningBlockResponse",
+        "type": "object"
+      },
       "SecurityEventResponse": {
         "additionalProperties": false,
         "properties": {
@@ -5213,6 +5264,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningBlockResponse"
+                }
+              }
+            },
+            "description": "Input blocked by Cerberus screening (transport-layer refusal, not a governance verdict)"
           },
           "422": {
             "content": {

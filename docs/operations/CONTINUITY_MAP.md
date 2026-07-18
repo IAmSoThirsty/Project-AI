@@ -1704,3 +1704,45 @@ item that needs a human business decision rather than further agent work.
 ### Safe to continue
 Yes. No blockers. Part 2 (governance framework residual: DPR, governance-agent, TS adapters,
 corpus/docs ingest) is the remaining declared scope and is not yet started.
+
+---
+
+## SESSION UPDATE 2026-07-18 — Cerberus C2: gateway input screening (fail-closed, non-governance)
+
+- **Status:** COMPLETE and gate-verified (see verification below). Work was found
+  in-flight (uncommitted, green) at session start and closed out per the approved plan.
+- **Task:** C2 of the Cerberus reconciliation
+  (`docs/operations/CERBERUS_RECONCILIATION_MATRIX.md`): wire `cerberus.security.InputValidator`
+  into the API gateway as a transport-layer input screen on `/atlas/sludge`. Screening is
+  explicitly NOT governance: a block is HTTP 403 with `screening_is_not_governance: true`;
+  verdict authority stays in `packages/governance`.
+- **Behavior:** block = 403 plus a quarantine JSON record (raw input + matched patterns,
+  operator-only) and a `cerberus.screening_block` Chimera relay event carrying only the input SHA-256; pass =
+  202 + `X-Cerberus-Screening` header; screener error = 503 fail-closed (nothing unscreened
+  passes). Quarantine dir: `screening_quarantine_dir` param / `PROJECT_AI_QUARANTINE_DIR` env /
+  default `.project-ai/automation/quarantine`.
+- **Files created:** `packages/api/src/project_ai_api/screening.py`,
+  `packages/api/tests/test_api_screening.py`.
+- **Files modified:** `packages/api/src/project_ai_api/app.py` (wire screen into `atlas_sludge`),
+  `packages/cerberus/src/cerberus/security/modules/input_validation.py` (XXE fix: bare
+  `SYSTEM`/`PUBLIC` patterns → context-bound `\bSYSTEM\s+["']` — upstream misclassified
+  ordinary prose as XXE and shadowed prompt-injection verdicts),
+  `packages/cerberus/tests/test_cerberus_security.py` (XXE regression tests),
+  `tests/test_cerberus_guardbot_integration.py` (updated to post-fix classification),
+  `docs/api/openapi-baseline.json` (403 screening response documented),
+  `uv.lock` (V3Q lock regen the 4ec1d0d1 wave had not committed),
+  `packages/api/src/project_ai_api/integration/cross_engine_dispatcher.py`
+  (pre-existing mypy error from the V3Q wiring wave: `v3q_gate` param was annotated
+  `ExecutionGate | None`, corrected to `ThirstysV3QGate | None`).
+- **Repo-wide pytest repair (pre-existing, V3Q wave):** full-suite collection was broken
+  since `4ec1d0d1` — `packages/thirstys-standard-v3q/tests/test_authority.py` collided with
+  `packages/capability/tests/test_authority.py` (default pytest import mode, no test-dir
+  `__init__.py`; repo convention is unique basenames). Renamed via `git mv` to
+  `tests/test_v3q_authority.py`. `packages/thirstys-standard-v3q/SHA256SUMS` still lists the
+  old path — left untouched deliberately: it is import-time provenance evidence, verified by
+  no automated tooling (checked workflows + tools/).
+- **Known pre-existing debt (NOT fixed, out of scope):** `uv run ruff check .` fails with
+  18 errors, all under `docs/governance/thirstys-standard-v3q-manifest/` (committed at
+  `0ab1bbae` as byte-preserved standalone copies). Repo-wide ruff is red until that dir
+  is either fixed or added to ruff excludes — needs a deliberate decision because the
+  copies were integrated as-is.
