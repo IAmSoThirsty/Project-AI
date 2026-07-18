@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Security
+from thirstys_standard_runtime.integration import build_gate
 
 from accounts import Account, AccountService, AccountServiceError, StoredSession
 from capability import CapabilityAuthority
@@ -98,6 +99,7 @@ def build_swr_runtime(secret: str, *, bundle_dir: Path | str | None = None) -> W
         ),
         capabilities=capabilities,
         events=EventSpine(),
+        v3q_gate=build_gate(),
     )
     runtime = WarRoomCore(
         execution=execution,

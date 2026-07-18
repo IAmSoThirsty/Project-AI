@@ -114,6 +114,27 @@ class ExecutionGate:
             )
         return self._finish(request, Outcome.ALLOW, "", output, evidence_hash)
 
+    def with_v3q(
+        self,
+        v3q_gate: ThirstysV3QGate,
+        *,
+        allow_cel_indeterminate: bool = False,
+    ) -> ExecutionGate:
+        """Return a copy of this gate with the V3Q pre-check enabled.
+
+        Reuses the exact same fail-closed evaluation as the original, just with
+        ``v3q_gate`` set. Call sites that receive a fully-built ``ExecutionGate``
+        can opt into V3Q governance without reconstructing it.
+        """
+        return ExecutionGate(
+            governance=self._governance,
+            capabilities=self._capabilities,
+            events=self._events,
+            chimera_relay=self._chimera_relay,
+            v3q_gate=v3q_gate,
+            v3q_allow_on_cel_indeterminate=allow_cel_indeterminate,
+        )
+
     def _evaluate_v3q(
         self,
         request: ActionRequest,
@@ -137,8 +158,10 @@ class ExecutionGate:
         if isinstance(override, dict):
             task = override.get("task", {"task_id": request.resource or request.action_id})
             action = override.get("action", {})
-            authority_proof = override.get("authority_proof")
-            approval_proof = override.get("approval_proof")
+            # Authority/approval proofs may live inside the override or as
+            # sibling top-level state keys (state["v3q_authority_proof"]).
+            authority_proof = override.get("authority_proof") or state_map.get("v3q_authority_proof")
+            approval_proof = override.get("approval_proof") or state_map.get("v3q_approval_proof")
         else:
             task = {"task_id": request.resource or request.action_id}
             action = {

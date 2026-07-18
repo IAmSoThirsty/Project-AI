@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+
+from thirstys_standard_runtime.integration import build_gate, request_to_v3q_action
+
 from atlas.analysis import Projection
 from atlas.audit import AuditCategory, AuditLevel, AuditTrail
 from execution import ExecutionGate, ExecutionResult
@@ -16,7 +20,13 @@ class Atlas:
         execution: ExecutionGate,
         audit_trail: AuditTrail | None = None,
     ) -> None:
-        self._execution = execution
+        # Opt into Thirsty's Standard V3 + Q fail-closed pre-check when it is
+        # configured. ``build_gate()`` returns None unless a trusted-key registry
+        # is supplied; in that case we keep the caller-supplied gate untouched
+        # (so a caller-provided V3Q gate is preserved, and the no-keys default
+        # leaves existing behavior unchanged).
+        v3q = build_gate()
+        self._execution = execution.with_v3q(v3q) if v3q is not None else execution
         self._projections: list[Projection] = []
         # Audit trail is OPTIONAL. If provided, every decision is recorded
         # with full rationale. This implements the "explanation chain" — the
@@ -36,6 +46,7 @@ class Atlas:
         *,
         analyst_id: str,
         capability_token: str,
+        state: Mapping[str, object] | None = None,
     ) -> ExecutionResult:
         request = ActionRequest(
             action_id=f"atlas:{projection.projection_sha256[:16]}",
@@ -52,10 +63,14 @@ class Atlas:
             self._projections.append(projection)
             return {"projection_sha256": projection.projection_sha256}
 
+        v3q_state: dict[str, object] = {"v3q_action": request_to_v3q_action(request)}
+        if state:
+            v3q_state.update(state)
         result = self._execution.submit_action(
             request,
             capability_token=capability_token,
             executor=persist,
+            state=v3q_state,
         )
 
         # Emit audit event if trail is attached. This records WHY reality

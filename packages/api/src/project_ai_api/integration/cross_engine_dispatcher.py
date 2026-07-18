@@ -30,6 +30,11 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any
 
+from thirstys_standard_runtime.integration import (
+    build_gate,
+    request_to_v3q_action,
+)
+
 from capability import CapabilityAuthority, CapabilityError
 from execution import ExecutionGate
 from kernel import ActionRequest, JsonValue, Outcome
@@ -120,6 +125,7 @@ class CrossEngineDispatcher:
         capability_authority: CapabilityAuthority | None = None,
         audit_log_path: str | None = None,
         actor_id: str = DEFAULT_DISPATCHER_ACTOR,
+        v3q_gate: ExecutionGate | None = None,
     ) -> None:
         """
         Initialize cross-engine dispatcher.
@@ -143,7 +149,13 @@ class CrossEngineDispatcher:
             "global": global_engine,
             "emp": emp_engine,
         }
-        self.execution_gate = execution_gate
+        # Opt into V3Q governance only when a configured gate is available
+        # (build_gate returns None unless a trusted-key registry is supplied).
+        v3q = build_gate() if v3q_gate is None else v3q_gate
+        self.execution_gate = (
+            execution_gate.with_v3q(v3q) if (execution_gate is not None and v3q is not None) else execution_gate
+        )
+        self._v3q_gate = v3q
         self.capability_authority = capability_authority
         self.audit_log_path = audit_log_path
         self.actor_id = actor_id
@@ -396,6 +408,11 @@ class CrossEngineDispatcher:
                 request,
                 capability_token=capability_token,
                 executor=_gated_executor,
+                state=(
+                    {"v3q_action": request_to_v3q_action(request)}
+                    if self._v3q_gate is not None
+                    else None
+                ),
             )
         except Exception as error:
             cascade.rejection_reason = f"ExecutionGate error: {error}"

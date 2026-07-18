@@ -155,6 +155,62 @@ class ThirstysV3QGate:
         return result
 
 
+def build_gate(
+    *,
+    cel_free: bool = False,
+    trusted_keys: dict[str, Any] | None = None,
+) -> ThirstysV3QGate | None:
+    """Construct a ``ThirstysV3QGate`` from the packaged manifest.
+
+    Returns ``None`` when no trusted-key registry is supplied — callers should
+    treat ``None`` as "V3Q not configured" and leave the gate as-is (existing
+    governance path stands). This is the safe default: V3Q enforcement requires
+    authenticated authority proofs, and enabling it without trusted keys would
+    deny every action (correct fail-closed, but it would block the whole system).
+
+    When ``trusted_keys`` are provided, the gate enforces the standard's
+    fail-closed controls (authority / scope / expiry / unknown class) against the
+    manifest shipped with this package. Callers that need authority *verification*
+    must supply the real owner key registry produced by the upstream tooling.
+    """
+    if trusted_keys is None:
+        return None
+    return ThirstysV3QGate(trusted_keys=trusted_keys, cel_free=cel_free)
+
+
+def request_to_v3q_action(
+    request: Any,
+    *,
+    operation_to_action: dict[str, tuple[str, str]] | None = None,
+) -> dict[str, Any]:
+    """Map a Beginnings ``ActionRequest`` into the V3Q ``{task, action}`` shape.
+
+    ``operation_to_action`` lets a caller map its operation strings onto the V3Q
+    ``(action_class, action_type)`` pairs declared in the manifest — e.g.
+    ``{"atlas.projection.record": ("local_reversible", "write")}``. When an
+    operation is unmapped, the V3Q ``class``/``type`` fall back to the raw
+    operation string, which the engine classifies as UNKNOWN and **denies closed**
+    — never a silent pass.
+
+    Authority/approval proofs are intentionally NOT fabricated here; a caller that
+    has authenticated them should inject them via ``state["v3q_authority_proof"]``
+    at submit time. Absent proofs fail closed inside V3Q.
+    """
+    operation = getattr(request, "operation", "")
+    if operation_to_action and operation in operation_to_action:
+        mapped_class, mapped_type = operation_to_action[operation]
+    else:
+        mapped_class = mapped_type = operation
+    return {
+        "task": {"task_id": getattr(request, "resource", "") or getattr(request, "action_id", "")},
+        "action": {
+            "action_id": getattr(request, "action_id", ""),
+            "class": mapped_class,
+            "type": mapped_type,
+        },
+    }
+
+
 def manifest_integrity_summary(manifest_path: str | Path | None = None) -> dict[str, Any]:
     """Compute the same rule/control/test/CEL counts ``validate_manifest.py`` reports.
 

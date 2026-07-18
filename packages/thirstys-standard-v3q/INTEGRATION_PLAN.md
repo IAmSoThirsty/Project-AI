@@ -107,9 +107,43 @@ docs, tests, SHA256SUMS).
 - Tests added to `packages/execution/tests/test_gate.py` (5 tests, all green): deny-blocks,
   allow-proceeds, cel_unavailable-fails-closed, engine-fault-fails-closed, absent-keeps-behavior.
 
-## 12. Remaining integration call-site work (honest, not done)
-The seam is live but **opt-in**. Each consequential caller (api/cross_engine_dispatcher,
-api/swr_workflows, atlas/service) must decide how to classify its operations into V3Q action types
-and pass a constructed `ThirstysV3QGate(...)` + mapping via `state`. Mapping Beginnings operations
-to the V3Q `action_classes` in the manifest is per-caller policy work and was left for those owners
-(consistent with not disturbing concurrent repo integrations).
+## 12. Live call-site wiring (added 2026-07-17, per user `the word`)
+The seam from §11 is now wired into ALL three consequential call sites. To avoid
+breaking the running system or faking enforcement, V3Q is **opt-in by trusted keys**:
+- `build_gate(trusted_keys=None)` returns `None` (not configured). Call sites wrap
+  their `ExecutionGate` with `with_v3q(build_gate(...))` only when a trusted-key
+  registry is supplied. With no keys, behavior is byte-for-byte unchanged (default).
+- When configured with real owner keys, V3Q sits in front of the live path and
+  **requires a signed authority proof**; absence or bad proof fails closed even
+  though Beginnings governance would allow.
+
+Wiring performed:
+- `packages/execution/gate.py`: added `ExecutionGate.with_v3q(...)` (reuses the exact
+  same fail-closed `_evaluate_v3q` logic) so call sites that receive a pre-built gate
+  can opt in without reconstructing it.
+- `packages/thirstys-standard-v3q/.../integration.py`: added `build_gate(trusted_keys=...)`
+  (None -> not configured) and generalized `request_to_v3q_action` to
+  `operation_to_action: dict[op -> (class_id, type)]` (unmapped ops fail closed).
+- `packages/api/.../cross_engine_dispatcher.py`: added optional `v3q_gate` param; when
+  set (or via `build_gate()`), wraps the injected gate and injects `state["v3q_action"]`.
+- `packages/api/.../swr_workflows.py`: `ExecutionGate(... v3q_gate=build_gate())`.
+- `packages/atlas/.../service.py`: `Atlas.__init__` wraps with `build_gate()` (preserving
+  any caller-supplied gate); `Atlas.record` gained a `state` param forwarded to submit;
+  `state["v3q_action"]` is derived from the request via `request_to_v3q_action`.
+- `packages/atlas/tests/test_atlas.py`: added 2 REAL-enforcement tests using a generated
+  Ed25519 owner key + signed authority proof proving the gate truly gates Atlas' live
+  path (no proof -> DENY; valid proof -> ALLOW; tampered scope -> DENY). These prove the
+  seam is live, not dormant. Atlas maps `atlas.projection.record -> ("local_reversible","write")`.
+
+Validation (real harness): execution 29 passed; atlas 369 passed (incl. 2 V3Q
+enforcement); api 52 passed / 1 skipped (db); v3q 32 passed; dispatcher 5 passed;
+ruff clean on all touched files. Source repo `T:/00-Active/thirstys-standard-v3q-manifest`
+unchanged (aggregate SHA `d84dbe7a…`). Concurrent work (Cerberus, API screening,
+UX-UI standard, uv.lock) left untouched.
+
+## 13. Remaining (genuinely open, per-caller policy)
+Each domain should (a) persist a real trusted-key registry (upstream
+`tools/create_owner_key.py`) and inject it via `build_gate(trusted_keys=...)`, and
+(b) complete its `operation_to_action` map for every operation it issues. Until then
+V3Q stays dormant-by-default (safe) at each call site. The dispatcher's cross-engine
+operations (`cross_engine_cascade.*`) are not yet mapped to V3Q action types.
