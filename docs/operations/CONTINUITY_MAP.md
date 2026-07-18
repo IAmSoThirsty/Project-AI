@@ -1860,3 +1860,91 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
   serves the built Vite app; API `/health/live` live. Rollback rehearsal:
   `docker compose down` → 0 services remain.
 - **Safe to continue:** yes.
+
+---
+
+## SESSION UPDATE 2026-07-18 (continuation 3) — Remaining-work closeout: push readiness, installer, packaged desktop, portals, PyPI, registry constraints, Cerberus C3
+
+- **Status:** Local/automatable work COMPLETE; credential/authorization items isolated
+  below. Baseline `55f57e9f`; two new commits this wave (`c0e0f7b0` portal a11y fix,
+  plus this continuity/report commit).
+- **1. Push readiness:** branch `main`, remote `origin =
+  https://github.com/IAmSoThirsty/Project-AI.git`, 32 commits pending
+  (`origin/main..HEAD` before this wave), 251 files +33,227/−864. Diff scanned: no
+  .env/keys/secrets/binaries/temp files; extension histogram dominated by .py/.md/.json;
+  5 PNGs are portal icons. Gates on the exact tree: ruff + format clean; full pytest
+  3020 passed (this session); pre-commit all-files green (at 6334fd54/55f57e9f).
+  AWAITING USER AUTHORIZATION: `git push origin main`.
+- **2. Windows installer:** BUILT LOCALLY with WiX 7.0.0 via
+  `tools/build_windows_installer.ps1` → `build/windows-installer/installer/`
+  Project-AI-Desktop-Setup.exe 96,657,090 bytes SHA256
+  A372D7A88E80070797C3FB9C4C3CCA04CF606078B1A71A0E13E280A75251BE29 (+ Desktop.msi
+  31,232,000 / Api.msi 64,784,868). Install/launch/uninstall smoke
+  (`tools/smoke_windows_installer.ps1`) BLOCKED locally: the Burn bundle's silent
+  install requires elevation; this session is non-interactive and unelevated — the
+  bundle sat 20+ min on an invisible UAC prompt, was killed, no temp prefix or ARP
+  entries were created (verified clean). The identical path runs elevated in CI job
+  `windows-installer` (ci.yaml:145). To run locally: elevated PowerShell →
+  `./tools/smoke_windows_installer.ps1 -BundleExe build/windows-installer/installer/Project-AI-Desktop-Setup.exe`.
+- **3. Desktop packaged build:** PyInstaller onedir per acceptance gate →
+  `build/acceptance/desktop/dist/Project-AI-Desktop/Project-AI-Desktop.exe` (1,914,234
+  bytes, SHA256 D1128F0C…C57FCD), launched packaged (offscreen smoke mode) exit 0.
+  Full windowed launch incl. bundled-api spawn/termination is the installer smoke's
+  assertion set (elevation-blocked locally, CI-covered).
+- **4/5. Triumvirate portal + GitHub Pages:** CSS built; served under an exact
+  base-path simulation (junction `…/pages-sim/the_triumvirate` + http-server): 17
+  routes, manifest, and all 5 manifest icons HTTP 200. Jest 33/33 (was 32; new
+  `tests/accessibility.test.js`). DEFECT FIXED (`c0e0f7b0`): dead/non-focusable skip
+  links (index + manifesto_gateway). DEFECT DOCUMENTED, NOT FIXED (design decision):
+  manifesto_gateway audits Lighthouse accessibility 0.93 vs the 0.95 budget in
+  `lighthouserc.js` — 46 color-contrast nodes rooted in light `-50` gradient stops +
+  low-contrast accent tokens under the dark theme, and link-in-text-block. Index page
+  audits 1.0 post-fix. Deployment: the portal targets
+  `https://iamsothirsty.github.io/the_triumvirate/` (separate repo, per DEPLOYMENT.md);
+  publishing = push portal contents to that repo (owner authorization; no workflow in
+  this repo deploys it).
+- **6. Registry constraints (DHI):** dhi.io denies anonymous pulls (probe: anonymous
+  token request → 401). Local builds work because Docker Desktop is logged in
+  (credsStore=desktop; no secrets in config.json). CRITICAL PRE-PUSH RISK: the last
+  green CI run (`c831f192`, run 28299731926) PREDATES the DHI migration (`3e00fdab` is
+  not its ancestor) — ci.yaml `compose` job, publish.yaml build jobs, and
+  image-scan.yaml have never run against dhi.io bases and will fail on push until a
+  Docker Hub credential with DHI entitlement is added as repo secrets plus a
+  `docker/login-action` step (registry: dhi.io) in those jobs.
+- **7. PyPI readiness:** dependency closure mapped: publishing
+  accounts/workflows requires {kernel, security, governance, capability, execution,
+  cerberus, accounts, workflows}; mcp-server is standalone (httpx only). Built 9
+  sdists + 9 wheels (`uv build --package … --out-dir build/pypi-dist`); installed the
+  full closure + mcp-server into a clean 3.12.10 venv (10 packages incl. thirsty-lang
+  from PyPI); import smoke 10/10 OK, `mcp_server.server:main` present; `uvx twine
+  check` 18/18 PASSED; all nine names return 404 on pypi.org (unregistered as of
+  2026-07-18). NO publication performed. Gap: no PyPI publishing workflow exists in
+  the repo (publish.yaml is containers-only). requires-python is the exact pin
+  `==3.12.10` — deliberate workspace convention; loosening it for PyPI is a decision,
+  not done. Publication sequence (after user authorizes + holds tokens):
+  `uv publish --index testpypi build/pypi-dist/*` → verify installs → `uv publish
+  build/pypi-dist/*` (tokens via UV_PUBLISH_TOKEN env, never stored).
+- **8. ADR-002:** exists, complete in the repo's ADR format (richer than ADR-001),
+  Status "Proposed — NOT implemented", with test plan and current-state evidence. The
+  repo defines no acceptance authority; acceptance + implementation scheduling is the
+  user's decision. No edit made.
+- **9. Portal AT acceptance (assistive technology):** criteria per
+  HUMAN_INTERFACE_IMPLEMENTATION_PLAN §12: automated checks + MANDATORY manual NVDA
+  (Windows) and TalkBack (Android) passes — the manual passes are human-executed and
+  remain BLOCKED (human acceptance). Automated evidence this session: operator-console
+  19 role/aria-query tests + docs 5 + proof 4 + triumvirate 33; production builds 4/4;
+  live 9/9 container stack with portals serving (earlier today); triumvirate Lighthouse
+  a11y index 1.0 / manifesto 0.93 (budget 0.95 — FAIL, design decision above). axe-core
+  per-route automation: NOT DEFINED in any portal (documented as future work in the
+  plan) — a documentation/tooling gap, not a pass.
+- **10. Cerberus C3:** COMPLETE-BY-PRECONDITION-ABSENT. C0/C1/C2 executable evidence:
+  212 tests pass (packages/cerberus + tests/test_cerberus_guardbot_integration.py +
+  packages/api/tests/test_api_screening.py); the C2 screening contract is asserted by
+  6 boundary tests (403+quarantine+audit, pass+header, 503 fail-closed on screener
+  error, auth-before-screening, downstream validation preserved, contract constants);
+  gateway boot-proven earlier today. C3 is defined
+  (INTEGRATION_VERIFICATION_CERBERUS_WATERFALL.md) as role-host wiring "only if
+  apps/services ever accepts model-facing input" — apps/services exposes exactly two
+  GET routes (/health/live, /service/info), no model-facing input: the C3 trigger
+  condition is verifiably absent. Status: NOT IMPLEMENTED BY DESIGN, correctly.
+- **Safe to continue:** yes.
