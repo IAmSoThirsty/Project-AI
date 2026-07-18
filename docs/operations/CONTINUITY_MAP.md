@@ -1880,12 +1880,15 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
   Project-AI-Desktop-Setup.exe 96,657,090 bytes SHA256
   A372D7A88E80070797C3FB9C4C3CCA04CF606078B1A71A0E13E280A75251BE29 (+ Desktop.msi
   31,232,000 / Api.msi 64,784,868). Install/launch/uninstall smoke
-  (`tools/smoke_windows_installer.ps1`) BLOCKED locally: the Burn bundle's silent
-  install requires elevation; this session is non-interactive and unelevated — the
-  bundle sat 20+ min on an invisible UAC prompt, was killed, no temp prefix or ARP
-  entries were created (verified clean). The identical path runs elevated in CI job
-  `windows-installer` (ci.yaml:145). To run locally: elevated PowerShell →
-  `./tools/smoke_windows_installer.ps1 -BundleExe build/windows-installer/installer/Project-AI-Desktop-Setup.exe`.
+  (`tools/smoke_windows_installer.ps1`): first attempt hung on an invisible UAC prompt
+  (unelevated non-interactive shell) and was killed with clean state verified; re-run
+  with the user approving elevation at the machine — ALL CHECKS PASSED, exit 0:
+  silent install to temp prefix (property forwarding verified), Add/Remove Programs
+  shows exactly the bundle ("Project-AI Desktop"), installed app launched and spawned
+  the bundled api process, graceful close terminated the bundled api
+  (aboutToQuit→terminate_supervisor path exercised), silent uninstall removed the
+  install root + ARP entry. The same scripts also run in CI job `windows-installer`
+  (ci.yaml:145).
 - **3. Desktop packaged build:** PyInstaller onedir per acceptance gate →
   `build/acceptance/desktop/dist/Project-AI-Desktop/Project-AI-Desktop.exe` (1,914,234
   bytes, SHA256 D1128F0C…C57FCD), launched packaged (offscreen smoke mode) exit 0.
