@@ -30,6 +30,7 @@ from thirstys_standard_runtime.authority import (
 from thirstys_standard_runtime.canonical import sha256_file
 from thirstys_standard_runtime.integration import (
     ThirstysV3QGate,
+    build_gate,
     default_manifest_path,
     manifest_integrity_summary,
 )
@@ -185,3 +186,78 @@ def test_gate_facade_requires_cel_when_not_cel_free(manifest, owner_keys) -> Non
     else:
         with pytest.raises(CELEngineUnavailable):
             ThirstysV3QGate(manifest, registry)
+
+
+# --- Production deployment path (config-driven, auto-minting, fail-safe) -------
+def test_build_gate_is_dormant_without_deployment_config() -> None:
+    # No owner key in the environment -> build_gate() resolves to None and the
+    # system runs on its existing governance (safe default; CI stays green).
+    import os
+
+    saved = os.environ.pop("THIRSTYS_V3Q_OWNER_KEY", None)
+    try:
+        assert build_gate() is None
+    finally:
+        if saved is not None:
+            os.environ["THIRSTYS_V3Q_OWNER_KEY"] = saved
+
+
+def test_build_gate_activates_and_auto_mints_with_owner_key(tmp_path, manifest) -> None:
+    # Simulate a production deployment: an owner private key + a matching trusted
+    # registry are provisioned and pointed at via env vars. build_gate() must
+    # return an ACTIVE gate that self-mints valid authority/approval proofs and
+    # enforces the manifest.
+    import json
+    import os
+
+    from thirstys_standard_runtime.authority import generate_keypair, write_private_key
+
+    private_doc, public_doc = generate_keypair(
+        "owner-primary", "Jeremy / Thirsty",
+        ["authority", "approval", "ratification", "execution_record"],
+    )
+    key_path = tmp_path / "owner-private.json"
+    write_private_key(key_path, private_doc)
+    registry_path = tmp_path / "trusted-keys.json"
+    registry_path.write_text(json.dumps({"keys": [public_doc]}, indent=2), encoding="utf-8")
+
+    saved_owner = os.environ.get("THIRSTYS_V3Q_OWNER_KEY")
+    saved_registry = os.environ.get("THIRSTYS_V3Q_REGISTRY")
+    os.environ["THIRSTYS_V3Q_OWNER_KEY"] = str(key_path)
+    os.environ["THIRSTYS_V3Q_REGISTRY"] = str(registry_path)
+    try:
+        gate = build_gate()
+        assert gate is not None, "deployment config should activate the gate"
+        # Mapped, reversible op -> gate auto-mints a valid authority proof -> ALLOW.
+        allowed = gate.decide(
+            {"task_id": "atlas:abc"},
+            {"action_id": "a1", "class": "local_reversible", "type": "write"},
+            None,
+            None,
+        )
+        assert allowed["decision"] == "allow", allowed
+        # Consequential op (rank 3) requires approval; auto-minted approval -> ALLOW.
+        consequential = gate.decide(
+            {"task_id": "sim:1"},
+            {"action_id": "a2", "class": "externally_consequential", "type": "deploy_visible_service"},
+            None,
+            None,
+        )
+        assert consequential["decision"] == "allow", consequential
+        # Unmapped op falls back to raw string -> unknown class -> DENY (never silent pass).
+        unknown = gate.decide(
+            {"task_id": "x:1"},
+            {"action_id": "a3", "class": "no_such_op", "type": "no_such_op"},
+            None,
+            None,
+        )
+        assert unknown["decision"] == "deny"
+    finally:
+        if saved_owner is not None:
+            os.environ["THIRSTYS_V3Q_OWNER_KEY"] = saved_owner
+        else:
+            os.environ.pop("THIRSTYS_V3Q_OWNER_KEY", None)
+        if saved_registry is not None:
+            os.environ["THIRSTYS_V3Q_REGISTRY"] = saved_registry
+        else:
+            os.environ.pop("THIRSTYS_V3Q_REGISTRY", None)

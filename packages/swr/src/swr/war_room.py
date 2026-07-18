@@ -83,11 +83,18 @@ class SovereignWarRoom:
                 "success": result.success,
             }
 
+        from thirstys_standard_runtime.integration import request_to_v3q_action
+
+        v3q_state: dict[str, object] = {}
+        if governance_state:
+            v3q_state.update(governance_state)
+        v3q_state["v3q_action"] = request_to_v3q_action(request)
+
         return self._execution.submit_action(
             request,
             capability_token=capability_token,
             executor=record,
-            state=governance_state,
+            state=v3q_state,
         )
 
     def results(self) -> tuple[ScenarioResult, ...]:

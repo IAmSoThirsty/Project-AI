@@ -224,6 +224,8 @@ def _v3q_gate(decision: dict[str, object]) -> ThirstysV3QGate:
     gate = ThirstysV3QGate.__new__(ThirstysV3QGate)
     object.__setattr__(gate, "_cel_free", False)
     object.__setattr__(gate, "_engine", _FakeV3QEngine(decision))
+    object.__setattr__(gate, "_owner_private_key", None)
+    object.__setattr__(gate, "_operation_to_action", {})
     return gate
 
 
@@ -300,6 +302,8 @@ def test_v3q_engine_fault_fails_closed() -> None:
     boom_gate = ThirstysV3QGate.__new__(ThirstysV3QGate)
     object.__setattr__(boom_gate, "_cel_free", False)
     object.__setattr__(boom_gate, "_engine", _BoomEngine())
+    object.__setattr__(boom_gate, "_owner_private_key", None)
+    object.__setattr__(boom_gate, "_operation_to_action", {})
     gate = ExecutionGate(
         governance=governance(),
         capabilities=capabilities,

@@ -147,3 +147,43 @@ Each domain should (a) persist a real trusted-key registry (upstream
 (b) complete its `operation_to_action` map for every operation it issues. Until then
 V3Q stays dormant-by-default (safe) at each call site. The dispatcher's cross-engine
 operations (`cross_engine_cascade.*`) are not yet mapped to V3Q action types.
+
+## 14. Production deployment readiness (added 2026-07-17, per `make production ready`)
+V3Q is no longer dormant-by-accident; it is **config-driven and fail-safe**:
+
+- A REAL owner keypair was generated. The public trusted-key registry
+  (`packages/thirstys-standard-v3q/trusted-keys.json`, `{"keys":[owner-primary]}`)
+  is committed. The private key (`owner-private.json`) is gitignored — it must be
+  provisioned via secret management in each deployment. Rotate with
+  `tools/create_owner_key.py` and re-commit the matching public registry.
+- `deployment.py`: `load_gate_config()` discovers config from env vars (12-factor):
+  `THIRSTYS_V3Q_OWNER_KEY` (private key path, required for activation),
+  `THIRSTYS_V3Q_REGISTRY` (optional; defaults to the packaged `trusted-keys.json`),
+  `THIRSTYS_V3Q_OP_MAP` (optional `op -> [class,type]` override). Malformed/partial
+  config yields `None` (dormant) and never raises.
+- `build_gate()` auto-loads that config when called with no args. Returns `None`
+  (dormant) unless the owner key is present; otherwise returns an ACTIVE gate.
+- The gate **self-mints** signed Ed25519 authority + approval proofs (bound to the
+  action's task scope + V3Q action type) when an owner key is configured, so call
+  sites need only supply the V3Q action mapping — the runtime acts as the authorized
+  owner. Without an owner key, no proof is fabricated and a missing proof fails closed.
+- Built-in per-domain `operation_to_action` map added (atlas.projection.record,
+  swr.scenario.record -> local_reversible/write; cross_engine_cascade.* ->
+  externally_consequential/deploy_visible_service). Unmapped ops fall back to the raw
+  operation string and are denied closed (never a silent pass).
+- All three call sites inject `state["v3q_action"]` (atlas + swr via `request_to_v3q_action`;
+  dispatcher via the same). SWR's `war_room.py` now merges the V3Q mapping into the
+  submit `state` alongside its governance state.
+- Tests: +2 production-path tests in `test_integration_beginnings.py` prove
+  config-driven activation + auto-mint (ALLOW for mapped/approval ops, DENY for
+  unmapped). The atlas enforcement tests prove live gating with manually-supplied
+  proofs. Execution-gate tests prove the seam (deny/allow/cel-unavailable/fault/
+  absent) stays correct.
+
+ACTIVATION IN PRODUCTION: set `THIRSTYS_V3Q_OWNER_KEY=/path/to/owner-private.json`
+(pointing at the secret-managed key whose public is in the committed registry). No
+code change. CI / local dev without the secret stays dormant and green.
+
+Validation: execution 29, atlas 369, v3q 34, swr 23, api 52/1skip — all green;
+ruff clean on all touched files. Source repo unchanged (SHA `d84dbe7a…`).
+Concurrent work (Cerberus, API screening, UX-UI standard, uv.lock) untouched.

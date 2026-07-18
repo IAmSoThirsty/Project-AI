@@ -1,0 +1,17 @@
+{
+  "keys": [
+    {
+      "key_id": "owner-primary",
+      "principal_id": "Jeremy / Thirsty",
+      "algorithm": "Ed25519",
+      "public_key": "RlUXGDP-DK9yuDlVyloThRxV6lJQmeaFaLT-43BFh8g",
+      "purposes": [
+        "approval",
+        "authority",
+        "execution_record",
+        "ratification"
+      ],
+      "status": "active"
+    }
+  ]
+}
