@@ -313,10 +313,10 @@ class Decision:
     decision_id: str
     decision: DecisionType
     reasons: list[str]
-    evidence_used: list[Evidence]
-    policies_used: list[Policy]
+    evidence_used: list[str]  # Evidence.source names, as serialized/audited
+    policies_used: list[str]  # policy names from PolicyEngine.evaluate()
     authority_used: str
-    constraints: list[Constraint]
+    constraints: list[str]  # Constraint.name values, as serialized/audited
     competing_values: list[str]
     risk_analysis: dict[str, object]
     confidence: float

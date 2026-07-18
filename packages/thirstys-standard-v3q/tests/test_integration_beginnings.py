@@ -213,7 +213,8 @@ def test_build_gate_activates_and_auto_mints_with_owner_key(tmp_path, manifest) 
     from thirstys_standard_runtime.authority import generate_keypair, write_private_key
 
     private_doc, public_doc = generate_keypair(
-        "owner-primary", "Jeremy / Thirsty",
+        "owner-primary",
+        "Jeremy / Thirsty",
         ["authority", "approval", "ratification", "execution_record"],
     )
     key_path = tmp_path / "owner-private.json"
@@ -239,7 +240,11 @@ def test_build_gate_activates_and_auto_mints_with_owner_key(tmp_path, manifest) 
         # Consequential op (rank 3) requires approval; auto-minted approval -> ALLOW.
         consequential = gate.decide(
             {"task_id": "sim:1"},
-            {"action_id": "a2", "class": "externally_consequential", "type": "deploy_visible_service"},
+            {
+                "action_id": "a2",
+                "class": "externally_consequential",
+                "type": "deploy_visible_service",
+            },
             None,
             None,
         )

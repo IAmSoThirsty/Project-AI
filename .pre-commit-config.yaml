@@ -1,13 +1,13 @@
-exclude: ^(apps/web-static/ompt-reference/|docs/internal/frozen-history/|docs/internal/verification/|docs/legacy-archive/|docs/reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+exclude: ^(apps/web-static/ompt-reference/|docs/governance/thirstys-standard-v3q-manifest/|docs/internal/frozen-history/|docs/internal/verification/|docs/legacy-archive/|docs/reference/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: ^(apps/web-static/ompt-reference/|docs/internal/verification/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(apps/web-static/ompt-reference/|docs/internal/verification/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/|packages/thirstys-standard-v3q/(README\.md|SHA256SUMS|trusted-keys\.json|docs/verification/))
       - id: end-of-file-fixer
-        exclude: ^(apps/web-static/ompt-reference/|docs/internal/verification/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/)
+        exclude: ^(apps/web-static/ompt-reference/|docs/internal/verification/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/|packages/thirstys-standard-v3q/(README\.md|SHA256SUMS|trusted-keys\.json|docs/verification/))
       - id: check-yaml
         exclude: ^helm/project-ai/templates/
       - id: check-json

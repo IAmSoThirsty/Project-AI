@@ -14,7 +14,7 @@ This enables the central research question:
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -68,7 +68,7 @@ class PurposeConstraint:
 
     def is_active(self, at_time: datetime | None = None) -> bool:
         """Check if constraint is currently active."""
-        at_time = at_time or datetime.utcnow()
+        at_time = at_time or datetime.now(UTC)
         if not self.binding:
             return False
         return not (self.expiry and at_time > self.expiry)
@@ -131,7 +131,7 @@ class PurposeReflectionContext:
     ambiguity_level: float  # 0.0-1.0: how many unresolved questions?
     escalation_needed: bool  # Should this go to human?
 
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 @dataclass
@@ -213,9 +213,9 @@ class PurposeTriggerDetector:
 
     def evaluate_triggers(
         self,
-        decision_history: list[dict],
-        current_context: dict,
-        authority_context: dict,
+        decision_history: list[dict[str, Any]],
+        current_context: dict[str, Any],
+        authority_context: dict[str, Any],
     ) -> list[PurposeReflectionTrigger]:
         """
         Evaluate all trigger conditions against current state.
@@ -244,22 +244,22 @@ class PurposeTriggerDetector:
 
         return triggers
 
-    def _check_no_user_interaction(self, history: list[dict]) -> bool:
+    def _check_no_user_interaction(self, history: list[dict[str, Any]]) -> bool:
         """Trigger if agent has made N+ decisions autonomously."""
         autonomous_count = sum(1 for d in history if d.get("user_directed", False) is False)
         return autonomous_count >= self.no_interaction_threshold
 
-    def _check_multiple_valid_actions(self, context: dict) -> bool:
+    def _check_multiple_valid_actions(self, context: dict[str, Any]) -> bool:
         """Trigger if 3+ constitutionally valid actions exist."""
         valid_actions = context.get("valid_action_alternatives", [])
         return len(valid_actions) >= self.multiple_action_threshold
 
-    def _check_long_term_uncertainty(self, history: list[dict]) -> bool:
+    def _check_long_term_uncertainty(self, history: list[dict[str, Any]]) -> bool:
         """Trigger if N+ decisions made under high uncertainty."""
         high_uncertainty = sum(1 for d in history if d.get("uncertainty", 0) > 0.6)
         return high_uncertainty >= self.uncertainty_threshold
 
-    def _check_conflicting_commitments(self, context: dict) -> bool:
+    def _check_conflicting_commitments(self, context: dict[str, Any]) -> bool:
         """Trigger if commitments pull in conflicting directions."""
         commitments = context.get("active_commitments", [])
         if len(commitments) < 2:
@@ -267,11 +267,11 @@ class PurposeTriggerDetector:
         # Simplified: if commitments have conflicting action_constraints, trigger
         return any(c.get("conflict_detected", False) for c in commitments)
 
-    def _check_self_modification(self, context: dict) -> bool:
+    def _check_self_modification(self, context: dict[str, Any]) -> bool:
         """Trigger if self-modification proposed."""
-        return context.get("self_modification_proposed", False)
+        return bool(context.get("self_modification_proposed", False))
 
-    def _check_repeated_optimization(self, history: list[dict]) -> bool:
+    def _check_repeated_optimization(self, history: list[dict[str, Any]]) -> bool:
         """Trigger if optimization toward single objective for N+ decisions."""
         if len(history) < self.optimization_threshold:
             return False
@@ -302,7 +302,7 @@ class PurposeFailureDetector:
     def evaluate(
         self,
         decision_history: list[PurposeDecision],
-        trigger_history: list[tuple],  # (trigger, timestamp) tuples
+        trigger_history: list[tuple[PurposeReflectionTrigger, float]],
     ) -> dict[str, dict[str, Any]]:
         """
         Evaluate all failure modes across decision history.
@@ -321,7 +321,7 @@ class PurposeFailureDetector:
     def _detect_fixation(
         self,
         history: list[PurposeDecision],
-        triggers: list[tuple],
+        triggers: list[tuple[PurposeReflectionTrigger, float]],
     ) -> dict[str, Any]:
         """Purpose Fixation: Reflection disabled or always returns CONTINUE."""
         if not history:
@@ -354,7 +354,7 @@ class PurposeFailureDetector:
     def _detect_blindness(
         self,
         history: list[PurposeDecision],
-        triggers: list[tuple],
+        triggers: list[tuple[PurposeReflectionTrigger, float]],
     ) -> dict[str, Any]:
         """Constitutional Blindness: Missed trigger conditions."""
         # This requires external instrumentation to detect missed triggers
@@ -473,7 +473,7 @@ class PurposeFailureDetector:
         high_ambiguity_low_legitimacy = sum(
             1
             for d in history
-            if d.reflection_context
+            if d.reflection_context is not None
             and d.reflection_context.ambiguity_level > 0.6
             and d.legitimacy_score < 0.5
         )

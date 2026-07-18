@@ -237,7 +237,14 @@ def test_v3q_deny_blocks_before_governance() -> None:
         governance=governance(),
         capabilities=capabilities,
         events=EventSpine(),
-        v3q_gate=_v3q_gate({"decision": "deny", "reason": "Q-002-B rejected", "action_class": "x", "control_ids": []}),
+        v3q_gate=_v3q_gate(
+            {
+                "decision": "deny",
+                "reason": "Q-002-B rejected",
+                "action_class": "x",
+                "control_ids": [],
+            }
+        ),
     )
     result = gate.submit_action(
         request(),
@@ -257,7 +264,9 @@ def test_v3q_allow_proceeds_to_execution() -> None:
         governance=governance(),
         capabilities=capabilities,
         events=EventSpine(),
-        v3q_gate=_v3q_gate({"decision": "allow", "reason": "", "action_class": "x", "control_ids": []}),
+        v3q_gate=_v3q_gate(
+            {"decision": "allow", "reason": "", "action_class": "x", "control_ids": []}
+        ),
     )
     result = gate.submit_action(
         request(),
@@ -277,7 +286,13 @@ def test_v3q_cel_unavailable_fails_closed_by_default() -> None:
         capabilities=capabilities,
         events=EventSpine(),
         v3q_gate=_v3q_gate(
-            {"decision": "allow", "reason": "", "action_class": "x", "control_ids": [], "cel_unavailable": True}
+            {
+                "decision": "allow",
+                "reason": "",
+                "action_class": "x",
+                "control_ids": [],
+                "cel_unavailable": True,
+            }
         ),
     )
     result = gate.submit_action(

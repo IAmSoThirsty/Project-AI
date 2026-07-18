@@ -1746,3 +1746,61 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
   `0ab1bbae` as byte-preserved standalone copies). Repo-wide ruff is red until that dir
   is either fixed or added to ruff excludes — needs a deliberate decision because the
   copies were integrated as-is.
+
+---
+
+## SESSION UPDATE 2026-07-18 (continuation) — Production-deployment-readiness gate wave: every repo-wide gate green
+
+- **Status:** COMPLETE and gate-verified. Goal: Production-Deployment-Ready per v3 §25.
+- **Deliberate decision (closes the open ruff question above):**
+  `docs/governance/thirstys-standard-v3q-manifest/` added to ruff `extend-exclude`, mypy
+  `exclude`, and the pre-commit top-level `exclude` — the copies are byte-preserved
+  standalone evidence (same treatment as `packages/security/reference`), so tooling must
+  not lint or rewrite them. `uv run ruff check .` now passes repo-wide.
+- **Ruff format debt (V3Q/C2 waves):** 5 files were committed unformatted
+  (`packages/atlas/tests/test_atlas.py`, `packages/execution/src/execution/gate.py`,
+  `packages/execution/tests/test_gate.py`,
+  `packages/thirstys-standard-v3q/src/thirstys_standard_runtime/integration.py`,
+  `packages/thirstys-standard-v3q/tests/test_integration_beginnings.py`); formatted,
+  `ruff format --check .` green (608 files).
+- **CI strict-mypy gate was RED (V3Q wiring wave, not previously recorded):**
+  `packages/execution/src/execution/gate.py:177` passed `object`-typed state values to
+  `ThirstysV3QGate.decide()`. Fixed by isinstance-narrowing non-dict proofs to `None`
+  (fail-closed on missing authority, so malformed input cannot widen access). The
+  optional-import block was also restructured to a `TYPE_CHECKING`-only import (the name
+  is annotation-only under `from __future__ import annotations`), removing an
+  environment-dependent `type: ignore` that broke the pre-commit mypy hook and deleting
+  the dead `_HAVE_THIRSTYS_V3Q` flag. CI-gate mypy: 168 source files, no issues.
+- **DPR strict-mypy debt CLEARED (44 → 0, was open since the DPR port):** mechanical
+  annotations across `policy.py`, `trust.py`, `audit.py`, `purpose.py`, `pipeline.py`,
+  plus real fixes: `Decision.evidence_used/policies_used/constraints` model annotations
+  corrected to `list[str]` (runtime always stored serialized names, the dataclass lied);
+  `AuditChain.verify()` now treats non-str `audit_hash`/`signature` as tamper
+  (fail-closed, previously would raise); `temporal_state["now"]` isinstance-narrowed;
+  `_authority_status_for_action` typed `tuple[str, AuthorityGrant | None]` with a ""
+  sentinel (loop always sets a status; no unreachable branch). `datetime.utcnow()`
+  (banned per CLAUDE.md) replaced with `datetime.now(UTC)` in `purpose.py` and the
+  phase7 test file — all datetimes in that flow are now aware, tests pass.
+- **Pre-commit `--all-files` green** (standard skips: `no-commit-to-branch`, `gitleaks`
+  — gitleaks is CI-enforced in `ci.yaml` "Pre-commit and gitleaks"). The EOF/whitespace
+  hooks tried to rewrite hash-listed V3Q provenance files
+  (`packages/thirstys-standard-v3q/{README.md,trusted-keys.json,docs/verification/}` and
+  the manifest copy's README/junit — both READMEs and both junit files are listed in
+  their `SHA256SUMS`); those were REVERTED and the paths excluded from the two rewriting
+  hooks. The emp-defense artifact JSONs are not hash-verified anywhere, so their
+  line-ending normalization was accepted (converges the hook, consistent with
+  `cf1e8e57`/`b5da00f1`).
+- **§25 checklist evidence:** `.env.example` present; compose.yaml with 9 healthchecks;
+  `helm/project-ai` present; README quick start (install/test/build) + operator doc
+  index; `docs/deployment/ENVIRONMENT_VARIABLES.md`; rollback documented in
+  `docs/deployment/PRODUCTION_DEPLOY.md` §7 and `PRE_DEPLOYMENT_CHECKLIST.md`; CI
+  workflows (ci/nightly/publish/image-scan/vulnscan/sbom); secrets scanning CI-enforced.
+- **Verification (executed):** full `uv run python -m pytest -q` green post-wave on the
+  final working tree: 3020 passed, 5 env-gated skips (postgres URL unset), 1 documented
+  xfail, exit 0, 182.49s — and warnings dropped 199 → 1 (the `utcnow()` deprecation
+  noise is gone). `uv run ruff check .` clean; `ruff format --check .` clean (608
+  files); CI-gate mypy 168 files no issues; `uv run mypy packages/dpr/src` 7 files no
+  issues; pre-commit all-files every hook green.
+- **Remaining (unchanged):** push decision; PyPI registration; ADR-002 implementation;
+  portal AT acceptance; Cerberus C3 (contingent); Waterfall W1 (pending user approval).
+- **Safe to continue:** yes.

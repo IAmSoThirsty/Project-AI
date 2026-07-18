@@ -202,6 +202,7 @@ extend-exclude = [
     "packages/_staging",     # byte-preserved Stage 4 migration inputs
     "packages/security/reference",  # byte-preserved Chimera import evidence
     "packages/rlp/governance_framework",  # allowlisted framework reference assets
+    "docs/governance/thirstys-standard-v3q-manifest",  # byte-preserved V3+Q standalone copies (0ab1bbae)
     "tools/_archive",        # one-shot tool archive
 ]
 
@@ -261,6 +262,7 @@ exclude = [
     "packages/_staging",
     "packages/security/reference",
     "packages/rlp/governance_framework",
+    "docs/governance/thirstys-standard-v3q-manifest",
     "packages/global-scenario/src",
     "packages/emp-defense/src",
     "packages/emp-defense/tests",

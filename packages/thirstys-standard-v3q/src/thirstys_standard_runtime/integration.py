@@ -64,7 +64,10 @@ BUILTIN_OPERATION_TO_ACTION: dict[str, tuple[str, str]] = {
     "swr.scenario.record": ("local_reversible", "write"),
     # Cross-engine dispatcher cascades mutate OTHER engines -> consequential. Mapped
     # to the externally-consequential class so they require owner approval.
-    "cross_engine_cascade.scenario_activation": ("externally_consequential", "deploy_visible_service"),
+    "cross_engine_cascade.scenario_activation": (
+        "externally_consequential",
+        "deploy_visible_service",
+    ),
     "cross_engine_cascade.inject_crisis": ("externally_consequential", "deploy_visible_service"),
     "cross_engine_cascade.inject_event": ("externally_consequential", "deploy_visible_service"),
 }
@@ -203,9 +206,7 @@ class ThirstysV3QGate:
             result["cel_unavailable"] = True
         return result
 
-    def _mint_authority_proof(
-        self, task: dict[str, Any], action: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _mint_authority_proof(self, task: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
         scope = f"task:{task.get('task_id', '')}"
         action_type = action.get("type", "")
         payload = {
@@ -219,9 +220,7 @@ class ThirstysV3QGate:
         }
         return sign_document(payload, self._owner_private_key, "authority")
 
-    def _mint_approval_proof(
-        self, task: dict[str, Any], action: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _mint_approval_proof(self, task: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
         scope = f"action:{action.get('action_id', '')}"
         action_type = action.get("type", "")
         payload = {

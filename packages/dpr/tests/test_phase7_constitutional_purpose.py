@@ -9,7 +9,7 @@ Research hypothesis:
    chosen purposes?"
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from dpr.purpose import (
@@ -29,7 +29,7 @@ class TestPurposeModels:
 
     def test_purpose_constraint_is_active(self):
         """Verify constraint active/expiry logic."""
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
 
         # Active constraint
         active = PurposeConstraint(
@@ -105,7 +105,7 @@ class TestPurposeModels:
 
         decision = PurposeDecision(
             decision_id="d1",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             reflection_context=ctx,
             decision_type=PurposeDecisionType.CONTINUE,
             chosen_purpose="test_purpose",
@@ -199,7 +199,7 @@ class TestPurposeFailureModes:
     ) -> PurposeDecision:
         """Helper to build test decisions."""
         ctx = PurposeReflectionContext(
-            reflection_id=f"r_{datetime.utcnow().timestamp()}",
+            reflection_id=f"r_{datetime.now(UTC).timestamp()}",
             current_purpose=purpose,
             purpose_origin=PurposeOrigin.CHOSEN,
             purpose_rationale="...",
@@ -222,8 +222,8 @@ class TestPurposeFailureModes:
         )
 
         return PurposeDecision(
-            decision_id=f"d_{datetime.utcnow().timestamp()}",
-            timestamp=datetime.utcnow(),
+            decision_id=f"d_{datetime.now(UTC).timestamp()}",
+            timestamp=datetime.now(UTC),
             reflection_context=ctx,
             decision_type=decision_type,
             chosen_purpose=purpose,
@@ -374,7 +374,7 @@ class TestPhase7Integration:
 
         decision = PurposeDecision(
             decision_id="d_new",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             reflection_context=ctx,
             decision_type=PurposeDecisionType.REVISE,
             chosen_purpose="new_purpose",

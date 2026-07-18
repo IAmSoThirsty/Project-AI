@@ -4,28 +4,23 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING
 
 from capability import CapabilityAuthority, CapabilityError
 from governance import GovernanceEngine
 from kernel import ActionRequest, EventSpine, JsonValue, Outcome
 from security import AppendOnlyAuditRelay, report_governance_denial
 
-type Executor = Callable[[ActionRequest], JsonValue]
-
-
 # Thirsty's Standard V3 + Q gate is an optional, fail-closed pre-check that runs
 # in front of the existing GovernanceEngine decision. It is injected by callers
 # that opt into V3Q governance; when absent the gate behaves exactly as before.
-# Import is lazy so the execution package's import graph never hard-depends on
+# The name is only ever used in (string) annotations, so the import is
+# type-checking-only and the execution package's import graph never depends on
 # the v3q package (kept optional per the integration plan).
-try:  # pragma: no cover - exercised only when v3q_gate is supplied
+if TYPE_CHECKING:
     from thirstys_standard_runtime.integration import ThirstysV3QGate
 
-    _HAVE_THIRSTYS_V3Q = True
-except Exception:  # pragma: no cover
-    ThirstysV3QGate = Any  # type: ignore[assignment, misc]
-    _HAVE_THIRSTYS_V3Q = False
+type Executor = Callable[[ActionRequest], JsonValue]
 
 
 @dataclass(frozen=True)
@@ -160,7 +155,9 @@ class ExecutionGate:
             action = override.get("action", {})
             # Authority/approval proofs may live inside the override or as
             # sibling top-level state keys (state["v3q_authority_proof"]).
-            authority_proof = override.get("authority_proof") or state_map.get("v3q_authority_proof")
+            authority_proof = override.get("authority_proof") or state_map.get(
+                "v3q_authority_proof"
+            )
             approval_proof = override.get("approval_proof") or state_map.get("v3q_approval_proof")
         else:
             task = {"task_id": request.resource or request.action_id}
@@ -171,10 +168,12 @@ class ExecutionGate:
             }
             authority_proof = state_map.get("v3q_authority_proof")
             approval_proof = state_map.get("v3q_approval_proof")
+        # Non-dict proofs are treated as absent; the gate fails closed on
+        # missing authority, so malformed input cannot widen access.
+        authority = authority_proof if isinstance(authority_proof, dict) else None
+        approval = approval_proof if isinstance(approval_proof, dict) else None
         try:
-            decision = self._v3q_gate.decide(
-                task, action, authority_proof, approval_proof
-            )
+            decision = self._v3q_gate.decide(task, action, authority, approval)
         except Exception as error:  # gate must never crash the executor open
             return self._deny(
                 request,

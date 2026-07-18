@@ -34,14 +34,20 @@ from __future__ import annotations
 
 import time
 from collections import defaultdict
+from collections.abc import Sequence
+from typing import cast
 
 from .audit import AuditChain, Signer
 from .models import (
+    ActionRiskProfile,
+    AuthorityGrant,
     CandidateEvaluation,
     Decision,
     DecisionType,
     DeliberationContext,
     FailureMode,
+    Policy,
+    RiskAssessment,
     new_decision_id,
 )
 from .policy import PolicyEngine, hash_policy_bundle
@@ -57,23 +63,26 @@ OBEDIENCE_COLLAPSE_RISK_THRESHOLD = 0.3
 
 
 class DeliberationEngine:
-    def __init__(self, signer: Signer, policies, trust_root: TrustRoot = None):
+    def __init__(
+        self, signer: Signer, policies: Sequence[Policy], trust_root: TrustRoot | None = None
+    ) -> None:
         self.audit_chain = AuditChain(signer)
         self.policy_engine = PolicyEngine(policies)
         self.policy_bundle_hash = hash_policy_bundle(policies)
         self.trust_root = trust_root if trust_root is not None else TrustRoot()
-        self._escalation_counts = defaultdict(int)
-        self._deferral_counts = defaultdict(int)
-        self._delay_counts = defaultdict(int)
+        self._escalation_counts: defaultdict[str, int] = defaultdict(int)
+        self._deferral_counts: defaultdict[str, int] = defaultdict(int)
+        self._delay_counts: defaultdict[str, int] = defaultdict(int)
 
     # ------------------------------------------------------------------
     def decide(self, ctx: DeliberationContext) -> Decision:
         steps = []
         reasons = []
         flags = []
-        policies_used = []
-        candidate_evaluations = []
-        t = ctx.temporal_state.get("now", time.time())
+        policies_used: list[str] = []
+        candidate_evaluations: list[dict[str, object]] = []
+        raw_now = ctx.temporal_state.get("now")
+        t = float(raw_now) if isinstance(raw_now, (int, float)) else time.time()
 
         # Step 0 (Phase 3): policy-source integrity.
         steps.append("verify_policy_source_integrity")
@@ -241,7 +250,9 @@ class DeliberationEngine:
                     matched_grant_hash=matched_grant_hash,
                 )
             hold_names = ", ".join(c.name for c in active_holds)
-            soonest = min(c.temporal_hold_until for c in active_holds)
+            soonest = min(
+                c.temporal_hold_until for c in active_holds if c.temporal_hold_until is not None
+            )
             return self._finalize(
                 ctx,
                 DecisionType.DELAY,
@@ -415,7 +426,7 @@ class DeliberationEngine:
         action_name: str,
         at_time: float,
         check_identity_drift: bool = False,
-    ):
+    ) -> tuple[str, AuthorityGrant | None]:
         """
         The ONLY TrustRoot-verified authorization path in this engine. Used
         for both the primary action and every candidate alternative.
@@ -436,13 +447,15 @@ class DeliberationEngine:
         if not covering_this_actor:
             return ("identity_drift" if check_identity_drift else "no_grant_for_action"), None
 
-        best_status = None
-        best_grant = None
+        # covering_this_actor is non-empty here, so the loop always sets a
+        # status; "" is a sentinel no verify_grant() result can collide with.
+        best_status = ""
+        best_grant: AuthorityGrant | None = None
         for g in covering_this_actor:
             status = self.trust_root.verify_grant(g, at_time)
             if status == VALID:
                 return VALID, g
-            if best_status is None or (best_status == EXPIRED and status in FORGERY_STATUSES):
+            if not best_status or (best_status == EXPIRED and status in FORGERY_STATUSES):
                 best_status = status
                 best_grant = g
         return best_status, best_grant
@@ -469,6 +482,7 @@ class DeliberationEngine:
 
         # Get the risk profile for this specific action (Phase 4)
         # Prefer per-action profile; fall back to shared context risk
+        candidate_risk: ActionRiskProfile | RiskAssessment
         if candidate_action in ctx.risk_by_action:
             candidate_risk = ctx.risk_by_action[candidate_action]
             reasons.append(
@@ -594,15 +608,18 @@ class DeliberationEngine:
         )
 
     def _select_viable_alternative(
-        self, ctx: DeliberationContext, at_time: float, out_evaluations: list
-    ):
+        self,
+        ctx: DeliberationContext,
+        at_time: float,
+        out_evaluations: list[dict[str, object]],
+    ) -> CandidateEvaluation | None:
         """
         Evaluates every candidate_alternatives entry (skipping the primary
         action itself), appends each CandidateEvaluation's serialized form
         to out_evaluations (non-viable candidates are audited too), and
         returns the first viable CandidateEvaluation or None.
         """
-        chosen = None
+        chosen: CandidateEvaluation | None = None
         for alt_name in ctx.candidate_alternatives:
             if alt_name == ctx.action.name:
                 continue
@@ -617,15 +634,15 @@ class DeliberationEngine:
         self,
         ctx: DeliberationContext,
         decision_type: DecisionType,
-        reasons,
-        flags,
-        steps,
-        policies_used=None,
-        confidence=None,
-        alternative_actions=None,
-        matched_grant_hash=None,
-        matched_alternative_grant_hash=None,
-        candidate_evaluations=None,
+        reasons: list[str],
+        flags: list[str],
+        steps: list[str],
+        policies_used: list[str] | None = None,
+        confidence: float | None = None,
+        alternative_actions: list[str] | None = None,
+        matched_grant_hash: str | None = None,
+        matched_alternative_grant_hash: str | None = None,
+        candidate_evaluations: list[dict[str, object]] | None = None,
     ) -> Decision:
         # GOVERNANCE_BYPASS invariant. A policy-source-integrity halt occurs
         # before verify_identity/verify_authority by design (step 0) — that
@@ -666,7 +683,8 @@ class DeliberationEngine:
             candidate_evaluations=candidate_evaluations or [],
         )
         entry = self.audit_chain.append(d.to_serializable())
-        d.audit_hash = entry["audit_hash"]
-        d.signature = entry["signature"]
-        d.prev_hash = entry["prev_hash"]
+        # append() sets these three keys as str on every entry it returns.
+        d.audit_hash = cast(str, entry["audit_hash"])
+        d.signature = cast(str, entry["signature"])
+        d.prev_hash = cast(str, entry["prev_hash"])
         return d

@@ -146,9 +146,7 @@ def _v3q_enabled_stack(resource: str) -> tuple[Atlas, CapabilityAuthority, dict[
     )
     # Real Ed25519 owner key trusted for the `authority` purpose over atlas tasks.
     # Trusted-key registry uses the canonical upstream shape: {"keys": [public_doc]}.
-    private_doc, public_doc = generate_keypair(
-        "owner-1", "atlas-owner", {"authority", "approval"}
-    )
+    private_doc, public_doc = generate_keypair("owner-1", "atlas-owner", {"authority", "approval"})
     gate = ExecutionGate(
         governance=gatekeeper,
         capabilities=issuer,
@@ -189,7 +187,9 @@ def test_v3q_enforced_atlas_requires_signed_authority() -> None:
     item = projection()
     resource = f"atlas:{item.projection_sha256}"
     atlas, issuer, keys = _v3q_enabled_stack(resource)
-    token = issuer.issue(subject="analyst-1", operation=RECORD_OPERATION, resource=resource, ttl=timedelta(minutes=5))
+    token = issuer.issue(
+        subject="analyst-1", operation=RECORD_OPERATION, resource=resource, ttl=timedelta(minutes=5)
+    )
 
     # No V3Q authority proof -> V3Q denies closed even though governance allows.
     blocked = atlas.record(item, analyst_id="analyst-1", capability_token=token)
@@ -219,14 +219,18 @@ def test_v3q_enforced_atlas_rejects_bad_proof() -> None:
     item = projection()
     resource = f"atlas:{item.projection_sha256}"
     atlas, issuer, keys = _v3q_enabled_stack(resource)
-    token = issuer.issue(subject="analyst-1", operation=RECORD_OPERATION, resource=resource, ttl=timedelta(minutes=5))
+    token = issuer.issue(
+        subject="analyst-1", operation=RECORD_OPERATION, resource=resource, ttl=timedelta(minutes=5)
+    )
     v3q_action = _v3q_action_for(
         __import__("kernel").ActionRequest(
             f"atlas:{item.projection_sha256[:16]}", "analyst-1", RECORD_OPERATION, resource
         )
     )
     # Tampered scope -> signature invalid -> V3Q denies.
-    bad_proof = _signed_authority_proof(keys["private"], "task:someone-elses-task", v3q_action["action"]["type"])
+    bad_proof = _signed_authority_proof(
+        keys["private"], "task:someone-elses-task", v3q_action["action"]["type"]
+    )
     result = atlas.record(
         item,
         analyst_id="analyst-1",

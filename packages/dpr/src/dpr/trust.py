@@ -14,6 +14,8 @@ event (REFUSE), not an attack signal (SAFE_HALT).
 
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 from .audit import Signer, canonical_json, sha256_hex
 from .models import AuthorityGrant
 
@@ -29,7 +31,7 @@ MALFORMED = "malformed"
 FORGERY_STATUSES = frozenset({UNKNOWN_GRANTOR, UNSIGNED, INVALID_SIGNATURE, MALFORMED})
 
 
-def grant_signable_body(grant: AuthorityGrant) -> dict:
+def grant_signable_body(grant: AuthorityGrant) -> dict[str, object]:
     """Canonical, deterministic body a grantor signs over. Order-independent
     (dict, hashed via canonical_json) and excludes the signature itself."""
     return {
@@ -69,7 +71,11 @@ def sign_grant(signer: Signer, grant: AuthorityGrant) -> AuthorityGrant:
 
 
 def issue_signed_grant(
-    signer: Signer, grantor: str, grantee: str, scope, expires_at: float | None = None
+    signer: Signer,
+    grantor: str,
+    grantee: str,
+    scope: Iterable[str],
+    expires_at: float | None = None,
 ) -> AuthorityGrant:
     """Build + sign an AuthorityGrant in one call. `signer` must be the grantor's key."""
     grant = AuthorityGrant(
@@ -85,8 +91,8 @@ class TrustRoot:
     verify as VALID, regardless of what the grant claims.
     """
 
-    def __init__(self):
-        self._keys: dict = {}
+    def __init__(self) -> None:
+        self._keys: dict[str, str] = {}
 
     def register(self, grantor_id: str, public_key_b64: str) -> None:
         self._keys[grantor_id] = public_key_b64

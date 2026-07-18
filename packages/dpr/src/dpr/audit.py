@@ -21,7 +21,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 
 
-def canonical_json(obj) -> bytes:
+def canonical_json(obj: object) -> bytes:
     """Deterministic canonical JSON: sorted keys, fixed separators, no whitespace drift."""
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
 
@@ -74,9 +74,9 @@ class AuditChain:
 
     def __init__(self, signer: Signer):
         self.signer = signer
-        self.entries: list = []
+        self.entries: list[dict[str, object]] = []
 
-    def append(self, decision_payload: dict) -> dict:
+    def append(self, decision_payload: dict[str, object]) -> dict[str, object]:
         prev_hash = self.entries[-1]["audit_hash"] if self.entries else self.GENESIS
         payload = dict(decision_payload)
         payload["prev_hash"] = prev_hash
@@ -89,14 +89,14 @@ class AuditChain:
         self.entries.append(entry)
         return entry
 
-    def verify(self):
+    def verify(self) -> tuple[bool, int | None, str | None]:
         """Returns (ok: bool, first_bad_index: Optional[int], reason: Optional[str])."""
         prev_hash = self.GENESIS
         for i, entry in enumerate(self.entries):
             check = dict(entry)
             audit_hash = check.pop("audit_hash", None)
             signature = check.pop("signature", None)
-            if audit_hash is None or signature is None:
+            if not isinstance(audit_hash, str) or not isinstance(signature, str):
                 return False, i, "missing audit_hash/signature"
             if check.get("prev_hash") != prev_hash:
                 return False, i, "prev_hash link broken (CHAIN_CORRUPTION)"

@@ -9,10 +9,13 @@ of "deny by default / no trusted shortcuts" for policy evaluation.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 from .audit import canonical_json, sha256_hex
+from .models import Policy
 
 
-def hash_policy_bundle(policies) -> str:
+def hash_policy_bundle(policies: Iterable[Policy]) -> str:
     """
     Phase 3. Deterministic fingerprint of a policy set. Used to detect the
     integrity gap where DeliberationContext.policies could diverge from the
@@ -22,27 +25,25 @@ def hash_policy_bundle(policies) -> str:
     is a governance-integrity failure, not a normal input variation — the
     context is *lying* about what it will be evaluated against.
     """
-    body = sorted(
-        [{"name": p.name, "rule": p.rule, "priority": p.priority} for p in policies],
-        key=lambda d: (d["name"], d["rule"], d["priority"]),
-    )
+    ordered = sorted(policies, key=lambda p: (p.name, p.rule, p.priority))
+    body = [{"name": p.name, "rule": p.rule, "priority": p.priority} for p in ordered]
     return sha256_hex(canonical_json(body))
 
 
 class PolicyEngine:
-    def __init__(self, policies):
+    def __init__(self, policies: Iterable[Policy]) -> None:
         # Highest priority evaluated first so an explicit high-priority DENY
         # can override a lower-priority ALLOW deterministically.
         self.policies = sorted(policies, key=lambda p: -p.priority)
 
-    def evaluate(self, action_name: str):
+    def evaluate(self, action_name: str) -> tuple[bool, list[str], list[str]]:
         """
         Returns (allowed: bool, policies_used: list[str], reasons: list[str]).
         POLICY_BYPASS invariant: this function is the ONLY path that may
         return allowed=True; callers must not synthesize an allow.
         """
-        used = []
-        reasons = []
+        used: list[str] = []
+        reasons: list[str] = []
 
         for p in self.policies:
             if not p.rule.startswith("DENY:"):
