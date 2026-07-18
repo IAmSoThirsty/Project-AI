@@ -2,11 +2,13 @@ name: project-ai
 
 # ============================================================================
 # Port Assignments (see docs/PORT_LEDGER.md)
-# - API:          127.0.0.1:8000 → 8000  (published)
-# - Docs Portal:  127.0.0.1:4173 → 8080  (published)
-# - Proof Portal: 127.0.0.1:4174 → 8080  (published)
-# - Genesis:      8080  (internal only)
+# - API:              127.0.0.1:8000 → 8000  (published)
+# - Docs Portal:      127.0.0.1:4173 → 8080  (published)
+# - Proof Portal:     127.0.0.1:4174 → 8080  (published)
+# - Operator Console: 127.0.0.1:4175 → 8080  (published)
+# - Genesis:          8080  (internal only)
 # - swr/atlas/arbiter-rlp: 8000 (internal only)
+# - Postgres:         5432  (internal only)
 # ============================================================================
 
 x-python-defaults: &python-defaults
@@ -35,6 +37,10 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: project-ai-postgres
+    # Run as the postgres user directly: the image entrypoint then skips its
+    # root-only chown/chmod steps, which cap_drop [ALL] forbids (as root it
+    # crash-loops with "Operation not permitted" before initdb ever runs).
+    user: postgres
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]

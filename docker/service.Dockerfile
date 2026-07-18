@@ -8,7 +8,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy
+    UV_LINK_MODE=copy \
+    UV_PYTHON_INSTALL_DIR=/opt/uv-python
 WORKDIR /app
 
 FROM base AS builder
@@ -21,8 +22,11 @@ COPY apps/services ./apps/services
 RUN uv sync --frozen --no-dev --package project-ai-service-host
 
 FROM base AS runtime
-# Copy venv from builder
+# Copy venv from builder, plus the uv-managed interpreter the venv symlinks to.
+# Without UV_PYTHON_INSTALL_DIR the interpreter lands under /root (mode 0700),
+# which UID 10001 cannot traverse at runtime — exec fails permission-denied.
 COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /opt/uv-python /opt/uv-python
 # Copy application code
 COPY README.md LICENSE ./
 COPY packages ./packages

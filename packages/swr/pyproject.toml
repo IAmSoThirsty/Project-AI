@@ -14,6 +14,7 @@ dependencies = [
     "project-ai-execution",
     "project-ai-governance",
     "project-ai-kernel",
+    "project-ai-thirstys-standard-v3q",
     "click>=8.1.0",
     "fastapi>=0.115.0",
     "jinja2>=3.1.0",

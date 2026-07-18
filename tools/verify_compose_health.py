@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the seven-service Compose runtime and container security settings."""
+"""Verify the nine-service Compose runtime and container security settings."""
 
 from __future__ import annotations
 
@@ -15,6 +15,8 @@ EXPECTED_SERVICES = {
     "atlas",
     "docs-portal",
     "genesis",
+    "operator-console",
+    "postgres",
     "proof-portal",
     "swr",
 }
@@ -73,6 +75,7 @@ def main() -> int:
         "http://127.0.0.1:8000/health/live": '"status":"live"',
         "http://127.0.0.1:4173/healthz": "live",
         "http://127.0.0.1:4174/healthz": "live",
+        "http://127.0.0.1:4175/healthz": "live",
     }
     for url, expected in endpoint_expectations.items():
         body = _http_text(url)
@@ -95,7 +98,8 @@ def main() -> int:
         for failure in failures:
             print(f"FAIL: {failure}")
         return 1
-    print("compose runtime: 7/7 healthy and security settings verified")
+    total = len(EXPECTED_SERVICES)
+    print(f"compose runtime: {total}/{total} healthy and security settings verified")
     return 0
 
 

@@ -1804,3 +1804,59 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
 - **Remaining (unchanged):** push decision; PyPI registration; ADR-002 implementation;
   portal AT acceptance; Cerberus C3 (contingent); Waterfall W1 (pending user approval).
 - **Safe to continue:** yes.
+
+---
+
+## SESSION UPDATE 2026-07-18 (continuation 2) — UX/UI production-deployment readiness; full 9-service stack boot-proven; 3 deployment bugs fixed
+
+- **Status:** COMPLETE and runtime-verified. Goal: all UX/UI work production-deployment-ready.
+  User steering during the wave: "create what is missing if required."
+- **UI surfaces verified by execution (all green):**
+  - Web (pnpm): `pnpm install --frozen-lockfile` (CI=true for pnpm's non-TTY modules-dir
+    consent); `pnpm web:lint` clean (max-warnings 0); `pnpm web:test` — operator-console 19,
+    docs-portal 5, proof-portal 4 (vitest) + triumvirate-portal 32 (jest) = 60 tests, all
+    passing; `pnpm web:build` — 4/4 portals build (triumvirate is a static-site rebuild,
+    deploys via GitHub Pages per its own production-readiness tests).
+  - Desktop (PyQt6): 27 tests passed offscreen; acceptance-gate source smoke
+    (`QT_QPA_PLATFORM=offscreen PROJECT_AI_DESKTOP_SMOKE=1 uv run --package
+    project-ai-desktop python -m project_ai_desktop`) exit 0. Packaged onedir build remains
+    CI's job ("Desktop (offscreen, unsigned onedir)").
+  - SWR: 23 package tests passed. Android: CI job reproduced locally —
+    `gradlew --no-daemon testDebugUnitTest assembleDebug` BUILD SUCCESSFUL in 13m37s.
+  - Helm: `helm template project-ai helm/project-ai | tools/verify_helm_template.py` —
+    27 manifests verified (portals.yaml covers operator-console).
+- **Live stack boot (first full boot since the 7-service era) exposed THREE production
+  deployment bugs, all fixed and re-proven:**
+  1. `compose.yaml` postgres crash-looped: the official entrypoint's root-phase
+     chown/chmod is forbidden by `cap_drop [ALL]`. Fix: `user: postgres` (entrypoint
+     skips root steps; named volume carries postgres ownership; hardening kept intact).
+     The postgres-data volume was verified EMPTY before the fix (no data at risk;
+     postgres had never initialized).
+  2. `docker/service.Dockerfile` (swr/atlas/arbiter-rlp): venv python symlinked to a
+     uv-managed interpreter under `/root/.local` (mode 0700) — unreachable for UID 10001,
+     exec permission-denied. Fix: `UV_PYTHON_INSTALL_DIR=/opt/uv-python` + copy into
+     runtime — the exact pattern `docker/api.Dockerfile` already had (the DHI migration
+     fixed api but not service).
+  3. `docker/genesis.Dockerfile`: musl-linked binary from the alpine DHI builder shipped
+     into a glibc debian runtime — exec "no such file or directory" (missing
+     `/lib/ld-musl-x86_64.so.1`, `libgcc_s.so.1`). Static crt-static builds are impossible
+     here (DHI rust image has no rustup; global RUSTFLAGS breaks host proc-macros —
+     both attempted, both failed with evidence). Fix: runtime = `alpine:3.24` +
+     `apk add ca-certificates libgcc` (matches builder libc).
+- **Undeclared-dependency bug (V3Q wiring wave):** api container crashed
+  `ModuleNotFoundError: thirstys_standard_runtime` — atlas/service.py, api swr_workflows +
+  cross_engine_dispatcher, and swr war_room import it, but NO package declared it (local
+  `--all-packages` venv masked it). Fix: `project-ai-thirstys-standard-v3q` added to
+  dependencies of `packages/atlas`, `packages/api`, `packages/swr`; `uv lock` regenerated
+  (+6 lines, three edges only); 444 api/atlas/swr tests re-passed.
+- **Verifier debt:** `tools/verify_compose_health.py` still expected the historical
+  7-service stack — operator-console (a UI surface) and postgres were deployed but never
+  health-verified. Updated to 9 services + the 4175 healthz endpoint; compose.yaml port
+  comment updated (PORT_LEDGER.md was already current). mypy tools (39 files) + ruff green.
+- **Runtime proof:** `docker compose up -d --build` → all 9 services running+healthy;
+  `tools/verify_compose_health.py` → "compose runtime: 9/9 healthy and security settings
+  verified" (readonly rootfs, cap_drop ALL, no-new-privileges on every container,
+  including postgres); portal healthz 4173/4174/4175 all "live"; operator-console root
+  serves the built Vite app; API `/health/live` live. Rollback rehearsal:
+  `docker compose down` → 0 services remain.
+- **Safe to continue:** yes.

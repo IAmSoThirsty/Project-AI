@@ -1111,6 +1111,7 @@ dependencies = [
     { name = "project-ai-security" },
     { name = "project-ai-swr" },
     { name = "project-ai-taar" },
+    { name = "project-ai-thirstys-standard-v3q" },
     { name = "project-ai-workflows" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -1132,6 +1133,7 @@ requires-dist = [
     { name = "project-ai-security", editable = "packages/security" },
     { name = "project-ai-swr", editable = "packages/swr" },
     { name = "project-ai-taar", editable = "packages/taar" },
+    { name = "project-ai-thirstys-standard-v3q", editable = "packages/thirstys-standard-v3q" },
     { name = "project-ai-workflows", editable = "packages/workflows" },
     { name = "pyinstaller", marker = "extra == 'build'", specifier = ">=6.11.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
@@ -1152,6 +1154,7 @@ dependencies = [
     { name = "numpy" },
     { name = "project-ai-execution" },
     { name = "project-ai-kernel" },
+    { name = "project-ai-thirstys-standard-v3q" },
     { name = "scipy" },
     { name = "thirsty-lang" },
 ]
@@ -1162,6 +1165,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=1.24,<2.0" },
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
+    { name = "project-ai-thirstys-standard-v3q", editable = "packages/thirstys-standard-v3q" },
     { name = "scipy", specifier = ">=1.11,<2.0" },
     { name = "thirsty-lang", specifier = "==0.8.1" },
 ]
@@ -1621,6 +1625,7 @@ dependencies = [
     { name = "project-ai-execution" },
     { name = "project-ai-governance" },
     { name = "project-ai-kernel" },
+    { name = "project-ai-thirstys-standard-v3q" },
     { name = "pydantic" },
     { name = "thirsty-lang" },
     { name = "uvicorn", extra = ["standard"] },
@@ -1635,6 +1640,7 @@ requires-dist = [
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-governance", editable = "packages/governance" },
     { name = "project-ai-kernel", editable = "packages/kernel" },
+    { name = "project-ai-thirstys-standard-v3q", editable = "packages/thirstys-standard-v3q" },
     { name = "pydantic", specifier = ">=2.7.0" },
     { name = "thirsty-lang", specifier = "==0.8.1" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },

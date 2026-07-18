@@ -20,6 +20,7 @@ dependencies = [
     "project-ai-security",
     "project-ai-swr",
     "project-ai-taar",
+    "project-ai-thirstys-standard-v3q",
     "project-ai-workflows",
     "uvicorn[standard]>=0.34.0",
 ]
