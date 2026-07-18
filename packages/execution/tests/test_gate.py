@@ -187,3 +187,145 @@ def test_governance_and_relay_faults_stay_closed(tmp_path: Path) -> None:
     assert result.outcome is Outcome.DENY
     assert result.reason == "governance evaluation failed: RuntimeError"
     assert events.events()[-1].event_type == "execution.chimera_relay_failed"
+
+
+# --- Thirsty's Standard V3 + Q opt-in pre-check wiring -----------------------
+# The v3q gate is an OPTIONAL, fail-closed pre-check in front of GovernanceEngine.
+# These tests prove the seam is live (not a stub): a denying v3q gate blocks the
+# action before execution; an allowing gate lets it proceed; an engine fault fails
+# closed. The v3q package is optional, so skip the whole block if it is not importable.
+try:
+    from thirstys_standard_runtime.integration import ThirstysV3QGate
+
+    _HAVE_V3Q = True
+except Exception:  # pragma: no cover
+    _HAVE_V3Q = False
+
+pytestmark_v3q = pytest.mark.skipif(not _HAVE_V3Q, reason="thirstys-standard-v3q not importable")
+
+
+class _FakeV3QEngine:
+    """Minimal stand-in for RuntimePolicyEngine.gate_action to drive the seam."""
+
+    def __init__(self, decision: dict[str, object]) -> None:
+        self._decision = decision
+
+    def gate_action(self, *args: object, **kwargs: object) -> object:
+        decision = self._decision
+
+        class _D:
+            def as_dict(self) -> dict[str, object]:
+                return decision
+
+        return _D()
+
+
+def _v3q_gate(decision: dict[str, object]) -> ThirstysV3QGate:
+    gate = ThirstysV3QGate.__new__(ThirstysV3QGate)
+    object.__setattr__(gate, "_cel_free", False)
+    object.__setattr__(gate, "_engine", _FakeV3QEngine(decision))
+    return gate
+
+
+@pytestmark_v3q
+def test_v3q_deny_blocks_before_governance() -> None:
+    capabilities = authority()
+    calls: list[str] = []
+    gate = ExecutionGate(
+        governance=governance(),
+        capabilities=capabilities,
+        events=EventSpine(),
+        v3q_gate=_v3q_gate({"decision": "deny", "reason": "Q-002-B rejected", "action_class": "x", "control_ids": []}),
+    )
+    result = gate.submit_action(
+        request(),
+        capability_token=token(capabilities),
+        executor=lambda action: calls.append(action.action_id),
+    )
+    assert result.outcome is Outcome.DENY
+    assert "v3q gate" in result.reason
+    assert calls == []
+
+
+@pytestmark_v3q
+def test_v3q_allow_proceeds_to_execution() -> None:
+    capabilities = authority()
+    calls: list[str] = []
+    gate = ExecutionGate(
+        governance=governance(),
+        capabilities=capabilities,
+        events=EventSpine(),
+        v3q_gate=_v3q_gate({"decision": "allow", "reason": "", "action_class": "x", "control_ids": []}),
+    )
+    result = gate.submit_action(
+        request(),
+        capability_token=token(capabilities),
+        executor=lambda action: calls.append(action.action_id),
+    )
+    assert result.outcome is Outcome.ALLOW
+    assert calls == ["a-1"]
+
+
+@pytestmark_v3q
+def test_v3q_cel_unavailable_fails_closed_by_default() -> None:
+    capabilities = authority()
+    calls: list[str] = []
+    gate = ExecutionGate(
+        governance=governance(),
+        capabilities=capabilities,
+        events=EventSpine(),
+        v3q_gate=_v3q_gate(
+            {"decision": "allow", "reason": "", "action_class": "x", "control_ids": [], "cel_unavailable": True}
+        ),
+    )
+    result = gate.submit_action(
+        request(),
+        capability_token=token(capabilities),
+        executor=lambda action: calls.append(action.action_id),
+    )
+    assert result.outcome is Outcome.DENY
+    assert "cel-python unavailable" in result.reason
+    assert calls == []
+
+
+@pytestmark_v3q
+def test_v3q_engine_fault_fails_closed() -> None:
+    capabilities = authority()
+    calls: list[str] = []
+
+    class _BoomEngine:
+        def gate_action(self, *args: object, **kwargs: object) -> object:
+            raise RuntimeError("v3q blew up")
+
+    boom_gate = ThirstysV3QGate.__new__(ThirstysV3QGate)
+    object.__setattr__(boom_gate, "_cel_free", False)
+    object.__setattr__(boom_gate, "_engine", _BoomEngine())
+    gate = ExecutionGate(
+        governance=governance(),
+        capabilities=capabilities,
+        events=EventSpine(),
+        v3q_gate=boom_gate,
+    )
+    result = gate.submit_action(
+        request(),
+        capability_token=token(capabilities),
+        executor=lambda action: calls.append(action.action_id),
+    )
+    assert result.outcome is Outcome.DENY
+    assert "v3q gate error" in result.reason
+    assert calls == []
+
+
+@pytestmark_v3q
+def test_v3q_absent_keeps_existing_behavior() -> None:
+    # Default construction (no v3q_gate) must be byte-for-byte the prior behavior.
+    capabilities = authority()
+    calls: list[str] = []
+    gate = ExecutionGate(governance=governance(), capabilities=capabilities, events=EventSpine())
+    result = gate.submit_action(
+        request(),
+        capability_token=token(capabilities),
+        executor=lambda action: calls.append(action.action_id),
+    )
+    assert result.outcome is Outcome.ALLOW
+    assert calls == ["a-1"]

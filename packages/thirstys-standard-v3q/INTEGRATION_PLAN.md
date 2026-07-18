@@ -78,8 +78,38 @@ docs, tests, SHA256SUMS).
 - No changes to any other package or to the two repos Claude is integrating (Cerberus guard
   framework, `packages/thirsty-ux-ui-standard`, API screening). Those are separate working trees.
 
-## 10. Recommended next steps (not executed)
-1. Run real `uv sync` to resolve `cel-python`; re-run full suite so the 15 skipped tests pass or
-   are documented precisely. (Or swap to a maintained CEL engine if 0.4.0 won't build on 3.12.)
-2. Route `ThirstysV3QGate` in front of `execution.ExecutionGate` so the standard is live-enforced,
-   not just available.
+## 10. Recommended next steps
+1. (DONE 2026-07-17) `cel-python` got resolved into the shared `.venv` via a `uv sync` (run by
+   concurrent work, not this integration). The 15 previously-skipped CEL tests now run and pass;
+   full v3q suite is 32 passed. No action needed.
+2. (DONE 2026-07-17, per user `continue`) Route `ThirstysV3QGate` in front of the live
+   `execution.ExecutionGate`. Implemented as an **opt-in, fail-closed pre-check** — see §11.
+
+## 11. Live wiring into `execution.ExecutionGate` (added 2026-07-17)
+`packages/execution/src/execution/gate.py`:
+- `ExecutionGate.__init__` gains two optional kwargs: `v3q_gate: ThirstysV3QGate | None = None`
+  and `v3q_allow_on_cel_indeterminate: bool = False`.
+- When `v3q_gate` is `None` (the default), behavior is byte-for-byte identical to before — every
+  existing caller and the existing 24 execution tests are unaffected.
+- When set, `submit_action` runs the V3Q gate as a pre-check **before** `GovernanceEngine.decide`:
+  - V3Q `deny` → short-circuit DENY carrying the V3Q reason; executor never runs.
+  - V3Q `cel_unavailable` (CEL engine absent) → **fails closed** (DENY) unless the caller passes
+    `v3q_allow_on_cel_indeterminate=True` (opt-in; never the default). Enforces the source README's
+    "do not silently pass applicability" rule.
+  - V3Q `allow` / `require_approval` → proceeds to the normal governance + capability path.
+  - Any V3Q gate exception → fails closed (gate must never crash the executor open).
+- The V3Q import is **lazy** (`try/except` at module load) so the execution package's import graph
+  never hard-depends on the v3q package.
+- ActionRequest → V3Q mapping: caller may supply a full `state["v3q_action"]`
+  ({task, action, authority_proof, approval_proof}); otherwise a best-effort mapping is derived
+  from the request (task_id = resource, action class/type = operation). Missing authority proof
+  fails closed inside V3Q.
+- Tests added to `packages/execution/tests/test_gate.py` (5 tests, all green): deny-blocks,
+  allow-proceeds, cel_unavailable-fails-closed, engine-fault-fails-closed, absent-keeps-behavior.
+
+## 12. Remaining integration call-site work (honest, not done)
+The seam is live but **opt-in**. Each consequential caller (api/cross_engine_dispatcher,
+api/swr_workflows, atlas/service) must decide how to classify its operations into V3Q action types
+and pass a constructed `ThirstysV3QGate(...)` + mapping via `state`. Mapping Beginnings operations
+to the V3Q `action_classes` in the manifest is per-caller policy work and was left for those owners
+(consistent with not disturbing concurrent repo integrations).

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from typing import Any
 
 from capability import CapabilityAuthority, CapabilityError
 from governance import GovernanceEngine
@@ -11,6 +12,20 @@ from kernel import ActionRequest, EventSpine, JsonValue, Outcome
 from security import AppendOnlyAuditRelay, report_governance_denial
 
 type Executor = Callable[[ActionRequest], JsonValue]
+
+
+# Thirsty's Standard V3 + Q gate is an optional, fail-closed pre-check that runs
+# in front of the existing GovernanceEngine decision. It is injected by callers
+# that opt into V3Q governance; when absent the gate behaves exactly as before.
+# Import is lazy so the execution package's import graph never hard-depends on
+# the v3q package (kept optional per the integration plan).
+try:  # pragma: no cover - exercised only when v3q_gate is supplied
+    from thirstys_standard_runtime.integration import ThirstysV3QGate
+
+    _HAVE_THIRSTYS_V3Q = True
+except Exception:  # pragma: no cover
+    ThirstysV3QGate = Any  # type: ignore[assignment, misc]
+    _HAVE_THIRSTYS_V3Q = False
 
 
 @dataclass(frozen=True)
@@ -31,11 +46,20 @@ class ExecutionGate:
         capabilities: CapabilityAuthority,
         events: EventSpine,
         chimera_relay: AppendOnlyAuditRelay | None = None,
+        v3q_gate: ThirstysV3QGate | None = None,
+        v3q_allow_on_cel_indeterminate: bool = False,
     ) -> None:
         self._governance = governance
         self._capabilities = capabilities
         self._events = events
         self._chimera_relay = chimera_relay
+        self._v3q_gate = v3q_gate
+        # When cel-python is unavailable the V3Q gate cannot evaluate
+        # ``applies_when`` applicability and reports ``cel_unavailable``. The
+        # fail-closed default is to DENY rather than silently pass
+        # applicability; opt in to allow-by-flag only when the caller has
+        # accepted that risk explicitly.
+        self._v3q_allow_on_cel_indeterminate = v3q_allow_on_cel_indeterminate
 
     def submit_action(
         self,
@@ -46,6 +70,9 @@ class ExecutionGate:
         state: Mapping[str, object] | None = None,
     ) -> ExecutionResult:
         self._events.append("execution.request_received", {"action_id": request.action_id})
+        v3q_block = self._evaluate_v3q(request, state)
+        if v3q_block is not None:
+            return v3q_block
         try:
             governance = self._governance.decide(request, state)
         except Exception as error:
@@ -86,6 +113,65 @@ class ExecutionGate:
                 evidence_hash=evidence_hash,
             )
         return self._finish(request, Outcome.ALLOW, "", output, evidence_hash)
+
+    def _evaluate_v3q(
+        self,
+        request: ActionRequest,
+        state: Mapping[str, object] | None,
+    ) -> ExecutionResult | None:
+        """Optional fail-closed Thirsty's Standard V3 + Q pre-check.
+
+        Returns a DENY ``ExecutionResult`` when V3Q rejects the action, or
+        ``None`` to proceed to the normal governance path. When no ``v3q_gate``
+        is configured this is a no-op (behavior identical to before).
+
+        Mapping: the caller may supply a fully-formed V3Q task/action/proof via
+        ``state["v3q_action"]`` / ``state["v3q_authority_proof"]`` /
+        ``state["v3q_approval_proof"]``. Otherwise a best-effort mapping is
+        derived from the ``ActionRequest``; missing authority fails closed.
+        """
+        if self._v3q_gate is None:
+            return None
+        state_map = state if isinstance(state, Mapping) else {}
+        override = state_map.get("v3q_action")
+        if isinstance(override, dict):
+            task = override.get("task", {"task_id": request.resource or request.action_id})
+            action = override.get("action", {})
+            authority_proof = override.get("authority_proof")
+            approval_proof = override.get("approval_proof")
+        else:
+            task = {"task_id": request.resource or request.action_id}
+            action = {
+                "action_id": request.action_id,
+                "class": request.operation,
+                "type": request.operation,
+            }
+            authority_proof = state_map.get("v3q_authority_proof")
+            approval_proof = state_map.get("v3q_approval_proof")
+        try:
+            decision = self._v3q_gate.decide(
+                task, action, authority_proof, approval_proof
+            )
+        except Exception as error:  # gate must never crash the executor open
+            return self._deny(
+                request,
+                f"v3q gate error: {type(error).__name__}: {error}",
+                evidence_hash="",
+            )
+        if decision.get("cel_unavailable") and not self._v3q_allow_on_cel_indeterminate:
+            return self._deny(
+                request,
+                "v3q gate: CEL applicability undetermined (cel-python unavailable) — failing closed",
+                evidence_hash="",
+            )
+        if decision.get("decision") in ("deny",):
+            return self._deny(
+                request,
+                f"v3q gate: {decision.get('reason', 'denied')}",
+                evidence_hash="",
+            )
+        # "allow" / "require_approval" -> proceed to normal governance.
+        return None
 
     def _deny(
         self,
