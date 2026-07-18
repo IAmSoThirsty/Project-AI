@@ -289,19 +289,21 @@ def request_to_v3q_action(
     """Map a Beginnings ``ActionRequest`` into the V3Q ``{task, action}`` shape.
 
     ``operation_to_action`` lets a caller map its operation strings onto the V3Q
-    ``(action_class, action_type)`` pairs declared in the manifest — e.g.
-    ``{"atlas.projection.record": ("local_reversible", "write")}``. When an
-    operation is unmapped, the V3Q ``class``/``type`` fall back to the raw
-    operation string, which the engine classifies as UNKNOWN and **denies closed**
-    — never a silent pass.
+    ``(action_class, action_type)`` pairs declared in the manifest. Defaults to the
+    package's :data:`BUILTIN_OPERATION_TO_ACTION` (atlas/swr/dispatcher mappings), so
+    call sites get correct mapping without passing it explicitly. When an operation
+    is unmapped (here or via override), the V3Q ``class``/``type`` fall back to the
+    raw operation string, which the engine classifies as UNKNOWN and **denies
+    closed** — never a silent pass.
 
-    Authority/approval proofs are intentionally NOT fabricated here; a caller that
-    has authenticated them should inject them via ``state["v3q_authority_proof"]``
-    at submit time. Absent proofs fail closed inside V3Q.
+    Authority/approval proofs are intentionally NOT fabricated here; a configured
+    gate self-mints them from the owner key at decision time. Absent proofs fail
+    closed inside V3Q.
     """
+    op_map = operation_to_action or BUILTIN_OPERATION_TO_ACTION
     operation = getattr(request, "operation", "")
-    if operation_to_action and operation in operation_to_action:
-        mapped_class, mapped_type = operation_to_action[operation]
+    if operation in op_map:
+        mapped_class, mapped_type = op_map[operation]
     else:
         mapped_class = mapped_type = operation
     return {
