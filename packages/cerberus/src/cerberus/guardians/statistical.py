@@ -78,6 +78,7 @@ class StatisticalGuardian(Guardian):
                 confidence=0.0,
                 threats_detected=[],
                 reasoning="Content too short for statistical analysis",
+                metadata={"reason": "Content too short for statistical analysis"},
             )
 
         threats: list[str] = []
@@ -85,6 +86,10 @@ class StatisticalGuardian(Guardian):
         anomalies = self._detect_anomalies(stats, threats)
 
         max_z_score = max((abs(a["z_score"]) for a in anomalies.values()), default=0.0)
+        if anomalies:
+            avg_z_score = sum(abs(a["z_score"]) for a in anomalies.values()) / len(anomalies)
+        else:
+            avg_z_score = 0.0
         threat_level = self._z_score_to_threat_level(max_z_score)
         confidence = self._calculate_confidence(anomalies)
         # Fail-closed pairing with the ThreatReport invariant: HIGH and
@@ -106,6 +111,12 @@ class StatisticalGuardian(Guardian):
             confidence=confidence,
             threats_detected=threats,
             reasoning=reasoning,
+            metadata={
+                "computed_stats": stats,
+                "anomalies": anomalies,
+                "max_z_score": max_z_score,
+                "avg_z_score": avg_z_score,
+            },
         )
 
     def _compute_statistics(self, content: str) -> dict[str, float]:

@@ -1,8 +1,7 @@
 """
 cerberus.security — Enterprise security modules (Cerberus Guard Bot port).
 
-Ported from upstream ``IAmSoThirsty/Cerberus`` ``src/cerberus/security/``,
-stdlib-only subset (no new workspace dependencies):
+Ported from upstream ``IAmSoThirsty/Cerberus`` ``src/cerberus/security/``:
 
 - input_validation — attack-vector detection + sanitization
 - rbac — role-based access control
@@ -11,10 +10,14 @@ stdlib-only subset (no new workspace dependencies):
 - audit_logger — HMAC-signed tamper-evident audit logging
 - auth — PBKDF2 password hashing, policy, sessions, lockout
 - monitoring — alerts, metric anomaly detection, Prometheus export
+- encryption — Fernet encryption at rest with key rotation
+  (requires ``cryptography``, declared)
+- sandbox — restricted-execution helpers (see its honest-scope docstring:
+  guard rails and subprocess/container isolation, not a governance boundary)
 
-Deferred (not ported): ``encryption`` (needs the ``cryptography`` package as a
-declared dependency) and ``sandbox`` (Unix-only ``resource`` limits plus
-arbitrary-code ``exec``; out of scope for the canonical governance surface).
+``encryption`` and ``sandbox`` were previously documented as deferred; the
+C1 reconciliation wave (``docs/operations/CERBERUS_RECONCILIATION_MATRIX.md``)
+completed both ports from the standalone guard-bot repo.
 """
 
 from cerberus.security.modules.audit_logger import (
@@ -28,6 +31,11 @@ from cerberus.security.modules.auth import (
     PasswordHasher,
     PasswordPolicy,
     Session,
+)
+from cerberus.security.modules.encryption import (
+    EncryptionKey,
+    EncryptionManager,
+    KeyManager,
 )
 from cerberus.security.modules.input_validation import (
     AttackType,
@@ -52,6 +60,13 @@ from cerberus.security.modules.rbac import (
     RBACManager,
     Role,
 )
+from cerberus.security.modules.sandbox import (
+    AgentSandbox,
+    ContainerSandbox,
+    PluginSandbox,
+    SandboxConfig,
+    SandboxViolation,
+)
 from cerberus.security.modules.threat_detector import (
     ThreatCategory,
     ThreatDetectionResult,
@@ -60,6 +75,7 @@ from cerberus.security.modules.threat_detector import (
 )
 
 __all__ = [
+    "AgentSandbox",
     "Alert",
     "AlertManager",
     "AlertSeverity",
@@ -69,16 +85,23 @@ __all__ = [
     "AuditLogger",
     "AuditSeverity",
     "AuthManager",
+    "ContainerSandbox",
+    "EncryptionKey",
+    "EncryptionManager",
     "InputValidator",
+    "KeyManager",
     "PasswordHasher",
     "PasswordPolicy",
     "Permission",
     "PermissionDenied",
+    "PluginSandbox",
     "RBACManager",
     "RateLimitConfig",
     "RateLimitExceeded",
     "RateLimiter",
     "Role",
+    "SandboxConfig",
+    "SandboxViolation",
     "SecurityMonitor",
     "Session",
     "ThreatCategory",

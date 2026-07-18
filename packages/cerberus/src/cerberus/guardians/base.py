@@ -32,6 +32,10 @@ class ThreatReport:
 
     Invariant (fail-closed): a report at HIGH or CRITICAL threat level
     must block; construction rejects non-blocking HIGH/CRITICAL reports.
+
+    ``metadata`` carries optional per-guardian analysis detail (reconciled
+    from the standalone guard-bot's StatisticalGuardian promotion); it is
+    informational only and never participates in the blocking decision.
     """
 
     guardian_id: str
@@ -42,6 +46,7 @@ class ThreatReport:
     threats_detected: list[str]
     reasoning: str
     timestamp: float | None = None
+    metadata: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
         if not self.should_block and self.threat_level in (ThreatLevel.HIGH, ThreatLevel.CRITICAL):

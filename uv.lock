@@ -1160,6 +1160,7 @@ name = "project-ai-cerberus"
 version = "0.0.0.dev0"
 source = { editable = "packages/cerberus" }
 dependencies = [
+    { name = "cryptography" },
     { name = "project-ai-capability" },
     { name = "project-ai-execution" },
     { name = "project-ai-governance" },
@@ -1168,6 +1169,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", specifier = ">=42.0" },
     { name = "project-ai-capability", editable = "packages/capability" },
     { name = "project-ai-execution", editable = "packages/execution" },
     { name = "project-ai-governance", editable = "packages/governance" },

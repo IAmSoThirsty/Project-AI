@@ -62,6 +62,30 @@ class TestThreatLevel:
 
 
 class TestThreatReport:
+    def test_metadata_defaults_to_none_and_is_informational(self) -> None:
+        report = ThreatReport(
+            guardian_id="g",
+            guardian_type="test",
+            should_block=False,
+            threat_level=ThreatLevel.NONE,
+            confidence=0.0,
+            threats_detected=[],
+            reasoning="clean",
+        )
+        assert report.metadata is None
+
+        annotated = ThreatReport(
+            guardian_id="g",
+            guardian_type="test",
+            should_block=False,
+            threat_level=ThreatLevel.LOW,
+            confidence=0.2,
+            threats_detected=["minor"],
+            reasoning="annotated",
+            metadata={"detail": 1},
+        )
+        assert annotated.metadata == {"detail": 1}
+
     def test_blocking_high_report_valid(self) -> None:
         report = ThreatReport(
             guardian_id="test",
@@ -225,6 +249,23 @@ class TestStatisticalGuardian:
         lenient = StatisticalGuardian(anomaly_threshold=50.0)
         result = lenient.analyze("1234567890" * 5)
         assert not result.should_block
+
+    def test_metadata_carries_statistical_detail(self, guardian: StatisticalGuardian) -> None:
+        result = guardian.analyze("1234567890" * 5)
+        assert result.metadata is not None
+        assert set(result.metadata) == {
+            "computed_stats",
+            "anomalies",
+            "max_z_score",
+            "avg_z_score",
+        }
+        assert "digit_ratio" in result.metadata["anomalies"]
+        assert result.metadata["max_z_score"] >= result.metadata["avg_z_score"] > 0.0
+        assert set(result.metadata["computed_stats"]) >= {"char_entropy", "digit_ratio"}
+
+    def test_metadata_present_for_short_content(self, guardian: StatisticalGuardian) -> None:
+        result = guardian.analyze("hi")
+        assert result.metadata == {"reason": "Content too short for statistical analysis"}
 
 
 class TestGuardianStyles:

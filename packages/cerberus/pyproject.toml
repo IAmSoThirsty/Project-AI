@@ -14,6 +14,7 @@ dependencies = [
     "project-ai-governance",
     "project-ai-execution",
     "project-ai-capability",
+    "cryptography>=42.0",
 ]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",

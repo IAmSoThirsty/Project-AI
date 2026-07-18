@@ -131,6 +131,7 @@ class RateLimiter:
         )
         self.use_token_bucket = use_token_bucket
         self.limiters: dict[str, _Limiter] = {}
+        self._last_access: dict[str, float] = {}
         self.lock = Lock()
         self.global_limiter = self._create_limiter(self.default_config)
 
@@ -146,6 +147,7 @@ class RateLimiter:
         with self.lock:
             if source_id not in self.limiters:
                 self.limiters[source_id] = self._create_limiter(config)
+            self._last_access[source_id] = time.time()
             return self.limiters[source_id]
 
     def check_limit(
@@ -204,9 +206,28 @@ class RateLimiter:
         with self.lock:
             if source_id:
                 self.limiters.pop(source_id, None)
+                self._last_access.pop(source_id, None)
             else:
                 self.limiters.clear()
+                self._last_access.clear()
                 self.global_limiter = self._create_limiter(self.default_config)
+
+    def cleanup_expired(self, max_age_seconds: float = 3600.0) -> int:
+        """Remove per-source limiters not accessed within ``max_age_seconds``.
+
+        The per-source limiter map otherwise grows unbounded (one entry per
+        distinct ``source_id`` ever seen). The standalone guard-bot declares
+        this method but ships it as a no-op stub; this is a real
+        implementation using last-access tracking. Returns the number of
+        limiters removed. The global limiter is never removed.
+        """
+        cutoff = time.time() - max_age_seconds
+        with self.lock:
+            stale = [sid for sid, last in self._last_access.items() if last < cutoff]
+            for sid in stale:
+                self.limiters.pop(sid, None)
+                self._last_access.pop(sid, None)
+            return len(stale)
 
 
 def rate_limit(

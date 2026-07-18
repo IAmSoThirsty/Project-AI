@@ -4,7 +4,8 @@ Honest scope: covers the public API of each ported module — input
 validation, RBAC, rate limiting, threat detection, audit logging, auth
 (PBKDF2), and monitoring — plus a small cross-module pipeline. Timing-based
 behavior uses short windows; cryptographic strength of PBKDF2 is assumed,
-not benchmarked. The deferred encryption/sandbox modules are not covered.
+not benchmarked. The encryption and sandbox modules are covered in
+test_cerberus_encryption.py and test_cerberus_sandbox.py.
 """
 
 import tempfile
@@ -165,6 +166,32 @@ class TestRateLimiting:
         stats = limiter.get_stats("src")
         assert stats["type"] == "token_bucket"
 
+    def test_cleanup_expired_removes_only_stale_sources(self) -> None:
+        limiter = RateLimiter(RateLimitConfig(max_requests=5, window_seconds=10))
+        limiter.check_limit("stale")
+        limiter.check_limit("fresh")
+        # Age one source artificially; cleanup must remove exactly that one.
+        limiter._last_access["stale"] -= 7200.0
+        removed = limiter.cleanup_expired(max_age_seconds=3600.0)
+        assert removed == 1
+        assert "stale" not in limiter.limiters
+        assert "fresh" in limiter.limiters
+
+    def test_cleanup_expired_never_touches_global_limiter(self) -> None:
+        limiter = RateLimiter(RateLimitConfig(max_requests=5, window_seconds=10))
+        limiter.check_limit(None)  # global path only
+        assert limiter.cleanup_expired(max_age_seconds=0.0) == 0
+        assert limiter.check_limit(None)[0]
+
+    def test_reset_clears_last_access_tracking(self) -> None:
+        limiter = RateLimiter(RateLimitConfig(max_requests=5, window_seconds=10))
+        limiter.check_limit("a")
+        limiter.reset("a")
+        assert "a" not in limiter._last_access
+        limiter.check_limit("b")
+        limiter.reset()
+        assert limiter._last_access == {}
+
 
 class TestThreatDetection:
     def test_detect_prompt_injection(self) -> None:
@@ -240,6 +267,18 @@ class TestAuditLogging:
             logger.log(event)
             event.signature = "0" * 64
             assert not logger._verify_event(event)
+
+    def test_convenience_wrappers_log_typed_events(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir, AuditLogger(log_dir=tmpdir) as logger:
+            logger.log_rate_limit(user_id="u", source_ip="127.0.0.1", details={"n": 9})
+            logger.log_config_change(user_id="admin", details={"key": "spawn_factor"})
+            logger.log_guardian_spawned("guardian-7", details={"reason": "escalation"})
+
+            by_type = logger.get_metrics().events_by_type
+            assert by_type[AuditEventType.RATE_LIMIT_EXCEEDED.value] == 1
+            assert by_type[AuditEventType.CONFIG_CHANGED.value] == 1
+            assert by_type[AuditEventType.GUARDIAN_SPAWNED.value] == 1
+            assert logger.verify_log_integrity()
 
 
 class TestAuthentication:

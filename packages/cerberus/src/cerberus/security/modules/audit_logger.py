@@ -247,6 +247,53 @@ class AuditLogger:
             )
         )
 
+    def log_rate_limit(
+        self,
+        user_id: str | None = None,
+        source_ip: str | None = None,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        """Log a rate-limit-exceeded event."""
+        self.log(
+            AuditEvent(
+                event_type=AuditEventType.RATE_LIMIT_EXCEEDED,
+                severity=AuditSeverity.WARNING,
+                user_id=user_id,
+                source_ip=source_ip,
+                details=details or {},
+            )
+        )
+
+    def log_config_change(
+        self,
+        user_id: str | None = None,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        """Log a configuration-change event."""
+        self.log(
+            AuditEvent(
+                event_type=AuditEventType.CONFIG_CHANGED,
+                severity=AuditSeverity.WARNING,
+                user_id=user_id,
+                details=details or {},
+            )
+        )
+
+    def log_guardian_spawned(
+        self,
+        guardian_id: str,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        """Log a guardian-spawned event."""
+        self.log(
+            AuditEvent(
+                event_type=AuditEventType.GUARDIAN_SPAWNED,
+                severity=AuditSeverity.INFO,
+                guardian_id=guardian_id,
+                details=details or {},
+            )
+        )
+
     def log_system_shutdown(self, reason: str, details: dict[str, Any] | None = None) -> None:
         """Log a system-shutdown event."""
         self.log(
