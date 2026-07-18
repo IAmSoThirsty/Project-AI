@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thirstysystems.com/schemas/thirstys-standard-conformance-report-1.1.0.json",
+  "title": "Thirsty's Standard Signed Independent Conformance Report Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["report_id", "manifest_id", "manifest_version", "task_id", "actor", "evaluator", "evaluated_at", "overall_status", "rule_results", "claims", "evidence", "residual_risks", "signature"],
+  "properties": {
+    "report_id": {"type": "string"},
+    "manifest_id": {"type": "string"},
+    "manifest_version": {"type": "string"},
+    "task_id": {"type": "string"},
+    "actor": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "key_id", "process_id"],
+      "properties": {
+        "id": {"type": "string"},
+        "key_id": {"type": "string"},
+        "process_id": {"type": "integer"}
+      }
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "key_id", "process_id", "independent_from_actor"],
+      "properties": {
+        "id": {"type": "string"},
+        "key_id": {"type": "string"},
+        "process_id": {"type": "integer"},
+        "independent_from_actor": {"const": true}
+      }
+    },
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "overall_status": {"enum": ["conformant", "conditionally_conformant", "nonconformant", "blocked"]},
+    "rule_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["control_id", "result", "evidence_ids", "notes"],
+        "properties": {
+          "control_id": {"type": "string"},
+          "result": {"enum": ["pass", "fail", "blocked", "not_applicable", "waived"]},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "waiver_id": {"type": ["string", "null"]},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "claims": {"type": "array", "items": {"type": "object"}},
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "residual_risks": {"type": "array", "items": {"type": "string"}},
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "key_id", "purpose", "value"],
+      "properties": {
+        "algorithm": {"const": "Ed25519"},
+        "key_id": {"type": "string"},
+        "purpose": {"const": "evaluation_report"},
+        "value": {"type": "string"}
+      }
+    }
+  }
+}

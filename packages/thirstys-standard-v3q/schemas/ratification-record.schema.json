@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thirstysystems.com/schemas/ratification-record-1.0.0.json",
+  "title": "Thirsty's Standard Owner Ratification Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["record_type", "manifest_id", "manifest_version", "standard_version", "manifest_sha256", "owner", "approval_authority", "effective_date", "ratified_at", "statement", "signature"],
+  "properties": {
+    "record_type": {"const": "owner_ratification"},
+    "manifest_id": {"type": "string"},
+    "manifest_version": {"type": "string"},
+    "standard_version": {"type": "string"},
+    "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "owner": {"const": "Jeremy / Thirsty"},
+    "approval_authority": {"const": "Jeremy / Thirsty"},
+    "effective_date": {"type": "string", "format": "date"},
+    "ratified_at": {"type": "string", "format": "date-time"},
+    "statement": {"type": "string", "minLength": 80},
+    "signature": {"type": "object", "required": ["algorithm", "key_id", "purpose", "value"], "properties": {"algorithm": {"const": "Ed25519"}, "purpose": {"const": "ratification"}}}
+  }
+}

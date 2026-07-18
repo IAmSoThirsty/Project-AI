@@ -1,0 +1,5 @@
+cel-python==0.4.0
+cryptography>=42,<46
+jsonschema>=4.23,<5
+PyYAML>=6.0.2,<7
+pytest>=8,<9

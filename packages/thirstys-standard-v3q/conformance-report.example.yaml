@@ -1,0 +1,33 @@
+report_id: report-example-001
+manifest_id: urn:thirsty:standard:v3q:manifest
+manifest_version: 1.1.0-rc1
+task_id: example-task
+actor:
+  id: actor-agent
+  key_id: actor-example
+  process_id: 1001
+evaluator:
+  id: independent-evaluator
+  key_id: evaluator-example
+  process_id: 1002
+  independent_from_actor: true
+evaluated_at: '2026-07-17T12:00:00Z'
+overall_status: blocked
+rule_results:
+- control_id: Q-001-A
+  result: blocked
+  evidence_ids: []
+  notes: Example only; no independent runtime evaluation was executed for this sample.
+claims:
+- claim_id: claim-example
+  text: The example report has the required signed-report structure.
+  status: unverified
+  evidence_ids: []
+evidence: []
+residual_risks:
+- Example values are structural placeholders and are not trusted evidence.
+signature:
+  algorithm: Ed25519
+  key_id: evaluator-example
+  purpose: evaluation_report
+  value: example-signature-not-cryptographically-valid

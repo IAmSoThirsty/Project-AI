@@ -1,0 +1,2 @@
+VERIFIED: /mnt/data/thirstys-standard-v3q-manifest/thirstys-standard-v3q.manifest.yaml conforms to thirstys-standard-manifest.schema.json
+VERIFIED: 53 rules, 112 controls, 20 tests, 8 CEL expressions

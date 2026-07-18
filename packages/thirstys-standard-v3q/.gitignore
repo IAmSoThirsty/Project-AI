@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Never commit private authority material
+*private-key*.json
+*private*.json
+owner-private.json
+evaluator-private.json
+trusted-keys.local.json
+
+# Locally generated ratification outputs
+owner-ratification.json
+*.ratified.manifest.yaml

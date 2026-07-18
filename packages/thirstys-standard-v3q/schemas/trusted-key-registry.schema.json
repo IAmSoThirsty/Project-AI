@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thirstysystems.com/schemas/trusted-key-registry-1.0.0.json",
+  "title": "Thirsty's Standard Trusted Key Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["keys"],
+  "properties": {
+    "keys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key_id", "principal_id", "algorithm", "public_key", "purposes", "status"],
+        "properties": {
+          "key_id": {"type": "string"},
+          "principal_id": {"type": "string"},
+          "algorithm": {"const": "Ed25519"},
+          "public_key": {"type": "string"},
+          "purposes": {"type": "array", "uniqueItems": true, "items": {"enum": ["authority", "approval", "ratification", "execution_record", "evaluation_report"]}},
+          "status": {"enum": ["active", "revoked", "expired"]}
+        }
+      }
+    }
+  }
+}

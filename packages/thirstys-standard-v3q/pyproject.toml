@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-thirstys-standard-v3q"
+version = "0.0.0.dev0"
+description = "Thirsty's Standard V3 + Q machine-readable enforcement runtime (fail-closed gate, Ed25519 authority, independent conformance evaluator)"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+authors = [
+    { name = "Jeremy Karrick", email = "IAmSoThirsty@users.noreply.github.com" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+dependencies = [
+    # cel-python is the upstream-declared CEL engine (==0.4.0). See note below.
+    "cel-python==0.4.0",
+    # cryptography pin widened from the upstream "<46" to match the workspace, which
+    # already installs cryptography 49.x. The Ed25519 API used by this runtime is
+    # stable across 42->49, so the bound is intentionally not "<46".
+    "cryptography>=42",
+    "jsonschema>=4.23,<5",
+    "PyYAML>=6.0.2,<7",
+]
+
+[project.scripts]
+thirstys-standard = "thirstys_standard_runtime.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/thirstys_standard_runtime"]
+
+# NOTE on cel-python availability:
+# The upstream package pins cel-python==0.4.0 (a 2020-era release). It is NOT
+# present in the shared workspace .venv at integration time and its install on
+# Python 3.12 was not verified (no uv sync was performed during integration).
+# All runtime modules except the CEL engine (cel_runtime.py) and its consumers
+# (policy.py, evaluator.py, cli.py) are pure stdlib + cryptography and work today.
+# The CEL-dependent paths are import-guarded and the CEL-dependent tests skip
+# cleanly when celpy is absent. Resolving cel-python on 3.12 (or vendoring a
+# maintained CEL engine) remains the one open integration item.

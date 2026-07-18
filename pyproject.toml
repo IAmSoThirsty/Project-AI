@@ -55,6 +55,7 @@ dependencies = [
     "project-ai-sovereign-vault",
     "project-ai-dpr",
     "project-ai-mcp-server",
+    "project-ai-thirstys-standard-v3q",
     # Thirsty-Lang (PyPI dep, six-tier governance language family)
     "thirsty-lang==0.8.1",
 ]
@@ -140,6 +141,7 @@ project-ai-cli = { workspace = true }
 project-ai-sovereign-vault = { workspace = true }
 project-ai-dpr = { workspace = true }
 project-ai-mcp-server = { workspace = true }
+project-ai-thirstys-standard-v3q = { workspace = true }
 
 [tool.uv.workspace]
 members = [
@@ -183,6 +185,7 @@ members = [
     "packages/sovereign-vault",
     "packages/dpr",
     "packages/mcp_server",
+    "packages/thirstys-standard-v3q",
 ]
 
 # ----------------------------------------------------------------------
@@ -279,6 +282,10 @@ exclude = [
     "packages/dpr/src/dpr/demo.py",
     "apps/desktop/tests/conftest.py",
     "tools/_archive",
+    "packages/thirstys-standard-v3q/src",
+    "packages/thirstys-standard-v3q/tests",
+    "packages/thirstys-standard-v3q/tools",
+    "packages/thirstys-standard-v3q/validate_manifest.py",
 ]
 
 # ----------------------------------------------------------------------
