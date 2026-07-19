@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import contextlib
 import os
+import sys
 from collections.abc import Iterator
 from dataclasses import dataclass
 
@@ -133,6 +134,11 @@ def transfer_via_memfd(data: bytes, name: str = "vault-object") -> int | None:
     after the consumer is done; sealing prevents the *receiver* from
     resizing/rewriting it, it does not itself zeroize on close.
     """
+    if sys.platform == "win32":
+        # memfd/fcntl sealing is POSIX-only. The static guard mirrors the
+        # runtime hasattr check below so mypy's per-platform analysis never
+        # sees fcntl members that its platform view does not define.
+        return None
     if not hasattr(os, "memfd_create"):
         return None
     try:
@@ -146,7 +152,7 @@ def transfer_via_memfd(data: bytes, name: str = "vault-object") -> int | None:
         F_SEAL_WRITE = 0x0008
         import fcntl
 
-        fcntl.fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL)  # type: ignore[attr-defined]
+        fcntl.fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL)
         return fd
     except Exception:
         return None

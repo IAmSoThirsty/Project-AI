@@ -1940,6 +1940,25 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
   a11y index 1.0 / manifesto 0.93 (budget 0.95 — FAIL, design decision above). axe-core
   per-route automation: NOT DEFINED in any portal (documented as future work in the
   plan) — a documentation/tooling gap, not a pass.
+- **POST-PUSH CI (run 29669875090 / Publish 29669875098 on d4dab184):** push executed
+  with user authorization (f0dbd452..d4dab184, 35 commits). Green: Android, Windows
+  installer (full install/smoke/uninstall on the runner), Compose (9/9 verifier IN CI),
+  Node web gates, Helm, SBOM, Rust, Desktop; Publish pushed api + swr/atlas/arbiter-rlp
+  + genesis images to ghcr with cosign signing — proving the service/genesis Dockerfile
+  fixes in CI and REFUTING the earlier dhi.io-credential concern (bases pull
+  anonymously from runners; continuity corrected). Red, root-caused, fixed locally:
+  (1) Publish build-web jobs — workflows passed build-arg PORTAL=docs but
+  web.Dockerfile consumes APP=docs-portal → `/app/apps/web/dist not found`; fixed in
+  publish.yaml + docker-hub-publish.yaml (matrix now carries APP names; operator-console
+  added to publishing, matching helm); (2) docker-hub-publish.yaml failed at parse time
+  (step-level `strategy:` blocks) → restructured into per-surface jobs; (3) CI
+  pre-commit: emp-defense artifact JSONs were committed WITHOUT final newlines (EOF
+  hook re-fixed them on Linux) → blobs normalized to LF + single final newline;
+  (4) CI pre-commit mypy: release.py fcntl `type: ignore[attr-defined]` is
+  platform-asymmetric under typeshed (needed on win32 view, unused on Linux) →
+  replaced with a `sys.platform == "win32"` static guard mirroring the existing
+  runtime hasattr guard (behavior identical). All fixes gate-verified locally;
+  awaiting push authorization.
 - **10. Cerberus C3:** COMPLETE-BY-PRECONDITION-ABSENT. C0/C1/C2 executable evidence:
   212 tests pass (packages/cerberus + tests/test_cerberus_guardbot_integration.py +
   packages/api/tests/test_api_screening.py); the C2 screening contract is asserted by
