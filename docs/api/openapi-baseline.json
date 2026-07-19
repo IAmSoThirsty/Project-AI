@@ -878,8 +878,7 @@
             "type": "string"
           },
           "version": {
-            "const": "0.0.0.dev0",
-            "default": "0.0.0.dev0",
+            "default": "0.0.2",
             "title": "Version",
             "type": "string"
           }
@@ -1215,8 +1214,7 @@
             "type": "array"
           },
           "version": {
-            "const": "0.0.0.dev0",
-            "default": "0.0.0.dev0",
+            "default": "0.0.2",
             "title": "Version",
             "type": "string"
           },
@@ -1493,8 +1491,7 @@
             "type": "string"
           },
           "version": {
-            "const": "0.0.0.dev0",
-            "default": "0.0.0.dev0",
+            "default": "0.0.2",
             "title": "Version",
             "type": "string"
           }
@@ -3346,7 +3343,7 @@
   },
   "info": {
     "title": "Project-AI Development Gateway",
-    "version": "0.0.0.dev0"
+    "version": "0.0.2"
   },
   "openapi": "3.1.0",
   "paths": {

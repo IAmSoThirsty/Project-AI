@@ -24,6 +24,7 @@ from typing import Any, TextIO
 
 from mcp_server.client import (
     TOOL_SPECS,
+    VERSION,
     GatewayClientError,
     UnknownToolError,
 )
@@ -32,7 +33,7 @@ type JsonObject = dict[str, Any]
 type ToolExecutor = Callable[[str, JsonObject], JsonObject]
 
 SERVER_NAME = "project-ai-mcp-server"
-SERVER_VERSION = "0.0.0.dev0"
+SERVER_VERSION = VERSION
 SUPPORTED_PROTOCOL_VERSIONS: tuple[str, ...] = ("2025-06-18", "2025-03-26", "2024-11-05")
 
 PARSE_ERROR = -32700

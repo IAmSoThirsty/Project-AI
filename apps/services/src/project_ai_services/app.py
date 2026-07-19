@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Final, Literal
 
 from fastapi import FastAPI
+from kernel.version import PROJECT_AI_VERSION
 from pydantic import BaseModel, ConfigDict
 
 type ServiceRole = Literal["swr", "atlas", "arbiter-rlp"]
@@ -31,7 +32,7 @@ class ServiceResponse(BaseModel):
 
     status: Literal["live"] = "live"
     service: ServiceRole
-    version: Literal["0.0.0.dev0"] = "0.0.0.dev0"
+    version: str = PROJECT_AI_VERSION
     maturity: str
     modules: tuple[str, ...]
     authority: Literal["none"] = "none"
@@ -44,12 +45,16 @@ def create_app(role: str) -> FastAPI:
     definition = SERVICES[service_role]
     for module_name in definition.modules:
         module = importlib.import_module(module_name)
-        if getattr(module, "__version__", None) != "0.0.0.dev0":
-            raise RuntimeError(f"{module_name} version is not the development baseline")
+        module_version = getattr(module, "__version__", None)
+        if module_version != PROJECT_AI_VERSION:
+            raise RuntimeError(
+                f"{module_name} version {module_version!r} does not match the "
+                f"Project-AI release {PROJECT_AI_VERSION!r}"
+            )
 
     application = FastAPI(
         title=f"Project-AI {service_role} development service",
-        version="0.0.0.dev0",
+        version=PROJECT_AI_VERSION,
         docs_url=None,
         redoc_url=None,
     )

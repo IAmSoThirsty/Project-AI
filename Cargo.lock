@@ -85,7 +85,7 @@ dependencies = [
 
 [[package]]
 name = "project-ai-genesis-emitter"
-version = "0.0.0-dev0"
+version = "0.0.2"
 dependencies = [
  "serde",
  "serde_json",

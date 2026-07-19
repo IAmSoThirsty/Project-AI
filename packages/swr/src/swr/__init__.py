@@ -1,5 +1,8 @@
 """Project-AI Sovereign War Room public interface."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from swr.core import DEFAULT_TOKEN_TTL, WarRoomCore, scenario_to_dict
 from swr.scenario import Difficulty, Scenario, ScenarioLibrary, ScenarioType
 from swr.war_room import RECORD_OPERATION, ScenarioResult, SovereignWarRoom, keyword_score
@@ -25,7 +28,10 @@ except ImportError as _import_error:  # pragma: no cover - fail-closed
     TSCGBSWRSpecError = None  # type: ignore[assignment,misc]
     load_spec = None  # type: ignore[assignment]
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-swr")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "DEFAULT_TOKEN_TTL",

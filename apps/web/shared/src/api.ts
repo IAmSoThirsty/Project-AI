@@ -1,4 +1,4 @@
-export type Health = { status: "live"; version: "0.0.0.dev0" };
+export type Health = { status: "live"; version: string };
 export type InstanceIdentity = {
   display_name: string;
   deployment: "local_sovereign";
@@ -41,7 +41,7 @@ export type DashboardWorkItem = {
 };
 export type DashboardResponse = {
   status: "ready";
-  version: "0.0.0.dev0";
+  version: string;
   maturity: "development";
   authority_boundary: string;
   surfaces: DashboardSurface[];
@@ -59,7 +59,7 @@ export type ModuleSurface = {
 };
 export type AtlasStatus = {
   status: "available";
-  version: "0.0.0.dev0";
+  version: string;
   stack: "Atlas";
   authority: "analysis_only";
   protected_operations: ["sludge_narrative"];

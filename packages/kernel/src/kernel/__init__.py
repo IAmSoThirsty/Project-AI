@@ -26,8 +26,9 @@ from kernel.threat_detection import (
 )
 from kernel.time_trust import TimeRollbackError, TrustedClock
 from kernel.types import ActionRequest, Decision, JsonScalar, JsonValue, Outcome
+from kernel.version import PROJECT_AI_VERSION
 
-__version__ = "0.0.0.dev0"
+__version__ = PROJECT_AI_VERSION
 
 __all__ = [
     "ActionRequest",

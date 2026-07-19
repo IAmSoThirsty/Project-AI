@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-caretaker"
-version = "0.0.0.dev0"
+version = "0.0.2"
 description = "Caretaker constitutional inference runtime (operator-side, ported from thirsty_governance_framework_0722)"
 readme = "README.md"
 requires-python = "==3.12.10"

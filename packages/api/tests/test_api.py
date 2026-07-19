@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 from cerberus.security.modules.auth import PasswordHasher
 from cryptography.fernet import Fernet
+from kernel.version import PROJECT_AI_VERSION
 from project_ai_api import DoiRecord, ReplayStatus, create_app, load_doi_registry
 from starlette.testclient import TestClient
 
@@ -114,7 +115,7 @@ def test_public_health_doi_and_replay_routes(tmp_path: Path) -> None:
     client = _client(tmp_path)
     assert client.get("/health/live").json() == {
         "status": "live",
-        "version": "0.0.0.dev0",
+        "version": PROJECT_AI_VERSION,
     }
     assert client.get("/dois").json()["dois"][0]["doi"] == "10.1/example"
     assert client.get("/replay/status").json()["invariants_passed"] == 5

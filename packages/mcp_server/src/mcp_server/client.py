@@ -13,12 +13,17 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
 from typing import Any, cast
 from urllib.parse import urlencode, urlsplit
 
 import httpx
 
-VERSION = "0.0.0.dev0"
+try:
+    VERSION = _pkg_version("project-ai-mcp-server")
+except PackageNotFoundError:  # pragma: no cover
+    VERSION = "0.0.0.dev0"
 DEFAULT_API_URL = "http://127.0.0.1:8000"
 
 type JsonObject = dict[str, Any]

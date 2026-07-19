@@ -1,5 +1,8 @@
 """Project-AI governance public interface."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from governance.asymmetric_security import (
     CATEGORY_COUNTS,
     REQUIRED_PROOFS,
@@ -48,7 +51,10 @@ except ImportError:  # pragma: no cover - fail-closed
     TarlBridgeDecision = None  # type: ignore[assignment,misc]
     evaluate_tarl_policy = None  # type: ignore[assignment]
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-governance")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "CATEGORY_COUNTS",

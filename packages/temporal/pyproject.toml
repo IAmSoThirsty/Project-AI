@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-temporal"
-version = "0.0.0.dev0"
+version = "0.0.2"
 description = "Temporal-style workflow orchestration (C4 of STAGE_19 §9): typed workflow/activity contracts without external SDK dependency."
 readme = "README.md"
 requires-python = "==3.12.10"

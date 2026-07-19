@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from project_ai_desktop._version import DESKTOP_VERSION
 from project_ai_desktop.client import Gateway
 
 
@@ -46,7 +47,7 @@ def run_replay_evidence_check(gateway: Gateway) -> DesktopReplayResult:
         ReplayCheck("gateway_live", health.get("status") == "live", str(health.get("status"))),
         ReplayCheck(
             "development_version",
-            health.get("version") == "0.0.0.dev0",
+            health.get("version") == DESKTOP_VERSION,
             str(health.get("version")),
         ),
         ReplayCheck("canonical_total", total == 5, f"total={total}"),

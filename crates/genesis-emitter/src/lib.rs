@@ -81,8 +81,11 @@ pub fn verify(record: &GenesisRecord) -> bool {
         .unwrap_or(false)
 }
 
-pub const HEALTH_JSON: &str =
-    r#"{"status":"live","service":"genesis","version":"0.0.0.dev0","authority":"evidence-only"}"#;
+pub const HEALTH_JSON: &str = concat!(
+    r#"{"status":"live","service":"genesis","version":""#,
+    env!("CARGO_PKG_VERSION"),
+    r#"","authority":"evidence-only"}"#,
+);
 
 pub fn serve_health(bind: &str) -> std::io::Result<()> {
     let listener = TcpListener::bind(bind)?;
@@ -168,7 +171,7 @@ mod tests {
     fn health_response_is_fixed_development_evidence() {
         let value: Value = serde_json::from_str(HEALTH_JSON).expect("health JSON");
         assert_eq!(value["status"], "live");
-        assert_eq!(value["version"], "0.0.0.dev0");
+        assert_eq!(value["version"], env!("CARGO_PKG_VERSION"));
         assert_eq!(value["authority"], "evidence-only");
     }
 }

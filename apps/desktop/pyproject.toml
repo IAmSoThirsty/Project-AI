@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-desktop"
-version = "0.0.0.dev0"
+version = "0.0.2"
 description = "Read-only PyQt6 operator desktop for Project-AI development"
 readme = "README.md"
 requires-python = "==3.12.10"

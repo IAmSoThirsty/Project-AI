@@ -1,5 +1,8 @@
 """Project-AI companion public interface."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from companion.bonded import (
     BOND_IDENTITY_OPERATION,
     PRUNE_FATES_OPERATION,
@@ -48,7 +51,10 @@ from companion.voice_bonding import (
     default_voice_profile,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-companion")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "ALLOWED_EXPRESSIONS",

@@ -23,6 +23,9 @@ event invalidates the chain from that point forward.
 
 from __future__ import annotations
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from audit.chain import (
     GENESIS_HASH,
     AuditEvent,
@@ -32,7 +35,10 @@ from audit.chain import (
     FileAuditLog,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-audit")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "GENESIS_HASH",

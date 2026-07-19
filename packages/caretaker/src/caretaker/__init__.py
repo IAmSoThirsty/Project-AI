@@ -24,6 +24,9 @@ Architecture:
                                           → Model (untrusted)
 """
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from caretaker.constitution import (
     DEFAULT_THRESHOLDS,
     DEFAULT_WEIGHTS,
@@ -56,7 +59,10 @@ from caretaker.runtime import GovernanceRequest, GovernanceResponse, GovernanceR
 from caretaker.session import Session, SessionManager
 from caretaker.system_prompt import SystemPromptBuilder
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-caretaker")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "DEFAULT_THRESHOLDS",

@@ -8,6 +8,7 @@ import sys
 from PyQt6.QtCore import QObject, QThread, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QApplication
 
+from project_ai_desktop._version import DESKTOP_VERSION
 from project_ai_desktop.api_supervisor import ApiSupervisor
 from project_ai_desktop.main_window import MainWindow
 
@@ -47,7 +48,7 @@ class ApiSupervisorThread(QThread):
 def run() -> int:
     application = QApplication.instance() or QApplication(sys.argv)
     application.setApplicationName("Project-AI Desktop")
-    application.setApplicationVersion("0.0.0.dev0")
+    application.setApplicationVersion(DESKTOP_VERSION)
     window = MainWindow()
     window.show()
 

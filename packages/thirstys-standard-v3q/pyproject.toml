@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-thirstys-standard-v3q"
-version = "0.0.0.dev0"
+version = "0.0.2"
 description = "Thirsty's Standard V3 + Q machine-readable enforcement runtime (fail-closed gate, Ed25519 authority, independent conformance evaluator)"
 readme = "README.md"
 requires-python = "==3.12.10"

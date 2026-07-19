@@ -7,6 +7,9 @@ no side effects; call :func:`cerberus.logging_config.configure_logging`
 explicitly to set up logging.
 """
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from cerberus.agent import (
     AGENT_STATE_KEY,
     ALLOWED_AGENT_STATES,
@@ -54,7 +57,10 @@ from cerberus.spawn_constraints import (
     default_spawn_policy,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-cerberus")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "AGENT_STATE_KEY",

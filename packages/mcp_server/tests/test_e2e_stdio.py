@@ -23,6 +23,8 @@ from threading import Thread
 from typing import IO, Any
 from urllib.request import urlopen
 
+from kernel.version import PROJECT_AI_VERSION
+
 TOKEN = "mcp-e2e-test-token"
 
 
@@ -156,7 +158,7 @@ def test_real_mcp_subprocess_against_real_gateway(tmp_path: Path) -> None:
         assert "project_ai_audit_query" in tool_names
 
         health = _tool_payload(session.request(3, "tools/call", name="project_ai_health"))
-        assert health == {"status": "live", "version": "0.0.0.dev0"}
+        assert health == {"status": "live", "version": PROJECT_AI_VERSION}
 
         dashboard = _tool_payload(session.request(4, "tools/call", name="project_ai_dashboard"))
         surface_ids = [surface["id"] for surface in dashboard["surfaces"]]

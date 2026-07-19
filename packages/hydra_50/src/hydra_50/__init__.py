@@ -1,5 +1,8 @@
 """Project-AI hydra_50 public interface."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from hydra_50.escalation import (
     ALLOWED_LEVELS,
     HISTORY_KEY,
@@ -25,7 +28,10 @@ from hydra_50.scenario import (
     scenario_to_dict,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-hydra-50")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "ALLOWED_CATEGORIES",

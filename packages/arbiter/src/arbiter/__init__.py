@@ -1,5 +1,8 @@
 """Experimental operator-side governance substrate."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from .arbiter_gov import (
     AdversarialReview,
     AdversarialReviewError,
@@ -25,7 +28,10 @@ from .arbiter_gov import (
     rule_power_consolidation,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-arbiter")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 __status__ = "experimental"
 
 __all__ = [

@@ -1,6 +1,6 @@
 [project]
 name = "project-ai"
-version = "0.0.0.dev0"
+version = "0.0.2"
 description = "Project-AI Sovereign Constitutional AGI Ecosystem development rebuild"
 readme = "README.md"
 requires-python = "==3.12.10"

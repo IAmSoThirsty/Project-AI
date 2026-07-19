@@ -5,7 +5,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import { DocsPortal } from "./DocsPortal";
 
 const payloads: Record<string, unknown> = {
-  "/api/health/live": { status: "live", version: "0.0.0.dev0" },
+  "/api/health/live": { status: "live", version: "0.0.2" },
   "/api/replay/status": { status: "pass", invariants_passed: 5, invariants_total: 5, updated_at: "now" },
   "/api/dois": { dois: [
     { title: "Paper-01", doi: "10.1/security", domain: "security", url: "https://doi.org/10.1/security" },

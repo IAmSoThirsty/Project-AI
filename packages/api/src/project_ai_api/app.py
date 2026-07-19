@@ -11,6 +11,7 @@ from typing import Annotated, Literal, cast
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Response, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from kernel.version import PROJECT_AI_VERSION
 from taar.errors import TaarError
 
 from accounts import (
@@ -271,7 +272,7 @@ def create_app(
 
     application = FastAPI(
         title="Project-AI Development Gateway",
-        version="0.0.0.dev0",
+        version=PROJECT_AI_VERSION,
         docs_url="/docs",
         redoc_url=None,
     )
@@ -413,7 +414,7 @@ def create_app(
                     id="gateway",
                     label="Gateway",
                     status="healthy",
-                    metric="0.0.0.dev0",
+                    metric=PROJECT_AI_VERSION,
                     detail="Development gateway is live.",
                 ),
                 DashboardSurface(

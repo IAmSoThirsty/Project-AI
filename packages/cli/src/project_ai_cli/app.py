@@ -6,6 +6,8 @@ import json
 import os
 from dataclasses import dataclass
 from enum import StrEnum
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
 from pathlib import Path
 from typing import Annotated, cast
 
@@ -14,7 +16,10 @@ import typer
 from project_ai_cli.client import Gateway, GatewayError, HttpGateway, JsonObject
 from project_ai_cli.thirsty import app as thirsty_app
 
-VERSION = "0.0.0.dev0"
+try:
+    VERSION = _pkg_version("project-ai-cli")
+except PackageNotFoundError:  # pragma: no cover
+    VERSION = "0.0.0.dev0"
 
 
 class Verdict(StrEnum):

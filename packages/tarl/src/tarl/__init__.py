@@ -1,5 +1,8 @@
 """Project-AI tarl public interface."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from tarl.compiler import (
     CompiledTarl,
     Compiler,
@@ -101,7 +104,10 @@ from tarl.validate import (
     validate_with_authorities,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-tarl")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "ALLOWED_VERDICTS",

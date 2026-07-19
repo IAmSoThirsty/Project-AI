@@ -908,7 +908,7 @@ wheels = [
 
 [[package]]
 name = "project-ai"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "." }
 dependencies = [
     { name = "project-ai-accounts" },
@@ -1034,7 +1034,7 @@ provides-extras = ["knowledge", "dev"]
 
 [[package]]
 name = "project-ai-accounts"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/accounts" }
 dependencies = [
     { name = "cryptography" },
@@ -1058,7 +1058,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-ai-takeover"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/ai-takeover" }
 dependencies = [
     { name = "project-ai-simulation-contract" },
@@ -1078,7 +1078,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-alien-invaders"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/alien-invaders" }
 dependencies = [
     { name = "project-ai-simulation-contract" },
@@ -1098,7 +1098,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-api"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/api" }
 dependencies = [
     { name = "fastapi" },
@@ -1142,12 +1142,12 @@ provides-extras = ["build"]
 
 [[package]]
 name = "project-ai-arbiter"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/arbiter" }
 
 [[package]]
 name = "project-ai-atlas"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/atlas" }
 dependencies = [
     { name = "jsonschema" },
@@ -1172,7 +1172,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-audit"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/audit" }
 
 [package.optional-dependencies]
@@ -1186,7 +1186,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-canonical"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/canonical" }
 dependencies = [
     { name = "project-ai-audit" },
@@ -1208,7 +1208,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-capability"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/capability" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1219,7 +1219,7 @@ requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
 
 [[package]]
 name = "project-ai-caretaker"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/caretaker" }
 dependencies = [
     { name = "click" },
@@ -1240,7 +1240,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-cerberus"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/cerberus" }
 dependencies = [
     { name = "cryptography" },
@@ -1261,7 +1261,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-cli"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/cli" }
 dependencies = [
     { name = "thirsty-lang" },
@@ -1276,7 +1276,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-cognitive-warfare"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/cognitive-warfare" }
 dependencies = [
     { name = "project-ai-governance" },
@@ -1298,7 +1298,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-companion"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/companion" }
 dependencies = [
     { name = "project-ai-execution" },
@@ -1313,7 +1313,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-convergence"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/convergence" }
 dependencies = [
     { name = "project-ai-atlas" },
@@ -1334,7 +1334,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-desktop"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "apps/desktop" }
 dependencies = [
     { name = "pyqt6" },
@@ -1354,7 +1354,7 @@ provides-extras = ["build"]
 
 [[package]]
 name = "project-ai-django-state"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/django-state" }
 
 [package.optional-dependencies]
@@ -1368,7 +1368,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-dpr"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/dpr" }
 dependencies = [
     { name = "cryptography" },
@@ -1379,7 +1379,7 @@ requires-dist = [{ name = "cryptography", specifier = ">=42.0" }]
 
 [[package]]
 name = "project-ai-emp-defense"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/emp-defense" }
 
 [package.optional-dependencies]
@@ -1393,7 +1393,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-execution"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/execution" }
 dependencies = [
     { name = "project-ai-capability" },
@@ -1412,7 +1412,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-global-scenario"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/global-scenario" }
 dependencies = [
     { name = "numpy" },
@@ -1436,7 +1436,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-governance"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/governance" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1451,7 +1451,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-hydra-50"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/hydra_50" }
 dependencies = [
     { name = "project-ai-execution" },
@@ -1468,7 +1468,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-identity"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/identity" }
 
 [package.optional-dependencies]
@@ -1482,12 +1482,12 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-kernel"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/kernel" }
 
 [[package]]
 name = "project-ai-knowledge"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/knowledge" }
 dependencies = [
     { name = "numpy" },
@@ -1513,7 +1513,7 @@ provides-extras = ["ingest"]
 
 [[package]]
 name = "project-ai-mcp-server"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/mcp_server" }
 dependencies = [
     { name = "httpx" },
@@ -1524,7 +1524,7 @@ requires-dist = [{ name = "httpx", specifier = ">=0.27.0" }]
 
 [[package]]
 name = "project-ai-memory"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/memory" }
 dependencies = [
     { name = "numpy" },
@@ -1547,12 +1547,12 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-rlp"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/rlp" }
 
 [[package]]
 name = "project-ai-security"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/security" }
 dependencies = [
     { name = "thirsty-lang" },
@@ -1563,12 +1563,13 @@ requires-dist = [{ name = "thirsty-lang", specifier = "==0.8.1" }]
 
 [[package]]
 name = "project-ai-service-host"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "apps/services" }
 dependencies = [
     { name = "fastapi" },
     { name = "project-ai-arbiter" },
     { name = "project-ai-atlas" },
+    { name = "project-ai-kernel" },
     { name = "project-ai-rlp" },
     { name = "project-ai-swr" },
     { name = "uvicorn", extra = ["standard"] },
@@ -1579,6 +1580,7 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.115.0" },
     { name = "project-ai-arbiter", editable = "packages/arbiter" },
     { name = "project-ai-atlas", editable = "packages/atlas" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
     { name = "project-ai-rlp", editable = "packages/rlp" },
     { name = "project-ai-swr", editable = "packages/swr" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
@@ -1586,7 +1588,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-simulation-contract"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/simulation-contract" }
 
 [package.optional-dependencies]
@@ -1600,7 +1602,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-sovereign-vault"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/sovereign-vault" }
 dependencies = [
     { name = "cryptography" },
@@ -1615,7 +1617,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-swr"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/swr" }
 dependencies = [
     { name = "click" },
@@ -1648,7 +1650,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-swr-dashboard"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "apps/swr-dashboard" }
 dependencies = [
     { name = "flask" },
@@ -1672,7 +1674,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-taar"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/taar" }
 dependencies = [
     { name = "pyyaml" },
@@ -1689,7 +1691,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-tarl"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/tarl" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1704,7 +1706,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-temporal"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/temporal" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1715,7 +1717,7 @@ requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
 
 [[package]]
 name = "project-ai-thirstys-standard-v3q"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/thirstys-standard-v3q" }
 dependencies = [
     { name = "cel-python" },
@@ -1734,7 +1736,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-thirstys-trading-hub"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/thirstys-trading-hub" }
 
 [package.optional-dependencies]
@@ -1748,7 +1750,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-workflows"
-version = "0.0.0.dev0"
+version = "0.0.2"
 source = { editable = "packages/workflows" }
 dependencies = [
     { name = "project-ai-accounts" },

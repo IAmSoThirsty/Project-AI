@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 from fastapi.testclient import TestClient
+from kernel.version import PROJECT_AI_VERSION
 from project_ai_services import create_app
 
 
@@ -22,7 +23,7 @@ def test_service_roles_are_live_and_authority_free(
     assert response.json() == {
         "status": "live",
         "service": role,
-        "version": "0.0.0.dev0",
+        "version": PROJECT_AI_VERSION,
         "maturity": maturity,
         "modules": modules,
         "authority": "none",

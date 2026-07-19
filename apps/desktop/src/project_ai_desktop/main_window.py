@@ -29,6 +29,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from project_ai_desktop._version import DESKTOP_VERSION
 from project_ai_desktop.capability_inspector import (
     CapabilityInspectionError,
     inspect_capability,
@@ -53,7 +54,7 @@ class MainWindow(QMainWindow):
         self._api_url = "http://127.0.0.1:8000"
         self._api_token = ""
         self._timeout = 10.0
-        self.setWindowTitle("Project-AI Operator Desktop - 0.0.0.dev0")
+        self.setWindowTitle(f"Project-AI Operator Desktop - {DESKTOP_VERSION}")
         self.resize(1180, 760)
         self.setMinimumSize(900, 620)
         self.setStyleSheet(STYLESHEET)
@@ -79,7 +80,7 @@ class MainWindow(QMainWindow):
         self.navigation.addItems(self.PAGE_NAMES)
         self.navigation.setCurrentRow(0)
         sidebar_layout.addWidget(self.navigation, 1)
-        boundary = QLabel("READ-ONLY CLIENT\n0.0.0.dev0")
+        boundary = QLabel(f"READ-ONLY CLIENT\n{DESKTOP_VERSION}")
         boundary.setObjectName("muted")
         boundary.setAlignment(Qt.AlignmentFlag.AlignCenter)
         sidebar_layout.addWidget(boundary)

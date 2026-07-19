@@ -13,6 +13,7 @@ from typing import Any, cast
 from urllib.error import HTTPError, URLError
 
 import pytest
+from kernel.version import PROJECT_AI_VERSION
 from project_ai_desktop.capability_inspector import (
     CapabilityInspectionError,
     inspect_capability,
@@ -45,7 +46,7 @@ class FakeGateway:
     def health(self) -> JsonObject:
         if self.fail:
             raise DesktopGatewayError("offline")
-        return {"status": "live", "version": "0.0.0.dev0"}
+        return {"status": "live", "version": PROJECT_AI_VERSION}
 
     def replay_status(self) -> JsonObject:
         return {
@@ -112,7 +113,7 @@ def test_gateway_validates_url_token_and_limits() -> None:
 def test_main_window_exposes_six_read_only_operator_pages(qt_app: QApplication) -> None:
     factory = lambda url, token, timeout: FakeGateway()  # noqa: E731
     window = MainWindow(factory)
-    assert window.windowTitle().endswith("0.0.0.dev0")
+    assert window.windowTitle().endswith(PROJECT_AI_VERSION)
     assert window.pages.count() == 6
     nav_labels = [item.text() for i in range(6) if (item := window.navigation.item(i)) is not None]
     assert nav_labels == list(MainWindow.PAGE_NAMES)

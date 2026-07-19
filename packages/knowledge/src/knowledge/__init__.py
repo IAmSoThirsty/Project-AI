@@ -11,6 +11,9 @@ Public surface:
 * Ingestion — :func:`ingest_corpus` and the ``knowledge.ingest`` CLI.
 """
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from knowledge.binding import build_knowledge_governor
 from knowledge.classify import classify_sensitivity, classify_topic, is_in_scope
 from knowledge.embedding import (
@@ -29,7 +32,10 @@ from knowledge.store import (
     reset_knowledge_store,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-knowledge")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "Chunk",

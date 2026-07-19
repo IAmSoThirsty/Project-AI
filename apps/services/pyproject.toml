@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-service-host"
-version = "0.0.0.dev0"
+version = "0.0.2"
 description = "Read-only health adapters for Project-AI development services"
 readme = "README.md"
 requires-python = "==3.12.10"
@@ -13,6 +13,7 @@ dependencies = [
     "fastapi>=0.115.0",
     "project-ai-arbiter",
     "project-ai-atlas",
+    "project-ai-kernel",
     "project-ai-rlp",
     "project-ai-swr",
     "uvicorn[standard]>=0.34.0",

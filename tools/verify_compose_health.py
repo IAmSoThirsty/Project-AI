@@ -9,6 +9,8 @@ import urllib.request
 from collections.abc import Sequence
 from typing import cast
 
+from kernel.version import PROJECT_AI_VERSION
+
 EXPECTED_SERVICES = {
     "api",
     "arbiter-rlp",
@@ -89,7 +91,7 @@ def main() -> int:
     if genesis != {
         "status": "live",
         "service": "genesis",
-        "version": "0.0.0.dev0",
+        "version": PROJECT_AI_VERSION,
         "authority": "evidence-only",
     }:
         failures.append(f"genesis evidence mismatch: {genesis!r}")

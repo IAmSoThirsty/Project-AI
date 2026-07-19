@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Literal
 
+from kernel.version import PROJECT_AI_VERSION
 from pydantic import BaseModel, ConfigDict, Field
 
 type JsonScalar = str | int | float | bool | None
@@ -16,7 +17,7 @@ class FrozenModel(BaseModel):
 
 class HealthResponse(FrozenModel):
     status: Literal["live"] = "live"
-    version: Literal["0.0.0.dev0"] = "0.0.0.dev0"
+    version: str = PROJECT_AI_VERSION
 
 
 class InstanceIdentityResponse(FrozenModel):
@@ -83,7 +84,7 @@ class DashboardWorkItem(FrozenModel):
 
 class DashboardResponse(FrozenModel):
     status: Literal["ready"] = "ready"
-    version: Literal["0.0.0.dev0"] = "0.0.0.dev0"
+    version: str = PROJECT_AI_VERSION
     maturity: Literal["development"] = "development"
     authority_boundary: str
     surfaces: tuple[DashboardSurface, ...]
@@ -385,7 +386,7 @@ class MessageResponse(FrozenModel):
 
 class AtlasStatus(FrozenModel):
     status: Literal["available"] = "available"
-    version: Literal["0.0.0.dev0"] = "0.0.0.dev0"
+    version: str = PROJECT_AI_VERSION
     stack: Literal["Atlas"] = "Atlas"
     authority: Literal["analysis_only"] = "analysis_only"
     protected_operations: tuple[Literal["sludge_narrative"], ...] = ("sludge_narrative",)

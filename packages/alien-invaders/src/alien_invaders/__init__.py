@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from alien_invaders.engine import AlienInvadersEngine
 from alien_invaders.schemas.config_schema import (
     AIGovernanceConfig,
@@ -13,7 +16,10 @@ from alien_invaders.schemas.config_schema import (
     load_scenario_preset,
 )
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-alien-invaders")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "AIGovernanceConfig",

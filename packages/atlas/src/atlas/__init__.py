@@ -1,5 +1,8 @@
 """Project-AI atlas public interface."""
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from atlas.analysis import (
     SUBORDINATION_NOTICE,
     Claim,
@@ -176,7 +179,10 @@ except ImportError as _import_error:  # pragma: no cover - fail-closed
     TSCGAtlasSpecError = None  # type: ignore[assignment,misc]
     load_spec = None  # type: ignore[assignment]
 
-__version__ = "0.0.0.dev0"
+try:
+    __version__ = _pkg_version("project-ai-atlas")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0.dev0"
 
 __all__ = [
     "FICTION_BANNER",

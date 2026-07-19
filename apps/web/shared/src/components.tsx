@@ -61,7 +61,7 @@ export function PortalShell({
       <footer className="footer">
         <div className="wrap footer-inner">
           <span>Project-AI / {lane}</span>
-          <span>Development checkpoint 0.0.0.dev0</span>
+          <span>Development checkpoint 0.0.2</span>
         </div>
       </footer>
     </div>

@@ -6,10 +6,10 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { ControlCenterApp } from "./App";
 
 const dashboard = {
-  status: "ready", version: "0.0.0.dev0", maturity: "development",
+  status: "ready", version: "0.0.2", maturity: "development",
   authority_boundary: "The Control Center does not grant authority.", doi_records: 2, work_items: [],
   surfaces: [
-    { id: "gateway", label: "Gateway", status: "healthy", metric: "0.0.0.dev0", detail: "Live" },
+    { id: "gateway", label: "Gateway", status: "healthy", metric: "0.0.2", detail: "Live" },
     { id: "replay", label: "Replay", status: "healthy", metric: "5/5 invariants", detail: "Pass" },
     { id: "audit_chain", label: "Audit chain", status: "healthy", metric: "0 entries", detail: "Valid" },
     { id: "evidence", label: "Evidence registry", status: "healthy", metric: "2 DOI records", detail: "Available" },
@@ -47,7 +47,7 @@ function defaultFetch(input: string | URL | Request): Promise<Response> {
   if (url.endsWith("/api/v1/work/requests")) return Promise.resolve(response({ requests: [], review_is_not_governance: true }));
   if (url.endsWith("/api/v1/work/operations")) return Promise.resolve(response({ operations: [{ id: "evidence.inspect", label: "Inspect evidence", description: "Request human inspection.", resource_hint: "bundle:42", schema_version: "evidence.inspect/v1", fields: [{ id: "bundle_id", label: "Evidence bundle identifier", description: "The exact evidence bundle to inspect.", placeholder: "42", resource_prefix: "bundle:", min_length: 1, max_length: 128, pattern: "(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9._\\/\\-]*" }], consequence: "Records intent only; no execution is started." }], execution_started: false }));
   if (url.endsWith("/replay/status")) return Promise.resolve(response({ status: "pass", invariants_passed: 5, invariants_total: 5, updated_at: "now" }));
-  if (url.endsWith("/atlas/status")) return Promise.resolve(response({ status: "available", version: "0.0.0.dev0", stack: "Atlas", authority: "analysis_only", protected_operations: ["sludge_narrative"], subordination_notice: "Atlas analysis is not a decision, authority grant, or actuation." }));
+  if (url.endsWith("/atlas/status")) return Promise.resolve(response({ status: "available", version: "0.0.2", stack: "Atlas", authority: "analysis_only", protected_operations: ["sludge_narrative"], subordination_notice: "Atlas analysis is not a decision, authority grant, or actuation." }));
   if (url.endsWith("/dois")) return Promise.resolve(response({ dois: [{ title: "Paper-01", doi: "10.1/example", domain: "security", url: "https://doi.org/10.1/example" }] }));
   if (url.includes("/audit?")) return Promise.resolve(response({ chain_valid: true, count: 0, filtered_count: 0, offset: 0, limit: 25, records: [] }));
   if (url.endsWith("/api/v1/auth/sessions")) return Promise.resolve(response({ sessions: [{ id: "session-1", current: true, created_at: "2026-07-15T12:00:00Z", last_seen_at: "2026-07-15T12:05:00Z", idle_expires_at: "2026-07-15T13:00:00Z", absolute_expires_at: "2026-07-16T00:00:00Z", user_agent: "Test browser", client_host: "127.0.0.1", revoked: false, mfa_verified_at: null }] }));

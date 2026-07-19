@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 
+from cerberus import __version__
 from cerberus.config import get_settings
 from cerberus.hub import HubCoordinator
 from cerberus.logging_config import configure_logging
@@ -29,7 +30,7 @@ def main() -> None:
     """Run the Cerberus Guard Bot demonstration."""
     settings = get_settings()
     configure_logging(settings)
-    logger.info("cerberus_starting", extra={"extra_fields": {"version": "0.0.0.dev0"}})
+    logger.info("cerberus_starting", extra={"extra_fields": {"version": __version__}})
 
     hub = HubCoordinator(settings=settings)
 

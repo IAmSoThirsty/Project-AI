@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-mcp-server"
-version = "0.0.0.dev0"
+version = "0.0.2"
 description = "In-house MCP stdio server exposing the Project-AI gateway's real routes"
 readme = "README.md"
 requires-python = "==3.12.10"
