@@ -226,15 +226,21 @@ class EMPDefenseEngine:
 
             base_dir.mkdir(parents=True, exist_ok=True)
 
+            # Artifacts are committed to the repo, so they must be written in
+            # the pre-commit-canonical form on every platform: LF line endings
+            # (not the Windows text-mode default) and a single final newline
+            # (json.dump emits none) — otherwise each test run dirties them.
             # Export final state
             state_file = base_dir / "final_state.json"
-            with open(state_file, "w") as f:
+            with open(state_file, "w", encoding="utf-8", newline="\n") as f:
                 json.dump(self.state.to_dict(), f, indent=2)
+                f.write("\n")
 
             # Export events log
             events_file = base_dir / "events.json"
-            with open(events_file, "w") as f:
+            with open(events_file, "w", encoding="utf-8", newline="\n") as f:
                 json.dump(self.events, f, indent=2)
+                f.write("\n")
 
             # Create simple summary
             summary_file = base_dir / "summary.json"
@@ -245,8 +251,9 @@ class EMPDefenseEngine:
                 "grid_operational_pct": self.state.grid_operational_pct,
                 "event_count": len(self.events),
             }
-            with open(summary_file, "w") as f:
+            with open(summary_file, "w", encoding="utf-8", newline="\n") as f:
                 json.dump(summary, f, indent=2)
+                f.write("\n")
 
             logger.info("✅ Artifacts exported to %s", base_dir)
             return True
