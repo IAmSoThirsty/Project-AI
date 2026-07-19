@@ -58,6 +58,7 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-docs-portal
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-proof-portal
+            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-operator-console
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-swr
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-atlas
             ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-arbiter-rlp
@@ -124,7 +125,7 @@ jobs:
             "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api@${{ steps.build.outputs.digest }}"
 
   build-web:
-    name: Build web portals (docs, proof)
+    name: Build web portals (docs, proof, operator-console)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: [image-metadata]
@@ -134,7 +135,9 @@ jobs:
       id-token: write # required for cosign keyless (Sigstore/Fulcio OIDC) signing
     strategy:
       matrix:
-        portal: [docs, proof]
+        # Matrix values are the web.Dockerfile APP build-arg (the pnpm package
+        # directory name); the published image name reuses it directly.
+        portal: [docs-portal, proof-portal, operator-console]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
@@ -157,16 +160,16 @@ jobs:
           file: docker/web.Dockerfile
           push: true
           build-args: |
-            PORTAL=${{ matrix.portal }}
+            APP=${{ matrix.portal }}
           tags: |
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}-portal:${{ needs.image-metadata.outputs.version }}
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}-portal:latest
+            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}:${{ needs.image-metadata.outputs.version }}
+            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}:latest
           labels: |
             org.opencontainers.image.version=${{ needs.image-metadata.outputs.version }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}-portal:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}-portal:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}:buildcache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}:buildcache,mode=max
           provenance: mode=max
           sbom: true
 
@@ -175,7 +178,7 @@ jobs:
       - name: Sign image (cosign keyless)
         run: |
           cosign sign --yes \
-            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}-portal@${{ steps.build.outputs.digest }}"
+            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}@${{ steps.build.outputs.digest }}"
 
   build-adapters:
     name: Build service adapters (swr, atlas, arbiter-rlp)

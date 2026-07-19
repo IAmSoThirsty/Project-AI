@@ -9,14 +9,17 @@ env:
   REGISTRY_HUB: docker.io
   REGISTRY_OWNER: ${{ secrets.DOCKER_HUB_USERNAME }}
 
+# `strategy` is only valid at job level, so the per-surface matrices live in
+# separate jobs (mirroring publish.yaml's build-web / build-adapters split).
+# The original single-job form put `strategy` inside steps, which GitHub
+# rejects at workflow-parse time — the run failed in 0s on first trigger.
 jobs:
-  publish:
+  publish-api:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
-
     permissions:
       contents: read
-
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
@@ -56,30 +59,90 @@ jobs:
           cache-from: type=registry,ref=${{ env.REGISTRY_HUB }}/${{ env.REGISTRY_OWNER }}/project-ai-api:buildcache
           cache-to: type=registry,ref=${{ env.REGISTRY_HUB }}/${{ env.REGISTRY_OWNER }}/project-ai-api:buildcache,mode=max
 
-      - name: Build and push Web Portals
+  publish-web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        # Matrix values are the web.Dockerfile APP build-arg (the pnpm package
+        # directory name); the published image name reuses it directly.
+        portal: [docs-portal, proof-portal, operator-console]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Set version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${{ github.ref }}" && VERSION="${VERSION#refs/tags/v}"
+          else
+            VERSION="latest"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
+        with:
+          registry: ${{ env.REGISTRY_HUB }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.portal }}
         uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6.0.0
-        strategy:
-          matrix:
-            portal: [docs, proof]
         with:
           context: .
           file: docker/web.Dockerfile
           push: true
           build-args: |
-            PORTAL=${{ matrix.portal }}
+            APP=${{ matrix.portal }}
           tags: |
-            ${{ env.REGISTRY_HUB }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}-portal:${{ steps.version.outputs.version }}
-            ${{ env.REGISTRY_HUB }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}-portal:latest
+            ${{ env.REGISTRY_HUB }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}:${{ steps.version.outputs.version }}
+            ${{ env.REGISTRY_HUB }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}:latest
           labels: |
             org.opencontainers.image.version=${{ steps.version.outputs.version }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
 
-      - name: Build and push Services
+  publish-services:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        service: [swr, atlas, arbiter-rlp]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Set version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${{ github.ref }}" && VERSION="${VERSION#refs/tags/v}"
+          else
+            VERSION="latest"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
+        with:
+          registry: ${{ env.REGISTRY_HUB }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.service }}
         uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6.0.0
-        strategy:
-          matrix:
-            service: [swr, atlas, arbiter-rlp]
         with:
           context: .
           file: docker/service.Dockerfile
@@ -93,6 +156,35 @@ jobs:
             org.opencontainers.image.version=${{ steps.version.outputs.version }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
+
+  publish-genesis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Set version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${{ github.ref }}" && VERSION="${VERSION#refs/tags/v}"
+          else
+            VERSION="latest"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
+        with:
+          registry: ${{ env.REGISTRY_HUB }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Build and push Genesis
         uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6.0.0
