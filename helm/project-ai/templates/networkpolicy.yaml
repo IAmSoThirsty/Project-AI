@@ -1,6 +1,6 @@
 {{- if .Values.networkPolicy.enabled }}
 ---
-# NetworkPolicy for API service: accepts traffic from portals/adapters, exposes audit port
+# NetworkPolicy for API service: accepts only ingress, internal consumers, and monitoring.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -20,38 +20,65 @@ spec:
     # Allow from portals (read-only access)
     - from:
         - podSelector:
-            matchLabels:
-              app.kubernetes.io/component: portals
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values: [docs-portal, proof-portal, operator-console]
       ports:
         - protocol: TCP
           port: {{ .Values.api.port }}
     # Allow from adapters (read-only access)
     - from:
         - podSelector:
-            matchLabels:
-              app.kubernetes.io/component: adapters
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values: [swr, atlas, arbiter-rlp]
       ports:
         - protocol: TCP
           port: {{ .Values.api.port }}
-    # Allow DNS queries
+    # Allow the ingress controller to route /api.
     - from:
-        - namespaceSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.ingressController.namespaceLabels | nindent 14 }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.ingressController.podLabels | nindent 14 }}
       ports:
-        - protocol: UDP
-          port: 53
+        - protocol: TCP
+          port: {{ .Values.api.port }}
+    {{- if .Values.monitoring.enabled }}
+    # Allow only the configured Prometheus pods to scrape /metrics.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .Values.monitoring.networkPolicy.namespaceLabels | nindent 14 }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.monitoring.networkPolicy.podLabels | nindent 14 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.api.port }}
+    {{- end }}
   egress:
     # Allow to any pod (for outbound service calls)
     - to:
         - podSelector: {}
     # Allow DNS
     - to:
-        - namespaceSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.namespaceLabels | nindent 14 }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.podLabels | nindent 14 }}
       ports:
         - protocol: UDP
           port: 53
 
 ---
-# NetworkPolicy for portals: accept inbound from ingress/lb, no inter-pod access
+# NetworkPolicy for portals: accept only ingress-controller traffic and call the API.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -62,25 +89,22 @@ metadata:
     app.kubernetes.io/component: portals
 spec:
   podSelector:
-    matchLabels:
-      app.kubernetes.io/component: portals
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values: [docs-portal, proof-portal, operator-console]
   policyTypes:
     - Ingress
     - Egress
   ingress:
-    # Allow from API (which portals call via Service)
-    - from:
-        - podSelector:
-            matchLabels:
-              {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 14 }}
-      ports:
-        - protocol: TCP
-          port: {{ .Values.api.port }}
-    # Allow from ingress/load balancer (any source external to cluster)
+    # Allow traffic only from the ingress controller namespace/pods.
     - from:
         - namespaceSelector:
             matchLabels:
-              name: ingress-nginx
+              {{- toYaml .Values.networkPolicy.ingressController.namespaceLabels | nindent 14 }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.ingressController.podLabels | nindent 14 }}
       ports:
         - protocol: TCP
           port: {{ .Values.docsPortal.port }}
@@ -95,13 +119,18 @@ spec:
           port: {{ .Values.api.port }}
     # Allow DNS
     - to:
-        - namespaceSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.namespaceLabels | nindent 14 }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.podLabels | nindent 14 }}
       ports:
         - protocol: UDP
           port: 53
 
 ---
-# NetworkPolicy for adapters: accept from API only, no ingress from outside
+# NetworkPolicy for adapters: accept from API only, no ingress from outside.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -112,8 +141,10 @@ metadata:
     app.kubernetes.io/component: adapters
 spec:
   podSelector:
-    matchLabels:
-      app.kubernetes.io/component: adapters
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values: [swr, atlas, arbiter-rlp]
   policyTypes:
     - Ingress
     - Egress
@@ -126,19 +157,15 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.swr.port }}
-    # Allow DNS
-    - from:
-        - namespaceSelector: {}
-      ports:
-        - protocol: UDP
-          port: 53
   egress:
-    # Allow outbound to external services
-    - to:
-        - namespaceSelector: {}
     # Allow DNS
     - to:
-        - namespaceSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.namespaceLabels | nindent 14 }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.podLabels | nindent 14 }}
       ports:
         - protocol: UDP
           port: 53
@@ -170,12 +197,14 @@ spec:
         - protocol: TCP
           port: {{ .Values.genesis.port }}
   egress:
-    # Allow outbound to external services (emit events to blockchain/external system)
-    - to:
-        - namespaceSelector: {}
     # Allow DNS
     - to:
-        - namespaceSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.namespaceLabels | nindent 14 }}
+          podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.dns.podLabels | nindent 14 }}
       ports:
         - protocol: UDP
           port: 53

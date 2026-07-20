@@ -43,13 +43,11 @@ jobs:
             packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src \
             packages/api/src packages/cli/src packages/sovereign-vault/src apps/desktop/src apps/services/src tools
       - name: Test with branch coverage
-        run: |
-          uv run pytest -q --tb=short \
-            --cov=kernel --cov=security --cov=governance --cov=capability \
-            --cov=execution --cov=companion --cov=swr --cov=atlas \
-            --cov=arbiter_gov --cov=rlp --cov=project_ai_api --cov=project_ai_cli \
-            --cov=project_ai_desktop --cov=project_ai_services --cov=sovereign_vault \
-            --cov-branch --cov-report=term-missing --cov-fail-under=80
+        # One monolithic coverage process exceeded the hosted runner's memory
+        # at 54% of the suite (exit 137). Sequential batches preserve the same
+        # aggregate source/branch/80% gate while releasing pytest state between
+        # batches.
+        run: uv run python tools/run_ci_coverage.py --batches 8
       - name: Canonical replay 5/5
         run: uv run python tools/canonical_replay.py
       - name: Frozen history 2264/2264
@@ -195,6 +193,16 @@ jobs:
       - run: helm lint helm/project-ai
       - run: uv sync --frozen --all-extras --all-packages
       - run: helm template project-ai-dev helm/project-ai | uv run python tools/verify_helm_template.py
+      - name: Verify production image and namespace render
+        run: |
+          helm template project-ai helm/project-ai \
+            --namespace project-ai-prod \
+            -f helm/values.prod.yaml | \
+            uv run python tools/verify_helm_template.py \
+              --expected-namespace project-ai-prod \
+              --project-image-registry ghcr.io \
+              --project-image-owner iamsothirsty \
+              --require-project-image-digests
 
   sbom:
     name: SBOM (CycloneDX)

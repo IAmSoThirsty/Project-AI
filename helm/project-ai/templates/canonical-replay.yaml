@@ -10,18 +10,27 @@ metadata:
     app.kubernetes.io/component: canonical-replay
 spec:
   schedule: "{{ .Values.canonicalReplay.schedule | default "0 * * * *" }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      activeDeadlineSeconds: 600
+      backoffLimit: 2
       template:
         metadata:
           labels:
             {{- include "project-ai.labels" . | nindent 12 }}
             app.kubernetes.io/component: canonical-replay
         spec:
+          automountServiceAccountToken: false
           restartPolicy: OnFailure
+          securityContext:
+            {{- include "project-ai.podSecurityContext" . | nindent 12 }}
           containers:
             - name: replay
               image: {{ include "project-ai.image" (dict "root" . "name" "api") }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
               command:
                 - python
                 - tools/canonical_replay.py

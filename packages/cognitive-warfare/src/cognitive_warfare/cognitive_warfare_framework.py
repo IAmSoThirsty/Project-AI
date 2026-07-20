@@ -29,6 +29,9 @@ from cognitive_warfare._governance_adapter import planetary_interposition
 
 logger = logging.getLogger(__name__)
 
+_POSITIVE_TERMS = frozenset({"calm", "cooperate", "help", "hope", "kind", "safe", "trust"})
+_NEGATIVE_TERMS = frozenset({"attack", "fear", "harm", "hate", "panic", "threat", "unsafe"})
+
 
 # ============================================================
 # 🛡️ DEFENSIVE CONCEPTS
@@ -123,11 +126,24 @@ class CognitiveDefenseEngine:
         elif hazard_level == CognitiveHazardLevel.WARNING:
             recommendation = "flag"
 
+        words = re.findall(r"[A-Za-z']+", content.lower())
+        positive_count = sum(word in _POSITIVE_TERMS for word in words)
+        negative_count = sum(word in _NEGATIVE_TERMS for word in words)
+        scored_count = positive_count + negative_count
+        if scored_count:
+            sentiment = {
+                "positive": positive_count / scored_count,
+                "negative": negative_count / scored_count,
+                "neutral": 0.0,
+            }
+        else:
+            sentiment = {"positive": 0.0, "negative": 0.0, "neutral": 1.0}
+
         return CognitiveAssessment(
             content_hash=content_hash,
             hazard_level=hazard_level,
             detected_patterns=detected,
-            sentiment_analysis={},  # Placeholder
+            sentiment_analysis=sentiment,
             truth_value=0.5,  # Neutral/Unknown
             recommended_action=recommendation,
         )

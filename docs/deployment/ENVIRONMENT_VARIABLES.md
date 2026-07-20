@@ -1,9 +1,8 @@
 # Environment Variables
 
-> **Source of truth:** the `.env.example` file at the repo root, plus the
-> `compose.yaml` `${VAR}` references. This document is a prose map; if a
-> variable is added or renamed, update both files and this doc in the same
-> commit.
+> **Source of truth:** the application call sites, `.env.example`, Compose,
+> and Helm templates. This document is a prose map; update it when a runtime
+> variable or secret-file binding changes.
 
 **Do not commit real credentials.** The `.env.example` file is a template;
 real values go in a local `.env` (gitignored) or in a secret manager.
@@ -14,7 +13,8 @@ real values go in a local `.env` (gitignored) or in a secret manager.
 
 | Category | Where consumed | Required? |
 |---|---|---|
-| **API gateway auth** | `PROJECT_AI_API_TOKEN` on the server | Required for protected routes |
+| **API gateway auth** | `PROJECT_AI_API_TOKEN` on the server | Development fallback only; production uses durable per-program credentials |
+| **Machine credential enforcement** | `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED` on the server | Set `true` in production after provisioning per-program credentials; rejects the shared bootstrap token |
 | **Audit persistence** | `PROJECT_AI_AUDIT_PATH` on the server | Required for protected routes |
 | **CLI client** | `PROJECT_AI_API_URL`, `PROJECT_AI_API_TOKEN` on the client | Required for protected CLI commands |
 | **Desktop smoke mode** | `PROJECT_AI_DESKTOP_SMOKE`, `QT_QPA_PLATFORM` | Optional, used in CI / offscreen validation |
@@ -31,13 +31,15 @@ real values go in a local `.env` (gitignored) or in a secret manager.
 |---|---|
 | Type | string (non-empty) |
 | Default | empty (server) |
-| Required for | protected API routes (`/audit`, `/chimera/verdict`, `/chimera/canary`, `/atlas/sludge`) |
-| Where set on the server | container env, K8s Secret, or `.env` consumed by Compose |
+| Required for | protected API routes only when durable machine credentials are not configured/enforced |
+| Where set on the server | container env, mounted secret file, or `.env` consumed by Compose |
 | Where set on the client | shell env (preferred) or `--api-token` flag (avoid — leaks to shell history) |
 | Comparison | constant-time `hmac.compare_digest` |
 
-**Behavior when empty:** the protected routes return `503 Service
-Unavailable` with `detail: "Protected API surfaces are not configured"`.
+**Behavior when empty:** in development fallback mode, protected routes return
+`503 Service Unavailable` with `detail: "Protected API surfaces are not
+configured"`. In production durable-credential mode, this value is intentionally
+absent and machine routes authenticate against the account store.
 This is intentional — it is **not** an unauthenticated state. The
 caller cannot bypass the 503 by omitting the `Authorization` header;
 the server is refusing to serve the protected surface, not asking for
@@ -45,6 +47,44 @@ credentials.
 
 **Generation:** any non-empty string. For production, use
 `openssl rand -hex 32` (64-char hex) and store in a secret manager.
+
+### `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED`
+
+The shared API token is a development/bootstrap credential. Production
+protected routes must use credentials created through the owner/MFA-protected
+machine-credential administration API. Set this variable to `true` after
+provisioning per-program credentials so the shared token cannot silently remain
+in service. Each route enforces its required scope (`evidence.read`,
+`evidence.write`, or `analysis.generate`). Raw credential tokens are returned
+only once at creation and are never stored.
+
+### Mounted secret files
+
+The API accepts the following `_FILE` alternatives so orchestrators can mount
+secrets without exposing their values in container environment variables:
+
+| Direct value | File path variable |
+|---|---|
+| `PROJECT_AI_API_TOKEN` | `PROJECT_AI_API_TOKEN_FILE` |
+| `PROJECT_AI_DATABASE_URL` | `PROJECT_AI_DATABASE_URL_FILE` |
+| `PROJECT_AI_SETUP_SECRET` | `PROJECT_AI_SETUP_SECRET_FILE` |
+| `PROJECT_AI_MFA_KEY` | `PROJECT_AI_MFA_KEY_FILE` |
+| `PROJECT_AI_EXECUTION_SECRET` | `PROJECT_AI_EXECUTION_SECRET_FILE` |
+
+### Waterfall integration
+
+`PROJECT_AI_WATERFALL_ENABLED` defaults to `false`. Set it to `true` only in an
+approved target after the copied/standalone runtime configuration, V3Q public
+registry, execution secret, and audit path are all present. When enabled,
+`PROJECT_AI_WATERFALL_CONFIG` may point to the server-side Waterfall JSON
+configuration; it is never supplied by a browser. Startup fails closed if
+Waterfall is enabled without a 32-byte execution secret, a valid audit relay,
+or a configured V3Q trusted-key registry.
+
+Each file must contain a non-empty UTF-8 value. Setting both the direct value
+and its `_FILE` alternative is rejected at startup. The production Helm chart
+mounts the configured existing Secret read-only at
+`/var/run/secrets/project-ai` and uses only `_FILE` variables.
 
 ### `PROJECT_AI_AUDIT_PATH`
 
@@ -143,8 +183,12 @@ For CI: set both to `PROJECT_AI_DESKTOP_SMOKE=1 QT_QPA_PLATFORM=offscreen`.
 
 Before declaring a deployment production-ready, confirm:
 
-- [ ] `PROJECT_AI_API_TOKEN` is set on the server (non-empty, generated via `openssl rand -hex 32` or equivalent)
-- [ ] `PROJECT_AI_API_TOKEN` is distributed to authorized clients only (secret manager, not git)
+- [ ] `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED=true` is set in production.
+- [ ] One scoped machine credential is provisioned per approved program through
+      the owner/MFA administration API; raw tokens are held only by the approved
+      secret manager or client runtime.
+- [ ] `PROJECT_AI_API_TOKEN` is absent from the production API environment/file
+      unless an explicit, time-bounded bootstrap exception is approved.
 - [ ] `PROJECT_AI_AUDIT_PATH` points to a writable path; the host directory is owned by UID 10001 (Compose) or the equivalent service account (K8s)
 - [ ] `PROJECT_AI_DOI_REGISTRY` (if overridden) points to a verified copy of `docs/reference/DOI_REGISTRY.md`
 - [ ] `.env` (local) or the K8s Secret is **not** committed
@@ -154,9 +198,11 @@ Before declaring a deployment production-ready, confirm:
 
 - `.env.example` — the template
 - `compose.yaml` — the `${VAR}` references
+- `helm/project-ai/templates/api.yaml` — production Secret mounts
 - `packages/api/src/project_ai_api/app.py` — the `os.getenv` call sites
 - `packages/cli/src/project_ai_cli/app.py` — the CLI env-var reads
 - `docs/operator.md` — the operator-side install commands
 
-If you add a new env var, update **all four** of the above in the same
-commit.
+If you add a runtime variable, update every applicable source above in the
+same change.
+Raw credential tokens are returned only once at creation and are never stored.

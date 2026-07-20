@@ -1,4 +1,10 @@
-# Production Infrastructure Build - Complete
+# Production Infrastructure Build - Local Capability Record
+
+> **Scope boundary (2026-07-19):** This document records local infrastructure
+> capabilities and implementation work. It is not a production deployment approval.
+> The current v0.0.3 successor remains fail-closed pending owner
+> signing/ratification, external proof custody, immutable remote evidence, and
+> approved target operations; see the [current CAB review pack](operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md).
 
 ## Summary
 
@@ -411,6 +417,6 @@ docker run -e PROJECT_AI_API_TOKEN=$(openssl rand -hex 32) \
 
 ---
 
-**Status:** ✅ **PRODUCTION READY**
+**Status:** ✅ **LOCAL CAPABILITY COMPLETE — NOT PRODUCTION APPROVED**
 **Last Updated:** 2026
 **Maintained by:** Project-AI Core Team

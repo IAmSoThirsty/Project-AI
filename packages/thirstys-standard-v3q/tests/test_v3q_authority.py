@@ -3,8 +3,8 @@ from __future__ import annotations
 from copy import deepcopy
 
 import pytest
-from conftest import signed_proof
 from thirstys_standard_runtime.authority import AuthorityError, verify_authority_proof
+from v3q_test_helpers import signed_proof
 
 
 def test_valid_ed25519_authority_proof(owner_keys) -> None:

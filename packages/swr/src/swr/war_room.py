@@ -88,6 +88,9 @@ class SovereignWarRoom:
         v3q_state: dict[str, object] = {}
         if governance_state:
             v3q_state.update(governance_state)
+            for proof_key in ("v3q_authority_proof", "v3q_approval_proof"):
+                if proof_key in governance_state:
+                    v3q_state[proof_key] = governance_state[proof_key]
         v3q_state["v3q_action"] = request_to_v3q_action(request)
 
         return self._execution.submit_action(

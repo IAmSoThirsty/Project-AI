@@ -199,13 +199,17 @@ def install_swr_workflow_routes(
                 reused_existing_receipt=True,
             )
 
-        governance_state = {
+        governance_state: dict[str, object] = {
             "human_review_state": reviewed_request.state.value,
             "request_operation": reviewed_request.operation,
             "request_resource": reviewed_request.resource,
             "scenario_id": scenario.scenario_id,
             "expected_decision": scenario.expected_decision,
         }
+        if payload.v3q_authority_proof is not None:
+            governance_state["v3q_authority_proof"] = payload.v3q_authority_proof
+        if payload.v3q_approval_proof is not None:
+            governance_state["v3q_approval_proof"] = payload.v3q_approval_proof
         try:
             result = runtime.execute_scenario(
                 scenario,

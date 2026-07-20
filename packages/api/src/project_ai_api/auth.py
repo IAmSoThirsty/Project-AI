@@ -21,6 +21,7 @@ from accounts import (
     InvalidMfa,
     InvalidRecovery,
     InvalidSession,
+    MachineCredential,
     MfaRequired,
     MfaUnavailable,
     PasswordRejected,
@@ -40,6 +41,9 @@ from project_ai_api.models import (
     BootstrapResponse,
     BootstrapStatusResponse,
     LoginRequest,
+    MachineCredentialCreateRequest,
+    MachineCredentialCreateResponse,
+    MachineCredentialsResponse,
     ManagedAccount,
     MessageResponse,
     MfaCodeRequest,
@@ -55,6 +59,9 @@ from project_ai_api.models import (
     SessionInfo,
     SessionResponse,
     SessionsResponse,
+)
+from project_ai_api.models import (
+    MachineCredential as MachineCredentialResponse,
 )
 
 SESSION_COOKIE = "project_ai_session"
@@ -134,6 +141,22 @@ def _safe_account(account: Account) -> AuthAccount:
 def _managed_account(account: Account) -> ManagedAccount:
     return ManagedAccount(
         **_safe_account(account).model_dump(), created_at=account.created_at.isoformat()
+    )
+
+
+def _machine_credential(item: object) -> MachineCredentialResponse:
+    credential = cast("MachineCredential", item)
+    return MachineCredentialResponse(
+        id=credential.id,
+        label=credential.label,
+        scopes=cast(
+            tuple[Literal["evidence.read", "evidence.write", "analysis.generate"], ...],
+            credential.scopes,
+        ),
+        created_at=credential.created_at.isoformat(),
+        created_by=credential.created_by,
+        last_used_at=credential.last_used_at.isoformat() if credential.last_used_at else None,
+        revoked_at=credential.revoked_at.isoformat() if credential.revoked_at else None,
     )
 
 
@@ -574,6 +597,63 @@ def install_auth_routes(
         except AccountServiceError as error:
             _raise_account_error(error)
         return MessageResponse(message="Account status changed")
+
+    @application.get("/api/v1/admin/machine-credentials", response_model=MachineCredentialsResponse)
+    def admin_machine_credentials(
+        session_context: Annotated[tuple[Account, StoredSession, str], Depends(current)],
+    ) -> MachineCredentialsResponse:
+        _, _, token = session_context
+        try:
+            credentials = service().list_machine_credentials(token)
+        except AccountServiceError as error:
+            _raise_account_error(error)
+        return MachineCredentialsResponse(
+            credentials=tuple(_machine_credential(item) for item in credentials)
+        )
+
+    @application.post(
+        "/api/v1/admin/machine-credentials",
+        response_model=MachineCredentialCreateResponse,
+    )
+    def admin_create_machine_credential(
+        payload: MachineCredentialCreateRequest,
+        request: Request,
+        session_context: Annotated[tuple[Account, StoredSession, str], Depends(current)],
+        csrf_token: Annotated[str | None, Header(alias="X-CSRF-Token")] = None,
+    ) -> MachineCredentialCreateResponse:
+        _require_same_origin(request)
+        _, _, token = session_context
+        try:
+            result = service().create_machine_credential(
+                token,
+                csrf_token,
+                label=payload.label,
+                scopes=tuple(payload.scopes),
+                source=_source(request),
+            )
+        except AccountServiceError as error:
+            _raise_account_error(error)
+        return MachineCredentialCreateResponse(
+            credential=_machine_credential(result.credential), token=result.token
+        )
+
+    @application.post(
+        "/api/v1/admin/machine-credentials/{credential_id}/revoke",
+        response_model=MessageResponse,
+    )
+    def admin_revoke_machine_credential(
+        credential_id: str,
+        request: Request,
+        session_context: Annotated[tuple[Account, StoredSession, str], Depends(current)],
+        csrf_token: Annotated[str | None, Header(alias="X-CSRF-Token")] = None,
+    ) -> MessageResponse:
+        _require_same_origin(request)
+        _, _, token = session_context
+        try:
+            service().revoke_machine_credential(token, csrf_token, credential_id, _source(request))
+        except AccountServiceError as error:
+            _raise_account_error(error)
+        return MessageResponse(message="Machine credential revoked")
 
     @application.get("/api/v1/admin/security-events", response_model=SecurityEventsResponse)
     def admin_security_events(

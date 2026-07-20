@@ -1,5 +1,39 @@
 # Production Deployment
 
+> **Current use:** local single-host acceptance only. The CAB production path
+> is Kubernetes/Helm and remains unauthorized until the external conditions in
+> `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md` are complete.
+
+The Compose stack contains nine services: API, three portals, three adapters,
+Genesis, and PostgreSQL. It is useful for release-candidate build/health and
+security smoke checks; it is not evidence of cluster routing, paging,
+multi-node persistence, backup/restore, or Helm rollback.
+
+```powershell
+uv sync --frozen --all-extras --all-packages
+uv run python tools/verify_pre_deployment.py
+docker compose config --quiet
+docker compose up -d --build --wait --wait-timeout 240
+python tools/verify_compose_health.py
+Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8000/metrics
+docker compose exec -T api python tools/canonical_replay.py
+docker compose exec -T api python tools/verify_frozen_history.py
+docker compose exec -T api python tools/verify_security_relay.py /data/chimera-audit.jsonl
+```
+
+Compose uses the shared `PROJECT_AI_API_TOKEN` only as a development fallback.
+For a production-equivalent machine lane, configure the account database,
+create scoped credentials through the owner/MFA administration API, and set
+`PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED=true`; raw per-program tokens belong in
+the approved secret manager, not `.env` or Helm values. Preserve the pre-existing
+stack state: if it was running before validation, leave it running; if
+validation started it, stop it with `docker compose down` after capturing logs.
+Do not use source checkout or rebuild as a production rollback mechanism; use
+the immutable Helm revision procedure in the CAB rollback runbook.
+
+<!-- Retired development-checkpoint guide retained as historical context. It
+contains obsolete seven-service counts and is not an approved runbook.
+
 > **Scope:** deploying the Project-AI development stack to a production-like
 > single-host Compose environment. For K8s / Helm, see `HELM_DEPLOY.md`.
 > **Pre-requisite:** the 4 canonical gates are green per
@@ -105,7 +139,7 @@ docker compose ps
 
 # Spot-check the API
 curl -sS http://127.0.0.1:8000/health/live
-# Expected: {"status":"live","version":"0.0.0.dev0"}
+# Expected: {"status":"live","version":"0.0.3"}
 ```
 
 ---
@@ -169,20 +203,34 @@ docker compose cp api:/data/chimera-audit.jsonl \
 sha256sum /var/log/project-ai/audit-*.jsonl
 ```
 
+For a governed backup/restore rehearsal, create an archive with
+`tools/backup_audit_data.sh` and restore it only into an explicitly named empty
+directory with `tools/restore_audit_data.sh`. The restore utility rejects
+non-empty targets and unsafe archive paths; record both archive identity and
+post-restore chain verification in the change record.
+
+```bash
+sh tools/backup_audit_data.sh /data /backup
+sh tools/restore_audit_data.sh /backup/audit-<UTC-TIMESTAMP>.tar.gz /restore/project-ai
+python tools/verify_frozen_history.py
+```
+
 ---
 
 ## 7. Rollback
 
-If the deployment needs to be rolled back:
+For a local Compose stop/restart only, use the following rehearsal. A production
+rollback must use the immutable Helm revision procedure in
+`docs/operations/cab/ROLLBACK_RUNBOOK.md`; do not rebuild from an arbitrary
+checkout during an incident.
 
 ```bash
 # 1. Stop the new stack
 docker compose down
 
-# 2. Check out the previous good commit
+# 2. Select the previously certified image/revision from the change record
 cd T:/00-Active/Project-AI-Beginnings
-git log --oneline -10   # find the previous good SHA
-git checkout <previous-good-sha>
+# no source checkout is part of the production rollback path
 
 # 3. Rebuild + restart
 docker compose build --parallel
@@ -222,3 +270,4 @@ After a successful deployment:
 - `docs/deployment/ENVIRONMENT_VARIABLES.md` — env-var reference
 - `docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md` — start/verify/inspect/stop
 - `docs/runbooks/INCIDENT_RESPONSE.md` — incident diagnostics
+-->

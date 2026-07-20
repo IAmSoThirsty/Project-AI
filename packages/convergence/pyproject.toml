@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-convergence"
-version = "0.0.2"
+version = "0.0.3"
 description = "Shadow-Thirst (6th tier) convergence harness across all Thirsty-Lang tier specs in Project-AI Beginnings"
 readme = "README.md"
 requires-python = "==3.12.10"

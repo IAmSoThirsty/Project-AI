@@ -1,14 +1,31 @@
-# Production values for Project-AI Helm chart
-# Use with: helm install project-ai ./helm/project-ai -f helm/values.prod.yaml
+# Production candidate baseline values for Project-AI Helm chart.
+# This file is not deployable as-is: it retains the v0.0.2 digest baseline and
+# an example ingress host. Replace both through an owner-approved successor
+# overlay only after the pre-deployment and CAB gates pass.
 
 image:
   registry: ghcr.io
-  owner: project-ai
-  pullPolicy: IfNotPresent
-  tag: "main"
+  owner: iamsothirsty
+  pullPolicy: Always
+  tag: "v0.0.2"
+  # OCI index digests resolved from GHCR for the signed v0.0.2 release.
+  digests:
+    api: sha256:faa048acda2eb3d91c8c8a39930de2a9691cccc6d25b8ca72394a0a824159d29
+    docs-portal: sha256:f7b24f1cb1d0af60d192dad27007db74962a36fcae626bf8592b67e91f56e216
+    proof-portal: sha256:fcc18230dc8205032c63b72d7160c0c32e9029372d0ea915b7ebffe951f10599
+    operator-console: sha256:adbd16934eaeda3588ea07bd1b08b27e9a39f98314ebf0a471c7aae68ce62272
+    swr: sha256:ffe552485c5d783119cdb7dd778c96bb70e4fe60edf721fb178ae7e84c602f1c
+    atlas: sha256:686242ff56499572e11721cc0cb927ad1df22c67f503be523e96c9218e69d15e
+    arbiter-rlp: sha256:b2963d3a18ab6f07157922c9293247dc47da8816bc7c7ad5d9da883e9bcdd5f6
+    genesis: sha256:adaff76155fd72e4ed1ed4218c1fc94a4e14713da5b8dc34bc777ea192e1dbcf
 
 secrets:
-  create: true
+  # Provision this Secret through the target cluster's approved secret manager.
+  # The Helm release references it but never stores production values in Git or
+  # Helm release metadata.
+  create: false
+  required: true
+  existingSecret: project-ai-api-secrets
   api:
     token: ""
     setupSecret: ""
@@ -16,17 +33,23 @@ secrets:
     databaseUrl: ""
     executionSecret: ""
 
+v3q:
+  required: true
+
 api:
   image: project-ai-api
   port: 8000
   env:
     PROJECT_AI_INSTANCE_NAME: PROJECT-AI-SOVEREIGN
     PROJECT_AI_API_TOKEN: ""
+    PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED: "true"
     PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
     PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
     PROJECT_AI_ACCOUNT_DB: ""
     PROJECT_AI_WORKFLOW_DB: ""
     PROJECT_AI_SWR_BUNDLE_DIR: /data/swr-bundles
+    PROJECT_AI_WATERFALL_ENABLED: "false"
+    PROJECT_AI_WATERFALL_CONFIG: ""
     PROJECT_AI_SESSION_COOKIE_SECURE: "true"
   # Multi-replica human state requires secrets.api.databaseUrl to reference PostgreSQL.
   replicas: 2
@@ -147,25 +170,67 @@ rbac:
 
 networkPolicy:
   enabled: true
+  # Override both selector sets when the target cluster uses different labels.
+  ingressController:
+    namespaceLabels:
+      kubernetes.io/metadata.name: ingress-nginx
+    podLabels:
+      app.kubernetes.io/component: controller
+  dns:
+    namespaceLabels:
+      kubernetes.io/metadata.name: kube-system
+    podLabels:
+      k8s-app: kube-dns
 
 podDisruptionBudgets:
   enabled: true
 
 monitoring:
   enabled: true
+  # Override selectors if the cluster monitoring stack uses other labels.
+  serviceMonitor:
+    labels:
+      release: prometheus
+  grafanaDashboard:
+    enabled: true
+    labels:
+      grafana_dashboard: "1"
+  networkPolicy:
+    namespaceLabels:
+      kubernetes.io/metadata.name: monitoring
+    podLabels:
+      app.kubernetes.io/name: prometheus
 
 alerting:
   enabled: true
+  prometheusRule:
+    labels:
+      release: prometheus
 
 backup:
   enabled: true
   schedule: "0 2 * * *"
+  image: "busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"
+  imagePullPolicy: Always
   # Remote upload stays disabled until an operator provides a real rclone
   # config Secret and destination — see helm/project-ai/values.yaml comment.
+  # The pre-deployment gate rejects this baseline until those values exist.
   remote:
     enabled: false
     destination: ""
     secretName: ""
+
+securityVerify:
+  enabled: true
+  schedule: "*/15 * * * *"
+
+frozenHistoryVerify:
+  enabled: true
+  schedule: "0 4 * * *"
+
+canonicalReplay:
+  enabled: true
+  schedule: "0 * * * *"
 
 ingress:
   enabled: true
@@ -173,6 +238,8 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
+    # Placeholder only; an approved environment overlay must replace this
+    # before any production render or deployment.
     - host: project-ai.example.com
       paths:
         - path: /docs

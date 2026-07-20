@@ -45,6 +45,8 @@ members = [
     "project-ai-temporal",
     "project-ai-thirstys-standard-v3q",
     "project-ai-thirstys-trading-hub",
+    "project-ai-thirstys-waterfall",
+    "project-ai-waterfall-adapter",
     "project-ai-workflows",
 ]
 
@@ -908,7 +910,7 @@ wheels = [
 
 [[package]]
 name = "project-ai"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "." }
 dependencies = [
     { name = "project-ai-accounts" },
@@ -948,6 +950,8 @@ dependencies = [
     { name = "project-ai-temporal" },
     { name = "project-ai-thirstys-standard-v3q" },
     { name = "project-ai-thirstys-trading-hub" },
+    { name = "project-ai-thirstys-waterfall" },
+    { name = "project-ai-waterfall-adapter" },
     { name = "project-ai-workflows" },
     { name = "thirsty-lang" },
 ]
@@ -1021,6 +1025,8 @@ requires-dist = [
     { name = "project-ai-temporal", editable = "packages/temporal" },
     { name = "project-ai-thirstys-standard-v3q", editable = "packages/thirstys-standard-v3q" },
     { name = "project-ai-thirstys-trading-hub", editable = "packages/thirstys-trading-hub" },
+    { name = "project-ai-thirstys-waterfall", editable = "packages/thirstys-waterfall" },
+    { name = "project-ai-waterfall-adapter", editable = "packages/waterfall-adapter" },
     { name = "project-ai-workflows", editable = "packages/workflows" },
     { name = "pypdf", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "pypdf", marker = "extra == 'knowledge'", specifier = ">=6.0.0" },
@@ -1034,7 +1040,7 @@ provides-extras = ["knowledge", "dev"]
 
 [[package]]
 name = "project-ai-accounts"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/accounts" }
 dependencies = [
     { name = "cryptography" },
@@ -1058,7 +1064,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-ai-takeover"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/ai-takeover" }
 dependencies = [
     { name = "project-ai-simulation-contract" },
@@ -1078,7 +1084,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-alien-invaders"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/alien-invaders" }
 dependencies = [
     { name = "project-ai-simulation-contract" },
@@ -1098,7 +1104,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-api"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/api" }
 dependencies = [
     { name = "fastapi" },
@@ -1112,7 +1118,10 @@ dependencies = [
     { name = "project-ai-swr" },
     { name = "project-ai-taar" },
     { name = "project-ai-thirstys-standard-v3q" },
+    { name = "project-ai-thirstys-waterfall" },
+    { name = "project-ai-waterfall-adapter" },
     { name = "project-ai-workflows" },
+    { name = "prometheus-client" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -1134,7 +1143,10 @@ requires-dist = [
     { name = "project-ai-swr", editable = "packages/swr" },
     { name = "project-ai-taar", editable = "packages/taar" },
     { name = "project-ai-thirstys-standard-v3q", editable = "packages/thirstys-standard-v3q" },
+    { name = "project-ai-thirstys-waterfall", editable = "packages/thirstys-waterfall" },
+    { name = "project-ai-waterfall-adapter", editable = "packages/waterfall-adapter" },
     { name = "project-ai-workflows", editable = "packages/workflows" },
+    { name = "prometheus-client", specifier = ">=0.25.0,<0.26" },
     { name = "pyinstaller", marker = "extra == 'build'", specifier = ">=6.11.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
 ]
@@ -1142,12 +1154,12 @@ provides-extras = ["build"]
 
 [[package]]
 name = "project-ai-arbiter"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/arbiter" }
 
 [[package]]
 name = "project-ai-atlas"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/atlas" }
 dependencies = [
     { name = "jsonschema" },
@@ -1172,7 +1184,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-audit"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/audit" }
 
 [package.optional-dependencies]
@@ -1186,7 +1198,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-canonical"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/canonical" }
 dependencies = [
     { name = "project-ai-audit" },
@@ -1208,7 +1220,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-capability"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/capability" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1219,7 +1231,7 @@ requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
 
 [[package]]
 name = "project-ai-caretaker"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/caretaker" }
 dependencies = [
     { name = "click" },
@@ -1240,7 +1252,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-cerberus"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/cerberus" }
 dependencies = [
     { name = "cryptography" },
@@ -1261,7 +1273,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-cli"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/cli" }
 dependencies = [
     { name = "thirsty-lang" },
@@ -1276,7 +1288,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-cognitive-warfare"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/cognitive-warfare" }
 dependencies = [
     { name = "project-ai-governance" },
@@ -1298,7 +1310,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-companion"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/companion" }
 dependencies = [
     { name = "project-ai-execution" },
@@ -1313,7 +1325,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-convergence"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/convergence" }
 dependencies = [
     { name = "project-ai-atlas" },
@@ -1334,7 +1346,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-desktop"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "apps/desktop" }
 dependencies = [
     { name = "pyqt6" },
@@ -1354,7 +1366,7 @@ provides-extras = ["build"]
 
 [[package]]
 name = "project-ai-django-state"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/django-state" }
 
 [package.optional-dependencies]
@@ -1368,7 +1380,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-dpr"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/dpr" }
 dependencies = [
     { name = "cryptography" },
@@ -1379,7 +1391,7 @@ requires-dist = [{ name = "cryptography", specifier = ">=42.0" }]
 
 [[package]]
 name = "project-ai-emp-defense"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/emp-defense" }
 
 [package.optional-dependencies]
@@ -1393,7 +1405,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-execution"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/execution" }
 dependencies = [
     { name = "project-ai-capability" },
@@ -1412,7 +1424,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-global-scenario"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/global-scenario" }
 dependencies = [
     { name = "numpy" },
@@ -1436,7 +1448,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-governance"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/governance" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1451,7 +1463,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-hydra-50"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/hydra_50" }
 dependencies = [
     { name = "project-ai-execution" },
@@ -1468,7 +1480,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-identity"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/identity" }
 
 [package.optional-dependencies]
@@ -1482,12 +1494,12 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-kernel"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/kernel" }
 
 [[package]]
 name = "project-ai-knowledge"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/knowledge" }
 dependencies = [
     { name = "numpy" },
@@ -1513,7 +1525,7 @@ provides-extras = ["ingest"]
 
 [[package]]
 name = "project-ai-mcp-server"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/mcp_server" }
 dependencies = [
     { name = "httpx" },
@@ -1524,7 +1536,7 @@ requires-dist = [{ name = "httpx", specifier = ">=0.27.0" }]
 
 [[package]]
 name = "project-ai-memory"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/memory" }
 dependencies = [
     { name = "numpy" },
@@ -1547,12 +1559,12 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-rlp"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/rlp" }
 
 [[package]]
 name = "project-ai-security"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/security" }
 dependencies = [
     { name = "thirsty-lang" },
@@ -1563,7 +1575,7 @@ requires-dist = [{ name = "thirsty-lang", specifier = "==0.8.1" }]
 
 [[package]]
 name = "project-ai-service-host"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "apps/services" }
 dependencies = [
     { name = "fastapi" },
@@ -1588,7 +1600,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-simulation-contract"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/simulation-contract" }
 
 [package.optional-dependencies]
@@ -1602,7 +1614,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-sovereign-vault"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/sovereign-vault" }
 dependencies = [
     { name = "cryptography" },
@@ -1617,7 +1629,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-swr"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/swr" }
 dependencies = [
     { name = "click" },
@@ -1650,7 +1662,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-swr-dashboard"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "apps/swr-dashboard" }
 dependencies = [
     { name = "flask" },
@@ -1674,7 +1686,7 @@ provides-extras = ["test"]
 
 [[package]]
 name = "project-ai-taar"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/taar" }
 dependencies = [
     { name = "pyyaml" },
@@ -1691,7 +1703,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-tarl"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/tarl" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1706,7 +1718,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-temporal"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/temporal" }
 dependencies = [
     { name = "project-ai-kernel" },
@@ -1717,7 +1729,7 @@ requires-dist = [{ name = "project-ai-kernel", editable = "packages/kernel" }]
 
 [[package]]
 name = "project-ai-thirstys-standard-v3q"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/thirstys-standard-v3q" }
 dependencies = [
     { name = "cel-python" },
@@ -1736,7 +1748,7 @@ requires-dist = [
 
 [[package]]
 name = "project-ai-thirstys-trading-hub"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/thirstys-trading-hub" }
 
 [package.optional-dependencies]
@@ -1749,8 +1761,40 @@ requires-dist = [{ name = "pytest", marker = "extra == 'test'", specifier = ">=8
 provides-extras = ["test"]
 
 [[package]]
+name = "project-ai-thirstys-waterfall"
+version = "0.0.3"
+source = { editable = "packages/thirstys-waterfall" }
+dependencies = [
+    { name = "cryptography" },
+    { name = "project-ai-waterfall-adapter" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "cryptography", specifier = ">=41.0.0" },
+    { name = "project-ai-waterfall-adapter", editable = "packages/waterfall-adapter" },
+]
+
+[[package]]
+name = "project-ai-waterfall-adapter"
+version = "0.0.3"
+source = { editable = "packages/waterfall-adapter" }
+dependencies = [
+    { name = "project-ai-capability" },
+    { name = "project-ai-execution" },
+    { name = "project-ai-kernel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "project-ai-capability", editable = "packages/capability" },
+    { name = "project-ai-execution", editable = "packages/execution" },
+    { name = "project-ai-kernel", editable = "packages/kernel" },
+]
+
+[[package]]
 name = "project-ai-workflows"
-version = "0.0.2"
+version = "0.0.3"
 source = { editable = "packages/workflows" }
 dependencies = [
     { name = "project-ai-accounts" },
@@ -1769,6 +1813,15 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
 ]
 provides-extras = ["test"]
+
+[[package]]
+name = "prometheus-client"
+version = "0.25.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1b/fb/d9aa83ffe43ce1f19e557c0971d04b90561b0cfd50762aafb01968285553/prometheus_client-0.25.0.tar.gz", hash = "sha256:5e373b75c31afb3c86f1a52fa1ad470c9aace18082d39ec0d2f918d11cc9ba28", size = 86035, upload-time = "2026-04-09T19:53:42.359Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8d/9b/d4b1e644385499c8346fa9b622a3f030dce14cd6ef8a1871c221a17a67e7/prometheus_client-0.25.0-py3-none-any.whl", hash = "sha256:d5aec89e349a6ec230805d0df882f3807f74fd6c1a2fa86864e3c2279059fed1", size = 64154, upload-time = "2026-04-09T19:53:41.324Z" },
+]
 
 [[package]]
 name = "psycopg"
@@ -2247,11 +2300,11 @@ wheels = [
 
 [[package]]
 name = "setuptools"
-version = "82.0.1"
+version = "83.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/4f/db/cfac1baf10650ab4d1c111714410d2fbb77ac5a616db26775db562c8fab2/setuptools-82.0.1.tar.gz", hash = "sha256:7d872682c5d01cfde07da7bccc7b65469d3dca203318515ada1de5eda35efbf9", size = 1152316, upload-time = "2026-03-09T12:47:17.221Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/34/26/f5d29e25ffdb535afef2d35cdb55b325298f96debd670da4c325e08d70f4/setuptools-83.0.0.tar.gz", hash = "sha256:025bccbbf0fa05b6192bc64ae1e7b16e001fd6d6d4d5de03c97b1c1ade523bef", size = 1154254, upload-time = "2026-07-04T15:31:22.699Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9d/76/f789f7a86709c6b087c5a2f52f911838cad707cc613162401badc665acfe/setuptools-82.0.1-py3-none-any.whl", hash = "sha256:a59e362652f08dcd477c78bb6e7bd9d80a7995bc73ce773050228a348ce2e5bb", size = 1006223, upload-time = "2026-03-09T12:47:15.026Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl", hash = "sha256:29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3", size = 1008090, upload-time = "2026-07-04T15:31:20.885Z" },
 ]
 
 [[package]]

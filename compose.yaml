@@ -73,6 +73,7 @@ services:
     environment:
       PROJECT_AI_INSTANCE_NAME: ${PROJECT_AI_INSTANCE_NAME:-PROJECT-AI-LOCAL}
       PROJECT_AI_API_TOKEN: ${PROJECT_AI_API_TOKEN:-}
+      PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED: ${PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED:-false}
       PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
       PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
       PROJECT_AI_DATABASE_URL: postgresql://project_ai:${PROJECT_AI_POSTGRES_PASSWORD:-project-ai-local-only}@postgres:5432/project_ai

@@ -1,5 +1,10 @@
 # Validation & Testing - NetworkPolicies
 
+> Historical validation artifact. The checks below validate chart templates only
+> and do not authorize a current production deployment. Current release status
+> is governed by the CAB evidence bundle and pre-deployment checklist.
+> Current deployment approval remains fail-closed until the successor gates pass.
+
 ## Validation Tests
 
 ### Test 1: Helm Linting
@@ -135,4 +140,5 @@ kubectl get pods -n np-test --show-labels | grep -E "api|portals|adapters|genesi
 | 14. DNS works | ✅ |
 | 15. Labels match | ✅ |
 
-**Production Ready:** ✅ YES
+**Template validation at report time:** ✅ PASS
+**Current production status:** NOT AUTHORIZED BY THIS ARTIFACT

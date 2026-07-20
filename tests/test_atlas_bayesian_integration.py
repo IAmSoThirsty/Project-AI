@@ -1,6 +1,6 @@
 """Integration tests for atlas.bayesian (Phase J2.3.2).
 
-Per Thirstys standards: production-ready integration tests proving that
+Per Thirstys standards: local integration tests proving that
 the Bayesian engine works end-to-end with the audit trail and produces
 deterministic, hash-chained, subordination-bound analyses.
 """

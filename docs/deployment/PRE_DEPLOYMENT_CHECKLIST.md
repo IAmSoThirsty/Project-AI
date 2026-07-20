@@ -1,5 +1,122 @@
 # Pre-Deployment Checklist
 
+**Status:** v0.0.3 successor identity prepared; owner-independent remediation
+gates pass locally, while the aggregate pre-deployment gate correctly fails on
+the present owner-private key, missing remote successor evidence, placeholder
+production ingress, and unconfigured remote backup. No production deployment
+is authorized.
+**Evidence date:** 2026-07-19.
+
+**Current CAB entry point:**
+[`PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`](../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md)
+
+## Current local evidence
+
+- Full pytest: 3406 passed, 5 PostgreSQL environment-gated skips, zero
+  failures, XFAIL/XPASS results, or warnings.
+- Batched branch coverage: 87.32%, threshold 80%.
+- Canonical replay: 5/5; frozen history: 2264/2264.
+- Rebuilt API image: live metrics, canonical replay, frozen-history verifier,
+  and valid empty security-relay genesis proven inside the container.
+- Compose: 9/9 healthy with read-only/cap-drop/no-new-privileges checks.
+- Helm: lint passes; production render has 47 manifests and enforces namespace
+  plus all eight image digests.
+- Checkov 3.3.8: Kubernetes 1123/0/0, Dockerfile 248/0/0, GitHub Actions
+  976/0/0.
+- Workflow action pinning: all 103 remote action references in the successor
+  checkout use full commit SHAs; local workflow verification passes.
+- Dependency audits: Python OSV and Node moderate+ pass after upgrading locked
+  setuptools 82.0.1 to 83.0.0.
+- Rust dependency audit: `cargo audit` 0.22.2 reports no advisories for the
+  current `Cargo.lock`; `cargo fmt`, Clippy, and workspace tests pass.
+- Local CycloneDX SBOMs: Python workspace SBOM contains 155 components and Rust
+  workspace SBOM contains 20 components; both validate as CycloneDX JSON.
+- Web surfaces: ESLint, all portal tests (61 tests), and all four production
+  builds pass locally.
+- Android: `testDebugUnitTest assembleDebug` passes with the configured Android
+  SDK; Gradle reports only the SDK XML-version compatibility warning.
+- Desktop: offscreen source smoke and unsigned PyInstaller onedir build/smoke
+  both pass under Python 3.12.10.
+- Standalone Waterfall: production-candidate image has zero HIGH/CRITICAL
+  Trivy findings and its temporary `/health` probe returned 200; the mutable
+  prior `latest` image is not promotable. The standalone locked test replay is
+  also green at `309 passed` with no warnings. The Project-AI copied-runtime
+  replay passes `313` tests.
+- ADR-002 machine credentials: owner/MFA issuance, scoped route enforcement,
+  revocation, audit attribution, and SQLite-to-disposable-PostgreSQL migration
+  are locally verified.
+- Backup/restore: audit and SWR bundle round-trip passes locally; non-empty
+  restore targets and unsafe archive paths fail closed.
+- V3Q package suite: 46 tests pass, including 28 required-mode/
+  integration/execution tests plus owner-key tool safety checks. This does not
+  replace owner ratification of the exact production manifest.
+
+## Mandatory candidate gates
+
+```powershell
+uv sync --frozen --all-extras --all-packages
+uv run python tools/verify_pre_deployment.py
+# Optional diagnostic pass: list every current blocker without fail-fast stop.
+uv run python tools/verify_pre_deployment.py --report
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy --ignore-missing-imports packages/kernel/src packages/security/src packages/governance/src packages/capability/src packages/execution/src packages/companion/src packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src packages/api/src packages/cli/src packages/sovereign-vault/src apps/desktop/src apps/services/src tools
+uv run pytest -q
+uv run python tools/run_ci_coverage.py --batches 8
+uv run python tools/canonical_replay.py
+uv run python tools/verify_frozen_history.py
+docker compose config --quiet
+docker compose up -d --build --wait --wait-timeout 240
+python tools/verify_compose_health.py
+helm lint helm/project-ai -f helm/values.prod.yaml
+helm template project-ai helm/project-ai --namespace project-ai-prod -f helm/values.prod.yaml | uv run python tools/verify_helm_template.py --expected-namespace project-ai-prod --project-image-registry ghcr.io --project-image-owner iamsothirsty --require-project-image-digests
+```
+
+The exact successor commit must then pass remote CI, CodeQL, Checkov, Trivy
+for all eight published images, Python/Node/Rust dependency scans, SBOM and
+signature/attestation verification. The CAB pack additionally requires the
+real target, owners, maintenance window, secret provenance, server-side dry
+run, monitoring/page delivery, backup/restore, rollback rehearsal, and named
+acceptance. Local gates alone are not production approval.
+
+## V3Q minimum acceptance gate
+
+Production Helm sets `THIRSTYS_V3Q_REQUIRED=true` and loads only public
+verification keys from the packaged or explicitly configured
+`THIRSTYS_V3Q_REGISTRY`. Missing or malformed verification configuration aborts
+application startup. The online runtime cannot mint its own authority or approval;
+missing external proofs deny execution. Development remains dormant by default.
+
+Do not deploy until all of the following are true:
+
+- the owner has rotated the local `owner-primary` key that entered a Docker
+  image before the root `.dockerignore` exclusion was added;
+- the replacement private key exists only in an approved offline signing system and
+  the replacement public key is committed in `trusted-keys.json`;
+- Jeremy / Thirsty has intentionally ratified the exact V3Q release manifest,
+  and `verify_ratification.py` passes against the replacement registry;
+- a production-equivalent startup test proves required-mode activation and a
+  negative test proves invalid configuration and missing proofs fail closed;
+- a consequential action without an external approval proof is proven not to execute.
+
+The current manifest remains `draft_unratified`; V3Q minimum acceptance is
+therefore not yet satisfied.
+
+Current draft-manifest review snapshot: `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c`.
+This hash is a review aid, not an owner ratification or release hash.
+
+`docs/operations/cab/REMOTE_SUCCESSOR_EVIDENCE.json` is the machine-readable
+successor evidence record. Its current `status` is `missing`; it must not be
+changed to `verified` until the immutable remote and target-environment
+evidence listed in that record exists. The record separately tracks owner-key
+rotation, exact-manifest ratification, external proof custody, production
+overlay, remote backup, monitoring CRDs, and Dependabot disposition; each must
+be evidenced rather than inferred from local tests. Its
+`candidate_manifest_sha256` is checked against the candidate manifest in the
+checkout before any external evidence can be accepted.
+
+<!-- Retired 2026-06-29 checkpoint retained as historical evidence only.
+
 **Status:** pre-deployment output, not a deployment approval.
 **Date:** 2026-06-29
 **Scope:** current development checkpoint on `main`.
@@ -66,7 +183,8 @@ Documented runtime variables:
 
 | Variable | Surface | Requirement |
 |---|---|---|
-| `PROJECT_AI_API_TOKEN` | API, CLI, Compose, Helm | Required for protected API routes and protected CLI commands. Keep blank in examples. |
+| `PROJECT_AI_API_TOKEN` | API, CLI, Compose, Helm | Development/bootstrap fallback; production machine routes use durable per-program credentials. Keep blank in examples. |
+| `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED` | API, Compose, Helm | Set `true` in production after scoped credentials are provisioned; rejects shared-token machine writes. |
 | `PROJECT_AI_AUDIT_PATH` | API, Compose, Helm | Required with token for protected audit surfaces. Compose and Helm set it to `/data/chimera-audit.jsonl`. |
 | `PROJECT_AI_DOI_REGISTRY` | API, Compose, Helm | Points to `docs/reference/DOI_REGISTRY.md` inside the API container. |
 | `PROJECT_AI_API_URL` | CLI | Defaults to `http://127.0.0.1:8000`; documented in `.env.example`. |
@@ -74,6 +192,8 @@ Documented runtime variables:
 | `PROJECT_AI_DESKTOP_SMOKE` | desktop app | `1` enables offscreen smoke mode. |
 | `QT_QPA_PLATFORM` | desktop tests/smoke | Use `offscreen` for CI and headless validation. |
 | `VITE_API_BASE_URL` | web portals | Optional override; defaults to `/api`. |
+| `PROJECT_AI_WATERFALL_ENABLED` | API | Leave `false` until the target has approved Waterfall configuration, V3Q rotation, and execution evidence. |
+| `PROJECT_AI_WATERFALL_CONFIG` | API | Optional server-side Waterfall JSON configuration; never browser-supplied. |
 
 ## Runtime Surfaces
 
@@ -133,8 +253,9 @@ explicitly defined and tested.
 
 - Production image names and registry policy are not defined.
 - Runtime secrets are not wired through a Kubernetes Secret.
-- TLS, ingress, persistence retention, monitoring, alerting, backup, and real
-  rollback are not implemented.
+- Target TLS/ingress ownership, persistence retention, monitoring/page delivery,
+  remote backup/restore, and real Helm rollback evidence remain unverified.
 - No production deployment has been performed.
 - No release tag, GitHub Release, package publication, or image publication has
   been created.
+-->

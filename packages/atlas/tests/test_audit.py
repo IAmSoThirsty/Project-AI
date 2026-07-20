@@ -1,6 +1,6 @@
 """Unit tests for atlas.audit module (Phase J2.2.1).
 
-Per Thirstys standards: production-ready, full coverage of:
+Per Thirstys standards: local, deterministic coverage of:
 - Every enum value
 - Every dataclass validation path
 - Hash chain integrity (link + content)

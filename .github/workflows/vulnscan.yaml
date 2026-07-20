@@ -1,6 +1,10 @@
 name: Vulnerability Scan
 
 on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
   schedule:
     - cron: "0 8 * * *"
   workflow_dispatch:
@@ -28,7 +32,9 @@ jobs:
         # which are published to PyPI, so an unfiltered audit fails immediately
         # on every one of them ("not found on PyPI") instead of scanning
         # anything. This is a hard gate: a real CVE fails the job.
-        run: uv run --with pip-audit pip-audit --desc --skip-editable
+        run: >-
+          uv run --with pip-audit==2.10.1 pip-audit
+          --desc --skip-editable --vulnerability-service osv
       - name: Summary
         run: |
           echo "## Python Vulnerability Scan" >> $GITHUB_STEP_SUMMARY
@@ -102,9 +108,36 @@ jobs:
         #     license has an explicit bootloader exception — the GPL applies
         #     to PyInstaller's own source, not to programs built with it.
         #     Not a copyleft risk for apps built using it.
+        #   - cel-python 0.4.0 ships an Apache-2.0 LICENSE in its wheel but
+        #     omits the core metadata License field, so pip-licenses reports
+        #     UNKNOWN. Verify the installed license text exactly before
+        #     excluding only this package from the metadata-based allow-list.
         run: |
+          python - <<'PY'
+          from importlib.metadata import distribution
+
+          package = distribution("cel-python")
+          license_files = [
+              file
+              for file in package.files or ()
+              if str(file).endswith("licenses/LICENSE")
+          ]
+          if len(license_files) != 1:
+              raise SystemExit(f"cel-python license file mismatch: {license_files}")
+          text = package.locate_file(license_files[0]).read_text(encoding="utf-8")
+          required = (
+              "Apache License",
+              "Version 2.0, January 2004",
+              "http://www.apache.org/licenses/",
+          )
+          missing = [marker for marker in required if marker not in text]
+          if missing:
+              raise SystemExit(f"cel-python Apache-2.0 license markers missing: {missing}")
+          print("cel-python installed license verified: Apache-2.0")
+          PY
           uv run --with pip-licenses pip-licenses \
             --allow-only="MIT;BSD;Apache;ISC License;MPL;PSF;Python Software Foundation License;GPL-3.0-only;LGPL v3;GNU General Public License v2 (GPLv2)" \
+            --ignore-packages cel-python \
             --partial-match
       - name: Summary
         run: |

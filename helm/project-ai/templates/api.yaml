@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "project-ai.labels" . | nindent 4 }}
     {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}
@@ -16,6 +17,7 @@ spec:
         {{- include "project-ai.labels" . | nindent 8 }}
         {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 8 }}
     spec:
+      automountServiceAccountToken: false
       {{- if .Values.rbac.create }}
       serviceAccountName: {{ .Release.Name }}-api
       {{- end }}
@@ -29,14 +31,16 @@ spec:
             - containerPort: {{ .Values.api.port }}
               protocol: TCP
           env:
+            - name: THIRSTYS_V3Q_REQUIRED
+              value: {{ .Values.v3q.required | quote }}
             - name: PROJECT_AI_INSTANCE_NAME
               value: {{ .Values.api.env.PROJECT_AI_INSTANCE_NAME | quote }}
-            - name: PROJECT_AI_API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-api-secrets
-                  key: PROJECT_AI_API_TOKEN
-                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
+            {{- if and (or .Values.secrets.required .Values.secrets.create .Values.secrets.existingSecret) (ne (default "false" .Values.api.env.PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED) "true") }}
+            - name: PROJECT_AI_API_TOKEN_FILE
+              value: /var/run/secrets/project-ai/PROJECT_AI_API_TOKEN
+            {{- end }}
+            - name: PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED
+              value: {{ .Values.api.env.PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED | quote }}
             - name: PROJECT_AI_AUDIT_PATH
               value: {{ .Values.api.env.PROJECT_AI_AUDIT_PATH | quote }}
             - name: PROJECT_AI_DOI_REGISTRY
@@ -47,32 +51,24 @@ spec:
               value: {{ .Values.api.env.PROJECT_AI_WORKFLOW_DB | quote }}
             - name: PROJECT_AI_SWR_BUNDLE_DIR
               value: {{ .Values.api.env.PROJECT_AI_SWR_BUNDLE_DIR | quote }}
-            - name: PROJECT_AI_DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-api-secrets
-                  key: PROJECT_AI_DATABASE_URL
-                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
+            - name: PROJECT_AI_WATERFALL_ENABLED
+              value: {{ .Values.api.env.PROJECT_AI_WATERFALL_ENABLED | quote }}
+            - name: PROJECT_AI_WATERFALL_CONFIG
+              value: {{ .Values.api.env.PROJECT_AI_WATERFALL_CONFIG | quote }}
+            {{- if or .Values.secrets.required .Values.secrets.create .Values.secrets.existingSecret }}
+            - name: PROJECT_AI_DATABASE_URL_FILE
+              value: /var/run/secrets/project-ai/PROJECT_AI_DATABASE_URL
+            {{- end }}
             - name: PROJECT_AI_SESSION_COOKIE_SECURE
               value: {{ .Values.api.env.PROJECT_AI_SESSION_COOKIE_SECURE | quote }}
-            - name: PROJECT_AI_SETUP_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-api-secrets
-                  key: PROJECT_AI_SETUP_SECRET
-                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
-            - name: PROJECT_AI_MFA_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-api-secrets
-                  key: PROJECT_AI_MFA_KEY
-                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
-            - name: PROJECT_AI_EXECUTION_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-api-secrets
-                  key: PROJECT_AI_EXECUTION_SECRET
-                  optional: {{ .Values.secrets.create | ternary "false" "true" }}
+            {{- if or .Values.secrets.required .Values.secrets.create .Values.secrets.existingSecret }}
+            - name: PROJECT_AI_SETUP_SECRET_FILE
+              value: /var/run/secrets/project-ai/PROJECT_AI_SETUP_SECRET
+            - name: PROJECT_AI_MFA_KEY_FILE
+              value: /var/run/secrets/project-ai/PROJECT_AI_MFA_KEY
+            - name: PROJECT_AI_EXECUTION_SECRET_FILE
+              value: /var/run/secrets/project-ai/PROJECT_AI_EXECUTION_SECRET
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /health/live
@@ -93,6 +89,11 @@ spec:
             {{- include "project-ai.tmpVolumeMount" . | nindent 12 }}
             - name: audit-data
               mountPath: /data
+            {{- if or .Values.secrets.required .Values.secrets.create .Values.secrets.existingSecret }}
+            - name: api-secrets
+              mountPath: /var/run/secrets/project-ai
+              readOnly: true
+            {{- end }}
       volumes:
         {{- include "project-ai.tmpVolume" . | nindent 8 }}
         - name: audit-data
@@ -102,11 +103,18 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        {{- if or .Values.secrets.required .Values.secrets.create .Values.secrets.existingSecret }}
+        - name: api-secrets
+          secret:
+            secretName: {{ include "project-ai.secretName" (dict "root" . "component" "api") }}
+            optional: {{ .Values.secrets.required | ternary "false" "true" }}
+        {{- end }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "project-ai.labels" . | nindent 4 }}
     {{- include "project-ai.selectorLabels" (dict "root" . "component" "api") | nindent 4 }}

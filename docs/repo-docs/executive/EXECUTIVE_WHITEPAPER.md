@@ -2,7 +2,13 @@
 <!--                                        Productivity: Active -->
 # Project-AI Executive Whitepaper
 
-**Version:** 1.0 **Date:** February 2026 **Status:** Production-Grade **Audience:** Executives, Investors, Decision Makers, Auditors
+**Version:** 1.0 **Date:** February 2026 **Status:** Recovered reference / positioning document **Audience:** Executives, Investors, Decision Makers, Auditors
+
+> **Current release boundary (2026-07-19):** “Production-Grade” language in
+> this recovered whitepaper describes intended platform qualities, not current
+> deployment approval. The v0.0.3 successor remains fail-closed pending the
+> owner, external evidence, and approved-operations gates in the
+> [current CAB review pack](../../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md).
 
 ______________________________________________________________________
 

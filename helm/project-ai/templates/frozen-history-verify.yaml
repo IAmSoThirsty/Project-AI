@@ -10,18 +10,27 @@ metadata:
     app.kubernetes.io/component: frozen-history-verify
 spec:
   schedule: "{{ .Values.frozenHistoryVerify.schedule | default "0 4 * * *" }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      activeDeadlineSeconds: 600
+      backoffLimit: 2
       template:
         metadata:
           labels:
             {{- include "project-ai.labels" . | nindent 12 }}
             app.kubernetes.io/component: frozen-history-verify
         spec:
+          automountServiceAccountToken: false
           restartPolicy: OnFailure
+          securityContext:
+            {{- include "project-ai.podSecurityContext" . | nindent 12 }}
           containers:
             - name: verify
               image: {{ include "project-ai.image" (dict "root" . "name" "api") }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
               command:
                 - python
                 - tools/verify_frozen_history.py

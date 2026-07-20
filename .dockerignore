@@ -40,3 +40,6 @@ docs/reference/attestations
 # Project internal
 docs/internal/STAGE_*
 CHANGELOG.md
+
+# Local owner-controlled signing material must never enter an image context.
+packages/thirstys-standard-v3q/owner-private.json

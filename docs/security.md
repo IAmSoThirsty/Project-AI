@@ -31,7 +31,8 @@ overridden by a capability token. Execution requires both to pass independently.
 
 ## Container Security
 
-All seven development containers are hardened identically:
+All nine development containers are verified against the same hardening
+contract:
 
 | Property | Value |
 |---|---|
@@ -42,9 +43,9 @@ All seven development containers are hardened identically:
 | Writable surface | `/tmp` emptyDir only (64 MB limit); API adds `/data` for audit output |
 | Seccomp (Kubernetes) | `RuntimeDefault` |
 
-Containers do not share network namespaces. Internal adapters (SWR, Atlas,
-Arbiter/RLP, Genesis) have no host-bound ports and are not reachable from
-outside the Compose network.
+Containers do not share network namespaces. PostgreSQL and the internal
+adapters (SWR, Atlas, Arbiter/RLP, Genesis) have no host-bound ports and are not
+reachable from outside the Compose network.
 
 ## API Security
 

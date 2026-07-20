@@ -12,13 +12,11 @@ Design notes / decisions
   ``thirstys-standard-v3q.manifest.yaml`` (copied verbatim from the source repository).
   ``default_manifest_path()`` resolves it relative to this file so callers do not have
   to hard-code workspace paths.
-* The runtime is *not* wired in front of the live ``execution.ExecutionGate`` side-effect
-  executor as a default. The source README explicitly states that "a caller that
-  bypasses the gate is not governed by it" and that integration requires routing all
-  consequential execution through the gate. This facade exposes ``ThirstysV3QGate`` as a
-  drop-in decision adapter; the ``execution`` package may delegate to it, but we do not
-  silently replace the existing, tested ``governance.GovernanceEngine`` path. That is a
-  deliberate, documented scope boundary, not an omission.
+* The runtime is wired as a fail-closed pre-check at the live ``execution.ExecutionGate``
+  call sites. The source README explicitly states that "a caller that bypasses the gate
+  is not governed by it"; this facade therefore remains a thin decision adapter and does
+  not replace the existing ``governance.GovernanceEngine`` path. Callers must route
+  consequential execution through the canonical gate and provide external proofs.
 * CEL-backed applicability (``RuntimePolicyEngine``'s ``applies_when`` rules) requires
   ``cel-python``. When it is absent, ``build_engine`` raises a clear
   ``CELEngineUnavailable`` rather than failing obscurely.
@@ -26,11 +24,9 @@ Design notes / decisions
 
 from __future__ import annotations
 
-from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
-from .authority import sign_document, utc_now
 from .canonical import sha256_file
 from .cel_runtime import CELExecutionError
 
@@ -45,7 +41,6 @@ except Exception:  # pragma: no cover
         """Fallback stub when deployment.py is unavailable."""
 
         trusted_keys: dict[str, Any]
-        owner_private_key: dict[str, Any]
         operation_to_action: dict[str, tuple[str, str]]
 
     def load_gate_config() -> V3QGateConfig | None:  # type: ignore[no-redef]
@@ -162,11 +157,9 @@ class ThirstysV3QGate:
         manifest_path: str | Path | None = None,
         engine: Any | None = None,
         cel_free: bool = False,
-        owner_private_key: dict[str, Any] | None = None,
         operation_to_action: dict[str, tuple[str, str]] | None = None,
     ) -> None:
         self._cel_free = cel_free
-        self._owner_private_key = owner_private_key
         self._operation_to_action = operation_to_action or BUILTIN_OPERATION_TO_ACTION
         if engine is not None:
             self._engine = engine
@@ -190,57 +183,17 @@ class ThirstysV3QGate:
         authority_proof: dict[str, Any] | None,
         approval_proof: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        # Production auto-mint: when this gate is configured with the owner signing
-        # key, it issues the authority (and, when required, approval) proofs itself,
-        # bound to the action's task scope and V3Q action type. This keeps call sites
-        # simple — they only supply the V3Q action mapping; the gate authenticates.
-        # If no owner key is configured, proofs are NOT fabricated: a missing proof
-        # fails closed (the safe, testable default).
-        if authority_proof is None and self._owner_private_key is not None:
-            authority_proof = self._mint_authority_proof(task, action)
-        if approval_proof is None and self._owner_private_key is not None:
-            approval_proof = self._mint_approval_proof(task, action)
         decision = self._engine.gate_action(task, action, authority_proof, approval_proof)
         result = decision.as_dict()
         if self._cel_free:
             result["cel_unavailable"] = True
         return result
 
-    def _mint_authority_proof(self, task: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
-        scope = f"task:{task.get('task_id', '')}"
-        action_type = action.get("type", "")
-        payload = {
-            "proof_id": f"v3q-auth-{action.get('action_id', '')}-{utc_now().timestamp()}",
-            "principal_id": self._owner_private_key.get("principal_id", "owner"),
-            "issued_at": utc_now().isoformat(),
-            "expires_at": (utc_now() + timedelta(hours=1)).isoformat(),
-            "scope": [scope],
-            "allowed_actions": [action_type, "*"],
-            "nonce": f"v3q-nonce-{utc_now().timestamp()}",
-        }
-        return sign_document(payload, self._owner_private_key, "authority")
-
-    def _mint_approval_proof(self, task: dict[str, Any], action: dict[str, Any]) -> dict[str, Any]:
-        scope = f"action:{action.get('action_id', '')}"
-        action_type = action.get("type", "")
-        payload = {
-            "proof_id": f"v3q-appr-{action.get('action_id', '')}-{utc_now().timestamp()}",
-            "principal_id": self._owner_private_key.get("principal_id", "owner"),
-            "issued_at": utc_now().isoformat(),
-            "expires_at": (utc_now() + timedelta(hours=1)).isoformat(),
-            "scope": [scope],
-            "allowed_actions": [action_type, "*"],
-            "nonce": f"v3q-appr-nonce-{utc_now().timestamp()}",
-            "action_id": action.get("action_id"),
-        }
-        return sign_document(payload, self._owner_private_key, "approval")
-
 
 def build_gate(
     *,
     cel_free: bool = False,
     trusted_keys: dict[str, Any] | None = None,
-    owner_private_key: dict[str, Any] | None = None,
     operation_to_action: dict[str, tuple[str, str]] | None = None,
 ) -> ThirstysV3QGate | None:
     """Construct a ``ThirstysV3QGate`` from the packaged manifest.
@@ -248,34 +201,30 @@ def build_gate(
     Production-ready, config-driven and fail-safe. Resolution order:
 
     1. Explicit arguments win (tests / callers that supply their own keys).
-    2. If no explicit keys are given, a deployment configuration is discovered from
-       the environment via :func:`load_gate_config` (see ``deployment.py``). This is
-       the production path: provision ``THIRSTYS_V3Q_OWNER_KEY`` (+ optional
-       ``THIRSTYS_V3Q_REGISTRY`` / ``THIRSTYS_V3Q_OP_MAP``) and enforcement activates
-       with no code change.
+    2. If no explicit registry is given, deployment configuration is discovered from
+       the environment via :func:`load_gate_config` (see ``deployment.py``). Production
+       sets ``THIRSTYS_V3Q_REQUIRED=true`` and may provide ``THIRSTYS_V3Q_REGISTRY``.
     3. If neither is present, returns ``None`` — callers treat that as
        "V3Q not configured" and the existing Beginnings governance path stands. This
        is the safe default: a checkout with no secrets (CI, local dev) stays dormant
        and all tests stay green; V3Q only denies when it is actually configured to
        verify signatures.
 
-    A gate is only returned when a trusted-key registry is available. When an owner
-    private key is also present, the gate self-mints signed authority/approval proofs
-    at decision time (the runtime acts as the authorized owner); otherwise a missing
-    proof fails closed.
+    A gate is only returned when a trusted-key registry is available. The online
+    runtime never holds an owner private key and never manufactures authority or
+    approval. Callers must supply externally signed, action-scoped proofs; missing
+    proofs fail closed.
     """
     if trusted_keys is None and _HAVE_DEPLOYMENT:
         config = load_gate_config()
         if config is not None:
             trusted_keys = config.trusted_keys
-            owner_private_key = owner_private_key or config.owner_private_key
             operation_to_action = operation_to_action or config.operation_to_action
     if trusted_keys is None:
         return None
     return ThirstysV3QGate(
         trusted_keys=trusted_keys,
         cel_free=cel_free,
-        owner_private_key=owner_private_key,
         operation_to_action=operation_to_action or BUILTIN_OPERATION_TO_ACTION,
     )
 
@@ -295,9 +244,8 @@ def request_to_v3q_action(
     raw operation string, which the engine classifies as UNKNOWN and **denies
     closed** — never a silent pass.
 
-    Authority/approval proofs are intentionally NOT fabricated here; a configured
-    gate self-mints them from the owner key at decision time. Absent proofs fail
-    closed inside V3Q.
+    Authority/approval proofs are intentionally NOT fabricated here. They must be
+    supplied from an external authorization boundary; absent proofs fail closed.
     """
     op_map = operation_to_action or BUILTIN_OPERATION_TO_ACTION
     operation = getattr(request, "operation", "")

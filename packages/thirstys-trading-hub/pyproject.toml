@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-thirstys-trading-hub"
-version = "0.0.2"
+version = "0.0.3"
 description = "Thirsty's Trading Hub integration (recovered from Project-AI-main)"
 readme = "README.md"
 requires-python = "==3.12.10"

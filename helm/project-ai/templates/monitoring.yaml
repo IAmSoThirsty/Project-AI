@@ -1,332 +1,62 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-config
-  namespace: project-ai
-data:
-  prometheus.yml: |
-    global:
-      scrape_interval: 15s
-      evaluation_interval: 15s
-
-    scrape_configs:
-      - job_name: 'project-ai-api'
-        static_configs:
-          - targets: ['project-ai-api:8000']
-        metrics_path: '/metrics'
-
-      - job_name: 'kubernetes-pods'
-        kubernetes_sd_configs:
-          - role: pod
-            namespaces:
-              names:
-                - project-ai
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-            action: keep
-            regex: true
-          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-            action: replace
-            target_label: __metrics_path__
-            regex: (.+)
-          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-            action: replace
-            regex: ([^:]+)(?::\d+)?;(\d+)
-            replacement: $1:$2
-            target_label: __address__
-
+{{- if and .Values.monitoring.enabled .Values.monitoring.grafanaDashboard.enabled }}
 ---
+# Dashboard discovery ConfigMap for an externally operated Grafana sidecar.
+# The chart deliberately does not deploy its own Prometheus/Grafana/Loki stack:
+# production observability ownership, persistence, HA, authentication, and
+# receiver routing belong to the cluster monitoring platform.
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: loki-config
-  namespace: project-ai
+  name: {{ .Release.Name }}-grafana-dashboard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "project-ai.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.grafanaDashboard.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 data:
-  loki-config.yaml: |
-    auth_enabled: false
-
-    ingester:
-      chunk_idle_period: 3m
-      chunk_retain_period: 1m
-      max_chunk_age: 1h
-      chunk_encoding: snappy
-
-    limits_config:
-      enforce_metric_name: false
-      reject_old_samples: true
-      reject_old_samples_max_age: 168h
-
-    schema_config:
-      configs:
-        - from: 2020-10-24
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: index_
-            period: 24h
-
-    server:
-      http_listen_port: 3100
-
-    storage_config:
-      boltdb_shipper:
-        active_index_directory: /loki/boltdb-shipper-active
-        cache_location: /loki/boltdb-shipper-cache
-        shared_store: filesystem
-      filesystem:
-        directory: /loki/chunks
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: promtail-config
-  namespace: project-ai
-data:
-  promtail-config.yaml: |
-    clients:
-      - url: http://loki:3100/loki/api/v1/push
-
-    scrape_configs:
-      - job_name: kubernetes-pods
-        kubernetes_sd_configs:
-          - role: pod
-            namespaces:
-              names:
-                - project-ai
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_name]
-            action: replace
-            target_label: pod
-          - source_labels: [__meta_kubernetes_namespace]
-            action: replace
-            target_label: namespace
-          - source_labels: [__meta_kubernetes_pod_container_name]
-            action: replace
-            target_label: container
-
-      - job_name: systemd
-        journal:
-          path: /var/log/journal
-          labels:
-            job: systemd
-        relabel_configs:
-          - source_labels: ['__journal__systemd_unit']
-            target_label: 'unit'
-          - source_labels: ['__journal_hostname']
-            target_label: 'hostname'
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: grafana-dashboards
-  namespace: project-ai
-data:
-  project-ai-dashboard.json: |
+  project-ai.json: |-
     {
-      "dashboard": {
-        "title": "Project-AI Governance & Operations",
-        "panels": [
-          {
-            "title": "API Requests/sec",
-            "targets": [
-              {
-                "expr": "rate(http_requests_total{job='project-ai-api'}[5m])"
-              }
-            ]
-          },
-          {
-            "title": "Governance Verdicts",
-            "targets": [
-              {
-                "expr": "rate(governance_verdicts_total[5m])"
-              }
-            ]
-          },
-          {
-            "title": "Audit Log Size",
-            "targets": [
-              {
-                "expr": "project_ai_audit_chain_size_bytes"
-              }
-            ]
-          },
-          {
-            "title": "Service Health",
-            "targets": [
-              {
-                "expr": "up{job=~'project-ai-.*'}"
-              }
-            ]
-          }
-        ]
-      }
+      "annotations": {"list": []},
+      "editable": false,
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Release build",
+          "targets": [{"expr": "project_ai_build_info{namespace=\"{{ .Release.Namespace }}\"}"}]
+        },
+        {
+          "type": "timeseries",
+          "title": "API requests per second",
+          "targets": [{"expr": "sum(rate(project_ai_http_requests_total{namespace=\"{{ .Release.Namespace }}\"}[5m]))"}]
+        },
+        {
+          "type": "timeseries",
+          "title": "API 5xx ratio",
+          "targets": [{"expr": "sum(rate(project_ai_http_requests_total{namespace=\"{{ .Release.Namespace }}\",status_code=~\"5..\"}[5m])) / clamp_min(sum(rate(project_ai_http_requests_total{namespace=\"{{ .Release.Namespace }}\"}[5m])), 0.001)"}]
+        },
+        {
+          "type": "timeseries",
+          "title": "API p99 latency",
+          "targets": [{"expr": "histogram_quantile(0.99, sum by (le) (rate(project_ai_http_request_duration_seconds_bucket{namespace=\"{{ .Release.Namespace }}\"}[5m])))"}]
+        },
+        {
+          "type": "timeseries",
+          "title": "Ready API replicas",
+          "targets": [{"expr": "kube_deployment_status_replicas_available{namespace=\"{{ .Release.Namespace }}\",deployment=\"{{ .Release.Name }}-api\"}"}]
+        },
+        {
+          "type": "timeseries",
+          "title": "PVC utilization",
+          "targets": [{"expr": "kubelet_volume_stats_used_bytes{namespace=\"{{ .Release.Namespace }}\",persistentvolumeclaim=~\"{{ .Release.Name }}-.*\"} / kubelet_volume_stats_capacity_bytes{namespace=\"{{ .Release.Namespace }}\",persistentvolumeclaim=~\"{{ .Release.Name }}-.*\"}"}]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["project-ai", "governance"],
+      "templating": {"list": []},
+      "time": {"from": "now-1h", "to": "now"},
+      "title": "Project-AI Production Operations",
+      "uid": "project-ai-production",
+      "version": 1
     }
-
-  grafana-datasources.yaml: |
-    apiVersion: 1
-    datasources:
-      - name: Prometheus
-        type: prometheus
-        url: http://prometheus:9090
-        access: proxy
-        isDefault: true
-
-      - name: Loki
-        type: loki
-        url: http://loki:3100
-        access: proxy
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: prometheus
-  namespace: project-ai
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: prometheus
-  template:
-    metadata:
-      labels:
-        app: prometheus
-    spec:
-      serviceAccountName: prometheus
-      containers:
-      - name: prometheus
-        image: prom/prometheus:v2.47.0
-        ports:
-        - containerPort: 9090
-        volumeMounts:
-        - name: config
-          mountPath: /etc/prometheus
-        - name: storage
-          mountPath: /prometheus
-        args:
-          - '--config.file=/etc/prometheus/prometheus.yml'
-          - '--storage.tsdb.path=/prometheus'
-      volumes:
-      - name: config
-        configMap:
-          name: prometheus-config
-      - name: storage
-        emptyDir: {}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus
-  namespace: project-ai
-spec:
-  selector:
-    app: prometheus
-  ports:
-  - port: 9090
-    targetPort: 9090
-  type: ClusterIP
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: grafana
-  namespace: project-ai
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: grafana
-  template:
-    metadata:
-      labels:
-        app: grafana
-    spec:
-      containers:
-      - name: grafana
-        image: grafana/grafana:10.2.0
-        ports:
-        - containerPort: 3000
-        env:
-        - name: GF_SECURITY_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: grafana-admin
-              key: password
-        - name: GF_USERS_ALLOW_SIGN_UP
-          value: "false"
-        volumeMounts:
-        - name: storage
-          mountPath: /var/lib/grafana
-        - name: datasources
-          mountPath: /etc/grafana/provisioning/datasources
-        - name: dashboards
-          mountPath: /etc/grafana/provisioning/dashboards
-      volumes:
-      - name: storage
-        emptyDir: {}
-      - name: datasources
-        configMap:
-          name: grafana-datasources
-      - name: dashboards
-        configMap:
-          name: grafana-dashboards
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: grafana
-  namespace: project-ai
-spec:
-  selector:
-    app: grafana
-  ports:
-  - port: 3000
-    targetPort: 3000
-  type: LoadBalancer
-
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: prometheus
-  namespace: project-ai
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: prometheus
-rules:
-- apiGroups: [""]
-  resources:
-  - nodes
-  - nodes/proxy
-  - services
-  - endpoints
-  - pods
-  verbs: ["get", "list", "watch"]
-- apiGroups:
-  - extensions
-  resources:
-  - ingresses
-  verbs: ["get", "list", "watch"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: prometheus
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: prometheus
-subjects:
-- kind: ServiceAccount
-  name: prometheus
-  namespace: project-ai
+{{- end }}

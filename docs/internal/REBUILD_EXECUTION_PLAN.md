@@ -1,13 +1,13 @@
 # Project-AI Rebuild Execution Ledger
 
-**Status:** LOCAL ACCEPTANCE COMPLETE; DEVELOPMENT CHECKPOINT IN PROGRESS
+**Status:** V0.0.3 LOCAL SUCCESSOR ACCEPTANCE IN PROGRESS; PRODUCTION BLOCKED
 **Canonical repository:** `T:\00-Active\Project-AI-Beginnings`
 **Working branch:** `main` (current development checkpoint; previous rebuild
 work landed from `codex/rebuild-continuation`)
 **Legacy source:** `T:\00-Active\Project-AI-main` (read-only input by policy)
 **Python:** 3.12.10
 **Package manager:** uv
-**Development version:** `0.0.0.dev0`
+**Development version:** `0.0.3` (working-tree successor; not yet immutable)
 **License:** MIT
 
 ## Authority
@@ -28,8 +28,8 @@ mapping without relabeling history.
 - Soft-freeze the legacy repository by recording state and hashes, not by
   changing ACLs, Git configuration, attributes, or files.
 - Keep all work local until the complete acceptance gate passes.
-- Do not create a version tag, GitHub Release, deployment, package publication,
-  container publication, or production-readiness claim.
+- Do not deploy or claim production readiness until the exact successor commit,
+  remote evidence, V3Q ratification, target rehearsal, and CAB acceptance pass.
 - After local acceptance, push a fresh `main` branch to the existing remote;
   do not modify legacy `master`, existing tags, or the remote default branch.
 
@@ -58,14 +58,14 @@ mapping without relabeling history.
 | 11 | Atlas and Genesis | Subordination and Rust-emitter tests pass |
 | 12 | API | Health, replay, audit, and authenticated Chimera routes pass |
 | 13 | CLI | Operator commands and bypass-prevention tests pass |
-| 14 | Web portals | Both React portal lint/test/build pipelines pass |
+| 14 | Web portals | All four web application lint/test/build pipelines pass |
 | 14.5 | Desktop | PyQt6 offscreen smoke and development build pass |
-| 15 | Containers | Seven Compose services build and become healthy |
+| 15 | Containers | Nine Compose services build, become healthy, and pass hardening verification |
 | 16 | CI | Local CI-equivalent checks and workflow validation pass |
 | 16.5 | Kubernetes | Helm lint and client-side manifest validation pass |
 | 17 | Documentation | Operator, architecture, security, and provenance docs agree with runtime |
 | 18 | Acceptance | PowerShell and POSIX gates pass from a clean checkout |
-| checkpoint | Development remote | Fresh `main` pushed and CI green; no tag or release |
+| checkpoint | Successor remote | Exact v0.0.3 candidate committed and pushed; CI/security/publish evidence green |
 
 ## Package And Application Boundaries
 
@@ -90,6 +90,6 @@ and `ESCALATE`. Seven-outcome proposals remain reference material only.
 
 Every gate ends with the narrowest relevant deterministic tests, a reviewed
 diff, an updated acceptance record, and a stage-scoped commit. The final gate
-also requires the canonical 5/5 replay, all 312 asymmetric-security cases, the
+also requires canonical replay, the active asymmetric-security matrix, the
 Arbiter baseline, Chimera relay evidence, frontend/application builds,
 container health, and infrastructure validation.

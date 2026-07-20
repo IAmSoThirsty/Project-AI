@@ -4,13 +4,21 @@ Development FastAPI gateway for liveness, DOI registry, replay status, Atlas
 status, Atlas Sludge narrative generation, Chimera audit evidence, verdict
 relay, and canary relay surfaces.
 
-Protected routes require both `PROJECT_AI_API_TOKEN` and
-`PROJECT_AI_AUDIT_PATH`. Missing configuration fails closed with HTTP 503.
+Protected routes require `PROJECT_AI_AUDIT_PATH` and a scoped machine
+credential. Development may use `PROJECT_AI_API_TOKEN` as a shared fallback;
+production sets `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED=true` and provisions
+one durable credential per program through the owner/MFA administration API.
+Missing configuration fails closed with HTTP 503.
 The gateway does not contain governance authority and does not execute actions.
+Production orchestrators may supply API, database, setup, MFA, and execution
+secrets through the corresponding `*_FILE` variables. Direct and file-backed
+values for the same secret are mutually exclusive and invalid files fail
+startup closed.
 
 Public routes:
 
 - `GET /health/live`
+- `GET /metrics` (Prometheus text exposition; bounded method/route/status labels)
 - `GET /dois`
 - `GET /replay/status`
 - `GET /atlas/status`
@@ -21,10 +29,18 @@ Protected routes:
 - `POST /chimera/verdict`
 - `POST /chimera/canary`
 - `POST /atlas/sludge`
+- `GET /api/v1/modules/waterfall/status`
+- `POST /api/v1/modules/waterfall/operations`
 
 `/atlas/sludge` consumes a Reality Stack snapshot, returns an SS-only fictional
 Sludge artifact, and records an `atlas.sludge_narrative` audit event. It does
 not grant authority or actuate a decision.
+
+The Waterfall routes require the machine bearer token, a valid append-only audit
+relay, an injected `WaterfallAdapter`, and an `ExecutionGate` with V3Q wired in.
+The operation route never calls the runtime directly; it accepts only the
+allow-listed Waterfall operations and records gate evidence plus an audit-chain
+receipt. Missing V3Q, runtime, adapter, or audit configuration fails closed.
 
 ## Run standalone (no Docker)
 

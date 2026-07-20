@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-cli"
-version = "0.0.2"
+version = "0.0.3"
 description = "API-bound operator CLI for Project-AI development"
 readme = "README.md"
 requires-python = "==3.12.10"

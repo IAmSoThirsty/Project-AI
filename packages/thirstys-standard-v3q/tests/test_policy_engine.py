@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import pytest
-from conftest import signed_proof
 from thirstys_standard_runtime.cel_runtime import CELExecutionError
 from thirstys_standard_runtime.policy import RuntimePolicyEngine
+from v3q_test_helpers import signed_proof
 
 cel_available = True
 try:

@@ -8,6 +8,8 @@
 - Verification environment: Python 3.13.5 on Linux x86_64
 - CEL implementation: `cel-python==0.4.0`
 - Recorded automated result: `23 passed`, `0 failed`, `0 errors`, `0 skipped`
+- Current Project-AI workspace package result: `46 passed`; the recorded
+  standalone result above remains historical artifact evidence.
 
 ## Direct result
 

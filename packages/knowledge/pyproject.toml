@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-knowledge"
-version = "0.0.2"
+version = "0.0.3"
 description = "Knowledge-aware reference-corpus retrieval for Project-AI governance"
 readme = "README.md"
 requires-python = "==3.12.10"

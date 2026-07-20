@@ -1,5 +1,9 @@
 # Repo Documentation (recovered from Project-AI-vault)
 
+> Recovered/reference material only: this directory is not current release
+> evidence or deployment approval. The successor remains fail-closed until
+> the current pre-deployment checklist and CAB evidence bundle pass.
+
 Comprehensive repository documentation recovered from
 ``T:\00-Active\Project-AI-vault\repo-docs\``.
 
@@ -64,8 +68,11 @@ Start with ``docs/repo-docs/00_INDEX.md`` (the master
 navigation hub) or ``docs/repo-docs/DOCUMENTATION_STRUCTURE_GUIDE.md``
 (the structure overview).
 
-Verification (4 canonical gates, all green):
-  pytest  2319 pass / 1 xfail (unchanged)
+Historical port baseline (not current release evidence):
+  pytest  2319 pass / 1 xfail (at recovery time)
   T7      True 3eda3256049339cb069354cc81ee7c51d88e3e41e81ea707e5bf3d3e14ba478c
   ruff    All checks passed
-  mypy    12 (pre-existing baseline, unchanged)
+  mypy    12 (at recovery time)
+
+Current successor evidence is authoritative only in
+`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md` and the CAB bundle.

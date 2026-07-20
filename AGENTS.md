@@ -184,7 +184,12 @@ These notes do not relax v3. They name the specific files in this repo that sati
 - **Legacy source state (read-only input):** `docs/internal/LEGACY_SOURCE_STATE.json`. The legacy repo at `T:\00-Active\Project-AI-main` MUST NOT be written to.
 - **Frozen history:** `docs/internal/frozen-history/PROJECT-AI_FROZEN_HISTORY.md` — 2,264/2,264 chain sections, SHA-256 `d4b9f8bd583bc5bc81e253ee9ca7bce4467cd66a527ed7c2790f089e9ae51e8e`.
 
-### 2.2 Repo Topology (13 packages per K.6 of the plan, less Unity per the 2026-06-21 user instruction)
+### 2.2 Repo Topology (current workspace membership is authoritative)
+
+The workspace has expanded beyond the original 13-package rebuild baseline.
+Use the root `pyproject.toml`, `Cargo.toml`, `package.json`, and `uv.lock` as the
+authoritative membership/version sources; do not infer the current package
+count from the historical execution-plan baseline below.
 
 Downward-only dependency graph:
 `kernel / security → governance / capability → execution → companion / swr / atlas → api / cli`
@@ -204,7 +209,10 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.3 Branch & Remote Discipline
 
-- Trunk: `main`. Local `main` runs ahead of `origin/main`; push only on explicit user authorization.
+- Release-development branch: `main`. Local `main` and `origin/main` currently
+  point to `82aa1476657e16a1d38caccba38357c83380a3e3`; the v0.0.3 successor is a
+  large dirty working tree. GitHub's default branch remains legacy `master`.
+  Commit or push only on explicit user authorization.
 - Working branches observed (per `git branch -a`, 2026-07-11):
   - `chore/warning-cleanup-utc-artifacts` (merged pointer; the former `codex/*` branches were fully merged and deleted 2026-07-10)
 - Safety: never rewrite existing commits. Push only a fresh `main`. Never modify legacy `master`, existing tags, or the remote default branch.
@@ -222,10 +230,20 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 - Compose: 7/7 healthy and hardened.
 - Android, Rust, Web, Desktop, SBOM, Helm — all green in detached clean-checkout runs at `baa98e2`.
 
-### 2.5 Current Open Blocker (NOT dismissible per v3 §5)
+### 2.5 Current Open Blockers (NOT dismissible per v3 §5)
 
-- None. Remote CI is green (run `28299731926` passed all jobs on `c831f192`); local acceptance complete.
-- **Safe to continue:** yes.
+- Published v0.0.2 / `82aa147` CI is red. The dirty v0.0.3 successor contains
+  locally verified repairs, but it has no immutable commit, remote CI,
+  signature, attestation, or successor-image evidence.
+- The ignored V3Q `owner-private.json` remains in the checkout. The old key must
+  be retired under the owner's approved process, replaced offline, and the
+  exact manifest ratified; the pre-deployment gate correctly fails closed.
+- No approved production cluster/namespace, target overlay, secret manager,
+  maintenance window, owners, paging route, rollback rehearsal, or acceptance
+  sign-off exists.
+- Dependabot PRs #509 and #510 target legacy `master`, remain unstable, and
+  require owner disposition.
+- **Safe to continue:** yes for local remediation; no for production deployment.
 
 ### 2.6 Continuity Map (v3 §20)
 

@@ -1,5 +1,11 @@
 # Beginnings `apps/` Inventory (Q8 resolution)
 
+> **Historical discovery snapshot:** This file records the 2026-06-25 Phase A
+> inventory and its then-current environment failures. It is not the current
+> application status. Current desktop, services, Android, and web validation is
+> recorded in `docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md` and
+> `docs/operations/CONTINUITY_MAP.md`.
+
 > **Generated:** 2026-06-25
 > **Project:** Project-AI Beginnings
 > **Mode:** discovery (read-only)

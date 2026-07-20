@@ -11,8 +11,8 @@ android {
         applicationId = "ai.project.readonly"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.0.0.dev0"
+        versionCode = 3
+        versionName = "0.0.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8000\"")
     }

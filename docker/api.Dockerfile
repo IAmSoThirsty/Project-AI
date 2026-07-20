@@ -31,6 +31,8 @@ COPY --chown=10001:10001 packages ./packages
 COPY --chown=10001:10001 apps/desktop ./apps/desktop
 COPY --chown=10001:10001 apps/services ./apps/services
 COPY --chown=10001:10001 docs/reference/DOI_REGISTRY.md ./docs/reference/DOI_REGISTRY.md
+COPY --chown=10001:10001 docs/internal/frozen-history/PROJECT-AI_FROZEN_HISTORY.md ./docs/internal/frozen-history/PROJECT-AI_FROZEN_HISTORY.md
+COPY --chown=10001:10001 tools/canonical_replay.py tools/verify_frozen_history.py tools/verify_security_relay.py ./tools/
 RUN chmod 0755 /app/.venv/bin/uvicorn \
     && mkdir -p /data \
     && chown 10001:10001 /data

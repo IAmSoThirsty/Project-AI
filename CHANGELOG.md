@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Project-AI v0.0.3 successor release identity across Python, Rust, Helm,
+  Android, web manifests, locks, and generated OpenAPI evidence.
+- Release-generated Helm image overlay containing verified OCI index digests
+  for all eight published images.
+- Thirsty's Standard V3 + Q production-required mode, owner-key Docker-context
+  exclusion, regression checks, and owner-controlled rotation runbook.
 - Stage -1.5: Frozen history (SHA-256 chain-linked snapshot of T:\00-Active\Project-AI-main)
 - Stage -1: Paper ingest + Downloads copy (137 files, all SHA-256 verified)
 - Operator-side governance drafts: arbiter_gov (12/12 tests pass) + rlp.py
@@ -44,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   surfaces.
 
 ### Changed
+- Production release notes now deploy with an immutable generated digest
+  overlay and reject a Git tag that does not match the repository version.
 - Root project documentation now describes the current `0.0.0.dev0`
   development checkpoint instead of the early two-stage bootstrap state.
 - CI action pins were updated to current full-SHA-pinned Node 24 action
@@ -69,6 +77,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   deployment was created for this checkpoint.
 
 ### Security
+- Excluded the ignored V3Q owner private-key path from every root Docker build
+  context after confirming it existed in an earlier local API image. The old
+  key is classified as compromised and must be rotated by the owner before use.
 - Black Box: AI's private inner space — only the AI accesses. Cannot be shared.
 - Personality Core (sovereign selfhood) acts WITHIN constitutional governance.
 - ExecutionGate: intersection of Core stance + Charter verdict.

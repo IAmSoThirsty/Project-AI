@@ -1,11 +1,424 @@
 # Operational Continuity Map - Updated
+
+## SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair
+
+- **Mode:** Governed implementation and local verification on the existing
+  dirty `main` working tree. No commit, push, tag, release, deployment,
+  destructive cleanup, private-key access, or external write was performed.
+- **Baseline:** `main` and `origin/main` remain
+  `82aa1476657e16a1d38caccba38357c83380a3e3`; the v0.0.3 successor is still an
+  uncommitted working tree and therefore has no immutable remote evidence.
+- **Python/CI repairs:** the bounded coverage runner now includes tracked and
+  untracked candidate tests; V3Q tests use a uniquely named helper instead of
+  order-dependent `conftest` imports; expected partial-batch coverage noise is
+  suppressed without changing measurement or the 80% gate. The legacy random
+  survival XPASS/XFAIL was replaced by a seeded, controlled, passing scenario.
+- **Completed implementation markers:** Atlas determinism verification now
+  replays and compares every canonical state hash; Temporal performs bounded
+  local static scanning, deterministic patch generation, real retry backoff,
+  and fail-closed unavailable-target reporting; EMP exact-field observation and
+  cognitive lexical sentiment are implemented.
+- **Truthful compatibility boundaries:** copied Waterfall browser code no
+  longer fabricates encrypted search results, Windows SSDT hashes, resource
+  readings, or OS sandbox claims. Missing search providers return an encrypted
+  `unavailable` result, Python-process resource measurements are real, Windows
+  syscall-table measurement returns unavailable, and all unbundled OS isolation
+  boundaries report false. This copied browser lane is not the governed
+  Project-AI production request path.
+- **Documentation reconciliation:** current service counts, v0.0.3 status,
+  deployment/runbook expectations, CAB dependency status, candidate evidence,
+  and historical-snapshot labeling were corrected. The older deployment
+  reports now carry explicit historical/superseded notices, the Triumvirate
+  guide is scoped to static-site publishing, and Waterfall provenance reports
+  the current `313`-test copied replay. `work/` is ignored as transient
+  acceptance output; existing files were not deleted.
+- **Current CAB entry point:**
+  `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md` now
+  carries the live successor decision and release-blocking checklist. The
+  v0.0.2 CAB pack remains a historical supersession record.
+- **Non-production code classification:** RLP v4 remains explicitly
+  experimental with uncalibrated constants; DPR remains Pre-Alpha and its
+  independently callable Phase 7 detectors are not automatically wired into
+  `DPRPipeline`; Sovereign Vault external witness custody is an intentional
+  fail-closed seam. None is presented as deployed v0.0.3 service evidence.
+- **Verification:** `3406 passed, 5 skipped` in `225.81s`, with zero failures,
+  XFAIL/XPASS results, or warnings; eight coverage batches passed at `87.32%`
+  branch coverage; Ruff passed and all `624` files are formatted; canonical
+  MyPy passed `175` files and strict Temporal/Waterfall-adapter MyPy passed `12`
+  files; the copied Waterfall replay passed `313` tests; focused V3Q/TAAR mixed
+  batch passed `266`; Temporal passed `125`; Atlas determinism/integration
+  passed `38`; EMP passed `18`; cognitive warfare passed `13`.
+- **Expected fail-closed gate:** `uv run python tools/verify_pre_deployment.py`
+  remains required to fail while ignored
+  `packages/thirstys-standard-v3q/owner-private.json` exists, remote successor
+  evidence is missing, the production ingress host is a placeholder, or remote
+  backup is unconfigured. The file was not opened, printed, copied, moved,
+  used, or deleted.
+- **External evidence gate:** `docs/operations/cab/REMOTE_SUCCESSOR_EVIDENCE.json`
+  is present with `status: missing`; it remains fail-closed until immutable
+  remote successor and approved target-environment evidence is recorded.
+- **Remaining external/owner blockers:** owner-controlled key rotation and
+  secure retirement, exact-manifest ratification, external proof custody,
+  commit/push and green successor CI/signature/attestation evidence, an approved
+  target/namespace/window/owners/secret manager/paging route/sign-off, an
+  owner-approved ingress host/TLS overlay, configured remote backup, Prometheus
+  Operator CRDs and target Helm/rollback rehearsal, and Dependabot PR #509/#510
+  disposition.
+- **Live external snapshot:** GitHub PRs #509 and #510 are still open,
+  non-draft, `UNSTABLE`, and target legacy `master`. The current Docker context
+  is `desktop-linux`, but the Docker Desktop Linux engine is not running, so no
+  Kubernetes API or Prometheus-CRD state can be refreshed into a current
+  cluster claim. `origin/master` remains
+  `9fc3c93e6abd02a14bd141fab4d3ef772fa090bf`, while `origin/main` remains
+  `82aa1476657e16a1d38caccba38357c83380a3e3`; the active scheduled Codex Deus
+  workflow on `master` fails before checkout because `actions/checkout@v4` and
+  `actions/download-artifact@v4` are not pinned to full-length SHAs. This is
+  separate from the local successor branch and must be resolved or retired
+  before remote evidence can be considered green. The same failure appears in
+  the open Dependabot PR check sets; PR #510 also reports a CircleCI error.
+- **Web dependency note:** direct installed Tailwind commands remove the npm
+  environment deprecation notices. The lock now contains registry-latest
+  `caniuse-lite` 1.0.30001806 and `baseline-browser-mapping` 2.10.43 with no
+  target-browser change; Tailwind still emits its upstream old-data advisory.
+  Frozen install, 61 web tests, builds, lint, and the moderate-level Node audit
+  all pass.
+- **Commands run:** full pytest; eight-batch coverage; repository Ruff check and
+  format check; canonical and additional strict MyPy; focused package/mixed
+  pytest suites; local marker and evidence searches.
+- **Safe to continue:** yes. Next safe action is to rerun the explicit
+  pre-deployment fail-closed gate and remaining non-Python local gates, then
+  obtain owner authorization for private-key retirement and Git publication.
+
 ## Simulation Engines Improvement Initiative
+
+## SESSION UPDATE 2026-07-19 — standalone Waterfall web-image hardening
+
+- **Status:** The standalone product remains independently usable, and its web
+  release lane now has current dependency/image evidence. `web/requirements.txt`
+  raises Flask-CORS to 4.0.2, Engine.IO to 4.13.2, Socket.IO to 5.16.2, and
+  Gunicorn to 22.0.0; the Dockerfile upgrades setuptools to 83.0.0 and wheel
+  to at least 0.46.2.
+- **Evidence:** standalone validator `35/35`; rebuilt
+  `thirstys-waterfall:production-candidate` has zero HIGH/CRITICAL Trivy
+  findings; its temporary container returned HTTP 200 from `/health` and was
+  removed. The prior `thirstys-waterfall:latest` image had eight actionable
+  HIGH findings and must not be promoted.
+- **Boundary:** No Project-AI authority, adapter, or standalone runtime
+  semantics were split. The dependency-only changes preserve the standalone
+  product while closing its image security gate.
+
+## SESSION UPDATE 2026-07-19 — standalone Waterfall full-suite replay corrected
+
+- **Status:** The standalone repository's complete suite is green: `309 passed`
+  with no warnings under Python 3.12.10.
+- **Canonical command:** `uv sync --frozen --extra test` followed by `uv run
+  python -m pytest -q --no-cov`. The earlier `uv run pytest` result that showed
+  platform failures came from a different global pytest launcher and is not
+  repository evidence.
+- **Boundary:** The runtime fixes only normalize certificate validity timestamps
+  and ledger export timestamps to timezone-aware APIs; no authorization or
+  encryption semantics changed.
+
+## SESSION UPDATE 2026-07-19 — web and Android acceptance gates current
+
+- **Status:** User-facing build surfaces were rerun against the current dirty
+  tree. Web ESLint passed; operator-console (19), docs portal (5), proof portal
+  (4), and Triumvirate (33) tests passed; all four portal production builds
+  passed. Android `testDebugUnitTest assembleDebug` passed with the configured
+  SDK. Desktop offscreen source smoke and the unsigned PyInstaller onedir
+  build/smoke passed under Python 3.12.10.
+- **Boundary:** The Android run emitted a non-failing SDK XML-version warning.
+  These local checks do not establish signed artifacts or remote release
+  evidence.
+
+## SESSION UPDATE 2026-07-19 — local Rust audit and SBOM gates closed
+
+- **Status:** The remaining local dependency evidence is now executable. Rust
+  `cargo audit` 0.22.2 reports no advisories; `cargo fmt`, Clippy, and the
+  workspace tests pass. The pinned CycloneDX generators produced validated
+  Python (155 components) and Rust (20 components) SBOMs under
+  `build/acceptance/sbom/`.
+- **Boundary:** These are working-tree artifacts only. They do not replace
+  remote successor CI, image SBOM attestations, cosign verification, or a
+  committed immutable release.
+- **Validation:** The release evidence bundle and pre-deployment checklist
+  now distinguish these local passes from the still-missing remote evidence.
+
+## SESSION UPDATE 2026-07-19 — V3Q checkout-hygiene wording corrected
+
+- **Status:** Evidence wording now distinguishes the intended release artifact
+  from the current local checkout. The V3Q verification report and README
+  explicitly record that the ignored `owner-private.json` is a production
+  blocker; the pre-deployment gate remains fail-closed until the owner
+  rotates/retires it outside the repository.
+- **Boundary:** The private file was not opened, copied, moved, deleted, or
+  used. No owner signing or ratification was attempted.
+- **Validation:** Documentation-only correction; the existing V3Q and
+  pre-deployment tests remain the authoritative executable checks.
+
+## SESSION UPDATE 2026-07-19 — ADR-002 durable machine credentials implemented locally
+
+- **Status:** The per-program credential implementation is present and locally
+  verified. SQLite and PostgreSQL account repositories use schema version 5;
+  owner/MFA-protected administration creates hashed one-time tokens, scoped
+  gateway dependencies enforce `evidence.read`, `evidence.write`, and
+  `analysis.generate`, and machine writes record credential identity.
+- **Evidence:** `50` focused account/API tests passed; strict MyPy over the
+  touched accounts/API surfaces passed; the OpenAPI baseline was regenerated
+  and matches the runtime. Production mode rejects the shared token on machine
+  routes after `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED=true`.
+- The standalone `T:\\01-Projects\\Thirstys-waterfall` package metadata now
+  declares `requires-python >=3.8.1`, matching its flake8 development floor;
+  its repository validator passes `35/35` with zero warnings.
+- Current full repository gate: `3406 passed, 5 skipped` in `225.81s`, with
+  zero failures, XFAIL/XPASS results, or warnings; the skips are PostgreSQL
+  environment gates.
+- Local backup/restore rehearsal passed for audit and SWR bundle files; the new
+  restore utility rejects non-empty targets and unsafe archive paths. Remote
+  PVC/secret-manager restore evidence remains a target-environment gate.
+- Production Helm rendering now omits the shared API-token file when durable
+  machine-credential enforcement is enabled, so a production API can start with
+  only the account database and per-program credentials.
+- The pre-deployment verifier now checks that production values require durable
+  credentials, the API template branches shared-token mounting on that mode,
+  and all local remote workflow actions use full commit SHAs; its repository
+  fixture suite passes 16 tests, including owner-key tooling guards.
+- V3Q package proof is current at 46 passing tests, including 28 deployment,
+  integration, and execution tests plus owner-key tool safety checks; the exact manifest remains
+  `draft_unratified` pending owner-controlled rotation, signature, and external
+  proof custody.
+- Containerized Trivy 0.63.0 scanned all eight locally available v0.0.2 GHCR
+  image digests with zero HIGH/CRITICAL findings; remote successor artifacts
+  are still required for release approval.
+- Containerized cosign 2.2.4 queried the published v0.0.2 API digest and
+  returned `no signatures found`; this confirms the successor signing/attestation
+  gate remains open rather than relying on workflow claims.
+- **Remaining:** Production-target PostgreSQL migration/rollback, production
+  credential provisioning/secret custody, immutable remote release evidence, and the
+  existing V3Q/cluster/owner approval blockers remain open. No production
+  deployment claim is made.
+
+## SESSION UPDATE 2026-07-19 — Waterfall W1 adapter boundary
+
+- **Status:** W1 adapter slice implemented and locally verified; live Waterfall
+  actuation remains intentionally unconfigured.
+- Added `packages/waterfall-adapter` as a native uv workspace member and root
+  dependency. It exposes only `vpn.connect`, `firewall.rule_change`, and
+  `kill_switch.trigger`.
+- The adapter denies without `ExecutionGate`, `CapabilityAuthority`, or an
+  injected Waterfall transport; configured requests use a scoped one-use
+  capability and return governance/event evidence hashes.
+- The standalone Waterfall product remains independently usable. Its runtime,
+  specifications, assets, examples, security metadata, and replay tests are
+  copied into `packages/thirstys-waterfall`; authority semantics are aligned
+  through the same contract rather than split between products.
+- Verified with adapter pytest (4 passed), Ruff, and MyPy. An in-process copied
+  runtime transport and authenticated Project-AI routes now exist; target
+  deployment evidence and ADR-002 program credentials remain follow-up gates,
+  so live activation stays fail-closed until those are supplied.
+
+## SESSION UPDATE 2026-07-19 — Waterfall standalone plus Project-AI rebuild
+
+- **Status:** provenance-preserving rebuild is present at
+  `packages/thirstys-waterfall`; the standalone checkout remains the usable
+  independent product and its release lane is untouched.
+- `PROVENANCE.md` records source checkout `0158ec8`, dirty-source condition,
+  copied runtime/specification/assets, and the retained test/example surfaces.
+- The typed `project_ai_waterfall` transport is the narrow integration surface;
+  consequential calls still pass through `WaterfallAdapter` and
+  `ExecutionGate` under the shared authority contract.
+- The API now exposes `/api/v1/modules/waterfall/status` and
+  `/api/v1/modules/waterfall/operations`. Both require machine authentication;
+  operations additionally require a valid audit relay and a V3Q-wired gate.
+- `PROJECT_AI_WATERFALL_ENABLED` defaults to false. Explicit activation builds
+  the copied runtime only after V3Q registry, execution-secret, audit, and
+  server-side configuration checks succeed.
+- Replay evidence: the copied standalone suite is now green at 313 passed with
+  no warnings; the focused DOS/transport rerun is also green (35 passed).
+- The copied `src/thirstys_waterfall`, `tests`, and `examples` tree now passes
+  direct Ruff validation after mechanical normalization. Strict Mypy remains
+  limited to the typed integration surface; legacy copied modules retain
+  separately documented typing debt.
+- The fail-closed pre-deployment verifier now checks both Docker exclusion and
+  actual checkout absence for `packages/thirstys-standard-v3q/owner-private.json`.
+  It currently stops on that owner-controlled file; no private material was
+  printed, moved, deleted, or used.
 
 **Started:** 2025
 **Scope:** Determinism, Governance, Cross-Engine Linkage, Production Hardening
 **Mode:** Repo-wide enhancement (existing production system)
 
 ---
+
+## SESSION UPDATE 2026-07-19 — Production-readiness remediation and CAB supersession
+
+- **Status:** LOCAL v0.0.3 SUCCESSOR IDENTITY AND REMEDIATION GATES GREEN;
+  production deployment remains unauthorized pending an immutable commit,
+  owner-controlled V3Q completion, and external CAB evidence.
+- **Mode:** Governed implementation and validation. No commit, push, tag,
+  release, issue creation, cluster deployment, external notification, or
+  destructive Git operation was performed.
+- **Baseline preserved:** branch `main` remains at
+  `82aa1476657e16a1d38caccba38357c83380a3e3`; the pre-existing untracked
+  `compose.hub.yaml` was not read, modified, staged, or used. PostgreSQL data and
+  its container were preserved. All eight application containers were
+  rebuilt/replaced from the remediated source and the nine-service stack is healthy.
+- **CI/runtime remediation:** replaced the Compose verifier's repository import
+  with live version agreement; added tested, pytest-policy-aware eight-batch
+  coverage aggregation that retains the final 80% branch gate; added real
+  Prometheus API metrics; added mounted `*_FILE` secret support with ambiguous
+  or unreadable configuration rejected; materialized a valid empty audit-chain
+  genesis at startup.
+- **V3Q secret-containment finding and repair:** the ignored
+  `packages/thirstys-standard-v3q/owner-private.json` was present in the
+  previously built local API image because Docker copied the package tree and
+  the root `.dockerignore` did not exclude it. The exact path is now excluded
+  and enforced by `tools/verify_pre_deployment.py`; targeted tests pass, and a
+  clean rebuilt image plus the replaced healthy API both report the file
+  absent. The old `owner-primary` key and affected local image layers remain a
+  mandatory owner-controlled rotation/retirement blocker; no private material
+  was printed, used, deleted, or moved.
+- **V3Q authority-boundary repair:** added `THIRSTYS_V3Q_REQUIRED`; development
+  remains dormant, while production loads public verification keys only. Hostile
+  review found that the prior integration self-minted authority/approval with a
+  runtime-held owner key and that `ExecutionGate` treated `require_approval` as
+  permission to continue. Runtime self-minting and the Helm private-key mount were
+  removed; `require_approval` and unknown decisions now deny before execution.
+  Tests and the pre-deployment gate enforce this boundary. The standard is still
+  `draft_unratified`, so offline owner rotation, exact-manifest ratification,
+  external proof issuance/custody, and target startup/denial evidence remain blockers.
+- **Release/security remediation:** publish and image-scan coverage now includes
+  all eight images; release publishing no longer accepts an arbitrary manual
+  tag; active pinned CodeQL and Checkov workflow added; vulnerability scans now
+  run on push/PR and use pinned pip-audit 2.10.1 with OSV; release-published
+  Trivy scans use the exact release tag and pinned trivy-action v0.36.0.
+- **Successor identity and immutable deployment input:** aligned all first-party
+  Python, Rust, Helm, Android, web, lock, runtime, and generated OpenAPI version
+  surfaces to `0.0.3`; added a 53-surface agreement gate. Release publication
+  now rejects tags that do not match the repository version and generates,
+  verifies, and attaches an eight-image OCI digest overlay so a new tag cannot
+  silently reuse the checked-in v0.0.2 digests.
+- **Dependency finding fixed:** OSV found `PYSEC-2026-3447` in locked
+  setuptools 82.0.1. `uv.lock` now resolves setuptools 83.0.0 and the repeat
+  Python audit reports no known vulnerabilities. Node moderate+ audit also
+  reports no known vulnerabilities. This fix is not in v0.0.2.
+- **License-gate repair:** the local allow-list check exposed
+  `cel-python==0.4.0` as `UNKNOWN` because its wheel metadata omits the License
+  field. The installed wheel contains Apache-2.0 text and the upstream source
+  declares Apache-2.0. The workflow now verifies the installed license file's
+  identifying markers before excluding only `cel-python` from the
+  metadata-based allow-list; the repeat gate passes.
+- **Helm hardening:** all eight application images are digest-capable and the
+  v0.0.2 baseline digests are recorded; production Secret values are mounted
+  read-only instead of exposed with `secretKeyRef` environment values;
+  namespace, security contexts, automount settings, backup image digest,
+  configurable ingress/DNS/Prometheus selectors, real ServiceMonitor/rules,
+  dashboard discovery, and scheduled security/replay/frozen-history jobs were
+  added or corrected. The API image now contains the exact verifier assets used
+  by those jobs.
+- **Local verification passed:** full pytest `3049 passed, 5 skipped, 1
+  xfailed`; combined branch coverage `87.42%`; canonical replay `5/5`; frozen
+  history `2264/2264`; pre-deployment verifier; targeted Ruff/MyPy; actionlint;
+  Helm lint; 47-manifest namespace/digest render; Checkov Kubernetes
+  `1123/0/0`, Dockerfile `248/0/0`, GitHub Actions `976/0/0`; rebuilt API image;
+  live `/metrics`; in-image replay/frozen-history/security-relay checks; Compose
+  `9/9` health and runtime security settings.
+- **v0.0.3 Compose rebuild finding fixed:** the first eight-container cutover
+  exposed all three DHI Nginx portals restart-looping because UID 10001 could
+  not traverse the base state directory and the base config wrote outside the
+  read-only runtime's writable mounts. Added an explicit Nginx main config that
+  sends logs to stdout/stderr and keeps PID/body/proxy temporary state under
+  `/tmp`, plus a regression gate. Rebuilt/replaced the portals; the complete
+  stack now reports 9/9 healthy at API version 0.0.3. PostgreSQL and its volume
+  were not recreated.
+- **Failed/partial checks:** an initial full multi-image Compose rebuild failed
+  when Docker DNS could not resolve Python/Rust package hosts; DNS recovered and
+  the changed API image built successfully. Exact GHCR pulls completed for six
+  v0.0.2 images but timed out for arbiter-rlp and genesis; no local Trivy result
+  was produced. Local cargo-audit is not installed. The five PostgreSQL tests
+  remain skipped because `PROJECT_AI_TEST_DATABASE_URL` is unset; one legacy
+  simulation test remains documented xfail; one pytest return-value warning
+  remains.
+- **CAB/documentation:** all nine CAB records now mark v0.0.2 superseded and
+  require a successor candidate. Deployment, monitoring, secret, rollback,
+  communications, dependency, and tracking records were reconciled with the
+  implemented state. Stale Helm/Compose/pre-deployment instructions are marked
+  retired and replaced by current procedures.
+- **Remaining blockers:** commit/push the prepared v0.0.3 successor;
+  green remote CI, CodeQL, Checkov, Trivy for eight exact successor images,
+  Rust/Python/Node audits, SBOM, cosign and attestation evidence; target
+  cluster/context, namespace, approved values overlay, DNS/TLS/storage/secret
+  manager; V3Q owner-key rotation, public registry replacement, owner
+  ratification, and required-mode target proof; named owners/window/freeze
+  status; live database tests; monitoring
+  receiver/dashboard/page proof; remote backup plus restore and Helm rollback
+  rehearsal; runtime acceptance and CAB sign-off. Remote default branch is
+  still `master` while this work is on local `main`; PRs #509/#510 target
+  `master` and remain non-green.
+- **Safe to continue:** Yes for versioning, commit/push when authorized,
+  successor release preparation, external evidence collection, and staged
+  rehearsal. No for production deployment.
+
+---
+
+## SESSION UPDATE 2026-07-19 — v0.0.2 CAB evidence pack and release-state verification
+
+- **Status:** DOCUMENTATION COMPLETE; CAB decision remains **MORE INFORMATION
+  REQUIRED / DEPLOYMENT NOT AUTHORIZED**.
+- **Mode:** Repository operations/governance documentation. No deployment,
+  release mutation, issue creation, commit, push, or external notification was
+  performed.
+- **Workspace/branch:** `T:\00-Active\Project-AI-Beginnings`, `main`, exact
+  release commit/tag `82aa1476657e16a1d38caccba38357c83380a3e3` / `v0.0.2`.
+- **Baseline dirty state preserved:** untracked `compose.hub.yaml` existed before
+  this work and was not read, modified, staged, or used.
+- **Created:** `docs/operations/cab/` with the v0.0.2 CAB review pack, formal
+  change record, rollback runbook, release evidence bundle, production
+  deployment details, monitoring/alerting plan, dependency disposition,
+  communications/support plan, and tracking issue draft.
+- **Inspected:** `AGENTS.md`; this continuity map; production/deployment docs;
+  Helm chart, production values, monitoring/alerting/ingress templates; CI,
+  publish, vulnerability, image-scan, and SBOM workflows; Git release/tag/run
+  state; open Dependabot PRs and checks.
+- **Release evidence:** GitHub Release v0.0.2 is published and its annotated tag
+  resolves to the exact commit. Publish run `29679414341` passed and built/signed
+  eight images, but the release body and publish pull/inspect verification omit
+  operator-console. Exact-commit CI run `29679407137` is red: Python coverage
+  terminated with exit 137 before summary; Compose verification failed importing
+  `kernel`. Active release-specific CodeQL/Checkov/Trivy evidence was not found.
+- **Executed verification:** `tools/verify_pre_deployment.py` passed; canonical
+  replay 5/5; frozen history 2264/2264; full Python suite 3020 passed, 5 skipped,
+  1 xfailed, 1 warning in 172.98s; Helm lint passed; production-values v0.0.2
+  render passed project verifier with 55 manifests and eight GHCR Project-AI
+  images.
+- **Failed/not verified:** local `pip-audit` did not complete because PyPI timed
+  out; no production target exists in the record, so no server dry run, live
+  health/metrics, alert delivery, deployment, rollback rehearsal, or acceptance
+  was run. Monitoring uses hard-coded namespace assumptions and alert/dashboard
+  metric names not found in the API implementation; Alertmanager routing is
+  absent.
+- **Decisions:** open dependency PRs #509/#510 are proposed as out of scope for
+  immutable v0.0.2, but successful vulnerability audits and explicit residual
+  risk acceptance remain mandatory. `v0.0.1` is recorded only as the previous
+  tag, not a certified known-good production rollback target.
+- **Remaining blockers:** green exact-candidate CI; named target/window/owners;
+  environment-specific secret/host/TLS/storage configuration; complete
+  signature/attestation and security scan evidence; live monitoring and paging
+  proof; backup/restore and rollback rehearsal; runtime acceptance; CAB and
+  acceptance sign-off.
+- **Next action:** use
+  `docs/operations/cab/TRACKING_ISSUE_DRAFT.md` to close the blocker checklist,
+  then reconvene CAB. Do not deploy from this pack as currently recorded.
+- **Safe to continue:** Yes, for blocker remediation and non-production
+  rehearsal. No, for production deployment.
+
+---
+
+> **Historical-entry boundary:** Session updates below preserve the evidence
+> and decisions of their original work sessions. Statements such as “No
+> blockers” or “Safe to continue” were scoped to those sessions and do not
+> override the current v0.0.3 successor CAB decision above. Current production
+> status is fail-closed until the current checklist and CAB pack are complete.
 
 ## SESSION UPDATE 2026-07-17 (continuation) — Gate fully green; integration verification; MCP handshake proven
 

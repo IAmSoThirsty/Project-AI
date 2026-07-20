@@ -11,6 +11,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ $root.Release.Name }}-{{ $component }}
+  namespace: {{ $root.Release.Namespace }}
   labels:
     {{- include "project-ai.labels" $root | nindent 4 }}
     {{- include "project-ai.selectorLabels" (dict "root" $root "component" $component) | nindent 4 }}
@@ -25,6 +26,7 @@ spec:
         {{- include "project-ai.labels" $root | nindent 8 }}
         {{- include "project-ai.selectorLabels" (dict "root" $root "component" $component) | nindent 8 }}
     spec:
+      automountServiceAccountToken: false
       {{- if $root.Values.rbac.create }}
       serviceAccountName: {{ $root.Release.Name }}-portals
       {{- end }}
@@ -62,6 +64,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $root.Release.Name }}-{{ $component }}
+  namespace: {{ $root.Release.Namespace }}
   labels:
     {{- include "project-ai.labels" $root | nindent 4 }}
     {{- include "project-ai.selectorLabels" (dict "root" $root "component" $component) | nindent 4 }}

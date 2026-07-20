@@ -12,5 +12,5 @@ $env:ANDROID_SDK_ROOT = $env:ANDROID_HOME
 .\gradlew.bat testDebugUnitTest assembleDebug
 ```
 
-The version is `0.0.0.dev0`; the APK is unsigned beyond the normal Android debug key and is not a
+The version is `0.0.3`; the APK is unsigned beyond the normal Android debug key and is not a
 release artifact.

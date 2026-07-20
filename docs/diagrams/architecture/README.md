@@ -1,6 +1,11 @@
 # Architecture Diagrams
 
-Production-ready Mermaid architecture diagrams for Project-AI system visualization.
+Mermaid architecture diagrams for Project-AI system visualization. “Production-
+ready” descriptions in individual diagram records refer to documentation asset
+quality only; they do not establish current runtime deployment authorization or
+deployment approval.
+The v0.0.3 successor remains fail-closed under the current
+[CAB review pack](../../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md).
 
 ## 📁 Diagram Files
 
@@ -269,4 +274,4 @@ These diagrams are part of Project-AI and are subject to the project license. Se
 
 **Last Updated**: 2025-01-15
 **Maintained By**: Architecture Team
-**Status**: ✅ Production-Ready
+**Status**: ✅ Documentation-ready reference

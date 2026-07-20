@@ -1,6 +1,9 @@
-# 🚀 Production Deployment Guide
+# 🚀 Static Portal Deployment Guide
 
-Complete guide for deploying The Triumvirate to GitHub Pages and ensuring production readiness.
+Guide for deploying the standalone Triumvirate static portal to GitHub Pages.
+This is a site-publishing guide, not authorization to deploy the Project-AI
+runtime. Current Project-AI release approval is governed by
+`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md` and the CAB evidence bundle.
 
 ## Table of Contents
 
@@ -186,7 +189,7 @@ The repository is configured for automatic deployment via GitHub Actions.
 1. **Commit and Push**
    ```bash
    git add .
-   git commit -m "Production ready deployment"
+   git commit -m "Deploy static Triumvirate portal"
    git push origin main
    ```
 
@@ -430,6 +433,7 @@ Your deployment is successful when:
 
 ---
 
-**Congratulations! Your site is production-ready! 🎉**
+**The static portal deployment completed.** Verify the published site and
+GitHub Pages checks; this does not certify the Project-AI runtime for production.
 
 For ongoing maintenance, see [MAINTENANCE.md](MAINTENANCE.md)

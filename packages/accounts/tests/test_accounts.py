@@ -18,6 +18,7 @@ from accounts import (
     InterfacePermission,
     InvalidCredentials,
     InvalidCsrf,
+    InvalidMachineCredential,
     InvalidMfa,
     InvalidRecovery,
     InvalidSession,
@@ -179,6 +180,34 @@ def test_totp_enrollment_login_replay_step_up_and_recovery(tmp_path: Path) -> No
     assert recovered.account.mfa_enabled is False
 
 
+def test_machine_credentials_are_scoped_hashed_single_use_and_revocable(tmp_path: Path) -> None:
+    service = _service(tmp_path)
+    owner = _bootstrap(service).bundle
+    service.repository.mark_session_mfa(owner.session.id, service.clock())
+
+    created = service.create_machine_credential(
+        owner.token,
+        owner.csrf_token,
+        label="Waterfall evidence writer",
+        scopes=("evidence.read", "evidence.write", "evidence.write"),
+        source="pytest",
+    )
+    assert created.token.startswith(f"mc_{created.credential.id}.")
+    assert created.token.encode() not in (tmp_path / "accounts.db").read_bytes()
+    assert created.credential.scopes == ("evidence.read", "evidence.write")
+
+    authenticated = service.authenticate_machine_credential(created.token, "evidence.write")
+    assert authenticated.id == created.credential.id
+    with pytest.raises(PermissionDenied, match="scope is insufficient"):
+        service.authenticate_machine_credential(created.token, "analysis.generate")
+
+    service.revoke_machine_credential(
+        owner.token, owner.csrf_token, created.credential.id, "pytest"
+    )
+    with pytest.raises(InvalidMachineCredential):
+        service.authenticate_machine_credential(created.token)
+
+
 def test_schema_migration_upgrades_version_two_store(tmp_path: Path) -> None:
     path = tmp_path / "accounts.db"
     with sqlite3.connect(path) as connection:
@@ -203,7 +232,7 @@ def test_schema_migration_upgrades_version_two_store(tmp_path: Path) -> None:
         )
     AccountRepository(path).migrate()
     with sqlite3.connect(path) as connection:
-        assert connection.execute("PRAGMA user_version").fetchone()[0] == 4
+        assert connection.execute("PRAGMA user_version").fetchone()[0] == 5
         assert connection.execute(
             "SELECT name FROM pragma_table_info('accounts') WHERE name = 'mfa_enabled'"
         ).fetchone() == ("mfa_enabled",)

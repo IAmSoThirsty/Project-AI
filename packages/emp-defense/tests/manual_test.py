@@ -15,8 +15,8 @@ from emp_defense import (
 )
 
 
-def test_basic_functionality():
-    """Test basic engine functionality."""
+def run_basic_functionality() -> bool:
+    """Run the standalone smoke suite and return whether every check passed."""
     print("=" * 60)
     print("EMP Defense Engine - Manual Test Suite")
     print("=" * 60)
@@ -145,8 +145,13 @@ def test_basic_functionality():
     return tests_failed == 0
 
 
+def test_basic_functionality() -> None:
+    """Expose the standalone smoke suite to pytest without returning a value."""
+    assert run_basic_functionality()
+
+
 if __name__ == "__main__":
-    success = test_basic_functionality()
+    success = run_basic_functionality()
     sys.exit(0 if success else 1)
 
 

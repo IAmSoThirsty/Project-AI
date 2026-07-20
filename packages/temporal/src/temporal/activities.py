@@ -23,8 +23,9 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
-from typing import Protocol
+from typing import Protocol, cast
 
+from kernel import JsonValue
 from temporal.dataclasses import (
     RetryPolicy,
     SecurityAgentRequest,
@@ -112,17 +113,15 @@ def run_activity(
                 * (effective_policy.backoff_coefficient ** (attempt - 1)),
                 effective_policy.max_interval_ms,
             )
-            _simulate_backoff(backoff_ms)
+            _apply_backoff(backoff_ms)
     raise ActivityError(
         f"activity exhausted {effective_policy.max_attempts} attempts: last_error={last_error!r}"
     )
 
 
-def _simulate_backoff(ms: float) -> None:
-    """No-op placeholder for backoff (real impl would sleep)."""
-    # In a real temporal runtime, this would block. For the typed
-    # primitive, we don't actually sleep; tests run fast.
-    _ = ms
+def _apply_backoff(ms: float) -> None:
+    """Apply the retry policy's bounded backoff interval."""
+    time.sleep(ms / 1000.0)
 
 
 def run_triumvirate_pipeline(
@@ -175,20 +174,33 @@ def run_triumvirate_pipeline(
 def run_security_agent_scan(
     request: SecurityAgentRequest,
 ) -> SecurityAgentResult:
-    """Default security agent scan activity (minimal implementation).
+    """Run the bounded local static scanner and return typed findings.
 
     Args:
         request: The security agent request.
 
     Returns:
-        A SecurityAgentResult with no findings (placeholder).
+        A SecurityAgentResult containing deterministic static findings.
     """
     if not isinstance(request, SecurityAgentRequest):
         raise ActivityError(f"request must be SecurityAgentRequest, got {type(request).__name__}")
+    from temporal.workflows.security_agent import run_code_vulnerability_scan
+
+    scan = run_code_vulnerability_scan(request)
+    status = scan["scan_status"]
+    findings = tuple(cast(list[dict[str, JsonValue]], scan["findings"]))
+    if status != "completed":
+        return SecurityAgentResult(
+            agent_id=request.agent_id,
+            success=False,
+            findings=findings,
+            error=f"scan did not complete: {status}",
+            correlation_id=request.correlation_id,
+        )
     return SecurityAgentResult(
         agent_id=request.agent_id,
         success=True,
-        findings=(),
+        findings=findings,
         correlation_id=request.correlation_id,
     )
 

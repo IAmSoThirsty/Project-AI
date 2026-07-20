@@ -85,7 +85,8 @@ Thirsty's Standard V3 + Q now has a machine-readable manifest and an executable 
 - Evaluator report signature verification: passed.
 - Evidence admissibility check: passed.
 - Ratification signature and exact-manifest hash binding mechanism: passed.
-- Automated suite: 23 passed.
+- Recorded standalone automated suite: 23 passed. Current Project-AI workspace
+  package suite: 46 passed, including owner-key rotation safety tests.
 - Owner ratification of this release: not verified.
 - Live Project-AI or agent-host integration: not verified because no target runtime was supplied.
 

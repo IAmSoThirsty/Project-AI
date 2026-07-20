@@ -239,6 +239,14 @@ def test_sqlite_human_state_migrates_once_without_secret_rehashing(tmp_path: Pat
         source="integration",
         user_agent="pytest",
     ).bundle
+    source_accounts.repository.mark_session_mfa(owner.session.id, NOW)
+    machine_credential = source_accounts.create_machine_credential(
+        owner.token,
+        owner.csrf_token,
+        label="Migrated Waterfall writer",
+        scopes=("evidence.write",),
+        source="integration",
+    )
     source_workflows = WorkflowService(WorkflowRepository(workflow_path), clock=lambda: NOW)
     request = source_workflows.submit(
         owner.account,
@@ -309,8 +317,14 @@ def test_sqlite_human_state_migrates_once_without_secret_rehashing(tmp_path: Pat
     assert counts["work_requests"] == 1
     assert counts["execution_receipts"] == 1
     assert counts["analysis_receipts"] == 1
+    assert counts["machine_credentials"] == 1
     target_account = PostgresAccountRepository(DSN).account_by_username("SQLITE.OWNER")
     assert target_account is not None and target_account.password_hash == source_hash
+    target_accounts = _service()
+    migrated_machine = target_accounts.authenticate_machine_credential(
+        machine_credential.token, "evidence.write"
+    )
+    assert migrated_machine.label == "Migrated Waterfall writer"
     target_workflows = PostgresWorkflowRepository(DSN)
     migrated_request = target_workflows.requests()[0]
     assert migrated_request.input_schema_version == "evidence.inspect/v1"

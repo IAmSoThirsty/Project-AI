@@ -31,7 +31,12 @@ Usage: include "project-ai.image" (dict "root" . "name" "api")
 {{- define "project-ai.image" -}}
 {{- if .root.Values.image.registry }}
 {{- if .root.Values.image.owner }}
+{{- $digest := index (.root.Values.image.digests | default dict) .name -}}
+{{- if $digest }}
+{{- printf "%s/%s/project-ai-%s@%s" .root.Values.image.registry .root.Values.image.owner .name $digest }}
+{{- else }}
 {{- printf "%s/%s/project-ai-%s:%s" .root.Values.image.registry .root.Values.image.owner .name (default "latest" .root.Values.image.tag) }}
+{{- end }}
 {{- else }}
 {{- printf "%s/project-ai-%s:%s" .root.Values.image.registry .name (default "latest" .root.Values.image.tag) }}
 {{- end }}
@@ -45,7 +50,11 @@ Secret name for a component.
 Usage: include "project-ai.secretName" (dict "root" . "component" "api")
 */}}
 {{- define "project-ai.secretName" -}}
+{{- if .root.Values.secrets.existingSecret -}}
+{{ .root.Values.secrets.existingSecret }}
+{{- else -}}
 {{ .root.Release.Name }}-{{ .component }}-secrets
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -57,6 +66,8 @@ allowPrivilegeEscalation: false
 capabilities:
   drop: [ALL]
 runAsNonRoot: true
+runAsUser: 10001
+runAsGroup: 10001
 seccompProfile:
   type: RuntimeDefault
 {{- end }}
@@ -66,6 +77,10 @@ Hardened pod security context.
 */}}
 {{- define "project-ai.podSecurityContext" -}}
 runAsNonRoot: true
+runAsUser: 10001
+runAsGroup: 10001
+fsGroup: 10001
+fsGroupChangePolicy: OnRootMismatch
 seccompProfile:
   type: RuntimeDefault
 {{- end }}

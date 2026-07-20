@@ -344,8 +344,19 @@ def test_engine_get_state_history() -> None:
 
 
 def test_engine_verify_determinism_same_seed() -> None:
-    """verify_determinism returns True for same seed."""
+    """verify_determinism replays and verifies a recorded run."""
     engine = MonteCarloEngine(seed="0xA17F01")
+    initial = WorldState(
+        timestamp=datetime.now(UTC),
+        timestep=0,
+        markets={"m1": 0.5},
+        governance={"g1": 0.5},
+        regulation={"r1": 0.5},
+        graph_topology={"t1": 0.5},
+        capital_distribution={"c1": 0.5},
+    )
+    engine.set_initial_state(initial)
+    engine.run(3)
     assert engine.verify_determinism("0xA17F01") is True
 
 
@@ -353,6 +364,26 @@ def test_engine_verify_determinism_different_seed() -> None:
     """verify_determinism returns False for different seed."""
     engine = MonteCarloEngine(seed="0xA17F01")
     assert engine.verify_determinism("0xDEAD") is False
+
+
+def test_engine_verify_determinism_fails_without_recorded_state() -> None:
+    """An unexecuted engine has no determinism evidence."""
+    engine = MonteCarloEngine(seed="0xA17F01")
+    assert engine.verify_determinism("0xA17F01") is False
+
+
+def test_engine_verify_determinism_detects_mutated_history() -> None:
+    """Mutation of a recorded state invalidates determinism evidence."""
+    engine = MonteCarloEngine(seed="0xA17F01")
+    initial = WorldState(
+        timestamp=datetime.now(UTC),
+        timestep=0,
+        markets={"m1": 0.5},
+    )
+    engine.set_initial_state(initial)
+    engine.step()
+    engine.states[-1].markets["m1"] = 0.0
+    assert engine.verify_determinism("0xA17F01") is False
 
 
 # ── 6. Closed feedback loop ───────────────────────

@@ -18,6 +18,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from kernel.version import PROJECT_AI_VERSION
+
 from atlas.analysis import SUBORDINATION_NOTICE
 from atlas.audit import AuditCategory, AuditLevel, AuditTrail
 from kernel import JsonValue
@@ -57,7 +59,7 @@ class ReplayBundle:
         *,
         bundle_id: str,
         created_at: str,
-        atlas_version: str = "0.0.0.dev0",
+        atlas_version: str = PROJECT_AI_VERSION,
         config_hashes: Mapping[str, str] | Sequence[tuple[str, str]] = (),
         baseline_hashes: Mapping[str, str] | Sequence[tuple[str, str]] = (),
         data_hashes: Mapping[str, str] | Sequence[tuple[str, str]] = (),
@@ -113,7 +115,7 @@ class ReplayBundle:
         return cls(
             bundle_id=_require_string(data, "bundle_id"),
             created_at=_require_string(data, "created_at"),
-            atlas_version=_optional_string(data, "atlas_version", "0.0.0.dev0"),
+            atlas_version=_optional_string(data, "atlas_version", PROJECT_AI_VERSION),
             config_hashes=_mapping_or_pairs(data.get("config_hashes", ()), "config_hashes"),
             baseline_hashes=_mapping_or_pairs(data.get("baseline_hashes", ()), "baseline_hashes"),
             data_hashes=_mapping_or_pairs(data.get("data_hashes", ()), "data_hashes"),

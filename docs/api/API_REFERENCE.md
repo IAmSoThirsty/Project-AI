@@ -6,7 +6,7 @@
 > OpenAPI snapshot. If it disagrees with runtime, runtime wins and this file
 > must be corrected.
 
-**Status:** live reference for the development gateway (version `0.0.0.dev0`).
+**Status:** live reference for the v0.0.3 successor gateway.
 **Base URL (local dev):** `http://127.0.0.1:8000`
 **Base URL (Compose):** `http://api:8000` from within the Compose network
 **OpenAPI schema (live):** `http://127.0.0.1:8000/openapi.json`
@@ -22,8 +22,11 @@ The gateway has two intentionally separate authentication lanes:
 - Human Control Center access uses an opaque server-side session in the
   `project_ai_session` HttpOnly cookie. State changes also require the per-session
   `X-CSRF-Token`; browser auth mutations are same-origin only.
-- Machine actuation uses `Authorization: Bearer $PROJECT_AI_API_TOKEN`. A human
-  session never satisfies Chimera or Atlas actuation authentication.
+- Machine actuation uses a durable per-program bearer credential. A human session
+  never satisfies Chimera or Atlas actuation authentication. Development may use
+  `PROJECT_AI_API_TOKEN` as an explicit fallback; production sets
+  `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED=true` and provisions one scoped
+  credential per program through the owner/MFA administration API.
 
 `GET /api/v1/instance` is a public presentation-identity route used before login.
 It reports the configured `PROJECT_AI_INSTANCE_NAME`, identifies the deployment as a
@@ -42,6 +45,10 @@ the bounded SWR workflow. It is never sent to the browser. SWR execution additio
 requires a valid `PROJECT_AI_AUDIT_PATH`. `PROJECT_AI_SWR_BUNDLE_DIR` may select a
 writable result-export directory; when omitted, configured deployments place it beside
 the audit file. Compose and Helm set it to `/data/swr-bundles`.
+When `THIRSTYS_V3Q_REQUIRED=true`, the SWR execution request may carry externally signed
+`v3q_authority_proof` and `v3q_approval_proof` documents. The API transports these
+public authorization artifacts to the execution gate; it never creates, stores, or
+mounts the corresponding private signing key. Missing or invalid proofs fail closed.
 Local Compose sets `PROJECT_AI_BOOTSTRAP_TRUST_PRIVATE_PROXY=true` so the loopback-only
 bootstrap can traverse its private same-origin Nginx proxy. Do not set that flag for an
 untrusted or internet-facing proxy path.
@@ -65,11 +72,15 @@ Human routes:
 | `GET /api/v1/me` | Return the signed-in account |
 | `GET/POST/DELETE /api/v1/auth/mfa...` | Enroll, confirm, step up, inspect, or remove TOTP |
 | `GET/POST /api/v1/admin/accounts...` | Permission-enforced account, role, and status administration |
+| `GET/POST /api/v1/admin/machine-credentials` | Owner/MFA-protected per-program credential inventory and one-time token issuance |
+| `POST /api/v1/admin/machine-credentials/{id}/revoke` | Revoke one machine credential without rotating other programs |
 | `GET /api/v1/admin/security-events` | Authentication security-event evidence |
 | `GET /api/v1/work/operations` | Server allowlist with versioned structured-input contracts for non-actuating requests |
 | `GET/POST /api/v1/work/requests...` | Schema-validated non-actuating request, creator cancellation, and MFA-guarded review records |
 | `GET /api/v1/work/requests/{request_id}` | Permission-checked request detail, exact structured inputs, input digest, and immutable human-review receipt digests |
 | `GET /api/v1/modules/swr/scenarios` | Canonical deterministic SWR scenario catalog and configuration status |
+| `GET /api/v1/modules/waterfall/status` | Machine-authenticated copied/standalone Waterfall status and shared-authority configuration |
+| `POST /api/v1/modules/waterfall/operations` | Machine-authenticated allow-listed Waterfall operation through V3Q and ExecutionGate |
 | `POST /api/v1/work/requests/{request_id}/execute/swr` | MFA-guarded, reviewed, exact-scope SWR execution-gate submission |
 | `POST /api/v1/modules/atlas/replay` | Session/CSRF/permission-checked deterministic Atlas evidence reconstruction |
 | `GET/POST /api/v1/modules/atlas/projections` | Permission-checked durable Atlas projection history and deterministic analysis creation |
@@ -95,20 +106,20 @@ until request payloads themselves become reviewable durable records.
 The machine lane exposes **public** and **protected** routes:
 
 - **Public** routes: no auth required, no token needed.
-- **Protected** routes require all three:
-  1. `PROJECT_AI_API_TOKEN` configured on the server (non-empty)
-  2. `PROJECT_AI_AUDIT_PATH` configured on the server (writable path)
-  3. `Authorization: Bearer <token>` header on the request, where `<token>` is
-     the server-side `PROJECT_AI_API_TOKEN` value (constant-time compared via
-     `hmac.compare_digest`)
+- **Protected** routes require an audit path and a bearer credential with the
+  route's scope: `evidence.read`, `evidence.write`, or `analysis.generate`.
+  When durable credentials are configured/enforced, the token is resolved from
+  the accounts store; only its salted hash is stored and revocation is per
+  credential. Machine writes include the credential id and label in the audit
+  record. Development fallback uses `PROJECT_AI_API_TOKEN`.
 
 **Fail-closed behavior:**
 
 | Server state | Protected-route behavior |
 |---|---|
-| `PROJECT_AI_API_TOKEN` empty or unset | `503 Service Unavailable` (no auth check runs) |
+| No audit path, or no credential backend/token in the selected mode | `503 Service Unavailable` (no auth check runs) |
 | `PROJECT_AI_AUDIT_PATH` empty or unset | `503 Service Unavailable` |
-| `PROJECT_AI_API_TOKEN` set, missing `Authorization` header | `401 Unauthorized` with `WWW-Authenticate: Bearer` |
+| Configured mode, missing `Authorization` header | `401 Unauthorized` with `WWW-Authenticate: Bearer` |
 | Wrong scheme (not `Bearer`) or wrong token | `401 Unauthorized` with `WWW-Authenticate: Bearer` |
 | Correct `Authorization: Bearer <token>` | route runs |
 
@@ -128,7 +139,7 @@ Liveness probe. Returns immediately, no auth, no side effects.
 ```json
 {
   "status": "live",
-  "version": "0.0.0.dev0"
+  "version": "0.0.3"
 }
 ```
 
@@ -205,7 +216,7 @@ exists.
 ```json
 {
   "status": "ready",
-  "version": "0.0.0.dev0",
+  "version": "0.0.3",
   "maturity": "development",
   "authority_boundary": "The Control Center presents evidence and requests. It does not grant authority; ...",
   "surfaces": [
@@ -213,7 +224,7 @@ exists.
       "id": "gateway",
       "label": "Gateway",
       "status": "healthy",
-      "metric": "0.0.0.dev0",
+      "metric": "0.0.3",
       "detail": "Development gateway is live."
     }
   ],
@@ -239,7 +250,7 @@ non-actuating, while machine-authenticated generation retains its separate bound
 ```json
 {
   "status": "available",
-  "version": "0.0.0.dev0",
+  "version": "0.0.3",
   "stack": "Atlas",
   "authority": "analysis_only",
   "protected_operations": ["sludge_narrative"],
@@ -302,7 +313,7 @@ through this route.
 
 ## 2. Protected routes
 
-All actuation routes require `Authorization: Bearer $PROJECT_AI_API_TOKEN`.
+All actuation routes require `Authorization: Bearer <scoped-machine-credential>`.
 `GET /audit` accepts either that machine credential or a valid human session.
 
 ### `GET /audit`
@@ -341,7 +352,8 @@ verification.
 ```
 
 **Response 401:** missing or invalid machine credential and no valid human session.
-**Response 503:** server-side `PROJECT_AI_API_TOKEN` or `PROJECT_AI_AUDIT_PATH` not configured.
+**Response 503:** the selected machine-credential mode or
+`PROJECT_AI_AUDIT_PATH` is not configured.
 
 The Control Center can export the currently displayed verified page as JSON. The
 export includes chain-verification state and active filters; it does not grant

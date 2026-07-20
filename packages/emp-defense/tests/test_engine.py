@@ -124,6 +124,18 @@ class TestStateObservation:
 
         assert updated_day > initial_day
 
+    def test_observe_filters_exact_state_field(self):
+        """A query returns only the requested top-level state field."""
+        engine = EMPDefenseEngine()
+        engine.init()
+        assert engine.observe("simulation_day") == {"simulation_day": 0}
+
+    def test_observe_unknown_field_fails_closed(self):
+        """An unknown query does not silently return the complete state."""
+        engine = EMPDefenseEngine()
+        engine.init()
+        assert engine.observe("not-a-state-field") == {}
+
 
 class TestArtifactExport:
     """Test artifact generation."""

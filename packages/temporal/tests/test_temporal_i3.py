@@ -312,7 +312,20 @@ def test_run_code_vulnerability_scan_minimal() -> None:
     result = run_code_vulnerability_scan(req)
     assert cast(str, result["scan_id"]).startswith("scan-")
     assert result["target"] == "/target"
+    assert result["scan_status"] == "target_unavailable"
     assert result["vulnerability_count"] == 0
+
+
+def test_run_code_vulnerability_scan_detects_shell_execution(tmp_path) -> None:
+    target = tmp_path / "unsafe.py"
+    target.write_text("subprocess.run(command, shell=True)\n", encoding="utf-8")
+    req = SecurityAgentRequest(agent_id="agent-1", target=str(target), operation="scan")
+    result = run_code_vulnerability_scan(req)
+    assert result["scan_status"] == "completed"
+    assert result["vulnerability_count"] == 1
+    findings = cast(list[dict[str, JsonValue]], result["findings"])
+    assert findings[0]["rule_id"] == "RCE-001"
+    assert findings[0]["line"] == 1
 
 
 def test_run_code_vulnerability_scan_validates_request() -> None:
@@ -357,9 +370,9 @@ def test_generate_security_patches_deterministic() -> None:
     )
     p1 = generate_security_patches([finding])[0]
     p2 = generate_security_patches([finding])[0]
-    # Same sha256 (deterministic), different patch_id (UUID)
+    # Content and identity are deterministic for the same finding.
     assert p1.sha256 == p2.sha256
-    assert p1.patch_id != p2.patch_id
+    assert p1.patch_id == p2.patch_id
 
 
 def test_generate_security_patches_validates_list() -> None:
@@ -444,7 +457,9 @@ def test_security_agent_workflow_remediate() -> None:
     workflow = SecurityAgentWorkflow()
     req = SecurityAgentRequest(agent_id="a1", target="/x", operation="remediate")
     result = workflow.execute(req)
-    assert "campaign_id" in result
+    assert "campaign" in result
+    assert "scan" in result
+    assert result["patch_count"] == 0
 
 
 def test_security_agent_workflow_validates_request() -> None:

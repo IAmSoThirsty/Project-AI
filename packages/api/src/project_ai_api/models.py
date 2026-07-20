@@ -106,6 +106,29 @@ class ModulesResponse(FrozenModel):
     modules: tuple[ModuleSurface, ...]
 
 
+class WaterfallStatusResponse(FrozenModel):
+    configured: bool
+    authority_contract: Literal["project-ai-v3q-execution-gate"] = "project-ai-v3q-execution-gate"
+    runtime_status: JsonValue | None = None
+
+
+class WaterfallOperationRequest(FrozenModel):
+    operation: Literal["vpn.connect", "firewall.rule_change", "kill_switch.trigger"]
+    resource: str = Field(min_length=1, max_length=256)
+    payload: dict[str, JsonValue] = Field(default_factory=dict)
+    state: dict[str, object] = Field(default_factory=dict)
+
+
+class WaterfallOperationResponse(FrozenModel):
+    action_id: str
+    outcome: Literal["ALLOW", "DENY", "ESCALATE"]
+    reason: str
+    output: JsonValue = None
+    governance_evidence_sha256: str
+    event_hash: str
+    audit_hash: str
+
+
 class AuthAccount(FrozenModel):
     id: str
     username: str
@@ -224,6 +247,32 @@ class SecurityEventResponse(FrozenModel):
 
 class SecurityEventsResponse(FrozenModel):
     events: tuple[SecurityEventResponse, ...]
+
+
+class MachineCredential(FrozenModel):
+    id: str
+    label: str
+    scopes: tuple[Literal["evidence.read", "evidence.write", "analysis.generate"], ...]
+    created_at: str
+    created_by: str
+    last_used_at: str | None
+    revoked_at: str | None
+
+
+class MachineCredentialsResponse(FrozenModel):
+    credentials: tuple[MachineCredential, ...]
+
+
+class MachineCredentialCreateRequest(FrozenModel):
+    label: str = Field(min_length=1, max_length=128)
+    scopes: tuple[Literal["evidence.read", "evidence.write", "analysis.generate"], ...] = (
+        "evidence.read",
+    )
+
+
+class MachineCredentialCreateResponse(FrozenModel):
+    credential: MachineCredential
+    token: str
 
 
 class WorkRequestResponse(FrozenModel):
@@ -354,6 +403,11 @@ class SwrScenariosResponse(FrozenModel):
 class SwrExecutionRequest(FrozenModel):
     scenario_id: str = Field(min_length=32, max_length=32)
     decision: str = Field(min_length=1, max_length=2048)
+    # V3Q documents are externally signed authorization artifacts. The API only
+    # transports them to the canonical execution gate; it never creates or stores
+    # private signing material.
+    v3q_authority_proof: dict[str, JsonValue] | None = None
+    v3q_approval_proof: dict[str, JsonValue] | None = None
 
 
 class SwrExecutionResponse(FrozenModel):

@@ -70,6 +70,28 @@ class SecurityEvent:
 
 
 @dataclass(frozen=True)
+class MachineCredential:
+    """Durable identity for a non-human program credential."""
+
+    id: str
+    label: str
+    token_hash: str
+    scopes: tuple[str, ...]
+    created_at: datetime
+    created_by: str
+    last_used_at: datetime | None
+    revoked_at: datetime | None
+
+
+@dataclass(frozen=True)
+class MachineCredentialResult:
+    """Credential metadata plus the one-time raw token handoff."""
+
+    credential: MachineCredential
+    token: str
+
+
+@dataclass(frozen=True)
 class BootstrapResult:
     bundle: SessionBundle
     recovery_codes: tuple[str, ...]

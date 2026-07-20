@@ -2,7 +2,11 @@
 
 ## Overview
 
-This directory contains 8 production-ready Mermaid flow diagrams documenting critical processes in the Project-AI system. These diagrams provide visual representations of complex workflows, making the codebase easier to understand, maintain, and extend.
+This directory contains 8 production-ready Mermaid documentation assets
+describing critical Project-AI processes. “Production-ready” here describes the
+diagrams' documentation quality, not runtime deployment approval or evidence.
+The diagrams provide visual representations of complex workflows, making the
+codebase easier to understand, maintain, and extend.
 
 ## Available Diagrams
 

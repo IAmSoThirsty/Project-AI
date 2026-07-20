@@ -1,8 +1,12 @@
 # Supporting Infrastructure Documentation
 
+> Recovered/reference material only: this directory is not current release
+> evidence or deployment approval. The successor remains fail-closed until
+> the current pre-deployment checklist and CAB evidence bundle pass.
+
 **Directory:** `source-docs/supporting/`
 **Purpose:** Complete reference documentation for Project-AI's supporting infrastructure
-**Status:** Production-Ready
+**Status:** Documentation-ready reference; not runtime deployment approval
 **Last Updated:** 2025-01-26
 **Maintained By:** AGENT-046
 

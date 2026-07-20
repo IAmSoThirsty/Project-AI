@@ -878,7 +878,7 @@
             "type": "string"
           },
           "version": {
-            "default": "0.0.2",
+            "default": "0.0.3",
             "title": "Version",
             "type": "string"
           }
@@ -1214,7 +1214,7 @@
             "type": "array"
           },
           "version": {
-            "default": "0.0.2",
+            "default": "0.0.3",
             "title": "Version",
             "type": "string"
           },
@@ -1491,7 +1491,7 @@
             "type": "string"
           },
           "version": {
-            "default": "0.0.2",
+            "default": "0.0.3",
             "title": "Version",
             "type": "string"
           }
@@ -1668,6 +1668,138 @@
           "password"
         ],
         "title": "LoginRequest",
+        "type": "object"
+      },
+      "MachineCredential": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "last_used_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Used At"
+          },
+          "revoked_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revoked At"
+          },
+          "scopes": {
+            "items": {
+              "enum": [
+                "evidence.read",
+                "evidence.write",
+                "analysis.generate"
+              ],
+              "type": "string"
+            },
+            "title": "Scopes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "scopes",
+          "created_at",
+          "created_by",
+          "last_used_at",
+          "revoked_at"
+        ],
+        "title": "MachineCredential",
+        "type": "object"
+      },
+      "MachineCredentialCreateRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "scopes": {
+            "default": [
+              "evidence.read"
+            ],
+            "items": {
+              "enum": [
+                "evidence.read",
+                "evidence.write",
+                "analysis.generate"
+              ],
+              "type": "string"
+            },
+            "title": "Scopes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "title": "MachineCredentialCreateRequest",
+        "type": "object"
+      },
+      "MachineCredentialCreateResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "credential": {
+            "$ref": "#/components/schemas/MachineCredential"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "credential",
+          "token"
+        ],
+        "title": "MachineCredentialCreateResponse",
+        "type": "object"
+      },
+      "MachineCredentialsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "credentials": {
+            "items": {
+              "$ref": "#/components/schemas/MachineCredential"
+            },
+            "title": "Credentials",
+            "type": "array"
+          }
+        },
+        "required": [
+          "credentials"
+        ],
+        "title": "MachineCredentialsResponse",
         "type": "object"
       },
       "ManagedAccount": {
@@ -2289,6 +2421,34 @@
             "minLength": 32,
             "title": "Scenario Id",
             "type": "string"
+          },
+          "v3q_approval_proof": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/JsonValue-Input"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "V3Q Approval Proof"
+          },
+          "v3q_authority_proof": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/JsonValue-Input"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "V3Q Authority Proof"
           }
         },
         "required": [
@@ -2916,6 +3076,121 @@
         "title": "VerdictRequest",
         "type": "object"
       },
+      "WaterfallOperationRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "operation": {
+            "enum": [
+              "vpn.connect",
+              "firewall.rule_change",
+              "kill_switch.trigger"
+            ],
+            "title": "Operation",
+            "type": "string"
+          },
+          "payload": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/JsonValue-Input"
+            },
+            "title": "Payload",
+            "type": "object"
+          },
+          "resource": {
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Resource",
+            "type": "string"
+          },
+          "state": {
+            "additionalProperties": true,
+            "title": "State",
+            "type": "object"
+          }
+        },
+        "required": [
+          "operation",
+          "resource"
+        ],
+        "title": "WaterfallOperationRequest",
+        "type": "object"
+      },
+      "WaterfallOperationResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "title": "Action Id",
+            "type": "string"
+          },
+          "audit_hash": {
+            "title": "Audit Hash",
+            "type": "string"
+          },
+          "event_hash": {
+            "title": "Event Hash",
+            "type": "string"
+          },
+          "governance_evidence_sha256": {
+            "title": "Governance Evidence Sha256",
+            "type": "string"
+          },
+          "outcome": {
+            "enum": [
+              "ALLOW",
+              "DENY",
+              "ESCALATE"
+            ],
+            "title": "Outcome",
+            "type": "string"
+          },
+          "output": {
+            "$ref": "#/components/schemas/JsonValue-Output"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action_id",
+          "outcome",
+          "reason",
+          "governance_evidence_sha256",
+          "event_hash",
+          "audit_hash"
+        ],
+        "title": "WaterfallOperationResponse",
+        "type": "object"
+      },
+      "WaterfallStatusResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authority_contract": {
+            "const": "project-ai-v3q-execution-gate",
+            "default": "project-ai-v3q-execution-gate",
+            "title": "Authority Contract",
+            "type": "string"
+          },
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "runtime_status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JsonValue-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "configured"
+        ],
+        "title": "WaterfallStatusResponse",
+        "type": "object"
+      },
       "WorkInputFieldResponse": {
         "additionalProperties": false,
         "properties": {
@@ -3329,7 +3604,7 @@
     },
     "securitySchemes": {
       "machineBearer": {
-        "description": "Shared machine bearer token (PROJECT_AI_API_TOKEN); not a human credential and never issued to a browser.",
+        "description": "Per-program machine credential; development may use the bootstrap PROJECT_AI_API_TOKEN until credentials are provisioned.",
         "scheme": "bearer",
         "type": "http"
       },
@@ -3343,7 +3618,7 @@
   },
   "info": {
     "title": "Project-AI Development Gateway",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -3567,6 +3842,148 @@
           }
         ],
         "summary": "Admin Change Status"
+      }
+    },
+    "/api/v1/admin/machine-credentials": {
+      "get": {
+        "operationId": "admin_machine_credentials_api_v1_admin_machine_credentials_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineCredentialsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Admin Machine Credentials"
+      },
+      "post": {
+        "operationId": "admin_create_machine_credential_api_v1_admin_machine_credentials_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MachineCredentialCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MachineCredentialCreateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Admin Create Machine Credential"
+      }
+    },
+    "/api/v1/admin/machine-credentials/{credential_id}/revoke": {
+      "post": {
+        "operationId": "admin_revoke_machine_credential_api_v1_admin_machine_credentials__credential_id__revoke_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "credential_id",
+            "required": true,
+            "schema": {
+              "title": "Credential Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Csrf-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "summary": "Admin Revoke Machine Credential"
       }
     },
     "/api/v1/admin/security-events": {
@@ -4887,6 +5304,72 @@
           }
         ],
         "summary": "Taar Status"
+      }
+    },
+    "/api/v1/modules/waterfall/operations": {
+      "post": {
+        "operationId": "waterfall_operation_api_v1_modules_waterfall_operations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaterfallOperationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterfallOperationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "machineBearer": []
+          }
+        ],
+        "summary": "Waterfall Operation"
+      }
+    },
+    "/api/v1/modules/waterfall/status": {
+      "get": {
+        "operationId": "waterfall_status_api_v1_modules_waterfall_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterfallStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "machineBearer": []
+          }
+        ],
+        "summary": "Waterfall Status"
       }
     },
     "/api/v1/work/operations": {

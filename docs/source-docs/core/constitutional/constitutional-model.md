@@ -37,7 +37,7 @@ word_count: 2614
 - **Directness Enforcement:** Removes euphemisms and comfort-first language
 - **Streaming Support:** Constitutional validation during token generation
 
-**Production Status:** ✅ Fully implemented, zero TODOs, production-ready
+**Production Status:** ✅ Reference implementation documented; runtime approval remains external
 
 ---
 

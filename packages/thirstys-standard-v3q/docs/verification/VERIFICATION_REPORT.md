@@ -8,6 +8,13 @@
 - Verification environment: Python 3.13.5 on Linux x86_64
 - CEL implementation: `cel-python==0.4.0`
 - Recorded automated result: `23 passed`, `0 failed`, `0 errors`, `0 skipped`
+- Current Project-AI workspace package result: `46 passed`; the recorded
+  standalone result above remains historical artifact evidence.
+- Current Project-AI checkout hygiene: **Blocked** — an ignored
+  `owner-private.json` is present in the checkout. It is not part of the
+  version-controlled release artifact, but the production pre-deployment gate
+  correctly refuses this checkout until the owner rotates/retires the
+  material outside the repository.
 
 ## Direct result
 
@@ -84,7 +91,11 @@ The tests verify:
 - action restriction enforcement;
 - separation of authority and approval signature purposes.
 
-No private owner key was generated or stored in the release package.
+The release artifact is intended to contain no private owner key. The current
+Project-AI checkout does contain an ignored `owner-private.json`; this report
+does not read or use it, and the production pre-deployment gate remains
+fail-closed until the owner rotates and retires that material outside the
+repository.
 
 ### Ratification mechanism
 

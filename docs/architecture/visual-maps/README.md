@@ -4,6 +4,11 @@ Architecture, data-flow, and dependency visual maps authored
 by AGENT-047 (Visual Relationship Maps Specialist) and
 recovered from ``T:\00-Active\Project-AI-vault\visual-maps\``.
 
+> **Scope boundary (2026-07-19):** These are recovered architecture reference
+> assets. Their `active` or “production-ready” labels describe documentation
+> quality only and do not establish deployment approval. The current successor
+> remains fail-closed under the [CAB review pack](../../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md).
+
 ## What's here
 
 10 documents (414 KB total), all in Obsidian-style Markdown
@@ -99,8 +104,11 @@ Obsidian-flavoured Markdown and conventional Markdown
     ``docs/deployment/PRODUCTION_DEPLOY.md`` — also
     recovered from the same era
 
-Verification (4 canonical gates, all green):
-  pytest  2319 pass / 1 xfail (unchanged)
+Historical port baseline (not current release evidence):
+  pytest  2319 pass / 1 xfail (at recovery time)
   T7      True 3eda3256049339cb069354cc81ee7c51d88e3e41e81ea707e5bf3d3e14ba478c
   ruff    All checks passed
-  mypy    12 (pre-existing baseline, unchanged)
+  mypy    12 (at recovery time)
+
+Current successor evidence is authoritative only in
+`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md` and the CAB bundle.

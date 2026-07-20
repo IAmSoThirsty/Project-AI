@@ -5,7 +5,7 @@
 > communicates only with the HTTP gateway; it does not import governance,
 > capability, execution, Arbiter, or RLP internals.
 
-**Status:** live reference for the development CLI (version `0.0.0.dev0`).
+**Status:** live reference for the v0.0.3 successor CLI.
 **Entrypoint:** `project-ai` (installed via `uv run pip install -e packages/cli`)
 **Help:** `project-ai --help` (Typer-generated)
 
@@ -39,7 +39,7 @@ Prints the development version string. No network call.
 
 ```
 $ project-ai version
-0.0.0.dev0
+0.0.3
 ```
 
 ### `project-ai health`
@@ -50,7 +50,7 @@ Calls `GET /health/live` and prints the response.
 $ project-ai health
 {
   "status": "live",
-  "version": "0.0.0.dev0"
+  "version": "0.0.3"
 }
 ```
 

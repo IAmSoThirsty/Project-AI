@@ -4,7 +4,7 @@
 # every produced artifact. Callable both locally and from CI, matching how
 # tools/acceptance_gate.ps1's Build-And-Smoke-Desktop already works in both contexts.
 #
-# WiX Open Source Maintenance Fee: this repo is pre-alpha (0.0.0.dev0, no revenue), so the
+# WiX Open Source Maintenance Fee: this repo is pre-alpha (0.0.3, no revenue), so the
 # free-use terms of the OSMF apply -- see docs/deployment/WINDOWS_INSTALLER.md for the
 # revenue threshold and what to do if that ever changes. `-acceptEula wix7` below accepts
 # the EULA text (free, no payment) required by WiX v7's CLI; see

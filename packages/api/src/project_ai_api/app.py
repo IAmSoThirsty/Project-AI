@@ -5,26 +5,30 @@ from __future__ import annotations
 import hmac
 import json
 import os
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Annotated, Literal, cast
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Response, Security, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from kernel.version import PROJECT_AI_VERSION
+from project_ai_waterfall.transport import WaterfallRuntime
 from taar.errors import TaarError
+from waterfall_adapter import WaterfallAdapter
 
 from accounts import (
     AccountRepository,
     AccountService,
     AccountServiceError,
     InterfacePermission,
+    InvalidMachineCredential,
     PermissionDenied,
     PostgresAccountRepository,
 )
 from atlas import SUBORDINATION_NOTICE, NarrativeArchetype, SludgeSandboxError, get_sludge_sandbox
 from project_ai_api.atlas_workflows import install_atlas_workflow_routes
 from project_ai_api.auth import SESSION_COOKIE_SCHEME, install_auth_routes
+from project_ai_api.metrics import install_metrics
 from project_ai_api.models import (
     AtlasSludgeEventDetailResponse,
     AtlasSludgeEventRecord,
@@ -56,6 +60,10 @@ from project_ai_api.screening import (
 )
 from project_ai_api.swr_workflows import build_swr_runtime, install_swr_workflow_routes
 from project_ai_api.taar_workflows import TaarInspectionService, install_taar_workflow_routes
+from project_ai_api.waterfall_workflows import (
+    build_waterfall_integration,
+    install_waterfall_routes,
+)
 from project_ai_api.workflows import install_workflow_routes
 from security import AppendOnlyAuditRelay, receive_canary_hit, receive_verdict
 from swr import WarRoomCore
@@ -69,8 +77,8 @@ type AuditRecord = dict[str, JsonScalar]
 MACHINE_BEARER_SCHEME = HTTPBearer(
     scheme_name="machineBearer",
     description=(
-        "Shared machine bearer token (PROJECT_AI_API_TOKEN); "
-        "not a human credential and never issued to a browser."
+        "Per-program machine credential; development may use the bootstrap "
+        "PROJECT_AI_API_TOKEN until credentials are provisioned."
     ),
     auto_error=False,
 )
@@ -78,6 +86,25 @@ MACHINE_BEARER_SCHEME = HTTPBearer(
 
 def _optional_path(value: str | None) -> Path | None:
     return Path(value).expanduser() if value and value.strip() else None
+
+
+def _secret_value(explicit: str | None, environment: str) -> str | None:
+    """Resolve a secret from an argument, environment value, or mounted file."""
+    if explicit is not None:
+        return explicit
+    direct_value = os.getenv(environment)
+    file_path = os.getenv(f"{environment}_FILE")
+    if direct_value is not None and file_path is not None:
+        raise ValueError(f"{environment} and {environment}_FILE must not both be set")
+    if file_path is None:
+        return direct_value
+    try:
+        file_value = Path(file_path).read_text(encoding="utf-8").strip()
+    except OSError as error:
+        raise ValueError(f"Unable to read {environment}_FILE") from error
+    if not file_value:
+        raise ValueError(f"{environment}_FILE must not be empty")
+    return file_value
 
 
 def _default_registry_path() -> Path | None:
@@ -183,9 +210,11 @@ def create_app(
     instance_name: str | None = None,
     taar_repo_root: Path | None = None,
     screening_quarantine_dir: Path | None = None,
+    waterfall_adapter: WaterfallAdapter | None = None,
+    waterfall_runtime: WaterfallRuntime | None = None,
 ) -> FastAPI:
     """Create an app with explicit, injectable runtime state."""
-    configured_token = api_token if api_token is not None else os.getenv("PROJECT_AI_API_TOKEN")
+    configured_token = _secret_value(api_token, "PROJECT_AI_API_TOKEN")
     configured_instance_name = (
         instance_name
         if instance_name is not None
@@ -214,28 +243,25 @@ def create_app(
         else os.getenv("PROJECT_AI_BOOTSTRAP_TRUST_PRIVATE_PROXY", "false").lower()
         in {"1", "true", "yes"}
     )
-    configured_database_url = database_url or os.getenv("PROJECT_AI_DATABASE_URL")
+    configured_database_url = _secret_value(
+        database_url if database_url else None,
+        "PROJECT_AI_DATABASE_URL",
+    )
+    configured_setup_secret = _secret_value(account_setup_secret, "PROJECT_AI_SETUP_SECRET")
+    configured_mfa_key = _secret_value(None, "PROJECT_AI_MFA_KEY")
     configured_account_path = account_db_path or _optional_path(os.getenv("PROJECT_AI_ACCOUNT_DB"))
     configured_accounts = account_service
     if configured_accounts is None and configured_database_url:
         configured_accounts = AccountService(
             PostgresAccountRepository(configured_database_url),
-            setup_secret=(
-                account_setup_secret
-                if account_setup_secret is not None
-                else os.getenv("PROJECT_AI_SETUP_SECRET")
-            ),
-            mfa_encryption_key=os.getenv("PROJECT_AI_MFA_KEY"),
+            setup_secret=configured_setup_secret,
+            mfa_encryption_key=configured_mfa_key,
         )
     elif configured_accounts is None and configured_account_path is not None:
         configured_accounts = AccountService(
             AccountRepository(configured_account_path),
-            setup_secret=(
-                account_setup_secret
-                if account_setup_secret is not None
-                else os.getenv("PROJECT_AI_SETUP_SECRET")
-            ),
-            mfa_encryption_key=os.getenv("PROJECT_AI_MFA_KEY"),
+            setup_secret=configured_setup_secret,
+            mfa_encryption_key=configured_mfa_key,
         )
     configured_workflow_path = workflow_db_path or _optional_path(
         os.getenv("PROJECT_AI_WORKFLOW_DB")
@@ -245,7 +271,28 @@ def create_app(
         configured_workflows = WorkflowService(PostgresWorkflowRepository(configured_database_url))
     elif configured_workflows is None and configured_workflow_path is not None:
         configured_workflows = WorkflowService(WorkflowRepository(configured_workflow_path))
-    configured_execution_secret = execution_secret or os.getenv("PROJECT_AI_EXECUTION_SECRET")
+    configured_execution_secret = _secret_value(
+        execution_secret if execution_secret else None,
+        "PROJECT_AI_EXECUTION_SECRET",
+    )
+    machine_credentials_required = os.getenv(
+        "PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED", "false"
+    ).lower() in {"1", "true", "yes", "on"}
+    configured_waterfall_runtime = waterfall_runtime
+    configured_waterfall_adapter = waterfall_adapter
+    waterfall_enabled = os.getenv("PROJECT_AI_WATERFALL_ENABLED", "false").lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+    if configured_waterfall_runtime is None and configured_waterfall_adapter is None:
+        configured_waterfall_runtime, configured_waterfall_adapter = build_waterfall_integration(
+            enabled=waterfall_enabled,
+            config_path=_optional_path(os.getenv("PROJECT_AI_WATERFALL_CONFIG")),
+            execution_secret=configured_execution_secret,
+            audit_relay=relay,
+        )
     configured_swr = swr_runtime
     if configured_swr is None and configured_execution_secret:
         configured_bundle_dir = _optional_path(os.getenv("PROJECT_AI_SWR_BUNDLE_DIR"))
@@ -276,32 +323,85 @@ def create_app(
         docs_url="/docs",
         redoc_url=None,
     )
+    install_metrics(application)
 
-    def _check_machine_credential(credential: HTTPAuthorizationCredentials | None) -> None:
-        if not configured_token or relay is None:
+    def _check_machine_credential(
+        credential: HTTPAuthorizationCredentials | None,
+        request: Request,
+        required_scope: str | None = None,
+    ) -> None:
+        if relay is None:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Protected API surfaces are not configured",
             )
-        if credential is None or not hmac.compare_digest(
-            credential.credentials.encode("utf-8"), configured_token.encode("utf-8")
-        ):
+        if credential is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid bearer token",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+        if configured_accounts is not None:
+            stored_credentials = configured_accounts.repository.machine_credentials()
+            if stored_credentials or machine_credentials_required:
+                try:
+                    principal = configured_accounts.authenticate_machine_credential(
+                        credential.credentials, required_scope
+                    )
+                except PermissionDenied as error:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN, detail=str(error)
+                    ) from error
+                except InvalidMachineCredential as error:
+                    raise HTTPException(
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail="Invalid machine credential",
+                        headers={"WWW-Authenticate": "Bearer"},
+                    ) from error
+                request.state.machine_credential = principal
+                return
+        if not configured_token:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Protected API surfaces are not configured",
+            )
+        if machine_credentials_required or not hmac.compare_digest(
+            credential.credentials.encode("utf-8"), configured_token.encode("utf-8")
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid machine credential",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
-    def require_machine_auth(
-        credential: Annotated[
-            HTTPAuthorizationCredentials | None, Security(MACHINE_BEARER_SCHEME)
-        ] = None,
-    ) -> None:
-        _check_machine_credential(credential)
+    def _machine_auth_for_scope(required_scope: str | None) -> Callable[..., None]:
+        def dependency(
+            request: Request,
+            credential: Annotated[
+                HTTPAuthorizationCredentials | None, Security(MACHINE_BEARER_SCHEME)
+            ] = None,
+        ) -> None:
+            _check_machine_credential(credential, request, required_scope)
 
-    machine_protected = [Depends(require_machine_auth)]
+        return dependency
+
+    def require_machine_scope(scope: str) -> Callable[..., None]:
+        return _machine_auth_for_scope(scope)
+
+    def machine_identity(request: Request) -> dict[str, str]:
+        principal = getattr(request.state, "machine_credential", None)
+        if principal is None:
+            return {}
+        return {
+            "machine_credential_id": principal.id,
+            "machine_credential_label": principal.label,
+        }
+
+    machine_write_protected = [Depends(require_machine_scope("evidence.write"))]
+    analysis_protected = [Depends(require_machine_scope("analysis.generate"))]
 
     def require_evidence_auth(
+        request: Request,
         credential: Annotated[
             HTTPAuthorizationCredentials | None, Security(MACHINE_BEARER_SCHEME)
         ] = None,
@@ -318,7 +418,7 @@ def create_app(
                 ) from error
             except AccountServiceError:
                 pass
-        _check_machine_credential(credential)
+        _check_machine_credential(credential, request, "evidence.read")
 
     evidence_protected = [Depends(require_evidence_auth)]
 
@@ -352,6 +452,13 @@ def create_app(
         relay,
         configured_taar,
         taar_configuration_error,
+    )
+    install_waterfall_routes(
+        application,
+        adapter=configured_waterfall_adapter,
+        runtime=configured_waterfall_runtime,
+        audit_relay=relay,
+        require_machine_scope=require_machine_scope,
     )
 
     @application.get("/health/live", response_model=HealthResponse)
@@ -584,6 +691,29 @@ def create_app(
                     summary="Registered package; no shared run contract is exposed.",
                 ),
                 ModuleSurface(
+                    id="waterfall",
+                    label="Thirstys Waterfall",
+                    category="operations",
+                    maturity="implemented",
+                    interface_status=(
+                        "available"
+                        if configured_waterfall_adapter is not None
+                        and configured_waterfall_adapter.v3q_configured
+                        and configured_waterfall_runtime is not None
+                        and relay is not None
+                        else "backend_only"
+                    ),
+                    authority="Shared Project-AI/V3Q authority contract through the execution gate",
+                    summary=(
+                        "Machine-authenticated status and allow-listed operations are available."
+                        if configured_waterfall_adapter is not None
+                        and configured_waterfall_adapter.v3q_configured
+                        and configured_waterfall_runtime is not None
+                        and relay is not None
+                        else "Copied runtime is installed; V3Q gate, runtime, and audit must be configured."
+                    ),
+                ),
+                ModuleSurface(
                     id="api",
                     label="Development gateway",
                     category="operations",
@@ -616,14 +746,16 @@ def create_app(
         "/chimera/verdict",
         response_model=AuditWriteResponse,
         status_code=status.HTTP_202_ACCEPTED,
-        dependencies=machine_protected,
+        dependencies=machine_write_protected,
     )
-    def chimera_verdict(request: VerdictRequest) -> AuditWriteResponse:
+    def chimera_verdict(request: VerdictRequest, http_request: Request) -> AuditWriteResponse:
+        identity = machine_identity(http_request)
         record = receive_verdict(
             active_relay(),
             action_id=request.action_id,
             verdict=request.verdict,
             source=request.source,
+            **identity,
         )
         return AuditWriteResponse(event=str(record["event"]), hash=str(record["hash"]))
 
@@ -631,11 +763,15 @@ def create_app(
         "/chimera/canary",
         response_model=AuditWriteResponse,
         status_code=status.HTTP_202_ACCEPTED,
-        dependencies=machine_protected,
+        dependencies=machine_write_protected,
     )
-    def chimera_canary(request: CanaryRequest) -> AuditWriteResponse:
+    def chimera_canary(request: CanaryRequest, http_request: Request) -> AuditWriteResponse:
+        identity = machine_identity(http_request)
         record = receive_canary_hit(
-            active_relay(), canary_value=request.canary_value, context=request.context
+            active_relay(),
+            canary_value=request.canary_value,
+            context=request.context,
+            **identity,
         )
         return AuditWriteResponse(event=str(record["event"]), hash=str(record["hash"]))
 
@@ -643,7 +779,7 @@ def create_app(
         "/atlas/sludge",
         response_model=AtlasSludgeResponse,
         status_code=status.HTTP_202_ACCEPTED,
-        dependencies=machine_protected,
+        dependencies=analysis_protected,
         responses={
             status.HTTP_403_FORBIDDEN: {
                 "model": ScreeningBlockResponse,
@@ -654,7 +790,10 @@ def create_app(
             }
         },
     )
-    def atlas_sludge(request: AtlasSludgeRequest, response: Response) -> AtlasSludgeResponse:
+    def atlas_sludge(
+        request: AtlasSludgeRequest, response: Response, http_request: Request
+    ) -> AtlasSludgeResponse:
+        identity = machine_identity(http_request)
         screening_summary = input_screen.screen_payload(
             request.rs_snapshot, source="atlas.sludge", relay=active_relay()
         )
@@ -677,6 +816,7 @@ def create_app(
                 "narrative_id": narrative.narrative_id,
                 "source_snapshot_sha256": narrative.source_snapshot_sha256,
                 "stack": narrative.stack,
+                **identity,
             },
         )
         response.headers["X-Cerberus-Screening"] = screening_summary

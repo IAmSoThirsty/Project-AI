@@ -21,7 +21,7 @@ const EXAMPLE_BUNDLE = JSON.stringify(
   {
     bundle_id: "bundle-1",
     created_at: "2026-07-16T00:00:00+00:00",
-    atlas_version: "0.0.0.dev0",
+    atlas_version: "0.0.3",
     config_hashes: { atlas: "a".repeat(64) },
     data_hashes: { source: "b".repeat(64) },
     seeds: { projection: "seed-1" },

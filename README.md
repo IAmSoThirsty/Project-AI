@@ -16,18 +16,18 @@ embed governance authority.
 
 ## Current status
 
-- Development version: `0.0.0.dev0`.
+- Local successor version: `0.0.3` (not yet committed, tagged, or published).
 - Active branch: `main`.
 - Stage 18 local acceptance: accepted from a detached clean checkout.
-- Development checkpoint: `main` is pushed and GitHub Actions CI is green
-  through the pre-deployment output commit
-  `6fdb658f76008b393e7a6c2b42814bb9f995e5e7` in run `28367849567`.
-- No version tag, GitHub Release, package publication, image publication,
-  deployment, or production-readiness claim is part of this checkpoint.
+- Published `v0.0.2` is superseded because its exact-commit CI failed and it
+  does not contain the current hardening work.
+- The local v0.0.3 candidate passes local remediation gates but still requires
+  an immutable commit, green remote release/security evidence, owner-controlled
+  V3Q key rotation and ratification, external proof custody, an approved
+  ingress/backup overlay, target-cluster rehearsal, and CAB approval.
 
-See `docs/internal/REBUILD_EXECUTION_PLAN.md`,
-`docs/internal/STAGE_18_ACCEPTANCE.md`,
-`docs/internal/STAGE_19_5_PRE_DEPLOYMENT_ACCEPTANCE.md`, and
+See `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`,
+`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`, and
 `docs/operations/CONTINUITY_MAP.md` for the current evidence trail.
 
 ## Quick start
@@ -42,6 +42,9 @@ uv run python tools/canonical_replay.py
 
 # Verify pre-deployment evidence and operator docs.
 uv run python tools/verify_pre_deployment.py
+
+# List every current blocker in one diagnostic pass (still exits non-zero when blocked).
+uv run python tools/verify_pre_deployment.py --report
 
 # Run the core Python validation used by the local checkpoint.
 uv run pytest
@@ -68,7 +71,7 @@ deployed stack. Read them in this order on first contact:
    service endpoints, CLI install, K8s validation, frozen-history
    verification, CI command mapping.
 2. **`docs/architecture.md`** — package dependency graph (downward-only),
-   12-package overview, 7-service Compose stack, governance pipeline
+   package/application overview, 9-service Compose stack, governance pipeline
    (kernel → governance → capability → execution), container hardening.
 3. **`docs/security.md`** — fail-closed execution gate, capability token
    semantics, container security table, secret scanning, audit trail
@@ -84,7 +87,7 @@ deployed stack. Read them in this order on first contact:
 7. **`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`** — the pre-deploy
    gate (the 4 canonical gates + the evidence they must produce).
 8. **`docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md`** — start/verify/inspect/
-   stop the 7-service Compose stack.
+   stop the 9-service Compose stack.
 9. **`docs/provenance.md`** — frozen-history SHA-256 chain verification,
    paper corpus provenance, merge provenance.
 
@@ -125,9 +128,11 @@ tools/
 
 ## Build status
 
-Local acceptance and remote development CI are green for the current checkpoint,
-but this repository remains a development baseline. Open post-acceptance work is
-tracked in the continuity map and stage/session ledgers.
+The local v0.0.3 successor passes the recorded local acceptance gates. Remote
+CI for the published v0.0.2 checkpoint is red, and the v0.0.3 successor remains
+uncommitted, so no immutable successor CI claim exists yet. The tracked
+production host is still a placeholder and remote backup is unconfigured;
+open production work is tracked in the continuity map and CAB records.
 
 ## License
 

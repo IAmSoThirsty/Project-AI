@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-canonical"
-version = "0.0.2"
+version = "0.0.3"
 description = "Canonical state for the execution-governance spine (Phase B-3 recovery)"
 readme = "README.md"
 requires-python = "==3.12.10"

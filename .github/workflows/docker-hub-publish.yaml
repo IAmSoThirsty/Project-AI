@@ -10,6 +10,9 @@ env:
   REGISTRY_HUB: docker.io
   REGISTRY_OWNER: iamsothirsty
 
+permissions:
+  contents: read
+
 # `strategy` is only valid at job level, so the per-surface matrices live in
 # separate jobs (mirroring publish.yaml's build-web / build-adapters split).
 # The original single-job form put `strategy` inside steps, which GitHub

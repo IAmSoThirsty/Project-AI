@@ -1,6 +1,6 @@
 """Unit tests for atlas.bayesian module (Phase J2.3.1).
 
-Per Thirstys standards: production-ready, full coverage of:
+Per Thirstys standards: local, deterministic coverage of:
 - Every enum value
 - Every dataclass validation path (DriverDependency, BayesianClaim,
   BayesianEvidence, BayesianConfig, BayesianAnalysis)

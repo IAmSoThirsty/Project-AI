@@ -1,5 +1,10 @@
 # Vault Recovery (recovered from Project-AI-vault)
 
+> Recovery index for historical/reference material. Contents are not current
+> release evidence or production approval; use the current pre-deployment
+> checklist and CAB evidence bundle for successor status.
+> Current deployment approval remains fail-closed until those successor gates pass.
+
 Miscellaneous vault subdirectories and root-level documents
 recovered from ``T:\00-Active\Project-AI-vault\``.
 

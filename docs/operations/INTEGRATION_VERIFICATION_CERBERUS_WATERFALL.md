@@ -1,11 +1,13 @@
 # Integration Verification — Cerberus (00-Active) and Thirstys-Waterfall
 
-- **Status:** VERIFICATION COMPLETE; integration NOT executed (planning/verification only,
-  per user directive 2026-07-17: "look at two more repos and verify a plan for integration").
-- **Repos reviewed (read-only):**
+- **Status:** standalone continuity preserved; Project-AI rebuild and governed
+  adapter are implemented and locally replay-verified. Live target actuation and
+  authenticated route evidence remain pending.
+- **Repos reviewed:**
   - `T:\00-Active\Cerberus` (`cerberus-guard-bot` 0.1.0, branch `main`, HEAD `4d3400c`)
   - `T:\01-Projects\Thirstys-waterfall` (`thirstys-waterfall` 1.0.0, branch `main`,
-    HEAD `0158ec8`, **dirty worktree** — another agent (Sol5.6-codex) is actively working it)
+  HEAD `0158ec8`, **dirty worktree** — standalone release lane preserved; this
+  pass changed only web dependency pins and the production Dockerfile hardening)
 - **Plan under verification:** `T:\00-Active\Cerberus\INTEGRATION_PLAN_PROJECT_AI_BEGINNINGS.md`
   (DRAFT, Hermes, 2026-07-17). Thirstys-Waterfall has no PAB-integration plan of its own
   (`SYSTEM_INTEGRATION_MAXIMUM_DESIGN.md` is internal architecture only); a recommended plan
@@ -99,7 +101,7 @@
 
 ---
 
-## Part 2 — Thirstys-Waterfall integration plan (proposed; no prior plan existed)
+## Part 2 — Thirstys-Waterfall integration plan
 
 ### What the repo actually is (verified)
 
@@ -108,45 +110,104 @@ A standalone privacy/network-actuation suite: 18 module categories
 `ad_annihilator`, `ai_assistant`, `consigliere`, ...), central `orchestrator.py` with a
 global `kill_switch.py`, own web UI (`web/`), Kubernetes kustomize manifests
 (`bridge/base` + overlays), single runtime dependency (`cryptography`), Python ≥3.8.
-Docs claim 309/309 tests passing — **not executed in this verification** (foreign repo,
-active worktree; would require its own isolated environment).
+The copied standalone replay suite has now been executed in the Project-AI lane:
+313 passed with no warnings. The source checkout's locked full suite also passes
+at 309 tests with no warnings. The source checkout remains
+dirty and its release lane is still independently maintained.
 
-### Why it must NOT be vendored into the workspace now
+### Rebuild boundary and standalone continuity
 
 1. **It actuates the real world** (VPN state, firewall rules, Wi-Fi, remote access).
    Under PAB's constitution every consequential effect must route through
    governance → capability → `ExecutionGate`. Vendoring 97 modules without gating them
    would import a large ungoverned actuation surface — the exact anti-pattern ADR-002's
    context names for global-scenario egress.
-2. **Active foreign lane:** the worktree is dirty (another agent mid-work). Any move
-   now risks clobbering in-flight changes.
-3. Scale: 97 modules across 18 categories versus the workspace's port-wave discipline.
+2. **Active foreign lane:** the standalone worktree remains independently usable and
+   is maintained as its own release lane. A separate security-only hardening pass
+   updated its web dependencies and production Docker image; no Project-AI
+   authority or adapter code was written back into that product.
+3. Scale: 97 modules across 18 categories; the copy is retained as a
+   provenance-preserving rebuild lane rather than treated as a second authority.
 
 ### Recommended integration shape
 
-- **W0 (now):** Waterfall remains a standalone external application. No cross-repo
-  imports in either direction. Coordinate any code movement with its active agent.
-- **W1 (first real slice, machine lane):** a thin governed adapter package
+- **W0 (completed):** Waterfall remains a standalone independently usable product.
+  A provenance-preserving copy now lives at `packages/thirstys-waterfall`; it is
+  sourced from the standalone checkout and does not replace that product's
+  release lane. The standalone web image received independent dependency
+  hardening (`Flask-CORS 4.0.2`, `python-engineio 4.13.2`,
+  `python-socketio 5.16.2`, `gunicorn 22.0.0`, and current setuptools/wheel).
+- **W1 (adapter boundary completed; machine activation pending):** a thin governed adapter package
   (`packages/waterfall-adapter`) exposing a *small allowlist* of consequential
   operations (e.g. `vpn.connect`, `firewall.rule_change`, `kill_switch.trigger`) as
   `ActionRequest`s through the canonical gate, mirroring the SWR pattern: server-side
   scoped one-use capability, governance recheck, durable receipt, Chimera audit. The
-  adapter talks to Waterfall over its local API/CLI; Waterfall itself never holds PAB
-  authority and PAB never embeds Waterfall's kill switch (it stays local-sovereign).
-- **W2:** read-only observability in the module catalog
-  (`/api/v1/modules` entry, `interface_status="backend_only"` → external service) and,
-  later, optional MCP tools for status reads only.
-- **Prerequisite:** ADR-002 (per-program machine credentials) should land before W1 so
-  the adapter authenticates as its own program, not the shared token.
+  adapter talks to the copied or standalone Waterfall runtime through the same
+  authority contract; no second authority or signing secret is introduced.
+- **W2 (implemented locally):** module-catalog and machine-authenticated API
+  routes at `/api/v1/modules/waterfall/status` and
+  `/api/v1/modules/waterfall/operations`. The operation route accepts only the
+  adapter allow-list, requires a valid audit relay and V3Q-wired gate, and
+  records governance/event/audit hashes. It remains unavailable until the
+  target supplies the runtime, execution secret, V3Q registry, and audit path.
+- **Prerequisite for live activation:** ADR-002 (per-program machine credentials)
+  is implemented in the local rebuild. The target still must provision the
+  Waterfall credential, enable enforcement, and attach target authentication
+  and revocation evidence before live activation.
 
-### Acceptance criteria for W1 (when scheduled)
+### W1 implementation status — adapter boundary completed (2026-07-19)
 
-- [ ] Deny-by-default proven: no gate/authority → no Waterfall call (tests mirror the
+The first governed slice now lives in the Beginnings workspace at
+`packages/waterfall-adapter`. It is intentionally an adapter, not a vendored
+copy of Waterfall:
+
+- `WaterfallAdapter` accepts only `vpn.connect`, `firewall.rule_change`, and
+  `kill_switch.trigger`.
+- Missing `ExecutionGate`, `CapabilityAuthority`, or injected transport denies
+  before any Waterfall call.
+- Configured calls create an exact-scope, 60-second one-use capability and
+  submit an `ActionRequest` through the canonical gate.
+- The adapter returns the gate's governance-evidence and event hashes.
+- Waterfall and Project-AI use the same authority contract. The copied runtime
+  keeps its implementation boundary, while consequential calls still enter via
+  the Project-AI gate and no signing secret is copied into either product lane.
+- An in-process transport now maps the adapter allow-list to the copied runtime;
+  the standalone web surface remains unchanged because it has health/status
+  endpoints but no consequential-operation API. No fake endpoint was added.
+
+The package is registered as the `project-ai-waterfall-adapter` uv workspace
+member. Its four focused tests cover deny-by-default, operation allow-listing,
+missing transport, and a gated allow path with evidence.
+
+### Project-AI rebuild status — copied runtime and replay evidence (2026-07-19)
+
+`packages/thirstys-waterfall` contains the copied runtime, integrated
+specifications, web/config/bridge assets, security metadata, examples, and the
+standalone test suite. `PROVENANCE.md` records source checkout `0158ec8` and
+the dirty-source condition at copy time. The typed `project_ai_waterfall`
+transport maps only the adapter allow-list to the copied runtime; it is not a
+second authority. The replay suite is the behavioral gate for the copied tree;
+the copied source/tests/examples now pass direct Ruff validation, while strict
+Mypy remains enforced on the typed transport and governed adapter surface.
+
+The API image now installs both workspace packages and imports them at `0.0.3`.
+`PROJECT_AI_WATERFALL_ENABLED=false` is the safe default; explicit activation
+constructs the copied runtime only after V3Q, execution-secret, and audit
+configuration checks pass.
+
+### Acceptance criteria for W1
+
+- [x] Deny-by-default proven: no gate/authority → no Waterfall call (tests mirror the
       cross-engine dispatcher suite).
-- [ ] Every executed operation produces governance-evidence + event hashes in the audit
+- [x] Every executed operation produces governance-evidence + event hashes in the audit
       chain.
-- [ ] Kill-switch semantics documented: PAB can *request* it through the gate; Waterfall
-      retains independent local authority to trigger it.
+- [x] Kill-switch semantics documented: PAB and Waterfall share the same authority
+      contract; the request still passes through the gate before runtime actuation.
+
+Remaining for a live machine lane: provision the scoped Waterfall credential
+through the owner/MFA administration surface, then prove the target
+deployment/rollback path. The adapter deliberately fails closed until those
+pieces exist.
 
 ---
 
@@ -157,9 +218,16 @@ active worktree; would require its own isolated environment).
   (collection fails resolving `cerberus.config` to the PAB file — see Part 1).
 - PAB-side facts: `packages/cerberus` pyproject + module tree; `accounts` import of
   `PasswordHasher`; `.project-ai/automation/quarantine` existence.
+- Waterfall rebuild and API: copied replay `313 passed`; standalone locked full
+  suite `309 passed`; standalone repair gate `35/35`; standalone production-candidate image scan has zero HIGH/CRITICAL
+  findings and its live `/health` probe returns 200; adapter/API execution tests
+  green; strict Ruff/MyPy green on the governed surface; API image built with
+  both workspace packages installed.
 
-## Not executed (would be required for full claims)
+## Still not executed (required for production authorization)
 
 - The two repos' own CI suites in their own isolated environments (their green claims
   are recorded, not re-proven).
-- Any code movement, dependency change, or adapter implementation.
+- Target-cluster deployment, external V3Q owner rotation/ratification, target
+  ADR-002 credential provisioning, remote cosign/SBOM/security evidence, and
+  rollback rehearsal.

@@ -6,17 +6,25 @@ image:
   registry: ""
   owner: ""
   tag: ""
+  digests: {}
   pullPolicy: IfNotPresent
 
 # Kubernetes Secrets for development (optional)
 secrets:
   create: false  # Development uses local environment variables
+  required: false
+  existingSecret: ""
   api:
     token: ""  # Not used in development
     setupSecret: ""
     mfaKey: ""
     databaseUrl: ""
     executionSecret: ""
+
+# Thirsty's Standard V3 + Q enforcement is opt-in for development. Production
+# loads public verification keys only and fails application startup closed.
+v3q:
+  required: false
 
 # Storage - disabled in development (uses emptyDir)
 persistence:
@@ -37,6 +45,16 @@ rbac:
 # Network Policies - disabled in development
 networkPolicy:
   enabled: false  # Development allows all traffic
+  ingressController:
+    namespaceLabels:
+      kubernetes.io/metadata.name: ingress-nginx
+    podLabels:
+      app.kubernetes.io/component: controller
+  dns:
+    namespaceLabels:
+      kubernetes.io/metadata.name: kube-system
+    podLabels:
+      k8s-app: kube-dns
 
 # Pod Disruption Budgets - disabled in development
 podDisruptionBudgets:
@@ -45,17 +63,35 @@ podDisruptionBudgets:
 # Monitoring - disabled in development
 monitoring:
   enabled: false
+  # The chart integrates with an existing Prometheus Operator and Grafana
+  # dashboard sidecar. It does not deploy an embedded monitoring stack.
+  serviceMonitor:
+    labels:
+      release: prometheus
+  grafanaDashboard:
+    enabled: true
+    labels:
+      grafana_dashboard: "1"
+  networkPolicy:
+    namespaceLabels:
+      kubernetes.io/metadata.name: monitoring
+    podLabels:
+      app.kubernetes.io/name: prometheus
 
 # Alerting - disabled in development
 alerting:
   enabled: false
+  prometheusRule:
+    labels:
+      release: prometheus
 
 # Backup - disabled in development
 backup:
   enabled: false
   schedule: "0 2 * * *"
   retentionDays: 30
-  image: "busybox:1.36.1"
+  image: "busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"
+  imagePullPolicy: IfNotPresent
   # Remote upload is off by default everywhere: it requires an operator-provided
   # rclone config Secret (see backup.remote.secretName) mounted at
   # /remote-config/rclone.conf. With remote.enabled=false, the CronJob only
@@ -121,6 +157,7 @@ api:
   env:
     PROJECT_AI_INSTANCE_NAME: PROJECT-AI-LOCAL
     PROJECT_AI_API_TOKEN: ""
+    PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED: "false"
     PROJECT_AI_AUDIT_PATH: /data/chimera-audit.jsonl
     PROJECT_AI_DOI_REGISTRY: /app/docs/reference/DOI_REGISTRY.md
     PROJECT_AI_ACCOUNT_DB: /data/accounts.db

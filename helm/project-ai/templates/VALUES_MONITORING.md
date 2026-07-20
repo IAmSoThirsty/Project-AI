@@ -1,6 +1,52 @@
-# Health Monitoring & SLO Dashboard Configuration
+# External Monitoring Contract
 
-This Helm values configuration sets up Prometheus, Grafana, and custom dashboards for monitoring Project-AI governance and operational health.
+The Project-AI chart does not install or operate Prometheus, Grafana,
+Alertmanager, Loki, or kube-state-metrics. When `monitoring.enabled` and
+`alerting.enabled` are true, it emits:
+
+- a `ServiceMonitor` for the API `/metrics` endpoint;
+- a `PrometheusRule` using the API's real bounded HTTP/build metrics plus
+  kube-state-metrics series;
+- a Grafana dashboard discovery ConfigMap; and
+- NetworkPolicy ingress for the explicitly selected Prometheus pods.
+
+Production operators must provide the external monitoring stack, matching
+labels, Alertmanager receivers, dashboard sidecar/import behavior, retention,
+log aggregation, paging ownership, and live query/delivery evidence.
+
+Relevant values:
+
+```yaml
+monitoring:
+  enabled: true
+  serviceMonitor:
+    labels:
+      release: prometheus
+  grafanaDashboard:
+    enabled: true
+    labels:
+      grafana_dashboard: "1"
+  networkPolicy:
+    namespaceLabels:
+      kubernetes.io/metadata.name: monitoring
+    podLabels:
+      app.kubernetes.io/name: prometheus
+
+alerting:
+  enabled: true
+  prometheusRule:
+    labels:
+      release: prometheus
+```
+
+Before deployment, render with the approved namespace/values and verify the
+target cluster's operator selectors. After deployment, prove `/metrics`
+scraping, every alert expression, dashboard import/query results, and primary
+plus secondary alert delivery. Repository rendering and static checks are not
+substitutes for those target-environment proofs.
+
+<!-- Retired embedded-stack design draft retained only as historical context.
+It is not deployable configuration and must not be used as a source of truth.
 
 ```yaml
 monitoring:
@@ -241,3 +287,4 @@ When error budget is consumed, automated alerts trigger for investigation and re
 - **Service Down**: Any core service unreachable for 2+ minutes
 
 Configure alert routing in `alertmanager.yaml` to send to your incident management system.
+-->

@@ -5,15 +5,13 @@ on:
     branches: ["main"]
     tags: ["v*"]
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Manual image tag (e.g., v0.1.0)"
-        required: true
-        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
+
+permissions:
+  contents: read
 
 env:
   REGISTRY: ghcr.io
@@ -35,13 +33,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify release tag matches repository version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          python - <<'PY'
+          import tomllib
+
+          with open("pyproject.toml", "rb") as handle:
+              expected = f"v{tomllib.load(handle)['project']['version']}"
+          actual = "${{ github.ref_name }}"
+          if actual != expected:
+              raise SystemExit(f"release tag {actual!r} does not match repository version {expected!r}")
+          print(f"release identity verified: {actual}")
+          PY
+
       - name: Determine version
         id: version
         run: |
           if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
             VERSION="${{ github.ref_name }}"
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            VERSION="${{ github.event.inputs.tag }}"
+            VERSION="manual-$(date +%Y%m%d)-$(echo ${{ github.sha }} | cut -c1-7)"
           elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             VERSION="main-$(date +%Y%m%d)-$(echo ${{ github.sha }} | cut -c1-7)"
           else
@@ -328,6 +340,7 @@ jobs:
           docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api:${{ needs.image-metadata.outputs.version }}
           docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-docs-portal:${{ needs.image-metadata.outputs.version }}
           docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-proof-portal:${{ needs.image-metadata.outputs.version }}
+          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-operator-console:${{ needs.image-metadata.outputs.version }}
           docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-swr:${{ needs.image-metadata.outputs.version }}
           docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-atlas:${{ needs.image-metadata.outputs.version }}
           docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-arbiter-rlp:${{ needs.image-metadata.outputs.version }}
@@ -335,7 +348,7 @@ jobs:
 
       - name: Inspect image manifests
         run: |
-          for image in api docs-portal proof-portal swr atlas arbiter-rlp genesis; do
+          for image in api docs-portal proof-portal operator-console swr atlas arbiter-rlp genesis; do
             echo "=== $image ==="
             docker inspect ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${image}:${{ needs.image-metadata.outputs.version }} | \
               jq '.[] | {Architecture: .Architecture, Os: .Os, Created: .Created, Size: .Size}'
@@ -345,7 +358,7 @@ jobs:
 
       - name: Verify cosign keyless signatures
         run: |
-          for image in api docs-portal proof-portal swr atlas arbiter-rlp genesis; do
+          for image in api docs-portal proof-portal operator-console swr atlas arbiter-rlp genesis; do
             echo "=== verifying $image ==="
             cosign verify \
               --certificate-identity-regexp "^https://github.com/${{ github.repository }}/\.github/workflows/publish\.yaml@.*$" \
@@ -361,11 +374,53 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
+      packages: read
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Lowercase registry owner
         run: echo "REGISTRY_OWNER=$(echo '${{ env.REGISTRY_OWNER }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
+      - uses: docker/setup-buildx-action@18ce135bb5112fa8ce4ed6c17ab05699d7f3a5e0 # v3.11.0
+
+      - uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3.2.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Generate and verify immutable image overlay
+        run: |
+          mkdir -p build/release
+          overlay="build/release/project-ai-${{ needs.image-metadata.outputs.version }}-image-digests.yaml"
+          {
+            echo "image:"
+            echo "  tag: \"${{ needs.image-metadata.outputs.version }}\""
+            echo "  digests:"
+            for image in api docs-portal proof-portal operator-console swr atlas arbiter-rlp genesis; do
+              reference="${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${image}:${{ needs.image-metadata.outputs.version }}"
+              digest="$(docker buildx imagetools inspect "$reference" --format '{{json .Manifest.Digest}}' | tr -d '"')"
+              if [[ ! "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+                echo "::error::invalid digest for ${reference}: ${digest}" >&2
+                exit 1
+              fi
+              printf '    %s: %s\n' "$image" "$digest"
+            done
+          } > "$overlay"
+
+          helm template project-ai ./helm/project-ai \
+            --namespace project-ai-prod \
+            -f helm/values.prod.yaml \
+            -f "$overlay" | \
+            uv run --with pyyaml python tools/verify_helm_template.py \
+              --expected-namespace project-ai-prod \
+              --project-image-registry ghcr.io \
+              --project-image-owner "$REGISTRY_OWNER" \
+              --require-project-image-digests
 
       - name: Generate release notes
         run: |
@@ -379,6 +434,7 @@ jobs:
           - `project-ai-api:${{ needs.image-metadata.outputs.version }}`
           - `project-ai-docs-portal:${{ needs.image-metadata.outputs.version }}`
           - `project-ai-proof-portal:${{ needs.image-metadata.outputs.version }}`
+          - `project-ai-operator-console:${{ needs.image-metadata.outputs.version }}`
           - `project-ai-swr:${{ needs.image-metadata.outputs.version }}`
           - `project-ai-atlas:${{ needs.image-metadata.outputs.version }}`
           - `project-ai-arbiter-rlp:${{ needs.image-metadata.outputs.version }}`
@@ -386,13 +442,19 @@ jobs:
 
           ## Deployment
 
-          Update your Helm values:
+          Download the attached
+          `project-ai-${{ needs.image-metadata.outputs.version }}-image-digests.yaml`
+          overlay. It contains the exact OCI index digest resolved after all
+          eight images were published and signature-verified. Do not deploy by
+          changing only `image.tag`; the base production values intentionally
+          retain historical v0.0.2 digests.
 
           ```yaml
           image:
-            registry: ghcr.io/${{ env.REGISTRY_OWNER }}
             tag: ${{ needs.image-metadata.outputs.version }}
-            pullPolicy: IfNotPresent
+            digests:
+              api: sha256:<RELEASE-DIGEST>
+              # ...all eight release images...
           ```
 
           Then deploy:
@@ -400,7 +462,7 @@ jobs:
           ```bash
           helm upgrade --install project-ai ./helm/project-ai \
             -f helm/values.prod.yaml \
-            --set image.tag=${{ needs.image-metadata.outputs.version }}
+            -f project-ai-${{ needs.image-metadata.outputs.version }}-image-digests.yaml
           ```
 
           ## Verification
@@ -427,5 +489,6 @@ jobs:
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
         with:
           body_path: /tmp/release-notes.md
+          files: build/release/project-ai-${{ needs.image-metadata.outputs.version }}-image-digests.yaml
           draft: false
           prerelease: ${{ contains(needs.image-metadata.outputs.version, 'rc') || contains(needs.image-metadata.outputs.version, 'beta') }}

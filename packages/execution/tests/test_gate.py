@@ -224,7 +224,6 @@ def _v3q_gate(decision: dict[str, object]) -> ThirstysV3QGate:
     gate = ThirstysV3QGate.__new__(ThirstysV3QGate)
     object.__setattr__(gate, "_cel_free", False)
     object.__setattr__(gate, "_engine", _FakeV3QEngine(decision))
-    object.__setattr__(gate, "_owner_private_key", None)
     object.__setattr__(gate, "_operation_to_action", {})
     return gate
 
@@ -278,6 +277,33 @@ def test_v3q_allow_proceeds_to_execution() -> None:
 
 
 @pytestmark_v3q
+def test_v3q_require_approval_blocks_execution() -> None:
+    capabilities = authority()
+    calls: list[str] = []
+    gate = ExecutionGate(
+        governance=governance(),
+        capabilities=capabilities,
+        events=EventSpine(),
+        v3q_gate=_v3q_gate(
+            {
+                "decision": "require_approval",
+                "reason": "explicit approval required",
+                "action_class": "externally_consequential",
+                "control_ids": ["Q-003-B"],
+            }
+        ),
+    )
+    result = gate.submit_action(
+        request(),
+        capability_token=token(capabilities),
+        executor=lambda action: calls.append(action.action_id),
+    )
+    assert result.outcome is Outcome.DENY
+    assert "explicit approval required" in result.reason
+    assert calls == []
+
+
+@pytestmark_v3q
 def test_v3q_cel_unavailable_fails_closed_by_default() -> None:
     capabilities = authority()
     calls: list[str] = []
@@ -317,7 +343,6 @@ def test_v3q_engine_fault_fails_closed() -> None:
     boom_gate = ThirstysV3QGate.__new__(ThirstysV3QGate)
     object.__setattr__(boom_gate, "_cel_free", False)
     object.__setattr__(boom_gate, "_engine", _BoomEngine())
-    object.__setattr__(boom_gate, "_owner_private_key", None)
     object.__setattr__(boom_gate, "_operation_to_action", {})
     gate = ExecutionGate(
         governance=governance(),

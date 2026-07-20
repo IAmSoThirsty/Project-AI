@@ -42,6 +42,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
@@ -498,17 +499,30 @@ class MonteCarloEngine:
         return self.states.copy()
 
     def verify_determinism(self, other_seed: str) -> bool:
-        """Verify determinism by comparing with another run
-        using same seed.
+        """Replay the recorded run and compare every canonical state hash.
 
-        Returns: True if hashes match, False otherwise.
+        Returns ``False`` when the seed differs, no initial state has been
+        recorded, a recorded state was mutated, or the replay diverges.
         """
-        if other_seed != self.seed:  # noqa: SIM103
+        if other_seed != self.seed or not self.states:
             return False
 
-        # Would need to re-run and compare hashes
-        # This is a placeholder for the verification logic
-        return True
+        recorded_hashes: list[str] = []
+        for state in self.states:
+            if state.state_hash is None or state.state_hash != state.compute_hash():
+                return False
+            recorded_hashes.append(state.state_hash)
+
+        replay = MonteCarloEngine(
+            seed=other_seed,
+            coupling=deepcopy(self.coupling),
+            # Determinism verification must not emit duplicate audit records.
+            audit_trail=object(),
+        )
+        replay.set_initial_state(deepcopy(self.states[0]))
+        replay.run(len(self.states) - 1)
+        replay_hashes = [state.state_hash for state in replay.states]
+        return replay_hashes == recorded_hashes
 
 
 # ── Singleton factory ──────────────────────────────

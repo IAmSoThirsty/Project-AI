@@ -31,6 +31,18 @@ def test_assess_clean_content_is_info() -> None:
     # SHA-256 of the content
     assert len(a.content_hash) == 64
     assert a.truth_value == 0.5
+    assert a.sentiment_analysis == {"positive": 0.0, "negative": 0.0, "neutral": 1.0}
+
+
+def test_assess_content_reports_deterministic_lexical_sentiment() -> None:
+    """The assessment exposes bounded, transparent lexical sentiment scores."""
+    engine = CognitiveDefenseEngine()
+    assessment = engine.assess_content("hope and trust, not fear", source="user")
+    assert assessment.sentiment_analysis == {
+        "positive": 2 / 3,
+        "negative": 1 / 3,
+        "neutral": 0.0,
+    }
 
 
 def test_assess_manipulation_pattern_is_warning() -> None:

@@ -1,8 +1,12 @@
 # AI Agents Documentation
 
+> Recovered/reference material only: this directory is not current release
+> evidence or deployment approval. The successor remains fail-closed until
+> the current pre-deployment checklist and CAB evidence bundle pass.
+
 **Created by**: AGENT-033 (Source Code Documentation Specialist)
 **Date**: 2026-04-20
-**Status**: Production-Ready
+**Status**: Documentation-ready reference; not runtime deployment approval
 
 ---
 

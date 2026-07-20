@@ -1,5 +1,10 @@
 # 🔍 The Triumvirate - Comprehensive System Audit
 
+> Historical static-site audit. “Production-ready” in this document applies
+> only to the static information/portfolio site described here and does not
+> approve deployment of the Project-AI runtime. Current release status is
+> governed by `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`.
+
 **Audit Date**: January 3, 2026
 **Version**: 1.0.0
 **Auditor**: System Analysis Tool

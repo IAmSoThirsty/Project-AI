@@ -22,6 +22,16 @@ def test_bridge_records_and_verifies_chain_without_raw_canary(tmp_path: Path) ->
     assert "private-canary" not in path.read_text(encoding="utf-8")
 
 
+def test_bridge_materializes_a_valid_empty_genesis_chain(tmp_path: Path) -> None:
+    path = tmp_path / "chimera-audit.jsonl"
+
+    relay = start_audit_relay(path)
+
+    assert path.is_file()
+    assert path.read_text(encoding="utf-8") == ""
+    assert relay.verify() == (True, 0)
+
+
 def test_bridge_detects_tampering(tmp_path: Path) -> None:
     path = tmp_path / "chimera-audit.jsonl"
     relay = start_audit_relay(path)

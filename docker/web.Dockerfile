@@ -37,8 +37,10 @@ RUN pnpm --filter "@project-ai/${APP}" build
 # ── Runtime ────────────────────────────────────────────────────────────────
 FROM dhi.io/nginx:1-alpine3.24 AS runtime
 ARG APP
+COPY docker/nginx-main.conf /etc/nginx/nginx.conf
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/apps/web/${APP}/dist /usr/share/nginx/html
 HEALTHCHECK --interval=5s --timeout=3s --retries=12 --start-period=3s \
   CMD wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1
+USER 10001:10001
 EXPOSE 8080

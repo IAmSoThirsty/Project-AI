@@ -3,7 +3,13 @@
 > **📍 Location**: Root documentation index
 > **🎯 Purpose**: Master navigation hub for all Project-AI documentation
 > **👥 Audience**: All users (developers, operators, executives, auditors)
-> **🔄 Status**: Production-Ready ✓
+> **🔄 Status**: Recovered reference index; not deployment approval
+>
+> **Current release boundary (2026-07-19):** The repository's v0.0.3
+> successor remains fail-closed pending owner-controlled signing material
+> rotation, exact-manifest ratification, external evidence custody, immutable
+> remote CI evidence, and approved production operations. See the current
+> [CAB review pack](../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md).
 
 ---
 

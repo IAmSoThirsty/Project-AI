@@ -11,7 +11,7 @@ afterEach(() => {
 
 const dashboardPayload = {
   status: "ready",
-  version: "0.0.2",
+  version: "0.0.3",
   maturity: "development",
   authority_boundary: "This dashboard reports evidence; it grants no authority.",
   surfaces: [
@@ -64,7 +64,7 @@ function stubGateway() {
           ? modulesPayload
           : url.includes("/audit")
             ? { chain_valid: true, count: 3, filtered_count: 1, offset: 0, limit: 100, records: [{ event: "chimera.canary_hit", canary_sha256: "abc", timestamp: "now", hash: "hash" }] }
-            : { status: "live", version: "0.0.2" };
+            : { status: "live", version: "0.0.3" };
     return { ok: true, json: async () => payload, capturedHeaders: init?.headers };
   });
   vi.stubGlobal("fetch", fetchMock);

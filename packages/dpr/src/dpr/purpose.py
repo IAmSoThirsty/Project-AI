@@ -488,5 +488,5 @@ class PurposeFailureDetector:
         }
 
 
-# Placeholder: full integration with Phase 3-6 will connect these to DeliberationContext
-# and update the pipeline to call reflection triggers and check purpose constraints.
+# Integration boundary: the pre-alpha DPR pipeline does not yet connect these
+# analyzers to DeliberationContext or enforce PurposeConstraint automatically.

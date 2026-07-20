@@ -24,7 +24,7 @@ Development baseline for Project-AI. Not production-ready.
 # Install all packages in editable mode
 uv sync
 
-# Run the full test suite (117 tests)
+# Run the full test suite
 uv run pytest -q
 
 # Lint + format check
@@ -66,21 +66,21 @@ pnpm web:lint
 # Test (Vitest)
 pnpm web:test
 
-# Build (Vite, both portals)
+# Build all four web applications
 pnpm web:build
 ```
 
 ## Development container stack
 
 ```bash
-# Build all seven images
+# Build every Project-AI service image and resolve the PostgreSQL image
 docker compose build
 
-# Start all services (detached)
-docker compose up -d
+# Start all nine services and wait for health
+docker compose up -d --wait --wait-timeout 240
 
-# Check health
-docker compose ps
+# Verify health and container hardening
+python tools/verify_compose_health.py
 
 # Stop
 docker compose down
@@ -91,8 +91,10 @@ docker compose down
 | Service | URL | Notes |
 |---|---|---|
 | API gateway | http://127.0.0.1:8000/health/live | JSON health response |
+| Operator console | http://127.0.0.1:4175/healthz | React SPA |
 | Docs portal | http://127.0.0.1:4173/healthz | React SPA |
 | Proof portal | http://127.0.0.1:4174/healthz | React SPA |
+| PostgreSQL | internal (port 5432) | Shared human state; no host binding |
 | SWR adapter | internal (port 8000) | No host binding |
 | Atlas adapter | internal (port 8000) | No host binding |
 | Arbiter/RLP adapter | internal (port 8000) | No host binding |
@@ -113,8 +115,8 @@ uv run project-ai --help
 ## Kubernetes (development, no cluster required)
 
 ```bash
-# Validate manifests client-side
-helm template project-ai-dev helm/project-ai | kubectl apply --dry-run=client -f -
+# Validate manifests offline against repository invariants
+helm template project-ai-dev helm/project-ai | uv run python tools/verify_helm_template.py
 
 # Lint chart
 helm lint helm/project-ai
@@ -129,9 +131,10 @@ python tools/verify_frozen_history.py
 
 ## CI
 
-GitHub Actions workflow at `.github/workflows/ci.yaml` runs four jobs:
-`python`, `rust`, `node`, `compose`. Run the equivalent locally with the
-commands above before pushing.
+GitHub Actions workflow at `.github/workflows/ci.yaml` covers Python, Rust,
+Node/web, Compose, Android, Kubernetes, SBOM, desktop packaging, and the Windows
+installer. Run the applicable equivalents locally before pushing; only the
+exact pushed commit's remote results are immutable CI evidence.
 
 ## See also
 

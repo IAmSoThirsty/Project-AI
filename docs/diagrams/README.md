@@ -5,6 +5,10 @@ documentation recovered from
 ``T:\\00-Active\\Project-AI-vault\\Project-AI\\diagrams\\``
 (pre-J2-port snapshot of Project-AI-Beginnings).
 
+> **Scope boundary (2026-07-19):** These recovered diagrams are reference
+> assets, not deployment approval. Their production-quality descriptions do
+> not override the current successor's fail-closed CAB decision.
+
 ## What was recovered (42 files, 593 KB)
 
 ### Architecture diagrams (10 topics)

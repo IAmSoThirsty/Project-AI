@@ -1,6 +1,6 @@
 {
   "name": "@project-ai/proof-portal",
-  "version": "0.0.0-dev0",
+  "version": "0.0.3",
   "private": true,
   "type": "module",
   "scripts": {

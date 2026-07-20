@@ -44,6 +44,42 @@ def _client(tmp_path: Path) -> TestClient:
     )
 
 
+def test_api_token_can_be_loaded_from_a_mounted_secret_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    token_path = tmp_path / "api-token"
+    token_path.write_text(f"{TOKEN}\n", encoding="utf-8")
+    monkeypatch.setenv("PROJECT_AI_API_TOKEN_FILE", str(token_path))
+
+    client = TestClient(create_app(audit_path=tmp_path / "audit.jsonl", dois=()))
+
+    assert client.get("/api/v1/dashboard", headers=AUTH).status_code == 200
+
+
+def test_direct_and_file_secret_configuration_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    token_path = tmp_path / "api-token"
+    token_path.write_text(TOKEN, encoding="utf-8")
+    monkeypatch.setenv("PROJECT_AI_API_TOKEN", TOKEN)
+    monkeypatch.setenv("PROJECT_AI_API_TOKEN_FILE", str(token_path))
+
+    with pytest.raises(ValueError, match="must not both be set"):
+        create_app(dois=())
+
+
+@pytest.mark.parametrize("content", ["", "   \n"])
+def test_blank_secret_file_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, content: str
+) -> None:
+    token_path = tmp_path / "api-token"
+    token_path.write_text(content, encoding="utf-8")
+    monkeypatch.setenv("PROJECT_AI_API_TOKEN_FILE", str(token_path))
+
+    with pytest.raises(ValueError, match="must not be empty"):
+        create_app(dois=())
+
+
 def _auth_client(tmp_path: Path) -> TestClient:
     accounts = AccountService(
         AccountRepository(tmp_path / "accounts.db"),
@@ -143,6 +179,26 @@ def test_public_health_doi_and_replay_routes(tmp_path: Path) -> None:
     assert atlas["authority"] == "analysis_only"
     assert atlas["protected_operations"] == ["sludge_narrative"]
     assert "not a decision, authority grant, or actuation" in atlas["subordination_notice"]
+
+
+def test_public_metrics_expose_bounded_release_and_http_series(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+
+    assert client.get("/health/live").status_code == 200
+    response = client.get("/metrics")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/plain")
+    body = response.text
+    assert f'project_ai_build_info{{version="{PROJECT_AI_VERSION}"}} 1.0' in body
+    assert (
+        'project_ai_http_requests_total{method="GET",route="/health/live",status_code="200"}'
+        in body
+    )
+    assert (
+        'project_ai_http_request_duration_seconds_bucket{le="1.0",method="GET",route="/health/live"}'
+        in body
+    )
 
 
 def test_human_atlas_replay_is_bounded_audited_analysis_only(tmp_path: Path) -> None:
@@ -537,6 +593,72 @@ def test_owner_account_administration_and_permission_denial(tmp_path: Path) -> N
     workflow_denied = client.get("/api/v1/work/requests")
     assert workflow_denied.status_code == 403
     assert workflow_denied.json()["detail"] == "Password change required"
+
+
+def test_machine_credential_mode_requires_scoped_durable_token(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED", "true")
+    monkeypatch.delenv("PROJECT_AI_API_TOKEN", raising=False)
+    monkeypatch.delenv("PROJECT_AI_API_TOKEN_FILE", raising=False)
+    accounts = AccountService(
+        AccountRepository(tmp_path / "accounts.db"),
+        setup_secret="one-time-setup",
+        password_hasher=PasswordHasher(iterations=1_000),
+        mfa_encryption_key=MFA_KEY,
+    )
+    client = TestClient(
+        create_app(
+            api_token=None,
+            audit_path=tmp_path / "audit.jsonl",
+            dois=(),
+            account_service=accounts,
+        )
+    )
+    owner = _bootstrap_auth(client)
+    token = client.cookies.get("project_ai_session")
+    assert token is not None
+    _, session = accounts.authenticate(token)
+    accounts.repository.mark_session_mfa(session.id, datetime.now(UTC))
+
+    created = client.post(
+        "/api/v1/admin/machine-credentials",
+        headers={"X-CSRF-Token": str(owner["csrf_token"])},
+        json={"label": "Waterfall writer", "scopes": ["evidence.write"]},
+    )
+    assert created.status_code == 200
+    machine_token = created.json()["token"]
+    verdict = {"action_id": "machine-credential-test", "verdict": "DENY", "source": "pytest"}
+    assert (
+        client.post(
+            "/chimera/verdict", headers={"Authorization": "Bearer bootstrap"}, json=verdict
+        ).status_code
+        == 401
+    )
+    assert (
+        client.post(
+            "/chimera/verdict",
+            headers={"Authorization": f"Bearer {machine_token}"},
+            json=verdict,
+        ).status_code
+        == 202
+    )
+    credential_id = created.json()["credential"]["id"]
+    assert (
+        client.post(
+            f"/api/v1/admin/machine-credentials/{credential_id}/revoke",
+            headers={"X-CSRF-Token": str(owner["csrf_token"])},
+        ).status_code
+        == 200
+    )
+    assert (
+        client.post(
+            "/chimera/verdict",
+            headers={"Authorization": f"Bearer {machine_token}"},
+            json={**verdict, "action_id": "machine-credential-revoked"},
+        ).status_code
+        == 401
+    )
 
 
 def test_human_work_request_is_durable_non_actuating_and_step_up_guarded(tmp_path: Path) -> None:

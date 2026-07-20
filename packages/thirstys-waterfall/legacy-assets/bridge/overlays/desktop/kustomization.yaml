@@ -1,0 +1,10 @@
+#! kustomization.yaml
+# Generated code, do not edit
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - ../../base
+patches:
+    - path: thirstys-waterfall-C:\Users\Quencher\.gemini\antigravity\scratch\sovereign-repos\Thirstys-waterfall\config-persistentVolumeClaim.yaml
+    - path: thirstys-waterfall-service.yaml
+    - path: thirstys-waterfall-thirstys_data-persistentVolumeClaim.yaml

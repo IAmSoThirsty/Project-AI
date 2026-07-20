@@ -45,7 +45,7 @@ python tools/verify_compose_health.py
 Expected result:
 
 ```text
-compose runtime: 7/7 healthy and security settings verified
+compose runtime: 9/9 healthy and security settings verified
 ```
 
 Public probes:
@@ -54,6 +54,7 @@ Public probes:
 Invoke-RestMethod http://127.0.0.1:8000/health/live
 Invoke-RestMethod http://127.0.0.1:4173/healthz
 Invoke-RestMethod http://127.0.0.1:4174/healthz
+Invoke-RestMethod http://127.0.0.1:4175/healthz
 ```
 
 Protected audit probe:

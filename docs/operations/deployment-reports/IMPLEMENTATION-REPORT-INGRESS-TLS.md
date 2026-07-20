@@ -1,5 +1,12 @@
 # Ingress & TLS Implementation Report
 
+> **Current release boundary (2026-07-19):** This is a historical or
+> implementation-reference artifact, not current production evidence or
+> deployment approval. The v0.0.3 successor remains fail-closed until the
+> [pre-deployment checklist](../../deployment/PRE_DEPLOYMENT_CHECKLIST.md) and
+> [CAB evidence bundle](../cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md)
+> pass. Commands here are examples; this document does not prove deployment.
+
 ## Overview
 
 Implemented **external access layer** via Kubernetes Ingress with TLS termination. Services are now accessible via HTTPS through a unified public endpoint.

@@ -260,13 +260,22 @@ def test_run_triumvirate_pipeline_skip_validation() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_run_security_agent_scan_no_findings() -> None:
-    req = SecurityAgentRequest(agent_id="agent-1", target="/etc/passwd", operation="scan")
+def test_run_security_agent_scan_no_findings(tmp_path) -> None:
+    target = tmp_path / "safe.py"
+    target.write_text("value = 1\n", encoding="utf-8")
+    req = SecurityAgentRequest(agent_id="agent-1", target=str(target), operation="scan")
     res = run_security_agent_scan(req)
     assert isinstance(res, SecurityAgentResult)
     assert res.agent_id == "agent-1"
     assert res.success is True
     assert res.findings == ()
+
+
+def test_run_security_agent_scan_unavailable_target_fails_closed() -> None:
+    req = SecurityAgentRequest(agent_id="agent-1", target="/missing", operation="scan")
+    res = run_security_agent_scan(req)
+    assert res.success is False
+    assert res.error == "scan did not complete: target_unavailable"
 
 
 def test_run_security_agent_scan_invalid_request() -> None:

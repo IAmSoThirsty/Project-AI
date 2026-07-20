@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-kernel"
-version = "0.0.2"
+version = "0.0.3"
 description = "Deterministic evidence, invariant, state, replay, and time primitives for Project-AI"
 readme = "README.md"
 requires-python = "==3.12.10"

@@ -35,7 +35,7 @@ word_count: 1247
 - **Behavioral Anomaly Detection:** Statistical outlier detection
 - **Automated Test Generation:** Property-based testing for constitutional properties
 
-**Production Status:** ✅ Fully implemented, production-ready
+**Production Status:** ✅ Reference implementation documented; runtime approval remains external
 
 ---
 

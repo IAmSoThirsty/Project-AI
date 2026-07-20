@@ -26,6 +26,10 @@ compliance:
 
 # Security Infrastructure Documentation Index
 
+> Recovered/reference material only: this directory is not current release
+> evidence or deployment approval. The successor remains fail-closed until
+> the current pre-deployment checklist and CAB evidence bundle pass.
+
 **AGENT-045: Security Infrastructure Documentation Specialist**
 **Mission Status:** ACTIVE
 **Security Posture:** Defense-in-Depth Architecture

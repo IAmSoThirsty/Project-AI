@@ -1,6 +1,6 @@
 """Integration tests for atlas.audit + Atlas service (Phase J2.2.2).
 
-Per Thirstys standards: production-ready integration tests proving that
+Per Thirstys standards: local integration tests proving that
 every Atlas decision emits an audit event with full rationale. This
 implements the user's mission:
 

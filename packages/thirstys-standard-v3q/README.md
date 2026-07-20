@@ -11,6 +11,12 @@
 **Ed25519 authority authentication:** implemented and verified  
 **Owner ratification:** pending owner-controlled cryptographic signature
 
+**Checkout hygiene:** the Project-AI production verifier fails closed if an
+ignored `owner-private.json` is present anywhere in the checkout. Keep owner
+private material in an approved offline signing system only; rotate and retire
+any local copy before production validation. This package and its verifier do
+not read or use that material during online execution.
+
 The verification claims above apply to the included reference implementation and automated test environment. They do not claim that the gate is already wired into Project-AI, an agent host, CI, deployment infrastructure, or every external tool path.
 
 ## What is now executable
@@ -42,11 +48,15 @@ python -m thirstys_standard_runtime.cli cel-verify thirstys-standard-v3q.manifes
 pytest -q tests
 ```
 
-Expected test status for this release:
+Recorded standalone artifact test status:
 
 ```text
 23 passed
 ```
+
+The current Project-AI workspace suite contains 46 V3Q package tests, including
+the owner-key rotation safety tests. The recorded 23-test result remains the
+original standalone artifact evidence and does not establish owner ratification.
 
 The recorded evidence is in:
 
@@ -93,6 +103,7 @@ Create the key outside the repository:
 
 ```bash
 python tools/create_owner_key.py \
+  --key-id owner-<ROTATION-ID> \
   --private-out /secure/off-repo/owner-private.json \
   --public-out owner-public.json
 ```

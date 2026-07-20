@@ -188,56 +188,94 @@ def test_gate_facade_requires_cel_when_not_cel_free(manifest, owner_keys) -> Non
             ThirstysV3QGate(manifest, registry)
 
 
-# --- Production deployment path (config-driven, auto-minting, fail-safe) -------
+# --- Production deployment path (public registry, external proofs, fail-safe) --
 def test_build_gate_is_dormant_without_deployment_config() -> None:
-    # No owner key in the environment -> build_gate() resolves to None and the
+    # No explicit registry in development -> build_gate() resolves to None and the
     # system runs on its existing governance (safe default; CI stays green).
     import os
 
-    saved = os.environ.pop("THIRSTYS_V3Q_OWNER_KEY", None)
+    saved_required = os.environ.pop("THIRSTYS_V3Q_REQUIRED", None)
+    saved_registry = os.environ.pop("THIRSTYS_V3Q_REGISTRY", None)
     try:
         assert build_gate() is None
     finally:
-        if saved is not None:
-            os.environ["THIRSTYS_V3Q_OWNER_KEY"] = saved
+        if saved_required is not None:
+            os.environ["THIRSTYS_V3Q_REQUIRED"] = saved_required
+        if saved_registry is not None:
+            os.environ["THIRSTYS_V3Q_REGISTRY"] = saved_registry
 
 
-def test_build_gate_activates_and_auto_mints_with_owner_key(tmp_path, manifest) -> None:
-    # Simulate a production deployment: an owner private key + a matching trusted
-    # registry are provisioned and pointed at via env vars. build_gate() must
-    # return an ACTIVE gate that self-mints valid authority/approval proofs and
-    # enforces the manifest.
+def test_build_gate_requires_external_authority_and_approval(tmp_path, manifest) -> None:
+    # Simulate production with a public registry only. The online gate must never
+    # hold the owner private key or manufacture proofs; externally signed proofs
+    # are required and action-scoped.
     import json
     import os
 
-    from thirstys_standard_runtime.authority import generate_keypair, write_private_key
+    from thirstys_standard_runtime.authority import generate_keypair
 
     private_doc, public_doc = generate_keypair(
         "owner-primary",
         "Jeremy / Thirsty",
         ["authority", "approval", "ratification", "execution_record"],
     )
-    key_path = tmp_path / "owner-private.json"
-    write_private_key(key_path, private_doc)
     registry_path = tmp_path / "trusted-keys.json"
     registry_path.write_text(json.dumps({"keys": [public_doc]}, indent=2), encoding="utf-8")
 
-    saved_owner = os.environ.get("THIRSTYS_V3Q_OWNER_KEY")
+    saved_required = os.environ.get("THIRSTYS_V3Q_REQUIRED")
     saved_registry = os.environ.get("THIRSTYS_V3Q_REGISTRY")
-    os.environ["THIRSTYS_V3Q_OWNER_KEY"] = str(key_path)
+    os.environ["THIRSTYS_V3Q_REQUIRED"] = "true"
     os.environ["THIRSTYS_V3Q_REGISTRY"] = str(registry_path)
     try:
         gate = build_gate()
         assert gate is not None, "deployment config should activate the gate"
-        # Mapped, reversible op -> gate auto-mints a valid authority proof -> ALLOW.
-        allowed = gate.decide(
+        missing = gate.decide(
             {"task_id": "atlas:abc"},
             {"action_id": "a1", "class": "local_reversible", "type": "write"},
             None,
             None,
         )
+        assert missing["decision"] == "deny"
+        authority = _signed_proof(
+            private_doc,
+            purpose="authority",
+            proof_id="production-auth",
+            scope=["task:atlas:abc"],
+            actions=["write"],
+        )
+        allowed = gate.decide(
+            {"task_id": "atlas:abc"},
+            {"action_id": "a1", "class": "local_reversible", "type": "write"},
+            authority,
+            None,
+        )
         assert allowed["decision"] == "allow", allowed
-        # Consequential op (rank 3) requires approval; auto-minted approval -> ALLOW.
+        consequential_authority = _signed_proof(
+            private_doc,
+            purpose="authority",
+            proof_id="production-consequential-auth",
+            scope=["task:sim:1"],
+            actions=["deploy_visible_service"],
+        )
+        awaiting_approval = gate.decide(
+            {"task_id": "sim:1"},
+            {
+                "action_id": "a2",
+                "class": "externally_consequential",
+                "type": "deploy_visible_service",
+            },
+            consequential_authority,
+            None,
+        )
+        assert awaiting_approval["decision"] == "require_approval"
+        approval = _signed_proof(
+            private_doc,
+            purpose="approval",
+            proof_id="production-approval",
+            scope=["action:a2"],
+            actions=["deploy_visible_service"],
+            action_id="a2",
+        )
         consequential = gate.decide(
             {"task_id": "sim:1"},
             {
@@ -245,8 +283,8 @@ def test_build_gate_activates_and_auto_mints_with_owner_key(tmp_path, manifest) 
                 "class": "externally_consequential",
                 "type": "deploy_visible_service",
             },
-            None,
-            None,
+            consequential_authority,
+            approval,
         )
         assert consequential["decision"] == "allow", consequential
         # Unmapped op falls back to raw string -> unknown class -> DENY (never silent pass).
@@ -258,10 +296,10 @@ def test_build_gate_activates_and_auto_mints_with_owner_key(tmp_path, manifest) 
         )
         assert unknown["decision"] == "deny"
     finally:
-        if saved_owner is not None:
-            os.environ["THIRSTYS_V3Q_OWNER_KEY"] = saved_owner
+        if saved_required is not None:
+            os.environ["THIRSTYS_V3Q_REQUIRED"] = saved_required
         else:
-            os.environ.pop("THIRSTYS_V3Q_OWNER_KEY", None)
+            os.environ.pop("THIRSTYS_V3Q_REQUIRED", None)
         if saved_registry is not None:
             os.environ["THIRSTYS_V3Q_REGISTRY"] = saved_registry
         else:

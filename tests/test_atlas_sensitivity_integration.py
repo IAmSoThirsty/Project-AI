@@ -1,6 +1,6 @@
 """Integration tests for atlas.sensitivity with execution-gated persistence.
 
-Per Thirstys standards: production-ready integration tests covering:
+Per Thirstys standards: local integration tests covering:
 - Sensitivity analysis through the canonical Atlas service
 - Capability token + ExecutionGate end-to-end
 - SHA-256 binding subordination notice through full pipeline

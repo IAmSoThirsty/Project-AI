@@ -92,7 +92,10 @@ class TestEventInjection:
 
         # Events are queued for next tick, need to tick to execute
         engine.tick()
-        assert len(engine.events) == 1
+        # The simulation may also emit deterministic scheduled events at the
+        # same tick; assert the injected event was executed without assuming it
+        # is the only event in the engine history.
+        assert sum(event.event_id == event_id for event in engine.events) == 1
 
     def test_inject_diplomatic_event(self):
         """Test injecting diplomatic event."""

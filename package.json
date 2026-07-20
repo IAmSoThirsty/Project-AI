@@ -1,6 +1,6 @@
 {
   "name": "project-ai-workspace",
-  "version": "0.0.0-dev0",
+  "version": "0.0.3",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.30.0",

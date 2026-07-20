@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-swr-dashboard"
-version = "0.0.2"
+version = "0.0.3"
 description = "Flask web dashboard for the Project-AI Sovereign War Room (SWR) — J3.8 port"
 readme = "README.md"
 requires-python = "==3.12.10"

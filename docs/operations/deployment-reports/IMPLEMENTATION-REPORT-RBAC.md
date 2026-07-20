@@ -1,5 +1,12 @@
 # RBAC Implementation Report
 
+> **Current release boundary (2026-07-19):** This is a historical or
+> implementation-reference artifact, not current production evidence or
+> deployment approval. The v0.0.3 successor remains fail-closed until the
+> [pre-deployment checklist](../../deployment/PRE_DEPLOYMENT_CHECKLIST.md) and
+> [CAB evidence bundle](../cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md)
+> pass. Commands here are examples; this document does not prove deployment.
+
 ## Overview
 
 Implemented **Role-Based Access Control (RBAC)** for Project-AI. Each service now has a dedicated ServiceAccount with minimal permissions required to operate, following the principle of least privilege.

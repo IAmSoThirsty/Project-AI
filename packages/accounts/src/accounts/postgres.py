@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from datetime import datetime
@@ -10,7 +11,13 @@ import psycopg
 from psycopg import Connection
 from psycopg.rows import dict_row
 
-from accounts.models import Account, AccountRole, SecurityEvent, StoredSession
+from accounts.models import (
+    Account,
+    AccountRole,
+    MachineCredential,
+    SecurityEvent,
+    StoredSession,
+)
 from accounts.repository import SCHEMA_VERSION, AccountRepository, _parse_datetime
 
 Row = Mapping[str, object]
@@ -121,8 +128,50 @@ class PostgresAccountRepository(AccountRepository):
                     (SCHEMA_VERSION,),
                 )
             elif current < SCHEMA_VERSION:
-                raise RuntimeError(
-                    f"PostgreSQL account schema {current} requires an explicit migration"
+                if current == 4:
+                    connection.execute(
+                        """CREATE TABLE IF NOT EXISTS machine_credentials (
+                            id TEXT PRIMARY KEY,
+                            label TEXT NOT NULL,
+                            token_hash TEXT NOT NULL UNIQUE,
+                            scopes JSONB NOT NULL,
+                            created_at TEXT NOT NULL,
+                            created_by TEXT NOT NULL REFERENCES accounts(id) ON DELETE RESTRICT,
+                            last_used_at TEXT,
+                            revoked_at TEXT
+                        )"""
+                    )
+                    connection.execute(
+                        "CREATE INDEX IF NOT EXISTS machine_credentials_active ON machine_credentials(revoked_at)"
+                    )
+                    connection.execute(
+                        "UPDATE project_ai_schema_versions SET version = %s WHERE component = 'accounts'",
+                        (SCHEMA_VERSION,),
+                    )
+                else:
+                    raise RuntimeError(
+                        f"PostgreSQL account schema {current} requires an explicit migration"
+                    )
+
+            if current == 0:
+                connection.execute(
+                    """CREATE TABLE IF NOT EXISTS machine_credentials (
+                        id TEXT PRIMARY KEY,
+                        label TEXT NOT NULL,
+                        token_hash TEXT NOT NULL UNIQUE,
+                        scopes JSONB NOT NULL,
+                        created_at TEXT NOT NULL,
+                        created_by TEXT NOT NULL REFERENCES accounts(id) ON DELETE RESTRICT,
+                        last_used_at TEXT,
+                        revoked_at TEXT
+                    )"""
+                )
+                connection.execute(
+                    "CREATE INDEX IF NOT EXISTS machine_credentials_active ON machine_credentials(revoked_at)"
+                )
+                connection.execute(
+                    "UPDATE project_ai_schema_versions SET version = %s WHERE component = 'accounts'",
+                    (SCHEMA_VERSION,),
                 )
 
     @staticmethod
@@ -437,6 +486,77 @@ class PostgresAccountRepository(AccountRepository):
             )
             for row in rows
         )
+
+    @staticmethod
+    def _machine_credential_pg(row: Row | None) -> MachineCredential | None:
+        if row is None:
+            return None
+        raw_scopes = row["scopes"]
+        scopes = raw_scopes if isinstance(raw_scopes, list) else json.loads(_text(raw_scopes))
+        if not isinstance(scopes, list) or not all(isinstance(item, str) for item in scopes):
+            raise RuntimeError("Stored machine credential scopes are invalid")
+        return MachineCredential(
+            id=_text(row["id"]),
+            label=_text(row["label"]),
+            token_hash=_text(row["token_hash"]),
+            scopes=tuple(scopes),
+            created_at=datetime.fromisoformat(_text(row["created_at"])),
+            created_by=_text(row["created_by"]),
+            last_used_at=_parse_datetime(
+                None if row["last_used_at"] is None else _text(row["last_used_at"])
+            ),
+            revoked_at=_parse_datetime(
+                None if row["revoked_at"] is None else _text(row["revoked_at"])
+            ),
+        )
+
+    def create_machine_credential(self, credential: MachineCredential) -> None:
+        with self._pg_connect() as connection:
+            connection.execute(
+                """INSERT INTO machine_credentials
+                (id, label, token_hash, scopes, created_at, created_by, last_used_at, revoked_at)
+                VALUES (%s, %s, %s, %s::jsonb, %s, %s, %s, %s)""",
+                (
+                    credential.id,
+                    credential.label,
+                    credential.token_hash,
+                    json.dumps(credential.scopes, separators=(",", ":")),
+                    credential.created_at.isoformat(),
+                    credential.created_by,
+                    credential.last_used_at.isoformat() if credential.last_used_at else None,
+                    credential.revoked_at.isoformat() if credential.revoked_at else None,
+                ),
+            )
+
+    def machine_credential_by_id(self, credential_id: str) -> MachineCredential | None:
+        with self._pg_connect() as connection:
+            row = connection.execute(
+                "SELECT * FROM machine_credentials WHERE id = %s", (credential_id,)
+            ).fetchone()
+        return self._machine_credential_pg(row)
+
+    def machine_credentials(self) -> tuple[MachineCredential, ...]:
+        with self._pg_connect() as connection:
+            rows = connection.execute(
+                "SELECT * FROM machine_credentials ORDER BY created_at, id"
+            ).fetchall()
+        return tuple(item for row in rows if (item := self._machine_credential_pg(row)) is not None)
+
+    def touch_machine_credential(self, credential_id: str, used_at: datetime) -> None:
+        with self._pg_connect() as connection:
+            connection.execute(
+                "UPDATE machine_credentials SET last_used_at = %s WHERE id = %s AND revoked_at IS NULL",
+                (used_at.isoformat(), credential_id),
+            )
+
+    def revoke_machine_credential(self, credential_id: str, revoked_at: datetime) -> bool:
+        with self._pg_connect() as connection:
+            cursor = connection.execute(
+                """UPDATE machine_credentials SET revoked_at = %s
+                WHERE id = %s AND revoked_at IS NULL""",
+                (revoked_at.isoformat(), credential_id),
+            )
+            return cursor.rowcount == 1
 
     def rate_limit_hit(
         self,

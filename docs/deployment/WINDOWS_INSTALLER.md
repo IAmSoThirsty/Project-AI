@@ -111,7 +111,7 @@ v7). Accepting the EULA (`-acceptEula wix7` / `wix eula accept wix7`) is free an
 itself verify or require payment — it is a separate, honor-system compliance obligation tied
 to revenue.
 
-Project-AI is pre-alpha (`0.0.0.dev0`) with no revenue, so the free-use terms apply today.
+Project-AI is pre-alpha (`0.0.3`) with no revenue, so the free-use terms apply today.
 **If this project starts generating revenue, re-check the threshold at the URL above before
 continuing to build with WiX.**
 

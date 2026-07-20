@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sqlite3
 from collections.abc import Callable, Sequence
@@ -10,6 +11,7 @@ from pathlib import Path
 
 import psycopg
 from psycopg import Connection, sql
+from psycopg.types.json import Jsonb
 
 from accounts import PostgresAccountRepository
 from workflows import PostgresWorkflowRepository
@@ -42,6 +44,25 @@ def _accounts(row: sqlite3.Row) -> tuple[object, ...]:
     )
 
 
+def _machine_credentials(row: sqlite3.Row) -> tuple[object, ...]:
+    raw_scopes = row["scopes"]
+    if not isinstance(raw_scopes, str):
+        raise ValueError("SQLite machine credential scopes must be JSON text")
+    scopes = json.loads(raw_scopes)
+    if not isinstance(scopes, list) or not all(isinstance(scope, str) for scope in scopes):
+        raise ValueError("SQLite machine credential scopes must be a JSON string list")
+    return (
+        row["id"],
+        row["label"],
+        row["token_hash"],
+        Jsonb(scopes),
+        row["created_at"],
+        row["created_by"],
+        row["last_used_at"],
+        row["revoked_at"],
+    )
+
+
 ACCOUNT_TABLES: tuple[tuple[str, tuple[str, ...], Transform], ...] = (
     (
         "accounts",
@@ -64,6 +85,20 @@ ACCOUNT_TABLES: tuple[tuple[str, tuple[str, ...], Transform], ...] = (
             "must_change_password",
         ),
         _accounts,
+    ),
+    (
+        "machine_credentials",
+        (
+            "id",
+            "label",
+            "token_hash",
+            "scopes",
+            "created_at",
+            "created_by",
+            "last_used_at",
+            "revoked_at",
+        ),
+        _machine_credentials,
     ),
     (
         "sessions",
@@ -231,17 +266,16 @@ WORKFLOW_TABLES: tuple[tuple[str, tuple[str, ...], Transform], ...] = (
 )
 
 
-def _source(path: Path, expected_version: int) -> sqlite3.Connection:
+def _source(path: Path, expected_version: int | tuple[int, ...]) -> sqlite3.Connection:
     if not path.is_file():
         raise FileNotFoundError(f"SQLite source does not exist: {path}")
     connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     version = int(connection.execute("PRAGMA user_version").fetchone()[0])
-    if version != expected_version:
+    expected = (expected_version,) if isinstance(expected_version, int) else expected_version
+    if version not in expected:
         connection.close()
-        raise RuntimeError(
-            f"SQLite source {path} has schema {version}; expected {expected_version}"
-        )
+        raise RuntimeError(f"SQLite source {path} has schema {version}; expected one of {expected}")
     return connection
 
 
@@ -252,6 +286,14 @@ def _copy_tables(
 ) -> dict[str, int]:
     counts: dict[str, int] = {}
     for table, columns, transform in specifications:
+        if table == "machine_credentials":
+            available = {
+                str(row["name"])
+                for row in source.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+            }
+            if table not in available:
+                counts[table] = 0
+                continue
         rows = source.execute(f"SELECT * FROM {table}").fetchall()
         statement = sql.SQL("INSERT INTO {} ({}) VALUES ({})").format(
             sql.Identifier(table),
@@ -267,7 +309,7 @@ def _copy_tables(
 def migrate(account_db: Path, workflow_db: Path, database_url: str) -> dict[str, int]:
     PostgresAccountRepository(database_url).migrate()
     PostgresWorkflowRepository(database_url).migrate()
-    accounts = _source(account_db, 4)
+    accounts = _source(account_db, (4, 5))
     workflows = _source(workflow_db, 4)
     try:
         with psycopg.connect(database_url) as target:
@@ -279,6 +321,7 @@ def migrate(account_db: Path, workflow_db: Path, database_url: str) -> dict[str,
                     (SELECT COUNT(*) FROM recovery_codes) +
                     (SELECT COUNT(*) FROM security_events) +
                     (SELECT COUNT(*) FROM auth_rate_limits) +
+                    (SELECT COUNT(*) FROM machine_credentials) +
                     (SELECT COUNT(*) FROM work_requests) +
                     (SELECT COUNT(*) FROM reviews) +
                     (SELECT COUNT(*) FROM execution_receipts) +

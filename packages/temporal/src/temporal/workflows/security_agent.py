@@ -19,7 +19,7 @@ This is the minimum viable port of legacy
 Architectural invariants (AGENTS.md v3):
 - Downward-only deps: imports only temporal submodules + kernel.
 - Fail-closed: SecurityAgentWorkflowError on failure.
-- Deterministic: same input → same output.
+- Deterministic findings and patch identities for the same target content.
 - Strict typing: mypy --strict clean.
 """
 
@@ -27,9 +27,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import time
 import uuid
 from dataclasses import dataclass
+from pathlib import Path
 from typing import cast
 
 from kernel import JsonValue
@@ -55,6 +57,35 @@ class SecurityAgentWorkflowError(TemporalError):
 _ALLOWED_OPERATIONS = frozenset({"scan", "verify", "audit", "remediate"})
 _ALLOWED_VULNERABILITY_TYPES = frozenset(
     {"sqli", "xss", "rce", "lfi", "ssrf", "auth_bypass", "info_disclosure"}
+)
+_MAX_SCAN_BYTES = 2 * 1024 * 1024
+_SCAN_RULES = (
+    (
+        "RCE-001",
+        "rce",
+        "high",
+        0.95,
+        re.compile(r"\b(?:subprocess\.(?:run|Popen|call)|os\.system)\s*\([^\n]*shell\s*=\s*True"),
+        "Shell execution enables command interpretation; use an argument vector without shell=True.",
+    ),
+    (
+        "RCE-002",
+        "rce",
+        "high",
+        0.90,
+        re.compile(r"\b(?:eval|exec)\s*\("),
+        "Dynamic code evaluation requires a constrained parser or an explicit trusted-input boundary.",
+    ),
+    (
+        "SQLI-001",
+        "sqli",
+        "high",
+        0.85,
+        re.compile(
+            r"(?:execute|executemany)\s*\(\s*f[\"']|(?:execute|executemany)\s*\([^\n]*\.format\("
+        ),
+        "SQL text is constructed dynamically; use parameterized query values.",
+    ),
 )
 
 
@@ -195,13 +226,48 @@ def run_code_vulnerability_scan(
         raise SecurityAgentWorkflowError(
             f"request must be SecurityAgentRequest, got {type(request).__name__}"
         )
-    scan_id = f"scan-{uuid.uuid4().hex[:16]}"
+    target = Path(request.target)
     findings_list: list[dict[str, object]] = []
+    scan_status = "completed"
+    content_digest = hashlib.sha256(request.target.encode()).hexdigest()
+    if not target.is_file():
+        scan_status = "target_unavailable"
+    else:
+        try:
+            raw = target.read_bytes()
+        except OSError as error:
+            raise SecurityAgentWorkflowError(
+                f"unable to read scan target {target}: {error}"
+            ) from error
+        if len(raw) > _MAX_SCAN_BYTES:
+            raise SecurityAgentWorkflowError(
+                f"scan target exceeds {_MAX_SCAN_BYTES} byte limit: {target}"
+            )
+        content_digest = hashlib.sha256(raw).hexdigest()
+        text = raw.decode("utf-8", errors="replace")
+        for rule_id, vulnerability_type, severity, confidence, pattern, message in _SCAN_RULES:
+            for match in pattern.finditer(text):
+                line = text.count("\n", 0, match.start()) + 1
+                findings_list.append(
+                    {
+                        "rule_id": rule_id,
+                        "vulnerability_type": vulnerability_type,
+                        "target": str(target),
+                        "line": line,
+                        "severity": severity,
+                        "confidence": confidence,
+                        "message": message,
+                    }
+                )
+    scan_material = f"{request.agent_id}\0{target}\0{content_digest}".encode()
+    scan_id = f"scan-{hashlib.sha256(scan_material).hexdigest()[:16]}"
     return cast(
         dict[str, JsonValue],
         {
             "scan_id": scan_id,
             "target": request.target,
+            "scan_status": scan_status,
+            "content_sha256": content_digest,
             "vulnerability_count": len(findings_list),
             "findings": findings_list,
             "agent_id": request.agent_id,
@@ -244,7 +310,7 @@ def generate_security_patches(
         description = cast(str, body["description"])
         patches.append(
             SecurityPatch(
-                patch_id=f"patch-{uuid.uuid4().hex[:16]}",
+                patch_id=f"patch-{sha[:16]}",
                 rule_id=finding.rule_id,
                 target=finding.target,
                 description=description,
@@ -320,9 +386,6 @@ class SecurityAgentWorkflow:
     - 'remediate' → run_red_team_campaign + generate patches
     """
 
-    def __init__(self) -> None:
-        pass
-
     def execute(self, request: SecurityAgentRequest) -> dict[str, JsonValue]:
         """Dispatch to the right activity based on request.operation."""
         if not isinstance(request, SecurityAgentRequest):
@@ -336,8 +399,40 @@ class SecurityAgentWorkflow:
         if request.operation == "audit":
             return run_red_team_campaign(request)
         if request.operation == "remediate":
-            # Audit + patches placeholder
-            return run_red_team_campaign(request)
+            scan = run_code_vulnerability_scan(request)
+            raw_findings = cast(list[dict[str, object]], scan["findings"])
+            findings = [
+                VulnerabilityFinding(
+                    rule_id=cast(str, finding["rule_id"]),
+                    vulnerability_type=cast(str, finding["vulnerability_type"]),
+                    target=cast(str, finding["target"]),
+                    severity=cast(str, finding["severity"]),
+                    confidence=cast(float, finding["confidence"]),
+                    message=cast(str, finding["message"]),
+                )
+                for finding in raw_findings
+            ]
+            patches = generate_security_patches(findings)
+            return cast(
+                dict[str, JsonValue],
+                {
+                    "campaign": run_red_team_campaign(request),
+                    "scan": scan,
+                    "patch_count": len(patches),
+                    "patches": [
+                        {
+                            "patch_id": patch.patch_id,
+                            "rule_id": patch.rule_id,
+                            "target": patch.target,
+                            "description": patch.description,
+                            "sha256": patch.sha256,
+                        }
+                        for patch in patches
+                    ],
+                    "agent_id": request.agent_id,
+                    "correlation_id": request.correlation_id,
+                },
+            )
         raise SecurityAgentWorkflowError(f"unknown operation: {request.operation!r}")
 
 

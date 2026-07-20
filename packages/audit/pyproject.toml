@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "project-ai-audit"
-version = "0.0.2"
+version = "0.0.3"
 description = "Tamper-evident hash-chained audit log (Phase B recovery from Project-AI-Canonical)"
 readme = "README.md"
 requires-python = "==3.12.10"

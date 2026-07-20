@@ -1,8 +1,6 @@
 # ADR-002: Per-program machine credentials
 
-- **Status:** Proposed — NOT implemented. Nothing in this record describes current
-  runtime behavior; the current runtime uses exactly one shared machine bearer
-  token (`PROJECT_AI_API_TOKEN`).
+- **Status:** Implemented in the local rebuild; production rollout evidence pending.
 - **Date:** 2026-07-17
 - **Scope:** Machine-facing gateway authentication (`packages/api`), machine
   clients (`packages/cli`, `packages/mcp_server`), deployment surfaces.
@@ -29,7 +27,7 @@ constant-time against `PROJECT_AI_API_TOKEN`. Consequences today:
 This is acceptable for a loopback-only pre-alpha development gateway and wrong
 for anything beyond it.
 
-## Decision (proposed)
+## Decision
 
 1. **Credential record.** Add a `machine_credentials` table to the accounts
    store (SQLite + PostgreSQL, same dual-backend pattern as `packages/accounts`):
@@ -45,11 +43,11 @@ for anything beyond it.
    revoked/unknown credentials, enforces the route's required scope, and stamps
    the credential `id` + `label` into the audit event so every machine write is
    attributable.
-4. **Bootstrap demotion.** `PROJECT_AI_API_TOKEN` becomes a bootstrap-only
-   credential: valid solely for minting the first owner-created machine
-   credential when no credential records exist, then refused. Deployments that
-   never configure credential records keep current behavior only in explicit
-   development mode.
+4. **Bootstrap demotion.** `PROJECT_AI_API_TOKEN` remains an explicit development
+   fallback. When `PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED=true`, or once any
+   durable credential record exists, it is refused on machine routes. Production
+   provisioning therefore creates the first credential through the owner/MFA
+   administration surface before enabling enforcement.
 5. **Management surface.** Owner/administrator session routes (CSRF + recent
    MFA, mirroring account administration):
    `GET/POST /api/v1/admin/machine-credentials`,
@@ -73,11 +71,10 @@ for anything beyond it.
 - Attribution: every machine audit event gains a stable credential identity.
 - Containment: one compromised program is revoked without touching the rest.
 - Least privilege: read-only consumers hold read-only scopes.
-- Cost: a schema migration (accounts store version bump, both backends), guard
-  changes on every machine route, new admin routes + UI, test matrix growth
-  (denial per missing scope, revocation, bootstrap demotion, no-bypass), and
-  OpenAPI baseline churn. This is why implementation is deferred rather than
-  rushed into the current slice while adjacent lanes are active.
+- Cost: a schema migration (accounts store version 5, both backends), guard
+  changes on every machine route, new admin routes, test matrix growth, and
+  OpenAPI baseline churn. A live PostgreSQL migration and production secret
+  provisioning remain rollout evidence rather than local implementation work.
 
 ## Test plan (for the implementing session)
 
@@ -85,13 +82,14 @@ for anything beyond it.
 - Bootstrap token refused once any credential record exists.
 - Creation returns raw token exactly once; storage holds only the salted hash.
 - Audit events carry credential id/label for every machine write.
-- Live PostgreSQL migration proof against a disposable container.
+- Live PostgreSQL migration proof against a disposable PostgreSQL 16 container;
+  production-target migration and rollback evidence remain pending.
 - OpenAPI baseline regenerated; freeze test green.
 
 ## Evidence for the current state (what makes this ADR necessary)
 
-- Shared-token guard: `packages/api/src/project_ai_api/app.py`
-  (`require_machine_auth`, `_check_machine_credential`).
+- Shared-token and durable-credential guard: `packages/api/src/project_ai_api/app.py`
+  (`require_machine_scope`, `_check_machine_credential`).
 - Ungoverned egress recorded as related debt: `packages/global-scenario`
   calls World Bank/ACLED via direct `requests` with no gateway identity at all
   (`global_scenario_engine.py`); any egress-governance design should assume

@@ -115,7 +115,9 @@ def run_red_team_attack(
             "campaign_id": campaign_id,
             "target": target,
             "technique": technique,
-            "success": False,  # placeholder — real impl would actually attack
+            # This primitive is deliberately non-actuating: it records a
+            # bounded simulation transcript and never attacks the target.
+            "success": False,
             "transcript_sha256": digest,
         },
     )

@@ -29,6 +29,10 @@ class AppendOnlyAuditRelay:
         self.path = path.resolve()
         self._lock = threading.Lock()
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        # A configured relay starts at a materialized, valid genesis state.
+        # This proves the path is writable during startup and lets external
+        # integrity jobs distinguish a valid empty chain from a bad mount.
+        self.path.touch(exist_ok=True)
 
     def _last_hash(self) -> str:
         if not self.path.exists():
@@ -81,10 +85,17 @@ def receive_verdict(
     action_id: str,
     verdict: Verdict,
     source: str = "execution",
+    machine_credential_id: str | None = None,
+    machine_credential_label: str | None = None,
 ) -> JsonRecord:
+    details: dict[str, JsonScalar] = {"action_id": action_id, "source": source, "verdict": verdict}
+    if machine_credential_id is not None:
+        details["machine_credential_id"] = machine_credential_id
+    if machine_credential_label is not None:
+        details["machine_credential_label"] = machine_credential_label
     return relay.append(
         "chimera.verdict",
-        {"action_id": action_id, "source": source, "verdict": verdict},
+        details,
     )
 
 
@@ -93,12 +104,16 @@ def receive_canary_hit(
     *,
     canary_value: str,
     context: str,
+    machine_credential_id: str | None = None,
+    machine_credential_label: str | None = None,
 ) -> JsonRecord:
     fingerprint = hashlib.sha256(canary_value.encode("utf-8")).hexdigest()
-    return relay.append(
-        "chimera.canary_hit",
-        {"canary_sha256": fingerprint, "context": context},
-    )
+    details: dict[str, JsonScalar] = {"canary_sha256": fingerprint, "context": context}
+    if machine_credential_id is not None:
+        details["machine_credential_id"] = machine_credential_id
+    if machine_credential_label is not None:
+        details["machine_credential_label"] = machine_credential_label
+    return relay.append("chimera.canary_hit", details)
 
 
 def report_governance_denial(

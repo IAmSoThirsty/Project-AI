@@ -9,8 +9,6 @@ import urllib.request
 from collections.abc import Sequence
 from typing import cast
 
-from kernel.version import PROJECT_AI_VERSION
-
 EXPECTED_SERVICES = {
     "api",
     "arbiter-rlp",
@@ -53,6 +51,26 @@ def _http_text(url: str) -> str:
         return cast(bytes, response.read()).decode("utf-8")
 
 
+def _api_version(body: str) -> tuple[str | None, str | None]:
+    """Return the live API version or a validation failure.
+
+    The Compose verifier intentionally runs with the host's standard Python in
+    CI. Reading the version from the running API both avoids an undeclared host
+    workspace import and proves that the API and Genesis containers agree on
+    the deployed release version.
+    """
+    try:
+        payload = cast(dict[str, object], json.loads(body))
+    except (TypeError, json.JSONDecodeError) as error:
+        return None, f"API health response is not valid JSON: {error}"
+    if payload.get("status") != "live":
+        return None, f"API health status is not live: {payload!r}"
+    version = payload.get("version")
+    if not isinstance(version, str) or not version.strip():
+        return None, f"API health version is missing or invalid: {payload!r}"
+    return version, None
+
+
 def main() -> int:
     records = _compose_records()
     by_service = {str(record["Service"]): record for record in records}
@@ -73,8 +91,14 @@ def main() -> int:
             failures.append(f"{service}: insecure container settings: {detail}")
         print(f"{service}: healthy; {detail}")
 
+    api_health_url = "http://127.0.0.1:8000/health/live"
+    api_health_body = _http_text(api_health_url)
+    api_version, api_failure = _api_version(api_health_body)
+    if api_failure is not None:
+        failures.append(f"{api_health_url}: {api_failure}")
+    print(f"{api_health_url}: {api_health_body.strip()}")
+
     endpoint_expectations = {
-        "http://127.0.0.1:8000/health/live": '"status":"live"',
         "http://127.0.0.1:4173/healthz": "live",
         "http://127.0.0.1:4174/healthz": "live",
         "http://127.0.0.1:4175/healthz": "live",
@@ -88,10 +112,10 @@ def main() -> int:
     genesis = json.loads(
         _run(("docker", "compose", "exec", "-T", "genesis", "genesis-emitter", "health"))
     )
-    if genesis != {
+    if api_version is not None and genesis != {
         "status": "live",
         "service": "genesis",
-        "version": PROJECT_AI_VERSION,
+        "version": api_version,
         "authority": "evidence-only",
     }:
         failures.append(f"genesis evidence mismatch: {genesis!r}")

@@ -167,7 +167,9 @@ class EMPDefenseEngine:
         Query current simulation state.
 
         Args:
-            query: Optional query filter (not implemented yet)
+            query: Optional exact top-level state field to return. ``None``
+                returns the complete state; an unknown field returns an empty
+                mapping.
 
         Returns:
             Dictionary with state information
@@ -187,7 +189,17 @@ class EMPDefenseEngine:
             return {}
 
         try:
-            return self.state.to_dict()
+            snapshot = self.state.to_dict()
+            if query is None:
+                return snapshot
+            if not isinstance(query, str) or not query.strip():
+                logger.warning("Observation query must be a non-empty field name")
+                return {}
+            field = query.strip()
+            if field not in snapshot:
+                logger.warning("Unknown observation field: %s", field)
+                return {}
+            return {field: snapshot[field]}
 
         except Exception as e:
             logger.error("❌ Observation failed: %s", e)

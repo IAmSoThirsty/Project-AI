@@ -1,0 +1,61 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, javascript-typescript]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: github/codeql-action/init@9e0d7b8d25671d64c341c19c0152d693099fb5ba # v4.35.5
+        with:
+          languages: ${{ matrix.language }}
+      - uses: github/codeql-action/analyze@9e0d7b8d25671d64c341c19c0152d693099fb5ba # v4.35.5
+        with:
+          category: /language:${{ matrix.language }}
+
+  checkov:
+    name: Checkov (Kubernetes, containers, workflows)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Render production chart
+        run: |
+          mkdir -p build/checkov
+          helm template project-ai helm/project-ai \
+            --namespace project-ai-prod \
+            -f helm/values.prod.yaml \
+            --output-dir build/checkov
+      - name: Scan rendered Kubernetes manifests
+        run: uvx --from checkov==3.3.8 checkov -d build/checkov --framework kubernetes --compact
+      - name: Scan container definitions
+        run: uvx --from checkov==3.3.8 checkov -d docker --framework dockerfile --compact
+      - name: Scan GitHub Actions
+        run: uvx --from checkov==3.3.8 checkov -d .github/workflows --framework github_actions --compact

@@ -1,5 +1,9 @@
 # Constitutional AI Systems - Documentation Index
 
+> Recovered/reference material only: this directory is not current release
+> evidence or deployment approval. The successor remains fail-closed until
+> the current pre-deployment checklist and CAB evidence bundle pass.
+
 **Purpose:** Complete documentation of all constitutional AI systems in Project-AI
 
 **Version:** 2.1.0
@@ -189,7 +193,7 @@ Project-AI's **constitutional AI systems** implement ethical governance, tempora
 - Prove constitutional guarantees formally
 - Detect anomalous AI behavior in production
 
-**Production Status:** ✅ Fully implemented, production-ready
+**Production Status:** ✅ Reference implementation documented; runtime approval remains external
 
 ---
 

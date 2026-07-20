@@ -1,6 +1,6 @@
 [project]
 name = "project-ai"
-version = "0.0.2"
+version = "0.0.3"
 description = "Project-AI Sovereign Constitutional AGI Ecosystem development rebuild"
 readme = "README.md"
 requires-python = "==3.12.10"
@@ -56,6 +56,8 @@ dependencies = [
     "project-ai-dpr",
     "project-ai-mcp-server",
     "project-ai-thirstys-standard-v3q",
+    "project-ai-waterfall-adapter",
+    "project-ai-thirstys-waterfall",
     # Thirsty-Lang (PyPI dep, six-tier governance language family)
     "thirsty-lang==0.8.1",
 ]
@@ -142,6 +144,8 @@ project-ai-sovereign-vault = { workspace = true }
 project-ai-dpr = { workspace = true }
 project-ai-mcp-server = { workspace = true }
 project-ai-thirstys-standard-v3q = { workspace = true }
+project-ai-waterfall-adapter = { workspace = true }
+project-ai-thirstys-waterfall = { workspace = true }
 
 [tool.uv.workspace]
 members = [
@@ -186,6 +190,8 @@ members = [
     "packages/dpr",
     "packages/mcp_server",
     "packages/thirstys-standard-v3q",
+    "packages/waterfall-adapter",
+    "packages/thirstys-waterfall",
 ]
 
 # ----------------------------------------------------------------------
@@ -204,6 +210,13 @@ extend-exclude = [
     "packages/rlp/governance_framework",  # allowlisted framework reference assets
     "docs/governance/thirstys-standard-v3q-manifest",  # byte-preserved V3+Q standalone copies (0ab1bbae)
     "tools/_archive",        # one-shot tool archive
+    # Provenance-preserving Waterfall rebuild inputs. The governed typed
+    # transport is linted; the copied standalone tree is replay-tested.
+    "packages/thirstys-waterfall/src/thirstys_waterfall",
+    "packages/thirstys-waterfall/legacy-assets",
+    "packages/thirstys-waterfall/legacy-specs",
+    "packages/thirstys-waterfall/tests",
+    "packages/thirstys-waterfall/examples",
 ]
 
 [tool.ruff.lint]
@@ -288,6 +301,13 @@ exclude = [
     "packages/thirstys-standard-v3q/tests",
     "packages/thirstys-standard-v3q/tools",
     "packages/thirstys-standard-v3q/validate_manifest.py",
+    # Provenance-preserving Waterfall rebuild inputs. The governed typed
+    # transport is type-checked; the copied standalone tree is replay-tested.
+    "packages/thirstys-waterfall/src/thirstys_waterfall",
+    "packages/thirstys-waterfall/legacy-assets",
+    "packages/thirstys-waterfall/legacy-specs",
+    "packages/thirstys-waterfall/tests",
+    "packages/thirstys-waterfall/examples",
 ]
 
 # ----------------------------------------------------------------------
@@ -319,6 +339,7 @@ markers = [
 [tool.coverage.run]
 branch = true
 source = ["packages", "apps/desktop/src", "apps/services/src"]
+disable_warnings = ["module-not-imported"]
 omit = [
     "*/tests/*",
     "*/__init__.py",

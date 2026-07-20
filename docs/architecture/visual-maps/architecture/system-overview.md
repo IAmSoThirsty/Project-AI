@@ -52,7 +52,7 @@ accuracy_rating: high
 
 **Version:** 1.0.0
 **Author:** AGENT-047 (Visual Relationship Maps Specialist)
-**Status:** Production-Ready
+**Status:** Documentation-ready reference
 **Last Updated:** 2026-04-20
 
 ---
@@ -687,7 +687,7 @@ class System:
 ## Evolution Path
 
 ### Current State (v1.0)
-- Desktop application: Production-ready
+- Desktop application: documented reference surface
 - Web application: Development phase
 - Core AI: 6 systems operational
 - Governance: CODEX DEUS active

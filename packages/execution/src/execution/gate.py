@@ -56,6 +56,11 @@ class ExecutionGate:
         # accepted that risk explicitly.
         self._v3q_allow_on_cel_indeterminate = v3q_allow_on_cel_indeterminate
 
+    @property
+    def v3q_configured(self) -> bool:
+        """Whether this gate has a V3Q pre-check wired into execution."""
+        return self._v3q_gate is not None
+
     def submit_action(
         self,
         request: ActionRequest,
@@ -186,13 +191,19 @@ class ExecutionGate:
                 "v3q gate: CEL applicability undetermined (cel-python unavailable) — failing closed",
                 evidence_hash="",
             )
-        if decision.get("decision") in ("deny",):
+        if decision.get("decision") in ("deny", "require_approval"):
             return self._deny(
                 request,
-                f"v3q gate: {decision.get('reason', 'denied')}",
+                f"v3q gate: {decision.get('reason', 'denied or awaiting approval')}",
                 evidence_hash="",
             )
-        # "allow" / "require_approval" -> proceed to normal governance.
+        if decision.get("decision") != "allow":
+            return self._deny(
+                request,
+                f"v3q gate: unknown decision {decision.get('decision')!r} — failing closed",
+                evidence_hash="",
+            )
+        # Only an explicit V3Q allow may proceed to normal governance.
         return None
 
     def _deny(

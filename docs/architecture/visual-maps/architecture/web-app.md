@@ -55,7 +55,7 @@ accuracy_rating: high
 
 **Version:** 1.0.0
 **Author:** AGENT-047 (Visual Relationship Maps Specialist)
-**Status:** Production-Ready
+**Status:** Documentation-ready reference
 **Last Updated:** 2026-04-20
 
 ---
@@ -78,7 +78,9 @@ This visual map details the **web application architecture** for Project-AI, fea
 - Support cloud deployment and scaling strategies
 - Complement desktop application with web accessibility
 
-**Current Status:** Development phase - Desktop application is production-ready, web version is evolving with full governance integration.
+**Current Status:** Development phase. The desktop and web surfaces have local
+acceptance evidence, but neither statement is current production deployment
+approval; the v0.0.3 CAB gates govern release readiness.
 
 ---
 
@@ -724,7 +726,7 @@ docker-compose -f web/docker-compose.yml up -d
 
 ---
 
-**Status:** ✅ Production-Ready Documentation
+**Status:** ✅ Documentation-ready reference
 **Validation:** Architecture verified against `web/backend/app.py`, `web/frontend/src/`, Docker configurations
 **Next Review:** 2026-07-20 (Quarterly update cycle)
 

@@ -375,9 +375,15 @@ export const gateway = {
   },
   swr: {
     scenarios: () => requestJson<{ scenarios: SwrScenario[]; execution_gate_configured: boolean; authority_boundary: string }>("/api/v1/modules/swr/scenarios"),
-    execute: (requestId: string, scenarioId: string, decision: string, csrf: string) =>
+    execute: (
+      requestId: string,
+      scenarioId: string,
+      decision: string,
+      csrf: string,
+      proofs?: { v3q_authority_proof?: Record<string, unknown>; v3q_approval_proof?: Record<string, unknown> },
+    ) =>
       requestJson<{ receipt: ExecutionReceipt; reused_existing_receipt: boolean }>(`/api/v1/work/requests/${encodeURIComponent(requestId)}/execute/swr`, {
-        method: "POST", csrf, body: { scenario_id: scenarioId, decision },
+        method: "POST", csrf, body: { scenario_id: scenarioId, decision, ...proofs },
       }),
   },
   atlas: {

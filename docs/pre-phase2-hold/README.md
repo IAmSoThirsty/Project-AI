@@ -1,5 +1,10 @@
 # pre-phase2-hold Recovery
 
+> Historical recovery index. The recovered artifacts describe an older hold
+> state and are not current production or release evidence. Current successor
+> status is governed by the pre-deployment checklist and CAB evidence bundle.
+> Current deployment approval remains fail-closed until those successor gates pass.
+
 Recovered from ``T:\08-Archive\Project-AI-pre-phase2-hold\``.
 
 19 files recovered. The 798 MB bulk of the original archive

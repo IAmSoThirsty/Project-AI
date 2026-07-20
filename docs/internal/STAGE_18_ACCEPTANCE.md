@@ -1,5 +1,9 @@
 # Stage 18 Acceptance Gate
 
+> Historical local acceptance artifact. Its 312-case matrix is retained as
+> stage evidence; current successor release evidence is recorded in
+> `docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md` and the CAB bundle.
+
 **Status:** accepted locally
 
 ## Gate Scripts

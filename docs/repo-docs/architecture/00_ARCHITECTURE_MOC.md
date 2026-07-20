@@ -3,7 +3,12 @@
 > **📍 Location**: `docs/architecture/00_ARCHITECTURE_MOC.md`
 > **🎯 Purpose**: Comprehensive architecture and design pattern navigation
 > **👥 Audience**: Architects, senior engineers, technical leads
-> **🔄 Status**: Production-Ready ✓
+> **🔄 Status**: Recovered reference architecture; not deployment approval
+>
+> **Current release boundary (2026-07-19):** Architecture documentation does
+> not establish production readiness. The current successor is fail-closed
+> pending the owner and external evidence gates recorded in the
+> [CAB review pack](../../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md).
 
 ---
 

@@ -329,7 +329,7 @@ All 32 agents in `src/app/agents/` have been successfully classified and integra
 
 The remaining 6.2% (2 agents) are properly documented as BYPASS-BY-DESIGN with clear justifications. Future work focuses on wrapping external AI API calls through governance and integrating the training loop when it becomes active.
 
-**Classification**: PRODUCTION-READY  
+**Classification**: REFERENCE IMPLEMENTATION; NOT CURRENT DEPLOYMENT APPROVAL  
 **Governance Coverage**: 100%  
 **Documentation**: COMPREHENSIVE  
 **Integration Quality**: EXCELLENT

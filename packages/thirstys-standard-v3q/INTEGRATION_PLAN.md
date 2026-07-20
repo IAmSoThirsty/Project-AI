@@ -54,13 +54,15 @@ docs, tests, SHA256SUMS).
 - Registered in root `pyproject.toml` members/sources/deps.
 - mypy exclude added for its `src/tests/tools/validate_manifest.py`.
 
-## 7. Validation performed (real Beginnings harness)
+## 7. Historical validation performed (real Beginnings harness)
 - `ruff check packages/thirstys-standard-v3q` → All checks passed.
 - `pytest packages/thirstys-standard-v3q` (repo config, `pythonpath="."`) → 17 passed, 15 skipped.
   - Passed: Ed25519 authority roundtrip, tamper rejection, expired/scope rejection, duplicate-key
     rejection, strict YAML, ratification hash binding, schema validity, integrity summary,
     fail-closed gate facade.
   - Skipped (honest): the 4 CEL-dependent upstream tests (cel-python absent).
+- Current workspace validation supersedes this checkpoint: `46 passed` in the
+  V3Q package suite, including owner-key rotation safety tests.
 - Source repo integrity: 44 files, aggregate tree SHA `d84dbe7a…` unchanged, original mtimes,
   directory never written this session.
 
@@ -96,7 +98,8 @@ docs, tests, SHA256SUMS).
   - V3Q `cel_unavailable` (CEL engine absent) → **fails closed** (DENY) unless the caller passes
     `v3q_allow_on_cel_indeterminate=True` (opt-in; never the default). Enforces the source README's
     "do not silently pass applicability" rule.
-  - V3Q `allow` / `require_approval` → proceeds to the normal governance + capability path.
+  - V3Q `allow` → proceeds to the normal governance + capability path.
+  - V3Q `require_approval` → short-circuit DENY until a valid external approval proof is supplied.
   - Any V3Q gate exception → fails closed (gate must never crash the executor open).
 - The V3Q import is **lazy** (`try/except` at module load) so the execution package's import graph
   never hard-depends on the v3q package.
@@ -113,7 +116,7 @@ breaking the running system or faking enforcement, V3Q is **opt-in by trusted ke
 - `build_gate(trusted_keys=None)` returns `None` (not configured). Call sites wrap
   their `ExecutionGate` with `with_v3q(build_gate(...))` only when a trusted-key
   registry is supplied. With no keys, behavior is byte-for-byte unchanged (default).
-- When configured with real owner keys, V3Q sits in front of the live path and
+- When configured with trusted public keys, V3Q sits in front of the live path and
   **requires a signed authority proof**; absence or bad proof fails closed even
   though Beginnings governance would allow.
 
@@ -148,25 +151,23 @@ Each domain should (a) persist a real trusted-key registry (upstream
 V3Q stays dormant-by-default (safe) at each call site. The dispatcher's cross-engine
 operations (`cross_engine_cascade.*`) are not yet mapped to V3Q action types.
 
-## 14. Production deployment readiness (added 2026-07-17, per `make production ready`)
-V3Q is no longer dormant-by-accident; it is **config-driven and fail-safe**:
+## 14. Production deployment readiness
+V3Q is config-driven, externally authorized, and fail-closed:
 
-- A REAL owner keypair was generated. The public trusted-key registry
-  (`packages/thirstys-standard-v3q/trusted-keys.json`, `{"keys":[owner-primary]}`)
-  is committed. The private key (`owner-private.json`) is gitignored — it must be
-  provisioned via secret management in each deployment. Rotate with
-  `tools/create_owner_key.py` and re-commit the matching public registry.
-- `deployment.py`: `load_gate_config()` discovers config from env vars (12-factor):
-  `THIRSTYS_V3Q_OWNER_KEY` (private key path, required for activation),
-  `THIRSTYS_V3Q_REGISTRY` (optional; defaults to the packaged `trusted-keys.json`),
-  `THIRSTYS_V3Q_OP_MAP` (optional `op -> [class,type]` override). Malformed/partial
-  config yields `None` (dormant) and never raises.
-- `build_gate()` auto-loads that config when called with no args. Returns `None`
-  (dormant) unless the owner key is present; otherwise returns an ACTIVE gate.
-- The gate **self-mints** signed Ed25519 authority + approval proofs (bound to the
-  action's task scope + V3Q action type) when an owner key is configured, so call
-  sites need only supply the V3Q action mapping — the runtime acts as the authorized
-  owner. Without an owner key, no proof is fabricated and a missing proof fails closed.
+- The public trusted-key registry is committed. The private owner key is gitignored,
+  must remain offline from the application runtime, and must never be mounted into a
+  pod or container. Rotate it with `tools/create_owner_key.py` and commit only the
+  reviewed replacement public document.
+- `deployment.py` discovers `THIRSTYS_V3Q_REGISTRY` (optional in required mode;
+  defaults to the packaged public registry) and `THIRSTYS_V3Q_OP_MAP` (optional
+  `op -> [class,type]` override). Invalid configuration raises when
+  `THIRSTYS_V3Q_REQUIRED=true`.
+- `build_gate()` returns `None` in unconfigured development. Required production
+  returns an active public-key verifier.
+- The online gate never loads an owner private key and never mints authority or
+  approval. Callers must supply externally signed, scope-bound proofs. Missing
+  authority denies; missing approval returns `require_approval`, which the execution
+  gate blocks until a valid external approval proof is supplied.
 - Built-in per-domain `operation_to_action` map added (atlas.projection.record,
   swr.scenario.record -> local_reversible/write; cross_engine_cascade.* ->
   externally_consequential/deploy_visible_service). Unmapped ops fall back to the raw
@@ -174,15 +175,15 @@ V3Q is no longer dormant-by-accident; it is **config-driven and fail-safe**:
 - All three call sites inject `state["v3q_action"]` (atlas + swr via `request_to_v3q_action`;
   dispatcher via the same). SWR's `war_room.py` now merges the V3Q mapping into the
   submit `state` alongside its governance state.
-- Tests: +2 production-path tests in `test_integration_beginnings.py` prove
-  config-driven activation + auto-mint (ALLOW for mapped/approval ops, DENY for
-  unmapped). The atlas enforcement tests prove live gating with manually-supplied
+- Tests in `test_integration_beginnings.py` prove public-key activation,
+  missing-proof denial, external authority and approval validation, and unmapped
+  operation denial. The atlas enforcement tests prove live gating with manually-supplied
   proofs. Execution-gate tests prove the seam (deny/allow/cel-unavailable/fault/
   absent) stays correct.
 
-ACTIVATION IN PRODUCTION: set `THIRSTYS_V3Q_OWNER_KEY=/path/to/owner-private.json`
-(pointing at the secret-managed key whose public is in the committed registry). No
-code change. CI / local dev without the secret stays dormant and green.
+ACTIVATION IN PRODUCTION: set `THIRSTYS_V3Q_REQUIRED=true`; optionally point
+`THIRSTYS_V3Q_REGISTRY` at an approved public-key registry. Private signing keys stay
+outside the online runtime. CI/local development without required mode stays dormant.
 
 Validation: execution 29, atlas 369, v3q 34, swr 23, api 52/1skip — all green;
 ruff clean on all touched files. Source repo unchanged (SHA `d84dbe7a…`).

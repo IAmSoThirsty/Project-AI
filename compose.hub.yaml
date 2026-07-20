@@ -1,0 +1,38 @@
+# Overlay that runs the PUBLISHED Docker Hub images instead of building locally.
+#   docker compose -f compose.yaml -f compose.hub.yaml pull
+#   docker compose -f compose.yaml -f compose.hub.yaml up -d --wait
+# `!reset null` drops each service's build: block so Compose uses the pulled
+# image rather than rebuilding from source. Postgres already uses a public
+# image and needs no override.
+services:
+  api:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-api:0.0.2
+
+  docs-portal:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-docs-portal:0.0.2
+
+  proof-portal:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-proof-portal:0.0.2
+
+  operator-console:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-operator-console:0.0.2
+
+  swr:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-swr:0.0.2
+
+  atlas:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-atlas:0.0.2
+
+  arbiter-rlp:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-arbiter-rlp:0.0.2
+
+  genesis:
+    build: !reset null
+    image: docker.io/iamsothirsty/project-ai-genesis:0.0.2

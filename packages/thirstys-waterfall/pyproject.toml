@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "project-ai-thirstys-waterfall"
+version = "0.0.3"
+description = "Project-AI rebuild of the standalone Thirstys Waterfall runtime"
+readme = "README.md"
+requires-python = "==3.12.10"
+license = "MIT"
+dependencies = [
+    "cryptography>=41.0.0",
+    "project-ai-waterfall-adapter",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/thirstys_waterfall", "src/project_ai_waterfall"]

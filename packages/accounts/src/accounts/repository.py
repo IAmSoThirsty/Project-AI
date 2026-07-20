@@ -2,15 +2,22 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
-from accounts.models import Account, AccountRole, SecurityEvent, StoredSession
+from accounts.models import (
+    Account,
+    AccountRole,
+    MachineCredential,
+    SecurityEvent,
+    StoredSession,
+)
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 def _parse_datetime(value: str | None) -> datetime | None:
@@ -137,6 +144,24 @@ class AccountRepository:
                     """
                     ALTER TABLE accounts ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0;
                     PRAGMA user_version = 4;
+                    """
+                )
+            if current <= 4:
+                connection.executescript(
+                    """
+                    CREATE TABLE IF NOT EXISTS machine_credentials (
+                        id TEXT PRIMARY KEY,
+                        label TEXT NOT NULL,
+                        token_hash TEXT NOT NULL UNIQUE,
+                        scopes TEXT NOT NULL,
+                        created_at TEXT NOT NULL,
+                        created_by TEXT NOT NULL REFERENCES accounts(id) ON DELETE RESTRICT,
+                        last_used_at TEXT,
+                        revoked_at TEXT
+                    );
+                    CREATE INDEX IF NOT EXISTS machine_credentials_active
+                        ON machine_credentials(revoked_at);
+                    PRAGMA user_version = 5;
                     """
                 )
 
@@ -459,6 +484,72 @@ class AccountRepository:
             )
             for row in rows
         )
+
+    @staticmethod
+    def _machine_credential(row: sqlite3.Row | None) -> MachineCredential | None:
+        if row is None:
+            return None
+        scopes = json.loads(str(row["scopes"]))
+        if not isinstance(scopes, list) or not all(isinstance(item, str) for item in scopes):
+            raise RuntimeError("Stored machine credential scopes are invalid")
+        return MachineCredential(
+            id=str(row["id"]),
+            label=str(row["label"]),
+            token_hash=str(row["token_hash"]),
+            scopes=tuple(scopes),
+            created_at=datetime.fromisoformat(str(row["created_at"])),
+            created_by=str(row["created_by"]),
+            last_used_at=_parse_datetime(row["last_used_at"]),
+            revoked_at=_parse_datetime(row["revoked_at"]),
+        )
+
+    def create_machine_credential(self, credential: MachineCredential) -> None:
+        with self._connect() as connection:
+            connection.execute(
+                """INSERT INTO machine_credentials
+                (id, label, token_hash, scopes, created_at, created_by, last_used_at, revoked_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    credential.id,
+                    credential.label,
+                    credential.token_hash,
+                    json.dumps(credential.scopes, separators=(",", ":")),
+                    credential.created_at.isoformat(),
+                    credential.created_by,
+                    credential.last_used_at.isoformat() if credential.last_used_at else None,
+                    credential.revoked_at.isoformat() if credential.revoked_at else None,
+                ),
+            )
+
+    def machine_credential_by_id(self, credential_id: str) -> MachineCredential | None:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT * FROM machine_credentials WHERE id = ?", (credential_id,)
+            ).fetchone()
+        return self._machine_credential(row)
+
+    def machine_credentials(self) -> tuple[MachineCredential, ...]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT * FROM machine_credentials ORDER BY created_at, id"
+            ).fetchall()
+        return tuple(item for row in rows if (item := self._machine_credential(row)) is not None)
+
+    def touch_machine_credential(self, credential_id: str, used_at: datetime) -> None:
+        with self._connect() as connection:
+            connection.execute(
+                "UPDATE machine_credentials SET last_used_at = ? WHERE id = ? AND revoked_at IS NULL",
+                (used_at.isoformat(), credential_id),
+            )
+
+    def revoke_machine_credential(self, credential_id: str, revoked_at: datetime) -> bool:
+        with self._connect() as connection:
+            cursor = connection.execute(
+                """UPDATE machine_credentials SET revoked_at = ?
+                WHERE id = ? AND revoked_at IS NULL""",
+                (revoked_at.isoformat(), credential_id),
+            )
+            return cursor.rowcount == 1
 
     def rate_limit_hit(
         self,

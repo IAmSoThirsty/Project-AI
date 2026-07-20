@@ -43,8 +43,10 @@ class AlienInvadersEngine:
     """
     Alien Invaders Contingency Plan Defense (AICPD) Engine
 
-    A complete, production-grade simulation system for modeling alien invasion
+    A complete, locally validated simulation system for modeling alien invasion
     scenarios and their cascading effects across all domains of human civilization.
+    This package is a simulation surface, not an approved production service;
+    deployment claims remain subject to the current release checklist and CAB.
 
     Implements mandatory interface:
     - init(): Initialize simulation

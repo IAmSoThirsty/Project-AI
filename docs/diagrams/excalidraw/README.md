@@ -1,5 +1,9 @@
 # Excalidraw Concept Visualizations
 
+> These are documentation/visualization assets. “Production-grade” describes
+> their rendering quality and editability, not Project-AI runtime deployment
+> approval; current release status is governed by the successor CAB pack.
+
 Production-grade visual diagrams for complex Project-AI architectural concepts.
 
 ## Overview

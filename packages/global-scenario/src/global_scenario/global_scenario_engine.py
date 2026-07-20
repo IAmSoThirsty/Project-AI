@@ -2,7 +2,10 @@
 Global Scenario Engine - God-Tier Monolithic Real-World Risk Analysis System
 Project-AI Production-Grade Global Contingency Simulation
 
-This module implements a comprehensive, production-ready global scenario engine that:
+This module implements a comprehensive global scenario simulation engine that is
+validated as a local/research runtime surface. It is not a deployed production
+service; live-data credentials, operational controls, target monitoring, and
+release approval remain separate gates.
 
 1. **Real-World Data ETL**: Loads actual time series data from 2016-YTD using live APIs:
    - World Bank API: Economic indicators, GDP, trade, development
@@ -22,8 +25,10 @@ This module implements a comprehensive, production-ready global scenario engine 
 4. **Crisis Alerting**: Auto-generates alerts for high-probability global crises with
    full explainability, supporting evidence, and causal activation chains.
 
-All code is production-ready, fully integrated with simulation_contingency_root.py
-contract, extensively documented, and designed for maximal density and extensibility.
+The implementation is integrated with the simulation contract, extensively
+documented, and designed for maximal density and extensibility. Production
+deployment claims must still be supported by the repository's current release
+checklist and CAB evidence.
 """
 
 

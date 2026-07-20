@@ -21,6 +21,8 @@ from accounts.models import (
     Account,
     AccountRole,
     BootstrapResult,
+    MachineCredential,
+    MachineCredentialResult,
     ManagedAccountResult,
     MfaEnrollment,
     SecurityEvent,
@@ -93,6 +95,13 @@ class PermissionDenied(AccountServiceError):
 
 class AccountConflict(AccountServiceError):
     pass
+
+
+class InvalidMachineCredential(AccountServiceError):
+    pass
+
+
+MACHINE_CREDENTIAL_SCOPES = frozenset({"evidence.read", "evidence.write", "analysis.generate"})
 
 
 def _utc_now() -> datetime:
@@ -373,6 +382,85 @@ class AccountService:
         account, _ = self.authenticate(token)
         self.require_permission(account, InterfacePermission.SECURITY_EVENTS_VIEW)
         return self.repository.security_events()
+
+    def list_machine_credentials(self, token: str) -> tuple[MachineCredential, ...]:
+        account, _session = self.authenticate(token)
+        self.require_permission(account, InterfacePermission.SYSTEM_CONFIGURE)
+        return self.repository.machine_credentials()
+
+    def create_machine_credential(
+        self,
+        token: str,
+        csrf_token: str | None,
+        *,
+        label: str,
+        scopes: tuple[str, ...],
+        source: str,
+    ) -> MachineCredentialResult:
+        account, session = self.authenticate(token)
+        self.require_csrf(session, csrf_token)
+        self.require_permission(account, InterfacePermission.SYSTEM_CONFIGURE)
+        if session.mfa_verified_at is None:
+            raise MfaRequired("Recent MFA verification required")
+        normalized_label = label.strip()
+        if not 1 <= len(normalized_label) <= 128:
+            raise AccountConflict("Machine credential label must be 1-128 characters")
+        normalized_scopes = tuple(dict.fromkeys(scope.strip() for scope in scopes if scope.strip()))
+        if not normalized_scopes or not set(normalized_scopes) <= MACHINE_CREDENTIAL_SCOPES:
+            raise AccountConflict("Machine credential scopes are invalid")
+        credential_id = uuid4().hex
+        token = f"mc_{credential_id}.{secrets.token_urlsafe(32)}"
+        now = self.clock()
+        credential = MachineCredential(
+            id=credential_id,
+            label=normalized_label,
+            token_hash=self.password_hasher.hash_password(token),
+            scopes=normalized_scopes,
+            created_at=now,
+            created_by=account.id,
+            last_used_at=None,
+            revoked_at=None,
+        )
+        self.repository.create_machine_credential(credential)
+        self._event(
+            "auth.machine_credential_created",
+            account.id,
+            source,
+            f"credential_id={credential.id};label={credential.label};scopes={','.join(credential.scopes)}",
+        )
+        return MachineCredentialResult(credential=credential, token=token)
+
+    def authenticate_machine_credential(
+        self, token: str, required_scope: str | None = None
+    ) -> MachineCredential:
+        if not token.startswith("mc_") or "." not in token:
+            raise InvalidMachineCredential("Invalid machine credential")
+        credential_id, _secret = token[3:].split(".", maxsplit=1)
+        credential = self.repository.machine_credential_by_id(credential_id)
+        if (
+            credential is None
+            or credential.revoked_at is not None
+            or not self.password_hasher.verify_password(token, credential.token_hash)
+        ):
+            raise InvalidMachineCredential("Invalid machine credential")
+        if required_scope is not None and required_scope not in credential.scopes:
+            raise PermissionDenied("Machine credential scope is insufficient")
+        self.repository.touch_machine_credential(credential.id, self.clock())
+        return credential
+
+    def revoke_machine_credential(
+        self,
+        token: str,
+        csrf_token: str | None,
+        credential_id: str,
+        source: str,
+    ) -> None:
+        account, session = self.authenticate(token)
+        self.require_csrf(session, csrf_token)
+        self.require_permission(account, InterfacePermission.SYSTEM_CONFIGURE)
+        if not self.repository.revoke_machine_credential(credential_id, self.clock()):
+            raise AccountConflict("Machine credential does not exist or is already revoked")
+        self._event("auth.machine_credential_revoked", account.id, source, credential_id)
 
     def rotate_session(
         self, token: str, csrf_token: str | None, source: str, user_agent: str
