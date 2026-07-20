@@ -36,7 +36,7 @@ The observed scheduled failures are runs `29709754498`, `29698528738`, and
 | Helm | Lint passes; production render verifies `47` manifests and eight digest-pinned images |
 | Web/Rust/Android/Desktop | Local acceptance gates pass; release artifacts remain unsigned or working-tree evidence |
 | Waterfall | Standalone `309` tests; copied Project-AI replay `313` tests, no warnings |
-| Pre-deployment verifier | **Fail-closed** while owner-private material, external successor evidence, approved ingress, and remote-backup configuration remain unresolved |
+| Pre-deployment verifier | **Fail-closed** while independent successor evidence, approved ingress, and remote-backup configuration remain unresolved; owner-private checkout exclusion now passes |
 | V3Q manifest review snapshot | `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c` source hash; canonical ratified hash `15c8e4ba51dd4e3d0e562da670848d4c62e2ee98ac3983429aac8a3ff44db80f` | `owner-ratification.json` verifies the exact ratified artifact |
 | Machine-readable successor evidence | `REMOTE_SUCCESSOR_EVIDENCE.json` currently has `status: missing` | Gate remains closed until owner, remote, overlay, backup, monitoring-CRD, dependency, and target-environment fields are evidenced and independently reviewed |
 

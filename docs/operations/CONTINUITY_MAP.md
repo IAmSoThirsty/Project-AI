@@ -7,9 +7,9 @@
   `packages/thirstys-standard-v3q/trusted-keys.json`.
 - `owner-ratification.json` and `thirstys-standard-v3q.ratified.manifest.yaml`
   were generated and independently verified with `verify_ratification.py`.
-- The retired ignored `owner-private.json` remains present locally and is not
-  read or included in the release; secure retirement is still required before
-  the local deployment gate can pass.
+- The retired ignored `owner-private.json` was moved out of the checkout into
+  restricted off-repository custody on 2026-07-20. Independent retirement and
+  custody proof is still required before the production gate can pass.
 - The clean-checkout gate-test portability repair is committed and pushed.
   Fresh successor CI run `29716300475` and vulnerability run `29716300404`
   passed for immutable candidate `6684828d`; the remaining remote evidence is
@@ -301,8 +301,9 @@ state.
   and enforced by `tools/verify_pre_deployment.py`; targeted tests pass, and a
   clean rebuilt image plus the replaced healthy API both report the file
   absent. The old `owner-primary` key and affected local image layers remain a
-  mandatory owner-controlled rotation/retirement blocker; no private material
-  was printed, used, deleted, or moved.
+  mandatory owner-controlled rotation/retirement evidence item. The checkout
+  copy was later moved into restricted off-repository custody; no private
+  material is used by the runtime.
 - **V3Q authority-boundary repair:** added `THIRSTYS_V3Q_REQUIRED`; development
   remains dormant, while production loads public verification keys only. Hostile
   review found that the prior integration self-minted authority/approval with a
