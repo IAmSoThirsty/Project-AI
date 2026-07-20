@@ -86,6 +86,15 @@ def candidate_test_files(root: Path = ROOT) -> tuple[PurePosixPath, ...]:
 
 
 def _group_key(path: PurePosixPath) -> str:
+    # Keep real subprocess/thread-pool tests in their own pytest process.
+    # Neighboring fixtures can start background monitors that otherwise starve
+    # process creation on constrained hosted runners.
+    if path.as_posix() in {
+        "packages/cerberus/tests/test_cerberus_sandbox.py",
+        "packages/mcp_server/tests/test_e2e_stdio.py",
+        "packages/workflows/tests/test_workflows.py",
+    }:
+        return path.as_posix()
     if len(path.parts) >= 3 and path.parts[0] in {"apps", "packages"}:
         return "/".join(path.parts[:2])
     return path.parts[0]
@@ -107,6 +116,20 @@ def balanced_batches(
         target = min(range(batch_count), key=lambda index: (len(batches[index]), index))
         batches[target].extend(sorted(group))
     non_empty = [tuple(batch) for batch in batches if batch]
+    sensitive_paths = {
+        "packages/cerberus/tests/test_cerberus_sandbox.py",
+        "packages/mcp_server/tests/test_e2e_stdio.py",
+        "packages/workflows/tests/test_workflows.py",
+    }
+    isolated: list[tuple[PurePosixPath, ...]] = []
+    regular: list[tuple[PurePosixPath, ...]] = []
+    for batch in non_empty:
+        sensitive = tuple(path for path in batch if path.as_posix() in sensitive_paths)
+        remainder = tuple(path for path in batch if path.as_posix() not in sensitive_paths)
+        isolated.extend((path,) for path in sensitive)
+        if remainder:
+            regular.append(remainder)
+    non_empty = [*isolated, *regular]
 
     # Run subprocess/concurrency integration tests before broad integration
     # batches, then leave Waterfall (which exercises many thread/process-backed

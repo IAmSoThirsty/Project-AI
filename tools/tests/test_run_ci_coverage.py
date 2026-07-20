@@ -119,6 +119,40 @@ def test_subprocess_integration_batch_runs_first() -> None:
     assert batches[0] == (PurePosixPath("packages/cerberus/tests/test_cerberus_sandbox.py"),)
 
 
+def test_process_sensitive_tests_are_isolated_from_neighboring_fixtures() -> None:
+    paths = (
+        PurePosixPath("packages/cerberus/tests/test_cerberus_agent.py"),
+        PurePosixPath("packages/cerberus/tests/test_cerberus_sandbox.py"),
+        PurePosixPath("packages/mcp_server/tests/test_e2e_stdio.py"),
+        PurePosixPath("packages/workflows/tests/test_workflows.py"),
+    )
+
+    batches = MODULE.balanced_batches(paths, 4)
+
+    assert all(len(batch) == 1 for batch in batches)
+
+
+def test_process_sensitive_tests_stay_isolated_when_batches_are_shared() -> None:
+    paths = (
+        PurePosixPath("packages/cerberus/tests/test_cerberus_sandbox.py"),
+        PurePosixPath("packages/mcp_server/tests/test_e2e_stdio.py"),
+        PurePosixPath("packages/workflows/tests/test_workflows.py"),
+        PurePosixPath("packages/cerberus/tests/test_cerberus_agent.py"),
+    )
+
+    batches = MODULE.balanced_batches(paths, 2)
+
+    assert all(
+        len(batch) == 1
+        for batch in batches
+        if any(
+            path.parts[:2]
+            in {("packages", "cerberus"), ("packages", "mcp_server"), ("packages", "workflows")}
+            for path in batch
+        )
+    )
+
+
 def test_batch_disables_partial_threshold_but_preserves_coverage_collection() -> None:
     arguments = MODULE._pytest_arguments((PurePosixPath("tests/test_example.py"),))
 
