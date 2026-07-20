@@ -209,38 +209,46 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.3 Branch & Remote Discipline
 
-- Release-development branch: `main`. Local `main` and `origin/main` currently
-  point to `82aa1476657e16a1d38caccba38357c83380a3e3`; the v0.0.3 successor is a
-  large dirty working tree. GitHub's default branch remains legacy `master`.
+- Current release-readiness branch: `agent/production-readiness-2026-07-19`,
+  clean and pushed at the latest follow-up head recorded in the continuity map.
+  The immutable v0.0.3 code candidate is
+  `6684828d23b08beaac77aee5efadc532bed23181`; local `main` and `origin/main`
+  remain the historical `82aa1476657e16a1d38caccba38357c83380a3e3` baseline.
+  GitHub's default branch remains legacy `master` at
+  `9fc3c93e6abd02a14bd141fab4d3ef772fa090bf`.
   Commit or push only on explicit user authorization.
 - Working branches observed (per `git branch -a`, 2026-07-11):
   - `chore/warning-cleanup-utc-artifacts` (merged pointer; the former `codex/*` branches were fully merged and deleted 2026-07-10)
-- Safety: never rewrite existing commits. Push only a fresh `main`. Never modify legacy `master`, existing tags, or the remote default branch.
+- Safety: never rewrite existing commits. Push only a fresh, explicitly
+  authorized working branch. Never modify legacy `master`, existing tags, or
+  the remote default branch.
 - No version tag, GitHub Release, deployment, package publication, container publication, or production-readiness claim is part of any current gate.
 
-### 2.4 Verified Evidence Inventory (as of 2026-06-24, from `STAGE_18_ACCEPTANCE.md`)
+### 2.4 Verified Evidence Inventory (current through 2026-07-20)
 
-- Strict MyPy: 70 source files, no issues.
-- Pytest: 447 passed.
-- Branch coverage: 89.41%.
-- Security matrix: 312/312 blocked.
-- Canonical replay: 5/5 invariants passed.
-- Frozen history: 2,264/2,264 sections verified.
-- Legacy source snapshot: `3fa803ab9a3751217b58c9e591cf3f515da5ab02`, unchanged.
-- Compose: 7/7 healthy and hardened.
-- Android, Rust, Web, Desktop, SBOM, Helm — all green in detached clean-checkout runs at `baa98e2`.
+- Full workspace pytest: `3410 passed, 5 skipped`; the skips require the
+  PostgreSQL integration-test environment variable.
+- Strict pre-deployment diagnostics pass all non-blocking repository checks and
+  report the remaining fail-closed owner/production prerequisites explicitly.
+- Immutable successor code candidate `6684828d` has green CI run
+  `29716300475` and vulnerability scan `29716300404`.
+- Follow-up gate/documentation head `3429be25` has green CI run `29717520103`
+  and vulnerability scan `29717520124`.
+- Canonical replay, frozen history, Compose, Helm, Rust, Node, Android,
+  Desktop, SBOM, and local security checks are recorded in the current CAB and
+  pre-deployment records.
 
 ### 2.5 Current Open Blockers (NOT dismissible per v3 §5)
 
-- Published v0.0.2 / `82aa147` CI is red. The dirty v0.0.3 successor contains
-  locally verified repairs, but it has no immutable commit, remote CI,
-  signature, attestation, or successor-image evidence.
+- The immutable successor has green CI and vulnerability evidence, but image
+  signatures, SBOM/provenance attestations, and external proof custody are not
+  recorded.
 - The ignored V3Q `owner-private.json` remains in the checkout. The old key must
-  be retired under the owner's approved process, replaced offline, and the
-  exact manifest ratified; the pre-deployment gate correctly fails closed.
-- No approved production cluster/namespace, target overlay, secret manager,
-  maintenance window, owners, paging route, rollback rehearsal, or acceptance
-  sign-off exists.
+-  be securely retired under the owner's approved process; the replacement key
+  and exact manifest ratification are already verified.
+- No approved production cluster/namespace, target overlay or hostname, remote
+  backup destination, secret manager, maintenance window, owners, paging route,
+  monitoring CRDs, rollback rehearsal, or acceptance sign-off exists.
 - Dependabot PRs #509 and #510 target legacy `master`, remain unstable, and
   require owner disposition.
 - **Safe to continue:** yes for local remediation; no for production deployment.
