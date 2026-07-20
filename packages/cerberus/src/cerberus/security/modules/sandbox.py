@@ -8,9 +8,9 @@ the deferral previously documented in ``cerberus.security``.
 Honest scope (this is NOT a security boundary):
 
 - :class:`AgentSandbox` applies POSIX resource limits (a no-op on Windows)
-  to the **current process** before invoking a callable in-process — it
-  constrains resources, it does not isolate. On POSIX the limits persist
-  for the process after the call.
+  to the **current process** while invoking a callable in-process — it
+  constrains resources, it does not isolate. The prior limits are restored
+  after the call so later work in the host process is not starved.
 - :class:`PluginSandbox` screens plugin source with a regex blocklist and
   executes it under restricted builtins. Blocklists are bypassable by
   construction; treat this as a guard rail against accidents, not against
@@ -68,13 +68,13 @@ class AgentSandbox:
     def execute(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
         """Execute a callable in-process under POSIX resource limits.
 
-        No-op limits on Windows; on POSIX the limits persist for the current
-        process after the call (upstream behavior, preserved and documented).
+        No-op limits on Windows; on POSIX the prior limits are restored after
+        the call so a sandboxed callable cannot disable later host operations.
 
         Raises:
             SandboxViolation: When a resource limit is exceeded.
         """
-        self._set_resource_limits()
+        previous_limits = self._set_resource_limits()
         try:
             return func(*args, **kwargs)
         except MemoryError as exc:
@@ -83,24 +83,40 @@ class AgentSandbox:
             if "CPU time limit exceeded" in str(exc):
                 raise SandboxViolation("CPU time limit exceeded") from exc
             raise
+        finally:
+            self._restore_resource_limits(previous_limits)
 
-    def _set_resource_limits(self) -> None:
+    def _set_resource_limits(self) -> dict[int, tuple[int, int]]:
         if sys.platform == "win32":  # Resource limits are POSIX-only.
+            return {}
+        import resource
+
+        requested = {
+            resource.RLIMIT_AS: self.config.max_memory_mb * 1024 * 1024,
+            resource.RLIMIT_CPU: self.config.max_cpu_time_seconds,
+            resource.RLIMIT_FSIZE: self.config.max_file_size_mb * 1024 * 1024,
+            resource.RLIMIT_NPROC: self.config.max_processes,
+        }
+        previous: dict[int, tuple[int, int]] = {}
+        for limit, soft_requested in requested.items():
+            soft_current, hard_current = resource.getrlimit(limit)
+            previous[limit] = (soft_current, hard_current)
+            soft_limit = (
+                soft_requested
+                if hard_current == resource.RLIM_INFINITY
+                else min(soft_requested, hard_current)
+            )
+            resource.setrlimit(limit, (soft_limit, hard_current))
+        return previous
+
+    @staticmethod
+    def _restore_resource_limits(previous: dict[int, tuple[int, int]]) -> None:
+        if sys.platform == "win32":
             return
         import resource
 
-        max_memory_bytes = self.config.max_memory_mb * 1024 * 1024
-        resource.setrlimit(resource.RLIMIT_AS, (max_memory_bytes, max_memory_bytes))
-        resource.setrlimit(
-            resource.RLIMIT_CPU,
-            (self.config.max_cpu_time_seconds, self.config.max_cpu_time_seconds),
-        )
-        max_file_bytes = self.config.max_file_size_mb * 1024 * 1024
-        resource.setrlimit(resource.RLIMIT_FSIZE, (max_file_bytes, max_file_bytes))
-        resource.setrlimit(
-            resource.RLIMIT_NPROC,
-            (self.config.max_processes, self.config.max_processes),
-        )
+        for limit, values in previous.items():
+            resource.setrlimit(limit, values)
 
     def execute_code(self, code: str, timeout: int | None = None) -> dict[str, Any]:
         """Execute Python code in a fresh subprocess with a minimal environment.
