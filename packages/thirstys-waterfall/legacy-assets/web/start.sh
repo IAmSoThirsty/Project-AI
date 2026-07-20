@@ -25,7 +25,7 @@ if [ "${WORKERS:-}" != "" ]; then
     echo "Workers: ${WORKERS:-4}"
     echo "Worker class: ${WORKER_CLASS:-sync}"
     echo "Port: ${WEB_PORT:-8080}"
-    
+
     exec gunicorn \
         --workers="${WORKERS:-4}" \
         --worker-class="${WORKER_CLASS:-sync}" \
@@ -42,7 +42,7 @@ else
     echo "Host: ${WEB_HOST:-0.0.0.0}"
     echo "Port: ${WEB_PORT:-8080}"
     echo "Debug: ${DEBUG:-false}"
-    
+
     exec ${PYTHON} -c "
 from app import create_app
 app = create_app()

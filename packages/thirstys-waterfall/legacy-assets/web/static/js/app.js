@@ -1,9 +1,9 @@
 /**
  * Thirsty's Waterfall - Privacy Browser Application Logic
  * =======================================================
- * 
+ *
  * MAXIMUM ALLOWED DESIGN IMPLEMENTATION
- * 
+ *
  * Architecture:
  * ------------
  * 1. Application State Management Layer
@@ -16,7 +16,7 @@
  * 8. Notification System
  * 9. Authentication Layer
  * 10. Error Handling & Recovery
- * 
+ *
  * Design Patterns:
  * ---------------
  * - Singleton: Application state
@@ -320,8 +320,8 @@ class TabManager {
             // For demo purposes, show a placeholder
             this.viewport.innerHTML = `
                 <div class="page-content" style="padding: 2rem;">
-                    <div style="background: var(--color-glass); backdrop-filter: blur(20px); 
-                                border: 1px solid var(--color-glass-border); border-radius: 1rem; 
+                    <div style="background: var(--color-glass); backdrop-filter: blur(20px);
+                                border: 1px solid var(--color-glass-border); border-radius: 1rem;
                                 padding: 2rem; text-align: center;">
                         <i class="fas fa-lock" style="font-size: 3rem; color: var(--color-success); margin-bottom: 1rem;"></i>
                         <h2 style="margin-bottom: 1rem;">Encrypted Connection</h2>
@@ -688,7 +688,7 @@ style.textContent = `
         z-index: var(--z-tooltip);
         max-width: 400px;
     }
-    
+
     @keyframes slideIn {
         from {
             transform: translateX(100%);
@@ -699,7 +699,7 @@ style.textContent = `
             opacity: 1;
         }
     }
-    
+
     @keyframes slideOut {
         from {
             transform: translateX(0);

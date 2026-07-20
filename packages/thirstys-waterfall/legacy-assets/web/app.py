@@ -15,7 +15,7 @@ def create_app(config=None):
     # Configuration
     app.config["JSON_SORT_KEYS"] = False
     app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
-    
+
     # Security headers
     @app.after_request
     def set_security_headers(response):

@@ -113,7 +113,9 @@ jobs:
         #     UNKNOWN. Verify the installed license text exactly before
         #     excluding only this package from the metadata-based allow-list.
         run: |
-          python - <<'PY'
+          # Use the uv-managed interpreter; `uv sync` does not activate the
+          # workspace environment for the runner's bare `python` command.
+          uv run python - <<'PY'
           from importlib.metadata import distribution
 
           package = distribution("cel-python")

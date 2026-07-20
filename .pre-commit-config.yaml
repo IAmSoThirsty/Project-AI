@@ -9,7 +9,9 @@ repos:
       - id: end-of-file-fixer
         exclude: ^(apps/web-static/ompt-reference/|docs/internal/verification/|docs/legacy-archive/|packages/_staging/|packages/rlp/governance_framework/|packages/security/reference/|packages/thirstys-standard-v3q/(README\.md|SHA256SUMS|trusted-keys\.json|docs/verification/))
       - id: check-yaml
-        exclude: ^helm/project-ai/templates/
+        # compose.hub.yaml uses Docker Compose's !reset extension, which is
+        # valid Compose syntax but intentionally outside standard YAML tags.
+        exclude: ^(helm/project-ai/templates/|compose\.hub\.yaml$)
       - id: check-json
       - id: check-toml
       - id: check-merge-conflict
