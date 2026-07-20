@@ -62,7 +62,7 @@ was not read, changed, staged, or used by these commands.
 
 | Command | Result |
 |---|---|
-| `uv run python tools/verify_pre_deployment.py` | **Fail-closed:** all other checks pass, but the checkout contains `packages/thirstys-standard-v3q/owner-private.json`; owner-controlled rotation/retirement is required before this gate can pass |
+| `uv run python tools/verify_pre_deployment.py` | **Fail-closed:** owner-private checkout exclusion now passes; remote evidence, production host, and remote-backup gates remain unresolved |
 | `uv run python tools/canonical_replay.py` | Passed: 5/5 invariants |
 | `uv run python tools/verify_frozen_history.py` | Passed: 2264/2264 sections |
 | Earlier remediation checkpoint (`uv run pytest -q`) | Passed: 3049 passed, 5 environment-gated skips, 1 documented xfail, 1 warning; retained as historical working-tree evidence |
@@ -128,7 +128,7 @@ remain visible.
 | Standalone Waterfall web candidate | Rebuilt `thirstys-waterfall:production-candidate`; zero HIGH/CRITICAL Trivy findings and temporary `/health` probe returned 200; prior `latest` image had eight HIGH findings and is not promotable | Local candidate only; standalone registry publication, signature, and independent CI evidence remain required |
 | Waterfall authenticated API surface | Passed locally: status and operation routes require machine auth; operation requires V3Q-wired adapter/audit and records evidence hashes; OpenAPI baseline regenerated |
 | ADR-002 machine credentials | Passed locally: schema version 5 (SQLite/PostgreSQL), owner/MFA-protected one-time token issuance, scope enforcement, revocation, machine-write attribution, and SQLite→PostgreSQL migration against disposable PostgreSQL 16; focused account/API and 5 integration tests passed | Production-target migration/rollback and credential provisioning remain open |
-| Waterfall image secret containment | Passed: local image reports the V3Q owner-private path absent; host checkout still contains owner-controlled material and fails the fail-closed pre-deployment gate |
+| Waterfall image secret containment | Passed: local image and host checkout report the V3Q owner-private path absent; independent key-retirement/custody proof and other production gates remain open |
 
 ## Commands to complete the security bundle
 

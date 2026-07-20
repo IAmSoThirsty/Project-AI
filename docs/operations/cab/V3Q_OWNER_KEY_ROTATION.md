@@ -8,8 +8,9 @@
   `packages/thirstys-standard-v3q/owner-ratification.json`; independent
   verification passed.
 - The retired ignored `packages/thirstys-standard-v3q/owner-private.json`
-  remains in the local checkout and must be securely retired before the
-  pre-deployment gate can pass.
+  was moved out of the local checkout into restricted off-repository custody
+  on 2026-07-20. Independent key-retirement and custody proof is still
+  required before the pre-deployment gate can pass.
 
 **Status:** Required before any production deployment or V3Q owner-key use.
 

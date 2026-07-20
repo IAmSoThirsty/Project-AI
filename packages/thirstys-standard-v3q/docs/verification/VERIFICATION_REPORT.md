@@ -11,11 +11,11 @@
 - Recorded automated result: `23 passed`, `0 failed`, `0 errors`, `0 skipped`
 - Current Project-AI workspace package result: `46 passed`; the recorded
   standalone result above remains historical artifact evidence.
-- Current Project-AI checkout hygiene: **Blocked** — the retired ignored
-  `owner-private.json` is still present in the checkout. It is not part of the
-  version-controlled release artifact, but the production pre-deployment gate
-  correctly refuses this checkout until the owner retires that material outside
-  the repository.
+- Current Project-AI checkout hygiene: **Passed locally** — the retired ignored
+  `owner-private.json` is absent from the checkout after being moved into
+  restricted off-repository custody. Independent key-retirement and custody
+  proof remains unavailable, so the production pre-deployment gate remains
+  fail-closed.
 
 ## Direct result
 
@@ -92,10 +92,11 @@ The tests verify:
 - action restriction enforcement;
 - separation of authority and approval signature purposes.
 
-The release artifact contains no private owner key. The current Project-AI
-checkout still contains the retired ignored `owner-private.json`; this report
-does not read or use it, and the production pre-deployment gate remains
-fail-closed until the owner retires that material outside the repository.
+The release artifact contains no private owner key. The retired ignored
+`owner-private.json` is absent from the current Project-AI checkout after being
+moved into restricted off-repository custody; this report does not read or use
+the retained file. The production pre-deployment gate remains fail-closed until
+independent retirement and custody proof is available.
 
 ### Ratification mechanism
 

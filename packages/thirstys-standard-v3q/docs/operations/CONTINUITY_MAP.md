@@ -112,8 +112,10 @@ None in the recorded automated verification run.
 
 ## Blockers
 
-- The retired ignored `owner-private.json` remains in the local checkout and must
-  be securely removed before the production pre-deployment gate can pass.
+- The retired ignored `owner-private.json` has been moved out of the local
+  checkout into restricted off-repository custody. Independent retirement and
+  custody proof remains required before the production pre-deployment gate can
+  pass.
 - External proof custody, host integration, and production deployment controls
   remain unverified.
 - End-to-end enforcement in Project-AI requires a concrete execution boundary where every consequential tool call is routed through the gate.

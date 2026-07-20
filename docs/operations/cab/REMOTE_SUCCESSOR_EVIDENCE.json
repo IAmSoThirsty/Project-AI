@@ -62,5 +62,5 @@
     "target_environment_record": "CAB-2026-07-20",
     "rollback_rehearsal_record": "rollback-test/20260720-789"
   },
-  "blocking_reason": "The supplied change, vault, CAB, cluster, backup, and rollback identifiers are recorded as owner/operator claims only; they are not independently auditable from this checkout and therefore do not satisfy strict-gate evidence. The record remains review-only and status missing. Concrete local blockers also remain: owner-private.json is present, tracked production values contain a placeholder host and disabled remote backup, and exact per-image digest/signature/attestation entries are absent."
+  "blocking_reason": "The supplied change, vault, CAB, cluster, backup, and rollback identifiers are recorded as owner/operator claims only; they are not independently auditable from this checkout and therefore do not satisfy strict-gate evidence. The record remains review-only and status missing. The checkout copy of owner-private.json has been moved to restricted off-repository custody, but key retirement/custody proof remains unverified. Tracked production values still contain a placeholder host and disabled remote backup, and exact per-image digest/signature/attestation entries are absent."
 }
