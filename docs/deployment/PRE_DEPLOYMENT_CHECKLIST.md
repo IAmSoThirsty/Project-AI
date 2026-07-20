@@ -104,6 +104,10 @@ The source manifest remains `draft_unratified`; the signed
 V3Q production minimum acceptance is still not satisfied until the retired local
 material and external deployment controls are resolved.
 
+Owner-controlled `owner-primary` key material is retired from the trusted
+registry but still present as an ignored local file; secure destruction remains
+an owner-controlled pre-deployment step.
+
 Current draft-manifest review snapshot: `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c`.
 This hash is a review aid, not an owner ratification or release hash.
 

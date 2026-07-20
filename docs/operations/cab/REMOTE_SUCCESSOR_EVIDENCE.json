@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "candidate_version": "0.0.3",
-  "candidate_commit": "82aa1476657e16a1d38caccba38357c83380a3e3",
+  "candidate_commit": "f35a305f845b88d59d1d7922ad7262ff970dc0e5",
   "candidate_manifest_sha256": "3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c",
   "status": "missing",
   "review_only": true,
@@ -30,14 +30,14 @@
       29698528738,
       29686790959
     ],
-    "last_checked": "2026-07-19"
+    "last_checked": "2026-07-20"
   },
   "evidence": {
     "owner_key_rotation_record": null,
     "exact_manifest_ratification_record": "packages/thirstys-standard-v3q/owner-ratification.json (key owner-rotation-2026-07-19-01; verify_ratification.py passed)",
     "proof_custody_record": null,
     "remote_commit_sha": null,
-    "remote_ci_runs": [],
+    "remote_ci_runs": [29714482276, 29714482256],
     "image_digests": {},
     "signature_verifications": [],
     "sbom_attestations": [],

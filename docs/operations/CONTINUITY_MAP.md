@@ -10,10 +10,10 @@
 - The retired ignored `owner-private.json` remains present locally and is not
   read or included in the release; secure retirement is still required before
   the local deployment gate can pass.
-- Remote CI now passes pre-commit/gitleaks and the vulnerability license gate;
-  the exact branch run still has a coverage failure because the current-repo
-  gate tests assumed the ignored private file existed in clean CI checkouts.
-  That test portability repair is in progress.
+- The clean-checkout gate-test portability repair is committed and pushed.
+  Fresh successor CI run `29714482276` and vulnerability run `29714482256` are
+  the immutable evidence candidates for this branch; their final conclusions
+  are recorded only after the hosted runs complete.
 
 ## SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair
 

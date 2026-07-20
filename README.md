@@ -18,7 +18,7 @@ embed governance authority.
 
 - Local successor version: `0.0.3` (committed on the working branch; not tagged,
   merged, or published as a production release).
-- Active branch: `agent/production-readiness-2026-07-19` at `65bcd273`.
+- Active branch: `agent/production-readiness-2026-07-19` at `f35a305f`.
 - Stage 18 local acceptance: accepted from a detached clean checkout.
 - Published `v0.0.2` is superseded because its exact-commit CI failed and it
   does not contain the current hardening work.
@@ -130,11 +130,11 @@ tools/
 
 ## Build status
 
-The local v0.0.3 successor passes the recorded local acceptance gates. Remote
-CI for the published v0.0.2 checkpoint is red, and the v0.0.3 successor remains
-uncommitted, so no immutable successor CI claim exists yet. The tracked
-production host is still a placeholder and remote backup is unconfigured;
-open production work is tracked in the continuity map and CAB records.
+The local v0.0.3 successor passes the recorded local acceptance gates and is
+pushed on the active branch. Fresh successor CI and vulnerability runs are
+being checked for this immutable candidate; the tracked production host is
+still a placeholder and remote backup is unconfigured. Open production work is
+tracked in the continuity map and CAB records.
 
 ## License
 
