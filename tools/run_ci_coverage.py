@@ -106,7 +106,21 @@ def balanced_batches(
     for _key, group in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0])):
         target = min(range(batch_count), key=lambda index: (len(batches[index]), index))
         batches[target].extend(sorted(group))
-    return tuple(tuple(batch) for batch in batches if batch)
+    non_empty = [tuple(batch) for batch in batches if batch]
+
+    # The Waterfall subsystem exercises many thread/process-backed adapters.
+    # Keep that batch last so its runner-local resource churn cannot starve the
+    # later subprocess/concurrency integration tests on constrained CI hosts.
+    # The batch contents and combined coverage are unchanged; only execution
+    # order is made deterministic for the resource-bounded runner.
+    return tuple(
+        sorted(
+            non_empty,
+            key=lambda batch: any(
+                path.parts[:2] == ("packages", "thirstys-waterfall") for path in batch
+            ),
+        )
+    )
 
 
 def _run(arguments: Sequence[str]) -> None:

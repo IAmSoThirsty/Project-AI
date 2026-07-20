@@ -96,6 +96,18 @@ def test_balanced_batches_reject_zero_batches() -> None:
         MODULE.balanced_batches((), 0)
 
 
+def test_resource_intensive_waterfall_batch_runs_last() -> None:
+    paths = (
+        PurePosixPath("packages/thirstys-waterfall/tests/test_basic.py"),
+        PurePosixPath("packages/cerberus/tests/test_cerberus_sandbox.py"),
+        PurePosixPath("packages/workflows/tests/test_workflows.py"),
+    )
+
+    batches = MODULE.balanced_batches(paths, 2)
+
+    assert batches[-1] == (PurePosixPath("packages/thirstys-waterfall/tests/test_basic.py"),)
+
+
 def test_batch_disables_partial_threshold_but_preserves_coverage_collection() -> None:
     arguments = MODULE._pytest_arguments((PurePosixPath("tests/test_example.py"),))
 
