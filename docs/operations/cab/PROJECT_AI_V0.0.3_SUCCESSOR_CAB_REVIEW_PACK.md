@@ -2,7 +2,7 @@
 
 **Prepared:** 2026-07-20
 **Repository:** `IAmSoThirsty/Project-AI`
-**Candidate:** immutable successor code commit `6684828d23b08beaac77aee5efadc532bed23181`; current branch head is the docs-only follow-up `c526d9f5c9fcac714dcaa8241184f91386b5ba99`
+**Candidate:** immutable successor code commit `6684828d23b08beaac77aee5efadc532bed23181`; current branch head is the docs-only follow-up `22e16eb4ca1d964dc5a840220d3c0b5a2f23d9d9`
 **Decision:** **DEPLOYMENT NOT AUTHORIZED**
 
 This is the current CAB entry point for the v0.0.3 successor. The candidate
