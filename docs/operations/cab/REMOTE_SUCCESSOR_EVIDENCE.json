@@ -8,19 +8,19 @@
   "remote_repository": "IAmSoThirsty/Project-AI",
   "remote_default_branch": "master",
   "required": {
-    "owner_key_rotation_verified": true,
+    "owner_key_rotation_verified": false,
     "exact_manifest_ratification_verified": true,
-    "external_proof_custody_verified": true,
+    "external_proof_custody_verified": false,
     "commit_pushed": true,
     "successor_ci_green": true,
-    "image_signatures_verified": true,
-    "sbom_attestations_verified": true,
-    "production_overlay_verified": true,
-    "remote_backup_verified": true,
-    "monitoring_crds_verified": true,
-    "dependabot_disposition_verified": true,
-    "target_environment_approved": true,
-    "rollback_rehearsal_verified": true
+    "image_signatures_verified": false,
+    "sbom_attestations_verified": false,
+    "production_overlay_verified": false,
+    "remote_backup_verified": false,
+    "monitoring_crds_verified": false,
+    "dependabot_disposition_verified": false,
+    "target_environment_approved": false,
+    "rollback_rehearsal_verified": false
   },
   "observed": {
     "origin_main": "82aa1476657e16a1d38caccba38357c83380a3e3",
@@ -45,14 +45,14 @@
       {
         "record": "vault-audit/20260720-0345",
         "scope": "all eight images",
-        "result": "reported verified by independent owner/operator"
+        "result": "owner/operator claim recorded; not independently auditable from this checkout"
       }
     ],
     "sbom_attestations": [
       {
         "record": "vault-audit/20260720-0345",
         "scope": "all eight images",
-        "result": "reported verified by independent owner/operator"
+        "result": "owner/operator claim recorded; not independently auditable from this checkout"
       }
     ],
     "production_overlay_record": "change/DEPLOY-20260720-001",
@@ -62,5 +62,5 @@
     "target_environment_record": "CAB-2026-07-20",
     "rollback_rehearsal_record": "rollback-test/20260720-789"
   },
-  "blocking_reason": "External owner/operator references were supplied for key custody, proof custody, image signatures, SBOM attestations, production overlay, backup, monitoring, dependency disposition, target approval, and rollback. The record remains review-only and status missing because the checkout still contains owner-private.json, tracked production values still contain a placeholder host and disabled remote backup, and exact per-image digest/signature/attestation entries were not supplied."
+  "blocking_reason": "The supplied change, vault, CAB, cluster, backup, and rollback identifiers are recorded as owner/operator claims only; they are not independently auditable from this checkout and therefore do not satisfy strict-gate evidence. The record remains review-only and status missing. Concrete local blockers also remain: owner-private.json is present, tracked production values contain a placeholder host and disabled remote backup, and exact per-image digest/signature/attestation entries are absent."
 }
