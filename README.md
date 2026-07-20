@@ -132,8 +132,9 @@ tools/
 ## Build status
 
 The local v0.0.3 successor passes the recorded local acceptance gates and is
-pushed on the active branch. Fresh successor CI and vulnerability runs are
-being checked for this immutable candidate; the tracked production host is
+pushed on the active branch. Immutable code-candidate CI and vulnerability
+evidence are green, and the latest gate/documentation follow-up runs
+`29717520103` and `29717520124` also passed. The tracked production host is
 still a placeholder and remote backup is unconfigured. Open production work is
 tracked in the continuity map and CAB records.
 
