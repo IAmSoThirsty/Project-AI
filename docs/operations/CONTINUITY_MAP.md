@@ -17,8 +17,8 @@
   and rollback custody.
 - The current branch contains gate-report and documentation follow-ups after the
   immutable code candidate; its hosted follow-up runs are separate from the
-  code-candidate evidence above. Follow-up CI `29718089242` and vulnerability
-  scan `29718089237` passed for branch head `3af82525`. Dependabot PRs #509 and #510 remain open against `master`
+  code-candidate evidence above. Follow-up CI `29718283865` and vulnerability
+  scan `29718283860` passed for branch head `e5724025`. Dependabot PRs #509 and #510 remain open against `master`
   with no owner disposition recorded.
 
 ## HISTORICAL SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair

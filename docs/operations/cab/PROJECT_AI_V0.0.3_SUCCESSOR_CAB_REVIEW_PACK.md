@@ -11,8 +11,8 @@ runs `29716300475` and `29716300404`. It is not a production release: image
 signatures, attestations, proof custody, target approval, and deployment
 controls remain unverified.
 
-The active successor branch follow-up head `3af82525` also passed CI run
-`29718089242` and vulnerability scan `29718089237`; those runs cover the
+The active successor branch follow-up head `e5724025` also passed CI run
+`29718283865` and vulnerability scan `29718283860`; those runs cover the
 gate-report/documentation follow-ups and do not replace the immutable candidate
 evidence above.
 

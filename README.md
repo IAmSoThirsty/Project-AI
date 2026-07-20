@@ -134,7 +134,7 @@ tools/
 The local v0.0.3 successor passes the recorded local acceptance gates and is
 pushed on the active branch. Immutable code-candidate CI and vulnerability
 evidence are green, and the latest gate/documentation follow-up runs
-`29718089242` and `29718089237` also passed. The tracked production host is
+`29718283865` and `29718283860` also passed. The tracked production host is
 still a placeholder and remote backup is unconfigured. Open production work is
 tracked in the continuity map and CAB records.
 
