@@ -31,6 +31,13 @@ jobs:
           sudo apt-get install -y libegl1
       - name: Install locked workspace
         run: uv sync --frozen --all-extras --all-packages
+      - name: Test with branch coverage
+        # Run before the static-analysis tools because the hosted runner's
+        # process/thread budget is shared across the job. Coverage exercises
+        # real subprocess/concurrency paths and must start from a clean budget.
+        # Sequential batches preserve the aggregate source/branch/80% gate
+        # while releasing pytest state between batches.
+        run: uv run python tools/run_ci_coverage.py --batches 8
       - name: Pre-commit and gitleaks
         run: SKIP=no-commit-to-branch uv run pre-commit run --all-files
       - name: Ruff
@@ -42,12 +49,6 @@ jobs:
             packages/capability/src packages/execution/src packages/companion/src \
             packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src \
             packages/api/src packages/cli/src packages/sovereign-vault/src apps/desktop/src apps/services/src tools
-      - name: Test with branch coverage
-        # One monolithic coverage process exceeded the hosted runner's memory
-        # at 54% of the suite (exit 137). Sequential batches preserve the same
-        # aggregate source/branch/80% gate while releasing pytest state between
-        # batches.
-        run: uv run python tools/run_ci_coverage.py --batches 8
       - name: Canonical replay 5/5
         run: uv run python tools/canonical_replay.py
       - name: Frozen history 2264/2264
