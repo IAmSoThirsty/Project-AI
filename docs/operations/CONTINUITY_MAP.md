@@ -2,11 +2,12 @@
 
 ## SESSION UPDATE 2026-07-20 — Optional service portability boundary
 
-- **Mode:** Production-deployment-readiness remediation; no deployment,
-  publication, external write, secret access, or destructive cleanup.
+- **Mode:** Production-deployment-readiness remediation; successor image
+  publication and registry verification were exercised, but no production
+  deployment, cluster write, secret access, or destructive cleanup occurred.
 - **Workspace/branch:** `T:\00-Active\Project-AI-Beginnings` on
-  `agent/production-readiness-2026-07-19`; the branch advanced concurrently
-  from `5cd3381d` to pushed head `eaed9905` while this session was running.
+  `agent/production-readiness-2026-07-19`; pushed head `0ca8d8b3`; immutable
+  successor images were built from candidate `eaed9905`.
 - **Decision:** Connected services are used as optional, replaceable operator,
   mirror, transport, infrastructure, delivery, and artifact surfaces. They are
   not core runtime or governance dependencies.
@@ -26,23 +27,24 @@
   inspected and its first page rendered without clipping, overlap, or missing
   glyphs. The Academic Writing Toolkit connection was unavailable, so its
   optional logic review was not performed.
-- **Concurrent worktree state:** `PRODUCTION_DEPLOYMENT_DETAILS.md`,
-  `REMOTE_SUCCESSOR_EVIDENCE.json`, `TRACKING_ISSUE_DRAFT.md`, and
-  `FORMAL_CHANGE_RECORD.md` were modified outside this session after the
-  initial clean status check. Those changes were preserved and were not
-  attributed to this session.
+- **Committed readiness state:** `PRODUCTION_DEPLOYMENT_DETAILS.md`,
+  `REMOTE_SUCCESSOR_EVIDENCE.json`, `TRACKING_ISSUE_DRAFT.md`,
+  `FORMAL_CHANGE_RECORD.md`, and the optional-service verifier/docs are
+  committed and pushed at `0ca8d8b3`.
 - **Current GitHub evidence:** publish run `29731685685`, CI run `29731671162`,
   and vulnerability scan `29731671150` all completed successfully for
   `eaed9905`; the publish run's image builds, SBOM job, and published-image
   verification job all completed successfully.
 - **Commands run:** targeted Ruff/check formatting; 28 pre-deployment tests;
-  full pytest; web lint/test/build; strict pre-deployment report; GitHub and
-  connected-service read-only discovery; dual-browser local bootstrap render;
-  PDF metadata/extraction/render inspection; git status/diff checks.
-- **Failed/not verified:** the strict gate still fails on external evidence,
+  full pytest; web lint/test/build; strict pre-deployment report; manual
+  successor Publish workflow; registry digest/attestation inspection; GitHub
+  and connected-service read-only discovery; dual-browser local bootstrap
+  render; PDF metadata/extraction/render inspection; git status/diff checks.
+- **Failed/not verified:** the strict gate still fails on owner/proof custody,
+  approved target/overlay, monitoring/backup/rollback, dependency disposition,
   placeholder ingress, and disabled remote backup. Five PostgreSQL integration
   tests were skipped. No production cluster, DNS, backup restore, alert route,
-  Vercel/Neon/Sites project, or external service write was exercised.
+  Vercel/Neon/Sites project, or production deployment was exercised.
 - **Current blockers:** the strict production gate still requires owner-key
   retirement evidence, external proof custody, an approved real
   target/hostname overlay, a configured/tested remote backup target, monitoring
