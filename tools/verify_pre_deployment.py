@@ -318,9 +318,11 @@ def verify_remote_successor_evidence(root: Path = ROOT) -> int:
                 and re.fullmatch(r"sha256:[0-9a-f]{64}", digest) is not None,
                 f"verified successor image digest is invalid: {name}",
             )
+    unresolved = [field for field in required_fields if not required[field]]
     _require(
-        document.get("status") == "verified" and all(required[field] for field in required_fields),
-        "remote successor evidence is not verified; deployment remains fail-closed",
+        document.get("status") == "verified" and not unresolved,
+        "remote successor evidence is not verified; deployment remains fail-closed; "
+        f"unresolved fields: {', '.join(unresolved) or 'status'}",
     )
     return 4 + len(required_fields) + len(evidence_fields)
 

@@ -49,7 +49,10 @@ def test_pre_deployment_report_lists_all_current_blockers() -> None:
             for result in report
         )
     assert any(
-        result.startswith("FAIL remote successor evidence:") and "not verified" in result
+        result.startswith("FAIL remote successor evidence:")
+        and "not verified" in result
+        and "owner_key_rotation_verified" in result
+        and "rollback_rehearsal_verified" in result
         for result in report
     )
     assert any(result.startswith("PASS document scope boundaries:") for result in report)
