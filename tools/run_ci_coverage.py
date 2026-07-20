@@ -108,19 +108,25 @@ def balanced_batches(
         batches[target].extend(sorted(group))
     non_empty = [tuple(batch) for batch in batches if batch]
 
-    # The Waterfall subsystem exercises many thread/process-backed adapters.
-    # Keep that batch last so its runner-local resource churn cannot starve the
-    # later subprocess/concurrency integration tests on constrained CI hosts.
-    # The batch contents and combined coverage are unchanged; only execution
-    # order is made deterministic for the resource-bounded runner.
-    return tuple(
-        sorted(
-            non_empty,
-            key=lambda batch: any(
-                path.parts[:2] == ("packages", "thirstys-waterfall") for path in batch
-            ),
+    # Run subprocess/concurrency integration tests before broad integration
+    # batches, then leave Waterfall (which exercises many thread/process-backed
+    # adapters) last. This prevents runner-local resource churn from starving
+    # process creation on constrained CI hosts. Contents and coverage are
+    # unchanged; only execution order is deterministic.
+    def _order_key(batch: tuple[PurePosixPath, ...]) -> tuple[int, int]:
+        sensitive = any(
+            path.parts[:2]
+            in {
+                ("packages", "cerberus"),
+                ("packages", "mcp_server"),
+                ("packages", "workflows"),
+            }
+            for path in batch
         )
-    )
+        waterfall = any(path.parts[:2] == ("packages", "thirstys-waterfall") for path in batch)
+        return (0 if sensitive else 1 if not waterfall else 2, 1 if waterfall else 0)
+
+    return tuple(sorted(non_empty, key=_order_key))
 
 
 def _run(arguments: Sequence[str]) -> None:
