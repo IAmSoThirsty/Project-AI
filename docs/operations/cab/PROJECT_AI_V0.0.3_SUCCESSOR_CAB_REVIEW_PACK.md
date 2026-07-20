@@ -2,13 +2,15 @@
 
 **Prepared:** 2026-07-20
 **Repository:** `IAmSoThirsty/Project-AI`
-**Candidate:** immutable successor code commit `6684828d23b08beaac77aee5efadc532bed23181`; the active branch also contains gate-report and documentation follow-ups
+**Candidate:** immutable successor code commit `eaed9905cacc02e2fb98e3cc92356e8d160e593e`; the active branch also contains gate-report and documentation follow-ups
 **Decision:** **DEPLOYMENT NOT AUTHORIZED**
 
 This is the current CAB entry point for the v0.0.3 successor. The candidate
-is pushed and immutable successor CI plus vulnerability scans are green in
-runs `29716300475` and `29716300404`. It is not a production release: image
-signatures, attestations, proof custody, target approval, and deployment
+is pushed and successor CI, vulnerability scanning, image publication, and
+registry verification are green in runs `29731671162`, `29731671150`, and
+`29731685685`. All eight image digests, keyless signatures, and SPDX/SLSA
+attestation manifests are recorded in `REMOTE_SUCCESSOR_EVIDENCE.json`. It is
+not a production release: proof custody, target approval, and deployment
 controls remain unverified.
 
 The active successor branch follow-up head `e5724025` also passed CI run
@@ -25,9 +27,14 @@ The observed scheduled failures are runs `29709754498`, `29698528738`, and
 
 ## Local evidence
 
+- Optional connected-service usage is now governed by
+  `OPTIONAL_SERVICE_USAGE.json`: every named service is replaceable, activated
+  explicitly, and prohibited from becoming a core or governance dependency.
+  The tracked repository remains the canonical evidence and continuity source.
+
 | Gate | Result |
 |---|---|
-| Python suite | `3410 passed, 5 skipped`; zero failures, warnings, XFAIL, or XPASS |
+| Python suite | `3412 passed, 5 skipped`; zero failures, warnings, XFAIL, or XPASS |
 | Branch coverage | `87.32%` across eight batches; threshold `80%` |
 | Canonical/frozen provenance | `5/5` replay; `2264/2264` frozen sections |
 | Static/type gates | Ruff, format, canonical MyPy (`175` files), and strict Temporal/Waterfall-adapter MyPy pass |
@@ -38,7 +45,7 @@ The observed scheduled failures are runs `29709754498`, `29698528738`, and
 | Waterfall | Standalone `309` tests; copied Project-AI replay `313` tests, no warnings |
 | Pre-deployment verifier | **Fail-closed** while independent successor evidence, approved ingress, and remote-backup configuration remain unresolved; owner-private checkout exclusion now passes |
 | V3Q manifest review snapshot | `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c` source hash; canonical ratified hash `15c8e4ba51dd4e3d0e562da670848d4c62e2ee98ac3983429aac8a3ff44db80f` | `owner-ratification.json` verifies the exact ratified artifact |
-| Machine-readable successor evidence | `REMOTE_SUCCESSOR_EVIDENCE.json` currently has `status: missing` | Gate remains closed until owner, remote, overlay, backup, monitoring-CRD, dependency, and target-environment fields are evidenced and independently reviewed |
+| Machine-readable successor evidence | `REMOTE_SUCCESSOR_EVIDENCE.json` has `status: missing`; image digest/signature/attestation fields are now populated | Gate remains closed until owner/proof custody, approved overlay, backup, monitoring-CRD, dependency, target-environment, and rollback fields are evidenced and independently reviewed |
 
 Local evidence is necessary but is not production authorization.
 
@@ -56,13 +63,15 @@ deployment gate.
 - [ ] External proof issuance and custody are demonstrated for required-mode
       execution; the online runtime must not self-authorize.
 - [x] The remediation is committed, pushed, and tested by successor CI and
-      vulnerability scanning on immutable candidate `6684828d`.
+      vulnerability scanning on immutable candidate `eaed9905`; the publish
+      workflow verified all eight image signatures and registry attestations.
 - [ ] The remote default-branch workflow failure is resolved or explicitly
       retired; candidate-branch CI is green, but default-branch workflow health
       remains an independent CAB review item.
-- [ ] All eight image digests have independently verified cosign signatures,
-      SBOM/provenance attestations, and matching CodeQL/Checkov/Trivy and
-      language dependency evidence.
+- [x] All eight image digests have workflow-verified cosign signatures and
+      SPDX/SLSA registry attestation manifests for candidate `eaed9905`.
+- [ ] Matching CodeQL/Checkov/Trivy and language dependency evidence is
+      complete for the same immutable candidate.
 - [ ] An approved production cluster, context, namespace, Helm release,
       maintenance window, implementer, rollback owner, approver, support owner,
       paging route, secret manager, and acceptance authority are recorded.

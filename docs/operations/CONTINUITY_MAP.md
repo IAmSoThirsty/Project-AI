@@ -1,5 +1,56 @@
 # Operational Continuity Map - Updated
 
+## SESSION UPDATE 2026-07-20 — Optional service portability boundary
+
+- **Mode:** Production-deployment-readiness remediation; no deployment,
+  publication, external write, secret access, or destructive cleanup.
+- **Workspace/branch:** `T:\00-Active\Project-AI-Beginnings` on
+  `agent/production-readiness-2026-07-19`; the branch advanced concurrently
+  from `5cd3381d` to pushed head `eaed9905` while this session was running.
+- **Decision:** Connected services are used as optional, replaceable operator,
+  mirror, transport, infrastructure, delivery, and artifact surfaces. They are
+  not core runtime or governance dependencies.
+- **Created:** `docs/operations/cab/OPTIONAL_SERVICE_USAGE.json` and
+  `docs/operations/cab/OPTIONAL_SERVICE_USAGE.md`.
+- **Modified:** the pre-deployment verifier and tests, deployment checklist,
+  successor CAB pack, and this continuity map.
+- **Connected inventory:** read-only discovery confirmed GitHub, Slack, Linear,
+  Notion, Basic Memory Cloud, and a Vercel team. No existing Project-AI Vercel,
+  Neon, or Sites project was found. No external resource was created.
+- **Browser evidence:** the production web build passed and the Owner bootstrap
+  surface rendered in both the in-app Browser and Chrome with no captured
+  console errors against a local configured API. No Owner account was created.
+- **Python evidence:** `uv run pytest -q` completed with `3412 passed, 5
+  skipped` in `220.47s`; all skips require `PROJECT_AI_TEST_DATABASE_URL`.
+- **Document evidence:** the 33-page tagged Thirsty UX/UI Standard v1 PDF was
+  inspected and its first page rendered without clipping, overlap, or missing
+  glyphs. The Academic Writing Toolkit connection was unavailable, so its
+  optional logic review was not performed.
+- **Concurrent worktree state:** `PRODUCTION_DEPLOYMENT_DETAILS.md`,
+  `REMOTE_SUCCESSOR_EVIDENCE.json`, `TRACKING_ISSUE_DRAFT.md`, and
+  `FORMAL_CHANGE_RECORD.md` were modified outside this session after the
+  initial clean status check. Those changes were preserved and were not
+  attributed to this session.
+- **Current GitHub evidence:** publish run `29731685685`, CI run `29731671162`,
+  and vulnerability scan `29731671150` all completed successfully for
+  `eaed9905`; the publish run's image builds, SBOM job, and published-image
+  verification job all completed successfully.
+- **Commands run:** targeted Ruff/check formatting; 28 pre-deployment tests;
+  full pytest; web lint/test/build; strict pre-deployment report; GitHub and
+  connected-service read-only discovery; dual-browser local bootstrap render;
+  PDF metadata/extraction/render inspection; git status/diff checks.
+- **Failed/not verified:** the strict gate still fails on external evidence,
+  placeholder ingress, and disabled remote backup. Five PostgreSQL integration
+  tests were skipped. No production cluster, DNS, backup restore, alert route,
+  Vercel/Neon/Sites project, or external service write was exercised.
+- **Current blockers:** the strict production gate still requires owner-key
+  retirement evidence, external proof custody, an approved real
+  target/hostname overlay, a configured/tested remote backup target, monitoring
+  CRD and paging-route evidence, Dependabot disposition, rollback rehearsal,
+  and owner acceptance sign-off.
+- **Safe to continue:** yes for local validation and owner-supplied target
+  configuration; no for production deployment.
+
 ## SESSION UPDATE 2026-07-20 — Owner rotation and remote gate repair
 
 - Replacement owner key `owner-rotation-2026-07-19-01` was generated outside

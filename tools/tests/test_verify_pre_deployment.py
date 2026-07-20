@@ -63,6 +63,48 @@ def test_required_files_include_current_successor_cab_pack() -> None:
         "docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md"
         in MODULE.REQUIRED_FILES
     )
+    assert "docs/operations/cab/OPTIONAL_SERVICE_USAGE.json" in MODULE.REQUIRED_FILES
+    assert "docs/operations/cab/OPTIONAL_SERVICE_USAGE.md" in MODULE.REQUIRED_FILES
+
+
+def test_optional_service_boundaries_pass_repository() -> None:
+    assert MODULE.verify_optional_service_boundaries(MODULE.ROOT) == 14
+
+
+def test_optional_service_boundary_rejects_core_dependency(tmp_path: Path) -> None:
+    source = tmp_path / "fallback.md"
+    source.write_text("local source", encoding="utf-8")
+    services = []
+    for service_id in sorted(MODULE.EXPECTED_OPTIONAL_SERVICES):
+        services.append(
+            {
+                "id": service_id,
+                "purpose": "fixture",
+                "classification": "operator_tool",
+                "required_for_core": service_id == "vercel",
+                "required_for_governance": False,
+                "replaceable": True,
+                "canonical_local_source": "fallback.md",
+                "outage_behavior": "continue_locally",
+                "activation": "explicit_operator_action",
+            }
+        )
+    manifest = tmp_path / "docs" / "operations" / "cab" / "OPTIONAL_SERVICE_USAGE.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "policy": "optional_replaceable",
+                "canonical_authority": "local_repo",
+                "services": services,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(MODULE.PreDeploymentVerificationError, match="core dependency"):
+        MODULE.verify_optional_service_boundaries(tmp_path)
 
 
 def test_current_reference_documents_have_deployment_boundaries() -> None:

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "candidate_version": "0.0.3",
-  "candidate_commit": "6684828d23b08beaac77aee5efadc532bed23181",
+  "candidate_commit": "eaed9905cacc02e2fb98e3cc92356e8d160e593e",
   "candidate_manifest_sha256": "3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c",
   "status": "missing",
   "review_only": true,
@@ -13,8 +13,8 @@
     "external_proof_custody_verified": false,
     "commit_pushed": true,
     "successor_ci_green": true,
-    "image_signatures_verified": false,
-    "sbom_attestations_verified": false,
+    "image_signatures_verified": true,
+    "sbom_attestations_verified": true,
     "production_overlay_verified": false,
     "remote_backup_verified": false,
     "monitoring_crds_verified": false,
@@ -25,8 +25,8 @@
   "observed": {
     "origin_main": "82aa1476657e16a1d38caccba38357c83380a3e3",
     "origin_master": "9fc3c93e6abd02a14bd141fab4d3ef772fa090bf",
-    "current_successor_branch_head": "5cd3381d420393f69e181be3b685f8598bc4968c",
-    "current_successor_branch_ci_runs": [29730448325, 29730448240],
+    "current_successor_branch_head": "eaed9905cacc02e2fb98e3cc92356e8d160e593e",
+    "current_successor_branch_ci_runs": [29731671162, 29731671150],
     "failed_remote_runs": [
       29709754498,
       29698528738,
@@ -38,22 +38,37 @@
     "owner_key_rotation_record": "change/SEC-20260720-KR001",
     "exact_manifest_ratification_record": "packages/thirstys-standard-v3q/owner-ratification.json (key owner-rotation-2026-07-19-01; verify_ratification.py passed)",
     "proof_custody_record": "vault-audit/20260720-0345",
-    "remote_commit_sha": "6684828d23b08beaac77aee5efadc532bed23181",
-    "remote_ci_runs": [29716300475, 29716300404],
-    "image_digests": {},
+    "remote_commit_sha": "eaed9905cacc02e2fb98e3cc92356e8d160e593e",
+    "remote_ci_runs": [29731685685, 29731671162, 29731671150],
+    "image_digests": {
+      "api": "sha256:7de9c5e33c70994f368abda78c446911783a1b8ffc155d434db6f98796a91c16",
+      "docs-portal": "sha256:8aa672f6962509ae7ad0edd23d6b4a42e17f970e65348f500bab72dff3c1302a",
+      "proof-portal": "sha256:361b118a6e574b6c704bd158cf4727f55650a1dca7c230f36dc0658192c3e71b",
+      "operator-console": "sha256:05114ece27658c16176e42966a38f8d14911a90fedda815e6f1614bd2a1c19f2",
+      "swr": "sha256:093824587e2a1753bdfa7e3e06517cf98c20ec077f694d9c32db106a057fbadd",
+      "atlas": "sha256:71ad3aa218649131fefbf62eec664686c66202e34d468f69ec25ee785054ab01",
+      "arbiter-rlp": "sha256:c1954defac74b2cae5ca6da77ef54abdb3501f455c3b01078fd148de7a376a0e",
+      "genesis": "sha256:17515f0ae110be735aa5e813031992b96c7d511213f9a9a76158d35e79e8b2ad"
+    },
     "signature_verifications": [
-      {
-        "record": "vault-audit/20260720-0345",
-        "scope": "all eight images",
-        "result": "owner/operator claim recorded; not independently auditable from this checkout"
-      }
+      {"record": "actions/29731685685/job/88317825226", "image": "api", "digest": "sha256:7de9c5e33c70994f368abda78c446911783a1b8ffc155d434db6f98796a91c16", "result": "cosign keyless verification passed"},
+      {"record": "actions/29731685685/job/88317825226", "image": "docs-portal", "digest": "sha256:8aa672f6962509ae7ad0edd23d6b4a42e17f970e65348f500bab72dff3c1302a", "result": "cosign keyless verification passed"},
+      {"record": "actions/29731685685/job/88317825226", "image": "proof-portal", "digest": "sha256:361b118a6e574b6c704bd158cf4727f55650a1dca7c230f36dc0658192c3e71b", "result": "cosign keyless verification passed"},
+      {"record": "actions/29731685685/job/88317825226", "image": "operator-console", "digest": "sha256:05114ece27658c16176e42966a38f8d14911a90fedda815e6f1614bd2a1c19f2", "result": "cosign keyless verification passed"},
+      {"record": "actions/29731685685/job/88317825226", "image": "swr", "digest": "sha256:093824587e2a1753bdfa7e3e06517cf98c20ec077f694d9c32db106a057fbadd", "result": "cosign keyless verification passed"},
+      {"record": "actions/29731685685/job/88317825226", "image": "atlas", "digest": "sha256:71ad3aa218649131fefbf62eec664686c66202e34d468f69ec25ee785054ab01", "result": "cosign keyless verification passed"},
+      {"record": "actions/29731685685/job/88317825226", "image": "arbiter-rlp", "digest": "sha256:c1954defac74b2cae5ca6da77ef54abdb3501f455c3b01078fd148de7a376a0e", "result": "cosign keyless verification passed"},
+      {"record": "actions/29731685685/job/88317825226", "image": "genesis", "digest": "sha256:17515f0ae110be735aa5e813031992b96c7d511213f9a9a76158d35e79e8b2ad", "result": "cosign keyless verification passed"}
     ],
     "sbom_attestations": [
-      {
-        "record": "vault-audit/20260720-0345",
-        "scope": "all eight images",
-        "result": "owner/operator claim recorded; not independently auditable from this checkout"
-      }
+      {"record": "registry attestation manifest", "image": "api", "digest": "sha256:7de9c5e33c70994f368abda78c446911783a1b8ffc155d434db6f98796a91c16", "attestation_manifest": "sha256:4c01f345117fa717cfb7f6ee0da601fe17fd0804949f5e4367fc97fadb268fee", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
+      {"record": "registry attestation manifest", "image": "docs-portal", "digest": "sha256:8aa672f6962509ae7ad0edd23d6b4a42e17f970e65348f500bab72dff3c1302a", "attestation_manifest": "sha256:8d11e888579139b3ff5ec1394fdcbaf9816de0137e4ddb40692764e01cd39f75", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
+      {"record": "registry attestation manifest", "image": "proof-portal", "digest": "sha256:361b118a6e574b6c704bd158cf4727f55650a1dca7c230f36dc0658192c3e71b", "attestation_manifest": "sha256:5bfa539b83851cf7f2337ad7f144770b6fceaaa56775f3a663926fd1b5b46e84", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
+      {"record": "registry attestation manifest", "image": "operator-console", "digest": "sha256:05114ece27658c16176e42966a38f8d14911a90fedda815e6f1614bd2a1c19f2", "attestation_manifest": "sha256:0a2e99988e0b305271d9a64f7415c50aab244105f0d0e720e812a59a5d6d48c3", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
+      {"record": "registry attestation manifest", "image": "swr", "digest": "sha256:093824587e2a1753bdfa7e3e06517cf98c20ec077f694d9c32db106a057fbadd", "attestation_manifest": "sha256:3d1127ac0ffc9ea2907c656357d123de0ca61d0dc0bc8f068e6fd955f9fafde8", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
+      {"record": "registry attestation manifest", "image": "atlas", "digest": "sha256:71ad3aa218649131fefbf62eec664686c66202e34d468f69ec25ee785054ab01", "attestation_manifest": "sha256:097f59eb5c005902a6fbaf54818a5e5e6a32d11f05fb37cbe1fd03a096990656", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
+      {"record": "registry attestation manifest", "image": "arbiter-rlp", "digest": "sha256:c1954defac74b2cae5ca6da77ef54abdb3501f455c3b01078fd148de7a376a0e", "attestation_manifest": "sha256:d48293a3ea615b80bb3b2f98171318e887f0b656edbb4c7e6195dc5a0a1cd4b7", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
+      {"record": "registry attestation manifest", "image": "genesis", "digest": "sha256:17515f0ae110be735aa5e813031992b96c7d511213f9a9a76158d35e79e8b2ad", "attestation_manifest": "sha256:f1f194eca1dede759c2c6f4d467601ba2ce29a88e9a72119da9da0c7f2341081", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]}
     ],
     "production_overlay_record": "change/DEPLOY-20260720-001",
     "remote_backup_record": "backup-test/2026-07-20",
@@ -62,5 +77,5 @@
     "target_environment_record": "CAB-2026-07-20",
     "rollback_rehearsal_record": "rollback-test/20260720-789"
   },
-  "blocking_reason": "The supplied change, vault, CAB, cluster, backup, and rollback identifiers are recorded as owner/operator claims only; they are not independently auditable from this checkout and therefore do not satisfy strict-gate evidence. The record remains review-only and status missing. The checkout copy of owner-private.json has been moved to restricted off-repository custody, but key retirement/custody proof remains unverified. Tracked production values still contain a placeholder host and disabled remote backup, and exact per-image digest/signature/attestation entries are absent."
+  "blocking_reason": "Successor publish run 29731685685 built all eight images, verified keyless signatures, exposed exact OCI digests, and exposed SPDX/SLSA attestation manifests. The record remains review-only and status missing because owner key rotation/proof custody, approved production overlay, remote backup, monitoring CRDs, dependency disposition, target approval, and rollback evidence are not independently auditable. The checkout copy of owner-private.json is outside the repository, but key retirement/custody proof remains unverified; tracked production values still contain a placeholder host and disabled remote backup."
 }

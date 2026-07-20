@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0",
+  "policy": "optional_replaceable",
+  "canonical_authority": "local_repo",
+  "services": [
+    {
+      "id": "academic-writing-toolkit",
+      "purpose": "citation and source-consistency review for release papers",
+      "classification": "operator_tool",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md",
+      "outage_behavior": "continue_locally",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "basic-memory-cloud",
+      "purpose": "optional continuity and handoff mirror",
+      "classification": "evidence_mirror",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/operations/CONTINUITY_MAP.md",
+      "outage_behavior": "queue_or_skip_mirror",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "browser",
+      "purpose": "interactive acceptance verification in the Codex in-app browser",
+      "classification": "operator_tool",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "apps/web/operator-console",
+      "outage_behavior": "use_automated_tests",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "chrome",
+      "purpose": "interactive acceptance verification in a second browser surface",
+      "classification": "operator_tool",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "apps/web/operator-console",
+      "outage_behavior": "use_automated_tests",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "documents",
+      "purpose": "optional Word-form release and review artifacts",
+      "classification": "artifact_renderer",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/operations/cab",
+      "outage_behavior": "retain_markdown_source",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "github",
+      "purpose": "remote source, CI, OCI, SBOM, signature, and release-evidence transport",
+      "classification": "evidence_transport",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": ".github/workflows",
+      "outage_behavior": "run_local_gates_and_defer_publication",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "linear",
+      "purpose": "optional operational task and blocker mirror",
+      "classification": "work_tracker",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/operations/cab/TRACKING_ISSUE_DRAFT.md",
+      "outage_behavior": "retain_local_tracking_record",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "neon-postgres",
+      "purpose": "optional PostgreSQL provider selected through the standard database URL contract",
+      "classification": "replaceable_infrastructure",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "packages/accounts/src/accounts/postgres.py",
+      "outage_behavior": "use_another_postgresql_provider",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "notion",
+      "purpose": "optional CAB and runbook mirror",
+      "classification": "evidence_mirror",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/operations/cab",
+      "outage_behavior": "retain_local_cab_record",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "pdf",
+      "purpose": "optional rendered release packet and visual document verification",
+      "classification": "artifact_renderer",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/operations/cab",
+      "outage_behavior": "retain_markdown_source",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "sites",
+      "purpose": "optional static public or private portal delivery",
+      "classification": "replaceable_delivery",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "apps/web",
+      "outage_behavior": "use_kubernetes_or_local_web_delivery",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "slack",
+      "purpose": "optional deployment and incident notification mirror",
+      "classification": "notification_transport",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/operations/cab/COMMUNICATIONS_SUPPORT_PLAN.md",
+      "outage_behavior": "retain_local_event_and_use_another_route",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "template-creator",
+      "purpose": "optional reusable artifact-template production",
+      "classification": "operator_tool",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "docs/templates",
+      "outage_behavior": "use_repository_templates",
+      "activation": "explicit_operator_action"
+    },
+    {
+      "id": "vercel",
+      "purpose": "optional static web preview or mirror delivery",
+      "classification": "replaceable_delivery",
+      "required_for_core": false,
+      "required_for_governance": false,
+      "replaceable": true,
+      "canonical_local_source": "apps/web",
+      "outage_behavior": "use_kubernetes_or_local_web_delivery",
+      "activation": "explicit_operator_action"
+    }
+  ]
+}

@@ -7,10 +7,19 @@
 
 The v0.0.2 material below is retained as historical evidence only. The
 immutable v0.0.3 successor code candidate is
-`6684828d23b08beaac77aee5efadc532bed23181`; successor CI run `29716300475`
-and vulnerability scan `29716300404` both passed. This does not supply image
-signatures, SBOM attestations, external proof custody, target approval, or
-deployment/rollback evidence.
+`eaed9905cacc02e2fb98e3cc92356e8d160e593e`; successor CI run `29731671162`,
+vulnerability scan `29731671150`, and publish/registry verification run
+`29731685685` all passed. The publish workflow verified all eight keyless
+signatures and the registry exposes SPDX and SLSA attestation manifests for
+each digest. External proof custody, target approval, and deployment/rollback
+evidence remain open.
+
+### Successor publish verification — `manual-20260720-eaed990`
+
+The publish workflow built and pushed all eight images from `eaed9905`, ran
+keyless cosign verification, and passed the immutable overlay render check.
+The exact digest map and per-image registry attestation-manifest references are
+machine-recorded in `REMOTE_SUCCESSOR_EVIDENCE.json`.
 
 > **Supersession notice:** v0.0.2 is no longer a deployable candidate. The
 > remediation working tree contains CI, runtime, monitoring, security, and
@@ -32,8 +41,7 @@ deployment/rollback evidence.
 | Release assets | No standalone assets attached to the GitHub Release |
 
 The v0.0.2 release body lists seven images and omits operator-console. The
-remediated publish workflow now verifies and documents all eight images, but
-that workflow change has not run remotely yet.
+successor publish run now verifies and documents all eight images.
 
 ## GitHub Actions evidence
 
@@ -41,6 +49,7 @@ that workflow change has not run remotely yet.
 |---|---|---|
 | Publish `29679414341` | Passed | Eight image build/sign jobs, seven-image pull verification, SBOM/provenance configuration, and release notes succeeded |
 | Publish `29679407181` | Passed | Duplicate exact-commit publish run also succeeded |
+| Publish `29731685685` | Passed | Successor branch built all eight images, verified keyless signatures, exposed exact digests, registry SPDX/SLSA attestations, and passed merged Helm overlay verification |
 | Publish to Docker Hub `29679414310` | Passed | Secondary registry publish succeeded; not the Helm source in this change |
 | Verify TAAR bundle `29679414313` | Passed | Clean-clone TAAR evidence verification succeeded |
 | CI `29679407137` | **Failed** | Release cannot be described as CI-green |
@@ -66,7 +75,7 @@ was not read, changed, staged, or used by these commands.
 | `uv run python tools/canonical_replay.py` | Passed: 5/5 invariants |
 | `uv run python tools/verify_frozen_history.py` | Passed: 2264/2264 sections |
 | Earlier remediation checkpoint (`uv run pytest -q`) | Passed: 3049 passed, 5 environment-gated skips, 1 documented xfail, 1 warning; retained as historical working-tree evidence |
-| Current-tree full Python suite (`uv run pytest -q`) | Passed: 3410 passed, 5 PostgreSQL environment-gated skips, zero failures, XFAIL/XPASS results, or warnings; this is successor working-tree evidence, not v0.0.2 release evidence |
+| Current-tree full Python suite (`uv run pytest -q`) | Passed: 3412 passed, 5 PostgreSQL environment-gated skips, zero failures, XFAIL/XPASS results, or warnings; this is successor working-tree evidence, not v0.0.2 release evidence |
 | `uv run python tools/run_ci_coverage.py --batches 8` | Passed: all 8 batches; combined branch coverage 87.32%, threshold 80% |
 | `helm lint helm/project-ai` | Passed: 1 chart, 0 failures; icon recommendation only |
 | Production-values Helm render + verifier | Passed: 47 manifests; namespace enforced and all eight v0.0.2 images digest pinned |
@@ -88,15 +97,15 @@ remain visible.
 
 | Control | Evidence | Status |
 |---|---|---|
-| Container signatures | Publish workflow uses keyless cosign for each build output | Workflow passed; independent v0.0.2 verification returned `no signatures found`; successor evidence required |
-| Cosign verification attempt | Containerized cosign 2.2.4 queried the published v0.0.2 API digest with the documented GitHub OIDC identity; registry returned `no signatures found` | **Blocker:** successor must be rebuilt/published and independently verified |
-| Image pull/manifest | v0.0.2 publish omitted operator-console verification; remediation verifies all eight | Remediation unrun remotely; successor evidence required |
-| SBOM/provenance | Buildx `sbom: true`, `provenance: mode=max`; publish SBOM note passed | Attestations claimed by build workflow; no standalone release assets and no independent attestation verification attached |
+| Container signatures | Successor publish `29731685685` uses keyless cosign for each of the eight candidate outputs | **Pass for candidate `eaed9905`;** target approval and external custody remain open |
+| Cosign verification attempt | Historical v0.0.2 API digest returned `no signatures found`; successor registry verification passed for all eight digests | **Pass for candidate `eaed9905`** |
+| Image pull/manifest | Successor publish pulled and inspected all eight images | **Pass for candidate `eaed9905`** |
+| SBOM/provenance | Buildx `sbom: true`, `provenance: mode=max`; registry attestation manifests expose SPDX and SLSA predicate layers for all eight digests | **Pass for candidate `eaed9905`;** exact references are in `REMOTE_SUCCESSOR_EVIDENCE.json` |
 | Python dependency audit | Pinned pip-audit 2.10.1 / OSV | Remediated lock passes; v0.0.2 lock contained vulnerable setuptools 82.0.1 |
 | Python dependency licenses | Explicit allow-list plus installed-artifact verification for cel-python 0.4.0's missing metadata field | Local v0.0.3 gate passes; remote successor run required |
-| Trivy image scan | Remediation scans all eight images on release publication | Exact-candidate remote successor result is missing; the historical GHCR pull attempt stalled, while the separate local containerized scan is recorded below |
+| Trivy image scan | Remediation scans all eight images on release publication | Candidate vulnerability workflow `29731671150` passed; detailed scan artifact remains an attachment requirement |
 | Local Trivy scan | Containerized Trivy 0.63.0 scanned all eight locally available v0.0.2 GHCR image digests with `HIGH,CRITICAL --ignore-unfixed`; all returned zero findings | Remote successor scan and attached immutable artifact remain required |
-| Python/Rust/Node vulnerability scans | Remediation runs on push/PR and schedule | Python OSV, Rust `cargo audit` 0.22.2, and Node moderate+ audits pass locally; raw outputs are under `build/acceptance/security/`; no remote successor run |
+| Python/Rust/Node vulnerability scans | Remediation runs on push/PR and schedule | Candidate vulnerability workflow `29731671150` passed; detailed language-scan artifact remains an attachment requirement |
 | Local CycloneDX SBOMs | Pinned Python generator and `cargo-cyclonedx` 0.5.9 produced validated JSON (155 Python / 20 Rust components) at `build/acceptance/sbom/project-ai-python.cdx.json` and `build/acceptance/sbom/project-ai-rust.cdx.json` | Working-tree evidence only; no immutable successor artifacts or remote attestations attached |
 | Weekly CycloneDX SBOM | `.github/workflows/sbom-weekly.yaml` exists on `main` | No v0.0.2-specific artifact attached |
 | CodeQL | Pinned CodeQL v4 workflow covers Python and JavaScript/TypeScript | Added locally; no remote successor run |

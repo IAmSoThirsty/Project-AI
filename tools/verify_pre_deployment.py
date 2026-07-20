@@ -38,6 +38,22 @@ EXPECTED_CI_JOBS = {
     "windows-installer",
 }
 EXPECTED_SECURITY_JOBS = {"codeql", "checkov"}
+EXPECTED_OPTIONAL_SERVICES = {
+    "academic-writing-toolkit",
+    "basic-memory-cloud",
+    "browser",
+    "chrome",
+    "documents",
+    "github",
+    "linear",
+    "neon-postgres",
+    "notion",
+    "pdf",
+    "sites",
+    "slack",
+    "template-creator",
+    "vercel",
+}
 REQUIRED_ENV_VARS = {
     "PROJECT_AI_API_TOKEN",
     "PROJECT_AI_API_URL",
@@ -68,6 +84,8 @@ REQUIRED_FILES = (
     "docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md",
     "docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md",
     "docs/operations/cab/REMOTE_SUCCESSOR_EVIDENCE.json",
+    "docs/operations/cab/OPTIONAL_SERVICE_USAGE.json",
+    "docs/operations/cab/OPTIONAL_SERVICE_USAGE.md",
     "docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md",
     "docs/operations/CONTINUITY_MAP.md",
     "docs/internal/STAGE_19_5_SESSION_LEDGER.md",
@@ -176,6 +194,83 @@ def verify_owner_key_rotation_tool(root: Path = ROOT) -> int:
             )
             checked += 1
     return checked
+
+
+def verify_optional_service_boundaries(root: Path = ROOT) -> int:
+    """Require useful service integrations to remain optional and replaceable."""
+    relative_path = "docs/operations/cab/OPTIONAL_SERVICE_USAGE.json"
+    document = json.loads(_read(root, relative_path))
+    _require(document.get("schema_version") == "1.0", "optional service schema mismatch")
+    _require(
+        document.get("policy") == "optional_replaceable",
+        "optional service policy must remain optional_replaceable",
+    )
+    _require(
+        document.get("canonical_authority") == "local_repo",
+        "optional services cannot hold canonical authority",
+    )
+    services = document.get("services")
+    _require(isinstance(services, list), "optional service list is missing")
+    if not isinstance(services, list):
+        raise PreDeploymentVerificationError("optional service list is invalid")
+    service_ids: set[str] = set()
+    for raw_service in services:
+        if not isinstance(raw_service, dict):
+            continue
+        service_id = raw_service.get("id")
+        if isinstance(service_id, str):
+            service_ids.add(service_id)
+    _require(
+        service_ids == EXPECTED_OPTIONAL_SERVICES,
+        "optional service inventory mismatch: "
+        f"expected={sorted(EXPECTED_OPTIONAL_SERVICES)} actual={sorted(service_ids)}",
+    )
+    _require(len(services) == len(service_ids), "optional service ids must be unique")
+    allowed_outage_behaviors = {
+        "continue_locally",
+        "queue_or_skip_mirror",
+        "use_automated_tests",
+        "retain_markdown_source",
+        "run_local_gates_and_defer_publication",
+        "retain_local_tracking_record",
+        "use_another_postgresql_provider",
+        "retain_local_cab_record",
+        "use_kubernetes_or_local_web_delivery",
+        "retain_local_event_and_use_another_route",
+        "use_repository_templates",
+    }
+    for raw_service in services:
+        service = _as_mapping(raw_service, "optional service entry")
+        service_id = service.get("id")
+        _require(
+            service.get("required_for_core") is False, f"{service_id} became a core dependency"
+        )
+        _require(
+            service.get("required_for_governance") is False,
+            f"{service_id} became a governance dependency",
+        )
+        _require(service.get("replaceable") is True, f"{service_id} must remain replaceable")
+        _require(
+            service.get("activation") == "explicit_operator_action",
+            f"{service_id} must require explicit operator activation",
+        )
+        _require(
+            service.get("outage_behavior") in allowed_outage_behaviors,
+            f"{service_id} has an unsupported outage behavior",
+        )
+        canonical_source = service.get("canonical_local_source")
+        _require(
+            isinstance(canonical_source, str) and bool(canonical_source),
+            f"{service_id} is missing a canonical local source",
+        )
+        if not isinstance(canonical_source, str):
+            raise PreDeploymentVerificationError(f"{service_id} local source is invalid")
+        source_path = Path(canonical_source)
+        _require(
+            not source_path.is_absolute(), f"{service_id} local source must be repository-relative"
+        )
+        _require((root / source_path).exists(), f"{service_id} local source does not exist")
+    return len(services)
 
 
 def verify_remote_successor_evidence(root: Path = ROOT) -> int:
@@ -732,7 +827,7 @@ def verify_docs(root: Path = ROOT) -> int:
         "Owner-controlled `owner-primary` key",
         "PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md",
         "REMOTE_SUCCESSOR_EVIDENCE.json",
-        "3410 passed",
+        "3412 passed",
         "--report",
         "87.32%",
         "draft-manifest review snapshot",
@@ -774,6 +869,7 @@ def _pre_deployment_checks() -> tuple[tuple[str, Any], ...]:
         ("environment example", verify_env_example),
         ("Docker secret exclusions", verify_docker_secret_exclusions),
         ("owner-key rotation tooling", verify_owner_key_rotation_tool),
+        ("optional service boundaries", verify_optional_service_boundaries),
         ("remote successor evidence", verify_remote_successor_evidence),
         ("V3Q external-authority boundary", verify_v3q_authority_boundary),
         ("Waterfall integration boundary", verify_waterfall_integration),

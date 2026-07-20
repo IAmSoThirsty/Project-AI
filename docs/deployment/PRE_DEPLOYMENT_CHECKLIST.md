@@ -12,7 +12,7 @@ backup. No production deployment is authorized.
 
 ## Current local evidence
 
-- Full pytest: 3410 passed, 5 PostgreSQL environment-gated skips, zero
+- Full pytest: 3412 passed, 5 PostgreSQL environment-gated skips, zero
   failures, XFAIL/XPASS results, or warnings.
 - Batched branch coverage: 87.32%, threshold 80%.
 - Canonical replay: 5/5; frozen history: 2264/2264.
@@ -141,13 +141,17 @@ tag, GitHub Release, package publication, image publication, or deployment.
 - Branch coverage gate: `88.47%`, threshold `80%`.
 - Canonical replay: `5/5 invariants passed`.
 - Frozen history: `2264 sections verified`.
-- GitHub Actions CI for immutable successor `6684828d`:
-  CI run `29716300475` and vulnerability scan `29716300404` passed; image
-  signatures, attestations, and target deployment evidence remain pending.
+- GitHub Actions evidence for immutable successor `eaed9905`:
+  CI run `29731671162`, vulnerability scan `29731671150`, and publish/registry
+  verification run `29731685685` passed; all eight image digests, keyless
+  signatures, and SPDX/SLSA registry attestations are recorded. Target
+  deployment evidence remains pending.
 - Historical GitHub Actions CI:
   - Implementation run `28362042896` passed at commit `176990f08b6c403befccee43b350d6874e733507`.
   - Latest docs/evidence run `28362260186` passed at commit `22ad10aa49f24e5045ffd4493a6e92f9cb615b7a`.
-- Pre-deployment verifier: `tools/verify_pre_deployment.py` passed locally.
+- Pre-deployment verifier: `tools/verify_pre_deployment.py` remains fail-closed
+  on owner/proof custody, approved target overlay, backup, monitoring, dependency,
+  target approval, rollback, placeholder host, and disabled remote backup.
 - Compose runtime: `7/7 healthy and security settings verified` locally after
   starting Docker Desktop.
 - Android debug test/build: `BUILD SUCCESSFUL` locally with
@@ -187,6 +191,20 @@ helm template project-ai-dev helm/project-ai | uv run python tools/verify_helm_t
 ```
 
 ## Environment Contract
+
+### Optional service portability
+
+- [ ] `docs/operations/cab/OPTIONAL_SERVICE_USAGE.json` passes the
+      `optional service boundaries` pre-deployment check.
+- [ ] Connected services are used only for their declared mirror, transport,
+      infrastructure, delivery, rendering, or operator-tool role.
+- [ ] No connected service is the sole holder of governance authority,
+      continuity, release evidence, recovery data, or a runnable local gate.
+- [ ] Activating Neon, Vercel, Sites, Slack, Linear, Notion, Basic Memory Cloud,
+      GitHub publication, or document/browser tooling is an explicit operator
+      action with a repository-local fallback.
+
+See `docs/operations/cab/OPTIONAL_SERVICE_USAGE.md` for the enforced boundary.
 
 Documented runtime variables:
 
@@ -230,9 +248,9 @@ Do not deploy if any of these are true:
 - `tools/verify_pre_deployment.py` fails.
 - Local tests, lint, type checking, canonical replay, or frozen-history
   verification fail.
-- Candidate `6684828d` has green successor CI and vulnerability evidence, but
-  image signatures, SBOM attestations, and target-environment proof are still
-  absent.
+- Candidate `eaed9905` has green successor CI/vulnerability/publish evidence and
+  verified image signatures plus SPDX/SLSA attestations, but target-environment
+  proof and production deployment controls remain absent.
 - `PROJECT_AI_API_TOKEN` is committed with a real value in tracked files.
 - Protected API routes do not fail closed when token or audit path is missing.
 - Compose health/security verification fails.

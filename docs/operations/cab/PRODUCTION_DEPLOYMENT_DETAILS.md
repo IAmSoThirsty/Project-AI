@@ -30,7 +30,10 @@ working tree and must be replaced with successor digests before deployment.
 The v0.0.3 publish workflow now creates and attaches an image-only values
 overlay containing all eight resolved OCI index digests, then verifies the
 merged render. The base v0.0.2 digests must never be used by changing only the
-tag.
+tag. Publish run `29731685685` produced the candidate `manual-20260720-eaed990`
+and verified its eight digests, keyless signatures, and SPDX/SLSA registry
+attestation manifests; the digest map is recorded in
+`REMOTE_SUCCESSOR_EVIDENCE.json`.
 
 ## Target record
 
@@ -162,8 +165,9 @@ must also be pinned by digest; a tag alone is not an approved input.
       owner.
 - [ ] Required CRDs/operators confirmed: Prometheus Operator resources are used
       when monitoring/alerting are enabled.
-- [ ] Successor image digests pinned and signature/attestations verified for
-      all eight images; do not reuse the v0.0.2 baseline digests.
+- [x] Successor image digests pinned and signature/attestations verified for
+      all eight images by publish run `29731685685`; do not reuse the v0.0.2
+      baseline digests.
 - [ ] PostgreSQL connectivity, schema compatibility, backup, and restore proven.
 - [ ] DNS, TLS certificate, ingress controller, NetworkPolicy, and external
       connectivity tested.

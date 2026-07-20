@@ -227,7 +227,7 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.4 Verified Evidence Inventory (current through 2026-07-20)
 
-- Full workspace pytest: `3410 passed, 5 skipped`; the skips require the
+- Full workspace pytest: `3412 passed, 5 skipped`; the skips require the
   PostgreSQL integration-test environment variable.
 - Strict pre-deployment diagnostics pass all non-blocking repository checks and
   report the remaining fail-closed owner/production prerequisites explicitly.

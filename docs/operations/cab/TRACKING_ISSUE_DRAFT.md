@@ -43,12 +43,13 @@ Current disposition: **v0.0.2 superseded; deployment not authorized**.
 - [x] Obtain Jeremy / Thirsty's signature over the exact V3Q release manifest
       and verify the ratification record. Required-mode startup evidence remains
       pending.
-- [ ] Attach all eight image digests and independent cosign signature plus
-      SBOM/provenance-attestation verification.
+- [x] Attach all eight image digests plus workflow-verified cosign signatures
+      and SPDX/SLSA registry attestation manifests from publish run
+      `29731685685`.
 - [x] Add pinned CodeQL/Checkov workflows; pass local Checkov, Python OSV, and
       Node audits; remediate vulnerable setuptools 82.0.1 to 83.0.0.
 - [ ] Attach successful remote CodeQL, Checkov, Trivy, Rust, Python, and Node
-      evidence tied to the immutable successor.
+      evidence tied to immutable successor `eaed9905`.
 - [x] Resolve repository monitoring namespace/job/metric mismatches and expose
       real API Prometheus series.
 - [ ] Configure real Alertmanager routes; prove dashboard queries and a test
