@@ -11,9 +11,10 @@
   read or included in the release; secure retirement is still required before
   the local deployment gate can pass.
 - The clean-checkout gate-test portability repair is committed and pushed.
-  Fresh successor CI run `29714482276` and vulnerability run `29714482256` are
-  the immutable evidence candidates for this branch; their final conclusions
-  are recorded only after the hosted runs complete.
+  Fresh successor CI run `29716300475` and vulnerability run `29716300404`
+  passed for immutable candidate `6684828d`; the remaining remote evidence is
+  signatures, attestations, target overlay, backup, monitoring, dependency,
+  and rollback custody.
 
 ## SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair
 

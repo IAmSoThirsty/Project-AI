@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "candidate_version": "0.0.3",
-  "candidate_commit": "f35a305f845b88d59d1d7922ad7262ff970dc0e5",
+  "candidate_commit": "6684828d23b08beaac77aee5efadc532bed23181",
   "candidate_manifest_sha256": "3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c",
   "status": "missing",
   "review_only": true,
@@ -11,8 +11,8 @@
     "owner_key_rotation_verified": false,
     "exact_manifest_ratification_verified": true,
     "external_proof_custody_verified": false,
-    "commit_pushed": false,
-    "successor_ci_green": false,
+    "commit_pushed": true,
+    "successor_ci_green": true,
     "image_signatures_verified": false,
     "sbom_attestations_verified": false,
     "production_overlay_verified": false,
@@ -36,8 +36,8 @@
     "owner_key_rotation_record": null,
     "exact_manifest_ratification_record": "packages/thirstys-standard-v3q/owner-ratification.json (key owner-rotation-2026-07-19-01; verify_ratification.py passed)",
     "proof_custody_record": null,
-    "remote_commit_sha": null,
-    "remote_ci_runs": [29714482276, 29714482256],
+    "remote_commit_sha": "6684828d23b08beaac77aee5efadc532bed23181",
+    "remote_ci_runs": [29716300475, 29716300404],
     "image_digests": {},
     "signature_verifications": [],
     "sbom_attestations": [],
@@ -48,5 +48,5 @@
     "target_environment_record": null,
     "rollback_rehearsal_record": null
   },
-  "blocking_reason": "The exact manifest ratification is verified, but retired local owner material, external proof custody, immutable successor remote CI, signature, attestation, approved production overlay, remote-backup, monitoring-CRD, dependency-disposition, and target-environment evidence remain unresolved."
+  "blocking_reason": "Owner ratification, immutable successor push, and successor CI/vulnerability runs are verified, but retired local owner material, external proof custody, image signatures, SBOM attestations, approved production overlay, remote-backup, monitoring-CRD, dependency-disposition, target-environment, and rollback evidence remain unresolved."
 }

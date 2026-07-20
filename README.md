@@ -18,7 +18,7 @@ embed governance authority.
 
 - Local successor version: `0.0.3` (committed on the working branch; not tagged,
   merged, or published as a production release).
-- Active branch: `agent/production-readiness-2026-07-19` at `f35a305f`.
+- Active branch: `agent/production-readiness-2026-07-19` at `6684828d`.
 - Stage 18 local acceptance: accepted from a detached clean checkout.
 - Published `v0.0.2` is superseded because its exact-commit CI failed and it
   does not contain the current hardening work.
