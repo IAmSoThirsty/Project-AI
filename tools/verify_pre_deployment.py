@@ -732,7 +732,7 @@ def verify_docs(root: Path = ROOT) -> int:
         "Owner-controlled `owner-primary` key",
         "PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md",
         "REMOTE_SUCCESSOR_EVIDENCE.json",
-        "3406 passed",
+        "3410 passed",
         "--report",
         "87.32%",
         "draft-manifest review snapshot",
