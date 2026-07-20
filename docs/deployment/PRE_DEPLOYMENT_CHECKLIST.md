@@ -12,7 +12,7 @@ backup. No production deployment is authorized.
 
 ## Current local evidence
 
-- Full pytest: 3406 passed, 5 PostgreSQL environment-gated skips, zero
+- Full pytest: 3410 passed, 5 PostgreSQL environment-gated skips, zero
   failures, XFAIL/XPASS results, or warnings.
 - Batched branch coverage: 87.32%, threshold 80%.
 - Canonical replay: 5/5; frozen history: 2264/2264.

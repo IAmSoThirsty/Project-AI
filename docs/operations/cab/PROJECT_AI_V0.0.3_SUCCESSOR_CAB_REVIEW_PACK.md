@@ -22,7 +22,7 @@ The observed scheduled failures are runs `29709754498`, `29698528738`, and
 
 | Gate | Result |
 |---|---|
-| Python suite | `3406 passed, 5 skipped`; zero failures, warnings, XFAIL, or XPASS |
+| Python suite | `3410 passed, 5 skipped`; zero failures, warnings, XFAIL, or XPASS |
 | Branch coverage | `87.32%` across eight batches; threshold `80%` |
 | Canonical/frozen provenance | `5/5` replay; `2264/2264` frozen sections |
 | Static/type gates | Ruff, format, canonical MyPy (`175` files), and strict Temporal/Waterfall-adapter MyPy pass |

@@ -66,7 +66,7 @@ was not read, changed, staged, or used by these commands.
 | `uv run python tools/canonical_replay.py` | Passed: 5/5 invariants |
 | `uv run python tools/verify_frozen_history.py` | Passed: 2264/2264 sections |
 | Earlier remediation checkpoint (`uv run pytest -q`) | Passed: 3049 passed, 5 environment-gated skips, 1 documented xfail, 1 warning; retained as historical working-tree evidence |
-| Current-tree full Python suite (`uv run pytest -q`) | Passed: 3406 passed, 5 PostgreSQL environment-gated skips, zero failures, XFAIL/XPASS results, or warnings in 225.81s; this is successor working-tree evidence, not v0.0.2 release evidence |
+| Current-tree full Python suite (`uv run pytest -q`) | Passed: 3410 passed, 5 PostgreSQL environment-gated skips, zero failures, XFAIL/XPASS results, or warnings; this is successor working-tree evidence, not v0.0.2 release evidence |
 | `uv run python tools/run_ci_coverage.py --batches 8` | Passed: all 8 batches; combined branch coverage 87.32%, threshold 80% |
 | `helm lint helm/project-ai` | Passed: 1 chart, 0 failures; icon recommendation only |
 | Production-values Helm render + verifier | Passed: 47 manifests; namespace enforced and all eight v0.0.2 images digest pinned |

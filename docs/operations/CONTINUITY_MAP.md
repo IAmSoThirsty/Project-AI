@@ -20,7 +20,11 @@
   evidence above. Dependabot PRs #509 and #510 remain open against `master`
   with no owner disposition recorded.
 
-## SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair
+## HISTORICAL SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair
+
+This entry is a superseded historical snapshot. The 2026-07-20 session update
+above is authoritative for current branch, key, ratification, and hosted-run
+state.
 
 - **Mode:** Governed implementation and local verification on the existing
   dirty `main` working tree. No commit, push, tag, release, deployment,
@@ -61,7 +65,7 @@
   independently callable Phase 7 detectors are not automatically wired into
   `DPRPipeline`; Sovereign Vault external witness custody is an intentional
   fail-closed seam. None is presented as deployed v0.0.3 service evidence.
-- **Verification:** `3406 passed, 5 skipped` in `225.81s`, with zero failures,
+- **Verification at that historical snapshot:** `3406 passed, 5 skipped` in `225.81s`, with zero failures,
   XFAIL/XPASS results, or warnings; eight coverage batches passed at `87.32%`
   branch coverage; Ruff passed and all `624` files are formatted; canonical
   MyPy passed `175` files and strict Temporal/Waterfall-adapter MyPy passed `12`
@@ -190,7 +194,7 @@
 - The standalone `T:\\01-Projects\\Thirstys-waterfall` package metadata now
   declares `requires-python >=3.8.1`, matching its flake8 development floor;
   its repository validator passes `35/35` with zero warnings.
-- Current full repository gate: `3406 passed, 5 skipped` in `225.81s`, with
+- Historical full repository gate: `3406 passed, 5 skipped` in `225.81s`, with
   zero failures, XFAIL/XPASS results, or warnings; the skips are PostgreSQL
   environment gates.
 - Local backup/restore rehearsal passed for audit and SWR bundle files; the new
