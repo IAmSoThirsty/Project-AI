@@ -1,5 +1,10 @@
 # Stage 19.5 Session Ledger — Complete Work Submission
 
+> **Historical submission snapshot:** This ledger records the June 2026
+> Stage 19.5 handoff. It is not current branch or production-readiness
+> evidence; consult `docs/operations/CONTINUITY_MAP.md` and the current CAB
+> records for successor state.
+
 **Status:** COMPLETE — ready for review/submission
 **Date:** 2026-06-25
 **Author:** Hermes (Quencher session)

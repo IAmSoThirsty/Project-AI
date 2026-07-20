@@ -1,6 +1,11 @@
 # Stage 19.5 Pre-Deployment Output Acceptance
 
-**Status:** ACCEPTED LOCALLY
+> **Historical snapshot:** This June 2026 local acceptance record is retained
+> for provenance and is superseded by the current fail-closed pre-deployment
+> checklist and CAB evidence. Its old test counts and seven-service baseline
+> are not current release evidence.
+
+**Status:** HISTORICAL — ACCEPTED LOCALLY AT THE TIME
 **Date:** 2026-06-29
 **Scope:** pre-deployment hardening output; no deployment performed.
 **Authority:** `docs/internal/REBUILD_EXECUTION_PLAN.md`, `AGENTS.md`.

@@ -1,6 +1,11 @@
 # Stage 19.5J2.9 Acceptance Gate
 
-**Status:** ACCEPTED LOCALLY
+> **Historical snapshot:** This June 2026 J2.9 acceptance record is retained
+> for implementation provenance. Current branch, suite, and deployment-gate
+> evidence is maintained in the continuity map, pre-deployment checklist, and
+> CAB records.
+
+**Status:** HISTORICAL — ACCEPTED LOCALLY AT THE TIME
 **Plan:** `docs/operations/STAGE_19_5_PHASED_PLAN.md` Phase J
 **Discovery source:** `packages/_staging/atlas/verification/replay_system.py`
 **Authority:** `docs/internal/REBUILD_EXECUTION_PLAN.md`, `AGENTS.md` (v3)
