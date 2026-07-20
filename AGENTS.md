@@ -210,7 +210,8 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 ### 2.3 Branch & Remote Discipline
 
 - Current release-readiness branch: `agent/production-readiness-2026-07-19`,
-  clean and pushed at the latest follow-up head recorded in the continuity map.
+  clean and pushed; the latest completed follow-up evidence is recorded in the
+  continuity map and machine-readable CAB record.
   The immutable v0.0.3 code candidate is
   `6684828d23b08beaac77aee5efadc532bed23181`; local `main` and `origin/main`
   remain the historical `82aa1476657e16a1d38caccba38357c83380a3e3` baseline.
