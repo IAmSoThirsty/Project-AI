@@ -38,6 +38,27 @@ The repository agent must not self-ratify the standard.
    to the approved off-repository location and the public half to a reviewable
    temporary file:
 
+   From PowerShell, first enter the repository and replace the values in the
+   variables with real paths. Do not type angle-bracket placeholders literally:
+
+   ```powershell
+   Set-Location 'T:\00-Active\Project-AI-Beginnings'
+   $secureDir = Join-Path $env:USERPROFILE 'Documents\Project-AI-Secrets'
+   New-Item -ItemType Directory -Path $secureDir -Force | Out-Null
+   $privateOut = Join-Path $secureDir 'owner-private.json'
+   $publicOut = Join-Path $secureDir 'owner-public.json'
+   $keyId = 'owner-rotation-YYYY-MM-DD-01'
+
+   uv run python .\packages\thirstys-standard-v3q\tools\create_owner_key.py `
+     --key-id $keyId `
+     --private-out $privateOut `
+     --public-out $publicOut
+   ```
+
+   If the private output already exists, stop and use a new approved output
+   path or the owner's documented rotation procedure; do not overwrite a key
+   without explicit custody approval.
+
    ```powershell
    uv run python packages/thirstys-standard-v3q/tools/create_owner_key.py `
      --key-id owner-<ROTATION-ID> `
