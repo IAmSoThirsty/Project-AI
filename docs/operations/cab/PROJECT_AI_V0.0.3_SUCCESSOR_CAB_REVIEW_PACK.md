@@ -11,6 +11,11 @@ runs `29716300475` and `29716300404`. It is not a production release: image
 signatures, attestations, proof custody, target approval, and deployment
 controls remain unverified.
 
+The active successor branch follow-up head `3429be25` also passed CI run
+`29717520103` and vulnerability scan `29717520124`; those runs cover the
+gate-report/documentation follow-ups and do not replace the immutable candidate
+evidence above.
+
 The remote default `master` currently resolves to `9fc3c93e6abd02a14bd141fab4d3ef772fa090bf`,
 not this successor. Its active scheduled Codex Deus workflow is failing before
 checkout because repository policy rejects unpinned actions such as
