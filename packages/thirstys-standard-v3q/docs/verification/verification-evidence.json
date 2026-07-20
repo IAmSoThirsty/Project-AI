@@ -1,6 +1,6 @@
 {
   "verification_id": "thirstys-standard-v3q-1.1.0-rc1-verification",
-  "verified_at": "2026-07-17T15:16:16.999998Z",
+  "verified_at": "2026-07-20T03:20:15.130322Z",
   "environment": {
     "python": "3.13.5",
     "platform": "Linux-4.4.0-x86_64-with-glibc2.41",
@@ -16,7 +16,11 @@
     "manifest_id": "urn:thirsty:standard:v3q:manifest",
     "manifest_version": "1.1.0-rc1",
     "standard_version": "3.1.0-rc1",
-    "lifecycle": "draft_unratified"
+    "lifecycle": "draft_unratified",
+    "ratified_artifact": "thirstys-standard-v3q.ratified.manifest.yaml",
+    "ratified_effective_date": "2026-07-19",
+    "ratification_record": "owner-ratification.json",
+    "ratification_key_id": "owner-rotation-2026-07-19-01"
   },
   "inventory": {
     "rules": 53,
@@ -194,20 +198,23 @@
         "test_scope_and_action_are_enforced",
         "test_duplicate_trusted_key_ids_are_rejected"
       ],
-      "boundary": "Ed25519 mechanism is verified. No production owner key has been enrolled."
+      "boundary": "Ed25519 mechanism is verified. Replacement public key owner-rotation-2026-07-19-01 is enrolled for ratification; private custody remains external."
     },
     {
       "item": "Owner ratification",
-      "status": "blocked_pending_owner_signature",
+      "status": "verified_exact_artifact",
       "evidence": [
-        "test_ratification_signature_binds_exact_manifest_hash"
+        "test_ratification_signature_binds_exact_manifest_hash",
+        "owner-ratification.json",
+        "verify_ratification.py"
       ],
-      "boundary": "The ratification mechanism is verified, but this exact release is not ratified because no owner-controlled public key and signed ratification record were supplied."
+      "boundary": "The exact ratified artifact is signed and independently verified. Production host integration, retired-key removal, and external proof custody remain open."
     }
   ],
-  "overall_status": "verified_except_owner_ratification_and_live_integration",
+  "overall_status": "verified_owner_ratification_pending_live_integration_and_deployment_controls",
   "blockers": [
-    "Jeremy / Thirsty must create and control an Ed25519 owner key and sign the exact release manifest.",
+    "The retired local owner-private.json must be securely removed before the production checkout gate can pass.",
+    "External proof custody and production deployment controls must be independently recorded.",
     "The reference gate must be integrated at the mandatory side-effect boundary before live enforcement can be claimed."
   ]
 }

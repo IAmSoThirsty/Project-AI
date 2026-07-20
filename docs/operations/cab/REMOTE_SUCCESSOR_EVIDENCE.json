@@ -9,7 +9,7 @@
   "remote_default_branch": "master",
   "required": {
     "owner_key_rotation_verified": false,
-    "exact_manifest_ratification_verified": false,
+    "exact_manifest_ratification_verified": true,
     "external_proof_custody_verified": false,
     "commit_pushed": false,
     "successor_ci_green": false,
@@ -34,7 +34,7 @@
   },
   "evidence": {
     "owner_key_rotation_record": null,
-    "exact_manifest_ratification_record": null,
+    "exact_manifest_ratification_record": "packages/thirstys-standard-v3q/owner-ratification.json (key owner-rotation-2026-07-19-01; verify_ratification.py passed)",
     "proof_custody_record": null,
     "remote_commit_sha": null,
     "remote_ci_runs": [],
@@ -48,5 +48,5 @@
     "target_environment_record": null,
     "rollback_rehearsal_record": null
   },
-  "blocking_reason": "No immutable successor remote CI, signature, attestation, approved production overlay, remote-backup, monitoring-CRD, dependency-disposition, or target-environment evidence is currently available."
+  "blocking_reason": "The exact manifest ratification is verified, but retired local owner material, external proof custody, immutable successor remote CI, signature, attestation, approved production overlay, remote-backup, monitoring-CRD, dependency-disposition, and target-environment evidence remain unresolved."
 }

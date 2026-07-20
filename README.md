@@ -16,14 +16,16 @@ embed governance authority.
 
 ## Current status
 
-- Local successor version: `0.0.3` (not yet committed, tagged, or published).
-- Active branch: `main`.
+- Local successor version: `0.0.3` (committed on the working branch; not tagged,
+  merged, or published as a production release).
+- Active branch: `agent/production-readiness-2026-07-19` at `65bcd273`.
 - Stage 18 local acceptance: accepted from a detached clean checkout.
 - Published `v0.0.2` is superseded because its exact-commit CI failed and it
   does not contain the current hardening work.
-- The local v0.0.3 candidate passes local remediation gates but still requires
-  an immutable commit, green remote release/security evidence, owner-controlled
-  V3Q key rotation and ratification, external proof custody, an approved
+- The local v0.0.3 candidate passes local remediation gates; replacement V3Q
+  public-key enrollment and exact-manifest ratification are now verified. It
+  still requires secure retirement of the old local private material, green
+  remote release/security evidence, external proof custody, an approved
   ingress/backup overlay, target-cluster rehearsal, and CAB approval.
 
 See `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`,

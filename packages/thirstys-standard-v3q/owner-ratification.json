@@ -1,0 +1,18 @@
+{
+  "record_type": "owner_ratification",
+  "manifest_id": "urn:thirsty:standard:v3q:manifest",
+  "manifest_version": "1.1.0",
+  "standard_version": "3.1.0",
+  "manifest_sha256": "15c8e4ba51dd4e3d0e562da670848d4c62e2ee98ac3983429aac8a3ff44db80f",
+  "owner": "Jeremy / Thirsty",
+  "approval_authority": "Jeremy / Thirsty",
+  "effective_date": "2026-07-19",
+  "ratified_at": "2026-07-20T03:20:15.130322Z",
+  "statement": "I, Jeremy / Thirsty, as owner and approval authority, ratify this exact manifest release as Thirsty's Standard V3 + Q, subject to its declared scope, priority order, and fail-closed controls.",
+  "signature": {
+    "algorithm": "Ed25519",
+    "key_id": "owner-rotation-2026-07-19-01",
+    "purpose": "ratification",
+    "value": "ibM9Tcps8fna0ibr8XfNYW5hW5LDCWPsqgnHShLscYwPJU73KA3frx2MH9gJFSTUTt74LP79LI1_hoNYxBUoDA"
+  }
+}

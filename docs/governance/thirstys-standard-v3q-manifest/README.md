@@ -16,6 +16,11 @@
 > exact-manifest ratification, external proof custody, and remote evidence are
 > independently verified.
 
+> Historical snapshot boundary: this copied artifact predates the
+> `owner-rotation-2026-07-19-01` registry entry and the current signed
+> `packages/thirstys-standard-v3q/thirstys-standard-v3q.ratified.manifest.yaml`.
+> Consult the package path for current ratification state.
+
 The verification claims above apply to the included reference implementation and automated test environment. They do not claim that the gate is already wired into Project-AI, an agent host, CI, deployment infrastructure, or every external tool path.
 
 ## What is now executable

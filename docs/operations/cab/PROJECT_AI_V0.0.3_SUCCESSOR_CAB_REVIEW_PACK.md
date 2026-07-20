@@ -31,7 +31,7 @@ The observed scheduled failures are runs `29709754498`, `29698528738`, and
 | Web/Rust/Android/Desktop | Local acceptance gates pass; release artifacts remain unsigned or working-tree evidence |
 | Waterfall | Standalone `309` tests; copied Project-AI replay `313` tests, no warnings |
 | Pre-deployment verifier | **Fail-closed** while owner-private material, remote successor evidence, approved ingress, and remote-backup configuration remain unresolved |
-| Draft V3Q manifest review snapshot | `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c` SHA-256 for `packages/thirstys-standard-v3q/thirstys-standard-v3q.manifest.yaml` | Review aid only; owner ratification must sign the exact final ratified-manifest hash |
+| V3Q manifest review snapshot | `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c` source hash; canonical ratified hash `15c8e4ba51dd4e3d0e562da670848d4c62e2ee98ac3983429aac8a3ff44db80f` | `owner-ratification.json` verifies the exact ratified artifact |
 | Machine-readable successor evidence | `REMOTE_SUCCESSOR_EVIDENCE.json` currently has `status: missing` | Gate remains closed until owner, remote, overlay, backup, monitoring-CRD, dependency, and target-environment fields are evidenced and independently reviewed |
 
 Local evidence is necessary but is not production authorization.
@@ -43,10 +43,10 @@ deployment gate.
 
 ## Release-blocking conditions
 
-- [ ] Owner-controlled `owner-primary` key is rotated offline, retired, and
-      replaced only through the approved secret/key custody process.
-- [ ] The exact final V3Q manifest is owner-ratified; the replacement public
-      key is enrolled; `verify_ratification.py` passes against that exact hash.
+- [ ] Retired `owner-primary` private material and affected local layers are
+      securely retired through the approved custody process.
+- [x] The exact final V3Q manifest is owner-ratified; replacement key
+      `owner-rotation-2026-07-19-01` is enrolled; `verify_ratification.py` passes.
 - [ ] External proof issuance and custody are demonstrated for required-mode
       execution; the online runtime must not self-authorize.
 - [ ] The remediation is committed, pushed, and tested by successor CI on the

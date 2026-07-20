@@ -109,8 +109,8 @@ and access policy.
 | Rotation/expiry | TBD |
 | Database endpoint and TLS policy | TBD |
 | Image pull policy/credentials | TBD |
-| V3Q replacement key ID/rotation date | TBD — `owner-primary` must be replaced |
-| V3Q owner ratification record | TBD — current manifest is `draft_unratified` |
+| V3Q replacement key ID/rotation date | `owner-rotation-2026-07-19-01` / `2026-07-19` |
+| V3Q owner ratification record | `packages/thirstys-standard-v3q/owner-ratification.json`; independently verified |
 
 ## Local Kubernetes rehearsal evidence
 
@@ -130,9 +130,9 @@ registry. The online runtime does not receive owner private authority and cannot
 manufacture authority or approval proofs. The pre-remediation local
 `owner-primary` private key entered a local Docker image because the
 package directory was copied without a matching root `.dockerignore` rule.
-That build path is now excluded and regression-checked, but the affected key
-must be rotated before it can be used for any authority, approval, execution,
-or ratification purpose. See `V3Q_OWNER_KEY_ROTATION.md`.
+That build path is now excluded and regression-checked. A replacement key is
+now enrolled for ratification, but the affected local private file still must be
+securely retired before any production use. See `V3Q_OWNER_KEY_ROTATION.md`.
 
 The production image pull policy is `Always`. All successor application images
 must also be pinned by digest; a tag alone is not an approved input.

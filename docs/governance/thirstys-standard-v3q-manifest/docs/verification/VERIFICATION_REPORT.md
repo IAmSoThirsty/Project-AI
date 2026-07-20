@@ -1,5 +1,10 @@
 # Verification Report
 
+> Historical snapshot boundary: this report predates the owner rotation and
+> exact-manifest ratification completed in the current package. It remains
+> reference evidence, not current deployment approval. Current state is recorded
+> under `packages/thirstys-standard-v3q/docs/verification/`.
+
 ## Artifact
 
 - Standard: `3.1.0-rc1`

@@ -2,6 +2,10 @@
 
 ## Current State
 
+> Historical snapshot boundary: this copied continuity record predates the
+> replacement owner key and exact-manifest ratification. The active continuity
+> record is `packages/thirstys-standard-v3q/docs/operations/CONTINUITY_MAP.md`.
+
 Thirsty's Standard V3 + Q now has a machine-readable manifest and an executable reference enforcement package. The release is `3.1.0-rc1` / manifest `1.1.0-rc1` and remains `draft_unratified`.
 
 ## Files Inspected

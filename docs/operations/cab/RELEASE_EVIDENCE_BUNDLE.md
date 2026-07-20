@@ -94,9 +94,9 @@ remain visible.
 | Checkov | Pinned Checkov 3.3.8 scans rendered production Kubernetes, Dockerfiles, and workflows | Local scans pass with zero skips/failures; no remote successor run |
 | Git tag signature | Annotated tag object | Unsigned; distinct from container cosign signatures |
 | Production secrets | Production values contain blank/example inputs | Unique production secret provenance not verified |
-| V3Q signing material | Root `.dockerignore` excludes the ignored owner-key file; rebuilt images report it absent; production loads public verification keys only and blocks `require_approval` | **Blocker:** rotate compromised `owner-primary` offline, update the public registry, ratify the exact manifest, and prove external proof issuance/custody before use |
-| V3Q ratification | Manifest declares executable enforcement controls | **Blocker:** manifest status is `draft_unratified`; owner signature and successful independent verification are missing |
-| V3Q package tests | Passed: 46 tests, including 28 deployment/integration/execution tests and owner-key tool safety checks covering missing registry/configuration, ratification verification, and `require_approval` denial | Production manifest signature, owner rotation, and external proof custody remain open |
+| V3Q signing material | Root `.dockerignore` excludes the ignored owner-key file; rebuilt images report it absent; replacement public key `owner-rotation-2026-07-19-01` is enrolled; production loads public verification keys only | **Blocker:** securely retire the old local `owner-primary` material and prove external proof issuance/custody before use |
+| V3Q ratification | `owner-ratification.json` binds and verifies the exact ratified artifact; `verify_ratification.py` passes | **Pass for exact artifact;** production host integration and external proof custody remain open |
+| V3Q package tests | Passed: 46 tests, including 28 deployment/integration/execution tests and owner-key tool safety checks covering missing registry/configuration, ratification verification, and `require_approval` denial | Retired local key removal, production integration, and external proof custody remain open |
 
 ## Runtime acceptance evidence
 

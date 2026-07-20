@@ -4,12 +4,13 @@
 
 **Standard:** `3.1.0-rc1`  
 **Manifest:** `1.1.0-rc1`  
-**Lifecycle:** `draft_unratified`  
+**Source lifecycle:** `draft_unratified`  
+**Ratified artifact:** `thirstys-standard-v3q.ratified.manifest.yaml` (`2026-07-19`)  
 **Reference runtime enforcement:** implemented and verified  
 **Common Expression Language execution:** implemented and verified  
 **Independent evaluator:** implemented and verified  
 **Ed25519 authority authentication:** implemented and verified  
-**Owner ratification:** pending owner-controlled cryptographic signature
+**Owner ratification:** verified for the exact ratified artifact; production host integration and proof custody remain open
 
 **Checkout hygiene:** the Project-AI production verifier fails closed if an
 ignored `owner-private.json` is present anywhere in the checkout. Keep owner
@@ -56,7 +57,9 @@ Recorded standalone artifact test status:
 
 The current Project-AI workspace suite contains 46 V3Q package tests, including
 the owner-key rotation safety tests. The recorded 23-test result remains the
-original standalone artifact evidence and does not establish owner ratification.
+original standalone artifact evidence. The exact ratified artifact is independently
+verified by `owner-ratification.json` and the replacement public key in
+`trusted-keys.json`.
 
 The recorded evidence is in:
 
@@ -130,11 +133,14 @@ python tools/verify_ratification.py \
   --registry trusted-keys.json
 ```
 
-Until that succeeds with an owner-controlled key, the standard remains `draft_unratified`.
+The source manifest remains `draft_unratified`; the separately generated ratified
+manifest is the signed release artifact. The private key remains off-repository.
 
 ## Core files
 
-- `thirstys-standard-v3q.manifest.yaml` - authoritative V3 + Q manifest.
+- `thirstys-standard-v3q.manifest.yaml` - authoritative draft V3 + Q input manifest.
+- `thirstys-standard-v3q.ratified.manifest.yaml` - owner-signed exact release artifact.
+- `owner-ratification.json` - public signed ratification evidence; contains no private key.
 - `thirstys-standard-manifest.schema.json` - manifest JSON Schema.
 - `src/thirstys_standard_runtime/` - executable CEL, authority, gate, evaluation, and ratification runtime.
 - `conformance-report.schema.json` - signed independent report contract.

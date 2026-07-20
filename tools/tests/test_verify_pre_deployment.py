@@ -25,21 +25,29 @@ def _write_candidate_manifest(tmp_path: Path) -> str:
 
 
 def test_current_repo_pre_deployment_gate_reports_owner_key_blocker() -> None:
-    with pytest.raises(
-        MODULE.PreDeploymentVerificationError,
-        match="must be absent from the checkout",
-    ):
+    owner_key_present = (
+        MODULE.ROOT / "packages" / "thirstys-standard-v3q" / "owner-private.json"
+    ).exists()
+    with pytest.raises(MODULE.PreDeploymentVerificationError) as error:
         MODULE.verify_all(MODULE.ROOT)
+    if owner_key_present:
+        assert "must be absent from the checkout" in str(error.value)
+    else:
+        assert "remote successor evidence is not verified" in str(error.value)
 
 
 def test_pre_deployment_report_lists_all_current_blockers() -> None:
     report = MODULE.collect_pre_deployment_report(MODULE.ROOT)
 
-    assert any(
-        result.startswith("FAIL Docker secret exclusions:")
-        and "owner-controlled signing material" in result
-        for result in report
-    )
+    owner_key_present = (
+        MODULE.ROOT / "packages" / "thirstys-standard-v3q" / "owner-private.json"
+    ).exists()
+    if owner_key_present:
+        assert any(
+            result.startswith("FAIL Docker secret exclusions:")
+            and "owner-controlled signing material" in result
+            for result in report
+        )
     assert any(
         result.startswith("FAIL remote successor evidence:") and "not verified" in result
         for result in report

@@ -4,17 +4,18 @@
 
 - Standard: `3.1.0-rc1`
 - Manifest: `1.1.0-rc1`
-- Lifecycle: `draft_unratified`
+- Source lifecycle: `draft_unratified`
+- Ratified artifact: `thirstys-standard-v3q.ratified.manifest.yaml`, effective `2026-07-19`
 - Verification environment: Python 3.13.5 on Linux x86_64
 - CEL implementation: `cel-python==0.4.0`
 - Recorded automated result: `23 passed`, `0 failed`, `0 errors`, `0 skipped`
 - Current Project-AI workspace package result: `46 passed`; the recorded
   standalone result above remains historical artifact evidence.
-- Current Project-AI checkout hygiene: **Blocked** — an ignored
-  `owner-private.json` is present in the checkout. It is not part of the
+- Current Project-AI checkout hygiene: **Blocked** — the retired ignored
+  `owner-private.json` is still present in the checkout. It is not part of the
   version-controlled release artifact, but the production pre-deployment gate
-  correctly refuses this checkout until the owner rotates/retires the
-  material outside the repository.
+  correctly refuses this checkout until the owner retires that material outside
+  the repository.
 
 ## Direct result
 
@@ -23,8 +24,8 @@
 | Runtime enforcement | **Verified — reference implementation** | The fail-closed gate blocks missing or invalid authority, unknown action classes, absent consequential-action approval, unknown-outcome retries, and revision drift. A denied action is not delivered to the executor. It is not yet integrated into Project-AI or another live execution host. |
 | Common Expression Language execution | **Verified** | All eight unique manifest conditions compile and execute through `cel-python==0.4.0`; expected true and false outcomes are tested. |
 | Independent evaluator behavior | **Verified — reference implementation** | The evaluator runs in a separate operating-system process, has a distinct identity and signing key, verifies the actor's signed execution record, independently checks CEL applicability and evidence, and signs its report. Production service isolation is not deployed. |
-| Cryptographic authority authentication | **Verified — mechanism** | Ed25519 authority proofs are accepted only with a trusted active key, authorized purpose, valid signature, current validity period, matching action, and matching scope. Tampering, expiry, and scope violations are rejected. No production owner key is enrolled. |
-| Owner ratification | **Not verified — blocked** | The signing and verification mechanism is tested, including exact manifest SHA-256 binding. This release is not ratified because Jeremy / Thirsty has not supplied an owner-controlled public key and signed ratification record. |
+| Cryptographic authority authentication | **Verified — mechanism** | Ed25519 authority proofs are accepted only with a trusted active key, authorized purpose, valid signature, current validity period, matching action, and matching scope. Tampering, expiry, and scope violations are rejected. Replacement public key `owner-rotation-2026-07-19-01` is enrolled for ratification; private custody remains external. |
+| Owner ratification | **Verified for exact artifact** | `owner-ratification.json` signs the exact `thirstys-standard-v3q.ratified.manifest.yaml` and `verify_ratification.py` passes against the replacement registry. This does not approve production deployment or prove external proof custody. |
 
 ## Evidence executed
 
@@ -91,27 +92,33 @@ The tests verify:
 - action restriction enforcement;
 - separation of authority and approval signature purposes.
 
-The release artifact is intended to contain no private owner key. The current
-Project-AI checkout does contain an ignored `owner-private.json`; this report
+The release artifact contains no private owner key. The current Project-AI
+checkout still contains the retired ignored `owner-private.json`; this report
 does not read or use it, and the production pre-deployment gate remains
-fail-closed until the owner rotates and retires that material outside the
-repository.
+fail-closed until the owner retires that material outside the repository.
 
 ### Ratification mechanism
 
 The mechanism test changes a manifest to ratified state in a temporary test workspace, signs a ratification record, verifies owner identity and signature, and binds the record to the exact manifest SHA-256. Modifying the manifest after signature causes verification failure.
 
-This proves the mechanism. It does not ratify this release.
+The generated owner record now ratifies the exact release artifact. The source
+manifest remains the draft input; the ratified artifact and replacement public
+registry are the signed release evidence.
 
-## Exact blocker for owner ratification
+## Remaining deployment conditions after ratification
 
-Owner ratification can become verified only when all of the following exist:
+The local ratification requirement is now satisfied by:
 
-1. An Ed25519 private key controlled by Jeremy / Thirsty and stored outside the repository.
+1. Replacement key `owner-rotation-2026-07-19-01`, controlled outside the repository.
 2. The corresponding public key enrolled in the trusted-key registry for the `ratification` purpose.
-3. An explicit effective date.
-4. A signed ratification record generated against the exact final manifest hash.
+3. Effective date `2026-07-19`.
+4. `owner-ratification.json` generated against the exact ratified manifest hash.
 5. Successful execution of `tools/verify_ratification.py`.
+
+Production deployment remains blocked until the retired local private file is
+securely removed, external proof custody is recorded, and the remote successor
+CI/signature/attestation, target-environment, overlay, backup, monitoring, and
+rollback approvals are independently available.
 
 ## Integration limitation
 

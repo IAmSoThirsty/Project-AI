@@ -1,5 +1,16 @@
 # V3Q Owner-Key Rotation and Ratification Gate
 
+## Current execution state
+
+- Replacement key ID: `owner-rotation-2026-07-19-01`.
+- Replacement public key is enrolled in `packages/thirstys-standard-v3q/trusted-keys.json`.
+- Exact-manifest ratification is recorded in
+  `packages/thirstys-standard-v3q/owner-ratification.json`; independent
+  verification passed.
+- The retired ignored `packages/thirstys-standard-v3q/owner-private.json`
+  remains in the local checkout and must be securely retired before the
+  pre-deployment gate can pass.
+
 **Status:** Required before any production deployment or V3Q owner-key use.
 
 ## Incident boundary

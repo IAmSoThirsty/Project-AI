@@ -1,10 +1,10 @@
 # Pre-Deployment Checklist
 
-**Status:** v0.0.3 successor identity prepared; owner-independent remediation
-gates pass locally, while the aggregate pre-deployment gate correctly fails on
-the present owner-private key, missing remote successor evidence, placeholder
-production ingress, and unconfigured remote backup. No production deployment
-is authorized.
+**Status:** v0.0.3 successor identity prepared; replacement owner public key
+enrolled and exact manifest ratification verified. The aggregate pre-deployment
+gate still correctly fails on the retired local owner-private key, missing remote
+successor evidence, placeholder production ingress, and unconfigured remote
+backup. No production deployment is authorized.
 **Evidence date:** 2026-07-19.
 
 **Current CAB entry point:**
@@ -89,18 +89,20 @@ missing external proofs deny execution. Development remains dormant by default.
 
 Do not deploy until all of the following are true:
 
-- the owner has rotated the local `owner-primary` key that entered a Docker
-  image before the root `.dockerignore` exclusion was added;
-- the replacement private key exists only in an approved offline signing system and
-  the replacement public key is committed in `trusted-keys.json`;
-- Jeremy / Thirsty has intentionally ratified the exact V3Q release manifest,
-  and `verify_ratification.py` passes against the replacement registry;
+- the retired local `owner-primary` private file and affected local layers are
+  securely retired under the owner's approved process;
+- the replacement private key remains only in the approved offline signing system
+  and the replacement public key is committed in `trusted-keys.json`;
+- Jeremy / Thirsty's exact-manifest ratification remains independently verifiable
+  through `owner-ratification.json` and `verify_ratification.py`;
 - a production-equivalent startup test proves required-mode activation and a
   negative test proves invalid configuration and missing proofs fail closed;
 - a consequential action without an external approval proof is proven not to execute.
 
-The current manifest remains `draft_unratified`; V3Q minimum acceptance is
-therefore not yet satisfied.
+The source manifest remains `draft_unratified`; the signed
+`thirstys-standard-v3q.ratified.manifest.yaml` is the current ratified artifact.
+V3Q production minimum acceptance is still not satisfied until the retired local
+material and external deployment controls are resolved.
 
 Current draft-manifest review snapshot: `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c`.
 This hash is a review aid, not an owner ratification or release hash.

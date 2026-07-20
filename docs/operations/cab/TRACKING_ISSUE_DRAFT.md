@@ -31,16 +31,16 @@ Current disposition: **v0.0.2 superseded; deployment not authorized**.
 - [ ] Replace placeholder production host/TLS/storage/secret inputs in an
       approved environment overlay; verify secret-manager provenance without
       exposing values.
-- [ ] Rotate the compromised local V3Q `owner-primary` key, update the tracked
-      public registry, and securely retire the old private key and affected
-      local image layers under the owner's approved process.
+- [ ] Securely retire the compromised local V3Q `owner-primary` private key and
+      affected local image layers under the owner's approved process. Replacement
+      public key `owner-rotation-2026-07-19-01` is already tracked.
 - [ ] Keep replacement owner authority outside the online runtime; attach
       evidence for external, narrowly scoped authority/approval proof issuance.
 - [ ] Prove a `require_approval` result never reaches the executor without a
       valid external approval proof.
-- [ ] Obtain Jeremy / Thirsty's signature over the exact V3Q release manifest,
-      verify the ratification record, and attach required-mode positive and
-      negative startup evidence.
+- [x] Obtain Jeremy / Thirsty's signature over the exact V3Q release manifest
+      and verify the ratification record. Required-mode startup evidence remains
+      pending.
 - [ ] Attach all eight image digests and independent cosign signature plus
       SBOM/provenance-attestation verification.
 - [x] Add pinned CodeQL/Checkov workflows; pass local Checkov, Python OSV, and

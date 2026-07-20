@@ -13,5 +13,9 @@ evaluator-private.json
 trusted-keys.local.json
 
 # Locally generated ratification outputs
+# The current owner-signed release outputs are reviewable, non-secret evidence
+# and are intentionally tracked once independently verified.
 owner-ratification.json
 *.ratified.manifest.yaml
+!owner-ratification.json
+!thirstys-standard-v3q.ratified.manifest.yaml

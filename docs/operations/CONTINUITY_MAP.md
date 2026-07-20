@@ -1,5 +1,20 @@
 # Operational Continuity Map - Updated
 
+## SESSION UPDATE 2026-07-20 — Owner rotation and remote gate repair
+
+- Replacement owner key `owner-rotation-2026-07-19-01` was generated outside
+  the repository; only its public document was enrolled in
+  `packages/thirstys-standard-v3q/trusted-keys.json`.
+- `owner-ratification.json` and `thirstys-standard-v3q.ratified.manifest.yaml`
+  were generated and independently verified with `verify_ratification.py`.
+- The retired ignored `owner-private.json` remains present locally and is not
+  read or included in the release; secure retirement is still required before
+  the local deployment gate can pass.
+- Remote CI now passes pre-commit/gitleaks and the vulnerability license gate;
+  the exact branch run still has a coverage failure because the current-repo
+  gate tests assumed the ignored private file existed in clean CI checkouts.
+  That test portability repair is in progress.
+
 ## SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair
 
 - **Mode:** Governed implementation and local verification on the existing

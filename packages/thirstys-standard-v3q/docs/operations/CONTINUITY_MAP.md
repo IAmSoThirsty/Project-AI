@@ -2,7 +2,11 @@
 
 ## Current State
 
-Thirsty's Standard V3 + Q now has a machine-readable manifest and an executable reference enforcement package. The release is `3.1.0-rc1` / manifest `1.1.0-rc1` and remains `draft_unratified`.
+Thirsty's Standard V3 + Q now has a machine-readable manifest, an executable
+reference enforcement package, and a signed exact-manifest artifact. The source
+release is `3.1.0-rc1` / manifest `1.1.0-rc1` (`draft_unratified`); the ratified
+artifact is `thirstys-standard-v3q.ratified.manifest.yaml`, effective
+`2026-07-19`, verified with key `owner-rotation-2026-07-19-01`.
 
 ## Files Inspected
 
@@ -87,7 +91,8 @@ Thirsty's Standard V3 + Q now has a machine-readable manifest and an executable 
 - Ratification signature and exact-manifest hash binding mechanism: passed.
 - Recorded standalone automated suite: 23 passed. Current Project-AI workspace
   package suite: 46 passed, including owner-key rotation safety tests.
-- Owner ratification of this release: not verified.
+- Owner ratification of the exact ratified artifact: verified with
+  `owner-ratification.json` and `verify_ratification.py`.
 - Live Project-AI or agent-host integration: not verified because no target runtime was supplied.
 
 ## Completed Work
@@ -96,7 +101,9 @@ Thirsty's Standard V3 + Q now has a machine-readable manifest and an executable 
 - Implemented actual CEL evaluation using `cel-python` rather than a placeholder parser.
 - Implemented independent evaluation with a distinct process, identity, and signing key.
 - Implemented Ed25519 trust-key, authority proof, approval, actor-record, evaluator-report, and ratification verification.
-- Implemented owner-controlled ratification tools without generating or storing an owner private key in the package.
+- Implemented owner-controlled ratification tools; the replacement private key is
+  stored outside the repository and only the public registry and signed record are
+  tracked.
 - Updated the manifest's implementation status without falsely changing its lifecycle to ratified.
 
 ## Known Failures
@@ -105,7 +112,10 @@ None in the recorded automated verification run.
 
 ## Blockers
 
-- Owner ratification requires Jeremy / Thirsty to create and control an Ed25519 private key and sign the exact release manifest.
+- The retired ignored `owner-private.json` remains in the local checkout and must
+  be securely removed before the production pre-deployment gate can pass.
+- External proof custody, host integration, and production deployment controls
+  remain unverified.
 - End-to-end enforcement in Project-AI requires a concrete execution boundary where every consequential tool call is routed through the gate.
 
 ## Risks
@@ -117,7 +127,7 @@ None in the recorded automated verification run.
 
 ## Pending Work
 
-- Owner key enrollment and ratification signature.
+- Secure retirement of the old local owner key and external proof-custody record.
 - Project-AI or agent-host integration.
 - CI workflow that runs the verification suite on every manifest/runtime change.
 - Canonical schema publication.
