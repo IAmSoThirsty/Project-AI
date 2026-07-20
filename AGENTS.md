@@ -233,8 +233,8 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
   report the remaining fail-closed owner/production prerequisites explicitly.
 - Immutable successor code candidate `6684828d` has green CI run
   `29716300475` and vulnerability scan `29716300404`.
-- Follow-up gate/documentation head `29757ed7` has green CI run `29717900198`
-  and vulnerability scan `29717900199`.
+- Follow-up gate/documentation head `3af82525` has green CI run `29718089242`
+  and vulnerability scan `29718089237`.
 - Canonical replay, frozen history, Compose, Helm, Rust, Node, Android,
   Desktop, SBOM, and local security checks are recorded in the current CAB and
   pre-deployment records.

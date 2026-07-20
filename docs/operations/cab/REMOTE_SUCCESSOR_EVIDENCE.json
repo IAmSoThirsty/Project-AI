@@ -25,8 +25,8 @@
   "observed": {
     "origin_main": "82aa1476657e16a1d38caccba38357c83380a3e3",
     "origin_master": "9fc3c93e6abd02a14bd141fab4d3ef772fa090bf",
-    "current_successor_branch_head": "29757ed74a563e89d1bc6f5f50b71d9863318906",
-    "current_successor_branch_ci_runs": [29717900198, 29717900199],
+    "current_successor_branch_head": "3af8252574b5d015f6c4d6198f0bd41353d78232",
+    "current_successor_branch_ci_runs": [29718089242, 29718089237],
     "failed_remote_runs": [
       29709754498,
       29698528738,
