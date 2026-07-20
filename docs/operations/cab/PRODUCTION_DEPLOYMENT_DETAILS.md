@@ -3,7 +3,7 @@
 **Status:** v0.0.3 repository identity prepared; immutable image overlay and
 real target details pending.
 
-**Hostname boundary (2026-07-19):** No approved production hostname or DNS
+**Hostname boundary (2026-07-20):** No approved production hostname or DNS
 record is present in the current repository or CAB records. The tracked
 `project-ai.example.com` value is an explicit placeholder and must be replaced
 by an owner-approved environment overlay before any production render or
@@ -12,7 +12,9 @@ documentation are not approval evidence.
 
 ## Immutable release input
 
-- Commit: `82aa1476657e16a1d38caccba38357c83380a3e3`
+- Successor code candidate: `6684828d23b08beaac77aee5efadc532bed23181`
+- Candidate CI/vulnerability evidence: `29716300475` / `29716300404` (both passed)
+- Historical baseline commit: `82aa1476657e16a1d38caccba38357c83380a3e3`
 - Tag: `v0.0.2`
 - Registry: `ghcr.io`
 - Owner: `iamsothirsty`

@@ -3,6 +3,15 @@
 **Evidence cutoff:** 2026-07-19
 **Candidate commit:** `82aa1476657e16a1d38caccba38357c83380a3e3`
 
+## Successor update — 2026-07-20
+
+The v0.0.2 material below is retained as historical evidence only. The
+immutable v0.0.3 successor code candidate is
+`6684828d23b08beaac77aee5efadc532bed23181`; successor CI run `29716300475`
+and vulnerability scan `29716300404` both passed. This does not supply image
+signatures, SBOM attestations, external proof custody, target approval, or
+deployment/rollback evidence.
+
 > **Supersession notice:** v0.0.2 is no longer a deployable candidate. The
 > remediation working tree contains CI, runtime, monitoring, security, and
 > dependency fixes that are not in this commit or its images. Local results

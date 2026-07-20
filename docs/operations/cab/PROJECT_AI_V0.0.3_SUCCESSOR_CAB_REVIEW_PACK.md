@@ -1,14 +1,15 @@
 # Project-AI v0.0.3 Successor CAB Review Pack
 
-**Prepared:** 2026-07-19
+**Prepared:** 2026-07-20
 **Repository:** `IAmSoThirsty/Project-AI`
-**Candidate:** local successor working tree at `82aa1476657e16a1d38caccba38357c83380a3e3`
+**Candidate:** immutable successor code commit `6684828d23b08beaac77aee5efadc532bed23181`; current branch head is the docs-only follow-up `c526d9f5c9fcac714dcaa8241184f91386b5ba99`
 **Decision:** **DEPLOYMENT NOT AUTHORIZED**
 
-This is the current CAB entry point for the v0.0.3 successor. The candidate is
-not yet an immutable release: the working tree is dirty, `HEAD` still equals
-the published v0.0.2 commit, and no successor remote CI, signature, or
-attestation evidence exists.
+This is the current CAB entry point for the v0.0.3 successor. The candidate
+is pushed and immutable successor CI plus vulnerability scans are green in
+runs `29716300475` and `29716300404`. It is not a production release: image
+signatures, attestations, proof custody, target approval, and deployment
+controls remain unverified.
 
 The remote default `master` currently resolves to `9fc3c93e6abd02a14bd141fab4d3ef772fa090bf`,
 not this successor. Its active scheduled Codex Deus workflow is failing before
@@ -30,7 +31,7 @@ The observed scheduled failures are runs `29709754498`, `29698528738`, and
 | Helm | Lint passes; production render verifies `47` manifests and eight digest-pinned images |
 | Web/Rust/Android/Desktop | Local acceptance gates pass; release artifacts remain unsigned or working-tree evidence |
 | Waterfall | Standalone `309` tests; copied Project-AI replay `313` tests, no warnings |
-| Pre-deployment verifier | **Fail-closed** while owner-private material, remote successor evidence, approved ingress, and remote-backup configuration remain unresolved |
+| Pre-deployment verifier | **Fail-closed** while owner-private material, external successor evidence, approved ingress, and remote-backup configuration remain unresolved |
 | V3Q manifest review snapshot | `3ea08a2cf1244c4c0b4a9045aef4b5e5ac59ed9e82d7e03aa315d0d56fdcf09c` source hash; canonical ratified hash `15c8e4ba51dd4e3d0e562da670848d4c62e2ee98ac3983429aac8a3ff44db80f` | `owner-ratification.json` verifies the exact ratified artifact |
 | Machine-readable successor evidence | `REMOTE_SUCCESSOR_EVIDENCE.json` currently has `status: missing` | Gate remains closed until owner, remote, overlay, backup, monitoring-CRD, dependency, and target-environment fields are evidenced and independently reviewed |
 
@@ -49,11 +50,11 @@ deployment gate.
       `owner-rotation-2026-07-19-01` is enrolled; `verify_ratification.py` passes.
 - [ ] External proof issuance and custody are demonstrated for required-mode
       execution; the online runtime must not self-authorize.
-- [ ] The remediation is committed, pushed, and tested by successor CI on the
-      exact immutable revision.
+- [x] The remediation is committed, pushed, and tested by successor CI and
+      vulnerability scanning on immutable candidate `6684828d`.
 - [ ] The remote default-branch workflow failure is resolved or explicitly
-      retired; all active remote workflows must satisfy full-SHA action pinning
-      before remote evidence is treated as green.
+      retired; candidate-branch CI is green, but default-branch workflow health
+      remains an independent CAB review item.
 - [ ] All eight image digests have independently verified cosign signatures,
       SBOM/provenance attestations, and matching CodeQL/Checkov/Trivy and
       language dependency evidence.

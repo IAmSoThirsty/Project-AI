@@ -5,7 +5,7 @@ enrolled and exact manifest ratification verified. The aggregate pre-deployment
 gate still correctly fails on the retired local owner-private key, missing remote
 successor evidence, placeholder production ingress, and unconfigured remote
 backup. No production deployment is authorized.
-**Evidence date:** 2026-07-19.
+**Evidence date:** 2026-07-20.
 
 **Current CAB entry point:**
 [`PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`](../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md)
@@ -141,7 +141,10 @@ tag, GitHub Release, package publication, image publication, or deployment.
 - Branch coverage gate: `88.47%`, threshold `80%`.
 - Canonical replay: `5/5 invariants passed`.
 - Frozen history: `2264 sections verified`.
-- GitHub Actions CI:
+- GitHub Actions CI for immutable successor `6684828d`:
+  CI run `29716300475` and vulnerability scan `29716300404` passed; image
+  signatures, attestations, and target deployment evidence remain pending.
+- Historical GitHub Actions CI:
   - Implementation run `28362042896` passed at commit `176990f08b6c403befccee43b350d6874e733507`.
   - Latest docs/evidence run `28362260186` passed at commit `22ad10aa49f24e5045ffd4493a6e92f9cb615b7a`.
 - Pre-deployment verifier: `tools/verify_pre_deployment.py` passed locally.
@@ -227,7 +230,9 @@ Do not deploy if any of these are true:
 - `tools/verify_pre_deployment.py` fails.
 - Local tests, lint, type checking, canonical replay, or frozen-history
   verification fail.
-- GitHub Actions CI is not green for the exact commit intended for deployment.
+- Candidate `6684828d` has green successor CI and vulnerability evidence, but
+  image signatures, SBOM attestations, and target-environment proof are still
+  absent.
 - `PROJECT_AI_API_TOKEN` is committed with a real value in tracked files.
 - Protected API routes do not fail closed when token or audit path is missing.
 - Compose health/security verification fails.

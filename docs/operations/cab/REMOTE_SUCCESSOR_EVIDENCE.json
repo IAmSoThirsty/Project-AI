@@ -44,7 +44,7 @@
     "production_overlay_record": null,
     "remote_backup_record": null,
     "monitoring_crds_record": null,
-    "dependabot_disposition_record": null,
+    "dependabot_disposition_record": "Pending owner disposition: Dependabot PR #509 (pip group) and PR #510 (npm_and_yarn group) remain open against master; no merge/close/risk-acceptance decision is recorded.",
     "target_environment_record": null,
     "rollback_rehearsal_record": null
   },

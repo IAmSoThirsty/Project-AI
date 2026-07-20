@@ -15,6 +15,10 @@
   passed for immutable candidate `6684828d`; the remaining remote evidence is
   signatures, attestations, target overlay, backup, monitoring, dependency,
   and rollback custody.
+- The current branch head is the documentation-only follow-up `c526d9f5`;
+  its hosted follow-up runs are separate from the immutable code-candidate
+  evidence above. Dependabot PRs #509 and #510 remain open against `master`
+  with no owner disposition recorded.
 
 ## SESSION UPDATE 2026-07-19 — successor gate completion and truthful boundary repair
 

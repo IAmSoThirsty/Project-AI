@@ -10,7 +10,9 @@
 Complete and attach the evidence required to make a CAB decision on a successor
 to Project-AI v0.0.2. v0.0.2 commit
 `82aa1476657e16a1d38caccba38357c83380a3e3` is superseded and must not be used
-as the deploy candidate.
+as the deploy candidate. Immutable successor code candidate
+`6684828d23b08beaac77aee5efadc532bed23181` is pushed and has green successor
+CI/vulnerability runs `29716300475` and `29716300404`.
 The current repository-local CAB pack is at
 `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`.
 The v0.0.2 pack remains a historical supersession record.
@@ -23,8 +25,8 @@ Current disposition: **v0.0.2 superseded; deployment not authorized**.
       failure; prove 87.32% combined coverage and 9/9 local runtime health.
 - [x] Choose and apply successor version v0.0.3 across all first-party version
       surfaces and add release tag/digest agreement gates.
-- [ ] Commit/push the remediation and require green remote CI/security
-      workflows on that exact revision.
+- [x] Commit/push the remediation and obtain green remote CI/security workflows
+      on immutable candidate `6684828d`.
 - [ ] Record environment, cluster/context, namespace, Helm release, maintenance
       window/timezone, freeze check, change owner, implementer, rollback owner +
       backup, approver, support owner, and acceptance authority.
