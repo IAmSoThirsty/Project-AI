@@ -82,6 +82,11 @@ def _source(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+def request_source(request: Request) -> str:
+    """Return the bounded source identity used by durable interface rate limits."""
+    return _source(request)
+
+
 def _user_agent(request: Request) -> str:
     return request.headers.get("user-agent", "unknown")
 
@@ -123,6 +128,11 @@ def _require_same_origin(request: Request) -> None:
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Cross-origin authentication request rejected",
         )
+
+
+def require_same_origin(request: Request) -> None:
+    """Apply the human-interface same-origin policy outside the auth router."""
+    _require_same_origin(request)
 
 
 def _safe_account(account: Account) -> AuthAccount:

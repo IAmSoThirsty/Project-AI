@@ -59,20 +59,29 @@ class AppendOnlyAuditRelay:
                 stream.write(_canonical_json(body).decode("utf-8") + "\n")
             return body
 
+    def verified_snapshot(self) -> tuple[bool, int, tuple[JsonRecord, ...]]:
+        """Return one locked, fully verified snapshot or no records on integrity failure."""
+        with self._lock:
+            previous = GENESIS_HASH
+            records: list[JsonRecord] = []
+            if not self.path.exists():
+                return True, 0, ()
+            lines = self.path.read_text(encoding="utf-8").splitlines()
+            for count, line in enumerate(lines, start=1):
+                record = cast(JsonRecord, json.loads(line))
+                current = record.get("hash")
+                body = {key: value for key, value in record.items() if key != "hash"}
+                if body.get("previous_hash") != previous or not isinstance(current, str):
+                    return False, count, ()
+                if hashlib.sha256(_canonical_json(body)).hexdigest() != current:
+                    return False, count, ()
+                records.append(record)
+                previous = current
+            return True, len(records), tuple(records)
+
     def verify(self) -> tuple[bool, int]:
-        previous = GENESIS_HASH
-        count = 0
-        if not self.path.exists():
-            return True, count
-        for count, line in enumerate(self.path.read_text(encoding="utf-8").splitlines(), start=1):
-            record = cast(JsonRecord, json.loads(line))
-            current = record.pop("hash", None)
-            if record.get("previous_hash") != previous or not isinstance(current, str):
-                return False, count
-            if hashlib.sha256(_canonical_json(record)).hexdigest() != current:
-                return False, count
-            previous = current
-        return True, count
+        valid, count, _ = self.verified_snapshot()
+        return valid, count
 
 
 def start_audit_relay(path: Path) -> AppendOnlyAuditRelay:

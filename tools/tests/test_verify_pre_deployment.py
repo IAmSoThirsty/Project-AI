@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -22,6 +23,96 @@ def _write_candidate_manifest(tmp_path: Path) -> str:
     content = b"fixture-manifest"
     manifest.write_bytes(content)
     return hashlib.sha256(content).hexdigest()
+
+
+_IMAGE_NAMES = (
+    "api",
+    "docs-portal",
+    "proof-portal",
+    "operator-console",
+    "swr",
+    "atlas",
+    "arbiter-rlp",
+    "genesis",
+)
+
+
+def _complete_verified_evidence(manifest_sha: str) -> dict[str, Any]:
+    """A fully-verified successor evidence document the gate accepts.
+
+    Baseline for negative tests: each poisons exactly one field to prove a
+    specific fabrication cannot pass the strict ``status: verified`` branch.
+    """
+    digest = "sha256:" + "a" * 64
+    return {
+        "schema_version": "1.0",
+        "candidate_version": "0.0.3",
+        "candidate_commit": "c" * 40,
+        "candidate_manifest_sha256": manifest_sha,
+        "status": "verified",
+        "review_only": False,
+        "required": {
+            field: True
+            for field in (
+                "owner_key_rotation_verified",
+                "exact_manifest_ratification_verified",
+                "external_proof_custody_verified",
+                "commit_pushed",
+                "successor_ci_green",
+                "image_signatures_verified",
+                "release_provenance_verified",
+                "sbom_attestations_verified",
+                "production_overlay_verified",
+                "remote_backup_verified",
+                "monitoring_crds_verified",
+                "dependabot_disposition_verified",
+                "target_environment_approved",
+                "rollback_rehearsal_verified",
+            )
+        },
+        "evidence": {
+            "owner_key_rotation_record": "rotation.json",
+            "exact_manifest_ratification_record": "ratification.json",
+            "proof_custody_record": "proof-custody.json",
+            "remote_commit_sha": "c" * 40,
+            "remote_ci_runs": ["run-1"],
+            "image_digests": {name: digest for name in _IMAGE_NAMES},
+            "signature_verifications": [
+                {
+                    "image": name,
+                    "digest": digest,
+                    "verifier": "cosign v3.1.2",
+                    "method": "cosign verify (digest-pinned)",
+                    "result": "verified",
+                }
+                for name in _IMAGE_NAMES
+            ],
+            "sbom_attestations": [
+                {
+                    "image": name,
+                    "digest": digest,
+                    "predicate_type": "spdxjson",
+                    "verifier": "cosign v3.1.2",
+                    "method": "cosign verify-attestation (digest-pinned)",
+                    "result": "verified",
+                }
+                for name in _IMAGE_NAMES
+            ],
+            "production_overlay_record": "overlay.json",
+            "remote_backup_record": "backup.json",
+            "monitoring_crds_record": "crds.json",
+            "dependabot_disposition_record": "dependabot.json",
+            "target_environment_record": "target.json",
+            "rollback_rehearsal_record": "rollback.json",
+        },
+    }
+
+
+def _write_evidence(tmp_path: Path, evidence: dict[str, Any]) -> Path:
+    path = tmp_path / "docs" / "operations" / "cab" / "REMOTE_SUCCESSOR_EVIDENCE.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(evidence), encoding="utf-8")
+    return path
 
 
 def test_current_repo_pre_deployment_gate_reports_owner_key_blocker() -> None:
@@ -194,6 +285,7 @@ def test_remote_successor_evidence_fails_closed_until_verified(tmp_path: Path) -
             "commit_pushed": False,
             "successor_ci_green": False,
             "image_signatures_verified": False,
+            "release_provenance_verified": False,
             "sbom_attestations_verified": False,
             "production_overlay_verified": False,
             "remote_backup_verified": False,
@@ -243,6 +335,7 @@ def test_remote_successor_evidence_verified_requires_external_records(tmp_path: 
             "commit_pushed": True,
             "successor_ci_green": True,
             "image_signatures_verified": True,
+            "release_provenance_verified": True,
             "sbom_attestations_verified": True,
             "production_overlay_verified": True,
             "remote_backup_verified": True,
@@ -304,6 +397,7 @@ def test_remote_successor_evidence_accepts_complete_external_records(tmp_path: P
                 "commit_pushed",
                 "successor_ci_green",
                 "image_signatures_verified",
+                "release_provenance_verified",
                 "sbom_attestations_verified",
                 "production_overlay_verified",
                 "remote_backup_verified",
@@ -320,8 +414,32 @@ def test_remote_successor_evidence_accepts_complete_external_records(tmp_path: P
             "remote_commit_sha": "c" * 40,
             "remote_ci_runs": ["run-1"],
             "image_digests": {name: "sha256:" + "a" * 64 for name in image_names},
-            "signature_verifications": ["sig-1"],
-            "sbom_attestations": ["att-1"],
+            # Structured records. The previous fixture used the placeholders
+            # ["sig-1"] / ["att-1"], which mirrored a real weakness: the gate only
+            # checked that these lists were non-empty, so the production record
+            # containing "cosign v2.6.0 no signatures found" satisfied the
+            # "signatures verified" requirement.
+            "signature_verifications": [
+                {
+                    "image": name,
+                    "digest": "sha256:" + "a" * 64,
+                    "verifier": "cosign v3.1.2",
+                    "method": "cosign verify (digest-pinned)",
+                    "result": "verified",
+                }
+                for name in image_names
+            ],
+            "sbom_attestations": [
+                {
+                    "image": name,
+                    "digest": "sha256:" + "a" * 64,
+                    "predicate_type": "spdxjson",
+                    "verifier": "cosign v3.1.2",
+                    "method": "cosign verify-attestation (digest-pinned)",
+                    "result": "verified",
+                }
+                for name in image_names
+            ],
             "production_overlay_record": "overlay.json",
             "remote_backup_record": "backup.json",
             "monitoring_crds_record": "crds.json",
@@ -334,7 +452,84 @@ def test_remote_successor_evidence_accepts_complete_external_records(tmp_path: P
     path.parent.mkdir(parents=True)
     path.write_text(json.dumps(evidence), encoding="utf-8")
 
-    assert MODULE.verify_remote_successor_evidence(tmp_path) == 31
+    # 4 base + 14 required booleans + 14 evidence fields. The required set grew by
+    # one on 2026-07-20 with release_provenance_verified: a cryptographically valid
+    # signature issued to an unmerged agent branch is not release provenance.
+    assert MODULE.verify_remote_successor_evidence(tmp_path) == 32
+
+
+def test_remote_successor_evidence_baseline_builder_is_accepted(tmp_path: Path) -> None:
+    # Guards the negative tests below: they are only meaningful if the un-poisoned
+    # baseline actually passes.
+    manifest_sha = _write_candidate_manifest(tmp_path)
+    _write_evidence(tmp_path, _complete_verified_evidence(manifest_sha))
+    assert MODULE.verify_remote_successor_evidence(tmp_path) == 32
+
+
+def test_remote_successor_evidence_rejects_cosign_v2_signature_record(tmp_path: Path) -> None:
+    # The exact 2026-07-20 weakness: a record produced by cosign 2.x -- which cannot
+    # read the v3 bundle format -- must never satisfy the signatures-verified gate,
+    # even when it claims a "verified" result.
+    manifest_sha = _write_candidate_manifest(tmp_path)
+    evidence = _complete_verified_evidence(manifest_sha)
+    evidence["evidence"]["signature_verifications"][0]["verifier"] = "cosign v2.6.0"
+    _write_evidence(tmp_path, evidence)
+    with pytest.raises(MODULE.PreDeploymentVerificationError, match="cosign >= 3"):
+        MODULE.verify_remote_successor_evidence(tmp_path)
+
+
+def test_remote_successor_evidence_rejects_unverified_signature_result(tmp_path: Path) -> None:
+    manifest_sha = _write_candidate_manifest(tmp_path)
+    evidence = _complete_verified_evidence(manifest_sha)
+    evidence["evidence"]["signature_verifications"][0]["result"] = "failed"
+    _write_evidence(tmp_path, evidence)
+    with pytest.raises(MODULE.PreDeploymentVerificationError, match="verified result"):
+        MODULE.verify_remote_successor_evidence(tmp_path)
+
+
+def test_remote_successor_evidence_rejects_signature_digest_mismatch(tmp_path: Path) -> None:
+    # A signature record bound to a different digest than the recorded image digest.
+    manifest_sha = _write_candidate_manifest(tmp_path)
+    evidence = _complete_verified_evidence(manifest_sha)
+    evidence["evidence"]["signature_verifications"][0]["digest"] = "sha256:" + "b" * 64
+    _write_evidence(tmp_path, evidence)
+    with pytest.raises(MODULE.PreDeploymentVerificationError, match="recorded image digest"):
+        MODULE.verify_remote_successor_evidence(tmp_path)
+
+
+def test_remote_successor_evidence_rejects_empty_attestations_when_verified(tmp_path: Path) -> None:
+    # A verified document that carries no attestation records must not pass.
+    manifest_sha = _write_candidate_manifest(tmp_path)
+    evidence = _complete_verified_evidence(manifest_sha)
+    evidence["evidence"]["sbom_attestations"] = []
+    _write_evidence(tmp_path, evidence)
+    with pytest.raises(MODULE.PreDeploymentVerificationError, match="missing external records"):
+        MODULE.verify_remote_successor_evidence(tmp_path)
+
+
+def test_collect_blockers_itemizes_every_condition_separately() -> None:
+    blockers = MODULE.collect_blockers(MODULE.ROOT)
+    conditions = {b["condition"] for b in blockers}
+    categories = {b["category"] for b in blockers}
+    # Distinct mandatory prerequisites must each appear as their own entry, not be
+    # collapsed under a single "remote evidence" line.
+    for expected in (
+        "release_provenance_verified",
+        "sbom_attestations_verified",
+        "owner_key_rotation_verified",
+        "external_proof_custody_verified",
+        "rollback_rehearsal_verified",
+        "monitoring_crds_verified",
+        "production_ingress_host",
+        "production_remote_backup",
+    ):
+        assert expected in conditions
+    # Each blocker names its category and an actionable minimum fix.
+    assert {"owner", "external-supply-chain", "production"} <= categories
+    for blocker in blockers:
+        assert blocker["category"] and len(blocker["minimum_fix"]) > 20
+    # Substantially more than the three machine-checked gates.
+    assert len(blockers) >= 10
 
 
 def test_v3q_authority_boundary_passes_repository() -> None:
@@ -449,6 +644,106 @@ def test_ci_workflow_requires_expected_jobs(tmp_path: Path) -> None:
         MODULE.verify_ci_workflow(tmp_path)
 
 
+def test_repository_ci_workflow_exactly_matches_expected_jobs() -> None:
+    assert MODULE.verify_ci_workflow(MODULE.ROOT) == len(MODULE.EXPECTED_CI_JOBS)
+
+
+def test_ci_workflow_rejects_unexpected_job(tmp_path: Path) -> None:
+    workflow_dir = tmp_path / ".github" / "workflows"
+    workflow_dir.mkdir(parents=True)
+    jobs = "\n".join(f"  {name}: {{}}" for name in sorted(MODULE.EXPECTED_CI_JOBS))
+    (workflow_dir / "ci.yaml").write_text(
+        f"jobs:\n{jobs}\n  unauthorized-extra: {{}}\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(MODULE.PreDeploymentVerificationError, match="CI jobs mismatch"):
+        MODULE.verify_ci_workflow(tmp_path)
+
+
+def test_local_test_evidence_rejects_document_count_drift(tmp_path: Path) -> None:
+    evidence_path = tmp_path / "docs" / "operations" / "cab" / "LOCAL_VERIFICATION_EVIDENCE.json"
+    evidence_path.parent.mkdir(parents=True)
+    evidence_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "recorded_at": "2026-07-21T00:00:00Z",
+                "scope": "dirty-working-tree",
+                "branch": "verification",
+                "head": "a" * 40,
+                "command": "uv run pytest -q",
+                "status": "passed",
+                "results": {
+                    "passed": 10,
+                    "failed": 0,
+                    "errors": 0,
+                    "skipped": 1,
+                    "xfailed": 0,
+                    "xpassed": 0,
+                    "deselected": 0,
+                    "flaky": 0,
+                    "retried": 0,
+                    "mocked": "not-measured",
+                },
+                "coverage": {
+                    "command": "uv run python tools/run_ci_coverage.py --batches 8",
+                    "status": "passed",
+                    "branch_percent": 87.48,
+                    "threshold_percent": 80,
+                    "requested_batches": 8,
+                    "executed_batches": 11,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "AGENTS.md").write_text(
+        "Full pytest: 10 passed, 1 skipped",
+        encoding="utf-8",
+    )
+    checklist = tmp_path / "docs" / "deployment" / "PRE_DEPLOYMENT_CHECKLIST.md"
+    checklist.parent.mkdir(parents=True)
+    checklist.write_text(
+        "Full pytest: 9 passed, 1 skipped",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        MODULE.PreDeploymentVerificationError,
+        match="does not match structured local test evidence",
+    ):
+        MODULE.verify_local_test_evidence(tmp_path)
+
+
+def test_local_test_evidence_rejects_coverage_drift(tmp_path: Path) -> None:
+    relative_paths = (
+        "AGENTS.md",
+        "docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md",
+        "docs/operations/cab/LOCAL_VERIFICATION_EVIDENCE.json",
+    )
+    for relative_path in relative_paths:
+        source = MODULE.ROOT / relative_path
+        target = tmp_path / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+    checklist = tmp_path / "docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md"
+    checklist.write_text(
+        checklist.read_text(encoding="utf-8").replace(
+            "Batched branch coverage: 87.48%, threshold 80%.",
+            "Batched branch coverage: 99.99%, threshold 80%.",
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        MODULE.PreDeploymentVerificationError,
+        match="does not match structured local coverage evidence",
+    ):
+        MODULE.verify_local_test_evidence(tmp_path)
+
+
 def test_security_workflow_requires_codeql_and_checkov(tmp_path: Path) -> None:
     workflow_dir = tmp_path / ".github" / "workflows"
     workflow_dir.mkdir(parents=True)
@@ -456,6 +751,21 @@ def test_security_workflow_requires_codeql_and_checkov(tmp_path: Path) -> None:
 
     with pytest.raises(MODULE.PreDeploymentVerificationError, match="security jobs mismatch"):
         MODULE.verify_security_workflow(tmp_path)
+
+
+def test_vulnerability_workflow_requires_lock_derived_third_party_audit(tmp_path: Path) -> None:
+    workflow_dir = tmp_path / ".github" / "workflows"
+    workflow_dir.mkdir(parents=True)
+    (workflow_dir / "vulnscan.yaml").write_text(
+        "jobs:\n  python:\n    steps:\n      - run: pip-audit --skip-editable\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        MODULE.PreDeploymentVerificationError,
+        match="locked third-party audit control",
+    ):
+        MODULE.verify_vulnerability_workflow(tmp_path)
 
 
 def test_workflow_action_pinning_passes_repository() -> None:

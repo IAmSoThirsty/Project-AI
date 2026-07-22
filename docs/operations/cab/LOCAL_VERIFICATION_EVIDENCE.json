@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "recorded_at": "2026-07-21T23:31:00-06:00",
+  "scope": "dirty-working-tree",
+  "branch": "agent/production-readiness-2026-07-19",
+  "head": "a819b3bfcbacdb2292fff4c45f4064a4d0440fef",
+  "command": "uv run pytest -q",
+  "status": "passed",
+  "results": {
+    "passed": 3497,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xfailed": 0,
+    "xpassed": 0,
+    "deselected": 0,
+    "flaky": 0,
+    "retried": 0,
+    "mocked": "not-measured"
+  },
+  "postgresql_integration": {
+    "executed": true,
+    "passed": 5,
+    "database": "isolated disposable PostgreSQL 16",
+    "credentials_source": "compose.yaml development defaults",
+    "retained": false
+  },
+  "coverage": {
+    "command": "uv run python tools/run_ci_coverage.py --batches 8",
+    "status": "passed",
+    "branch_percent": 87.48,
+    "threshold_percent": 80,
+    "requested_batches": 8,
+    "executed_batches": 11
+  },
+  "duration_seconds": 198.15
+}

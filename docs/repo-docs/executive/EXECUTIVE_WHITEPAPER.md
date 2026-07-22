@@ -9,6 +9,14 @@
 > deployment approval. The v0.0.3 successor remains fail-closed pending the
 > owner, external evidence, and approved-operations gates in the
 > [current CAB review pack](../../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md).
+>
+> **Supply-chain accuracy (2026-07-20):** any "SLSA Level 3" claim in this
+> document is **not substantiated**. As of 2026-07-20 no image digest carries a
+> verifiable SBOM or provenance attestation (**0/8**), and the eight signed
+> digests carry **branch**, not release, provenance. Image *signatures* are real
+> and independently verified (8/8, cosign ≥ 3). Authoritative:
+> `docs/operations/cab/EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md` and
+> `tools/supply_chain_policy.json`.
 
 ______________________________________________________________________
 

@@ -23,18 +23,22 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --frozen --all-extras --all-packages
+      - name: Export locked third-party dependency closure
+        run: >-
+          uv export --frozen --all-packages --all-extras
+          --no-emit-workspace --no-hashes
+          --output-file /tmp/project-ai-third-party-requirements.txt
       - name: Run pip-audit
         # pip-audit is intentionally not a workspace dependency (keeps it out of
         # the locked dependency graph); `--with` installs it into an ephemeral
-        # overlay of the already-synced env so it audits the real resolved
-        # third-party deps. --skip-editable is required: this is a uv workspace
-        # of 30+ local `project-ai-*` packages installed editable, none of
-        # which are published to PyPI, so an unfiltered audit fails immediately
-        # on every one of them ("not found on PyPI") instead of scanning
-        # anything. This is a hard gate: a real CVE fails the job.
+        # overlay of the already-synced env. The audited requirements are exported
+        # from uv.lock with first-party workspace members omitted, so every resolved
+        # third-party dependency remains in scope without querying unpublished
+        # `project-ai-*` names on PyPI. This is a hard gate: a real CVE fails the job.
         run: >-
           uv run --with pip-audit==2.10.1 pip-audit
-          --desc --skip-editable --vulnerability-service osv
+          --desc --requirement /tmp/project-ai-third-party-requirements.txt
+          --vulnerability-service osv
       - name: Summary
         run: |
           echo "## Python Vulnerability Scan" >> $GITHUB_STEP_SUMMARY

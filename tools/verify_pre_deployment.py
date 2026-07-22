@@ -30,6 +30,7 @@ EXPECTED_CI_JOBS = {
     "python",
     "rust",
     "node",
+    "web-visual",
     "android",
     "desktop",
     "compose",
@@ -80,10 +81,12 @@ REQUIRED_FILES = (
     ".github/workflows/ci.yaml",
     ".github/workflows/publish.yaml",
     ".github/workflows/security.yaml",
+    ".github/workflows/vulnscan.yaml",
     "helm/project-ai/values.yaml",
     "docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md",
     "docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md",
     "docs/operations/cab/REMOTE_SUCCESSOR_EVIDENCE.json",
+    "docs/operations/cab/LOCAL_VERIFICATION_EVIDENCE.json",
     "docs/operations/cab/OPTIONAL_SERVICE_USAGE.json",
     "docs/operations/cab/OPTIONAL_SERVICE_USAGE.md",
     "docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md",
@@ -311,6 +314,12 @@ def verify_remote_successor_evidence(root: Path = ROOT) -> int:
         "commit_pushed",
         "successor_ci_green",
         "image_signatures_verified",
+        # A valid signature is not the same thing as acceptable provenance. The
+        # eight 2026-07-20 candidate digests verify cryptographically but were
+        # signed from an unmerged agent branch via workflow_dispatch, not from
+        # main or a release tag -- and the workflow's own identity pattern ended
+        # in '@.*$', so it could not tell the difference.
+        "release_provenance_verified",
         "sbom_attestations_verified",
         "production_overlay_verified",
         "remote_backup_verified",
@@ -413,6 +422,71 @@ def verify_remote_successor_evidence(root: Path = ROOT) -> int:
                 and re.fullmatch(r"sha256:[0-9a-f]{64}", digest) is not None,
                 f"verified successor image digest is invalid: {name}",
             )
+
+        # Structured records, not merely non-empty lists.
+        #
+        # Before 2026-07-20 this gate accepted ANY non-empty list here. The record
+        # that satisfied it literally read "cosign v2.6.0 no signatures found" --
+        # a list entry describing a FAILED verification was enough to pass the
+        # "signatures verified" gate. A record must now name the digest it covers,
+        # the tool and version that produced it, and an explicit verified result.
+        def _check_records(
+            records: object,
+            label: str,
+            *,
+            extra_fields: tuple[str, ...] = (),
+        ) -> None:
+            _require(isinstance(records, list), f"verified successor {label} must be a list")
+            entries = cast(list[Any], records)
+            covered: set[str] = set()
+            for entry in entries:
+                _require(
+                    isinstance(entry, dict),
+                    f"verified successor {label} entries must be structured records, not free text",
+                )
+                record = cast(dict[str, Any], entry)
+                for field in ("image", "digest", "verifier", "method", "result", *extra_fields):
+                    _require(
+                        isinstance(record.get(field), str) and bool(record[field]),
+                        f"verified successor {label} record missing {field}",
+                    )
+                _require(
+                    record["result"] == "verified",
+                    f"verified successor {label} record for {record['image']} does not "
+                    f"report a verified result: {record['result']!r}",
+                )
+                _require(
+                    record["image"] in image_digests
+                    and record["digest"] == image_digests[record["image"]],
+                    f"verified successor {label} record for {record['image']} does not "
+                    "match the recorded image digest",
+                )
+                # The verifier must affirmatively be cosign >= 3. cosign 2.x cannot
+                # read the declared v3 bundle format, so a v2 result is not evidence
+                # about it. A substring blocklist ("cosign 2") missed the real
+                # "cosign v2.6.0" form -- the 'v' broke the match -- so parse the
+                # major and require the declared minimum, failing closed if the
+                # verifier does not name a cosign version at all.
+                cosign_major = re.search(r"cosign\s+v?(\d+)", record["verifier"])
+                _require(
+                    cosign_major is not None and int(cosign_major.group(1)) >= 3,
+                    f"verified successor {label} record for {record['image']} must be "
+                    "produced by cosign >= 3.x (the declared v3 bundle format); got "
+                    f"verifier {record['verifier']!r}",
+                )
+                covered.add(record["image"])
+            _require(
+                covered == expected_images,
+                f"verified successor {label} must cover all eight images; "
+                f"missing {sorted(expected_images - covered)}",
+            )
+
+        _check_records(evidence["signature_verifications"], "signature records")
+        _check_records(
+            evidence["sbom_attestations"],
+            "SBOM attestation records",
+            extra_fields=("predicate_type",),
+        )
     unresolved = [field for field in required_fields if not required[field]]
     _require(
         document.get("status") == "verified" and not unresolved,
@@ -745,6 +819,24 @@ def verify_security_workflow(root: Path = ROOT) -> int:
     return len(jobs)
 
 
+def verify_vulnerability_workflow(root: Path = ROOT) -> int:
+    """Require the Python audit to cover the lock-derived third-party closure."""
+    workflow = _read(root, ".github/workflows/vulnscan.yaml")
+    required_texts = (
+        "uv export --frozen --all-packages --all-extras",
+        "--no-emit-workspace --no-hashes",
+        "--output-file /tmp/project-ai-third-party-requirements.txt",
+        "--requirement /tmp/project-ai-third-party-requirements.txt",
+        "--vulnerability-service osv",
+    )
+    for required_text in required_texts:
+        _require(
+            required_text in workflow,
+            f"vulnerability workflow missing locked third-party audit control: {required_text}",
+        )
+    return len(required_texts)
+
+
 def verify_workflow_action_pinning(root: Path = ROOT) -> int:
     """Require immutable full-SHA references for every remote workflow action."""
     workflow_dir = root / ".github" / "workflows"
@@ -771,7 +863,26 @@ def verify_workflow_action_pinning(root: Path = ROOT) -> int:
     return checked
 
 
+PUBLISH_BUILD_JOBS = ("build-api", "build-web", "build-adapters", "build-genesis")
+
+
+def _job_step_text(job: dict[str, Any]) -> str:
+    """Flatten every step of a job into one searchable string."""
+    steps = job.get("steps")
+    if not isinstance(steps, list):
+        return ""
+    return "\n".join(str(step) for step in steps)
+
+
 def verify_publish_workflow(root: Path = ROOT) -> int:
+    """Assert the publish workflow actually signs, attests, and verifies.
+
+    This gate used to be five substring checks, none of them signing-related, so
+    every cosign step could have been deleted without failing it. The 2026-07-20
+    audit made that concrete: the workflow reported success while producing no
+    independently retrievable attestation at all. The checks below are structural
+    and each one corresponds to a specific way that failure was able to hide.
+    """
     workflow_text = _read(root, ".github/workflows/publish.yaml")
     required_texts = (
         "Verify release tag matches repository version",
@@ -782,7 +893,133 @@ def verify_publish_workflow(root: Path = ROOT) -> int:
     )
     for required_text in required_texts:
         _require(required_text in workflow_text, f"publish workflow missing {required_text}")
-    return len(required_texts)
+
+    document = yaml.safe_load(workflow_text)
+    _require(isinstance(document, dict), "publish workflow is not a mapping")
+    jobs = document.get("jobs")
+    _require(isinstance(jobs, dict), "publish workflow declares no jobs")
+
+    checks = len(required_texts)
+
+    # The signature storage format must be pinned. An unpinned cosign-installer
+    # silently follows the latest cosign major, and the v2 -> v3 default change is
+    # exactly what made valid signatures invisible to the auditor's verifier.
+    _require(
+        "cosign-release:" in workflow_text,
+        "publish workflow must pin an explicit cosign-release; an unpinned "
+        "cosign-installer silently follows the latest cosign major and can change "
+        "the signature storage format without any repository change",
+    )
+    checks += 1
+
+    # A trailing '@.*$' accepts a signature issued to ANY git ref, including an
+    # unreviewed agent branch. That is how branch-built images passed this
+    # workflow's own verification on 2026-07-20.
+    _require(
+        "publish\\.yaml@.*$" not in workflow_text and "publish[.]yaml@.*$" not in workflow_text,
+        "publish workflow certificate-identity pattern must anchor the git ref; "
+        "a trailing '@.*$' accepts a signature issued to any branch",
+    )
+    checks += 1
+
+    # The fabricated-success job must not come back.
+    _require(
+        "publish-sbom" not in jobs,
+        "publish workflow must not reintroduce the publish-sbom job; it was named "
+        "'Generate and attach SBOMs' but only ran echo statements",
+    )
+    checks += 1
+
+    for job_name in PUBLISH_BUILD_JOBS:
+        job = jobs.get(job_name)
+        _require(isinstance(job, dict), f"publish workflow missing job {job_name}")
+        permissions = job.get("permissions")
+        _require(
+            isinstance(permissions, dict) and permissions.get("id-token") == "write",
+            f"{job_name} must request id-token: write for cosign keyless signing",
+        )
+        step_text = _job_step_text(job)
+        _require(
+            "sign_and_attest_image.sh" in step_text, f"{job_name} must sign and attest its image"
+        )
+        _require(
+            "steps.build.outputs.digest" in step_text,
+            f"{job_name} must operate on the immutable build digest, not a tag",
+        )
+        _require("sbom-action" in step_text, f"{job_name} must generate an SBOM predicate")
+        checks += 4
+
+    verify_job = jobs.get("verify-images")
+    _require(isinstance(verify_job, dict), "publish workflow missing verify-images job")
+    _require(
+        "if" not in verify_job,
+        "verify-images must not be conditional; 'if: always()' let it report success "
+        "even when every build and signing job had failed",
+    )
+    verify_text = _job_step_text(verify_job)
+    _require("cosign verify" in verify_text, "verify-images must verify signatures")
+    _require(
+        "cosign verify-attestation" in verify_text,
+        "verify-images must verify attestations, not only signatures",
+    )
+    _require(
+        "verify_supply_chain.py" in verify_text,
+        "verify-images must run the repository's independent verifier; verifying "
+        "cosign output with cosign alone cannot detect a format change",
+    )
+    _require(
+        "project-ai-${image}@${digest}" in verify_text or "project-ai-${image}@" in verify_text,
+        "verify-images must verify by digest, not by mutable tag",
+    )
+    checks += 5
+
+    return checks
+
+
+def verify_supply_chain_policy(root: Path = ROOT) -> int:
+    """Assert the declared supply-chain policy is present and internally coherent.
+
+    Repo-local and network-free so the report stays runnable offline. The live
+    registry check lives in tools/verify_supply_chain.py.
+    """
+    policy = json.loads(_read(root, "tools/supply_chain_policy.json"))
+    _require(isinstance(policy, dict), "supply-chain policy must be a JSON object")
+
+    components = policy.get("image_components")
+    _require(
+        isinstance(components, list) and len(components) == 8,
+        "supply-chain policy must declare exactly eight image components",
+    )
+
+    cosign = _as_mapping(policy.get("cosign"), "supply-chain cosign policy")
+    _require(cosign.get("major") == 3, "supply-chain policy must declare cosign major 3")
+    verifier_image = cosign.get("verifier_image")
+    _require(
+        isinstance(verifier_image, str) and "@sha256:" in verifier_image,
+        "supply-chain verifier image must be pinned by digest",
+    )
+
+    identity = _as_mapping(policy.get("identity"), "supply-chain identity policy")
+    approved = identity.get("approved_release_identity_regexp")
+    if not isinstance(approved, str) or not (approved.startswith("^") and approved.endswith("$")):
+        raise PreDeploymentVerificationError(
+            "approved release identity regexp must be fully anchored"
+        )
+    _require(
+        "@.*$" not in approved,
+        "approved release identity regexp must anchor the git ref",
+    )
+    _require(
+        identity.get("oidc_issuer") == "https://token.actions.githubusercontent.com",
+        "supply-chain policy must declare the GitHub Actions OIDC issuer",
+    )
+
+    attestation = _as_mapping(policy.get("attestation"), "supply-chain attestation policy")
+    _require(
+        attestation.get("buildkit_attestations_are_not_sufficient") is True,
+        "policy must record that BuildKit in-toto layers do not satisfy an attestation gate",
+    )
+    return 8
 
 
 def verify_docs(root: Path = ROOT) -> int:
@@ -827,9 +1064,7 @@ def verify_docs(root: Path = ROOT) -> int:
         "Owner-controlled `owner-primary` key",
         "PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md",
         "REMOTE_SUCCESSOR_EVIDENCE.json",
-        "3412 passed",
         "--report",
-        "87.32%",
         "draft-manifest review snapshot",
         "placeholder production ingress",
         "unconfigured remote backup",
@@ -839,6 +1074,65 @@ def verify_docs(root: Path = ROOT) -> int:
             f"documentation missing required text: {required_text}",
         )
     return 8
+
+
+def verify_local_test_evidence(root: Path = ROOT) -> int:
+    """Bind the current full-suite result to structured evidence and current docs."""
+    relative_path = "docs/operations/cab/LOCAL_VERIFICATION_EVIDENCE.json"
+    evidence = json.loads(_read(root, relative_path))
+    _require(isinstance(evidence, dict), f"{relative_path} must contain a JSON object")
+    _require(evidence.get("schema_version") == "1.0", "local test evidence schema mismatch")
+    _require(evidence.get("command") == "uv run pytest -q", "local test command mismatch")
+    _require(evidence.get("status") == "passed", "local test evidence is not passing")
+    _require(evidence.get("scope") == "dirty-working-tree", "local test evidence scope mismatch")
+    _require(isinstance(evidence.get("recorded_at"), str), "local test evidence date missing")
+    _require(isinstance(evidence.get("branch"), str), "local test evidence branch missing")
+    _require(isinstance(evidence.get("head"), str), "local test evidence HEAD missing")
+    results = _as_mapping(evidence.get("results"), "local test results")
+    passed = results.get("passed")
+    skipped = results.get("skipped")
+    _require(isinstance(passed, int) and passed > 0, "local passing test count is invalid")
+    _require(isinstance(skipped, int) and skipped >= 0, "local skipped test count is invalid")
+    for field in ("failed", "errors", "xfailed", "xpassed", "deselected", "flaky", "retried"):
+        _require(results.get(field) == 0, f"local test evidence has nonzero {field}")
+    _require(
+        results.get("mocked") == "not-measured",
+        "local test evidence must disclose that aggregate mocked coverage is not measured",
+    )
+    expected_text = f"Full pytest: {passed} passed, {skipped} skipped"
+    for document in ("AGENTS.md", "docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md"):
+        _require(
+            expected_text in _read(root, document),
+            f"{document} does not match structured local test evidence: {expected_text}",
+        )
+    coverage = _as_mapping(evidence.get("coverage"), "local coverage evidence")
+    _require(
+        coverage.get("command") == "uv run python tools/run_ci_coverage.py --batches 8",
+        "local coverage command mismatch",
+    )
+    _require(coverage.get("status") == "passed", "local coverage evidence is not passing")
+    branch_percent = coverage.get("branch_percent")
+    threshold_percent = coverage.get("threshold_percent")
+    _require(
+        isinstance(branch_percent, (int, float))
+        and isinstance(threshold_percent, (int, float))
+        and branch_percent >= threshold_percent,
+        "local branch coverage does not meet its threshold",
+    )
+    _require(coverage.get("requested_batches") == 8, "local coverage batch request mismatch")
+    _require(
+        isinstance(coverage.get("executed_batches"), int) and coverage["executed_batches"] > 0,
+        "local coverage executed-batch count is invalid",
+    )
+    coverage_text = (
+        f"Batched branch coverage: {branch_percent:.2f}%, threshold {threshold_percent:g}%."
+    )
+    checklist = _read(root, "docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md")
+    _require(
+        coverage_text in checklist,
+        f"deployment checklist does not match structured local coverage evidence: {coverage_text}",
+    )
+    return 25
 
 
 def verify_document_scope_boundaries(root: Path = ROOT) -> int:
@@ -881,8 +1175,11 @@ def _pre_deployment_checks() -> tuple[tuple[str, Any], ...]:
         ("production backup", verify_production_backup),
         ("CI workflow", verify_ci_workflow),
         ("security workflow", verify_security_workflow),
+        ("vulnerability workflow", verify_vulnerability_workflow),
         ("workflow action pinning", verify_workflow_action_pinning),
         ("publish workflow", verify_publish_workflow),
+        ("supply-chain policy", verify_supply_chain_policy),
+        ("local test evidence", verify_local_test_evidence),
         ("pre-deployment docs", verify_docs),
         ("document scope boundaries", verify_document_scope_boundaries),
     )
@@ -914,7 +1211,141 @@ def collect_pre_deployment_report(root: Path = ROOT) -> tuple[str, ...]:
     return tuple(results)
 
 
+# Every mandatory deployment condition, mapped to the category of who must clear it
+# and the exact minimum fix. §8 requires each reported separately -- collapsing them
+# into one "remote evidence" line risks a false-green once the machine-checkable
+# subset is cleared while owner/external/production prerequisites remain open.
+_EVIDENCE_BLOCKER_CATALOG: tuple[tuple[str, str, str], ...] = (
+    (
+        "owner_key_rotation_verified",
+        "owner",
+        "Rotate/retire the former owner key under the approved custody process and record "
+        "independently verifiable evidence.",
+    ),
+    (
+        "exact_manifest_ratification_verified",
+        "owner",
+        "Ratify the exact release manifest with the owner key; verify with verify_ratification.py.",
+    ),
+    (
+        "external_proof_custody_verified",
+        "owner",
+        "Record external proof custody (independent witness/vault) for the release evidence.",
+    ),
+    (
+        "commit_pushed",
+        "owner",
+        "Commit and push the remediation to an approved ref (owner-authorized).",
+    ),
+    ("successor_ci_green", "external", "Obtain a green successor CI run on the approved ref."),
+    (
+        "image_signatures_verified",
+        "external-supply-chain",
+        "Verify 8/8 cosign signatures (Layer A container + Layer B registry) for the release digests.",
+    ),
+    (
+        "release_provenance_verified",
+        "external-supply-chain",
+        "Re-publish the eight images from refs/heads/main or a refs/tags/v* tag so the certificate "
+        "SAN is release provenance, not an agent branch.",
+    ),
+    (
+        "sbom_attestations_verified",
+        "external-supply-chain",
+        "Re-publish under the corrected workflow to produce cosign SPDX + SLSA attestations (cannot "
+        "be applied retroactively) and verify 8/8.",
+    ),
+    (
+        "production_overlay_verified",
+        "production",
+        "Provide and verify an approved production Helm overlay (namespace, ingress, TLS, secret source).",
+    ),
+    (
+        "remote_backup_verified",
+        "production",
+        "Configure a remote backup destination and prove a restore.",
+    ),
+    (
+        "monitoring_crds_verified",
+        "production",
+        "Install the monitoring CRDs (Prometheus Operator) and prove alert/paging delivery.",
+    ),
+    (
+        "dependabot_disposition_verified",
+        "owner",
+        "Record an owner CAB disposition for Dependabot PRs #509/#510.",
+    ),
+    (
+        "target_environment_approved",
+        "production",
+        "Record the approved production cluster/namespace/window/owners and acceptance authority.",
+    ),
+    ("rollback_rehearsal_verified", "production", "Rehearse and evidence a production rollback."),
+)
+
+
+def collect_blockers(root: Path = ROOT) -> list[dict[str, str]]:
+    """Enumerate every unresolved mandatory deployment blocker separately.
+
+    Never collapses prerequisites: each entry names the condition, the category of who
+    must clear it (repository / owner / external / external-supply-chain / production),
+    and the exact minimum fix. Non-machine-verifiable conditions are still listed --
+    they remain mandatory outside automated evaluation. §8, v3 §25.
+    """
+    blockers: list[dict[str, str]] = []
+
+    document = json.loads(_read(root, "docs/operations/cab/REMOTE_SUCCESSOR_EVIDENCE.json"))
+    required = document.get("required")
+    required_map = required if isinstance(required, dict) else {}
+    for field, category, fix in _EVIDENCE_BLOCKER_CATALOG:
+        if required_map.get(field) is not True:
+            blockers.append({"condition": field, "category": category, "minimum_fix": fix})
+
+    # Machine-checkable production-values gates, reported as their own blockers so a
+    # placeholder host or disabled backup never hides behind the evidence bundle.
+    for check, condition, fix in (
+        (
+            verify_production_values,
+            "production_ingress_host",
+            "Replace the placeholder ingress host in helm/values.prod.yaml with an owner-approved host.",
+        ),
+        (
+            verify_production_backup,
+            "production_remote_backup",
+            "Enable remote backup in production Helm values and prove a restore.",
+        ),
+    ):
+        try:
+            check(root)
+        except PreDeploymentVerificationError as error:
+            blockers.append(
+                {
+                    "condition": condition,
+                    "category": "production",
+                    "minimum_fix": f"{fix} ({error})",
+                }
+            )
+
+    return blockers
+
+
+def _print_blockers(root: Path = ROOT) -> int:
+    blockers = collect_blockers(root)
+    order = ("repository", "owner", "external", "external-supply-chain", "production")
+    for category in order:
+        for blocker in blockers:
+            if blocker["category"] == category:
+                print(f"[{category}] {blocker['condition']}: {blocker['minimum_fix']}")
+    print(
+        f"{len(blockers)} mandatory blocker(s) unresolved across "
+        f"{len({b['category'] for b in blockers})} categories; deployment not authorized"
+    )
+    return 1 if blockers else 0
+
+
 def main() -> int:
+    if "--blockers" in sys.argv[1:]:
+        return _print_blockers(ROOT)
     if "--report" in sys.argv[1:]:
         report = collect_pre_deployment_report(ROOT)
         for result in report:

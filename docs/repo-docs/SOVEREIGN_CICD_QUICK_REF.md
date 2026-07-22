@@ -2,6 +2,34 @@
 <!--                                        Productivity: Active -->
 # 🏛️ Sovereign CI/CD - Quick Reference Card
 
+> ## ⚠️ ACCURACY NOTICE — 2026-07-20: SOME COMMANDS HERE DO NOT EXIST
+>
+> Verified against the repository on 2026-07-20. Per AGENTS.md §18, the following
+> entries are **not implemented**:
+>
+> - `scripts/verify-supply-chain.sh` (lines ~42, ~90) **does not exist**.
+>   Use `uv run python tools/verify_supply_chain.py` instead.
+> - `actions/attest-build-provenance@v2.0.0` (line ~154) is **not used**.
+>   Attestation uses `cosign attest`, implemented but **never executed**.
+>
+> **Verifying images requires cosign >= 3.0.** This repository publishes Sigstore
+> bundles via the OCI 1.1 referrers mechanism; cosign 2.x looks for legacy
+> `.sig` tags that are never written and will wrongly report "no signatures found".
+>
+> Working verification commands:
+>
+> ```bash
+> # Both layers (needs Docker + network); --allow-branch-provenance is currently
+> # required because the candidate digests were signed from an agent branch.
+> uv run python tools/verify_supply_chain.py --allow-branch-provenance
+>
+> # Registry layer only - no Docker, no cosign binary needed
+> uv run python tools/verify_supply_chain.py --layer registry --allow-branch-provenance
+>
+> # Attestations (expected to FAIL - none have ever been produced)
+> uv run python tools/verify_supply_chain.py --require-attestations
+> ```
+
 ## 🚀 One-Page Cheat Sheet
 
 ### Pipeline Trigger

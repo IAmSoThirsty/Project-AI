@@ -11,8 +11,8 @@ Complete and attach the evidence required to make a CAB decision on a successor
 to Project-AI v0.0.2. v0.0.2 commit
 `82aa1476657e16a1d38caccba38357c83380a3e3` is superseded and must not be used
 as the deploy candidate. Immutable successor code candidate
-`6684828d23b08beaac77aee5efadc532bed23181` is pushed and has green successor
-CI/vulnerability runs `29716300475` and `29716300404`.
+`eaed9905cacc02e2fb98e3cc92356e8d160e593e` is pushed and has green successor
+CI/vulnerability runs `29731671162` and `29731671150`.
 The current repository-local CAB pack is at
 `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`.
 The v0.0.2 pack remains a historical supersession record.
@@ -26,7 +26,7 @@ Current disposition: **v0.0.2 superseded; deployment not authorized**.
 - [x] Choose and apply successor version v0.0.3 across all first-party version
       surfaces and add release tag/digest agreement gates.
 - [x] Commit/push the remediation and obtain green remote CI/security workflows
-      on immutable candidate `6684828d`.
+      on immutable candidate `eaed9905`.
 - [ ] Record environment, cluster/context, namespace, Helm release, maintenance
       window/timezone, freeze check, change owner, implementer, rollback owner +
       backup, approver, support owner, and acceptance authority.
@@ -43,9 +43,12 @@ Current disposition: **v0.0.2 superseded; deployment not authorized**.
 - [x] Obtain Jeremy / Thirsty's signature over the exact V3Q release manifest
       and verify the ratification record. Required-mode startup evidence remains
       pending.
-- [x] Attach all eight image digests plus workflow-verified cosign signatures
-      and SPDX/SLSA registry attestation manifests from publish run
-      `29731685685`.
+- [x] Independently verify all eight image signatures and subject-digest
+      bindings from publish run `29731685685` with cosign v3.1.2 and raw OCI
+      checks; the certificates are branch-provenance only.
+- [ ] Re-publish from `main` or a release tag and attach digest-bound SPDX/SLSA
+      attestations; current attestations are absent 0/8 and cannot be added
+      retroactively.
 - [x] Add pinned CodeQL/Checkov workflows; pass local Checkov, Python OSV, and
       Node audits; remediate vulnerable setuptools 82.0.1 to 83.0.0.
 - [ ] Attach successful remote CodeQL, Checkov, Trivy, Rust, Python, and Node
@@ -57,10 +60,10 @@ Current disposition: **v0.0.2 superseded; deployment not authorized**.
 - [ ] Perform server-side dry run and reviewed manifest diff in the target.
 - [ ] Confirm the target cluster has the Prometheus Operator
       `ServiceMonitor` and `PrometheusRule` CRDs. A prior local
-      `docker-desktop` server-side rehearsal failed closed without them; the
-      current Docker context is `desktop-linux`, whose Linux engine is not
-      running. Rerun the full production-values Helm dry run after the
-      prerequisite is present.
+      `docker-desktop` server-side rehearsal failed closed without them; Docker
+      Desktop is now running locally, but no approved production target exists.
+      Rerun the full production-values Helm dry run after the prerequisite is
+      present.
 - [ ] Prove backup and restore, then rehearse Helm rollback to a certified
       known-good revision; record duration and data/audit effects.
 - [x] Add and locally exercise governed audit/SWR backup and restore utilities;

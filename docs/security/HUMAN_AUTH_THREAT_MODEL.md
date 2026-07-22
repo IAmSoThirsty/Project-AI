@@ -38,6 +38,46 @@ session state.
 | Browser capability theft | SWR capability is issued and consumed inside the server; no capability field exists in the browser API | OpenAPI/client inspection and integration tests |
 | Review/execution scope drift | SWR operation, scenario resource, approval state, and canonical decision are checked before reservation and again by governance | API mismatch and direct no-bypass tests |
 | Duplicate execution | Durable unique request reservation returns the existing receipt across concurrent repository instances | SQLite and live PostgreSQL concurrency tests |
+| Unauthorized audit export | Export is a cookie-authenticated POST requiring same-origin CSRF proof and the separate `audit.export` permission; machine evidence-read credentials cannot use it | API role, CSRF, origin, and machine-boundary denial tests |
+| Secret or free-form audit data in exports | Export uses an explicit field allowlist, omits every other event field, names omitted fields, and never exports a raw audit record | API redaction and negative-secret assertions |
+| Audit export resource exhaustion | Server-side export size is bounded to 500 records and each account/source pair uses the durable five-minute action-rate bucket | Validation and rate-limit tests |
+| Untraceable or modified export | Full-chain verification precedes filtering; the response carries a canonical records digest and the relay records a hash-linked `control_center.audit_export` receipt without copying filter text or records | Digest recomputation and audit-receipt tests |
+| Cursor tampering, filter drift, or append-time page movement | A cursor is the verified anchor record hash and must exist in the current filtered snapshot; nonzero offsets cannot be combined with cursors. The client retains cursor history, so later appends do not duplicate or skip older evidence | API append-between-pages, invalid-cursor, filter-boundary, and UI navigation tests |
+| Ambiguous audit time boundaries | `from_time` and `to_time` require explicit timezone offsets and the server rejects reversed ranges before returning records | API naive-time and reversed-range denial tests |
+| Human filter identifiers disclosed in access URLs | The operator console sends filters to the same-origin, human-session-only `POST /audit/search` body; the machine/proof GET remains compatible but is not used by the human UI | API origin/machine denial tests, client request-shape test, and live access-log inspection |
+| Raw relay records disclosed through human search | `POST /audit/search` projects every match to a fixed summary containing only event/time, chain hashes, canonical verdict/severity, and verified status | API negative-field assertions and typed client contract |
+| Hidden audit values inferred through filters or result counts | Exact actor, account, operation, and resource filters require `audit.raw_view`; lower-privilege free-text queries search only the visible summary projection. Export enforces the same boundary | API role-denial, negative-query, hash-query, and export-filter tests |
+| Unauthorized raw audit detail | `POST /audit/detail` requires a same-origin human session and `evidence.view`; only Owner, Administrator, and Auditor roles hold the separate `audit.raw_view` permission | Role-matrix, API redacted/privileged response, origin, and machine-denial tests |
+| Credentials disclosed in privileged detail | Credential-bearing field-name fragments are replaced with `[REDACTED]` before either normalized fields or sanitized raw JSON leave the server | API negative-secret and explicit-redaction assertions |
+| Audit evidence rendered as executable markup | Raw detail is returned as data and React renders JSON through text nodes inside `code`; no unescaped HTML rendering path exists | Browser DOM assertion and automated accessibility test |
+| Stale evidence remains visible after integrity failure | A new query clears prior records and details before verification; any chain failure renders a lockdown state with no cached evidence | UI valid-then-503 regression test |
+
+## Audit export data-flow boundary
+
+The browser may request a redacted JSON export of the current audit query. The server
+authenticates the human session, validates same-origin CSRF proof, checks the independent
+`audit.export` permission, consumes the durable export rate limit, verifies the entire
+append-only chain, applies the bounded filter, and projects each record through a strict
+allowlist. The returned digest covers exactly the projected records. Only hashes, counts,
+offsets, and the requesting account identifier enter the export audit receipt; raw query
+text and record values do not. The browser receives no machine credential and performs no
+authority-bearing action.
+
+Interactive audit reads follow a separate read-only boundary. The operator console sends
+its cursor and filters in the body of `POST /audit/search`; the server requires a valid
+same-origin human session and `evidence.view`. This prevents actor, account, resource,
+and free-text filters from entering the request URL or default access logs. The endpoint
+does not mutate state and does not accept a machine bearer credential. Exact raw-identifier
+filters require `audit.raw_view`; lower-privilege free-text queries search only the fixed
+summary projection. The export path applies the same constraint so response counts cannot
+be used as a blind oracle for withheld audit values.
+
+Human record detail follows the same session/origin boundary. The browser submits only
+the selected source hash to `POST /audit/detail`. The server verifies the complete chain
+again, locates that exact hash, and applies `audit.raw_view` before constructing the
+response. Lower-privilege roles receive allowlisted fields and hashed identifiers with no
+raw record. Privileged roles receive a sanitized raw record, but credential-bearing keys
+remain redacted. The browser treats all returned values as text.
 
 ## Remaining security work
 

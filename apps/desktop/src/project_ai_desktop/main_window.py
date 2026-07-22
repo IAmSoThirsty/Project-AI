@@ -55,10 +55,18 @@ class MainWindow(QMainWindow):
         self._api_token = ""
         self._timeout = 10.0
         self.setWindowTitle(f"Project-AI Operator Desktop - {DESKTOP_VERSION}")
+        self.setAccessibleName("Project-AI read-only operator desktop")
+        self.setAccessibleDescription(
+            "Read-only status, replay, audit, capability, governance, and connection surfaces."
+        )
         self.resize(1180, 760)
         self.setMinimumSize(900, 620)
         self.setStyleSheet(STYLESHEET)
         self._status_bar = QStatusBar()
+        self._status_bar.setAccessibleName("Operator status messages")
+        self._status_bar.setAccessibleDescription(
+            "Reports the outcome of the most recent operator action."
+        )
         self.setStatusBar(self._status_bar)
         self._build_ui()
         self._status_bar.showMessage("Development checkpoint - no governance authority")
@@ -77,6 +85,8 @@ class MainWindow(QMainWindow):
         brand.setObjectName("brand")
         sidebar_layout.addWidget(brand)
         self.navigation = QListWidget()
+        self.navigation.setAccessibleName("Operator sections")
+        self.navigation.setAccessibleDescription("Choose one of six read-only operator sections.")
         self.navigation.addItems(self.PAGE_NAMES)
         self.navigation.setCurrentRow(0)
         sidebar_layout.addWidget(self.navigation, 1)
@@ -86,6 +96,7 @@ class MainWindow(QMainWindow):
         sidebar_layout.addWidget(boundary)
 
         self.pages = QStackedWidget()
+        self.pages.setAccessibleName("Selected operator section")
         self.pages.addWidget(self._status_page())
         self.pages.addWidget(self._replay_page())
         self.pages.addWidget(self._audit_page())
@@ -101,6 +112,7 @@ class MainWindow(QMainWindow):
     @staticmethod
     def _page(title: str, eyebrow: str) -> tuple[QWidget, QVBoxLayout]:
         page = QWidget()
+        page.setAccessibleName(title)
         layout = QVBoxLayout(page)
         layout.setContentsMargins(34, 30, 34, 30)
         layout.setSpacing(18)
@@ -116,9 +128,15 @@ class MainWindow(QMainWindow):
         page, layout = self._page("Gateway status", "LIVE / VERSION / REPLAY")
         self.status_summary = QLabel("Not checked")
         self.status_summary.setObjectName("muted")
+        self.status_summary.setAccessibleName("Gateway status summary")
         self.status_detail = QTextEdit()
         self.status_detail.setReadOnly(True)
+        self.status_detail.setAccessibleName("Gateway status details")
+        self.status_detail.setAccessibleDescription(
+            "Read-only health and canonical replay response details."
+        )
         refresh = QPushButton("Refresh public status")
+        refresh.setAccessibleDescription("Load public gateway health and canonical replay status.")
         refresh.clicked.connect(self.refresh_status)
         layout.addWidget(self.status_summary)
         layout.addWidget(self.status_detail, 1)
@@ -132,12 +150,17 @@ class MainWindow(QMainWindow):
         )
         note.setObjectName("muted")
         self.replay_table = QTableWidget(0, 3)
+        self.replay_table.setAccessibleName("Canonical replay evidence results")
+        self.replay_table.setAccessibleDescription(
+            "Read-only table of deterministic replay checks, results, and details."
+        )
         self.replay_table.setHorizontalHeaderLabels(("Check", "Result", "Detail"))
         replay_header = self.replay_table.horizontalHeader()
         if replay_header is not None:
             replay_header.setStretchLastSection(True)
         self.replay_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         run_button = QPushButton("Run replay evidence check")
+        run_button.setAccessibleDescription("Run five deterministic read-only replay checks.")
         run_button.clicked.connect(self.run_replay)
         layout.addWidget(note)
         layout.addWidget(self.replay_table, 1)
@@ -148,15 +171,26 @@ class MainWindow(QMainWindow):
         page, layout = self._page("Chimera audit evidence", "VERIFIED APPEND-ONLY VIEW")
         controls = QHBoxLayout()
         self.audit_limit = QSpinBox()
+        self.audit_limit.setAccessibleName("Audit entry limit")
+        self.audit_limit.setAccessibleDescription(
+            "Maximum authenticated audit entries to load, from 1 through 500."
+        )
         self.audit_limit.setRange(1, 500)
         self.audit_limit.setValue(100)
         load_button = QPushButton("Load authenticated evidence")
+        load_button.setAccessibleDescription(
+            "Load verified append-only audit evidence using the in-memory API token."
+        )
         load_button.clicked.connect(self.load_audit)
         controls.addWidget(QLabel("Limit"))
         controls.addWidget(self.audit_limit)
         controls.addWidget(load_button)
         controls.addStretch(1)
         self.audit_table = QTableWidget(0, 4)
+        self.audit_table.setAccessibleName("Chimera audit evidence")
+        self.audit_table.setAccessibleDescription(
+            "Read-only table of audit events, subjects, timestamps, and hashes."
+        )
         self.audit_table.setHorizontalHeaderLabels(("Event", "Subject", "Timestamp", "Hash"))
         audit_header = self.audit_table.horizontalHeader()
         if audit_header is not None:
@@ -173,10 +207,21 @@ class MainWindow(QMainWindow):
         )
         note.setObjectName("muted")
         self.capability_input = QTextEdit()
+        self.capability_input.setAccessibleName("Capability token to inspect")
+        self.capability_input.setAccessibleDescription(
+            "Paste a token for local claim decoding. Its signature is not verified here."
+        )
         self.capability_input.setPlaceholderText("Paste a capability token for local inspection")
         self.capability_output = QTextEdit()
         self.capability_output.setReadOnly(True)
+        self.capability_output.setAccessibleName("Capability inspection result")
+        self.capability_output.setAccessibleDescription(
+            "Read-only decoded capability claims and verification limitations."
+        )
         inspect_button = QPushButton("Inspect and clear token")
+        inspect_button.setAccessibleDescription(
+            "Decode the pasted token locally, then clear it from the input."
+        )
         inspect_button.clicked.connect(self.inspect_token)
         layout.addWidget(note)
         layout.addWidget(self.capability_input, 1)
@@ -208,10 +253,18 @@ class MainWindow(QMainWindow):
         page, layout = self._page("Connection settings", "TOKEN REMAINS IN MEMORY ONLY")
         form = QFormLayout()
         self.api_url_input = QLineEdit(self._api_url)
+        self.api_url_input.setAccessibleName("API URL")
+        self.api_url_input.setAccessibleDescription("Gateway address for this desktop session.")
         self.api_token_input = QLineEdit()
+        self.api_token_input.setAccessibleName("API token")
+        self.api_token_input.setAccessibleDescription(
+            "Masked audit credential held in memory and cleared after applying settings."
+        )
         self.api_token_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.api_token_input.setPlaceholderText("Required only for audit evidence")
         self.timeout_input = QDoubleSpinBox()
+        self.timeout_input.setAccessibleName("Request timeout")
+        self.timeout_input.setAccessibleDescription("Maximum gateway request duration in seconds.")
         self.timeout_input.setRange(0.1, 300.0)
         self.timeout_input.setValue(self._timeout)
         self.timeout_input.setSuffix(" seconds")
@@ -219,6 +272,9 @@ class MainWindow(QMainWindow):
         form.addRow("API token", self.api_token_input)
         form.addRow("Timeout", self.timeout_input)
         save = QPushButton("Apply in-memory settings")
+        save.setAccessibleDescription(
+            "Validate and apply this session's connection settings without persisting the token."
+        )
         save.clicked.connect(self.apply_settings)
         layout.addLayout(form)
         layout.addWidget(save, 0, Qt.AlignmentFlag.AlignLeft)

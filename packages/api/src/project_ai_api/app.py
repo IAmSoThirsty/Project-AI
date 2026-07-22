@@ -2,14 +2,26 @@
 
 from __future__ import annotations
 
+import hashlib
 import hmac
 import json
 import os
 from collections.abc import Callable, Sequence
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated, Literal, cast
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, Security, status
+from fastapi import (
+    Depends,
+    FastAPI,
+    Header,
+    HTTPException,
+    Query,
+    Request,
+    Response,
+    Security,
+    status,
+)
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from kernel.version import PROJECT_AI_VERSION
 from project_ai_waterfall.transport import WaterfallRuntime
@@ -17,17 +29,27 @@ from taar.errors import TaarError
 from waterfall_adapter import WaterfallAdapter
 
 from accounts import (
+    Account,
     AccountRepository,
     AccountService,
     AccountServiceError,
     InterfacePermission,
+    InvalidCsrf,
     InvalidMachineCredential,
+    InvalidSession,
     PermissionDenied,
     PostgresAccountRepository,
+    RateLimited,
+    has_permission,
 )
 from atlas import SUBORDINATION_NOTICE, NarrativeArchetype, SludgeSandboxError, get_sludge_sandbox
 from project_ai_api.atlas_workflows import install_atlas_workflow_routes
-from project_ai_api.auth import SESSION_COOKIE_SCHEME, install_auth_routes
+from project_ai_api.auth import (
+    SESSION_COOKIE_SCHEME,
+    install_auth_routes,
+    request_source,
+    require_same_origin,
+)
 from project_ai_api.metrics import install_metrics
 from project_ai_api.models import (
     AtlasSludgeEventDetailResponse,
@@ -37,7 +59,14 @@ from project_ai_api.models import (
     AtlasSludgeRequest,
     AtlasSludgeResponse,
     AtlasStatus,
+    AuditDetailRequest,
+    AuditDetailResponse,
+    AuditExportFilters,
+    AuditExportRecord,
+    AuditExportRequest,
+    AuditExportResponse,
     AuditResponse,
+    AuditSearchRequest,
     AuditWriteResponse,
     CanaryRequest,
     DashboardResponse,
@@ -45,6 +74,8 @@ from project_ai_api.models import (
     DoiRecord,
     DoiResponse,
     HealthResponse,
+    HumanAuditRecordSummary,
+    HumanAuditResponse,
     InstanceIdentityResponse,
     JsonScalar,
     ModulesResponse,
@@ -70,6 +101,62 @@ from swr import WarRoomCore
 from workflows import PostgresWorkflowRepository, WorkflowRepository, WorkflowService
 
 type AuditRecord = dict[str, JsonScalar]
+
+AUDIT_EXPORT_SAFE_FIELDS = frozenset(
+    {
+        "attack_type",
+        "classification",
+        "configured",
+        "confidence",
+        "exported_count",
+        "filtered_count",
+        "limit",
+        "offset",
+        "outcome",
+        "severity",
+        "status",
+        "verdict",
+    }
+)
+AUDIT_EXPORT_IDENTIFIER_FIELDS = frozenset(
+    {
+        "action_id",
+        "account_id",
+        "agent_id",
+        "actor_id",
+        "attempt_id",
+        "bundle_id",
+        "claim_id",
+        "created_by",
+        "initiated_by",
+        "machine_credential_id",
+        "narrative_id",
+        "request_id",
+        "reviewer_account_id",
+        "run_id",
+        "scenario_id",
+    }
+)
+AUDIT_EXPORT_HASH_SUFFIXES = ("_hash", "_sha256")
+AUDIT_DETAIL_SECRET_FIELD_FRAGMENTS = (
+    "authorization",
+    "cookie",
+    "csrf",
+    "password",
+    "private_key",
+    "recovery_code",
+    "secret",
+    "token",
+    "totp",
+)
+AUDIT_FILTER_FIELDS: dict[str, tuple[str, ...]] = {
+    "actor": ("actor_id", "agent_id"),
+    "account": ("account_id", "initiated_by", "created_by", "reviewer_account_id"),
+    "operation": ("operation",),
+    "resource": ("resource",),
+    "verdict": ("verdict", "outcome"),
+    "severity": ("severity",),
+}
 
 # Declared at module scope so deferred annotations resolve and every
 # machine-token route advertises the same OpenAPI security scheme;
@@ -115,44 +202,296 @@ def _default_registry_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
+def _audit_filters(
+    *,
+    query: str | None = None,
+    event: str | None = None,
+    actor: str | None = None,
+    account: str | None = None,
+    operation: str | None = None,
+    resource: str | None = None,
+    verdict: Literal["ALLOW", "DENY", "ESCALATE"] | None = None,
+    severity: str | None = None,
+    from_time: datetime | None = None,
+    to_time: datetime | None = None,
+) -> AuditExportFilters:
+    def cleaned(value: str | None) -> str | None:
+        return value.strip() if value and value.strip() else None
+
+    return AuditExportFilters(
+        query=cleaned(query),
+        event=cleaned(event),
+        actor=cleaned(actor),
+        account=cleaned(account),
+        operation=cleaned(operation),
+        resource=cleaned(resource),
+        verdict=verdict,
+        severity=cleaned(severity),
+        from_time=from_time,
+        to_time=to_time,
+    )
+
+
 def _audit_records(
     relay: AppendOnlyAuditRelay,
     limit: int,
     offset: int = 0,
-    query: str | None = None,
-    event: str | None = None,
+    cursor: str | None = None,
+    filters: AuditExportFilters | None = None,
+    *,
+    sensitive_query: bool = True,
 ) -> AuditResponse:
+    active_filters = filters or AuditExportFilters()
+    if cursor and offset:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="Audit cursor and offset cannot be combined",
+        )
+    for boundary in (active_filters.from_time, active_filters.to_time):
+        if boundary is not None and boundary.utcoffset() is None:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail="Audit time filters must include a timezone offset",
+            )
+    if (
+        active_filters.from_time is not None
+        and active_filters.to_time is not None
+        and active_filters.from_time > active_filters.to_time
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="Audit from_time must not be later than to_time",
+        )
+    count, records = _verified_audit_snapshot(relay)
+    normalized_query = active_filters.query.strip().casefold() if active_filters.query else ""
+    normalized_event = active_filters.event.strip().casefold() if active_filters.event else ""
+
+    def exact_field_match(record: AuditRecord, filter_name: str, expected: str | None) -> bool:
+        if not expected:
+            return True
+        normalized = expected.strip().casefold()
+        return any(
+            str(record.get(field, "")).casefold() == normalized
+            for field in AUDIT_FILTER_FIELDS[filter_name]
+        )
+
+    def time_match(record: AuditRecord) -> bool:
+        if active_filters.from_time is None and active_filters.to_time is None:
+            return True
+        try:
+            timestamp = datetime.fromisoformat(
+                str(record.get("timestamp", "")).replace("Z", "+00:00")
+            )
+        except ValueError:
+            return False
+        if timestamp.utcoffset() is None:
+            return False
+        return not (
+            (active_filters.from_time is not None and timestamp < active_filters.from_time)
+            or (active_filters.to_time is not None and timestamp > active_filters.to_time)
+        )
+
+    filtered: list[AuditRecord] = []
+    for record in records:
+        query_record = (
+            record if sensitive_query else _human_audit_summary(record).model_dump(mode="json")
+        )
+        if (
+            (not normalized_event or str(record.get("event", "")).casefold() == normalized_event)
+            and exact_field_match(record, "actor", active_filters.actor)
+            and exact_field_match(record, "account", active_filters.account)
+            and exact_field_match(record, "operation", active_filters.operation)
+            and exact_field_match(record, "resource", active_filters.resource)
+            and exact_field_match(record, "verdict", active_filters.verdict)
+            and exact_field_match(record, "severity", active_filters.severity)
+            and time_match(record)
+            and (
+                not normalized_query
+                or normalized_query in json.dumps(query_record, sort_keys=True).casefold()
+            )
+        ):
+            filtered.append(record)
+    newest_first = tuple(reversed(filtered))
+    start = offset
+    if cursor:
+        try:
+            start = next(
+                index + 1
+                for index, record in enumerate(newest_first)
+                if record.get("hash") == cursor
+            )
+        except StopIteration as error:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail="Audit cursor does not match the current filter set",
+            ) from error
+    page = newest_first[start : start + limit]
+    has_more = start + len(page) < len(newest_first)
+    next_cursor = str(page[-1]["hash"]) if page and has_more else None
+    return AuditResponse(
+        count=count,
+        filtered_count=len(filtered),
+        offset=start,
+        limit=limit,
+        cursor=cursor,
+        next_cursor=next_cursor,
+        has_more=has_more,
+        records=page,
+    )
+
+
+def _verified_audit_snapshot(
+    relay: AppendOnlyAuditRelay,
+) -> tuple[int, tuple[AuditRecord, ...]]:
     try:
-        valid, count = relay.verify()
+        valid, count, records = relay.verified_snapshot()
     except (OSError, ValueError):
-        valid, count = False, 0
+        valid, count, records = False, 0, ()
     if not valid:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Audit hash chain verification failed",
         )
-    if not relay.path.exists():
-        return AuditResponse(count=0, filtered_count=0, offset=offset, limit=limit, records=())
-    lines = [line for line in relay.path.read_text(encoding="utf-8").splitlines() if line]
-    records = [cast(AuditRecord, json.loads(line)) for line in lines]
-    normalized_query = query.strip().casefold() if query else ""
-    normalized_event = event.strip().casefold() if event else ""
-    filtered = [
-        record
-        for record in records
-        if (not normalized_event or str(record.get("event", "")).casefold() == normalized_event)
-        and (
-            not normalized_query
-            or normalized_query in json.dumps(record, sort_keys=True).casefold()
+    return count, records
+
+
+def _human_audit_summary(record: AuditRecord) -> HumanAuditRecordSummary:
+    raw_verdict = record.get("verdict")
+    verdict = cast(
+        Literal["ALLOW", "DENY", "ESCALATE"] | None,
+        raw_verdict if raw_verdict in {"ALLOW", "DENY", "ESCALATE"} else None,
+    )
+    raw_severity = record.get("severity")
+    return HumanAuditRecordSummary(
+        event=str(record.get("event", "audit.record")),
+        timestamp=str(record.get("timestamp", "")),
+        source_hash=str(record.get("hash", "")),
+        previous_hash=str(record.get("previous_hash", "")),
+        verdict=verdict,
+        severity=raw_severity if isinstance(raw_severity, str) else None,
+    )
+
+
+def _human_audit_response(source: AuditResponse) -> HumanAuditResponse:
+    return HumanAuditResponse(
+        count=source.count,
+        filtered_count=source.filtered_count,
+        offset=source.offset,
+        limit=source.limit,
+        cursor=source.cursor,
+        next_cursor=source.next_cursor,
+        has_more=source.has_more,
+        records=tuple(_human_audit_summary(record) for record in source.records),
+    )
+
+
+def _audit_sensitive_filter_permission(
+    account: Account,
+    filters: AuditExportFilters,
+) -> bool:
+    privileged = has_permission(account.role, InterfacePermission.AUDIT_RAW_VIEW)
+    if not privileged and any(
+        (filters.actor, filters.account, filters.operation, filters.resource)
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Raw audit filters require permission: audit.raw_view",
         )
-    ]
-    page = tuple(reversed(filtered))[offset : offset + limit]
-    return AuditResponse(
-        count=count,
-        filtered_count=len(filtered),
-        offset=offset,
-        limit=limit,
-        records=page,
+    return privileged
+
+
+def _audit_export_record(record: AuditRecord) -> AuditExportRecord:
+    structural = {"event", "hash", "previous_hash", "timestamp"}
+    fields: dict[str, JsonScalar] = {}
+    redacted_fields: list[str] = []
+    for key, value in sorted(record.items()):
+        if key in structural:
+            continue
+        if key in AUDIT_EXPORT_IDENTIFIER_FIELDS:
+            fields[f"{key}_sha256"] = hashlib.sha256(str(value).encode("utf-8")).hexdigest()
+            redacted_fields.append(key)
+        elif key in AUDIT_EXPORT_SAFE_FIELDS or key.endswith(AUDIT_EXPORT_HASH_SUFFIXES):
+            fields[key] = value
+        else:
+            redacted_fields.append(key)
+    return AuditExportRecord(
+        event=str(record.get("event", "audit.record")),
+        timestamp=str(record.get("timestamp", "")),
+        source_hash=str(record.get("hash", "")),
+        previous_hash=str(record.get("previous_hash", "")),
+        fields=fields,
+        redacted_fields=tuple(redacted_fields),
+    )
+
+
+def _audit_export_digest(records: tuple[AuditExportRecord, ...]) -> str:
+    payload = json.dumps(
+        [record.model_dump(mode="json") for record in records],
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _audit_detail_secret_field(field: str) -> bool:
+    normalized = field.casefold().replace("-", "_")
+    return any(fragment in normalized for fragment in AUDIT_DETAIL_SECRET_FIELD_FRAGMENTS)
+
+
+def _audit_record_detail(
+    relay: AppendOnlyAuditRelay,
+    source_hash: str,
+    *,
+    privileged: bool,
+) -> AuditDetailResponse:
+    count, records = _verified_audit_snapshot(relay)
+    match = next(
+        (
+            (position, record)
+            for position, record in enumerate(records, start=1)
+            if record.get("hash") == source_hash
+        ),
+        None,
+    )
+    if match is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Audit record not found in the verified chain",
+        )
+    position, record = match
+    if privileged:
+        redacted_fields = tuple(
+            sorted(field for field in record if _audit_detail_secret_field(field))
+        )
+        safe_raw = {
+            field: "[REDACTED]" if field in redacted_fields else value
+            for field, value in record.items()
+        }
+        fields = {
+            field: value
+            for field, value in safe_raw.items()
+            if field not in {"event", "hash", "previous_hash", "timestamp"}
+        }
+        raw_record: dict[str, JsonScalar] | None = safe_raw
+        visibility: Literal["privileged", "redacted"] = "privileged"
+    else:
+        redacted = _audit_export_record(record)
+        fields = redacted.fields
+        redacted_fields = redacted.redacted_fields
+        raw_record = None
+        visibility = "redacted"
+    return AuditDetailResponse(
+        chain_position=position,
+        chain_records=count,
+        visibility=visibility,
+        event=str(record.get("event", "audit.record")),
+        timestamp=str(record.get("timestamp", "")),
+        source_hash=str(record.get("hash", "")),
+        previous_hash=str(record.get("previous_hash", "")),
+        fields=fields,
+        redacted_fields=redacted_fields,
+        raw_record=raw_record,
     )
 
 
@@ -421,6 +760,77 @@ def create_app(
         _check_machine_credential(credential, request, "evidence.read")
 
     evidence_protected = [Depends(require_evidence_auth)]
+
+    def authorize_human_audit_read(request: Request, session_token: str | None) -> Account:
+        require_same_origin(request)
+        if configured_accounts is None:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Human account storage is not configured",
+            )
+        if not session_token:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Human session required for audit search",
+            )
+        try:
+            account, _ = configured_accounts.authenticate(session_token)
+            configured_accounts.require_permission(account, InterfacePermission.EVIDENCE_VIEW)
+            return account
+        except InvalidSession as error:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail=str(error)
+            ) from error
+        except PermissionDenied as error:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(error)) from error
+        except AccountServiceError as error:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Human account storage unavailable",
+            ) from error
+
+    def authorize_audit_export(
+        request: Request,
+        session_token: str | None,
+        csrf_token: str | None,
+    ) -> Account:
+        require_same_origin(request)
+        if configured_accounts is None:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Human account storage is not configured",
+            )
+        if not session_token:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Human session required for audit export",
+            )
+        try:
+            return configured_accounts.authorize_rate_limited_action(
+                session_token,
+                csrf_token,
+                permission=InterfacePermission.AUDIT_EXPORT,
+                operation="audit_export",
+                source=request_source(request),
+                limit=10,
+            )
+        except InvalidSession as error:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail=str(error)
+            ) from error
+        except (InvalidCsrf, PermissionDenied) as error:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(error)) from error
+        except RateLimited as error:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=str(error),
+                headers={"Retry-After": "900"},
+            ) from error
+        except AccountServiceError as error:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Human account storage unavailable",
+            ) from error
 
     def active_relay() -> AppendOnlyAuditRelay:
         if relay is None:  # Protected dependencies reject this configuration first.
@@ -737,10 +1147,147 @@ def create_app(
     def audit_view(
         limit: Annotated[int, Query(ge=1, le=500)] = 100,
         offset: Annotated[int, Query(ge=0)] = 0,
+        cursor: Annotated[str | None, Query(pattern=r"^[a-f0-9]{64}$")] = None,
         query: Annotated[str | None, Query(max_length=200)] = None,
         event: Annotated[str | None, Query(max_length=120)] = None,
+        actor: Annotated[str | None, Query(max_length=200)] = None,
+        account: Annotated[str | None, Query(max_length=200)] = None,
+        operation: Annotated[str | None, Query(max_length=200)] = None,
+        resource: Annotated[str | None, Query(max_length=300)] = None,
+        verdict: Literal["ALLOW", "DENY", "ESCALATE"] | None = None,
+        severity: Annotated[str | None, Query(max_length=40)] = None,
+        from_time: datetime | None = None,
+        to_time: datetime | None = None,
     ) -> AuditResponse:
-        return _audit_records(active_relay(), limit, offset, query, event)
+        return _audit_records(
+            active_relay(),
+            limit,
+            offset,
+            cursor,
+            _audit_filters(
+                query=query,
+                event=event,
+                actor=actor,
+                account=account,
+                operation=operation,
+                resource=resource,
+                verdict=verdict,
+                severity=severity,
+                from_time=from_time,
+                to_time=to_time,
+            ),
+        )
+
+    @application.post("/audit/search", response_model=HumanAuditResponse)
+    def audit_search(
+        payload: AuditSearchRequest,
+        request: Request,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
+    ) -> HumanAuditResponse:
+        account = authorize_human_audit_read(request, session_token)
+        filters = _audit_filters(
+            query=payload.query,
+            event=payload.event,
+            actor=payload.actor,
+            account=payload.account,
+            operation=payload.operation,
+            resource=payload.resource,
+            verdict=payload.verdict,
+            severity=payload.severity,
+            from_time=payload.from_time,
+            to_time=payload.to_time,
+        )
+        privileged = _audit_sensitive_filter_permission(account, filters)
+        return _human_audit_response(
+            _audit_records(
+                active_relay(),
+                payload.limit,
+                cursor=payload.cursor,
+                filters=filters,
+                sensitive_query=privileged,
+            )
+        )
+
+    @application.post("/audit/detail", response_model=AuditDetailResponse)
+    def audit_detail(
+        payload: AuditDetailRequest,
+        request: Request,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
+    ) -> AuditDetailResponse:
+        account = authorize_human_audit_read(request, session_token)
+        return _audit_record_detail(
+            active_relay(),
+            payload.source_hash,
+            privileged=has_permission(account.role, InterfacePermission.AUDIT_RAW_VIEW),
+        )
+
+    @application.post(
+        "/audit/export",
+        response_model=AuditExportResponse,
+        status_code=status.HTTP_200_OK,
+    )
+    def audit_export(
+        payload: AuditExportRequest,
+        request: Request,
+        csrf_token: Annotated[str | None, Header(alias="X-CSRF-Token")] = None,
+        session_token: Annotated[str | None, Security(SESSION_COOKIE_SCHEME)] = None,
+    ) -> AuditExportResponse:
+        relay = active_relay()
+        account = authorize_audit_export(request, session_token, csrf_token)
+        filters = _audit_filters(
+            query=payload.query,
+            event=payload.event,
+            actor=payload.actor,
+            account=payload.account,
+            operation=payload.operation,
+            resource=payload.resource,
+            verdict=payload.verdict,
+            severity=payload.severity,
+            from_time=payload.from_time,
+            to_time=payload.to_time,
+        )
+        privileged = _audit_sensitive_filter_permission(account, filters)
+        source = _audit_records(
+            relay,
+            payload.limit,
+            payload.offset,
+            filters=filters,
+            sensitive_query=privileged,
+        )
+        records = tuple(_audit_export_record(record) for record in source.records)
+        records_sha256 = _audit_export_digest(records)
+        filters_sha256 = hashlib.sha256(
+            json.dumps(
+                filters.model_dump(mode="json"),
+                ensure_ascii=True,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest()
+        receipt = relay.append(
+            "control_center.audit_export",
+            {
+                "exported_count": len(records),
+                "filtered_count": source.filtered_count,
+                "filters_sha256": filters_sha256,
+                "initiated_by": account.id,
+                "limit": payload.limit,
+                "offset": payload.offset,
+                "records_sha256": records_sha256,
+            },
+        )
+        return AuditExportResponse(
+            generated_at=datetime.now(UTC).isoformat(),
+            source_chain_records=source.count,
+            matched_records=source.filtered_count,
+            exported_records=len(records),
+            offset=payload.offset,
+            limit=payload.limit,
+            filters=filters,
+            records_sha256=records_sha256,
+            export_audit_hash=str(receipt["hash"]),
+            records=records,
+        )
 
     @application.post(
         "/chimera/verdict",

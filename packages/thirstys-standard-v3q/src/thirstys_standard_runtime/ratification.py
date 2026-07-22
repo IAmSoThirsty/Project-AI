@@ -13,8 +13,34 @@ RATIFICATION_STATEMENT = (
     "as Thirsty's Standard V3 + Q, subject to its declared scope, priority order, and fail-closed controls."
 )
 
+# Written into implementation_status.statement when a manifest is ratified.
+#
+# The draft manifest carries prose ending "Owner ratification remains pending an
+# explicit owner signature over the exact release manifest." Until 2026-07-20 that
+# sentence survived verbatim into the ratified artifact, which therefore asserted
+# both `status: ratified` and "ratification remains pending" at the same time.
+RATIFIED_IMPLEMENTATION_STATEMENT = (
+    "The package includes an executable fail-closed action gate, CEL condition runtime, "
+    "signed independent evaluator, Ed25519 authority verification, and ratification tooling. "
+    "Owner ratification is complete: this exact manifest release is bound by an Ed25519 "
+    "ratification record over its file SHA-256."
+)
+
 
 def prepare_ratified_manifest(manifest: dict[str, Any], effective_date: str) -> dict[str, Any]:
+    """Return a ratified copy of ``manifest``.
+
+    Every field whose value depends on ratification status is updated here. Fields
+    that merely *describe* that status used to be left untouched, producing a signed
+    artifact that contradicted itself: top-level `status: ratified` and
+    `owner_ratification_verified: true`, but `lifecycle.ratification.status:
+    pending_owner_signature` and prose saying ratification "remains pending".
+
+    Because the signature binds the raw file bytes, that contradiction could not be
+    corrected in place after signing -- editing one character invalidates the record.
+    A missing key therefore raises instead of being skipped silently, so the defect
+    fails at preparation time rather than being frozen into a signed artifact.
+    """
     try:
         date.fromisoformat(effective_date)
     except ValueError as exc:
@@ -27,6 +53,21 @@ def prepare_ratified_manifest(manifest: dict[str, Any], effective_date: str) -> 
     )
     updated["manifest_version"] = str(updated["manifest_version"]).replace("-rc1", "")
     updated["implementation_status"]["owner_ratification_verified"] = True
+
+    lifecycle = updated.get("lifecycle")
+    if not isinstance(lifecycle, dict) or not isinstance(lifecycle.get("ratification"), dict):
+        raise AuthorityError(
+            "Manifest must declare lifecycle.ratification before it can be ratified; "
+            "refusing to sign an artifact whose ratification status cannot be updated"
+        )
+    lifecycle["ratification"]["status"] = "owner_signed"
+
+    if "statement" not in updated["implementation_status"]:
+        raise AuthorityError(
+            "Manifest must declare implementation_status.statement before it can be ratified"
+        )
+    updated["implementation_status"]["statement"] = RATIFIED_IMPLEMENTATION_STATEMENT
+
     return updated
 
 

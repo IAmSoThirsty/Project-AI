@@ -19,6 +19,10 @@ def test_bridge_records_and_verifies_chain_without_raw_canary(tmp_path: Path) ->
     report_governance_denial(relay, action_id="act-2", reason="scope")
 
     assert relay.verify() == (True, 3)
+    valid, count, records = relay.verified_snapshot()
+    assert (valid, count) == (True, 3)
+    assert records[0]["event"] == "chimera.verdict"
+    assert records[0]["hash"]
     assert "private-canary" not in path.read_text(encoding="utf-8")
 
 
@@ -39,3 +43,4 @@ def test_bridge_detects_tampering(tmp_path: Path) -> None:
     path.write_text(path.read_text(encoding="utf-8").replace("act-1", "act-9"), encoding="utf-8")
 
     assert relay.verify() == (False, 1)
+    assert relay.verified_snapshot() == (False, 1, ())

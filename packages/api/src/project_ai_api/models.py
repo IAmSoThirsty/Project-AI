@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Literal
 
 from kernel.version import PROJECT_AI_VERSION
@@ -730,4 +731,117 @@ class AuditResponse(FrozenModel):
     filtered_count: int = Field(ge=0)
     offset: int = Field(ge=0)
     limit: int = Field(ge=1, le=500)
+    cursor: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    next_cursor: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    has_more: bool = False
     records: tuple[dict[str, JsonScalar], ...]
+
+
+class AuditSearchRequest(FrozenModel):
+    limit: int = Field(default=100, ge=1, le=500)
+    cursor: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    query: str | None = Field(default=None, max_length=200)
+    event: str | None = Field(default=None, max_length=120)
+    actor: str | None = Field(default=None, max_length=200)
+    account: str | None = Field(default=None, max_length=200)
+    operation: str | None = Field(default=None, max_length=200)
+    resource: str | None = Field(default=None, max_length=300)
+    verdict: Literal["ALLOW", "DENY", "ESCALATE"] | None = None
+    severity: str | None = Field(default=None, max_length=40)
+    from_time: datetime | None = None
+    to_time: datetime | None = None
+
+
+class HumanAuditRecordSummary(FrozenModel):
+    event: str
+    timestamp: str
+    source_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    previous_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    verdict: Literal["ALLOW", "DENY", "ESCALATE"] | None = None
+    severity: str | None = None
+    chain_status: Literal["verified"] = "verified"
+
+
+class HumanAuditResponse(FrozenModel):
+    chain_valid: Literal[True] = True
+    count: int = Field(ge=0)
+    filtered_count: int = Field(ge=0)
+    offset: int = Field(ge=0)
+    limit: int = Field(ge=1, le=500)
+    cursor: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    next_cursor: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    has_more: bool = False
+    records: tuple[HumanAuditRecordSummary, ...]
+
+
+class AuditDetailRequest(FrozenModel):
+    source_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+
+class AuditDetailResponse(FrozenModel):
+    chain_valid: Literal[True] = True
+    chain_status: Literal["verified"] = "verified"
+    chain_position: int = Field(ge=1)
+    chain_records: int = Field(ge=1)
+    visibility: Literal["privileged", "redacted"]
+    event: str
+    timestamp: str
+    source_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    previous_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    fields: dict[str, JsonScalar]
+    redacted_fields: tuple[str, ...]
+    raw_record: dict[str, JsonScalar] | None = None
+
+
+class AuditExportRequest(FrozenModel):
+    limit: int = Field(default=500, ge=1, le=500)
+    offset: int = Field(default=0, ge=0)
+    query: str | None = Field(default=None, max_length=200)
+    event: str | None = Field(default=None, max_length=120)
+    actor: str | None = Field(default=None, max_length=200)
+    account: str | None = Field(default=None, max_length=200)
+    operation: str | None = Field(default=None, max_length=200)
+    resource: str | None = Field(default=None, max_length=300)
+    verdict: Literal["ALLOW", "DENY", "ESCALATE"] | None = None
+    severity: str | None = Field(default=None, max_length=40)
+    from_time: datetime | None = None
+    to_time: datetime | None = None
+
+
+class AuditExportFilters(FrozenModel):
+    query: str | None = None
+    event: str | None = None
+    actor: str | None = None
+    account: str | None = None
+    operation: str | None = None
+    resource: str | None = None
+    verdict: Literal["ALLOW", "DENY", "ESCALATE"] | None = None
+    severity: str | None = None
+    from_time: datetime | None = None
+    to_time: datetime | None = None
+
+
+class AuditExportRecord(FrozenModel):
+    event: str
+    timestamp: str
+    source_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    previous_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    fields: dict[str, JsonScalar]
+    redacted_fields: tuple[str, ...]
+
+
+class AuditExportResponse(FrozenModel):
+    schema_version: Literal["project-ai.audit-export/v1"] = "project-ai.audit-export/v1"
+    generated_at: str
+    source_chain_valid: Literal[True] = True
+    source_chain_records: int = Field(ge=0)
+    matched_records: int = Field(ge=0)
+    exported_records: int = Field(ge=0, le=500)
+    offset: int = Field(ge=0)
+    limit: int = Field(ge=1, le=500)
+    filters: AuditExportFilters
+    redaction_applied: Literal[True] = True
+    redaction_policy: Literal["allowlist-v1"] = "allowlist-v1"
+    records_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    export_audit_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+    records: tuple[AuditExportRecord, ...]

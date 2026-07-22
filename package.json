@@ -4,10 +4,18 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.30.0",
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@1.1.15": "1.1.16",
+      "brace-expansion@5.0.6": "5.0.7",
+      "js-yaml@4.2.0": "4.3.0"
+    }
+  },
   "scripts": {
     "web:lint": "eslint apps/web --max-warnings 0",
     "web:test": "pnpm --filter @project-ai/operator-console test && pnpm --filter @project-ai/docs-portal test && pnpm --filter @project-ai/proof-portal test && pnpm --filter @project-ai/triumvirate-portal test",
-    "web:build": "pnpm --filter @project-ai/operator-console build && pnpm --filter @project-ai/docs-portal build && pnpm --filter @project-ai/proof-portal build && pnpm --filter @project-ai/triumvirate-portal build"
+    "web:build": "pnpm --filter @project-ai/operator-console build && pnpm --filter @project-ai/docs-portal build && pnpm --filter @project-ai/proof-portal build && pnpm --filter @project-ai/triumvirate-portal build",
+    "web:visual": "pnpm --filter @project-ai/operator-console test:visual"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

@@ -16,13 +16,91 @@ export type ReplayStatus = {
 };
 export type DoiRecord = { title: string; doi: string; domain: string; url: string };
 export type AuditRecord = Record<string, string | number | boolean | null>;
+export type HumanAuditRecordSummary = {
+  event: string;
+  timestamp: string;
+  source_hash: string;
+  previous_hash: string;
+  verdict: "ALLOW" | "DENY" | "ESCALATE" | null;
+  severity: string | null;
+  chain_status: "verified";
+};
+export type AuditFilters = {
+  offset?: number;
+  cursor?: string;
+  query?: string;
+  event?: string;
+  actor?: string;
+  account?: string;
+  operation?: string;
+  resource?: string;
+  verdict?: "ALLOW" | "DENY" | "ESCALATE";
+  severity?: string;
+  from_time?: string;
+  to_time?: string;
+};
 export type AuditResponse = {
   chain_valid: true;
   count: number;
   filtered_count: number;
   offset: number;
   limit: number;
+  cursor: string | null;
+  next_cursor: string | null;
+  has_more: boolean;
   records: AuditRecord[];
+};
+export type HumanAuditResponse = Omit<AuditResponse, "records"> & {
+  records: HumanAuditRecordSummary[];
+};
+export type AuditDetailResponse = {
+  chain_valid: true;
+  chain_status: "verified";
+  chain_position: number;
+  chain_records: number;
+  visibility: "privileged" | "redacted";
+  event: string;
+  timestamp: string;
+  source_hash: string;
+  previous_hash: string;
+  fields: AuditRecord;
+  redacted_fields: string[];
+  raw_record: AuditRecord | null;
+};
+export type AuditExportRecord = {
+  event: string;
+  timestamp: string;
+  source_hash: string;
+  previous_hash: string;
+  fields: AuditRecord;
+  redacted_fields: string[];
+};
+export type AuditExportResponse = {
+  schema_version: "project-ai.audit-export/v1";
+  generated_at: string;
+  source_chain_valid: true;
+  source_chain_records: number;
+  matched_records: number;
+  exported_records: number;
+  offset: number;
+  limit: number;
+  filters: {
+    query: string | null;
+    event: string | null;
+    actor: string | null;
+    account: string | null;
+    operation: string | null;
+    resource: string | null;
+    verdict: "ALLOW" | "DENY" | "ESCALATE" | null;
+    severity: string | null;
+    from_time: string | null;
+    to_time: string | null;
+  };
+  redaction_applied: true;
+  redaction_policy: "allowlist-v1";
+  records_sha256: string;
+  export_audit_hash: string;
+  records: AuditExportRecord[];
 };
 export type DashboardSurface = {
   id: "gateway" | "replay" | "audit_chain" | "evidence";
@@ -270,6 +348,13 @@ async function requestJson<T>(path: string, options: RequestOptions = {}): Promi
   return (await response.json()) as T;
 }
 
+function appendAuditFilters(parameters: URLSearchParams, filters: AuditFilters): void {
+  for (const [key, value] of Object.entries(filters)) {
+    if (value === undefined || value === "" || (key === "offset" && value === 0)) continue;
+    parameters.set(key, String(value).trim());
+  }
+}
+
 export const gateway = {
   instance: () => requestJson<InstanceIdentity>("/api/v1/instance"),
   dashboard: () => requestJson<DashboardResponse>("/api/v1/dashboard"),
@@ -280,14 +365,30 @@ export const gateway = {
   audit: (
     token?: string,
     limit = 100,
-    filters: { offset?: number; query?: string; event?: string } = {},
+    filters: AuditFilters = {},
   ) => {
     const parameters = new URLSearchParams({ limit: String(limit) });
-    if (filters.offset) parameters.set("offset", String(filters.offset));
-    if (filters.query?.trim()) parameters.set("query", filters.query.trim());
-    if (filters.event?.trim()) parameters.set("event", filters.event.trim());
+    appendAuditFilters(parameters, filters);
     return requestJson<AuditResponse>(`/audit?${parameters.toString()}`, { token });
   },
+  auditSearch: (filters: Omit<AuditFilters, "offset"> = {}, limit = 100) =>
+    requestJson<HumanAuditResponse>("/audit/search", {
+      method: "POST",
+      body: { limit, ...filters },
+    }),
+  auditDetail: (sourceHash: string) =>
+    requestJson<AuditDetailResponse>("/audit/detail", {
+      method: "POST",
+      body: { source_hash: sourceHash },
+    }),
+  auditExport: (
+    filters: Omit<AuditFilters, "cursor"> & { limit?: number },
+    csrf: string,
+  ) => requestJson<AuditExportResponse>("/audit/export", {
+    method: "POST",
+    csrf,
+    body: filters,
+  }),
   auth: {
     bootstrapStatus: () => requestJson<BootstrapStatus>("/api/v1/auth/bootstrap-status"),
     bootstrap: (payload: {

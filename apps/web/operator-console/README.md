@@ -7,9 +7,16 @@ This is an implementation foundation, not a production-ready operator product.
 
 - `/command-center` — live gateway, replay, audit-chain, and evidence summary.
 - `/evidence` — replay status and DOI evidence registry.
-- `/evidence/audit` — verified audit-chain evidence with server-backed search,
-  event filtering, pagination, and bounded JSON page export through the signed-in
-  human session.
+- `/evidence/audit` — verified audit-chain evidence with stable hash-cursor paging;
+  query, event, actor, account, operation, resource, verdict, severity, and bounded
+  time filters; normalized record detail; permission-filtered safe raw JSON; integrity
+  lockdown; and permission-gated redacted export of up to 500 matching records through
+  the signed-in human session. Interactive search returns fixed summaries and uses a
+  same-origin POST body so raw relay fields and identifiers do not enter list payloads or
+  access URLs. Raw-identifier filters require `audit.raw_view`; restricted roles search
+  only visible summary fields so result counts cannot reveal withheld values. Each export
+  carries the normalized filter manifest, a records digest, and a hash-linked server audit
+  receipt.
 - `/sign-in`, `/setup`, `/recover` — local Owner entry and recovery flows.
 - `/profile/security` — active-session revocation, logout, and password change.
 - `/profile/preferences` — browser-local density and reduced-motion controls.
@@ -24,7 +31,11 @@ This is an implementation foundation, not a production-ready operator product.
 
 The application shell includes `Ctrl/Cmd+K` screen search and a live work
 notification panel populated from the signed-in account's visible submitted
-requests. These functions do not introduce a second authority path.
+requests. Its liveness-derived gateway indicator distinguishes checking, live,
+stale, unavailable, and browser-offline states without treating liveness as whole-system
+health. The Command Center separately labels partial, stale, and offline snapshots and
+retains their last-observed time. These functions do not introduce a second authority
+path.
 
 Before authentication, the assurance rail reads the server-provided
 `PROJECT_AI_INSTANCE_NAME` from `GET /api/v1/instance`. It labels the target as a local
@@ -60,23 +71,41 @@ Open `http://127.0.0.1:4175/`. The first loopback visit requires the setup secre
 and creates the exactly-once local Owner. Recovery codes are shown once. For HTTPS
 deployments, set `PROJECT_AI_SESSION_COOKIE_SECURE=true`.
 
+The Help control resolves to `/docs/` in a production build, matching the Helm
+ingress. During local development it resolves to the docs portal's standard
+`http://127.0.0.1:4173/` address. Set `VITE_DOCS_URL` when the docs portal is
+served somewhere else.
+
 ## Verify
 
 ```powershell
 pnpm --filter @project-ai/operator-console lint
 pnpm --filter @project-ai/operator-console test
 pnpm --filter @project-ai/operator-console build
+pnpm --filter @project-ai/operator-console exec playwright install chromium
+pnpm web:visual
 uv run pytest packages/accounts/tests packages/workflows/tests packages/swr/tests packages/api/tests -q
 ```
+
+`pnpm web:visual` builds and serves the production bundle, installs deterministic API
+fixtures in Chromium, and compares thirteen desktop/mobile/modal states with reviewed
+Windows and Linux baselines. Failure traces, actual images, and pixel diffs are written
+under ignored `output/playwright/`. Use
+`tools/update_operator_console_visual_baselines.ps1` only after intentionally reviewing
+a UI change; it regenerates both platform baseline sets through local Chromium and the
+digest-pinned Linux container documented in `tests/visual/README.md`.
 
 ## Not implemented
 
 Managed PostgreSQL TLS/credential rotation and live-cluster restore drills, durable
 notification history, global record search, additional module-specific execution
-workflows, full-route and rendered color-contrast accessibility coverage, assistive-
-technology acceptance, and final production security acceptance remain open work. The
-test suite runs axe-core checks on sign-in, Command Center, request detail, and the SWR
-execution receipt; browser rendering is still required for color contrast. See
+workflows, assistive-technology acceptance, additional module/role state coverage, and final
+production security acceptance remain open work. The test suite runs axe-core checks on every implemented authenticated route plus
+the consequential auth and workflow states. A local rendered-browser pass covers all
+16 authenticated routes for color contrast, 320/768/1440-pixel reflow, and native 200%
+browser zoom without document-level overflow. Manual NVDA and TalkBack acceptance is
+still required; the exact current evidence is recorded in
+`docs/operations/CONTINUITY_MAP.md`. See
 `docs/operations/HUMAN_INTERFACE_IMPLEMENTATION_PLAN.md`.
 
 Request detail does include stable human-review receipt digests. These prove the

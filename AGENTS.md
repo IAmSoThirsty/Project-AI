@@ -227,8 +227,10 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.4 Verified Evidence Inventory (current through 2026-07-20)
 
-- Full workspace pytest: `3412 passed, 5 skipped`; the skips require the
-  PostgreSQL integration-test environment variable.
+- Full pytest: 3497 passed, 0 skipped. The five PostgreSQL integration tests ran
+  against an isolated disposable PostgreSQL 16 instance. (The count rose from the
+  earlier `3412` as the supply-chain, workflow-gate, ratification-consistency,
+  SHA256SUMS, and evidence-gate regression suites were added.)
 - Strict pre-deployment diagnostics pass all non-blocking repository checks and
   report the remaining fail-closed owner/production prerequisites explicitly.
 - Immutable successor code candidate `6684828d` has green CI run
@@ -241,12 +243,28 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.5 Current Open Blockers (NOT dismissible per v3 §5)
 
-- The immutable successor has green CI and vulnerability evidence, but image
-  signatures, SBOM/provenance attestations, and external proof custody are not
-  recorded.
-- The ignored V3Q `owner-private.json` remains in the checkout. The old key must
--  be securely retired under the owner's approved process; the replacement key
-  and exact manifest ratification are already verified.
+- The immutable successor has green CI and vulnerability evidence. **Image
+  signatures are RESOLVED** — all eight digests independently verified 2026-07-20
+  with cosign v3.1.2 (digest-pinned verifier image) plus a cosign-independent OCI
+  referrers check. Verification requires **cosign >= 3.0**; cosign 2.x cannot read
+  this repository's signature format and will report "no signatures found" for
+  correctly signed images. See `tools/supply_chain_policy.json`.
+- **SBOM/provenance attestations are NOT recorded and never were.** Confirmed
+  absent 0/8 for both `spdxjson` and `slsaprovenance`. `cosign attest` is now
+  implemented in `publish.yaml` but has never executed. Attestations are produced
+  at build time and cannot be applied retroactively — a re-publish is required.
+- **Release provenance is NOT established.** All eight candidate digests were
+  signed from the unmerged branch `agent/production-readiness-2026-07-19` via
+  `workflow_dispatch`, not from `main` or a `v*` tag. Their certificate SAN binds
+  to that branch ref.
+- External proof custody is not recorded.
+- The old V3Q `owner-primary` private material must be securely retired under the
+  owner's approved process. The ignored `owner-private.json` is **no longer in the
+  checkout** (moved to off-repository custody 2026-07-20; verified absent). The
+  replacement key and exact manifest ratification are already verified.
+- The signed V3Q manifest 1.1.0 contains contradictory `pending_owner_signature`
+  text. Unsigned successor revision `1.2.0-rc1` supersedes it and the preparation
+  defect is fixed, but the successor requires an owner signature. Owner-blocked.
 - No approved production cluster/namespace, target overlay or hostname, remote
   backup destination, secret manager, maintenance window, owners, paging route,
   monitoring CRDs, rollback rehearsal, or acceptance sign-off exists.

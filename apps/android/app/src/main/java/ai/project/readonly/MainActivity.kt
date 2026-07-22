@@ -2,64 +2,136 @@ package ai.project.readonly
 
 import android.app.Activity
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.view.View
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
+import android.util.TypedValue
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import java.util.concurrent.Executors
 
 class MainActivity : Activity() {
     private val client by lazy { ReadOnlyProjectAiClient(HttpGetTransport(BuildConfig.API_BASE_URL)) }
+    private val executor = Executors.newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val output = TextView(this).apply {
-            setTextColor(Color.rgb(218, 225, 234))
-            textSize = 16f
-            text = "Select a read-only Project-AI surface."
-            setPadding(24, 24, 24, 24)
-        }
+        val output = resultView()
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundColor(Color.rgb(11, 13, 18))
-            addView(title("Project-AI Read Only"))
-            addView(button("DOI Registry") { load(output) { renderDois(client.fetchDois()) } })
+            setPadding(dp(16), dp(12), dp(16), dp(16))
+            addView(title())
+            addView(introduction())
+            addView(actionButton(R.string.doi_registry, output) { renderDois(client.fetchDois()) })
             addView(
-                button("Canonical Replay Status") {
-                    load(output) { renderReplay(client.fetchReplayStatus()) }
+                actionButton(R.string.canonical_replay_status, output) {
+                    renderReplay(client.fetchReplayStatus())
                 },
             )
-            addView(ScrollView(this@MainActivity).apply { addView(output) })
+            addView(ScrollView(this@MainActivity).apply {
+                isFillViewport = true
+                addView(output)
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    0,
+                    1f,
+                ).apply { topMargin = dp(12) }
+            })
         }
         setContentView(layout)
     }
 
-    private fun title(value: String): TextView = TextView(this).apply {
-        text = value
+    override fun onDestroy() {
+        executor.shutdownNow()
+        super.onDestroy()
+    }
+
+    private fun title(): TextView = TextView(this).apply {
+        setText(R.string.screen_title)
         textSize = 24f
         setTextColor(Color.WHITE)
-        setPadding(24, 32, 24, 16)
+        setPadding(dp(8), dp(20), dp(8), dp(8))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) isAccessibilityHeading = true
     }
 
-    private fun button(label: String, action: () -> Unit): View = Button(this).apply {
-        text = label
-        isAllCaps = false
-        setOnClickListener { action() }
+    private fun introduction(): TextView = TextView(this).apply {
+        setText(R.string.select_surface)
+        setTextColor(Color.rgb(174, 190, 207))
+        textSize = 16f
+        setPadding(dp(8), 0, dp(8), dp(12))
     }
 
-    private fun load(output: TextView, operation: () -> String) {
-        output.text = "Loading..."
-        Thread {
-            val rendered = runCatching(operation).getOrElse { "Read failed: ${it.message}" }
-            runOnUiThread { output.text = rendered }
-        }.start()
+    private fun resultView(): TextView = TextView(this).apply {
+        setText(R.string.select_surface)
+        setTextColor(Color.rgb(218, 225, 234))
+        textSize = 16f
+        setPadding(dp(12), dp(16), dp(12), dp(24))
+        setTextIsSelectable(true)
+        autoLinkMask = Linkify.WEB_URLS
+        movementMethod = LinkMovementMethod.getInstance()
+        isFocusable = true
     }
 
-    private fun renderDois(records: List<DoiRecord>): String = records.joinToString("\n\n") {
-        "${it.title}\n${it.doi}\n${it.url}"
+    private fun actionButton(labelResource: Int, output: TextView, action: () -> String): Button =
+        Button(this).apply {
+            setText(labelResource)
+            isAllCaps = false
+            minimumHeight = dp(48)
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+            ).apply { topMargin = dp(8) }
+            setOnClickListener { load(this, output, text.toString(), action) }
+        }
+
+    private fun load(button: Button, output: TextView, operationLabel: String, operation: () -> String) {
+        button.isEnabled = false
+        output.setText(R.string.loading)
+        output.announceForAccessibility(getString(R.string.loading_announcement, operationLabel))
+        executor.execute {
+            val result = runCatching(operation)
+            val rendered = result.getOrElse {
+                getString(R.string.read_failed, it.message ?: getString(R.string.unknown_error))
+            }
+            runOnUiThread {
+                if (isDestroyed || isFinishing) return@runOnUiThread
+                output.text = rendered
+                button.isEnabled = true
+                output.announceForAccessibility(
+                    getString(
+                        if (result.isSuccess) R.string.loaded_announcement else R.string.failed_announcement,
+                        operationLabel,
+                    ),
+                )
+            }
+        }
     }
 
-    private fun renderReplay(status: ReplayStatus): String =
-        "${status.status}\n${status.invariantsPassed}/${status.invariantsTotal} invariants passed\n${status.updatedAt}"
+    private fun renderDois(records: List<DoiRecord>): String =
+        if (records.isEmpty()) {
+            getString(R.string.no_doi_records)
+        } else {
+            records.joinToString("\n\n") {
+                getString(R.string.doi_record, it.title, it.doi, it.url)
+            }
+        }
+
+    private fun renderReplay(status: ReplayStatus): String = getString(
+        R.string.replay_result,
+        status.status,
+        status.invariantsPassed,
+        status.invariantsTotal,
+        status.updatedAt,
+    )
+
+    private fun dp(value: Int): Int = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        value.toFloat(),
+        resources.displayMetrics,
+    ).toInt()
 }

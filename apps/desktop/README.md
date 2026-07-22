@@ -8,6 +8,13 @@ The desktop application does not import governance or execution packages.
 Capability inspection decodes public claims but cannot authenticate
 signatures without issuer authority, and labels that limit in the UI.
 
+The native controls expose assistive-technology names and descriptions for
+navigation, status messages, read-only evidence tables, capability inspection,
+and connection settings. Keyboard focus follows Qt's native tab and list
+navigation behavior. Automated tests verify that metadata without placing token
+values in the accessibility tree. The minimum 900 by 620 window has been visually
+checked on Windows. Manual NVDA acceptance remains required before release.
+
 ## Bundled local api gateway
 
 When installed via the Windows installer (see

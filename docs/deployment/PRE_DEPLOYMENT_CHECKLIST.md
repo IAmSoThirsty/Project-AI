@@ -2,19 +2,19 @@
 
 **Status:** v0.0.3 successor identity prepared; replacement owner public key
 enrolled and exact manifest ratification verified. The aggregate pre-deployment
-gate still correctly fails on the retired local owner-private key, missing remote
-successor evidence, placeholder production ingress, and unconfigured remote
-backup. No production deployment is authorized.
-**Evidence date:** 2026-07-20.
+gate still correctly fails on missing external owner-key retirement/custody
+evidence, missing remote successor evidence, placeholder production ingress, and
+unconfigured remote backup. No production deployment is authorized.
+**Evidence date:** 2026-07-21.
 
 **Current CAB entry point:**
 [`PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`](../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md)
 
 ## Current local evidence
 
-- Full pytest: 3412 passed, 5 PostgreSQL environment-gated skips, zero
+- Full pytest: 3497 passed, 0 skipped, zero
   failures, XFAIL/XPASS results, or warnings.
-- Batched branch coverage: 87.32%, threshold 80%.
+- Batched branch coverage: 87.48%, threshold 80%.
 - Canonical replay: 5/5; frozen history: 2264/2264.
 - Rebuilt API image: live metrics, canonical replay, frozen-history verifier,
   and valid empty security-relay genesis proven inside the container.
@@ -22,8 +22,8 @@ backup. No production deployment is authorized.
 - Helm: lint passes; production render has 47 manifests and enforces namespace
   plus all eight image digests.
 - Checkov 3.3.8: Kubernetes 1123/0/0, Dockerfile 248/0/0, GitHub Actions
-  976/0/0.
-- Workflow action pinning: all 103 remote action references in the successor
+  1020/0/0.
+- Workflow action pinning: all 110 remote action references in the successor
   checkout use full commit SHAs; local workflow verification passes.
 - Dependency audits: Python OSV and Node moderate+ pass after upgrading locked
   setuptools 82.0.1 to 83.0.0.
@@ -31,10 +31,12 @@ backup. No production deployment is authorized.
   current `Cargo.lock`; `cargo fmt`, Clippy, and workspace tests pass.
 - Local CycloneDX SBOMs: Python workspace SBOM contains 155 components and Rust
   workspace SBOM contains 20 components; both validate as CycloneDX JSON.
-- Web surfaces: ESLint, all portal tests (61 tests), and all four production
+- Web surfaces: ESLint, all portal tests (88 tests), all 18 operator-console visual
+  tests, and all four production
   builds pass locally.
-- Android: `testDebugUnitTest assembleDebug` passes with the configured Android
-  SDK; Gradle reports only the SDK XML-version compatibility warning.
+- Android: `lintDebug lintRelease testDebugUnitTest assembleDebug assembleRelease`
+  passes with the configured Android SDK; Gradle reports only the SDK XML-version
+  compatibility warning.
 - Desktop: offscreen source smoke and unsigned PyInstaller onedir build/smoke
   both pass under Python 3.12.10.
 - Standalone Waterfall: production-candidate image has zero HIGH/CRITICAL
@@ -143,9 +145,17 @@ tag, GitHub Release, package publication, image publication, or deployment.
 - Frozen history: `2264 sections verified`.
 - GitHub Actions evidence for immutable successor `eaed9905`:
   CI run `29731671162`, vulnerability scan `29731671150`, and publish/registry
-  verification run `29731685685` passed; all eight image digests, keyless
-  signatures, and SPDX/SLSA registry attestations are recorded. Target
-  deployment evidence remains pending.
+  verification run `29731685685` passed. All eight image digests are recorded and
+  their **keyless signatures are independently verified** (cosign v3.1.2 from a
+  digest-pinned verifier image, plus a cosign-independent OCI referrers layout
+  check; subject-digest binding confirmed per image, 2026-07-20).
+  **Verification requires cosign >= 3.0** — cosign 2.x cannot read this signature
+  format and will report "no signatures found" for correctly signed images.
+  **SPDX/SLSA registry attestations are NOT recorded** — they were never produced,
+  are absent 0/8, and cannot be added retroactively to these digests.
+  **Release provenance is NOT established** — all eight were signed from the
+  unmerged branch `agent/production-readiness-2026-07-19` via `workflow_dispatch`.
+  Target deployment evidence remains pending.
 - Historical GitHub Actions CI:
   - Implementation run `28362042896` passed at commit `176990f08b6c403befccee43b350d6874e733507`.
   - Latest docs/evidence run `28362260186` passed at commit `22ad10aa49f24e5045ffd4493a6e92f9cb615b7a`.
@@ -249,8 +259,10 @@ Do not deploy if any of these are true:
 - Local tests, lint, type checking, canonical replay, or frozen-history
   verification fail.
 - Candidate `eaed9905` has green successor CI/vulnerability/publish evidence and
-  verified image signatures plus SPDX/SLSA attestations, but target-environment
-  proof and production deployment controls remain absent.
+  independently verified image signatures, but **SPDX/SLSA attestations are absent
+  (0/8, never produced)**, **release provenance is branch-scoped rather than
+  tag/main**, and target-environment proof and production deployment controls
+  remain absent.
 - `PROJECT_AI_API_TOKEN` is committed with a real value in tracked files.
 - Protected API routes do not fail closed when token or audit path is missing.
 - Compose health/security verification fails.

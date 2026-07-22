@@ -1,0 +1,71 @@
+{
+  "policy_version": "1.0",
+  "description": "Single source of truth for container supply-chain signing and verification. Read by tools/verify_supply_chain.py and asserted against .github/workflows/publish.yaml by tools/verify_pre_deployment.py. The 2026-07-20 audit discrepancy was caused by an UNDECLARED signature storage format: cosign-installer v4.x silently installs cosign v3, which silently prefers OCI 1.1 referrers, which silently falls back to a sha256-<digest> tag. Nothing in the repository declared the expected format, so nothing could detect the drift. Every field below exists to make that drift loud.",
+  "registry": "ghcr.io",
+  "owner": "iamsothirsty",
+  "image_components": [
+    "api",
+    "arbiter-rlp",
+    "atlas",
+    "docs-portal",
+    "genesis",
+    "operator-console",
+    "proof-portal",
+    "swr"
+  ],
+  "cosign": {
+    "major": 3,
+    "signer_release": "v3.1.2",
+    "verifier_image": "ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849",
+    "verifier_image_version": "v3.1.2",
+    "verifier_channel_note": "The verifier is pulled as an OCI image pinned by digest. The signer is installed from a GitHub release tarball by sigstore/cosign-installer. Deliberately different distribution channels, so a compromised or drifted channel cannot silently validate its own output.",
+    "v2_incompatibility_expected": true,
+    "v2_incompatibility_note": "cosign 2.x CANNOT read these signatures. It looks for the legacy sha256-<digest>.sig tag, which is intentionally absent under the v3 bundle format. A 'no signatures found' result from cosign 2.x is an EXPECTED property of this policy, not evidence of a missing signature. Verification requires cosign >= 3.0."
+  },
+  "signature": {
+    "storage": "oci-referrers-with-tag-fallback",
+    "fallback_tag_pattern": "sha256-{digest_hex}",
+    "artifact_type": "application/vnd.dev.sigstore.bundle.v0.3+json",
+    "bundle_media_type": "application/vnd.dev.sigstore.bundle.v0.3+json",
+    "bundle_predicate_type": "https://sigstore.dev/cosign/sign/v1",
+    "dsse_payload_type": "application/vnd.in-toto+json",
+    "legacy_sig_tag_expected_absent": true,
+    "referrers_api_supported_by_registry": false,
+    "referrers_api_note": "ghcr.io returns MANIFEST_UNKNOWN for /v2/<repo>/referrers/<digest>, so cosign uses the fallback tag. Verified 2026-07-20."
+  },
+  "attestation": {
+    "mechanism": "cosign-attest",
+    "predicate_types": {
+      "sbom": "spdxjson",
+      "provenance": "slsaprovenance"
+    },
+    "status": "not-yet-produced",
+    "status_note": "cosign attest steps are implemented in .github/workflows/publish.yaml but have never executed. Attestations are produced at BUILD time and cannot be applied retroactively, so the eight digests recorded in REMOTE_SUCCESSOR_EVIDENCE.json can never satisfy this requirement without a re-publish. sbom_attestations_verified must remain false until a re-publish occurs under the fixed workflow.",
+    "buildkit_attestations_are_not_sufficient": true,
+    "buildkit_note": "docker/build-push-action provenance:mode=max and sbom:true DO write a real BuildKit attestation manifest into the image index (vnd.docker.reference.type=attestation-manifest) carrying in-toto layers with predicate types https://spdx.dev/Document and https://slsa.dev/provenance/v1. These are genuine but are NEITHER cosign attestations NOR GitHub attestations, so no standard verifier reads them. They are INFORMATIONAL ONLY and must never satisfy an attestation gate.",
+    "rejected_alternatives": [
+      {
+        "mechanism": "actions/attest-build-provenance",
+        "reason": "Not selected for this revision. It would be verifiable by 'gh attestation verify' (the exact command the external auditor ran) and does not depend on the referrers mechanism that produced this incident. Recorded as an open owner decision in docs/operations/cab/EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md rather than silently discarded."
+      }
+    ]
+  },
+  "identity": {
+    "oidc_issuer": "https://token.actions.githubusercontent.com",
+    "repository": "IAmSoThirsty/Project-AI",
+    "workflow_path": ".github/workflows/publish.yaml",
+    "approved_release_identity_regexp": "^https://github[.]com/IAmSoThirsty/Project-AI/[.]github/workflows/publish[.]yaml@refs/(tags/v[^/]+|heads/main)$",
+    "forbidden_identity_patterns": [
+      "@[.]*$",
+      "@.*$"
+    ],
+    "forbidden_identity_note": "A trailing '@.*$' accepts ANY git ref, including an unreviewed agent branch. The publish workflow used exactly that until 2026-07-20, which is why branch-built images passed its own verification. Any identity regexp must anchor the ref."
+  },
+  "current_candidate": {
+    "version_tag": "manual-20260720-eaed990",
+    "build_trigger": "workflow_dispatch",
+    "actual_identity": "https://github.com/IAmSoThirsty/Project-AI/.github/workflows/publish.yaml@refs/heads/agent/production-readiness-2026-07-19",
+    "meets_approved_release_identity": false,
+    "provenance_blocker": "The eight production-candidate digests were built and signed from the unmerged branch 'agent/production-readiness-2026-07-19' via workflow_dispatch, not from refs/heads/main and not from a refs/tags/v* release tag. Their signatures are cryptographically valid but their PROVENANCE is not release provenance. Production use requires a re-publish from an approved ref. Verifying these digests requires the explicit --allow-branch-provenance flag, and that flag must be recorded in any evidence record it produces."
+  }
+}

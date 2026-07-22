@@ -1,5 +1,816 @@
 # Operational Continuity Map - Updated
 
+## SESSION UPDATE 2026-07-21 — Truthful gateway and retained-state UX
+
+- **Task / mode:** Continue making UX/UI production-deployment ready. Mode:
+  production-critical operator-console state, responsive, role, keyboard, and
+  cross-platform rendered-browser acceptance. Workspace
+  `T:\\00-Active\\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`; `HEAD` remained `a819b3bf`. No commit,
+  push, publication, deployment, production data, owner key, release state, or
+  pre-existing container was changed.
+- **Baseline / preservation:** Continued from the existing dirty worktree at 55
+  modified plus 17 untracked entries. Every unrelated release, supply-chain,
+  Android, desktop, API, security, and earlier web change was preserved. After
+  session-only cleanup, final state is 56 modified plus 18 untracked entries;
+  the additional untracked entry is the new browser-status hook, while the new
+  screenshots remain within the existing untracked operator visual-test tree.
+- **Modified / created:** Created
+  `apps/web/operator-console/src/browser-status.ts`. Modified the operator shell,
+  Command Center route, shared state panel, styles, unit tests, visual specification,
+  visual baselines, operator and visual-test READMEs, the human-interface plan,
+  and this continuity map.
+- **False-live correction:** The shell previously rendered a hard-coded green dot
+  and `Live query` label even when the gateway could not be reached. It now polls
+  `/health/live` every 15 seconds and visibly distinguishes `Checking gateway`,
+  `Gateway live`, `Gateway stale`, `Gateway unavailable`, and `Browser offline`.
+  A successful liveness response is described only as gateway liveness, not
+  whole-system health. Stale state retains and timestamps the last successful
+  response; narrow layouts expose a compact semantic status without duplicating
+  the accessible announcement.
+- **Retained evidence:** Command Center now elevates non-healthy surfaces as
+  `Partial system evidence`. A failed refresh preserves the prior response but
+  labels it `Dashboard data is stale` with its observation time and error. Browser
+  disconnection labels retained data `Offline snapshot`, says explicitly that it
+  is not current evidence, and suppresses the overlapping stale warning. Initial
+  failures still show the existing unavailable state without fabricated data.
+- **Automated validation:** Web lint passed with zero warnings. All 88 portal tests
+  passed: operator 46, docs 5, proof 4, and Triumvirate 33. All four production web
+  builds passed. `git diff --check` passed with only the known CRLF-to-LF advisory
+  for `docs/api/openapi-baseline.json`. No backend source changed in this wave, so
+  the earlier 94-test account/security/API result with 5 PostgreSQL skips was not
+  re-run or represented as current-wave execution.
+- **Rendered-browser acceptance:** The existing repository Playwright Test path
+  was used for deterministic real-browser acceptance. Coverage expanded from 11
+  to 18 checks: 13 reviewed screenshots plus 5 keyboard/focus behaviors. New
+  screenshots prove partial, unavailable, stale, and retained-offline Command
+  Center states and Viewer mobile navigation without Administration. New browser
+  behavior proves focus moves to the main landmark across Evidence, Audit, and
+  Preferences routes and follows the Administration form's visible reading order.
+  Fresh comparisons passed 18/18 on Windows and 18/18 in the digest-pinned Linux
+  image `mcr.microsoft.com/playwright@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48`.
+- **Failures found and fixed:** The first full unit run exposed React Query's
+  shared offline state leaking into later tests; the offline test now restores the
+  online event. A retrying stale-state fixture exceeded the default assertion
+  window; its bounded wait now matches the behavior under test. Expected new and
+  changed screenshot baselines were inspected before acceptance. A mobile offline
+  selector matched both the compact visible label and the preserved accessible
+  desktop status; it was narrowed to the compact label. Image review then exposed
+  that healthy surface cards could be mistaken for current evidence while offline;
+  the explicit `Offline snapshot` warning and not-current wording close that gap.
+- **Cleanup / runtime:** All visual-test containers used `--rm` and auto-removed.
+  Session-generated Playwright output was removed after evidence capture. Docker
+  Desktop 29.6.1 remains running with the same eight pre-existing containers;
+  none was restarted, stopped, or modified. No session listener remains on ports
+  8000 or 4176.
+- **Not verified / remaining:** Manual NVDA and Android TalkBack acceptance,
+  remaining module/role/error/empty-state visual matrices, cross-client acceptance,
+  global record search, durable notification history, PostgreSQL-backed integration,
+  and the production cluster, secret manager, backup, monitoring, owner approval,
+  release provenance, and attestation prerequisites remain open. `caniuse-lite`
+  emits a non-blocking outdated-data advisory. This wave does not establish
+  whole-product production readiness or authorize deployment.
+- **Safe to continue:** Yes for local remediation and acceptance work. No for
+  production deployment.
+
+## SESSION UPDATE 2026-07-21 — Permission-aware normalized audit record detail
+
+- **Task / mode:** Continue making UX/UI production-deployment ready. Mode:
+  production-critical audit evidence inspection across the canonical React operator
+  console, human-session API, append-only relay, permission model, documentation,
+  browser acceptance, and visual regression gates. Workspace
+  `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`; `HEAD` remained `a819b3bf`. No commit,
+  push, publication, deployment, production data, owner key, release state, or
+  pre-existing container was changed.
+- **Baseline / preservation:** Continued from the existing dirty worktree and
+  preserved every unrelated release, supply-chain, Android, desktop, account,
+  security, and earlier web change. After session-only cleanup, final status was
+  55 modified plus 17 untracked entries. Four Linux/Windows record-detail baseline
+  PNGs were added inside the existing untracked operator visual-test tree; no
+  tracked or unrelated file was deleted.
+- **Modified:** `packages/accounts/src/accounts/permissions.py` and account tests;
+  `packages/api/src/project_ai_api/app.py` and `models.py`; API tests, reference,
+  and generated OpenAPI baseline; shared web API types; operator Audit Explorer
+  route, tests, styles, README, visual specification, and reviewed baselines; the
+  human-authentication threat model; interface implementation plan; and this map.
+- **API contract:** Added `audit.raw_view` and a same-origin, human-session-only
+  `POST /audit/detail`. Each detail request re-verifies the complete append-only
+  chain and resolves one exact source hash. The response supplies normalized chain
+  position, total, hashes, time, event, field projection, visibility, redaction
+  list, and optional sanitized raw record. Unknown hashes return 404, malformed
+  hashes 422, invalid chains 503, machine credentials 401, and cross-origin reads
+  403. The existing machine/proof `GET /audit` contract remains compatible.
+- **Field visibility:** Owner, Administrator, and Auditor roles hold
+  `audit.raw_view` and receive sanitized raw JSON. Reviewer, Operator, and Viewer
+  roles receive allowlisted values, SHA-256 identifiers, explicit withheld-field
+  names, and no raw record. Credential-bearing key fragments including token,
+  secret, password, cookie, authorization, CSRF, TOTP, recovery code, and private
+  key are replaced with `[REDACTED]` for every role.
+- **Blind-oracle correction:** Hostile review found that a restricted role could
+  otherwise test guessed raw values through exact filters or matching counts.
+  Actor, account, operation, and resource filters now require `audit.raw_view` on
+  both search and export. Lower-privilege free-text queries search only the fixed
+  visible summary projection. The UI omits raw identifier controls and explains
+  the boundary. Role-denial, private-query miss, visible-hash match, and export
+  denial tests prove the correction.
+- **Operator experience:** Audit summaries are selectable cards with an accessible
+  inline detail panel. Opening detail moves focus to its heading; closing restores
+  the exact trigger. Desktop and mobile layouts present chain integrity separately
+  from normalized fields, withheld fields, and safe raw JSON. React renders raw
+  evidence as text, including markup-shaped values. A new search clears prior
+  records/detail first, so an integrity failure presents only the lockdown state
+  and never stale evidence.
+- **Rendered-browser acceptance:** A production operator build and preview called
+  a live temporary local API. An Owner search returned summary-only records; detail
+  exposed permitted values while redacting a dummy token, and a script-shaped value
+  remained inert text. A Reviewer received only hashed/allowlisted fields with raw
+  JSON withheld. Deliberate corruption of only the temporary relay produced 503 and
+  removed all cached rows/detail from the UI. Access-log inspection found three
+  body-based searches and two detail reads, zero relevant query strings, and zero
+  seeded action, actor, resource, or token values. Machine access to detail returned
+  401. The two listeners were stopped and their ports verified clear.
+- **Visual regression:** Coverage expanded from 9 to 11 checks: eight reviewed
+  screenshots plus skip-link, mobile-navigation focus, and audit-filter-order
+  behaviors. New states cover privileged desktop detail and permission-filtered
+  mobile detail, including focus and reflow. Windows and digest-pinned Playwright
+  Linux update runs passed 11/11, the affected images were inspected, and fresh
+  comparisons independently passed 11/11 on both platforms. A reviewer-fixture
+  mismatch noticed during image review was corrected with assertions for the safe
+  placeholder, permission notice, and absent Actor field before the baseline was
+  accepted.
+- **Automated validation:** Ruff formatting/lint passed all touched Python files;
+  strict MyPy passed 21 account/API source files. Focused account/API tests passed
+  57 with the OpenAPI check deselected during contract work; regenerated OpenAPI
+  then passed the full 49-test API suite. Final account/security/API gates passed
+  94 tests with 5 PostgreSQL integration tests skipped because
+  `PROJECT_AI_TEST_DATABASE_URL` is unset. Web lint passed with zero warnings; all
+  85 portal tests passed (operator 43, docs 5, proof 4, Triumvirate 33); all four
+  production web builds passed; and `git diff --check` passed with only the known
+  CRLF-to-LF advisory for the generated OpenAPI JSON.
+- **Failures found and fixed:** Expected screenshot deltas and new missing
+  baselines were accepted only after inspection. A strict Playwright selector was
+  narrowed. Full-page capture initially exposed a fixed skip-link artifact after
+  focus movement; deterministic scroll reset removed it. The permission-filter
+  assertion initially used the wrong leading phrase and was corrected to the
+  rendered accessible copy. The raw-filter result-count disclosure was found in
+  hostile review and closed in API, UI, tests, and documentation.
+- **Cleanup / runtime:** Browser sessions were closed; only session-owned API and
+  preview processes were stopped. Session-owned temporary account/audit data,
+  Playwright metadata, reports, and failure artifacts were removed after evidence
+  capture. Docker Desktop 29.6.1 remains running with the same eight pre-existing
+  containers; each pinned visual container auto-removed.
+- **Not verified / remaining:** PostgreSQL-backed integration behavior was not run
+  because no test database URL is configured. Manual NVDA and Android TalkBack
+  acceptance, broader multi-route/role/state visual coverage, global record search,
+  durable notification history, cross-client acceptance, managed PostgreSQL
+  TLS/credential rotation and restore drills, and production-cluster/owner release
+  prerequisites remain open. This wave does not establish whole-product production
+  readiness or authorize deployment.
+- **Safe to continue:** Yes for local remediation and acceptance work. No for
+  production deployment.
+
+## SESSION UPDATE 2026-07-21 — Stable audit pagination and complete filter contract
+
+- **Task / mode:** Continue making UX/UI production-deployment ready. Mode:
+  production-critical audit discovery across the canonical React operator console,
+  human-session API, append-only relay, evidence export, documentation, and visual
+  regression gates. Workspace `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`; `HEAD` remained `a819b3bf`. No commit,
+  push, publication, deployment, production data, owner key, release state, or
+  pre-existing container was changed.
+- **Baseline / preservation:** Continued from the existing dirty worktree and
+  preserved every unrelated release, supply-chain, Android, desktop, account,
+  security, and earlier web change. Final status remained 54 modified plus 17
+  untracked entries. Four Linux/Windows expanded-filter baseline PNGs were created
+  inside the existing untracked operator visual-test tree; no tracked or unrelated
+  file was deleted.
+- **Modified:** `packages/api/src/project_ai_api/app.py` and `models.py`; API tests,
+  reference, and generated OpenAPI baseline; shared web API types; operator Audit
+  Explorer route, tests, styles, README, visual specification, and reviewed
+  baselines; the human-authentication threat model; interface implementation plan;
+  and this continuity map.
+- **Stable navigation:** Audit reads now return an opaque hash cursor bound to the
+  last visible relay record. The API resolves the next page relative to that
+  record, so later appends cannot displace or duplicate entries already traversed.
+  The console keeps a cursor history for explicit Newer/Older navigation. Existing
+  machine and proof clients retain the offset query contract for compatibility.
+  Unknown or stale cursor hashes fail closed rather than silently changing page
+  position.
+- **Complete filter contract:** Search now supports free text plus exact event,
+  actor, account, operation, resource, verdict, and severity filters, with ordered,
+  timezone-aware inclusive from/to bounds. The UI keeps secondary filters in a
+  disclosure, reports the active-filter count, resets cursor history when filters
+  change, and gives actions and pagination 44-pixel minimum targets. Filtered
+  export uses the same contract as the interactive result set.
+- **Disclosure correction:** Hostile review found that a browser GET search would
+  place operator-entered identifiers in request URLs and default reverse-proxy
+  access logs. Added same-origin, human-session-only `POST /audit/search`, and moved
+  the console to a JSON request body. Machine bearer credentials are denied on
+  this browser route; the legacy protected GET remains for machine/proof clients.
+  The route is read-only and therefore does not require a CSRF token. API tests,
+  reference, OpenAPI, threat model, and UI tests cover the boundary.
+- **Automated validation:** Ruff format and lint passed across 37 account,
+  security, and API files; strict MyPy passed 25 source files. Targeted account,
+  security, and API suites passed 92 tests with 5 PostgreSQL integration tests
+  skipped because `PROJECT_AI_TEST_DATABASE_URL` is unset. The full API suite alone
+  passed 47 tests after regenerating the OpenAPI baseline. Web lint passed with
+  zero warnings; all portal tests passed (operator 40, docs 5, proof 4,
+  Triumvirate 33); and all four production web builds passed.
+- **Rendered-browser acceptance:** A production operator build and preview called
+  a live local API through the preview proxy. An owner session applied all ten
+  filters across 26 records, navigated to the final record, and remained anchored
+  there after record 27 was appended. Returning to the newest page exposed record
+  27. The console then exported all 27 matching records. Independent parsing proved
+  the canonical records SHA-256
+  `3a516b67e5d30447ac886889f4a0189e9cdb0fc8e414951c52aca175ccc740ea`,
+  receipt hash
+  `b9b6fa8c54531c5398377e7e2c71c2e8ecc22d0f466ab044e793256661ad4f28`,
+  required redactions, absence of raw identifiers from exported records, and a
+  valid 28-record relay after the receipt.
+- **Network and log evidence:** Browser traffic contained four successful
+  `POST /audit/search` calls and one successful `POST /audit/export`. Request-body
+  inspection proved all ten filters and the opaque page cursor were transmitted in
+  JSON. API access-log inspection found four body-based search lines, zero search
+  query strings, and zero occurrences of the seeded action, actor, account, or
+  resource identifiers. The only browser console error was the expected initial
+  unauthenticated session probe returning `401`; no post-login warning or error was
+  observed.
+- **Visual regression:** Windows and digest-pinned Playwright Linux comparisons
+  both passed 9/9. Screenshot coverage now includes desktop/mobile Command Center,
+  open mobile navigation, collapsed desktop Audit Explorer, and expanded audit
+  filters on desktop and mobile. Functional browser checks continue to cover the
+  skip link, mobile focus containment/restoration, and audit-filter keyboard order.
+- **Cleanup / runtime:** The live browser session was closed; only the validated
+  API listener on port 8000 and preview listener on 4176 were stopped; both ports
+  were then clear. Temporary account/workflow databases, audit and service logs,
+  downloaded export, Playwright session metadata, and test reports created for
+  this acceptance run were removed. Docker Desktop 29.6.1 remains running with the
+  same eight pre-existing containers; the visual comparison container auto-removed.
+- **Failures found and fixed:** Initial OpenAPI comparison correctly detected the
+  expanded contract and passed after baseline regeneration. A first test assertion
+  incorrectly searched the entire export manifest for a resource value that is
+  intentionally present in filter metadata; it was narrowed to exported records.
+  A frontend active-filter assertion was corrected to match the rendered copy.
+  Expected screenshot deltas were inspected before accepting the new states. An
+  initial combined Linux baseline command exceeded its foreground window; its log
+  completed green, and a fresh digest-pinned comparison independently passed 9/9.
+  The access-log identifier risk discovered during hostile review was fixed with
+  the body-based human search route and reverified end to end.
+- **Not verified / remaining:** PostgreSQL-backed search behavior was not run
+  because no integration database URL is configured. Normalized audit record
+  detail, permission-aware raw-field visibility, manual NVDA/TalkBack acceptance,
+  broader multi-route focus/state/role visual coverage, and the existing production
+  cluster, owner, release-provenance, attestation, custody, signing-retirement, and
+  deployment prerequisites remain open.
+- **Safe to continue:** yes for local UX/UI remediation; no for production
+  deployment.
+
+---
+
+## SESSION UPDATE 2026-07-21 — Permission-gated redacted audit export
+
+- **Task / mode:** Continue making UX/UI production-deployment ready. Mode:
+  production-critical operator workflow across the canonical React console, human
+  account authority, API, and append-only audit relay. Workspace
+  `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`; `HEAD` remained `a819b3bf`. No commit,
+  push, publication, deployment, production data, owner key, release state, or
+  pre-existing container was changed.
+- **Baseline / preservation:** Continued from 38 modified plus 17 untracked status
+  entries. All unrelated release, supply-chain, Android, desktop, and earlier web
+  work was preserved. Final status is 54 modified plus 17 untracked entries. This
+  wave created no new status roots; the two reviewed Audit Explorer PNGs changed
+  inside the already-untracked visual-test tree.
+- **Modified:** account service and role-permission tests; security audit relay and
+  tests; API authentication helpers, models, application route, tests, reference,
+  and OpenAPI baseline; shared web API types; operator Audit Explorer, tests,
+  styles, preview configuration, README, and Windows/Linux audit baselines; human
+  authentication threat model; interface implementation plan; and this continuity
+  map. Created or deleted repository files: none.
+- **Authority and API implementation:** Added `POST /audit/export`. It accepts only
+  a human session with a matching CSRF token, same-origin request, and explicit
+  `audit.export` permission; machine bearer credentials and operator/viewer roles
+  are denied. Owner, administrator, reviewer, and auditor roles retain permission.
+  The durable account rate limiter allows 10 export requests per five-minute
+  window per account and source, then fails with `429` and `Retry-After`. Each
+  request is capped at 500 matching records and fails closed if the audit relay is
+  unavailable or its complete hash chain is invalid.
+- **Data boundary:** Export records are generated server-side from one locked,
+  verified relay snapshot. The allowlist omits arbitrary fields, hashes identifying
+  values such as action IDs, preserves only safe enums/counts and existing hash
+  values, lists every redacted source field, and binds the canonical record array
+  to `records_sha256`. A `control_center.audit_export` receipt records counts,
+  bounds, initiating account, filter hash, and records hash without copying raw
+  queries or record content. The threat model documents authorization, disclosure,
+  resource-exhaustion, tamper, and repudiation controls.
+- **Operator workflow:** Replaced the local displayed-page export with a
+  permission-aware `Export redacted results` action. Authorized roles call the API
+  using the active filters and receive a digest-named JSON download with live
+  success/error status; viewer sessions see an explicit denial boundary and no
+  export control. The production preview now proxies `/api`, enabling a real
+  preview-to-API acceptance path. Audit actions and pagination use 44-pixel minimum
+  pointer targets.
+- **Automated validation:** Targeted account/security/API suites passed 89 tests
+  with 5 PostgreSQL integration tests skipped because
+  `PROJECT_AI_TEST_DATABASE_URL` is unset. Ruff format/check passed on all touched
+  Python files; strict MyPy passed 25 source files. API-only hostile-review reruns
+  included 47 passing security/API tests and the full API suite passed 44 tests
+  after regenerating the OpenAPI baseline. Web lint passed with zero warnings; all
+  portal tests passed (operator 38, docs 5, proof 4, Triumvirate 33); all four web
+  builds passed. The operator test includes route-wide axe checks and export
+  download/denial coverage.
+- **Rendered-browser validation:** A production operator build and preview called a
+  live local API through the preview proxy. The full journey bootstrapped the owner,
+  acknowledged recovery, authenticated, opened Audit Explorer, filtered one seeded
+  record, exported it, and downloaded
+  `project-ai-audit-2026-07-21-76750e46.json`. Browser network evidence showed the
+  audit reads and export returning `200`, with zero console errors or warnings.
+  Independent parsing proved the record digest, redaction, and export audit receipt
+  valid; the seeded free-form sensitive marker was absent and its action identifier
+  was hashed. At 390 by 844 the page had no document-level horizontal overflow.
+- **Visual regression:** The intentional Audit Explorer change first failed the
+  existing Windows snapshot by 9,056 pixels (1%), proving the gate detected it. The
+  actual and diff were inspected before accepting the change. Reviewed Windows and
+  digest-pinned Playwright Linux baselines were regenerated and visually inspected.
+  Fresh comparison passed 7/7 on Windows and 7/7 in the pinned Linux container.
+- **Failures found and fixed:** The first narrow operator test used an ambiguous
+  status-role selector; it was narrowed and 38/38 reran green. The first OpenAPI
+  comparison correctly detected the new contract; the checked-in baseline was
+  regenerated and the full 44-test API suite passed. Hostile review found that a
+  relay read and verification occurred in separate operations and that identifier
+  values could escape the initial allowlist; a locked verified snapshot and
+  identifier hashing were added with regression coverage. Hostile review also moved
+  relay availability ahead of quota consumption. The combined cross-platform
+  baseline updater exceeded an initial short command window without changing the
+  snapshots; Windows and pinned-Linux updates were rerun separately and verified.
+- **Cleanup / runtime:** Temporary account/workflow databases, audit log, API/preview
+  logs, browser session metadata, downloaded export, screenshots, and Playwright
+  reports created for live acceptance were removed after verification. Docker
+  Desktop remains running at version 29.6.1. The pinned visual container was removed
+  automatically; all containers that existed before this wave remain untouched.
+- **Not verified / remaining:** PostgreSQL-backed export rate limiting was not run
+  because no test database URL is configured. Stable audit cursors, complete
+  actor/account/operation/resource/verdict/severity/time filters, normalized record
+  detail, permission-aware raw-field visibility, manual NVDA/TalkBack acceptance,
+  and wider state/role visual coverage remain open. The existing production cluster,
+  owner, release-provenance, attestation, custody, signing-retirement, and deployment
+  blockers remain current.
+- **Safe to continue:** yes for local UX/UI remediation; no for production
+  deployment.
+
+---
+
+## SESSION UPDATE 2026-07-21 — Android and desktop accessibility/release hardening
+
+- **Task / mode:** Continue making UX/UI production-deployment ready. Mode:
+  cross-client accessibility and release hardening, bounded to the read-only Android
+  companion, native desktop operator client, their CI gate, and truthful interface
+  records. Workspace `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`; `HEAD` remained `a819b3bf`. No commit, push,
+  publish, deployment, production data, owner key, or release state was touched.
+- **Baseline / preservation:** Continued from the operator visual-regression wave at 30
+  modified plus 13 untracked status entries. All unrelated release, supply-chain, and
+  prior interface work was preserved. Final status is 38 modified plus 17 untracked
+  status entries; the four added untracked roots are Android resource/source-set paths.
+- **Created:** Android debug manifest and debug-only network security configuration;
+  vector launcher icon; resource strings; pre-Android-12 backup rules; and Android 12+
+  data-extraction rules. Deleted: no repository files.
+- **Modified:** Android README, Gradle build, main manifest, `MainActivity.kt`, and theme;
+  desktop README, main window, and desktop tests; `.github/workflows/ci.yaml`; the human
+  interface implementation plan; and this continuity map.
+- **Android implementation:** Release builds obtain `projectAiApiBaseUrl` from an
+  explicit Gradle property, require a parseable HTTPS host without embedded credentials,
+  query, or fragment, and otherwise retain a visibly non-routable HTTPS placeholder.
+  Main/release traffic is cleartext-denied. Debug permits
+  cleartext only to emulator host `10.0.2.2`; base cleartext remains denied. Backup and
+  device transfer are excluded for every supported storage domain. The app now has a
+  real icon and localized display strings, density-independent padding, 48-dp full-width
+  actions, a weighted result scroller, selectable/linkable output, an accessibility
+  heading, concise load outcome announcements, and a lifecycle-bound worker executor.
+  CI now lints and assembles both variants and runs debug unit tests with lint warnings
+  promoted to errors.
+- **Desktop implementation:** The window, navigation, status messages, each page,
+  read-only evidence surfaces, audit limit, capability inputs/results, and connection
+  settings now expose intentional assistive-technology names/descriptions. Metadata
+  describes authority and persistence limits without copying credentials into the
+  accessibility tree. A deterministic test covers those properties across the six
+  pages.
+- **Validation:** Android `lintDebug lintRelease testDebugUnitTest assembleDebug
+  assembleRelease` passed; both lint reports say `No issues found`; unit tests passed
+  2/2; and both APK variants assembled. Generated debug/release URLs were respectively
+  `http://10.0.2.2:8000` and the HTTPS placeholder. Merged release policy proved
+  `usesCleartextTraffic=false`; merged debug policy proved the scoped network security
+  configuration. HTTP, hostless HTTPS, and credential-bearing release URLs all failed
+  closed as expected, while an explicit `https://project-ai.example` release assembled
+  and embedded that URL. Desktop tests
+  passed 28/28; Ruff format/check passed; MyPy reported no issues in 12 source files;
+  the offscreen smoke launch passed; and a real Windows render at the minimum 900 by 620
+  size was visually inspected without clipping. `actionlint` and `git diff --check`
+  passed.
+- **Failures found and fixed:** The first debug build exposed a manifest-merger conflict
+  between the safe main policy and the emulator exception; the debug override is now
+  explicit and scoped. The next strict lint run found 11 errors covering one API-level
+  style property, API-level annotation, invalid data-extraction domains, and a plural
+  heuristic; each source issue was corrected and both lint variants reran clean. The
+  offscreen Windows screenshot rendered font glyphs as boxes, so it was not accepted as
+  visual evidence; the normal Windows platform capture rendered correctly and was
+  inspected instead.
+- **Runtime / cleanup:** Docker Desktop remains running at client/server version 29.6.1
+  as explicitly requested. Eight already-running/restarted containers were observed and
+  left untouched. The ADB server started during environment discovery was stopped.
+- **Not verified / remaining:** NVDA is not installed in the checked standard Windows
+  locations. The Android SDK has ADB but no emulator binary and no device is attached.
+  Manual NVDA and TalkBack acceptance therefore remains unverified. Android device
+  sign-in, notifications/inbox, secure offline cache, lost-device revocation, production
+  signing, and a real approved API endpoint remain incomplete. Desktop distribution
+  licensing and code signing remain open. All release, supply-chain, owner, and
+  production-cluster blockers remain current.
+- **Safe to continue:** yes for local UX/UI remediation; no for production deployment.
+
+---
+
+## SESSION UPDATE 2026-07-21 — Durable operator-console visual regression gate
+
+- **Task / mode:** Continue making UX/UI production-deployment ready. Mode:
+  production-critical interface testing and CI enforcement, bounded to the canonical
+  operator console. Workspace `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`; `HEAD` remained `a819b3bf`. No commit, push,
+  publish, deployment, production data, owner key, or release state was touched.
+- **Baseline / preservation:** Started from the prior wave's 23 modified plus 10
+  untracked release/supply-chain files. All unrelated work was preserved. Final status
+  is 30 modified plus 13 untracked status entries; the three added untracked roots are
+  the Playwright configuration, visual-test tree, and cross-platform baseline updater.
+- **Created:** `apps/web/operator-console/playwright.config.ts`;
+  `tests/visual/operator-console.visual.spec.ts`; `tests/visual/README.md`; eight reviewed
+  PNG baselines (four Windows, four Linux); and
+  `tools/update_operator_console_visual_baselines.ps1`.
+- **Modified:** root and operator-console `package.json`, `pnpm-lock.yaml`, `.gitignore`,
+  `.github/workflows/ci.yaml`, operator `main.tsx`, `vite.config.ts`,
+  `routes/CommandCenterRoute.tsx`, `styles.css`, `App.test.tsx`, `README.md`, the human
+  interface plan, and this continuity map. Deleted: no repository files.
+- **Implementation:** Added pinned `@playwright/test` 1.61.1; production-bundled Inter
+  variable typography; deterministic, fail-on-unhandled-request visual API fixtures;
+  UTC/en-US/reduced-motion rendering; reviewed platform-specific baselines; ignored
+  failure artifacts under `output/playwright`; and a dedicated Linux CI job that installs
+  pinned Chromium, compares the production build, and uploads diffs/traces only on
+  failure. Vitest now explicitly includes only `src/**/*.test.{ts,tsx}`, so it does not
+  collect Playwright specs. The mobile work queue now has a stable 680-pixel table canvas,
+  contained horizontal scrolling, and a visible/accessible `Scroll table` continuation
+  cue discovered during baseline review.
+- **Baseline evidence:** Windows generated and compared 4/4 screenshots. Linux generated
+  and compared 4/4 screenshots in the official Playwright 1.61.1 Noble image pinned at
+  `sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48`.
+  All eight PNGs were visually inspected. A disposable Linux negative control changed
+  `--bg` to magenta; the desktop comparison failed as required with 492,018 pixels / 35%
+  different, proving that the gate detects material drift. No mutation reached the host.
+  Three additional real-browser assertions prove skip-link bypass, mobile navigation
+  focus containment/Escape restoration, and the audit filter control sequence.
+- **Validation:** `pnpm install --frozen-lockfile` passed. `pnpm web:lint` passed with
+  zero warnings. `pnpm web:test` passed 78/78 (operator 36, docs 5, proof 4,
+  Triumvirate 33). `pnpm web:build` built all four frontends. `pnpm web:visual` passed
+  7/7 on Windows; the clean Linux container passed 7/7. The documented updater also
+  passed its Linux-only execution path. `actionlint .github/workflows/ci.yaml` passed.
+  The expected visual negative-control failure is not a product failure.
+- **Failures found and fixed:** The first visual run used an ambiguous close-navigation
+  locator; fixed with an exact accessible-name match. The first full web test run exposed
+  Vitest collecting the Playwright spec; fixed with an explicit unit-test include and
+  rerun green. The first negative-control wrapper was invalid because PowerShell expanded
+  its shell status variable and its small color change stayed within the pixel budget;
+  that result was discarded and replaced by the proven 35% background-drift failure.
+- **Runtime / cleanup:** Docker Desktop was explicitly started at the user's request and
+  remains running (`29.6.1`). All disposable containers exited and were removed. Generated
+  local Playwright reports/results were removed after verification; the ignored output
+  path remains available for future failures.
+- **Not verified / remaining:** Manual NVDA on Windows and TalkBack on Android, broader
+  screen/state screenshot coverage, broader multi-route focus-order acceptance, final
+  production security acceptance, and cross-client acceptance. The separate Triumvirate manifesto
+  Lighthouse accessibility score of 0.93 versus its 0.95 budget remains unchanged. All
+  release, supply-chain, owner, and production-cluster blockers remain current.
+- **Safe to continue:** yes for local UX/UI work; no for production deployment.
+
+---
+
+## SESSION UPDATE 2026-07-21 — Operator-console accessibility and production UX hardening
+
+- **Task / mode:** Continue making the UX/UI production-deployment ready. Mode:
+  production-critical interface, bounded to the canonical React operator console and
+  its truthful implementation records. Workspace
+  `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`. No commit, push, publish, deployment,
+  production data, owner key, or release state was touched.
+- **Baseline / continuity:** The worktree already contained 17 modified and 10
+  untracked release/supply-chain files. Those changes were preserved; the final
+  worktree is 23 modified plus the same 10 untracked files. The current
+  human-interface plan, prior TAAR interface handoff, live route map, and
+  `packages/thirsty-ux-ui-standard/Thirsty UX-UI Standard v1.pdf` were reviewed before
+  editing. The operator-console baseline was `19 passed`.
+- **Modified:** `apps/web/operator-console/src/app-shell.tsx`,
+  `routes/CommandCenterRoute.tsx`, `styles.css`, `App.test.tsx`, and `README.md`;
+  this continuity map and
+  `docs/operations/HUMAN_INTERFACE_IMPLEMENTATION_PLAN.md`. Created/deleted: none.
+- **Implemented:** Route changes now move programmatic focus to `#main-content`.
+  The command-search dialog receives initial focus, contains Tab/Shift+Tab, closes on
+  Escape, and restores focus to its invoking control. The search trigger exposes
+  dialog/expanded semantics. The former hard-coded, nonfunctional Environment
+  dropdown is now a noninteractive live status populated by `GET /api/v1/instance`.
+  The former dead Help button is a real documentation link (`/docs/` in production,
+  the standard docs dev URL locally, or `VITE_DOCS_URL`). Narrow-screen menu/help
+  targets are 44 by 44 CSS pixels. Closed narrow navigation is now inert and hidden
+  from accessibility traversal. Open narrow navigation is modal, receives and contains
+  focus, closes on Escape, and restores focus to its menu trigger. The work-queue table's
+  contained horizontal scroller is now a named, keyboard-focusable region.
+- **Automated tests:** Operator-console coverage increased from 19 to 36 tests. Axe
+  checks now cover all 16 implemented authenticated routes in addition to the
+  consequential authentication/workflow states. Focus containment, focus restoration,
+  route focus, narrow-navigation isolation/containment/restoration, truthful environment
+  semantics, and the Help link have deterministic assertions. `pnpm web:test` passed:
+  operator console 36, docs portal 5, proof portal 4, Triumvirate portal 33 (78 total).
+- **Rendered-browser verification:** A temporary loopback gateway and Vite server used
+  isolated databases under `tmp/operator-console-browser`; they and all browser/PDF
+  artifacts were removed after verification. Playwright Chromium verified all 16
+  authenticated routes with rendered axe-core, including color contrast: 0 violations
+  on every route. The same 16 routes at 320, 768, and 1440 CSS pixels produced 48/48
+  document-reflow passes with no page-level horizontal overflow. The command dialog
+  wrapped focus from first to last and back, Escape restored the search trigger, and a
+  sidebar route change focused `main-content`. At 320 pixels, menu/help targets measured
+  44 by 44, the document measured exactly 320 pixels, the server instance name remained
+  exposed through its accessible status, and reduced-motion media collapsed the
+  sidebar transition to `1e-05s`. A narrow Command Center screenshot was inspected;
+  its work-queue table retains an intentional contained horizontal scroller rather than
+  overflowing the document. Closed and open narrow-navigation scans both returned zero
+  axe violations after fixing a non-focusable scroll-region violation and an invalid
+  landmark/dialog element-role combination. Keyboard checks proved focus wrapping,
+  Escape close, and trigger restoration for the narrow navigation. Native Chrome zoom
+  was then set to 200% through browser controls and independently measured at zoom factor
+  `2`; all 16 authenticated routes retained their expected pathname and heading, visible
+  main content, and no document-level horizontal overflow. Zoom was restored to 100% and
+  independently remeasured at factor `1`.
+- **Build / lint:** `pnpm web:lint` passed with zero warnings. `pnpm web:build` built
+  operator-console, docs, proof, and Triumvirate portal successfully. The first strict
+  operator build found a nullable dialog closure (`TS18047`); it was fixed before the
+  successful gates. The Triumvirate Tailwind build still reports the existing outdated
+  `caniuse-lite` advisory; it is non-blocking and requires separate dependency-refresh
+  work. A later strict build caught a sidebar ref element-type mismatch (`TS2322`) after
+  the semantic container change; it was fixed before the final targeted and full gates.
+- **Commands run:** `git status --short`; focused `rg`/file inspection; PDF text and
+  rendered-page review; `pnpm --filter @project-ai/operator-console test -- --run`;
+  `pnpm --filter @project-ai/operator-console lint`; `pnpm --filter
+  @project-ai/operator-console build`; `pnpm web:lint`; `pnpm web:test`; `pnpm
+  web:build`; Playwright CLI route snapshots, keyboard operations, rendered axe scans,
+  reflow scans, native-zoom measurement, screenshot, reduced-motion and target-size
+  checks; Windows browser-control zoom input; exact loopback process/port verification
+  and cleanup.
+- **Not verified / remaining:** Manual NVDA on Windows and TalkBack on Android,
+  durable screenshot-regression infrastructure, broader focus-order review, final
+  production security acceptance, and cross-client acceptance.
+  The separate Triumvirate manifesto Lighthouse accessibility score of 0.93 versus its
+  0.95 budget was not changed. All release, supply-chain, owner, and production-cluster
+  blockers recorded in the 2026-07-20 entries remain current.
+- **Verification status:** This accessibility hardening wave is implemented, tested,
+  and locally browser-verified. The overall UX/UI and production deployment are not
+  fully ready because the remaining manual/cross-client/release prerequisites above
+  are incomplete. **Safe to continue:** yes for local UX/UI remediation; no for
+  production deployment.
+
+---
+
+## SESSION UPDATE 2026-07-20 — remediation verification, SHA256SUMS reconciliation, gate hardening
+
+- **Mode:** Governed production-readiness continuation. Local repository work
+  only. **No commit, no push, no publish, no sign, no deploy, no cluster/secret
+  access, no owner-key access.** `HEAD` stayed `a819b3bf`; branch
+  `agent/production-readiness-2026-07-19`. Final worktree: 15 modified + 10
+  untracked (was 15 + 8; added `tools/checksums.py` and `tests/test_checksums.py`).
+- **Verified the prior remediation (evidence, not trust):** `publish.yaml` and
+  `verify_pre_deployment.verify_publish_workflow` agree (29 structural checks);
+  `docker-hub-publish.yaml` is marked non-production; focused suites 45 passed;
+  V3Q + pre-deployment suites 84 passed; the strict gate is **fail-closed**
+  (`DEPLOYMENT NOT AUTHORIZED`, exit 1). **Both** independent supply-chain layers
+  were executed against the existing digests (Docker 29.6.1 + network available):
+  **Layer A** (`--layer cosign`, cosign v3.1.2 container) verified **8/8**
+  signatures cryptographically; **Layer B** (`--layer registry`, plain OCI) confirmed
+  **8/8** subject-digest binding. A re-publish was NOT needed to verify the existing
+  signatures — only to add the missing attestations. Confirmed fail-closed via Layer A:
+  approved-release identity **0/8** (cosign rejects the agent-branch SAN against the
+  anchored regex) and SPDX/SLSA attestations **0/8** (`--require-attestations` fails:
+  "none of the attestations matched predicate type").
+- **SHA256SUMS integrity (resolved).** The package record had **four** stale
+  hashes (`CONTINUITY_MAP.md`, `VERIFICATION_REPORT.md`, `verification-evidence.json`,
+  and the session's own `test_ratification_consistency.py` entry) and **eight**
+  omitted files, plus CRLF line endings, and no generator/verifier/test. Added a
+  deterministic **generator + verifier** (`packages/thirstys-standard-v3q/tools/checksums.py`,
+  scope = all distributed files except `SHA256SUMS` and gitignored private-key
+  material; sorted, LF, self-excluding) and **15 tests**
+  (`tests/test_checksums.py`) covering stale/missing/unexpected/duplicate/traversal/
+  private-key/CRLF/self-reference/ordering/historical-preservation. Regenerated
+  `SHA256SUMS` (58 files); the verifier is a clean fixed point.
+- **Hostile-review fixes.**
+  1. **Unverified reported records (not "fabricated").** `REMOTE_SUCCESSOR_EVIDENCE.json`
+     carried 8 custody/change-management references (owner-key rotation, proof
+     custody, production overlay, remote backup, monitoring CRDs, dependabot
+     disposition, target environment, rollback rehearsal) while each paired
+     `*_verified` flag was `false`, no supporting artifact exists in the repo, and
+     those items are not done. Correct classification: **unverified reported
+     reference** (not confirmed fabricated, not confirmed genuine). The gate field
+     `evidence.*_record` is set to `null` (matches the gate's own "missing"-state
+     test fixture, keeps it fail-closed), and the **original reported values are
+     preserved with provenance** in a new `unverified_reported_records` block
+     (`reported_reference` / `verification_status: unverified` / `verified_reference:
+     null` / `excluded_from_gate: true`). Nothing was destroyed. If the owner holds
+     a real record for any, restore it into `evidence.*_record` and flip the paired
+     flag only when independently verifiable.
+  2. **Real gate false-green fixed.** `verify_pre_deployment._check_records`
+     rejected cosign-2 records with `"cosign 2" not in verifier`, which never
+     matched the real `"cosign v2.6.0"` form (the `v`), so a fabricated cosign-2
+     "verified" record could pass the signatures-verified gate. Replaced with a
+     positive `cosign >= 3` major parse (fail-closed if unparseable) and added
+     5 regression tests (cosign-2, non-verified result, wrong-digest, empty
+     attestations, accepted baseline).
+  3. **Documentation truth.** `SOVEREIGN_CICD_IMPLEMENTATION.md` still declared
+     "complete and production-ready / SLSA Level 3 / Production Certified / no
+     remaining gaps" in its Conclusion + footer (the session had corrected only
+     the top); added the matching 2026-07-20 correction there. Updated the stale
+     `3412 passed` to the measured **3477 passed** in AGENTS.md §2.4,
+     `PRE_DEPLOYMENT_CHECKLIST.md`, and the V0.0.3 CAB pack. Corrected the earlier
+     entry's "SHA256SUMS left untouched" wording (annotated below).
+  4. **Gate itemizes every blocker (§8).** Added `collect_blockers()` and a
+     `--blockers` mode to `verify_pre_deployment.py`: the strict gate now enumerates
+     each mandatory condition separately with its category (owner / external /
+     external-supply-chain / production) and exact minimum fix, instead of collapsing
+     ten conditions under one "remote evidence" line. Current output: **12 blockers**
+     across 3 categories, exit 1. Non-machine-verifiable conditions are still listed
+     (they remain mandatory outside automated evaluation). Regression test added.
+- **Full validation (executed):** `uv run pytest` → **3478 passed, 5 skipped**
+  (220s, exit 0; skips need `PROJECT_AI_TEST_DATABASE_URL`); `run_ci_coverage.py`
+  → **87.32%** branch (threshold 80%; unchanged — no `--cov`-scoped source changed);
+  `ruff check .` clean; `ruff format --check` 630 files clean; **canonical strict
+  MyPy `uv run mypy … tools` → Success, 178 source files** (fixed 3 pre-existing
+  `no-any-return` errors in the session's supply-chain/workflow-gate test helpers via
+  typed locals); `pre-commit run --all-files` all hooks Passed
+  (`detect private key` Passed; `gitleaks` + `no-commit-to-branch` Skipped per
+  repo policy in `CLAUDE.md`); canonical replay 5/5; frozen history 2264/2264;
+  `git diff --check` clean. Path/index secret scan: no private key tracked,
+  staged, in any diff, or in generated evidence; `owner-private.json` absent.
+- **Expected fail-closed results (unchanged and correct):** historical image
+  signatures 8/8 (only via `--allow-branch-provenance`), approved-release identity
+  0/8, SPDX attestations 0/8, SLSA provenance 0/8, V3Q successor unsigned, strict
+  gate DEPLOYMENT NOT AUTHORIZED.
+- **Documentation-truth — active reference docs corrected.** Added supply-chain
+  accuracy notices to the two active docs that asserted "SLSA Level 3":
+  `docs/repo-docs/executive/EXECUTIVE_WHITEPAPER.md` (extended its existing 2026-07-19
+  boundary notice) and `docs/repo-docs/architecture/PLATFORM_ARCHITECTURE_BLUEPRINT.md`
+  (new notice; Status changed from "Production-Grade" to "Design reference
+  (aspirational)"). Both now state SLSA Level 3 is unsubstantiated (attestations
+  0/8), the eight signatures are branch provenance, and deployment is not authorized.
+  The `docs/repo-docs/reports/*` and `internal/archive/*` files carry dated
+  `report_date` / archive framing (self-labeled historical) and are left unchanged;
+  their "13/13" figures mostly denote unrelated test suites, not supply-chain
+  threat classes. Recorded so the owner may still retire or refresh them.
+- **Current blockers (owner/external/production — all fail-closed):** commit/push/
+  merge/re-publish; real SPDX+SLSA attestations (need a re-publish from an approved
+  ref); approved release provenance; V3Q successor owner signature + key retirement
+  + external proof custody; production cluster/namespace/ingress/TLS/secret-manager;
+  remote backup + restore proof; monitoring CRDs + paging; Dependabot #509/#510
+  disposition; rollback rehearsal; maintenance window; acceptance sign-off.
+- **Safe to continue:** yes for local repository work. **Production readiness is
+  NOT established; deployment is NOT authorized.** Next authorized action is owner
+  review + commit of this remediation onto the working branch.
+
+## SESSION UPDATE 2026-07-20 — supply-chain root cause and V3Q successor revision
+
+- **Mode:** Governed production-readiness continuation. Local repository work
+  only. No production deployment, no cluster access, no secret access, no owner
+  private key access, **no commit, no push** (explicitly scoped by the operator).
+- **Workspace/branch:** `T:\00-Active\Project-AI-Beginnings` on
+  `agent/production-readiness-2026-07-19`; candidate remains
+  `eaed9905cacc02e2fb98e3cc92356e8d160e593e`. Worktree is dirty by design.
+
+- **Root cause of the signature discrepancy — FOUND.** The prior audit's "no
+  signatures for all eight digests" was a **verifier format mismatch**, not a
+  missing signature. `sigstore/cosign-installer@6f9f177…` (v4.1.2) installs
+  cosign **3.x**, which defaults to the Sigstore bundle format published via the
+  **OCI 1.1 referrers** mechanism. ghcr.io returns `MANIFEST_UNKNOWN` for the
+  referrers API, so cosign falls back to a **suffix-less `sha256-<digest>` tag**.
+  cosign 2.6.0 reads only the legacy `sha256-<digest>.sig` tag, which this format
+  never writes. Nothing in the repository declared the expected format, so
+  nothing could detect the v2→v3 drift.
+
+- **Verified:** All **8/8** digests independently re-verified with cosign v3.1.2
+  run from a digest-pinned OCI image
+  (`ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e…`) — a different
+  distribution channel from the signer. Confirmed a second time without cosign at
+  all, by reading raw registry bytes over the OCI distribution API and decoding
+  the bundle with `openssl`. Subject-digest binding confirmed per image; Rekor
+  inclusion, Fulcio chain, and OIDC issuer
+  `https://token.actions.githubusercontent.com` all confirmed.
+
+- **NEW BLOCKER — branch provenance.** The certificate SAN for all eight digests
+  is `…/publish.yaml@refs/heads/agent/production-readiness-2026-07-19`. The
+  production-candidate images were built and signed from an **unmerged working
+  branch** via `workflow_dispatch`, not from `main` or a `v*` tag. The workflow's
+  own identity regexp ended in `@.*$`, which accepts any ref, so it structurally
+  could not tell a release build from a branch build. Tracked as the new required
+  evidence field `release_provenance_verified` (false).
+
+- **Attestations: genuinely absent, confirmed 0/8.** `cosign attest` existed
+  nowhere in the repository. The `publish-sbom` job was named "Generate and attach
+  SBOMs" and its only steps were two `echo` statements, behind `if: always()`.
+  BuildKit `provenance: mode=max` / `sbom: true` do embed real in-toto layers, but
+  no standard verifier reads them. `gh attestation verify` returns 404.
+  **Attestations are produced at build time and cannot be applied retroactively —
+  these eight digests can never satisfy the requirement without a re-publish.**
+
+- **Created:** `tools/verify_supply_chain.py` (two independent verification
+  layers, fail-closed, digest-only, treats "could not look" as BLOCKED not PASS);
+  `tools/supply_chain_policy.json` (declared format, so drift is loud);
+  `tools/sign_and_attest_image.sh` (signs, attests, then **reads the artifacts
+  back out of the registry** before reporting success);
+  `packages/thirstys-standard-v3q/thirstys-standard-v3q.successor.manifest.yaml`
+  (revision `1.2.0-rc1`, **UNSIGNED**); three new test modules.
+
+- **Modified:** `.github/workflows/publish.yaml` — pinned `cosign-release`,
+  deleted the fake `publish-sbom` job, added real `cosign attest`, removed
+  `if: always()` from `verify-images`, switched verification from tag to digest,
+  anchored the identity regexp, added an independent postcondition check.
+  `docker-hub-publish.yaml` marked NOT production-eligible (unsigned mirror).
+  `tools/verify_pre_deployment.py` — publish-workflow gate went from 5 substring
+  checks to 29 structural ones; evidence records must now be structured and
+  cosign-2-produced results are rejected. `ratification.py` — the ratification
+  contradiction is now impossible to reproduce.
+
+- **V3Q:** The signed 1.1.0 artifact is **preserved byte-identical**
+  (`15c8e4ba…`) — its signature binds raw file bytes, so it cannot be corrected in
+  place. The draft is also byte-identical (`3ea08a2c…`), which matters because
+  `verify_remote_successor_evidence()` hashes it against
+  `candidate_manifest_sha256`. Successor `1.2.0-rc1` supersedes 1.1.0 by hash and
+  is internally consistent, but is **UNSIGNED**: the owner private key is
+  off-repository and was not read, copied, or used. **The V3Q gate stays blocked.**
+
+- **Failed / not verified:** Attestation verification (0/8 — correct fail-closed
+  result). Release provenance (branch-signed). V3Q successor signature
+  (owner-blocked). Production ingress host is still `project-ai.example.com`;
+  remote backup still disabled. `verify_pre_deployment.py` reports
+  **DEPLOYMENT NOT AUTHORIZED**.
+
+- **Discovered, not caused by this session:** `packages/thirstys-standard-v3q/SHA256SUMS`
+  has three stale entries (`docs/operations/CONTINUITY_MAP.md`,
+  `docs/verification/VERIFICATION_REPORT.md`,
+  `docs/verification/verification-evidence.json`) and omits eight files that exist
+  in the package. Left untouched rather than silently normalized, so the
+  discrepancy stays visible to the owner.
+  **[Corrected in the later 2026-07-20 continuation — see the top entry. "Left
+  untouched" was imprecise: this session had in fact already edited `SHA256SUMS`
+  to add its own new files (`successor.manifest.yaml`,
+  `test_ratification_consistency.py`), and that added `test_ratification_consistency.py`
+  entry was itself already stale. There were four stale hashes (not three) and
+  eight omitted files. The scope defect is now resolved by a deterministic
+  generator/verifier (`packages/thirstys-standard-v3q/tools/checksums.py`,
+  `tests/test_checksums.py`) and a regenerated, drift-free record.]**
+
+- **Current blockers:** release provenance; attestations (needs re-publish);
+  V3Q successor signature; owner key retirement and external proof custody;
+  production target/namespace/ingress/TLS; remote backup; monitoring CRDs and
+  paging; Dependabot #509/#510; rollback rehearsal; maintenance window;
+  acceptance sign-off.
+
+- **Safe to continue:** yes for further repository work. **Production readiness is
+  NOT established and deployment is NOT authorized.**
+
+## SESSION UPDATE 2026-07-20 — independent CAB/V3Q external audit
+
+- **Mode:** External auditor review under explicit owner authorization. No
+  production deployment, cluster write, secret access, commit, or push was
+  performed by this audit.
+- **Workspace/branch:** `T:\00-Active\Project-AI-Beginnings` on
+  `agent/production-readiness-2026-07-19`; candidate code head is
+  `eaed9905cacc02e2fb98e3cc92356e8d160e593e` with this audit's documentation
+  changes currently uncommitted.
+- **Confirmed:** successor CI `29731671162`, vulnerability scan
+  `29731671150`, and publish `29731685685` completed successfully; exact
+  current eight-image digests are recorded in `REMOTE_SUCCESSOR_EVIDENCE.json`.
+- **V3Q:** `verify_ratification.py` independently verifies the owner
+  ratification record and exact ratified manifest. The former private checkout
+  file remains absent; secure retirement/custody and external proof custody are
+  not proven by repository inspection. The signed manifest itself still has
+  embedded `pending_owner_signature` text despite top-level `ratified` status;
+  correction requires a new owner-signed artifact.
+- **Audit finding:** workflow logs claim cosign and OCI attestation success, but
+  GHCR-authenticated cosign v2.6.0 checks returned `no signatures found` for all
+  eight digests; `.sig`/`.att` manifests and OCI attestations were not found.
+  Buildx SBOM/provenance is documented by the workflow as informational and not
+  independently cosign-signed.
+- **Runtime boundary:** Docker Desktop was started and its Linux engine reached
+  `running`. No approved production cluster, namespace, ingress, secret source,
+  remote backup, monitoring CRDs, paging route, or rollback rehearsal was
+  discovered or inferred from the local engine.
+- **Current blockers:** independent image signature/attestation evidence,
+  owner/proof custody, approved production overlay and target, backup/restore,
+  monitoring/alert delivery, Dependabot disposition, rollback rehearsal, and
+  acceptance sign-off.
+- **Canonical audit record:**
+  `docs/operations/cab/EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md`.
+
 ## SESSION UPDATE 2026-07-20 — Optional service portability boundary
 
 - **Mode:** Production-deployment-readiness remediation; successor image
@@ -2296,6 +3107,212 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
 - **Remaining (unchanged):** push decision; PyPI registration; ADR-002 implementation;
   portal AT acceptance; Cerberus C3 (contingent); Waterfall W1 (pending user approval).
 - **Safe to continue:** yes.
+
+## 2026-07-21 — End-to-end code-level remediation and verification pass
+
+- **Task:** Remediate evidence-proven repository-local defects from the preceding
+  verification pass, rerun repository-defined gates, exercise practical failure
+  paths, and separate locally verified behavior from owner/external/production
+  prerequisites.
+- **Mode:** Repository-level code remediation and verification; dirty working tree.
+- **Workspace:** `T:\00-Active\Project-AI-Beginnings`.
+- **Branch / HEAD at start and end:**
+  `agent/production-readiness-2026-07-19` /
+  `a819b3bfcbacdb2292fff4c45f4064a4d0440fef`.
+- **Authority inspected:** `AGENTS.md`, root `pyproject.toml`, `Cargo.toml`,
+  `package.json`, `uv.lock`, `pnpm-lock.yaml`, repository workflows, deployment
+  and Helm configuration, `tools/supply_chain_policy.json`,
+  `docs/internal/REBUILD_EXECUTION_PLAN.md`, current stage-acceptance records,
+  CAB evidence, and repository-defined verification scripts/tests.
+- **Starting state:** 56 tracked files modified plus untracked remediation and
+  evidence files. All user work was preserved. No reset, clean, discard, commit,
+  push, tag, publication, deployment, key operation, or external-system mutation
+  was performed.
+
+### Repository-local defects fixed in this pass
+
+1. **CI topology verifier omitted a real required job.**
+   `.github/workflows/ci.yaml` defines `web-visual`, while
+   `tools/verify_pre_deployment.py` previously rejected the live topology because
+   its exact expected-job set omitted that job. The expected set now includes
+   `web-visual`; exact equality remains enforced. Regression tests prove both the
+   repository topology passes and an unexpected job is rejected.
+2. **Full-test evidence was a brittle prose literal.** The verifier required the
+   stale string `3412 passed` even though the live suite had changed. A structured,
+   dirty-working-tree-scoped record now exists at
+   `docs/operations/cab/LOCAL_VERIFICATION_EVIDENCE.json`; the verifier validates
+   the result fields and requires `AGENTS.md` plus the deployment checklist to
+   match it. A drift regression test proves stale prose fails closed.
+3. **Node advisory closure.** Exact pnpm overrides advance the vulnerable locked
+   `brace-expansion` and `js-yaml` releases to patched versions within their
+   callers' declared ranges. Frozen install, audit, lint, tests, visual tests, and
+   all four builds passed.
+4. **Python vulnerability-workflow coverage gap.** The workflow formerly audited
+   the installed environment with `--skip-editable`, which did not establish a
+   complete first-party-excluded third-party closure. It now exports the frozen
+   lock-derived third-party requirements with `uv export --no-emit-workspace` and
+   audits that exact file. A regression test rejects the former method.
+
+### Files changed by this pass
+
+- `.github/workflows/vulnscan.yaml` — lock-derived third-party Python audit.
+- `AGENTS.md` — current full-suite evidence and already-established blocker facts.
+- `package.json`, `pnpm-lock.yaml` — exact patched Node transitive resolutions.
+- `tools/verify_pre_deployment.py` — CI topology, structured local evidence, and
+  vulnerability-workflow verification.
+- `tools/tests/test_verify_pre_deployment.py` — narrow fail-closed regressions.
+- `docs/operations/cab/LOCAL_VERIFICATION_EVIDENCE.json` — machine-readable local
+  full-suite evidence, including PostgreSQL execution disclosure.
+- `docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md` — reconciled current local counts,
+  date, web/Android commands, action pinning, and owner-key wording.
+- `docs/operations/CONTINUITY_MAP.md` — this entry.
+- **Deleted:** None.
+- **Other dirty files:** Preserved; they predated or belonged to the larger active
+  remediation surface and were not reverted or attributed to this pass.
+
+### Executed validation and evidence
+
+- `uv run pytest -q` with `PROJECT_AI_TEST_DATABASE_URL` pointing to an isolated,
+  disposable PostgreSQL 16 container: **3497 passed, 0 skipped in 198.15 s**.
+  The five PostgreSQL integration tests passed; the container and volumes were
+  removed afterward.
+- Focused verifier/workflow/supply-chain regressions: **74 passed**.
+- Governance/execution/capability/security focus: **453 passed**.
+- `uv run python tools/run_ci_coverage.py --batches 8`: **87.48% branch coverage**,
+  threshold 80%, exit 0. The script selected 11 execution batches.
+- Ruff check and format: **passed** for 630 files; Ruff reported non-fatal access
+  warnings while attempting to write some `.ruff_cache` files.
+- Strict MyPy: **passed, 178 source files**.
+- Repository-defined Checkov 3.3.8 scans: rendered Kubernetes **1123 passed,
+  0 failed, 0 skipped**; Dockerfiles **248/0/0**; GitHub Actions **1020/0/0**.
+- Repository-defined Python license gate: installed `cel-python` Apache-2.0 text
+  markers verified and the complete `pip-licenses` allow-list check passed. The
+  workflow's documented PyQt6/PyInstaller/cel-python exceptions remain explicit;
+  this result does not resolve the commercial/GPL distribution decision for PyQt6.
+- Pre-commit: the first final run reformatted one newly added test file and exited
+  nonzero; the complete rerun then passed every configured hook.
+- `uv export ... --no-emit-workspace` plus `pip-audit 2.10.1` against the exported
+  frozen third-party closure: **no known vulnerabilities**.
+- `pnpm install --frozen-lockfile`, `pnpm audit --audit-level=moderate`,
+  `pnpm web:lint`, `pnpm web:test`, `pnpm web:visual`, and `pnpm web:build`:
+  **passed**; 88 unit/integration web tests and 18 visual tests passed. One build
+  attempt failed with Windows `EPERM` because it ran concurrently with the visual
+  server; the sequential rerun passed all four builds. Browserslist reported an
+  outdated `caniuse-lite` data warning.
+- `cargo fmt --check`, Clippy with warnings denied, workspace tests, and
+  `cargo audit`: **passed**; 3 tests and no advisories across 22 dependencies.
+- Android repository command
+  `gradlew.bat --no-daemon lintDebug lintRelease testDebugUnitTest assembleDebug assembleRelease`:
+  **BUILD SUCCESSFUL**, 92 tasks; SDK tools emitted the documented XML-version
+  compatibility warning. No device/emulator or TalkBack acceptance was performed.
+- Desktop offscreen source smoke: **passed**.
+- Canonical replay: **5/5**; frozen-history verifier: **2264/2264**.
+- Helm development/production lint and render verification: **passed**; production
+  render contained 47 manifests and enforced namespace plus eight image digests.
+- Compose: the first build client hung after producing images and was terminated
+  by exact PID; the daemon and unrelated containers were untouched. A subsequent
+  `docker compose up -d --wait` succeeded, **9/9 services healthy**. The health
+  verifier confirmed read-only filesystems, all capabilities dropped, and
+  no-new-privileges. Protected `/audit` and session routes denied unauthenticated
+  requests; `/health/live`, DOI, and replay-status routes responded. Canonical
+  replay and frozen history passed inside the API container. API restart returned
+  healthy and retained the audit file. The stack and its volumes were then removed.
+  Non-fatal Nginx log-path and PostgreSQL initialization/locale warnings remain.
+- Backup/restore scripts, exercised in an exact PostgreSQL 16 utility container:
+  local empty-audit backup and hash-equal restore passed; non-empty-target and
+  corrupt-archive restores exited nonzero. This does not prove remote backup,
+  encryption, retention, real-data recovery, or production recoverability.
+- Supply chain: the release-policy verifier failed closed because the certificate
+  identity is the unmerged agent branch. Diagnostic branch-provenance verification
+  passed 8/8 signatures. Requiring attestations failed at the first missing SPDX
+  attestation. No signing, attestation, image publication, tag, or registry mutation
+  was performed.
+- Final `tools/verify_pre_deployment.py --report`: every repository-local check
+  passed; remote successor evidence, placeholder production ingress, and disabled
+  production remote backup remained blocking. `--blockers` reported 12 mandatory
+  unresolved conditions across owner, external-supply-chain, and production.
+- `git diff --check`: passed. Final git status remained dirty and is fully listed
+  by `git status --short`; no user changes were discarded.
+
+### Evidence classification and remaining conditions
+
+- **Verified fact:** repository-local test, type, lint, formatting, coverage,
+  dependency-audit, build, replay, history, Helm, Compose, PostgreSQL, and local
+  backup failure-path gates described above passed with the stated limitations.
+- **Verified fact:** deployment remains fail-closed on 12 conditions:
+  `owner_key_rotation_verified`, `external_proof_custody_verified`,
+  `dependabot_disposition_verified`, `release_provenance_verified`,
+  `sbom_attestations_verified`, `production_overlay_verified`,
+  `remote_backup_verified`, `monitoring_crds_verified`,
+  `target_environment_approved`, `rollback_rehearsal_verified`,
+  `production_ingress_host`, and `production_remote_backup`.
+- **Direct observation:** the current images carry 8/8 branch-scoped signatures;
+  registry attestations are absent, and the repository production values retain a
+  placeholder host with remote backup disabled.
+- **Inference:** none promoted to fact.
+- **Assumption:** none used to clear a gate.
+- **Unknown / blocked by missing evidence:** approved target cluster/namespace,
+  production hostname and secret source, monitoring CRDs and paging delivery,
+  remote backup destination and restore, maintenance window/owners/acceptance,
+  external proof custody, approved former-key retirement evidence, Dependabot
+  disposition, release-ref provenance, new-image attestations, and rollback rehearsal.
+  **Not verifiable from the available repository evidence.**
+- **Final status:** `PARTIALLY VERIFIED`. Repository-local defects were remediated
+  and the executable local verification surface passed, but required external and
+  production evidence does not exist in the repository and no production action
+  was authorized.
+- **Risks:** production deployment remains unauthorized; the working tree is large
+  and dirty; Compose build invocation can hang after image creation on this host;
+  manual assistive-technology acceptance and production operations remain absent.
+- **Next recommended action:** owner disposition of the 12 fail-closed conditions,
+  beginning with approved release provenance/re-publication and production target
+  details. No local code change can truthfully supply those external facts.
+- **Safe to continue:** yes for local review/remediation; no for production deployment.
+
+## 2026-07-21 — Code-level verification pass (working tree `a819b3bf`)
+
+- **Mode:** Read-only code-level verification of the current dirty working tree;
+  no production code, tests, manifests, deployment state, or external systems were
+  changed. This continuity entry is the sole session edit required by v3 §23.
+- **Repository state:** branch `agent/production-readiness-2026-07-19`, HEAD
+  `a819b3bfcbacdb2292fff4c45f4064a4d0440fef`; 56 tracked files were already
+  modified and multiple verification/UI/supply-chain files were already untracked.
+  Those existing changes were preserved.
+- **Verified local gates:** `uv run pytest -q` passed **3487 tests** with **5
+  PostgreSQL environment-gated skips**; focused governance/execution/capability/
+  security suites passed 453 tests; batched branch coverage passed at **87.48%**
+  (80% threshold); Ruff lint and format passed; strict MyPy passed 178 source files;
+  pre-commit passed all executed hooks (branch hook intentionally skipped through
+  the CI-defined `SKIP=no-commit-to-branch` setting); canonical replay passed 5/5;
+  frozen history passed 2264/2264; 69 verifier/workflow/supply-chain regression tests
+  passed. Web lint, 88 unit/integration tests, four production builds, and 18
+  Playwright visual/interaction tests passed. Rust format, Clippy, 3 tests, and
+  `cargo audit` passed. Desktop offscreen source smoke passed. Compose configuration,
+  development Helm lint/render (16 manifests), and production Helm lint/render (47
+  manifests with digest enforcement) passed.
+- **Confirmed defects/divergences:** the strict pre-deployment verifier exits 1
+  because `EXPECTED_CI_JOBS` omits the current `web-visual` job and its documentation
+  check still requires the historical text `3412 passed`. Current documentation says
+  `3478 passed`, while this pass measured `3487 passed`. `pnpm audit
+  --audit-level=moderate` fails with 3 HIGH transitive advisories: two
+  `brace-expansion` paths and one `js-yaml` path, contradicting the checklist claim
+  that the Node moderate+ audit passes.
+- **Fail-closed/external evidence:** the strict pre-deployment verifier also correctly
+  rejects placeholder production ingress, disabled/unconfigured remote backup, and
+  unresolved remote/owner/production evidence fields. All eight image layouts and
+  signatures verified only with `--allow-branch-provenance`; the verifier explicitly
+  warns this is not approved release provenance. Required SPDX attestations failed
+  as absent on the first image checked.
+- **Not verified / blocked:** PostgreSQL-backed tests require
+  `PROJECT_AI_TEST_DATABASE_URL`. Android lint/test/assembly is blocked because the
+  local Android SDK location is not configured (`ANDROID_HOME` and
+  `apps/android/local.properties` absent). Project-AI Compose runtime health was not
+  run because eight unrelated/pre-existing containers were active and stack cleanup
+  could alter shared local runtime state. Production deployment, rollback rehearsal,
+  external proof custody, target approval, monitoring CRDs, and remote backup remain
+  unverified from repository-only evidence.
+- **Safe to continue:** yes for local verification/remediation; no for production
+  deployment.
 
 ---
 

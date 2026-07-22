@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
@@ -26,6 +26,36 @@ function response(payload: unknown, status = 200): Response {
   return { ok: status >= 200 && status < 300, status, json: async () => payload } as Response;
 }
 
+function auditSummary(
+  event: string,
+  sourceHash: string,
+  timestamp: string,
+  options: { previousHash?: string; verdict?: "ALLOW" | "DENY" | "ESCALATE"; severity?: string } = {},
+) {
+  return {
+    event,
+    timestamp,
+    source_hash: sourceHash,
+    previous_hash: options.previousHash ?? "0".repeat(64),
+    verdict: options.verdict ?? null,
+    severity: options.severity ?? null,
+    chain_status: "verified" as const,
+  };
+}
+
+function useNarrowViewport(): void {
+  vi.stubGlobal("matchMedia", vi.fn().mockImplementation((query: string) => ({
+    matches: query === "(max-width: 920px)",
+    media: query,
+    onchange: null,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })));
+}
+
 async function expectNoAutomatedAccessibilityViolations(): Promise<void> {
   const result = await axe.run(document.body, {
     rules: { "color-contrast": { enabled: false } },
@@ -37,6 +67,7 @@ async function expectNoAutomatedAccessibilityViolations(): Promise<void> {
 
 function defaultFetch(input: string | URL | Request): Promise<Response> {
   const url = String(input);
+  if (url.endsWith("/health/live")) return Promise.resolve(response({ status: "live", version: "0.0.3" }));
   if (url.endsWith("/api/v1/instance")) return Promise.resolve(response({ display_name: "PROJECT-AI-LOCAL", deployment: "local_sovereign", cloud_login: false, browser_machine_identity: false, browser_execution_capability: false, human_access_path: ["identity", "authentication", "server_session", "workspace"], governed_execution_path: ["server_service_identity", "governance_policy", "scoped_capability", "execution_gate"] }));
   if (url.endsWith("/api/v1/auth/bootstrap-status")) return Promise.resolve(response({ status: "closed", setup_secret_required: false }));
   if (url.endsWith("/api/v1/auth/session")) return Promise.resolve(response(signedIn));
@@ -48,8 +79,10 @@ function defaultFetch(input: string | URL | Request): Promise<Response> {
   if (url.endsWith("/api/v1/work/operations")) return Promise.resolve(response({ operations: [{ id: "evidence.inspect", label: "Inspect evidence", description: "Request human inspection.", resource_hint: "bundle:42", schema_version: "evidence.inspect/v1", fields: [{ id: "bundle_id", label: "Evidence bundle identifier", description: "The exact evidence bundle to inspect.", placeholder: "42", resource_prefix: "bundle:", min_length: 1, max_length: 128, pattern: "(?!.*\\.\\.)[A-Za-z0-9][A-Za-z0-9._\\/\\-]*" }], consequence: "Records intent only; no execution is started." }], execution_started: false }));
   if (url.endsWith("/replay/status")) return Promise.resolve(response({ status: "pass", invariants_passed: 5, invariants_total: 5, updated_at: "now" }));
   if (url.endsWith("/atlas/status")) return Promise.resolve(response({ status: "available", version: "0.0.3", stack: "Atlas", authority: "analysis_only", protected_operations: ["sludge_narrative"], subordination_notice: "Atlas analysis is not a decision, authority grant, or actuation." }));
+  if (url.includes("/api/v1/modules/atlas/projections?")) return Promise.resolve(response({ projections: [] }));
+  if (url.endsWith("/api/v1/modules/swr/scenarios")) return Promise.resolve(response({ scenarios: [], execution_gate_configured: true, authority_boundary: "The browser never receives a capability token." }));
   if (url.endsWith("/dois")) return Promise.resolve(response({ dois: [{ title: "Paper-01", doi: "10.1/example", domain: "security", url: "https://doi.org/10.1/example" }] }));
-  if (url.includes("/audit?")) return Promise.resolve(response({ chain_valid: true, count: 0, filtered_count: 0, offset: 0, limit: 25, records: [] }));
+  if (url.endsWith("/audit/search")) return Promise.resolve(response({ chain_valid: true, count: 0, filtered_count: 0, offset: 0, limit: 25, cursor: null, next_cursor: null, has_more: false, records: [] }));
   if (url.endsWith("/api/v1/auth/sessions")) return Promise.resolve(response({ sessions: [{ id: "session-1", current: true, created_at: "2026-07-15T12:00:00Z", last_seen_at: "2026-07-15T12:05:00Z", idle_expires_at: "2026-07-15T13:00:00Z", absolute_expires_at: "2026-07-16T00:00:00Z", user_agent: "Test browser", client_host: "127.0.0.1", revoked: false, mfa_verified_at: null }] }));
   if (url.endsWith("/api/v1/auth/mfa")) return Promise.resolve(response({ enabled: false, enrollment_pending: false }));
   if (url.endsWith("/api/v1/admin/accounts")) return Promise.resolve(response({ accounts: [{ ...signedIn.account, created_at: "2026-07-15T12:00:00Z" }] }));
@@ -72,6 +105,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
   localStorage.removeItem("project-ai-density");
   localStorage.removeItem("project-ai-reduced-motion");
   delete document.documentElement.dataset.density;
@@ -82,9 +116,76 @@ afterEach(() => {
 test("renders truthful dashboard data for an authenticated human session", async () => {
   render(<ControlCenterApp />);
   expect(await screen.findByText("5/5 invariants")).toBeInTheDocument();
+  expect(await screen.findByRole("status", { name: "Environment: PROJECT-AI-LOCAL" })).toBeInTheDocument();
+  expect(await screen.findByRole("status", { name: /Gateway live.*Liveness verified for version 0.0.3/ })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /Environment:/ })).not.toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Open operator documentation" })).toHaveAttribute("href", "http://127.0.0.1:4173/");
   expect(screen.getByText("No work-item API is available yet.")).toBeInTheDocument();
+  const workQueue = screen.getByRole("region", { name: "Work queue table; scroll horizontally to view all columns" });
+  expect(workQueue).toHaveAttribute("tabindex", "0");
+  expect(workQueue).toHaveAttribute("aria-describedby", "work-queue-scroll-hint");
+  expect(screen.getByText("Scroll table")).toBeInTheDocument();
   expect(screen.getByText("The Control Center does not grant authority.")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "Open account security" })).toHaveTextContent("Local Owner");
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("reports browser-offline and gateway-unavailable states without a false live signal", async () => {
+  const online = vi.spyOn(Navigator.prototype, "onLine", "get").mockReturnValue(true);
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    if (String(input).endsWith("/health/live")) return response({ detail: "Gateway unavailable" }, 503);
+    return defaultFetch(input);
+  }));
+  render(<ControlCenterApp />);
+  expect(await screen.findByRole("status", { name: /Gateway unavailable.*No liveness response/ })).toBeInTheDocument();
+  expect(screen.queryByText("Live query")).not.toBeInTheDocument();
+
+  online.mockReturnValue(false);
+  window.dispatchEvent(new Event("offline"));
+  expect(await screen.findByRole("status", { name: /Browser offline.*no network connection/ })).toBeInTheDocument();
+  expect(await screen.findByText("Offline snapshot")).toBeInTheDocument();
+  expect(screen.getByText(/It is not current evidence/)).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+  online.mockReturnValue(true);
+  window.dispatchEvent(new Event("online"));
+});
+
+test("keeps a failed dashboard refresh visibly stale while retaining the last verified snapshot", async () => {
+  let dashboardCalls = 0;
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    if (String(input).endsWith("/api/v1/dashboard")) {
+      dashboardCalls += 1;
+      return dashboardCalls === 1
+        ? response(dashboard)
+        : response({ detail: "Dashboard refresh failed" }, 503);
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("5/5 invariants")).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Refresh" }));
+  expect(await screen.findByText("Dashboard data is stale", {}, { timeout: 5_000 })).toBeInTheDocument();
+  expect(screen.getByText(/last verified snapshot/i)).toBeInTheDocument();
+  expect(screen.getByText("5/5 invariants")).toBeInTheDocument();
+  expect(screen.queryByText("Dashboard unavailable")).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("elevates degraded and unavailable dashboard surfaces as partial evidence", async () => {
+  const partialDashboard = {
+    ...dashboard,
+    surfaces: dashboard.surfaces.map((surface) => surface.id === "audit_chain"
+      ? { ...surface, status: "unavailable", metric: "Unavailable", detail: "Audit storage cannot be verified." }
+      : surface),
+  };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/dashboard")
+    ? response(partialDashboard)
+    : defaultFetch(input)));
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Partial system evidence")).toBeInTheDocument();
+  expect(screen.getByText(/Audit chain: unavailable/)).toBeInTheDocument();
+  expect(screen.getByText("Audit storage cannot be verified.")).toBeInTheDocument();
   await expectNoAutomatedAccessibilityViolations();
 });
 
@@ -101,7 +202,249 @@ test("loads protected audit evidence without a browser-readable machine token", 
   render(<ControlCenterApp />);
   expect(await screen.findByText("No matching records")).toBeInTheDocument();
   expect(screen.queryByLabelText("Development API token")).not.toBeInTheDocument();
-  expect(screen.getByText(/No machine credential is entered/)).toBeInTheDocument();
+  expect(screen.getByText(/Search results expose normalized summaries only/)).toBeInTheDocument();
+});
+
+test("uses stable audit cursors instead of positional paging", async () => {
+  window.history.pushState({}, "", "/evidence/audit");
+  const anchor = "b".repeat(64);
+  const auditRequests: Array<{ url: string; body: Record<string, unknown> }> = [];
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/audit/search")) {
+      const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
+      auditRequests.push({ url, body });
+      const cursor = typeof body.cursor === "string" ? body.cursor : null;
+      return cursor
+        ? response({ chain_valid: true, count: 4, filtered_count: 4, offset: 3, limit: 25, cursor, next_cursor: null, has_more: false, records: [auditSummary("control.oldest", "a".repeat(64), "2026-07-21T12:00:00Z")] })
+        : response({ chain_valid: true, count: 3, filtered_count: 3, offset: 0, limit: 25, cursor: null, next_cursor: anchor, has_more: true, records: [auditSummary("control.newest", "c".repeat(64), "2026-07-21T12:02:00Z"), auditSummary("control.middle", anchor, "2026-07-21T12:01:00Z")] });
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("control.newest")).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Older" }));
+  expect(await screen.findByText("control.oldest")).toBeInTheDocument();
+  expect(auditRequests.some(({ body }) => body.cursor === anchor)).toBe(true);
+  expect(auditRequests.every(({ url, body }) => !url.includes("?") && !("offset" in body))).toBe(true);
+  await user.click(screen.getByRole("button", { name: "Newer" }));
+  expect(await screen.findByText("control.newest")).toBeInTheDocument();
+});
+
+test("sends the complete normalized audit filter contract", async () => {
+  window.history.pushState({}, "", "/evidence/audit");
+  const auditRequests: Array<{ url: string; body: Record<string, unknown> }> = [];
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/audit/search")) {
+      auditRequests.push({ url, body: JSON.parse(String(init?.body)) as Record<string, unknown> });
+      return response({ chain_valid: true, count: 0, filtered_count: 0, offset: 0, limit: 25, cursor: null, next_cursor: null, has_more: false, records: [] });
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  render(<ControlCenterApp />);
+  await screen.findByText("No matching records");
+  await user.type(screen.getByLabelText("Search evidence"), "action-safe");
+  await user.type(screen.getByLabelText("Event type"), "control.filtered");
+  await user.click(screen.getByText("More filters"));
+  await user.type(screen.getByLabelText("Actor"), "ACTOR-REVIEWER");
+  await user.type(screen.getByLabelText("Account"), "account-reviewer");
+  await user.type(screen.getByLabelText("Operation"), "evidence.inspect");
+  await user.type(screen.getByLabelText("Resource"), "bundle:approved-42");
+  await user.selectOptions(screen.getByLabelText("Verdict"), "ESCALATE");
+  await user.type(screen.getByLabelText("Severity"), "high");
+  fireEvent.change(screen.getByLabelText(/From time/), { target: { value: "2026-07-21T12:00" } });
+  fireEvent.change(screen.getByLabelText(/To time/), { target: { value: "2026-07-21T13:00" } });
+  await user.click(screen.getByRole("button", { name: "Apply filters" }));
+  await waitFor(() => expect(auditRequests).toHaveLength(2));
+  expect(auditRequests[1].url).not.toContain("?");
+  expect(auditRequests[1].body).toEqual({
+    limit: 25,
+    query: "action-safe",
+    event: "control.filtered",
+    actor: "ACTOR-REVIEWER",
+    account: "account-reviewer",
+    operation: "evidence.inspect",
+    resource: "bundle:approved-42",
+    verdict: "ESCALATE",
+    severity: "high",
+    from_time: new Date("2026-07-21T12:00").toISOString(),
+    to_time: new Date("2026-07-21T13:00").toISOString(),
+  });
+  expect(screen.getByText("10 active")).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("requests a permission-gated redacted audit export and downloads its receipt", async () => {
+  window.history.pushState({}, "", "/evidence/audit");
+  const auditRecord = auditSummary("control.test", "a".repeat(64), "2026-07-21T12:00:00Z");
+  const exported = {
+    schema_version: "project-ai.audit-export/v1",
+    generated_at: "2026-07-21T12:05:00Z",
+    source_chain_valid: true,
+    source_chain_records: 1,
+    matched_records: 1,
+    exported_records: 1,
+    offset: 0,
+    limit: 500,
+    filters: { query: "action-safe", event: "control.test" },
+    redaction_applied: true,
+    redaction_policy: "allowlist-v1",
+    records_sha256: "b".repeat(64),
+    export_audit_hash: "c".repeat(64),
+    records: [{ event: "control.test", timestamp: auditRecord.timestamp, source_hash: auditRecord.source_hash, previous_hash: "0".repeat(64), fields: { action_id: "action-safe" }, redacted_fields: ["message"] }],
+  };
+  const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/audit/search")) return response({ chain_valid: true, count: 1, filtered_count: 1, offset: 0, limit: 25, cursor: null, next_cursor: null, has_more: false, records: [auditRecord] });
+    if (url.endsWith("/audit/export")) {
+      expect(init?.method).toBe("POST");
+      expect((init?.headers as Headers).get("X-CSRF-Token")).toBe("csrf-test");
+      expect(JSON.parse(String(init?.body))).toEqual({ limit: 500, offset: 0, query: "action-safe", event: "control.test" });
+      return response(exported);
+    }
+    return defaultFetch(input);
+  });
+  vi.stubGlobal("fetch", fetchMock);
+  const NativeUrl = URL;
+  class DownloadUrl extends NativeUrl {}
+  const createObjectURL = vi.fn(() => "blob:audit-export");
+  const revokeObjectURL = vi.fn();
+  Object.assign(DownloadUrl, { createObjectURL, revokeObjectURL });
+  vi.stubGlobal("URL", DownloadUrl);
+  const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => undefined);
+
+  const user = userEvent.setup();
+  render(<ControlCenterApp />);
+  await user.type(await screen.findByLabelText("Search evidence"), "action-safe");
+  await user.type(screen.getByLabelText("Event type"), "control.test");
+  await user.click(screen.getByRole("button", { name: "Apply filters" }));
+  await user.click(await screen.findByRole("button", { name: "Export redacted results" }));
+
+  const exportStatus = await screen.findByText(/Exported 1 of 1 matching records with redaction/);
+  expect(exportStatus).toHaveAttribute("role", "status");
+  expect(createObjectURL).toHaveBeenCalledOnce();
+  expect(revokeObjectURL).toHaveBeenCalledWith("blob:audit-export");
+  expect(click).toHaveBeenCalledOnce();
+  expect(fetchMock).toHaveBeenCalledWith(
+    expect.stringContaining("/audit/export"),
+    expect.objectContaining({ method: "POST", credentials: "same-origin" }),
+  );
+});
+
+test("does not offer bulk audit export to a viewer", async () => {
+  window.history.pushState({}, "", "/evidence/audit");
+  const viewer = { ...signedIn, account: { ...signedIn.account, role: "viewer" } };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/session")) return response(viewer);
+    if (url.endsWith("/audit/search")) return response({ chain_valid: true, count: 1, filtered_count: 1, offset: 0, limit: 25, cursor: null, next_cursor: null, has_more: false, records: [auditSummary("control.test", "a".repeat(64), "2026-07-21T12:00:00Z")] });
+    return defaultFetch(input);
+  }));
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Your role can view approved audit evidence but cannot request bulk exports.")).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Export redacted results" })).not.toBeInTheDocument();
+});
+
+test("opens privileged normalized audit detail with safe escaped raw JSON", async () => {
+  window.history.pushState({}, "", "/evidence/audit");
+  const sourceHash = "d".repeat(64);
+  const previousHash = "c".repeat(64);
+  const requests: Array<{ url: string; method: string | undefined; body: unknown }> = [];
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/audit/search")) {
+      return response({ chain_valid: true, count: 4, filtered_count: 1, offset: 0, limit: 25, cursor: null, next_cursor: null, has_more: false, records: [auditSummary("control.detail", sourceHash, "2026-07-21T12:00:00Z", { previousHash, verdict: "DENY", severity: "high" })] });
+    }
+    if (url.endsWith("/audit/detail")) {
+      requests.push({ url, method: init?.method, body: JSON.parse(String(init?.body)) });
+      return response({
+        chain_valid: true,
+        chain_status: "verified",
+        chain_position: 4,
+        chain_records: 4,
+        visibility: "privileged",
+        event: "control.detail",
+        timestamp: "2026-07-21T12:00:00Z",
+        source_hash: sourceHash,
+        previous_hash: previousHash,
+        fields: { action_id: "action-detail-1", api_token: "[REDACTED]", message: "<script>evidence remains text</script>", verdict: "DENY" },
+        redacted_fields: ["api_token"],
+        raw_record: { event: "control.detail", timestamp: "2026-07-21T12:00:00Z", hash: sourceHash, previous_hash: previousHash, action_id: "action-detail-1", api_token: "[REDACTED]", message: "<script>evidence remains text</script>", verdict: "DENY" },
+      });
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  render(<ControlCenterApp />);
+  const trigger = await screen.findByRole("button", { name: /View detail for control.detail/ });
+  await user.click(trigger);
+
+  const heading = await screen.findByRole("heading", { name: "control.detail", level: 3 });
+  await waitFor(() => expect(heading).toHaveFocus());
+  expect(screen.getByText("Privileged safe view")).toBeInTheDocument();
+  expect(screen.getByText("4 of 4")).toBeInTheDocument();
+  expect(screen.getAllByText("[REDACTED]").length).toBeGreaterThan(0);
+  expect(screen.getAllByText("<script>evidence remains text</script>").length).toBeGreaterThan(0);
+  expect(document.querySelector("script")).toBeNull();
+  expect(requests).toEqual([{ url: "/api/audit/detail", method: "POST", body: { source_hash: sourceHash } }]);
+  await expectNoAutomatedAccessibilityViolations();
+
+  await user.click(screen.getByRole("button", { name: "Close audit record detail" }));
+  expect(trigger).toHaveFocus();
+  expect(screen.queryByRole("heading", { name: "control.detail", level: 3 })).not.toBeInTheDocument();
+});
+
+test("shows only normalized redacted detail to a reviewer", async () => {
+  window.history.pushState({}, "", "/evidence/audit");
+  const sourceHash = "e".repeat(64);
+  const reviewer = { ...signedIn, account: { ...signedIn.account, role: "reviewer" } };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/session")) return response(reviewer);
+    if (url.endsWith("/audit/search")) return response({ chain_valid: true, count: 1, filtered_count: 1, offset: 0, limit: 25, cursor: null, next_cursor: null, has_more: false, records: [auditSummary("control.restricted", sourceHash, "2026-07-21T12:00:00Z", { severity: "high" })] });
+    if (url.endsWith("/audit/detail")) return response({ chain_valid: true, chain_status: "verified", chain_position: 1, chain_records: 1, visibility: "redacted", event: "control.restricted", timestamp: "2026-07-21T12:00:00Z", source_hash: sourceHash, previous_hash: "0".repeat(64), fields: { action_id_sha256: "f".repeat(64), severity: "high" }, redacted_fields: ["action_id", "message", "resource"], raw_record: null });
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  render(<ControlCenterApp />);
+  expect(await screen.findByLabelText("Search evidence")).toHaveAttribute("placeholder", "Event, hash, verdict, or severity");
+  await user.click(screen.getByText("More filters"));
+  expect(screen.queryByLabelText("Actor")).not.toBeInTheDocument();
+  expect(screen.getByText(/filters require raw-audit permission/)).toBeInTheDocument();
+  await user.click(await screen.findByRole("button", { name: /View detail for control.restricted/ }));
+
+  expect(await screen.findByText("Permission-filtered view")).toBeInTheDocument();
+  expect(screen.getByText("Raw JSON withheld")).toBeInTheDocument();
+  expect(screen.getByText("action_id_sha256")).toBeInTheDocument();
+  expect(screen.queryByText("Safe raw JSON")).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("removes cached audit records when integrity verification fails", async () => {
+  window.history.pushState({}, "", "/evidence/audit");
+  let searches = 0;
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/audit/search")) {
+      searches += 1;
+      return searches === 1
+        ? response({ chain_valid: true, count: 1, filtered_count: 1, offset: 0, limit: 25, cursor: null, next_cursor: null, has_more: false, records: [auditSummary("control.valid", "a".repeat(64), "2026-07-21T12:00:00Z")] })
+        : response({ detail: "Audit hash chain verification failed" }, 503);
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("control.valid")).toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Apply filters" }));
+
+  expect(await screen.findByText(/Audit hash chain verification failed.*No cached records are displayed/)).toBeInTheDocument();
+  expect(screen.getByText("Audit locked down")).toBeInTheDocument();
+  expect(screen.queryByText("control.valid")).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /View detail for control.valid/ })).not.toBeInTheDocument();
 });
 
 test("redirects an unauthenticated deep link to sign in and completes login", async () => {
@@ -235,13 +578,27 @@ test("shows server-authorized account administration and one-time codes", async 
   expect(screen.getByText("Password change required")).toBeInTheDocument();
 });
 
-test("opens and closes narrow-screen navigation without changing routes", async () => {
+test("isolates narrow-screen navigation focus and restores its trigger", async () => {
+  useNarrowViewport();
   const user = userEvent.setup(); render(<ControlCenterApp />);
   await screen.findByText("5/5 invariants");
-  await user.click(screen.getByRole("button", { name: "Open navigation" }));
-  expect(screen.getByRole("button", { name: "Close navigation overlay" })).toBeInTheDocument();
-  await user.click(screen.getByRole("button", { name: "Close navigation overlay" }));
-  expect(screen.queryByRole("button", { name: "Close navigation overlay" })).not.toBeInTheDocument();
+  const navigation = document.querySelector<HTMLElement>(".console-sidebar");
+  const trigger = screen.getByRole("button", { name: "Open navigation" });
+  expect(navigation).toHaveAttribute("aria-hidden", "true");
+  expect(navigation).toHaveAttribute("inert");
+  await user.click(trigger);
+  const dialog = screen.getByRole("dialog", { name: "Control Center sidebar" });
+  expect(dialog).not.toHaveAttribute("aria-hidden");
+  expect(dialog).not.toHaveAttribute("inert");
+  const close = screen.getByRole("button", { name: "Close navigation" });
+  await waitFor(() => expect(close).toHaveFocus());
+  await user.tab({ shift: true });
+  expect(screen.getByRole("link", { name: "Preferences" })).toHaveFocus();
+  await user.tab();
+  expect(close).toHaveFocus();
+  await user.keyboard("{Escape}");
+  expect(navigation).toHaveAttribute("aria-hidden", "true");
+  await waitFor(() => expect(trigger).toHaveFocus());
   expect(window.location.pathname).toBe("/command-center");
 });
 
@@ -253,6 +610,50 @@ test("opens keyboard screen search and navigates to a result", async () => {
   await user.type(search, "preferences");
   await user.click(screen.getByRole("button", { name: "Display preferences" }));
   expect(await screen.findByRole("heading", { name: "Display preferences" })).toBeInTheDocument();
+  await waitFor(() => expect(document.querySelector("#main-content")).toHaveFocus());
+});
+
+test("contains command-dialog focus and restores the invoking control", async () => {
+  const user = userEvent.setup(); render(<ControlCenterApp />);
+  await screen.findByText("5/5 invariants");
+  const trigger = screen.getByRole("button", { name: "Search Control Center screens" });
+  await user.click(trigger);
+  const search = screen.getByRole("textbox", { name: "Screen search" });
+  await waitFor(() => expect(search).toHaveFocus());
+  await user.tab({ shift: true });
+  expect(screen.getByRole("button", { name: "Account administration" })).toHaveFocus();
+  await user.tab();
+  expect(search).toHaveFocus();
+  await user.keyboard("{Escape}");
+  expect(screen.queryByRole("dialog", { name: "Search Control Center screens" })).not.toBeInTheDocument();
+  await waitFor(() => expect(trigger).toHaveFocus());
+});
+
+const authenticatedRoutes = [
+  "/command-center",
+  "/inbox",
+  "/requests",
+  "/evidence",
+  "/evidence/audit",
+  "/governance",
+  "/security",
+  "/simulations",
+  "/simulations/swr",
+  "/simulations/atlas-replay",
+  "/simulations/atlas-projections",
+  "/simulations/taar",
+  "/system/health",
+  "/profile/security",
+  "/profile/preferences",
+  "/administration/accounts",
+] as const;
+
+test.each(authenticatedRoutes)("has no automated accessibility violations on %s", async (path) => {
+  window.history.pushState({}, "", path);
+  render(<ControlCenterApp />);
+  await screen.findByRole("heading", { level: 1 });
+  await waitFor(() => expect(screen.queryByText("Checking local session")).not.toBeInTheDocument());
+  await expectNoAutomatedAccessibilityViolations();
 });
 
 test("loads live work notifications and persists browser-local preferences", async () => {

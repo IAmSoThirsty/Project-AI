@@ -86,7 +86,7 @@ Out of scope unless separately approved:
 | Monitoring route not proven | High | Repository metrics/rules are locally verified; prove receiver route and test page | Open |
 | Machine credential migration/provisioning incomplete | High | Run schema version 5 migration, create scoped per-program credentials through owner/MFA API, store raw tokens only in approved secret manager, and test revocation | Open |
 | Rollback target not known-good | Blocker | Certify deployed revision and rehearse rollback | Open |
-| Supply-chain evidence incomplete | High | Candidate `eaed9905` has verified eight-image cosign and SPDX/SLSA registry evidence; attach remaining vulnerability artifacts and target proof | Open |
+| Supply-chain evidence incomplete | High | Candidate `eaed9905` has independently verified 8/8 cosign signatures and subject-digest bindings, but branch provenance is not an approved release identity and SPDX/SLSA attestations are absent; re-publish from `main` or a release tag and attach immutable artifacts | Open |
 | Open dependency updates | Medium | Use disposition record; audit locked v0.0.2 dependencies | Open |
 | Ingress/TLS target is placeholder | Blocker | Replace `project-ai.example.com`; prove certificate and routes | Open |
 

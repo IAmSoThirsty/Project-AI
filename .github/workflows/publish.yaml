@@ -16,6 +16,24 @@ permissions:
 env:
   REGISTRY: ghcr.io
   REGISTRY_OWNER: ${{ github.repository_owner }}
+  # Pinned deliberately, and mirrored in tools/supply_chain_policy.json.
+  #
+  # sigstore/cosign-installer v4.x tracks the latest cosign MAJOR. The silent
+  # v2 -> v3 transition changed the default signature storage from the legacy
+  # `sha256-<digest>.sig` tag to an OCI 1.1 referrers bundle (falling back to a
+  # suffix-less `sha256-<digest>` tag on registries like ghcr.io that do not
+  # serve the referrers API). Nothing in this repository declared the expected
+  # format, so when the external auditor verified with cosign 2.6.0 they
+  # correctly found no `.sig` tags and reported "no signatures" -- while this
+  # workflow, using the same v3 binary that wrote them, reported success.
+  # Verification now requires cosign >= 3.0; see tools/supply_chain_policy.json.
+  COSIGN_VERSION: 'v3.1.2'
+  COSIGN_OIDC_ISSUER: 'https://token.actions.githubusercontent.com'
+  # Anchored to THIS run's ref. Never use a trailing `@.*$`: that accepts any
+  # git ref, which is why branch-built images previously passed this workflow's
+  # own verification. `[.]` is used instead of `\.` to keep the expression free
+  # of YAML/shell backslash escaping.
+  COSIGN_IDENTITY_REGEXP: '^https://github[.]com/${{ github.repository }}/[.]github/workflows/publish[.]yaml@${{ github.ref }}$'
 
 jobs:
   image-metadata:
@@ -25,8 +43,6 @@ jobs:
     permissions:
       contents: read
     outputs:
-      tags: ${{ steps.meta.outputs.tags }}
-      labels: ${{ steps.meta.outputs.labels }}
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -62,24 +78,11 @@ jobs:
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "Version: ${VERSION}"
 
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
-        with:
-          images: |
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-docs-portal
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-proof-portal
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-operator-console
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-swr
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-atlas
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-arbiter-rlp
-            ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-genesis
-          tags: |
-            type=semver,pattern={{version}},value=${{ steps.version.outputs.version }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.version }},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=ref,event=branch,suffix=-{{date 'YYYYMMDD-HHmmss' tz='UTC'}}
-            type=sha,prefix={{branch}}-
+      # The `docker/metadata-action` step that used to live here was removed on
+      # 2026-07-20. It computed `tags` and `labels` job outputs that no job ever
+      # consumed -- every build job hand-rolls its own tag list -- while
+      # maintaining a second, independent copy of the eight-image list that could
+      # silently drift from the real one. Only `version` is actually used.
 
   build-api:
     name: Build project-ai-api
@@ -130,11 +133,22 @@ jobs:
           sbom: true
 
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
 
-      - name: Sign image (cosign keyless)
+      - name: Generate SPDX SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api@${{ steps.build.outputs.digest }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+          upload-artifact: false
+
+      - name: Sign and attest image (cosign keyless)
         run: |
-          cosign sign --yes \
-            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api@${{ steps.build.outputs.digest }}"
+          bash tools/sign_and_attest_image.sh \
+            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api@${{ steps.build.outputs.digest }}" \
+            sbom.spdx.json
 
   build-web:
     name: Build web portals (docs, proof, operator-console)
@@ -186,11 +200,22 @@ jobs:
           sbom: true
 
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
 
-      - name: Sign image (cosign keyless)
+      - name: Generate SPDX SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}@${{ steps.build.outputs.digest }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+          upload-artifact: false
+
+      - name: Sign and attest image (cosign keyless)
         run: |
-          cosign sign --yes \
-            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}@${{ steps.build.outputs.digest }}"
+          bash tools/sign_and_attest_image.sh \
+            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.portal }}@${{ steps.build.outputs.digest }}" \
+            sbom.spdx.json
 
   build-adapters:
     name: Build service adapters (swr, atlas, arbiter-rlp)
@@ -240,11 +265,22 @@ jobs:
           sbom: true
 
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
 
-      - name: Sign image (cosign keyless)
+      - name: Generate SPDX SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.service }}@${{ steps.build.outputs.digest }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+          upload-artifact: false
+
+      - name: Sign and attest image (cosign keyless)
         run: |
-          cosign sign --yes \
-            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.service }}@${{ steps.build.outputs.digest }}"
+          bash tools/sign_and_attest_image.sh \
+            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${{ matrix.service }}@${{ steps.build.outputs.digest }}" \
+            sbom.spdx.json
 
   build-genesis:
     name: Build project-ai-genesis
@@ -289,38 +325,44 @@ jobs:
           sbom: true
 
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
 
-      - name: Sign image (cosign keyless)
+      - name: Generate SPDX SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-genesis@${{ steps.build.outputs.digest }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+          upload-artifact: false
+
+      - name: Sign and attest image (cosign keyless)
         run: |
-          cosign sign --yes \
-            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-genesis@${{ steps.build.outputs.digest }}"
+          bash tools/sign_and_attest_image.sh \
+            "${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-genesis@${{ steps.build.outputs.digest }}" \
+            sbom.spdx.json
 
-  publish-sbom:
-    name: Generate and attach SBOMs
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: [build-api, build-web, build-adapters, build-genesis]
-    if: always()
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-
-      - name: Create attestation note
-        run: |
-          echo "All container images built with provenance and SBOM attestations"
-          echo "Use: cosign verify <image>@<digest> --certificate-identity-regexp='.*' --certificate-oidc-issuer=https://token.actions.githubusercontent.com to verify the keyless signature"
+  # The former `publish-sbom` job was removed on 2026-07-20. It was named
+  # "Generate and attach SBOMs" but its only steps were two `echo` statements: it
+  # generated nothing, attached nothing, and held `packages: write` for no reason,
+  # while `if: always()` kept it green even when every build job failed. Its name
+  # asserted a capability it did not have, which is precisely the kind of
+  # fabricated success AGENTS.md forbids. Real SBOM and SLSA provenance
+  # attestation now happens inside each build job, where the image digest and the
+  # OIDC token are actually in scope, via tools/sign_and_attest_image.sh.
 
   verify-images:
     name: Verify published images
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     needs: [image-metadata, build-api, build-web, build-adapters, build-genesis]
-    if: always()
+    # `if: always()` was removed on 2026-07-20. It caused this job to run even when
+    # every build and signing job had failed, so a green "Verify published images"
+    # could coexist with a supply chain that had produced nothing.
     permissions:
       contents: read
       packages: read
+      id-token: write # cosign needs an OIDC token to fetch trust material
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
@@ -335,36 +377,89 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify image pulls
+      - name: Resolve every tag to an immutable digest
         run: |
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-api:${{ needs.image-metadata.outputs.version }}
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-docs-portal:${{ needs.image-metadata.outputs.version }}
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-proof-portal:${{ needs.image-metadata.outputs.version }}
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-operator-console:${{ needs.image-metadata.outputs.version }}
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-swr:${{ needs.image-metadata.outputs.version }}
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-atlas:${{ needs.image-metadata.outputs.version }}
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-arbiter-rlp:${{ needs.image-metadata.outputs.version }}
-          docker pull ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-genesis:${{ needs.image-metadata.outputs.version }}
-
-      - name: Inspect image manifests
-        run: |
+          set -euo pipefail
+          # Resolve once, here, and verify only digests from this point on. The previous
+          # implementation passed `:${version}` tags straight to cosign, so cosign
+          # re-resolved the tag independently of whatever `cosign sign` had operated on.
+          # A tag is a mutable pointer; it can move between signing and verification.
+          echo "{" > digests.json
+          first=1
           for image in api docs-portal proof-portal operator-console swr atlas arbiter-rlp genesis; do
-            echo "=== $image ==="
-            docker inspect ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${image}:${{ needs.image-metadata.outputs.version }} | \
-              jq '.[] | {Architecture: .Architecture, Os: .Os, Created: .Created, Size: .Size}'
+            reference="${REGISTRY}/${REGISTRY_OWNER}/project-ai-${image}:${{ needs.image-metadata.outputs.version }}"
+            digest="$(docker buildx imagetools inspect "$reference" --format '{{json .Manifest.Digest}}' | tr -d '"')"
+            if [[ ! "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+              echo "::error::invalid digest for ${reference}: ${digest}" >&2
+              exit 1
+            fi
+            [[ $first -eq 1 ]] && first=0 || echo "," >> digests.json
+            printf '  "%s": "%s"' "$image" "$digest" >> digests.json
+            echo "resolved ${image} -> ${digest}"
+          done
+          printf '\n}\n' >> digests.json
+          cat digests.json
+
+      - name: Verify image pulls by digest
+        run: |
+          set -euo pipefail
+          for image in api docs-portal proof-portal operator-console swr atlas arbiter-rlp genesis; do
+            digest="$(jq -r --arg k "$image" '.[$k]' digests.json)"
+            docker pull "${REGISTRY}/${REGISTRY_OWNER}/project-ai-${image}@${digest}"
+            docker inspect "${REGISTRY}/${REGISTRY_OWNER}/project-ai-${image}@${digest}" \
+              | jq '.[] | {Architecture, Os, Created, Size}'
           done
 
       - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
 
-      - name: Verify cosign keyless signatures
+      - name: Verify signatures and attestations for every digest
         run: |
+          set -uo pipefail
+          failed=0
           for image in api docs-portal proof-portal operator-console swr atlas arbiter-rlp genesis; do
-            echo "=== verifying $image ==="
-            cosign verify \
-              --certificate-identity-regexp "^https://github.com/${{ github.repository }}/\.github/workflows/publish\.yaml@.*$" \
-              --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-              ${{ env.REGISTRY }}/${{ env.REGISTRY_OWNER }}/project-ai-${image}:${{ needs.image-metadata.outputs.version }}
+            digest="$(jq -r --arg k "$image" '.[$k]' digests.json)"
+            ref="${REGISTRY}/${REGISTRY_OWNER}/project-ai-${image}@${digest}"
+            echo "=== ${image} ${digest} ==="
+
+            if ! cosign verify \
+                --certificate-identity-regexp "${COSIGN_IDENTITY_REGEXP}" \
+                --certificate-oidc-issuer "${COSIGN_OIDC_ISSUER}" \
+                "$ref" > /dev/null; then
+              echo "::error::signature verification failed for ${ref}"
+              failed=1
+            fi
+
+            for predicate_type in spdxjson slsaprovenance; do
+              if ! cosign verify-attestation \
+                  --type "$predicate_type" \
+                  --certificate-identity-regexp "${COSIGN_IDENTITY_REGEXP}" \
+                  --certificate-oidc-issuer "${COSIGN_OIDC_ISSUER}" \
+                  "$ref" > /dev/null; then
+                echo "::error::${predicate_type} attestation verification failed for ${ref}"
+                failed=1
+              fi
+            done
           done
+          # Every image is checked before exiting so that one bad image does not mask
+          # the state of the other seven, but any failure still fails the job.
+          exit "$failed"
+
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Independent postcondition check (repository verifier)
+        run: |
+          set -euo pipefail
+          # A second, independent opinion. tools/verify_supply_chain.py speaks the plain
+          # OCI distribution API and shares no code with cosign, so if cosign changes its
+          # default storage format again this step fails loudly instead of moving silently
+          # with it. Verifying cosign's output with cosign alone is what allowed the
+          # 2026-07-20 discrepancy to go unnoticed inside this workflow.
+          jq '{image_digests: .}' digests.json > successor-digests.json
+          uv run --with pyyaml python tools/verify_supply_chain.py \
+            --digests successor-digests.json \
+            --require-attestations
 
   publish-release-notes:
     name: Create release notes
@@ -467,18 +562,42 @@ jobs:
 
           ## Verification
 
+          > **cosign 3.0 or newer is required.** These signatures use the Sigstore
+          > bundle format published through the OCI 1.1 referrers mechanism. Because
+          > ghcr.io does not serve the referrers API, cosign stores them under a
+          > `sha256-<digest>` fallback tag. cosign 2.x looks only for the legacy
+          > `sha256-<digest>.sig` tag, which is intentionally **not** written, so
+          > cosign 2.x reports "no signatures found" for correctly signed images.
+          > That is a verifier limitation, not a missing signature.
+
+          Verify **by digest**, never by tag — a tag is mutable and can move after
+          signing. Take the digests from the attached
+          `project-ai-${{ needs.image-metadata.outputs.version }}-image-digests.yaml`.
+
           All images include:
           - A cosign keyless signature (Sigstore/Fulcio, via GitHub Actions OIDC — no
             long-lived key is stored anywhere). Verify with:
             ```bash
             cosign verify \
-              --certificate-identity-regexp '^https://github.com/${{ github.repository }}/\.github/workflows/publish\.yaml@.*$' \
+              --certificate-identity-regexp '^https://github[.]com/${{ github.repository }}/[.]github/workflows/publish[.]yaml@${{ github.ref }}$' \
               --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-              ghcr.io/${{ env.REGISTRY_OWNER }}/project-ai-<image>:${{ needs.image-metadata.outputs.version }}
+              ghcr.io/${{ env.REGISTRY_OWNER }}/project-ai-<image>@sha256:<digest>
             ```
-          - Buildx-generated SLSA provenance and Software Bill of Materials (SBOM)
-            attestations (`provenance: mode=max`, `sbom: true`) — informational,
-            attached to the image manifest, not independently cosign-signed.
+            Do not relax that identity pattern to `@.*$`. A trailing wildcard accepts a
+            signature issued to any git ref, including an unreviewed branch, which
+            defeats the purpose of checking the identity at all.
+          - cosign SPDX SBOM and SLSA provenance attestations. Verify with:
+            ```bash
+            cosign verify-attestation --type spdxjson \
+              --certificate-identity-regexp '<same anchored pattern as above>' \
+              --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+              ghcr.io/${{ env.REGISTRY_OWNER }}/project-ai-<image>@sha256:<digest>
+            ```
+            (repeat with `--type slsaprovenance`)
+          - Buildx-generated in-toto layers (`provenance: mode=max`, `sbom: true`)
+            embedded in the image index. These are **informational only** — no standard
+            verifier reads them. They do not satisfy an attestation requirement; the
+            cosign attestations above are what count.
           - Daily Trivy scan results (`.github/workflows/image-scan.yaml`) once this
             tag's image has been pulled by that scheduled workflow.
 

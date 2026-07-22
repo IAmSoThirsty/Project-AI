@@ -14,7 +14,8 @@
     "commit_pushed": true,
     "successor_ci_green": true,
     "image_signatures_verified": true,
-    "sbom_attestations_verified": true,
+    "release_provenance_verified": false,
+    "sbom_attestations_verified": false,
     "production_overlay_verified": false,
     "remote_backup_verified": false,
     "monitoring_crds_verified": false,
@@ -34,48 +35,95 @@
     ],
     "last_checked": "2026-07-20"
   },
+  "supply_chain_format": {
+    "cosign_major": 3,
+    "signature_storage": "oci-referrers-with-tag-fallback",
+    "fallback_tag_pattern": "sha256-{digest_hex}",
+    "artifact_type": "application/vnd.dev.sigstore.bundle.v0.3+json",
+    "legacy_sig_tag_expected_absent": true,
+    "note": "cosign 2.x CANNOT read these signatures; it looks for the legacy sha256-<digest>.sig tag, which this format never writes. A 'no signatures found' result from cosign 2.x is an expected property of the declared format, not evidence of a missing signature. Declared in tools/supply_chain_policy.json."
+  },
   "evidence": {
-    "owner_key_rotation_record": "change/SEC-20260720-KR001",
+    "owner_key_rotation_record": null,
     "exact_manifest_ratification_record": "packages/thirstys-standard-v3q/owner-ratification.json (key owner-rotation-2026-07-19-01; verify_ratification.py passed)",
-    "proof_custody_record": "vault-audit/20260720-0345",
+    "proof_custody_record": null,
     "remote_commit_sha": "eaed9905cacc02e2fb98e3cc92356e8d160e593e",
     "remote_ci_runs": [29731685685, 29731671162, 29731671150],
     "image_digests": {
-      "api": "sha256:7de9c5e33c70994f368abda78c446911783a1b8ffc155d434db6f98796a91c16",
-      "docs-portal": "sha256:8aa672f6962509ae7ad0edd23d6b4a42e17f970e65348f500bab72dff3c1302a",
-      "proof-portal": "sha256:361b118a6e574b6c704bd158cf4727f55650a1dca7c230f36dc0658192c3e71b",
-      "operator-console": "sha256:05114ece27658c16176e42966a38f8d14911a90fedda815e6f1614bd2a1c19f2",
-      "swr": "sha256:093824587e2a1753bdfa7e3e06517cf98c20ec077f694d9c32db106a057fbadd",
-      "atlas": "sha256:71ad3aa218649131fefbf62eec664686c66202e34d468f69ec25ee785054ab01",
-      "arbiter-rlp": "sha256:c1954defac74b2cae5ca6da77ef54abdb3501f455c3b01078fd148de7a376a0e",
-      "genesis": "sha256:17515f0ae110be735aa5e813031992b96c7d511213f9a9a76158d35e79e8b2ad"
+      "api": "sha256:e878d233dd09535aa5b6356612eb0ecfd169bb98ebf751264284eec44276e502",
+      "docs-portal": "sha256:c11615b6bbe65c01e93aaad30d7e0d46478425bbbd70f9b1ad8d4b95bb4e9deb",
+      "proof-portal": "sha256:0924c2649b52674ffeb81a430f014b5fa557126daa058f315f159a6298f8566c",
+      "operator-console": "sha256:2bb32bf3924cb425452945b5f64a86996f74fba488dbd36ada164b75a5f3dfdb",
+      "swr": "sha256:092700a29793adc9def0f8743ea6dd18e4e758f1af441aea496f017b5947e4b3",
+      "atlas": "sha256:b90a86b936caf26b0d87baf511fc47472ee563f35af73ac39560979a31eaf595",
+      "arbiter-rlp": "sha256:b327cc7464e1370d3d129e29fee1266602a9e7711330efa5dc0f93e1c70af888",
+      "genesis": "sha256:4507977282eea0ff48c36160b387ce3a3638676803b219b696ad6b0b51048ffb"
     },
     "signature_verifications": [
-      {"record": "actions/29731685685/job/88317825226", "image": "api", "digest": "sha256:7de9c5e33c70994f368abda78c446911783a1b8ffc155d434db6f98796a91c16", "result": "cosign keyless verification passed"},
-      {"record": "actions/29731685685/job/88317825226", "image": "docs-portal", "digest": "sha256:8aa672f6962509ae7ad0edd23d6b4a42e17f970e65348f500bab72dff3c1302a", "result": "cosign keyless verification passed"},
-      {"record": "actions/29731685685/job/88317825226", "image": "proof-portal", "digest": "sha256:361b118a6e574b6c704bd158cf4727f55650a1dca7c230f36dc0658192c3e71b", "result": "cosign keyless verification passed"},
-      {"record": "actions/29731685685/job/88317825226", "image": "operator-console", "digest": "sha256:05114ece27658c16176e42966a38f8d14911a90fedda815e6f1614bd2a1c19f2", "result": "cosign keyless verification passed"},
-      {"record": "actions/29731685685/job/88317825226", "image": "swr", "digest": "sha256:093824587e2a1753bdfa7e3e06517cf98c20ec077f694d9c32db106a057fbadd", "result": "cosign keyless verification passed"},
-      {"record": "actions/29731685685/job/88317825226", "image": "atlas", "digest": "sha256:71ad3aa218649131fefbf62eec664686c66202e34d468f69ec25ee785054ab01", "result": "cosign keyless verification passed"},
-      {"record": "actions/29731685685/job/88317825226", "image": "arbiter-rlp", "digest": "sha256:c1954defac74b2cae5ca6da77ef54abdb3501f455c3b01078fd148de7a376a0e", "result": "cosign keyless verification passed"},
-      {"record": "actions/29731685685/job/88317825226", "image": "genesis", "digest": "sha256:17515f0ae110be735aa5e813031992b96c7d511213f9a9a76158d35e79e8b2ad", "result": "cosign keyless verification passed"}
+      {"record": "local-reverification/2026-07-20", "image": "api", "digest": "sha256:e878d233dd09535aa5b6356612eb0ecfd169bb98ebf751264284eec44276e502", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"},
+      {"record": "local-reverification/2026-07-20", "image": "docs-portal", "digest": "sha256:c11615b6bbe65c01e93aaad30d7e0d46478425bbbd70f9b1ad8d4b95bb4e9deb", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"},
+      {"record": "local-reverification/2026-07-20", "image": "proof-portal", "digest": "sha256:0924c2649b52674ffeb81a430f014b5fa557126daa058f315f159a6298f8566c", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"},
+      {"record": "local-reverification/2026-07-20", "image": "operator-console", "digest": "sha256:2bb32bf3924cb425452945b5f64a86996f74fba488dbd36ada164b75a5f3dfdb", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"},
+      {"record": "local-reverification/2026-07-20", "image": "swr", "digest": "sha256:092700a29793adc9def0f8743ea6dd18e4e758f1af441aea496f017b5947e4b3", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"},
+      {"record": "local-reverification/2026-07-20", "image": "atlas", "digest": "sha256:b90a86b936caf26b0d87baf511fc47472ee563f35af73ac39560979a31eaf595", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"},
+      {"record": "local-reverification/2026-07-20", "image": "arbiter-rlp", "digest": "sha256:b327cc7464e1370d3d129e29fee1266602a9e7711330efa5dc0f93e1c70af888", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"},
+      {"record": "local-reverification/2026-07-20", "image": "genesis", "digest": "sha256:4507977282eea0ff48c36160b387ce3a3638676803b219b696ad6b0b51048ffb", "verifier": "cosign v3.1.2 (ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e8d2f549c747a72dc174f90579e410a1695f57f686674f84ce849)", "method": "cosign verify (digest-pinned) + independent OCI referrers layout check", "result": "verified"}
     ],
-    "sbom_attestations": [
-      {"record": "registry attestation manifest", "image": "api", "digest": "sha256:7de9c5e33c70994f368abda78c446911783a1b8ffc155d434db6f98796a91c16", "attestation_manifest": "sha256:4c01f345117fa717cfb7f6ee0da601fe17fd0804949f5e4367fc97fadb268fee", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
-      {"record": "registry attestation manifest", "image": "docs-portal", "digest": "sha256:8aa672f6962509ae7ad0edd23d6b4a42e17f970e65348f500bab72dff3c1302a", "attestation_manifest": "sha256:8d11e888579139b3ff5ec1394fdcbaf9816de0137e4ddb40692764e01cd39f75", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
-      {"record": "registry attestation manifest", "image": "proof-portal", "digest": "sha256:361b118a6e574b6c704bd158cf4727f55650a1dca7c230f36dc0658192c3e71b", "attestation_manifest": "sha256:5bfa539b83851cf7f2337ad7f144770b6fceaaa56775f3a663926fd1b5b46e84", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
-      {"record": "registry attestation manifest", "image": "operator-console", "digest": "sha256:05114ece27658c16176e42966a38f8d14911a90fedda815e6f1614bd2a1c19f2", "attestation_manifest": "sha256:0a2e99988e0b305271d9a64f7415c50aab244105f0d0e720e812a59a5d6d48c3", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
-      {"record": "registry attestation manifest", "image": "swr", "digest": "sha256:093824587e2a1753bdfa7e3e06517cf98c20ec077f694d9c32db106a057fbadd", "attestation_manifest": "sha256:3d1127ac0ffc9ea2907c656357d123de0ca61d0dc0bc8f068e6fd955f9fafde8", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
-      {"record": "registry attestation manifest", "image": "atlas", "digest": "sha256:71ad3aa218649131fefbf62eec664686c66202e34d468f69ec25ee785054ab01", "attestation_manifest": "sha256:097f59eb5c005902a6fbaf54818a5e5e6a32d11f05fb37cbe1fd03a096990656", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
-      {"record": "registry attestation manifest", "image": "arbiter-rlp", "digest": "sha256:c1954defac74b2cae5ca6da77ef54abdb3501f455c3b01078fd148de7a376a0e", "attestation_manifest": "sha256:d48293a3ea615b80bb3b2f98171318e887f0b656edbb4c7e6195dc5a0a1cd4b7", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]},
-      {"record": "registry attestation manifest", "image": "genesis", "digest": "sha256:17515f0ae110be735aa5e813031992b96c7d511213f9a9a76158d35e79e8b2ad", "attestation_manifest": "sha256:f1f194eca1dede759c2c6f4d467601ba2ce29a88e9a72119da9da0c7f2341081", "predicates": ["https://spdx.dev/Document", "https://slsa.dev/provenance/v1"]}
-    ],
-    "production_overlay_record": "change/DEPLOY-20260720-001",
-    "remote_backup_record": "backup-test/2026-07-20",
-    "monitoring_crds_record": "cluster-preflight/20260720-032",
-    "dependabot_disposition_record": "CAB-2026-07-20-DEPENDABOT (risk-accept with mitigation for PRs #509 and #510)",
-    "target_environment_record": "CAB-2026-07-20",
-    "rollback_rehearsal_record": "rollback-test/20260720-789"
+    "signature_identity": {
+      "oidc_issuer": "https://token.actions.githubusercontent.com",
+      "certificate_issuer": "O=sigstore.dev, CN=sigstore-intermediate",
+      "san_uri": "https://github.com/IAmSoThirsty/Project-AI/.github/workflows/publish.yaml@refs/heads/agent/production-readiness-2026-07-19",
+      "meets_approved_release_identity": false,
+      "approved_release_identity_regexp": "^https://github[.]com/IAmSoThirsty/Project-AI/[.]github/workflows/publish[.]yaml@refs/(tags/v[^/]+|heads/main)$",
+      "note": "Signatures are cryptographically valid but were issued to an unmerged agent branch via workflow_dispatch, not to refs/heads/main or a refs/tags/v* release tag. This is why release_provenance_verified is false even though image_signatures_verified is true. Verifying these digests requires tools/verify_supply_chain.py --allow-branch-provenance."
+    },
+    "sbom_attestations": [],
+    "sbom_attestation_status": {
+      "result": "absent",
+      "verifier": "cosign v3.1.2",
+      "checked": ["spdxjson", "slsaprovenance"],
+      "outcome": "0 of 8 images have a verifiable cosign attestation for either predicate type",
+      "gh_attestation_verify": "HTTP 404 - no GitHub attestations exist for these digests",
+      "cause": "The publish workflow never produced attestations. The publish-sbom job was named 'Generate and attach SBOMs' but its only steps were two echo statements; cosign attest appeared nowhere in the repository. BuildKit provenance:mode=max and sbom:true do embed real in-toto layers (predicate types https://spdx.dev/Document and https://slsa.dev/provenance/v1) in the image index, but these are neither cosign nor GitHub attestations and no standard verifier reads them.",
+      "remediation": "cosign attest steps are now implemented in .github/workflows/publish.yaml via tools/sign_and_attest_image.sh, but they have NEVER EXECUTED. Attestations are produced at build time and cannot be applied retroactively, so these eight digests can never satisfy this requirement without a re-publish."
+    },
+    "production_overlay_record": null,
+    "remote_backup_record": null,
+    "monitoring_crds_record": null,
+    "dependabot_disposition_record": null,
+    "target_environment_record": null,
+    "rollback_rehearsal_record": null
   },
-  "blocking_reason": "Successor publish run 29731685685 built all eight images, verified keyless signatures, exposed exact OCI digests, and exposed SPDX/SLSA attestation manifests. The record remains review-only and status missing because owner key rotation/proof custody, approved production overlay, remote backup, monitoring CRDs, dependency disposition, target approval, and rollback evidence are not independently auditable. The checkout copy of owner-private.json is outside the repository, but key retirement/custody proof remains unverified; tracked production values still contain a placeholder host and disabled remote backup."
+  "unverified_reported_records": {
+    "note": "These custody / change-management references were present in the working-tree evidence file on 2026-07-20, but NO supporting artifact was found in the repository and each paired required.*_verified flag is false. They are neither asserted as real nor deleted: they are preserved here for provenance and are EXCLUDED from the strict gate. The gate reads evidence.*_record (above), which stays null until a verified artifact exists, so a reported-but-unverified value cannot satisfy it. Classification: unverified reported reference (not confirmed fabricated, not confirmed genuine). If the owner holds a real record for any of these, restore it into evidence.*_record and flip the paired required.*_verified only when the artifact is independently verifiable.",
+    "audit_timestamp": "2026-07-20",
+    "origin": "prior 2026-07-20 session working-tree edit; audited in the later 2026-07-20 continuation",
+    "records": {
+      "owner_key_rotation_record": {"reported_reference": "change/SEC-20260720-KR001", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true},
+      "proof_custody_record": {"reported_reference": "vault-audit/20260720-0345", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true},
+      "production_overlay_record": {"reported_reference": "change/DEPLOY-20260720-001", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true},
+      "remote_backup_record": {"reported_reference": "backup-test/2026-07-20", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true},
+      "monitoring_crds_record": {"reported_reference": "cluster-preflight/20260720-032", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true},
+      "dependabot_disposition_record": {"reported_reference": "CAB-2026-07-20-DEPENDABOT (risk-accept with mitigation for PRs #509 and #510)", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true},
+      "target_environment_record": {"reported_reference": "CAB-2026-07-20", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true},
+      "rollback_rehearsal_record": {"reported_reference": "rollback-test/20260720-789", "verification_status": "unverified", "verified_reference": null, "excluded_from_gate": true}
+    }
+  },
+  "superseded_findings": {
+    "note": "Preserved as historical evidence. These records were correct observations made with cosign v2.6.0, but the conclusion drawn from them -- that no signatures existed -- was wrong. cosign 2.x cannot read the cosign 3 bundle format used here. Retained, not deleted. See docs/operations/cab/EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md, section 'Correction - 2026-07-20'.",
+    "signature_verifications_2026-07-20-cosign-v2": [
+      {"record": "external-auditor/2026-07-20", "image": "api", "digest": "sha256:e878d233dd09535aa5b6356612eb0ecfd169bb98ebf751264284eec44276e502", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"},
+      {"record": "external-auditor/2026-07-20", "image": "docs-portal", "digest": "sha256:c11615b6bbe65c01e93aaad30d7e0d46478425bbbd70f9b1ad8d4b95bb4e9deb", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"},
+      {"record": "external-auditor/2026-07-20", "image": "proof-portal", "digest": "sha256:0924c2649b52674ffeb81a430f014b5fa557126daa058f315f159a6298f8566c", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"},
+      {"record": "external-auditor/2026-07-20", "image": "operator-console", "digest": "sha256:2bb32bf3924cb425452945b5f64a86996f74fba488dbd36ada164b75a5f3dfdb", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"},
+      {"record": "external-auditor/2026-07-20", "image": "swr", "digest": "sha256:092700a29793adc9def0f8743ea6dd18e4e758f1af441aea496f017b5947e4b3", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"},
+      {"record": "external-auditor/2026-07-20", "image": "atlas", "digest": "sha256:b90a86b936caf26b0d87baf511fc47472ee563f35af73ac39560979a31eaf595", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"},
+      {"record": "external-auditor/2026-07-20", "image": "arbiter-rlp", "digest": "sha256:b327cc7464e1370d3d129e29fee1266602a9e7711330efa5dc0f93e1c70af888", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"},
+      {"record": "external-auditor/2026-07-20", "image": "genesis", "digest": "sha256:4507977282eea0ff48c36160b387ce3a3638676803b219b696ad6b0b51048ffb", "result": "cosign v2.6.0 no signatures found; publish workflow log claimed success"}
+    ],
+    "sbom_attestations_2026-07-20": [
+      {"record": "external-auditor/2026-07-20", "image": "all-eight", "result": "gh attestation verify --bundle-from-oci: no attestations found; workflow documents SBOM/provenance as informational. RE-CONFIRMED 2026-07-20 with cosign v3.1.2: still absent for both spdxjson and slsaprovenance. This finding stands."}
+    ]
+  },
+  "blocking_reason": "Image signatures are RESOLVED: all eight digests were independently re-verified on 2026-07-20 with cosign v3.1.2 run from a digest-pinned OCI image, plus a cosign-independent OCI referrers layout check, with subject-digest binding confirmed for each. The earlier 'no signatures found' result was a cosign v2.6.0 format limitation, not a missing signature. The record remains review-only and status missing because these blockers are unresolved: (1) the eight digests were signed from the unmerged branch 'agent/production-readiness-2026-07-19' via workflow_dispatch, not from main or a release tag, so they carry branch provenance rather than release provenance; (2) no cosign or GitHub attestation exists for any digest and none can be added retroactively -- a re-publish under the corrected workflow is required; (3) owner key retirement and external proof custody are not independently evidenced; (4) the V3Q successor manifest revision 1.2.0-rc1 exists but is UNSIGNED because the owner private key is off-repository and must not be handled by an agent; (5) tracked production values still contain a placeholder ingress host and disabled remote backup; (6) approved production cluster/namespace, monitoring CRDs, dependency disposition, rollback rehearsal, maintenance window, and acceptance sign-off remain outstanding. Deployment remains fail-closed."
 }

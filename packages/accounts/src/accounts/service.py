@@ -283,6 +283,25 @@ class AccountService:
         if not has_permission(account.role, permission):
             raise PermissionDenied(f"Interface permission required: {permission.value}")
 
+    def authorize_rate_limited_action(
+        self,
+        token: str,
+        csrf_token: str | None,
+        *,
+        permission: InterfacePermission,
+        operation: str,
+        source: str,
+        limit: int,
+    ) -> Account:
+        """Authorize a consequential interface action and consume its durable quota."""
+        if not operation or limit < 1:
+            raise ValueError("Rate-limited action requires an operation and positive limit")
+        account, session = self.authenticate(token)
+        self.require_csrf(session, csrf_token)
+        self.require_permission(account, permission)
+        self._rate_limit(operation, f"{account.id}:{source}", limit=limit)
+        return account
+
     def list_accounts(
         self, token: str, permission: InterfacePermission = InterfacePermission.ACCOUNTS_MANAGE
     ) -> tuple[Account, ...]:

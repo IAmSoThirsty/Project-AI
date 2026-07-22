@@ -315,12 +315,21 @@ through this route.
 
 All actuation routes require `Authorization: Bearer <scoped-machine-credential>`.
 `GET /audit` accepts either that machine credential or a valid human session.
+`POST /audit/search` is the preferred human-console read path: it accepts only a valid
+same-origin human session and keeps filter identifiers out of request URLs/access logs.
+It returns normalized summaries rather than arbitrary relay fields. `POST /audit/detail`
+resolves one verified record hash and applies server-side field visibility.
+`POST /audit/export` accepts only a valid human session with `audit.export` and
+same-origin CSRF proof; machine evidence credentials cannot request exports.
 
 ### `GET /audit`
 
 Verifies the append-only Chimera audit log (stored at `PROJECT_AI_AUDIT_PATH`),
 then returns a bounded, newest-first page. Filtering never bypasses full-chain
-verification.
+verification. Human clients should use the returned hash cursor for stable paging;
+`offset` remains available for existing machine/proof clients. A cursor anchors the
+next page after the last record previously returned, so newly appended records do not
+duplicate or skip older results.
 
 **Query parameters:**
 
@@ -328,8 +337,17 @@ verification.
 |---|---|---|---|---|
 | `limit` | int | 100 | 1..500 | Maximum records to return (most-recent first) |
 | `offset` | int | 0 | 0 or greater | Number of matching newest-first records to skip |
+| `cursor` | SHA-256 hex | empty | 64 lowercase hex characters | Continue after a previously returned page anchor; cannot be combined with nonzero `offset` |
 | `query` | string | empty | 200 characters | Case-insensitive search across the serialized record |
 | `event` | string | empty | 120 characters | Exact, case-insensitive event-type filter |
+| `actor` | string | empty | 200 characters | Exact actor/agent identifier |
+| `account` | string | empty | 200 characters | Exact initiating/creating/reviewing account identifier |
+| `operation` | string | empty | 200 characters | Exact operation identifier |
+| `resource` | string | empty | 300 characters | Exact resource identifier |
+| `verdict` | enum | empty | `ALLOW`, `DENY`, `ESCALATE` | Exact canonical verdict/outcome |
+| `severity` | string | empty | 40 characters | Exact severity |
+| `from_time` | date-time | empty | timezone required | Include records at or after this instant |
+| `to_time` | date-time | empty | timezone required | Include records at or before this instant; cannot precede `from_time` |
 
 **Response 200:**
 ```json
@@ -339,11 +357,14 @@ verification.
   "filtered_count": 1,
   "offset": 0,
   "limit": 100,
+  "cursor": null,
+  "next_cursor": "<sha256-hex-or-null>",
+  "has_more": true,
   "records": [
     {
       "event": "<event-type>",
       "hash": "<sha256-hex>",
-      "prev_hash": "<sha256-hex or null>",
+      "previous_hash": "<sha256-hex>",
       "timestamp": "<iso8601>",
       "<event-specific-fields>": "..."
     }
@@ -352,18 +373,234 @@ verification.
 ```
 
 **Response 401:** missing or invalid machine credential and no valid human session.
+**Response 422:** malformed/unknown cursor, cursor combined with nonzero offset,
+timezone-free time boundary, reversed time range, or invalid query value.
 **Response 503:** the selected machine-credential mode or
 `PROJECT_AI_AUDIT_PATH` is not configured.
-
-The Control Center can export the currently displayed verified page as JSON. The
-export includes chain-verification state and active filters; it does not grant
-machine authority or alter the audit log.
 
 **Curl:**
 ```bash
 curl -s -H "Authorization: Bearer $PROJECT_AI_API_TOKEN" \
      "http://127.0.0.1:8000/audit?limit=50" | python -m json.tool
 ```
+
+---
+
+### `POST /audit/search`
+
+Returns a verified, normalized `HumanAuditResponse` and accepts the stable cursor and
+all filters in a JSON request body. The records contain only event, timestamp, chain
+hashes, canonical verdict, severity, and verified status; arbitrary relay fields and
+raw identifiers are never included in a human search response. This read-only endpoint
+requires a valid human session, `evidence.view`, and a same-origin request. Machine bearer
+credentials are not accepted. No CSRF token is required because the operation does not
+mutate server state.
+
+The operator console uses this endpoint so actor, account, resource, and free-text
+filters do not enter browser request URLs or default reverse-proxy access logs.
+Owner, administrator, and auditor roles may filter exact actor, account, operation,
+and resource values because they hold `audit.raw_view`. Reviewer, operator, and viewer
+roles may filter only the visible summary fields; their `query` search is evaluated
+against that same summary projection. Supplying a raw-identifier filter without
+`audit.raw_view` returns 403, preventing result counts from becoming a hidden-value
+oracle.
+
+```json
+{
+  "limit": 25,
+  "cursor": "<sha256-hex-or-null>",
+  "query": "action-safe",
+  "event": "chimera.verdict",
+  "actor": "ACTOR-REVIEWER",
+  "account": "account-reviewer",
+  "operation": "evidence.inspect",
+  "resource": "bundle:approved-42",
+  "verdict": "DENY",
+  "severity": "high",
+  "from_time": "2026-07-21T12:00:00Z",
+  "to_time": "2026-07-21T13:00:00Z"
+}
+```
+
+**Response 200 (record shape):**
+
+```json
+{
+  "chain_valid": true,
+  "count": 42,
+  "filtered_count": 1,
+  "offset": 0,
+  "limit": 25,
+  "cursor": null,
+  "next_cursor": null,
+  "has_more": false,
+  "records": [
+    {
+      "event": "chimera.verdict",
+      "timestamp": "2026-07-21T12:30:00Z",
+      "source_hash": "<sha256-hex>",
+      "previous_hash": "<sha256-hex>",
+      "verdict": "DENY",
+      "severity": "high",
+      "chain_status": "verified"
+    }
+  ]
+}
+```
+
+**Response 401:** no valid human session; machine bearer credentials are not accepted.
+**Response 403:** cross-origin request, missing `evidence.view`, or a raw-identifier
+filter without `audit.raw_view`.
+**Response 422:** malformed/unknown cursor, invalid filter value, timezone-free time
+boundary, or reversed time range.
+
+---
+
+### `POST /audit/detail`
+
+Verifies the complete append-only chain, resolves one exact record hash, and returns
+normalized integrity metadata plus permission-filtered fields. Owner, administrator,
+and auditor roles hold `audit.raw_view` and receive a sanitized raw record. Keys that
+indicate passwords, tokens, secrets, cookies, authorization, CSRF, TOTP, recovery codes,
+or private keys are replaced with `[REDACTED]` even for those roles. Reviewer, operator,
+and viewer roles receive the export allowlist projection: identifiers become SHA-256
+digests, arbitrary fields are withheld, and `raw_record` is `null`.
+
+The endpoint is same-origin, human-session-only, and requires `evidence.view`. It is a
+read-only operation and therefore does not require a CSRF token. Machine bearer
+credentials are not accepted.
+
+**Request body:**
+
+```json
+{
+  "source_hash": "<sha256-hex>"
+}
+```
+
+**Response 200 (privileged example):**
+
+```json
+{
+  "chain_valid": true,
+  "chain_status": "verified",
+  "chain_position": 41,
+  "chain_records": 42,
+  "visibility": "privileged",
+  "event": "chimera.verdict",
+  "timestamp": "2026-07-21T12:30:00Z",
+  "source_hash": "<sha256-hex>",
+  "previous_hash": "<sha256-hex>",
+  "fields": {
+    "action_id": "action-42",
+    "api_token": "[REDACTED]",
+    "verdict": "DENY"
+  },
+  "redacted_fields": ["api_token"],
+  "raw_record": {
+    "event": "chimera.verdict",
+    "hash": "<sha256-hex>",
+    "previous_hash": "<sha256-hex>",
+    "timestamp": "2026-07-21T12:30:00Z",
+    "action_id": "action-42",
+    "api_token": "[REDACTED]",
+    "verdict": "DENY"
+  }
+}
+```
+
+**Response 401:** no valid human session; machine bearer credentials are not accepted.
+**Response 403:** cross-origin request or missing `evidence.view` permission.
+**Response 404:** the hash does not identify a record in the verified snapshot.
+**Response 422:** malformed source hash.
+**Response 503:** audit storage is unavailable or the complete chain is invalid.
+
+---
+
+### `POST /audit/export`
+
+Creates a bounded, redacted JSON export after verifying the complete source chain.
+The server requires the separate `audit.export` human-interface permission, validates
+same-origin CSRF proof, limits each export to 500 matching records, and applies a strict
+field allowlist. Unknown and free-form event fields are omitted and named in each
+record's `redacted_fields`. The canonical `records_sha256` covers exactly the returned
+redacted records. A hash-linked `control_center.audit_export` receipt records only the
+requesting account, counts, bounds, filter digest, and records digest.
+
+Export filtering follows the same visibility boundary as interactive search. Exact
+actor, account, operation, and resource filters require `audit.raw_view`; without that
+permission, `query` searches only the visible summary projection. This applies even to
+roles that hold `audit.export` so matched-record counts cannot disclose hidden values.
+
+**Request body:**
+
+```json
+{
+  "limit": 500,
+  "offset": 0,
+  "query": "action-safe",
+  "event": "chimera.verdict",
+  "actor": "ACTOR-REVIEWER",
+  "account": "account-reviewer",
+  "operation": "evidence.inspect",
+  "resource": "bundle:approved-42",
+  "verdict": "DENY",
+  "severity": "high",
+  "from_time": "2026-07-21T12:00:00Z",
+  "to_time": "2026-07-21T13:00:00Z"
+}
+```
+
+**Response 200 (abridged):**
+
+```json
+{
+  "schema_version": "project-ai.audit-export/v1",
+  "generated_at": "<iso8601>",
+  "source_chain_valid": true,
+  "source_chain_records": 42,
+  "matched_records": 3,
+  "exported_records": 3,
+  "offset": 0,
+  "limit": 500,
+  "filters": {
+    "query": "action-safe",
+    "event": "chimera.verdict",
+    "actor": "ACTOR-REVIEWER",
+    "account": "account-reviewer",
+    "operation": "evidence.inspect",
+    "resource": "bundle:approved-42",
+    "verdict": "DENY",
+    "severity": "high",
+    "from_time": "2026-07-21T12:00:00Z",
+    "to_time": "2026-07-21T13:00:00Z"
+  },
+  "redaction_applied": true,
+  "redaction_policy": "allowlist-v1",
+  "records_sha256": "<sha256-hex>",
+  "export_audit_hash": "<sha256-hex>",
+  "records": [
+    {
+      "event": "chimera.verdict",
+      "timestamp": "<iso8601>",
+      "source_hash": "<sha256-hex>",
+      "previous_hash": "<sha256-hex>",
+      "fields": {"action_id_sha256": "<sha256-hex>", "verdict": "DENY"},
+      "redacted_fields": ["action_id", "source"]
+    }
+  ]
+}
+```
+
+**Response 401:** no valid human session; machine bearer credentials are not accepted.
+**Response 403:** missing/invalid CSRF proof, missing `audit.export`, or a raw-identifier
+filter without `audit.raw_view`.
+**Response 429:** the durable account/source export quota was exceeded; includes
+`Retry-After: 900`.
+**Response 422:** invalid filter value, timezone-free time boundary, or reversed time
+range. The export manifest intentionally records the exact normalized filters; record
+redaction applies to `records`, while the appended audit receipt stores only a digest
+of the filter manifest.
 
 ---
 
@@ -568,9 +805,9 @@ human-readable error context:
 
 ## 4. Rate limits and quotas
 
-Human login, recovery, and MFA paths use durable source/account rate-limit records;
-PostgreSQL updates them under row locks so replicas share one limit. Audit export and
-other expensive read routes still need deployment-level quotas before internet exposure.
+Human login, recovery, MFA, and audit-export paths use durable source/account rate-limit
+records; PostgreSQL updates them under row locks so replicas share one limit. Other
+expensive read routes still need deployment-level quotas before internet exposure.
 
 ---
 

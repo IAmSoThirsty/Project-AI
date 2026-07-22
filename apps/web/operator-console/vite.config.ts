@@ -20,5 +20,17 @@ export default defineConfig({
       },
     },
   },
-  test: { environment: "jsdom", setupFiles: "./src/test-setup.ts" },
+  preview: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        rewrite: (requestPath) => requestPath.replace(/^\/api/, ""),
+      },
+    },
+  },
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.test.{ts,tsx}"],
+    setupFiles: "./src/test-setup.ts",
+  },
 });

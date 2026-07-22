@@ -12,8 +12,8 @@ documentation are not approval evidence.
 
 ## Immutable release input
 
-- Successor code candidate: `6684828d23b08beaac77aee5efadc532bed23181`
-- Candidate CI/vulnerability evidence: `29716300475` / `29716300404` (both passed)
+- Successor code candidate: `eaed9905cacc02e2fb98e3cc92356e8d160e593e`
+- Candidate CI/vulnerability evidence: `29731671162` / `29731671150` (both passed)
 - Historical baseline commit: `82aa1476657e16a1d38caccba38357c83380a3e3`
 - Tag: `v0.0.2`
 - Registry: `ghcr.io`
@@ -30,9 +30,11 @@ working tree and must be replaced with successor digests before deployment.
 The v0.0.3 publish workflow now creates and attaches an image-only values
 overlay containing all eight resolved OCI index digests, then verifies the
 merged render. The base v0.0.2 digests must never be used by changing only the
-tag. Publish run `29731685685` produced the candidate `manual-20260720-eaed990`
-and verified its eight digests, keyless signatures, and SPDX/SLSA registry
-attestation manifests; the digest map is recorded in
+tag. Publish run `29731685685` produced the candidate `manual-20260720-eaed990`.
+Independent cosign v3.1.2 and raw OCI checks verify all eight signatures and
+subject-digest bindings, but the certificates identify the unmerged
+`agent/production-readiness-2026-07-19` branch. No cosign SPDX or SLSA
+attestations are present (0/8); the digest map and gate state are recorded in
 `REMOTE_SUCCESSOR_EVIDENCE.json`.
 
 ## Target record
@@ -119,9 +121,9 @@ and access policy.
 
 ## Local Kubernetes rehearsal evidence
 
-The current Docker context is `desktop-linux`, but the Docker Desktop Linux
-engine is not running, so a new server-side dry run cannot be performed now. A
-prior local `docker-desktop` attempt with `helm/values.prod.yaml` correctly
+The current Docker context is `desktop-linux` and Docker Desktop is running, but
+no approved production Kubernetes target is configured here. A prior local
+`docker-desktop` attempt with `helm/values.prod.yaml` correctly
 stopped because that cluster lacked the Prometheus Operator CRDs required by
 the production `ServiceMonitor` and `PrometheusRule` resources. The same render
 passes when monitoring and alerting are explicitly disabled. This is useful
@@ -165,9 +167,9 @@ must also be pinned by digest; a tag alone is not an approved input.
       owner.
 - [ ] Required CRDs/operators confirmed: Prometheus Operator resources are used
       when monitoring/alerting are enabled.
-- [x] Successor image digests pinned and signature/attestations verified for
-      all eight images by publish run `29731685685`; do not reuse the v0.0.2
-      baseline digests.
+- [ ] Successor image digests pinned, approved-ref provenance verified, and
+      cosign SPDX/SLSA attestations present for all eight images; current
+      branch-provenance signatures are recorded but do not satisfy this gate.
 - [ ] PostgreSQL connectivity, schema compatibility, backup, and restore proven.
 - [ ] DNS, TLS certificate, ingress controller, NetworkPolicy, and external
       connectivity tested.

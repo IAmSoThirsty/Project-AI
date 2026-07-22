@@ -19,6 +19,7 @@ class InterfacePermission(StrEnum):
     TAAR_RUN_READER = "taar.run_reader"
     MODULE_EXECUTION_INITIATE = "modules.execution.initiate"
     AUDIT_EXPORT = "audit.export"
+    AUDIT_RAW_VIEW = "audit.raw_view"
     SYSTEM_CONFIGURE = "system.configure"
 
 
@@ -55,6 +56,7 @@ ROLE_PERMISSIONS: dict[AccountRole, frozenset[InterfacePermission]] = {
         | {
             InterfacePermission.MODULE_ANALYSIS_RUN,
             InterfacePermission.AUDIT_EXPORT,
+            InterfacePermission.AUDIT_RAW_VIEW,
             InterfacePermission.TAAR_VIEW,
         }
     ),

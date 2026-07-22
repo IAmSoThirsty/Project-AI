@@ -20,7 +20,7 @@ export function SurfaceStatus({ surface }: { surface: DashboardSurface }) {
   );
 }
 
-export function StatePanel({ title, children, tone = "neutral" }: { title: string; children: ReactNode; tone?: "neutral" | "error" }) {
+export function StatePanel({ title, children, tone = "neutral" }: { title: string; children: ReactNode; tone?: "neutral" | "warning" | "error" }) {
   return <div className={`state-panel state-${tone}`} role={tone === "error" ? "alert" : "status"}><strong>{title}</strong><span>{children}</span></div>;
 }
 

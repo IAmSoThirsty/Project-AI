@@ -1,4 +1,31 @@
-name: Publish to Docker Hub
+name: Publish to Docker Hub (convenience mirror — NOT a production source)
+
+# ---------------------------------------------------------------------------------
+# NOT PRODUCTION-ELIGIBLE. Recorded 2026-07-20.
+#
+# This workflow publishes the same eight images as publish.yaml to
+# docker.io/iamsothirsty, but with none of the supply-chain assurances:
+#
+#   * no cosign signature          (publish.yaml signs every digest)
+#   * no SBOM or SLSA attestation  (publish.yaml attests both)
+#   * no provenance/sbom build flags
+#   * no digest capture and no verification job
+#   * pushes a mutable `:latest` on every push to main
+#
+# ghcr.io is the ONLY approved production image source. Its digests are the ones
+# pinned in helm/values.prod.yaml and gated by tools/verify_supply_chain.py.
+# Nothing produced here may be deployed to production or used as release evidence.
+#
+# OWNER DECISION REQUIRED — two options, neither taken yet:
+#   (a) restrict: stop pushing `:latest` from main and keep this as a tag-only
+#       mirror, leaving it explicitly non-production (smaller change); or
+#   (b) parity: add cosign signing, attestation, and verification to match
+#       publish.yaml (larger change; needs Docker Hub credentials with the right
+#       scope, and makes Docker Hub a second production-eligible source).
+#
+# Until that decision is recorded, treat every image in this registry as
+# unverified. See docs/operations/cab/EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md.
+# ---------------------------------------------------------------------------------
 
 on:
   push:

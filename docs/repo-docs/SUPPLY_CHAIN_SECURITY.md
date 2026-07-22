@@ -2,11 +2,47 @@
 <!--                                        Productivity: Active -->
 # 🛡️ Supply Chain Security - Threat Coverage Matrix
 
+> ## ⚠️ ACCURACY NOTICE — 2026-07-20: THIS DOCUMENT DESCRIBES A TARGET, NOT THE PIPELINE
+>
+> Verified against the repository on 2026-07-20. Substantial parts of this document
+> describe a pipeline that **does not exist**. Treat it as a design target
+> (AGENTS.md §18: "not implemented"), not as a description of current behaviour.
+>
+> **Specifically not implemented as written:**
+>
+> | Claim in this document | Actual state |
+> |---|---|
+> | `uses: actions/attest-build-provenance@v2.0.0` | **Not present in any workflow.** Attestation uses `cosign attest` via `tools/sign_and_attest_image.sh`. |
+> | `attestations: write` permission | **Not granted anywhere.** |
+> | `./scripts/verify-supply-chain.sh` | **Does not exist.** The real verifier is `tools/verify_supply_chain.py`. |
+> | Single image `ghcr.io/iamsothirsty/project-ai` | Wrong. Eight images, `project-ai-<component>`. |
+> | "Coverage: 13/13 threat classes fully mitigated" | **False.** See below. |
+> | "Verification: Automated at every pipeline execution" | Was false until 2026-07-20. |
+>
+> **What is actually true as of 2026-07-20:**
+>
+> - ✅ All eight image digests carry valid cosign signatures, independently verified
+>   (cosign v3.1.2, digest-pinned verifier image, subject-digest binding confirmed).
+>   **Verification requires cosign >= 3.0** — this repository uses the Sigstore
+>   bundle/OCI-referrers format, which cosign 2.x cannot read.
+> - ❌ **No SBOM or provenance attestation exists for any digest.** `cosign attest` is
+>   now implemented but has never executed. Attestations are produced at build time
+>   and cannot be applied retroactively; a re-publish is required.
+> - ❌ **Release provenance is not established.** The eight candidate digests were
+>   signed from an unmerged agent branch via `workflow_dispatch`.
+> - ❌ A parallel **unsigned** publishing path to Docker Hub exists
+>   (`.github/workflows/docker-hub-publish.yaml`) with no signature, attestation,
+>   or verification.
+>
+> Authoritative sources: `tools/supply_chain_policy.json` (declared format),
+> `tools/verify_supply_chain.py` (verifier),
+> `docs/operations/cab/EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md` (evidence).
+
 This document maps the **13 supply chain threat classes** covered by Project-AI's sovereign CI/CD architecture to specific countermeasures implemented in the pipeline.
 
 ## 🎯 Executive Summary
 
-**Coverage**: 13/13 threat classes fully mitigated **Approach**: Defense in depth with structural enforcement **Verification**: Automated at every pipeline execution
+**Status**: ASPIRATIONAL — see the accuracy notice above. **Intended coverage**: 13/13 threat classes **Approach**: Defense in depth with structural enforcement **Verification**: partially automated; attestation coverage is absent
 
 ______________________________________________________________________
 

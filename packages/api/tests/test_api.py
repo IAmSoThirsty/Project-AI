@@ -13,6 +13,7 @@ from project_ai_api import DoiRecord, ReplayStatus, create_app, load_doi_registr
 from starlette.testclient import TestClient
 
 from accounts import AccountRepository, AccountRole, AccountService, calculate_totp
+from security import AppendOnlyAuditRelay
 from workflows import ReviewDecision, WorkflowRepository, WorkflowService
 
 TOKEN = "stage-12-test-token"
@@ -971,6 +972,501 @@ def test_audit_filters_and_pages_verified_records(tmp_path: Path) -> None:
     assert page["offset"] == 1
     assert page["limit"] == 1
     assert page["records"][0]["action_id"] == "action-alpha"
+
+
+def test_audit_cursor_remains_stable_when_new_records_are_appended(tmp_path: Path) -> None:
+    audit_path = tmp_path / "audit.jsonl"
+    relay = AppendOnlyAuditRelay(audit_path)
+    hashes: dict[str, str] = {}
+    for action_id in ("action-oldest", "action-middle", "action-newest"):
+        record = relay.append(
+            "control.cursor_test",
+            {"action_id": action_id, "verdict": "ALLOW"},
+        )
+        hashes[action_id] = str(record["hash"])
+    client = TestClient(create_app(api_token=TOKEN, audit_path=audit_path, dois=()))
+
+    first = client.get("/audit?limit=2&event=control.cursor_test", headers=AUTH).json()
+    assert [record["action_id"] for record in first["records"]] == [
+        "action-newest",
+        "action-middle",
+    ]
+    assert first["cursor"] is None
+    assert first["next_cursor"] == hashes["action-middle"]
+    assert first["has_more"] is True
+
+    relay.append(
+        "control.cursor_test",
+        {"action_id": "action-appended-after-page-one", "verdict": "ALLOW"},
+    )
+    second = client.get(
+        f"/audit?limit=2&event=control.cursor_test&cursor={first['next_cursor']}",
+        headers=AUTH,
+    ).json()
+    assert [record["action_id"] for record in second["records"]] == ["action-oldest"]
+    assert second["cursor"] == hashes["action-middle"]
+    assert second["next_cursor"] is None
+    assert second["has_more"] is False
+
+    invalid = client.get(f"/audit?cursor={'f' * 64}", headers=AUTH)
+    assert invalid.status_code == 422
+    assert invalid.json()["detail"] == "Audit cursor does not match the current filter set"
+    combined = client.get(
+        f"/audit?offset=1&cursor={hashes['action-middle']}",
+        headers=AUTH,
+    )
+    assert combined.status_code == 422
+    assert combined.json()["detail"] == "Audit cursor and offset cannot be combined"
+
+
+def test_human_audit_search_uses_session_authority_and_body_filters(tmp_path: Path) -> None:
+    audit_path = tmp_path / "audit.jsonl"
+    client = _auth_client(tmp_path)
+    _bootstrap_auth(client)
+    AppendOnlyAuditRelay(audit_path).append(
+        "control.human_search",
+        {
+            "actor_id": "ACTOR-OWNER",
+            "operation": "evidence.inspect",
+            "resource": "private/repository/path",
+            "severity": "high",
+        },
+    )
+    response = client.post(
+        "/audit/search",
+        json={
+            "limit": 25,
+            "event": "control.human_search",
+            "actor": "ACTOR-OWNER",
+            "operation": "evidence.inspect",
+            "resource": "private/repository/path",
+            "severity": "high",
+        },
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["filtered_count"] == 1
+    assert payload["records"][0] == {
+        "event": "control.human_search",
+        "timestamp": payload["records"][0]["timestamp"],
+        "source_hash": payload["records"][0]["source_hash"],
+        "previous_hash": "0" * 64,
+        "verdict": None,
+        "severity": "high",
+        "chain_status": "verified",
+    }
+    serialized = json.dumps(payload["records"], sort_keys=True)
+    assert "ACTOR-OWNER" not in serialized
+    assert "evidence.inspect" not in serialized
+    assert "private/repository/path" not in serialized
+
+    cross_origin = client.post(
+        "/audit/search",
+        headers={"Origin": "https://attacker.example"},
+        json={"resource": "private/repository/path"},
+    )
+    assert cross_origin.status_code == 403
+    machine = TestClient(client.app)
+    machine_denied = machine.post("/audit/search", headers=AUTH, json={})
+    assert machine_denied.status_code == 401
+    assert machine_denied.json()["detail"] == "Human session required for audit search"
+
+
+def test_audit_detail_gives_privileged_roles_safe_raw_evidence(tmp_path: Path) -> None:
+    audit_path = tmp_path / "audit.jsonl"
+    client = _auth_client(tmp_path)
+    _bootstrap_auth(client)
+    record = AppendOnlyAuditRelay(audit_path).append(
+        "control.detail",
+        {
+            "action_id": "action-detail-1",
+            "actor_id": "ACTOR-OWNER",
+            "api_token": "never-return-this-token",
+            "message": "<script>evidence remains text</script>",
+            "operation": "evidence.inspect",
+            "resource": "private/repository/path",
+            "severity": "high",
+            "verdict": "DENY",
+        },
+    )
+    source_hash = str(record["hash"])
+
+    response = client.post("/audit/detail", json={"source_hash": source_hash})
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["chain_valid"] is True
+    assert payload["chain_status"] == "verified"
+    assert payload["chain_position"] == payload["chain_records"] == 1
+    assert payload["visibility"] == "privileged"
+    assert payload["source_hash"] == source_hash
+    assert payload["fields"]["action_id"] == "action-detail-1"
+    assert payload["fields"]["resource"] == "private/repository/path"
+    assert payload["fields"]["api_token"] == "[REDACTED]"
+    assert payload["raw_record"]["message"] == "<script>evidence remains text</script>"
+    assert payload["raw_record"]["api_token"] == "[REDACTED]"
+    assert payload["redacted_fields"] == ["api_token"]
+    assert "never-return-this-token" not in json.dumps(payload, sort_keys=True)
+
+    cross_origin = client.post(
+        "/audit/detail",
+        headers={"Origin": "https://attacker.example"},
+        json={"source_hash": source_hash},
+    )
+    assert cross_origin.status_code == 403
+    missing = client.post("/audit/detail", json={"source_hash": "f" * 64})
+    assert missing.status_code == 404
+    machine = TestClient(client.app)
+    machine_denied = machine.post(
+        "/audit/detail",
+        headers=AUTH,
+        json={"source_hash": source_hash},
+    )
+    assert machine_denied.status_code == 401
+    assert machine_denied.json()["detail"] == "Human session required for audit search"
+
+
+def test_audit_detail_redacts_raw_evidence_for_reviewer(tmp_path: Path) -> None:
+    audit_path = tmp_path / "audit.jsonl"
+    accounts = AccountService(
+        AccountRepository(tmp_path / "accounts.db"),
+        setup_secret="one-time-setup",
+        password_hasher=PasswordHasher(iterations=1_000),
+        mfa_encryption_key=MFA_KEY,
+    )
+    application = create_app(
+        api_token=TOKEN,
+        audit_path=audit_path,
+        dois=(),
+        account_service=accounts,
+    )
+    owner_client = TestClient(application)
+    owner = _bootstrap_auth(owner_client)
+    owner_token = owner_client.cookies.get("project_ai_session")
+    assert owner_token is not None
+    reviewer_result = accounts.create_managed_account(
+        owner_token,
+        str(owner["csrf_token"]),
+        username="reviewer.one",
+        display_name="Reviewer One",
+        password="Temporary!Reviewer123",
+        role=AccountRole.REVIEWER,
+        actor_id="ACTOR-REVIEWER",
+        source="pytest",
+    )
+    accounts.repository.change_password(
+        reviewer_result.account.id,
+        reviewer_result.account.password_hash,
+        datetime.now(UTC),
+    )
+    record = AppendOnlyAuditRelay(audit_path).append(
+        "control.detail",
+        {
+            "action_id": "action-private",
+            "actor_id": "ACTOR-OWNER",
+            "api_token": "never-return-this-token",
+            "message": "private investigation narrative",
+            "operation": "evidence.inspect",
+            "resource": "private/repository/path",
+            "severity": "high",
+            "verdict": "ESCALATE",
+        },
+    )
+    reviewer = TestClient(application)
+    login = reviewer.post(
+        "/api/v1/auth/login",
+        json={"username": "reviewer.one", "password": "Temporary!Reviewer123"},
+    )
+    assert login.status_code == 200
+
+    response = reviewer.post(
+        "/audit/detail",
+        json={"source_hash": str(record["hash"])},
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["visibility"] == "redacted"
+    assert payload["raw_record"] is None
+    assert payload["fields"] == {
+        "action_id_sha256": hashlib.sha256(b"action-private").hexdigest(),
+        "actor_id_sha256": hashlib.sha256(b"ACTOR-OWNER").hexdigest(),
+        "severity": "high",
+        "verdict": "ESCALATE",
+    }
+    assert payload["redacted_fields"] == [
+        "action_id",
+        "actor_id",
+        "api_token",
+        "message",
+        "operation",
+        "resource",
+    ]
+    serialized = json.dumps(payload, sort_keys=True)
+    for private_value in (
+        "action-private",
+        "ACTOR-OWNER",
+        "never-return-this-token",
+        "private investigation narrative",
+        "private/repository/path",
+    ):
+        assert private_value not in serialized
+
+    blind_filter = reviewer.post(
+        "/audit/search",
+        json={"actor": "ACTOR-OWNER"},
+    )
+    assert blind_filter.status_code == 403
+    assert blind_filter.json()["detail"] == ("Raw audit filters require permission: audit.raw_view")
+    blind_query = reviewer.post(
+        "/audit/search",
+        json={"query": "action-private"},
+    )
+    assert blind_query.status_code == 200
+    assert blind_query.json()["filtered_count"] == 0
+    safe_hash_query = reviewer.post(
+        "/audit/search",
+        json={"query": str(record["hash"])},
+    )
+    assert safe_hash_query.status_code == 200
+    assert safe_hash_query.json()["filtered_count"] == 1
+    export_filter = reviewer.post(
+        "/audit/export",
+        headers={"X-CSRF-Token": str(login.json()["csrf_token"])},
+        json={"resource": "private/repository/path"},
+    )
+    assert export_filter.status_code == 403
+    assert export_filter.json()["detail"] == (
+        "Raw audit filters require permission: audit.raw_view"
+    )
+
+
+def test_audit_filters_actor_account_operation_resource_verdict_severity_and_time(
+    tmp_path: Path,
+) -> None:
+    audit_path = tmp_path / "audit.jsonl"
+    relay = AppendOnlyAuditRelay(audit_path)
+    relay.append(
+        "control.filtered",
+        {
+            "actor_id": "ACTOR-REVIEWER",
+            "initiated_by": "account-reviewer",
+            "operation": "evidence.inspect",
+            "resource": "bundle:approved-42",
+            "verdict": "ESCALATE",
+            "severity": "high",
+            "timestamp": "2026-07-21T12:30:00+00:00",
+        },
+    )
+    relay.append(
+        "control.filtered",
+        {
+            "actor_id": "ACTOR-OTHER",
+            "initiated_by": "account-other",
+            "operation": "evidence.read",
+            "resource": "bundle:other",
+            "verdict": "ALLOW",
+            "severity": "low",
+            "timestamp": "2026-07-21T13:30:00+00:00",
+        },
+    )
+    client = TestClient(create_app(api_token=TOKEN, audit_path=audit_path, dois=()))
+    result = client.get(
+        "/audit",
+        headers=AUTH,
+        params={
+            "event": "control.filtered",
+            "actor": "actor-reviewer",
+            "account": "ACCOUNT-REVIEWER",
+            "operation": "evidence.inspect",
+            "resource": "bundle:approved-42",
+            "verdict": "ESCALATE",
+            "severity": "HIGH",
+            "from_time": "2026-07-21T12:00:00Z",
+            "to_time": "2026-07-21T13:00:00Z",
+        },
+    )
+    assert result.status_code == 200
+    payload = result.json()
+    assert payload["filtered_count"] == 1
+    assert payload["records"][0]["actor_id"] == "ACTOR-REVIEWER"
+
+    naive = client.get("/audit?from_time=2026-07-21T12:00:00", headers=AUTH)
+    assert naive.status_code == 422
+    assert naive.json()["detail"] == "Audit time filters must include a timezone offset"
+    reversed_range = client.get(
+        "/audit?from_time=2026-07-22T00:00:00Z&to_time=2026-07-21T00:00:00Z",
+        headers=AUTH,
+    )
+    assert reversed_range.status_code == 422
+    assert reversed_range.json()["detail"] == "Audit from_time must not be later than to_time"
+
+
+def test_audit_export_is_redacted_digested_and_audit_recorded(tmp_path: Path) -> None:
+    audit_path = tmp_path / "audit.jsonl"
+    client = _auth_client(tmp_path)
+    owner = _bootstrap_auth(client)
+    secret = "private-export-marker"
+    AppendOnlyAuditRelay(audit_path).append(
+        "control.test",
+        {
+            "action_id": "action-safe",
+            "actor_id": "ACTOR-OWNER",
+            "api_token": secret,
+            "initiated_by": "account-owner",
+            "input_sha256": "a" * 64,
+            "message": f"do not export {secret}",
+            "operation": "evidence.export",
+            "resource": "private/repository/path",
+            "severity": "high",
+            "timestamp": "2026-07-21T12:30:00+00:00",
+            "verdict": "DENY",
+        },
+    )
+
+    missing_csrf = client.post("/audit/export", json={"event": "control.test"})
+    assert missing_csrf.status_code == 403
+    cross_origin = client.post(
+        "/audit/export",
+        headers={
+            "Origin": "https://attacker.example",
+            "X-CSRF-Token": str(owner["csrf_token"]),
+        },
+        json={"event": "control.test"},
+    )
+    assert cross_origin.status_code == 403
+
+    response = client.post(
+        "/audit/export",
+        headers={"X-CSRF-Token": str(owner["csrf_token"])},
+        json={
+            "limit": 500,
+            "query": "action-safe",
+            "event": "control.test",
+            "actor": "ACTOR-OWNER",
+            "account": "account-owner",
+            "operation": "evidence.export",
+            "resource": "private/repository/path",
+            "verdict": "DENY",
+            "severity": "high",
+            "from_time": "2026-07-21T12:00:00Z",
+            "to_time": "2026-07-21T13:00:00Z",
+        },
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["schema_version"] == "project-ai.audit-export/v1"
+    assert payload["source_chain_valid"] is True
+    assert payload["source_chain_records"] == 1
+    assert payload["matched_records"] == payload["exported_records"] == 1
+    assert payload["redaction_applied"] is True
+    assert payload["redaction_policy"] == "allowlist-v1"
+    record = payload["records"][0]
+    assert record["fields"] == {
+        "action_id_sha256": hashlib.sha256(b"action-safe").hexdigest(),
+        "actor_id_sha256": hashlib.sha256(b"ACTOR-OWNER").hexdigest(),
+        "initiated_by_sha256": hashlib.sha256(b"account-owner").hexdigest(),
+        "input_sha256": "a" * 64,
+        "severity": "high",
+        "verdict": "DENY",
+    }
+    assert record["redacted_fields"] == [
+        "action_id",
+        "actor_id",
+        "api_token",
+        "initiated_by",
+        "message",
+        "operation",
+        "resource",
+    ]
+    assert payload["filters"] == {
+        "query": "action-safe",
+        "event": "control.test",
+        "actor": "ACTOR-OWNER",
+        "account": "account-owner",
+        "operation": "evidence.export",
+        "resource": "private/repository/path",
+        "verdict": "DENY",
+        "severity": "high",
+        "from_time": "2026-07-21T12:00:00Z",
+        "to_time": "2026-07-21T13:00:00Z",
+    }
+    serialized = json.dumps(payload, sort_keys=True)
+    assert secret not in serialized
+    assert "private/repository/path" not in json.dumps(payload["records"], sort_keys=True)
+    canonical_records = json.dumps(
+        payload["records"], ensure_ascii=True, separators=(",", ":"), sort_keys=True
+    ).encode()
+    assert hashlib.sha256(canonical_records).hexdigest() == payload["records_sha256"]
+
+    audit_lines = audit_path.read_text(encoding="utf-8").splitlines()
+    export_receipt = json.loads(audit_lines[-1])
+    assert export_receipt["event"] == "control_center.audit_export"
+    assert export_receipt["records_sha256"] == payload["records_sha256"]
+    assert export_receipt["hash"] == payload["export_audit_hash"]
+    assert "action-safe" not in audit_lines[-1]
+    assert "control.test" not in audit_lines[-1]
+
+
+def test_audit_export_denies_machine_and_non_export_roles(tmp_path: Path) -> None:
+    accounts = AccountService(
+        AccountRepository(tmp_path / "accounts.db"),
+        setup_secret="one-time-setup",
+        password_hasher=PasswordHasher(iterations=1_000),
+        mfa_encryption_key=MFA_KEY,
+    )
+    application = create_app(
+        api_token=TOKEN,
+        audit_path=tmp_path / "audit.jsonl",
+        dois=(),
+        account_service=accounts,
+    )
+    owner_client = TestClient(application)
+    owner = _bootstrap_auth(owner_client)
+    token = owner_client.cookies.get("project_ai_session")
+    assert token is not None
+    operator_result = accounts.create_managed_account(
+        token,
+        str(owner["csrf_token"]),
+        username="operator.one",
+        display_name="Operator One",
+        password="Temporary!Operator123",
+        role=AccountRole.OPERATOR,
+        actor_id="ACTOR-OPERATOR",
+        source="pytest",
+    )
+    accounts.repository.change_password(
+        operator_result.account.id,
+        operator_result.account.password_hash,
+        datetime.now(UTC),
+    )
+
+    machine = TestClient(application)
+    machine_denied = machine.post("/audit/export", headers=AUTH, json={})
+    assert machine_denied.status_code == 401
+    assert machine_denied.json()["detail"] == "Human session required for audit export"
+
+    operator = TestClient(application)
+    login = operator.post(
+        "/api/v1/auth/login",
+        json={"username": "operator.one", "password": "Temporary!Operator123"},
+    )
+    denied = operator.post(
+        "/audit/export",
+        headers={"X-CSRF-Token": login.json()["csrf_token"]},
+        json={},
+    )
+    assert denied.status_code == 403
+    assert denied.json()["detail"] == "Interface permission required: audit.export"
+
+
+def test_audit_export_uses_durable_action_rate_limit(tmp_path: Path) -> None:
+    client = _auth_client(tmp_path)
+    owner = _bootstrap_auth(client)
+    headers = {"X-CSRF-Token": str(owner["csrf_token"])}
+    for _ in range(10):
+        assert client.post("/audit/export", headers=headers, json={"limit": 1}).status_code == 200
+    blocked = client.post("/audit/export", headers=headers, json={"limit": 1})
+    assert blocked.status_code == 429
+    assert blocked.headers["retry-after"] == "900"
 
 
 def test_canary_route_never_persists_raw_canary(tmp_path: Path) -> None:

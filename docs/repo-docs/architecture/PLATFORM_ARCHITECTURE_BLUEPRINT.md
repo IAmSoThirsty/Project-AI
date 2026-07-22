@@ -7,7 +7,19 @@ Productivity: Active
 ![ToG Compliance Certified](https://img.shields.io/badge/ToG_Compliance-Certified-gold?style=for-the-badge&logo=opsgenie&logoColor=white)
 ![Documentation Quality Superior](https://img.shields.io/badge/Documentation_Quality-Superior-blue?style=for-the-badge&logo=googledocs&logoColor=white)
 
-**Version:** 1.0 **Date:** February 2026 **Status:** Production-Grade **Audience:** Architects, Engineers, DevOps
+**Version:** 1.0 **Date:** February 2026 **Status:** Design reference (aspirational — see accuracy notice) **Audience:** Architects, Engineers, DevOps
+
+> **⚠️ Accuracy notice (2026-07-20):** the "Production-Grade", "Certified", and
+> "SLSA Level 3 attestation" claims in this document describe **intended** design
+> targets, not the current verified state. As of 2026-07-20: no image digest
+> carries a verifiable SBOM or provenance attestation (**0/8**), so **SLSA
+> Level 3 is not substantiated**; the eight signed digests carry **branch**, not
+> release, provenance; and production readiness is **not** established and
+> deployment is **not** authorized. Image *signatures* are real and independently
+> verified (8/8, cosign ≥ 3). Authoritative:
+> `docs/operations/cab/EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md`,
+> `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`, and
+> `tools/supply_chain_policy.json`.
 
 ______________________________________________________________________
 

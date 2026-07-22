@@ -8,18 +8,22 @@
 The v0.0.2 material below is retained as historical evidence only. The
 immutable v0.0.3 successor code candidate is
 `eaed9905cacc02e2fb98e3cc92356e8d160e593e`; successor CI run `29731671162`,
-vulnerability scan `29731671150`, and publish/registry verification run
-`29731685685` all passed. The publish workflow verified all eight keyless
-signatures and the registry exposes SPDX and SLSA attestation manifests for
-each digest. External proof custody, target approval, and deployment/rollback
-evidence remain open.
+vulnerability scan `29731671150`, and publish run `29731685685` all passed.
+The publish log claimed eight keyless signatures and registry attestations.
+Independent re-verification now confirms 8/8 digest-bound signatures with
+cosign v3.1.2 plus a raw OCI referrers check; the earlier cosign v2.6 `.sig`
+lookup was a format limitation. The certificates identify the unmerged
+`agent/production-readiness-2026-07-19` branch, not an approved release ref, and
+no cosign SPDX/SLSA attestations are present (0/8). External proof custody,
+target approval, and deployment/rollback evidence remain open.
 
 ### Successor publish verification — `manual-20260720-eaed990`
 
-The publish workflow built and pushed all eight images from `eaed9905`, ran
-keyless cosign verification, and passed the immutable overlay render check.
-The exact digest map and per-image registry attestation-manifest references are
-machine-recorded in `REMOTE_SUCCESSOR_EVIDENCE.json`.
+The publish workflow built and pushed all eight images from `eaed9905`, ran its
+workflow-local cosign verification, and passed the immutable overlay render
+check. The exact digest map and the independent-audit discrepancy are recorded
+in `REMOTE_SUCCESSOR_EVIDENCE.json` and
+`EXTERNAL_AUDITOR_EVIDENCE_2026-07-20.md`.
 
 > **Supersession notice:** v0.0.2 is no longer a deployable candidate. The
 > remediation working tree contains CI, runtime, monitoring, security, and
@@ -49,7 +53,7 @@ successor publish run now verifies and documents all eight images.
 |---|---|---|
 | Publish `29679414341` | Passed | Eight image build/sign jobs, seven-image pull verification, SBOM/provenance configuration, and release notes succeeded |
 | Publish `29679407181` | Passed | Duplicate exact-commit publish run also succeeded |
-| Publish `29731685685` | Passed | Successor branch built all eight images, verified keyless signatures, exposed exact digests, registry SPDX/SLSA attestations, and passed merged Helm overlay verification |
+| Publish `29731685685` | Passed | Successor branch built all eight images, exposed exact digests, verified branch-provenance signatures, and passed merged Helm overlay verification; independent attestation check is 0/8 |
 | Publish to Docker Hub `29679414310` | Passed | Secondary registry publish succeeded; not the Helm source in this change |
 | Verify TAAR bundle `29679414313` | Passed | Clean-clone TAAR evidence verification succeeded |
 | CI `29679407137` | **Failed** | Release cannot be described as CI-green |
@@ -85,10 +89,10 @@ was not read, changed, staged, or used by these commands.
 | API Prometheus endpoint | Live `/metrics` exposes build info, bounded request counter, and latency histogram |
 | Python dependency audit | OSV audit passed after upgrading locked `setuptools` 82.0.1 to 83.0.0 |
 | Node dependency audit | `pnpm audit --audit-level=moderate` reported no known vulnerabilities |
-| Web acceptance | ESLint passed; four portal suites passed (61 tests total); all four production builds passed | Working-tree evidence only; no immutable successor artifact |
-| Android acceptance | `testDebugUnitTest assembleDebug` passed with the configured SDK | Working-tree evidence only; unsigned debug artifact and remote release evidence remain out of scope |
-| Desktop acceptance | Offscreen source smoke and unsigned PyInstaller onedir build/smoke passed under Python 3.12.10 | Working-tree evidence only; signed installer/release artifact remains unverified |
-| Standalone Waterfall full suite | `T:\\01-Projects\\Thirstys-waterfall`: `uv sync --frozen --extra test` followed by `uv run python -m pytest -q --no-cov` passed **309 tests** with no warnings | Correct repository-environment replay; standalone target/registry release evidence remains external |
+| Web acceptance | ESLint passed; four portal suites passed (61 tests total); all four production builds passed **Scope:** Working-tree evidence only; no immutable successor artifact |
+| Android acceptance | `testDebugUnitTest assembleDebug` passed with the configured SDK **Scope:** Working-tree evidence only; unsigned debug artifact and remote release evidence remain out of scope |
+| Desktop acceptance | Offscreen source smoke and unsigned PyInstaller onedir build/smoke passed under Python 3.12.10 **Scope:** Working-tree evidence only; signed installer/release artifact remains unverified |
+| Standalone Waterfall full suite | `T:\\01-Projects\\Thirstys-waterfall`: `uv sync --frozen --extra test` followed by `uv run python -m pytest -q --no-cov` passed **309 tests** with no warnings **Scope:** Correct repository-environment replay; standalone target/registry release evidence remains external |
 
 The local full suite does not replace the failed remote CI run; both facts must
 remain visible.
@@ -97,10 +101,11 @@ remain visible.
 
 | Control | Evidence | Status |
 |---|---|---|
-| Container signatures | Successor publish `29731685685` uses keyless cosign for each of the eight candidate outputs | **Pass for candidate `eaed9905`;** target approval and external custody remain open |
-| Cosign verification attempt | Historical v0.0.2 API digest returned `no signatures found`; successor registry verification passed for all eight digests | **Pass for candidate `eaed9905`** |
+| Container signatures | Successor publish `29731685685` logs keyless cosign verification for each of the eight candidate outputs | **VERIFIED 2026-07-20 (8/8):** re-checked with cosign v3.1.2 from digest-pinned image `ghcr.io/sigstore/cosign/cosign@sha256:d91bc4e7e95e…`, plus a cosign-independent OCI referrers layout check; subject-digest binding confirmed per image. The earlier cosign v2.6.0 `no signatures found` result was a **format limitation** — v2.x reads only legacy `.sig` tags, which the cosign v3 bundle/referrers format never writes. **Requires cosign >= 3.0.** |
+| Release provenance | Certificate SAN for all eight digests | **BLOCKER:** binds to `…/publish.yaml@refs/heads/agent/production-readiness-2026-07-19` — an unmerged branch built via `workflow_dispatch`, not `main` or a `v*` tag. The workflow's own identity pattern ended in `@.*$`, accepting any ref. Re-publish from an approved ref required |
+| Cosign verification attempt | Independent GHCR-authenticated check using cosign v3.1.2 and raw OCI referrers | **Pass for signatures (8/8);** the earlier cosign v2.6 `.sig` lookup was a format limitation. Attestations remain absent 0/8 |
 | Image pull/manifest | Successor publish pulled and inspected all eight images | **Pass for candidate `eaed9905`** |
-| SBOM/provenance | Buildx `sbom: true`, `provenance: mode=max`; registry attestation manifests expose SPDX and SLSA predicate layers for all eight digests | **Pass for candidate `eaed9905`;** exact references are in `REMOTE_SUCCESSOR_EVIDENCE.json` |
+| SBOM/provenance | Buildx `sbom: true`, `provenance: mode=max`; workflow documentation calls these informational and not independently cosign-signed | **Unverified:** `gh attestation verify --bundle-from-oci` found no OCI attestations |
 | Python dependency audit | Pinned pip-audit 2.10.1 / OSV | Remediated lock passes; v0.0.2 lock contained vulnerable setuptools 82.0.1 |
 | Python dependency licenses | Explicit allow-list plus installed-artifact verification for cel-python 0.4.0's missing metadata field | Local v0.0.3 gate passes; remote successor run required |
 | Trivy image scan | Remediation scans all eight images on release publication | Candidate vulnerability workflow `29731671150` passed; detailed scan artifact remains an attachment requirement |
@@ -134,9 +139,9 @@ remain visible.
 | V3Q required-mode startup | Helm render sets required mode and mounted key path; target startup not run |
 | Waterfall standalone/rebuild replay | Passed: standalone repair gate `35/35`; standalone full suite `309 passed` with no warnings using the locked test extra; Project-AI copied replay `313 passed`; copied source/tests/examples direct Ruff check passes; typed adapter/transport checks green |
 | Waterfall-integrated API image | Passed: rebuilt `project-ai-api:waterfall-route-local` (`sha256:9f6f2125531a8fdad6293e81698ba7e1683dbb3588f6819e18acf4124d11e4bc`); image imports `project_ai_waterfall` and `waterfall_adapter`, exposes the Waterfall OpenAPI route, and excludes the owner-private path |
-| Standalone Waterfall web candidate | Rebuilt `thirstys-waterfall:production-candidate`; zero HIGH/CRITICAL Trivy findings and temporary `/health` probe returned 200; prior `latest` image had eight HIGH findings and is not promotable | Local candidate only; standalone registry publication, signature, and independent CI evidence remain required |
+| Standalone Waterfall web candidate | Rebuilt `thirstys-waterfall:production-candidate`; zero HIGH/CRITICAL Trivy findings and temporary `/health` probe returned 200; prior `latest` image had eight HIGH findings and is not promotable **Scope:** Local candidate only; standalone registry publication, signature, and independent CI evidence remain required |
 | Waterfall authenticated API surface | Passed locally: status and operation routes require machine auth; operation requires V3Q-wired adapter/audit and records evidence hashes; OpenAPI baseline regenerated |
-| ADR-002 machine credentials | Passed locally: schema version 5 (SQLite/PostgreSQL), owner/MFA-protected one-time token issuance, scope enforcement, revocation, machine-write attribution, and SQLite→PostgreSQL migration against disposable PostgreSQL 16; focused account/API and 5 integration tests passed | Production-target migration/rollback and credential provisioning remain open |
+| ADR-002 machine credentials | Passed locally: schema version 5 (SQLite/PostgreSQL), owner/MFA-protected one-time token issuance, scope enforcement, revocation, machine-write attribution, and SQLite→PostgreSQL migration against disposable PostgreSQL 16; focused account/API and 5 integration tests passed **Scope:** Production-target migration/rollback and credential provisioning remain open |
 | Waterfall image secret containment | Passed: local image and host checkout report the V3Q owner-private path absent; independent key-retirement/custody proof and other production gates remain open |
 
 ## Commands to complete the security bundle
@@ -146,12 +151,12 @@ to the external change record. Pin by digest, not only by tag.
 
 ```powershell
 cosign verify `
-  --certificate-identity-regexp '^https://github.com/IAmSoThirsty/Project-AI/.github/workflows/publish.yaml@.*$' `
+  --certificate-identity-regexp '^https://github[.]com/IAmSoThirsty/Project-AI/[.]github/workflows/publish[.]yaml@refs/(tags/v[^/]+|heads/main)$' `
   --certificate-oidc-issuer https://token.actions.githubusercontent.com `
   ghcr.io/iamsothirsty/project-ai-<IMAGE>@<DIGEST>
 
 cosign verify-attestation `
-  --certificate-identity-regexp '^https://github.com/IAmSoThirsty/Project-AI/.github/workflows/publish.yaml@.*$' `
+  --certificate-identity-regexp '^https://github[.]com/IAmSoThirsty/Project-AI/[.]github/workflows/publish[.]yaml@refs/(tags/v[^/]+|heads/main)$' `
   --certificate-oidc-issuer https://token.actions.githubusercontent.com `
   ghcr.io/iamsothirsty/project-ai-<IMAGE>@<DIGEST>
 ```

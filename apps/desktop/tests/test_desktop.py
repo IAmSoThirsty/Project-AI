@@ -139,6 +139,64 @@ def test_main_window_exposes_six_read_only_operator_pages(qt_app: QApplication) 
     window.close()
 
 
+def test_main_window_exposes_assistive_technology_metadata(qt_app: QApplication) -> None:
+    factory = lambda url, token, timeout: FakeGateway()  # noqa: E731
+    window = MainWindow(factory)
+
+    assert window.accessibleName() == "Project-AI read-only operator desktop"
+    assert window.accessibleDescription()
+    assert window.statusBar() is not None
+    assert window.statusBar().accessibleName() == "Operator status messages"
+    assert window.navigation.accessibleName() == "Operator sections"
+    assert window.navigation.accessibleDescription()
+    assert window.pages.accessibleName() == "Selected operator section"
+    assert all(
+        window.pages.widget(index).accessibleName() == page_name
+        for index, page_name in enumerate(
+            (
+                "Gateway status",
+                "Canonical replay evidence",
+                "Chimera audit evidence",
+                "Capability inspector",
+                "Governance contract",
+                "Connection settings",
+            )
+        )
+    )
+
+    named_controls = (
+        window.status_summary,
+        window.status_detail,
+        window.replay_table,
+        window.audit_limit,
+        window.audit_table,
+        window.capability_input,
+        window.capability_output,
+        window.api_url_input,
+        window.api_token_input,
+        window.timeout_input,
+    )
+    assert all(control.accessibleName() for control in named_controls)
+    assert all(
+        control.accessibleDescription()
+        for control in (
+            window.status_detail,
+            window.replay_table,
+            window.audit_limit,
+            window.audit_table,
+            window.capability_input,
+            window.capability_output,
+            window.api_url_input,
+            window.api_token_input,
+            window.timeout_input,
+        )
+    )
+    assert "operator-token" not in " ".join(
+        control.accessibleDescription() for control in named_controls
+    )
+    window.close()
+
+
 def test_main_window_fails_closed_on_gateway_and_invalid_capability(qt_app: QApplication) -> None:
     factory = lambda url, token, timeout: FakeGateway(fail=True)  # noqa: E731
     window = MainWindow(factory)
