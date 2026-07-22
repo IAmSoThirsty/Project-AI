@@ -11,7 +11,7 @@
 - **Created (net-new):** `docs/standards/README.md` (guidebook index/governance stack/source map);
   `AGENT_OPERATING_CONTRACT.md` (Part II); `THIRSTYS_UX_UI_STANDARD_V1.md` (Part III text, complements
   the existing PDF); `GLOSSARY_AND_REFERENCE.md` (Part V); `agent-role-templates/README.md` + the 20
-  role contracts `01-architect.md` … `20-decision-arbiter.md` (Part VI) — 26 files.
+  role contracts `01-architect.md` … `20-decision-arbiter.md` (Part VI) — 25 new markdown files.
 - **Modified:** `AGENTS.md` — added §2.8 "Integrated Governance Standards" wiring the new docs into
   the binding overlay (UX/UI Standard declared binding for `apps/web`, `apps/desktop`, `apps/android`).
 - **Validation:** Path/link integrity check passed — every relative link in the new standards docs
