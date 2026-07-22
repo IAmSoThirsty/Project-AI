@@ -25,7 +25,9 @@ The build fails closed unless `projectAiApiBaseUrl` is a parseable HTTPS URL wit
 and no embedded credentials, query, or fragment. Cloud backup and device transfer are
 disabled for every app storage domain. The interface uses density-independent sizing, a
 bounded scrollable result region, selectable/linkable evidence, an accessibility heading,
-and concise async load announcements.
+a polite accessibility live region for concise async load and result updates. While one
+read is pending, both surface actions are disabled so the shared result cannot be
+overwritten by competing completion order.
 
 The version is `0.0.3`; the APK is unsigned beyond the normal Android debug key and is
 not a release artifact. Manual TalkBack acceptance still requires an emulator or device

@@ -1,5 +1,507 @@
 # Operational Continuity Map - Updated
 
+## SESSION UPDATE 2026-07-22 — Durable work-queue action-state hardening
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by removing
+  duplicate-action races from request recording and human review workflows.
+- **Implemented:** Request creation and Inbox human-review controls now guard
+  against repeated activation, disable while their durable calls are pending,
+  and expose `Recording request…` / `Recording review…` labels. Request detail
+  and cancellation controls now also serialize in-flight reads and mutations
+  with explicit `Loading detail…` / `Cancelling…` states.
+- **Validation:** Operator-console component coverage passed 69/69 and the
+  aggregate web suite passed 111/111. The full Windows Chromium suite passed
+  40/40 and the digest-pinned Linux read-only suite passed 40/40 (13 screenshot
+  comparisons plus 27 functional checks). Repository web lint passed with zero
+  warnings. The rebuilt operator-console Docker image reached healthy status
+  with all nine Compose services healthy; API and portal health probes returned
+  HTTP 200. No visual baseline was changed.
+- **Safe to continue:** Yes for local web UX hardening; no for production
+  deployment until the documented owner, provenance, attestation, and live
+  operations gates are satisfied.
+
+## SESSION UPDATE 2026-07-22 — SWR submission-state hardening
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by closing
+  the duplicate-submit race in the highest-authority SWR workflow.
+- **Implemented:** The execution-gate submit control now tracks the in-flight
+  request, disables while the durable receipt is pending, and exposes the
+  operation-specific `Submitting through execution gate…` state. A component
+  regression test proves the control cannot be activated twice during the
+  pending request and that the receipt still renders after completion.
+- **Validation:** Operator-console component coverage passed 67/67 and the
+  aggregate web suite passed 109/109. The full Windows Chromium suite passed
+  40/40 and the digest-pinned Linux read-only suite passed 40/40 (13 screenshot
+  comparisons plus 27 functional checks). No visual baseline was changed.
+- **Safe to continue:** Yes for local web UX hardening; no for production
+  deployment until the documented owner, provenance, attestation, and live
+  operations gates are satisfied.
+
+## SESSION UPDATE 2026-07-22 — Reviewer/administrator role-matrix coverage
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by closing the
+  documented role-matrix gap in the production-built operator console.
+- **Implemented evidence:** Added a reviewer Inbox check proving submitted
+  human-review work is exposed without request-submission or execution authority.
+  Added an administrator check proving the account-management surface, role
+  controls, and server-authorized boundary are present.
+- **Validation:** Targeted Chromium role checks passed 2/2. The full Windows
+  Chromium suite passed 40/40 (13 screenshot comparisons plus 27 functional
+  checks). The digest-pinned Linux read-only suite independently passed 40/40.
+  No visual baseline was changed.
+- **Safe to continue:** Yes for deterministic role-matrix acceptance. Manual
+  NVDA/TalkBack, code signing, and live production operational gates remain open.
+
+## SESSION UPDATE 2026-07-22 — Android result-surface concurrency hardening
+
+- **Task / mode:** Continue cross-client UX/UI production-deployment readiness
+  by removing a shared-result race in the Android read-only client.
+- **Implemented:** Both DOI and replay actions now disable while either read is
+  pending, so asynchronous completion order cannot overwrite the result surface
+  with a competing operation. The existing polite live region and operation-
+  specific loading announcement remain intact.
+- **Validation:** `gradlew.bat clean testDebugUnitTest lintDebug lintRelease
+  assembleDebug assembleRelease` passed; 103 actionable tasks completed with
+  no Android lint failures. Manual TalkBack and release signing remain open.
+- **Safe to continue:** Yes for local Android UX hardening; no for signed
+  production distribution.
+
+## SESSION UPDATE 2026-07-22 — Atlas workflow browser coverage
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by covering
+  both durable Atlas analysis workflows in the production-built console.
+- **Implemented evidence:** Added real-browser checks for successful Atlas
+  projection creation and Atlas replay verification. They verify durable
+  hashes/receipts and the explicit analysis-only, no-governance-verdict, and
+  no-execution boundaries.
+- **Validation:** Targeted Chromium checks passed 2/2. The full Windows
+  Chromium suite passed 38/38 (13 screenshot comparisons plus 25 functional
+  checks). The digest-pinned Linux read-only suite independently passed 38/38.
+  No visual baseline was changed.
+- **Safe to continue:** Yes for deterministic Atlas workflow acceptance. Manual
+  NVDA/TalkBack, code signing, and live production operational gates remain open.
+
+## SESSION UPDATE 2026-07-22 — SWR execution-gate browser coverage
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by covering
+  the first governed execution workflow in the production-built console.
+- **Implemented evidence:** Added a browser check for a reviewed `scenario.prepare`
+  request submitted through the SWR execution-gate endpoint. The check verifies
+  the durable receipt appears and the UI keeps the capability-token boundary
+  explicit.
+- **Validation:** Targeted Chromium passed 1/1. The full Windows Chromium suite
+  passed 36/36 (13 screenshot comparisons plus 23 functional checks). The
+  digest-pinned Linux read-only suite independently passed 36/36. No visual
+  baseline was changed.
+- **Safe to continue:** Yes for deterministic governed-workflow acceptance.
+  Manual NVDA/TalkBack, code signing, and live production operational gates
+  remain open.
+
+## SESSION UPDATE 2026-07-22 — TAAR successful-run browser coverage
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by covering a
+  consequential report-only module workflow in the production-built console.
+- **Implemented evidence:** Added a browser check for a successful registered
+  TAAR reader run. It verifies sealed evidence and audit hashes appear, the
+  history refreshes, and the visible boundary states that no source mutation,
+  governance verdict, or Project-AI execution was created.
+- **Validation:** Targeted Chromium passed 1/1. The full Windows Chromium suite
+  passed 35/35 (13 screenshot comparisons plus 22 functional checks). The
+  digest-pinned Linux read-only suite independently passed 35/35. No visual
+  baseline was changed.
+- **Safe to continue:** Yes for deterministic module-workflow acceptance. Manual
+  NVDA/TalkBack, code signing, and live production operational gates remain open.
+
+## SESSION UPDATE 2026-07-22 — First-run and account-service browser coverage
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by closing the
+  remaining real-browser evidence gap around bootstrap failure and first-run
+  account creation.
+- **Implemented evidence:** Added a browser check proving that a failed
+  `/api/v1/auth/bootstrap-status` read withholds the protected workspace and
+  renders the explicit account-service-unavailable recovery guidance. Added a
+  browser check proving that required Owner setup displays recovery codes and
+  keeps Control Center entry disabled until the user acknowledges saving them.
+- **Validation:** Targeted Chromium checks passed 2/2. The full Windows
+  Chromium suite passed 34/34 (13 screenshot comparisons plus 21 functional
+  checks). The digest-pinned Linux read-only suite independently passed 34/34.
+  No visual baseline was changed.
+- **Safe to continue:** Yes for deterministic local auth UX acceptance. Manual
+  NVDA/TalkBack, code signing, and live production operational gates remain open.
+
+## SESSION UPDATE 2026-07-22 — Authentication boundary browser coverage
+
+- **Task / mode:** Continue cross-client UX/UI production-deployment readiness by
+  extending production-built browser evidence to the unauthenticated sign-in and
+  local recovery routes.
+- **Implemented evidence:** Added real-browser checks proving that a 401 session
+  lands on the sign-in surface with the server-authentication/governance boundary
+  visible and that failed credentials render an explicit alert. Added a recovery
+  check proving local recovery completion renders the next-sign-in status without
+  inventing an email workflow.
+- **Validation:** Targeted Chromium authentication checks passed 2/2. The full
+  Windows Chromium suite passed 32/32 (13 screenshot comparisons plus 19
+  functional checks). The digest-pinned Linux read-only suite using
+  `mcr.microsoft.com/playwright@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48`
+  independently passed 32/32. No visual baseline was changed.
+- **Runtime:** `docker compose up -d --build --wait --wait-timeout 240
+  operator-console` rebuilt the operator image; all 9 project services are
+  healthy and API/docs/proof/operator health probes returned HTTP 200.
+- **Safe to continue:** Yes for deterministic local UX acceptance. Manual
+  NVDA/TalkBack, code signing, and live production operational gates remain open.
+
+## SESSION UPDATE 2026-07-22 — Work-notification focus acceptance
+
+- **Task / mode:** Close the remaining deterministic keyboard/focus gap in the
+  operator shell's work-notifications popover.
+- **Implemented:** The popover is a named `dialog` linked to its trigger with
+  `aria-controls`; opening moves focus to the close control, and Escape, close,
+  or navigation restores the trigger when appropriate. Notification navigation
+  closes the popover without stealing focus from the route transition.
+- **Validation:** Operator-console Vitest passed 66/66, aggregate `pnpm
+  web:test` passed 108/108 (operator 66 + docs 5 + proof 4 + Triumvirate 33),
+  lint passed with zero warnings, and the production build passed. The targeted
+  Chromium check passed 1/1; the full Windows Chromium suite passed 23/23 (13
+  screenshot comparisons plus 10 functional checks). The digest-pinned Linux
+  read-only run independently passed the same 23/23 suite. No visual baseline
+  was changed.
+- **Runtime:** The rebuilt operator-console Compose image is healthy; all 9
+  project services report healthy in `docker compose ps`.
+- **Safe to continue:** Yes for deterministic UI acceptance. Manual NVDA/
+  TalkBack and code signing remain production-release gates.
+
+## SESSION UPDATE 2026-07-22 — Consequential role-boundary browser coverage
+
+- **Task / mode:** Extend production-built browser evidence across the remaining
+  consequential module role states.
+- **Implemented evidence:** Added real-browser checks proving a Viewer receives
+  an explicit SWR view-only boundary and that a Viewer receives an explicit
+  Atlas Projections access restriction with projection inputs/history/creation
+  controls withheld.
+- **Validation:** Targeted Chromium role checks passed 2/2. The full Windows
+  Chromium suite passed 25/25 (13 screenshot comparisons plus 12 functional
+  checks). The digest-pinned Linux read-only suite independently passed 25/25.
+  No visual baseline was changed.
+- **Runtime:** The rebuilt operator-console Compose image and all 9 project
+  services remain healthy.
+- **Safe to continue:** Yes for deterministic cross-platform role/state
+  acceptance. Manual NVDA/TalkBack and code signing remain production gates.
+
+## SESSION UPDATE 2026-07-22 — Security workflow browser coverage
+
+- **Task / mode:** Extend production-built browser evidence for the
+  credential-bearing account-security workflow.
+- **Implemented evidence:** Added real-browser checks proving that a failed
+  initial session/MFA read hides password and authenticator controls, and that an
+  account marked `must_change_password` is routed to Account security before
+  another workspace renders.
+- **Validation:** Targeted Chromium security checks passed 2/2. The full Windows
+  Chromium suite passed 27/27 (13 screenshot comparisons plus 14 functional
+  checks). The digest-pinned Linux read-only suite independently passed 27/27.
+  No visual baseline was changed.
+- **Safe to continue:** Yes for deterministic security UX acceptance. Manual
+  assistive-technology acceptance, signing, and live production security gates
+  remain open.
+
+## SESSION UPDATE 2026-07-22 — System Health browser coverage
+
+- **Task / mode:** Extend production-built browser evidence for the dedicated
+  System Health workspace.
+- **Implemented evidence:** Added a real-browser degraded-dashboard check proving
+  that partial evidence is labeled as `Partial system evidence`, identifies the
+  unavailable audit surface, and keeps the page's non-production-readiness
+  boundary visible.
+- **Validation:** Targeted Chromium passed 1/1. The full Windows Chromium suite
+  passed 28/28 (13 screenshot comparisons plus 15 functional checks). The
+  digest-pinned Linux read-only suite independently passed 28/28. No visual
+  baseline was changed.
+- **Safe to continue:** Yes for deterministic health-state UX acceptance. Manual
+  assistive-technology acceptance and production operational gates remain open.
+
+## SESSION UPDATE 2026-07-22 — Module and public evidence browser coverage
+
+- **Task / mode:** Extend production-built browser evidence to remaining
+  module-catalog and public Evidence failure/partial states.
+- **Implemented evidence:** Added checks proving a failed module catalog does not
+  render a false empty catalog or workflow links, and that a mixed replay/DOI
+  response is labeled as partial while retaining the verified replay result.
+- **Validation:** Targeted Chromium passed 2/2. The full Windows Chromium suite
+  passed 30/30 (13 screenshot comparisons plus 17 functional checks). The
+  digest-pinned Linux read-only suite independently passed 30/30. No visual
+  baseline was changed.
+- **Safe to continue:** Yes for deterministic module/evidence UX acceptance.
+  Manual assistive technology and production release gates remain open.
+
+## SESSION UPDATE 2026-07-22 — Windows installer smoke acceptance
+
+- **Task / mode:** Verify the real desktop distribution path after the native
+  offscreen UI gate.
+- **Initial result:** The first smoke attempt installed successfully but could
+  not exercise bundled-gateway startup because the running Docker API already
+  answered on port 8000; the desktop correctly reused that gateway, while the
+  smoke script requires a spawned bundled process. The failed temp installation
+  was removed with the same bundle's silent uninstall path.
+- **Isolated acceptance:** After stopping only `project-ai-api`,
+  `tools/smoke_windows_installer.ps1` passed the complete install, custom-path,
+  Add/Remove Programs, installed-app launch, bundled API spawn, graceful child
+  cleanup, and uninstall checks. The stack's API service was then restarted.
+- **Runtime evidence:** All 9 Compose services are healthy and ports 8000,
+  4173, 4174, and 4175 return HTTP 200 on their health endpoints.
+- **Accessibility tooling check:** `nvda`, `nvda64`, Accessibility Insights,
+  Inspect, and AccEvent are not installed; Windows Narrator is present. The
+  Android SDK still has no emulator binary and no `adb` command is available.
+  Manual NVDA/TalkBack acceptance therefore remains unverified.
+- **Desktop regression:** `uv run --project . pytest -q` from `apps/desktop`
+  passed 28/28 in 1.28 seconds.
+- **Not verified:** Code signing and manual native screen-reader acceptance
+  remain open.
+- **Safe to continue:** Yes for local desktop distribution checks. No for
+  production release without signing and assistive-technology acceptance.
+
+## SESSION UPDATE 2026-07-22 — Docker stack restart and health verification
+
+- **Task / mode:** Run the local Docker Compose stack for the UX/UI deployment
+  surfaces and verify service health.
+- **Execution:** `docker compose up -d --build --wait --wait-timeout 240` did not
+  return within the local command window; stopping that waiting process also
+  stopped the backend containers. No repository files were changed.
+- **Recovery:** `docker compose up -d` restarted the full Project-AI stack
+  successfully. `docker compose ps` reports all 9 project services running;
+  API, SWR, Atlas, Arbiter/RLP, Genesis, Postgres, operator console, proof
+  portal, and docs portal are healthy after startup.
+- **Endpoint evidence:** HTTP 200 from `/health/live` on port 8000 and
+  `/healthz` on ports 4173, 4174, and 4175.
+- **Safe to continue:** Yes for local Docker UX/UI verification. No production
+  deployment or image promotion was performed.
+
+## SESSION UPDATE 2026-07-22 — Linux visual gate reconciliation
+
+- **Task / mode:** Reconcile the cross-platform visual gate without snapshot
+  update mode or overwriting concurrent baseline work.
+- **Evidence:** The preserved pinned candidate set and tracked Linux baselines
+  match byte-for-byte for all 13 PNGs (13/13 SHA-256 matches). A disposable
+  read-only run using
+  `mcr.microsoft.com/playwright@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48`
+  ran the full current Chromium suite and passed 22/22, including all 13
+  screenshot comparisons and 9 functional checks. No repository baseline or
+  source file was written.
+- **Correction:** Earlier continuity text saying the Linux baselines mismatched
+  is superseded by this current hash and pinned-container evidence.
+- **Safe to continue:** Yes for local cross-platform UI acceptance. No for
+  production deployment, image promotion, or release provenance.
+
+## SESSION UPDATE 2026-07-22 — Android live-region deprecation cleanup
+
+- **Task / mode:** Continue cross-client UX/UI production-deployment readiness
+  by removing deprecated asynchronous accessibility announcements from the
+  Android read-only client.
+- **Implemented:** The result view keeps the supported polite accessibility
+  live region and now changes its visible text to an operation-specific loading
+  message before replacing it with the result or failure content. Deprecated
+  `announceForAccessibility` and low-level announcement-event APIs were removed;
+  no AndroidX dependency was added.
+- **Validation:** With the installed API 36 SDK, `gradlew.bat clean
+  testDebugUnitTest lintDebug lintRelease assembleDebug assembleRelease` passed
+  (103 actionable tasks). The Kotlin deprecation warnings are gone; lint and
+  debug/release APK builds passed.
+- **Not verified:** Manual TalkBack still requires an emulator or device; the
+  local SDK has no available emulator binary/device.
+- **Safe to continue:** Yes for local Android build/lint evidence. No for
+  production mobile release without device acceptance and signing.
+
+## SESSION UPDATE 2026-07-22 — Named state landmarks
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by making
+  shared loading, warning, and error states discoverable to assistive
+  technology.
+- **Implemented:** `StatePanel` now gives every `status` or `alert` landmark an
+  accessible name derived from its visible title. The administration role-state
+  component and Chromium fixture assert the named landmark directly.
+- **Validation:** Targeted component test passed 1/1; aggregate `pnpm web:test`
+  passed 107/107; `pnpm web:lint` passed with zero warnings; operator build
+  passed; targeted browser passed 1/1; full Chromium passed 22/22;
+  `git diff --check` passed. The current operator-console image was rebuilt in
+  Compose and all nine services remain healthy with four HTTP 200 probes.
+- **Not verified:** Manual NVDA/TalkBack remains unavailable; no emulator or
+  device is present, and no visual baselines were regenerated.
+- **Safe to continue:** Yes for local deterministic and runtime acceptance.
+  No for production deployment, image promotion, or release provenance.
+
+## SESSION UPDATE 2026-07-22 — Administration role restriction and rebuilt runtime
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by making
+  direct-link account-administration denial explicit and rebuilding the local
+  operator-console image from the current source.
+- **Implemented:** Administration now distinguishes server `403` from service
+  failure and withholds account controls and security-event content for roles
+  without account-management authority. Component and Chromium fixtures cover
+  the viewer direct-link state.
+- **Validation:** Operator-console Vitest passed 65/65 and aggregate `pnpm
+  web:test` passed 107/107; repository web lint passed with zero warnings;
+  operator TypeScript/Vite build passed; targeted
+  Chromium passed 1/1; full Chromium passed 22/22; `git diff --check` passed.
+  `docker compose up -d --build --wait --wait-timeout 240 operator-console`
+  rebuilt the API/operator images and brought the operator container healthy.
+  All nine Compose services are healthy and API/docs/proof/operator health
+  probes returned HTTP 200.
+- **Baseline boundary:** The browser check is functional only; no Windows or
+  Linux PNG baseline was regenerated. Existing generated output and concurrent
+  V3Q edits remain preserved.
+- **Safe to continue:** Yes for local deterministic and runtime acceptance.
+  No for production deployment, image promotion, or release provenance.
+
+## SESSION UPDATE 2026-07-22 — Role-aware consequential controls
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by making
+  permission boundaries legible before a user submits a consequential action.
+- **Implemented:** SWR now presents `View only` and withholds execution for
+  roles without `modules.execution.initiate`. Request creation now withholds
+  the composer for roles without request-submission permission and preserves
+  the visible request list. TAAR reviewers can inspect but see an explicit
+  reader-execution restriction. Atlas Projection, Atlas Replay, and TAAR
+  distinguish server `403` access restriction from service unavailability and
+  keep their protected controls hidden in both cases.
+- **Regression evidence:** Operator-console Vitest passed 64/64 with role,
+  empty, and failure coverage; `pnpm web:lint` passed with zero warnings;
+  operator TypeScript/Vite production build passed; `git diff --check` passed.
+- **Rendered evidence:** In-app browser captures `19-atlas-access-restricted.png`,
+  `20-taar-view-only.png`, and `21-request-submission-restricted.png` were saved
+  under `output/ux-audit-20260722/` and inspected. A temporary Vite fixture
+  server supplied viewer/reviewer sessions and scoped 403/200 responses for
+  these states; its listener, config, logs, and browser tab were removed after
+  capture.
+- **Safe to continue:** Yes for local deterministic and rendered acceptance.
+  No for production deployment, image promotion, or release provenance.
+
+## SESSION UPDATE 2026-07-22 — Browser role-state regression coverage
+
+- **Task / mode:** Extend real-browser UX/UI acceptance for the new permission
+  boundaries without changing reviewed image baselines.
+- **Implemented:** The Chromium fixture now covers viewer Atlas access
+  restriction, reviewer TAAR view-only behavior, and viewer request-submission
+  restriction. These are functional assertions only; no Windows or Linux PNG
+  baseline was regenerated.
+- **Validation:** Targeted browser checks passed 3/3 in 8.8 seconds. The full
+  Chromium suite passed 21/21 in 30.7 seconds, including responsive, focus,
+  offline, audit, and the new role-state checks. The first targeted run exposed
+  and then fixed an overly broad `status` locator; the product state itself was
+  present in that run.
+- **Safe to continue:** Yes for local browser acceptance. No for production
+  release or Linux baseline replacement without authorization.
+
+## SESSION UPDATE 2026-07-22 — Android live-region acceptance
+
+- **Task / mode:** Continue cross-client UX/UI production-deployment readiness
+  for the scoped Android read-only client.
+- **Implemented:** The result surface is now marked as a polite accessibility
+  live region so TalkBack can receive asynchronous DOI/replay result updates;
+  the empty DOI payload has an explicit client regression test.
+- **Validation:** With `ANDROID_HOME` and `ANDROID_SDK_ROOT` set to the
+  installed `C:\Users\Quencher\AppData\Local\Android\Sdk`,
+  `gradlew.bat testDebugUnitTest lintDebug lintRelease assembleDebug
+  assembleRelease` passed. The build emitted existing Kotlin deprecation
+  warnings for `announceForAccessibility` and an SDK XML version-compatibility
+  warning; lint completed successfully.
+- **Not verified:** Manual TalkBack on an emulator/device and release signing.
+- **Safe to continue:** Yes for local client checks. No for production mobile
+  release without device accessibility acceptance and signing approval.
+
+## SESSION UPDATE 2026-07-22 — Desktop offscreen acceptance
+
+- **Task / mode:** Continue cross-client UX/UI production-deployment readiness
+  for the scoped PyQt6 read-only desktop client.
+- **Validation:** `uv run --project . pytest -q` from `apps/desktop` passed
+  28/28 in 2.72 seconds with the offscreen Qt fixture. An initial
+  `uv run --project apps/desktop pytest -q` from the repository root was
+  terminated after the command window because root discovery collected all
+  3,497 workspace tests; it was not treated as desktop evidence. The
+  project-local rerun is the authoritative desktop result.
+- **Not verified:** Manual NVDA acceptance, signed installer, and installed
+  gateway-spawn path.
+- **Safe to continue:** Yes for local client checks. No for production desktop
+  release without assistive-technology acceptance and code signing.
+
+## SESSION UPDATE 2026-07-22 — Docker Compose restart verification
+
+- **Task / mode:** Start and verify the repository Docker Compose stack for
+  local UX/UI runtime checks on branch `agent/production-readiness-2026-07-19`.
+- **Commands / results:** `docker compose up -d --wait --wait-timeout 120`
+  completed successfully. Compose recreated SWR, Atlas, and Arbiter/RLP and
+  waited for all configured health checks.
+- **Runtime evidence:** All nine Compose services report `healthy` in
+  `docker compose ps`. Host probes returned HTTP 200 for API
+  `/health/live` on port 8000 and `/healthz` on ports 4173, 4174, and 4175.
+- **Safe to continue:** Yes for local UI/runtime checks. No for production
+  deployment, image promotion, or release provenance.
+
+## SESSION UPDATE 2026-07-22 — Consequential module initial-read hardening
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by closing
+  false-empty and premature-control states in SWR, TAAR, Atlas Projections, and
+  Atlas Replay.
+- **Implemented:** Initial reads now gate each workflow boundary. SWR waits for
+  both the scenario catalog and request queue before showing authority or
+  execution controls. TAAR waits for target status and evidence history before
+  showing target/reader/history controls. Atlas Projections waits for durable
+  history before showing inputs or creation controls. Atlas Replay waits for
+  status before showing replay inputs or verification controls. Failed reads use
+  deterministic `retry: false` behavior and explicit unavailable copy; verified
+  empty responses remain distinct from unknown state.
+- **UX polish:** The rendered TAAR audit initially showed three repeated error
+  panels for one failed initial boundary. The route now consolidates the target
+  and evidence-history reasons into one unavailable panel while retaining both
+  causes and the controls-withheld statement. The final `16-taar-unavailable.png`
+  capture was refreshed after this change and inspected.
+- **Regression evidence:** `pnpm --dir apps/web/operator-console test` passed
+  59/59; `pnpm web:test` passed 101/101; operator lint, repository web lint, and
+  all four web production builds passed. Two existing asynchronous test timing
+  assumptions were repaired by waiting for the instance read and verified replay
+  control before interaction.
+- **Rerun evidence:** A later default Vitest/ESLint aggregate command exceeded
+  five minutes without gate output and was terminated; this was a runner
+  timeout, not a test pass. The operator test was rerun with one thread and
+  passed 59/59. Docs and proof passed 5/5 and 4/4 with one thread, Triumvirate
+  Jest passed 33/33 in band, and operator/docs/proof/Triumvirate production
+  builds all passed. `pnpm web:lint` then passed with zero warnings; a
+  single-file ESLint diagnostic also passed after the flat config finished
+  loading. The config load is unusually slow on this workspace, but the current
+  repository-wide lint gate is green.
+- **Rendered evidence:** In-app browser captures `15-swr-unavailable.png`,
+  `16-taar-unavailable.png`, `17-atlas-projections-unavailable.png`, and
+  `18-atlas-replay-unavailable.png` are saved under
+  `output/ux-audit-20260722/` and each was inspected after saving. A temporary
+  Vite proxy forwarded authentication and unrelated API calls to the healthy
+  gateway while returning 503 only for the named module reads. No application
+  source or persistent runtime data was changed by the proxy.
+- **Runtime note:** First-run browser setup required an ephemeral API setup
+  secret; the Owner session was created locally and recovery codes were not
+  copied into evidence. The API container was restarted with the secret for
+  setup, then recreated with an empty `PROJECT_AI_SETUP_SECRET`; it is healthy
+  and no temporary proxy listener or config remains.
+- **Safe to continue:** Yes for local deterministic and rendered acceptance. No
+  for production deployment or Linux-baseline replacement without authorization.
+
+## SESSION UPDATE 2026-07-22 — Docker Compose local runtime
+
+- **Task / mode:** Start the repository Docker Compose stack for local runtime
+  verification on branch `agent/production-readiness-2026-07-19`.
+- **Commands / results:** `docker info` reported Docker 29.6.1; `docker compose
+  config --quiet` passed. `docker compose up -d --build --wait --wait-timeout
+  240` exceeded the command window during the image rebuild before completing.
+  The already-built project images were then started with Compose/container
+  start commands after the database finished initialization.
+- **Runtime evidence:** PostgreSQL, API, SWR, Atlas, Arbiter/RLP, and Genesis
+  are healthy. The three web portals are healthy. Host probes returned HTTP 200
+  for `/health/live` on port 8000 and `/healthz` on ports 4173, 4174, and 4175.
+  Compose configuration was revalidated after startup.
+- **Runtime caveat:** The first failed API container is dead and marked for
+  removal; the healthy replacement is the generated Compose API container
+  `0faa1756f33c_project-ai-api`. No project volume or unrelated container was
+  removed or modified. The source edits in the working tree were not treated as
+  production image evidence until a completed rebuild is separately verified.
+- **Safe to continue:** Yes for local UI/runtime checks. No for production
+  deployment, image promotion, or release provenance.
+
 ## SESSION UPDATE 2026-07-22 — release-readiness reconciliation and local validation
 
 - **Task / mode:** Repository release-readiness completion pass on branch
@@ -74,11 +576,12 @@
   candidates render complete desktop/mobile/audit states; the current modified baselines
   show blank or incomplete content after the shell header. Replacement remains pending
   because it would overwrite concurrent user changes.
-- **Classification:** The Linux gate remains blocked by two concrete current-state
-  conditions: all thirteen modified baselines mismatch fresh pinned output, and one
-  functional route assertion was intermittently unavailable during candidate generation.
-  This is separate follow-up work; it does not weaken the passing unit, lint, build,
-  Windows, or first Linux functional evidence.
+- **Classification:** The Linux gate remains blocked by one concrete current-state
+  condition: all thirteen modified baselines mismatch fresh pinned output. The
+  intermittent route assertion was resolved by the 15-second helper timeout and
+  the clean candidate generation passed 18/18. This is separate follow-up work;
+  it does not weaken the passing unit, lint, build, Windows, or Linux functional
+  evidence.
 - **Safe to continue:** Yes for local investigation. No for production deployment or
   baseline replacement without an authorized, visually reviewed candidate set.
 

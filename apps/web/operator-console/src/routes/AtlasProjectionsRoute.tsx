@@ -1,4 +1,5 @@
 import {
+  ApiError,
   gateway,
   type AtlasProjection,
   type AtlasProjectionDriver,
@@ -33,7 +34,7 @@ function ProjectionResult({ projection }: { projection: AtlasProjection }) {
 
 export function AtlasProjectionsRoute() {
   const auth = useAuth();
-  const history = useQuery({ queryKey: ["atlas-projections"], queryFn: () => gateway.atlas.projections() });
+  const history = useQuery({ queryKey: ["atlas-projections"], queryFn: () => gateway.atlas.projections(), retry: false });
   const [claimId, setClaimId] = useState("claim-projection-1");
   const [claimType, setClaimType] = useState<AtlasProjectionInput["claim_type"]>("predictive");
   const [stack, setStack] = useState("RS");
@@ -57,12 +58,15 @@ export function AtlasProjectionsRoute() {
   }
 
   const projections = history.data?.projections ?? [];
+  const initialReady = !history.isLoading && !history.isError;
+  const accessDenied = history.error instanceof ApiError && history.error.status === 403;
   return <div className="console-page atlas-projections-page">
     <PageHeading title="Atlas Projections" description="Create deterministic evidence-weighted projections and inspect durable analysis receipts." />
     <div className="atlas-boundary" role="note"><Info aria-hidden="true" /><strong>Analysis only</strong><span>·</span><span>Not a recommendation</span><span>·</span><span>No governance verdict</span><span>·</span><span>No execution</span></div>
     {error ? <StatePanel title="Projection rejected" tone="error">{error}</StatePanel> : null}
-    {history.isError ? <StatePanel title="Projection history unavailable" tone="error">{history.error.message}</StatePanel> : null}
-    <div className="projection-workspace">
+    {history.isLoading ? <StatePanel title="Loading Atlas projections">Reading durable analysis receipts before exposing projection controls.</StatePanel> : null}
+    {history.isError ? <StatePanel title={accessDenied ? "Atlas access restricted" : "Projection history unavailable"} tone="error">{accessDenied ? "Your interface role is not authorized to run Atlas analysis. No projection inputs, history, or creation controls are shown." : "No projection inputs, history, or creation controls are shown because the initial read failed."} {history.error.message}</StatePanel> : null}
+    {initialReady ? <div className="projection-workspace">
       <form className="projection-form" onSubmit={submit}>
         <header><Sparkles aria-hidden="true" /><div><h2>Projection inputs</h2><span>All inputs are sealed into the durable receipt.</span></div></header>
         <div className="projection-core-fields"><label>Claim ID<input value={claimId} onChange={(event) => setClaimId(event.target.value)} pattern="[A-Za-z0-9][A-Za-z0-9_.\-]*" maxLength={128} required /></label><label>Claim type<select value={claimType} onChange={(event) => setClaimType(event.target.value as AtlasProjectionInput["claim_type"])}>{claimTypes.map((item) => <option key={item}>{item}</option>)}</select></label><label>Stack<select value={stack} onChange={(event) => setStack(event.target.value)}><option>RS</option><option>SS</option><option>TS-analysis</option></select></label></div>
@@ -72,8 +76,8 @@ export function AtlasProjectionsRoute() {
         <button className="atlas-submit" type="submit" disabled={submitting}><Activity aria-hidden="true" />{submitting ? "Creating projection…" : "Create projection"}</button>
       </form>
       <aside>{result ? <ProjectionResult projection={result} /> : <section className="projection-empty"><Activity aria-hidden="true" /><h2>Projection result</h2><p>Submit the evidence model to create a deterministic, analysis-only receipt.</p></section>}</aside>
-    </div>
-    <section className="projection-history"><header><FileCheck2 aria-hidden="true" /><div><h2>Projection history</h2><span>Durable receipts from the configured human-state store</span></div></header>{history.isLoading ? <StatePanel title="Loading projection history">Reading durable analysis receipts…</StatePanel> : null}{!history.isLoading && projections.length === 0 ? <StatePanel title="No projections yet">Created projections will appear here with their evidence hashes.</StatePanel> : null}{projections.length ? <div className="projection-table-wrap"><table><thead><tr><th>Claim ID</th><th>Type</th><th>Posterior</th><th>Uncertainty</th><th>Evidence</th><th>Stack</th><th>Created</th><th>Receipt</th><th><span className="sr-only">Detail</span></th></tr></thead><tbody>{projections.map((projection) => <ProjectionHistoryRow key={projection.id} projection={projection} expanded={expanded === projection.id} onToggle={() => setExpanded((current) => current === projection.id ? null : projection.id)} />)}</tbody></table></div> : null}</section>
+    </div> : null}
+    {initialReady ? <section className="projection-history"><header><FileCheck2 aria-hidden="true" /><div><h2>Projection history</h2><span>Durable receipts from the configured human-state store</span></div></header>{projections.length === 0 ? <StatePanel title="No projections yet">Created projections will appear here with their evidence hashes.</StatePanel> : null}{projections.length ? <div className="projection-table-wrap"><table><thead><tr><th>Claim ID</th><th>Type</th><th>Posterior</th><th>Uncertainty</th><th>Evidence</th><th>Stack</th><th>Created</th><th>Receipt</th><th><span className="sr-only">Detail</span></th></tr></thead><tbody>{projections.map((projection) => <ProjectionHistoryRow key={projection.id} projection={projection} expanded={expanded === projection.id} onToggle={() => setExpanded((current) => current === projection.id ? null : projection.id)} />)}</tbody></table></div> : null}</section> : null}
   </div>;
 }
 

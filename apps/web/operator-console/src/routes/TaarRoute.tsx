@@ -1,4 +1,4 @@
-import { gateway, type TaarEvidence } from "@project-ai/web-shared/api";
+import { ApiError, gateway, type TaarEvidence } from "@project-ai/web-shared/api";
 import { useQuery } from "@tanstack/react-query";
 import {
   Activity,
@@ -43,8 +43,8 @@ function LatestEvidence({ run }: { run: TaarEvidence | null }) {
 
 export function TaarRoute() {
   const auth = useAuth();
-  const statusQuery = useQuery({ queryKey: ["taar-status"], queryFn: gateway.taar.status });
-  const historyQuery = useQuery({ queryKey: ["taar-runs"], queryFn: () => gateway.taar.runs() });
+  const statusQuery = useQuery({ queryKey: ["taar-status"], queryFn: gateway.taar.status, retry: false });
+  const historyQuery = useQuery({ queryKey: ["taar-runs"], queryFn: () => gateway.taar.runs(), retry: false });
   const [agentId, setAgentId] = useState("");
   const [latest, setLatest] = useState<TaarEvidence | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -54,6 +54,14 @@ export function TaarRoute() {
   const runs = historyQuery.data?.runs ?? [];
   const selected = status?.readers.find((reader) => reader.id === agentId);
   const canRun = ["owner", "administrator", "operator"].includes(auth.session?.account.role ?? "");
+  const initialLoading = statusQuery.isLoading || historyQuery.isLoading;
+  const initialError = statusQuery.isError || historyQuery.isError;
+  const initialReady = !initialLoading && !initialError;
+  const accessDenied = [statusQuery.error, historyQuery.error].some((reason) => reason instanceof ApiError && reason.status === 403);
+  const initialFailureReasons = [
+    statusQuery.isError ? `Target read: ${statusQuery.error.message}` : null,
+    historyQuery.isError ? `Evidence history read: ${historyQuery.error.message}` : null,
+  ].filter((reason): reason is string => Boolean(reason)).join(" · ");
 
   useEffect(() => {
     if (!agentId && status?.readers[0]) setAgentId(status.readers[0].id);
@@ -80,26 +88,28 @@ export function TaarRoute() {
     <PageHeading title="TAAR Inspection Console" description="Run registered report-only readers and inspect hash-sealed evidence without granting repository mutation authority." />
     <div className="taar-boundary" role="note"><ShieldCheck aria-hidden="true" /><strong>Report only</strong><span>·</span><span>Server-configured target</span><span>·</span><span>No source mutation</span><span>·</span><span>No Project-AI governance verdict</span></div>
     {error ? <StatePanel title="Inspection rejected" tone="error">{error}</StatePanel> : null}
-    {statusQuery.isError ? <StatePanel title="TAAR target unavailable" tone="error">{statusQuery.error.message}</StatePanel> : null}
-    {historyQuery.isError ? <StatePanel title="Evidence history unavailable" tone="error">{historyQuery.error.message}</StatePanel> : null}
-    <div className="taar-workspace">
+    {initialLoading ? <StatePanel title="Loading TAAR inspection">Verifying the configured target and sealed evidence history.</StatePanel> : null}
+    {initialError ? <StatePanel title={accessDenied ? "TAAR access restricted" : "TAAR inspection unavailable"} tone="error">{accessDenied ? "Your interface role is not authorized to inspect this TAAR target. No target, reader, or evidence-history controls are shown." : "No target, reader, or evidence-history controls are shown because the initial read failed."} {initialFailureReasons}</StatePanel> : null}
+    {initialReady ? <div className="taar-workspace">
       <form className="taar-request" onSubmit={submit}>
         <header><Activity aria-hidden="true" /><div><h2>Inspection request</h2><span>Only server-registered reader agents are available.</span></div></header>
         {status ? <div className="taar-target"><Server aria-hidden="true" /><div><span>Read-only target</span><strong>{status.target_repository}</strong><code title={status.target_path}>{status.target_path}</code></div><span className={`taar-facility facility-${status.facility_mode.toLowerCase()}`}>{status.facility_mode} facility</span></div> : <div className="taar-target-loading">Reading server target…</div>}
         <label>Registered reader<select value={agentId} onChange={(event) => setAgentId(event.target.value)} disabled={!status?.readers.length || submitting} required><option value="">Select a reader</option>{status?.readers.map((reader) => <option value={reader.id} key={reader.id}>{reader.id}</option>)}</select></label>
+        {status && !status.readers.length ? <p className="taar-request-note">The successful server response contained no registered readers.</p> : null}
         {selected ? <div className="taar-reader-detail"><p>{selected.description}</p><dl><dt>Task</dt><dd>{selected.task_id}</dd><dt>Default classification</dt><dd>{selected.classification_default}</dd><dt>Timeout</dt><dd>{selected.timeout_seconds} seconds</dd></dl><div><span>Evidence scope</span>{selected.evidence_scope.map((scope) => <code key={scope}>{scope}</code>)}</div></div> : null}
         <button className="taar-submit" type="submit" disabled={!agentId || submitting || !canRun || !status?.registry_valid}><FileSearch aria-hidden="true" />{submitting ? "Running inspection…" : canRun ? "Run inspection" : "View only"}</button>
+        {!canRun ? <p className="taar-request-note">Your interface role can inspect sealed evidence but cannot run a reader.</p> : null}
         <p className="taar-request-note"><Info aria-hidden="true" />This browser cannot submit repository paths, commands, capabilities, writers, or execution instructions.</p>
       </form>
       <LatestEvidence run={latest ?? runs[0] ?? null} />
-    </div>
-    <section className="taar-history">
+    </div> : null}
+    {initialReady ? <section className="taar-history">
       <header><Fingerprint aria-hidden="true" /><div><h2>Inspection history</h2><span>Hash-sealed evidence discovered in the configured TAAR store</span></div></header>
       {historyQuery.isLoading ? <StatePanel title="Loading inspection history">Verifying TAAR evidence and audit records…</StatePanel> : null}
       {!historyQuery.isLoading && !runs.length ? <StatePanel title="No inspections yet">Registered reader evidence will appear here after a successful run.</StatePanel> : null}
       {runs.length ? <div className="taar-table-wrap"><table><thead><tr><th>Reader</th><th>Status</th><th>Class</th><th>Findings</th><th>Integrity</th><th>Completed</th><th><span className="sr-only">Detail</span></th></tr></thead><tbody>{runs.map((run) => <EvidenceRow key={run.run_id} run={run} expanded={expanded === run.run_id} onToggle={() => setExpanded((current) => current === run.run_id ? null : run.run_id)} />)}</tbody></table></div> : null}
       {historyQuery.data ? <p className="taar-redaction"><LockKeyhole aria-hidden="true" />{historyQuery.data.redaction_boundary}</p> : null}
-    </section>
+    </section> : null}
   </div>;
 }
 

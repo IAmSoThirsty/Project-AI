@@ -5,10 +5,7 @@
     <string name="select_surface">Select a read-only Project-AI surface.</string>
     <string name="doi_registry">DOI Registry</string>
     <string name="canonical_replay_status">Canonical Replay Status</string>
-    <string name="loading">Loading…</string>
     <string name="loading_announcement">Loading %1$s.</string>
-    <string name="loaded_announcement">%1$s loaded.</string>
-    <string name="failed_announcement">%1$s could not be loaded.</string>
     <string name="read_failed">Read failed: %1$s</string>
     <string name="unknown_error">Unknown error</string>
     <string name="no_doi_records">No DOI records are available.</string>

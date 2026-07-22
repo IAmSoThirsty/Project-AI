@@ -96,6 +96,8 @@ export function ControlCenterShell() {
   const navigationCloseRef = useRef<HTMLButtonElement>(null);
   const navigationDialogRef = useRef<HTMLDivElement>(null);
   const navigationTriggerRef = useRef<HTMLButtonElement>(null);
+  const notificationCloseRef = useRef<HTMLButtonElement>(null);
+  const notificationTriggerRef = useRef<HTMLButtonElement>(null);
   const searchDialogRef = useRef<HTMLElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchReturnFocusRef = useRef<HTMLElement | null>(null);
@@ -107,11 +109,17 @@ export function ControlCenterShell() {
       window.requestAnimationFrame(() => navigationTriggerRef.current?.focus());
     }
   }, []);
+  const closeNotifications = useCallback((restoreFocus = true) => {
+    setNotificationsOpen(false);
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => notificationTriggerRef.current?.focus());
+    }
+  }, []);
   const openNavigation = useCallback(() => {
     setSearchOpen(false);
-    setNotificationsOpen(false);
+    closeNotifications(false);
     setNavigationOpen(true);
-  }, []);
+  }, [closeNotifications]);
   const closeSearch = useCallback((restoreFocus = true) => {
     setSearchOpen(false);
     if (restoreFocus) {
@@ -122,10 +130,10 @@ export function ControlCenterShell() {
     searchReturnFocusRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : searchTriggerRef.current;
-    setNotificationsOpen(false);
+    closeNotifications(false);
     setNavigationOpen(false);
     setSearchOpen(true);
-  }, []);
+  }, [closeNotifications]);
   useEffect(() => {
     function handleShortcut(event: KeyboardEvent) {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
@@ -136,12 +144,12 @@ export function ControlCenterShell() {
       if (event.key === "Escape") {
         if (searchOpen) closeSearch();
         else if (isNarrowNavigation && navigationOpen) closeNavigation();
-        setNotificationsOpen(false);
+        else if (notificationsOpen) closeNotifications();
       }
     }
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, [closeNavigation, closeSearch, isNarrowNavigation, navigationOpen, openSearch, searchOpen]);
+  }, [closeNavigation, closeNotifications, closeSearch, isNarrowNavigation, navigationOpen, notificationsOpen, openSearch, searchOpen]);
   useEffect(() => {
     if (!isNarrowNavigation || !navigationOpen) return;
     const navigation = navigationDialogRef.current;
@@ -171,14 +179,19 @@ export function ControlCenterShell() {
     };
   }, [searchOpen]);
   useEffect(() => {
+    if (!notificationsOpen) return;
+    const frame = window.requestAnimationFrame(() => notificationCloseRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [notificationsOpen]);
+  useEffect(() => {
     if (previousPathRef.current === location.pathname) return;
     previousPathRef.current = location.pathname;
     setNavigationOpen(false);
     setSearchOpen(false);
-    setNotificationsOpen(false);
+    closeNotifications(false);
     const frame = window.requestAnimationFrame(() => mainContentRef.current?.focus());
     return () => window.cancelAnimationFrame(frame);
-  }, [location.pathname]);
+  }, [closeNotifications, location.pathname]);
   const destinations = useMemo(() => {
     const items = [
       ...availableNavigation,
@@ -193,9 +206,13 @@ export function ControlCenterShell() {
 
   function openNotifications() {
     const next = !notificationsOpen;
-    setNotificationsOpen(next);
     setSearchOpen(false);
-    if (!next) return;
+    setNavigationOpen(false);
+    if (!next) {
+      closeNotifications();
+      return;
+    }
+    setNotificationsOpen(true);
     setNotificationError("");
     gateway.work.requests()
       .then((response) => setNotifications(response.requests.filter((item) => item.state === "submitted")))
@@ -267,14 +284,14 @@ export function ControlCenterShell() {
             <Search aria-hidden="true" /><span>Search Control Center screens…</span><kbd><Command /> K</kbd>
           </button>
           <div className="topbar-actions">
-            <button type="button" aria-label="Open work notifications" aria-expanded={notificationsOpen} onClick={openNotifications}><Bell /></button>
+            <button ref={notificationTriggerRef} type="button" aria-label="Open work notifications" aria-controls="work-notifications" aria-expanded={notificationsOpen} onClick={openNotifications}><Bell /></button>
             <a className="help-link" href={docsHref} target="_blank" rel="noreferrer" aria-label="Open operator documentation"><CircleHelp aria-hidden="true" /></a>
             <NavLink className="profile-control" to="/profile/security" aria-label="Open account security">
               <span className="avatar">{initials}</span><span><strong>{session?.account.display_name}</strong><small>{session?.account.role}</small></span>
             </NavLink>
           </div>
         </header>
-        {notificationsOpen ? <aside className="notification-popover" aria-label="Work notifications"><div><strong>Awaiting review</strong><button type="button" aria-label="Close notifications" onClick={() => setNotificationsOpen(false)}><X /></button></div>{notificationError ? <p role="alert">{notificationError}</p> : notifications.length === 0 ? <p>No submitted requests are visible to this account.</p> : notifications.slice(0, 6).map((item) => <button type="button" key={item.id} onClick={() => { setNotificationsOpen(false); navigate("/requests"); }}><strong>{item.title}</strong><span>{item.operation} · {item.resource}</span></button>)}</aside> : null}
+        {notificationsOpen ? <aside id="work-notifications" className="notification-popover" role="dialog" aria-label="Work notifications"><div><strong>Awaiting review</strong><button ref={notificationCloseRef} type="button" aria-label="Close notifications" onClick={() => closeNotifications()}><X /></button></div>{notificationError ? <p role="alert">{notificationError}</p> : notifications.length === 0 ? <p>No submitted requests are visible to this account.</p> : notifications.slice(0, 6).map((item) => <button type="button" key={item.id} onClick={() => { closeNotifications(false); navigate("/requests"); }}><strong>{item.title}</strong><span>{item.operation} · {item.resource}</span></button>)}</aside> : null}
         <main ref={mainContentRef} id="main-content" tabIndex={-1}><Outlet /></main>
       </div>
       {navigationOpen ? <button className="nav-scrim" type="button" tabIndex={-1} aria-label="Close navigation overlay" onClick={() => closeNavigation()} /> : null}

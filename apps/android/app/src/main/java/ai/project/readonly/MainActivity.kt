@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors
 class MainActivity : Activity() {
     private val client by lazy { ReadOnlyProjectAiClient(HttpGetTransport(BuildConfig.API_BASE_URL)) }
     private val executor = Executors.newSingleThreadExecutor()
+    private val actionButtons = mutableListOf<Button>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +77,7 @@ class MainActivity : Activity() {
         autoLinkMask = Linkify.WEB_URLS
         movementMethod = LinkMovementMethod.getInstance()
         isFocusable = true
+        accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
     }
 
     private fun actionButton(labelResource: Int, output: TextView, action: () -> String): Button =
@@ -86,13 +89,13 @@ class MainActivity : Activity() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
             ).apply { topMargin = dp(8) }
-            setOnClickListener { load(this, output, text.toString(), action) }
+            setOnClickListener { load(output, text.toString(), action) }
+            actionButtons += this
         }
 
-    private fun load(button: Button, output: TextView, operationLabel: String, operation: () -> String) {
-        button.isEnabled = false
-        output.setText(R.string.loading)
-        output.announceForAccessibility(getString(R.string.loading_announcement, operationLabel))
+    private fun load(output: TextView, operationLabel: String, operation: () -> String) {
+        actionButtons.forEach { it.isEnabled = false }
+        output.text = getString(R.string.loading_announcement, operationLabel)
         executor.execute {
             val result = runCatching(operation)
             val rendered = result.getOrElse {
@@ -101,13 +104,7 @@ class MainActivity : Activity() {
             runOnUiThread {
                 if (isDestroyed || isFinishing) return@runOnUiThread
                 output.text = rendered
-                button.isEnabled = true
-                output.announceForAccessibility(
-                    getString(
-                        if (result.isSuccess) R.string.loaded_announcement else R.string.failed_announcement,
-                        operationLabel,
-                    ),
-                )
+                actionButtons.forEach { it.isEnabled = true }
             }
         }
     }

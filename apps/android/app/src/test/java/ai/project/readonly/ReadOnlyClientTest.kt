@@ -28,4 +28,14 @@ class ReadOnlyClientTest {
         )
         assertEquals(ReplayStatus("pass", 5, 5, "now"), status)
     }
+
+    @Test
+    fun emptyDoiPayloadRemainsAnExplicitEmptyResult() {
+        val client = ReadOnlyProjectAiClient { path ->
+            assertEquals("/dois", path)
+            """{"dois":[]}"""
+        }
+
+        assertEquals(emptyList<DoiRecord>(), client.fetchDois())
+    }
 }

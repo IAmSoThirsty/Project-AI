@@ -1,4 +1,4 @@
-import { gateway, type AtlasReplayResponse } from "@project-ai/web-shared/api";
+import { ApiError, gateway, type AtlasReplayResponse } from "@project-ai/web-shared/api";
 import { useQuery } from "@tanstack/react-query";
 import {
   Braces,
@@ -63,11 +63,13 @@ function CopyHash({ label, value }: { label: string; value: string }) {
 
 export function AtlasReplayRoute() {
   const auth = useAuth();
-  const atlas = useQuery({ queryKey: ["atlas-status"], queryFn: gateway.atlas.status });
+  const atlas = useQuery({ queryKey: ["atlas-status"], queryFn: gateway.atlas.status, retry: false });
   const [source, setSource] = useState(EXAMPLE_BUNDLE);
   const [result, setResult] = useState<AtlasReplayResponse | null>(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const initialReady = !atlas.isLoading && !atlas.isError;
+  const accessDenied = atlas.error instanceof ApiError && atlas.error.status === 403;
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -108,10 +110,11 @@ export function AtlasReplayRoute() {
         <Info aria-hidden="true" />
         <strong>Analysis only</strong><span>·</span><span>No governance verdict</span><span>·</span><span>No execution</span>
       </div>
-      {atlas.isError ? <StatePanel title="Atlas status unavailable" tone="error">{atlas.error.message}</StatePanel> : null}
+      {atlas.isLoading ? <StatePanel title="Loading Atlas Replay">Reading the canonical analytical boundary before exposing replay controls.</StatePanel> : null}
+      {atlas.isError ? <StatePanel title={accessDenied ? "Atlas access restricted" : "Atlas status unavailable"} tone="error">{accessDenied ? "Your interface role is not authorized to run Atlas analysis. No replay input or verification controls are shown." : "No replay input or verification controls are shown because the initial status read failed."} {atlas.error.message}</StatePanel> : null}
       {error ? <StatePanel title="Replay rejected" tone="error">{error}</StatePanel> : null}
 
-      <div className="atlas-workspace">
+      {initialReady ? <div className="atlas-workspace">
         <form className="atlas-editor-panel" onSubmit={submit}>
           <header>
             <div><FileJson aria-hidden="true" /><h2>Replay bundle</h2></div>
@@ -156,7 +159,7 @@ export function AtlasReplayRoute() {
             </ul>
           </section>
         </aside>
-      </div>
+      </div> : null}
 
       {result ? (
         <section className="atlas-result" aria-live="polite">

@@ -55,6 +55,12 @@ const fixtures: ApiFixture[] = [
     governed_execution_path: ["server_service_identity", "governance_policy", "scoped_capability", "execution_gate"],
   }],
   ["/api/v1/dashboard", dashboard],
+  ["/api/v1/work/requests", { requests: [], review_is_not_governance: true }],
+  ["/api/v1/auth/sessions", { sessions: [] }],
+  ["/api/v1/auth/mfa", { enabled: false, enrollment_pending: false }],
+  ["/api/v1/modules/swr/scenarios", { scenarios: [], execution_gate_configured: true, authority_boundary: "The browser never receives a capability token." }],
+  ["/api/v1/modules/taar/status", { status: "available", target_repository: "Project-AI-Beginnings", target_path: "T:/00-Active/Project-AI-Beginnings", facility_mode: "GREEN", registry_valid: true, registry_validation_errors: 0, readers: [{ id: "heartbeat-reader", task_id: "heartbeat-check", description: "Check the facility heartbeat.", classification_default: "OPEN", timeout_seconds: 60, evidence_scope: ["registry/**"] }], report_only: true, browser_selects_target: false, browser_submits_commands: false, source_mutation_capability: false }],
+  ["/api/v1/modules/taar/runs", { runs: [], redaction_boundary: "Sensitive or hash-invalid evidence is withheld." }],
   ["/replay/status", { status: "pass", invariants_passed: 5, invariants_total: 5, updated_at: "2026-07-21T17:00:00Z" }],
   ["/dois", { dois: [
     { title: "Governed AI Systems", doi: "10.1000/project-ai.1", domain: "governance", url: "https://doi.org/10.1000/project-ai.1" },
@@ -220,6 +226,431 @@ test("viewer navigation omits administrative authority", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Preferences" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Administration" })).toHaveCount(0);
   await expect(page).toHaveScreenshot("navigation-viewer-mobile-open.png");
+});
+
+test("viewer sees an explicit Atlas access restriction", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/session", { ...session, account: { ...session.account, role: "viewer" } }],
+    ["/atlas/status", { detail: "Module analysis permission required" }, 403],
+  ]);
+  await openAuthenticatedRoute(page, "/simulations/atlas-replay", "Atlas Replay");
+  await expect(page.getByRole("alert")).toContainText("Atlas access restricted");
+  await expect(page.getByRole("alert")).toContainText("No replay input or verification controls are shown");
+  await expect(page.getByRole("heading", { name: "Replay bundle" })).toHaveCount(0);
+});
+
+test("viewer sees SWR as view-only", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [["/api/v1/auth/session", { ...session, account: { ...session.account, role: "viewer" } }]]);
+  await openAuthenticatedRoute(page, "/simulations/swr", "Sovereign War Room");
+  await expect(page.getByRole("button", { name: "View only" })).toBeDisabled();
+  await expect(page.getByText("Your interface role can inspect deterministic scenarios but cannot initiate execution.")).toBeVisible();
+});
+
+test("viewer sees an explicit Atlas projection restriction", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/session", { ...session, account: { ...session.account, role: "viewer" } }],
+    ["/api/v1/modules/atlas/projections", { detail: "Module analysis permission required" }, 403],
+  ]);
+  await openAuthenticatedRoute(page, "/simulations/atlas-projections", "Atlas Projections");
+  await expect(page.getByRole("alert")).toContainText("Atlas access restricted");
+  await expect(page.getByRole("alert")).toContainText("No projection inputs, history, or creation controls are shown");
+  await expect(page.getByRole("heading", { name: "Projection inputs" })).toHaveCount(0);
+});
+
+test("reviewer sees TAAR as view-only", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [["/api/v1/auth/session", { ...session, account: { ...session.account, role: "reviewer" } }]]);
+  await openAuthenticatedRoute(page, "/simulations/taar", "TAAR Inspection Console");
+  await expect(page.getByRole("button", { name: "View only" })).toBeDisabled();
+  await expect(page.getByText("Your interface role can inspect sealed evidence but cannot run a reader.")).toBeVisible();
+});
+
+test("reviewer inbox exposes human review without execution authority", async ({ page }) => {
+  const reviewer = { ...session, account: { ...session.account, id: "reviewer-account", role: "reviewer" } };
+  const request = {
+    id: "request-review-1",
+    created_by: "operator-account",
+    title: "Review bounded evidence",
+    operation: "evidence.inspect",
+    resource: "bundle:review-1",
+    rationale: "Confirm the evidence bundle before governance evaluation.",
+    state: "submitted",
+    created_at: "2026-07-21T16:00:00Z",
+    updated_at: "2026-07-21T16:00:00Z",
+  };
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/session", reviewer],
+    ["/api/v1/work/requests", { requests: [request], review_is_not_governance: true }],
+  ]);
+  await openAuthenticatedRoute(page, "/inbox", "My Inbox");
+  await expect(page.getByRole("heading", { name: "Record human review" })).toBeVisible();
+  await expect(page.getByRole("option", { name: "Review bounded evidence" })).toHaveCount(1);
+  await expect(page.getByText("Approval forwards for governance; it is not ALLOW.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Record a request" })).toHaveCount(0);
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("administrator retains the management surface and role controls", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [[
+    "/api/v1/auth/session",
+    { ...session, account: { ...session.account, role: "administrator" } },
+  ]]);
+  await openAuthenticatedRoute(page, "/administration/accounts", "Administration");
+  await expect(page.getByRole("heading", { name: "Create account" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Human accounts" })).toBeVisible();
+  await expect(page.getByLabel("Interface role")).toBeVisible();
+  await expect(page.getByText("Role and status changes are server-authorized and audit-recorded.")).toBeVisible();
+  await expect(page.getByText("Administration access restricted")).toHaveCount(0);
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("viewer request workspace withholds the submission composer", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [["/api/v1/auth/session", { ...session, account: { ...session.account, role: "viewer" } }]]);
+  await openAuthenticatedRoute(page, "/requests", "Execution requests");
+  await expect(page.getByText("Request submission restricted", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Record a request" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "No requests are visible" })).toBeVisible();
+});
+
+test("viewer sees an explicit administration access restriction", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/session", { ...session, account: { ...session.account, role: "viewer" } }],
+    ["/api/v1/admin/accounts", { detail: "Account administration permission required" }, 403],
+    ["/api/v1/admin/security-events", { detail: "Account administration permission required" }, 403],
+  ]);
+  await openAuthenticatedRoute(page, "/administration/accounts", "Administration");
+  await expect(page.getByRole("status", { name: "Administration access restricted" })).toBeVisible();
+  await expect(page.getByText(/current interface role cannot manage human accounts/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Create account" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Human accounts" })).toHaveCount(0);
+});
+
+test("security hides controls when its initial state cannot be verified", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/sessions", { detail: "Session store unavailable" }, 503],
+    ["/api/v1/auth/mfa", { detail: "Authenticator state unavailable" }, 503],
+  ]);
+  await openAuthenticatedRoute(page, "/profile/security", "Account security");
+  await expect(page.getByRole("alert", { name: "Account security unavailable" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Set up authenticator" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Change password" })).toHaveCount(0);
+});
+
+test("temporary-password accounts are routed to security before other workspaces", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [[
+    "/api/v1/auth/session",
+    { ...session, account: { ...session.account, must_change_password: true } },
+  ]]);
+  await page.goto("/command-center");
+  await expect(page.getByRole("heading", { level: 1, name: "Account security" })).toBeVisible();
+  await expect(page).toHaveURL(/\/profile\/security$/);
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("system health labels partial gateway evidence", async ({ page }) => {
+  await page.unroute("**/api/**");
+  const degraded = {
+    ...dashboard,
+    surfaces: dashboard.surfaces.map((surface) => surface.id === "audit_chain"
+      ? { ...surface, status: "unavailable", metric: "Unavailable", detail: "Audit storage cannot be verified." }
+      : surface),
+  };
+  await installDeterministicApi(page, [["/api/v1/dashboard", degraded]]);
+  await openAuthenticatedRoute(page, "/system/health", "System health");
+  await expect(page.getByRole("status", { name: "Partial system evidence" })).toBeVisible();
+  await expect(page.getByText("Audit chain: unavailable")).toBeVisible();
+  await expect(page.getByText("Current gateway evidence, not a production-readiness claim.")).toBeVisible();
+});
+
+test("module catalog failure does not present a false empty catalog", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [["/api/v1/modules", { detail: "Module catalog unavailable" }, 503]]);
+  await openAuthenticatedRoute(page, "/simulations", "Simulations and analysis");
+  await expect(page.getByRole("alert", { name: "Catalog unavailable" })).toBeVisible();
+  await expect(page.getByText("No module count or interface state is shown because the catalog read failed.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open projections" })).toHaveCount(0);
+});
+
+test("evidence labels a partial replay and DOI snapshot", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [["/dois", { detail: "DOI registry unavailable" }, 503]]);
+  await openAuthenticatedRoute(page, "/evidence", "Evidence");
+  await expect(page.getByRole("status", { name: "Partial evidence" })).toBeVisible();
+  await expect(page.getByText("5/5 invariants")).toBeVisible();
+  await expect(page.getByRole("alert", { name: "DOI registry unavailable" })).toBeVisible();
+});
+
+test("sign-in keeps the server boundary visible and reports failed credentials", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/session", { detail: "Sign in required" }, 401],
+    ["/api/v1/auth/login", { detail: "Invalid username or password" }, 401],
+  ]);
+  await page.goto("/sign-in");
+  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
+  await expect(page.getByText("Server-authenticated session")).toBeVisible();
+  await expect(page.getByText("Governance gate remains authoritative")).toBeVisible();
+  await page.getByLabel("Username").fill("unknown");
+  await page.locator("#password").fill("wrong-password");
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page.getByRole("alert")).toHaveText("Invalid username or password");
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("recovery completes locally and confirms the next sign-in step", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/session", { detail: "Sign in required" }, 401],
+    ["/api/v1/auth/recovery/complete", { message: "Recovery completed" }],
+  ]);
+  await page.goto("/recover");
+  await expect(page.getByRole("heading", { name: "Recover access" })).toBeVisible();
+  await page.getByLabel("Username").fill("owner");
+  await page.getByLabel("Recovery code").fill("ABCD-EFGH-JKLM");
+  await page.locator("#recovery-password").fill("Recovered!Owner789");
+  await page.locator("#recovery-confirm").fill("Recovered!Owner789");
+  await page.getByRole("button", { name: "Reset password" }).click();
+  await expect(page.getByRole("status")).toHaveText("Recovery complete. Sign in with your new password.");
+  await expect(page.getByText(/email/i)).toHaveCount(0);
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("account service failure withholds the protected workspace", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [[
+    "/api/v1/auth/bootstrap-status",
+    { detail: "Account service unavailable" },
+    503,
+  ]]);
+  await page.goto("/command-center");
+  await expect(page.getByText("Human account service unavailable")).toBeVisible();
+  await expect(page.getByText("Set PROJECT_AI_ACCOUNT_DB and PROJECT_AI_SETUP_SECRET on the local gateway.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Command Center" })).toHaveCount(0);
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("first-run setup requires recovery-code acknowledgement before entry", async ({ page }) => {
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/auth/bootstrap-status", { status: "required", setup_secret_required: true }],
+    ["/api/v1/auth/bootstrap", { ...session, recovery_codes: ["CODE-0-SAFE", "CODE-1-SAFE"] }],
+  ]);
+  await page.goto("/setup");
+  await expect(page.getByRole("heading", { name: "Create the Owner account" })).toBeVisible();
+  await page.getByLabel("One-time setup secret").fill("one-time-setup");
+  await page.getByLabel("Display name").fill("Local Owner");
+  await page.getByLabel("Username").fill("owner");
+  await page.locator("#setup-password").fill("Foundation!Owner123");
+  await page.locator("#confirm-password").fill("Foundation!Owner123");
+  await page.getByRole("button", { name: "Create Owner account" }).click();
+  await expect(page.getByRole("heading", { name: "Save recovery codes" })).toBeVisible();
+  await expect(page.getByText("CODE-0-SAFE")).toBeVisible();
+  const enter = page.getByRole("button", { name: "Enter Control Center" });
+  await expect(enter).toBeDisabled();
+  await page.getByRole("checkbox", { name: /I saved these codes/ }).check();
+  await expect(enter).toBeEnabled();
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("TAAR run completion exposes sealed evidence and its report-only boundary", async ({ page }) => {
+  const run = {
+    run_id: "visual-run-1",
+    agent_id: "heartbeat-reader",
+    task_id: "heartbeat-check",
+    classification: "OPEN",
+    status: "succeeded",
+    branch: "main",
+    commit: "a".repeat(40),
+    dirty_state_before: "clean",
+    start_time: "2026-07-21T16:00:00Z",
+    end_time: "2026-07-21T16:00:01Z",
+    duration_ms: 42,
+    command_count: 1,
+    finding_count: 0,
+    evidence_hash: "b".repeat(64),
+    evidence_hash_valid: true,
+    audit_record_hash: "c".repeat(64),
+    audit_record_hash_valid: true,
+    details_redacted: false,
+    findings: [],
+    commands: [{ command: "builtin:heartbeat_check", exit_code: 0, duration_ms: 0 }],
+    uncertainty: [],
+    human_action_required: false,
+    report_only: true,
+    source_mutation_capability: false,
+    governance_verdict_created: false,
+    project_ai_execution_started: false,
+  };
+  let created = false;
+  await page.route("**/api/v1/modules/taar/runs", async (route) => {
+    if (route.request().method() === "POST") {
+      created = true;
+      await route.fulfill({ status: 201, json: { run, reused_existing_receipt: false } });
+      return;
+    }
+    await route.fulfill({ status: 200, json: { runs: created ? [run] : [], redaction_boundary: "Sensitive or hash-invalid evidence is withheld." } });
+  });
+  await openAuthenticatedRoute(page, "/simulations/taar", "TAAR Inspection Console");
+  await expect(page.getByRole("button", { name: "Run inspection" })).toBeEnabled();
+  await page.getByRole("button", { name: "Run inspection" }).click();
+  await expect(page.getByRole("heading", { name: "Latest evidence" })).toBeVisible();
+  await expect(page.getByText("Evidence SHA-256")).toBeVisible();
+  await expect(page.getByText("No source-mutation capability, governance verdict, or Project-AI execution was created.")).toBeVisible();
+  await expect(page.getByText("Sensitive or hash-invalid evidence is withheld.")).toBeVisible();
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("SWR execution presents a durable receipt without exposing a capability", async ({ page }) => {
+  const scenario = {
+    scenario_id: "swr-visual-1",
+    name: "Triage under uncertainty",
+    description: "Allocate scarce care safely.",
+    scenario_type: "ethical_dilemma",
+    difficulty: 4,
+    round_number: 1,
+    expected_decision: "escalate_for_human_triage",
+    tags: ["ethics", "triage"],
+  };
+  const request = {
+    id: "request-swr",
+    created_by: session.account.id,
+    title: "Run SWR triage",
+    operation: "scenario.prepare",
+    resource: `scenario:${scenario.scenario_id}`,
+    rationale: "Bounded analysis",
+    state: "reviewed_approve",
+    created_at: "2026-07-21T16:00:00Z",
+    updated_at: "2026-07-21T16:05:00Z",
+  };
+  const receipt = {
+    request_id: request.id,
+    attempt_id: "attempt-visual-1",
+    module_id: "swr",
+    initiated_by: session.account.id,
+    status: "executed",
+    action_id: "swr:action",
+    outcome: "ALLOW",
+    reason: "",
+    output: { recorded: true, score: 100 },
+    governance_evidence_sha256: "e".repeat(64),
+    event_hash: "f".repeat(64),
+    audit_hash: "a".repeat(64),
+    created_at: "2026-07-21T16:06:00Z",
+    completed_at: "2026-07-21T16:06:01Z",
+  };
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [
+    ["/api/v1/modules/swr/scenarios", {
+      scenarios: [scenario],
+      execution_gate_configured: true,
+      authority_boundary: "The browser never receives a capability token.",
+    }],
+    ["/api/v1/work/requests", { requests: [request], review_is_not_governance: true }],
+  ]);
+  await page.route("**/api/v1/work/requests/request-swr/execute/swr", async (route) => {
+    await route.fulfill({ status: 200, json: { receipt, reused_existing_receipt: false } });
+  });
+  await openAuthenticatedRoute(page, "/simulations/swr", "Sovereign War Room");
+  await page.getByLabel("Approved request").selectOption(request.id);
+  await page.locator("select").nth(1).selectOption(scenario.scenario_id);
+  await page.getByRole("button", { name: "Submit through execution gate" }).click();
+  await expect(page.getByRole("heading", { name: "Durable execution receipt" })).toBeVisible();
+  await expect(page.getByText("The server submitted the bounded scenario record through the execution gate.")).toBeVisible();
+  await expect(page.getByText("attempt-visual-1")).toBeVisible();
+  await expect(page.getByText("The browser sends a request ID and scenario input. It never receives the server capability.")).toBeVisible();
+  await expect(page.getByText("The browser never receives a capability token.")).toBeVisible();
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("Atlas projection creation exposes an analysis-only durable receipt", async ({ page }) => {
+  const projection = {
+    id: "projection-visual-1",
+    initiated_by: session.account.id,
+    claim_id: "claim-projection-1",
+    statement: "Source-backed controls remain effective under the evaluated conditions.",
+    claim_type: "predictive",
+    stack: "RS",
+    evidence: [{ source: "control-test", tier: "A", confidence: 0.9 }, { source: "replay-test", tier: "B", confidence: 0.8 }],
+    drivers: [{ name: "control_strength", value: 0.85 }, { name: "source_quality", value: 0.95 }],
+    posterior: 0.711,
+    uncertainty: 0.289,
+    evidence_count: 2,
+    projection_sha256: "p".repeat(64),
+    input_sha256: "i".repeat(64),
+    output_sha256: "o".repeat(64),
+    audit_hash: "a".repeat(64),
+    created_at: "2026-07-21T16:00:00Z",
+    subordination_notice: "Atlas output is analytical evidence only.",
+  };
+  let created = false;
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page);
+  await page.route("**/modules/atlas/projections*", async (route) => {
+    if (route.request().method() === "POST") {
+      created = true;
+      await route.fulfill({ status: 201, json: { projection, reused_existing_receipt: false } });
+      return;
+    }
+    await route.fulfill({ status: 200, json: { projections: created ? [projection] : [] } });
+  });
+  await openAuthenticatedRoute(page, "/simulations/atlas-projections", "Atlas Projections");
+  await page.getByRole("button", { name: "Create projection" }).click();
+  await expect(page.getByRole("heading", { name: "Projection result" })).toBeVisible();
+  await expect(page.locator("aside").getByText("Projection SHA-256")).toBeVisible();
+  await expect(page.getByText("This projection is analytical evidence only. It is not a decision or authority grant.")).toBeVisible();
+  await expect(page.getByText("claim-projection-1")).toBeVisible();
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("Atlas replay verification exposes evidence without authority or execution", async ({ page }) => {
+  const replay = {
+    status: "verified",
+    bundle_id: "bundle-visual-1",
+    bundle_hash: "b".repeat(64),
+    reconstructed_state_hash: "r".repeat(64),
+    item_counts: { audit_events: 1, checkpoints: 1, claims: 1, graph_snapshots: 1, projections: 1 },
+    audit_receipt_sha256: "a".repeat(64),
+    audited_at: "2026-07-21T16:00:00Z",
+    subordination_notice: "Atlas analysis is not a decision, authority grant, or actuation.",
+    authority: "analysis_only",
+    governance_verdict_created: false,
+    execution_started: false,
+  };
+  await page.unroute("**/api/**");
+  await installDeterministicApi(page, [[
+    "/atlas/status",
+    { status: "available", version: "0.0.3", stack: "Atlas", authority: "analysis_only", protected_operations: ["sludge_narrative"], subordination_notice: "Atlas analysis is not a decision, authority grant, or actuation." },
+  ]]);
+  await page.route("**/modules/atlas/replay", async (route) => {
+    await route.fulfill({ status: 200, json: replay });
+  });
+  await openAuthenticatedRoute(page, "/simulations/atlas-replay", "Atlas Replay");
+  await page.getByRole("button", { name: "Verify and replay" }).click();
+  await expect(page.getByRole("heading", { name: "Verification passed" })).toBeVisible();
+  await expect(page.getByText("Bundle ID · bundle-visual-1")).toBeVisible();
+  await expect(page.getByText("This reconstruction is evidence only. It is not a decision or authority grant.")).toBeVisible();
+  await expect(page.getByText("Browser token not used")).toBeVisible();
+  expect(unhandledRequests).toEqual([]);
+});
+
+test("work notifications move focus into the dialog and restore it", async ({ page }) => {
+  await openAuthenticatedRoute(page, "/command-center", "Command Center");
+  const trigger = page.getByRole("button", { name: "Open work notifications" });
+  await trigger.click();
+  await expect(page.getByRole("dialog", { name: "Work notifications" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Close notifications" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: "Work notifications" })).toHaveCount(0);
+  await expect(trigger).toBeFocused();
 });
 
 test("audit explorer desktop", async ({ page }) => {

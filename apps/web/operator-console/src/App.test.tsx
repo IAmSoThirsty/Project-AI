@@ -285,6 +285,23 @@ test("hides administration controls when accounts or security events cannot be r
   await expectNoAutomatedAccessibilityViolations();
 });
 
+test("labels role-restricted administration access without exposing controls", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/session")) return response({ ...signedIn, account: { ...signedIn.account, role: "viewer" } });
+    if (url.endsWith("/api/v1/admin/accounts") || url.endsWith("/api/v1/admin/security-events")) return response({ detail: "Account administration permission required" }, 403);
+    return defaultFetch(input);
+  }));
+  window.history.pushState({}, "", "/administration/accounts");
+  render(<ControlCenterApp />);
+  expect(await screen.findByRole("status", { name: "Administration access restricted" })).toBeInTheDocument();
+  expect(screen.getByText(/current interface role cannot manage human accounts/)).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Create account" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Human accounts" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Recent account security events" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
 test("labels verified empty administration responses", async () => {
   vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
     const url = String(input);
@@ -309,6 +326,134 @@ test("does not present an empty module catalog when the catalog read fails", asy
   expect(await screen.findByText("Catalog unavailable", { selector: "strong" })).toBeInTheDocument();
   expect(screen.getByText(/No module count or interface state is shown/)).toBeInTheDocument();
   expect(screen.queryByText("No registered modules")).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("hides SWR controls when the initial scenario read fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/modules/swr/scenarios")
+    ? response({ detail: "Scenario catalog unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/simulations/swr");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("SWR workflow unavailable")).toBeInTheDocument();
+  expect(screen.getByText(/No scenario list, authority boundary, or execution controls are shown/)).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Reviewed scenario execution" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Submit through execution gate" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("hides TAAR controls and history when an initial read fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/modules/taar/status")
+    ? response({ detail: "TAAR target unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/simulations/taar");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("TAAR inspection unavailable")).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Inspection request" })).not.toBeInTheDocument();
+  expect(screen.queryByText("No inspections yet")).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("hides Atlas projection controls when history cannot be verified", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).includes("/api/v1/modules/atlas/projections?")
+    ? response({ detail: "Projection history unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/simulations/atlas-projections");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Projection history unavailable")).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Projection inputs" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Create projection" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("hides Atlas replay controls when the status cannot be verified", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/atlas/status")
+    ? response({ detail: "Atlas status unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/simulations/atlas-replay");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Atlas status unavailable")).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Replay bundle" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Verify and replay" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("distinguishes role-restricted module access from service failure", async () => {
+  const viewer = { ...signedIn, account: { ...signedIn.account, role: "viewer" } };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/session")) return response(viewer);
+    if (url.endsWith("/atlas/status") || url.includes("/api/v1/modules/atlas/projections?")) return response({ detail: "Module analysis permission required" }, 403);
+    return defaultFetch(input);
+  }));
+  window.history.pushState({}, "", "/simulations/atlas-replay");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Atlas access restricted")).toBeInTheDocument();
+  expect(screen.getByText(/not authorized to run Atlas analysis/)).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Replay bundle" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("labels role-restricted Atlas projection access without exposing inputs", async () => {
+  const viewer = { ...signedIn, account: { ...signedIn.account, role: "viewer" } };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/session")) return response(viewer);
+    if (url.includes("/api/v1/modules/atlas/projections?")) return response({ detail: "Module analysis permission required" }, 403);
+    return defaultFetch(input);
+  }));
+  window.history.pushState({}, "", "/simulations/atlas-projections");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Atlas access restricted")).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Projection inputs" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("labels role-restricted TAAR access without exposing the target", async () => {
+  const viewer = { ...signedIn, account: { ...signedIn.account, role: "viewer" } };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/session")) return response(viewer);
+    if (url.endsWith("/api/v1/modules/taar/status") || url.includes("/api/v1/modules/taar/runs?")) return response({ detail: "TAAR view permission required" }, 403);
+    return defaultFetch(input);
+  }));
+  window.history.pushState({}, "", "/simulations/taar");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("TAAR access restricted")).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Inspection request" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("keeps TAAR view-only roles explicit while withholding reader execution", async () => {
+  const reviewer = { ...signedIn, account: { ...signedIn.account, role: "reviewer" } };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/auth/session")
+    ? response(reviewer)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/simulations/taar");
+  render(<ControlCenterApp />);
+  expect(await screen.findByRole("button", { name: "View only" })).toBeDisabled();
+  expect(screen.getByText("Your interface role can inspect sealed evidence but cannot run a reader.")).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("withholds SWR execution and request submission controls from a viewer", async () => {
+  const viewer = { ...signedIn, account: { ...signedIn.account, role: "viewer" } };
+  const reviewedRequest = { id: "request-reviewed", created_by: "account-1", title: "Approved scenario", operation: "scenario.prepare", resource: "scenario:swr-1", rationale: "Review", state: "reviewed_approve", created_at: "2026-07-15T12:00:00Z", updated_at: "2026-07-15T12:00:00Z" };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/session")) return response(viewer);
+    if (url.endsWith("/api/v1/work/requests")) return response({ requests: [reviewedRequest], review_is_not_governance: true });
+    return defaultFetch(input);
+  }));
+  window.history.pushState({}, "", "/simulations/swr");
+  render(<ControlCenterApp />);
+  expect(await screen.findByRole("button", { name: "View only" })).toBeDisabled();
+  expect(screen.getByText(/cannot initiate execution/)).toBeInTheDocument();
+  window.history.pushState({}, "", "/requests");
+  cleanup();
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Request submission restricted")).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Record a request" })).not.toBeInTheDocument();
   await expectNoAutomatedAccessibilityViolations();
 });
 
@@ -581,7 +726,7 @@ test("redirects an unauthenticated deep link to sign in and completes login", as
   vi.stubGlobal("fetch", fetchMock);
   const user = userEvent.setup(); render(<ControlCenterApp />);
   expect(await screen.findByRole("heading", { name: "Sign in" })).toBeInTheDocument();
-  expect(await screen.findByText("Connected to:")).toHaveTextContent("PROJECT-AI-LOCAL");
+  await waitFor(() => expect(screen.getByText("Connected to:")).toHaveTextContent("PROJECT-AI-LOCAL"));
   expect(screen.getByText("Authentication establishes identity. Authority is evaluated independently by governance policy.")).toBeInTheDocument();
   expect(screen.getByText("Server-authenticated session")).toBeInTheDocument();
   expect(screen.getByText("Governance gate remains authoritative")).toBeInTheDocument();
@@ -701,6 +846,34 @@ test("shows server-authorized account administration and one-time codes", async 
   expect(screen.getByText("Password change required")).toBeInTheDocument();
 });
 
+test("prevents duplicate account creation while the server action is pending", async () => {
+  let release: (() => void) | undefined;
+  let postCount = 0;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  vi.stubGlobal("fetch", vi.fn((input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/admin/accounts") && init?.method === "POST") {
+      postCount += 1;
+      return gate.then(() => response({ account: { ...signedIn.account, id: "account-2", username: "operator.one", display_name: "Operator One", role: "operator", actor_id: null, must_change_password: true, created_at: "2026-07-15T13:00:00Z" }, recovery_codes: ["ABCD-EFGH-JKLM"] }));
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  window.history.pushState({}, "", "/administration/accounts");
+  render(<ControlCenterApp />);
+  await user.type(await screen.findByLabelText("Display name"), "Operator One");
+  await user.type(screen.getByLabelText("Username"), "operator.one");
+  await user.type(screen.getByLabelText("Temporary password"), "Temporary!Operator123");
+  await user.click(screen.getByRole("button", { name: "Create account" }));
+  const pending = await screen.findByRole("button", { name: "Creating account…" });
+  expect(pending).toBeDisabled();
+  expect(postCount).toBe(1);
+  release?.();
+  expect(await screen.findByText("ABCD-EFGH-JKLM")).toBeInTheDocument();
+  expect(postCount).toBe(1);
+  await expectNoAutomatedAccessibilityViolations();
+});
+
 test("isolates narrow-screen navigation focus and restores its trigger", async () => {
   useNarrowViewport();
   const user = userEvent.setup(); render(<ControlCenterApp />);
@@ -793,6 +966,17 @@ test("loads live work notifications and persists browser-local preferences", asy
   expect(localStorage.getItem("project-ai-reduced-motion")).toBe("true");
 });
 
+test("names the work notifications dialog and restores its trigger", async () => {
+  const user = userEvent.setup(); render(<ControlCenterApp />);
+  const trigger = await screen.findByRole("button", { name: "Open work notifications" });
+  await user.click(trigger);
+  expect(await screen.findByRole("dialog", { name: "Work notifications" })).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByRole("button", { name: "Close notifications" })).toHaveFocus());
+  await user.keyboard("{Escape}");
+  expect(screen.queryByRole("dialog", { name: "Work notifications" })).not.toBeInTheDocument();
+  await waitFor(() => expect(trigger).toHaveFocus());
+});
+
 test("deep-links to the truthful simulation catalog", async () => {
   window.history.pushState({}, "", "/simulations"); render(<ControlCenterApp />);
   expect(await screen.findByRole("heading", { name: "Simulations and analysis" })).toBeInTheDocument();
@@ -883,7 +1067,7 @@ test("verifies and reconstructs an Atlas bundle without claiming authority", asy
   expect(await screen.findByRole("heading", { name: "Atlas Replay" })).toBeInTheDocument();
   expect(screen.getByText("No governance verdict")).toBeInTheDocument();
   expect(screen.queryByLabelText(/token/i)).not.toBeInTheDocument();
-  await user.click(screen.getByRole("button", { name: "Verify and replay" }));
+  await user.click(await screen.findByRole("button", { name: "Verify and replay" }));
   expect(await screen.findByRole("heading", { name: "Verification passed" })).toBeInTheDocument();
   expect(screen.getByText("Bundle ID · bundle-1")).toBeInTheDocument();
   expect(screen.getByText("This reconstruction is evidence only. It is not a decision or authority grant.")).toBeInTheDocument();
@@ -918,6 +1102,34 @@ test("runs a reviewed SWR request and presents the durable execution receipt", a
   await expectNoAutomatedAccessibilityViolations();
 });
 
+test("prevents duplicate SWR submission while the execution gate is pending", async () => {
+  const scenario = { scenario_id: "s".repeat(32), name: "Triage under uncertainty", description: "Allocate scarce care safely.", scenario_type: "ethical_dilemma", difficulty: 4, round_number: 1, expected_decision: "escalate_for_human_triage", tags: ["ethics", "triage"] };
+  const request = { id: "request-swr-pending", created_by: "account-1", title: "Run SWR triage", operation: "scenario.prepare", resource: `scenario:${scenario.scenario_id}`, rationale: "Bounded analysis", state: "reviewed_approve", created_at: "2026-07-15T12:00:00Z", updated_at: "2026-07-15T12:05:00Z" };
+  const receipt = { request_id: request.id, attempt_id: "attempt-pending", module_id: "swr", initiated_by: "account-1", status: "executed", action_id: "swr:action", outcome: "ALLOW", reason: "", output: { recorded: true }, governance_evidence_sha256: "e".repeat(64), event_hash: "f".repeat(64), audit_hash: "a".repeat(64), created_at: "2026-07-15T12:06:00Z", completed_at: "2026-07-15T12:06:01Z" };
+  let release: (() => void) | undefined;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/modules/swr/scenarios")) return response({ scenarios: [scenario], execution_gate_configured: true, authority_boundary: "The browser never receives a capability token." });
+    if (url.endsWith("/api/v1/work/requests/request-swr-pending/execute/swr") && init?.method === "POST") return gate.then(() => response({ receipt, reused_existing_receipt: false }));
+    if (url.endsWith("/api/v1/work/requests")) return response({ requests: [request], review_is_not_governance: true });
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  window.history.pushState({}, "", "/simulations/swr");
+  render(<ControlCenterApp />);
+  await screen.findByRole("heading", { name: "Sovereign War Room" });
+  await user.selectOptions(await screen.findByLabelText("Approved request"), request.id);
+  await user.selectOptions(screen.getByLabelText("Scenario"), scenario.scenario_id);
+  const submit = screen.getByRole("button", { name: "Submit through execution gate" });
+  await user.click(submit);
+  const pending = await screen.findByRole("button", { name: "Submitting through execution gate…" });
+  expect(pending).toBeDisabled();
+  release?.();
+  expect(await screen.findByRole("heading", { name: "Durable execution receipt" })).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
 test("records a human request without claiming governance or execution", async () => {
   vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input);
@@ -945,4 +1157,63 @@ test("records a human request without claiming governance or execution", async (
   await user.click(screen.getByRole("button", { name: "Cancel request" }));
   expect(await screen.findByText("Request cancelled. No governance verdict was created and no execution started.")).toBeInTheDocument();
   expect(screen.getByText("cancelled")).toBeInTheDocument();
+});
+
+test("prevents duplicate request recording while the durable request is pending", async () => {
+  const created = { id: "request-pending", created_by: "account-1", title: "Inspect evidence", operation: "evidence.inspect", resource: "bundle:42", input_schema_version: "evidence.inspect/v1", inputs: { bundle_id: "42" }, input_sha256: "b".repeat(64), rationale: "Verify provenance", state: "submitted", created_at: "2026-07-15T12:00:00Z", updated_at: "2026-07-15T12:00:00Z" };
+  let release: (() => void) | undefined;
+  let postCount = 0;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  vi.stubGlobal("fetch", vi.fn((input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/work/requests") && init?.method === "POST") {
+      postCount += 1;
+      return gate.then(() => response(created));
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  window.history.pushState({}, "", "/requests");
+  render(<ControlCenterApp />);
+  await user.type(await screen.findByLabelText("Title"), "Inspect evidence");
+  await user.selectOptions(screen.getByLabelText("Operation"), "evidence.inspect");
+  await user.type(screen.getByLabelText(/Evidence bundle identifier/), "42");
+  await user.type(screen.getByLabelText("Rationale"), "Verify provenance");
+  await user.click(screen.getByRole("button", { name: "Record request" }));
+  const pending = await screen.findByRole("button", { name: "Recording request…" });
+  expect(pending).toBeDisabled();
+  expect(postCount).toBe(1);
+  release?.();
+  expect(await screen.findByText("Request recorded. No governance verdict was created and no execution started.")).toBeInTheDocument();
+  expect(postCount).toBe(1);
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("prevents duplicate human review while the review receipt is pending", async () => {
+  const request = { id: "request-review-pending", created_by: "account-2", title: "Review evidence", operation: "evidence.inspect", resource: "bundle:42", rationale: "Needs review", state: "submitted", created_at: "2026-07-15T12:00:00Z", updated_at: "2026-07-15T12:00:00Z" };
+  let release: (() => void) | undefined;
+  let postCount = 0;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  vi.stubGlobal("fetch", vi.fn((input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith(`/api/v1/work/requests/${request.id}/reviews`) && init?.method === "POST") {
+      postCount += 1;
+      return gate.then(() => response({ id: "review-1", request_id: request.id, reviewer_account_id: "account-1", decision: "approve_for_governance", rationale: "Reviewed", created_at: "2026-07-15T12:05:00Z", receipt_sha256: "a".repeat(64), governance_verdict_created: false, execution_started: false }));
+    }
+    if (url.endsWith("/api/v1/work/requests")) return Promise.resolve(response({ requests: [request], review_is_not_governance: true }));
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  window.history.pushState({}, "", "/inbox");
+  render(<ControlCenterApp />);
+  await user.selectOptions(await screen.findByLabelText("Request"), request.id);
+  await user.type(screen.getByLabelText("Rationale"), "Reviewed");
+  await user.click(screen.getByRole("button", { name: "Record review" }));
+  const pending = await screen.findByRole("button", { name: "Recording review…" });
+  expect(pending).toBeDisabled();
+  expect(postCount).toBe(1);
+  release?.();
+  expect(await screen.findByText("Human review recorded. It is not a governance verdict and did not execute anything.")).toBeInTheDocument();
+  expect(postCount).toBe(1);
+  await expectNoAutomatedAccessibilityViolations();
 });
