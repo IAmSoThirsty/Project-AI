@@ -815,6 +815,35 @@ test("shows current server session and signs out through CSRF-protected API", as
   expect((logoutCall?.[1]?.headers as Headers).get("X-CSRF-Token")).toBe("csrf-test");
 });
 
+test("prevents duplicate session revocation while the security action is pending", async () => {
+  const otherSession = { id: "session-2", current: false, created_at: "2026-07-15T12:00:00Z", last_seen_at: "2026-07-15T12:05:00Z", idle_expires_at: "2026-07-15T13:00:00Z", absolute_expires_at: "2026-07-16T00:00:00Z", user_agent: "Test browser", client_host: "127.0.0.1", revoked: false, mfa_verified_at: null };
+  let release: (() => void) | undefined;
+  let revokeCount = 0;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  vi.stubGlobal("fetch", vi.fn((input: string | URL | Request, init?: RequestInit) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/auth/sessions")) return Promise.resolve(response({ sessions: [{ ...otherSession, id: "session-1", current: true, user_agent: "Current browser" }, otherSession] }));
+    if (url.endsWith("/api/v1/auth/sessions/session-2") && init?.method === "DELETE") {
+      revokeCount += 1;
+      return gate.then(() => response({ message: "Session revoked" }));
+    }
+    return defaultFetch(input);
+  }));
+  const user = userEvent.setup();
+  window.history.pushState({}, "", "/profile/security");
+  render(<ControlCenterApp />);
+  await screen.findByText("Test browser");
+  await user.click(screen.getByRole("button", { name: "Revoke Test browser" }));
+  const pending = await screen.findByRole("button", { name: "Revoke Test browser" });
+  expect(pending).toBeDisabled();
+  expect(pending).toHaveTextContent("Revoking…");
+  expect(revokeCount).toBe(1);
+  release?.();
+  expect(await screen.findByText("Revoked")).toBeInTheDocument();
+  expect(revokeCount).toBe(1);
+  await expectNoAutomatedAccessibilityViolations();
+});
+
 test("redirects a temporary-password account to security", async () => {
   vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
     const url = String(input);

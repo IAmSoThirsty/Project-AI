@@ -1,5 +1,22 @@
 # Operational Continuity Map - Updated
 
+## SESSION UPDATE 2026-07-22 — Account-security action-state hardening
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by closing
+  duplicate-action races in the account security surface.
+- **Implemented:** Session revocation, sign-out, password change, and MFA
+  enrollment/confirmation/step-up/removal now serialize through one pending
+  action, disable competing controls, and expose operation-specific pending
+  labels. A regression test proves a session revoke cannot be submitted twice
+  while the server response is pending.
+- **Validation:** Operator-console component coverage passed 71/71 and the
+  aggregate web suite passed 113/113. The full Windows Chromium suite passed
+  40/40 and the digest-pinned Linux read-only suite passed 40/40. Repository
+  web lint passed with zero warnings; no visual baseline changed.
+- **Safe to continue:** Yes for local web security UX hardening; no for
+  production deployment until the documented owner, provenance, attestation,
+  and live operations gates are satisfied.
+
 ## SESSION UPDATE 2026-07-22 — Durable work-queue action-state hardening
 
 - **Task / mode:** Continue UX/UI production-deployment readiness by removing
