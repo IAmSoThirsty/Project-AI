@@ -3108,6 +3108,35 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
   portal AT acceptance; Cerberus C3 (contingent); Waterfall W1 (pending user approval).
 - **Safe to continue:** yes.
 
+## 2026-07-22 — Android API 36 CI follow-up
+
+- **Task:** Reproduce and repair the Android job failure from CI run
+  `29900187732` without weakening strict lint.
+- **Mode:** Narrow Android/toolchain remediation and local-plus-hosted verification.
+- **Branch:** `agent/production-readiness-2026-07-19`.
+- **Observed failure:** hosted `lintRelease` rejected `targetSdk = 34` with
+  `OldTargetApi`. Subsequent clean local execution also identified the currently
+  required Gradle and `org.json` test-dependency versions under the repository's
+  `warningsAsErrors = true` policy.
+- **Changed:** Android compile/target SDK 36; explicit Build Tools 36.0.0; Android
+  Gradle Plugin 8.11.1; Gradle wrapper 8.14.5; `org.json:20260719`; CI SDK install
+  and Android README updated to API/Build Tools 36.
+- **Local verification:** `gradlew.bat --no-daemon clean lintDebug lintRelease
+  testDebugUnitTest assembleDebug assembleRelease` — **BUILD SUCCESSFUL in 1m 11s**;
+  103 actionable tasks, 101 executed and 2 up-to-date. Non-blocking warnings remain
+  for two deprecated `announceForAccessibility` calls and local SDK XML tool-version
+  compatibility; strict lint did not reject them.
+- **Commit/push:** `1e899eaadeccb39b903d1eac6d6f3cc6f8328d19`
+  (`fix: update Android validation toolchain`) pushed to the active branch.
+- **Hosted verification:** CI run `29901895300`, Android job `88864291797`
+  (`Android (unit, debug assembly)`) completed **success** for exact commit
+  `1e899eaa`.
+- **Scope boundary:** Concurrent web/test/baseline, V3Q checksum, and `output/`
+  working-tree changes were preserved and not included in the Android commit.
+- **Result:** Android follow-up verified locally and in hosted CI.
+- **Safe to continue:** yes for repository work; no production deployment authority
+  is implied.
+
 ## 2026-07-21 — End-to-end code-level remediation and verification pass
 
 - **Task:** Remediate evidence-proven repository-local defects from the preceding
