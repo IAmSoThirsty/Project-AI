@@ -4,7 +4,7 @@ This development app exposes only the DOI registry (`GET /dois`) and canonical r
 (`GET /replay/status`). It has no mutation, execution, governance, capability, token, or operator
 authority surface. The API base URL is a development BuildConfig value.
 
-Build with Java 17 and an Android SDK containing API 34 and Build Tools 34.0.0:
+Build with Java 17 and an Android SDK containing API 36 and Build Tools 36.0.0:
 
 ```powershell
 $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"

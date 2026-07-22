@@ -25,12 +25,13 @@ require(
 
 android {
     namespace = "ai.project.readonly"
-    compileSdk = 34
+    compileSdk = 36
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "ai.project.readonly"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 3
         versionName = "0.0.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -68,5 +69,5 @@ android {
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.json:json:20240303")
+    testImplementation("org.json:json:20260719")
 }
