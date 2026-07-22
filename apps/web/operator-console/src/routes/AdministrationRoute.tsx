@@ -14,18 +14,27 @@ export function AdministrationRoute() {
   const [events, setEvents] = useState<SecurityEvent[]>([]);
   const [form, setForm] = useState({ username: "", display_name: "", password: "", role: "operator" as ManagedRole, actor_id: "" });
   const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
-  async function load() {
-    const [accountResult, eventResult] = await Promise.all([
-      gateway.admin.accounts(), gateway.admin.securityEvents(),
-    ]);
-    setAccounts(accountResult.accounts);
-    setEvents(eventResult.events.slice(-50).reverse());
-  }
-
-  useEffect(() => { load().catch((reason) => setError(reason instanceof Error ? reason.message : "Administration unavailable")); }, []);
+  useEffect(() => {
+    let active = true;
+    Promise.all([gateway.admin.accounts(), gateway.admin.securityEvents()])
+      .then(([accountResult, eventResult]) => {
+        if (!active) return;
+        setAccounts(accountResult.accounts);
+        setEvents(eventResult.events.slice(-50).reverse());
+      })
+      .catch((reason) => {
+        if (active) setLoadError(reason instanceof Error ? reason.message : "Administration unavailable");
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+    return () => { active = false; };
+  }, []);
 
   function clearMessages() { setError(""); setNotice(""); }
 
@@ -60,9 +69,11 @@ export function AdministrationRoute() {
 
   return <div className="console-page">
     <PageHeading title="Administration" description="Manage human interface access. These roles do not grant execution authority." />
+    {isLoading ? <StatePanel title="Loading administration">Reading human accounts and account-security events.</StatePanel> : null}
+    {loadError ? <StatePanel title="Administration unavailable" tone="error">Account controls and event lists are hidden because the initial read failed. {loadError}</StatePanel> : null}
     {error ? <StatePanel title="Administrative action failed" tone="error">{error}</StatePanel> : null}
     {notice ? <StatePanel title="Administration updated">{notice}</StatePanel> : null}
-    {recoveryCodes.length ? <section className="records-panel recovery-handoff"><div className="panel-heading"><div><h2>One-time recovery codes</h2><p>These cannot be retrieved after you dismiss them.</p></div><KeyRound /></div><ol>{recoveryCodes.map((code) => <li key={code}><code>{code}</code></li>)}</ol><button type="button" onClick={() => setRecoveryCodes([])}>I transferred these codes securely</button></section> : null}
+    {!isLoading && !loadError ? <>{recoveryCodes.length ? <section className="records-panel recovery-handoff"><div className="panel-heading"><div><h2>One-time recovery codes</h2><p>These cannot be retrieved after you dismiss them.</p></div><KeyRound /></div><ol>{recoveryCodes.map((code) => <li key={code}><code>{code}</code></li>)}</ol><button type="button" onClick={() => setRecoveryCodes([])}>I transferred these codes securely</button></section> : null}
     <div className="admin-grid">
       <section className="records-panel security-panel">
         <div className="panel-heading"><div><h2>Create account</h2><p>The user must change the temporary password before using protected product surfaces.</p></div><UserPlus /></div>
@@ -70,9 +81,9 @@ export function AdministrationRoute() {
       </section>
       <section className="records-panel accounts-panel">
         <div className="panel-heading"><div><h2>Human accounts</h2><p>Role and status changes are server-authorized and audit-recorded.</p></div><Users /></div>
-        <div className="account-list">{accounts.map((account) => <article key={account.id}><div><strong>{account.display_name}</strong><span>@{account.username} · {account.actor_id ?? "No actor binding"}</span><small>{account.must_change_password ? "Password change required" : account.mfa_enabled ? "MFA enabled" : "MFA not enabled"}</small></div><span className={account.status === "active" ? "session-active" : "session-revoked"}>{account.status}</span>{account.role === "owner" ? <strong>Owner</strong> : <><select aria-label={`Role for ${account.display_name}`} value={account.role} onChange={(event) => changeRole(account, event.target.value as ManagedRole)}>{roles.map((role) => <option key={role} value={role}>{role}</option>)}</select><button type="button" onClick={() => toggleStatus(account)}>{account.status === "active" ? "Disable" : "Enable"}</button></>}</article>)}</div>
+        <div className="account-list">{accounts.length > 0 ? accounts.map((account) => <article key={account.id}><div><strong>{account.display_name}</strong><span>@{account.username} · {account.actor_id ?? "No actor binding"}</span><small>{account.must_change_password ? "Password change required" : account.mfa_enabled ? "MFA enabled" : "MFA not enabled"}</small></div><span className={account.status === "active" ? "session-active" : "session-revoked"}>{account.status}</span>{account.role === "owner" ? <strong>Owner</strong> : <><select aria-label={`Role for ${account.display_name}`} value={account.role} onChange={(event) => changeRole(account, event.target.value as ManagedRole)}>{roles.map((role) => <option key={role} value={role}>{role}</option>)}</select><button type="button" onClick={() => toggleStatus(account)}>{account.status === "active" ? "Disable" : "Enable"}</button></>}</article>) : <p>No human accounts were returned by the server.</p>}</div>
       </section>
     </div>
-    <section className="records-panel events-panel"><div className="panel-heading"><div><h2>Recent account security events</h2><p>Append-only local authentication evidence.</p></div><ShieldCheck /></div><div className="event-list">{events.map((event) => <article key={event.id}><strong>{event.event_type}</strong><span>{event.source}</span><time>{new Date(event.occurred_at).toLocaleString()}</time></article>)}</div></section>
+    <section className="records-panel events-panel"><div className="panel-heading"><div><h2>Recent account security events</h2><p>Append-only local authentication evidence.</p></div><ShieldCheck /></div><div className="event-list">{events.length > 0 ? events.map((event) => <article key={event.id}><strong>{event.event_type}</strong><span>{event.source}</span><time>{new Date(event.occurred_at).toLocaleString()}</time></article>) : <p>No account security events were returned.</p>}</div></section></> : null}
   </div>;
 }

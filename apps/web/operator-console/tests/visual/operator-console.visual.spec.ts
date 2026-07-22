@@ -111,7 +111,7 @@ async function installDeterministicApi(page: Page, overrides: ApiFixture[] = [])
 
 async function openAuthenticatedRoute(page: Page, path: string, heading: string) {
   await page.goto(path);
-  await expect(page.getByRole("heading", { level: 1, name: heading })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: heading })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText("Checking local session")).toHaveCount(0);
   await page.evaluate(async () => document.fonts.ready);
   expect(unhandledRequests).toEqual([]);

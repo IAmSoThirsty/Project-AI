@@ -1,14 +1,15 @@
 # Dependency Disposition — v0.0.3 Successor / v0.0.2 Baseline
 
-**Status:** Proposed disposition; technical evidence current; change owner
-acceptance pending.
+**Status:** Final disposition recorded 2026-07-22. The current owner-operator
+authorized closure of the two legacy Dependabot PRs; this record is not a
+general dependency-risk acceptance.
 
 ## Open dependency changes observed 2026-07-19
 
 | PR | Scope | Current state |
 |---|---|---|
-| [#509](https://github.com/IAmSoThirsty/Project-AI/pull/509) | Pip group across 2 directories, 9 updates | Open, non-draft, `UNSTABLE`; branch `dependabot/pip/pip-819fd62d25` targets `master` (updated 2026-07-13) |
-| [#510](https://github.com/IAmSoThirsty/Project-AI/pull/510) | npm/yarn group across 3 directories, 12 updates | Open, non-draft, `UNSTABLE`; branch `dependabot/npm_and_yarn/npm_and_yarn-93676e20c0` targets `master` (updated 2026-07-14) |
+| [#509](https://github.com/IAmSoThirsty/Project-AI/pull/509) | Pip group across 2 directories, 9 updates | Closed 2026-07-22 at `2026-07-22T08:22:30Z` as superseded; it targets `master` and changes retired paths outside the active workspace dependency closure. |
+| [#510](https://github.com/IAmSoThirsty/Project-AI/pull/510) | npm/yarn group across 3 directories, 12 updates | Closed 2026-07-22 at `2026-07-22T08:22:32Z` as superseded; it targets `master` and retired root/desktop/web lockfiles outside the active pnpm workspace. |
 
 Both PRs predate v0.0.2, target remote `master`, are not contained in commit
 `82aa1476657e16a1d38caccba38357c83380a3e3`, and currently report an unstable
@@ -33,11 +34,13 @@ eight locally available v0.0.2 GHCR image digests with zero HIGH/CRITICAL
 findings when unfixed findings were ignored. These are local/superseded-image
 results, not immutable successor CI or successor-image evidence.
 
-## Proposed disposition
+## Final disposition
 
-- The existence of the PRs is **not by itself a blocker** to a successor
-  release. Merging them would create a different candidate and remains out of
-  scope for this change.
+- Both PRs were closed with recorded GitHub comments. The machine-readable
+  record is `docs/operations/cab/DEPENDABOT_DISPOSITION_2026-07-22.json`.
+- The existence of the two PRs is no longer a release blocker. Merging either
+  would create a different candidate and was not justified because each targets
+  the retired `master` line rather than the active workspace.
 - The locked v0.0.2 environment is superseded because it contains the affected
   setuptools version. Do not accept v0.0.2 as deployable merely because the
   broader Dependabot PRs are deferred.
@@ -59,12 +62,14 @@ results, not immutable successor CI or successor-image evidence.
 | Acceptance expiry/review date | TBD |
 | Follow-up release target | TBD |
 
-## Exit criteria
+## Completed disposition criteria
 
+- [x] Each named PR was inspected for target, changed paths, commit, and remote
+      state.
+- [x] Each named PR has an explicit final disposition recorded locally and on
+      GitHub.
+- [x] Active pnpm dependency closure was frozen-installed and the applicable web
+      lint, test, build, and visual gates passed.
 - [ ] Current Python, Node, Rust, and exact-image scans complete successfully
-      against the committed successor candidate.
-- [ ] Each dependency update is classified security/bug/compatibility/tooling.
-- [ ] Any vulnerability affecting v0.0.2 is fixed in a new candidate or accepted
-      explicitly with owner, compensating control, and expiry.
-- [ ] PR checks are repaired and green before merge.
-- [ ] CAB/change owner records whether the residual dependency risk is accepted.
+      against the final committed release candidate. This is separate from the
+      disposition of the two legacy PRs.

@@ -37,6 +37,13 @@ health. The Command Center separately labels partial, stale, and offline snapsho
 retains their last-observed time. These functions do not introduce a second authority
 path.
 
+Initial reads on the work queue, evidence registry, account-security,
+administration, and module-catalog routes fail closed. While a read is pending, the
+console shows an explicit loading state. If it fails, record counts and consequential
+controls are hidden instead of being rendered as verified-empty or healthy state. A
+successful zero-record response is labeled separately. System Health also elevates any
+non-healthy surface as partial evidence.
+
 Before authentication, the assurance rail reads the server-provided
 `PROJECT_AI_INSTANCE_NAME` from `GET /api/v1/instance`. It labels the target as a local
 sovereign instance and distinguishes the human access path
@@ -94,6 +101,11 @@ under ignored `output/playwright/`. Use
 `tools/update_operator_console_visual_baselines.ps1` only after intentionally reviewing
 a UI change; it regenerates both platform baseline sets through local Chromium and the
 digest-pinned Linux container documented in `tests/visual/README.md`.
+
+Unit coverage includes negative initial-read and verified-empty contracts for the work
+queue, evidence sources, account security, administration, module catalogs, and partial
+system health. These tests prevent unavailable data from silently becoming zero counts,
+disabled-authenticator claims, or exposed mutation controls.
 
 ## Not implemented
 

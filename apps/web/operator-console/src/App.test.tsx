@@ -189,6 +189,129 @@ test("elevates degraded and unavailable dashboard surfaces as partial evidence",
   await expectNoAutomatedAccessibilityViolations();
 });
 
+test("elevates partial evidence on the dedicated system-health route", async () => {
+  const partialDashboard = {
+    ...dashboard,
+    surfaces: dashboard.surfaces.map((surface) => surface.id === "replay"
+      ? { ...surface, status: "not_run", metric: "0/5 invariants", detail: "Replay has not run." }
+      : surface),
+  };
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/dashboard")
+    ? response(partialDashboard)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/system/health");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Partial system evidence")).toBeInTheDocument();
+  expect(screen.getByText(/Replay: not run/)).toBeInTheDocument();
+  expect(screen.getByText("Replay has not run.")).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("does not present an empty work queue or actions when the initial read fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/work/requests")
+    ? response({ detail: "Workflow store unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/requests");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Work queue unavailable")).toBeInTheDocument();
+  expect(screen.getByText(/No request count or workflow actions are shown/)).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Record a request" })).not.toBeInTheDocument();
+  expect(screen.queryByText("No requests are visible")).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("keeps successful DOI evidence visible when replay evidence fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/replay/status")
+    ? response({ detail: "Replay unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/evidence");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Partial evidence")).toBeInTheDocument();
+  expect(screen.getByText("Replay evidence unavailable")).toBeInTheDocument();
+  expect(screen.getByText("Paper-01")).toBeInTheDocument();
+  expect(screen.queryByText("Loading", { exact: true })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("does not report zero DOI records when the registry read fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/dois")
+    ? response({ detail: "DOI registry unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/evidence");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("DOI registry unavailable", { selector: "strong" })).toBeInTheDocument();
+  expect(screen.getByText(/No DOI record count is shown/)).toBeInTheDocument();
+  expect(screen.queryByText("0 current records")).not.toBeInTheDocument();
+  expect(screen.getByText("5/5 invariants")).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("hides security controls when their initial state cannot be verified", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/auth/sessions")
+    ? response({ detail: "Session store unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/profile/security");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Account security unavailable")).toBeInTheDocument();
+  expect(screen.getByText(/Session and authenticator controls are hidden/)).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Set up authenticator" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Change password" })).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Sign out" })).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("labels a verified empty server-session response", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/auth/sessions")
+    ? response({ sessions: [] })
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/profile/security");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("No server sessions were returned for this account.")).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Set up authenticator" })).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("hides administration controls when accounts or security events cannot be read", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/admin/accounts")
+    ? response({ detail: "Account store unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/administration/accounts");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Administration unavailable")).toBeInTheDocument();
+  expect(screen.getByText(/Account controls and event lists are hidden/)).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Create account" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Human accounts" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Recent account security events" })).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("labels verified empty administration responses", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => {
+    const url = String(input);
+    if (url.endsWith("/api/v1/admin/accounts")) return response({ accounts: [] });
+    if (url.endsWith("/api/v1/admin/security-events")) return response({ events: [] });
+    return defaultFetch(input);
+  }));
+  window.history.pushState({}, "", "/administration/accounts");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("No human accounts were returned by the server.")).toBeInTheDocument();
+  expect(screen.getByText("No account security events were returned.")).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "Create account" })).toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
+test("does not present an empty module catalog when the catalog read fails", async () => {
+  vi.stubGlobal("fetch", vi.fn(async (input: string | URL | Request) => String(input).endsWith("/api/v1/modules")
+    ? response({ detail: "Catalog unavailable" }, 503)
+    : defaultFetch(input)));
+  window.history.pushState({}, "", "/governance");
+  render(<ControlCenterApp />);
+  expect(await screen.findByText("Catalog unavailable", { selector: "strong" })).toBeInTheDocument();
+  expect(screen.getByText(/No module count or interface state is shown/)).toBeInTheDocument();
+  expect(screen.queryByText("No registered modules")).not.toBeInTheDocument();
+  await expectNoAutomatedAccessibilityViolations();
+});
+
 test("deep-links to evidence and preserves accessible navigation", async () => {
   window.history.pushState({}, "", "/evidence");
   render(<ControlCenterApp />);
@@ -570,7 +693,7 @@ test("shows server-authorized account administration and one-time codes", async 
   }));
   const user = userEvent.setup(); window.history.pushState({}, "", "/administration/accounts"); render(<ControlCenterApp />);
   expect(await screen.findByRole("heading", { name: "Administration" })).toBeInTheDocument();
-  await user.type(screen.getByLabelText("Display name"), "Operator One");
+  await user.type(await screen.findByLabelText("Display name"), "Operator One");
   await user.type(screen.getByLabelText("Username"), "operator.one");
   await user.type(screen.getByLabelText("Temporary password"), "Temporary!Operator123");
   await user.click(screen.getByRole("button", { name: "Create account" }));

@@ -1,5 +1,168 @@
 # Operational Continuity Map - Updated
 
+## SESSION UPDATE 2026-07-22 — release-readiness reconciliation and local validation
+
+- **Task / mode:** Repository release-readiness completion pass on branch
+  `agent/production-readiness-2026-07-19`. Reconciled preserved operator-console
+  route changes, V3Q checksum normalization, visual baselines, and legacy
+  Dependabot disposition without touching production infrastructure or keys.
+- **Implemented / preserved:** The four operator routes preserve fail-closed
+  initial-read behavior; their tests and documentation are included in this
+  cohesive change. V3Q canonical files were verified LF-only and
+  `checksums.py --check` passed for 58 files. The four checksum entries match
+  the canonical normalized bytes; no signed historical V3Q artifact was
+  rewritten.
+- **Visual evidence:** Windows Playwright acceptance passed 18/18. The first
+  read-only digest-pinned Linux comparison rejected all thirteen modified Linux
+  baselines (4–11% diffs and several changed heights), while the five
+  functional checks passed. The Linux files were regenerated only through
+  `mcr.microsoft.com/playwright@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48`;
+  a fresh read-only comparison then passed 18/18. Windows baselines were not
+  changed.
+- **Dependency disposition:** GitHub PRs #509 and #510 were inspected. Both
+  target legacy `master` and modify retired paths outside the active workspace;
+  both were unstable. They were closed as superseded at
+  `2026-07-22T08:22:30Z` and `2026-07-22T08:22:32Z`. The machine-readable
+  record is `docs/operations/cab/DEPENDABOT_DISPOSITION_2026-07-22.json`;
+  `REMOTE_SUCCESSOR_EVIDENCE.json` now derives only the Dependabot blocker as
+  verified from that evidence.
+- **Local validation:** frozen pnpm install; web lint; web tests 97/97;
+  operator production build; V3Q tests 71/71; full Python branch coverage in
+  11 batches using an isolated disposable PostgreSQL 16 instance (including
+  PostgreSQL integrations): all batches passed, combined coverage 87.52%; ruff
+  check/format passed; canonical replay 5/5; frozen history 2264/2264; and
+  `git diff --check` passed. The disposable PostgreSQL container was removed.
+- **Aggregate verifier:** correctly remains fail-closed. Dependabot is no
+  longer unresolved. Remaining unverified fields are owner key rotation,
+  external proof custody, approved release provenance, SBOM attestations,
+  production overlay, remote backup, monitoring CRDs, target environment, and
+  rollback rehearsal.
+- **Not attempted:** release promotion/tagging, image publication/attestation,
+  owner-key operations, authority record completion, external custody, or
+  production deployment. These require real owner-controlled identity,
+  infrastructure, signing, custody, and approval facts not present locally.
+- **Safe to continue:** Yes for commit/push and exact-commit CI. No for
+  production deployment.
+
+## SESSION UPDATE 2026-07-22 — Linux baseline reconciliation evidence
+
+- **Task / mode:** Continue UX/UI production-deployment readiness by resolving the
+  cross-platform visual gate without overwriting concurrent work. Workspace
+  `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`; `HEAD` remained `cc20a73f`.
+- **Read-only reconciliation:** In the digest-pinned Playwright Linux image
+  `mcr.microsoft.com/playwright@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48`,
+  the current source generated all thirteen Linux screenshots successfully in a
+  disposable container. The generated images were compared byte-for-byte with the
+  thirteen host baselines. All thirteen mismatched, confirming that the current
+  uncommitted PNGs are not valid evidence for the current source/image pair. No host
+  baseline was changed, staged, or accepted.
+- **Follow-up attempt:** A second disposable generation intended to copy fresh candidates
+  to a temporary inspection directory reached 17/18 tests and hit one transient
+  `Audit explorer` heading-read failure before the copy step. The temporary directory was
+  removed; no repository file was changed. This indicates an additional intermittent
+  browser/runtime stability issue that needs a clean rerun before any baseline decision.
+- **Harness correction and rerun:** The shared visual-route helper now allows 15 seconds
+  for the authenticated route heading while retaining the same required heading, session,
+  font, and unhandled-request assertions. Windows visual acceptance reran 18/18. The five
+  non-screenshot keyboard/focus checks reran 5/5 in the pinned Linux image, including the
+  previously intermittent route sequence. This removes the helper timeout as the active
+  Linux blocker; the thirteen image-baseline mismatches remain.
+- **Candidate evidence:** A clean pinned-container generation then passed 18/18 and
+  produced thirteen visually inspected candidate PNGs under
+  `output/ux-audit-20260722/linux-baseline-candidate/`, with a SHA-256 manifest. The
+  candidates render complete desktop/mobile/audit states; the current modified baselines
+  show blank or incomplete content after the shell header. Replacement remains pending
+  because it would overwrite concurrent user changes.
+- **Classification:** The Linux gate remains blocked by two concrete current-state
+  conditions: all thirteen modified baselines mismatch fresh pinned output, and one
+  functional route assertion was intermittently unavailable during candidate generation.
+  This is separate follow-up work; it does not weaken the passing unit, lint, build,
+  Windows, or first Linux functional evidence.
+- **Safe to continue:** Yes for local investigation. No for production deployment or
+  baseline replacement without an authorized, visually reviewed candidate set.
+
+## SESSION UPDATE 2026-07-22 — Fail-closed operator route-state audit
+
+- **Task / mode:** Continue making UX/UI production-deployment ready. Mode:
+  production-critical operator-console runtime-state integrity, rendered-browser audit,
+  deterministic regression coverage, and cross-platform acceptance. Workspace
+  `T:\00-Active\Project-AI-Beginnings`; branch
+  `agent/production-readiness-2026-07-19`. `HEAD` began at `33303dd2` and advanced
+  concurrently, outside this work, through `1e899eaa` and `cc20a73f`; current local and
+  remote branch head is `cc20a73f`. No commit, push, publication, deployment, production
+  data, owner key, release state, or pre-existing container was changed by this session.
+- **Baseline / preservation:** The session began with only the existing untracked
+  `output/` root visible. During execution, unrelated Android/CI work was committed by
+  another actor, while five V3Q files and all thirteen Linux visual baselines became or
+  remained modified. Those files were preserved exactly. This session changed only the
+  five operator source/test files, operator README, human-interface plan, this map, and
+  the audit evidence under `output/ux-audit-20260722/`.
+- **Rendered audit:** An isolated loopback API and Vite runtime exercised first-run Owner
+  setup and the live Command Center, System Health, Requests, Governance, Account
+  Security, Administration, and Evidence routes. Fourteen desktop/mobile screenshots and
+  the audit notes are retained under `output/ux-audit-20260722/`. One-time recovery codes
+  were not copied, saved, or included in screenshots. The audit found pending or failed
+  reads that could appear as verified empty queues/catalogs, zero evidence counts,
+  disabled MFA, available administrative controls, or a non-elevated health snapshot.
+- **Implemented:** Work Queue now loads its independent initial reads in parallel,
+  cancels stale effects, and hides forms, lists, and detail until both reads succeed.
+  Evidence represents replay and DOI loading/failure independently and preserves a
+  successful source when the other fails. Account Security and Administration hide
+  consequential controls until their complete initial reads succeed. Module catalogs
+  now distinguish loading, unavailable, successful-empty, and populated results. System
+  Health elevates every non-healthy surface as `Partial system evidence`. Verified-empty
+  session, account, event, request, DOI, and module responses have explicit copy.
+- **Regression coverage:** Added nine deterministic operator tests for System Health
+  partial evidence; work-queue, evidence-source, security, administration, and catalog
+  failures; and verified-empty security/administration responses. Existing asynchronous
+  administration coverage now waits for the completed initial read. Operator coverage is
+  55/55; the full web total is 97/97 (operator 55, docs 5, proof 4, Triumvirate 33).
+- **Validation:** Operator and repository web lint passed with zero warnings. `pnpm
+  web:test` passed 97/97. `pnpm web:build` built all four web applications. Windows
+  production-bundle browser acceptance passed 18/18: thirteen screenshot comparisons and
+  five keyboard/focus checks. Targeted `git diff --check` passed. The live corrected
+  unavailable and partial states were visually inspected in the in-app browser.
+- **Current Linux gate failure:** The official digest-pinned Playwright Linux image
+  `mcr.microsoft.com/playwright@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48`
+  passed all five functional browser checks but failed all thirteen image comparisons
+  against the concurrently modified Linux PNGs. Differences ranged from approximately
+  2% to 11%, with multiple mobile and audit images also changing height. No update mode
+  ran and no baseline was modified or accepted by this session. Classification: requires
+  separate coordinated follow-up and blocks a green cross-platform visual release gate;
+  it does not invalidate the passing unit, lint, build, Windows, or functional evidence.
+- **Failures found and repaired:** An initial local runtime launcher did not bind within
+  its 45-second gate; the API and web runtime were relaunched separately and verified.
+  An early combined lint/test process exceeded 124 seconds and was terminated; the gates
+  were separated and passed. The first administration regression exposed an async form
+  readiness assumption; the test now awaits the input. Two evidence regressions exposed
+  React Query's default retry delay; read-only evidence queries now use deterministic
+  fail-closed `retry: false` behavior and passed on rerun. The first temporary-directory
+  cleanup attempt encountered a still-closing log handle; the exact directory was retried
+  with terminating errors and verified absent. A broad diagnostic text search timed out
+  without changing files. The Linux baseline mismatch remains open as described above.
+- **Runtime / cleanup:** The isolated browser tabs were finalized, viewport overrides
+  reset, the exact Vite PID on `127.0.0.1:4175` stopped, and the exact session-owned
+  temporary directory under `T:\Temp` removed. Ports 4175 and 8000 have no listener.
+  Disposable visual containers used `--rm` and are absent. Docker Desktop remains
+  running with the same eight pre-existing containers; none was restarted, stopped, or
+  modified.
+- **Commands run:** `pnpm --dir apps/web/operator-console lint`; `pnpm --dir
+  apps/web/operator-console test`; `pnpm web:lint`; `pnpm web:test`; `pnpm web:build`;
+  `pnpm web:visual`; digest-pinned read-only Linux `docker run --rm ... playwright test`;
+  targeted `git diff --check`; branch/status/diff/process/port/container inspections; and
+  exact session runtime cleanup. No snapshot-update, git staging, commit, or push command
+  ran.
+- **Not verified / remaining:** Reconcile the uncommitted Linux baselines against an
+  authorized code state; manual NVDA and TalkBack acceptance; remaining module/role/error/
+  empty/offline/stale matrices; cross-client and PostgreSQL-backed acceptance; global
+  search and durable notification history; and all production cluster, secret-manager,
+  backup, monitoring, owner approval, release-provenance, custody, and attestation
+  prerequisites. This wave does not establish whole-product production readiness or
+  authorize deployment.
+- **Safe to continue:** Yes for local remediation and acceptance. No for production
+  deployment.
+
 ## SESSION UPDATE 2026-07-21 — Truthful gateway and retained-state UX
 
 - **Task / mode:** Continue making UX/UI production-deployment ready. Mode:

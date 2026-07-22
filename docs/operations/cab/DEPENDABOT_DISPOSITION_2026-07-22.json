@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "record_id": "CAB-2026-07-22-DEPENDABOT",
+  "recorded_at_utc": "2026-07-22T08:22:32Z",
+  "repository": "IAmSoThirsty/Project-AI",
+  "authority": "current repository owner-operator instruction: release-readiness completion pass",
+  "disposition": "closed_as_superseded",
+  "pull_requests": [
+    {
+      "number": 509,
+      "url": "https://github.com/IAmSoThirsty/Project-AI/pull/509",
+      "head_commit": "93e33acfe9c8b19ad0562bc1198d82f4c610269c",
+      "target_branch": "master",
+      "changed_paths": [
+        "SOVEREIGN-WAR-ROOM/requirements.txt",
+        "api/requirements.txt",
+        "recovery/PHASE_D3A_PIP_FREEZE_AFTER.txt"
+      ],
+      "remote_state": "CLOSED",
+      "closed_at_utc": "2026-07-22T08:22:30Z",
+      "reason": "Targets legacy master and modifies retired paths outside the active workspace dependency closure. The PR was unstable and was not merged into the release candidate."
+    },
+    {
+      "number": 510,
+      "url": "https://github.com/IAmSoThirsty/Project-AI/pull/510",
+      "head_commit": "6dfc61d59fc4e4045aad51e136835d0da502b174",
+      "target_branch": "master",
+      "changed_paths": [
+        "desktop/package.json",
+        "package-lock.json",
+        "package.json",
+        "web/package-lock.json",
+        "web/package.json"
+      ],
+      "remote_state": "CLOSED",
+      "closed_at_utc": "2026-07-22T08:22:32Z",
+      "reason": "Targets legacy master and retired npm lockfiles outside the active pnpm workspace. The active lock pins js-yaml to 4.3.0 and passed its frozen install, audit, lint, test, build, and visual gates."
+    }
+  ],
+  "active_validation": {
+    "pnpm_lockfile": "pnpm-lock.yaml",
+    "pnpm_install_frozen": "passed 2026-07-22",
+    "web_validation": "lint, 97 tests, production builds, Windows visual 18/18, and pinned Linux visual 18/18 passed 2026-07-22"
+  },
+  "scope_limit": "This record disposes of the two named legacy Dependabot PRs only. It does not establish release provenance, supply-chain attestation, production authorization, or a general vulnerability waiver."
+}

@@ -12,15 +12,28 @@ export function SecurityRoute() {
   const [sessions, setSessions] = useState<SessionInfo[]>([]);
   const [mfa, setMfa] = useState<MfaStatus | null>(null);
   const [enrollment, setEnrollment] = useState<MfaEnrollment | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [passwords, setPasswords] = useState({ current: "", next: "", confirm: "" });
   const [mfaForm, setMfaForm] = useState({ password: "", code: "" });
 
   useEffect(() => {
+    let active = true;
     Promise.all([gateway.auth.sessions(), gateway.auth.mfaStatus()])
-      .then(([sessionResult, mfaResult]) => { setSessions(sessionResult.sessions); setMfa(mfaResult); })
-      .catch((reason) => setError(reason instanceof Error ? reason.message : "Security settings unavailable"));
+      .then(([sessionResult, mfaResult]) => {
+        if (!active) return;
+        setSessions(sessionResult.sessions);
+        setMfa(mfaResult);
+      })
+      .catch((reason) => {
+        if (active) setLoadError(reason instanceof Error ? reason.message : "Security settings unavailable");
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+    return () => { active = false; };
   }, []);
 
   function clearMessages() { setError(""); setNotice(""); }
@@ -88,12 +101,14 @@ export function SecurityRoute() {
 
   return <div className="console-page">
     <PageHeading title="Account security" description="Your human session identifies requests. It never grants execution authority." action={<button className="icon-button" type="button" onClick={logout}><LogOut /> Sign out</button>} />
+    {isLoading ? <StatePanel title="Loading account security">Reading active sessions and authenticator state.</StatePanel> : null}
+    {loadError ? <StatePanel title="Account security unavailable" tone="error">Session and authenticator controls are hidden because the initial read failed. {loadError}</StatePanel> : null}
     {error ? <StatePanel title="Security action failed" tone="error">{error}</StatePanel> : null}
     {notice ? <StatePanel title="Security updated">{notice}</StatePanel> : null}
-    <div className="security-grid">
+    {!isLoading && !loadError ? <div className="security-grid">
       <section className="records-panel security-panel">
         <div className="panel-heading"><div><h2>Active sessions</h2><p>Opaque server-side sessions; raw tokens are never displayed.</p></div><MonitorSmartphone /></div>
-        <div className="session-list">{sessions.map((item) => <article key={item.id}><div><strong>{item.current ? "This browser" : item.user_agent}</strong><span>{item.client_host} · Last active {new Date(item.last_seen_at).toLocaleString()}</span><small>Absolute expiry {new Date(item.absolute_expires_at).toLocaleString()}{item.mfa_verified_at ? " · MFA verified" : ""}</small></div><span className={item.revoked ? "session-revoked" : "session-active"}>{item.revoked ? "Revoked" : item.current ? "Current" : "Active"}</span>{!item.revoked ? <button type="button" onClick={() => revoke(item)} aria-label={`Revoke ${item.current ? "current session" : item.user_agent}`}><Trash2 /> Revoke</button> : null}</article>)}</div>
+        <div className="session-list">{sessions.length > 0 ? sessions.map((item) => <article key={item.id}><div><strong>{item.current ? "This browser" : item.user_agent}</strong><span>{item.client_host} · Last active {new Date(item.last_seen_at).toLocaleString()}</span><small>Absolute expiry {new Date(item.absolute_expires_at).toLocaleString()}{item.mfa_verified_at ? " · MFA verified" : ""}</small></div><span className={item.revoked ? "session-revoked" : "session-active"}>{item.revoked ? "Revoked" : item.current ? "Current" : "Active"}</span>{!item.revoked ? <button type="button" onClick={() => revoke(item)} aria-label={`Revoke ${item.current ? "current session" : item.user_agent}`}><Trash2 /> Revoke</button> : null}</article>) : <p>No server sessions were returned for this account.</p>}</div>
       </section>
 
       <section className="records-panel security-panel">
@@ -107,6 +122,6 @@ export function SecurityRoute() {
         <div className="panel-heading"><div><h2>Change password</h2><p>Changing it revokes every session, including this one.</p></div><KeyRound /></div>
         <form className="security-form" onSubmit={changePassword}><label>Current password<input type="password" autoComplete="current-password" value={passwords.current} onChange={(event) => setPasswords({ ...passwords, current: event.target.value })} required /></label><label>New password<input type="password" autoComplete="new-password" value={passwords.next} onChange={(event) => setPasswords({ ...passwords, next: event.target.value })} required /></label><label>Confirm new password<input type="password" autoComplete="new-password" value={passwords.confirm} onChange={(event) => setPasswords({ ...passwords, confirm: event.target.value })} required /></label><p>At least 14 characters with uppercase, lowercase, number, and special character.</p><button type="submit"><ShieldCheck /> Change password</button></form>
       </section>
-    </div>
+    </div> : null}
   </div>;
 }

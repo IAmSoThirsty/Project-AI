@@ -19,7 +19,7 @@
     "production_overlay_verified": false,
     "remote_backup_verified": false,
     "monitoring_crds_verified": false,
-    "dependabot_disposition_verified": false,
+    "dependabot_disposition_verified": true,
     "target_environment_approved": false,
     "rollback_rehearsal_verified": false
   },
@@ -90,7 +90,7 @@
     "production_overlay_record": null,
     "remote_backup_record": null,
     "monitoring_crds_record": null,
-    "dependabot_disposition_record": null,
+    "dependabot_disposition_record": "docs/operations/cab/DEPENDABOT_DISPOSITION_2026-07-22.json (PRs #509 and #510 closed as superseded after target/path/commit inspection; GitHub closure timestamps 2026-07-22T08:22:30Z and 2026-07-22T08:22:32Z)",
     "target_environment_record": null,
     "rollback_rehearsal_record": null
   },
