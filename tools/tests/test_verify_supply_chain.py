@@ -33,7 +33,7 @@ REFERRER_DIGEST = "sha256:15538d22aacecda9a2a24bffa8ccaecb934822ca0ba35716140052
 BUNDLE_TYPE = "application/vnd.dev.sigstore.bundle.v0.3+json"
 
 
-@pytest.fixture
+@pytest.fixture  # type: ignore[untyped-decorator]
 def policy() -> dict[str, Any]:
     loaded: dict[str, Any] = MODULE.load_policy(POLICY_PATH)
     return loaded
