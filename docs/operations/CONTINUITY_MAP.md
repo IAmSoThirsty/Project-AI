@@ -1,5 +1,29 @@
 # Operational Continuity Map - Updated
 
+## SESSION UPDATE 2026-07-22 — Integrate Thirsty's Agents 101 governance guidebook
+
+- **Task / mode:** Module/docs — integrate the *Thirsty's Agents 101* guidebook into the repo as
+  durable, machine-readable governance reference and wire it into the binding `AGENTS.md` contract.
+- **Inspected first:** Confirmed what was already integrated — Standard v3 (Part I) is verbatim in
+  `AGENTS.md`; the V3Q Manifest (Part IV) is `packages/thirstys-standard-v3q/` +
+  `docs/governance/thirstys-standard-v3q-manifest/`; the UX/UI Standard (Part III) existed only as a
+  PDF in `docs/standards/thirsty-ux-ui-standard/`. Parts II, V, VI and a UX text version were absent.
+- **Created (net-new):** `docs/standards/README.md` (guidebook index/governance stack/source map);
+  `AGENT_OPERATING_CONTRACT.md` (Part II); `THIRSTYS_UX_UI_STANDARD_V1.md` (Part III text, complements
+  the existing PDF); `GLOSSARY_AND_REFERENCE.md` (Part V); `agent-role-templates/README.md` + the 20
+  role contracts `01-architect.md` … `20-decision-arbiter.md` (Part VI) — 26 files.
+- **Modified:** `AGENTS.md` — added §2.8 "Integrated Governance Standards" wiring the new docs into
+  the binding overlay (UX/UI Standard declared binding for `apps/web`, `apps/desktop`, `apps/android`).
+- **Validation:** Path/link integrity check passed — every relative link in the new standards docs
+  resolves to a real file; markdown well-formed. No source code changed; no tests affected. The
+  pre-existing markdown-lint warnings inside the verbatim v3 block of `AGENTS.md` were left untouched
+  (v3 is reproduced verbatim and must not be altered).
+- **Not verified:** Word-for-word byte fidelity against the original source files (the guidebook itself
+  states typography/page-flow are adapted and wording is not editorially deleted; reproduced faithfully
+  in clean Markdown, not as a byte-identical facsimile).
+- **Safe to continue:** Yes — documentation/governance-reference integration only; no runtime,
+  deployment, or governance-enforcement behavior changed.
+
 ## SESSION UPDATE 2026-07-22 — Account-security action-state hardening
 
 - **Task / mode:** Continue UX/UI production-deployment readiness by closing

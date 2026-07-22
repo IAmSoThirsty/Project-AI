@@ -297,6 +297,27 @@ Commands run:
 Safe to continue: yes/no
 ```
 
+### 2.8 Integrated Governance Standards (Thirsty's Agents 101)
+
+The *Thirsty's Agents 101* guidebook is integrated into this repo as durable, machine-readable
+reference under `docs/standards/`. It is additive to and governed by this file; where anything in
+`docs/standards/` conflicts with v3 above, this file wins.
+
+- **Index / operating guide:** `docs/standards/README.md` (governance stack, lifecycle, source map).
+- **Part I — Thirsty's Standard v3:** reproduced verbatim in §1 above (the canonical in-repo copy).
+- **Part II — Agent Operating Contract:** `docs/standards/AGENT_OPERATING_CONTRACT.md`.
+- **Part III — Thirsty's UX/UI Standard v1:** `docs/standards/THIRSTYS_UX_UI_STANDARD_V1.md`
+  (machine-readable text) + source PDF in `docs/standards/thirsty-ux-ui-standard/`. Binding for all
+  UX/UI work in `apps/web/`, `apps/desktop/`, and `apps/android/`.
+- **Part IV — Thirsty's Standard V3Q Manifest:** package `packages/thirstys-standard-v3q/`; mirror +
+  verification in `docs/governance/thirstys-standard-v3q-manifest/`. Treat rule IDs, controls,
+  evidence contracts, status, and implementation statements exactly as written.
+- **Part V — Glossary, Reference Index, Disclaimer:** `docs/standards/GLOSSARY_AND_REFERENCE.md`.
+- **Part VI — Full Agent Template Library:** the 20 bounded role contracts in
+  `docs/standards/agent-role-templates/` (`README.md` index + `01-architect.md` … `20-decision-arbiter.md`).
+  When decomposing multi-step work, select the smallest set of roles required and preserve
+  disagreement rather than manufacturing consensus.
+
 ---
 
 ## 3. Acknowledgements and Anti-Patterns
