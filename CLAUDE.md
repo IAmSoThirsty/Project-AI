@@ -47,8 +47,9 @@ Web: `pnpm install --frozen-lockfile`, then `pnpm web:lint` / `pnpm web:test` / 
 Rust: `cargo fmt --check`, `cargo clippy --workspace --all-targets --locked -- -D warnings`,
 `cargo test --workspace --locked`.
 
-Pre-commit hooks are NOT installed into `.git/hooks` yet (deferred to Stage 16); run manually
-before each commit (PowerShell):
+Pre-commit hooks are installed into `.git/hooks` (run `uv run pre-commit install` on a fresh
+clone if `.git/hooks/pre-commit` is absent). They also run automatically on `git commit`; to run
+the full suite manually before a commit (PowerShell):
 
 ```
 $env:SKIP='no-commit-to-branch,gitleaks'; uv run pre-commit run --all-files

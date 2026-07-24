@@ -48,6 +48,9 @@ jobs:
             packages/kernel/src packages/security/src packages/governance/src \
             packages/capability/src packages/execution/src packages/companion/src \
             packages/swr/src packages/atlas/src packages/arbiter/src packages/rlp/src \
+            packages/taar/src packages/caretaker/src packages/convergence/src \
+            packages/accounts/src packages/workflows/src packages/mcp_server/src \
+            packages/knowledge/src packages/dpr/src \
             packages/api/src packages/cli/src packages/sovereign-vault/src apps/desktop/src apps/services/src tools
       - name: Canonical replay 5/5
         run: uv run python tools/canonical_replay.py
