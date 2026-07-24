@@ -11,6 +11,8 @@ from fastapi import FastAPI
 from kernel.version import PROJECT_AI_VERSION
 from pydantic import BaseModel, ConfigDict
 
+from project_ai_services.repository_intelligence import create_repository_router
+
 type ServiceRole = Literal["swr", "atlas", "arbiter-rlp"]
 
 
@@ -72,6 +74,9 @@ def create_app(role: str) -> FastAPI:
     def service_info() -> ServiceResponse:
         return response
 
+    # Repository intelligence is intentionally read-only.  Building and
+    # refreshing the local artifact remains an explicit offline CLI action.
+    application.include_router(create_repository_router())
     return application
 
 

@@ -7,9 +7,8 @@ If you find a security issue, see `SECURITY.md`.
 
 ## For the owner
 
-Every change goes through the 26-stage build plan at
-`docs/internal/PLAN_REFERENCE.md` (link TBD — see plan file at
-`C:\Users\Quencher\.hermes\plans\2026-06-19_150000-project-ai-rebuild-structured.md`).
+Every change goes through the rebuild execution ledger at
+`docs/internal/REBUILD_EXECUTION_PLAN.md` (the active execution authority).
 
 Each stage:
 1. Produces its deliverable.
