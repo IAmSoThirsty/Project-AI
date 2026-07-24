@@ -6,6 +6,12 @@ from kernel.evidence_bundle import EvidenceBundle, build_evidence_bundle
 from kernel.invariant_engine import Invariant, InvariantEngine, InvariantViolation
 from kernel.invariant_severity import InvariantSeverity
 from kernel.knowledge import KnowledgePassage, KnowledgeSource
+from kernel.safe_halt import (
+    HaltEvent,
+    HaltReason,
+    SafeHaltController,
+    SafeHaltError,
+)
 from kernel.state_register import RevisionConflictError, StateRegister, StateSnapshot
 from kernel.tarl_bridge import (
     EscalationHandler,
@@ -40,6 +46,8 @@ __all__ = [
     "Event",
     "EventSpine",
     "EvidenceBundle",
+    "HaltEvent",
+    "HaltReason",
     "HeuristicPredictor",
     "Invariant",
     "InvariantEngine",
@@ -53,6 +61,8 @@ __all__ = [
     "RecommendedAction",
     "ReplayResult",
     "RevisionConflictError",
+    "SafeHaltController",
+    "SafeHaltError",
     "StateRegister",
     "StateSnapshot",
     "TarlEnforcementError",

@@ -75,6 +75,60 @@ class DeliberationEngine:
         self._delay_counts: defaultdict[str, int] = defaultdict(int)
 
     # ------------------------------------------------------------------
+    def reset_loop_counters(
+        self,
+        *,
+        authorized_by: str,
+        actor_id: str | None = None,
+        action_name: str | None = None,
+    ) -> int:
+        """Clear the loop-limit counters that latch SAFE_HALT for a key.
+
+        The escalation/deferral/delay loop guards keep persistent per-(actor,
+        action) counters on the engine; once a key exceeds its limit, every
+        subsequent decide() for that key force-halts (SAFE_HALT). This is the
+        authorized recovery path: clearing the counters lets standard
+        deliberation resume for the affected key(s).
+
+        Scope:
+          - actor_id and action_name both given: clear only the
+            f"{actor_id}:{action_name}" key across all three counters.
+          - both omitted: full reset (all keys).
+          - exactly one given: rejected (ambiguous scope).
+
+        Fail-closed: a blank authorized_by is rejected. The reset is recorded
+        on the audit chain so recovery is itself auditable. Returns the number
+        of distinct keys cleared.
+        """
+        if not authorized_by.strip():
+            raise ValueError("reset_loop_counters requires a non-blank authorized_by")
+        if (actor_id is None) != (action_name is None):
+            raise ValueError(
+                "actor_id and action_name must both be provided (targeted reset) "
+                "or both omitted (full reset)"
+            )
+        counters = (self._escalation_counts, self._deferral_counts, self._delay_counts)
+        if actor_id is not None and action_name is not None:
+            key = f"{actor_id}:{action_name}"
+            cleared_keys = {key} if any(key in c for c in counters) else set[str]()
+            for c in counters:
+                c.pop(key, None)
+        else:
+            cleared_keys = {k for c in counters for k in c}
+            for c in counters:
+                c.clear()
+        self.audit_chain.append(
+            {
+                "decision": "LOOP_COUNTERS_RESET",
+                "authorized_by": authorized_by,
+                "scope": "targeted" if actor_id is not None else "all",
+                "cleared_keys": sorted(cleared_keys),
+                "timestamp": time.time(),
+            }
+        )
+        return len(cleared_keys)
+
+    # ------------------------------------------------------------------
     def decide(self, ctx: DeliberationContext) -> Decision:
         steps = []
         reasons = []

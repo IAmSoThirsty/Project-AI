@@ -10,7 +10,16 @@ import pytest
 from capability import CapabilityAuthority
 from execution import ExecutionGate, submit_action
 from governance import GovernanceEngine, GovernanceResult, Rule, RuleGovernor
-from kernel import ActionRequest, EventSpine, JsonValue, Outcome, TrustedClock, verify_event_chain
+from kernel import (
+    ActionRequest,
+    EventSpine,
+    HaltReason,
+    JsonValue,
+    Outcome,
+    SafeHaltController,
+    TrustedClock,
+    verify_event_chain,
+)
 from security import AppendOnlyAuditRelay, start_audit_relay
 
 type JsonScalar = str | int | float | bool | None
@@ -187,6 +196,65 @@ def test_governance_and_relay_faults_stay_closed(tmp_path: Path) -> None:
     assert result.outcome is Outcome.DENY
     assert result.reason == "governance evaluation failed: RuntimeError"
     assert events.events()[-1].event_type == "execution.chimera_relay_failed"
+
+
+# --- Repo-wide SAFE-HALT write-block -----------------------------------------
+# When a SafeHaltController is wired in and halted, every write is blocked before
+# governance/capability run; an authorized reset resumes execution. A None
+# controller (all other tests) keeps behavior identical to before.
+
+
+def test_safe_halt_blocks_write_without_executing() -> None:
+    capabilities = authority()
+    events = EventSpine()
+    halt = SafeHaltController("node-1")
+    halt.trigger_halt(HaltReason.ADMINISTRATIVE, "manual stop", "operator")
+    gate = ExecutionGate(
+        governance=governance(),
+        capabilities=capabilities,
+        events=events,
+        halt=halt,
+    )
+    calls: list[str] = []
+    result = gate.submit_action(
+        request(),
+        capability_token=token(capabilities),
+        executor=lambda action: calls.append(action.action_id),
+    )
+    assert result.outcome is Outcome.DENY
+    assert "SAFE-HALT" in result.reason
+    assert calls == []  # executor never ran
+    assert [event.event_type for event in events.events()] == [
+        "execution.request_received",
+        "execution.blocked",
+    ]
+
+
+def test_reset_resumes_execution_through_gate() -> None:
+    capabilities = authority()
+    halt = SafeHaltController("node-1")
+    halt.trigger_halt(HaltReason.ADMINISTRATIVE, "manual stop", "operator")
+    gate = ExecutionGate(
+        governance=governance(),
+        capabilities=capabilities,
+        events=EventSpine(),
+        halt=halt,
+    )
+    calls: list[str] = []
+
+    def execute(action: ActionRequest) -> JsonValue:
+        calls.append(action.action_id)
+        return {"changed": True}
+
+    issued = token(capabilities)
+    blocked = gate.submit_action(request(), capability_token=issued, executor=execute)
+    assert blocked.outcome is Outcome.DENY
+    assert calls == []  # blocked before capability consume, so the token is untouched
+
+    assert halt.reset(authorized_by="operator") is True
+    resumed = gate.submit_action(request(), capability_token=issued, executor=execute)
+    assert resumed.outcome is Outcome.ALLOW
+    assert calls == ["a-1"]
 
 
 # --- Thirsty's Standard V3 + Q opt-in pre-check wiring -----------------------

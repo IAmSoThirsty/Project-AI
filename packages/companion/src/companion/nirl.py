@@ -6,6 +6,10 @@ companion's internal reflex states (idle, listening, thinking, speaking,
 paused, recovering, safe_halt). Transitions are validated by a pluggable
 policy Protocol; default allow-list is conservative (fail-closed).
 
+safe_halt is reachable from any active state, and its sole sanctioned exit is
+safe_halt -> recovering -> idle: recovery must pass through `recovering` so it
+is an explicit, auditable transition rather than a silent resume.
+
 Every transition routes through ExecutionGate to maintain the single
 audit chain invariant (AGENTS.md §2). State is held in kernel.StateRegister
 for revision tracking and tamper-evidence.
@@ -64,8 +68,8 @@ class NIRLTransition(Protocol):
     def __call__(self, from_state: str, to_state: str) -> bool: ...
 
 
-# Default allow-list. Conservative: only forward-progression plus safe-halt
-# from any active state.
+# Default allow-list. Conservative: only forward-progression, safe-halt from
+# any active state, and the single recovery exit (safe_halt -> recovering).
 _DEFAULT_ALLOWED: frozenset[tuple[str, str]] = frozenset(
     {
         # Bootstrap / reset
@@ -84,6 +88,11 @@ _DEFAULT_ALLOWED: frozenset[tuple[str, str]] = frozenset(
         ("speaking", "recovering"),
         ("recovering", "idle"),
         ("recovering", "safe_halt"),
+        # Sole sanctioned recovery exit from safe_halt: safe_halt -> recovering
+        # -> idle. There is deliberately no direct safe_halt -> idle/listening
+        # edge; recovery must pass through `recovering` so it is an explicit,
+        # auditable transition (routed through ExecutionGate by BondedCompanion).
+        ("safe_halt", "recovering"),
         # Pause / resume
         ("listening", "paused"),
         ("thinking", "paused"),

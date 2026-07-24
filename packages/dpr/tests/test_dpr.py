@@ -382,6 +382,62 @@ def test_escalation_loop_limit_forces_safe_halt():
     assert FailureMode.INFINITE_ESCALATION.value in d.flagged_failure_modes
 
 
+# ---------------------------------------------------------------- loop-counter reset (recovery)
+def _drive_to_escalation_halt(engine, root):
+    d = None
+    for _ in range(5):
+        ctx = make_ctx(root, severity=0.9, reversibility=0.05, uncertainty=0.1)
+        d = engine.decide(ctx)
+    assert d.decision == DecisionType.SAFE_HALT
+    return d
+
+
+def test_reset_loop_counters_targeted_clears_and_resumes():
+    engine, root, _ = new_engine()
+    _drive_to_escalation_halt(engine, root)
+    cleared = engine.reset_loop_counters(
+        authorized_by="operator", actor_id="jeremy", action_name="deploy_service"
+    )
+    assert cleared == 1
+    # After the reset, the same actor/action pair no longer force-halts; the
+    # high-severity/low-reversibility profile escalates as it did originally.
+    ctx = make_ctx(root, severity=0.9, reversibility=0.05, uncertainty=0.1)
+    d = engine.decide(ctx)
+    assert d.decision == DecisionType.ESCALATE
+
+
+def test_reset_loop_counters_full_reset_records_audit_entry():
+    engine, root, _ = new_engine()
+    _drive_to_escalation_halt(engine, root)
+    cleared = engine.reset_loop_counters(authorized_by="operator")
+    assert cleared == 1
+    last = engine.audit_chain.entries[-1]
+    assert last["decision"] == "LOOP_COUNTERS_RESET"
+    assert last["scope"] == "all"
+    ok, _bad, _reason = engine.audit_chain.verify()
+    assert ok is True
+
+
+def test_reset_loop_counters_rejects_blank_authorized_by():
+    engine, _root, _ = new_engine()
+    raised = False
+    try:
+        engine.reset_loop_counters(authorized_by="  ")
+    except ValueError:
+        raised = True
+    assert raised
+
+
+def test_reset_loop_counters_rejects_partial_scope():
+    engine, _root, _ = new_engine()
+    raised = False
+    try:
+        engine.reset_loop_counters(authorized_by="operator", actor_id="jeremy")
+    except ValueError:
+        raised = True
+    assert raised
+
+
 # ---------------------------------------------------------------- obedience collapse
 def test_obedience_collapse_guard():
     engine, root, _ = new_engine()

@@ -8,6 +8,12 @@
 **Inventory source last write observed:** 2026-07-07 03:53:48
 **Verification mode:** read-mostly repository traceability; one documentation artifact created
 
+> **Amendment (2026-07-24, branch `agent/production-readiness-2026-07-19`):** the SAFE_HALT
+> row below was updated from *Partial* to *Implemented* to reflect the new repo-wide
+> `SafeHaltController` (`packages/kernel/src/kernel/safe_halt.py` and the execution/companion/dpr
+> integration). Only that row was re-verified in this amendment; every other row still reflects
+> the 2026-07-07 snapshot above and was not re-checked.
+
 ## Classification Legend
 
 | Status | Meaning |
@@ -46,7 +52,7 @@ Classification: not blocking this traceability task; unsafe to clean or revert w
 | Event Spine | Implemented | `packages/kernel/src/kernel/event_spine.py`, `packages/kernel/tests/test_kernel.py` | Append-only hash-chained event spine with replay/tamper tests. |
 | Capability Tokens | Implemented | `packages/capability/src/capability/authority.py`, `packages/capability/tests/test_authority.py`, `packages/canonical/src/canonical/_internal/capability_tokens.py` | Scoped issue/verify/consume behavior with denial tests. |
 | MutationGovernanceBinding | Docs/reference only | `docs/reference/The Governing Code Caretaker.final.yaml`, `docs/reference/Zombie Defense Plan.txt` | Named but no current executable binding object found. |
-| SAFE_HALT | Partial | `packages/rlp/src/rlp/rlp.py`, `packages/companion/src/companion/nirl.py`, docs | SAFE_HALT behavior exists in RLP/NIRL surfaces; not a single repo-wide constitutional stop state. |
+| SAFE_HALT | Implemented | `packages/kernel/src/kernel/safe_halt.py`, `packages/execution/src/execution/gate.py`, `packages/companion/src/companion/nirl.py`, `packages/dpr/src/dpr/pipeline.py`, `docs/operations/SAFE_HALT_RECOVERY.md` | Repo-wide `SafeHaltController` (PSIA §8.3): monotonic write-block enforced at the sole `ExecutionGate` write path, cleared by an authorized `reset(authorized_by)` that emits `system.safe_halt.entered`/`.exited`. In-place recovery paths exist for the latched surfaces: NIRL `safe_halt → recovering → idle`, DPR `DeliberationEngine.reset_loop_counters(...)`. Recovery sequence documented in the runbook. |
 | Iron Path | Partial | `docs/operations/STAGE_19_ACCEPTANCE.md`, integration test references | Documented and partially represented through kernel/execution gates; not verified as a named current package. |
 | Existential Proof System | Docs/reference only | `docs/reference/COMPREHENSIVE_STRATEGY_GUIDE_PROJECT_AI.md` | No current executable invariant monitor under this name. |
 | Four-State Constitutional Machine | Absent | No exact hit found | Inventory item not present by exact term. |

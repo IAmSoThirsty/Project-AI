@@ -8,7 +8,14 @@ from typing import TYPE_CHECKING
 
 from capability import CapabilityAuthority, CapabilityError
 from governance import GovernanceEngine
-from kernel import ActionRequest, EventSpine, JsonValue, Outcome
+from kernel import (
+    ActionRequest,
+    EventSpine,
+    JsonValue,
+    Outcome,
+    SafeHaltController,
+    SafeHaltError,
+)
 from security import AppendOnlyAuditRelay, report_governance_denial
 
 # Thirsty's Standard V3 + Q gate is an optional, fail-closed pre-check that runs
@@ -43,12 +50,17 @@ class ExecutionGate:
         chimera_relay: AppendOnlyAuditRelay | None = None,
         v3q_gate: ThirstysV3QGate | None = None,
         v3q_allow_on_cel_indeterminate: bool = False,
+        halt: SafeHaltController | None = None,
     ) -> None:
         self._governance = governance
         self._capabilities = capabilities
         self._events = events
         self._chimera_relay = chimera_relay
         self._v3q_gate = v3q_gate
+        # Optional repo-wide SAFE-HALT. When set and halted, every write
+        # (actuation) is blocked before governance runs; default None keeps
+        # behavior identical to before (same opt-in pattern as v3q_gate).
+        self._halt = halt
         # When cel-python is unavailable the V3Q gate cannot evaluate
         # ``applies_when`` applicability and reports ``cel_unavailable``. The
         # fail-closed default is to DENY rather than silently pass
@@ -70,6 +82,11 @@ class ExecutionGate:
         state: Mapping[str, object] | None = None,
     ) -> ExecutionResult:
         self._events.append("execution.request_received", {"action_id": request.action_id})
+        if self._halt is not None:
+            try:
+                self._halt.check_write_allowed()
+            except SafeHaltError as error:
+                return self._deny(request, f"system in SAFE-HALT: {error}", evidence_hash="")
         v3q_block = self._evaluate_v3q(request, state)
         if v3q_block is not None:
             return v3q_block
@@ -133,6 +150,7 @@ class ExecutionGate:
             chimera_relay=self._chimera_relay,
             v3q_gate=v3q_gate,
             v3q_allow_on_cel_indeterminate=allow_cel_indeterminate,
+            halt=self._halt,
         )
 
     def _evaluate_v3q(

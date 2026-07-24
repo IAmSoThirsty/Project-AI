@@ -125,11 +125,29 @@ def test_unknown_target_state_is_rejected() -> None:
 
 
 def test_safe_halt_to_active_state_is_denied() -> None:
-    """Once in safe_halt, must be reset externally; NIRL doesn't allow self-resume."""
-    ctrl = NIRLController(initial_state="safe_halt")
-    with pytest.raises(NIRLTransitionError, match="denied by policy"):
-        ctrl.request_transition("idle", expected_revision=0)
-    assert ctrl.current_state == "safe_halt"
+    """The only exit from safe_halt is via `recovering`; direct jumps to an active
+    state (idle/listening) are denied — recovery must be explicit."""
+    for target in ("idle", "listening"):
+        ctrl = NIRLController(initial_state="safe_halt")
+        with pytest.raises(NIRLTransitionError, match="denied by policy"):
+            ctrl.request_transition(target, expected_revision=0)
+        assert ctrl.current_state == "safe_halt"
+
+
+def test_safe_halt_recovers_through_recovering_to_idle() -> None:
+    """Sole sanctioned recovery exit: safe_halt -> recovering -> idle."""
+    ctrl = NIRLController(initial_state="thinking")
+    ctrl.request_transition("safe_halt", expected_revision=0)
+    ctrl.request_transition("recovering", expected_revision=1)
+    assert ctrl.current_state == "recovering"
+    snap = ctrl.request_transition("idle", expected_revision=2)
+    assert ctrl.current_state == "idle"
+    assert snap.revision == 3
+
+
+def test_default_policy_accepts_safe_halt_recovery_edge() -> None:
+    assert default_nirl_transition("safe_halt", "recovering") is True
+    assert default_nirl_transition("safe_halt", "idle") is False
 
 
 # ---------------------------------------------------------------------------
