@@ -38,6 +38,7 @@ monkeytype.sqlite3
 # IDE
 .idea/
 .vscode/
+.vs/
 *.swp
 *.swo
 .DS_Store
@@ -57,7 +58,9 @@ htmlcov/
 .tox/
 .mypy_cache/
 .ruff_cache/
-output/playwright/
+# Generated evidence bundles (Playwright runs, CI logs, release-readiness and UX
+# audit captures). Reproducible from source; never committed.
+output/
 node_modules/
 work/
 *.tsbuildinfo
@@ -71,6 +74,15 @@ engines/alien_invaders/artifacts/
 # (copyright + size); rebuild from source with `python -m knowledge.ingest`.
 # Provenance is committed as packages/knowledge/KNOWLEDGE_MANIFEST.md.
 data/knowledge/
+
+# Repository-intelligence: derived, deterministic offline source index. Never
+# committed (48 MB records.json exceeds the large-file cap and its root
+# fingerprint self-stales on every source change). Rebuild with
+# `uv run python -m knowledge.repository_cli build --root . --output data/repository-intelligence`.
+# The live status.json is the authoritative index evidence and stays untracked;
+# final-verification.log is retained on disk as historical provenance
+# (see docs/operations/REPOSITORY_INTELLIGENCE.md).
+data/repository-intelligence/
 
 # TAAR runtime state (audit spine, evidence, locks, reports) - never committed.
 .project-ai/
