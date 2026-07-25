@@ -80,3 +80,18 @@ def test_repository_intelligence_routes_are_read_only_and_grounded(tmp_path, mon
 def test_unknown_service_role_fails_startup() -> None:
     with pytest.raises(ValueError, match="Unsupported service role"):
         create_app("execution")
+
+
+def test_service_host_declares_knowledge_dependency() -> None:
+    # project_ai_services.app imports knowledge.repository at module load, so a
+    # service-host deployment that omits project-ai-knowledge crash-loops on
+    # startup with ModuleNotFoundError (the fresh-Compose failure). Deployment
+    # images install only this package's declared dependencies, so the import
+    # closure must be declared here, not merely satisfied by the dev workspace.
+    import tomllib
+    from pathlib import Path
+
+    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    deps = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["dependencies"]
+    names = {dep.split(">")[0].split("=")[0].split("[")[0].strip() for dep in deps}
+    assert "project-ai-knowledge" in names
