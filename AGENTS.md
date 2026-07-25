@@ -225,12 +225,31 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
   the remote default branch.
 - No version tag, GitHub Release, deployment, package publication, container publication, or production-readiness claim is part of any current gate.
 
-### 2.4 Verified Evidence Inventory (current through 2026-07-20)
+### 2.4 Verified Evidence Inventory (current through 2026-07-24)
 
-- Full pytest: 3497 passed, 0 skipped. The five PostgreSQL integration tests ran
-  against an isolated disposable PostgreSQL 16 instance. (The count rose from the
-  earlier `3412` as the supply-chain, workflow-gate, ratification-consistency,
-  SHA256SUMS, and evidence-gate regression suites were added.)
+- 2026-07-24 (branch `agent/production-readiness-2026-07-19`, HEAD `1792d453`,
+  commits `b022ed74..1792d453`): repository-controlled work landed — the SAFE_HALT
+  halt-and-recover protocol, the offline repository-intelligence index + read-only
+  service router, a CI/pre-commit strict-mypy allowlist reconciliation, and a
+  service-host dependency fix. Verified locally: `tools/run_ci_coverage.py
+  --batches 8` exit 0 with 87.58% branch coverage (fail_under=80); 3528 tests
+  collected, all passing, the 5 PostgreSQL integration tests skipped because
+  `PROJECT_AI_TEST_DATABASE_URL` was unset; the reconciled 21-package strict mypy
+  (273 source files) exit 0; `pre-commit run --all-files` all hooks pass; canonical
+  replay 5/5; frozen history 2264/2264; convergence hash unchanged
+  (`3eda3256…478c`). A **fresh** `docker compose up -d --build --wait` (not the
+  pre-existing stack) rebuilt all images and recreated all 9 services 9/9 healthy
+  with read-only + cap_drop ALL + no-new-privileges (`verify_compose_health.py`
+  exit 0). That fresh build first exposed a real regression — the new repository-
+  intelligence import crash-looped swr/atlas/arbiter-rlp because
+  `project-ai-service-host` had not declared `project-ai-knowledge`; fixed in
+  `1792d453` with a unit guard. No production-readiness claim; the pre-deployment
+  verifier remains fail-closed on the external blockers in §2.5.
+- 2026-07-20 snapshot — full pytest: 3497 passed, 0 skipped. The five PostgreSQL
+  integration tests ran against an isolated disposable PostgreSQL 16 instance.
+  (The count rose from the earlier `3412` as the supply-chain, workflow-gate,
+  ratification-consistency, SHA256SUMS, and evidence-gate regression suites were
+  added.)
 - Strict pre-deployment diagnostics pass all non-blocking repository checks and
   report the remaining fail-closed owner/production prerequisites explicitly.
 - Immutable successor code candidate `6684828d` has green CI run
