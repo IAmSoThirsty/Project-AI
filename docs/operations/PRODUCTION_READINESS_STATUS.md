@@ -1,13 +1,22 @@
 # Production Readiness Status
 
+> **Current profile-qualified decision (2026-07-26):** Project-AI v0.0.3 is
+> released for the single-user P1 Offline-First Local production profile.
+> The assessment below is retained as the historical aggregate/P2 assessment;
+> its hosted Kubernetes, registry, remote-backup, external-custody, and CAB
+> blockers apply to future optional P2 and do not revoke or downgrade P1.
+> Current P1 evidence:
+> `docs/deployment/OFFLINE_FIRST_READINESS.md`.
+
 **Assessment date:** 2026-07-24 UTC
-**Mode:** Bounded repository production-readiness pass
+**Mode:** Historical aggregate/P2 repository production-readiness pass
 **Branch:** `agent/production-readiness-2026-07-19`
 **Workspace:** `T:\00-Active\Project-AI-Beginnings`
 
 ## Decision
 
-**Not production-ready. Deployment and publication are not authorized by this assessment.**
+**Historical P2 decision:** Hosted/Kubernetes deployment and publication were
+not authorized by this assessment.
 
 The locally executable quality gates listed below were run independently. Several pass,
 but the fail-closed pre-deployment verifier exits 1, all three available security-relay

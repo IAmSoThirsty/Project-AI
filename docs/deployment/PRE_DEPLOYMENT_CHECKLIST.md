@@ -1,11 +1,21 @@
-# Pre-Deployment Checklist
+# Deployment Readiness Checklist
 
-**Status:** v0.0.3 successor identity prepared; replacement owner public key
-enrolled and exact manifest ratification verified. The aggregate pre-deployment
-gate still correctly fails on missing external owner-key retirement/custody
-evidence, missing remote successor evidence, placeholder production ingress, and
-unconfigured remote backup. No production deployment is authorized.
-**Evidence date:** 2026-07-21.
+> **Profile correction (owner decision, 2026-07-25):** Project-AI's product is
+> **P1 Offline-First Local**. This checklist historically aggregated P1 with an
+> optional Kubernetes/registry/CAB profile and therefore overstated several P2
+> gaps as universal blockers. The authoritative model is
+> [`DEPLOYMENT_MODEL.md`](DEPLOYMENT_MODEL.md), the reclassification is
+> [`BLOCKER_PROFILE_MAP.md`](BLOCKER_PROFILE_MAP.md), and the controlling P1
+> acceptance record is
+> [`OFFLINE_FIRST_READINESS.md`](OFFLINE_FIRST_READINESS.md).
+
+**P1 status:** v0.0.3 is released for a single user's Offline-First Local
+production deployment. Its controlling acceptance record is
+[`OFFLINE_FIRST_READINESS.md`](OFFLINE_FIRST_READINESS.md).
+**P2 status:** Future optional work. The aggregate hosted/Kubernetes gate still
+correctly fails on its unprovisioned external controls. Those items do not
+downgrade or block the released P1 product.
+**Evidence date:** 2026-07-26.
 
 **Current CAB entry point:**
 [`PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`](../operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md)
@@ -53,7 +63,16 @@ unconfigured remote backup. No production deployment is authorized.
   integration/execution tests plus owner-key tool safety checks. This does not
   replace owner ratification of the exact production manifest.
 
-## Mandatory candidate gates
+## P1 released-production gates
+
+The v0.0.3 P1 release artifact and runtime passed the offline bundle, protected
+secret, local persistence, backup/restore, upgrade/rollback, health, failure,
+owner-workflow, and continuity checks in `OFFLINE_FIRST_READINESS.md`. P1
+startup must use `compose.secrets.yaml`, must not place credentials in `.env`
+or container environment variables, and must start the imported offline images
+with registry pulls disabled.
+
+## P2 hosted/Kubernetes candidate gates
 
 ```powershell
 uv sync --frozen --all-extras --all-packages
@@ -74,14 +93,14 @@ helm lint helm/project-ai -f helm/values.prod.yaml
 helm template project-ai helm/project-ai --namespace project-ai-prod -f helm/values.prod.yaml | uv run python tools/verify_helm_template.py --expected-namespace project-ai-prod --project-image-registry ghcr.io --project-image-owner iamsothirsty --require-project-image-digests
 ```
 
-The exact successor commit must then pass remote CI, CodeQL, Checkov, Trivy
+For P2, the exact successor commit must then pass remote CI, CodeQL, Checkov, Trivy
 for all eight published images, Python/Node/Rust dependency scans, SBOM and
 signature/attestation verification. The CAB pack additionally requires the
 real target, owners, maintenance window, secret provenance, server-side dry
 run, monitoring/page delivery, backup/restore, rollback rehearsal, and named
-acceptance. Local gates alone are not production approval.
+acceptance. These hosted-profile controls do not gate P1.
 
-## V3Q minimum acceptance gate
+## V3Q hosted/P2 acceptance gate
 
 Production Helm sets `THIRSTYS_V3Q_REQUIRED=true` and loads only public
 verification keys from the packaged or explicitly configured
@@ -89,7 +108,8 @@ verification keys from the packaged or explicitly configured
 application startup. The online runtime cannot mint its own authority or approval;
 missing external proofs deny execution. Development remains dormant by default.
 
-Do not deploy until all of the following are true:
+Do not deploy the optional P2 hosted/Kubernetes profile until all of the
+following are true:
 
 - the retired local `owner-primary` private file and affected local layers are
   securely retired under the owner's approved process;
@@ -103,8 +123,10 @@ Do not deploy until all of the following are true:
 
 The source manifest remains `draft_unratified`; the signed
 `thirstys-standard-v3q.ratified.manifest.yaml` is the current ratified artifact.
-V3Q production minimum acceptance is still not satisfied until the retired local
-material and external deployment controls are resolved.
+V3Q P2 hosted-production minimum acceptance is still not satisfied until the
+retired local material and external deployment controls are resolved. That
+does not revoke or downgrade the P1 offline release, which runs under the
+local product profile defined in `DEPLOYMENT_MODEL.md`.
 
 Owner-controlled `owner-primary` key material is retired from the trusted
 registry but still present as an ignored local file; secure destruction remains

@@ -209,9 +209,11 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 
 ### 2.3 Branch & Remote Discipline
 
-- Current release-readiness branch: `agent/production-readiness-2026-07-19`,
-  clean and pushed; the latest completed follow-up evidence is recorded in the
-  continuity map and machine-readable CAB record.
+- Current P1 release branch: `github_release_branch`. It contains the v0.0.3
+  single-user Offline-First Local production release revision and the exact
+  versioned offline distribution workflow. The prior
+  `agent/production-readiness-2026-07-19` branch remains historical P1/P2
+  preparation evidence.
   The immutable v0.0.3 code candidate is
   `6684828d23b08beaac77aee5efadc532bed23181`; local `main` and `origin/main`
   remain the historical `82aa1476657e16a1d38caccba38357c83380a3e3` baseline.
@@ -223,9 +225,17 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 - Safety: never rewrite existing commits. Push only a fresh, explicitly
   authorized working branch. Never modify legacy `master`, existing tags, or
   the remote default branch.
-- No version tag, GitHub Release, deployment, package publication, container publication, or production-readiness claim is part of any current gate.
+- The v0.0.3 GitHub Release and versioned P1 offline ZIP are the P1
+  distribution. They do not authorize a merge to legacy `master`, container
+  publication, package publication, Kubernetes deployment, or any P2 claim.
 
 ### 2.4 Verified Evidence Inventory (current through 2026-07-24)
+
+- 2026-07-26: v0.0.3 is the released single-user P1 Offline-First Local
+  production product. The release archive, checksum, detached SSH Ed25519
+  signature, public key, clean-install acceptance, and exact revision are
+  recorded in `docs/deployment/OFFLINE_FIRST_READINESS.md` and the continuity
+  map. P2 remains future optional work.
 
 - 2026-07-24 (branch `agent/production-readiness-2026-07-19`, HEAD `1792d453`,
   commits `b022ed74..1792d453`): repository-controlled work landed — the SAFE_HALT
@@ -245,7 +255,7 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
   `project-ai-service-host` had not declared `project-ai-knowledge`; fixed in
   `1792d453` with a unit guard. No production-readiness claim; the pre-deployment
   verifier remains fail-closed on the external blockers in §2.5.
-- 2026-07-20 snapshot — full pytest: 3497 passed, 0 skipped. The five PostgreSQL
+- 2026-07-20 snapshot — Full pytest: 3497 passed, 0 skipped. The five PostgreSQL
   integration tests ran against an isolated disposable PostgreSQL 16 instance.
   (The count rose from the earlier `3412` as the supply-chain, workflow-gate,
   ratification-consistency, SHA256SUMS, and evidence-gate regression suites were
@@ -260,7 +270,15 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
   Desktop, SBOM, and local security checks are recorded in the current CAB and
   pre-deployment records.
 
-### 2.5 Current Open Blockers (NOT dismissible per v3 §5)
+### 2.5 Profile-Scoped Open Blockers (NOT dismissible per v3 §5)
+
+The owner established on 2026-07-25 that Project-AI's product deployment is
+**P1 Offline-First Local**. Kubernetes, hosted ingress, cloud publication, cloud
+secret management, monitoring CRDs, and CAB processes are optional **P2**
+surfaces, not the product. `docs/deployment/DEPLOYMENT_MODEL.md` is the
+authoritative profile definition and
+`docs/deployment/BLOCKER_PROFILE_MAP.md` maps each item below. Do not use a P2
+gap to block or downgrade P1. Do not use P1 evidence to authorize P2.
 
 - The immutable successor has green CI and vulnerability evidence. **Image
   signatures are RESOLVED** — all eight digests independently verified 2026-07-20
@@ -268,15 +286,16 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
   referrers check. Verification requires **cosign >= 3.0**; cosign 2.x cannot read
   this repository's signature format and will report "no signatures found" for
   correctly signed images. See `tools/supply_chain_policy.json`.
-- **SBOM/provenance attestations are NOT recorded and never were.** Confirmed
+- **P2:** SBOM/provenance attestations are NOT recorded and never were. Confirmed
   absent 0/8 for both `spdxjson` and `slsaprovenance`. `cosign attest` is now
   implemented in `publish.yaml` but has never executed. Attestations are produced
   at build time and cannot be applied retroactively — a re-publish is required.
-- **Release provenance is NOT established.** All eight candidate digests were
+- **P2:** Release provenance is NOT established. All eight candidate digests were
   signed from the unmerged branch `agent/production-readiness-2026-07-19` via
   `workflow_dispatch`, not from `main` or a `v*` tag. Their certificate SAN binds
   to that branch ref.
-- External proof custody is not recorded.
+- **P1/P2:** External proof custody is not recorded. P1 may satisfy this with
+  owner-controlled offline custody; it does not require a cloud service.
 - The old V3Q `owner-primary` private material must be securely retired under the
   owner's approved process. The ignored `owner-private.json` is **no longer in the
   checkout** (moved to off-repository custody 2026-07-20; verified absent). The
@@ -284,12 +303,14 @@ Verdict set is the three-outcome baseline: `ALLOW`, `DENY`, `ESCALATE`. Seven-ou
 - The signed V3Q manifest 1.1.0 contains contradictory `pending_owner_signature`
   text. Unsigned successor revision `1.2.0-rc1` supersedes it and the preparation
   defect is fixed, but the successor requires an owner signature. Owner-blocked.
-- No approved production cluster/namespace, target overlay or hostname, remote
+- **P2 only:** No approved production cluster/namespace, target overlay or hostname, remote
   backup destination, secret manager, maintenance window, owners, paging route,
   monitoring CRDs, rollback rehearsal, or acceptance sign-off exists.
 - Dependabot PRs #509 and #510 target legacy `master`, remain unstable, and
   require owner disposition.
-- **Safe to continue:** yes for local remediation; no for production deployment.
+- **Safe to continue:** yes for P1 local implementation and verification; no for
+  P2 hosted deployment/publication. A P1 production-readiness decision depends
+  on `docs/deployment/OFFLINE_FIRST_READINESS.md`, not the P2 aggregate gate.
 
 ### 2.6 Continuity Map (v3 §20)
 
@@ -336,6 +357,14 @@ reference under `docs/standards/`. It is additive to and governed by this file; 
   `docs/standards/agent-role-templates/` (`README.md` index + `01-architect.md` … `20-decision-arbiter.md`).
   When decomposing multi-step work, select the smallest set of roles required and preserve
   disagreement rather than manufacturing consensus.
+- **Part VII — Thirsty's Standard v3 Owner's Cockpit Extension (TS3-OCS-1.0):**
+  `docs/standards/THIRSTYS_OWNER_COCKPIT_STANDARD_TS3-OCS-1.0.md` (machine-readable
+  transcription), source PDF in `docs/standards/owner-cockpit-standard/`, and the
+  144-row source requirements matrix in
+  `docs/standards/owner-cockpit/REQUIREMENTS.json`. The standard remains a candidate
+  until the owner signs a scope-specific ratification record. It is additive to v3 and
+  binding for owner-facing control paths once ratified; it cannot imply conformance,
+  readiness, or owner acceptance without evidence.
 
 ---
 

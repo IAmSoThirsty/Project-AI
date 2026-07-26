@@ -1,5 +1,10 @@
 # Production Closure Plan — Owner-Controlled Execution of Remaining External Gates
 
+> **Current scope (2026-07-26):** This is a future optional P2 hosted/Kubernetes
+> closure plan. Project-AI v0.0.3 is separately released for the single-user P1
+> Offline-First Local production profile. None of the P2 steps below are a
+> prerequisite for installing or operating the P1 release.
+
 - **Date:** 2026-07-24 UTC
 - **Mode:** Approved owner-closure planning and evidence refresh. Repository implementation
   authority: suspended. Commit authority: not granted.

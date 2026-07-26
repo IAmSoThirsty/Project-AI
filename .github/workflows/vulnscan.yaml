@@ -81,7 +81,8 @@ jobs:
           node-version: "22"
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=moderate
+      - name: Run fail-closed Node dependency audit
+        run: python tools/verify_node_dependencies.py
 
   python-licenses:
     name: Python dependency license check (pip-licenses)

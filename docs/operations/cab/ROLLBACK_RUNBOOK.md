@@ -1,5 +1,9 @@
 # Rollback Runbook — Project-AI Successor to v0.0.2
 
+> **Scope:** Future optional P2 Helm/Kubernetes rollback only. The released
+> v0.0.3 P1 local product uses
+> `docs/deployment/OFFLINE_UPGRADE_ROLLBACK_RUNBOOK.md`.
+
 **Status:** Procedure defined; target, owner, known-good revision, timing, and
 rehearsal evidence pending.
 **Primary strategy:** Helm revision rollback.

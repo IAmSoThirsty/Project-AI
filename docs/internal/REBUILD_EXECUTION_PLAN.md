@@ -1,14 +1,21 @@
 # Project-AI Rebuild Execution Ledger
 
-**Status:** V0.0.3 LOCAL SUCCESSOR ACCEPTANCE IN PROGRESS; PRODUCTION BLOCKED
+**Status:** V0.0.3 RELEASED FOR SINGLE-USER P1 OFFLINE-FIRST LOCAL PRODUCTION;
+P2 HOSTED/KUBERNETES FUTURE AND UNPROVISIONED
 **Canonical repository:** `T:\00-Active\Project-AI-Beginnings`
-**Working branch:** `main` (current development checkpoint; previous rebuild
-work landed from `codex/rebuild-continuation`)
+**Release branch:** `github_release_branch`
 **Legacy source:** `T:\00-Active\Project-AI-main` (read-only input by policy)
 **Python:** 3.12.10
 **Package manager:** uv
-**Development version:** `0.0.3` (working-tree successor; not yet immutable)
+**Released version:** `0.0.3`
 **License:** MIT
+
+> This ledger contains chronological rebuild and historical aggregate/P2 gate
+> records. Current P1 release authority is
+> `docs/deployment/DEPLOYMENT_MODEL.md` plus
+> `docs/deployment/OFFLINE_FIRST_READINESS.md`. Historical statements that
+> "production is blocked" now apply only to future optional P2 unless they name
+> a concrete P1 defect.
 
 ## Authority
 

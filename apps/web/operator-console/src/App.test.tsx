@@ -127,6 +127,13 @@ test("renders truthful dashboard data for an authenticated human session", async
   expect(screen.getByText("Scroll table")).toBeInTheDocument();
   expect(screen.getByText("The Control Center does not grant authority.")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "Open account security" })).toHaveTextContent("Local Owner");
+  const orientation = screen.getByRole("region", { name: "Owner orientation" });
+  expect(orientation).toHaveTextContent("PROJECT-AI-LOCAL");
+  expect(orientation).toHaveTextContent("0.0.3");
+  expect(orientation).toHaveTextContent("P1 Offline-First Local");
+  expect(orientation).toHaveTextContent("Local Owner");
+  expect(orientation).toHaveTextContent("Current evidence reports healthy");
+  expect(orientation).toHaveTextContent("Review governed requests");
   await expectNoAutomatedAccessibilityViolations();
 });
 

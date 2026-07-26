@@ -1,5 +1,9 @@
 # External CAB/V3Q Audit Evidence — 2026-07-20
 
+> **Profile note (2026-07-26):** Historical P2 registry/hosted evidence. It is
+> not the acceptance record for the released v0.0.3 single-user P1 offline
+> product; see `docs/deployment/OFFLINE_FIRST_READINESS.md`.
+
 **Auditor:** `codex-external-auditor` (independent checkout and registry review)
 **Scope:** Project-AI successor candidate `eaed9905cacc02e2fb98e3cc92356e8d160e593e`
 **Repository:** `IAmSoThirsty/Project-AI`

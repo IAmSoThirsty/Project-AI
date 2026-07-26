@@ -1,0 +1,1739 @@
+{
+  "schema_version": 1,
+  "standard": "TS3-OCS-1.0",
+  "status": "candidate_for_owner_ratification",
+  "ratification_implied": false,
+  "source_pdf": "docs/standards/owner-cockpit-standard/Thirstys_Owners_Cockpit_Standard_v1.0_Command_Edition.pdf",
+  "source_sha256": "e8484ea46ce017fda427bc748627e7313f536c4a6a41248832b6b069238f8b0b",
+  "requirement_count": 144,
+  "requirements": [
+    {
+      "id": "OC-1.1",
+      "chapter": "1. The Owner’s Cockpit Mandate",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "A non-programmer owner starts from a stopped machine and reaches the cockpit.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-1.2",
+      "chapter": "1. The Owner’s Cockpit Mandate",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "First-session walkthrough identifies what is running and what is not.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-1.3",
+      "chapter": "1. The Owner’s Cockpit Mandate",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Execute the workflow twice from clean local starts.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-2.1",
+      "chapter": "2. Relationship to Thirsty’s Standard v3",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Remove or falsify evidence and confirm the claim degrades to Unknown/Not verified.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-2.2",
+      "chapter": "2. Relationship to Thirsty’s Standard v3",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Attempt the action through every UI/API path and verify identical enforcement.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-2.3",
+      "chapter": "2. Relationship to Thirsty’s Standard v3",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "A new operator reconstructs the last session without chat memory.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-3.1",
+      "chapter": "3. Owner, Operator, Developer, and User Roles",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Test each role against allowed and denied actions.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-3.2",
+      "chapter": "3. Owner, Operator, Developer, and User Roles",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Complete a repository workflow without fictional CAB or team approvals.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-3.3",
+      "chapter": "3. Owner, Operator, Developer, and User Roles",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Remove credentials or external assets and verify fail-closed behavior.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-4.1",
+      "chapter": "4. Authority and Precedence",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Inspect a completed and denied action receipt.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-4.2",
+      "chapter": "4. Authority and Precedence",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Inject conflicting instructions and verify deterministic resolution.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-4.3",
+      "chapter": "4. Authority and Precedence",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Block one dependency and confirm unaffected work remains executable.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-5.1",
+      "chapter": "5. Truthful Status and the No-Fake-Success Rule",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Attempt invalid transitions and verify rejection.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-5.2",
+      "chapter": "5. Truthful Status and the No-Fake-Success Rule",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Withhold one required artifact and verify success is impossible.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-5.3",
+      "chapter": "5. Truthful Status and the No-Fake-Success Rule",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Expire telemetry and inspect the rendered state.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-6.1",
+      "chapter": "6. Scope, Boundaries, and Completion",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Inspect action history and reconstruct its boundaries.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-6.2",
+      "chapter": "6. Scope, Boundaries, and Completion",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Attempt silent expansion and verify it is denied or paused.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-6.3",
+      "chapter": "6. Scope, Boundaries, and Completion",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Select a criterion and trace it to current evidence.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-7.1",
+      "chapter": "7. Owner Jobs, Journeys, and Operational Intent",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Select a surface and identify the owner outcome it enables.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-7.2",
+      "chapter": "7. Owner Jobs, Journeys, and Operational Intent",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Run from initial trigger to known final state.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-7.3",
+      "chapter": "7. Owner Jobs, Journeys, and Operational Intent",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Owner locates target task without coaching.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-8.1",
+      "chapter": "8. Cognitive Load Budget",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Owner identifies top condition and next action within one minute.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-8.2",
+      "chapter": "8. Cognitive Load Budget",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Move from summary to raw evidence and back without losing context.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-8.3",
+      "chapter": "8. Cognitive Load Budget",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Trigger one shared failure and inspect notification grouping.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-9.1",
+      "chapter": "9. Situational Awareness",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Switch environment or actor and verify prominent change.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-9.2",
+      "chapter": "9. Situational Awareness",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Trace a displayed condition to its originating event.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-9.3",
+      "chapter": "9. Situational Awareness",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Inspect mixed fact/forecast presentation.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-10.1",
+      "chapter": "10. Trust Calibration and Uncertainty",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Review a recommendation with missing data and verify explicit limits.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-10.2",
+      "chapter": "10. Trust Calibration and Uncertainty",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Ask two operators to interpret the indicator consistently.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-10.3",
+      "chapter": "10. Trust Calibration and Uncertainty",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Open evidence and compare alternatives without leaving the decision context.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-11.1",
+      "chapter": "11. Decision Support Without Decision Seizure",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Generate a recommendation and confirm no side effect occurs.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-11.2",
+      "chapter": "11. Decision Support Without Decision Seizure",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Owner explains tradeoffs before committing.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-11.3",
+      "chapter": "11. Decision Support Without Decision Seizure",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Modify scope after confirmation and verify re-approval is required.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-12.1",
+      "chapter": "12. Error Recovery Psychology and Owner Confidence",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Induce representative failures and follow the offered path.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-12.2",
+      "chapter": "12. Error Recovery Psychology and Owner Confidence",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Interrupt and retry an operation; inspect resulting state.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-12.3",
+      "chapter": "12. Error Recovery Psychology and Owner Confidence",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Owner distinguishes preserved and uncertain state.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-13.1",
+      "chapter": "13. Information Architecture and Navigation",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Owner locates each critical task from Home.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-13.2",
+      "chapter": "13. Information Architecture and Navigation",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Open a copied evidence link in a new session.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-13.3",
+      "chapter": "13. Information Architecture and Navigation",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Compare status across all views during an update.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-14.1",
+      "chapter": "14. Visual Hierarchy and Density",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Compare high and low severity conditions.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-14.2",
+      "chapter": "14. Visual Hierarchy and Density",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Complete the primary task at 200% browser zoom.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-14.3",
+      "chapter": "14. Visual Hierarchy and Density",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Render maximum supported labels and records.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-15.1",
+      "chapter": "15. Controlled Status Language and Color Semantics",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Use grayscale/color-blind simulation and identify every state.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-15.2",
+      "chapter": "15. Controlled Status Language and Color Semantics",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Ask what is ready and against which criterion.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-15.3",
+      "chapter": "15. Controlled Status Language and Color Semantics",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Attempt to render success without evidence.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-16.1",
+      "chapter": "16. Interaction Grammar and Consequence Design",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Compare every occurrence of a high-risk verb.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-16.2",
+      "chapter": "16. Interaction Grammar and Consequence Design",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Owner accurately predicts the result before confirming.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-16.3",
+      "chapter": "16. Interaction Grammar and Consequence Design",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Refresh or reopen and locate the action result.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-17.1",
+      "chapter": "17. Forms, Configuration, and Safe Defaults",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Bypass client validation and verify backend rejection.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-17.2",
+      "chapter": "17. Forms, Configuration, and Safe Defaults",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Start with no local config and inspect resulting behavior.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-17.3",
+      "chapter": "17. Forms, Configuration, and Safe Defaults",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Submit a canary secret and search all outputs.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-18.1",
+      "chapter": "18. Accessibility and Inclusive Operation",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Run the complete journey by keyboard and screen reader.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-18.2",
+      "chapter": "18. Accessibility and Inclusive Operation",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Trigger status updates using assistive technology.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-18.3",
+      "chapter": "18. Accessibility and Inclusive Operation",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Complete actions using keyboard and non-color cues.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-19.1",
+      "chapter": "19. Home and Command Overview",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Owner answers all five without opening developer tools.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-19.2",
+      "chapter": "19. Home and Command Overview",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Open condition, proof, and next action.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-19.3",
+      "chapter": "19. Home and Command Overview",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Disable one source and inspect Home.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-20.1",
+      "chapter": "20. Local Launch, Status, and Stop",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Start from all components stopped.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-20.2",
+      "chapter": "20. Local Launch, Status, and Stop",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Perform the declared local acceptance action twice.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-20.3",
+      "chapter": "20. Local Launch, Status, and Stop",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Stop, then verify no unintended owned process remains.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-21.1",
+      "chapter": "21. Work, Task, and Action Control",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Refresh/restart and recover the action.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-21.2",
+      "chapter": "21. Work, Task, and Action Control",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Invoke each control during representative work.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-21.3",
+      "chapter": "21. Work, Task, and Action Control",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Compare presented scope to execution trace.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-22.1",
+      "chapter": "22. Evidence, Receipts, and Verification",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Select a claim and resolve every referenced artifact.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-22.2",
+      "chapter": "22. Evidence, Receipts, and Verification",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Compare evidence from two environments.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-22.3",
+      "chapter": "22. Evidence, Receipts, and Verification",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Attempt mutation and inspect detection/audit.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-23.1",
+      "chapter": "23. Incident, Degradation, and SAFE_HALT",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Enter SAFE_HALT and attempt all consequential paths.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-23.2",
+      "chapter": "23. Incident, Degradation, and SAFE_HALT",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Attempt to close before verification.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-23.3",
+      "chapter": "23. Incident, Degradation, and SAFE_HALT",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Reconstruct the incident after restart.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-24.1",
+      "chapter": "24. Release, Deployment, and Rollback",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Change candidate and verify evidence invalidation.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-24.2",
+      "chapter": "24. Release, Deployment, and Rollback",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Pass individual steps but withhold whole-gate result.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-24.3",
+      "chapter": "24. Release, Deployment, and Rollback",
+      "default_level": "OC-1",
+      "primary_acceptance_method": "Exercise in staging or inspect truthful block.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-25.1",
+      "chapter": "25. Conversational Control and Grounded Dialogue",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Ask for a change and inspect state before authorization.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-25.2",
+      "chapter": "25. Conversational Control and Grounded Dialogue",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Disconnect a source and query current state.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-25.3",
+      "chapter": "25. Conversational Control and Grounded Dialogue",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Issue an underspecified destructive request.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-26.1",
+      "chapter": "26. Agent Identity, Role, and Capability",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Trace an action through handoffs.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-26.2",
+      "chapter": "26. Agent Identity, Role, and Capability",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Give a capable agent no grant and attempt action.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-26.3",
+      "chapter": "26. Agent Identity, Role, and Capability",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Alter an agent contract and attempt work.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-27.1",
+      "chapter": "27. Delegation and Bounded Autonomy",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Attempt a child action outside scope.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-27.2",
+      "chapter": "27. Delegation and Bounded Autonomy",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Expand resource or consequence boundary.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-27.3",
+      "chapter": "27. Delegation and Bounded Autonomy",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Revoke during operation and inspect state.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-28.1",
+      "chapter": "28. Multi-Agent Coordination and Handoffs",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Restart the receiver and continue from record alone.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-28.2",
+      "chapter": "28. Multi-Agent Coordination and Handoffs",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Change upstream output and verify invalidation.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-28.3",
+      "chapter": "28. Multi-Agent Coordination and Handoffs",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Inject contradictory assessments.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-29.1",
+      "chapter": "29. Independent Review and Adversarial Verification",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Trace approval to independent evidence.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-29.2",
+      "chapter": "29. Independent Review and Adversarial Verification",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Inspect review coverage beyond happy path.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-29.3",
+      "chapter": "29. Independent Review and Adversarial Verification",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Modify reviewed artifact and inspect status.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-30.1",
+      "chapter": "30. Model Failure, Hallucination, and Fallback",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Inject invalid model parameters.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-30.2",
+      "chapter": "30. Model Failure, Hallucination, and Fallback",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Request state for nonexistent evidence.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-30.3",
+      "chapter": "30. Model Failure, Hallucination, and Fallback",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Disable all model services and operate controls.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-31.1",
+      "chapter": "31. Reference Architecture and Separation of Concerns",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Enumerate all command paths and verify controls.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-31.2",
+      "chapter": "31. Reference Architecture and Separation of Concerns",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Modify client state and attempt action.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-31.3",
+      "chapter": "31. Reference Architecture and Separation of Concerns",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Trace displayed values to source services.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-32.1",
+      "chapter": "32. Action Contracts and State Machines",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Attempt every prohibited transition.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-32.2",
+      "chapter": "32. Action Contracts and State Machines",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Reconstruct an action timeline.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-32.3",
+      "chapter": "32. Action Contracts and State Machines",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Complete execution while causing verifier failure.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-33.1",
+      "chapter": "33. API, Event, and Evidence Schemas",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Validate representative payloads and rejected invalids.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-33.2",
+      "chapter": "33. API, Event, and Evidence Schemas",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Follow one action across every layer.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-33.3",
+      "chapter": "33. API, Event, and Evidence Schemas",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Introduce a breaking fixture and verify CI failure.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-34.1",
+      "chapter": "34. Observability for Owner and Engineer",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Run the journey and inspect correlated telemetry.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-34.2",
+      "chapter": "34. Observability for Owner and Engineer",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Break a required dependency while process remains alive.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-34.3",
+      "chapter": "34. Observability for Owner and Engineer",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Inject a canary secret and inspect telemetry stores.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-35.1",
+      "chapter": "35. Configuration, Environment, and Secrets Architecture",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Set conflicting layers and verify result.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-35.2",
+      "chapter": "35. Configuration, Environment, and Secrets Architecture",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Search built artifacts using canary values.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-35.3",
+      "chapter": "35. Configuration, Environment, and Secrets Architecture",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Change material config and verify digest change.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-36.1",
+      "chapter": "36. Delivery Pipeline and Reproducibility",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Rebuild in a new short-path worktree or CI environment.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-36.2",
+      "chapter": "36. Delivery Pipeline and Reproducibility",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Repackage after test and verify invalidation.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-36.3",
+      "chapter": "36. Delivery Pipeline and Reproducibility",
+      "default_level": "OC-2",
+      "primary_acceptance_method": "Reproduce under alternate supported harness.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-37.1",
+      "chapter": "37. Identity, Authentication, and Session Safety",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Inspect action after session renewal.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-37.2",
+      "chapter": "37. Identity, Authentication, and Session Safety",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Attempt with stale or weak session.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-37.3",
+      "chapter": "37. Identity, Authentication, and Session Safety",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Attempt remote access to local-only mode.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-38.1",
+      "chapter": "38. Authorization, Approval, and Separation of Duties",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Call backend directly without UI permission.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-38.2",
+      "chapter": "38. Authorization, Approval, and Separation of Duties",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Edit one material parameter after approval.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-38.3",
+      "chapter": "38. Authorization, Approval, and Separation of Duties",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Review whether solo-owner development is needlessly blocked.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-39.1",
+      "chapter": "39. Data Protection and Privacy",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Trace representative data end to end.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-39.2",
+      "chapter": "39. Data Protection and Privacy",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Inspect storage, transport, and masking.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-39.3",
+      "chapter": "39. Data Protection and Privacy",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Disable external sharing and verify no transmission.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-40.1",
+      "chapter": "40. Threat Modeling and Secure Interaction Design",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Insert malicious instruction text into a document.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-40.2",
+      "chapter": "40. Threat Modeling and Secure Interaction Design",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Run representative attack tests.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-40.3",
+      "chapter": "40. Threat Modeling and Secure Interaction Design",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Review a new integration change.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-41.1",
+      "chapter": "41. Resilience, Offline Behavior, and Graceful Degradation",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Disable each major dependency in turn.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-41.2",
+      "chapter": "41. Resilience, Offline Behavior, and Graceful Degradation",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Disconnect network and inspect every critical view.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-41.3",
+      "chapter": "41. Resilience, Offline Behavior, and Graceful Degradation",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Interrupt and reconnect during action.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-42.1",
+      "chapter": "42. Backup, Restore, and Continuity of Control",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Validate artifact and prerequisites.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-42.2",
+      "chapter": "42. Backup, Restore, and Continuity of Control",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Restore to isolated environment and verify owner journey.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-42.3",
+      "chapter": "42. Backup, Restore, and Continuity of Control",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Remove one dependency and inspect truthful block.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-43.1",
+      "chapter": "43. Discovery and Owner Research",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Trace each major feature to a research finding.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-43.2",
+      "chapter": "43. Discovery and Owner Research",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Select a key assumption and inspect evidence.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-43.3",
+      "chapter": "43. Discovery and Owner Research",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Observe or simulate representative breakdowns.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-44.1",
+      "chapter": "44. Design, Prototyping, and Architecture Alignment",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Inspect each high-impact control.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-44.2",
+      "chapter": "44. Design, Prototyping, and Architecture Alignment",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Owner completes tasks in prototype.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-44.3",
+      "chapter": "44. Design, Prototyping, and Architecture Alignment",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Review unresolved journey/architecture conflicts.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-45.1",
+      "chapter": "45. Implementation and Definition of Done",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Run from owner trigger to verified outcome.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-45.2",
+      "chapter": "45. Implementation and Definition of Done",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Trigger permission, stale, failure, and recovery cases.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-45.3",
+      "chapter": "45. Implementation and Definition of Done",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Follow guide in clean environment.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-46.1",
+      "chapter": "46. Verification Strategy and Owner Acceptance",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Sample requirements across all parts.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-46.2",
+      "chapter": "46. Verification Strategy and Owner Acceptance",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Owner performs tasks without step-by-step coaching.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-46.3",
+      "chapter": "46. Verification Strategy and Owner Acceptance",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Correct a failure and inspect both records.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-47.1",
+      "chapter": "47. Release, Change, and Continuous",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Owner identifies what changed and required action. Improvement",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-47.2",
+      "chapter": "47. Release, Change, and Continuous Improvement",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Upgrade representative state and restore.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-47.3",
+      "chapter": "47. Release, Change, and Continuous Improvement",
+      "default_level": "OC-3",
+      "primary_acceptance_method": "Inspect whether metrics can reward harmful engagement.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-48.1",
+      "chapter": "48. Conformance, Audit, and Ratification",
+      "default_level": "OC-4",
+      "primary_acceptance_method": "Attempt to interpret claim without outside context.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-48.2",
+      "chapter": "48. Conformance, Audit, and Ratification",
+      "default_level": "OC-4",
+      "primary_acceptance_method": "Remove evidence for one mandatory requirement.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    },
+    {
+      "id": "OC-48.3",
+      "chapter": "48. Conformance, Audit, and Ratification",
+      "default_level": "OC-4",
+      "primary_acceptance_method": "Inspect authority and scope of approval.",
+      "implementation": {
+        "owner": null,
+        "result": "Not verified",
+        "date": null,
+        "evidence_id": null
+      }
+    }
+  ]
+}

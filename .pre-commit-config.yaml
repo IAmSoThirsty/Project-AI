@@ -11,7 +11,7 @@ repos:
       - id: check-yaml
         # compose.hub.yaml uses Docker Compose's !reset extension, which is
         # valid Compose syntax but intentionally outside standard YAML tags.
-        exclude: ^(helm/project-ai/templates/|compose\.hub\.yaml$)
+        exclude: ^(helm/project-ai/templates/|compose\.(hub|secrets)\.yaml$)
       - id: check-json
       - id: check-toml
       - id: check-merge-conflict

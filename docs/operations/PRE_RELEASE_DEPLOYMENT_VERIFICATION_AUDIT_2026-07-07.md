@@ -3,8 +3,8 @@
 > **Historical audit snapshot:** Findings below describe the 2026-07-07 tree.
 > Several implementation gaps were repaired afterward. Current release and
 > production status is authoritative only in
-> `docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`,
-> `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`, and
+> `docs/deployment/OFFLINE_FIRST_READINESS.md`,
+> `docs/deployment/DEPLOYMENT_MODEL.md`, and
 > `docs/operations/CONTINUITY_MAP.md`.
 
 **Status:** formal production-gate audit complete

@@ -635,6 +635,36 @@ def test_web_runtime_requires_tmp_pid(tmp_path: Path) -> None:
         MODULE.verify_web_runtime(tmp_path)
 
 
+def test_web_runtime_removes_exactly_the_gateway_api_prefix(tmp_path: Path) -> None:
+    (tmp_path / "docker").mkdir()
+    (tmp_path / "docker" / "web.Dockerfile").write_text(
+        "COPY docker/nginx-main.conf /etc/nginx/nginx.conf\nUSER 10001:10001\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "docker" / "nginx-main.conf").write_text(
+        "\n".join(
+            (
+                "error_log /dev/stderr;",
+                "access_log /dev/stdout;",
+                "pid /tmp/nginx.pid;",
+                "client_body_temp_path /tmp/client_body;",
+                "proxy_temp_path /tmp/proxy;",
+            )
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "docker" / "nginx.conf").write_text(
+        "location /api/ { proxy_pass http://api:8000; }\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        MODULE.PreDeploymentVerificationError,
+        match="remove exactly the browser gateway /api prefix",
+    ):
+        MODULE.verify_web_runtime(tmp_path)
+
+
 def test_ci_workflow_requires_expected_jobs(tmp_path: Path) -> None:
     workflow_dir = tmp_path / ".github" / "workflows"
     workflow_dir.mkdir(parents=True)

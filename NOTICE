@@ -1,0 +1,14 @@
+Project-AI v0.0.3
+Copyright (c) 2025-2026 Jeremy Karrick
+
+Project-AI source code is distributed under the MIT License included in the
+root LICENSE file.
+
+The P1 offline bundle also contains third-party software inside its container
+images and compiled web assets. Those components remain under their respective
+licenses. See THIRD_PARTY_NOTICES.md for the release notice, dependency
+inventory locations, and verification scope.
+
+Project-AI P1 is the single-user, offline-first Windows product. Kubernetes,
+hosted services, cloud publication, and public ingress are optional future P2
+deployment surfaces and are not included in the P1 release.

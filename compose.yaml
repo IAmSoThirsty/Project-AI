@@ -24,7 +24,9 @@ x-python-health: &python-health
   interval: 5s
   timeout: 3s
   retries: 12
-  start_period: 5s
+  # A cold containerd restart can spend roughly two minutes unpacking and
+  # importing the offline Python workspace on the supported local host.
+  start_period: 120s
 
 x-web-health: &web-health
   test: [CMD, wget, -q, -O, /dev/null, "http://127.0.0.1:8080/healthz"]
@@ -160,6 +162,8 @@ services:
       dockerfile: docker/web.Dockerfile
       args:
         APP: operator-console
+        VITE_DEPLOYMENT_PROFILE: P1 Offline-First Local
+        VITE_DOCS_URL: http://127.0.0.1:4173/
     image: project-ai:operator-console
     container_name: project-ai-operator-console
     depends_on:

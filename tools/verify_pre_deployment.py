@@ -661,7 +661,12 @@ def verify_web_runtime(root: Path = ROOT) -> int:
         _require(required_text in dockerfile, f"web Dockerfile missing {required_text}")
     for required_text in required_nginx_text:
         _require(required_text in nginx, f"Nginx runtime config missing {required_text}")
-    return len(required_dockerfile_text) + len(required_nginx_text)
+    site = _read(root, "docker/nginx.conf")
+    _require(
+        "proxy_pass http://api:8000/;" in site,
+        "Nginx site config must remove exactly the browser gateway /api prefix",
+    )
+    return len(required_dockerfile_text) + len(required_nginx_text) + 1
 
 
 def _as_mapping(value: Any, context: str) -> dict[str, Any]:

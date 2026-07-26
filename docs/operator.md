@@ -1,6 +1,9 @@
 # Operator Guide
 
-Development baseline for Project-AI. Not production-ready.
+Project-AI v0.0.3 is released for the single-user P1 Offline-First Local
+production profile. This guide also contains source-development and optional P2
+Kubernetes commands; those additional commands do not change the P1 product
+boundary.
 
 ## Prerequisites
 
@@ -13,6 +16,11 @@ Development baseline for Project-AI. Not production-ready.
 | pnpm | 10.30.0 | Node package management |
 | Docker + Compose | ≥ 27 / v2 | Container stack |
 | Helm | ≥ 4 | Kubernetes manifests (optional) |
+
+For normal P1 production installation and operation, the owner needs only
+Windows 11, Docker Desktop Linux containers, and the verified offline ZIP. See
+`OWNER_QUICKSTART.md`; Python, Rust, Node, pnpm, and Helm are source-development
+or optional P2 tools and are not required by the released offline bundle.
 
 > **Note on Rust toolchain:** `rust-toolchain.toml` pins `stable-x86_64-pc-windows-gnu`
 > for Windows development. On Linux (including Docker and CI), set
@@ -112,7 +120,7 @@ uv run pip install -e packages/cli
 uv run project-ai --help
 ```
 
-## Kubernetes (development, no cluster required)
+## Kubernetes (future optional P2, no cluster required for rendering)
 
 ```bash
 # Validate manifests offline against repository invariants
@@ -145,8 +153,8 @@ exact pushed commit's remote results are immutable CI evidence.
 - **`docs/cli/CLI_REFERENCE.md`** — every `project-ai` subcommand with examples
 - **`docs/runbooks/INCIDENT_RESPONSE.md`** — 8 most-likely incidents with diagnostics
 - **`docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md`** — start/verify/inspect/stop the Compose stack
-- **`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`** — the pre-deploy gate
-- **`docs/deployment/PRODUCTION_DEPLOY.md`** — end-to-end deploy procedure
+- **`docs/deployment/OFFLINE_FIRST_READINESS.md`** — released P1 production evidence
+- **`docs/deployment/PRODUCTION_DEPLOY.md`** — P1 production operation and P2 boundary
 - **`docs/deployment/HELM_DEPLOY.md`** — Kubernetes install via the helm chart
 - **`docs/deployment/ENVIRONMENT_VARIABLES.md`** — every env var with type/default/required-flag
 - **`docs/operations/PERFORMANCE_SLOS.md`** — performance and SLO targets

@@ -4,13 +4,22 @@ import { Link } from "react-router-dom";
 import { gateway } from "@project-ai/web-shared/api";
 
 import { PageHeading, StatePanel, SurfaceStatus } from "../components";
+import { useAuth } from "../auth-store";
 import { useBrowserOnline } from "../browser-status";
 
 export function CommandCenterRoute() {
   const dashboard = useQuery({ queryKey: ["dashboard"], queryFn: gateway.dashboard, refetchInterval: 30_000 });
+  const instance = useQuery({ queryKey: ["instance"], queryFn: gateway.instance, staleTime: Infinity });
+  const { session } = useAuth();
   const browserOnline = useBrowserOnline();
   const nonHealthySurfaces = dashboard.data?.surfaces.filter((surface) => surface.status !== "healthy") ?? [];
   const lastDashboardAt = dashboard.dataUpdatedAt > 0 ? new Date(dashboard.dataUpdatedAt) : null;
+  const operatingMode = import.meta.env.VITE_DEPLOYMENT_PROFILE || "P1 Offline-First Local";
+  const condition = !browserOnline
+    ? "Browser offline; displayed evidence may be stale"
+    : nonHealthySurfaces.length > 0
+      ? "Partial; inspect affected surfaces"
+      : "Current evidence reports healthy";
 
   return (
     <div className="console-page command-center-page">
@@ -26,6 +35,36 @@ export function CommandCenterRoute() {
       {dashboard.data && nonHealthySurfaces.length > 0 ? <StatePanel title="Partial system evidence" tone="warning">{nonHealthySurfaces.map((surface) => `${surface.label}: ${surface.status.replace("_", " ")}`).join(" · ")}. Inspect each surface before relying on this snapshot.</StatePanel> : null}
       {dashboard.data ? (
         <>
+          <section className="owner-orientation" aria-label="Owner orientation">
+            <div>
+              <span>Environment</span>
+              <strong>{instance.data?.display_name ?? "Unavailable"}</strong>
+            </div>
+            <div>
+              <span>Version</span>
+              <strong>{dashboard.data.version}</strong>
+            </div>
+            <div>
+              <span>Operating mode</span>
+              <strong>{operatingMode}</strong>
+            </div>
+            <div>
+              <span>Signed-in actor</span>
+              <strong>{session?.account.display_name ?? "Unavailable"}</strong>
+            </div>
+            <div>
+              <span>Current condition</span>
+              <strong>{condition}</strong>
+            </div>
+            <div>
+              <span>Next safe action</span>
+              <Link to={nonHealthySurfaces.length > 0 ? "/system/health" : "/requests"}>
+                {nonHealthySurfaces.length > 0 ? "Inspect system health" : "Review governed requests"}
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </div>
+          </section>
+
           <section className="surface-band" aria-label="Current system state">
             {dashboard.data.surfaces.map((surface) => <SurfaceStatus key={surface.id} surface={surface} />)}
           </section>

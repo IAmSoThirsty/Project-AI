@@ -91,6 +91,10 @@ data/repository-intelligence/
 .env
 .env.local
 .env.*.local
+.owner-state/
+.owner-evidence/
+.local/backups/
+.local/offline-bundles/
 *.pem
 *.key
 *.p12
@@ -115,6 +119,7 @@ SECRET*
 # failure on a fresh Linux checkout).
 !packages/taar/src/taar/checks/secret_check.py
 !helm/project-ai/templates/secrets.yaml
+!scripts/owner/Secret-Store.ps1
 
 # Exception to the negation above: the 2026-07-10 audit receipt bundle's 36 MB
 # HEAD tarball stays out of git (reproducible via `git archive HEAD`; its

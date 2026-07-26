@@ -5,9 +5,25 @@
 
 ## What this is
 
-Project-AI is a governed AI systems rebuild with runtime authority checks,
-provenance records, replay verification, application surfaces, and deployment
-manifests under active development.
+Project-AI v0.0.3 is a released single-user, offline-first Windows product with
+runtime authority checks, provenance records, replay verification, local
+application surfaces, encrypted backup/restore, and a no-pull offline installer.
+
+## Use it locally - the product deployment
+
+Project-AI's primary product profile is **offline-first local operation**. Kubernetes,
+cloud publication, hosted ingress, and SaaS integrations are optional additions; they are
+not required to run the product.
+
+For a prepared offline bundle, extract it and run `Install Project-AI Offline.cmd`.
+In this source checkout, run `Start Project-AI.cmd`, then open:
+
+`http://127.0.0.1:4175`
+
+See [`OWNER_QUICKSTART.md`](OWNER_QUICKSTART.md) for owner start, status, stop, backup,
+restore, recovery, and offline installation instructions. The authoritative profile
+definition is
+[`docs/deployment/DEPLOYMENT_MODEL.md`](docs/deployment/DEPLOYMENT_MODEL.md).
 
 The development baseline keeps the AI-side runtime behind explicit governance
 and authority gates. Operator-side experimental packages (`arbiter` and `rlp`)
@@ -16,22 +32,31 @@ embed governance authority.
 
 ## Current status
 
-- Local successor version: `0.0.3` (committed on the working branch; not tagged,
-  merged, or published as a production release).
-- Active branch: `agent/production-readiness-2026-07-19`; immutable code candidate
-  `6684828d` is the tested successor revision.
-- Stage 18 local acceptance: accepted from a detached clean checkout.
-- Published `v0.0.2` is superseded because its exact-commit CI failed and it
-  does not contain the current hardening work.
-- The local v0.0.3 candidate passes local remediation gates; replacement V3Q
-  public-key enrollment and exact-manifest ratification are now verified. It
-  still requires secure retirement of the old local private material, green
-  remote release/security evidence, external proof custody, an approved
-  ingress/backup overlay, target-cluster rehearsal, and CAB approval.
+- Released version: `v0.0.3`.
+- Production profile: `P1 Offline-First Local`, for one Windows user.
+- Distribution:
+  `project-ai-p1-v0.0.3-windows-amd64.zip` plus `.sha256`, `.sig`, and `.pub`
+  sidecars on the GitHub Release.
+- Startup: extract the ZIP and run `Install Project-AI Offline.cmd`.
+- P2 Kubernetes, hosted ingress, registry images, cloud services, and
+  organizational CAB controls are future optional deployment work. P1 does not
+  authorize or imply P2.
 
-See `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md`,
-`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`, and
-`docs/operations/CONTINUITY_MAP.md` for the current evidence trail.
+See [`docs/deployment/OFFLINE_FIRST_READINESS.md`](docs/deployment/OFFLINE_FIRST_READINESS.md)
+and [`docs/operations/CONTINUITY_MAP.md`](docs/operations/CONTINUITY_MAP.md) for
+the exact release acceptance and evidence trail.
+
+## Verify the downloaded release
+
+```powershell
+pwsh -File .\scripts\owner\Test-OfflineRelease.ps1 `
+  -ArchivePath .\project-ai-p1-v0.0.3-windows-amd64.zip
+```
+
+The validator checks the SHA-256 sidecar, SSH Ed25519 detached signature,
+release public key, internal file manifest, image inventory, `LICENSE`,
+`NOTICE`, and `RELEASE.json`. The release signing-key fingerprint is
+`SHA256:rKRWH+iipbORKpYSUuK3zU2w8e9vcLr/2RbI/QUToE8`.
 
 ## Quick start
 
@@ -87,8 +112,8 @@ deployed stack. Read them in this order on first contact:
    (service unhealthy, audit chain break, token rejected, compose won't
    start, atlas replay fails, pytest regression, CI red on main) with
    diagnostics and recovery.
-7. **`docs/deployment/PRE_DEPLOYMENT_CHECKLIST.md`** — the pre-deploy
-   gate (the 4 canonical gates + the evidence they must produce).
+7. **`docs/deployment/OFFLINE_FIRST_READINESS.md`** — the released P1
+   production acceptance and exact-artifact evidence.
 8. **`docs/runbooks/DEVELOPMENT_STACK_RUNBOOK.md`** — start/verify/inspect/
    stop the 9-service Compose stack.
 9. **`docs/provenance.md`** — frozen-history SHA-256 chain verification,
@@ -131,13 +156,14 @@ tools/
 
 ## Build status
 
-The local v0.0.3 successor passes the recorded local acceptance gates and is
-pushed on the active branch. Immutable code-candidate CI and vulnerability
-evidence are green, and the latest gate/documentation follow-up runs
-`29718283865` and `29718283860` also passed. The tracked production host is
-still a placeholder and remote backup is unconfigured. Open production work is
-tracked in the continuity map and CAB records.
+The v0.0.3 P1 release is built from one clean release revision and distributed
+as an integrity-addressed, detached-signature-verified offline ZIP. Its
+acceptance covers install, first account setup, governed Atlas/SWR operation,
+restart/repeat, encrypted backup, restore, and explicit removal on the supported
+Windows/Docker Desktop platform. Hosted P2 infrastructure remains
+unprovisioned and outside this release.
 
 ## License
 
-MIT - see `LICENSE`.
+MIT - see `LICENSE`. Distribution notices are in `NOTICE` and
+`THIRD_PARTY_NOTICES.md`.

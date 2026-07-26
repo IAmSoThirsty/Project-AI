@@ -1,5 +1,10 @@
 # Project-AI v0.0.3 Successor CAB Review Pack
 
+> **Profile note (2026-07-26):** Retained for the future optional P2
+> hosted/Kubernetes profile. The v0.0.3 single-user P1 Offline-First Local
+> product is released under `docs/deployment/OFFLINE_FIRST_READINESS.md`; open
+> CAB/cluster/registry items in this pack do not downgrade or block P1.
+
 **Prepared:** 2026-07-20
 **Repository:** `IAmSoThirsty/Project-AI`
 **Candidate:** immutable successor code commit `eaed9905cacc02e2fb98e3cc92356e8d160e593e`; the active branch also contains gate-report and documentation follow-ups

@@ -6,6 +6,13 @@
 > and full agent role templates into machine-readable Markdown for use inside this repository.
 > Wording is reproduced faithfully; typography and page flow are adapted for readability.
 
+The owner-supplied guidebook file `Thirstys_Agents_101_v1.3.pdf` was cross-checked on
+2026-07-25 (SHA-256
+`3dd8584f68c08613b93f3ef57fcd42bbb50c1c9b7d4cb629d092d326cff6910f`).
+Its document-control page self-identifies as Edition 1.0 and contains Parts I-VI.
+TS3-OCS-1.0 is therefore registered below as an additive Part VII, not silently
+represented as content already present in that guidebook PDF.
+
 This is the operating library for how AI agents work in Project-AI. It is **additive** to and
 governed by [`AGENTS.md`](../../AGENTS.md) — the binding rule of engagement — and it never relaxes
 Thirsty's Standard v3. Where anything here conflicts with `AGENTS.md`, `AGENTS.md` wins.
@@ -20,6 +27,7 @@ Thirsty's Standard v3. Where anything here conflicts with `AGENTS.md`, `AGENTS.m
 | Part IV — Thirsty's Standard V3Q Manifest | Machine-readable behavioral + enforcement contract (rule IDs, controls, evidence, tests) | Package [`packages/thirstys-standard-v3q/`](../../packages/thirstys-standard-v3q/); mirror + verification in [`docs/governance/thirstys-standard-v3q-manifest/`](../governance/thirstys-standard-v3q-manifest/) |
 | Part V — Glossary, Reference Index, Disclaimer | Normative + guidebook glossary, controlling-source index, use limits | [`GLOSSARY_AND_REFERENCE.md`](GLOSSARY_AND_REFERENCE.md) |
 | Part VI — Full Agent Template Library | 20 bounded professional role contracts | [`agent-role-templates/`](agent-role-templates/) |
+| Part VII — Owner's Cockpit Extension | Owner-usability, control, evidence, local mode, acceptance, and ratification standard (144 source requirements) | [`THIRSTYS_OWNER_COCKPIT_STANDARD_TS3-OCS-1.0.md`](THIRSTYS_OWNER_COCKPIT_STANDARD_TS3-OCS-1.0.md); [`REQUIREMENTS.json`](owner-cockpit/REQUIREMENTS.json); source PDF in [`owner-cockpit-standard/`](owner-cockpit-standard/) |
 
 ## How to use this guide
 

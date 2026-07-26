@@ -1,11 +1,15 @@
 # Production Handoff Report
 
-**Assessment:** Not production-ready; deployment and publication are not authorized.
+> **Supersession (2026-07-26):** P1 Offline-First Local v0.0.3 is the released
+> single-user production product. This handoff is retained for future optional
+> P2 hosted/Kubernetes closure only. Its P2 blockers do not apply to P1.
+
+**Assessment:** Historical P2 assessment; hosted deployment and publication are not authorized.
 **Assessment date:** 2026-07-24 UTC
 **Branch:** `agent/production-readiness-2026-07-19`
 **Workspace:** `T:\00-Active\Project-AI-Beginnings`
 
-## Executive decision
+## Historical P2 executive decision
 
 The bounded local production-readiness pass is complete at the safe boundary. Local
 verification has been expanded and recorded, but production readiness is **not**

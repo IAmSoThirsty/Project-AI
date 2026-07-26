@@ -1,35 +1,33 @@
 # Production Deployment
 
-> **Current use:** local single-host acceptance only. The CAB production path
-> is Kubernetes/Helm and remains unauthorized until the external conditions in
-> `docs/operations/cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md` are complete.
+> **Current production product:** Project-AI v0.0.3, P1 Offline-First Local,
+> for one Windows user. Install the verified versioned ZIP and use the owner
+> launchers. Kubernetes/Helm is future optional P2 work and remains unauthorized
+> until its separate external conditions are complete.
 
-The Compose stack contains nine services: API, three portals, three adapters,
-Genesis, and PostgreSQL. It is useful for release-candidate build/health and
-security smoke checks; it is not evidence of cluster routing, paging,
-multi-node persistence, backup/restore, or Helm rollback.
+The production Compose stack contains nine services: API, three portals, three
+adapters, Genesis, and PostgreSQL. Owner-facing ports bind only to loopback.
+The v0.0.3 archive carries the exact image set and runs with registry pulls
+disabled.
 
 ```powershell
-uv sync --frozen --all-extras --all-packages
-uv run python tools/verify_pre_deployment.py
-docker compose config --quiet
-docker compose up -d --build --wait --wait-timeout 240
-python tools/verify_compose_health.py
-Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8000/metrics
-docker compose exec -T api python tools/canonical_replay.py
-docker compose exec -T api python tools/verify_frozen_history.py
-docker compose exec -T api python tools/verify_security_relay.py /data/chimera-audit.jsonl
+pwsh -File .\scripts\owner\Test-OfflineRelease.ps1 `
+  -ArchivePath .\project-ai-p1-v0.0.3-windows-amd64.zip
+
+# After extraction:
+.\Install Project-AI Offline.cmd
+.\Project-AI Status.cmd
 ```
 
-Compose uses the shared `PROJECT_AI_API_TOKEN` only as a development fallback.
-For a production-equivalent machine lane, configure the account database,
-create scoped credentials through the owner/MFA administration API, and set
-`PROJECT_AI_MACHINE_CREDENTIALS_REQUIRED=true`; raw per-program tokens belong in
-the approved secret manager, not `.env` or Helm values. Preserve the pre-existing
-stack state: if it was running before validation, leave it running; if
-validation started it, stop it with `docker compose down` after capturing logs.
-Do not use source checkout or rebuild as a production rollback mechanism; use
-the immutable Helm revision procedure in the CAB rollback runbook.
+Protected credentials are stored under `.owner-state` with Windows DPAPI or an
+owner-selected portable passphrase and are projected as restricted secret files
+only while the stack runs. Backup, restore, stop, removal, and offline upgrade
+procedures are in `OWNER_QUICKSTART.md` and
+`OFFLINE_UPGRADE_ROLLBACK_RUNBOOK.md`.
+
+The Helm/CAB material retained below is historical and P2-specific. It is not
+the P1 production runbook and its open hosted controls do not describe defects
+in the released single-user product.
 
 <!-- Retired development-checkpoint guide retained as historical context. It
 contains obsolete seven-service counts and is not an approved runbook.

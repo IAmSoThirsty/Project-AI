@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "audit_level": "moderate",
+  "exceptions": [
+    {
+      "advisory": "GHSA-qwww-vcr4-c8h2",
+      "package": "react-router",
+      "version": "7.18.1",
+      "severity": "high",
+      "paths": [
+        "apps__web__operator-console>react-router-dom>react-router"
+      ],
+      "source_roots": [
+        "apps/web/operator-console/src"
+      ],
+      "forbidden_source_terms": [
+        "unstable_RSC",
+        "RSCStaticRouter",
+        "RSCHydratedRouter",
+        "createCallServer",
+        "decodeReply"
+      ],
+      "expires_utc": "2026-08-31T00:00:00Z",
+      "rationale": "GHSA-qwww-vcr4-c8h2 affects only unstable React Server Components APIs. Project-AI's P1 operator console is a Vite client-side browser application and does not import or invoke those APIs. React Router 8.3.0, the advisory's stated patched release, was not published when this exception was recorded."
+    }
+  ]
+}

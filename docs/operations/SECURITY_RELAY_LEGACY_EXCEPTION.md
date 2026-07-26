@@ -87,7 +87,8 @@ validate the current implementation; they say nothing about these legacy artifac
 - This exception does **not** make any relay chain valid.
 - It satisfies **no** prerequisite of `tools/verify_pre_deployment.py`; all nine externally
   controlled prerequisites remain unresolved and fail-closed.
-- The repository remains **not production-ready**; deployment and publication remain
+- The future optional P2 hosted/Kubernetes profile remains **not production-ready**;
+  its deployment and publication remain
   prohibited.
 
 ## Tamper-detection / future re-verification

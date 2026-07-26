@@ -4332,6 +4332,85 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
 - **Explicit non-claim:** The relay chains remain invalid. This exception resolves the disposition blocker only; it satisfies no `verify_pre_deployment.py` prerequisite. Production deployment/publication remains prohibited.
 - **Safe to continue:** Local non-deployment work yes; production deployment/publication no.
 
+## P1 OFFLINE-FIRST LOCAL PRODUCT ACCEPTANCE 2026-07-25
+
+- **Task / mode:** Production-deployment work, narrowed by owner decision to the P1
+  offline-first local product. Kubernetes, cloud publication, public ingress, and hosted
+  infrastructure remain P2 additive options, not product prerequisites.
+- **Workspace / branch / base:** `T:\00-Active\Project-AI-Beginnings`;
+  `agent/production-readiness-2026-07-19`; base HEAD `01c4ec74fc61`.
+  Working tree is intentionally dirty and uncommitted; commit/push were not authorized.
+- **Continuity recovered:** Claude's approved but unstarted plan was recovered from
+  `C:\Users\Quencher\.claude\plans\owner-local-use-enablement-directive-delegated-summit.md`
+  and session `d04604d0-ef61-430e-8534-dc703fa165e9`. Claude had reached plan approval and
+  stopped on a spend limit before making repository changes.
+- **Owner decision:** P1 offline-first local operation is the product. Owner's Cockpit work is
+  supporting. Hosted/Kubernetes/cloud requirements do not block P1.
+- **Created:** protected Compose secret overlay; owner start/stop/status/backup/restore/offline
+  install/export scripts and double-click wrappers; owner quickstart; P1 deployment model,
+  blocker map, readiness record, upgrade/rollback runbook; Owner's Cockpit standard
+  transcription, 144-requirement JSON index, exact source PDF, OC-1 gap/acceptance/ratification
+  records; deterministic recovery negative-test script.
+- **Modified:** root/readme deployment profile language; `AGENTS.md` P1/P2 boundary and Part VII
+  registration; Control Center owner-orientation strip and tests; web image build arguments;
+  `.gitignore`; `.pre-commit-config.yaml` valid Compose `!reset` exclusion.
+- **Secret model:** owner credentials are DPAPI CurrentUser protected by default or
+  PBKDF2-SHA256-200000 passphrase protected. Runtime plaintext exists only as ACL-restricted
+  secret files while running. Direct secret environment variables are reset by
+  `compose.secrets.yaml`. No scanned value appeared in `.env`, container inspect/environment,
+  API logs, evidence receipts, or encrypted-store JSON.
+- **Final candidate artifact:** `.local/offline-bundles/project-ai-p1-offline-ready.zip`,
+  SHA-256 `853df37188ae387ba930b5515ffb86f8710bd19b1fc85baa9815bd9814a43c0c`,
+  receipt `owner-offline-bundle-20260726T045057Z`.
+- **Rollback artifact:** `.local/offline-bundles/project-ai-p1-baseline-01c4ec74.zip`,
+  508,820,903 bytes, SHA-256
+  `9fcc779fb0dda0e4794674097dcc066f40aa2dab4958f25551de30e7f6ef0832`.
+- **Recovery artifact:** `.local/backups/pre-owner-profile-20260725.paibak`, SHA-256
+  `4ac9363bd642200aa0e5f2b4a6928a89e31ab6c69a5f876f98f547d77cb8b85c`.
+  It preserves the state from before the protected profile migration.
+- **Offline import evidence:** candidate images were removed by tag, loaded from the sealed
+  archive, identity-checked, and started with `--pull never`; 9/9 services became healthy.
+  Same-machine upgrade retained and hash-compared the encrypted credential store.
+- **Upgrade/rollback evidence:** a detached clean `01c4ec74` worktree produced genuinely
+  different baseline API/service/Control Center image IDs. Baseline -> candidate passed
+  (`owner-status-20260726T042621Z`); candidate -> baseline rollback passed
+  (`owner-status-20260726T043143Z`); return to candidate passed
+  (`owner-status-20260726T043438Z`). PostgreSQL and audit volumes were retained throughout.
+- **Backup/restore evidence:** DPAPI backup isolated restore reported `accounts=5` and
+  `workflows=4`; portable schema-2 backup/restore passed with AES-256-GCM and all four
+  credential names present only inside the encrypted archive
+  (`owner-backup-20260726T034400Z`, `owner-restore-20260726T034404Z`). Its random-passphrase
+  test artifact was intentionally removed after acceptance.
+- **Recovery denial evidence:** `Test-OwnerRecoveryNegativePaths.ps1` passed confirmation-required,
+  missing-credential continuity rejection, encrypted-archive tamper rejection, and zip-slip
+  rejection; final failure receipts `owner-restore-20260726T044956Z` and
+  `owner-restore-20260726T044957Z`.
+- **Validation:** operator console ESLint passed; Vitest `71 passed`; TypeScript/Vite production
+  build passed (1,641 modules); PowerShell parser passed 10 scripts; Compose direct-secret-env
+  assertion passed; 9-container read-only/cap-drop/no-new-privileges assertion passed; final
+  owner health passed four surfaces with bootstrap `closed`; targeted modified+untracked
+  pre-commit hooks all passed; requirement JSON count/actual/unique all equal 144; cockpit PDF
+  SHA-256 equals source
+  `e8484ea46ce017fda427bc748627e7313f536c4a6a41248832b6b069238f8b0b`.
+- **Browser acceptance:** unauthenticated Control Center rendered the local instance
+  `PROJECT-AI-LOCAL`, local-account sign-in, and no-cloud-login assurances. Neither available
+  browser had an authenticated local session. Existing accounts were not reset or bypassed.
+- **Current runtime:** candidate stack is running 9/9 healthy at
+  `http://127.0.0.1:4175`; owner bootstrap is closed; encrypted state and both named data
+  volumes are retained.
+- **Known failure / environment issue:** Docker Desktop 29.6.1 deadlocked twice after repeated
+  aggregate/historical image builds. Client processes were stopped and Docker Desktop restarted;
+  no volumes were deleted. Final builds/imports use sequential builds and completed. This remains
+  a local runtime reliability risk, not a promoted pass.
+- **Remaining P1 acceptance:** Jeremy must sign in, complete and retain one real Atlas or SWR
+  owner workflow, repeat it after stop/start, record manual usability/accessibility acceptance,
+  and explicitly ratify or reject TS3-OCS-1.0. Those owner-only results are not inferred.
+- **P2 status:** Kubernetes, public ingress, cloud publication, remote cluster/backup, external
+  proof custody, and hosted supply-chain gates remain optional and unprovisioned. They do not
+  block P1 and no P2 production-readiness claim is made.
+- **Safe to continue:** yes for P1 owner acceptance and local operation; no for public/hosted
+  deployment or publication.
+
 ## REPOSITORY COMPLETION PASS 2026-07-24 UTC - Remaining repository-controlled gates exhausted
 
 - **Task/mode:** Repository completion and remaining-gate assessment. Only repository-actionable and repository-verification work was processed; the owner-approved immutable relay exception was not revisited.
@@ -4358,3 +4437,295 @@ corpus/docs ingest) is the remaining declared scope and is not yet started.
 - **Deferred by authorization scope:** the standing repository-intelligence index rebuild after a continuity append was NOT performed (writing `data/repository-intelligence/` is outside the granted authority); the index is therefore stale relative to this entry and the closure plan, and must be rebuilt under the next authorized session.
 - **Decision:** Owner actions incomplete; external infrastructure incomplete. All 15 remaining gates require owner credentials, elevation, external infrastructure, external publication, explicit approval, or the missing legacy workspace. Production deployment and publication remain prohibited.
 - **Safe to continue:** Local non-deployment work yes; production deployment/publication no.
+
+## DOCKER DESKTOP IMAGE-STORE REPAIR 2026-07-26
+
+- **Task / mode:** Authorized Windows/Docker Desktop runtime repair for the P1
+  offline-first local product. The repair scope included the mutable image/build
+  cache, Docker Desktop engine configuration, Project-AI container reconciliation,
+  and repeat cold-start validation. Kubernetes, cloud, public deployment, and
+  publication were not in scope.
+- **Baseline evidence:** Docker Desktop 4.82.0 / Engine 29.6.1 / BuildKit 0.31.1
+  used the containerd snapshotter with an 8 GB Linux VM. BuildKit retained
+  23.57 GB under the Docker Desktop default 20 GiB GC reserve, the engine held
+  175 images, 53 images were dangling, and a stale unauthorized
+  `cloud-thirstyoftp-builder-1` definition returned HTTP 401. Repeated aggregate
+  builds had previously produced BuildKit deadlocks and missing containerd
+  content.
+- **Data preserved before cleanup:** named volumes
+  `project-ai_postgres-data` and `project-ai_audit-data`; final offline bundle
+  SHA-256 `853df37188ae387ba930b5515ffb86f8710bd19b1fc85baa9815bd9814a43c0c`;
+  rollback bundle SHA-256
+  `9fcc779fb0dda0e4794674097dcc066f40aa2dab4958f25551de30e7f6ef0832`;
+  recovery backup SHA-256
+  `4ac9363bd642200aa0e5f2b4a6928a89e31ab6c69a5f876f98f547d77cb8b85c`.
+  No volume was pruned, deleted, or recreated.
+- **Docker Desktop repair:** removed only the stale cloud builder definition;
+  cleared the rebuildable 23.57 GB BuildKit cache; pruned unused dangling image
+  content (3.182 GB reclaimed); retained the supported containerd image store;
+  and changed Docker Engine `builder.gc.defaultKeepStorage` from `20GB` to
+  `8GB` through Docker Desktop Settings. After restart, live `buildx inspect`
+  reported one 1.105 GiB ephemeral-cache limit and three 8 GiB reserve rules.
+  No tagged image from another local project was pruned.
+- **Repository repairs:** `scripts/owner/Start-ProjectAI.ps1` now builds the six
+  unique images sequentially, starts and waits for PostgreSQL before credential
+  rotation, and detects containers created from another Compose working directory
+  so stale bind-mounted secret paths are force-reconciled while named volumes are
+  preserved. `compose.yaml` now gives Python services a 120-second health
+  start period; the earlier 5-second grace plus 12 retries incorrectly marked a
+  cold containerd import unhealthy after about 65 seconds, while the observed
+  offline cold start needed about 105 seconds.
+- **Failures discovered and fixed:** the first post-restart start failed because
+  credential rotation attempted `docker exec` against a stopped PostgreSQL
+  container; the next attempt found containers whose secret mounts still pointed
+  at the removed `.owner-state/final-offline-acceptance` test directory; the
+  first cold restart after a clean rebuild then exposed the insufficient Python
+  health grace. Each failure was reproduced, repaired at its cause, and rerun.
+  Database visibility remained intact (`project_ai`, 11 non-system tables).
+- **Build evidence:** a clean-cache invocation of
+  `scripts/owner/Start-ProjectAI.ps1 -NoBrowser` built API, shared service, three
+  web portals, and Genesis sequentially, then returned the stack to 9/9 healthy;
+  exit 0 in 758 seconds. Resulting image IDs were:
+  `api=e03da08c...0470df45`, `service=04b6cd6d...67706575`,
+  `docs=b069135c...c62e9dce`, `proof=24c6bfb4...f3d0`,
+  `operator=bb5117e9...dcf67b7a`, and
+  `genesis=6dc904cf...d3a92798`.
+- **Cold-restart evidence:** the rebuilt image IDs remained byte-for-byte
+  identical across Docker Desktop restart. A final controlled Desktop restart
+  followed by `Start-ProjectAI.ps1 -Offline -NoBrowser` (`--pull never`) exited
+  0; all nine services became healthy, all four HTTP health surfaces returned
+  live, and `tools/verify_compose_health.py` verified read-only filesystems,
+  `cap_drop: ALL`, and `no-new-privileges` for 9/9 containers.
+- **Final Docker state:** Desktop and BuildKit workers running; 134 images;
+  5.398 GB total build cache, below the 8 GiB policy; 7 dangling manifests left
+  after the fresh builds; both Project-AI named data volumes present; final stack
+  9/9 healthy. The seven dangling manifests are not blocking and were not chased
+  with broad `system prune` or `image prune -a`, which would risk unrelated local
+  offline images.
+- **Verification / non-claims:** PowerShell parser passed for the modified start
+  script; Compose configuration passed; full image build passed; repeated offline
+  start passed; repeated Desktop restart passed; runtime hardening and database
+  visibility passed. This establishes the repaired P1 local Docker path, not
+  hosted/Kubernetes/public production readiness. Existing external deployment
+  blockers remain unchanged.
+- **Safe to continue:** yes for P1 offline-first local operation. No for public,
+  hosted, Kubernetes, or cloud deployment/publication.
+
+## P1 V0.0.3 RELEASE REVISION PREPARATION 2026-07-26
+
+- **Task / mode:** Production-deployment release work for the single-user P1
+  Offline-First Local Windows product. Future Kubernetes, hosted ingress, cloud,
+  registry-image, and CAB work remains optional P2.
+- **Workspace / branch:** `T:\00-Active\Project-AI-Beginnings`;
+  `github_release_branch`, created from `01c4ec74fc61e097ffde74e5f84280a0432b668e`.
+  The intentionally dirty P1 implementation from
+  `agent/production-readiness-2026-07-19` was preserved in full.
+- **Release identity:** v0.0.3; versioned distribution name
+  `project-ai-p1-v0.0.3-windows-amd64.zip`.
+- **Exporter changes:** the offline exporter now requires a clean release tree
+  by default, reads the version from `pyproject.toml`, includes `LICENSE`,
+  `NOTICE`, `THIRD_PARTY_NOTICES.md`, generated `RELEASE.json`, versioned release
+  notes, the repaired startup/health scripts, and the exact image set. It emits
+  `.sha256`, detached SSH Ed25519 `.sig`, and `.pub` sidecars. The independent
+  `Test-OfflineRelease.ps1` validator verifies all external sidecars, the
+  internal manifest, required legal/version files, source cleanliness, path
+  safety, and every recorded file hash.
+- **Evidence-receipt defect fixed:** two restore failures inside one second
+  previously reused the same evidence ID and the second receipt overwrote the
+  first. Receipt IDs now include milliseconds. The recovery denial test asserts
+  distinct same-run failure receipts; its rerun retained two distinct files and
+  passed confirmation, missing-credential continuity, tamper, and zip-slip
+  denial.
+- **Documentation reconciliation:** active README, owner/operator, deployment,
+  readiness, production, release, execution-ledger, handoff, CAB, rollback, and
+  human-interface documents now identify v0.0.3 P1 as the single-user released
+  production profile and mark Kubernetes/cloud/CAB material as future optional
+  P2. Historical evidence remains intact and is labeled rather than rewritten.
+  Checksum-sealed V3Q verification evidence was not changed.
+- **Validation passed:** `uv run pre-commit run --all-files`; 44 targeted
+  release/pre-deployment tests; release-contract tests 6/6; operator-console
+  tests 71/71 and production build (1,641 modules); all owner PowerShell scripts
+  parse; Compose configuration; live runtime 9/9 healthy with read-only,
+  `cap_drop: ALL`, and `no-new-privileges`; canonical replay 5/5; frozen history
+  2264/2264; full coverage gate 11/11 batches, 87.58% branch coverage against an
+  80% threshold.
+- **Failures handled:** the first full-coverage attempt hit a non-reproducible
+  15-second MCP gateway-port-file timeout; the isolated test passed normally and
+  under exact coverage instrumentation, and the complete rerun passed that
+  batch. The second attempt correctly caught a stale SHA256SUMS entry after a
+  wording change inside the sealed V3Q package; that non-product-status edit was
+  reverted byte-for-byte, the V3Q checksum suite passed 15/15, and the complete
+  coverage rerun passed.
+- **Pending after the release revision is committed:** rebuild and sign the
+  exact clean-revision ZIP; verify it; execute fresh-Windows-user or clean-machine
+  install/setup/workflow/restart/repeat/backup/restore/removal acceptance;
+  restore preserved owner state; record exact artifact and acceptance evidence;
+  push the branch; publish the GitHub Release assets.
+- **Risk:** the clean-machine acceptance temporarily requires isolated fresh
+  product state. Existing owner data must be backed up and verified before any
+  named volume is removed; no destructive step may run without the explicit
+  recovery path recorded.
+- **Safe to continue:** yes for creating the clean release revision and exact
+  P1 artifact. P2 remains unprovisioned and unauthorized.
+
+## P1 V0.0.3 DESTRUCTIVE-RESTORE DEFECT CLOSURE 2026-07-27
+
+- **Failure discovered:** exact-ZIP clean-state install, initial Owner setup,
+  two durable analysis-only Atlas receipts across a stop/start, backup, and
+  isolated restore all passed. The first destructive replacement restore then
+  failed because `docker cp` restored `/data` as root while the hardened API
+  runs as `10001:10001`. The API crash-looped with
+  `PermissionError: [Errno 13] Permission denied:
+  '/data/chimera-audit.jsonl'`; failed receipt
+  `owner-restore-20260727T055647414Z` was preserved.
+- **Cause and repair:** `Restore-ProjectAI.ps1` now follows the copy with a
+  short-lived, no-dependency maintenance container running as root with only
+  `CAP_CHOWN` added, then recursively assigns the restored volume to
+  `10001:10001`. The normal API service remains non-root, read-only,
+  capability-dropped, and `no-new-privileges`.
+- **Targeted verification:** release-contract tests pass 7/7; the PowerShell
+  parser passes; the patched recovery path completed destructive replacement
+  restore, returned all 9 services healthy, retained both exact Atlas receipt
+  IDs, and produced verified receipt
+  `owner-restore-20260727T055915494Z`.
+- **Release consequence:** the earlier v0.0.3 ZIP checksum is rejected as a
+  release candidate because it contains the defective restore script. Amend
+  the unpushed release revision, rebuild and resign from that exact clean
+  revision, then repeat the complete acceptance/removal/recovery sequence
+  before publication.
+- **Safe to continue:** yes. The blocker is fixed in the working tree and must
+  still pass the rebuilt exact-artifact acceptance. P2 remains out of scope.
+
+## P1 V0.0.3 EXPORTER SECRET-PREFLIGHT CLOSURE 2026-07-27
+
+- **Failure discovered:** the first rebuild from amended commit `0bde222c`
+  completed all image builds, then failed its post-build readiness check.
+  Clean-state removal had correctly deleted ephemeral files under
+  `.owner-state/runtime`; the exporter did not recreate them before `compose
+  up`, so PostgreSQL rejected an empty `POSTGRES_PASSWORD` and no ZIP was
+  emitted.
+- **Repair:** after verifying source-tree cleanliness, the exporter now
+  initializes the non-secret local environment, validates encrypted credential
+  continuity, initializes any missing protected values, and writes the
+  ephemeral Compose secret files before the readiness check.
+- **Release consequence:** amend the still-unpushed single release revision
+  again, remove the failed empty test volumes, rebuild and resign, and accept
+  only the artifact whose manifest names the successor exact commit.
+- **Safe to continue:** yes after targeted and pre-commit validation. No failed
+  export artifact is eligible for publication.
+
+## P1 V0.0.3 DETERMINISTIC ARTIFACT-REPLACEMENT CLOSURE 2026-07-27
+
+- **Failure discovered:** the corrected exporter rebuilt all images and passed
+  9/9 readiness, then `Compress-Archive` refused the existing rejected
+  v0.0.3 filename. No successor checksum/signature was produced.
+- **Repair:** after runtime readiness and internal manifest creation, a rebuild
+  now removes only the explicitly selected archive path and its `.sha256`,
+  `.sig`, and `.pub` derivatives, then creates the new ZIP with `-Force`.
+  Preflight/build failures cannot delete the earlier diagnostic artifact.
+- **Release consequence:** amend the unpushed release revision once more and
+  rebuild from its exact clean hash. The validator and acceptance journey must
+  reject every earlier v0.0.3 checksum.
+- **Safe to continue:** yes after targeted and pre-commit validation.
+
+## P1 V0.0.3 REMOTE-GATE REPAIR 2026-07-27
+
+- **Task / mode:** Complete the single-user P1 Offline-First Local release
+  after the first pushed release candidate exposed remote visual-regression
+  and dependency-audit failures. Kubernetes, hosted infrastructure, registry
+  publication, and cloud operation remain future optional P2.
+- **Remote failures surfaced:** GitHub CI run `30242762150` failed only its web
+  visual-regression job because 13 reviewed Linux screenshots no longer
+  matched the older baselines. Vulnerability run `30242762163` reported
+  PostCSS, brace-expansion, pypdf, and React Router advisories. All other CI
+  jobs passed, including Python, Node build/test, Compose, Rust, Android,
+  Desktop, Windows installer, Helm, and SBOM.
+- **Dependency repairs:** pypdf moved from 6.13.3 to 6.14.2; PostCSS is forced
+  to 8.5.23; brace-expansion is forced to 5.0.8; ESLint moved to 10.8.0 so the
+  obsolete minimatch 3 / brace-expansion 1.x path is removed. The raw Python
+  OSV audit reports no known vulnerabilities.
+- **React Router disposition:** no currently published version is free of
+  every registry advisory. Version 7.18.1 leaves only
+  `GHSA-qwww-vcr4-c8h2`, whose affected surface is unstable React Server
+  Components. The P1 operator console is a Vite browser client and uses none
+  of that surface. `tools/verify_node_dependencies.py` now enforces an exact
+  package/version/path exception, scans the declared source root for affected
+  RSC symbols, fails on unknown or changed findings, fails when the exception
+  is stale, and expires on 2026-08-31. Eight deterministic policy tests pass.
+- **Visual repair:** 13 Linux baselines were replaced only with the stable
+  first-attempt actual images from failed CI run `30242762150`, after manual
+  review of the P1 identity and responsive layouts. Five stale Windows
+  command-center baselines were refreshed from the reviewed local run.
+  Windows Playwright then passed 40/40.
+- **Local verification completed at this entry:** Node dependency policy pass;
+  Python OSV audit pass; policy tests 8/8; Ruff pass; web lint pass; portal
+  tests pass (operator console 71/71, docs 5/5, proof 4/4, Triumvirate 33/33);
+  all four web production builds pass; Windows visual regression 40/40.
+- **Release consequence:** the earlier ZIP checksum
+  `cccd28065dfc52f43877bd23ba2e8097dfbdbba8ba4f6eef1d00574ab4b29399`
+  is rejected because it predates these dependency and evidence repairs. The
+  authorized release-branch amendment must preserve one clean revision,
+  rebuild/resign the ZIP from that exact clean commit, rerun complete
+  fresh-user acceptance, obtain green GitHub gates, and publish only the
+  successor artifact and acceptance record.
+- **Safe to continue:** yes for the P1 release completion sequence. No earlier
+  v0.0.3 ZIP is eligible for publication.
+
+## P1 V0.0.3 FRESH-WINDOWS-USER STARTUP REPAIR 2026-07-27
+
+- **Failure discovered:** the rebuilt, signed ZIP at SHA-256
+  `6d4132263a9b7524b4934181310882c9cb79c28fa1d6a38dd9a7e8f5ec52c9a6`
+  passed internal release validation but failed its first installation under
+  the real local account `ProjectAIReleaseTest`. Docker Desktop could not read
+  `.owner-state/runtime/postgres-password` inside that account's private
+  profile and returned `CreateFile ... Access is denied`. No container was
+  created; the failed-attempt data volume was explicitly removed.
+- **Cause and repair:** the encrypted DPAPI/passphrase credential store remains
+  private under `.owner-state/credentials`. Only its ephemeral plaintext
+  Compose projections move on Windows to
+  `%ProgramData%\Project-AI\owner-runtime\<owner-SID>`. The leaf directory and
+  files disable inherited ACLs and grant full access to the owner, SYSTEM, and
+  administrators plus read/execute access to the local `docker-users` group.
+  Compose receives the exact SID-scoped path from the owner scripts. Stop and
+  removal delete that exact projection directory.
+- **Real fresh-user verification:** the patched source was exercised under
+  `THIRSTYS-COMPUT\ProjectAIReleaseTest`, not the development account. All five
+  projections were created at the SID-scoped common-data path; Docker Desktop
+  started all 9 containers healthy; ACL inspection confirmed only the expected
+  owner, `docker-users`, SYSTEM, and administrator grants; explicit removal
+  deleted all containers, named volumes, and the runtime projection directory.
+- **Regression coverage:** release-contract tests now assert the common-data
+  location, SID scoping, Docker ACL, environment handoff, and all five Compose
+  secret paths. The PowerShell parser, Compose interpolation, and targeted
+  tests pass.
+- **Release consequence:** the ZIP named above is rejected because it contains
+  the private-profile runtime path. Amend the single release revision, rebuild
+  and resign from its exact clean hash, then repeat the complete exact-ZIP
+  install/setup/workflow/restart/repeat/backup/restore/removal journey.
+- **Safe to continue:** yes. The concrete startup blocker is fixed and proven
+  under the fresh account; exact replacement-artifact acceptance remains
+  mandatory before publication.
+
+## P1 V0.0.3 CONTROL-CENTER PROXY FALSE-POSITIVE CLOSURE 2026-07-27
+
+- **Investigation corrected:** the first acceptance harness called
+  `http://127.0.0.1:4175/api/v1/...` directly and received HTTP 404. That was
+  not the browser contract. The web client intentionally uses `/api` as its
+  gateway base and supplies versioned paths beginning with `/api/v1`, producing
+  `/api/api/v1/...`; the Nginx and Vite rewrites remove only the gateway prefix
+  and correctly forward `/api/v1/...` to FastAPI.
+- **Hostile-review finding:** changing Nginx to preserve the whole incoming
+  path made the direct harness probe pass but broke the real Control Center.
+  A fresh-profile Chrome capture displayed `Not Found`, while direct inspection
+  showed the browser request had become `/api/api/v1/...` upstream. That
+  mistaken proxy change was reverted before release.
+- **Acceptance correction:** the harness now targets the actual browser gateway
+  base at `http://127.0.0.1:4175/api`, so its versioned requests exercise the
+  same double-prefix-and-single-rewrite path as the shipped client.
+- **Release consequence:** both the `d93a87c5...` artifact and its successor
+  `43f43489...` are rejected. Neither represents the final browser-correct
+  release. Rebuild from the corrected clean revision and repeat exact-ZIP
+  acceptance before publication.
+- **Safe to continue:** yes. The repository proxy behavior is restored to the
+  browser-correct contract; the final clean artifact and acceptance remain
+  required.

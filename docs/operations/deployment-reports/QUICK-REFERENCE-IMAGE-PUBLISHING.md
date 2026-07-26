@@ -1,11 +1,10 @@
 # Quick Reference: Production Image Publishing Pipeline
 
-> **Current release boundary (2026-07-19):** This is a historical or
-> implementation-reference artifact, not current production evidence or
-> deployment approval. The v0.0.3 successor remains fail-closed until the
-> [pre-deployment checklist](../../deployment/PRE_DEPLOYMENT_CHECKLIST.md) and
-> [CAB evidence bundle](../cab/PROJECT_AI_V0.0.3_SUCCESSOR_CAB_REVIEW_PACK.md)
-> pass. Commands here are examples; this document does not prove deployment.
+> **Current release boundary (2026-07-26):** This is a future optional P2
+> container-registry/hosted reference. Project-AI v0.0.3 is released as the
+> single-user P1 Offline-First Local ZIP under
+> [its acceptance record](../../deployment/OFFLINE_FIRST_READINESS.md).
+> Commands here do not grant P2 deployment approval; P2 remains fail-closed.
 
 ## Verify Implementation
 
