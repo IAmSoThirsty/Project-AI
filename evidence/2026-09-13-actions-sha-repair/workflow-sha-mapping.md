@@ -1,0 +1,339 @@
+# GitHub Actions SHA pinning repair evidence
+
+- Date: 2026-09-13
+- Scope: active workflows under `.github/workflows/`
+- Evidence source: regenerated from the committed workflow files after pinning.
+- Ref verification source: `git ls-remote` against `https://github.com/<owner>/<repo>` for each mutable ref; annotated tags were resolved to their peeled commit (`^{}`) when applicable.
+
+## Changed workflows
+
+- `agent-governance-default-enforcement.yml`
+- `ai_takeover_reviewer_trap.yml`
+- `codex-deus-ultimate.yml`
+- `deploy-hub.yml`
+- `deploy-site.yml`
+- `doc-code-alignment.yml`
+- `enforce-root-structure.yml`
+- `generate-sbom.yml`
+- `nextjs.yml`
+- `validate-metadata.yml`
+
+## Pinned workflow entries
+
+### `agent-governance-default-enforcement.yml`
+- Line 38: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 41: `actions/setup-python@v5` -> `a26af69be951a213d495a4c3e4e4022e16d87065`
+  - Final: `uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5`
+
+### `ai_takeover_reviewer_trap.yml`
+- Line 36: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 42: `actions/setup-python@v5` -> `a26af69be951a213d495a4c3e4e4022e16d87065`
+  - Final: `uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5`
+- Line 174: `actions/github-script@v7` -> `f28e40c7f34bde8b3046d885e986cb6290c5673b`
+  - Final: `uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7`
+- Line 231: `actions/github-script@v7` -> `f28e40c7f34bde8b3046d885e986cb6290c5673b`
+  - Final: `uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7`
+- Line 264: `actions/github-script@v7` -> `f28e40c7f34bde8b3046d885e986cb6290c5673b`
+  - Final: `uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7`
+
+### `codex-deus-ultimate.yml`
+- Line 198: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 355: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 360: `github/codeql-action/init@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/init@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 366: `github/codeql-action/autobuild@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/autobuild@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 369: `github/codeql-action/analyze@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/analyze@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 391: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 417: `github/codeql-action/upload-sarif@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/upload-sarif@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 424: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 447: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 482: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 503: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 526: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 557: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 598: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 620: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 643: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 663: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 679: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 699: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 717: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 738: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 764: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 769: `super-linter/super-linter@v5` -> `a8150b40c89574adb5f68bf9502b890a236a06b3`
+  - Final: `uses: super-linter/super-linter@a8150b40c89574adb5f68bf9502b890a236a06b3 # v5`
+- Line 798: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 801: `reviewdog/action-actionlint@v1` -> `d290e336d5a743810aef4404f757dc862276d2ae`
+  - Final: `uses: reviewdog/action-actionlint@d290e336d5a743810aef4404f757dc862276d2ae # v1`
+- Line 829: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 853: `codecov/codecov-action@v3` -> `ab904c41d6ece82784817410c45d8b8c02684457`
+  - Final: `uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3`
+- Line 860: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 884: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 909: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 946: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 981: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1017: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1043: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1077: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1115: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1118: `actions/download-artifact@v4` -> `d3f86a106a0bac45b974a628896c90dbdf5c8093`
+  - Final: `uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4`
+- Line 1148: `codacy/codacy-coverage-reporter-action@v1` -> `89d6c85cfafaec52c72b6c5e8b2878d33104c699`
+  - Final: `uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1`
+- Line 1155: `py-cov-action/python-coverage-comment-action@v3` -> `50d15ff8768f6d897b04e5a0805bd1a98f7096c4`
+  - Final: `uses: py-cov-action/python-coverage-comment-action@50d15ff8768f6d897b04e5a0805bd1a98f7096c4 # v3`
+- Line 1162: `codecov/codecov-action@v3` -> `ab904c41d6ece82784817410c45d8b8c02684457`
+  - Final: `uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3`
+- Line 1196: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1219: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 1247: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1250: `docker/setup-buildx-action@v3` -> `8d2750c68a42422c14e847fe6c8ac0403b4cbd6f`
+  - Final: `uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3`
+- Line 1260: `docker/build-push-action@v5` -> `ca052bb54ab0790a636c9b5f226502c73d547a25`
+  - Final: `uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5`
+- Line 1283: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1286: `actions/setup-java@v3` -> `e9fbacdec3bb3b6036605a3e6f7995d66773a8c6`
+  - Final: `uses: actions/setup-java@e9fbacdec3bb3b6036605a3e6f7995d66773a8c6 # v3`
+- Line 1292: `gradle/gradle-build-action@v2.4.2` -> `749f47bda3e44aa060e82d7b3ef7e40d953bd629`
+  - Final: `uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629 # v2.4.2`
+- Line 1303: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 1327: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1347: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 1374: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1394: `sigstore/cosign-installer@v3` -> `398d4b0eeef1380460a10c8013a76f728fb906ac`
+  - Final: `uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3`
+- Line 1403: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 1428: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1431: `actions/download-artifact@v3` -> `9bc31d5ccc31df68ecc42ccf4149144866c47d8a`
+  - Final: `uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3`
+- Line 1452: `github/codeql-action/upload-sarif@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/upload-sarif@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 1459: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 1485: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1488: `aquasecurity/trivy-action@master` -> `d2a0b60797ff03db6132bd4e2b293f9b37081297`
+  - Final: `uses: aquasecurity/trivy-action@d2a0b60797ff03db6132bd4e2b293f9b37081297 # master`
+- Line 1497: `github/codeql-action/upload-sarif@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/upload-sarif@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 1518: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1521: `docker/setup-buildx-action@v3` -> `8d2750c68a42422c14e847fe6c8ac0403b4cbd6f`
+  - Final: `uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3`
+- Line 1524: `docker/build-push-action@v5` -> `ca052bb54ab0790a636c9b5f226502c73d547a25`
+  - Final: `uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5`
+- Line 1533: `aquasecurity/trivy-action@master` -> `d2a0b60797ff03db6132bd4e2b293f9b37081297`
+  - Final: `uses: aquasecurity/trivy-action@d2a0b60797ff03db6132bd4e2b293f9b37081297 # master`
+- Line 1542: `github/codeql-action/upload-sarif@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/upload-sarif@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 1563: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1566: `aquasecurity/trivy-action@master` -> `d2a0b60797ff03db6132bd4e2b293f9b37081297`
+  - Final: `uses: aquasecurity/trivy-action@d2a0b60797ff03db6132bd4e2b293f9b37081297 # master`
+- Line 1575: `github/codeql-action/upload-sarif@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/upload-sarif@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 1596: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1599: `bridgecrewio/checkov-action@v12` -> `a8664e3a0549367977f0cda990a34311835c87c0`
+  - Final: `uses: bridgecrewio/checkov-action@a8664e3a0549367977f0cda990a34311835c87c0 # v12`
+- Line 1608: `github/codeql-action/upload-sarif@v3` -> `faaca9a8f6edddba5725ffe5adefdab6669a2eca`
+  - Final: `uses: github/codeql-action/upload-sarif@faaca9a8f6edddba5725ffe5adefdab6669a2eca # v3`
+- Line 1634: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1689: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1697: `actions/download-artifact@v3` -> `9bc31d5ccc31df68ecc42ccf4149144866c47d8a`
+  - Final: `uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3`
+- Line 1710: `peter-evans/create-pull-request@v5` -> `4e1beaa7521e8b457b572c090b25bd3db56bf1c5`
+  - Final: `uses: peter-evans/create-pull-request@4e1beaa7521e8b457b572c090b25bd3db56bf1c5 # v5`
+- Line 1742: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1745: `actions/download-artifact@v4` -> `d3f86a106a0bac45b974a628896c90dbdf5c8093`
+  - Final: `uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4`
+- Line 1782: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1787: `actions/labeler@v4` -> `ac9175f8a1f3625fd0d4fb234536d26811351594`
+  - Final: `uses: actions/labeler@ac9175f8a1f3625fd0d4fb234536d26811351594 # v4`
+- Line 1792: `codelytv/pr-size-labeler@v1` -> `095a41fca88b8764fd9e008ad269bcdb82bb38b9`
+  - Final: `uses: codelytv/pr-size-labeler@095a41fca88b8764fd9e008ad269bcdb82bb38b9 # v1`
+- Line 1820: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1824: `hmarr/auto-approve-action@v3` -> `7d0ab8fdbb906da8a6297d373561d5ccb137d98f`
+  - Final: `uses: hmarr/auto-approve-action@7d0ab8fdbb906da8a6297d373561d5ccb137d98f # v3`
+- Line 1857: `dependabot/fetch-metadata@v1` -> `8348ea7f5d949b08c7f125a44b569c9626b05db3`
+  - Final: `uses: dependabot/fetch-metadata@8348ea7f5d949b08c7f125a44b569c9626b05db3 # v1`
+- Line 1882: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 1885: `github/issue-labeler@v3.1` -> `e24a3eb6b2e28c8904d086302a2b760647f5f45c`
+  - Final: `uses: github/issue-labeler@e24a3eb6b2e28c8904d086302a2b760647f5f45c # v3.1`
+- Line 1892: `actions/github-script@v7` -> `f28e40c7f34bde8b3046d885e986cb6290c5673b`
+  - Final: `uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7`
+- Line 1917: `actions/stale@v8` -> `1160a2240286f5da8ec72b1c0816ce2481aabf84`
+  - Final: `uses: actions/stale@1160a2240286f5da8ec72b1c0816ce2481aabf84 # v8`
+- Line 1949: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2010: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2050: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 2071: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2074: `actions/download-artifact@v4` -> `d3f86a106a0bac45b974a628896c90dbdf5c8093`
+  - Final: `uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4`
+- Line 2080: `sigstore/cosign-installer@v3` -> `398d4b0eeef1380460a10c8013a76f728fb906ac`
+  - Final: `uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3`
+- Line 2093: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 2113: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2116: `actions/download-artifact@v3` -> `9bc31d5ccc31df68ecc42ccf4149144866c47d8a`
+  - Final: `uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3`
+- Line 2122: `softprops/action-gh-release@v1` -> `de2c0eb89ae2a093876385947365aca7b0e5f844`
+  - Final: `uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1`
+- Line 2151: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2154: `actions/download-artifact@v4` -> `d3f86a106a0bac45b974a628896c90dbdf5c8093`
+  - Final: `uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4`
+- Line 2160: `pypa/gh-action-pypi-publish@release/v1` -> `dc37677b2e1c63e2034f94d8a5b11f265b73ba33`
+  - Final: `uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1`
+- Line 2182: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2185: `docker/setup-buildx-action@v3` -> `8d2750c68a42422c14e847fe6c8ac0403b4cbd6f`
+  - Final: `uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3`
+- Line 2188: `docker/login-action@v3` -> `c94ce9fb468520275223c153574b00df6fe4bcc9`
+  - Final: `uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3`
+- Line 2196: `docker/metadata-action@v5` -> `c299e40c65443455700f0fdfc63efafe5b349051`
+  - Final: `uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5`
+- Line 2205: `docker/build-push-action@v5` -> `ca052bb54ab0790a636c9b5f226502c73d547a25`
+  - Final: `uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5`
+- Line 2243: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2269: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2319: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2353: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2356: `c-hive/gha-remove-artifacts@v1` -> `62c2fbea931baa7dd4a6b73ea5a799984a818f61`
+  - Final: `uses: c-hive/gha-remove-artifacts@62c2fbea931baa7dd4a6b73ea5a799984a818f61 # v1`
+- Line 2376: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2406: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2441: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2444: `actions/download-artifact@v3` -> `9bc31d5ccc31df68ecc42ccf4149144866c47d8a`
+  - Final: `uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3`
+- Line 2493: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2515: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+- Line 2534: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 2537: `actions/download-artifact@v3` -> `9bc31d5ccc31df68ecc42ccf4149144866c47d8a`
+  - Final: `uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3`
+- Line 2573: `actions/upload-artifact@v3` -> `ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5`
+  - Final: `uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3`
+
+### `deploy-hub.yml`
+- Line 15: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 18: `SamKirkland/FTP-Deploy-Action@v4.3.5` -> `8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65`
+  - Final: `uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5`
+
+### `deploy-site.yml`
+- Line 15: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 18: `SamKirkland/FTP-Deploy-Action@v4.3.5` -> `8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65`
+  - Final: `uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5`
+
+### `doc-code-alignment.yml`
+- Line 24: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 27: `actions/setup-python@v5` -> `a26af69be951a213d495a4c3e4e4022e16d87065`
+  - Final: `uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5`
+
+### `enforce-root-structure.yml`
+- Line 20: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 25: `actions/setup-python@v5` -> `a26af69be951a213d495a4c3e4e4022e16d87065`
+  - Final: `uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5`
+
+### `generate-sbom.yml`
+- Line 28: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 31: `actions/setup-python@v5` -> `a26af69be951a213d495a4c3e4e4022e16d87065`
+  - Final: `uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5`
+- Line 170: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 173: `actions/setup-node@v4` -> `49933ea5288caeca8642d1e84afbd3f7d6820020`
+  - Final: `uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4`
+
+### `nextjs.yml`
+- Line 33: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 59: `actions/setup-node@v4` -> `49933ea5288caeca8642d1e84afbd3f7d6820020`
+  - Final: `uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4`
+- Line 65: `actions/configure-pages@v5` -> `983d7736d9b0ae728b81ab479565c72886d7745b`
+  - Final: `uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5`
+- Line 73: `actions/cache@v4` -> `0057852bfaa89a56745cba8c7296529d2fc39830`
+  - Final: `uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4`
+- Line 100: `actions/upload-pages-artifact@v3` -> `56afc609e74202658d3ffba0e8f6dda462b719fa`
+  - Final: `uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3`
+- Line 114: `actions/deploy-pages@v4` -> `d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e`
+  - Final: `uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4`
+
+### `validate-metadata.yml`
+- Line 25: `actions/checkout@v4` -> `11d5960a326750d5838078e36cf38b85af677262`
+  - Final: `uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4`
+- Line 30: `actions/cache@v3` -> `6f8efc29b200d32929f49075959781ed54ec270c`
+  - Final: `uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3`
+- Line 58: `actions/upload-artifact@v4` -> `ea165f8d65b6e75b540449e92b4886f43607fa02`
+  - Final: `uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4`
+- Line 99: `actions/github-script@v7` -> `f28e40c7f34bde8b3046d885e986cb6290c5673b`
+  - Final: `uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7`
